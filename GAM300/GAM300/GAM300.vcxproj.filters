@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="AppEntry">
+      <UniqueIdentifier>{96e704aa-def7-499e-9abd-3c235e500216}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\AppEntry\Application.cpp">
+      <Filter>AppEntry</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AppEntry\EntryPoint.cpp">
+      <Filter>AppEntry</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Precompiled.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\AppEntry\Application.h">
+      <Filter>AppEntry</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AppEntry\EntryPoint.h">
+      <Filter>AppEntry</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Precompiled.h" />
+  </ItemGroup>
+</Project>
