@@ -22,7 +22,8 @@ objects participating in the application.
 #include <string>
 #pragma warning(push, 0)
 #include "GL/glew.h"
-#include "GLFW/glfw3.h"
+//#include "GLFW/glfw3.h"
+#include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 //#include "glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include <glm/gtc/type_ptr.hpp> // for glm functions
 
