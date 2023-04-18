@@ -4,6 +4,9 @@
     <Filter Include="AppEntry">
       <UniqueIdentifier>{96e704aa-def7-499e-9abd-3c235e500216}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IOManager">
+      <UniqueIdentifier>{beabc29e-af6f-42cd-a8e5-efc5756e255a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\AppEntry\Application.cpp">
@@ -13,6 +16,9 @@
       <Filter>AppEntry</Filter>
     </ClCompile>
     <ClCompile Include="Source\Precompiled.cpp" />
+    <ClCompile Include="Source\IOManager\Handler_GLFW.cpp">
+      <Filter>IOManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -22,5 +28,8 @@
       <Filter>AppEntry</Filter>
     </ClInclude>
     <ClInclude Include="Source\Precompiled.h" />
+    <ClInclude Include="Source\IOManager\Handler_GLFW.h">
+      <Filter>IOManager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
