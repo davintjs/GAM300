@@ -21,7 +21,11 @@
   <ItemGroup>
     <ClCompile Include="Source\AppEntry\Application.cpp" />
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
+    <ClCompile Include="Source\Graphics\glslshader.cpp" />
+    <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
+    <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
+    <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -30,7 +34,11 @@
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
+    <ClInclude Include="Source\Graphics\glslshader.h" />
+    <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
+    <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
+    <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
     <ClInclude Include="Source\Precompiled.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -97,7 +105,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Bin\Release_x64\</OutDir>
+    <OutDir>$(SolutionDir)/GAM300</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -173,11 +181,11 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\Mono;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.lib;$(SolutionDir)External\Mono\mono\lib\Release\mono-2.0-sgen.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)External\Mono;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mt.dll" "$(TargetDir)assimp-vc142-mt.dll" /Y
+      <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mtd.dll" "$(TargetDir)assimp-vc142-mtd.dll" /Y
 copy "$(SolutionDir)External\FMOD\lib\x64\fmod.dll" "$(TargetDir)fmod.dll" /Y
 copy "$(SolutionDir)External\freetype-2.12.1\objs\freetype.dll" "$(TargetDir)freetype.dll" /Y
 copy "$(SolutionDir)External\GLEW\include\glew32.dll" "$(TargetDir)glew32.dll" /Y

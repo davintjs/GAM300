@@ -1,10 +1,4 @@
-﻿  Precompiled.cpp
-  Application.cpp
-  EntryPoint.cpp
-  Handler_GLFW.cpp
-C:\Users\jakel\Documents\GAM300\GAM300\GAM300\GAM300\Source\IOManager\Handler_GLFW.cpp(793,77): warning C4100: 'h': unreferenced formal parameter
-C:\Users\jakel\Documents\GAM300\GAM300\GAM300\GAM300\Source\IOManager\Handler_GLFW.cpp(793,70): warning C4100: 'w': unreferenced formal parameter
-  Generating Code...
+﻿  Application.cpp
   GAM300.vcxproj -> C:\Users\jakel\Documents\GAM300\GAM300\GAM300\Bin\Debug_x64\GAM300.exe
           1 file(s) copied.
           1 file(s) copied.

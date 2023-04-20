@@ -76,8 +76,8 @@ public:
 
 	void LoadModel();
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
-	//Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
-	void Optimize();
+	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
+	//void Optimize();
 	void TransformVertices();
 	void ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene);
 
@@ -89,7 +89,7 @@ public:
 
 	Descriptor* _descriptor{ nullptr };
 
-	//std::vector<Mesh> _meshes{};
+	std::vector<Mesh> _meshes{};
 	std::vector<Vertex> _vertices{};
 	std::vector<int32_t> _indices{};
 	std::vector<Texture> _textures{};

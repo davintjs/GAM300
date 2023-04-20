@@ -64,7 +64,7 @@ void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 	for (unsigned int i = 0; i < node.mNumMeshes; ++i) // Loop through node meshes
 	{
 		aiMesh* pMesh = scene.mMeshes[node.mMeshes[i]];
-		//_meshes.push_back(ProcessMesh(*pMesh, scene));
+		_meshes.push_back(ProcessMesh(*pMesh, scene));
 	}
 	for (unsigned int j = 0; j < node.mNumChildren; ++j) // Initialize all the children nodes
 	{
@@ -72,66 +72,67 @@ void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 	}
 }
 
-//Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
-//{
-//	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Vertices
-//	{
-//		Vertex temp;
-//
-//		temp.pos = xcore::vector3(static_cast<float>(mesh.mVertices[i].x),
-//			static_cast<float>(mesh.mVertices[i].y),
-//			static_cast<float>(mesh.mVertices[i].z));
-//
-//		// normal vectors
-//		temp.normal = xcore::vector3d(static_cast<float>(mesh.mNormals[i].x),
-//			static_cast<float>(mesh.mNormals[i].y),
-//			static_cast<float>(mesh.mNormals[i].z));
-//
-//		if (mesh.HasTextureCoords(0))
-//		{
-//			temp.tex = xcore::vector2(static_cast<float>(mesh.mTextureCoords[0][i].x),
-//				static_cast<float>(mesh.mTextureCoords[0][i].y));
-//		}
-//		if (mesh.HasVertexColors(0))
-//		{
-//			temp.color = xcore::icolor(xcore::vector4(static_cast<float>(mesh.mColors[0][i].r),
-//				static_cast<float>(mesh.mColors[0][i].g),
-//				static_cast<float>(mesh.mColors[0][i].b),
-//				static_cast<float>(mesh.mColors[0][i].a)));
-//		}
-//
-//		if (mesh.mTangents != nullptr)
-//		{
-//			temp.tangent = {
-//				static_cast<float>(mesh.mTangents[i].x),
-//				static_cast<float>(mesh.mTangents[i].y),
-//				static_cast<float>(mesh.mTangents[i].z)
-//			};
-//		}
-//		_vertices.push_back(temp); // Add this vertex into our vector of vertices
-//	}
-//
-//	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Faces
-//	{
-//		const aiFace& face = mesh.mFaces[j];
-//
-//		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in each face
-//		{
-//			_indices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
-//		}
-//	}
-//
-//	if (mesh.mMaterialIndex >= 0) // Material
-//	{
-//		const aiMaterial& mat = *scene.mMaterials[mesh.mMaterialIndex];
-//		ImportMaterialAndTextures(mat, scene);
-//	}
-//
-//	Optimize(); // Optimize before storing
-//
-//	int materialIndex = static_cast<int>(_materials.size() - 1);
-//	return Mesh(this->_vertices, this->_indices, materialIndex);
-//}
+Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
+{
+	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Vertices
+	{
+		Vertex temp;
+
+		temp.pos = glm::vec3(static_cast<float>(mesh.mVertices[i].x),
+			static_cast<float>(mesh.mVertices[i].y),
+			static_cast<float>(mesh.mVertices[i].z));
+
+		// normal vectors
+		temp.normal = glm::vec3(static_cast<float>(mesh.mNormals[i].x),
+			static_cast<float>(mesh.mNormals[i].y),
+			static_cast<float>(mesh.mNormals[i].z));
+
+		if (mesh.HasTextureCoords(0))
+		{
+			temp.tex = glm::vec2(static_cast<float>(mesh.mTextureCoords[0][i].x),
+				static_cast<float>(mesh.mTextureCoords[0][i].y));
+		}
+		if (mesh.HasVertexColors(0))
+		{
+			temp.color = glm::vec4(static_cast<float>(mesh.mColors[0][i].r),
+									static_cast<float>(mesh.mColors[0][i].g),
+									static_cast<float>(mesh.mColors[0][i].b),
+									static_cast<float>(mesh.mColors[0][i].a));
+		}
+
+		if (mesh.mTangents != nullptr)
+		{
+			temp.tangent = {
+				static_cast<float>(mesh.mTangents[i].x),
+				static_cast<float>(mesh.mTangents[i].y),
+				static_cast<float>(mesh.mTangents[i].z)
+			};
+		}
+		_vertices.push_back(temp); // Add this vertex into our vector of vertices
+	}
+
+	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Faces
+	{
+		const aiFace& face = mesh.mFaces[j];
+
+		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in each face
+		{
+			_indices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
+		}
+	}
+
+	if (mesh.mMaterialIndex >= 0) // Material
+	{
+		const aiMaterial& mat = *scene.mMaterials[mesh.mMaterialIndex];
+		ImportMaterialAndTextures(mat, scene);
+	}
+
+	//Optimize(); // Optimize before storing
+	TransformVertices();
+
+	int materialIndex = static_cast<int>(_materials.size() - 1);
+	return Mesh(this->_vertices, this->_indices, materialIndex);
+}
 
 //void AssimpLoader::Optimize()
 //{
@@ -186,11 +187,11 @@ void AssimpLoader::TransformVertices() // Apply the modifications to our vertice
 	glm::mat4 rotMat = rotZ * rotY * rotX;
 	glm::mat4 concat = transMat * rotMat * scaleMat;
 
-	/*for (size_t i = 0; i < _vertices.size(); ++i)
+	for (size_t i = 0; i < _vertices.size(); ++i)
 	{
-		glm::vec3 resultant = concat * _vertices[i].pos;
+		glm::vec3 resultant = concat * glm::vec4(_vertices[i].pos, 0.f);
 		_vertices[i].pos = resultant;
-	}*/
+	}/**/
 }
 
 void AssimpLoader::ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene)
@@ -410,7 +411,7 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
 }
 
-int main() {
-	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc","../GAM300/Assets/Models/Skull_textured.geom");
-	return 0;
-}
+//int main() {
+//	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc","../GAM300/Assets/Models/Skull_textured.geom");
+//	return 0;
+//}

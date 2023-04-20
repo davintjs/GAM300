@@ -31,6 +31,20 @@ struct Material
     std::vector<SampleHolder> _samples;
 };
 
+class Mesh {
+public:
+    std::vector<Vertex> _vertices;
+    std::vector<int> _indices;
+
+    int _material; // sampler3d
+public:
+    Mesh() {};
+    Mesh(std::vector<Vertex> vertices, std::vector<int> indices, int material)
+        :_vertices(vertices), _indices(indices), _material(material)
+    {};
+
+};
+
 //class Mesh
 //{
 //public:

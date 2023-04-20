@@ -9,12 +9,17 @@
 #include "stb/stb_image.h"
 #include <glm/gtc/type_ptr.hpp> // for glm functions
 
+#include "LapSupGraphics/Compiler.h"
+#include "LapSupGraphics/Mesh.h"
+#include "../Source/Graphics/Model3d.h"
+Model testmodel;
 
 Application::Application() {}
 Application::~Application() {}
 
 void Application::Init()
 {
+
 	/// <This should be like some sort of configuration file?>
 	GLFW_Handler::width = 1600;
 	GLFW_Handler::height = 900;
@@ -25,6 +30,8 @@ void Application::Init()
 		std::cout << "Unable to create OpenGL context" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc", "../GAM300/Assets/Models/Skull_textured.geom");
+	testmodel.init(&assimp);
 }
 
 void Application::Run()
@@ -40,6 +47,9 @@ void Application::Run()
 
 
 		glClearColor(0.f, 0.5f, 0.5f, 1.f);
+
+		
+		testmodel.draw();
 
 		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end
 	}
