@@ -411,8 +411,7 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
 }
 
-int main() {
-	//AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc","../GAM300/Assets/Models/Skull_textured.geom");
-	std::cout << "Hello world" << std::endl;
-	return 0;
-}
+//int main() {
+//	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc","../GAM300/Assets/Models/Skull_textured.geom");
+//	return 0;
+//}
