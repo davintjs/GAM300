@@ -1,16 +1,6 @@
-/*!************************************************************************
-\file               Model.cpp
-\author             Lian Khai Kiat
-\par DP email:      l.kiat\@digipen.edu
-\par Course:        CSD2150
-\date               07/04/2023
-\brief
-Implementation of Assimp Loader
-**************************************************************************/
-
 #include "Compiler.h"
 
-AssimpLoader::AssimpLoader(const std::string descriptorFilePath, const std::string geomFilePath)
+ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath)
 {
 	_descriptor = new Descriptor;
 
@@ -19,7 +9,7 @@ AssimpLoader::AssimpLoader(const std::string descriptorFilePath, const std::stri
 	SerializeBinaryGeom(geomFilePath);
 }
 
-AssimpLoader::~AssimpLoader()
+ModelLoader::~ModelLoader()
 {
 	if (_descriptor)
 	{
@@ -28,7 +18,7 @@ AssimpLoader::~AssimpLoader()
 	}
 }
 
-void AssimpLoader::LoadModel()
+void ModelLoader::LoadModel()
 {
 	Assimp::Importer assimpImporter;
 	uint32_t ImportOptions{};
@@ -42,12 +32,8 @@ void AssimpLoader::LoadModel()
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
-
-	if (_descriptor->combine)
-	{
-		ImportOptions |= aiPostProcessSteps::aiProcess_PreTransformVertices;
-	}
+		aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
+		aiPostProcessSteps::aiProcess_PreTransformVertices;
 
 	// import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -59,7 +45,7 @@ void AssimpLoader::LoadModel()
 	ProcessGeom(*scene->mRootNode, *scene);
 }
 
-void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
+void ModelLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 {
 	for (unsigned int i = 0; i < node.mNumMeshes; ++i) // Loop through node meshes
 	{
@@ -72,7 +58,7 @@ void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 	}
 }
 
-Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
+Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 {
 	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Vertices
 	{
@@ -134,7 +120,7 @@ Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	return Mesh(this->_vertices, this->_indices, materialIndex);
 }
 
-//void AssimpLoader::Optimize()
+//void ModelLoader::Optimize()
 //{
 //	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
 //	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
@@ -142,7 +128,7 @@ Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 //	TransformVertices();
 //}
 
-void AssimpLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
+void ModelLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
 {
 	glm::mat4 scaleMat
 	{
@@ -191,10 +177,10 @@ void AssimpLoader::TransformVertices() // Apply the modifications to our vertice
 	{
 		glm::vec3 resultant = concat * glm::vec4(_vertices[i].pos, 0.f);
 		_vertices[i].pos = resultant;
-	}/**/
+	}
 }
 
-void AssimpLoader::ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene)
+void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene)
 {
 	_materials.emplace_back();
 	Material& mat = _materials[0];
@@ -266,7 +252,7 @@ void AssimpLoader::ImportMaterialAndTextures(const aiMaterial& material, const a
 	return;
 }
 
-void AssimpLoader::SerializeDescriptor(const std::string filepath)
+void ModelLoader::SerializeDescriptor(const std::string filepath)
 {
 	rapidjson::StringBuffer buffer;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> jason(buffer);
@@ -297,9 +283,6 @@ void AssimpLoader::SerializeDescriptor(const std::string filepath)
 	jason.Double(_descriptor->translate.z);
 	jason.EndArray();
 
-	jason.String("Mesh MergeMeshes");
-	jason.Bool(_descriptor->combine);
-
 	jason.String("Mesh MeshName");
 	jason.String(_descriptor->meshName.c_str());
 
@@ -317,45 +300,46 @@ void AssimpLoader::SerializeDescriptor(const std::string filepath)
 	serializeFile.close();
 }
 
-void AssimpLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
+void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
 {
-	//std::ofstream serializeFile(filepath, std::ios_base::binary);
-	//if (!serializeFile)
-	//{
-	//	std::cerr << "Could not open output file to serialize geom!" << std::endl;
-	//	return;
-	//}
+	std::ofstream serializeFile(filepath, std::ios_base::binary);
+	if (!serializeFile)
+	{
+		std::cerr << "Could not open output file to serialize geom!" << std::endl;
+		return;
+	}
 
-	///*size_t meshSize = _meshes.size();
-	//serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));*/
+	/*size_t meshSize = _meshes.size();
+	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));*/
 
-	//size_t vertexSize = _vertices.size();
-	//serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_vertices[0]), vertexSize * sizeof(Vertex));
+	size_t vertexSize = _vertices.size();
+	serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+	serializeFile.write(reinterpret_cast<char*>(&_vertices[0]), vertexSize * sizeof(Vertex));
 
-	//size_t indicesSize = _indices.size();
-	//serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_indices[0]), indicesSize * sizeof(int32_t));
+	size_t indicesSize = _indices.size();
+	serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+	serializeFile.write(reinterpret_cast<char*>(&_indices[0]), indicesSize * sizeof(int32_t));
 
-	//size_t texSize = _textures.size();
-	//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_textures[0]), texSize * sizeof(Texture));
+	size_t texSize = _textures.size();
+	serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+	serializeFile.write(reinterpret_cast<char*>(&_textures[0]), texSize * sizeof(Texture));
 
-	//size_t matSize = _materials.size();
-	//serializeFile.write(reinterpret_cast<char*>(&matSize), sizeof(matSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_materials[0]), matSize * sizeof(Material));
+	size_t matSize = _materials.size();
+	serializeFile.write(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+	serializeFile.write(reinterpret_cast<char*>(&_materials[0]), matSize * sizeof(Material));
 
-	//serializeFile.flush();
-	//serializeFile.close();
+	serializeFile.flush();
+	serializeFile.close();
 }
 
-void AssimpLoader::DeserializeDescriptor(const std::string filepath)
+void ModelLoader::DeserializeDescriptor(const std::string filepath)
 {
 	// Takes in the _descriptor file path and load assimp _descriptor struct with data before loading the assimp
 
 	std::ifstream file(filepath);
 	if(!file.is_open()){
-		std::cout << "euan good boi\n";
+		std::cerr << "Unable to open geom descriptor file" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 	rapidjson::IStreamWrapper streamWrapper(file);
 
@@ -363,7 +347,6 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	doc.ParseStream(streamWrapper);
 
 	_descriptor->filePath = doc["Mesh FilePath"].GetString(); // File path
-	//_descriptor->filePath = "";
 
 	float values[3]{ 0.f, 0.f, 0.f };
 	int i = 0;
@@ -408,7 +391,6 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 
 
 	_descriptor->meshName = doc["Mesh MeshName"].GetString();
-	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
 }
 
 int main() {
