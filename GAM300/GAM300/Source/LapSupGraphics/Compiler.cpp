@@ -406,10 +406,6 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.x = values[0];
 	_descriptor->translate.y = values[1];
 	_descriptor->translate.z = values[2];
-
-
-	_descriptor->meshName = doc["Mesh MeshName"].GetString();
-	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
 }
 
 //int main() {

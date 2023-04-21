@@ -4,7 +4,7 @@ ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string
 {
 	_descriptor = new Descriptor;
 
-	DeserializeDescriptor(descriptorFilePath); // desialize to _descriptor
+	DeserializeDescriptor(descriptorFilePath);
 	LoadModel();
 	SerializeBinaryGeom(geomFilePath);
 }
@@ -14,7 +14,6 @@ ModelLoader::~ModelLoader()
 	if (_descriptor)
 	{
 		delete _descriptor;
-		// delete[] _descriptor;
 	}
 }
 
@@ -110,7 +109,7 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	if (mesh.mMaterialIndex >= 0) // Material
 	{
 		const aiMaterial& mat = *scene.mMaterials[mesh.mMaterialIndex];
-		ImportMaterialAndTextures(mat, scene);
+		ImportMaterialAndTextures(mat);
 	}
 
 	//Optimize(); // Optimize before storing
@@ -180,7 +179,7 @@ void ModelLoader::TransformVertices() // Apply the modifications to our vertices
 	}
 }
 
-void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene)
+void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 {
 	_materials.emplace_back();
 	Material& mat = _materials[0];
@@ -250,54 +249,6 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material, const ai
 
 	}
 	return;
-}
-
-void ModelLoader::SerializeDescriptor(const std::string filepath)
-{
-	rapidjson::StringBuffer buffer;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> jason(buffer);
-
-	jason.StartObject();
-
-	jason.String("Mesh FilePath");
-	jason.String(_descriptor->filePath.c_str());
-
-	jason.String("Mesh Scale");
-	jason.StartArray();
-	jason.Double(_descriptor->scale.x);
-	jason.Double(_descriptor->scale.y);
-	jason.Double(_descriptor->scale.z);
-	jason.EndArray();
-
-	jason.String("Mesh Rotation");
-	jason.StartArray();
-	jason.Double(_descriptor->rotate.x);
-	jason.Double(_descriptor->rotate.y);
-	jason.Double(_descriptor->rotate.z);
-	jason.EndArray();
-
-	jason.String("Mesh Translation");
-	jason.StartArray();
-	jason.Double(_descriptor->translate.x);
-	jason.Double(_descriptor->translate.y);
-	jason.Double(_descriptor->translate.z);
-	jason.EndArray();
-
-	jason.String("Mesh MeshName");
-	jason.String(_descriptor->meshName.c_str());
-
-	jason.EndObject();
-
-	std::ofstream serializeFile(filepath);
-	if (!serializeFile)
-	{
-		std::cerr << "Cannot open the output file." << std::endl;
-		return;
-	}
-
-	serializeFile << buffer.GetString();
-	serializeFile.flush();
-	serializeFile.close();
 }
 
 void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
@@ -388,12 +339,140 @@ void ModelLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.x = values[0];
 	_descriptor->translate.y = values[1];
 	_descriptor->translate.z = values[2];
+}
 
+std::string GenerateGUID(const std::string meshFileName) // Using meshFileName to convert to ascii value
+{
+	std::stringstream stream{};
+	for (size_t i = 0; i < meshFileName.length(); ++i)
+	{
+		int asc = static_cast<int>(meshFileName[i]); // Convert from char to int first
+		stream << std::hex << asc; // Convert to hexadecimal
+	}
 
-	_descriptor->meshName = doc["Mesh MeshName"].GetString();
+	std::uniform_real_distribution<double> distribution(0, 1000);
+	std::random_device rd;
+	std::default_random_engine generator(rd());
+	int number = static_cast<int>(distribution(generator));
+	stream << std::hex << number;
+
+	std::string GUID(stream.str()); // Concat the string of hex asc
+	return GUID;
+}
+
+void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFilePath, const std::string meshFileName)
+{
+	rapidjson::StringBuffer buffer;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+	writer.StartObject();
+
+	writer.String("Mesh FilePath");
+	writer.String(fbxFilePath.c_str());
+
+	writer.String("Mesh Scale");
+	writer.StartArray();
+	writer.Double(1.0);
+	writer.Double(1.0);
+	writer.Double(1.0);
+	writer.EndArray();
+
+	writer.String("Mesh Rotation");
+	writer.StartArray();
+	writer.Double(10.0);
+	writer.Double(78.0);
+	writer.Double(0.0);
+	writer.EndArray();
+
+	writer.String("Mesh Translation");
+	writer.StartArray();
+	writer.Double(0.0);
+	writer.Double(0.0);
+	writer.Double(0.0);
+	writer.EndArray();
+
+	writer.String("Mesh GUID");
+	writer.String(GenerateGUID(meshFileName).c_str());
+
+	writer.EndObject();
+
+	std::ofstream serializeFile(writeDescFilePath);
+	if (!serializeFile)
+	{
+		std::cerr << "Cannot open the output file." << std::endl;
+		return;
+	}
+
+	serializeFile << buffer.GetString();
+	serializeFile.flush();
+	serializeFile.close();
 }
 
 int main() {
-	std::cout << "Hello Ordd" << std::endl;
+	std::cout << "Compiling models..." << std::endl;
+
+	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets/Models"))
+	{
+		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
+		{
+			for (const auto& _dir : std::filesystem::recursive_directory_iterator(dir)) // Looping through contents of the model's folder
+			{
+				std::string subFilePath = _dir.path().generic_string();
+				std::string subFilePathDesc = subFilePath;
+				std::string geomFilePath = subFilePath;
+				std::string fileType{};
+				std::string fileName{};
+
+				// Get the file type of the current file in this folder
+				for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+				{
+					fileType += subFilePath[i];
+				}
+
+				if (strcmp(fileType.c_str(), "fbx")) // Skip this file if not fbx
+				{
+					continue;
+				}
+
+				// Reaching here means we are at the fbx file
+
+				// Get file name
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
+				std::cout << "Compiling " << fileName << "...";
+				geomFilePath.erase(geomFilePath.find_last_of('.'), strlen(fileType.c_str()) + 1);
+				geomFilePath += ".geom";
+
+				subFilePathDesc.erase(subFilePathDesc.find_last_of('.'), strlen(fileType.c_str()) + 1);
+				subFilePathDesc += ".geom.desc";
+
+				// Check if this model had already been previously serialized
+				if (std::filesystem::exists(geomFilePath) && std::filesystem::exists(subFilePathDesc)) // Both geom and desc files must be present
+				{
+					std::cout << " Done!" << std::endl;
+					break; // Go to next model folder
+				}
+
+				// Find the desc file of this model
+				if (!std::filesystem::exists(subFilePathDesc))
+				{
+
+					// Create desc file for this model
+					CreateDescFile(subFilePath, subFilePathDesc, fileName); // fbx filepath & desc filepath & filename parameters
+				}
+
+				// Reaching here means the desc file exists, but the model is not serialized yet
+				ModelLoader myLoader(subFilePathDesc, geomFilePath);
+
+				// Reaching here means the model is now serialized and now contains desc and geom files
+				std::cout << " Done!" << std::endl;
+				break; // Go to next model folder (Optimization by skipping rest of files)
+			}
+		}
+	}
+
+	std::cout << "Finished compiling all models!" << std::endl;
 	return 0;
 }
