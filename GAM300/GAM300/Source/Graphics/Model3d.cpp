@@ -39,13 +39,13 @@ void Model::setup_shader() {
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "Source/LapSupGraphics/abnb2.vert"));
+        "GAM300/Source/LapSupGraphics/abnb2.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
 // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "Source/LapSupGraphics/abnb2.frag"));
+        "GAM300/Source/LapSupGraphics/abnb2.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     shader.CompileLinkValidate(shdr_files);

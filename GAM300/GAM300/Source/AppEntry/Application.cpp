@@ -36,7 +36,7 @@ void Application::Init()
 
 
 	// Temporary Stuffs
-	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc", "../GAM300/Assets/Models/Skull_textured.geom");
+	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
 	testmodel.init(&assimp);
 	testCam.Init();
 }
