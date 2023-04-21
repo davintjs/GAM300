@@ -23,6 +23,7 @@
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
+    <ClCompile Include="Source\Graphics\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -39,5 +40,6 @@
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
     <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
+    <ClInclude Include="Source\Graphics\Camera.h" />
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Source\AppEntry\Application.cpp" />
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
+    <ClCompile Include="Source\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
@@ -34,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
+    <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
