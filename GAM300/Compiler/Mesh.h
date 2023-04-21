@@ -15,7 +15,6 @@ struct Vertex
 struct Texture
 {
     std::string filepath;
-    //xgpu::texture instance;
 };
 
 struct SampleHolder
