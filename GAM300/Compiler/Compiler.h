@@ -8,6 +8,9 @@
 #include <iostream>
 #include <filesystem>
 #include <algorithm>
+#include <chrono>
+#include <random>
+#include <sstream>
 
 #include "Mesh.h"
 #include "rapidjson/document.h"
@@ -43,7 +46,7 @@ public:
 	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
 	//void Optimize();
 	void TransformVertices();
-	void ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene);
+	void ImportMaterialAndTextures(const aiMaterial& material);
 
 	void SerializeBinaryGeom(const std::string filepath);
 	void DeserializeDescriptor(const std::string filepath);
