@@ -1,8 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "../GAM300/Source/Precompiled.h"
-#include "../External/GLM/glm/glm.hpp"
+#include "glm/glm.hpp"
+
 struct Vertex
 {
     glm::vec3 pos;

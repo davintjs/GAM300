@@ -43,8 +43,6 @@ void Application::Init()
 
 void Application::Run()
 {
-	std::cout << "Konichiwa Tomodachis :)" << std::endl;
-
 	// Game Loop
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
 	{

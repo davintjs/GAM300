@@ -16,11 +16,10 @@ Definition of geom class of geom compliler
 #include "../External/GLM/glm/glm.hpp"
 
 #include "Mesh.h"
-//#include "../External/assimp/include/assimp/types.h"
-#include "rapidjson/rapidjson/document.h"
-#include "rapidjson/rapidjson/istreamwrapper.h"
-#include "rapidjson/rapidjson/stringbuffer.h"
-#include "rapidjson/rapidjson/prettywriter.h"
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
