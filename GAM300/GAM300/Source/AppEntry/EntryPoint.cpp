@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 #include "EntryPoint.h"
+#include "Core/EngineCore.h"
 #define _CRTDBG_MAP_ALLOC
 
 int main(int, char**) {
@@ -17,7 +18,10 @@ int main(int, char**) {
 	}
 
 	app->Init();
+	MyEngineCore.Init();
 	app->Run();
+	MyEngineCore.Update();
+	MyEngineCore.Exit();
 	app->Exit();
 
 	delete app;
