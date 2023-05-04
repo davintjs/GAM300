@@ -16,7 +16,7 @@ AssimpLoader::AssimpLoader(const std::string descriptorFilePath, const std::stri
 
 	DeserializeDescriptor(descriptorFilePath); // desialize to _descriptor
 	LoadModel();
-	SerializeBinaryGeom(geomFilePath);
+	//SerializeBinaryGeom(geomFilePath);
 }
 
 AssimpLoader::~AssimpLoader()
@@ -42,12 +42,8 @@ void AssimpLoader::LoadModel()
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
-
-	if (_descriptor->combine)
-	{
-		ImportOptions |= aiPostProcessSteps::aiProcess_PreTransformVertices;
-	}
+		aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
+		aiPostProcessSteps::aiProcess_PreTransformVertices;
 
 	// import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -297,12 +293,6 @@ void AssimpLoader::SerializeDescriptor(const std::string filepath)
 	jason.Double(_descriptor->translate.z);
 	jason.EndArray();
 
-	jason.String("Mesh MergeMeshes");
-	jason.Bool(_descriptor->combine);
-
-	jason.String("Mesh MeshName");
-	jason.String(_descriptor->meshName.c_str());
-
 	jason.EndObject();
 
 	std::ofstream serializeFile(filepath);
@@ -406,10 +396,6 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.x = values[0];
 	_descriptor->translate.y = values[1];
 	_descriptor->translate.z = values[2];
-
-
-	_descriptor->meshName = doc["Mesh MeshName"].GetString();
-	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
 }
 
 //int main() {

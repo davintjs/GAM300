@@ -61,9 +61,6 @@ struct Descriptor
 	glm::vec3 rotate = { 0.f, 0.f, 0.f };
 	glm::vec3 translate = { 0.f, 0.f, 0.f };
 	std::string filePath; // Path to intermediate file
-	std::string meshName{}; // Mesh file name
-
-	bool combine = true; // All separated meshes in file combined into one?
 };
 
 class AssimpLoader

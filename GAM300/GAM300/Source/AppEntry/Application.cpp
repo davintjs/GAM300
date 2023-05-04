@@ -12,7 +12,10 @@
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 #include "../Source/Graphics/Model3d.h"
+#include "Graphics/Camera.h"
+//Temporary Stuffs
 Model testmodel;
+Camera testCam;
 
 Application::Application() {}
 Application::~Application() {}
@@ -30,14 +33,16 @@ void Application::Init()
 		std::cout << "Unable to create OpenGL context" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc", "../GAM300/Assets/Models/Skull_textured.geom");
+
+
+	// Temporary Stuffs
+	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
 	testmodel.init(&assimp);
+	testCam.Init();
 }
 
 void Application::Run()
 {
-	std::cout << "Konichiwa Tomodachis :)" << std::endl;
-
 	// Game Loop
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
 	{
@@ -48,7 +53,7 @@ void Application::Run()
 
 		glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-		
+		glEnable(GL_DEPTH_BUFFER);
 		testmodel.draw();
 
 		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end

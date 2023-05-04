@@ -19,8 +19,12 @@ layout (location = 0) in vec3 aVertexPosition;
 
 layout (location=0) out vec3 vColor;
 
+uniform mat4 persp_projection;
+uniform mat4 SRT;
+
+
 void main() {
-	gl_Position = vec4(aVertexPosition.x,aVertexPosition.y,0.0f, 1.0f);
+	gl_Position = persp_projection * SRT * vec4(aVertexPosition, 1.0f);
 
 	//vColor = aVertexColor;
 	//testing

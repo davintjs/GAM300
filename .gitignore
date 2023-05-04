@@ -28,6 +28,7 @@ dlldata.c
 *.tlog
 *.idb
 *.pdb
+*.db
 
 # Compiled Dynamic libraries
 *.so
@@ -48,5 +49,3 @@ dlldata.c
 *.tlog
 *.tlog
 *.pch
-GAM300/GAM300/x64/Debug/GAM300.tlog/CL.command.1.tlog
-GAM300/.vs/GAM300/v16/Browse.VC.db
