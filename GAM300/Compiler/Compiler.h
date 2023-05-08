@@ -11,6 +11,7 @@
 #include <chrono>
 #include <random>
 #include <sstream>
+#include <unordered_map>
 
 #include "Mesh.h"
 
@@ -43,6 +44,7 @@ public:
 	~ModelLoader();
 
 	void LoadModel();
+	void ProcessBones(const aiNode& node, const aiScene& scene);
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
 	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
 	//void Optimize();
@@ -56,12 +58,15 @@ public:
 
 	Descriptor* _descriptor{ nullptr };
 
-	std::vector<Mesh> _meshes{};
-	std::vector<Vertex> _vertices{};
-	std::vector<int32_t> _indices{};
-	std::vector<Texture> _textures{};
-	std::vector<Material> _materials{};
+	std::vector<Mesh> _meshes{}; // Individual meshes in the model, which also contains it's individual vertices and indices
 
+	// I think this bottom part we should eventually phase out, and save the individual meshes
+	// vertices and indices instead of whole chunk at one go
+	std::vector<Vertex> _vertices{}; // Total vertices of the WHOLE model
+	std::vector<int32_t> _indices{}; // Total indices of the WHOLE model
+
+	//std::vector<Texture> _textures{}; // Total textures of the WHOLE model
+	std::vector<Material> _materials{}; // Total materials of the WHOLE model
 };
 
 #endif // !MODEL_H
