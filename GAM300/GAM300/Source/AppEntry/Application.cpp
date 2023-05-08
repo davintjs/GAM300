@@ -43,11 +43,16 @@ void Application::Init()
 
 void Application::Run()
 {
-	// Game Loop
+	// Game Loop, MOVE TO ENGINE CORE
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
 	{
-		
+		//MOVE TO INPUT SYSTEM
 		glfwPollEvents(); // This at the start
+		//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
+
+		//GAME LOGIC
+
+		//MOVE TO GRAPHICS SYSTEM UPDATE
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -55,8 +60,9 @@ void Application::Run()
 
 		glEnable(GL_DEPTH_BUFFER);
 		testmodel.draw();
-
 		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end
+		//GRAPHICS SYSTEM END
+		//IMGUI RENDER
 	}
 }
 

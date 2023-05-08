@@ -28,6 +28,17 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
     System/class name
 */
 /**************************************************************************/
+#define SINGLETON(TYPE) class TYPE final : public Singleton<TYPE>
+
+/**************************************************************************/
+/*!
+  \brief
+    Macro to define a class that should be a system that runs regardless
+    of the state of the engine
+  \param TYPE
+    System/class name
+*/
+/**************************************************************************/
 #define ENGINE_SYSTEM(TYPE) class TYPE final : public ISystem, public Singleton<TYPE>
 /**************************************************************************/
 /*!

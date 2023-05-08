@@ -19,12 +19,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SystemInterface.h"
 #include "Precompiled.h"
 #include "FramerateController.h"
+//#include "Physics/PhysicsSystem.h"
+#include "Scene/SceneManager.h"
 
 #define MyEngineCore EngineCore::Instance()
 
 enum class EngineState
 {
 	Run,
+	Editor,
+	Paused,
 	Quit
 };
 
@@ -43,6 +47,8 @@ public:
 		MyFrameRateController.Init();
 		systems =
 		{
+			&SceneManager::Instance(),
+			//&PhysicsSystem::Instance(),
 		};
 		for (ISystem* pSystem : systems)
 		{
@@ -61,7 +67,6 @@ public:
 	{
 		while (state != EngineState::Quit)
 		{
-
 			if (state == EngineState::Run)
 			{
 				MyFrameRateController.Start();
@@ -86,9 +91,9 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
-		for (int i = systems.size() - 1; i >= 0; --i)
+		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
-			systems[i]->Exit();
+			(*iter)->Exit();
 		}
 	}
 private:
