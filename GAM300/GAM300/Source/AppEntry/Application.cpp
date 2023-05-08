@@ -46,7 +46,7 @@ void Application::Run()
 	// Game Loop, MOVE TO ENGINE CORE
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
 	{
-		//MOVE TO INPUT SYSTEM
+		//MOVE TO INPUT/WINDOW SYSTEM
 		glfwPollEvents(); // This at the start
 		//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
 
