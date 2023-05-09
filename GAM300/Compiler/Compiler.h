@@ -24,6 +24,8 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include "Meshoptimizer/meshoptimizer.h"
+
 #include "glm/glm.hpp"
 
 struct Descriptor
@@ -47,7 +49,7 @@ public:
 	void ProcessBones(const aiNode& node, const aiScene& scene);
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
 	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
-	//void Optimize();
+	void Optimize();
 	void TransformVertices();
 	void ImportMaterialAndTextures(const aiMaterial& material);
 

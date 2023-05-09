@@ -230,13 +230,13 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	return Mesh(this->_vertices, this->_indices, materialIndex); // Create the mesh class with model loader data
 }
 
-//void ModelLoader::Optimize()
-//{
-//	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
-//	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
-//
-//	TransformVertices();
-//}
+void ModelLoader::Optimize()
+{
+	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
+	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
+
+	TransformVertices();
+}
 
 void ModelLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
 {
