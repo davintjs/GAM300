@@ -5,6 +5,7 @@
 
 ENGINE_SYSTEM(GraphicsSystem)
 {
+public:
 	void Init();
 	void Update();
 	void Exit();

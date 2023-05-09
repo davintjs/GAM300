@@ -17,6 +17,7 @@ void SceneManager::LoadScene(const char* path)
 
 void SceneManager::Update()
 {
+	//PRINT("Hello", " World!");
 }
 
 void SceneManager::Exit()
