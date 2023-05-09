@@ -5,6 +5,7 @@ void SceneManager::Init()
 {
 	if (loadedScenes.empty())
 	{
+		//Create empty scene
 		LoadScene("");
 	}
 }
@@ -16,7 +17,6 @@ void SceneManager::LoadScene(const char* path)
 
 void SceneManager::Update()
 {
-	PRINT("Hello", " World!");
 }
 
 void SceneManager::Exit()

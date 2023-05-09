@@ -1,5 +1,8 @@
 #include "Precompiled.h"
 #include <glm/gtx/string_cast.hpp>
+
+#include "Core/EngineCore.h"
+#include "Core/EventsManager.h"
 //#include "GL/glew.h"
 //#include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 
@@ -13,6 +16,7 @@
 #include "LapSupGraphics/Mesh.h"
 #include "../Source/Graphics/Model3d.h"
 #include "Graphics/Camera.h"
+
 //Temporary Stuffs
 Model testmodel;
 Camera testCam;
@@ -51,6 +55,7 @@ void Application::Run()
 		//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
 
 		//GAME LOGIC
+		MyEngineCore.Update(); //PRINT(GetComponentType<AudioSource>::E());
 
 		//MOVE TO GRAPHICS SYSTEM UPDATE
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

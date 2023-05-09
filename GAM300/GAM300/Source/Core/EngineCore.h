@@ -17,10 +17,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define ENGINE_CORE_H
 
 #include "SystemInterface.h"
-#include "Precompiled.h"
 #include "FramerateController.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
+#include <vector>
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -65,21 +65,21 @@ public:
 	/**************************************************************************/
 	void Update()
 	{
-		while (state != EngineState::Quit)
+		//while (state != EngineState::Quit)
+		//{
+		//	if (state == EngineState::Run)
+		//	{
+				//MyFrameRateController.Start();
+		for (ISystem* pSystem : systems)
 		{
-			if (state == EngineState::Run)
+			if (pSystem->GetMode() & mode)
 			{
-				MyFrameRateController.Start();
-				for (ISystem* pSystem : systems)
-				{
-					if (pSystem->GetMode() & mode)
-					{
-						pSystem->Update();
-					}
-				}
-				MyFrameRateController.End();
+				pSystem->Update();
 			}
 		}
+				//MyFrameRateController.End();
+			//}
+		//}
 	}
 
 	/**************************************************************************/

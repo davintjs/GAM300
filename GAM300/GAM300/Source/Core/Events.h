@@ -16,8 +16,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "Scene/Entity.h"
-#include "Scene/Components.h"
+#include "Scene/Scene.h"
 
 struct IEvent
 {
@@ -40,11 +39,17 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
+struct GetCurrentSceneEvent
+{
+	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
+	Scene& scene;
+};
+
 template <typename T>
 struct ComponentAddEvent : IEvent
 {
 	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
-		gameObject{ _gameObject }, componentContainer{ _componentContainer }, uuid{_uuid} {}
+		entity{ _entity }, componentContainer{ _componentContainer }, uuid{_uuid} {}
 	Entity& entity;
 	T*& componentContainer;
 	UUID uuid;

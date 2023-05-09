@@ -14,9 +14,6 @@ public:
 	void LoadScene(const char* path = "");
 
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
-	Entity& AddEntity();
-	template <typename Component>
-	Component& AddComponent();
 private:
 	std::list<Scene> loadedScenes;
 };

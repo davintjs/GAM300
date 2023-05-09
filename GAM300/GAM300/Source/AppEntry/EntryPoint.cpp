@@ -2,7 +2,6 @@
 #include "EntryPoint.h"
 #include "Core/EngineCore.h"
 #define _CRTDBG_MAP_ALLOC
-#include "Scene/Scene.h"
 
 int main(int, char**) {
 
@@ -19,8 +18,8 @@ int main(int, char**) {
 
 	app->Init();
 	MyEngineCore.Init();
+	//MyEngineCore.Update();
 	app->Run();
-	MyEngineCore.Update();
 	MyEngineCore.Exit();
 	app->Exit();
 

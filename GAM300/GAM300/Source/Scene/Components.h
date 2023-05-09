@@ -30,7 +30,7 @@ using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
 
-//#define RegisterComponent(Type) template <> struct GetComponentType<Type>{static constexpr size_t e{ (size_t)ComponentType::Type }; static constexpr const char* name = #Type;}
+//#define Component(Type) struct Type; template <> struct GetComponentType<Type>{static constexpr size_t e = ComponentEnumCount<>(); /*static constexpr const char* name = #Type;*/};;struct Type
 
 template <typename T>
 using SingleComponentsArray = ObjectsArray<T, MAX_COMPONENTS>;
@@ -40,6 +40,37 @@ template <typename T>
 using ComponentsPtrArray = std::vector<T*>;
 
 struct None {};
+
+template<size_t N = 0, typename... Ts>
+struct GetComponentTypeGroup : GetComponentTypeGroup<N+1,std::forward<Ts...>>
+{
+	static constexpr size_t e = N;
+	constexpr GetComponentTypeGroup(TemplatePack<Ts...> pack) {}
+	constexpr GetComponentTypeGroup() = default;
+
+
+	template <typename T1>
+	static constexpr size_t E()
+	{
+		if constexpr (std::is_same<T, T1>())
+		{
+			return e;
+		}
+		else if (sizeof...(Ts) == 1)
+		{
+			static_assert(true);
+		}
+		else
+		{
+			return GetComponentTypeGroup<Ts...>::E();
+		}
+	}
+};
+
+template<size_t N, typename... Ts>
+struct GetComponentTypeGroup <N,None, Ts...>
+{};
+
 
 template<typename T, typename... Ts>
 struct SingleComponentGroup : SingleComponentGroup<Ts...>
@@ -63,6 +94,20 @@ struct SingleComponentGroup : SingleComponentGroup<Ts...>
 		{
 			return SingleComponentGroup<Ts...>::GetArray();
 		}
+	}
+
+	constexpr void Expand()
+	{
+		components.emplace_back();
+		if constexpr (sizeof...(Ts) != 0)
+			SingleComponentGroup<Ts...>::Expand();
+	}
+
+	constexpr void Delete(size_t index)
+	{
+		components.erase(components.begin() + index);
+		if constexpr (sizeof...(Ts) != 0)
+			SingleComponentGroup<Ts...>::Delete(index);
 	}
 };
 
@@ -156,9 +201,9 @@ struct Animator
 {
 };
 
-struct Camera
-{
-};
+//struct Camera
+//{
+//};
 
 struct Rigidbody
 {
@@ -174,8 +219,7 @@ struct Script
 {
 	std::string name;
 };
-template <typename T>
-struct GetComponentType {};
+
 
 //RegisterComponent(Transform);
 //RegisterComponent(BoxCollider);
@@ -186,10 +230,11 @@ struct GetComponentType {};
 //RegisterComponent(Animator);
 //RegisterComponent(AudioSource);
 //RegisterComponent(Script);
-using SingleComponentTypes = TemplatePack<Rigidbody, Animator, Camera,None>;
+using SingleComponentTypes = TemplatePack<Rigidbody, Animator,None>;
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script, None>;
 using SingleComponentsArrays = decltype(SingleComponentGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentGroup(MultiComponentTypes()));
+using GetComponentType = decltype(GetComponentTypeGroup<0>(SingleComponentTypes().Concatenate(MultiComponentTypes())));
 using ComponentsPtrArrays = decltype(ComponentPtrGroup(SingleComponentTypes().Concatenate(MultiComponentTypes())));
 
 

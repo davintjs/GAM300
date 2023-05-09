@@ -115,6 +115,7 @@ struct Scene
 
 	Entity& AddEntity()
 	{
+		//singleComponentsArrays.GetArray<Component>().emplace_back();
 		return entities.emplace_back();
 	}
 

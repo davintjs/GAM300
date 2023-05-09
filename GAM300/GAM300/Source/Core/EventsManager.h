@@ -25,7 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <map>
 
-#define MyEventSystem EventSystem::Instance()
+#define EVENTS EventsManager::Instance()
 
 class IEventHandler
 {
@@ -61,7 +61,7 @@ private:
 };
 
 typedef std::list<IEventHandler*> HandlerList;
-SINGLETON(EventSystem) {
+SINGLETON(EventsManager) {
 private:
     std::map<std::type_index, HandlerList*> subscribers;
 public:

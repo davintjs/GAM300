@@ -15,6 +15,7 @@ struct Entity
 	Entity(UUID _uuid = CreateUUID());
 	const UUID uuid;
 	Scene* pScene = nullptr;
+	//std::bitset<MAX_COMPONENTS> componentsBitset{};
 };
 
 using EntitiesArray = ObjectsArray<Entity, MAX_ENTITIES>;
