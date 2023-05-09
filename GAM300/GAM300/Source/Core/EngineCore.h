@@ -21,6 +21,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "FramerateController.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
+#include "Graphics/GraphicsSystem.h"
+#include "IOManager/Handler_GLFW.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -49,6 +51,8 @@ public:
 		{
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
+			&GraphicsSystem::Instance()
+
 		};
 		for (ISystem* pSystem : systems)
 		{
@@ -65,7 +69,7 @@ public:
 	/**************************************************************************/
 	void Update()
 	{
-		while (state != EngineState::Quit)
+		while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 		{
 			if (state == EngineState::Run)
 			{

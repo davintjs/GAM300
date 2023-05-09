@@ -13,9 +13,10 @@
 #include "LapSupGraphics/Mesh.h"
 #include "../Source/Graphics/Model3d.h"
 #include "Graphics/Camera.h"
-//Temporary Stuffs
-Model testmodel;
-Camera testCam;
+
+////Temporary Stuffs
+//Model testmodel;
+//Camera testCam;
 
 Application::Application() {}
 Application::~Application() {}
@@ -35,35 +36,28 @@ void Application::Init()
 	}
 
 
-	// Temporary Stuffs
-	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
-	testmodel.init(&assimp);
-	testCam.Init();
+	//// Temporary Stuffs
+	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
+	//testmodel.init(&assimp);
+	//testCam.Init();
 }
 
 void Application::Run()
 {
 	// Game Loop, MOVE TO ENGINE CORE
-	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
-	{
-		//MOVE TO INPUT/WINDOW SYSTEM
-		glfwPollEvents(); // This at the start
-		//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
+	//while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
+	//{
+	//	//MOVE TO INPUT/WINDOW SYSTEM
+	//	glfwPollEvents(); // This at the start
 
-		//GAME LOGIC
+	//	//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
 
-		//MOVE TO GRAPHICS SYSTEM UPDATE
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	//GAME LOGIC
 
-
-		glClearColor(0.f, 0.5f, 0.5f, 1.f);
-
-		glEnable(GL_DEPTH_BUFFER);
-		testmodel.draw();
-		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end
-		//GRAPHICS SYSTEM END
-		//IMGUI RENDER
-	}
+	//	//MOVE TO GRAPHICS SYSTEM UPDATE
+	//	//GRAPHICS SYSTEM END
+	//	//IMGUI RENDER
+	//}
 }
 
 void Application::Exit()
