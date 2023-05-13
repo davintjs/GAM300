@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "precompiled.h"
+#include "../PCH/Precompiled.h"
 #include "glm/glm.hpp"
 struct Vertex
 {

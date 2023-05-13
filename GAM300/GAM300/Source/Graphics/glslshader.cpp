@@ -6,7 +6,7 @@
 
 This file contains definitions of member functions of class GLShader.
 *//*__________________________________________________________________________*/
-#include <Precompiled.h>
+#include "PCH/Precompiled.h"
 #include "glslshader.h"
 
 /*!***********************************************************************

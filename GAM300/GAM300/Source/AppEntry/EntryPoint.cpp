@@ -1,4 +1,4 @@
-#include "Precompiled.h"
+#include "../PCH/Precompiled.h"
 #include "EntryPoint.h"
 #include "Core/EngineCore.h"
 #define _CRTDBG_MAP_ALLOC
@@ -10,6 +10,7 @@ int main(int, char**) {
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
 	auto app = Application::CreateApp();
 	if (!app)
 	{

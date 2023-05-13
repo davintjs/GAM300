@@ -1,10 +1,12 @@
-#include "Precompiled.h"
+#include "../PCH/Precompiled.h"
 #include "GraphicsSystem.h"
 
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 #include "Model3d.h"
 #include "Camera.h"
+
+#include "Editor/Editor.h"
 
 //Temporary
 Model testmodel;
@@ -44,7 +46,6 @@ void GraphicsSystem::Update()
 
 	glEnable(GL_DEPTH_BUFFER);
 	testmodel.draw();
-	glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end
 
 }
 

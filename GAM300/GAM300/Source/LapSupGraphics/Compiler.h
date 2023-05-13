@@ -12,7 +12,7 @@ Definition of geom class of geom compliler
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "precompiled.h"
+#include "../PCH/Precompiled.h"
 #include "glm/glm.hpp"
 
 #include "Mesh.h"

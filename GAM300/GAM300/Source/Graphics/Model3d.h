@@ -1,5 +1,5 @@
 #pragma once
-#include "Precompiled.h"
+#include "../PCH/Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"

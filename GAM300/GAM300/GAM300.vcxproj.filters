@@ -15,7 +15,7 @@
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp">
       <Filter>AppEntry</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Precompiled.cpp" />
+    <ClCompile Include="Source\PCH\Precompiled.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp">
       <Filter>IOManager</Filter>
     </ClCompile>
@@ -30,6 +30,15 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="Source\Editor\Editor.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_demo.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_draw.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_stdlib.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_tables.cpp" />
+    <ClCompile Include="..\External\imgui\include\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -38,7 +47,7 @@
     <ClInclude Include="Source\AppEntry\EntryPoint.h">
       <Filter>AppEntry</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Precompiled.h" />
+    <ClInclude Include="Source\PCH\Precompiled.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h">
       <Filter>IOManager</Filter>
     </ClInclude>
@@ -63,5 +72,6 @@
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\EventsManager.h" />
+    <ClInclude Include="Source\Editor\Editor.h" />
   </ItemGroup>
 </Project>

@@ -16,9 +16,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef ENGINE_CORE_H
 #define ENGINE_CORE_H
 
+#include "../PCH/Precompiled.h"
 #include "SystemInterface.h"
-#include "Precompiled.h"
 #include "FramerateController.h"
+#include "Editor/Editor.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Graphics/GraphicsSystem.h"
@@ -47,17 +48,27 @@ public:
 	void Init()
 	{
 		MyFrameRateController.Init();
+
+
 		systems =
 		{
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
+			& EditorSystem::Instance(),
 			&GraphicsSystem::Instance()
+			
+
 
 		};
+
+
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
 		}
+
+
+
 	}
 
 	/**************************************************************************/
@@ -71,9 +82,17 @@ public:
 	{
 		while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 		{
+			
+
 			if (state == EngineState::Run)
 			{
 				MyFrameRateController.Start();
+
+				//Start ImGui Frames
+				ImGui_ImplOpenGL3_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				ImGui::NewFrame();
+
 				for (ISystem* pSystem : systems)
 				{
 					if (pSystem->GetMode() & mode)
@@ -81,8 +100,19 @@ public:
 						pSystem->Update();
 					}
 				}
+
+				//End ImGui Frames
+				ImGui::EndFrame();
+				ImGui::Render();
+				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+				glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
+
 				MyFrameRateController.End();
 			}
+
+			
+
 		}
 	}
 
