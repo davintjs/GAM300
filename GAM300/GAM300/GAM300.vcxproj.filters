@@ -30,6 +30,20 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="Source\Editor\Editor.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -63,5 +77,6 @@
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\EventsManager.h" />
+    <ClInclude Include="Source\Editor\Editor.h" />
   </ItemGroup>
 </Project>

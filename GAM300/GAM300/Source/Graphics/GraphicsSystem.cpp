@@ -6,6 +6,8 @@
 #include "Model3d.h"
 #include "Camera.h"
 
+#include "Editor/Editor.h"
+
 //Temporary
 Model testmodel;
 Camera testCam;
@@ -44,7 +46,6 @@ void GraphicsSystem::Update()
 
 	glEnable(GL_DEPTH_BUFFER);
 	testmodel.draw();
-	glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end
 
 }
 

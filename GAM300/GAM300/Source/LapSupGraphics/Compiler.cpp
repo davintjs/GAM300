@@ -7,7 +7,7 @@
 \brief
 Implementation of Assimp Loader
 **************************************************************************/
-#include "precompiled.h"
+#include "Precompiled.h"
 #include "Compiler.h"
 
 AssimpLoader::AssimpLoader(const std::string descriptorFilePath, const std::string geomFilePath)

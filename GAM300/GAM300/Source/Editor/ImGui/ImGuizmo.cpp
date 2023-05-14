@@ -25,6 +25,7 @@
 //
 
 #include "imgui.h"
+#include <iostream>
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
@@ -1501,7 +1502,7 @@ namespace IMGUIZMO_NAMESPACE
    }
 
    static void DrawTranslationGizmo(OPERATION op, int type)
-   {
+   {    
       ImDrawList* drawList = gContext.mDrawList;
       if (!drawList)
       {
@@ -1512,18 +1513,19 @@ namespace IMGUIZMO_NAMESPACE
       {
          return;
       }
-
+      
       // colors
       ImU32 colors[7];
       ComputeColors(colors, type, TRANSLATE);
 
       const ImVec2 origin = worldToPos(gContext.mModel.v.position, gContext.mViewProjection);
-
+       
       // draw
       bool belowAxisLimit = false;
       bool belowPlaneLimit = false;
       for (int i = 0; i < 3; ++i)
       {
+         
          vec_t dirPlaneX, dirPlaneY, dirAxis;
          ComputeTripodAxisAndVisibility(i, dirAxis, dirPlaneX, dirPlaneY, belowAxisLimit, belowPlaneLimit);
 
@@ -2439,7 +2441,6 @@ namespace IMGUIZMO_NAMESPACE
       translation[0] = mat.v.position.x;
       translation[1] = mat.v.position.y;
       translation[2] = mat.v.position.z;
-
    }
 
    void RecomposeMatrixFromComponents(const float* translation, const float* rotation, const float* scale, float* matrix)
@@ -2498,9 +2499,10 @@ namespace IMGUIZMO_NAMESPACE
       camSpacePosition.TransformPoint(makeVect(0.f, 0.f, 0.f), gContext.mMVP);
       if (!gContext.mIsOrthographic && camSpacePosition.z < 0.001f)
       {
+ 
          return false;
       }
-
+ 
       // --
       int type = MT_NONE;
       bool manipulated = false;
