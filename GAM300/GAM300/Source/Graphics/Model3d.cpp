@@ -1,4 +1,4 @@
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "Model3d.h"
 #include "Camera.h"
 

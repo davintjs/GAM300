@@ -1,5 +1,5 @@
 
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "Scene/Scene.h"
 
 

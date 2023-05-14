@@ -15,7 +15,7 @@
  */
  /**************************************************************************************/
 
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "Editor.h"
 
 void EditorSystem::Init()

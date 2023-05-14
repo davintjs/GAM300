@@ -1,4 +1,4 @@
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "SceneManager.h"
 
 void SceneManager::Init()

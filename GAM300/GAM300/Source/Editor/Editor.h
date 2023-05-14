@@ -15,7 +15,7 @@
  */
  /**************************************************************************************/
 
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
 #include "Core/SystemInterface.h"
 #include "imgui.h"

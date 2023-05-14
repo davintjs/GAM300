@@ -1,4 +1,4 @@
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "Entity.h"
 #include "Scene.h"
 

@@ -16,7 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef ENGINE_CORE_H
 #define ENGINE_CORE_H
 
-#include "../PCH/Precompiled.h"
+#include "Precompiled.h"
 #include "SystemInterface.h"
 #include "FramerateController.h"
 #include "Editor/Editor.h"
@@ -87,6 +87,11 @@ public:
 			if (state == EngineState::Run)
 			{
 				MyFrameRateController.Start();
+
+				// Bean: This should be in input system (Euan go create)
+				glfwPollEvents();
+
+				//glfwSetMouseButtonCallback();
 
 				//Start ImGui Frames
 				ImGui_ImplOpenGL3_NewFrame();

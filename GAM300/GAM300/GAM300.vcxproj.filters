@@ -15,7 +15,7 @@
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp">
       <Filter>AppEntry</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PCH\Precompiled.cpp" />
+    <ClCompile Include="Source\Precompiled.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp">
       <Filter>IOManager</Filter>
     </ClCompile>
@@ -31,14 +31,19 @@
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_demo.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_draw.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_stdlib.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_tables.cpp" />
-    <ClCompile Include="..\External\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -47,7 +52,7 @@
     <ClInclude Include="Source\AppEntry\EntryPoint.h">
       <Filter>AppEntry</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PCH\Precompiled.h" />
+    <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h">
       <Filter>IOManager</Filter>
     </ClInclude>
