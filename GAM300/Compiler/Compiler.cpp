@@ -24,15 +24,16 @@ void ModelLoader::LoadModel()
 	ImportOptions =
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
 		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+		//aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
 		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
 		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
+		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
 		aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
-		aiPostProcessSteps::aiProcess_PreTransformVertices;
+		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
+		//aiPostProcessSteps::aiProcess_PreTransformVertices
 
 	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -42,7 +43,7 @@ void ModelLoader::LoadModel()
 		exit(EXIT_FAILURE);
 	}
 
-	ProcessBones(*scene->mRootNode, *scene); // WIP
+	//ProcessBones(*scene->mRootNode, *scene); // WIP
 	ProcessGeom(*scene->mRootNode, *scene);
 }
 
@@ -168,9 +169,12 @@ void ModelLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 
 Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 {
+	std::vector<TempVertex> tempVertex;
+	std::vector<unsigned int> tempIndices;
+
 	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
-		Vertex temp;
+		TempVertex temp;
 
 		// Vertex position
 		temp.pos = glm::vec3(static_cast<float>(mesh.mVertices[i].x),
@@ -204,7 +208,7 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 				static_cast<float>(mesh.mTangents[i].z)
 			};
 		}
-		_vertices.push_back(temp); // Add this vertex into our vector of vertices in model loader
+		tempVertex.push_back(temp); // Add this vertex into our vector of vertices
 	}
 
 	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Processing all faces in this single mesh
@@ -213,7 +217,7 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 
 		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in this current face
 		{
-			_indices.push_back(face.mIndices[k]); // Store the indices in our vector of indices in model loader
+			tempIndices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
 		}
 	}
 
@@ -223,22 +227,89 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 		ImportMaterialAndTextures(mat);
 	}
 
-	//Optimize(); // Optimize before storing
-	TransformVertices();
+	TransformVertices(tempVertex); // Apply transformation on the mesh according to descriptor file specifications
 
+	Optimize(tempVertex, tempIndices); // Optimize this mesh
+
+	// Get BoundingBox3D of the vertex position and texture coordinates (TODO)
+
+
+	// Compress vertices and indices for storing in our vertex
+	std::vector<Vertex> CompressedVertices;
+	std::vector<unsigned int> CompressedIndices;
+	CompressVerticesIndices(CompressedVertices, CompressedIndices, tempVertex, tempIndices);
+
+	// Calculate the material index of this mesh
 	int materialIndex = static_cast<int>(_materials.size() - 1);
-	return Mesh(this->_vertices, this->_indices, materialIndex); // Create the mesh class with model loader data
+
+	return Mesh(CompressedVertices, CompressedIndices, materialIndex); // Create this mesh
 }
 
-void ModelLoader::Optimize()
+void ModelLoader::Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind)
 {
-	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
-	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
+	std::vector<unsigned int> remap(ind.size());
+	const size_t vertCount = meshopt_generateVertexRemap(&remap[0],
+		ind.data(),
+		ind.size(),
+		vert.data(),
+		ind.size(),
+		sizeof(TempVertex));
 
-	TransformVertices();
+	std::vector<unsigned int> remappedIndices(ind.size());
+	std::vector<TempVertex> remappedVertices(vertCount);
+
+	meshopt_remapIndexBuffer(remappedIndices.data(), ind.data(), ind.size(), &remap[0]);
+	meshopt_remapVertexBuffer(remappedVertices.data(), vert.data(), vert.size(), sizeof(TempVertex), &remap[0]);
+
+	meshopt_optimizeVertexCache(remappedIndices.data(), remappedIndices.data(), ind.size(), vertCount);
+
+	meshopt_optimizeOverdraw(remappedIndices.data(),
+							remappedIndices.data(),
+							ind.size(),
+							&remappedVertices[0].pos.x,
+							vertCount,
+							sizeof(TempVertex),
+							1.05f);
+
+	meshopt_optimizeVertexFetch(remappedVertices.data(), 
+								remappedIndices.data(), 
+								ind.size(),
+								remappedVertices.data(), 
+								vertCount, 
+								sizeof(TempVertex));
+
+	// Below is for LOD of meshes
+		
+	//const float threshold = 0.2f; // Controls the LOD of the mesh
+	//const size_t targetIndexCount = size_t(remappedIndices.size() * threshold);
+	//const float targetError = 1e-2f;
+	//std::vector<unsigned int> indicesLod(remappedIndices.size());
+	//indicesLod.resize(meshopt_simplify(&indicesLod[0],
+	//									remappedIndices.data(), 
+	//									remappedIndices.size(),
+	//									&remappedVertices[0].pos.x, 
+	//									vertCount, 
+	//									sizeof(Vertex), 
+	//									targetIndexCount,
+	//									targetError));
+
+	ind = remappedIndices;
+	vert = remappedVertices;
 }
 
-void ModelLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
+// Basically changing floats to 2 bytes integers
+void ModelLoader::CompressVerticesIndices(std::vector<Vertex>& CompressVertices,
+							std::vector<unsigned int>& CompressIndices,
+							const std::vector<TempVertex> tempVertex,
+							const std::vector<unsigned int> tempIndices)
+{
+	for (const auto& vert : tempVertex)
+	{
+
+	}
+}
+
+void ModelLoader::TransformVertices(std::vector<TempVertex> vert) // Apply the modifications to our vertices from desc to our geom
 {
 	glm::mat4 scaleMat
 	{
@@ -283,10 +354,10 @@ void ModelLoader::TransformVertices() // Apply the modifications to our vertices
 	glm::mat4 rotMat = rotZ * rotY * rotX;
 	glm::mat4 concat = transMat * rotMat * scaleMat;
 
-	for (size_t i = 0; i < _vertices.size(); ++i)
+	for (size_t i = 0; i < vert.size(); ++i)
 	{
-		glm::vec3 resultant = concat * glm::vec4(_vertices[i].pos, 0.f);
-		_vertices[i].pos = resultant;
+		glm::vec3 resultant = concat * glm::vec4(vert[i].pos, 0.f);
+		vert[i].pos = resultant;
 	}
 }
 
@@ -415,6 +486,9 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 
 void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
 {
+	size_t vv = 0;
+	size_t ii = 0;
+
 	std::ofstream serializeFile(filepath, std::ios_base::binary);
 	if (!serializeFile)
 	{
@@ -422,38 +496,34 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize t
 		return;
 	}
 
-	/*size_t meshSize = _meshes.size();
-	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));*/
-
-	size_t vertexSize = _vertices.size();
-	serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-	serializeFile.write(reinterpret_cast<char*>(&_vertices[0]), vertexSize * sizeof(Vertex));
-
-	size_t indicesSize = _indices.size();
-	serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-	serializeFile.write(reinterpret_cast<char*>(&_indices[0]), indicesSize * sizeof(int32_t));
-
-	//size_t texSize = _textures.size();
-	//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_textures[0]), texSize * sizeof(Texture));
-
-	//size_t matSize = _materials.size();
-	//serializeFile.write(reinterpret_cast<char*>(&matSize), sizeof(matSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_materials[0]), matSize * sizeof(Material));
-
-	for (auto i : _materials) // Save material one at a time
+	for (auto& _mesh : this->_meshes) // Save vertices and indices of all meshes first
 	{
-		serializeFile.write(reinterpret_cast<char*>(&i.Specular), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&i.Diffuse), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&i.Ambient), sizeof(aiColor4D));
+		size_t vertexSize = _mesh._vertices.size();
+		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
+		vv += vertexSize;
 
-		size_t texSize = i.textures.size(); // Save all textures of this material
+		size_t indicesSize = _mesh._indices.size();
+		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+		ii += indicesSize;
+	}
+
+	for (auto& mat : _materials) // Save all materials of this model
+	{
+		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
+
+		size_t texSize = mat.textures.size(); // Save all textures of this material
 		if (texSize > 0)
 		{
 			serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-			serializeFile.write(reinterpret_cast<char*>(&i.textures[0]), texSize * sizeof(Texture));
+			serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		}
 	}
+	
+	std::cout << this->_meshes.size() << " " << vv << " " << ii << std::endl;
 
 	serializeFile.flush();
 	serializeFile.close();

@@ -22,6 +22,7 @@
     <ClCompile Include="Compiler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="Mesh.h" />
   </ItemGroup>

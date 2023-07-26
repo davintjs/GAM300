@@ -90,7 +90,7 @@ public:
 	std::vector<Vertex> _vertices{};
 	std::vector<int32_t> _indices{};
 	std::vector<Texture> _textures{};
-	std::vector<Material> _materials{};/**/
+	std::vector<Material> _materials{};
 
 };
 

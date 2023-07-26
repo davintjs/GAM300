@@ -6,11 +6,25 @@
 
 struct Vertex
 {
-    glm::vec3 pos;
-    glm::vec3 normal;
-    glm::vec3 tangent;
-    glm::vec2 tex;
-    glm::vec4 color;
+    std::int16_t posX;
+    std::int16_t posY;
+    std::int16_t posZ;
+
+    std::int16_t normX;
+    std::int16_t normY;
+    std::int16_t normZ;
+
+    std::int16_t tanX;
+    std::int16_t tanY;
+    std::int16_t tanZ;
+
+    std::int16_t texU;
+    std::int16_t texV;
+
+    std::int8_t colorR;
+    std::int8_t colorG;
+    std::int8_t colorB;
+    std::int8_t colorA;
 };
 
 struct Texture
@@ -18,11 +32,11 @@ struct Texture
     std::string filepath;
 };
 
-struct SampleHolder
-{
-    int binding;
-    std::string type;
-};
+//struct SampleHolder
+//{
+//    int binding;
+//    std::string type;
+//};
 
 struct Material
 {
@@ -40,12 +54,15 @@ struct Material
 class Mesh {
 public:
     std::vector<Vertex> _vertices; // This individual mesh vertices
-    std::vector<int> _indices; // This individual mesh indices
+    std::vector<unsigned int> _indices; // This individual mesh indices
+
+    glm::vec3 mPosCompressionOffset; // This individual mesh vertices' positions' center offset from original
+    glm::vec2 mTexCompressionOffset; // This individual mesh textures' coordinates' center offset from original
 
     int materialIndex = 0; // Material index
-public:
+
     Mesh() {};
-    Mesh(std::vector<Vertex> vertices, std::vector<int> indices, int material)
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material)
         :_vertices(vertices), _indices(indices), materialIndex(material)
     {};
 
