@@ -7,8 +7,8 @@ class BoundingBox3D
 public:
     // Constructor
     BoundingBox3D() {}
-    BoundingBox3D(const glm::vec3& center, const glm::vec3& extents) : mCenter(center), mExtents(extents) { return; }
+    BoundingBox3D(const glm::vec3& min, const glm::vec3& max) : mMin(min), mMax(max) { return; }
 
-    glm::vec3 mCenter{};    // Center point
-    glm::vec3 mExtents{};   // Center to corner half extents.
+    glm::vec3 mMin{};    // Center point
+    glm::vec3 mMax{};    // Center to corner half extents.
 };

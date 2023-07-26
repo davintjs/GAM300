@@ -44,7 +44,7 @@ struct TempVertex
 	glm::vec3 normal;
 	glm::vec3 tangent;
 	glm::vec2 tex;
-	glm::vec4 color;
+	glm::ivec4 color;
 };
 
 class ModelLoader
@@ -60,17 +60,16 @@ public:
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
 	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
 	void Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind);
-	void CompressVerticesIndices(std::vector<Vertex>& CompressVertices, 
-							std::vector<unsigned int>& CompressIndices, 
-							const std::vector<TempVertex> tempVertex, 
-							const std::vector<unsigned int> tempIndices);
+	void CompressVertices(std::vector<Vertex>& CompressVertices,
+								const std::vector<TempVertex> tempVertex,
+								std::pair<glm::vec3, glm::vec2>& mOffsets);
 	void TransformVertices(std::vector<TempVertex> vert);
 	void ImportMaterialAndTextures(const aiMaterial& material);
 
 	void SerializeBinaryGeom(const std::string filepath);
 	void DeserializeDescriptor(const std::string filepath);
 
-public:
+private:
 
 	Descriptor* _descriptor{ nullptr };
 

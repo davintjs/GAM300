@@ -12,11 +12,10 @@ struct Vertex
 
     std::int16_t normX;
     std::int16_t normY;
-    std::int16_t normZ;
 
     std::int16_t tanX;
     std::int16_t tanY;
-    std::int16_t tanZ;
+    std::int8_t  tanSign;
 
     std::int16_t texU;
     std::int16_t texV;
@@ -62,8 +61,8 @@ public:
     int materialIndex = 0; // Material index
 
     Mesh() {};
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material)
-        :_vertices(vertices), _indices(indices), materialIndex(material)
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posOffset, glm::vec2 texOffset)
+        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset)
     {};
 
 };
