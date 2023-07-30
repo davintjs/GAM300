@@ -602,11 +602,9 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 	return;
 }
 
-void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
+// Serialize to geom binary file a single FBX file
+void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 {
-	size_t vv = 0;
-	size_t ii = 0;
-
 	std::ofstream serializeFile(filepath, std::ios_base::binary);
 	if (!serializeFile)
 	{
@@ -614,20 +612,27 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize t
 		return;
 	}
 
-	for (auto& _mesh : this->_meshes) // Save vertices and indices of all meshes first
+	// Save the compression scale values of the position and texture of the FBX model
+	serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
+	serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
+
+	for (auto& _mesh : this->_meshes)
 	{
+		// Vertices
 		size_t vertexSize = _mesh._vertices.size();
 		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
 		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
-		vv += vertexSize;
 
+		// Indices
 		size_t indicesSize = _mesh._indices.size();
 		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
 		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
-		ii += indicesSize;
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
 	}
 
-	for (auto& mat : _materials) // Save all materials of this model
+	for (auto& mat : _materials) // Save material of this model
 	{
 		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
 		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
