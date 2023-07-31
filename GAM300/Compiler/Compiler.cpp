@@ -616,6 +616,9 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 	serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
 	serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
 
+	size_t meshSize = this->_meshes.size();
+	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
 	for (auto& _mesh : this->_meshes)
 	{
 		// Vertices
@@ -628,9 +631,14 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
 		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
 
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
 		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
 		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
 	}
+
+	size_t materialSize = this->_materials.size();
+	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
 
 	for (auto& mat : _materials) // Save material of this model
 	{

@@ -6,6 +6,20 @@
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 
+//#include "../../Compiler/Mesh.h"
+
+// Just a wrapper class to hold all these values
+//class Geom
+//{
+//public:
+//	std::vector<Mesh> mMeshes; // Total submeshes of this geom
+//
+//	// Model loader values
+//	glm::vec3 mPosCompressionScale;
+//	glm::vec2 mTexCompressionScale;
+//	std::vector<Material> _materials{};
+//};
+
 class Model {
 public:
 	void init(AssimpLoader* geom); // make vao vbo
@@ -20,4 +34,9 @@ public:
 	void draw();
 
 	AssimpLoader* _geom;
+
+	//std::vector<Geom> totalGeoms; // Contains all geom of the project
+
+private:
+	void DeserializeGeoms(const std::string filePath);
 };

@@ -110,3 +110,61 @@ void Model::draw() {
     glBindVertexArray(0);
     shader.UnUse();
 }
+
+// Should plan on when you want to deserialize each time -> every start up? or every click command or something
+// But right now just 1 model only
+//void Model::DeserializeGeoms(const std::string filePath)
+//{
+//    Geom tempGeom;
+//    std::ifstream ifs(filePath, std::ios::binary);
+//
+//    ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
+//    ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
+//
+//    size_t meshSize;
+//    ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+//
+//    for (int i = 0; i < meshSize; ++i)
+//    {
+//        Mesh tempMesh;
+//
+//        size_t vertSize;
+//        ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+//        ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+//
+//        size_t indSize;
+//        ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
+//        ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
+//
+//        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+//        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+//        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+//
+//        tempGeom.mMeshes.push_back(tempMesh);
+//    }
+//
+//    size_t matSize;
+//    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+//
+//    for (int j = 0; j < matSize; ++j)
+//    {
+//        Material tempMat;
+//
+//        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+//        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+//        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+//
+//        size_t texSize;
+//        ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+//        if (texSize > 0)
+//        {
+//            ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+//        }
+//
+//        tempGeom._materials.push_back(tempMat);
+//    }
+//
+//    this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
+//
+//    ifs.close();
+//}
