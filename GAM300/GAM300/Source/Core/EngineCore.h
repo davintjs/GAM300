@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/SceneManager.h"
 #include "Graphics/GraphicsSystem.h"
 #include "IOManager/Handler_GLFW.h"
+#include "AI/Blackboard.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -67,7 +68,7 @@ public:
 			pSystem->Init();
 		}
 
-
+		BLACKBOARD; // Blackboard initialization
 
 	}
 
@@ -115,9 +116,6 @@ public:
 
 				MyFrameRateController.End();
 			}
-
-			
-
 		}
 	}
 
@@ -134,6 +132,8 @@ public:
 		{
 			(*iter)->Exit();
 		}
+
+		BLACKBOARD_TERMINATE;
 	}
 private:
 	std::vector<ISystem*> systems;
