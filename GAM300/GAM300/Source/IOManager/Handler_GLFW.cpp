@@ -291,253 +291,28 @@ void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int
     // key state changes from released to pressed
     if (GLFW_PRESS == action) {
         
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
-
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
         //crashTestObsevable.ProcessEvent(event);
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = true;
-        }
-        /*
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_TRUE;}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_TRUE;
-        //}
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_TRUE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_TRUE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_TRUE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_TRUE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_TRUE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_TRUE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_TRUE;
-        //}
-        //if (GLFW_KEY_G == key) 
-        //{
-        //    Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
-        //    crashTestObsevable.ProcessEvent(event);
-        //    //Orion::crash_Test = GL_TRUE;
-        //}
-        //if (GLFW_KEY_H == key) 
-        //{
-        //    Orion::showcase_2500_Toggle = GL_TRUE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_TRUE;
-        //}
-        */
+       
     }
    
     else if (GLFW_REPEAT == action) {
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = true;
-        }
+        
 
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), true);
         //crashTestObsevable.ProcessEvent(event);
 
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_TRUE;
-        //}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_TRUE;
-        //}
-
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_TRUE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_TRUE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_TRUE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_TRUE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_TRUE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_TRUE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_FALSE;
-        //}
-        //if (GLFW_KEY_G == key)
-        //{
-        //    Orion::crash_Test = GL_FALSE;
-        //}
-        //if (GLFW_KEY_H == key)
-        //{
-        //    Orion::showcase_2500_Toggle = GL_FALSE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_FALSE;
-        //}
+        
     }
 
 
     else if (GLFW_RELEASE == action) {
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = false;
-        }
+        
 
         //Orion::Events::KeyReleasedEvent event = Orion::Events::KeyReleasedEvent(static_cast<Orion::Key::KeyCode>(key));
         //crashTestObsevable.ProcessEvent(event);
 
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_FALSE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_FALSE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_FALSE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_FALSE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_FALSE;
-        //}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_FALSE;
-        //}
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_FALSE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_FALSE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_FALSE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_FALSE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_FALSE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_FALSE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_FALSE;
-        //}
-        //if (GLFW_KEY_G == key)
-        //{
-        //    Orion::crash_Test = GL_FALSE;
-        //}
-        //if (GLFW_KEY_H == key)
-        //{
-        //    Orion::showcase_2500_Toggle = GL_FALSE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_FALSE;
-        //}
+       
 
     }
 }

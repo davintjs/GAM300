@@ -84,12 +84,19 @@ public:
 		{
 			
 
+
 			if (state == EngineState::Run)
 			{
 				MyFrameRateController.Start();
 
 				// Bean: This should be in input system (Euan go create)
 				glfwPollEvents();
+				int checking = glfwGetKey(GLFW_Handler::ptr_window, GLFW_KEY_A);
+
+				if ((checking == GLFW_PRESS) || (checking == GLFW_REPEAT))
+				{
+					std::cout << "it actually works\n";
+				}
 
 				//glfwSetMouseButtonCallback();
 
