@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Graphics/GraphicsSystem.h"
+#include "IOManager/InputSystem.h"
 #include "IOManager/Handler_GLFW.h"
 
 #define MyEngineCore EngineCore::Instance()
@@ -52,13 +53,12 @@ public:
 
 		systems =
 		{
+			&InputSystem::Instance(),
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
 			& EditorSystem::Instance(),
 			&GraphicsSystem::Instance()
 			
-
-
 		};
 
 
@@ -89,16 +89,7 @@ public:
 			{
 				MyFrameRateController.Start();
 
-				// Bean: This should be in input system (Euan go create)
-				glfwPollEvents();
-				int checking = glfwGetKey(GLFW_Handler::ptr_window, GLFW_KEY_A);
-
-				if ((checking == GLFW_PRESS) || (checking == GLFW_REPEAT))
-				{
-					std::cout << "it actually works\n";
-				}
-
-				//glfwSetMouseButtonCallback();
+				
 
 				//Start ImGui Frames
 				ImGui_ImplOpenGL3_NewFrame();

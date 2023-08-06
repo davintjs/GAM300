@@ -44,6 +44,7 @@
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
+    <ClCompile Include="Source\IOManager\InputSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -78,5 +79,6 @@
     <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\EventsManager.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
+    <ClInclude Include="Source\IOManager\InputSystem.h" />
   </ItemGroup>
 </Project>
