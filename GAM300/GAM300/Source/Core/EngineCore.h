@@ -19,8 +19,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "SystemInterface.h"
 #include "FramerateController.h"
 //#include "Physics/PhysicsSystem.h"
-#include "Scene/SceneManager.h"
+//#include "Scene/SceneManager.h"
 #include <vector>
+#include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
 #include "IOManager/Handler_GLFW.h"
 
@@ -49,7 +50,7 @@ public:
 		MyFrameRateController.Init();
 		systems =
 		{
-			&SceneManager::Instance(),
+			//&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance()
 
@@ -69,11 +70,19 @@ public:
 	/**************************************************************************/
 	void Update()
 	{
+		
+		SingleComponentsArrays* arrs = new SingleComponentsArrays();
+		//MultiComponentsArrays arr;
 		while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 		{
-			if (pSystem->GetMode() & mode)
+			//Move to WindowsSystem
+			glfwPollEvents();
+			for (ISystem* pSystem : systems)
 			{
-				pSystem->Update();
+				if (pSystem->GetMode() & mode)
+				{
+					pSystem->Update();
+				}
 			}
 		}
 				//MyFrameRateController.End();

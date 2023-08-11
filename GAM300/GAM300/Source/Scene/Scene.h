@@ -41,7 +41,6 @@ struct Scene
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
 	EntitiesPtrArray entitiesToDelete;
-	ComponentsPtrArrays componentsToDelete;
 
 	enum class State : char 
 	{
@@ -116,7 +115,10 @@ struct Scene
 	Entity& AddEntity()
 	{
 		//singleComponentsArrays.GetArray<Component>().emplace_back();
-		return entities.emplace_back();
+		//CHANGE THIS BACK TO USE EMPLACE;
+		static Entity temp;
+		return temp;
+		//return entities.emplace_back();
 	}
 
 	bool EntityIsActive(EntityIndex index);

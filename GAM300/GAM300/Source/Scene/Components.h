@@ -16,38 +16,31 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#define MAX_COMPONENTS 100000
-#define MAX_MULTI_COMPONENTS 5
+#define MAX_MULTI_COMPONENTS 1
 
 #include <string>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include "Utilities/TemplatePack.h"
-#include "Utilities/ObjectsArray.h"
+#include "Utilities/ObjectsList.h"
+#include "Entity.h"
 
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
 
-//#define Component(Type) struct Type; template <> struct GetComponentType<Type>{static constexpr size_t e = ComponentEnumCount<>(); /*static constexpr const char* name = #Type;*/};;struct Type
-
-template <typename T>
-using SingleComponentsArray = ObjectsArray<T, MAX_COMPONENTS>;
-template <typename T>
-using MultiComponentsArray = SparseSet<ObjectsArray<T, MAX_MULTI_COMPONENTS>, MAX_COMPONENTS>;
+#define ComponentName(Type) #Type
 template <typename T>
 using ComponentsPtrArray = std::vector<T*>;
 
-struct None {};
-
-template<size_t N = 0, typename... Ts>
-struct GetComponentTypeGroup : GetComponentTypeGroup<N+1,std::forward<Ts...>>
+template<typename T, typename... Ts>
+struct GetComponentTypeGroup : GetComponentTypeGroup<Ts...>
 {
-	static constexpr size_t e = N;
-	constexpr GetComponentTypeGroup(TemplatePack<Ts...> pack) {}
+	static constexpr const char* name = ComponentName(T);
+	static constexpr size_t e = sizeof...(Ts) - 1;
+	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
 	constexpr GetComponentTypeGroup() = default;
-
 
 	template <typename T1>
 	static constexpr size_t E()
@@ -56,10 +49,6 @@ struct GetComponentTypeGroup : GetComponentTypeGroup<N+1,std::forward<Ts...>>
 		{
 			return e;
 		}
-		else if (sizeof...(Ts) == 1)
-		{
-			static_assert(true);
-		}
 		else
 		{
 			return GetComponentTypeGroup<Ts...>::E();
@@ -67,110 +56,50 @@ struct GetComponentTypeGroup : GetComponentTypeGroup<N+1,std::forward<Ts...>>
 	}
 };
 
-template<size_t N, typename... Ts>
-struct GetComponentTypeGroup <N,None, Ts...>
-{};
+template <typename... Ts>
+struct GetComponentTypeGroup<None,Ts...>{};
 
-
-template<typename T, typename... Ts>
-struct SingleComponentGroup : SingleComponentGroup<Ts...>
-{
-	constexpr SingleComponentGroup(TemplatePack<T,Ts...> pack) {}
-	SingleComponentsArray<T> components;
-	SingleComponentGroup() = default;
-
-	template <typename T1>
-	constexpr SingleComponentsArray<T1>& GetArray()
-	{
-		if constexpr (std::is_same<T, T1>())
-		{
-			return components;
-		}
-		else if (sizeof...(Ts) == 1)
-		{
-			static_assert(true);
-		}
-		else
-		{
-			return SingleComponentGroup<Ts...>::GetArray();
-		}
-	}
-
-	constexpr void Expand()
-	{
-		components.emplace_back();
-		if constexpr (sizeof...(Ts) != 0)
-			SingleComponentGroup<Ts...>::Expand();
-	}
-
-	constexpr void Delete(size_t index)
-	{
-		components.erase(components.begin() + index);
-		if constexpr (sizeof...(Ts) != 0)
-			SingleComponentGroup<Ts...>::Delete(index);
-	}
-};
 
 template<typename... Ts>
-struct SingleComponentGroup <None, Ts...>
-{};
-
-template<typename T, typename... Ts>
-struct MultiComponentGroup : MultiComponentGroup<Ts...>
+struct SingleComponentsGroup
 {
-	constexpr MultiComponentGroup(TemplatePack<T,Ts...> pack) {}
-	MultiComponentsArray<T> components;
-	MultiComponentGroup() = default;
+	constexpr SingleComponentsGroup(TemplatePack<Ts...>) {}
+	SingleComponentsGroup() = default;
+
+	template <typename T1>
+	constexpr ObjectsList<T1, MAX_ENTITIES>& GetArray()
+	{
+		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		return std::get<ObjectsList<T1, MAX_ENTITIES>>(arrays);
+	}
+private:
+	std::tuple<ObjectsList<Ts, MAX_ENTITIES>...> arrays;
+};
+
+
+template <typename Component>
+using MultiComponent = ObjectsList<Component, MAX_MULTI_COMPONENTS>;
+
+template <typename Component>
+using MultiComponentsArray = ObjectsList<MultiComponent<Component>, MAX_ENTITIES>;
+
+template<typename... Ts>
+struct MultiComponentsGroup
+{
+	constexpr MultiComponentsGroup(TemplatePack<Ts...>) {}
+	MultiComponentsGroup() = default;
 
 	template <typename T1>
 	constexpr MultiComponentsArray<T1>& GetArray()
 	{
-		if constexpr (std::is_same<T, T1>())
-		{
-			return components;
-		}
-		else if (sizeof...(Ts) == 1)
-		{
-			static_assert(true);
-		}
-		else
-		{
-			return MultiComponentGroup<Ts...>::GetArray();
-		}
+		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		return std::get<MultiComponentsArray<T1>>(arrays);
 	}
+private:
+	std::tuple<MultiComponentsArray<Ts>...> arrays;
 };
 
-template<typename... Ts>
-struct MultiComponentGroup <None, Ts...>
-{};
 
-template<typename T, typename... Ts>
-struct ComponentPtrGroup
-{
-	constexpr ComponentPtrGroup(TemplatePack<T, Ts...> pack) {}
-	ComponentsPtrArray<T> components;
-	ComponentPtrGroup() = default;
-
-	template <typename T1>
-	constexpr ComponentsPtrArray<T1>& GetArray()
-	{
-		if constexpr (std::is_same<T, T1>())
-		{
-			return components;
-		}
-		else if (sizeof...(Ts) == 1)
-		{
-			static_assert(true);
-		}
-		else
-		{
-			return ComponentPtrGroup<Ts...>::GetArray();
-		}
-	}
-};
-
-template<typename... Ts>
-struct ComponentPtrGroup<None,Ts...>{};
 
 struct Transform
 {
@@ -220,22 +149,23 @@ struct Script
 	std::string name;
 };
 
+//MULTI COMPONENT ARRAYS
+/*
+Lets say MAX_MULTI_COMPONENTS = 4
+For each GameObject, they will preallocate for 4 of the same components
+If there are more than 4, it will allocate for a new set of same components,
+This way, its a forward list with some cache locality and can scale infinitely
+So technically this would it a sparse set of 
 
-//RegisterComponent(Transform);
-//RegisterComponent(BoxCollider);
-//RegisterComponent(SphereCollider);
-//RegisterComponent(CapsuleCollider);
-//RegisterComponent(Rigidbody);
-//RegisterComponent(Camera);
-//RegisterComponent(Animator);
-//RegisterComponent(AudioSource);
-//RegisterComponent(Script);
-using SingleComponentTypes = TemplatePack<Rigidbody, Animator,None>;
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script, None>;
-using SingleComponentsArrays = decltype(SingleComponentGroup(SingleComponentTypes()));
-using MultiComponentsArrays = decltype(MultiComponentGroup(MultiComponentTypes()));
-using GetComponentType = decltype(GetComponentTypeGroup<0>(SingleComponentTypes().Concatenate(MultiComponentTypes())));
-using ComponentsPtrArrays = decltype(ComponentPtrGroup(SingleComponentTypes().Concatenate(MultiComponentTypes())));
+
+
+*/
+
+using SingleComponentTypes = TemplatePack<Rigidbody, Animator>;
+using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
+using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
+//using GetComponentType = decltype(GetComponentTypeGroup(SingleComponentTypes()));
 
 
 #endif // !COMPONENTS_H

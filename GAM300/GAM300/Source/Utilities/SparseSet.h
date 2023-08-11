@@ -22,6 +22,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include "Core/Debug.h"
 
+
+struct DenseIndex
+{
+    size_t val = 0;
+};
+
 template <typename T, size_t N>
 class SparseSet
 {
@@ -30,6 +36,7 @@ class SparseSet
     std::array<size_t, N>indexes;
     size_t size_{ 0 };
 public:
+
     class Iterator
     {
 
@@ -119,88 +126,6 @@ public:
             return sparseIndex != other.sparseIndex;
         }
     };
-    class ReverseIterator
-    {
-        SparseSet<T, N>& arr;
-        int sparseIndex;
-        friend class SparseSet;
-    public:
-        /***************************************************************************/
-        /*!
-            \brief
-                Constructor for iterator
-            \param _sparseIndex
-                Index of element
-            \param _arr
-                Referenced sparse set
-        */
-        /**************************************************************************/
-        ReverseIterator(size_t _sparseIndex, SparseSet<T, N>& _arr) : sparseIndex(_sparseIndex), arr{ _arr } {}
-        /***************************************************************************/
-        /*!
-            \brief
-                Dereferencing operator to get value in it
-            \return
-                Reference to object stored
-        */
-        /**************************************************************************/
-        T& operator*() const
-        {
-            return arr[sparseIndex];
-        }
-        /***************************************************************************/
-         /*!
-            \brief
-                Gets the next iterator
-            \return
-                Next iterator
-        */
-        /**************************************************************************/
-        ReverseIterator operator++() {
-            --sparseIndex;
-            return *this;
-        }
-        /***************************************************************************/
-        /*!
-            \brief
-                Increments this iterator and but returns the current iteration
-            \return
-                this iterator
-        */
-        /**************************************************************************/
-        ReverseIterator operator++(int) {
-            ReverseIterator tmp(*this);
-            operator++();
-            return tmp;
-        }
-        /***************************************************************************/
-        /*!
-            \brief
-                Checks if two iterators are the same
-            \param other
-                Other iterator to compare with
-            \return
-                True if both iterators are of the same sparse index
-        */
-        /**************************************************************************/
-        bool operator==(const ReverseIterator& other) const {
-            return sparseIndex == other.sparseIndex;
-        }
-        /***************************************************************************/
-        /*!
-            \brief
-                Checks if two iterators are NOT the same
-            \param other
-                Other iterator to compare with
-            \return
-                True if both iterators are NOT of the same sparse index
-        */
-        /**************************************************************************/
-        bool operator!=(const ReverseIterator& other) const {
-            return sparseIndex != other.sparseIndex;
-        }
-    };
-
     /***************************************************************************/
     /*!
         \brief
@@ -209,9 +134,7 @@ public:
             Starting iterator to this sparse set
     */
     /**************************************************************************/
-    Iterator begin() {
-        return Iterator(0, *this);
-    }
+    Iterator begin() {return Iterator(0, *this);}
 
     /***************************************************************************/
     /*!
@@ -221,33 +144,7 @@ public:
             Starting iterator to this sparse set
     */
     /**************************************************************************/
-    Iterator end() {
-        return Iterator(size_, *this);
-    }
-
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the reverse starting iterator to this sparse set
-        \return
-            Reverse starting iterator to this sparse set
-    */
-    /**************************************************************************/
-    ReverseIterator rbegin() {
-        return ReverseIterator(size_ - 1, *this);
-    }
-
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the reverse end iterator to this sparse set
-        \return
-            Reverse end iterator to this sparse set
-    */
-    /**************************************************************************/
-    ReverseIterator rend() {
-        return ReverseIterator(-1, *this);
-    }
+    Iterator end() {return Iterator(size_, *this);}
 
     /***************************************************************************/
     /*!
@@ -263,14 +160,7 @@ public:
             Destructs all elements in the sparse set
     */
     /**************************************************************************/
-    ~SparseSet()
-    {
-        for (T& element : *this)
-        {
-            element.~T();
-        }
-        //PRINT("SPARSE SET DECONSTRUCTOR ");
-    }
+    ~SparseSet();
 
     /***************************************************************************/
     /*!
@@ -284,13 +174,10 @@ public:
     */
     /**************************************************************************/
     template <typename... Args>
-    T& emplace_back(Args&&... args)
-    {
-        T& back = *new (data + indexes[size_]) T(std::forward<Args>(args)...); // Construct the new element in the array
-        ++size_;
-        return back;
-    }
+    T& emplace_back(Args&&... args);
 
+    template <typename... Args>
+    T& emplace_back(DenseIndex index ,Args&&... args);
     /***************************************************************************/
     /*!
         \brief
@@ -299,43 +186,8 @@ public:
             Reference of value that would be used for memory address
     */
     /**************************************************************************/
-    void erase(T& val)
-    {
-        //Find index first
-        for (size_t i = 0; i < size_; ++i)
-        {
-            if (reinterpret_cast<T*>(data + indexes[i]) == &val)
-            {
-                size_t index = indexes[i];
 
-                reinterpret_cast<T*>(data)[index].~T();
-
-                std::ignore = std::remove(indexes.begin(), indexes.begin() + size_, index);
-                indexes[size_ - 1] = index;
-                --size_;
-                return;
-            }
-        }
-        //ASSERT(true, "Value is not an element of this array");
-    }
-
-    /***************************************************************************/
-    /*!
-        \brief
-            Erases from the sparse set by comparing iterators
-        \param iter
-            Iterator to match to remove the element
-    */
-    /**************************************************************************/
-    void erase(const Iterator& iter)
-    {
-        //ASSERT(size_ == 0, "Can't erase from empty array");
-        size_t index = indexes[iter.sparseIndex];
-        reinterpret_cast<T*>(data)[index].~T();
-        std::ignore = std::remove(indexes.begin(), indexes.begin() + size_, index);
-        indexes[size_ - 1] = index;
-        --size_;
-    }
+    void erase(size_t denseIndex);
 
     /***************************************************************************/
     /*!
@@ -362,6 +214,8 @@ public:
     /**************************************************************************/
     T& operator[] (size_t i);
 
+    T& operator[] (DenseIndex val);
+
     /***************************************************************************/
     /*!
         \brief
@@ -372,17 +226,12 @@ public:
             True if the object is part of this sparse set
     */
     /**************************************************************************/
-    bool exists(T* pValue)
+    bool contains(T& pValue)
     {
-        size_t denseIndex = pValue - static_cast<T*>(data);
-        for (size_t i = 0; i < size_; ++i)
-        {
-            if (indexes[i] == denseIndex)
-            {
-                return true;
-            }
-        }
-        return false;
+        size_t denseIndex = &pValue - static_cast<T*>(data);
+        if (denseIndex >= N)
+            return false;
+        return true;
     }
 
     /***************************************************************************/
@@ -416,8 +265,8 @@ public:
     {
         size_t rhsDenseIndex = &rhs - reinterpret_cast<T*>(data);
         size_t lhsDenseIndex = &lhs - reinterpret_cast<T*>(data);
-        //ASSERT(rhsDenseIndex >= size_, "RHS is not an element of this array");
-        //ASSERT(lhsDenseIndex >= size_, "LHS is not an element of this array");
+        ASSERT(rhsDenseIndex >= N, "RHS is not an element of this array");
+        ASSERT(lhsDenseIndex >= N, "LHS is not an element of this array");
         if (lhsDenseIndex > rhsDenseIndex)
         {
             for (size_t i = 0; i < size_; ++i)
@@ -466,6 +315,8 @@ public:
     /**************************************************************************/
     bool empty() const { return !size_; }
 
+    bool full() const { return size_ == N; }
+
     template <typename T, size_t N>
     friend std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS);
 };
@@ -480,21 +331,6 @@ std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS)
     return stream;
 }
 
-template <typename T, size_t N>
-SparseSet<T, N>::SparseSet()
-{
-    for (size_t i = 0; i < N; ++i)
-    {
-        indexes[i] = i;
-    }
-    //PRINT("SPARSE SET CONSTRUCTED");
-}
-
-template <typename T, size_t N>
-T& SparseSet<T, N>::operator[] (size_t i)
-{
-    //ASSERT(i >= size_, "ARRAY OUT OF BOUNDS");
-    return *reinterpret_cast<T*>(data + indexes[i]);
-}
+#include "SparseSet.cpp"
 
 #endif // !SPARSE_SET_H

@@ -18,8 +18,8 @@ int main(int, char**) {
 
 	app->Init();
 	MyEngineCore.Init();
-	//MyEngineCore.Update();
-	app->Run();
+	MyEngineCore.Update();
+	//app->Run();
 	MyEngineCore.Exit();
 	app->Exit();
 

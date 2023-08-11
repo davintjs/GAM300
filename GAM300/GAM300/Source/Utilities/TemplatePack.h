@@ -7,20 +7,44 @@ static constexpr bool contains()
 	return std::disjunction_v<std::is_same<T, Ts>...>;
 }
 
-template <typename... Ts>
+struct None{};
+
+template <auto N>
+struct TemplateContainer
+{};
+
+template <typename T, typename... Ts>
 struct TemplatePack
 {
-	template<typename T>
+	template<typename T1>
 	static constexpr bool Has()
 	{
-		return contains<T, Ts...>();
+		return contains<T1,T, Ts...>();
 	}
 
 	template <typename... T1s>
-	constexpr TemplatePack<Ts..., T1s...> Concatenate(TemplatePack<T1s...> pack)
+	constexpr TemplatePack<T,Ts..., T1s...> Concatenate(TemplatePack<T1s...> pack)
 	{
-		return TemplatePack<Ts..., T1s...>();
+		return TemplatePack<T,Ts..., T1s...>();
 	}
+
+	//constexpr auto Pop()
+	//{
+	//	return Pop<>();
+	//}
+
+	//template <typename... T1s>
+	//constexpr auto Pop()
+	//{
+	//	if constexpr (sizeof...(Ts) + 1 > 1)
+	//	{
+	//		return TemplatePack<Ts...>().Pop<T1s..., T>();
+	//	}
+	//	else
+	//	{
+	//		return TemplatePack<T1s...>();
+	//	}
+	//}
 };
 
 #endif // !TEMPLATE_PACK_H

@@ -29,8 +29,6 @@ void GraphicsSystem::Init()
 void GraphicsSystem::Update()
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
-	
-
 
 	//UPDATE OR RENDER GRAPHICS HERE
 

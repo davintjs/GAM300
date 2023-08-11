@@ -16,7 +16,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "Scene/Scene.h"
+//#include "Scene/Scene.h"
 
 struct IEvent
 {
@@ -39,27 +39,27 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
-struct GetCurrentSceneEvent
-{
-	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
-	Scene& scene;
-};
+//struct GetCurrentSceneEvent
+//{
+//	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
+//	Scene& scene;
+//};
 
-template <typename T>
-struct ComponentAddEvent : IEvent
-{
-	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
-		entity{ _entity }, componentContainer{ _componentContainer }, uuid{_uuid} {}
-	Entity& entity;
-	T*& componentContainer;
-	UUID uuid;
-};
-
-template <typename T>
-struct ComponentDeleteEvent : IEvent
-{
-	ComponentDeleteEvent(T& _component) : component{_component}{}
-	T& component;
-};
+//template <typename T>
+//struct ComponentAddEvent : IEvent
+//{
+//	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
+//		entity{ _entity }, componentContainer{ _componentContainer }, uuid{_uuid} {}
+//	Entity& entity;
+//	T*& componentContainer;
+//	UUID uuid;
+//};
+//
+//template <typename T>
+//struct ComponentDeleteEvent : IEvent
+//{
+//	ComponentDeleteEvent(T& _component) : component{_component}{}
+//	T& component;
+//};
 
 #endif //!EVENTS_H

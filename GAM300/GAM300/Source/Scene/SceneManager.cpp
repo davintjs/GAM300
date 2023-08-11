@@ -3,16 +3,16 @@
 
 void SceneManager::Init()
 {
-	if (loadedScenes.empty())
-	{
-		//Create empty scene
-		LoadScene("");
-	}
+	//if (loadedScenes.empty())
+	//{
+	//	//Create empty scene
+	//	LoadScene("");
+	//}
 }
 
 void SceneManager::LoadScene(const char* path)
 {
-	loadedScenes.emplace_front(path);
+	//loadedScenes.emplace_front(path);
 }
 
 void SceneManager::Update()

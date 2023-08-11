@@ -13,9 +13,9 @@ public:
 
 	void LoadScene(const char* path = "");
 
-	Scene& GetCurrentScene() { return loadedScenes.front(); }
-private:
-	std::list<Scene> loadedScenes;
+//	Scene& GetCurrentScene() { return loadedScenes.front(); }
+//private:
+//	std::list<Scene> loadedScenes;
 };
 
 #endif // !SCENE_MANAGER_H
