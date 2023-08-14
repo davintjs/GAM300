@@ -2,6 +2,7 @@
 
 #include "IOManager/Handler_GLFW.h"
 
+#define MAX_KEY_COUNT 348
 class InputHandler
 {
 public:
@@ -16,9 +17,10 @@ public:
 		GLFW_PRESS -> if pressed
 		GLFW_RELEASE -> if released / not pressed
 	*******************************************************************************/
-	static bool isKeyButtonHolding(int key);
+	static bool isKeyButtonHolding(int key);// I guess u can use this for things like moving around
 
-	static bool isKeyButtonPressed(int key);
+	static bool isKeyButtonPressed(int key);// UNIQUE 1 Time Press -> Pressing Tab or something like that
+											// I am sure u know what i mean big boi
 
 	static void setKeystate_Press(int key);
 
@@ -26,6 +28,9 @@ public:
 
 	static void setKeystate_Release(int key);
 
+	static void copyingCurrStatetoLast();
+
 private:
-	inline static int Key_states[348]; // 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int last_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
 };

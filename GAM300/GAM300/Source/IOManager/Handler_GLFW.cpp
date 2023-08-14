@@ -290,7 +290,8 @@ if button T M A are pressed, will trigger specific flags relating to tutorial 5
 
 void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int action, int ) {
     // key state changes from released to pressed
-    std::cout << "entered key_callback\n";
+
+    InputHandler::copyingCurrStatetoLast();
     if (GLFW_PRESS == action) {
         //std::cout << "GLFW HANDLER : PRESS\n";
         InputHandler::setKeystate_Press(key);

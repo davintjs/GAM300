@@ -22,7 +22,7 @@ void InputSystem::Update()
 
 	//InputHandler::isKeyButtonPressed(GLFW_KEY_0)
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_0))
+	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_0))
 	{
 		std::cout << "Pressed 0\n";
 	}
@@ -30,11 +30,8 @@ void InputSystem::Update()
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_0))
 	{
 		std::cout << "Holding 0\n";
-	}
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_0) == GLFW_RELEASE)
-	{
-		std::cout << "NOT PRESSING 0\n";
-	}
+	}*/
+	
 
 }
 void InputSystem::Exit()
