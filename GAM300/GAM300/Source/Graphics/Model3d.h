@@ -14,6 +14,7 @@ public:
 	GLenum prim;
 	GLuint vaoid;
 	GLuint vboid;
+	GLuint texturebuffer{};
 	GLuint drawcount;
 	GLSLShader shader;
 
