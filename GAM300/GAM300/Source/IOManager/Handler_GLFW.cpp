@@ -18,6 +18,7 @@ pointers to OpenGL implementations.
 ----------------------------------------------------------------------------- */
 #include "Precompiled.h"
 #include "Handler_GLFW.h"
+//#include "InputHandler.h"
 //#include "Orion/Core/Log.h"
 //#include "Orion/Renderer/Model.h"
 //#include "Orion/IOManager/MouseHandler.h"
@@ -284,30 +285,33 @@ This function is called when keyboard buttons are pressed.
 This function is called when keyboard buttons are pressed.
 When the ESC key is pressed, the close flag of the window is set.
 
-if button T M A are pressed, will trigger specific flags relating to tutorial 5
+if button T M A are pressed, will trigger specific flags relating to tutorial 5 
 */
 
 void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int action, int ) {
     // key state changes from released to pressed
+    std::cout << "entered key_callback\n";
     if (GLFW_PRESS == action) {
-        
+        //std::cout << "GLFW HANDLER : PRESS\n";
+        InputHandler::setKeystate_Press(key);
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
         //crashTestObsevable.ProcessEvent(event);
        
     }
-   
     else if (GLFW_REPEAT == action) {
-        
+        //std::cout << "GLFW HANDLER : REPEAT / HOLDING\n";
 
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), true);
         //crashTestObsevable.ProcessEvent(event);
-
+        InputHandler::setKeystate_Hold(key);
         
     }
 
-
     else if (GLFW_RELEASE == action) {
         
+        //std::cout << "GLFW HANDLER : RELEASE\n";
+
+        InputHandler::setKeystate_Release(key);
 
         //Orion::Events::KeyReleasedEvent event = Orion::Events::KeyReleasedEvent(static_cast<Orion::Key::KeyCode>(key));
         //crashTestObsevable.ProcessEvent(event);

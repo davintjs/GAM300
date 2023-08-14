@@ -45,6 +45,7 @@
     <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
     <ClCompile Include="Source\IOManager\InputSystem.cpp" />
+    <ClCompile Include="Source\IOManager\InputHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -80,5 +81,6 @@
     <ClInclude Include="Source\Core\EventsManager.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
     <ClInclude Include="Source\IOManager\InputSystem.h" />
+    <ClInclude Include="Source\IOManager\InputHandler.h" />
   </ItemGroup>
 </Project>
