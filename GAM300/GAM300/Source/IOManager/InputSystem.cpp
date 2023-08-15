@@ -11,17 +11,12 @@ void InputSystem::Init()
 void InputSystem::Update()
 {
 
-	// Bean: This should be in input system (Euan go create)
 	glfwPollEvents();
-	//int checking = glfwGetKey(GLFW_Handler::ptr_window, GLFW_KEY_A);// Only returns GLFW_PRESS or GLFW_RELEASE
 
-	//if ((checking == GLFW_PRESS))
-	//{
-	//	std::cout << "tapping A key\n";
-	//}
-
-	//InputHandler::isKeyButtonPressed(GLFW_KEY_0)
-
+	//--------------------------------------------------------------
+	// KEYBOARD TESTING using button - 0
+	//--------------------------------------------------------------
+	
 	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_0))
 	{
 		std::cout << "Pressed 0\n";
@@ -31,8 +26,16 @@ void InputSystem::Update()
 	{
 		std::cout << "Holding 0\n";
 	}*/
-	
 
+	//if (InputHandler::isMouseButtonPressed_L())
+	//{
+	//	std::cout << "Pressing LEFT\n";
+	//}
+	//if (InputHandler::isMouseButtonPressed_R())
+	//{
+	//	std::cout << "Pressing RIGHT\n";
+	//}
+	std::cout << InputHandler::getMouseY() << "\n";
 }
 void InputSystem::Exit()
 {

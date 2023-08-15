@@ -1,6 +1,9 @@
 #include "Precompiled.h"
 
 #include "InputHandler.h"
+// ---------------------------------------------------------------------------------------
+// KEYBOARD 
+// ---------------------------------------------------------------------------------------
 
 bool InputHandler::isKeyButtonHolding(int key)
 {
@@ -12,8 +15,6 @@ bool InputHandler::isKeyButtonHolding(int key)
 
 	return false;
 }
-
-
 
 bool InputHandler::isKeyButtonPressed(int key)
 {
@@ -53,4 +54,36 @@ void InputHandler::copyingCurrStatetoLast()
 {
 	for (int i = 0; i < MAX_KEY_COUNT; ++i)
 		InputHandler::last_Key_states[i] = InputHandler::curr_Key_states[i];
+}
+
+
+// ---------------------------------------------------------------------------------------
+// MOUSE 
+// ---------------------------------------------------------------------------------------
+
+bool InputHandler::isMouseButtonPressed_L()
+{
+	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_LEFT);
+}
+bool InputHandler::isMouseButtonPressed_R()
+{
+	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
+}
+
+std::pair<double, double> InputHandler::getMousePos()
+{
+	std::pair<double, double>X_Y;
+	glfwGetCursorPos(GLFW_Handler::ptr_window, &X_Y.first, &X_Y.second);
+	X_Y.second = GLFW_Handler::height - X_Y.second;
+	return X_Y;
+}
+
+double InputHandler::getMouseX()
+{
+	return getMousePos().first;
+}
+
+double InputHandler::getMouseY()
+{
+	return getMousePos().second;
 }

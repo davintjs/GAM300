@@ -321,6 +321,7 @@ void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int
 
     }
 }
+
 /*  _________________________________________________________________________*/
 /*! mousebutton_cb
 
@@ -343,6 +344,7 @@ were held down
 
 This function is called when mouse buttons are pressed.
 */
+
 void GLFW_Handler::mousebutton_cb(GLFWwindow*, int button, int action, int ) {
   switch (button) {
   case GLFW_MOUSE_BUTTON_LEFT:
@@ -450,8 +452,9 @@ relative to the top-left corner of the window client area.
 */
 void GLFW_Handler::mousepos_cb(GLFWwindow*, [[maybe_unused]] double xpos, [[maybe_unused]] double ypos) {
 #ifdef _DEBUG
-    //std::cout << "Mouse cursor position: (" << xpos << ", " << ypos << ")" << std::endl;
+    //std::cout << "from CALLBACK\n";
 
+    //std::cout << "Mouse cursor position: (" << xpos << ", " << ypos << ")" << std::endl;
 #endif
     /*double x, y;
     x = (xpos - (GLFW_Handler::width / 2.0));
