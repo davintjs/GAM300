@@ -4,11 +4,11 @@
 
 void MoveToPosition::Enter()
 {
-
+	onLeafEnter();
 }
 
-BehaviorResult MoveToPosition::Run()
+void MoveToPosition::Tick(float dt)
 {
 	std::cout << "Leaf node running..." << std::endl;
-	return BehaviorResult::SUCCESS;
+	onSuccess();
 }

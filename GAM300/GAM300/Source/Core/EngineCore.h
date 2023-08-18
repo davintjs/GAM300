@@ -28,6 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "AI/ControlFlow/Sequencer.h"
 #include "AI/Decorators/Inverter.h"
 #include "AI/LeafNodes/MoveToPosition.h"
+#include "AI/Enemy.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -73,29 +74,18 @@ public:
 
 		BLACKBOARD; // Blackboard initialization
 
-		MoveToPosition* move = new MoveToPosition("Move");
-		Inverter* notNear = new Inverter(move);
-		Sequencer* sequence = new Sequencer();
+		//MoveToPosition* move = new MoveToPosition("Move");
+		//Inverter* notNear = new Inverter(move);
+		//Sequencer* sequence = new Sequencer();
 
-		sequence->addChild(notNear);
+		//sequence->addChild(notNear);
 
-		BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
+		//BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
 
-		BehaviorResult status = tempTree->RunTree();
-		if (status == BehaviorResult::SUCCESS)
-		{
-			std::cout << "Behavior Tree executed successfully!" << std::endl;
-		}
-		else if (status == BehaviorResult::FAILURE)
-		{
-			std::cout << "Behavior Tree failed!" << std::endl;
-		}
-		else
-		{
-			std::cout << "Behavior Tree is still running" << std::endl;
-		}
+		//Enemy tempEnemy(tempTree);
+		//tempEnemy.Update(1.f); // Temporary dt lol
 	
-		delete tempTree;
+		//delete tempTree;
 
 	}
 

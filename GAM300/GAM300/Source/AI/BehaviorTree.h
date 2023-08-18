@@ -16,7 +16,7 @@ enum class BehaviorResult
 {
 	SUCCESS,
 	FAILURE,
-	RUNNING
+	IN_PROGRESS
 };
 
 class BehaviorNode
@@ -24,25 +24,34 @@ class BehaviorNode
 public:
 	virtual ~BehaviorNode() {};
 	virtual void Enter() = 0;
-	virtual BehaviorResult Run() = 0;
+	virtual void Tick(float dt) = 0;
 
 	void setStatus(BehaviorStatus status);
+	void setResult(BehaviorResult result);
+
+	const BehaviorStatus getStatus();
+	const BehaviorResult getResult();
+
+protected:
+	void onLeafEnter();
+	void onSuccess();
+	void onFailure();
 
 private:
 	BehaviorStatus mStatus;
+	BehaviorResult mResult;
 };
 
 class BehaviorTree
 {
 public:
 	BehaviorTree(std::string name, BehaviorNode* rootNode) : mTreeName(name), mRootNode(rootNode) {}
-
 	~BehaviorTree()
 	{
 		delete mRootNode;
 	}
 
-	BehaviorResult RunTree();
+	void RunTree(float dt);
 	std::string GetTreeName() const;
 
 private:

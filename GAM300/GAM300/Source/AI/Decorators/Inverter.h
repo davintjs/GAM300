@@ -15,6 +15,7 @@ public:
 
 private:
 	virtual void Enter() override;
-	virtual BehaviorResult Run() override;
+	virtual void Tick(float dt) override;
+
 	BehaviorNode* mChild;
 };

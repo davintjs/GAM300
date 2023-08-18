@@ -24,6 +24,7 @@
     <ClCompile Include="Source\AI\Blackboard.cpp" />
     <ClCompile Include="Source\AI\ControlFlow\Sequencer.cpp" />
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
+    <ClCompile Include="Source\AI\Enemy.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AppEntry\Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -124,6 +125,7 @@
     <ClInclude Include="Source\AI\Blackboard.h" />
     <ClInclude Include="Source\AI\ControlFlow\Sequencer.h" />
     <ClInclude Include="Source\AI\Decorators\Inverter.h" />
+    <ClInclude Include="Source\AI\Enemy.h" />
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />

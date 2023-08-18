@@ -5,22 +5,18 @@
 void Inverter::Enter()
 {
 	mChild->setStatus(BehaviorStatus::READY);
-	Run();
 }
 
-BehaviorResult Inverter::Run()
+void Inverter::Tick(float dt)
 {
 	std::cout << "Decorator node running..." << std::endl;
-	BehaviorResult status = mChild->Run();
-
-	if (status == BehaviorResult::SUCCESS)
+	mChild->Tick(dt);
+	if (mChild->getResult() == BehaviorResult::SUCCESS)
 	{
-		return BehaviorResult::FAILURE;
+		onFailure();
 	}
-	else if (status == BehaviorResult::FAILURE)
+	else if (mChild->getResult() == BehaviorResult::FAILURE)
 	{
-		return BehaviorResult::SUCCESS;
+		onSuccess();
 	}
-
-	return status;
 }

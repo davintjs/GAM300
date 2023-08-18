@@ -15,17 +15,17 @@ void Sequencer::Enter()
 	}
 }
 
-BehaviorResult Sequencer::Run()
+void Sequencer::Tick(float dt)
 {
 	std::cout << "Control flow node running..." << std::endl;
 	for (auto& child : mChildren)
 	{
-		BehaviorResult status = child->Run();
-		if (status != BehaviorResult::SUCCESS) // This is a sequence control flow node
+		child->Tick(dt);
+		if (child->getResult() != BehaviorResult::SUCCESS)
 		{
-			return status;
+			onFailure();
 		}
 	}
 
-	return BehaviorResult::SUCCESS;
+	onSuccess();
 }

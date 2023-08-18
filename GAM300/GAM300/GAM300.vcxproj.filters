@@ -50,6 +50,7 @@
     <ClCompile Include="Source\AI\ControlFlow\Sequencer.cpp" />
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
+    <ClCompile Include="Source\AI\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -90,5 +91,6 @@
     <ClInclude Include="Source\AI\ControlFlow\Sequencer.h" />
     <ClInclude Include="Source\AI\Decorators\Inverter.h" />
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
+    <ClInclude Include="Source\AI\Enemy.h" />
   </ItemGroup>
 </Project>
