@@ -73,7 +73,7 @@ public:
 
 		BLACKBOARD; // Blackboard initialization
 
-		/*MoveToPosition* move = new MoveToPosition("Move");
+		MoveToPosition* move = new MoveToPosition("Move");
 		Inverter* notNear = new Inverter(move);
 		Sequencer* sequence = new Sequencer();
 
@@ -81,12 +81,12 @@ public:
 
 		BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
 
-		BehaviorStatus status = tempTree->RunTree();
-		if (status == BehaviorStatus::SUCCESS)
+		BehaviorResult status = tempTree->RunTree();
+		if (status == BehaviorResult::SUCCESS)
 		{
 			std::cout << "Behavior Tree executed successfully!" << std::endl;
 		}
-		else if (status == BehaviorStatus::FAILURE)
+		else if (status == BehaviorResult::FAILURE)
 		{
 			std::cout << "Behavior Tree failed!" << std::endl;
 		}
@@ -95,7 +95,7 @@ public:
 			std::cout << "Behavior Tree is still running" << std::endl;
 		}
 	
-		delete tempTree;*/
+		delete tempTree;
 
 	}
 

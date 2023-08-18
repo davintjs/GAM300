@@ -17,6 +17,8 @@ public:
 	void addChild(BehaviorNode* child);
 
 private:
-	virtual BehaviorStatus Run() override;
+	virtual void Enter() override;
+	virtual BehaviorResult Run() override;
+
 	std::vector<BehaviorNode*> mChildren;
 };

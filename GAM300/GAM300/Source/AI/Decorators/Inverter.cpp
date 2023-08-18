@@ -2,18 +2,24 @@
 
 #include "Inverter.h"
 
-BehaviorStatus Inverter::Run()
+void Inverter::Enter()
+{
+	mChild->setStatus(BehaviorStatus::READY);
+	Run();
+}
+
+BehaviorResult Inverter::Run()
 {
 	std::cout << "Decorator node running..." << std::endl;
-	BehaviorStatus status = mChild->Run();
+	BehaviorResult status = mChild->Run();
 
-	if (status == BehaviorStatus::SUCCESS)
+	if (status == BehaviorResult::SUCCESS)
 	{
-		return BehaviorStatus::FAILURE;
+		return BehaviorResult::FAILURE;
 	}
-	else if (status == BehaviorStatus::FAILURE)
+	else if (status == BehaviorResult::FAILURE)
 	{
-		return BehaviorStatus::SUCCESS;
+		return BehaviorResult::SUCCESS;
 	}
 
 	return status;

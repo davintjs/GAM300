@@ -14,6 +14,7 @@ public:
 	}
 
 private:
-	virtual BehaviorStatus Run() override;
+	virtual void Enter() override;
+	virtual BehaviorResult Run() override;
 	BehaviorNode* mChild;
 };

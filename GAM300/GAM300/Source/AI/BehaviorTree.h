@@ -6,6 +6,14 @@
 
 enum class BehaviorStatus
 {
+	READY,
+	RUNNING,
+	EXITING,
+	SUSPENDED
+};
+
+enum class BehaviorResult
+{
 	SUCCESS,
 	FAILURE,
 	RUNNING
@@ -15,7 +23,13 @@ class BehaviorNode
 {
 public:
 	virtual ~BehaviorNode() {};
-	virtual BehaviorStatus Run() = 0;
+	virtual void Enter() = 0;
+	virtual BehaviorResult Run() = 0;
+
+	void setStatus(BehaviorStatus status);
+
+private:
+	BehaviorStatus mStatus;
 };
 
 class BehaviorTree
@@ -28,7 +42,7 @@ public:
 		delete mRootNode;
 	}
 
-	BehaviorStatus RunTree();
+	BehaviorResult RunTree();
 	std::string GetTreeName() const;
 
 private:

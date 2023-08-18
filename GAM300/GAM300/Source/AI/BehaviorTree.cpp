@@ -2,7 +2,12 @@
 
 #include "BehaviorTree.h"
 
-BehaviorStatus BehaviorTree::RunTree()
+void BehaviorNode::setStatus(BehaviorStatus status)
+{
+	mStatus = status;
+}
+
+BehaviorResult BehaviorTree::RunTree()
 {
 	return mRootNode->Run();
 }

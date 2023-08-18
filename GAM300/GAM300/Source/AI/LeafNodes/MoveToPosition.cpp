@@ -2,8 +2,13 @@
 
 #include "MoveToPosition.h"
 
-BehaviorStatus MoveToPosition::Run()
+void MoveToPosition::Enter()
+{
+
+}
+
+BehaviorResult MoveToPosition::Run()
 {
 	std::cout << "Leaf node running..." << std::endl;
-	return BehaviorStatus::SUCCESS;
+	return BehaviorResult::SUCCESS;
 }

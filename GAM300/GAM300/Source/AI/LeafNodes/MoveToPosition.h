@@ -9,5 +9,6 @@ public:
 
 private:
 	std::string mNodeName; // Name of this action
-	virtual BehaviorStatus Run() override;
+	virtual void Enter() override;
+	virtual BehaviorResult Run() override;
 };
