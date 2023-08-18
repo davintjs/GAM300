@@ -12,7 +12,7 @@
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 #include "../Source/Graphics/Model3d.h"
-#include "Graphics/Camera.h"
+#include "Graphics/Editor_Camera.h"
 
 ////Temporary Stuffs
 //Model testmodel;

@@ -18,11 +18,13 @@ layout (location=1) in vec2 aVertexTexture;
 layout (location = 0) out vec2 vTexture;
 
 uniform mat4 persp_projection;
+uniform mat4 View;
 uniform mat4 SRT;
 
 
 void main() {
-	gl_Position = persp_projection * SRT * vec4(aVertexPosition, 1.0f);
+				// Proj * View() * model(SRT)  * vertex pos
+	gl_Position = persp_projection *View * SRT * vec4(aVertexPosition, 1.0f);
 
 	//vColor = aVertexColor;
 	//testing

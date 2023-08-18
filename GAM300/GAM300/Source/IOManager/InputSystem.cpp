@@ -12,7 +12,6 @@ void InputSystem::Update()
 {
 
 	glfwPollEvents();
-
 	//--------------------------------------------------------------
 	// KEYBOARD TESTING using button - 0
 	//--------------------------------------------------------------
@@ -35,7 +34,7 @@ void InputSystem::Update()
 	//{
 	//	std::cout << "Pressing RIGHT\n";
 	//}
-	std::cout << InputHandler::getMouseY() << "\n";
+	//std::cout << InputHandler::getMouseY() << "\n";
 }
 void InputSystem::Exit()
 {

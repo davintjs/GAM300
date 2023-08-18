@@ -4,13 +4,17 @@
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 #include "Model3d.h"
-#include "Camera.h"
+#include "Editor_Camera.h"
+#include "../Core/FramerateController.h"
 
 #include "Editor/Editor.h"
 
 //Temporary
 Model testmodel;
-Camera testCam;
+
+//Editor_Camera testCam;
+
+Editor_Camera E_Camera;
 
 void GraphicsSystem::Init()
 {
@@ -19,19 +23,18 @@ void GraphicsSystem::Init()
 
 	//INIT GRAPHICS HERE
 
-
-
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
 	testmodel.init(&assimp);
-	testCam.Init();
-
+	E_Camera.Init();
 }
 
 void GraphicsSystem::Update()
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	
+	//Currently Putting in Camera Update loop here
+	E_Camera.Update((float)MyFrameRateController.getDt());
 
 
 	//UPDATE OR RENDER GRAPHICS HERE

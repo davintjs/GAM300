@@ -3,7 +3,7 @@
 #include "glslshader.h"
 #include "IOManager/Handler_GLFW.h"
 
-class Camera
+class Editor_Camera
 {
 public:
 	/*!*****************************************************************************
@@ -26,7 +26,11 @@ public:
 		void
 	*******************************************************************************/
 	void Update(float dt);
+	//void Update();
 	
+
+
+	void updateView();
 	/*private:*/
 	glm::vec3 cam_pos{}; // Location of Camera
 	glm::vec3 target_pos{}; //  Target ( location camera is looking at )
@@ -41,6 +45,15 @@ public:
 	glm::vec2 locked_coord{};
 	float mov_per_sec = 10000.f;
 	float mov_speed;
+	
+	float spin = 0.f;
+	float tilt = 0.f;
+
 	bool lock = false;
 	bool showcase = false;
+
+	glm::vec2 prevMousePos;
+
+
 };
+

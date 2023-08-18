@@ -1,11 +1,11 @@
 #include "Precompiled.h"
 #include "Model3d.h"
-#include "Camera.h"
+#include "Editor_Camera.h"
 
 
 #include <algorithm>
 
-extern Camera testCam;
+extern Editor_Camera E_Camera;
 
 //test
 
@@ -214,7 +214,7 @@ void Model::draw() {
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
-
+    std::cout << E_Camera.spin << "\n";
 
     shader.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -223,12 +223,18 @@ void Model::draw() {
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(testCam.persp_projection));
-    // Scuffed SRT
+        glm::value_ptr(E_Camera.persp_projection));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
-            "SRT");
+            "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
+        glm::value_ptr(E_Camera.cam_mat));
+
+    // Scuffed SRT
+    GLint uniform_var_loc3 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "SRT");
+    glUniformMatrix4fv(uniform_var_loc3, 1, GL_FALSE,
         glm::value_ptr(SRT));
 
     // test

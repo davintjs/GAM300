@@ -25,7 +25,7 @@ public:
 	static bool isMouseButtonPressed_L();
 	static bool isMouseButtonPressed_R();
 
-	static std::pair<double, double> getMousePos(); // < X , Y >	
+	static glm::vec2 getMousePos(); // < X , Y >	
 	static double getMouseX(); 
 	static double getMouseY();
 

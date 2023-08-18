@@ -70,20 +70,22 @@ bool InputHandler::isMouseButtonPressed_R()
 	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
 }
 
-std::pair<double, double> InputHandler::getMousePos()
+glm::vec2 InputHandler::getMousePos()
 {
-	std::pair<double, double>X_Y;
-	glfwGetCursorPos(GLFW_Handler::ptr_window, &X_Y.first, &X_Y.second);
-	X_Y.second = GLFW_Handler::height - X_Y.second;
+	double x, y;
+	glfwGetCursorPos(GLFW_Handler::ptr_window, &x, &y);
+	y = GLFW_Handler::height - y;
+
+	glm::vec2 X_Y(x, y);
 	return X_Y;
 }
 
 double InputHandler::getMouseX()
 {
-	return getMousePos().first;
+	return getMousePos()[0];
 }
 
 double InputHandler::getMouseY()
 {
-	return getMousePos().second;
+	return getMousePos()[1];
 }
