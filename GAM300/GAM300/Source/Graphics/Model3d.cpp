@@ -214,7 +214,6 @@ void Model::draw() {
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
-    std::cout << E_Camera.spin << "\n";
 
     shader.Use();
     // UNIFORM VARIABLES ----------------------------------------

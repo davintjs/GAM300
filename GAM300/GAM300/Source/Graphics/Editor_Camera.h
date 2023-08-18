@@ -28,19 +28,20 @@ public:
 	void Update(float dt);
 	//void Update();
 	
-
-
 	void updateView();
+
+	glm::quat getOrientation();
+
+	glm::vec3 getRightVec();
+	glm::vec3 getUpVec();
+	glm::vec3 getForwardVec();
+
 	/*private:*/
 	glm::vec3 cam_pos{}; // Location of Camera
-	glm::vec3 target_pos{}; //  Target ( location camera is looking at )
-	glm::vec3 direction_vec{};// cam - target & normalized ( its pointing towards me )
-	glm::vec3 right_vec{}; // right vector
-	glm::vec3 up_vec{}; // upwards vector
 
 	glm::mat4 cam_mat;
 	glm::mat4 persp_projection;
-	glm::mat4 ortho_projection;
+	glm::mat4 ortho_projection; // Don't think its needed
 
 	glm::vec2 locked_coord{};
 	float mov_per_sec = 10000.f;
