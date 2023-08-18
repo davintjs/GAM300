@@ -45,6 +45,11 @@
     <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
     <ClCompile Include="Source\AI\Blackboard.cpp" />
+    <ClCompile Include="Source\AI\BehaviorTreeBuilder.cpp" />
+    <ClCompile Include="Source\AI\BehaviorTree.cpp" />
+    <ClCompile Include="Source\AI\ControlFlow\Sequencer.cpp" />
+    <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
+    <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -80,5 +85,10 @@
     <ClInclude Include="Source\Core\EventsManager.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
     <ClInclude Include="Source\AI\Blackboard.h" />
+    <ClInclude Include="Source\AI\BehaviorTreeBuilder.h" />
+    <ClInclude Include="Source\AI\BehaviorTree.h" />
+    <ClInclude Include="Source\AI\ControlFlow\Sequencer.h" />
+    <ClInclude Include="Source\AI\Decorators\Inverter.h" />
+    <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
   </ItemGroup>
 </Project>

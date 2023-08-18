@@ -19,7 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AI\BehaviorTree.cpp" />
+    <ClCompile Include="Source\AI\BehaviorTreeBuilder.cpp" />
     <ClCompile Include="Source\AI\Blackboard.cpp" />
+    <ClCompile Include="Source\AI\ControlFlow\Sequencer.cpp" />
+    <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
+    <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AppEntry\Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
@@ -114,7 +119,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AI\BehaviorTree.h" />
+    <ClInclude Include="Source\AI\BehaviorTreeBuilder.h" />
     <ClInclude Include="Source\AI\Blackboard.h" />
+    <ClInclude Include="Source\AI\ControlFlow\Sequencer.h" />
+    <ClInclude Include="Source\AI\Decorators\Inverter.h" />
+    <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\Core\Debug.h" />

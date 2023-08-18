@@ -25,6 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/GraphicsSystem.h"
 #include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
+#include "AI/ControlFlow/Sequencer.h"
+#include "AI/Decorators/Inverter.h"
+#include "AI/LeafNodes/MoveToPosition.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -69,6 +72,30 @@ public:
 		}
 
 		BLACKBOARD; // Blackboard initialization
+
+		/*MoveToPosition* move = new MoveToPosition("Move");
+		Inverter* notNear = new Inverter(move);
+		Sequencer* sequence = new Sequencer();
+
+		sequence->addChild(notNear);
+
+		BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
+
+		BehaviorStatus status = tempTree->RunTree();
+		if (status == BehaviorStatus::SUCCESS)
+		{
+			std::cout << "Behavior Tree executed successfully!" << std::endl;
+		}
+		else if (status == BehaviorStatus::FAILURE)
+		{
+			std::cout << "Behavior Tree failed!" << std::endl;
+		}
+		else
+		{
+			std::cout << "Behavior Tree is still running" << std::endl;
+		}
+	
+		delete tempTree;*/
 
 	}
 
