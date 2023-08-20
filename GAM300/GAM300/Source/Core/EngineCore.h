@@ -17,18 +17,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define ENGINE_CORE_H
 
 #include "Precompiled.h"
-#include "SystemInterface.h"
+//#include "SystemInterface.h"
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Graphics/GraphicsSystem.h"
-#include "IOManager/Handler_GLFW.h"
+//#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
-#include "AI/ControlFlow/Sequencer.h"
-#include "AI/Decorators/Inverter.h"
-#include "AI/LeafNodes/MoveToPosition.h"
-#include "AI/Enemy.h"
+#include "AI/BehaviorTreeBuilder.h"
+//#include "AI/ControlFlow/Sequencer.h"
+//#include "AI/Decorators/Inverter.h"
+//#include "AI/LeafNodes/MoveToPosition.h"
+//#include "AI/Enemy.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -59,9 +60,10 @@ public:
 		{
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
-			& EditorSystem::Instance(),
-			&GraphicsSystem::Instance()
-			
+			&EditorSystem::Instance(),
+			&GraphicsSystem::Instance(),
+			&Blackboard::Instance(),
+			&BehaviorTreeBuilder::Instance()
 
 
 		};
@@ -71,8 +73,6 @@ public:
 		{
 			pSystem->Init();
 		}
-
-		BLACKBOARD; // Blackboard initialization
 
 		//MoveToPosition* move = new MoveToPosition("Move");
 		//Inverter* notNear = new Inverter(move);
@@ -149,8 +149,6 @@ public:
 		{
 			(*iter)->Exit();
 		}
-
-		BLACKBOARD_TERMINATE;
 	}
 private:
 	std::vector<ISystem*> systems;

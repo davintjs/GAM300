@@ -1,8 +1,5 @@
 #include <unordered_map>
 
-#define BLACKBOARD Blackboard::Instance()
-#define BLACKBOARD_TERMINATE Blackboard::Terminate()
-
 template <typename K>
 class my_unordered_map
 {
@@ -10,23 +7,9 @@ public:
     std::unordered_map<const char*, K> mMap;
 };
 
-class Blackboard
+ENGINE_SYSTEM(Blackboard)
 {
 public:
-    static Blackboard* Instance()
-    {
-        if (BlackboardInstance == NULL) {
-            BlackboardInstance = new Blackboard();
-        }
-        return BlackboardInstance;
-    }
-
-    static void Terminate()
-    {
-        if (BlackboardInstance != NULL) {
-            delete BlackboardInstance;
-        }
-    }
 
     template <typename T>
     void setValue(const char* key, const T& value)
@@ -51,6 +34,10 @@ public:
     }
 
 private:
+    void Init() {};
+    void Update() {};
+    void Exit() {};
+
     template <typename T>
     static my_unordered_map<T>& getMap()
     {
@@ -58,7 +45,4 @@ private:
         return instance;
     }
 
-    static Blackboard* BlackboardInstance;
 };
-
-Blackboard* Blackboard::BlackboardInstance = nullptr;

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "BehaviorTree.h"
+//#include "BehaviorTree.h"
+
+class BehaviorTree;
 
 class Enemy
 {

@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 
 #include "Enemy.h"
+#include "BehaviorTree.h"
 
 void Enemy::Init()
 {
