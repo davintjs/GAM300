@@ -89,3 +89,27 @@ double InputHandler::getMouseY()
 {
 	return getMousePos()[1];
 }
+
+void InputHandler::setMouseScroll(int state)
+{
+	if (state == -1)
+	{
+		mouseScrollState = -1;
+	}
+	if (state == 1)
+	{
+		mouseScrollState = 1;
+	}
+	
+}
+void InputHandler::reset()
+{
+	mouseScrollState = 0;
+}
+
+int InputHandler::getMouseScrollState()
+{
+	return mouseScrollState;
+}
+
+

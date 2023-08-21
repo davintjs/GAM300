@@ -222,12 +222,12 @@ void Model::draw() {
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(E_Camera.persp_projection));
+        glm::value_ptr(E_Camera.getPerspMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(E_Camera.cam_mat));
+        glm::value_ptr(E_Camera.getViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =

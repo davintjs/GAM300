@@ -520,17 +520,18 @@ mouse scroll wheel, being vertical, provides offsets only along the Y-axis.
 void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[maybe_unused]] double y) {
     //UNREFERENCED_PARAMETER(x);
 #ifdef _DEBUG
-  /*std::cout << "Mouse scroll wheel offset: ("
-    << xoffset << ", " << yoffset << ")" << std::endl;*/
+  
 #endif
-   /* if (y > 0 && Mouse.within_window)
-    {
-        Cam.Move_Front();
-    }
-    else if ( Mouse.within_window)
-    {
-        Cam.Move_Back();
-    }*/
+
+    InputHandler::setMouseScroll(y);
+    //if (y > 0 && Mouse.within_window)
+    //{
+    //    Cam.Move_Front();
+    //}
+    //else if ( Mouse.within_window)
+    //{
+    //    Cam.Move_Back();
+    //}
 }
 
 /*  _________________________________________________________________________ */

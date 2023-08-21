@@ -30,22 +30,39 @@ public:
 	
 	void updateView();
 
-	glm::quat getOrientation();
+	void setDistanceToFocalPoint(float distance);
+	
+	void rotateCamera(glm::vec2 delta);
+	void panCamera(glm::vec2 delta);
+	void zoomCamera();
 
+
+	// Getting Things relative to Cameras
+	float getDistanceToFocalPoint();
+
+	glm::vec3 GetCameraPosition();
+	
+	glm::quat getOrientation();
 	glm::vec3 getRightVec();
 	glm::vec3 getUpVec();
 	glm::vec3 getForwardVec();
 
-	/*private:*/
+	glm::mat4 getViewMatrix();
+	glm::mat4 getPerspMatrix();
+
+	float getZoomSpeed();
+
+	private:
 	glm::vec3 cam_pos{}; // Location of Camera
 
 	glm::mat4 cam_mat;
 	glm::mat4 persp_projection;
 	glm::mat4 ortho_projection; // Don't think its needed
 
-	glm::vec2 locked_coord{};
-	float mov_per_sec = 10000.f;
-	float mov_speed;
+	glm::vec3 focalPoint{};
+
+	float distanceToFP;
+
 	
 	float spin = 0.f;
 	float tilt = 0.f;
