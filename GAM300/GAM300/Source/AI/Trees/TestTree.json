@@ -1,0 +1,24 @@
+{
+    "TestTree": 
+    [
+        {
+            "NodeName": "Sequencer",
+            "NodeType": "ControlFlow",
+            "Children": 
+            [
+                {
+                    "NodeName": "Inverter",
+                    "NodeType": "Decorator",
+                    "Children": 
+                    [
+                        {
+                            "NodeName": "MoveToPosition",
+                            "NodeType": "LeafNode",
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

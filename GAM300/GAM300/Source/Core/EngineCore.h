@@ -17,13 +17,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define ENGINE_CORE_H
 
 #include "Precompiled.h"
-#include "SystemInterface.h"
+//#include "SystemInterface.h"
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Graphics/GraphicsSystem.h"
-#include "IOManager/Handler_GLFW.h"
+//#include "IOManager/Handler_GLFW.h"
+#include "AI/Blackboard.h"
+#include "AI/BehaviorTreeBuilder.h"
+//#include "AI/Enemy.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -54,9 +57,10 @@ public:
 		{
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
-			& EditorSystem::Instance(),
-			&GraphicsSystem::Instance()
-			
+			&EditorSystem::Instance(),
+			&GraphicsSystem::Instance(),
+			&Blackboard::Instance(),
+			&BehaviorTreeBuilder::Instance()
 
 
 		};
@@ -67,8 +71,8 @@ public:
 			pSystem->Init();
 		}
 
-
-
+		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
+		//tempEnemy.Update(1.f); // Temporary dt lol
 	}
 
 	/**************************************************************************/
@@ -115,9 +119,6 @@ public:
 
 				MyFrameRateController.End();
 			}
-
-			
-
 		}
 	}
 
