@@ -21,7 +21,14 @@ enum class BehaviorResult
 class BehaviorNode
 {
 public:
-	virtual ~BehaviorNode() {};
+	BehaviorNode() = default;
+	virtual ~BehaviorNode() 
+	{
+		for (auto& child : mChildren)
+		{
+			delete child;
+		}
+	};
 	virtual void Enter() = 0;
 	virtual void Tick(float dt) = 0;
 
@@ -31,6 +38,9 @@ public:
 	const BehaviorStatus getStatus();
 	const BehaviorResult getResult();
 
+	void addChild(BehaviorNode* child);
+	std::vector<BehaviorNode*> getChildren();
+
 protected:
 	void onLeafEnter();
 	void onSuccess();
@@ -39,6 +49,8 @@ protected:
 private:
 	BehaviorStatus mStatus;
 	BehaviorResult mResult;
+
+	std::vector<BehaviorNode*> mChildren;
 };
 
 class BehaviorTree

@@ -4,18 +4,18 @@
 
 void Inverter::Enter()
 {
-	mChild->setStatus(BehaviorStatus::READY);
+	getChildren()[0]->setStatus(BehaviorStatus::READY);
 }
 
 void Inverter::Tick(float dt)
 {
 	std::cout << "Decorator node running..." << std::endl;
-	mChild->Tick(dt);
-	if (mChild->getResult() == BehaviorResult::SUCCESS)
+	getChildren()[0]->Tick(dt);
+	if (getChildren()[0]->getResult() == BehaviorResult::SUCCESS)
 	{
 		onFailure();
 	}
-	else if (mChild->getResult() == BehaviorResult::FAILURE)
+	else if (getChildren()[0]->getResult() == BehaviorResult::FAILURE)
 	{
 		onSuccess();
 	}

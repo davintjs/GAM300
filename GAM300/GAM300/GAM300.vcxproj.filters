@@ -92,5 +92,6 @@
     <ClInclude Include="Source\AI\Decorators\Inverter.h" />
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
     <ClInclude Include="Source\AI\Enemy.h" />
+    <ClInclude Include="Source\AI\NodeIncludes.h" />
   </ItemGroup>
 </Project>

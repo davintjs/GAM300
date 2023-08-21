@@ -4,19 +4,16 @@
         {
             "NodeName": "Sequencer",
             "NodeType": "ControlFlow",
-            "NodeDepth": 0,
             "Children": 
             [
                 {
                     "NodeName": "Inverter",
                     "NodeType": "Decorator",
-                    "NodeDepth": 1,
                     "Children": 
                     [
                         {
                             "NodeName": "MoveToPosition",
                             "NodeType": "LeafNode",
-                            "NodeDepth": 2,
                             "Children": []
                         }
                     ]

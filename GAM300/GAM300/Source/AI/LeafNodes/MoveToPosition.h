@@ -5,8 +5,7 @@
 class MoveToPosition : public BehaviorNode
 {
 public:
-	MoveToPosition(std::string name) : mNodeName(name) {};
-
+	MoveToPosition() : mNodeName("MoveToPosition") {};
 private:
 	std::string mNodeName; // Name of this action
 	virtual void Enter() override;

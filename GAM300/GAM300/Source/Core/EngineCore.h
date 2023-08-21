@@ -26,9 +26,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
-//#include "AI/ControlFlow/Sequencer.h"
-//#include "AI/Decorators/Inverter.h"
-//#include "AI/LeafNodes/MoveToPosition.h"
 //#include "AI/Enemy.h"
 
 #define MyEngineCore EngineCore::Instance()
@@ -74,19 +71,8 @@ public:
 			pSystem->Init();
 		}
 
-		//MoveToPosition* move = new MoveToPosition("Move");
-		//Inverter* notNear = new Inverter(move);
-		//Sequencer* sequence = new Sequencer();
-
-		//sequence->addChild(notNear);
-
-		//BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
-
-		//Enemy tempEnemy(tempTree);
+		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
-	
-		//delete tempTree;
-
 	}
 
 	/**************************************************************************/

@@ -1,12 +1,6 @@
 #include "Precompiled.h"
 #include "BehaviorTreeBuilder.h"
-
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/stringbuffer.h"
-
-#include <filesystem>
+#include "NodeIncludes.h"
 
 void BehaviorTreeBuilder::Init()
 {
@@ -20,7 +14,26 @@ void BehaviorTreeBuilder::Update()
 
 void BehaviorTreeBuilder::Exit()
 {
+	for (auto& tree : mBehaviorTrees)
+	{
+		delete tree;
+	}
+	mBehaviorTrees.clear();
+}
 
+BehaviorTree* BehaviorTreeBuilder::GetBehaviorTree(std::string treeName)
+{
+	for (const auto& tree : mBehaviorTrees)
+	{
+		if (tree->GetTreeName() == treeName)
+		{
+			return tree;
+		}
+	}
+
+	std::cout << "Nullptr returned while trying to find behavior tree..." << std::endl;
+	exit(0);
+	return nullptr;
 }
 
 void BehaviorTreeBuilder::BuildTrees()
@@ -64,27 +77,118 @@ void BehaviorTreeBuilder::BuildTrees()
 
 		std::string rootName = tree["NodeName"].GetString();
 		std::string rootType = tree["NodeType"].GetString();
-		int rootDepth = tree["NodeDepth"].GetInt();
 
 		// Deserialize the root node first
-
+		BehaviorNode* rootNode = BuildNode(rootType, rootName);
 
 		// Deserialize the children nodes
 		const rapidjson::Value& _children = tree["Children"];
 
-		for (int i = 0; i < _children.Size(); ++i)
+		for (size_t i = 0; i < _children.Size(); ++i)
 		{
 			// Recursively build tree here from the root node
+			const rapidjson::Value& mChild = _children[static_cast<int>(i)];
+			BuildChildren(rootNode, mChild);
 		}
 
+		BehaviorTree* tempTree = new BehaviorTree(fileName, rootNode);
 
-		//MoveToPosition* move = new MoveToPosition("Move");
-		//Inverter* notNear = new Inverter(move);
-		//Sequencer* sequence = new Sequencer();
-
-		//sequence->addChild(notNear);
-
-		//BehaviorTree* tempTree = new BehaviorTree("Temp tree", sequence);
-		
+		mBehaviorTrees.push_back(tempTree); // Add this tree to our behavior tree vector
 	}
+}
+
+void BehaviorTreeBuilder::BuildChildren(BehaviorNode* mNode, const rapidjson::Value& val)
+{
+	std::string nodeName = val["NodeName"].GetString();
+	std::string nodeType = val["NodeType"].GetString();
+
+	BehaviorNode* childNode = BuildNode(nodeType, nodeName);
+	mNode->addChild(childNode);
+
+	const rapidjson::Value& _children = val["Children"];
+
+	// Build the children of this children
+	for (size_t i = 0; i < _children.Size(); ++i)
+	{
+		const rapidjson::Value& mChild = _children[static_cast<int>(i)];
+		BuildChildren(childNode, mChild);
+	}
+}
+
+// Following functions below require changes every addition of behavior nodes
+BehaviorNode* BehaviorTreeBuilder::BuildNode(std::string nodeType, std::string nodeName)
+{
+	if (nodeType == "ControlFlow")
+	{
+		BehaviorNode* mNode = DeserializeControlFlow(nodeName);
+		return mNode;
+	}
+	else if (nodeType == "Decorator")
+	{
+		BehaviorNode* mNode = DeserializeDecorator(nodeName);
+		return mNode;
+	}
+	else if (nodeType == "LeafNode")
+	{
+		BehaviorNode* mNode = DeserializeLeafNode(nodeName);
+		return mNode;
+	}
+	else
+	{
+		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
+		exit(0);
+	}
+
+	return nullptr;
+}
+
+BehaviorNode* BehaviorTreeBuilder::DeserializeControlFlow(std::string nodeName)
+{
+	if (nodeName == "Sequencer")
+	{
+		BehaviorNode* mNode;
+		mNode = new Sequencer();
+		return mNode;
+	}
+	else
+	{
+		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
+		exit(0);
+	}
+
+	return nullptr;
+}
+
+BehaviorNode* BehaviorTreeBuilder::DeserializeDecorator(std::string nodeName)
+{
+	if (nodeName == "Inverter")
+	{
+		BehaviorNode* mNode;
+		mNode = new Inverter();
+		return mNode;
+	}
+	else
+	{
+		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
+		exit(0);
+	}
+
+	return nullptr;
+}
+
+BehaviorNode* BehaviorTreeBuilder::DeserializeLeafNode(std::string nodeName)
+{
+	if (nodeName == "MoveToPosition")
+	{
+		BehaviorNode* mNode;
+		mNode = new MoveToPosition();
+		return mNode;
+	}
+	else
+	{
+		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
+		exit(0);
+	}
+
+	return nullptr;
 }

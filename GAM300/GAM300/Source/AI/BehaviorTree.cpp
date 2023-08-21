@@ -1,5 +1,4 @@
 #include "Precompiled.h"
-
 #include "BehaviorTree.h"
 
 void BehaviorNode::setResult(BehaviorResult result)
@@ -12,14 +11,24 @@ void BehaviorNode::setStatus(BehaviorStatus status)
 	mStatus = status;
 }
 
+const BehaviorStatus BehaviorNode::getStatus()
+{
+	return mStatus;
+}
+
 const BehaviorResult BehaviorNode::getResult()
 {
 	return mResult;
 }
 
-const BehaviorStatus BehaviorNode::getStatus()
+void BehaviorNode::addChild(BehaviorNode* mChild)
 {
-	return mStatus;
+	mChildren.push_back(mChild);
+}
+
+std::vector<BehaviorNode*> BehaviorNode::getChildren()
+{
+	return mChildren;
 }
 
 void BehaviorNode::onLeafEnter()
