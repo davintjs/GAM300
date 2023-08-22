@@ -36,6 +36,9 @@ public:
 	void panCamera(glm::vec2 delta);
 	void zoomCamera();
 
+	void setViewportSize(float width , float height);
+
+	void setRotationSpeed(float speed);
 
 	// Getting Things relative to Cameras
 	float getDistanceToFocalPoint();
@@ -51,8 +54,16 @@ public:
 	glm::mat4 getPerspMatrix();
 
 	float getZoomSpeed();
+	glm::vec2 getPanSpeed();
 
-	private:
+	glm::vec2 getViewportSize();
+
+	float getRotationSpeed();
+
+private:
+
+	glm::vec2 viewport{ 1600.f,900.f };
+
 	glm::vec3 cam_pos{}; // Location of Camera
 
 	glm::mat4 cam_mat;
@@ -63,7 +74,8 @@ public:
 
 	float distanceToFP;
 
-	
+	float rotationSpeed;
+
 	float spin = 0.f;
 	float tilt = 0.f;
 

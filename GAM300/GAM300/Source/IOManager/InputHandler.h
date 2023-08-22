@@ -35,11 +35,6 @@ public:
 
 	static int getMouseScrollState();// 1 -> scroll up / -1 -> scroll down, 0 -> nothing
 
-
-
-
-
-
 	static void setKeystate_Press(int key);
 
 	static void setKeystate_Hold(int key);

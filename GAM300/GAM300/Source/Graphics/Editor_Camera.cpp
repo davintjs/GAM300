@@ -4,16 +4,9 @@
 
 void Editor_Camera::Init()
 {
-	cam_pos = glm::vec3(0.f, 0.f, 0.f);
-	//target_pos = glm::vec3(0.f, 0.f, -10000.f);
-
-	//direction_vec = glm::normalize(cam_pos - target_pos);
-	//right_vec = glm::vec3(0.f, 1.f, 0.f);
-	//right_vec = glm::normalize(glm::cross(right_vec, direction_vec));
-	//up_vec = glm::cross(direction_vec, glm::vec3(right_vec));
-	//focalPoint = { -10.f,-10.f,-10.f };
+	
 	setDistanceToFocalPoint(1000.f);
-
+	setRotationSpeed(2.f);
 	updateView();
 
 	persp_projection = glm::perspective(glm::radians(45.0f), 16.f / 9.f, 0.1f, 1000000.f);
@@ -27,12 +20,12 @@ void Editor_Camera::Update(float dt)
 	// To Move / Adjust the editor camera
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
-
 		//--------------------------------------------------------------
 		// Rotating / Panning / Zooming
 		//--------------------------------------------------------------
 
 		glm::vec2 delta = (InputHandler::getMousePos() - prevMousePos) * 0.003f;
+		
 		prevMousePos = InputHandler::getMousePos();
 
 		if (InputHandler::isMouseButtonPressed_L()) // Rotating
@@ -69,15 +62,10 @@ void Editor_Camera::Update(float dt)
 		{
 			focalPoint += getRightVec() * 10.f;
 		}
-
-
 		std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
 		std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
 		updateView();
 	}
-	
-
-
 }
 
 void Editor_Camera::updateView()
@@ -155,15 +143,18 @@ float Editor_Camera::getZoomSpeed()
 void Editor_Camera::rotateCamera(glm::vec2 delta)
 {
 	std::cout << "Rotate Camera\n";
-	tilt += delta.x * 0.5f;
-	spin -= delta.y * 0.5f;
+	tilt += delta.x * getRotationSpeed();
+	spin -= delta.y * getRotationSpeed();
 }
+
 void Editor_Camera::panCamera(glm::vec2 delta)
 {
 	std::cout << "Panning\n";
-	focalPoint += -getRightVec() * delta.x * 100.f;
-	focalPoint += getUpVec() * delta.y * 100.f;
+	glm::vec2 panSpeed = getPanSpeed();
+	focalPoint += -getRightVec() * delta.x * panSpeed.x * getDistanceToFocalPoint();
+	focalPoint += getUpVec() * delta.y * panSpeed.y * getDistanceToFocalPoint();
 }
+
 void Editor_Camera::zoomCamera()
 {
 	distanceToFP += -InputHandler::getMouseScrollState() * getZoomSpeed();
@@ -175,3 +166,34 @@ void Editor_Camera::zoomCamera()
 	}
 }
 
+glm::vec2 Editor_Camera::getPanSpeed() //  Copied from Cherno no cappo
+{
+	std::cout << "viewport " << viewport.x << " , " << viewport.y << "\n";
+	float x = std::min(viewport.x / 1000.0f, 2.4f); // max = 2.4f
+	float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
+
+	float y = std::min(viewport.y / 1000.0f, 2.4f); // max = 2.4f
+	float yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
+
+	return { xFactor, yFactor };
+}
+
+void Editor_Camera::setViewportSize(float width, float height)
+{
+	viewport = glm::vec2(width, height);
+}
+
+glm::vec2 Editor_Camera::getViewportSize()
+{
+	return viewport;
+}
+
+void Editor_Camera::setRotationSpeed(float speed)
+{
+	rotationSpeed = speed;
+}
+
+float Editor_Camera::getRotationSpeed()
+{
+	return rotationSpeed;
+}
