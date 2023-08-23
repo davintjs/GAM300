@@ -29,22 +29,21 @@ T& ObjectsList<T, N>::emplace_back(Args&&... args)
 	return start->sparseSet.emplace_back(args...);
 }
 
-template <typename T, size_t N>
+template <typename T, ObjectIndex N>
 template <typename... Args>
-T& ObjectsList<T, N>::emplace_back(DenseIndex index, Args&&... args)
+T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
 {
-	//Find and make to next element
-	T& back = *new (data + index.val) T(std::forward<Args>(args)...); // Construct the new element in the array
-	for (size_t i = size_; i < N; ++i)
+	if (head == nullptr)
+		head = new Node;
+	Node* start = head;
+	while (index >= N)
 	{
-		if (index[i] == index.val)
-		{
-			std::swap(index[i], index[size_]);
-			break;
-		}
+		if (start->next == nullptr)
+			start->next = CreateNode();
+		start = start->next;
+		index -= N;
 	}
-	++size_;
-	return back;
+	return start->sparseSet.emplace(index);
 }
 
 template <typename T, ObjectIndex N>

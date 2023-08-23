@@ -8,17 +8,25 @@
 constexpr size_t MAX_ENTITIES{ 100000 };
 
 struct Scene;
-using EntityIndex = size_t;
+struct Entity;
+
+using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
 struct Entity
 {
+public:
 	Entity(UUID _uuid = CreateUUID());
 	const UUID uuid;
-	Scene* pScene = nullptr;
-	//std::bitset<MAX_COMPONENTS> componentsBitset{};
+	//Which array does this object belong in?
+	EntitiesList* pList = nullptr;
+	DenseIndex GetDenseIndex()
+	{
+		if (pList == nullptr)
+			ASSERT(true,"Entity does not belong to any array yet");
+		return pList->GetDenseIndex(*this);
+	}
 };
 
-using EntitiesArray = ObjectsList<Entity, MAX_ENTITIES>;
 using EntitiesPtrArray = std::vector<Entity*>;
 
 #endif // !ENTITY_H

@@ -39,6 +39,26 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
+struct SceneChangingEvent : IEvent
+{
+	SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
+	Scene& scene;
+};
+
+template <typename T>
+struct ReflectComponentEvent : IEvent
+{
+	ReflectComponentEvent(T& _component) : component{ _component } {}
+	T& component;
+};
+
+struct ReflectEntityEvent : IEvent
+{
+	ReflectEntityEvent(Entity& _entity) : entity{ _entity} {}
+	Entity& entity;
+};
+
+
 //struct GetCurrentSceneEvent
 //{
 //	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};

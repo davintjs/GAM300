@@ -35,10 +35,10 @@ template <typename T>
 using ComponentsPtrArray = std::vector<T*>;
 
 template<typename T, typename... Ts>
-struct GetComponentTypeGroup : GetComponentTypeGroup<Ts...>
+struct GetComponentTypeGroup
 {
 	static constexpr const char* name = ComponentName(T);
-	static constexpr size_t e = sizeof...(Ts) - 1;
+	static constexpr size_t e = sizeof...(Ts);
 	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
 	constexpr GetComponentTypeGroup() = default;
 
@@ -55,10 +55,6 @@ struct GetComponentTypeGroup : GetComponentTypeGroup<Ts...>
 		}
 	}
 };
-
-template <typename... Ts>
-struct GetComponentTypeGroup<None,Ts...>{};
-
 
 template<typename... Ts>
 struct SingleComponentsGroup
@@ -156,16 +152,13 @@ For each GameObject, they will preallocate for 4 of the same components
 If there are more than 4, it will allocate for a new set of same components,
 This way, its a forward list with some cache locality and can scale infinitely
 So technically this would it a sparse set of 
-
-
-
 */
 
 using SingleComponentTypes = TemplatePack<Rigidbody, Animator>;
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
-//using GetComponentType = decltype(GetComponentTypeGroup(SingleComponentTypes()));
+using GetComponentType = decltype(GetComponentTypeGroup(SingleComponentTypes().Concatenate(MultiComponentTypes())));
 
 
 #endif // !COMPONENTS_H

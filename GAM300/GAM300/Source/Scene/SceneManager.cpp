@@ -3,16 +3,17 @@
 
 void SceneManager::Init()
 {
-	//if (loadedScenes.empty())
-	//{
-	//	//Create empty scene
-	//	LoadScene("");
-	//}
+	if (loadedScenes.empty())
+	{
+		//Create empty scene
+		LoadScene("");
+		loadedScenes.front().AddEntity();
+	}
 }
 
 void SceneManager::LoadScene(const char* path)
 {
-	//loadedScenes.emplace_front(path);
+	loadedScenes.emplace_front(path);
 }
 
 void SceneManager::Update()
@@ -22,5 +23,5 @@ void SceneManager::Update()
 
 void SceneManager::Exit()
 {
-
+	loadedScenes.clear();
 }

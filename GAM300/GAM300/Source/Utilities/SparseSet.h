@@ -23,17 +23,20 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/Debug.h"
 
 
-struct DenseIndex
-{
-    size_t val = 0;
-};
+using DenseIndex = size_t;
 
 template <typename T, size_t N>
 class SparseSet
 {
     //Uninitialized memory
-    typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
-    std::array<size_t, N>indexes;
+    union 
+    {
+        typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
+        T* pData;
+    };
+    //DenseIndexes
+    std::array<size_t, N>denseIndexes;
+    std::array<size_t, N>sparseIndexes;
     size_t size_{ 0 };
 public:
 
@@ -177,7 +180,7 @@ public:
     T& emplace_back(Args&&... args);
 
     template <typename... Args>
-    T& emplace_back(DenseIndex index ,Args&&... args);
+    T& emplace(DenseIndex index ,Args&&... args);
     /***************************************************************************/
     /*!
         \brief
@@ -214,7 +217,7 @@ public:
     /**************************************************************************/
     T& operator[] (size_t i);
 
-    T& operator[] (DenseIndex val);
+    T& DenseSubscript (DenseIndex val);
 
     /***************************************************************************/
     /*!
@@ -228,8 +231,9 @@ public:
     /**************************************************************************/
     bool contains(T& pValue)
     {
-        size_t denseIndex = &pValue - static_cast<T*>(data);
-        if (denseIndex >= N)
+        if (&pValue < pData)
+            return false;
+        if (&pValue - pData >= N)
             return false;
         return true;
     }
@@ -246,9 +250,9 @@ public:
     /**************************************************************************/
     void swap(size_t sparseIndex1, size_t sparseIndex2)
     {
-        size_t tmp{ indexes[sparseIndex1] };
-        indexes[sparseIndex1] = indexes[sparseIndex2];
-        indexes[sparseIndex2] = tmp;
+        size_t tmp{ denseIndexes[sparseIndex1] };
+        denseIndexes[sparseIndex1] = denseIndexes[sparseIndex2];
+        denseIndexes[sparseIndex2] = tmp;
     }
 
     /***************************************************************************/
@@ -271,7 +275,7 @@ public:
         {
             for (size_t i = 0; i < size_; ++i)
             {
-                size_t& index = indexes[i];
+                size_t& index = denseIndexes[i];
                 if (index == rhsDenseIndex)
                     index = lhsDenseIndex;
                 else if (index == lhsDenseIndex)
@@ -285,7 +289,7 @@ public:
         {
             for (size_t i = 0; i < size_; ++i)
             {
-                size_t& index = indexes[i];
+                size_t& index = denseIndexes[i];
                 if (index == lhsDenseIndex)
                     index = rhsDenseIndex;
                 else if (index == rhsDenseIndex)
@@ -295,6 +299,12 @@ public:
                 }
             }
         }
+    }
+
+
+    DenseIndex GetDenseIndex(T& object)
+    {
+        return &object - pData;
     }
 
     /***************************************************************************/

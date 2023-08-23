@@ -21,7 +21,8 @@ SparseSet<T, N>::SparseSet()
 {
     for (size_t i = 0; i < N; ++i)
     {
-        indexes[i] = i;
+        denseIndexes[i] = i;
+        sparseIndexes[i] = i;
     }
 }
 
@@ -38,7 +39,7 @@ template <typename T, size_t N>
 template <typename... Args>
 T& SparseSet<T, N>::emplace_back(Args&&... args)
 {
-    T& back = *new (data + indexes[size_]) T(std::forward<Args>(args)...); // Construct the new element in the array
+    T& back = *new (data + denseIndexes[size_]) T(std::forward<Args>(args)...); // Construct the new element in the array
     ++size_;
     return back;
 }
@@ -46,15 +47,15 @@ T& SparseSet<T, N>::emplace_back(Args&&... args)
 
 template <typename T, size_t N>
 template <typename... Args>
-T& SparseSet<T, N>::emplace_back(DenseIndex index, Args&&... args)
+T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
 {
     //Find and make to next element
-    T& back = *new (data + index.val) T(std::forward<Args>(args)...); // Construct the new element in the array
+    T& back = *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
     for (size_t i = size_; i < N; ++i)
     {
-        if (index[i] == index.val)
+        if (denseIndexes[i] == index)
         {
-            std::swap(index[i], index[size_]);
+            std::swap(denseIndexes[i], denseIndexes[size_]);
             break;
         }
     }
@@ -67,11 +68,11 @@ void SparseSet<T, N>::erase(size_t denseIndex)
 {
     for (size_t i = 0; i < size_; ++i)
     {
-        size_t& index = indexes[i];
+        size_t& index = denseIndexes[i];
         if (index == denseIndex)
         {
             reinterpret_cast<T*>(data)[index].~T();
-            std::swap(index, indexes[size_ - 1]);
+            std::swap(index, denseIndexes[size_ - 1]);
             --size_;
             return;
         }
@@ -82,11 +83,11 @@ template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
     //ASSERT(i >= size_, "ARRAY OUT OF BOUNDS");
-    return *reinterpret_cast<T*>(data + indexes[i]);
+    return *reinterpret_cast<T*>(data + denseIndexes[i]);
 }
 
 template <typename T, size_t N>
-T& SparseSet<T, N>::operator[] (DenseIndex index)
+T& SparseSet<T, N>::DenseSubscript(DenseIndex index)
 {
-    return *reinterpret_cast<T*>(data + index.val);
+    return *reinterpret_cast<T*>(data + index);
 }

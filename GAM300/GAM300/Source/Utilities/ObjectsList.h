@@ -8,12 +8,6 @@ using ObjectIndex = size_t;
 template <typename T, ObjectIndex N>
 class ObjectsList
 {
-    struct Node
-    {
-        SparseSet<T, N> sparseSet;
-        std::bitset<N> activeObjectsBitset;
-        Node* next = nullptr;
-    };
     class Iterator
     {
 
@@ -106,25 +100,36 @@ class ObjectsList
         }
     };
 public:
-	//bool GetActive(ObjectIndex index)
-	//{
-	//	return activeObjectsBitset.test(index);
-	//}
-
-	//void SetActive(ObjectIndex index, bool val)
-	//{
-	//	activeObjectsBitset.set(index, val);
-	//}
     template <typename... Args>
     T& emplace_back(Args&&... args);
     template <typename... Args>
-    T& emplace_back(DenseIndex index, Args&&... args);
+    T& emplace(DenseIndex index, Args&&... args);
     void clear();
     void erase(T& val);
     ~ObjectsList();
     Iterator begin() {return Iterator(0, *this);}
     Iterator end() {return Iterator(size_, *this);}
+
+
+    DenseIndex GetDenseIndex(T& object)
+    {
+        Node* start = head;
+        while (start != nullptr)
+        {
+            if (start->sparseSet.contains(object))
+                return start->sparseSet.GetDenseIndex(object);
+            start = start->next;
+        }
+        ASSERT(true, "Object List does not contain this object");
+    }
 private:
+    struct Node
+    {
+        SparseSet<T, N> sparseSet;
+        std::bitset<N> activeObjectsBitset;
+        //Forward List
+        Node* next = nullptr;
+    };
     Node* head = nullptr;
     Node* emptyNodesPool = nullptr;
     size_t size_;

@@ -37,7 +37,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 
 struct Scene
 {
-	EntitiesArray entities;	//Vector should be in order
+	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
 	EntitiesPtrArray entitiesToDelete;
@@ -52,100 +52,34 @@ struct Scene
 
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		LOAD function for the scene
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void Load();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		INIT function for the scene
-	/*******************************************************************************/
-	void Init();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		UPDATE function for the scene
-	/*******************************************************************************/
-	void Update();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		DRAW function for the scene
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void Draw();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		FREE function for the scene
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void Free();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		UNLOAD function for the scene
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	void Unload();
 
 
 	Entity& AddEntity()
 	{
-		//singleComponentsArrays.GetArray<Component>().emplace_back();
-		//CHANGE THIS BACK TO USE EMPLACE;
-		static Entity temp;
-		return temp;
-		//return entities.emplace_back();
+		return entities.emplace_back();
 	}
 
-	bool EntityIsActive(EntityIndex index);
+	bool EntityIsActive(DenseIndex index);
 
-	void EntitySetActive(EntityIndex index,bool value);
-
-	template <typename Component>
-	bool ComponentIsEnabled(EntityIndex index, size_t multiIndex);
-
+	void EntitySetActive(DenseIndex index,bool value);
 
 	template <typename Component>
-	void ComponentSetEnabled(EntityIndex index,bool value, size_t multiIndex = 0);
+	bool ComponentIsEnabled(DenseIndex index, size_t multiIndex);
+
 
 	template <typename Component>
-	Component& AddComponent(EntityIndex index)
+	void ComponentSetEnabled(DenseIndex index,bool value, size_t multiIndex = 0);
+
+	template <typename Component>
+	Component& AddComponent(DenseIndex index)
 	{
 		if constexpr (SingleComponentTypes::Has(Component))
 		{
-			Component& component = 
-				singleComponentsArrays.GetArray<Component>().emplace_back();
-			return component;
+			return singleComponentsArrays.GetArray<Component>().emplace(index);;
 		}
 		else if constexpr (MultiComponentTypes::Has(Component))
 		{
-			Component& component =
-				multiComponentsArrays.GetArray<Component>().emplace_back();
-			return component;
+			return multiComponentsArrays.GetArray<Component>().emplace(index);;
 		}
 		else
 		{
@@ -158,7 +92,7 @@ struct Scene
 };
 
 template <typename Component>
-bool Scene::ComponentIsEnabled(EntityIndex index, size_t multiIndex)
+bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
 {
 	if constexpr (SingleComponentTypes::Has(Component))
 	{
@@ -173,7 +107,7 @@ bool Scene::ComponentIsEnabled(EntityIndex index, size_t multiIndex)
 }
 
 template <typename Component>
-void Scene::ComponentSetEnabled(EntityIndex index, bool value, size_t multiIndex)
+void Scene::ComponentSetEnabled(DenseIndex index, bool value, size_t multiIndex)
 {
 	if constexpr (SingleComponentTypes::Has(Component))
 	{

@@ -25,7 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <map>
 
-#define EVENTS EventsManager::Instance()
+#define EVENT EventsManager::Instance()
 
 class IEventHandler
 {
