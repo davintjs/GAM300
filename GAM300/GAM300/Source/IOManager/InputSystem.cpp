@@ -6,6 +6,7 @@
 
 void InputSystem::Init()
 {
+	InputHandler::setFullscreen(false);
 	//InputHandler:: = new int[55];
 }
 void InputSystem::Update()
@@ -13,6 +14,12 @@ void InputSystem::Update()
 	InputHandler::reset();
 
 	glfwPollEvents();
+
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_F11))
+	{
+		std::cout << "toggling between fullscreen and non fullscreen\n";
+		InputHandler::setFullscreen(!InputHandler::isFullscreen());
+	}
 
 	//--------------------------------------------------------------
 	// KEYBOARD TESTING using button - 0

@@ -2,6 +2,7 @@
 
 #include "IOManager/Handler_GLFW.h"
 
+
 #define MAX_KEY_COUNT 348
 class InputHandler
 {
@@ -21,13 +22,16 @@ public:
 
 	static bool isKeyButtonPressed(int key);// UNIQUE 1 Time Press -> Pressing Tab or something like that
 											// I am sure u know what i mean big boi
-
 	static bool isMouseButtonPressed_L();
 	static bool isMouseButtonPressed_R();
 
 	static glm::vec2 getMousePos(); // < X , Y >
 
+	static void setFullscreen(bool);
 
+	static bool isFullscreen();
+
+	//static void resizeViewport(int width, int height);
 	static double getMouseX(); 
 	static double getMouseY();
 
@@ -49,4 +53,5 @@ private:
 	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
 	inline static int last_Key_states[MAX_KEY_COUNT]; // Used for the difference between press and hold
 	inline static int mouseScrollState = 0;
+	inline static bool fullscreen;
 };

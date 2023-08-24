@@ -62,8 +62,13 @@ void Editor_Camera::Update(float dt)
 		{
 			focalPoint += getRightVec() * 10.f;
 		}
-		std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
-		std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
+
+
+		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
+		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
+		
+		
+		
 		updateView();
 	}
 }
