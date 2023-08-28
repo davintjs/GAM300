@@ -29,7 +29,18 @@ ENGINE_SYSTEM(EditorSystem)
 	void Init();
 	void Update();
 	void Exit();
+
+	void Editor_Dockspace();
+	void Editor_MenuBar();
+	void Editor_Content_Browser();
+	void Editor_SceneViewport();
+	void Editor_Toolbar();
+	void Editor_Inspector();
+	void Editor_Hierarchy();
+
 };
+
+
 
 //Inspector Functions
 //void Inspector_Transform(int index);
@@ -41,14 +52,9 @@ ENGINE_SYSTEM(EditorSystem)
 
 // Editor Member functions
 //void Editor_Entity_Creator();
-//void Editor_SceneViewport();
-//void Editor_Toolbar();
-//void Editor_Inspector(std::string Entity_Name, int Entity_Index);
-//void Editor_Hierarchy();
+
 //void Editor_PerformanceViewer();
-void Editor_Dockspace();
-//void Editor_MenuBar();
-//void Editor_Content_Browser();
+
 //void Editor_Update();
 //void Editor_New_Scene();
 //void Editor_PickEntity();

@@ -114,6 +114,7 @@
     <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -151,6 +152,7 @@
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
+    <ClInclude Include="Source\Utilities\PlatformUtils.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />

@@ -51,6 +51,7 @@
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
+    <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -93,5 +94,6 @@
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
     <ClInclude Include="Source\AI\Enemy.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />
+    <ClInclude Include="Source\Utilities\PlatformUtils.h" />
   </ItemGroup>
 </Project>
