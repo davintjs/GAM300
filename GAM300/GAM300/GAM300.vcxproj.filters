@@ -51,6 +51,8 @@
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
+    <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -93,5 +95,7 @@
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
     <ClInclude Include="Source\AI\Enemy.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />
+    <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\AssetManager\ThreadPool.h" />
   </ItemGroup>
 </Project>
