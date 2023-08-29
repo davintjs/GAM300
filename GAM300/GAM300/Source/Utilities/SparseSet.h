@@ -29,14 +29,9 @@ template <typename T, size_t N>
 class SparseSet
 {
     //Uninitialized memory
-    union 
-    {
-        typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
-        T* pData;
-    };
+    typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
     //DenseIndexes
     std::array<size_t, N>denseIndexes;
-    std::array<size_t, N>sparseIndexes;
     size_t size_{ 0 };
 public:
 
@@ -231,9 +226,9 @@ public:
     /**************************************************************************/
     bool contains(T& pValue)
     {
-        if (&pValue < pData)
+        if (&pValue < reinterpret_cast<T*>(data))
             return false;
-        if (&pValue - pData >= N)
+        if (&pValue - reinterpret_cast<T*>(data) >= N)
             return false;
         return true;
     }
@@ -304,7 +299,7 @@ public:
 
     DenseIndex GetDenseIndex(T& object)
     {
-        return &object - pData;
+        return &object - reinterpret_cast<T*>(data);
     }
 
     /***************************************************************************/

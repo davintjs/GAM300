@@ -25,7 +25,15 @@ void SceneManager::Update()
 	{
 		++i;
 		//PRINT(entity.uuid, ' ', i, '\n');
+		DenseIndex index = entity.GetDenseIndex();
+		loadedScenes.front().singleComponentsArrays.GetArray<Transform>().DenseSubscript(index);
 	}
+
+	for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
+	{
+
+	}
+
 	//PRINT('\n');
 }
 

@@ -56,8 +56,12 @@ struct Scene
 
 	Entity& AddEntity()
 	{
-		PRINT("Added Entity");
-		return entities.emplace_back();
+		//PRINT("Added Entity");
+		Entity& entity = entities.emplace_back();
+		entity.pList = &entities;
+		DenseIndex index = entity.GetDenseIndex();
+		singleComponentsArrays.GetArray<Transform>().emplace(index);
+		return entity;
 	}
 
 	bool EntityIsActive(DenseIndex index);

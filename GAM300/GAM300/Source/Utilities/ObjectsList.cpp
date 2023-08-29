@@ -37,7 +37,7 @@ template <typename... Args>
 T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
 {
 	if (head == nullptr)
-		head = new Node;
+		head = CreateNode();
 	Node* start = head;
 	while (index >= N)
 	{
@@ -46,6 +46,7 @@ T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
 		start = start->next;
 		index -= N;
 	}
+	++size_;
 	return start->sparseSet.emplace(index);
 }
 

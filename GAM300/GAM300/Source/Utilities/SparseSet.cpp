@@ -22,7 +22,6 @@ SparseSet<T, N>::SparseSet()
     for (size_t i = 0; i < N; ++i)
     {
         denseIndexes[i] = i;
-        sparseIndexes[i] = i;
     }
 }
 
@@ -50,7 +49,10 @@ template <typename... Args>
 T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
 {
     //Find and make to next element
+    ASSERT(index < N, " OUT OF BOUNDS");
     T& back = *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
+    if (size_ == N)
+        PRINT("WTF");
     for (size_t i = size_; i < N; ++i)
     {
         if (denseIndexes[i] == index)
@@ -82,7 +84,7 @@ void SparseSet<T, N>::erase(size_t denseIndex)
 template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
-    //ASSERT(i >= size_, "ARRAY OUT OF BOUNDS");
+    ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
     return *reinterpret_cast<T*>(data + denseIndexes[i]);
 }
 

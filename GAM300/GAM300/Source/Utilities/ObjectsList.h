@@ -112,14 +112,26 @@ public:
 
     size_t size() const { return size_; }
 
+    T& DenseSubscript(DenseIndex val)
+    {
+        Node* start = head;
+        while (val > N)
+        {
+            val -= N;
+            start = start->next;
+        }
+        return start->sparseSet.DenseSubscript(val);
+    }
 
     DenseIndex GetDenseIndex(T& object)
     {
         Node* start = head;
+        DenseIndex count = 0;
         while (start != nullptr)
         {
+            ++count;
             if (start->sparseSet.contains(object))
-                return start->sparseSet.GetDenseIndex(object);
+                return start->sparseSet.GetDenseIndex(object) + count*N;
             start = start->next;
         }
         ASSERT(true, "Object List does not contain this object");
