@@ -18,6 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "SystemInterface.h"
 #include "FramerateController.h"
+#include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include <vector>
@@ -47,6 +48,7 @@ public:
 	/**************************************************************************/
 	void Init()
 	{
+		THREADS.Init();
 		MyFrameRateController.Init();
 		systems =
 		{
@@ -58,6 +60,12 @@ public:
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
+		}
+
+		//TEST ENTITY CREATION
+		for (int i = 0; i < 100; ++i)
+		{
+			SceneManager::Instance().GetCurrentScene().AddEntity();
 		}
 	}
 
@@ -98,6 +106,7 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
+		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
 			(*iter)->Exit();

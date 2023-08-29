@@ -39,9 +39,9 @@ class ObjectsList
         {
             size_t whichNode = index / N;
             size_t sparseIndex = index % N;
-            Node* start = head;
-            for (size_t i = 0; i < whichNode; ++i, head = head->next);
-            return head->sparseSet[sparseIndex];
+            Node* start = arr.head;
+            for (size_t i = 0; i < whichNode; ++i, start = start->next);
+            return start->sparseSet[sparseIndex];
         }
 
         /***************************************************************************/
@@ -110,6 +110,8 @@ public:
     Iterator begin() {return Iterator(0, *this);}
     Iterator end() {return Iterator(size_, *this);}
 
+    size_t size() const { return size_; }
+
 
     DenseIndex GetDenseIndex(T& object)
     {
@@ -132,7 +134,7 @@ private:
     };
     Node* head = nullptr;
     Node* emptyNodesPool = nullptr;
-    size_t size_;
+    size_t size_{0};
     Node* CreateNode();
     void DeleteNode(Node* prev, Node* pNode);
 };	

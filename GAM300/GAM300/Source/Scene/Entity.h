@@ -5,7 +5,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-constexpr size_t MAX_ENTITIES{ 100000 };
+constexpr size_t MAX_ENTITIES{ 5 };
 
 struct Scene;
 struct Entity;

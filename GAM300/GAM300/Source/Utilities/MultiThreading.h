@@ -3,16 +3,12 @@
 #include "Core/SystemInterface.h"
 #include "Core/EventsManager.h"
 #include <thread>
+#include <string>
 #include <unordered_map>
 
+#define THREADS ThreadsManager::Instance()
 
-enum class MutexType
-{
-	FileSystem,
-	None
-};
-
-ENGINE_EDITOR_SYSTEM(ThreadsManager)
+SINGLETON(ThreadsManager)
 {
 public:
 	/*******************************************************************************
@@ -22,15 +18,7 @@ public:
 			Initialise the system at engine start
 	*/
 	/*******************************************************************************/
-	void init();
-	/*******************************************************************************
-	/*!
-	*
-		\brief
-			Runs at engine update
-	*/
-	/*******************************************************************************/
-	void update();
+	void Init();
 	/*******************************************************************************
 	/*!
 	*
@@ -38,7 +26,7 @@ public:
 			Runs when engine exits
 	*/
 	/*******************************************************************************/
-	void exit();
+	void Exit();
 
 	/*******************************************************************************
 	/*!
@@ -51,7 +39,7 @@ public:
 			Thread to keep track of
 	*/
 	/*******************************************************************************/
-	void addThread(std::thread * _thread);
+	void AddThread(std::thread * _thread);
 
 	/*******************************************************************************
 	/*!
@@ -64,13 +52,7 @@ public:
 			True if acquired
 	*/
 	/*******************************************************************************/
-	bool acquireMutex(MutexType mutexType)
-	{
-		if (mutexes[mutexType] == 1)
-			return 0;
-		mutexes[mutexType] = 1;
-		return 1;
-	}
+	bool AcquireMutex(const std::string & mutexName);
 
 	/*******************************************************************************
 	/*!
@@ -81,10 +63,7 @@ public:
 			Type of mutex to return
 	*/
 	/*******************************************************************************/
-	void returnMutex(MutexType mutexType)
-	{
-		mutexes[mutexType] = 0;
-	}
+	void ReturnMutex(const std::string & mutexName);
 
 	/*******************************************************************************
 	/*!
@@ -98,6 +77,6 @@ public:
 	bool HasQuit() const;
 private:
 	std::vector<std::thread*> threads;
-	std::unordered_map<MutexType, bool> mutexes;
+	std::unordered_map<std::string, bool> mutexes;
 	bool quit = false;
 };

@@ -7,18 +7,26 @@ void SceneManager::Init()
 	{
 		//Create empty scene
 		LoadScene("");
-		loadedScenes.front().AddEntity();
 	}
 }
 
 void SceneManager::LoadScene(const char* path)
 {
 	loadedScenes.emplace_front(path);
+	
+	//Init scene
 }
 
 void SceneManager::Update()
 {
 	//PRINT("Hello", " World!");
+	int i = 0;
+	for (Entity& entity : loadedScenes.front().entities)
+	{
+		++i;
+		//PRINT(entity.uuid, ' ', i, '\n');
+	}
+	//PRINT('\n');
 }
 
 void SceneManager::Exit()

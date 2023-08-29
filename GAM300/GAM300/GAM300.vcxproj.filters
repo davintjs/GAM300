@@ -32,6 +32,7 @@
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Utilities\SparseSet.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsList.cpp" />
+    <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -65,5 +66,6 @@
     <ClInclude Include="Source\Core\EventsManager.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Utilities\MultiThreading.h" />
   </ItemGroup>
 </Project>

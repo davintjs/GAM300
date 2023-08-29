@@ -56,6 +56,7 @@ struct Scene
 
 	Entity& AddEntity()
 	{
+		PRINT("Added Entity");
 		return entities.emplace_back();
 	}
 
@@ -79,7 +80,15 @@ struct Scene
 		}
 		else if constexpr (MultiComponentTypes::Has(Component))
 		{
-			return multiComponentsArrays.GetArray<Component>().emplace(index);;
+			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
+			for (MultiComponent<Component>& multiComp : arr)
+			{
+				index -= multiComp.size();
+				if (multiComp.size() == MAX_MULTI_COMPONENTS)
+					continue;
+				return multiComp.emplace(index);
+			}
+			return multiComponentsArrays.GetArray<Component>().emplace().emplace(index);
 		}
 		else
 		{

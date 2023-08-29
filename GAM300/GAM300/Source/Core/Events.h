@@ -16,7 +16,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
-//#include "Scene/Scene.h"
+#include "Scene/Scene.h"
 
 struct IEvent
 {

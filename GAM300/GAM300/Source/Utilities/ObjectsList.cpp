@@ -20,12 +20,15 @@ template <typename... Args>
 T& ObjectsList<T, N>::emplace_back(Args&&... args)
 {
 	if (head == nullptr)
-		head = new Node;
+		head = CreateNode();
 	Node* start = head;
 	while (start->sparseSet.full())
 	{
+		if (start->next == nullptr)
+			start->next = CreateNode();
 		start = start->next;
 	}
+	++size_;
 	return start->sparseSet.emplace_back(args...);
 }
 
@@ -60,11 +63,10 @@ void ObjectsList<T, N>::clear()
 template <typename T, ObjectIndex N>
 typename ObjectsList<T, N>::Node* ObjectsList<T, N>::CreateNode()
 {
-	if (emptyNodesPool != nullptr)
-	{
+	if (emptyNodesPool == nullptr)
 		return new Node;
-	}
 	Node* newNode = emptyNodesPool;
+	newNode->next = nullptr;
 	emptyNodesPool = emptyNodesPool->next;
 	return newNode;
 }
