@@ -38,6 +38,13 @@ void GraphicsSystem::Init()
 	AffectedByLight.cubeinit();
 	AffectedByLight.setup_affectedShader();
 
+	// Setting up Positions
+
+	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
+	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
+	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
+
+
 	EditorCam.Init();
 }
 
@@ -61,12 +68,47 @@ void GraphicsSystem::Update()
 
 	glEnable(GL_DEPTH_BUFFER);
 
-	testmodel.draw();
+	// This one is turbo scuffed i just putting here to test  light
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
+	{
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+		{
+			LightSource.position.x -= 10.f;
+		}
+		else
+		{
+			LightSource.position.y += 10.f;
 
+		}
+	}
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
+	{
+		LightSource.position.z -= 10.f;
+	}
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
+	{
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+		{
+			LightSource.position.x += 10.f;
+		}
+		else
+		{
+			LightSource.position.y -= 10.f;
+
+		}
+	}
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
+	{
+		LightSource.position.z += 10.f;
+	}
+
+
+
+	testmodel.draw();
 
 	LightSource.lightSource_draw();
 
-	AffectedByLight.affectedByLight_draw();
+	AffectedByLight.affectedByLight_draw(LightSource.position);
 
 
 

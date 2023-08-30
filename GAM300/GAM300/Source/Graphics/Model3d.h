@@ -19,8 +19,9 @@ public:
 	void setup_lightshader();// The Light
 	void setup_affectedShader();// Impacted by Light
 	void lightSource_draw();
-	void affectedByLight_draw();
+	void affectedByLight_draw(glm::vec3 lightPos);
 
+	glm::vec3 position;
 
 	GLenum prim;
 	GLuint vaoid;

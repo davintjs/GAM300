@@ -7,6 +7,8 @@
 
 //extern Editor_Camera E_Camera;
 
+
+
 //test
 
 #define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
@@ -178,7 +180,10 @@ void Model::setup_shader() {
         "GAM300/Source/LapSupGraphics/abnb2.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
+    std::cout << "abnb2 SHADER\n";
     shader.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
     // if linking failed
     if (GL_FALSE == shader.IsLinked()) {
         std::stringstream sstr;
@@ -213,7 +218,7 @@ void Model::draw() {
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(0.f, 0.f, -800.f, 1.f)
+        glm::vec4(position, 1.f)
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
@@ -255,47 +260,47 @@ void Model::draw() {
 void Model::cubeinit()
 {
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
     // first, configure the cube's VAO (and VBO)
@@ -310,19 +315,22 @@ void Model::cubeinit()
     glBindVertexArray(vaoid);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
-    unsigned int lightCubeVAO;
-    glGenVertexArrays(1, &lightCubeVAO);
-    glBindVertexArray(lightCubeVAO);
+    //// second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    //unsigned int lightCubeVAO;
+    //glGenVertexArrays(1, &lightCubeVAO);
+    //glBindVertexArray(lightCubeVAO);
 
-    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
-    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    //// we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
+    //glBindBuffer(GL_ARRAY_BUFFER, vboid);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
 }
 
 void Model::setup_lightshader()
@@ -340,7 +348,10 @@ void Model::setup_lightshader()
         "GAM300/Source/Graphics/BasicLighting.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
+    std::cout << "BasicLighting SHADER\n";
     shader.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
     // if linking failed
     if (GL_FALSE == shader.IsLinked()) {
         std::stringstream sstr;
@@ -367,7 +378,10 @@ void Model::setup_affectedShader()
         "GAM300/Source/Graphics/LightAffected.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
+    std::cout << "LightAffected SHADER\n";
     shader.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
     // if linking failed
     if (GL_FALSE == shader.IsLinked()) {
         std::stringstream sstr;
@@ -388,7 +402,6 @@ void Model::lightSource_draw()
         glm::vec4(0.f, 100.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 100.f, 0.f),
         glm::vec4(0.f, 0.f, 0.f, 1.f)
-
     );
 
     glm::mat4 rotation_mat(
@@ -403,7 +416,7 @@ void Model::lightSource_draw()
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(0.f, 0.f, -300.f, 1.f)
+        glm::vec4(position, 1.f)
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
 
@@ -443,7 +456,7 @@ void Model::lightSource_draw()
 
 }
 
-void Model::affectedByLight_draw()
+void Model::affectedByLight_draw(glm::vec3 lightPos)
 {
 
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
@@ -468,12 +481,13 @@ void Model::affectedByLight_draw()
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(0.f, 0.f, -500.f, 1.f)
+        glm::vec4(position, 1.f)
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
 
 
     shader.Use();
+
     // UNIFORM VARIABLES ----------------------------------------
     // Persp Projection
     GLint uniform_var_loc1 =
@@ -510,6 +524,19 @@ void Model::affectedByLight_draw()
             "objectColor");
     glUniform3fv(uniform_var_loc5, 1,
         glm::value_ptr(objectColor));
+
+    GLint uniform_var_loc6 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "lightPos");
+    glUniform3fv(uniform_var_loc6, 1,
+        glm::value_ptr(lightPos));
+
+    GLint uniform_var_loc7 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "camPos");
+    glUniform3fv(uniform_var_loc7, 1,
+        glm::value_ptr(EditorCam.GetCameraPosition()));
+
 
 
     //// test
