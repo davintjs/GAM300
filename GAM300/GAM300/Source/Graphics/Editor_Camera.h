@@ -2,8 +2,11 @@
 
 #include "glslshader.h"
 #include "IOManager/Handler_GLFW.h"
+#include "../Core/SystemInterface.h"
 
-class Editor_Camera
+#define EditorCam Editor_Camera::Instance()
+
+SINGLETON(Editor_Camera)
 {
 public:
 	/*!*****************************************************************************

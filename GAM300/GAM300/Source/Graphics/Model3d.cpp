@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-extern Editor_Camera E_Camera;
+//extern Editor_Camera E_Camera;
 
 //test
 
@@ -222,12 +222,12 @@ void Model::draw() {
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(E_Camera.getPerspMatrix()));
+        glm::value_ptr(EditorCam.getPerspMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(E_Camera.getViewMatrix()));
+        glm::value_ptr(EditorCam.getViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =

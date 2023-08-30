@@ -1,6 +1,9 @@
 #include "Precompiled.h"
 
 #include "InputHandler.h"
+#include "../Graphics/Editor_Camera.h"
+
+
 // ---------------------------------------------------------------------------------------
 // KEYBOARD 
 // ---------------------------------------------------------------------------------------
@@ -92,6 +95,7 @@ double InputHandler::getMouseY()
 
 void InputHandler::setMouseScroll(int state)
 {
+
 	if (state == -1)
 	{
 		mouseScrollState = -1;
@@ -119,18 +123,22 @@ void InputHandler::setFullscreen(bool state)
 
 	if (fullscreen)// going into fullscreen mode
 	{
+
 		std::cout << "going into fullscreen mode\n";
 		glfwSetWindowMonitor(GLFW_Handler::ptr_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 		glViewport(0, 0, mode->width, mode->height);
+		EditorCam.setViewportSize(mode->width, mode->height);
 
 	}
 	else
 	{
+
 		std::cout << "going into windowed mode\n";
 		glfwSetWindowMonitor(GLFW_Handler::ptr_window, nullptr, 0, 30, GLFW_Handler::width, GLFW_Handler::height,
 			mode->refreshRate);
 		glfwSetWindowAttrib(GLFW_Handler::ptr_window, GLFW_DECORATED, GLFW_TRUE);
 		glViewport(0, 0, GLFW_Handler::width, GLFW_Handler::height);
+		EditorCam.setViewportSize(GLFW_Handler::width, GLFW_Handler::height);
 
 	}
 

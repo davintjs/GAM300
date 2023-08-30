@@ -4,6 +4,7 @@
 
 
 #define MAX_KEY_COUNT 348
+
 class InputHandler
 {
 public:

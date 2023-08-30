@@ -9,6 +9,7 @@ void InputSystem::Init()
 	InputHandler::setFullscreen(false);
 	//InputHandler:: = new int[55];
 }
+
 void InputSystem::Update()
 {
 	InputHandler::reset();

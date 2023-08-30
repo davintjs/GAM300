@@ -147,14 +147,14 @@ float Editor_Camera::getZoomSpeed()
 
 void Editor_Camera::rotateCamera(glm::vec2 delta)
 {
-	std::cout << "Rotate Camera\n";
+	//std::cout << "Rotate Camera\n";
 	tilt += delta.x * getRotationSpeed();
 	spin -= delta.y * getRotationSpeed();
 }
 
 void Editor_Camera::panCamera(glm::vec2 delta)
 {
-	std::cout << "Panning\n";
+	//std::cout << "Panning\n";
 	glm::vec2 panSpeed = getPanSpeed();
 	focalPoint += -getRightVec() * delta.x * panSpeed.x * getDistanceToFocalPoint();
 	focalPoint += getUpVec() * delta.y * panSpeed.y * getDistanceToFocalPoint();
@@ -165,7 +165,7 @@ void Editor_Camera::zoomCamera()
 	distanceToFP += -InputHandler::getMouseScrollState() * getZoomSpeed();
 	if (distanceToFP < 1.f)
 	{
-		std::cout << "we hitting here ouchy\n";
+		//std::cout << "we hitting here ouchy\n";
 		//focalPoint += getForwardVec();
 		distanceToFP = 1.1f;
 	}
@@ -173,7 +173,6 @@ void Editor_Camera::zoomCamera()
 
 glm::vec2 Editor_Camera::getPanSpeed() //  Copied from Cherno no cappo
 {
-	std::cout << "viewport " << viewport.x << " , " << viewport.y << "\n";
 	float x = std::min(viewport.x / 1000.0f, 2.4f); // max = 2.4f
 	float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
 

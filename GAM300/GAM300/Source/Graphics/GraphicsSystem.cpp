@@ -14,7 +14,7 @@ Model testmodel;
 
 //Editor_Camera testCam;
 
-Editor_Camera E_Camera;
+//Editor_Camera E_Camera;
 
 void GraphicsSystem::Init()
 {
@@ -26,7 +26,7 @@ void GraphicsSystem::Init()
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
 	testmodel.init(&assimp);
-	E_Camera.Init();
+	EditorCam.Init();
 }
 
 void GraphicsSystem::Update()
@@ -34,7 +34,7 @@ void GraphicsSystem::Update()
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	
 	//Currently Putting in Camera Update loop here
-	E_Camera.Update((float)MyFrameRateController.getDt());
+	EditorCam.Update((float)MyFrameRateController.getDt());
 
 
 	//UPDATE OR RENDER GRAPHICS HERE
