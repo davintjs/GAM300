@@ -48,11 +48,28 @@ public:
 
 	static void copyingCurrStatetoLast();
 
-	static void reset();
+	static void mouseReset();
+
+	static bool isMouse_L_DoubleClick();
+
+	static bool isMouse_L_DoubleClickandHold();
+
+
+	// [0] is left click, [1] is right click
+	inline static int mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
+	
+	inline static int prev_mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
+
+	inline static std::chrono::high_resolution_clock::time_point prevMouse_LClick;
+
+	inline static bool doubleclick = false;
+	inline static bool doubleclickAndHold = false;
 
 private:
 	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
 	inline static int last_Key_states[MAX_KEY_COUNT]; // Used for the difference between press and hold
 	inline static int mouseScrollState = 0;
 	inline static bool fullscreen;
+
+	
 };

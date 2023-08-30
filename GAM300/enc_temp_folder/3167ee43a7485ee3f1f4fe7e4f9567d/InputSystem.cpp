@@ -66,13 +66,22 @@ void InputSystem::Update()
 	}
 	else
 	{
-
 		InputHandler::mouse_Button_states[0] = 0;
 		InputHandler::doubleclick = false;
 		InputHandler::doubleclickAndHold = false;
 	}
 	
-	 /*if (InputHandler::isMouse_L_DoubleClick())
+	/*if (InputHandler::isMouseButtonPressed_R())
+	{
+		std::cout << "Pressing R Button\n";
+	}*/
+	
+	
+	/*if (InputHandler::isMouse_L_DoubleClickandHold())
+	{
+		std::cout << "doubleclick & Holding\n";
+	}
+	else*/ if (InputHandler::isMouse_L_DoubleClick())
 	{
 		std::cout << "doubleclick ONLY\n";
 	}
@@ -80,7 +89,7 @@ void InputSystem::Update()
 	if (InputHandler::isMouse_L_DoubleClickandHold())
 	{
 		std::cout << "doubleclick & Hold ONLY\n";
-	}*/
+	}
 
 
 

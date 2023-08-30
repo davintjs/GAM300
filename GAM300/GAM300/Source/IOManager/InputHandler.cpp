@@ -57,6 +57,9 @@ void InputHandler::copyingCurrStatetoLast()
 {
 	for (int i = 0; i < MAX_KEY_COUNT; ++i)
 		InputHandler::last_Key_states[i] = InputHandler::curr_Key_states[i];
+
+	prev_mouse_Button_states[0] = mouse_Button_states[0];
+	prev_mouse_Button_states[1] = mouse_Button_states[1];
 }
 
 
@@ -106,10 +109,14 @@ void InputHandler::setMouseScroll(int state)
 	}
 	
 }
-void InputHandler::reset()
+void InputHandler::mouseReset()
 {
 	mouseScrollState = 0;
+
+	mouse_Button_states[0] = 0;
+	mouse_Button_states[1] = 0;
 }
+
 
 int InputHandler::getMouseScrollState()
 {
@@ -145,10 +152,45 @@ void InputHandler::setFullscreen(bool state)
 
 }
 
+bool InputHandler::isMouse_L_DoubleClick()
+{
+	if (InputHandler::doubleclick)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool InputHandler::isMouse_L_DoubleClickandHold()
+{
+	if (InputHandler::doubleclickAndHold)
+	{
+		return true;
+	}
+	return false;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 bool InputHandler::isFullscreen()
 {
 	return fullscreen;
 }
+
+
+
+
 
 //void InputHandler::resizeViewport(int width, int height)
 //{
