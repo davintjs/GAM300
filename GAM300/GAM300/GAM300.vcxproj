@@ -144,6 +144,12 @@
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\BasicLighting.frag" />
+    <None Include="Source\Graphics\BasicLighting.vert" />
+    <None Include="Source\Graphics\LightAffected.frag" />
+    <None Include="Source\Graphics\LightAffected.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

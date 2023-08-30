@@ -83,4 +83,10 @@
     <ClInclude Include="Source\IOManager\InputSystem.h" />
     <ClInclude Include="Source\IOManager\InputHandler.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\BasicLighting.vert" />
+    <None Include="Source\Graphics\BasicLighting.frag" />
+    <None Include="Source\Graphics\LightAffected.vert" />
+    <None Include="Source\Graphics\LightAffected.frag" />
+  </ItemGroup>
 </Project>

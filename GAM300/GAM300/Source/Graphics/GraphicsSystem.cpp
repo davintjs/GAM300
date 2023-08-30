@@ -12,6 +12,10 @@
 //Temporary
 Model testmodel;
 
+Model LightSource;
+
+Model AffectedByLight;
+
 //Editor_Camera testCam;
 
 //Editor_Camera E_Camera;
@@ -25,7 +29,15 @@ void GraphicsSystem::Init()
 
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
-	testmodel.init(&assimp);
+	testmodel.init(&assimp);// The Shader is set up inside this init function
+
+	// Magic Testing
+	LightSource.cubeinit();
+	LightSource.setup_lightshader();
+	
+	AffectedByLight.cubeinit();
+	AffectedByLight.setup_affectedShader();
+
 	EditorCam.Init();
 }
 
@@ -48,7 +60,15 @@ void GraphicsSystem::Update()
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
 	glEnable(GL_DEPTH_BUFFER);
+
 	testmodel.draw();
+
+
+	LightSource.lightSource_draw();
+
+	AffectedByLight.affectedByLight_draw();
+
+
 
 }
 

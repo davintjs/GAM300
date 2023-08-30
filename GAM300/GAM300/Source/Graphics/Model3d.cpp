@@ -161,6 +161,9 @@ void Model::init(AssimpLoader* geom) {
     setup_shader();
 }
 
+
+
+
 void Model::setup_shader() {
     std::vector<std::pair<GLenum, std::string>> shdr_files;
     // Vertex Shader
@@ -210,7 +213,7 @@ void Model::draw() {
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(0.f, 0.f, -500.f, 1.f)
+        glm::vec4(0.f, 0.f, -800.f, 1.f)
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
@@ -247,3 +250,278 @@ void Model::draw() {
     glBindVertexArray(0);
     shader.UnUse();
 }
+
+
+void Model::cubeinit()
+{
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
+
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+    };
+
+    // first, configure the cube's VAO (and VBO)
+    //unsigned int VBO, cubeVAO;
+    
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(vaoid);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
+
+    // we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+}
+
+void Model::setup_lightshader()
+{
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/Graphics/BasicLighting.vert"));
+    //"Assets/Shaders/OrionVertShader.vert"));
+
+// Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/Graphics/BasicLighting.frag"));
+    //"Assets/Shaders/OrionFragShader.frag"));
+
+    shader.CompileLinkValidate(shdr_files);
+    // if linking failed
+    if (GL_FALSE == shader.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shader.GetLog() << "\n";
+        //ORION_ENGINE_ERROR(sstr.str());
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+void Model::setup_affectedShader()
+{
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/Graphics/LightAffected.vert"));
+    //"Assets/Shaders/OrionVertShader.vert"));
+
+// Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/Graphics/LightAffected.frag"));
+    //"Assets/Shaders/OrionFragShader.frag"));
+
+    shader.CompileLinkValidate(shdr_files);
+    // if linking failed
+    if (GL_FALSE == shader.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shader.GetLog() << "\n";
+        //ORION_ENGINE_ERROR(sstr.str());
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+void Model::lightSource_draw()
+{
+    glEnable(GL_DEPTH_TEST); // might be sus to place this here
+
+    glm::mat4 scaling_mat(
+        glm::vec4(100.f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 100.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 100.f, 0.f),
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
+
+    );
+
+    glm::mat4 rotation_mat(
+        glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f),
+        glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
+    );
+    //glm::mat3 translation_mat = glm::mat3(1.f);
+
+    glm::mat4 translation_mat(
+        glm::vec4(1.f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 1.f, 0.f),
+        glm::vec4(0.f, 0.f, -300.f, 1.f)
+    );
+    glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
+
+
+    shader.Use();
+    // UNIFORM VARIABLES ----------------------------------------
+    // Persp Projection
+    GLint uniform_var_loc1 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "persp_projection");
+    glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getPerspMatrix()));
+    GLint uniform_var_loc2 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "View");
+    glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getViewMatrix()));
+
+    // Scuffed SRT
+
+    GLint uniform_var_loc3 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "SRT");
+    glUniformMatrix4fv(uniform_var_loc3, 1, GL_FALSE,
+        glm::value_ptr(SRT));
+
+    //// test
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    //glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+
+
+    glBindVertexArray(vaoid);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    shader.UnUse();
+
+}
+
+void Model::affectedByLight_draw()
+{
+
+    glEnable(GL_DEPTH_TEST); // might be sus to place this here
+
+    glm::mat4 scaling_mat(
+        glm::vec4(100.f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 100.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 100.f, 0.f),
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
+
+    );
+
+    glm::mat4 rotation_mat(
+        glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f),
+        glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
+    );
+    //glm::mat3 translation_mat = glm::mat3(1.f);
+
+    glm::mat4 translation_mat(
+        glm::vec4(1.f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 1.f, 0.f),
+        glm::vec4(0.f, 0.f, -500.f, 1.f)
+    );
+    glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
+
+
+    shader.Use();
+    // UNIFORM VARIABLES ----------------------------------------
+    // Persp Projection
+    GLint uniform_var_loc1 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "persp_projection");
+    glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getPerspMatrix()));
+    GLint uniform_var_loc2 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "View");
+    glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getViewMatrix()));
+
+    // Scuffed SRT
+    GLint uniform_var_loc3 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "SRT");
+    glUniformMatrix4fv(uniform_var_loc3, 1, GL_FALSE,
+        glm::value_ptr(SRT));
+
+    // Setting Up Light Thing here
+
+    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+    glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
+
+    GLint uniform_var_loc4 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "lightColor");
+    glUniform3fv(uniform_var_loc4, 1, 
+        glm::value_ptr(lightColor));
+
+    GLint uniform_var_loc5 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "objectColor");
+    glUniform3fv(uniform_var_loc5, 1,
+        glm::value_ptr(objectColor));
+
+
+    //// test
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    //glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+
+
+    glBindVertexArray(vaoid);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    shader.UnUse();
+
+}
+

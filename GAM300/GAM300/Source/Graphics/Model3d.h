@@ -8,8 +8,19 @@
 
 class Model {
 public:
+
+	// This 3D Model version
 	void init(AssimpLoader* geom); // make vao vbo
 	void setup_shader();
+	void draw();
+
+	// This below are all the things i use to testing with light stuffs
+	void cubeinit();
+	void setup_lightshader();// The Light
+	void setup_affectedShader();// Impacted by Light
+	void lightSource_draw();
+	void affectedByLight_draw();
+
 
 	GLenum prim;
 	GLuint vaoid;
@@ -18,7 +29,6 @@ public:
 	GLuint drawcount;
 	GLSLShader shader;
 
-	void draw();
 
 	AssimpLoader* _geom;
 };
