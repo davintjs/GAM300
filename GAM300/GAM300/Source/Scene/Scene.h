@@ -40,7 +40,6 @@ struct Scene
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
-	EntitiesPtrArray entitiesToDelete;
 
 	enum class State : char 
 	{
@@ -54,13 +53,12 @@ struct Scene
 	Scene& operator=(Scene&) = delete;
 
 
-	Entity& AddEntity()
+	Entity& AddEntity(UUID uuid = CreateUUID())
 	{
-		//PRINT("Added Entity");
-		Entity& entity = entities.emplace_back();
-		entity.pList = &entities;
-		DenseIndex index = entity.GetDenseIndex();
-		AddComponent<Transform>(index);
+		Entity& entity = entities.emplace_back(uuid);
+		entity.pScene = this;
+		entity.denseIndex = entities.GetDenseIndex(entity);
+		AddComponent<Transform>(entity);
 		return entity;
 	}
 
@@ -76,6 +74,31 @@ struct Scene
 	void ComponentSetEnabled(DenseIndex index,bool value, size_t multiIndex = 0);
 
 	template <typename Component>
+	Component& AddComponent(const Entity& entity)
+	{
+		return AddComponent<Component>(entity.denseIndex);
+	}
+
+	template <typename Component>
+	void RemoveComponent(Entity& entity,Component& component)
+	{
+		//When removing a component, disable the object first
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			singleComponentsArrays.GetArray<Component>().erase(component);
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
+			arr.DenseSubscript(entity.denseIndex).erase(component);
+		}
+		else
+		{
+			static_assert(true, "Type is not a valid component!");
+		}
+	}
+
+	template <typename Component>
 	Component& AddComponent(DenseIndex index)
 	{
 		if constexpr (SingleComponentTypes::Has<Component>())
@@ -85,16 +108,9 @@ struct Scene
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
 			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
-			//If there are multiComponents existing already
-			for (MultiComponent<Component>& multiComp : arr)
-			{
-				index -= MAX_MULTI_COMPONENTS;
-				if (multiComp.size() == MAX_MULTI_COMPONENTS)
-					continue;
-				return multiComp.emplace_back();
-			}
-			//I want a b list of object lists
-			return arr.emplace(index).emplace_back();
+			while (arr.size() <= index)
+				arr.emplace_back();
+			return arr.DenseSubscript(index).emplace_back();
 		}
 		else
 		{

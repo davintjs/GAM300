@@ -89,5 +89,5 @@ T& SparseSet<T, N>::operator[] (size_t i)
 template <typename T, size_t N>
 T& SparseSet<T, N>::DenseSubscript(DenseIndex index)
 {
-    return *reinterpret_cast<T*>(data + index);
+    return reinterpret_cast<T*>(data)[index];
 }

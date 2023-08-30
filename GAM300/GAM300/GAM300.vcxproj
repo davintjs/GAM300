@@ -44,6 +44,9 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
+    <ClCompile Include="Source\Utilities\ObjectsBList.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Source\Utilities\ObjectsList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -83,6 +86,7 @@
     <ClInclude Include="Source\Scene\Entity.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Utilities\ObjectsBList.h" />
     <ClInclude Include="Source\Utilities\MultiThreading.h" />
     <ClInclude Include="Source\Utilities\ObjectsList.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />

@@ -12,32 +12,11 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-#include "ObjectsList.h"
+#include "ObjectsBList.h"
 
-
-template <typename T, ObjectIndex N>
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 template <typename... Args>
-T& ObjectsList<T, N>::emplace_back(Args&&... args)
-{
-	if (head == nullptr)
-		head = tail = CreateNode();
-	Node* start = head;
-	while (start->next)
-	{
-		start = start->next;
-	}
-	if (start->sparseSet.full())
-	{
-		tail = start->next = CreateNode();
-		start = start->next;
-	}
-	++size_;
-	return start->sparseSet.emplace_back(args...);
-}
-
-template <typename T, ObjectIndex N>
-template <typename... Args>
-T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
+T& ObjectsBList<T, N, B_SZ>::emplace(DenseIndex index, Args&&... args)
 {
 	if (head == nullptr)
 		head = tail = CreateNode();
@@ -55,8 +34,8 @@ T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
 	return start->sparseSet.emplace(index);
 }
 
-template <typename T, ObjectIndex N>
-void ObjectsList<T, N>::clear()
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+void ObjectsBList<T, N, B_SZ>::clear()
 {
 	Node* start = head;
 	while (start->sparseSet.full())
@@ -66,8 +45,8 @@ void ObjectsList<T, N>::clear()
 	}
 }
 
-template <typename T, ObjectIndex N>
-typename ObjectsList<T, N>::Node* ObjectsList<T, N>::CreateNode()
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+typename ObjectsBList<T, N, B_SZ>::Node* ObjectsBList<T, N, B_SZ>::CreateNode()
 {
 	if (emptyNodesPool == nullptr)
 		return new Node;
@@ -77,8 +56,8 @@ typename ObjectsList<T, N>::Node* ObjectsList<T, N>::CreateNode()
 	return newNode;
 }
 
-template <typename T, ObjectIndex N>
-void ObjectsList<T, N>::DeleteNode(Node* prev, Node* pNode)
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+void ObjectsBList<T, N, B_SZ>::DeleteNode(Node* prev, Node* pNode)
 {
 	if (prev)
 	{
@@ -95,8 +74,8 @@ void ObjectsList<T, N>::DeleteNode(Node* prev, Node* pNode)
 	emptyNodesPool = pNode;
 }
 
-template <typename T, ObjectIndex N>
-void ObjectsList<T, N>::erase(T& val)
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+void ObjectsBList<T, N, B_SZ>::erase(T& val)
 {
 	Node* prev = nullptr;
 	Node* start = head;
@@ -115,8 +94,8 @@ void ObjectsList<T, N>::erase(T& val)
 		DeleteNode(prev, head);
 }
 
-template <typename T, ObjectIndex N>
-ObjectsList<T, N>::~ObjectsList()
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+ObjectsBList<T, N, B_SZ>::~ObjectsBList()
 {
 	Node* start = head;
 	while (start)

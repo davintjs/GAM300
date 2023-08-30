@@ -19,21 +19,20 @@ void SceneManager::LoadScene(const char* path)
 
 void SceneManager::Update()
 {
-	//PRINT("Hello", " World!");
 	Scene& scene = GetCurrentScene();
-	for (Entity& entity : loadedScenes.front().entities)
+	for (Entity& entity : scene.entities)
 	{
-		DenseIndex index = entity.GetDenseIndex();
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(index);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 	}
 
-	int j = 0;
+	//Issue with this, iterating over empty multicomponents
 	for (MultiComponent<Script>& multiScript : scene.multiComponentsArrays.GetArray<Script>())
 	{
+		if (multiScript.size() > 0)
+			PRINT("SCRIPT: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(multiScript), '\n');
 		for (Script& script : multiScript)
 		{
-			PRINT("SCRIPT: ", j, ' ');
-			++j;
+			
 		}
 	}
 

@@ -16,15 +16,11 @@ struct Entity
 {
 public:
 	Entity(UUID _uuid = CreateUUID());
+	Entity() = delete;
 	const UUID uuid;
 	//Which array does this object belong in?
-	EntitiesList* pList = nullptr;
-	DenseIndex GetDenseIndex()
-	{
-		if (pList == nullptr)
-			ASSERT(true,"Entity does not belong to any array yet");
-		return pList->GetDenseIndex(*this);
-	}
+	Scene* pScene;
+	DenseIndex denseIndex;
 };
 
 using EntitiesPtrArray = std::vector<Entity*>;

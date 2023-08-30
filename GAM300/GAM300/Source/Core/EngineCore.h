@@ -62,13 +62,24 @@ public:
 			pSystem->Init();
 		}
 
+		Scene& scene = SceneManager::Instance().GetCurrentScene();
+
 		//TEST ENTITY CREATION
-		for (int i = 0; i < 100; ++i)
+		for (int i = 0; i < 22; ++i)
 		{
-			SceneManager::Instance().GetCurrentScene().AddEntity();
+			scene.AddEntity();
 		}
-		SceneManager::Instance().GetCurrentScene().AddComponent<Script>(99);
-		SceneManager::Instance().GetCurrentScene().AddComponent<Script>(99);
+
+		scene.AddComponent<Rigidbody>(20);
+		scene.AddComponent<Rigidbody>(1);
+		//Script& script = scene.AddComponent<Script>(20);
+		scene.AddComponent<Script>(20);
+		scene.AddComponent<Script>(20);
+		scene.AddComponent<Script>(1);
+		scene.AddComponent<Script>(20);
+		scene.AddComponent<Script>(20);
+		//Entity& entity = scene.entities.DenseSubscript(20);
+		//scene.RemoveComponent(entity,script);
 	}
 
 	/**************************************************************************/

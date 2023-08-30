@@ -2,16 +2,16 @@
 #define OBJECTS_LIST_H
 #include "SparseSet.h"
 #include <bitset>
+#include "ObjectsList.h"
 
 using ObjectIndex = size_t;
 
-template <typename T, ObjectIndex N>
-class ObjectsList
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+class ObjectsBList
 {
     struct Node
     {
-        SparseSet<T, N> sparseSet;
-        std::bitset<N> activeObjectsBitset;
+        SparseSet<ObjectsList<T,B_SZ>, N> sparseSet;
         //Forward List
         Node* next = nullptr;
     };
@@ -110,12 +110,10 @@ class ObjectsList
     };
 public:
     template <typename... Args>
-    T& emplace_back(Args&&... args);
-    template <typename... Args>
     T& emplace(DenseIndex index, Args&&... args);
     void clear();
     void erase(T& val);
-    ~ObjectsList();
+    ~ObjectsBList();
     Iterator begin() {return Iterator(0, head);}
     Iterator end() {return Iterator(0, nullptr);}
 
@@ -154,6 +152,6 @@ private:
     void DeleteNode(Node* prev, Node* pNode);
 };	
 
-#include "ObjectsList.cpp"
+#include "ObjectsBList.cpp"
 
 #endif // !OBJECTS_LIST_H
