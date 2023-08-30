@@ -60,7 +60,7 @@ struct Scene
 		Entity& entity = entities.emplace_back();
 		entity.pList = &entities;
 		DenseIndex index = entity.GetDenseIndex();
-		singleComponentsArrays.GetArray<Transform>().emplace(index);
+		AddComponent<Transform>(index);
 		return entity;
 	}
 
@@ -78,21 +78,23 @@ struct Scene
 	template <typename Component>
 	Component& AddComponent(DenseIndex index)
 	{
-		if constexpr (SingleComponentTypes::Has(Component))
+		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().emplace(index);;
+			return singleComponentsArrays.GetArray<Component>().emplace(index);
 		}
-		else if constexpr (MultiComponentTypes::Has(Component))
+		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
 			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
+			//If there are multiComponents existing already
 			for (MultiComponent<Component>& multiComp : arr)
 			{
-				index -= multiComp.size();
+				index -= MAX_MULTI_COMPONENTS;
 				if (multiComp.size() == MAX_MULTI_COMPONENTS)
 					continue;
-				return multiComp.emplace(index);
+				return multiComp.emplace_back();
 			}
-			return multiComponentsArrays.GetArray<Component>().emplace().emplace(index);
+			//I want a b list of object lists
+			return arr.emplace(index).emplace_back();
 		}
 		else
 		{

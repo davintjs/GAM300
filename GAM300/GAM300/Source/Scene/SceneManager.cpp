@@ -20,19 +20,24 @@ void SceneManager::LoadScene(const char* path)
 void SceneManager::Update()
 {
 	//PRINT("Hello", " World!");
-	int i = 0;
+	Scene& scene = GetCurrentScene();
 	for (Entity& entity : loadedScenes.front().entities)
 	{
-		++i;
-		//PRINT(entity.uuid, ' ', i, '\n');
 		DenseIndex index = entity.GetDenseIndex();
-		loadedScenes.front().singleComponentsArrays.GetArray<Transform>().DenseSubscript(index);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(index);
 	}
 
-	for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
+	int j = 0;
+	for (MultiComponent<Script>& multiScript : scene.multiComponentsArrays.GetArray<Script>())
 	{
-
+		for (Script& script : multiScript)
+		{
+			PRINT("SCRIPT: ", j, ' ');
+			++j;
+		}
 	}
+
+	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
 
 	//PRINT('\n');
 }

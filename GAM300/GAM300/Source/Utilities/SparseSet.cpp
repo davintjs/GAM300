@@ -51,8 +51,6 @@ T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
     //Find and make to next element
     ASSERT(index < N, " OUT OF BOUNDS");
     T& back = *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
-    if (size_ == N)
-        PRINT("WTF");
     for (size_t i = size_; i < N; ++i)
     {
         if (denseIndexes[i] == index)

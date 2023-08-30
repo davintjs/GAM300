@@ -67,6 +67,8 @@ public:
 		{
 			SceneManager::Instance().GetCurrentScene().AddEntity();
 		}
+		SceneManager::Instance().GetCurrentScene().AddComponent<Script>(99);
+		SceneManager::Instance().GetCurrentScene().AddComponent<Script>(99);
 	}
 
 	/**************************************************************************/
