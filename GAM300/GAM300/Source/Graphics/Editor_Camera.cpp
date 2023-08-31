@@ -9,8 +9,11 @@ void Editor_Camera::Init()
 	setRotationSpeed(2.f);
 	updateView();
 
-	persp_projection = glm::perspective(glm::radians(45.0f), 16.f / 9.f, 0.1f, 1000000.f);
+	aspect = 16.f / 9.f;
+	persp_projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 1000000.f);
 
+	framebuffer.set_size((unsigned int) 1600, (unsigned int) 900);
+	framebuffer.init();
 }
 
 
@@ -81,6 +84,16 @@ void Editor_Camera::updateView()
 	cam_mat = glm::translate(glm::mat4(1.0f), cam_pos) * glm::mat4(Orientation);
 	cam_mat = glm::inverse(cam_mat);
 
+}
+
+// Bean: Temporary resize needed for resizing the scene viewport
+void Editor_Camera::onResize(float _width, float _height)
+{
+	viewport.x = _width;
+	viewport.y = _height;
+	aspect = viewport.x / viewport.y;
+
+	persp_projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 1000000.f);
 }
 
 

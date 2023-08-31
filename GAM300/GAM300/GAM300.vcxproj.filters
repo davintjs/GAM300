@@ -62,6 +62,7 @@
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
+    <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -114,6 +115,7 @@
     <ClInclude Include="Source\AssetManager\ThreadPool.h" />
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
     <ClInclude Include="Source\Editor\EditorTemplates.h" />
+    <ClInclude Include="Source\Graphics\Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
