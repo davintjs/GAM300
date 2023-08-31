@@ -31,6 +31,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
 //#include "AI/Enemy.h"
+#include "IOManager/InputSystem.h"
+#include "IOManager/Handler_GLFW.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -60,14 +62,13 @@ public:
 
 		systems =
 		{
+			&InputSystem::Instance(),
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
 			&EditorSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance()
-
-
 		};
 
 
@@ -112,14 +113,12 @@ public:
 		{
 			
 
+
 			if (state == EngineState::Run)
 			{
 				MyFrameRateController.Start();
 
-				// Bean: This should be in input system (Euan go create)
-				glfwPollEvents();
-
-				//glfwSetMouseButtonCallback();
+				
 
 				//Start ImGui Frames
 				ImGui_ImplOpenGL3_NewFrame();

@@ -26,7 +26,7 @@ objects participating in the application.
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 //#include "glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include <glm/gtc/type_ptr.hpp> // for glm functions
-
+#include "InputHandler.h"
 #pragma warning(pop)
 //#include "Orion/Core/KeyCodes.h"
 //#include"include/GLFW/glfw3.h"

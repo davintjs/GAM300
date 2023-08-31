@@ -9,24 +9,26 @@ This file contains a vertex shader.
 #version 450 core
 
 layout (location = 0) in vec3 aVertexPosition;
-//layout (location = 1) in vec3 aVertexColor;
-
-//layout (location = 0) out vec3 vColor;
 
 //testing
-//layout (location=0) in vec3 aVertexColor;
-//layout (location=2) in vec2 aVertexTexture;
+//layout (location=1) in vec3 aVertexColor;
+layout (location=1) in vec2 aVertexTexture;
 
-layout (location=0) out vec3 vColor;
+//layout (location = 0) out vec3 vColor;
+layout (location = 0) out vec2 vTexture;
 
 uniform mat4 persp_projection;
+uniform mat4 View;
 uniform mat4 SRT;
 
 
 void main() {
-	gl_Position = persp_projection * SRT * vec4(aVertexPosition, 1.0f);
+				// Proj * View() * model(SRT)  * vertex pos
+	gl_Position = persp_projection *View * SRT * vec4(aVertexPosition, 1.0f);
 
 	//vColor = aVertexColor;
 	//testing
-	vColor = vec3(1.0f, 1.0f, 1.0f);
+	//vColor = vec3(1.0f, 1.0f, 1.0f);
+	vTexture = aVertexTexture;
+	//vTexture.x = 1.f - aVertexTexture.x;
 }

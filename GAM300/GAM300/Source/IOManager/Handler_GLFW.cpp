@@ -18,6 +18,7 @@ pointers to OpenGL implementations.
 ----------------------------------------------------------------------------- */
 #include "Precompiled.h"
 #include "Handler_GLFW.h"
+//#include "InputHandler.h"
 //#include "Orion/Core/Log.h"
 //#include "Orion/Renderer/Model.h"
 //#include "Orion/IOManager/MouseHandler.h"
@@ -284,263 +285,43 @@ This function is called when keyboard buttons are pressed.
 This function is called when keyboard buttons are pressed.
 When the ESC key is pressed, the close flag of the window is set.
 
-if button T M A are pressed, will trigger specific flags relating to tutorial 5
+if button T M A are pressed, will trigger specific flags relating to tutorial 5 
 */
 
 void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int action, int ) {
     // key state changes from released to pressed
-    if (GLFW_PRESS == action) {
-        
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
 
+    //InputHandler::copyingCurrStatetoLast();
+    if (GLFW_PRESS == action) {
+        //std::cout << "GLFW HANDLER : PRESS\n";
+        InputHandler::setKeystate_Press(key);
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
         //crashTestObsevable.ProcessEvent(event);
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = true;
-        }
-        /*
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_TRUE;}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_TRUE;
-        //}
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_TRUE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_TRUE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_TRUE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_TRUE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_TRUE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_TRUE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_TRUE;
-        //}
-        //if (GLFW_KEY_G == key) 
-        //{
-        //    Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
-        //    crashTestObsevable.ProcessEvent(event);
-        //    //Orion::crash_Test = GL_TRUE;
-        //}
-        //if (GLFW_KEY_H == key) 
-        //{
-        //    Orion::showcase_2500_Toggle = GL_TRUE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_TRUE;
-        //}
-        */
+       
     }
-   
     else if (GLFW_REPEAT == action) {
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = true;
-        }
+        //std::cout << "GLFW HANDLER : REPEAT / HOLDING\n";
 
         //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), true);
         //crashTestObsevable.ProcessEvent(event);
-
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_TRUE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_TRUE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_TRUE;
-        //}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_TRUE;
-        //}
-
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_TRUE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_TRUE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_TRUE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_TRUE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_TRUE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_TRUE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_FALSE;
-        //}
-        //if (GLFW_KEY_G == key)
-        //{
-        //    Orion::crash_Test = GL_FALSE;
-        //}
-        //if (GLFW_KEY_H == key)
-        //{
-        //    Orion::showcase_2500_Toggle = GL_FALSE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_FALSE;
-        //}
+        InputHandler::setKeystate_Hold(key);
+        
     }
 
-
     else if (GLFW_RELEASE == action) {
-        //if (GLFW_KEY_ESCAPE == key) { // closing window
-        //    glfwSetWindowShouldClose(pwin, GLFW_TRUE);
-        //}
-        if (GLFW_KEY_LEFT_CONTROL == key)
-        {
-            //function_mode = false;
-        }
+        
+        //std::cout << "GLFW HANDLER : RELEASE\n";
+
+        InputHandler::setKeystate_Release(key);
 
         //Orion::Events::KeyReleasedEvent event = Orion::Events::KeyReleasedEvent(static_cast<Orion::Key::KeyCode>(key));
         //crashTestObsevable.ProcessEvent(event);
 
-        //if (GLFW_KEY_N == key) // scale X smaller
-        //{
-        //    Orion::shrinkX = GL_FALSE;
-        //}
-        //if (GLFW_KEY_M == key) //  scale X bigger
-        //{
-        //    Orion::expandX = GL_FALSE;
-        //}
-        //if (GLFW_KEY_J == key) // scale Y smaller
-        //{
-        //    Orion::shrinkY = GL_FALSE;
-        //}
-        //if (GLFW_KEY_K == key) //  scale Y bigger
-        //{
-        //    Orion::expandY = GL_FALSE;
-        //}
-        //if (GLFW_KEY_I == key) // rotate left
-        //{
-        //    Orion::rotateLeft = GL_FALSE;
-        //}
-        //if (GLFW_KEY_O == key) //  rotate right
-        //{
-        //    Orion::rotateRight = GL_FALSE;
-        //}
-        //if (GLFW_KEY_V == key) //  tOggling debug drawing
-        //{
-        //    Orion::debug_Toggle = GL_FALSE;
-        //}
-
-        //// Movement Buttons
-        //if (GLFW_KEY_W == key) // currently linked to toggling velocity
-        //{
-        //    Orion::move_Top = GL_FALSE;
-        //}
-        //if (GLFW_KEY_A == key)
-        //{
-        //    Orion::move_Left = GL_FALSE;
-        //}
-        //if (GLFW_KEY_S == key)
-        //{
-        //    Orion::move_Down = GL_FALSE;
-        //}
-        //if (GLFW_KEY_D == key)
-        //{
-        //    Orion::move_Right = GL_FALSE;
-        //}
-        //if (GLFW_KEY_SPACE == key)
-        //{
-        //    Orion::jump = GL_FALSE;
-        //}
-
-        //// Testing Buttons
-        //if (GLFW_KEY_F == key) // currently linked to toggling velocity
-        //{
-        //    Orion::reset = GL_FALSE;
-        //}
-        //if (GLFW_KEY_G == key)
-        //{
-        //    Orion::crash_Test = GL_FALSE;
-        //}
-        //if (GLFW_KEY_H == key)
-        //{
-        //    Orion::showcase_2500_Toggle = GL_FALSE;
-        //}
-        //if (GLFW_KEY_B == key)
-        //{
-        //    Orion::imgui_Toggle = GL_FALSE;
-        //}
+       
 
     }
 }
+
 /*  _________________________________________________________________________*/
 /*! mousebutton_cb
 
@@ -563,6 +344,7 @@ were held down
 
 This function is called when mouse buttons are pressed.
 */
+
 void GLFW_Handler::mousebutton_cb(GLFWwindow*, int button, int action, int ) {
   switch (button) {
   case GLFW_MOUSE_BUTTON_LEFT:
@@ -670,8 +452,9 @@ relative to the top-left corner of the window client area.
 */
 void GLFW_Handler::mousepos_cb(GLFWwindow*, [[maybe_unused]] double xpos, [[maybe_unused]] double ypos) {
 #ifdef _DEBUG
-    //std::cout << "Mouse cursor position: (" << xpos << ", " << ypos << ")" << std::endl;
+    //std::cout << "from CALLBACK\n";
 
+    //std::cout << "Mouse cursor position: (" << xpos << ", " << ypos << ")" << std::endl;
 #endif
     /*double x, y;
     x = (xpos - (GLFW_Handler::width / 2.0));
@@ -737,17 +520,18 @@ mouse scroll wheel, being vertical, provides offsets only along the Y-axis.
 void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[maybe_unused]] double y) {
     //UNREFERENCED_PARAMETER(x);
 #ifdef _DEBUG
-  /*std::cout << "Mouse scroll wheel offset: ("
-    << xoffset << ", " << yoffset << ")" << std::endl;*/
+  
 #endif
-   /* if (y > 0 && Mouse.within_window)
-    {
-        Cam.Move_Front();
-    }
-    else if ( Mouse.within_window)
-    {
-        Cam.Move_Back();
-    }*/
+
+    InputHandler::setMouseScroll(y);
+    //if (y > 0 && Mouse.within_window)
+    //{
+    //    Cam.Move_Front();
+    //}
+    //else if ( Mouse.within_window)
+    //{
+    //    Cam.Move_Back();
+    //}
 }
 
 /*  _________________________________________________________________________ */

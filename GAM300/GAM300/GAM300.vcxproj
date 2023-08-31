@@ -98,11 +98,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
+    <ClCompile Include="Source\IOManager\InputHandler.cpp" />
+    <ClCompile Include="Source\IOManager\InputSystem.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
@@ -154,11 +156,13 @@
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
-    <ClInclude Include="Source\Graphics\Camera.h" />
+    <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
+    <ClInclude Include="Source\IOManager\InputHandler.h" />
+    <ClInclude Include="Source\IOManager\InputSystem.h" />
     <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
     <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
     <ClInclude Include="Source\Physics\PhysicsSystem.h" />
@@ -175,6 +179,12 @@
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\BasicLighting.frag" />
+    <None Include="Source\Graphics\BasicLighting.vert" />
+    <None Include="Source\Graphics\LightAffected.frag" />
+    <None Include="Source\Graphics\LightAffected.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

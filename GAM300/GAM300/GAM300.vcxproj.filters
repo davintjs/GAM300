@@ -25,6 +25,8 @@
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
     <ClCompile Include="Source\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
     <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
@@ -56,6 +58,8 @@
     <ClCompile Include="Source\Utilities\ObjectsList.cpp" />
     <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsBList.cpp" />
+    <ClCompile Include="Source\IOManager\InputSystem.cpp" />
+    <ClCompile Include="Source\IOManager\InputHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -76,6 +80,8 @@
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Graphics\Camera.h" />
+    <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Core\Debug.h" />
@@ -101,5 +107,13 @@
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Utilities\MultiThreading.h" />
     <ClInclude Include="Source\Utilities\ObjectsBList.h" />
+    <ClInclude Include="Source\IOManager\InputSystem.h" />
+    <ClInclude Include="Source\IOManager\InputHandler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Graphics\BasicLighting.vert" />
+    <None Include="Source\Graphics\BasicLighting.frag" />
+    <None Include="Source\Graphics\LightAffected.vert" />
+    <None Include="Source\Graphics\LightAffected.frag" />
   </ItemGroup>
 </Project>
