@@ -25,7 +25,9 @@ int main(int, char**) {
 	float dt = 0;
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 	{
+		MyFrameRateController.Start();
 		MyEngineCore.Update(dt);
+		MyFrameRateController.End();
 		dt = MyFrameRateController.getDt();
 	}
 	//app->Run();
