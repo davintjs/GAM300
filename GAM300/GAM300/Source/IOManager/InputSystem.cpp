@@ -10,7 +10,7 @@ void InputSystem::Init()
 	//InputHandler:: = new int[55];
 }
 
-void InputSystem::Update()
+void InputSystem::Update(float dt)
 {
 	InputHandler::copyingCurrStatetoLast();
 

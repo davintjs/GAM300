@@ -5,7 +5,7 @@
 ENGINE_SYSTEM(InputSystem)
 {
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 };
 #endif // !INPUT_SYSTEM_H

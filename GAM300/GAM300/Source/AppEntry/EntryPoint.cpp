@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "EntryPoint.h"
 #include "Core/EngineCore.h"
+#include "Core/FramerateController.h"
 #define _CRTDBG_MAP_ALLOC
 
 int main(int, char**) {
@@ -19,7 +20,14 @@ int main(int, char**) {
 
 	app->Init();
 	MyEngineCore.Init();
-	MyEngineCore.Update();
+	MyFrameRateController.Init();
+
+	float dt = 0;
+	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
+	{
+		MyEngineCore.Update(dt);
+		dt = MyFrameRateController.getDt();
+	}
 	//app->Run();
 	MyEngineCore.Exit();
 	app->Exit();

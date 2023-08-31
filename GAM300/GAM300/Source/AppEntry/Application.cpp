@@ -33,7 +33,7 @@ void Application::Init()
 	/// <end>
 
 	//Initializing OpenGL Context with OpenGL 4.5 and creating window
-	if (!GLFW_Handler::init(GLFW_Handler::width, GLFW_Handler::height, "Put Team Name Here")) {
+	if (!GLFW_Handler::init(GLFW_Handler::width, GLFW_Handler::height, "Bean Factory")) {
 		std::cout << "Unable to create OpenGL context" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}

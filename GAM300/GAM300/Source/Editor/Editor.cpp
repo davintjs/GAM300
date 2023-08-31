@@ -37,7 +37,7 @@ void EditorSystem::Init()
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-void EditorSystem::Update()
+void EditorSystem::Update(float dt)
 {
 
     bool demo = true;

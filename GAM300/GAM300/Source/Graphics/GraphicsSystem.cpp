@@ -48,7 +48,7 @@ void GraphicsSystem::Init()
 	EditorCam.Init();
 }
 
-void GraphicsSystem::Update()
+void GraphicsSystem::Update(float dt)
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	

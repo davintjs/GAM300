@@ -17,7 +17,7 @@ public:
 
 private:
     void Init();
-    void Update();
+    void Update(float dt);
     void Exit();
 
     std::vector<BehaviorTree*> mBehaviorTrees;

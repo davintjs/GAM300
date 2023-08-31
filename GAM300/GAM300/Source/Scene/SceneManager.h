@@ -8,7 +8,7 @@ ENGINE_SYSTEM(SceneManager)
 {
 public:
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 
 	void LoadScene(const char* path = "");

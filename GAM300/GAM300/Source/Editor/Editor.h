@@ -27,7 +27,7 @@
 ENGINE_SYSTEM(EditorSystem)
 {
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 
 	void Editor_Dockspace();
