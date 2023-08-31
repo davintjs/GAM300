@@ -141,7 +141,6 @@ void Model::init(AssimpLoader* geom) {
     //    geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
     //}
 
-    //GLuint texturebuffer;
     glGenBuffers(1, &texturebuffer);
     glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
     glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
@@ -245,7 +244,7 @@ void Model::draw() {
         glm::value_ptr(SRT));
 
     // test
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
 
@@ -314,12 +313,17 @@ void Model::cubeinit()
 
     glBindVertexArray(vaoid);
 
+    glGenBuffers(1, &texturebuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
 
     //// second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
     //unsigned int lightCubeVAO;
@@ -445,8 +449,8 @@ void Model::lightSource_draw()
 
     //// test
     //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, texturebuffer);
-    //glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+    glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
 
 
     glBindVertexArray(vaoid);
@@ -541,8 +545,8 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
 
     //// test
     //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, texturebuffer);
-    //glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+    glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
 
 
     glBindVertexArray(vaoid);
