@@ -32,6 +32,8 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
+    <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,6 +151,8 @@
     <ClInclude Include="Source\AI\NodeIncludes.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
+    <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\AssetManager\ThreadPool.h" />
     <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\Events.h" />
