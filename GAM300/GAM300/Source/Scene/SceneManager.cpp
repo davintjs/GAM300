@@ -28,7 +28,6 @@ void SceneManager::Update(float dt)
 	//Issue with this, iterating over empty multicomponents
 	//for (Script& script : scene.multiComponentsArrays.GetArray<Script>())
 	//{
-
 	//}
 
 	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
