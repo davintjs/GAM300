@@ -172,15 +172,15 @@ bool InputHandler::isMouse_L_DoubleClickandHold()
 }
 
 
+void InputHandler::setMouseButtonState(int index, int state)
+{
+	InputHandler::mouse_Button_states[index] = state;
+}
 
-
-
-
-
-
-
-
-
+int InputHandler::getMouseButtonState(int index)
+{
+	return InputHandler::mouse_Button_states[index];
+}
 
 
 bool InputHandler::isFullscreen()

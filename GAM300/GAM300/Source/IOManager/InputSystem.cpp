@@ -28,15 +28,16 @@ void InputSystem::Update()
 	if (InputHandler::isMouseButtonPressed_L())
 	{
 		std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-		//std::cout << "inside the if\n";
+		
 
-		if (InputHandler::prev_mouse_Button_states[0] == 2)// Checking if its still holding
+		if (InputHandler::getMouseButtonState(0) == 2)// Checking if its still holding
 		{
-			InputHandler::mouse_Button_states[0] = 2;	
+			InputHandler::setMouseButtonState(0, 2);
 		}
-		else if (InputHandler::prev_mouse_Button_states[0] == 1 )// Checking if it's a hold
+		else if (InputHandler::getMouseButtonState(0) == 1 )// Checking if it's a hold
 		{
-			InputHandler::mouse_Button_states[0] = 2;
+			InputHandler::setMouseButtonState(0, 2);
+
 			
 			if (InputHandler::doubleclick)
 			{
@@ -44,7 +45,7 @@ void InputSystem::Update()
 				InputHandler::doubleclick = false;
 			}
 		}
-		else if (InputHandler::prev_mouse_Button_states[0] == 0) // Checking if it's a fresh press
+		else if (InputHandler::getMouseButtonState(0) == 0) // Checking if it's a fresh press
 		{
 			//std::cout << "inside the else if\n";
 
@@ -54,20 +55,19 @@ void InputSystem::Update()
 		
 			if (time_span.count() <= 0.5)
 			{
-				std::cout << "inside\n";
 				InputHandler::doubleclick = true;
 			}
 
 			// Same part
-			InputHandler::mouse_Button_states[0] = 1;
+			InputHandler::setMouseButtonState(0, 1);
+
 			InputHandler::prevMouse_LClick = now;
 		}
 		
 	}
 	else
 	{
-
-		InputHandler::mouse_Button_states[0] = 0;
+		InputHandler::setMouseButtonState(0, 0);
 		InputHandler::doubleclick = false;
 		InputHandler::doubleclickAndHold = false;
 	}

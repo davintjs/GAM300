@@ -5,6 +5,14 @@
 
 #define MAX_KEY_COUNT 348
 
+enum ButtonState
+{
+	Release = 0,
+	Press = 1,
+	Hold = 2
+};
+
+
 class InputHandler
 {
 public:
@@ -54,11 +62,11 @@ public:
 
 	static bool isMouse_L_DoubleClickandHold();
 
+	static void setMouseButtonState(int index, int state);
 
+	static int getMouseButtonState(int index); // change to button state
 	// [0] is left click, [1] is right click
-	inline static int mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
 	
-	inline static int prev_mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
 
 	inline static std::chrono::high_resolution_clock::time_point prevMouse_LClick;
 
@@ -68,7 +76,15 @@ public:
 private:
 	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
 	inline static int last_Key_states[MAX_KEY_COUNT]; // Used for the difference between press and hold
+	
+	
 	inline static int mouseScrollState = 0;
+	inline static int mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int prev_mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
+
+
+
+
 	inline static bool fullscreen;
 
 	
