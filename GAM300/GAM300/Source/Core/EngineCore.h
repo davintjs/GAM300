@@ -11,17 +11,21 @@
 	NOTE: DO NOT INCLUDE IN ANY OTHER PLACE OTHER THAN MAIN
 	This file manages all the systems as a super system itself. 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef ENGINE_CORE_H
 #define ENGINE_CORE_H
 
 #include "Precompiled.h"
-//#include "SystemInterface.h"
 #include "FramerateController.h"
 #include "Editor/Editor.h"
+#include "SystemInterface.h"
+#include "FramerateController.h"
+#include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
+#include <vector>
+#include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
 //#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
@@ -50,6 +54,7 @@ public:
 	/**************************************************************************/
 	void Init()
 	{
+		THREADS.Init();
 		MyFrameRateController.Init();
 
 
@@ -73,6 +78,24 @@ public:
 
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
+		Scene& scene = SceneManager::Instance().GetCurrentScene();
+
+		//TEST ENTITY CREATION
+		// for (int i = 0; i < 22; ++i)
+		// {
+		// 	scene.AddEntity();
+		// }
+
+		// scene.AddComponent<Rigidbody>(20);
+		// scene.AddComponent<Rigidbody>(1);
+		//Script& script = scene.AddComponent<Script>(20);
+		// scene.AddComponent<Script>(20);
+		// scene.AddComponent<Script>(20);
+		// scene.AddComponent<Script>(1);
+		// scene.AddComponent<Script>(20);
+		//scene.AddComponent<Script>(20);
+		//Entity& entity = scene.entities.DenseSubscript(20);
+		//scene.RemoveComponent(entity,script);
 	}
 
 	/**************************************************************************/
@@ -84,6 +107,7 @@ public:
 	/**************************************************************************/
 	void Update()
 	{
+		//MultiComponentsArrays arr;
 		while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 		{
 			
@@ -104,10 +128,7 @@ public:
 
 				for (ISystem* pSystem : systems)
 				{
-					if (pSystem->GetMode() & mode)
-					{
-						pSystem->Update();
-					}
+					pSystem->Update();
 				}
 
 				//End ImGui Frames
@@ -120,6 +141,9 @@ public:
 				MyFrameRateController.End();
 			}
 		}
+				//MyFrameRateController.End();
+			//}
+		//}
 	}
 
 	/**************************************************************************/
@@ -131,6 +155,7 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
+		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
 			(*iter)->Exit();

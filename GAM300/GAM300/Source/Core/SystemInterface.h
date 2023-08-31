@@ -39,7 +39,8 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
     System/class name
 */
 /**************************************************************************/
-#define ENGINE_SYSTEM(TYPE) class TYPE final : public ISystem, public Singleton<TYPE>
+
+#define ENGINE_SYSTEM(TYPE) class TYPE final : public ISystem, public Singleton<TYPE> 
 /**************************************************************************/
 /*!
   \brief
@@ -50,6 +51,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 */
 /**************************************************************************/
 #define ENGINE_RUNTIME_SYSTEM(TYPE) class TYPE final : public IRuntimeSystem, public Singleton<TYPE>
+
 /**************************************************************************/
 /*!
   \brief

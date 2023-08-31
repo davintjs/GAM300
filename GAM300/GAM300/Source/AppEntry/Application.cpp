@@ -1,5 +1,8 @@
 #include "Precompiled.h"
 #include <glm/gtx/string_cast.hpp>
+
+#include "Core/EngineCore.h"
+#include "Core/EventsManager.h"
 //#include "GL/glew.h"
 //#include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 

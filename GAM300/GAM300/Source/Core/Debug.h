@@ -6,10 +6,10 @@
 #define DEBUG_H
 #define ASSERT(expr) assert(expr);
 
-template <typename Arg, typename... Args>
-void PRINT(Arg&& arg, Args&&... args)
+template <typename... Args>
+void PRINT(Args&&... args)
 {
-	std::cout << std::forward<Arg>(arg);
+	((std::cout << std::forward<Args>(args)),...);
 }
 
 #endif

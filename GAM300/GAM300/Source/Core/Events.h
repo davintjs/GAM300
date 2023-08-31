@@ -16,8 +16,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "Scene/Entity.h"
-#include "Scene/Components.h"
+#include "Scene/Scene.h"
 
 struct IEvent
 {
@@ -40,21 +39,47 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
-template <typename T>
-struct ComponentAddEvent : IEvent
+struct SceneChangingEvent : IEvent
 {
-	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
-		gameObject{ _gameObject }, componentContainer{ _componentContainer }, uuid{_uuid} {}
-	Entity& entity;
-	T*& componentContainer;
-	UUID uuid;
+	SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
+	Scene& scene;
 };
 
 template <typename T>
-struct ComponentDeleteEvent : IEvent
+struct ReflectComponentEvent : IEvent
 {
-	ComponentDeleteEvent(T& _component) : component{_component}{}
+	ReflectComponentEvent(T& _component) : component{ _component } {}
 	T& component;
 };
+
+struct ReflectEntityEvent : IEvent
+{
+	ReflectEntityEvent(Entity& _entity) : entity{ _entity} {}
+	Entity& entity;
+};
+
+
+//struct GetCurrentSceneEvent
+//{
+//	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
+//	Scene& scene;
+//};
+
+//template <typename T>
+//struct ComponentAddEvent : IEvent
+//{
+//	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
+//		entity{ _entity }, componentContainer{ _componentContainer }, uuid{_uuid} {}
+//	Entity& entity;
+//	T*& componentContainer;
+//	UUID uuid;
+//};
+//
+//template <typename T>
+//struct ComponentDeleteEvent : IEvent
+//{
+//	ComponentDeleteEvent(T& _component) : component{_component}{}
+//	T& component;
+//};
 
 #endif //!EVENTS_H

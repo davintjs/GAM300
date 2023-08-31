@@ -1,23 +1,28 @@
 #include "Utilities/UUID.h"
-#include "Utilities/ObjectsArray.h"
+#include "Utilities/ObjectsList.h"
 #include <vector>
 
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#define MAX_ENTITIES 100000
+constexpr size_t MAX_ENTITIES{ 5 };
 
 struct Scene;
-using EntityIndex = size_t;
+struct Entity;
+
+using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
 struct Entity
 {
+public:
 	Entity(UUID _uuid = CreateUUID());
+	Entity() = delete;
 	const UUID uuid;
-	Scene* pScene = nullptr;
+	//Which array does this object belong in?
+	Scene* pScene;
+	DenseIndex denseIndex;
 };
 
-using EntitiesArray = ObjectsArray<Entity, MAX_ENTITIES>;
 using EntitiesPtrArray = std::vector<Entity*>;
 
 #endif // !ENTITY_H

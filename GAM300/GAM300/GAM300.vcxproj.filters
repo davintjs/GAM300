@@ -24,10 +24,8 @@
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
-    <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Scene\Entity.cpp" />
-    <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
@@ -52,6 +50,12 @@
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Utilities\SparseSet.cpp" />
+    <ClCompile Include="Source\Utilities\ObjectsList.cpp" />
+    <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
+    <ClCompile Include="Source\Utilities\ObjectsBList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -71,16 +75,14 @@
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
-    <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
-    <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\Entity.h" />
-    <ClInclude Include="Source\Utilities\ObjectsArray.h" />
+    <ClInclude Include="Source\Utilities\ObjectsList.h" />
     <ClInclude Include="Source\Physics\PhysicsSystem.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Core\Events.h" />
@@ -95,5 +97,9 @@
     <ClInclude Include="Source\AI\Enemy.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />
     <ClInclude Include="Source\Utilities\PlatformUtils.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
+    <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Utilities\MultiThreading.h" />
+    <ClInclude Include="Source\Utilities\ObjectsBList.h" />
   </ItemGroup>
 </Project>
