@@ -1,5 +1,8 @@
 #include "Compiler.h"
 
+BoundingBox3D mGlobalPosAABB;
+BoundingBox3D mGlobalTexAABB;
+
 ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath)
 {
 	_descriptor = new Descriptor;
@@ -24,15 +27,16 @@ void ModelLoader::LoadModel()
 	ImportOptions =
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
 		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+		//aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
 		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
 		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
+		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
 		aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
-		aiPostProcessSteps::aiProcess_PreTransformVertices;
+		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
+		//aiPostProcessSteps::aiProcess_PreTransformVertices
 
 	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -42,7 +46,7 @@ void ModelLoader::LoadModel()
 		exit(EXIT_FAILURE);
 	}
 
-	ProcessBones(*scene->mRootNode, *scene); // WIP
+	//ProcessBones(*scene->mRootNode, *scene); // WIP
 	ProcessGeom(*scene->mRootNode, *scene);
 }
 
@@ -168,9 +172,12 @@ void ModelLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 
 Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 {
+	std::vector<TempVertex> tempVertex;
+	std::vector<unsigned int> tempIndices;
+
 	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
-		Vertex temp;
+		TempVertex temp;
 
 		// Vertex position
 		temp.pos = glm::vec3(static_cast<float>(mesh.mVertices[i].x),
@@ -204,7 +211,7 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 				static_cast<float>(mesh.mTangents[i].z)
 			};
 		}
-		_vertices.push_back(temp); // Add this vertex into our vector of vertices in model loader
+		tempVertex.push_back(temp); // Add this vertex into our vector of vertices
 	}
 
 	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Processing all faces in this single mesh
@@ -213,7 +220,7 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 
 		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in this current face
 		{
-			_indices.push_back(face.mIndices[k]); // Store the indices in our vector of indices in model loader
+			tempIndices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
 		}
 	}
 
@@ -223,22 +230,204 @@ Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 		ImportMaterialAndTextures(mat);
 	}
 
-	//Optimize(); // Optimize before storing
-	TransformVertices();
+	TransformVertices(tempVertex); // Apply transformation on the mesh according to descriptor file specifications
 
+	Optimize(tempVertex, tempIndices); // Optimize this mesh
+
+	// Compress vertices for storing in our vertex
+	std::vector<Vertex> CompressedVertices;
+	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
+	CompressVertices(CompressedVertices, tempVertex, mPosTexOffset);
+
+	// Calculate the material index of this mesh
 	int materialIndex = static_cast<int>(_materials.size() - 1);
-	return Mesh(this->_vertices, this->_indices, materialIndex); // Create the mesh class with model loader data
+
+	return Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
 }
 
-//void ModelLoader::Optimize()
-//{
-//	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
-//	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
-//
-//	TransformVertices();
-//}
+void ModelLoader::Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind)
+{
+	std::vector<unsigned int> remap(ind.size());
+	const size_t vertCount = meshopt_generateVertexRemap(&remap[0],
+		ind.data(),
+		ind.size(),
+		vert.data(),
+		ind.size(),
+		sizeof(TempVertex));
 
-void ModelLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
+	std::vector<unsigned int> remappedIndices(ind.size());
+	std::vector<TempVertex> remappedVertices(vertCount);
+
+	meshopt_remapIndexBuffer(remappedIndices.data(), ind.data(), ind.size(), &remap[0]);
+	meshopt_remapVertexBuffer(remappedVertices.data(), vert.data(), vert.size(), sizeof(TempVertex), &remap[0]);
+
+	meshopt_optimizeVertexCache(remappedIndices.data(), remappedIndices.data(), ind.size(), vertCount);
+
+	meshopt_optimizeOverdraw(remappedIndices.data(),
+							remappedIndices.data(),
+							ind.size(),
+							&remappedVertices[0].pos.x,
+							vertCount,
+							sizeof(TempVertex),
+							1.05f);
+
+	meshopt_optimizeVertexFetch(remappedVertices.data(), 
+								remappedIndices.data(), 
+								ind.size(),
+								remappedVertices.data(), 
+								vertCount, 
+								sizeof(TempVertex));
+
+	// Below is for LOD of meshes
+		
+	//const float threshold = 0.2f; // Controls the LOD of the mesh
+	//const size_t targetIndexCount = size_t(remappedIndices.size() * threshold);
+	//const float targetError = 1e-2f;
+	//std::vector<unsigned int> indicesLod(remappedIndices.size());
+	//indicesLod.resize(meshopt_simplify(&indicesLod[0],
+	//									remappedIndices.data(), 
+	//									remappedIndices.size(),
+	//									&remappedVertices[0].pos.x, 
+	//									vertCount, 
+	//									sizeof(Vertex), 
+	//									targetIndexCount,
+	//									targetError));
+
+	vert = remappedVertices;
+	ind = remappedIndices;
+}
+
+// Basically changing floats to 2 bytes integers
+void ModelLoader::CompressVertices(std::vector<Vertex>& CompressVertices,
+	const std::vector<TempVertex> tempVertex,
+	std::pair<glm::vec3, glm::vec2>& mOffsets)
+{
+	// Get BoundingBox3D of the vertex position and texture coordinates
+	float mPosMinX = FLT_MAX, mPosMinY = FLT_MAX, mPosMinZ = FLT_MAX;
+	float mPosMaxX = -FLT_MAX, mPosMaxY = -FLT_MAX, mPosMaxZ = -FLT_MAX;
+
+	float mTexMinU = FLT_MAX, mTexMinV = FLT_MAX;
+	float mTexMaxU = -FLT_MAX, mTexMaxV = -FLT_MAX;
+	for (const auto& v : tempVertex)
+	{
+		// Position
+		mPosMinX = std::min(mPosMinX, v.pos.x);
+		mPosMinY = std::min(mPosMinY, v.pos.y);
+		mPosMinZ = std::min(mPosMinZ, v.pos.z);
+		mPosMaxX = std::max(mPosMaxX, v.pos.x);
+		mPosMaxY = std::max(mPosMaxY, v.pos.y);
+		mPosMaxZ = std::max(mPosMaxZ, v.pos.z);
+
+		// Texture
+		mTexMinU = std::min(mTexMinU, v.tex.x);
+		mTexMinV = std::min(mTexMinV, v.tex.y);
+		mTexMaxU = std::max(mTexMaxU, v.tex.x);
+		mTexMaxV = std::max(mTexMaxV, v.tex.y);
+	}
+
+	glm::vec3 minPos{ mPosMinX, mPosMinY, mPosMinZ };
+	glm::vec3 maxPos{ mPosMaxX, mPosMaxY, mPosMaxZ };
+	glm::vec2 minTex{ mTexMinU, mTexMinV };
+	glm::vec2 maxTex{ mTexMaxU, mTexMaxV };
+
+	BoundingBox3D mPosAABB, mTexAABB;
+	mPosAABB.mMin = minPos;
+	mPosAABB.mMax = maxPos;
+
+	mTexAABB.mMin = { minTex.x, minTex.y, 0.f };
+	mTexAABB.mMax = { maxTex.x, maxTex.y, 0.f };
+
+	glm::vec3 mPosCompressionScale = maxPos - minPos;
+	glm::vec2 mTexCompressionScale = maxTex - minTex;
+
+	// Here we update the global AABB containing all the meshes of the model
+	mGlobalPosAABB.mMin = { std::min(mGlobalPosAABB.mMin.x, mPosCompressionScale.x),
+							std::min(mGlobalPosAABB.mMin.y, mPosCompressionScale.y),
+							std::min(mGlobalPosAABB.mMin.z, mPosCompressionScale.z) };
+
+	mGlobalPosAABB.mMax = { std::max(mGlobalPosAABB.mMax.x, mPosCompressionScale.x),
+							std::max(mGlobalPosAABB.mMax.y, mPosCompressionScale.y),
+							std::max(mGlobalPosAABB.mMax.z, mPosCompressionScale.z) };
+
+	mGlobalTexAABB.mMin = { std::min(mGlobalTexAABB.mMin.x, mTexCompressionScale.x),
+							std::min(mGlobalTexAABB.mMin.y, mTexCompressionScale.y), 
+							0.f };
+
+	mGlobalTexAABB.mMax = { std::max(mGlobalTexAABB.mMax.x, mTexCompressionScale.x),
+						std::max(mGlobalTexAABB.mMax.y, mTexCompressionScale.y),
+						0.f };
+
+	// Store this scaling to our ModelLoader
+	this->mPosCompressionScale = mGlobalPosAABB.mMax - mGlobalPosAABB.mMin;
+	this->mTexCompressionScale = mGlobalTexAABB.mMax - mGlobalTexAABB.mMin;
+
+	// Here we want to get the offsets for this particular mesh
+	mOffsets.first = (mPosAABB.mMin + mPosAABB.mMax) / 2.f;
+	mOffsets.second = (mTexAABB.mMin + mTexAABB.mMax) / 2.f;
+
+	// Compressing the vertices here
+	for (const auto& vert : tempVertex)
+	{
+		// Position vertices
+		float val;
+		std::int16_t mPosX, mPosY, mPosZ, mNormalX, mNormalY, mTanX, mTanY, mTexU, mTexV;
+		std::int8_t mSign;
+
+		val = vert.pos.x - mOffsets.first.x / this->mPosCompressionScale.x;
+		mPosX = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.y - mOffsets.first.y / this->mPosCompressionScale.y;
+		mPosY = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.z - mOffsets.first.z / this->mPosCompressionScale.z;
+		mPosZ = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		// Extras
+		std::int16_t Nx = std::min((short)0x3FFF, static_cast<std::int16_t>(((vert.normal.x + 1) / 2.0f) * 0x3FFF));
+		if (vert.normal.z < 0)
+		{
+			if (Nx == 0)
+			{
+				Nx = -1;
+			}
+			else
+			{
+				Nx = -Nx;
+			}
+		}
+		mNormalX = Nx;
+		mNormalY = static_cast<std::int16_t>(vert.normal.y * (vert.normal.y >= 0 ? 0x1FF : 0x200));
+		mTanX = static_cast<std::int16_t>(vert.tangent.x * (vert.tangent.x >= 0 ? 0x1FF : 0x200));
+		mTanY = static_cast<std::int16_t>(vert.tangent.y * (vert.tangent.y >= 0 ? 0x1FF : 0x200));
+		mSign = vert.tangent.z >= 0 ? 0x1 : 0x3;
+
+		val = (vert.tex.x - mOffsets.second.x) / this->mTexCompressionScale.x;
+		mTexU = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = (vert.tex.y - mOffsets.second.y) / this->mTexCompressionScale.y;
+		mTexV = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		Vertex currVert;
+		currVert.posX = mPosX;
+		currVert.posY = mPosY;
+		currVert.posZ = mPosZ;
+		currVert.normX = mNormalX;
+		currVert.normY = mNormalY;
+		currVert.tanX = mTanX;
+		currVert.tanY = mTanY;
+		currVert.tanSign = mSign;
+		currVert.texU = mTexU;
+		currVert.texV = mTexV;
+		currVert.colorR = vert.color.r;
+		currVert.colorG = vert.color.g;
+		currVert.colorB = vert.color.b;
+		currVert.colorA = vert.color.a;
+
+		CompressVertices.push_back(currVert);
+	}
+}
+
+void ModelLoader::TransformVertices(std::vector<TempVertex> vert) // Apply the modifications to our vertices from desc to our geom
 {
 	glm::mat4 scaleMat
 	{
@@ -283,10 +472,10 @@ void ModelLoader::TransformVertices() // Apply the modifications to our vertices
 	glm::mat4 rotMat = rotZ * rotY * rotX;
 	glm::mat4 concat = transMat * rotMat * scaleMat;
 
-	for (size_t i = 0; i < _vertices.size(); ++i)
+	for (size_t i = 0; i < vert.size(); ++i)
 	{
-		glm::vec3 resultant = concat * glm::vec4(_vertices[i].pos, 0.f);
-		_vertices[i].pos = resultant;
+		glm::vec3 resultant = concat * glm::vec4(vert[i].pos, 0.f);
+		vert[i].pos = resultant;
 	}
 }
 
@@ -413,7 +602,8 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 	return;
 }
 
-void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
+// Serialize to geom binary file a single FBX file
+void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 {
 	std::ofstream serializeFile(filepath, std::ios_base::binary);
 	if (!serializeFile)
@@ -422,36 +612,45 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath) // Serialize t
 		return;
 	}
 
-	/*size_t meshSize = _meshes.size();
-	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));*/
+	// Save the compression scale values of the position and texture of the FBX model
+	serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
+	serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
 
-	size_t vertexSize = _vertices.size();
-	serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-	serializeFile.write(reinterpret_cast<char*>(&_vertices[0]), vertexSize * sizeof(Vertex));
+	size_t meshSize = this->_meshes.size();
+	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
 
-	size_t indicesSize = _indices.size();
-	serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-	serializeFile.write(reinterpret_cast<char*>(&_indices[0]), indicesSize * sizeof(int32_t));
-
-	//size_t texSize = _textures.size();
-	//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_textures[0]), texSize * sizeof(Texture));
-
-	//size_t matSize = _materials.size();
-	//serializeFile.write(reinterpret_cast<char*>(&matSize), sizeof(matSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_materials[0]), matSize * sizeof(Material));
-
-	for (auto i : _materials) // Save material one at a time
+	for (auto& _mesh : this->_meshes)
 	{
-		serializeFile.write(reinterpret_cast<char*>(&i.Specular), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&i.Diffuse), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&i.Ambient), sizeof(aiColor4D));
+		// Vertices
+		size_t vertexSize = _mesh._vertices.size();
+		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
 
-		size_t texSize = i.textures.size(); // Save all textures of this material
+		// Indices
+		size_t indicesSize = _mesh._indices.size();
+		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
+	}
+
+	size_t materialSize = this->_materials.size();
+	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
+
+	for (auto& mat : _materials) // Save material of this model
+	{
+		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
+
+		size_t texSize = mat.textures.size(); // Save all textures of this material
 		if (texSize > 0)
 		{
 			serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-			serializeFile.write(reinterpret_cast<char*>(&i.textures[0]), texSize * sizeof(Texture));
+			serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		}
 	}
 
@@ -627,7 +826,7 @@ int main() {
 				// Check if this model had already been previously serialized
 				if (std::filesystem::exists(geomFilePath) && std::filesystem::exists(subFilePathDesc)) // Both geom and desc files must be present
 				{
-					std::cout << " Done!" << std::endl;
+					std::cout << "Done!" << std::endl;
 					break; // Go to next model folder
 				}
 
