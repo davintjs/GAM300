@@ -16,6 +16,8 @@ void AssetManager::Init()
 		this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
 	}
 
+	
+
 	this->LoadAsset("Assets");
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
@@ -110,4 +112,35 @@ const std::vector<char>& AssetManager::GetAsset(const int& assetGUID)
 		});
 
 	return mTotalAssets.mFilesData[assetGUID].second;
+}
+
+void AssetManager::CreateMetaFile(const std::string& filePath, const std::string& fileType)
+{
+	std::uniform_real_distribution<double> distribution(0, 100000);
+	std::random_device rd;
+	std::default_random_engine generator(rd());
+	const int GUID = distribution(generator);
+
+	std::string fileAssetPath = filePath;
+	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen("meta") + 1);
+	fileAssetPath += '.' + fileType;
+
+	rapidjson::StringBuffer sb;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+
+	writer.StartObject();
+	writer.String("GUID");
+	writer.Int(GUID);
+	writer.String("FileType");
+	writer.String(fileType.c_str());
+	writer.String("FileAssetPath");
+	writer.String(fileAssetPath.c_str());
+	writer.EndObject();
+
+	std::ofstream ofs(filePath);
+	ofs << sb.GetString();
+	ofs.flush();
+	ofs.close();
+
+	return;
 }

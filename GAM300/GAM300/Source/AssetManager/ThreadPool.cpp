@@ -5,8 +5,8 @@ ThreadPool::ThreadPool(int numThreads)
 {
     for (size_t i = 0; i < numThreads; ++i)
     {
-        std::thread* thread = new std::thread;
-        mWorkerPool.push_back(*thread);
+       std::thread* thread = new std::thread;
+       mWorkerPool.push_back(std::move(*thread));
     }
 
     RunTask();
@@ -47,13 +47,4 @@ ThreadPool::~ThreadPool()
 	{
 		thread.join(); // Join all threads to main thread from the worker thread pool
 	}
-}
-
-template <typename T>
-void ThreadPool::EnqueueTask(T&& mTask)
-{
-	std::unique_lock<std::mutex> mLock(mQueueMutex);
-	tasks.emplace(std::move(mTask));
-
-	mQueueVariable.notify_one();
 }

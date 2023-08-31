@@ -15,7 +15,13 @@ public:
 	~ThreadPool();
 
 	template <typename T>
-	void EnqueueTask(T&& task);
+	void EnqueueTask(T&& task)
+	{
+		std::unique_lock<std::mutex> mLock(mQueueMutex);
+		mTasks.emplace(std::move(task));
+
+		mQueueVariable.notify_one();
+	}
 
 	void RunTask();
 

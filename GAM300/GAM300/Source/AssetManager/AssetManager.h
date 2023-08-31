@@ -18,7 +18,7 @@ public:
 	void Update();
 	void Exit();
 
-	void AsyncLoadAsset(const std::string& assetPath);
+	void AsyncLoadAsset(const std::string & assetPath);
 	const std::vector<char>& GetAsset(const int& assetGUID);
 
 private:
@@ -30,5 +30,6 @@ private:
 	// Asset stuff
 	Asset mTotalAssets;
 
-	void LoadAsset(const std::string& filePath);
-}
+	void LoadAsset(const std::string & filePath);
+	void CreateMetaFile(const std::string & filePath, const std::string & fileType);
+};
