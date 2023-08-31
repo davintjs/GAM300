@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/vec4.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
+#include "Utilities/ObjectsBList.h"
 #include "Entity.h"
 
 using Vector2 = glm::vec2;
@@ -72,12 +73,8 @@ private:
 	std::tuple<ObjectsList<Ts, MAX_ENTITIES>...> arrays;
 };
 
-
 template <typename Component>
-using MultiComponent = ObjectsList<Component, MAX_MULTI_COMPONENTS>;
-
-template <typename Component>
-using MultiComponentsArray = ObjectsList<MultiComponent<Component>, MAX_ENTITIES>;
+using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES, MAX_MULTI_COMPONENTS>;
 
 template<typename... Ts>
 struct MultiComponentsGroup

@@ -77,7 +77,7 @@ public:
 		scene.AddComponent<Script>(20);
 		scene.AddComponent<Script>(1);
 		scene.AddComponent<Script>(20);
-		scene.AddComponent<Script>(20);
+		//scene.AddComponent<Script>(20);
 		//Entity& entity = scene.entities.DenseSubscript(20);
 		//scene.RemoveComponent(entity,script);
 	}

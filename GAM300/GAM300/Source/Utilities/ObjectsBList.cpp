@@ -31,16 +31,20 @@ T& ObjectsBList<T, N, B_SZ>::emplace(DenseIndex index, Args&&... args)
 	if (start->next == nullptr)
 		tail = start;
 	++size_;
-	return start->sparseSet.emplace(index);
+	while (!start->sparseSetList.full())
+	{
+		start->sparseSetList.emplace_back();
+	}
+	return start->sparseSetList.DenseSubscript(index).emplace_back();
 }
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 void ObjectsBList<T, N, B_SZ>::clear()
 {
 	Node* start = head;
-	while (start->sparseSet.full())
+	while (start->sparseSetList.full())
 	{
-		start->sparseSet.clear();
+		start->sparseSetList.clear();
 		start = start->next;
 	}
 }
@@ -80,7 +84,7 @@ void ObjectsBList<T, N, B_SZ>::erase(T& val)
 	Node* prev = nullptr;
 	Node* start = head;
 	//Look for node/sparseset that contains the value
-	while (!start->sparseSet.contains(val))
+	while (!start->sparseSetList.contains(val))
 	{
 		prev = start;
 		start = start->next;

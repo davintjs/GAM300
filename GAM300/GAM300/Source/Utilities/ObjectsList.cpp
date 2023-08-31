@@ -59,8 +59,9 @@ template <typename T, ObjectIndex N>
 void ObjectsList<T, N>::clear()
 {
 	Node* start = head;
-	while (start->sparseSet.full())
+	while (start)
 	{
+		Node* prev = start;
 		start->sparseSet.clear();
 		start = start->next;
 	}

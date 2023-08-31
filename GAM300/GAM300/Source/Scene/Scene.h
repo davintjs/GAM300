@@ -107,10 +107,7 @@ struct Scene
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
-			while (arr.size() <= index)
-				arr.emplace_back();
-			return arr.DenseSubscript(index).emplace_back();
+			return multiComponentsArrays.GetArray<Component>().emplace(index);
 		}
 		else
 		{

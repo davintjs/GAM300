@@ -26,15 +26,15 @@ void SceneManager::Update()
 	}
 
 	//Issue with this, iterating over empty multicomponents
-	for (MultiComponent<Script>& multiScript : scene.multiComponentsArrays.GetArray<Script>())
-	{
-		if (multiScript.size() > 0)
-			PRINT("SCRIPT: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(multiScript), '\n');
-		for (Script& script : multiScript)
-		{
-			
-		}
-	}
+	//for (MultiComponent<Script>& multiScript : scene.multiComponentsArrays.GetArray<Script>())
+	//{
+	//	if (multiScript.size() > 0)
+	//		PRINT("SCRIPT: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(multiScript), '\n');
+	//	for (Script& script : multiScript)
+	//	{
+	//		
+	//	}
+	//}
 
 	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
 

@@ -1,5 +1,5 @@
-#ifndef OBJECTS_LIST_H
-#define OBJECTS_LIST_H
+#ifndef OBJECTS_B_LIST_H
+#define OBJECTS_B_LIST_H
 #include "SparseSet.h"
 #include <bitset>
 #include "ObjectsList.h"
@@ -11,7 +11,7 @@ class ObjectsBList
 {
     struct Node
     {
-        SparseSet<ObjectsList<T,B_SZ>, N> sparseSet;
+        SparseSet<ObjectsList<T,B_SZ>, N> sparseSetList;
         //Forward List
         Node* next = nullptr;
     };
@@ -20,7 +20,7 @@ class ObjectsBList
     {
         Node* pNode;
         size_t index;
-        friend class ObjectsList;
+        friend class ObjectsBList;
     public:
         /***************************************************************************/
         /*!
