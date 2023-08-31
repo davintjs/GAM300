@@ -128,7 +128,8 @@ public:
 
 				for (ISystem* pSystem : systems)
 				{
-					pSystem->Update();
+					if (pSystem->GetMode() & mode)
+						pSystem->Update();
 				}
 
 				//End ImGui Frames
