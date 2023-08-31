@@ -1,12 +1,12 @@
 #include "Precompiled.h"
 #include "ThreadPool.h"
 
-ThreadPool::ThreadPool(int numThreads)
+ThreadPool::ThreadPool()
 {
-    for (size_t i = 0; i < numThreads; ++i)
+    for (size_t i = 0; i < MAX_THREADS; ++i)
     {
-       std::thread* thread = new std::thread;
-       mWorkerPool.push_back(std::move(*thread));
+        std::thread* thread = new std::thread;
+        mWorkerPool.push_back(std::move(*thread));
     }
 
     RunTask();
@@ -23,7 +23,7 @@ void ThreadPool::RunTask()
             std::unique_lock<std::mutex> mLock(mQueueMutex);
             mQueueVariable.wait(mLock, [this] 
                 { 
-                    return mTasks.empty(); 
+                    return mTasks.empty();
                 });
 
             if (mTasks.empty())

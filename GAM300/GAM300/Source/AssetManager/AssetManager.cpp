@@ -10,15 +10,57 @@ void AssetManager::Init()
 		exit(0);
 	}
 	
-	// Store all last updated time of each file
+	std::string subFilePath{};
+	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
 	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets"))
 	{
+		subFilePath = dir.path().generic_string();
+		//if (!strcmp(subFilePath.c_str(), "Assets/Models")) // This is a folder that requires iteration
+		//{
+		//	
+		//}
+		std::string subFilePathMeta = subFilePath;
+		std::string fileType{};
+		std::string fileName{};
+
+		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		{
+			fileType += subFilePath[i];
+		}
+
+		if (strcmp(fileType.c_str(), "geom")) // Skip if not geom
+		{
+			continue;
+		}
+
+		for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+		{
+			fileName += subFilePath[j];
+		}
+
+		// Remove extension only if is not geom file
+		if (strcmp(fileType.c_str(), "geom"))
+		{
+			// Removing extension to add .meta extension
+			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
+			subFilePathMeta += ".meta";
+		}
+		else
+		{
+			subFilePathMeta += ".meta";
+		}
+
+		if (!std::filesystem::exists(subFilePathMeta))
+		{
+			CreateMetaFile(fileName, subFilePathMeta, fileType);
+		}
+
+		// Add this asset file time to our tracking vector of last write time
 		this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
+		
+		// Deserialize from meta file and load the asset asynchronously
+		this->AsyncLoadAsset(subFilePathMeta, fileName);
 	}
-
-	
-
-	this->LoadAsset("Assets");
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
 }
@@ -64,42 +106,16 @@ void AssetManager::Exit()
 }
 
 // Multi-threaded loading of assets
-void AssetManager::LoadAsset(const std::string& filePath)
+void AssetManager::LoadAsset(const std::string& metaFilePath, const std::string& fileName)
 {
 	std::lock_guard<std::mutex> mLock(mAssetMutex); // Mutex lock if opening the same file in multiple threads (Maybe no need)
-
-	// Should move these string trimming to another function, then this function just for loading only
-	if (!std::filesystem::exists(filePath))
-	{
-		std::cout << "Check if proper assets filepath exists!" << std::endl;
-		exit(0);
-	}
-
-	std::string subFilePath{};
-	for (const auto& dir : std::filesystem::directory_iterator(filePath))
-	{
-		subFilePath = dir.path().generic_string();
-		std::string subFilePathMeta = subFilePath;
-		std::string fileType{};
-		std::string fileName{};
-
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
-		{
-			fileType += subFilePath[i];
-		}
-
-		if (!strcmp(fileType.c_str(), "meta")) // Skip this file if is meta file
-		{
-			continue;
-		}
-	}
-	
+	DeserializeAssetMeta(metaFilePath, fileName);
 	mAssetVariable.notify_all();
 }
 
-void AssetManager::AsyncLoadAsset(const std::string& assetPath)
+void AssetManager::AsyncLoadAsset(const std::string& metaFilePath, const std::string& fileName)
 {
-	AssetThread.EnqueueTask([this, assetPath] { LoadAsset(assetPath); });
+	AssetThread.EnqueueTask([this, metaFilePath, fileName] { LoadAsset(metaFilePath, fileName); });
 }
 
 // Get a loaded asset
@@ -114,13 +130,28 @@ const std::vector<char>& AssetManager::GetAsset(const int& assetGUID)
 	return mTotalAssets.mFilesData[assetGUID].second;
 }
 
-void AssetManager::CreateMetaFile(const std::string& filePath, const std::string& fileType)
+std::string AssetManager::GenerateGUID(const std::string& fileName)
 {
-	std::uniform_real_distribution<double> distribution(0, 100000);
+	std::stringstream stream{};
+	for (size_t i = 0; i < fileName.length(); ++i)
+	{
+		int asc = static_cast<int>(fileName[i]); // Convert from char to int first
+		stream << std::hex << asc; // Convert to hexadecimal
+	}
+
+	std::uniform_real_distribution<double> distribution(1, 1000);
 	std::random_device rd;
 	std::default_random_engine generator(rd());
-	const int GUID = distribution(generator);
+	int number = static_cast<int>(distribution(generator));
+	stream << std::hex << number;
 
+	std::string GUID(stream.str()); // Concat the string of hex asc
+	return GUID;
+}
+
+void AssetManager::CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType)
+{
+	std::string fileNameNum = GenerateGUID(fileName);
 	std::string fileAssetPath = filePath;
 	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen("meta") + 1);
 	fileAssetPath += '.' + fileType;
@@ -130,7 +161,7 @@ void AssetManager::CreateMetaFile(const std::string& filePath, const std::string
 
 	writer.StartObject();
 	writer.String("GUID");
-	writer.Int(GUID);
+	writer.Int64(std::stoi(fileNameNum));
 	writer.String("FileType");
 	writer.String(fileType.c_str());
 	writer.String("FileAssetPath");
@@ -143,4 +174,34 @@ void AssetManager::CreateMetaFile(const std::string& filePath, const std::string
 	ofs.close();
 
 	return;
+}
+
+void AssetManager::DeserializeAssetMeta(std::string filePath, std::string fileName)
+{
+	std::ifstream ifs(filePath);
+	std::stringstream buffer;
+	buffer << ifs.rdbuf();
+	ifs.close();
+
+	rapidjson::Document doc;
+	const std::string data(buffer.str());
+	doc.Parse(data.c_str());
+
+	std::string assetPath = doc["FileAssetPath"].GetString();
+	const long long int GUIDofAsset = doc["GUID"].GetInt();
+
+	std::ifstream inputFile(assetPath.c_str());
+	if (!inputFile)
+	{
+		std::cout << "Error opening file to load asset into memory!" << std::endl;
+		exit(0);
+	}
+
+	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
+
+	std::filesystem::directory_entry path(assetPath);
+	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
+	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, std::make_pair(pathTime, buff)));
+
+	inputFile.close();
 }

@@ -17,6 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define ENGINE_CORE_H
 
 #include "Precompiled.h"
+
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
@@ -24,7 +25,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
-#include <vector>
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
 //#include "IOManager/Handler_GLFW.h"
@@ -33,6 +33,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "AI/Enemy.h"
 #include "IOManager/InputSystem.h"
 #include "IOManager/Handler_GLFW.h"
+#include "AssetManager/AssetManager.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -68,7 +69,8 @@ public:
 			&EditorSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
-			&BehaviorTreeBuilder::Instance()
+			&BehaviorTreeBuilder::Instance(),
+			&AssetManager::Instance()
 		};
 
 

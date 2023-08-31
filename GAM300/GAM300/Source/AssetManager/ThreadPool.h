@@ -7,11 +7,12 @@
 #include <mutex>
 #include <condition_variable>
 
+constexpr int MAX_THREADS = 4;
+
 class ThreadPool
 {
 public:
-	ThreadPool() = delete;
-	ThreadPool(int numThreads);
+	ThreadPool();
 	~ThreadPool();
 
 	template <typename T>
