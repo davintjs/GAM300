@@ -182,6 +182,13 @@ int InputHandler::getMouseButtonState(int index)
 	return InputHandler::mouse_Button_states[index];
 }
 
+int InputHandler::get_Prev_MouseButtonState(int index)
+{
+	return InputHandler::prev_mouse_Button_states[index];
+
+}
+
+
 
 bool InputHandler::isFullscreen()
 {

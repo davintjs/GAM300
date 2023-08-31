@@ -75,10 +75,10 @@ void InputSystem::Update()
 		std::cout << "doubleclick ONLY\n";
 	}*/
 
-	/*if (InputHandler::isMouse_L_DoubleClickandHold())
+	if (InputHandler::isMouse_L_DoubleClickandHold())
 	{
 		std::cout << "doubleclick & Hold ONLY\n";
-	}*/
+	}
 
 
 

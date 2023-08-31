@@ -65,6 +65,7 @@ public:
 	static void setMouseButtonState(int index, int state);
 
 	static int getMouseButtonState(int index); // change to button state
+	static int get_Prev_MouseButtonState(int index); // change to button state
 	// [0] is left click, [1] is right click
 	
 
