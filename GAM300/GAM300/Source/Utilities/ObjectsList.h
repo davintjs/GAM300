@@ -142,8 +142,8 @@ public:
         Node* start = head;
         while (i >= start->sparseSet.size())
         {
-            start = start->next;
             i -= start->sparseSet.size();
+            start = start->next;
         }
         return start->sparseSet[i];
     }

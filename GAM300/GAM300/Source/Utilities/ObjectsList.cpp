@@ -106,8 +106,7 @@ void ObjectsList<T, N>::erase(T& val)
 		start = start->next;
 	}
 	ASSERT(start != nullptr, "Failed to erase value");
-	SparseSet<T, N>& sparseSet = start->sparseSet;
-	sparseSet.erase(sparseSet.GetDenseIndex(val));
+	start->sparseSet.erase(val);
 	--size_;
 }
 

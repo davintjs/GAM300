@@ -84,23 +84,23 @@ public:
 		//scene.AddEntity();
 		//}
 
-		DenseIndex index = 20;
-
-		scene.AddComponent<Rigidbody>(16);
-		Rigidbody& rb = scene.AddComponent<Rigidbody>(15);
-		Rigidbody& rb2 = scene.AddComponent<Rigidbody>(2);
-		scene.RemoveComponent(rb);
-		scene.AddComponent<Rigidbody>(1);
-		scene.RemoveComponent(rb2);
-
-		//Script& script3 = scene.AddComponent<Script>(index);
-		//scene.RemoveComponent(script3);
-
-		//scene.AddComponent<Script>(0);
-		//Script& script = scene.AddComponent<Script>(0);
-		//Script& script2 = scene.AddComponent<Script>(5);
-		//scene.RemoveComponent(entity, script2);
-		//scene.RemoveComponent(entity, script3);
+		Script& script3 = scene.AddComponent<Script>(14);
+		scene.AddComponent<Script>(14);
+		scene.AddComponent<Script>(13);
+		scene.AddComponent<Script>(3);
+		scene.AddComponent<Script>(21);
+		scene.Destroy(script3);
+		scene.AddComponent<Script>(14);
+		scene.AddComponent<Script>(14);
+		Script& script = scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
+		scene.Destroy(script);
+		scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
+		//Script& script2 = scene.AddComponent<Script>(10);
 	}
 
 	/**************************************************************************/

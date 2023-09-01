@@ -73,6 +73,22 @@ private:
 	std::tuple<ObjectsList<Ts, MAX_ENTITIES>...> arrays;
 };
 
+template<typename... Ts>
+struct ComponentsBuffer
+{
+	constexpr ComponentsBuffer(TemplatePack<Ts...>) {}
+	ComponentsBuffer() = default;
+
+	template <typename T1>
+	constexpr std::vector<T1*>& GetArray()
+	{
+		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		return std::get<std::vector<T1*>>(arrays);
+	}
+private:
+	std::tuple<std::vector<Ts*>...> arrays;
+};
+
 template <typename Component>
 using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES, MAX_MULTI_COMPONENTS>;
 
@@ -155,7 +171,9 @@ using SingleComponentTypes = TemplatePack<Transform,Rigidbody, Animator>;
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
-using GetComponentType = decltype(GetComponentTypeGroup(SingleComponentTypes().Concatenate(MultiComponentTypes())));
+using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
+using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
+using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
 
 #endif // !COMPONENTS_H

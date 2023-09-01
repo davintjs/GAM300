@@ -192,6 +192,12 @@ public:
 
     void erase(size_t denseIndex);
 
+
+    void erase(T& val)
+    {
+        erase(GetDenseIndex(val));
+    }
+
     /***************************************************************************/
     /*!
         \brief

@@ -45,6 +45,7 @@ class ObjectsBList
         /**************************************************************************/
         T& operator*()
         {
+            //for (auto& objectList : )
             return pNode->sparseSetList[index][subIndex];
         }
 
@@ -58,14 +59,17 @@ class ObjectsBList
         /**************************************************************************/
         Iterator operator++() 
         {
-            //If subIndex has hit max size, go to next list of Objects
+            //Same type of objects that belong to the same entity
+            //If it is full subIndex
+            //Go to the next object set, aka sparseSetList
             ++subIndex;
-            if (subIndex >= pNode->sparseSetList[index].size())
+            while(pNode && subIndex >= pNode->sparseSetList[index].size())
             {
                 ++index;
-                while (pNode && index >= pNode->sparseSetList.size())
+                //If index is more than node size, go to next node
+                while(pNode && index >= pNode->sparseSetList.size())
                 {
-                    index -= pNode->sparseSetList.size();
+                    index = 0;
                     pNode = pNode->next;
                 }
                 subIndex = 0;
@@ -155,12 +159,18 @@ public:
     DenseIndex GetDenseIndex(T& object)
     {
         Node* start = head;
-        DenseIndex count = 0;
-        while (start != nullptr)
+        size_t i = 0;
+        while (start)
         {
-            if (start->sparseSet.contains(object))
-                return start->sparseSet.GetDenseIndex(object) + count * N;
-            ++count;
+            for (auto& objectList : start->sparseSetList)
+            {
+                if (objectList.contains(object))
+                {
+                    return i + start->sparseSetList.GetDenseIndex(objectList);
+                }
+                //++i;
+            }
+            i += N;
             start = start->next;
         }
         ASSERT(true, "Object List does not contain this object");

@@ -41,6 +41,9 @@ struct Scene
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
 
+	EntitiesPtrArray entitiesDeletionBuffer;
+	ComponentsBufferArray componentsDeletionBuffer;
+
 	enum class State : char 
 	{
 		Edit = 0,
@@ -62,6 +65,66 @@ struct Scene
 		return entity;
 	}
 
+	template<typename T>
+	void Destroy(T& object)
+	{
+		if constexpr (std::is_same<T, Entity>())
+			entitiesDeletionBuffer.push_back(&object);
+		else if constexpr (AllComponentTypes::Has<T>())
+			componentsDeletionBuffer.GetArray<T>().push_back(&object);
+		static_assert(true,"Not a valid type of object to destroy");
+	}
+
+	template <typename T, typename... Ts>
+	struct ClearBufferStruct
+	{
+		ClearBufferStruct(TemplatePack<T, Ts...> pack) {}
+		ClearBufferStruct(Scene& _scene) : scene{ _scene }
+		{
+			CleanComponents<T, Ts...>();
+		}
+		Scene& scene;
+		template <typename T1, typename... T1s>
+		void CleanComponents()
+		{
+			auto& arr = scene.componentsDeletionBuffer.GetArray<T1>();
+			if constexpr (SingleComponentTypes::Has<T1>())
+			{
+				auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
+				for (T1* pComponent : arr)
+				{
+					compArray.erase(*pComponent);
+				}
+			}
+			else if constexpr (MultiComponentTypes::Has<T1>())
+			{
+				auto& compArray = scene.multiComponentsArrays.GetArray<T1>();
+				for (T1* pComponent : arr)
+				{
+					compArray.erase(*pComponent);
+				}
+			}
+			arr.clear();
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanComponents<T1s...>();
+			}
+		}
+	};
+
+	using ClearBufferHelper = decltype(ClearBufferStruct(AllComponentTypes()));
+
+	void ClearBuffer()
+	{
+		for (Entity* pEntity : entitiesDeletionBuffer)
+		{
+			entities.erase(*pEntity);
+		}
+		entitiesDeletionBuffer.clear();
+
+		ClearBufferHelper(*this);
+	}
+
 	bool EntityIsActive(DenseIndex index);
 
 	void EntitySetActive(DenseIndex index,bool value);
@@ -77,26 +140,6 @@ struct Scene
 	Component& AddComponent(const Entity& entity)
 	{
 		return AddComponent<Component>(entity.denseIndex);
-	}
-
-
-
-	template <typename Component>
-	void RemoveComponent(Component& component)
-	{
-		//When removing a component, disable the object first
-		if constexpr (SingleComponentTypes::Has<Component>())
-		{
-			singleComponentsArrays.GetArray<Component>().erase(component);
-		}
-		else if constexpr (MultiComponentTypes::Has<Component>())
-		{
-			multiComponentsArrays.GetArray<Component>().erase(component);
-		}
-		else
-		{
-			static_assert(true, "Type is not a valid component!");
-		}
 	}
 
 	template <typename Component>

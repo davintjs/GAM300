@@ -25,18 +25,17 @@ void SceneManager::Update(float dt)
 	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 	//}
 
-	for (Rigidbody& rb : scene.singleComponentsArrays.GetArray<Rigidbody>())
-	{
-		PRINT("RB:", scene.singleComponentsArrays.GetArray<Rigidbody>().GetDenseIndex(rb), '\n');
-	}
+	//for (Rigidbody& rb : scene.singleComponentsArrays.GetArray<Rigidbody>())
+	//{
+	//	PRINT("RB:", scene.singleComponentsArrays.GetArray<Rigidbody>().GetDenseIndex(rb), '\n');
+	//}
 
-	////Issue with this, iterating over empty multicomponents
-	//size_t i = 0;
+	//Issue with this, iterating over empty multicomponents
 	//for (Script& script : scene.multiComponentsArrays.GetArray<Script>())
 	//{
-	//	PRINT("Script: ", i, '\n');
-	//	++i;
+	//	PRINT("Script: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(script), '\n');
 	//}
+	scene.ClearBuffer();
 
 	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
 
