@@ -44,6 +44,15 @@ public:
 	GLuint drawcount;
 	GLSLShader shader;
 
+	// debug AABB
+	GLuint vaoidAABB;
+	GLSLShader shaderAABB;
+	glm::vec3 pntAABB[8];
+	std::vector<glm::ivec2> idxAABB{};
+	void debugAABB_init(); // vao & shader
+	void debugAABB_draw(glm::mat4& SRT);
+
+
 
 	AssimpLoader* _geom;
 
