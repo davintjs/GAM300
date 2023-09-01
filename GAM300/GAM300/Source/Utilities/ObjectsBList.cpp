@@ -77,12 +77,10 @@ void ObjectsBList<T, N, B_SZ>::DeleteNode(Node* prev, Node* pNode)
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 void ObjectsBList<T, N, B_SZ>::erase(T& val)
 {
-	Node* prev = nullptr;
 	Node* start = head;
 	//Look for node/sparseset that contains the value
 	while (start)
 	{
-		prev = start;
 		for (auto& subNode : start->sparseSetList)
 		{
 			if (subNode.contains(val))

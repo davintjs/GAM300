@@ -48,25 +48,22 @@ template <typename T, size_t N>
 template <typename... Args>
 T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
 {
-    //Already exists
-    if (nodes[index].sparseIndex < size_)
-        return reinterpret_cast<T*>(data)[index];
     //Find and make to next element
     ASSERT(index < N, " OUT OF BOUNDS");
-    T& back = *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
     for (size_t i = size_; i < N; ++i)
     {
         if (nodes[i].denseIndex == index)
         {
-            size_t sparseIndex = nodes[i].sparseIndex;
-            nodes[i].sparseIndex = nodes[size_].sparseIndex;
-            nodes[size_].sparseIndex = sparseIndex;
-            std::swap(nodes[i], nodes[size_]);
-            break;
+            //Already exists
+            if (nodes[i].sparseIndex < size_)
+                return reinterpret_cast<T*>(data)[index];
+            nodes[i].denseIndex = nodes[size_].denseIndex;
+            nodes[size_].denseIndex = index;
+            ++size_;
+            return *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
         }
     }
-    ++size_;
-    return back;
+    ASSERT(true, "OUT OF BOUNDS");
 }
 
 template <typename T, size_t N>

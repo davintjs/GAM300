@@ -99,12 +99,10 @@ void ObjectsList<T, N>::DeleteNode(Node* prev, Node* pNode)
 template <typename T, ObjectIndex N>
 void ObjectsList<T, N>::erase(T& val)
 {
-	Node* prev = nullptr;
 	Node* start = head;
 	//Look for node/sparseset that contains the value
 	while (!start->sparseSet.contains(val))
 	{
-		prev = start;
 		start = start->next;
 	}
 	ASSERT(start != nullptr, "Failed to erase value");

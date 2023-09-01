@@ -79,22 +79,28 @@ public:
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
 		//TEST ENTITY CREATION
-		 for (int i = 0; i < 22; ++i)
-		 {
-		 	scene.AddEntity();
-		 }
+		//for (int i = 0; i < 22; ++i)
+		//{
+		//scene.AddEntity();
+		//}
 
-		Script& script3 = scene.AddComponent<Script>(20);
-		scene.AddComponent<Rigidbody>(15);
-		//scene.AddComponent<Rigidbody>(15);
+		DenseIndex index = 20;
+
+		scene.AddComponent<Rigidbody>(16);
+		Rigidbody& rb = scene.AddComponent<Rigidbody>(15);
+		Rigidbody& rb2 = scene.AddComponent<Rigidbody>(2);
+		scene.RemoveComponent(rb);
 		scene.AddComponent<Rigidbody>(1);
-		Script& script = scene.AddComponent<Script>(0);
-		///scene.AddComponent<Script>(0);
-		Script& script2 = scene.AddComponent<Script>(5);
-		Entity& entity = scene.entities.DenseSubscript(20);
-		scene.RemoveComponent(entity, script);
-		scene.RemoveComponent(entity, script2);
-		scene.RemoveComponent(entity, script3);
+		scene.RemoveComponent(rb2);
+
+		//Script& script3 = scene.AddComponent<Script>(index);
+		//scene.RemoveComponent(script3);
+
+		//scene.AddComponent<Script>(0);
+		//Script& script = scene.AddComponent<Script>(0);
+		//Script& script2 = scene.AddComponent<Script>(5);
+		//scene.RemoveComponent(entity, script2);
+		//scene.RemoveComponent(entity, script3);
 	}
 
 	/**************************************************************************/

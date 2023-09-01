@@ -20,15 +20,15 @@ void SceneManager::LoadScene(const char* path)
 void SceneManager::Update(float dt)
 {
 	Scene& scene = GetCurrentScene();
-	for (Entity& entity : scene.entities)
-	{
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
-	}
-
-	//for (Rigidbody& rb : scene.singleComponentsArrays.GetArray<Rigidbody>())
+	//for (Entity& entity : scene.entities)
 	//{
-	//	PRINT("RB:", scene.singleComponentsArrays.GetArray<Rigidbody>().GetDenseIndex(rb), '\n');
+	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 	//}
+
+	for (Rigidbody& rb : scene.singleComponentsArrays.GetArray<Rigidbody>())
+	{
+		PRINT("RB:", scene.singleComponentsArrays.GetArray<Rigidbody>().GetDenseIndex(rb), '\n');
+	}
 
 	////Issue with this, iterating over empty multicomponents
 	//size_t i = 0;

@@ -79,8 +79,10 @@ struct Scene
 		return AddComponent<Component>(entity.denseIndex);
 	}
 
+
+
 	template <typename Component>
-	void RemoveComponent(Entity& entity,Component& component)
+	void RemoveComponent(Component& component)
 	{
 		//When removing a component, disable the object first
 		if constexpr (SingleComponentTypes::Has<Component>())
