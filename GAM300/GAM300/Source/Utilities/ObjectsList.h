@@ -115,6 +115,12 @@ public:
     T& emplace(DenseIndex index, Args&&... args);
     void clear();
     void erase(T& val);
+
+    bool empty()
+    {
+        return size_ == 0;
+    }
+
     ~ObjectsList();
     Iterator begin() { Node* start = head;  while (start && start->sparseSet.empty()) start = start->next; return Iterator(0, start); }
     Iterator end() {return Iterator(0, nullptr);}

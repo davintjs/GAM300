@@ -89,9 +89,6 @@ void ObjectsBList<T, N, B_SZ>::erase(T& val)
 			{
 				subNode.erase(val);
 				--size_;
-				//Delete node only if its the last one
-				if (start->sparseSetList.empty() && start->next == nullptr)
-					DeleteNode(prev, start);
 				return;
 			}
 		}

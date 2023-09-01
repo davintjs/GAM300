@@ -111,9 +111,6 @@ void ObjectsList<T, N>::erase(T& val)
 	SparseSet<T, N>& sparseSet = start->sparseSet;
 	sparseSet.erase(sparseSet.GetDenseIndex(val));
 	--size_;
-	//Delete node only if its the last one
-	if (sparseSet.empty() && start->next == nullptr)
-		DeleteNode(prev, start);
 }
 
 template <typename T, ObjectIndex N>
