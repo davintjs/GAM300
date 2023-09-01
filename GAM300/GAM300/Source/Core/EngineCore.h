@@ -81,7 +81,7 @@ public:
 		//TEST ENTITY CREATION
 		//for (int i = 0; i < 22; ++i)
 		//{
-		//scene.AddEntity();
+		//	scene.AddEntity();
 		//}
 
 		Script& script3 = scene.AddComponent<Script>(14);
@@ -100,7 +100,8 @@ public:
 		scene.AddComponent<Script>(0);
 		scene.AddComponent<Script>(0);
 		scene.AddComponent<Script>(0);
-		//Script& script2 = scene.AddComponent<Script>(10);
+		Script& script2 = scene.AddComponent<Script>(10);
+		scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 	}
 
 	/**************************************************************************/

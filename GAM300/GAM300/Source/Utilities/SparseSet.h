@@ -249,6 +249,11 @@ public:
         return &object - reinterpret_cast<T*>(data);
     }
 
+    DenseIndex GetDenseIndex(size_t sparseIndex)
+    {
+        return nodes[sparseIndex].denseIndex;
+    }
+
     /***************************************************************************/
     /*!
         \brief

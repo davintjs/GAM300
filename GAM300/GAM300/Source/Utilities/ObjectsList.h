@@ -107,6 +107,11 @@ class ObjectsList
         bool operator!=(const Iterator& other) const {
             return pNode != other.pNode || index != other.index;
         }
+
+        bool IsActive()
+        {
+            return pNode->activeObjectsBitset.test(pNode->sparseSet.GetDenseIndex(index));
+        }
     };
 public:
     template <typename... Args>
@@ -119,6 +124,33 @@ public:
     bool empty()
     {
         return size_ == 0;
+    }
+
+    bool IsActive(DenseIndex index)
+    {
+        Node* start = head;
+        while (start && index >= N)
+        {
+            index -= N;
+            start = start->next;
+        }
+        return start->activeObjectsBitset.test(index);
+    }
+
+    void SetActive(DenseIndex index, bool val = true)
+    {
+        Node* start = head;
+        while (start && index >= N)
+        {
+            index -= N;
+            start = start->next;
+        }
+        start->activeObjectsBitset.set(index,val);
+    }
+
+    void SetActive(T& object, bool val = true)
+    {
+        SetActive(GetDenseIndex(object),val);
     }
 
     ~ObjectsList();
@@ -173,6 +205,19 @@ public:
             start = start->next;
         }
         ASSERT(true, "Object List does not contain this object");
+    }
+
+    DenseIndex GetDenseIndex(size_t sparseIndex)
+    {
+        Node* start = head;
+        DenseIndex index = 0;
+        while (start && sparseIndex >= start->sparseSet.size())
+        {
+            index += start->sparseSet.size();
+            sparseIndex -= start->sparseSet.size();
+            start = start->next;
+        }
+        return index + start->sparseSet.GetDenseIndex(sparseIndex);
     }
 private:
     Node* head = nullptr;

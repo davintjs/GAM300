@@ -61,6 +61,7 @@ struct Scene
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
+		entities.SetActive(entity.denseIndex);
 		AddComponent<Transform>(entity);
 		return entity;
 	}
@@ -69,9 +70,22 @@ struct Scene
 	void Destroy(T& object)
 	{
 		if constexpr (std::is_same<T, Entity>())
+		{
 			entitiesDeletionBuffer.push_back(&object);
-		else if constexpr (AllComponentTypes::Has<T>())
+			entities.SetActive(object.denseIndex,false);
+		}
+		else if constexpr (SingleComponentTypes::Has<T>())
+		{
 			componentsDeletionBuffer.GetArray<T>().push_back(&object);
+			auto& arr = singleComponentsArrays.GetArray<T>();
+			arr.SetActive(arr.GetDenseIndex(object),false);
+		}
+		else if constexpr (MultiComponentTypes::Has<T>())
+		{
+			componentsDeletionBuffer.GetArray<T>().push_back(&object);
+			auto& arr = multiComponentsArrays.GetArray<T>();
+			arr.SetActive(object, false);
+		}
 		static_assert(true,"Not a valid type of object to destroy");
 	}
 
@@ -125,10 +139,6 @@ struct Scene
 		ClearBufferHelper(*this);
 	}
 
-	bool EntityIsActive(DenseIndex index);
-
-	void EntitySetActive(DenseIndex index,bool value);
-
 	template <typename Component>
 	bool ComponentIsEnabled(DenseIndex index, size_t multiIndex);
 
@@ -147,11 +157,17 @@ struct Scene
 	{
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().emplace(index);
+			auto& arr = singleComponentsArrays.GetArray<Component>();
+			Component& component = arr.emplace(index);
+			arr.SetActive(index);
+			return component;
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return multiComponentsArrays.GetArray<Component>().emplace(index);
+			auto& arr = multiComponentsArrays.GetArray<Component>();
+			Component& component = arr.emplace(index);
+			arr.SetActive(component);
+			return component;
 		}
 		else
 		{
@@ -166,7 +182,7 @@ struct Scene
 template <typename Component>
 bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
 {
-	if constexpr (SingleComponentTypes::Has(Component))
+	if constexpr (SingleComponentTypes::Has<Component>())
 	{
 		ASSERT(multiIndex == 0);//, "Unable to find another component of given type as only one should exist on this gameObject");
 		singleComponentsArrays.GetArray<Component>().GetActive(index);
