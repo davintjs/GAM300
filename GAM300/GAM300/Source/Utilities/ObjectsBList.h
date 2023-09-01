@@ -58,14 +58,18 @@ class ObjectsBList
         /**************************************************************************/
         Iterator operator++() 
         {
-            if (subIndex == pNode->sparseSetList[index].size())
-                ++index;
-            while (pNode && index >= pNode->sparseSetList.size())
-            {
-                index -= pNode->sparseSetList.size();
-                pNode = pNode->next;
-            }
+            //If subIndex has hit max size, go to next list of Objects
             ++subIndex;
+            if (subIndex == pNode->sparseSetList[index].size())
+            {
+                ++index;
+                while (pNode && index >= pNode->sparseSetList.size())
+                {
+                    index -= pNode->sparseSetList.size();
+                    pNode = pNode->next;
+                }
+                subIndex = 0;
+            }
             return *this;
         }
 
@@ -119,8 +123,8 @@ public:
     void clear();
     void erase(T& val);
     ~ObjectsBList();
-    Iterator begin() {return Iterator(0,0, head);}
-    Iterator end() {return Iterator(0,0, nullptr);}
+    Iterator begin() { Node* start = head;  while (start && start->sparseSetList.empty()) start = start->next; return Iterator(0,0, start);}
+    Iterator end() {return Iterator(0,0, nullptr); }
 
     size_t size() const { return size_; }
 

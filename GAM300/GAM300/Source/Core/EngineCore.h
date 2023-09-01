@@ -84,16 +84,13 @@ public:
 		 	scene.AddEntity();
 		 }
 
-		scene.AddComponent<Rigidbody>(20);
+		scene.AddComponent<Script>(20);
+		scene.AddComponent<Rigidbody>(15);
+		//scene.AddComponent<Rigidbody>(15);
 		scene.AddComponent<Rigidbody>(1);
-		Script& script = scene.AddComponent<Script>(20);
-		scene.AddComponent<Script>(20);
-		scene.AddComponent<Script>(20);
-		scene.AddComponent<Script>(1);
-		scene.AddComponent<Script>(20);
-		scene.AddComponent<Script>(20);
-		//Entity& entity = scene.entities.DenseSubscript(20);
-		//scene.RemoveComponent(entity,script);
+		Script& script = scene.AddComponent<Script>(0);
+		Entity& entity = scene.entities.DenseSubscript(20);
+		//scene.RemoveComponent(entity, script);
 	}
 
 	/**************************************************************************/

@@ -89,8 +89,7 @@ struct Scene
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
-			arr.DenseSubscript(entity.denseIndex).erase(component);
+			multiComponentsArrays.GetArray<Component>().erase(component);
 		}
 		else
 		{

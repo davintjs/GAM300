@@ -116,8 +116,20 @@ public:
     void clear();
     void erase(T& val);
     ~ObjectsList();
-    Iterator begin() {return Iterator(0, head);}
+    Iterator begin() { Node* start = head;  while (start && start->sparseSet.empty()) start = start->next; return Iterator(0, start); }
     Iterator end() {return Iterator(0, nullptr);}
+
+    bool contains(T& val)
+    {
+        Node* start = head;
+        while (start)
+        {
+            if (start->sparseSet.contains(val))
+                return true;
+            start = start->next;
+        }
+        return false;
+    }
 
     T& operator[] (size_t i)
     {

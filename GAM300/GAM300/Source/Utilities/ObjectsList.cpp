@@ -86,12 +86,12 @@ void ObjectsList<T, N>::DeleteNode(Node* prev, Node* pNode)
 		prev->next = pNode->next;
 	}
 
+	if (head == pNode)
+		head = pNode->next;
 	//If tail node being deleted
 	if (tail == pNode)
 		tail = prev;
 
-	if (pNode == head)
-		tail = nullptr;
 	pNode->next = emptyNodesPool;
 	emptyNodesPool = pNode;
 }
@@ -113,7 +113,7 @@ void ObjectsList<T, N>::erase(T& val)
 	--size_;
 	//Delete node only if its the last one
 	if (sparseSet.empty() && start->next == nullptr)
-		DeleteNode(prev, head);
+		DeleteNode(prev, start);
 }
 
 template <typename T, ObjectIndex N>
