@@ -3,6 +3,7 @@
 #include "glslshader.h"
 #include "IOManager/Handler_GLFW.h"
 #include "../Core/SystemInterface.h"
+#include "Framebuffer.h"
 
 #define EditorCam Editor_Camera::Instance()
 
@@ -32,6 +33,8 @@ public:
 	//void Update();
 	
 	void updateView();
+
+	void onResize(float _width, float _height);
 
 	void setDistanceToFocalPoint(float distance);
 	
@@ -63,6 +66,8 @@ public:
 
 	float getRotationSpeed();
 
+	Framebuffer& getFramebuffer() { return framebuffer; }
+
 private:
 
 	glm::vec2 viewport{ 1600.f,900.f };
@@ -76,7 +81,7 @@ private:
 	glm::vec3 focalPoint{};
 
 	float distanceToFP;
-
+	float aspect;
 	float rotationSpeed;
 
 	float spin = 0.f;
@@ -87,6 +92,6 @@ private:
 
 	glm::vec2 prevMousePos;
 
-
+	Framebuffer framebuffer;
 };
 

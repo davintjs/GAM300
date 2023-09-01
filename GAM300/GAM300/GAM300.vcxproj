@@ -48,6 +48,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -101,6 +102,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
+    <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
@@ -160,7 +162,9 @@
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
+    <ClInclude Include="Source\Editor\EditorTemplates.h" />
     <ClInclude Include="Source\Graphics\Editor_Camera.h" />
+    <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Graphics\Model3d.h" />

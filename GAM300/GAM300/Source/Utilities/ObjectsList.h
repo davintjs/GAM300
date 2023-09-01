@@ -119,6 +119,17 @@ public:
     Iterator begin() {return Iterator(0, head);}
     Iterator end() {return Iterator(0, nullptr);}
 
+    T& operator[] (size_t i)
+    {
+        Node* start = head;
+        while (i >= start->sparseSet.size())
+        {
+            start = start->next;
+            i -= start->sparseSet.size();
+        }
+        return start->sparseSet[i];
+    }
+
     size_t size() const { return size_; }
 
     T& DenseSubscript(DenseIndex val)

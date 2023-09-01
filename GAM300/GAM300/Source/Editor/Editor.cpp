@@ -19,6 +19,9 @@
 #include "Editor.h"
 #include "../Utilities/PlatformUtils.h"
 
+// Bean: Need this to reference the editor camera's framebuffer
+#include "../Graphics/Editor_Camera.h"
+
 static bool exitapp = false;
 
 void EditorSystem::Init()
@@ -37,7 +40,7 @@ void EditorSystem::Init()
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-void EditorSystem::Update()
+void EditorSystem::Update(float dt)
 {
 
     bool demo = true;
@@ -293,10 +296,32 @@ void EditorSystem::Editor_Content_Browser() {
     ImGui::End();
 }
 
+// Bean: Temporary add a viewport
 void EditorSystem::Editor_SceneViewport() {
-    ImGui::Begin("Scene");
+    
+    if (ImGui::Begin("Scene"))
+    {
+        static glm::vec2 _newDimension, sceneDimension{ 1600, 900 };
+
+        unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
+        ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+        _newDimension = *((glm::vec2*) &viewportEditorSize);
+
+        // Only if the current scene dimension is not the same as new dimension
+        if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
+        {
+            sceneDimension = { _newDimension.x, _newDimension.y };
+            EditorCam.onResize(sceneDimension.x, sceneDimension.y);
+
+            EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+        }
+
+        ImGui::Image((void*) (size_t) textureID, ImVec2{ (float) sceneDimension.x, (float) sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+
+    }
     ImGui::End();
 }
+
 void EditorSystem::Editor_Toolbar() {
     ImGui::Begin("Toolbar");
     ImGui::End();

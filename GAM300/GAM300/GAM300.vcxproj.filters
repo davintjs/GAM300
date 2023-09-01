@@ -24,7 +24,6 @@
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
-    <ClCompile Include="Source\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
     <ClCompile Include="Source\Scene\Entity.cpp" />
@@ -62,6 +61,8 @@
     <ClCompile Include="Source\IOManager\InputHandler.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
     <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
+    <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
+    <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -81,7 +82,6 @@
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
-    <ClInclude Include="Source\Graphics\Camera.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
@@ -113,6 +113,9 @@
     <ClInclude Include="Source\IOManager\InputHandler.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\AssetManager\ThreadPool.h" />
+    <ClInclude Include="Source\Utilities\ObjectsArray.h" />
+    <ClInclude Include="Source\Editor\EditorTemplates.h" />
+    <ClInclude Include="Source\Graphics\Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

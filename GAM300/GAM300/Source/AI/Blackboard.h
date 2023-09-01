@@ -35,7 +35,7 @@ public:
 
 private:
     void Init() {};
-    void Update() {};
+    void Update(float dt) {};
     void Exit() {};
 
     template <typename T>

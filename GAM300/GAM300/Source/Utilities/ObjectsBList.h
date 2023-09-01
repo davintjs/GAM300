@@ -20,6 +20,7 @@ class ObjectsBList
     {
         Node* pNode;
         size_t index;
+        size_t subIndex;
         friend class ObjectsBList;
     public:
         /***************************************************************************/
@@ -32,7 +33,7 @@ class ObjectsBList
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, Node* _pNode) : index(_index), pNode{ _pNode } {}
+        Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex },pNode{ _pNode } {}
 
         /***************************************************************************/
         /*!
@@ -42,9 +43,9 @@ class ObjectsBList
                 Reference to object stored
         */
         /**************************************************************************/
-        T& operator*() const
+        T& operator*()
         {
-            return pNode->sparseSet[index];
+            return pNode->sparseSetList[index][subIndex];
         }
 
         /***************************************************************************/
@@ -57,12 +58,14 @@ class ObjectsBList
         /**************************************************************************/
         Iterator operator++() 
         {
-            ++index;
-            while (pNode && index >= pNode->sparseSet.size())
+            if (subIndex == pNode->sparseSetList[index].size())
+                ++index;
+            while (pNode && index >= pNode->sparseSetList.size())
             {
-                index -= pNode->sparseSet.size();
+                index -= pNode->sparseSetList.size();
                 pNode = pNode->next;
             }
+            ++subIndex;
             return *this;
         }
 
@@ -91,7 +94,7 @@ class ObjectsBList
         */
         /**************************************************************************/
         bool operator==(const Iterator& other) const {
-            return pNode == other.pNode && index == other.index;
+            return pNode == other.pNode && index == other.index && subIndex == other.subIndex;
         }
 
         /***************************************************************************/
@@ -105,8 +108,10 @@ class ObjectsBList
         */
         /**************************************************************************/
         bool operator!=(const Iterator& other) const {
-            return pNode != other.pNode || index != other.index;
+            return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
         }
+
+
     };
 public:
     template <typename... Args>
@@ -114,8 +119,8 @@ public:
     void clear();
     void erase(T& val);
     ~ObjectsBList();
-    Iterator begin() {return Iterator(0, head);}
-    Iterator end() {return Iterator(0, nullptr);}
+    Iterator begin() {return Iterator(0,0, head);}
+    Iterator end() {return Iterator(0,0, nullptr);}
 
     size_t size() const { return size_; }
 

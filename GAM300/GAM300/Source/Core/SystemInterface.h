@@ -128,7 +128,7 @@ class ISystem
                 Runs every frame of the engine
         */
         /**************************************************************************/
-        virtual void Update() = 0;
+        virtual void Update(float dt) = 0;
         /**************************************************************************/
         /*!
             \brief
