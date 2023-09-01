@@ -9,15 +9,16 @@ This file contains a fragment shader.
 #version 450 core
 
 //test
-layout(location=0) in vec2 vTexture;
+layout(location=0) in vec4 vColor;
+layout(location=1) in vec2 vTexCoord;
 
-//layout(location=0) in vec3 vColor;
 layout (location=0) out vec4 fFragColor;
 
 // Values that stay constant for the whole mesh.
 uniform sampler2D myTextureSampler;
 
 void main() {
-	//fFragColor = vec4(vColor, 1.0f);
-	fFragColor = texture( myTextureSampler, vTexture );
+	//fFragColor = vColor;
+	fFragColor = texture( myTextureSampler, vTexCoord );
+	//fFragColor = vec4(vTexCoord,0,1);
 }

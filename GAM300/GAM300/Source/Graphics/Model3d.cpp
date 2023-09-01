@@ -104,6 +104,7 @@ GLuint loadDDS(const char* imagepath) {
     }
 
     free(buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return textureID;
 
@@ -126,40 +127,52 @@ void Model::init(AssimpLoader* geom) {
     glGenBuffers(1, &EBO);
     glBindVertexArray(VAO);
     //std::cout << "box_wf vao is :" << VAO << "\n";
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    
-    // test texture loading
-    //std::cout << texturebuffer << "first \n";
-    /*GLuint*/ texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-    //std::cout << texturebuffer << "second \n";
-    //test col link
+
+    // test vertex colors
     //for (size_t i = 0; i < geom->_vertices.size(); i++)
     //{
     //    geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
     //}
 
-    glGenBuffers(1, &texturebuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
-    glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
-    //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].color, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    // bind vbo and pass vertice data into the buffer
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
 
-    //
+    // set the vertex attributes to tell vert shader pos, uv, normal etc.
+    // note offsetof uses the struct Vertex as first argument, and member name as second.
+    // it returns the offset to the member name :)
+    glEnableVertexAttribArray(0); //pos
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
+    glEnableVertexAttribArray(1); //normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+    glEnableVertexAttribArray(2); //tangent
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+
+    glEnableVertexAttribArray(3); //tex, aka uv
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+
+    glEnableVertexAttribArray(4); //color
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    
+
+    // bind indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, geom->_indices.size() * sizeof(int32_t), &geom->_indices[0], GL_STATIC_DRAW);
 
-    glBindVertexArray(0);
+    glBindVertexArray(0); //unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); //unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //unbind ebo
+
     vaoid = VAO;
     vboid = VBO;
     prim = GL_TRIANGLES;
     drawcount = geom->_indices.size(); // number of slices 
     setup_shader();
+
+    //load deault texture, todo
+    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
 }
 
 
@@ -251,7 +264,10 @@ void Model::draw() {
 
     glBindVertexArray(vaoid);
     glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
+
+    // unbind and free stuff
     glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     shader.UnUse();
 }
 
