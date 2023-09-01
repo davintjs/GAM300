@@ -1,67 +1,70 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "../GAM300/Source/Precompiled.h"
-#include "../External/GLM/glm/glm.hpp"
+#include "glm/glm.hpp"
+#include "assimp/color4.h"
+
 struct Vertex
 {
-    glm::vec3 pos;
-    glm::vec3 normal;
-    glm::vec3 tangent;
-    glm::vec2 tex;
-    glm::vec4 color;
+    std::int16_t posX;
+    std::int16_t posY;
+    std::int16_t posZ;
+
+    std::int16_t normX;
+    std::int16_t normY;
+
+    std::int16_t tanX;
+    std::int16_t tanY;
+    std::int8_t  tanSign;
+
+    std::int16_t texU;
+    std::int16_t texV;
+
+    std::int8_t colorR;
+    std::int8_t colorG;
+    std::int8_t colorB;
+    std::int8_t colorA;
 };
 
 struct Texture
 {
     std::string filepath;
-    //xgpu::texture instance;
 };
 
-struct SampleHolder
-{
-    int binding;
-    std::string type;
-};
+//struct SampleHolder
+//{
+//    int binding;
+//    std::string type;
+//};
 
 struct Material
 {
-    std::size_t GUID;
-    std::string matName;
-    std::vector<SampleHolder> _samples;
+    aiColor4D Specular; // Shiny spots on the object when light hits the surface
+    aiColor4D Diffuse; // Color when light his the surface and illuminates it
+    aiColor4D Ambient; // Color the surface has when not exposed directly to light from object
+
+    std::vector<Texture> textures;
+
+    //std::size_t GUID;
+    //std::string matName;
+    //std::vector<SampleHolder> _samples;
 };
 
-//class Mesh
-//{
-//public:
-//    std::vector<Vertex> mVertices;
-//    std::vector<int> mIndices;
-//
-//    int m_iMaterial;
-//
-//public:
-//    Mesh() {};
-//
-//    Mesh(xgpu::device Dev, const std::vector<Vertex> Vertices, const std::vector<int> Indices, const int iMaterial) noexcept
-//        : mDevice(Dev), mVertices(Vertices), mIndices(Indices), m_iMaterial(iMaterial)
-//    {
-//        setupMesh();
-//    }
-//
-//    Mesh(const std::vector<Vertex> Vertices, const std::vector<int> Indices, const int iMaterial) noexcept
-//        : mVertices(Vertices), mIndices(Indices), m_iMaterial(iMaterial) {}
-//
-//    void Draw(xgpu::cmd_buffer& CmdBuffer);
-//
-//private:
-//
-//    // Render data
-//    xgpu::buffer m_VertexBuffer;
-//    xgpu::buffer m_IndexBuffer;
-//    xgpu::vertex_descriptor m_VertexDescriptor;
-//
-//    // Initializes all the buffer objects/arrays
-//    xgpu::device::error* setupMesh(void);
-//};
+class Mesh {
+public:
+    std::vector<Vertex> _vertices; // This individual mesh vertices
+    std::vector<unsigned int> _indices; // This individual mesh indices
+
+    glm::vec3 mPosCompressionOffset; // This individual mesh vertices' positions' center offset from original
+    glm::vec2 mTexCompressionOffset; // This individual mesh textures' coordinates' center offset from original
+
+    int materialIndex = 0; // Material index
+
+    Mesh() {};
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posOffset, glm::vec2 texOffset)
+        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset)
+    {};
+
+};
 
 #endif

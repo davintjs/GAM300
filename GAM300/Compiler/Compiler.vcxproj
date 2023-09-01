@@ -20,15 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compiler.cpp" />
-    <ClCompile Include="JsonUtilities.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Compiler.h" />
-    <ClInclude Include="JsonUtilities.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Serializer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -91,10 +87,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
-    <IncludePath>$(SolutionDir)External/assimp/include/;$(SolutionDir)External/</IncludePath>
+    <IncludePath>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson</IncludePath>
+    <OutDir>$(ProjectDir)Bin\Debug_x64\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)Bin\Release_x64\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -126,17 +125,18 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/assimp/include;$(SolutionDir)External/assimp/include/assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson;$(SolutionDir)External\GLM;$(SolutionDir)External\Meshoptimizer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)External/assimp/assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)External/assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\Meshoptimizer\Meshoptimizer\meshoptimizer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\Meshoptimizer\Meshoptimizer;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mtd.dll" "$(TargetDir)assimp-vc142-mtd.dll" /Y</Command>
@@ -150,13 +150,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson;$(SolutionDir)External\GLM;$(SolutionDir)External\Meshoptimizer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mt.dll" "$(TargetDir)assimp-vc142-mt.dll" /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

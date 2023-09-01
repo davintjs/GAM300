@@ -1,1 +1,0 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(507,5): error MSB3061: Unable to delete file "x64\Debug\GAM300.pch". The process cannot access the file 'C:\Users\matth\Desktop\BleepBloop\GAM300\GAM300\GAM300\x64\Debug\GAM300.pch' because it is being used by another process.

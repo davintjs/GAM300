@@ -1,59 +1,33 @@
 #pragma once
 
-/*!************************************************************************
-\file               Model.h
-\author             Lian Khai Kiat
-\par DP email:      l.kiat\@digipen.edu
-\par Course:        CSD2150
-\date               07/04/2023
-\brief
-Definition of geom class of geom compliler
-**************************************************************************/
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "../GAM300/Source/Precompiled.h"
-#include "../External/GLM/glm/glm.hpp"
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <filesystem>
+#include <algorithm>
+#include <chrono>
+#include <random>
+#include <sstream>
+#include <unordered_map>
 
 #include "Mesh.h"
-//#include "../External/assimp/include/assimp/types.h"
-#include "rapidjson/rapidjson/document.h"
-#include "rapidjson/rapidjson/istreamwrapper.h"
-#include "rapidjson/rapidjson/stringbuffer.h"
-#include "rapidjson/rapidjson/prettywriter.h"
+#include "BoundingBox.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
+#include "Meshoptimizer/meshoptimizer.h"
 
-//#include "../srcviewer/Mesh.h"
-//#include "meshoptimizer.h"
-//
-//
-//#include "assimp/Importer.hpp"
-//#include "assimp/scene.h"
-//#include "assimp/postprocess.h"
-
-//struct Texture
-//{
-//	std::string filepath;
-//	//xgpu::texture instance;
-//};
-//
-//struct SampleHolder
-//{
-//	int binding;
-//	std::string type;
-//};
-//
-//struct Material
-//{
-//	std::size_t GUID;
-//	std::string matName;
-//	std::vector<SampleHolder> _samples;
-//};
-
+#include "glm/glm.hpp"
 
 struct Descriptor
 {
@@ -62,39 +36,55 @@ struct Descriptor
 	glm::vec3 translate = { 0.f, 0.f, 0.f };
 	std::string filePath; // Path to intermediate file
 	std::string meshName{}; // Mesh file name
-
-	bool combine = true; // All separated meshes in file combined into one?
 };
 
-class AssimpLoader
+struct TempVertex
+{
+	glm::vec3 pos;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::vec2 tex;
+	glm::ivec4 color;
+};
+
+class ModelLoader
 {
 public:
 
-	AssimpLoader() {};
-	AssimpLoader(const std::string descriptorFilePath, const std::string geomFilePath);
-	~AssimpLoader();
+	ModelLoader() {};
+	ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath);
+	~ModelLoader();
 
 	void LoadModel();
+	void ProcessBones(const aiNode& node, const aiScene& scene);
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
-	//Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
-	void Optimize();
-	void TransformVertices();
-	void ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene);
+	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
+	void Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind);
+	void CompressVertices(std::vector<Vertex>& CompressVertices,
+								const std::vector<TempVertex> tempVertex,
+								std::pair<glm::vec3, glm::vec2>& mOffsets);
+	void TransformVertices(std::vector<TempVertex> vert);
+	void ImportMaterialAndTextures(const aiMaterial& material);
 
-	void SerializeDescriptor(const std::string filepath);
 	void SerializeBinaryGeom(const std::string filepath);
 	void DeserializeDescriptor(const std::string filepath);
 
-public:
+private:
 
 	Descriptor* _descriptor{ nullptr };
 
-	//std::vector<Mesh> _meshes{};
-	std::vector<Vertex> _vertices{};
-	std::vector<int32_t> _indices{};
-	std::vector<Texture> _textures{};
-	std::vector<Material> _materials{};/**/
+	std::vector<Mesh> _meshes{}; // Individual meshes in the model, which also contains its individual vertices and indices
 
+	glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions containing the whole model
+	glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates containing the whole model
+
+	// I think this bottom part we should eventually phase out, and save the individual meshes
+	// vertices and indices instead of whole chunk at one go
+	//std::vector<Vertex> _vertices{}; // Total vertices of the WHOLE model
+	//std::vector<unsigned int> _indices{}; // Total indices of the WHOLE model
+
+	//std::vector<Texture> _textures{}; // Total textures of the WHOLE model
+	std::vector<Material> _materials{}; // Total materials of the WHOLE model (One mesh uses one material only)
 };
 
 #endif // !MODEL_H

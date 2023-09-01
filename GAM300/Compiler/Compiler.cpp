@@ -1,70 +1,168 @@
-/*!************************************************************************
-\file               Model.cpp
-\author             Lian Khai Kiat
-\par DP email:      l.kiat\@digipen.edu
-\par Course:        CSD2150
-\date               07/04/2023
-\brief
-Implementation of Assimp Loader
-**************************************************************************/
-
 #include "Compiler.h"
 
-AssimpLoader::AssimpLoader(const std::string descriptorFilePath, const std::string geomFilePath)
+BoundingBox3D mGlobalPosAABB;
+BoundingBox3D mGlobalTexAABB;
+
+ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath)
 {
 	_descriptor = new Descriptor;
 
-	DeserializeDescriptor(descriptorFilePath); // desialize to _descriptor
+	DeserializeDescriptor(descriptorFilePath);
 	LoadModel();
 	SerializeBinaryGeom(geomFilePath);
 }
 
-AssimpLoader::~AssimpLoader()
+ModelLoader::~ModelLoader()
 {
 	if (_descriptor)
 	{
 		delete _descriptor;
-		// delete[] _descriptor;
 	}
 }
 
-void AssimpLoader::LoadModel()
+void ModelLoader::LoadModel()
 {
 	Assimp::Importer assimpImporter;
 	uint32_t ImportOptions{};
 	ImportOptions =
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
 		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+		//aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
 		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
 		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
+		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
 		aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
 		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
+		//aiPostProcessSteps::aiProcess_PreTransformVertices
 
-	if (_descriptor->combine)
-	{
-		ImportOptions |= aiPostProcessSteps::aiProcess_PreTransformVertices;
-	}
-
-	// import fbx
+	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
 	if (!scene)
 	{
 		std::cout << "Error reading file into scene!!" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+
+	//ProcessBones(*scene->mRootNode, *scene); // WIP
 	ProcessGeom(*scene->mRootNode, *scene);
 }
 
-void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
+void ModelLoader::ProcessBones(const aiNode& node, const aiScene& scene)
+{
+	std::unordered_map<std::string, const aiNode*> nodeName;
+	std::unordered_map<std::string, const aiBone*> boneName;
+
+	for (unsigned int i = 0; i < scene.mNumMeshes; ++i) // Looping through all meshes in the scene to find all bones
+	{
+		const aiMesh& mesh = *scene.mMeshes[i];
+		for (unsigned int j = 0; j < mesh.mNumBones; ++j) // Looping through all bones in the current mesh
+		{
+			const aiBone& bone = *mesh.mBones[j];
+			if (auto go = boneName.find(bone.mName.data); go == boneName.end()) // Found a new bone, add it into our map
+			{
+				auto pNode = scene.mRootNode->FindNode(bone.mName);
+				boneName[bone.mName.data] = &bone; // Initialize the map using the bone name and its corresponding aiBone
+				nodeName[bone.mName.data] = pNode; // Initialize the map using the bone name and its corresponding node
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < scene.mNumAnimations; ++i) // Looping through available animations for this model
+	{
+		const aiAnimation& currAnimation = *scene.mAnimations[i];
+		for (unsigned int j = 0; j < currAnimation.mNumChannels; ++j) // Looping through this animation channels
+		{
+			aiNodeAnim& currChannel = *currAnimation.mChannels[j];
+
+			if (auto go = nodeName.find(currChannel.mNodeName.data); go == nodeName.end())
+			{
+				nodeName.insert({ currChannel.mNodeName.data, scene.mRootNode->FindNode(currChannel.mNodeName) });
+			}
+		}
+	}
+
+	struct BoneNode
+	{
+		const aiNode* m_AssimpNode{ nullptr };
+		int             m_Depth{ 0 };
+		int             m_TotalChildren{ 0 };
+		int             m_Children{ 0 };
+	};
+
+	std::vector<BoneNode> totalNodes(nodeName.size());
+	
+	int temp = 0;
+	for (auto itr = nodeName.begin(); itr != nodeName.end(); ++itr)
+	{
+		auto& currNode = totalNodes[temp++];
+		currNode.m_AssimpNode = itr->second;
+	}
+
+	for (unsigned int i = 0; i < totalNodes.size(); ++i)
+	{
+		auto& currNode = totalNodes[i];
+		bool foundParent = false;
+
+		for (aiNode* pNode = currNode.m_AssimpNode->mParent; pNode != nullptr; pNode = pNode->mParent)
+		{
+			++currNode.m_Depth;
+
+			for (size_t j = 0; j < totalNodes.size(); ++j)
+			{
+				auto& parentNode = totalNodes[j];
+				if (pNode == parentNode.m_AssimpNode)
+				{
+					++parentNode.m_TotalChildren;
+					if (foundParent == false)
+					{
+						++parentNode.m_Children;
+					}
+					foundParent = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// Sort the nodes in ascending order
+	std::qsort(totalNodes.data(),
+		totalNodes.size(),
+		sizeof(BoneNode),
+		[](const void* x, const void* y)
+		{
+			const auto& A = *reinterpret_cast<const BoneNode*>(x);
+			const auto& B = *reinterpret_cast<const BoneNode*>(y);
+
+			if (A.m_Depth < B.m_Depth)
+			{
+				return -1;
+			}
+			else if (A.m_Depth > B.m_Depth)
+			{
+				return 1;
+			}
+
+			if (A.m_TotalChildren < B.m_TotalChildren)
+			{
+				return -1;
+			}
+
+			return static_cast<int>((A.m_TotalChildren > B.m_TotalChildren));
+		});
+
+	// Creating the bones
+
+}
+
+void ModelLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 {
 	for (unsigned int i = 0; i < node.mNumMeshes; ++i) // Loop through node meshes
 	{
 		aiMesh* pMesh = scene.mMeshes[node.mMeshes[i]];
-		//_meshes.push_back(ProcessMesh(*pMesh, scene));
+		_meshes.push_back(ProcessMesh(*pMesh, scene));
 	}
 	for (unsigned int j = 0; j < node.mNumChildren; ++j) // Initialize all the children nodes
 	{
@@ -72,76 +170,264 @@ void AssimpLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 	}
 }
 
-//Mesh AssimpLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
-//{
-//	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Vertices
-//	{
-//		Vertex temp;
-//
-//		temp.pos = xcore::vector3(static_cast<float>(mesh.mVertices[i].x),
-//			static_cast<float>(mesh.mVertices[i].y),
-//			static_cast<float>(mesh.mVertices[i].z));
-//
-//		// normal vectors
-//		temp.normal = xcore::vector3d(static_cast<float>(mesh.mNormals[i].x),
-//			static_cast<float>(mesh.mNormals[i].y),
-//			static_cast<float>(mesh.mNormals[i].z));
-//
-//		if (mesh.HasTextureCoords(0))
-//		{
-//			temp.tex = xcore::vector2(static_cast<float>(mesh.mTextureCoords[0][i].x),
-//				static_cast<float>(mesh.mTextureCoords[0][i].y));
-//		}
-//		if (mesh.HasVertexColors(0))
-//		{
-//			temp.color = xcore::icolor(xcore::vector4(static_cast<float>(mesh.mColors[0][i].r),
-//				static_cast<float>(mesh.mColors[0][i].g),
-//				static_cast<float>(mesh.mColors[0][i].b),
-//				static_cast<float>(mesh.mColors[0][i].a)));
-//		}
-//
-//		if (mesh.mTangents != nullptr)
-//		{
-//			temp.tangent = {
-//				static_cast<float>(mesh.mTangents[i].x),
-//				static_cast<float>(mesh.mTangents[i].y),
-//				static_cast<float>(mesh.mTangents[i].z)
-//			};
-//		}
-//		_vertices.push_back(temp); // Add this vertex into our vector of vertices
-//	}
-//
-//	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Faces
-//	{
-//		const aiFace& face = mesh.mFaces[j];
-//
-//		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in each face
-//		{
-//			_indices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
-//		}
-//	}
-//
-//	if (mesh.mMaterialIndex >= 0) // Material
-//	{
-//		const aiMaterial& mat = *scene.mMaterials[mesh.mMaterialIndex];
-//		ImportMaterialAndTextures(mat, scene);
-//	}
-//
-//	Optimize(); // Optimize before storing
-//
-//	int materialIndex = static_cast<int>(_materials.size() - 1);
-//	return Mesh(this->_vertices, this->_indices, materialIndex);
-//}
+Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
+{
+	std::vector<TempVertex> tempVertex;
+	std::vector<unsigned int> tempIndices;
 
-//void AssimpLoader::Optimize()
-//{
-//	meshopt_optimizeVertexCache(_indices.data(), _indices.data(), _indices.size(), _vertices.size());
-//	meshopt_optimizeVertexFetch(_vertices.data(), _indices.data(), _indices.size(), _vertices.data(), _vertices.size(), sizeof(Vertex));
-//
-//	TransformVertices();
-//}
+	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
+	{
+		TempVertex temp;
 
-void AssimpLoader::TransformVertices() // Apply the modifications to our vertices from desc to our geom
+		// Vertex position
+		temp.pos = glm::vec3(static_cast<float>(mesh.mVertices[i].x),
+							static_cast<float>(mesh.mVertices[i].y),
+							static_cast<float>(mesh.mVertices[i].z));
+
+		// Vertex normal
+		temp.normal = glm::vec3(static_cast<float>(mesh.mNormals[i].x),
+								static_cast<float>(mesh.mNormals[i].y),
+								static_cast<float>(mesh.mNormals[i].z));
+
+		if (mesh.HasTextureCoords(0)) // Vertex Texture 
+		{
+			temp.tex = glm::vec2(static_cast<float>(mesh.mTextureCoords[0][i].x),
+								static_cast<float>(mesh.mTextureCoords[0][i].y));
+		}
+
+		if (mesh.HasVertexColors(0)) // Vertex Color
+		{
+			temp.color = glm::vec4(static_cast<float>(mesh.mColors[0][i].r),
+									static_cast<float>(mesh.mColors[0][i].g),
+									static_cast<float>(mesh.mColors[0][i].b),
+									static_cast<float>(mesh.mColors[0][i].a));
+		}
+
+		if (mesh.mTangents != nullptr) // Vertex tangent
+		{
+			temp.tangent = {
+				static_cast<float>(mesh.mTangents[i].x),
+				static_cast<float>(mesh.mTangents[i].y),
+				static_cast<float>(mesh.mTangents[i].z)
+			};
+		}
+		tempVertex.push_back(temp); // Add this vertex into our vector of vertices
+	}
+
+	for (unsigned int j = 0; j < mesh.mNumFaces; ++j) // Processing all faces in this single mesh
+	{
+		const aiFace& face = mesh.mFaces[j];
+
+		for (unsigned int k = 0; k < face.mNumIndices; ++k) // Loop through all indices in this current face
+		{
+			tempIndices.push_back(face.mIndices[k]); // Store the indices in our vector of indices
+		}
+	}
+
+	if (mesh.mMaterialIndex >= 0) // Import the mesh material if it exists
+	{
+		const aiMaterial& mat = *scene.mMaterials[mesh.mMaterialIndex];
+		ImportMaterialAndTextures(mat);
+	}
+
+	TransformVertices(tempVertex); // Apply transformation on the mesh according to descriptor file specifications
+
+	Optimize(tempVertex, tempIndices); // Optimize this mesh
+
+	// Compress vertices for storing in our vertex
+	std::vector<Vertex> CompressedVertices;
+	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
+	CompressVertices(CompressedVertices, tempVertex, mPosTexOffset);
+
+	// Calculate the material index of this mesh
+	int materialIndex = static_cast<int>(_materials.size() - 1);
+
+	return Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
+}
+
+void ModelLoader::Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind)
+{
+	std::vector<unsigned int> remap(ind.size());
+	const size_t vertCount = meshopt_generateVertexRemap(&remap[0],
+		ind.data(),
+		ind.size(),
+		vert.data(),
+		ind.size(),
+		sizeof(TempVertex));
+
+	std::vector<unsigned int> remappedIndices(ind.size());
+	std::vector<TempVertex> remappedVertices(vertCount);
+
+	meshopt_remapIndexBuffer(remappedIndices.data(), ind.data(), ind.size(), &remap[0]);
+	meshopt_remapVertexBuffer(remappedVertices.data(), vert.data(), vert.size(), sizeof(TempVertex), &remap[0]);
+
+	meshopt_optimizeVertexCache(remappedIndices.data(), remappedIndices.data(), ind.size(), vertCount);
+
+	meshopt_optimizeOverdraw(remappedIndices.data(),
+							remappedIndices.data(),
+							ind.size(),
+							&remappedVertices[0].pos.x,
+							vertCount,
+							sizeof(TempVertex),
+							1.05f);
+
+	meshopt_optimizeVertexFetch(remappedVertices.data(), 
+								remappedIndices.data(), 
+								ind.size(),
+								remappedVertices.data(), 
+								vertCount, 
+								sizeof(TempVertex));
+
+	// Below is for LOD of meshes
+		
+	//const float threshold = 0.2f; // Controls the LOD of the mesh
+	//const size_t targetIndexCount = size_t(remappedIndices.size() * threshold);
+	//const float targetError = 1e-2f;
+	//std::vector<unsigned int> indicesLod(remappedIndices.size());
+	//indicesLod.resize(meshopt_simplify(&indicesLod[0],
+	//									remappedIndices.data(), 
+	//									remappedIndices.size(),
+	//									&remappedVertices[0].pos.x, 
+	//									vertCount, 
+	//									sizeof(Vertex), 
+	//									targetIndexCount,
+	//									targetError));
+
+	vert = remappedVertices;
+	ind = remappedIndices;
+}
+
+// Basically changing floats to 2 bytes integers
+void ModelLoader::CompressVertices(std::vector<Vertex>& CompressVertices,
+	const std::vector<TempVertex> tempVertex,
+	std::pair<glm::vec3, glm::vec2>& mOffsets)
+{
+	// Get BoundingBox3D of the vertex position and texture coordinates
+	float mPosMinX = FLT_MAX, mPosMinY = FLT_MAX, mPosMinZ = FLT_MAX;
+	float mPosMaxX = -FLT_MAX, mPosMaxY = -FLT_MAX, mPosMaxZ = -FLT_MAX;
+
+	float mTexMinU = FLT_MAX, mTexMinV = FLT_MAX;
+	float mTexMaxU = -FLT_MAX, mTexMaxV = -FLT_MAX;
+	for (const auto& v : tempVertex)
+	{
+		// Position
+		mPosMinX = std::min(mPosMinX, v.pos.x);
+		mPosMinY = std::min(mPosMinY, v.pos.y);
+		mPosMinZ = std::min(mPosMinZ, v.pos.z);
+		mPosMaxX = std::max(mPosMaxX, v.pos.x);
+		mPosMaxY = std::max(mPosMaxY, v.pos.y);
+		mPosMaxZ = std::max(mPosMaxZ, v.pos.z);
+
+		// Texture
+		mTexMinU = std::min(mTexMinU, v.tex.x);
+		mTexMinV = std::min(mTexMinV, v.tex.y);
+		mTexMaxU = std::max(mTexMaxU, v.tex.x);
+		mTexMaxV = std::max(mTexMaxV, v.tex.y);
+	}
+
+	glm::vec3 minPos{ mPosMinX, mPosMinY, mPosMinZ };
+	glm::vec3 maxPos{ mPosMaxX, mPosMaxY, mPosMaxZ };
+	glm::vec2 minTex{ mTexMinU, mTexMinV };
+	glm::vec2 maxTex{ mTexMaxU, mTexMaxV };
+
+	BoundingBox3D mPosAABB, mTexAABB;
+	mPosAABB.mMin = minPos;
+	mPosAABB.mMax = maxPos;
+
+	mTexAABB.mMin = { minTex.x, minTex.y, 0.f };
+	mTexAABB.mMax = { maxTex.x, maxTex.y, 0.f };
+
+	glm::vec3 mPosCompressionScale = maxPos - minPos;
+	glm::vec2 mTexCompressionScale = maxTex - minTex;
+
+	// Here we update the global AABB containing all the meshes of the model
+	mGlobalPosAABB.mMin = { std::min(mGlobalPosAABB.mMin.x, mPosCompressionScale.x),
+							std::min(mGlobalPosAABB.mMin.y, mPosCompressionScale.y),
+							std::min(mGlobalPosAABB.mMin.z, mPosCompressionScale.z) };
+
+	mGlobalPosAABB.mMax = { std::max(mGlobalPosAABB.mMax.x, mPosCompressionScale.x),
+							std::max(mGlobalPosAABB.mMax.y, mPosCompressionScale.y),
+							std::max(mGlobalPosAABB.mMax.z, mPosCompressionScale.z) };
+
+	mGlobalTexAABB.mMin = { std::min(mGlobalTexAABB.mMin.x, mTexCompressionScale.x),
+							std::min(mGlobalTexAABB.mMin.y, mTexCompressionScale.y), 
+							0.f };
+
+	mGlobalTexAABB.mMax = { std::max(mGlobalTexAABB.mMax.x, mTexCompressionScale.x),
+						std::max(mGlobalTexAABB.mMax.y, mTexCompressionScale.y),
+						0.f };
+
+	// Store this scaling to our ModelLoader
+	this->mPosCompressionScale = mGlobalPosAABB.mMax - mGlobalPosAABB.mMin;
+	this->mTexCompressionScale = mGlobalTexAABB.mMax - mGlobalTexAABB.mMin;
+
+	// Here we want to get the offsets for this particular mesh
+	mOffsets.first = (mPosAABB.mMin + mPosAABB.mMax) / 2.f;
+	mOffsets.second = (mTexAABB.mMin + mTexAABB.mMax) / 2.f;
+
+	// Compressing the vertices here
+	for (const auto& vert : tempVertex)
+	{
+		// Position vertices
+		float val;
+		std::int16_t mPosX, mPosY, mPosZ, mNormalX, mNormalY, mTanX, mTanY, mTexU, mTexV;
+		std::int8_t mSign;
+
+		val = vert.pos.x - mOffsets.first.x / this->mPosCompressionScale.x;
+		mPosX = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.y - mOffsets.first.y / this->mPosCompressionScale.y;
+		mPosY = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.z - mOffsets.first.z / this->mPosCompressionScale.z;
+		mPosZ = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		// Extras
+		std::int16_t Nx = std::min((short)0x3FFF, static_cast<std::int16_t>(((vert.normal.x + 1) / 2.0f) * 0x3FFF));
+		if (vert.normal.z < 0)
+		{
+			if (Nx == 0)
+			{
+				Nx = -1;
+			}
+			else
+			{
+				Nx = -Nx;
+			}
+		}
+		mNormalX = Nx;
+		mNormalY = static_cast<std::int16_t>(vert.normal.y * (vert.normal.y >= 0 ? 0x1FF : 0x200));
+		mTanX = static_cast<std::int16_t>(vert.tangent.x * (vert.tangent.x >= 0 ? 0x1FF : 0x200));
+		mTanY = static_cast<std::int16_t>(vert.tangent.y * (vert.tangent.y >= 0 ? 0x1FF : 0x200));
+		mSign = vert.tangent.z >= 0 ? 0x1 : 0x3;
+
+		val = (vert.tex.x - mOffsets.second.x) / this->mTexCompressionScale.x;
+		mTexU = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = (vert.tex.y - mOffsets.second.y) / this->mTexCompressionScale.y;
+		mTexV = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		Vertex currVert;
+		currVert.posX = mPosX;
+		currVert.posY = mPosY;
+		currVert.posZ = mPosZ;
+		currVert.normX = mNormalX;
+		currVert.normY = mNormalY;
+		currVert.tanX = mTanX;
+		currVert.tanY = mTanY;
+		currVert.tanSign = mSign;
+		currVert.texU = mTexU;
+		currVert.texV = mTexV;
+		currVert.colorR = vert.color.r;
+		currVert.colorG = vert.color.g;
+		currVert.colorB = vert.color.b;
+		currVert.colorA = vert.color.a;
+
+		CompressVertices.push_back(currVert);
+	}
+}
+
+void ModelLoader::TransformVertices(std::vector<TempVertex> vert) // Apply the modifications to our vertices from desc to our geom
 {
 	glm::mat4 scaleMat
 	{
@@ -186,175 +472,200 @@ void AssimpLoader::TransformVertices() // Apply the modifications to our vertice
 	glm::mat4 rotMat = rotZ * rotY * rotX;
 	glm::mat4 concat = transMat * rotMat * scaleMat;
 
-	/*for (size_t i = 0; i < _vertices.size(); ++i)
+	for (size_t i = 0; i < vert.size(); ++i)
 	{
-		glm::vec3 resultant = concat * _vertices[i].pos;
-		_vertices[i].pos = resultant;
-	}*/
+		glm::vec3 resultant = concat * glm::vec4(vert[i].pos, 0.f);
+		vert[i].pos = resultant;
+	}
 }
 
-void AssimpLoader::ImportMaterialAndTextures(const aiMaterial& material, const aiScene& scene)
+void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 {
-	_materials.emplace_back();
-	Material& mat = _materials[0];
-	mat.GUID = reinterpret_cast<std::size_t>(&material);
+	// Materials
+	aiColor4D specularColor;
+	aiColor4D diffuseColor;
+	aiColor4D ambientColor;
+	float shininess;
 
-	for (unsigned int l = 0; l < material.mNumProperties; ++l) // Loop through all properties of this material
+	aiGetMaterialColor(&material, AI_MATKEY_COLOR_SPECULAR, &specularColor);
+	aiGetMaterialColor(&material, AI_MATKEY_COLOR_DIFFUSE, &diffuseColor);
+	aiGetMaterialColor(&material, AI_MATKEY_COLOR_AMBIENT, &ambientColor);
+	aiGetMaterialFloat(&material, AI_MATKEY_SHININESS, &shininess);
+
+	Material tempMat({
+		{specularColor.r, specularColor.g, specularColor.b, shininess},
+		{diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a},
+		{ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a} });
+
+	// Textures
+	aiString specName{};
+	aiString diffName{};
+	aiString ambiName{};
+
+	if (material.GetTextureCount(aiTextureType_SPECULAR) > 0) // Specular texture
 	{
-		const aiMaterialProperty& matProperty = *material.mProperties[l];
-		if (matProperty.mType != aiPTI_String)
-		{
-			continue;
-		}
+		Texture tempTex;
+		material.Get(AI_MATKEY_TEXTURE(aiTextureType_SPECULAR, 0), specName);
+		tempTex.filepath = specName.C_Str();
 
-		aiString* pString = reinterpret_cast<aiString*>(matProperty.mData); // Cast bits to aiString*
-
-		if (matProperty.mSemantic == aiTextureType_NONE)
-		{
-			mat.matName = pString->C_Str();
-			continue;
-		}
-
-		SampleHolder sample;
-		Texture texture;
-
-		// Setting hint type
-		/*if (matProperty.mSemantic == aiTextureType_NORMAL_CAMERA || xcore::string::FindStrI(pString->C_Str(), "_Normal") != -1)
-		{
-			sample.type = "PBR_NORMAL";
-		}
-		else if (matProperty.mSemantic == aiTextureType_BASE_COLOR || xcore::string::FindStrI(pString->C_Str(), "_Base_Color") != -1)
-		{
-			sample.type = "PBR_ALBEDO";
-		}
-		else if (matProperty.mSemantic == aiTextureType_AMBIENT_OCCLUSION || xcore::string::FindStrI(pString->C_Str(), "_AO") != -1)
-		{
-			sample.type = "PBR_OCCLUSION";
-		}
-		else if (matProperty.mSemantic == aiTextureType_DIFFUSE_ROUGHNESS || xcore::string::FindStrI(pString->C_Str(), "_Roughness") != -1)
-		{
-			sample.type = "PBR_ROUGHNESS";
-		}
-		else
-		{
-			sample.type = "UNKNOWN";
-		}*/
-
-		texture.filepath = pString->C_Str(); // Set file path of texture
-
-		int  iTexture = 0;
-		bool bFound = false;
-		for (const auto& Tex : _textures)
-		{
-			if (Tex.filepath == texture.filepath)
-			{
-				bFound = true;
-				break;
-			}
-			++iTexture;
-		}
-
-		sample.binding = iTexture; // Set sampler texture binding index wrt to textures vector size
-		mat._samples.push_back(sample); // Set the texture index
-		if (bFound == false)
-		{
-			_textures.push_back(texture); // Add this texture to our vector of textures
-		}
-
+		tempMat.textures.push_back(tempTex);
 	}
+
+	if (material.GetTextureCount(aiTextureType_DIFFUSE) > 0) // Diffuse texture
+	{
+		Texture tempTex;
+		material.Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), diffName);
+		tempTex.filepath = diffName.C_Str();
+
+		tempMat.textures.push_back(tempTex);
+	}
+
+	if (material.GetTextureCount(aiTextureType_AMBIENT) > 0) // Ambient texture
+	{
+		Texture tempTex;
+		material.Get(AI_MATKEY_TEXTURE(aiTextureType_AMBIENT, 0), ambiName);
+		tempTex.filepath = ambiName.C_Str();
+
+		tempMat.textures.push_back(tempTex);
+	}
+
+	_materials.push_back(tempMat);
+
+	//_materials.emplace_back();
+	//Material& mat = _materials[0];
+	//mat.GUID = reinterpret_cast<std::size_t>(&material);
+
+	//for (unsigned int l = 0; l < material.mNumProperties; ++l) // Loop through all properties of this material
+	//{
+	//	const aiMaterialProperty& matProperty = *material.mProperties[l];
+	//	if (matProperty.mType != aiPTI_String)
+	//	{
+	//		continue;
+	//	}
+
+	//	aiString* pString = reinterpret_cast<aiString*>(matProperty.mData); // Cast bits to aiString*
+
+	//	if (matProperty.mSemantic == aiTextureType_NONE)
+	//	{
+	//		mat.matName = pString->C_Str();
+	//		continue;
+	//	}
+
+	//	SampleHolder sample;
+	//	Texture texture;
+
+	//	// Setting hint type
+	//	/*if (matProperty.mSemantic == aiTextureType_NORMAL_CAMERA || xcore::string::FindStrI(pString->C_Str(), "_Normal") != -1)
+	//	{
+	//		sample.type = "PBR_NORMAL";
+	//	}
+	//	else if (matProperty.mSemantic == aiTextureType_BASE_COLOR || xcore::string::FindStrI(pString->C_Str(), "_Base_Color") != -1)
+	//	{
+	//		sample.type = "PBR_ALBEDO";
+	//	}
+	//	else if (matProperty.mSemantic == aiTextureType_AMBIENT_OCCLUSION || xcore::string::FindStrI(pString->C_Str(), "_AO") != -1)
+	//	{
+	//		sample.type = "PBR_OCCLUSION";
+	//	}
+	//	else if (matProperty.mSemantic == aiTextureType_DIFFUSE_ROUGHNESS || xcore::string::FindStrI(pString->C_Str(), "_Roughness") != -1)
+	//	{
+	//		sample.type = "PBR_ROUGHNESS";
+	//	}
+	//	else
+	//	{
+	//		sample.type = "UNKNOWN";
+	//	}*/
+
+	//	texture.filepath = pString->C_Str(); // Set file path of texture
+
+	//	int  iTexture = 0;
+	//	bool bFound = false;
+	//	for (const auto& Tex : _textures)
+	//	{
+	//		if (Tex.filepath == texture.filepath)
+	//		{
+	//			bFound = true;
+	//			break;
+	//		}
+	//		++iTexture;
+	//	}
+
+	//	sample.binding = iTexture; // Set sampler texture binding index wrt to textures vector size
+	//	mat._samples.push_back(sample); // Set the texture index
+	//	if (bFound == false)
+	//	{
+	//		_textures.push_back(texture); // Add this texture to our vector of textures
+	//	}
+
+	//}
+
 	return;
 }
 
-void AssimpLoader::SerializeDescriptor(const std::string filepath)
+// Serialize to geom binary file a single FBX file
+void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 {
-	rapidjson::StringBuffer buffer;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> jason(buffer);
-
-	jason.StartObject();
-
-	jason.String("Mesh FilePath");
-	jason.String(_descriptor->filePath.c_str());
-
-	jason.String("Mesh Scale");
-	jason.StartArray();
-	jason.Double(_descriptor->scale.x);
-	jason.Double(_descriptor->scale.y);
-	jason.Double(_descriptor->scale.z);
-	jason.EndArray();
-
-	jason.String("Mesh Rotation");
-	jason.StartArray();
-	jason.Double(_descriptor->rotate.x);
-	jason.Double(_descriptor->rotate.y);
-	jason.Double(_descriptor->rotate.z);
-	jason.EndArray();
-
-	jason.String("Mesh Translation");
-	jason.StartArray();
-	jason.Double(_descriptor->translate.x);
-	jason.Double(_descriptor->translate.y);
-	jason.Double(_descriptor->translate.z);
-	jason.EndArray();
-
-	jason.String("Mesh MergeMeshes");
-	jason.Bool(_descriptor->combine);
-
-	jason.String("Mesh MeshName");
-	jason.String(_descriptor->meshName.c_str());
-
-	jason.EndObject();
-
-	std::ofstream serializeFile(filepath);
+	std::ofstream serializeFile(filepath, std::ios_base::binary);
 	if (!serializeFile)
 	{
-		std::cerr << "Cannot open the output file." << std::endl;
+		std::cerr << "Could not open output file to serialize geom!" << std::endl;
 		return;
 	}
 
-	serializeFile << buffer.GetString();
+	// Save the compression scale values of the position and texture of the FBX model
+	serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
+	serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
+
+	size_t meshSize = this->_meshes.size();
+	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+	for (auto& _mesh : this->_meshes)
+	{
+		// Vertices
+		size_t vertexSize = _mesh._vertices.size();
+		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
+
+		// Indices
+		size_t indicesSize = _mesh._indices.size();
+		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
+	}
+
+	size_t materialSize = this->_materials.size();
+	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
+
+	for (auto& mat : _materials) // Save material of this model
+	{
+		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
+
+		size_t texSize = mat.textures.size(); // Save all textures of this material
+		if (texSize > 0)
+		{
+			serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+			serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
+		}
+	}
+
 	serializeFile.flush();
 	serializeFile.close();
 }
 
-void AssimpLoader::SerializeBinaryGeom(const std::string filepath) // Serialize to geom binary file
-{
-	//std::ofstream serializeFile(filepath, std::ios_base::binary);
-	//if (!serializeFile)
-	//{
-	//	std::cerr << "Could not open output file to serialize geom!" << std::endl;
-	//	return;
-	//}
-
-	///*size_t meshSize = _meshes.size();
-	//serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));*/
-
-	//size_t vertexSize = _vertices.size();
-	//serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_vertices[0]), vertexSize * sizeof(Vertex));
-
-	//size_t indicesSize = _indices.size();
-	//serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_indices[0]), indicesSize * sizeof(int32_t));
-
-	//size_t texSize = _textures.size();
-	//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_textures[0]), texSize * sizeof(Texture));
-
-	//size_t matSize = _materials.size();
-	//serializeFile.write(reinterpret_cast<char*>(&matSize), sizeof(matSize));
-	//serializeFile.write(reinterpret_cast<char*>(&_materials[0]), matSize * sizeof(Material));
-
-	//serializeFile.flush();
-	//serializeFile.close();
-}
-
-void AssimpLoader::DeserializeDescriptor(const std::string filepath)
+void ModelLoader::DeserializeDescriptor(const std::string filepath)
 {
 	// Takes in the _descriptor file path and load assimp _descriptor struct with data before loading the assimp
 
 	std::ifstream file(filepath);
 	if(!file.is_open()){
-		std::cout << "euan good boi\n";
+		std::cerr << "Unable to open geom descriptor file" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 	rapidjson::IStreamWrapper streamWrapper(file);
 
@@ -362,7 +673,6 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	doc.ParseStream(streamWrapper);
 
 	_descriptor->filePath = doc["Mesh FilePath"].GetString(); // File path
-	//_descriptor->filePath = "";
 
 	float values[3]{ 0.f, 0.f, 0.f };
 	int i = 0;
@@ -404,13 +714,139 @@ void AssimpLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.x = values[0];
 	_descriptor->translate.y = values[1];
 	_descriptor->translate.z = values[2];
+}
 
+std::string GenerateGUID(const std::string meshFileName) // Using meshFileName to convert to ascii value
+{
+	std::stringstream stream{};
+	for (size_t i = 0; i < meshFileName.length(); ++i)
+	{
+		int asc = static_cast<int>(meshFileName[i]); // Convert from char to int first
+		stream << std::hex << asc; // Convert to hexadecimal
+	}
 
-	_descriptor->meshName = doc["Mesh MeshName"].GetString();
-	_descriptor->combine = doc["Mesh MergeMeshes"].GetBool();
+	std::uniform_real_distribution<double> distribution(0, 1000);
+	std::random_device rd;
+	std::default_random_engine generator(rd());
+	int number = static_cast<int>(distribution(generator));
+	stream << std::hex << number;
+
+	std::string GUID(stream.str()); // Concat the string of hex asc
+	return GUID;
+}
+
+void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFilePath, const std::string meshFileName)
+{
+	rapidjson::StringBuffer buffer;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+	writer.StartObject();
+
+	writer.String("Mesh FilePath");
+	writer.String(fbxFilePath.c_str());
+
+	writer.String("Mesh Scale");
+	writer.StartArray();
+	writer.Double(1.0);
+	writer.Double(1.0);
+	writer.Double(1.0);
+	writer.EndArray();
+
+	writer.String("Mesh Rotation");
+	writer.StartArray();
+	writer.Double(10.0);
+	writer.Double(78.0);
+	writer.Double(0.0);
+	writer.EndArray();
+
+	writer.String("Mesh Translation");
+	writer.StartArray();
+	writer.Double(0.0);
+	writer.Double(0.0);
+	writer.Double(0.0);
+	writer.EndArray();
+
+	writer.String("Mesh GUID");
+	writer.String(GenerateGUID(meshFileName).c_str());
+
+	writer.EndObject();
+
+	std::ofstream serializeFile(writeDescFilePath);
+	if (!serializeFile)
+	{
+		std::cerr << "Cannot open the output file." << std::endl;
+		return;
+	}
+
+	serializeFile << buffer.GetString();
+	serializeFile.flush();
+	serializeFile.close();
 }
 
 int main() {
-	AssimpLoader assimp("../GAM300/Assets/Models/Skull_textured.geom.desc","../GAM300/Assets/Models/Skull_textured.geom");
+	std::cout << "Compiling models..." << std::endl;
+
+	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets/Models"))
+	{
+		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
+		{
+			for (const auto& _dir : std::filesystem::recursive_directory_iterator(dir)) // Looping through contents of the model's folder
+			{
+				std::string subFilePath = _dir.path().generic_string();
+				std::string subFilePathDesc = subFilePath;
+				std::string geomFilePath = subFilePath;
+				std::string fileType{};
+				std::string fileName{};
+
+				// Get the file type of the current file in this folder
+				for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+				{
+					fileType += subFilePath[i];
+				}
+
+				if (strcmp(fileType.c_str(), "fbx")) // Skip this file if not fbx
+				{
+					continue;
+				}
+
+				// Reaching here means we are at the fbx file
+
+				// Get file name
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
+				std::cout << "Compiling " << fileName << "...";
+				geomFilePath.erase(geomFilePath.find_last_of('.'), strlen(fileType.c_str()) + 1);
+				geomFilePath += ".geom";
+
+				subFilePathDesc.erase(subFilePathDesc.find_last_of('.'), strlen(fileType.c_str()) + 1);
+				subFilePathDesc += ".geom.desc";
+
+				// Check if this model had already been previously serialized
+				if (std::filesystem::exists(geomFilePath) && std::filesystem::exists(subFilePathDesc)) // Both geom and desc files must be present
+				{
+					std::cout << "Done!" << std::endl;
+					break; // Go to next model folder
+				}
+
+				// Find the desc file of this model
+				if (!std::filesystem::exists(subFilePathDesc))
+				{
+					// Create desc file for this model
+					CreateDescFile(subFilePath, subFilePathDesc, fileName); // fbx filepath & desc filepath & filename parameters
+				}
+
+				// Reaching here means the desc file exists, but the model is not serialized yet
+				ModelLoader myLoader(subFilePathDesc, geomFilePath);
+
+				// Reaching here means the model is now serialized and now contains desc and geom files
+				std::cout << " Done!" << std::endl;
+				break; // Go to next model folder (Optimization by skipping rest of files)
+			}
+		}
+	}
+
+	std::cout << "Finished compiling all models!" << std::endl;
 	return 0;
 }

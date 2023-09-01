@@ -1,0 +1,19 @@
+{
+    "Mesh FilePath": "Assets/Models/Skull_textured/Skull_textured.fbx",
+    "Mesh Scale": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Mesh Rotation": [
+        10.0,
+        78.0,
+        0.0
+    ],
+    "Mesh Translation": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "Mesh GUID": "536b756c6c5f74657874757265641ff"
+}
