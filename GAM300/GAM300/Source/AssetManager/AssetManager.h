@@ -22,6 +22,8 @@ public:
 	const std::vector<char>& GetAsset(const std::string& assetGUID);
 
 private:
+	const std::string AssetPath = "Assets";
+
 	void Init();
 	void Update(float dt);
 	void Exit();
@@ -35,10 +37,19 @@ private:
 	Asset mTotalAssets;
 
 	// Helper functions
-	void AsyncLoadAsset(const std::string& metaFilePath, const std::string& fileName);
-	void LoadAsset(const std::string& metaFilePath, const std::string& fileName);
+	void AsyncLoadAsset(const std::string& metaFilePath);
+	void LoadAsset(const std::string& metaFilePath);
+	void AsyncUnloadAsset(const std::string& assetGUID);
+	void UnloadAsset(const std::string& assetGUID);
+	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
+	void UpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
+
 
 	std::string GenerateGUID(const std::string& fileName);
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
-	void DeserializeAssetMeta(const std::string& filePath, const std::string& fileName);
+	void DeserializeAssetMeta(const std::string& filePath);
+
+	void FileAddProtocol();
+	void FileRemoveProtocol();
+	void FileUpdateProtocol();
 };
