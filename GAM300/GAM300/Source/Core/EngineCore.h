@@ -62,7 +62,7 @@ public:
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
-			&EditorSystem::Instance(),
+			//&EditorSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance()
@@ -74,7 +74,7 @@ public:
 			pSystem->Init();
 		}
 
-		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
+		////Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
@@ -95,8 +95,8 @@ public:
 		Script& script4 = scene.AddComponent<Script>(0);
 		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
 		scene.Destroy(script);
-		//Script& script2 = scene.AddComponent<Script>(10);
-		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
+		Script& script2 = scene.AddComponent<Script>(10);
+		scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 	}
 
 	/**************************************************************************/
@@ -111,20 +111,34 @@ public:
 		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
-			//Start ImGui Frames
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
+			////Start ImGui Frames
+			////std::cout << "start\n";
+			//ImGui_ImplOpenGL3_NewFrame();
+			//std::cout << "opengl new\n";
+
+			//ImGui_ImplGlfw_NewFrame();
+			//std::cout << "glfw new\n";
+
+			//ImGui::NewFrame();
+			//std::cout << " new frame\n";
 
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->GetMode() & mode)
 					pSystem->Update(dt);
 			}
-			//End ImGui Frames
-			ImGui::EndFrame();
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			////End ImGui Frames
+			//std::cout << " after update loops\n";
+
+			////ImGui::EndFrame();
+			//std::cout << " end frame\n";
+
+			//ImGui::Render();
+			//std::cout << " render frame\n";
+
+			//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			//std::cout << " render draw data\n";
+
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 		}
