@@ -15,7 +15,6 @@ void AssetManager::Init()
 	{
 		this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
 	}
-
 	
 
 	this->LoadAsset("Assets");

@@ -21,6 +21,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "Debugging.h"
 
 
 
@@ -37,8 +38,9 @@ ENGINE_SYSTEM(EditorSystem)
 	void Editor_Toolbar();
 	void Editor_Inspector();
 	void Editor_Hierarchy();
-
 };
+
+extern Debugger Debug_Sys;
 
 
 
