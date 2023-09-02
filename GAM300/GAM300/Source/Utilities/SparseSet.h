@@ -3,13 +3,13 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			10/03/2023
+\date			02/09/2023
 
 \brief
-    This file contains an ADT for object pooling, with support of for range loops, iterators
-    , reverse iterators, emplacement, swapping, subscript operator.
+    This file contains the function declarations for a fixed size SparseSet that supports
+    iterators and for range iteration.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -22,29 +22,27 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <iostream>
 #include "Core/Debug.h"
 
+using ObjectIndex = uint32_t;
 
-using DenseIndex = size_t;
-
-template <typename T, size_t N>
+template <typename T, ObjectIndex N>
 class SparseSet
 {
     struct Node
     {
-        size_t denseIndex;
-        size_t sparseIndex;
+        ObjectIndex denseIndex;
+        ObjectIndex sparseIndex;
     };
     //Uninitialized memory
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
     //DenseIndexes
     std::array<Node, N> nodes;
-    size_t size_{ 0 };
+    uint32_t size_{ 0 };
 public:
 
     class Iterator
     {
-
         SparseSet<T, N>& arr;
-        size_t sparseIndex;
+        uint32_t sparseIndex;
         friend class SparseSet;
     public:
 
@@ -59,7 +57,7 @@ public:
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _sparseIndex, SparseSet<T, N>& _arr) : sparseIndex(_sparseIndex), arr{ _arr } {}
+        Iterator(uint32_t _sparseIndex, SparseSet<T, N>& _arr);
 
         /***************************************************************************/
         /*!
@@ -69,10 +67,7 @@ public:
                 Reference to object stored
         */
         /**************************************************************************/
-        T& operator*() const
-        {
-            return arr[sparseIndex];
-        }
+        T& operator*() const;
 
         /***************************************************************************/
          /*!
@@ -82,10 +77,7 @@ public:
                 Next iterator
         */
         /**************************************************************************/
-        Iterator operator++() {
-            ++sparseIndex;
-            return *this;
-        }
+        Iterator operator++();
 
         /***************************************************************************/
         /*!
@@ -95,11 +87,7 @@ public:
                 this iterator
         */
         /**************************************************************************/
-        Iterator operator++(int) {
-            Iterator tmp(*this);
-            operator++();
-            return tmp;
-        }
+        Iterator operator++(int);
 
         /***************************************************************************/
         /*!
@@ -111,9 +99,7 @@ public:
                 True if both iterators are of the same sparse index
         */
         /**************************************************************************/
-        bool operator==(const Iterator& other) const {
-            return sparseIndex == other.sparseIndex;
-        }
+        bool operator==(const Iterator& other) const;
 
         /***************************************************************************/
         /*!
@@ -125,9 +111,7 @@ public:
                 True if both iterators are NOT of the same sparse index
         */
         /**************************************************************************/
-        bool operator!=(const Iterator& other) const {
-            return sparseIndex != other.sparseIndex;
-        }
+        bool operator!=(const Iterator& other) const;
     };
     /***************************************************************************/
     /*!
@@ -137,7 +121,7 @@ public:
             Starting iterator to this sparse set
     */
     /**************************************************************************/
-    Iterator begin() {return Iterator(0, *this);}
+    Iterator begin();
 
     /***************************************************************************/
     /*!
@@ -147,7 +131,7 @@ public:
             Starting iterator to this sparse set
     */
     /**************************************************************************/
-    Iterator end() {return Iterator(size_, *this);}
+    Iterator end();
 
     /***************************************************************************/
     /*!
@@ -180,7 +164,7 @@ public:
     T& emplace_back(Args&&... args);
 
     template <typename... Args>
-    T& emplace(DenseIndex index ,Args&&... args);
+    T& emplace(ObjectIndex index ,Args&&... args);
     /***************************************************************************/
     /*!
         \brief
@@ -190,13 +174,10 @@ public:
     */
     /**************************************************************************/
 
-    void erase(size_t denseIndex);
+    void erase(uint32_t denseIndex);
 
 
-    void erase(T& val)
-    {
-        erase(GetDenseIndex(val));
-    }
+    void erase(T& val);
 
     /***************************************************************************/
     /*!
@@ -206,10 +187,7 @@ public:
             Amount of objects in use
     */
     /**************************************************************************/
-    size_t size() const
-    {
-        return size_;
-    }
+    uint32_t size() const;
 
     /***************************************************************************/
     /*!
@@ -221,9 +199,9 @@ public:
             Reference to object that was gotten through subscript
     */
     /**************************************************************************/
-    T& operator[] (size_t i);
+    T& operator[] (uint32_t i);
 
-    T& DenseSubscript (DenseIndex val);
+    T& DenseSubscript (ObjectIndex val);
 
     /***************************************************************************/
     /*!
@@ -235,24 +213,11 @@ public:
             True if the object is part of this sparse set
     */
     /**************************************************************************/
-    bool contains(T& pValue)
-    {
-        if (&pValue < reinterpret_cast<T*>(data))
-            return false;
-        if (&pValue - reinterpret_cast<T*>(data) >= N)
-            return false;
-        return true;
-    }
+    bool contains(T& pValue);
 
-    DenseIndex GetDenseIndex(T& object)
-    {
-        return &object - reinterpret_cast<T*>(data);
-    }
+    uint32_t GetDenseIndex(T& object);
 
-    DenseIndex GetDenseIndex(size_t sparseIndex)
-    {
-        return nodes[sparseIndex].denseIndex;
-    }
+    uint32_t GetDenseIndex(uint32_t sparseIndex);
 
     /***************************************************************************/
     /*!
@@ -260,7 +225,7 @@ public:
             Resets sparse set to size 0
     */
     /**************************************************************************/
-    void clear() { size_ = 0; }
+    void clear();
 
     /***************************************************************************/
     /*!
@@ -270,24 +235,10 @@ public:
             True if no objects
     */
     /**************************************************************************/
-    bool empty() const { return !size_; }
+    bool empty() const;
 
-    bool full() const { return size_ == N; }
-
-    template <typename T, size_t N>
-    friend std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS);
+    bool full() const;
 };
-
-template<typename T, size_t N>
-std::ostream& operator<<(std::ostream& stream, SparseSet<T, N>& sS)
-{
-    for (size_t i{ 0 }; i < sS.size_; ++i)
-    {
-        stream << sS.indexes[i] << ",";
-    }
-    return stream;
-}
-
 #include "SparseSet.cpp"
 
 #endif // !SPARSE_SET_H

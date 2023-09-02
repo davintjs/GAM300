@@ -37,7 +37,7 @@ T& ObjectsList<T, N>::emplace_back(Args&&... args)
 
 template <typename T, ObjectIndex N>
 template <typename... Args>
-T& ObjectsList<T, N>::emplace(DenseIndex index, Args&&... args)
+T& ObjectsList<T, N>::emplace(ObjectIndex index, Args&&... args)
 {
 	if (head == nullptr)
 		head = tail = CreateNode();

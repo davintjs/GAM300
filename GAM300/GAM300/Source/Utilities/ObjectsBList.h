@@ -4,8 +4,6 @@
 #include <bitset>
 #include "ObjectsList.h"
 
-using ObjectIndex = size_t;
-
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 class ObjectsBList
 {
@@ -127,7 +125,7 @@ public:
         }
     };
     template <typename... Args>
-    T& emplace(DenseIndex index, Args&&... args);
+    T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
     ~ObjectsBList();
@@ -159,14 +157,14 @@ public:
                 if ((*it).contains(obj))
                 {
                     (*it).SetActive(obj, val);
-                    break;
+                    return;
                 }
             }
             start = start->next;
         }
     }
 
-    T& DenseSubscript(DenseIndex val)
+    T& DenseSubscript(ObjectIndex val)
     {
         Node* start = head;
         while (val >= N)
@@ -177,7 +175,7 @@ public:
         return start->sparseSet.DenseSubscript(val);
     }
 
-    DenseIndex GetDenseIndex(T& object)
+    ObjectIndex GetDenseIndex(T& object)
     {
         Node* start = head;
         size_t i = 0;
@@ -189,7 +187,6 @@ public:
                 {
                     return i + start->sparseSetList.GetDenseIndex(objectList);
                 }
-                //++i;
             }
             i += N;
             start = start->next;
