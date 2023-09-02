@@ -93,8 +93,9 @@ public:
 		scene.AddComponent<Script>(14);
 		Script& script = scene.AddComponent<Script>(0);
 		Script& script4 = scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(0);
 		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
-		scene.Destroy(script);
+		scene.Destroy(script4);
 		//Script& script2 = scene.AddComponent<Script>(10);
 		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 	}

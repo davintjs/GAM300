@@ -29,15 +29,15 @@ void SceneManager::Update(float dt)
 	//}
 
 
-	//auto& scriptArr = scene.multiComponentsArrays.GetArray<Script>();
-	//for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
-	//{
-	//	if (!it.IsActive())
-	//		continue;
-	//	Script& script = *it;
-	//	PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
-	//}
-	//PRINT('\n');
+	auto& scriptArr = scene.multiComponentsArrays.GetArray<Script>();
+	for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
+	{
+		if (!it.IsActive())
+			continue;
+		Script& script = *it;
+		PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
+	}
+	PRINT('\n');
 
 	//Issue with this, iterating over empty multicomponents
 	//for (Script& script : scene.multiComponentsArrays.GetArray<Script>())
