@@ -7,7 +7,7 @@ void BehaviorTreeBuilder::Init()
 	BuildTrees();
 }
 
-void BehaviorTreeBuilder::Update()
+void BehaviorTreeBuilder::Update(float dt)
 {
 
 }

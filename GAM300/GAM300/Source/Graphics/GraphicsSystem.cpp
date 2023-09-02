@@ -48,13 +48,16 @@ void GraphicsSystem::Init()
 	EditorCam.Init();
 }
 
-void GraphicsSystem::Update()
+void GraphicsSystem::Update(float dt)
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	
 	//Currently Putting in Camera Update loop here
-	EditorCam.Update((float)MyFrameRateController.getDt());
 
+	// Bean: For binding framebuffer
+	EditorCam.getFramebuffer().bind();
+
+	EditorCam.Update((float)MyFrameRateController.getDt());
 
 	//UPDATE OR RENDER GRAPHICS HERE
 
@@ -110,8 +113,8 @@ void GraphicsSystem::Update()
 
 	AffectedByLight.affectedByLight_draw(LightSource.position);
 
-
-
+	// Bean: For unbinding framebuffer
+	EditorCam.getFramebuffer().unbind();
 }
 
 void GraphicsSystem::Exit()

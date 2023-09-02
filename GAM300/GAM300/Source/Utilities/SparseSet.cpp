@@ -21,7 +21,7 @@ SparseSet<T, N>::SparseSet()
 {
     for (size_t i = 0; i < N; ++i)
     {
-        denseIndexes[i] = i;
+        nodes[i] = {i,i};
     }
 }
 
@@ -38,7 +38,7 @@ template <typename T, size_t N>
 template <typename... Args>
 T& SparseSet<T, N>::emplace_back(Args&&... args)
 {
-    T& back = *new (data + denseIndexes[size_]) T(std::forward<Args>(args)...); // Construct the new element in the array
+    T& back = *new (data + nodes[size_].denseIndex) T(std::forward<Args>(args)...); // Construct the new element in the array
     ++size_;
     return back;
 }
@@ -50,17 +50,18 @@ T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
 {
     //Find and make to next element
     ASSERT(index < N, " OUT OF BOUNDS");
-    T& back = *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
     for (size_t i = size_; i < N; ++i)
     {
-        if (denseIndexes[i] == index)
+        if (nodes[i].denseIndex == index)
         {
-            std::swap(denseIndexes[i], denseIndexes[size_]);
-            break;
+            nodes[i].denseIndex = nodes[size_].denseIndex;
+            nodes[size_].denseIndex = index;
+            ++size_;
+            return *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
         }
     }
-    ++size_;
-    return back;
+    //Already exists
+    return reinterpret_cast<T*>(data)[index];
 }
 
 template <typename T, size_t N>
@@ -68,22 +69,25 @@ void SparseSet<T, N>::erase(size_t denseIndex)
 {
     for (size_t i = 0; i < size_; ++i)
     {
-        size_t& index = denseIndexes[i];
-        if (index == denseIndex)
+        if (nodes[i].denseIndex == denseIndex)
         {
-            reinterpret_cast<T*>(data)[index].~T();
-            std::swap(index, denseIndexes[size_ - 1]);
+            PRINT("SZ:", size_, '\n');
+            reinterpret_cast<T*>(data)[denseIndex].~T();
             --size_;
+            nodes[i].denseIndex = nodes[size_].denseIndex;
+            nodes[size_].denseIndex = denseIndex;
             return;
         }
     }
+    ASSERT(false,"FAILED TO ERASE");
 }
+
 
 template <typename T, size_t N>
 T& SparseSet<T, N>::operator[] (size_t i)
 {
     ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
-    return *reinterpret_cast<T*>(data + denseIndexes[i]);
+    return *reinterpret_cast<T*>(data + nodes[i].denseIndex);
 }
 
 template <typename T, size_t N>

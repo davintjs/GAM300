@@ -21,7 +21,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-#include "FramerateController.h"
 #include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
@@ -58,7 +57,6 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-		MyFrameRateController.Init();
 
 
 		systems =
@@ -84,21 +82,29 @@ public:
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
 		//TEST ENTITY CREATION
-		// for (int i = 0; i < 22; ++i)
-		// {
-		// 	scene.AddEntity();
-		// }
+		//for (int i = 0; i < 22; ++i)
+		//{
+		//	scene.AddEntity();
+		//}
 
-		// scene.AddComponent<Rigidbody>(20);
-		// scene.AddComponent<Rigidbody>(1);
-		//Script& script = scene.AddComponent<Script>(20);
-		// scene.AddComponent<Script>(20);
-		// scene.AddComponent<Script>(20);
-		// scene.AddComponent<Script>(1);
-		// scene.AddComponent<Script>(20);
-		//scene.AddComponent<Script>(20);
-		//Entity& entity = scene.entities.DenseSubscript(20);
-		//scene.RemoveComponent(entity,script);
+		//Script& script3 = scene.AddComponent<Script>(14);
+		//scene.AddComponent<Script>(14);
+		//scene.AddComponent<Script>(13);
+		//scene.AddComponent<Script>(3);
+		//scene.AddComponent<Script>(21);
+		//scene.Destroy(script3);
+		//scene.AddComponent<Script>(14);
+		//scene.AddComponent<Script>(14);
+		//Script& script = scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		//scene.Destroy(script);
+		//scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		//Script& script2 = scene.AddComponent<Script>(10);
+		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 	}
 
 	/**************************************************************************/
@@ -108,44 +114,28 @@ public:
 		if it should only be update in play mode or not
 	*/
 	/**************************************************************************/
-	void Update()
+	void Update(float dt)
 	{
 		//MultiComponentsArrays arr;
-		while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
+		if (state == EngineState::Run)
 		{
-			
+			//Start ImGui Frames
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
-
-			if (state == EngineState::Run)
+			for (ISystem* pSystem : systems)
 			{
-				MyFrameRateController.Start();
-
-				
-
-				//Start ImGui Frames
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
-
-				for (ISystem* pSystem : systems)
-				{
-					if (pSystem->GetMode() & mode)
-						pSystem->Update();
-				}
-
-				//End ImGui Frames
-				ImGui::EndFrame();
-				ImGui::Render();
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-				glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
-
-				MyFrameRateController.End();
+				if (pSystem->GetMode() & mode)
+					pSystem->Update(dt);
 			}
+			//End ImGui Frames
+			ImGui::EndFrame();
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 		}
-				//MyFrameRateController.End();
-			//}
-		//}
 	}
 
 	/**************************************************************************/

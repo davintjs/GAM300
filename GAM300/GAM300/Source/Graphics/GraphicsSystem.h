@@ -7,7 +7,7 @@ ENGINE_SYSTEM(GraphicsSystem)
 {
 public:
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 };
 #endif // !GRAPHICS_SYSTEM_H

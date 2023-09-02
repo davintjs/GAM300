@@ -28,10 +28,15 @@ using DenseIndex = size_t;
 template <typename T, size_t N>
 class SparseSet
 {
+    struct Node
+    {
+        size_t denseIndex;
+        size_t sparseIndex;
+    };
     //Uninitialized memory
     typename std::aligned_storage<sizeof(T), alignof(T)>::type data[N];
     //DenseIndexes
-    std::array<size_t, N>denseIndexes;
+    std::array<Node, N> nodes;
     size_t size_{ 0 };
 public:
 
@@ -187,6 +192,12 @@ public:
 
     void erase(size_t denseIndex);
 
+
+    void erase(T& val)
+    {
+        erase(GetDenseIndex(val));
+    }
+
     /***************************************************************************/
     /*!
         \brief
@@ -233,73 +244,14 @@ public:
         return true;
     }
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Swaps two objects based on their sparse indexes
-        \param sparseIndex1
-            Index of first object to swap
-        \param sparseIndex2
-            Index of second object to swap
-    */
-    /**************************************************************************/
-    void swap(size_t sparseIndex1, size_t sparseIndex2)
-    {
-        size_t tmp{ denseIndexes[sparseIndex1] };
-        denseIndexes[sparseIndex1] = denseIndexes[sparseIndex2];
-        denseIndexes[sparseIndex2] = tmp;
-    }
-
-    /***************************************************************************/
-    /*!
-        \brief
-            Swaps two objects based on their memory location
-        \param lhs
-            First object to swap
-        \param rhs
-            Second object to swap
-    */
-    /**************************************************************************/
-    void swap(T& lhs, T& rhs)
-    {
-        size_t rhsDenseIndex = &rhs - reinterpret_cast<T*>(data);
-        size_t lhsDenseIndex = &lhs - reinterpret_cast<T*>(data);
-        ASSERT(rhsDenseIndex >= N, "RHS is not an element of this array");
-        ASSERT(lhsDenseIndex >= N, "LHS is not an element of this array");
-        if (lhsDenseIndex > rhsDenseIndex)
-        {
-            for (size_t i = 0; i < size_; ++i)
-            {
-                size_t& index = denseIndexes[i];
-                if (index == rhsDenseIndex)
-                    index = lhsDenseIndex;
-                else if (index == lhsDenseIndex)
-                {
-                    index = rhsDenseIndex;
-                    return;
-                }
-            }
-        }
-        else if (lhsDenseIndex < rhsDenseIndex)
-        {
-            for (size_t i = 0; i < size_; ++i)
-            {
-                size_t& index = denseIndexes[i];
-                if (index == lhsDenseIndex)
-                    index = rhsDenseIndex;
-                else if (index == rhsDenseIndex)
-                {
-                    index = lhsDenseIndex;
-                    return;
-                }
-            }
-        }
-    }
-
-
     DenseIndex GetDenseIndex(T& object)
     {
         return &object - reinterpret_cast<T*>(data);
+    }
+
+    DenseIndex GetDenseIndex(size_t sparseIndex)
+    {
+        return nodes[sparseIndex].denseIndex;
     }
 
     /***************************************************************************/

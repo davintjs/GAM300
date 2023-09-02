@@ -17,24 +17,34 @@ void SceneManager::LoadScene(const char* path)
 	//Init scene
 }
 
-void SceneManager::Update()
+void SceneManager::Update(float dt)
 {
 	Scene& scene = GetCurrentScene();
-	for (Entity& entity : scene.entities)
-	{
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
-	}
+	//for (auto it = scene.entities.begin(); it != scene.entities.end(); ++it)
+	//{
+	//	if (!it.IsActive())
+	//		continue;
+	//	Entity& entity = *it;
+	//	PRINT("Entity: ", scene.entities.GetDenseIndex(entity), '\n');
+	//}
+
+
+	//auto& scriptArr = scene.multiComponentsArrays.GetArray<Script>();
+	//for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
+	//{
+	//	if (!it.IsActive())
+	//		continue;
+	//	Script& script = *it;
+	//	PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
+	//}
+	PRINT('\n');
 
 	//Issue with this, iterating over empty multicomponents
-	//for (MultiComponent<Script>& multiScript : scene.multiComponentsArrays.GetArray<Script>())
+	//for (Script& script : scene.multiComponentsArrays.GetArray<Script>())
 	//{
-	//	if (multiScript.size() > 0)
-	//		PRINT("SCRIPT: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(multiScript), '\n');
-	//	for (Script& script : multiScript)
-	//	{
-	//		
-	//	}
+	//	PRINT("Script: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(script), '\n');
 	//}
+	scene.ClearBuffer();
 
 	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
 
