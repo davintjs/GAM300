@@ -81,6 +81,19 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
+		//ThreadPool mThreadP;
+		//for (int i = 0; i < 10; ++i)
+		//{
+		//	mThreadP.EnqueueTask([i]
+		//		{
+		//			std::cout << "Task " << i << " is being executed by thread " << std::this_thread::get_id() << std::endl;
+		//			std::this_thread::sleep_for(std::chrono::seconds(1));
+		//			std::cout << "Task " << i << " completed" << std::endl;
+		//		});
+		//}
+
+		//std::this_thread::sleep_for(std::chrono::seconds(10));
+
 		//TEST ENTITY CREATION
 		//for (int i = 0; i < 22; ++i)
 		//{

@@ -38,17 +38,9 @@ void AssetManager::Init()
 			fileName += subFilePath[j];
 		}
 
-		// Remove extension only if is not geom file
-		if (strcmp(fileType.c_str(), "geom"))
-		{
-			// Removing extension to add .meta extension
-			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-			subFilePathMeta += ".meta";
-		}
-		else
-		{
-			subFilePathMeta += ".meta";
-		}
+		// Removing extension to add .meta extension
+		subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
+		subFilePathMeta += ".meta";
 
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
@@ -66,7 +58,7 @@ void AssetManager::Init()
 }
 
 // For run time update of files
-void AssetManager::Update()
+void AssetManager::Update(float dt)
 {
 	if (!std::filesystem::exists("Assets"))
 	{
@@ -119,7 +111,7 @@ void AssetManager::AsyncLoadAsset(const std::string& metaFilePath, const std::st
 }
 
 // Get a loaded asset
-const std::vector<char>& AssetManager::GetAsset(const int& assetGUID)
+const std::vector<char>& AssetManager::GetAsset(const std::string& assetGUID)
 {
 	std::unique_lock<std::mutex> mLock(mAssetMutex);
 	mAssetVariable.wait(mLock, [this, &assetGUID] // Wait if the asset is not loaded yet
@@ -161,7 +153,7 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 
 	writer.StartObject();
 	writer.String("GUID");
-	writer.Int64(std::stoi(fileNameNum));
+	writer.String(fileNameNum.c_str());
 	writer.String("FileType");
 	writer.String(fileType.c_str());
 	writer.String("FileAssetPath");
@@ -176,7 +168,7 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 	return;
 }
 
-void AssetManager::DeserializeAssetMeta(std::string filePath, std::string fileName)
+void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::string& fileName)
 {
 	std::ifstream ifs(filePath);
 	std::stringstream buffer;
@@ -187,8 +179,8 @@ void AssetManager::DeserializeAssetMeta(std::string filePath, std::string fileNa
 	const std::string data(buffer.str());
 	doc.Parse(data.c_str());
 
-	std::string assetPath = doc["FileAssetPath"].GetString();
-	const long long int GUIDofAsset = doc["GUID"].GetInt();
+	const std::string assetPath = doc["FileAssetPath"].GetString();
+	const std::string GUIDofAsset = doc["GUID"].GetString();
 
 	std::ifstream inputFile(assetPath.c_str());
 	if (!inputFile)
@@ -202,6 +194,8 @@ void AssetManager::DeserializeAssetMeta(std::string filePath, std::string fileNa
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
 	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, std::make_pair(pathTime, buff)));
+
+	std::cout << "Done loading " << fileName << std::endl;
 
 	inputFile.close();
 }
