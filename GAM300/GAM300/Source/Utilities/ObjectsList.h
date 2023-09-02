@@ -3,8 +3,6 @@
 #include "SparseSet.h"
 #include <bitset>
 
-using ObjectIndex = size_t;
-
 template <typename T, ObjectIndex N>
 class ObjectsList
 {
@@ -107,32 +105,82 @@ class ObjectsList
         bool operator!=(const Iterator& other) const {
             return pNode != other.pNode || index != other.index;
         }
+
+        bool IsActive()
+        {
+            return pNode->activeObjectsBitset.test(pNode->sparseSet.GetDenseIndex(index));
+        }
     };
 public:
     template <typename... Args>
     T& emplace_back(Args&&... args);
     template <typename... Args>
-    T& emplace(DenseIndex index, Args&&... args);
+    T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
+
+    bool empty()
+    {
+        return size_ == 0;
+    }
+
+    bool IsActive(ObjectIndex sparseIndex)
+    {
+        Node* start = head;
+        while (start && sparseIndex >= N)
+        {
+            sparseIndex -= N;
+            start = start->next;
+        }
+        return start->activeObjectsBitset.test(start->sparseSet.GetDenseIndex(sparseIndex));
+    }
+
+    void SetActive(ObjectIndex index, bool val = true)
+    {
+        Node* start = head;
+        while (start && index >= N)
+        {
+            index -= N;
+            start = start->next;
+        }
+        start->activeObjectsBitset.set(index,val);
+    }
+
+    void SetActive(T& object, bool val = true)
+    {
+        SetActive(GetDenseIndex(object),val);
+    }
+
     ~ObjectsList();
-    Iterator begin() {return Iterator(0, head);}
+    Iterator begin() { Node* start = head;  while (start && start->sparseSet.empty()) start = start->next; return Iterator(0, start); }
     Iterator end() {return Iterator(0, nullptr);}
+
+    bool contains(T& val)
+    {
+        Node* start = head;
+        while (start)
+        {
+            if (start->sparseSet.contains(val))
+                return true;
+            start = start->next;
+        }
+        return false;
+    }
 
     T& operator[] (size_t i)
     {
         Node* start = head;
         while (i >= start->sparseSet.size())
         {
-            start = start->next;
             i -= start->sparseSet.size();
+            start = start->next;
         }
         return start->sparseSet[i];
     }
 
     size_t size() const { return size_; }
 
-    T& DenseSubscript(DenseIndex val)
+    T& DenseSubscript(ObjectIndex val)
     {
         Node* start = head;
         while (val >= N)
@@ -143,10 +191,10 @@ public:
         return start->sparseSet.DenseSubscript(val);
     }
 
-    DenseIndex GetDenseIndex(T& object)
+    ObjectIndex GetDenseIndex(T& object)
     {
         Node* start = head;
-        DenseIndex count = 0;
+        ObjectIndex count = 0;
         while (start != nullptr)
         {
             if (start->sparseSet.contains(object))
@@ -155,6 +203,19 @@ public:
             start = start->next;
         }
         ASSERT(true, "Object List does not contain this object");
+    }
+
+    ObjectIndex GetDenseIndex(ObjectIndex sparseIndex)
+    {
+        Node* start = head;
+        ObjectIndex index = 0;
+        while (start && sparseIndex >= start->sparseSet.size())
+        {
+            index += N;
+            sparseIndex -= start->sparseSet.size();
+            start = start->next;
+        }
+        return index + start->sparseSet.GetDenseIndex(sparseIndex);
     }
 private:
     Node* head = nullptr;

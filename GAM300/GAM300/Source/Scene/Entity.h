@@ -20,7 +20,7 @@ public:
 	const UUID uuid;
 	//Which array does this object belong in?
 	Scene* pScene;
-	DenseIndex denseIndex;
+	ObjectIndex denseIndex;
 };
 
 using EntitiesPtrArray = std::vector<Entity*>;

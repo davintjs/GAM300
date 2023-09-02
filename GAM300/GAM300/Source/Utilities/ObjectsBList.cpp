@@ -16,26 +16,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 template <typename... Args>
-T& ObjectsBList<T, N, B_SZ>::emplace(DenseIndex index, Args&&... args)
+T& ObjectsBList<T, N, B_SZ>::emplace(ObjectIndex denseIndex, Args&&... args)
 {
 	if (head == nullptr)
 		head = tail = CreateNode();
 	Node* start = head;
-	while (index >= N)
+	while (denseIndex >= N)
 	{
 		if (start->next == nullptr)
 			start->next = CreateNode();
 		start = start->next;
-		index -= N;
+		denseIndex -= N;
 	}
 	if (start->next == nullptr)
 		tail = start;
 	++size_;
-	while (!start->sparseSetList.full())
-	{
-		start->sparseSetList.emplace_back();
-	}
-	return start->sparseSetList.DenseSubscript(index).emplace_back();
+	return start->sparseSetList.emplace(denseIndex).emplace_back();
 }
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
@@ -81,21 +77,22 @@ void ObjectsBList<T, N, B_SZ>::DeleteNode(Node* prev, Node* pNode)
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 void ObjectsBList<T, N, B_SZ>::erase(T& val)
 {
-	Node* prev = nullptr;
 	Node* start = head;
 	//Look for node/sparseset that contains the value
-	while (!start->sparseSetList.contains(val))
+	while (start)
 	{
-		prev = start;
+		for (auto& subNode : start->sparseSetList)
+		{
+			if (subNode.contains(val))
+			{
+				subNode.erase(val);
+				--size_;
+				return;
+			}
+		}
 		start = start->next;
 	}
 	ASSERT(start != nullptr, "Failed to erase value");
-	SparseSet<T, N>& sparseSet = start->sparseSet;
-	sparseSet.erase(sparseSet.GetDenseIndex(val));
-	--size_;
-	//Delete node only if its the last one
-	if (sparseSet.empty() && start->next == nullptr)
-		DeleteNode(prev, head);
 }
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>

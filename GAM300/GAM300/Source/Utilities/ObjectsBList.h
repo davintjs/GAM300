@@ -4,8 +4,6 @@
 #include <bitset>
 #include "ObjectsList.h"
 
-using ObjectIndex = size_t;
-
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 class ObjectsBList
 {
@@ -16,6 +14,7 @@ class ObjectsBList
         Node* next = nullptr;
     };
 
+public:
     class Iterator
     {
         Node* pNode;
@@ -33,7 +32,7 @@ class ObjectsBList
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex },pNode{ _pNode } {}
+        Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex }, pNode{ _pNode } {}
 
         /***************************************************************************/
         /*!
@@ -45,6 +44,7 @@ class ObjectsBList
         /**************************************************************************/
         T& operator*()
         {
+            //for (auto& objectList : )
             return pNode->sparseSetList[index][subIndex];
         }
 
@@ -56,16 +56,23 @@ class ObjectsBList
                 Next iterator
         */
         /**************************************************************************/
-        Iterator operator++() 
+        Iterator operator++()
         {
-            if (subIndex == pNode->sparseSetList[index].size())
-                ++index;
-            while (pNode && index >= pNode->sparseSetList.size())
-            {
-                index -= pNode->sparseSetList.size();
-                pNode = pNode->next;
-            }
+            //Same type of objects that belong to the same entity
+            //If it is full subIndex
+            //Go to the next object set, aka sparseSetList
             ++subIndex;
+            while (pNode && subIndex >= pNode->sparseSetList[index].size())
+            {
+                ++index;
+                //If index is more than node size, go to next node
+                while (pNode && index >= pNode->sparseSetList.size())
+                {
+                    index = 0;
+                    pNode = pNode->next;
+                }
+                subIndex = 0;
+            }
             return *this;
         }
 
@@ -111,20 +118,53 @@ class ObjectsBList
             return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
         }
 
-
+        bool IsActive()
+        {
+            auto& objectList = pNode->sparseSetList[index];
+            return objectList.IsActive(objectList.GetDenseIndex(subIndex));
+        }
     };
-public:
     template <typename... Args>
-    T& emplace(DenseIndex index, Args&&... args);
+    T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
     ~ObjectsBList();
-    Iterator begin() {return Iterator(0,0, head);}
-    Iterator end() {return Iterator(0,0, nullptr);}
+    Iterator begin() 
+    {
+        Node* start = head;  
+        while (start) 
+        { 
+            for (auto& val : start->sparseSetList)
+            {
+                if (!val.empty())
+                    return Iterator(0, 0, start);
+            }
+            start = start->next;
+        } 
+        return Iterator(0, 0, nullptr); 
+    }
+    Iterator end() {return Iterator(0,0, nullptr); }
 
     size_t size() const { return size_; }
 
-    T& DenseSubscript(DenseIndex val)
+    void SetActive(T& obj, bool val = true)
+    {
+        Node* start = head;
+        while (start)
+        {
+            for (auto it = start->sparseSetList.begin(); it != start->sparseSetList.end();++it)
+            {
+                if ((*it).contains(obj))
+                {
+                    (*it).SetActive(obj, val);
+                    return;
+                }
+            }
+            start = start->next;
+        }
+    }
+
+    T& DenseSubscript(ObjectIndex val)
     {
         Node* start = head;
         while (val >= N)
@@ -135,15 +175,20 @@ public:
         return start->sparseSet.DenseSubscript(val);
     }
 
-    DenseIndex GetDenseIndex(T& object)
+    ObjectIndex GetDenseIndex(T& object)
     {
         Node* start = head;
-        DenseIndex count = 0;
-        while (start != nullptr)
+        size_t i = 0;
+        while (start)
         {
-            if (start->sparseSet.contains(object))
-                return start->sparseSet.GetDenseIndex(object) + count * N;
-            ++count;
+            for (auto& objectList : start->sparseSetList)
+            {
+                if (objectList.contains(object))
+                {
+                    return i + start->sparseSetList.GetDenseIndex(objectList);
+                }
+            }
+            i += N;
             start = start->next;
         }
         ASSERT(true, "Object List does not contain this object");
