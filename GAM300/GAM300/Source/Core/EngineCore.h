@@ -79,27 +79,22 @@ public:
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
 		//TEST ENTITY CREATION
-		//for (int i = 0; i < 22; ++i)
+		//for (int i = 0; i < 7; ++i)
 		//{
 		//	scene.AddEntity();
 		//}
 
-		//Script& script3 = scene.AddComponent<Script>(14);
-		//scene.AddComponent<Script>(14);
-		//scene.AddComponent<Script>(13);
-		//scene.AddComponent<Script>(3);
-		//scene.AddComponent<Script>(21);
+		//scene.Destroy(*(++(++scene.entities.begin())));
+
+		Script& script3 = scene.AddComponent<Script>(14);
+		scene.AddComponent<Script>(13);
+		scene.AddComponent<Script>(3);
 		//scene.Destroy(script3);
-		//scene.AddComponent<Script>(14);
-		//scene.AddComponent<Script>(14);
-		//Script& script = scene.AddComponent<Script>(0);
-		//scene.AddComponent<Script>(0);
-		//scene.AddComponent<Script>(0);
-		//scene.Destroy(script);
-		//scene.AddComponent<Script>(0);
-		//scene.AddComponent<Script>(0);
-		//scene.AddComponent<Script>(0);
-		//scene.AddComponent<Script>(0);
+		scene.AddComponent<Script>(14);
+		Script& script = scene.AddComponent<Script>(0);
+		Script& script4 = scene.AddComponent<Script>(0);
+		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
+		scene.Destroy(script);
 		//Script& script2 = scene.AddComponent<Script>(10);
 		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 	}

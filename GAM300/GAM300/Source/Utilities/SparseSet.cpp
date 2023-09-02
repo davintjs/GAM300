@@ -3,30 +3,77 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			27/06/2023
+\date			02/09/2023
 
 \brief
-    This file contains an ADT for object pooling, with support of for range loops, iterators
-    , reverse iterators, emplacement, swapping, subscript operator.
+    This file contains the function definitions for a fixed size SparseSet
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #include "SparseSet.h"
 
-template <typename T, size_t N>
-SparseSet<T, N>::SparseSet()
+#define SPARSESET SparseSet<T, N>
+#define ITERATOR SPARSESET::Iterator
+
+#pragma region Iterator
+
+template <typename T, ObjectIndex N>
+ITERATOR::Iterator(ObjectIndex _sparseIndex, SparseSet<T, N>& _arr) : sparseIndex(_sparseIndex), arr{ _arr } {}
+
+template <typename T, ObjectIndex N>
+T& ITERATOR::operator*() const
 {
-    for (size_t i = 0; i < N; ++i)
+    return arr[sparseIndex];
+}
+
+template <typename T, ObjectIndex N>
+typename ITERATOR ITERATOR::operator++()
+{
+    ++sparseIndex;
+    return *this;
+}
+
+template <typename T, ObjectIndex N>
+typename ITERATOR ITERATOR::operator++(int)
+{
+    Iterator tmp(*this);
+    operator++();
+    return tmp;
+}
+
+template <typename T, ObjectIndex N>
+bool ITERATOR::operator==(const Iterator& other) const {
+    return sparseIndex == other.sparseIndex;
+}
+
+template <typename T, ObjectIndex N>
+bool ITERATOR::operator!=(const Iterator& other) const {
+    return sparseIndex != other.sparseIndex;
+}
+
+#pragma endregion
+
+#pragma region SparseSet
+
+template <typename T, ObjectIndex N>
+typename ITERATOR SPARSESET::begin() { return Iterator(0, *this); }
+template <typename T, ObjectIndex N>
+typename ITERATOR SPARSESET::end() { return Iterator(size_, *this); }
+
+template <typename T, ObjectIndex N>
+SPARSESET::SparseSet()
+{
+    for (ObjectIndex i = 0; i < N; ++i)
     {
         nodes[i] = {i,i};
     }
 }
 
-template <typename T, size_t N>
-SparseSet<T, N>::~SparseSet()
+template <typename T, ObjectIndex N>
+SPARSESET::~SparseSet()
 {
     for (T& element : *this)
     {
@@ -34,23 +81,22 @@ SparseSet<T, N>::~SparseSet()
     }
 }
 
-template <typename T, size_t N>
+template <typename T, ObjectIndex N>
 template <typename... Args>
-T& SparseSet<T, N>::emplace_back(Args&&... args)
+T& SPARSESET::emplace_back(Args&&... args)
 {
     T& back = *new (data + nodes[size_].denseIndex) T(std::forward<Args>(args)...); // Construct the new element in the array
     ++size_;
     return back;
 }
 
-
-template <typename T, size_t N>
+template <typename T, ObjectIndex N>
 template <typename... Args>
-T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
+T& SPARSESET::emplace(ObjectIndex index, Args&&... args)
 {
     //Find and make to next element
     ASSERT(index < N, " OUT OF BOUNDS");
-    for (size_t i = size_; i < N; ++i)
+    for (ObjectIndex i = size_; i < N; ++i)
     {
         if (nodes[i].denseIndex == index)
         {
@@ -64,14 +110,13 @@ T& SparseSet<T, N>::emplace(DenseIndex index, Args&&... args)
     return reinterpret_cast<T*>(data)[index];
 }
 
-template <typename T, size_t N>
-void SparseSet<T, N>::erase(size_t denseIndex)
+template <typename T, ObjectIndex N>
+void SPARSESET::erase(ObjectIndex denseIndex)
 {
-    for (size_t i = 0; i < size_; ++i)
+    for (ObjectIndex i = 0; i < size_; ++i)
     {
         if (nodes[i].denseIndex == denseIndex)
         {
-            PRINT("SZ:", size_, '\n');
             reinterpret_cast<T*>(data)[denseIndex].~T();
             --size_;
             nodes[i].denseIndex = nodes[size_].denseIndex;
@@ -82,16 +127,56 @@ void SparseSet<T, N>::erase(size_t denseIndex)
     ASSERT(false,"FAILED TO ERASE");
 }
 
+template <typename T, ObjectIndex N>
+void SPARSESET::erase(T& val)
+{
+    erase(GetDenseIndex(val));
+}
 
-template <typename T, size_t N>
-T& SparseSet<T, N>::operator[] (size_t i)
+template <typename T, ObjectIndex N>
+bool SPARSESET::contains(T& pValue)
+{
+    if (&pValue < reinterpret_cast<T*>(data))
+        return false;
+    if (&pValue - reinterpret_cast<T*>(data) >= N)
+        return false;
+    return true;
+}
+
+template <typename T, ObjectIndex N>
+T& SPARSESET::operator[] (ObjectIndex i)
 {
     ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
     return *reinterpret_cast<T*>(data + nodes[i].denseIndex);
 }
 
-template <typename T, size_t N>
-T& SparseSet<T, N>::DenseSubscript(DenseIndex index)
+template <typename T, ObjectIndex N>
+T& SPARSESET::DenseSubscript(ObjectIndex index)
 {
     return reinterpret_cast<T*>(data)[index];
 }
+
+template <typename T, ObjectIndex N>
+ObjectIndex SPARSESET::GetDenseIndex(T& object)
+{
+    return &object - reinterpret_cast<T*>(data);
+}
+
+template <typename T, ObjectIndex N>
+ObjectIndex SPARSESET::GetDenseIndex(ObjectIndex sparseIndex)
+{
+    return nodes[sparseIndex].denseIndex;
+}
+
+template <typename T, ObjectIndex N>
+ObjectIndex SPARSESET::size() const{return size_;}
+
+template <typename T, ObjectIndex N>
+void SPARSESET::clear() { size_ = 0; }
+
+template <typename T, ObjectIndex N>
+bool SPARSESET::empty() const { return !size_; }
+
+template <typename T, ObjectIndex N>
+bool SPARSESET::full() const { return size_ == N; }
+#pragma endregion

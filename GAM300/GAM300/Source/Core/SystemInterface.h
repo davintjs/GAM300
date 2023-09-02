@@ -47,7 +47,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
     Macro to define a class that should be a system that runs during the
     game runtime
   \param TYPE
-    System/class name
+    System/class named
 */
 /**************************************************************************/
 #define ENGINE_RUNTIME_SYSTEM(TYPE) class TYPE final : public IRuntimeSystem, public Singleton<TYPE>
