@@ -140,11 +140,11 @@ struct Scene
 	}
 
 	template <typename Component>
-	bool ComponentIsEnabled(DenseIndex index, size_t multiIndex);
+	bool ComponentIsEnabled(uint32_t index, size_t multiIndex);
 
 
 	template <typename Component>
-	void ComponentSetEnabled(DenseIndex index,bool value, size_t multiIndex = 0);
+	void ComponentSetEnabled(uint32_t index,bool value, size_t multiIndex = 0);
 
 	template <typename Component>
 	Component& AddComponent(const Entity& entity)
@@ -153,7 +153,7 @@ struct Scene
 	}
 
 	template <typename Component>
-	Component& AddComponent(DenseIndex index)
+	Component& AddComponent(uint32_t index)
 	{
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
@@ -180,7 +180,7 @@ struct Scene
 };
 
 template <typename Component>
-bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
+bool Scene::ComponentIsEnabled(uint32_t index, size_t multiIndex)
 {
 	if constexpr (SingleComponentTypes::Has<Component>())
 	{
@@ -195,7 +195,7 @@ bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
 }
 
 template <typename Component>
-void Scene::ComponentSetEnabled(DenseIndex index, bool value, size_t multiIndex)
+void Scene::ComponentSetEnabled(uint32_t index, bool value, size_t multiIndex)
 {
 	if constexpr (SingleComponentTypes::Has(Component))
 	{

@@ -16,22 +16,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 template <typename... Args>
-T& ObjectsBList<T, N, B_SZ>::emplace(DenseIndex index, Args&&... args)
+T& ObjectsBList<T, N, B_SZ>::emplace(ObjectIndex denseIndex, Args&&... args)
 {
 	if (head == nullptr)
 		head = tail = CreateNode();
 	Node* start = head;
-	while (index >= N)
+	while (denseIndex >= N)
 	{
 		if (start->next == nullptr)
 			start->next = CreateNode();
 		start = start->next;
-		index -= N;
+		denseIndex -= N;
 	}
 	if (start->next == nullptr)
 		tail = start;
 	++size_;
-	return start->sparseSetList.emplace(index).emplace_back();
+	return start->sparseSetList.emplace(denseIndex).emplace_back();
 }
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
