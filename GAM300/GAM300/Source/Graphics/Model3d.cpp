@@ -60,19 +60,23 @@ GLuint loadDDS(const char* imagepath) {
     switch (fourCC)
     {
     case FOURCC_DXT1:
+        std::cout << "1\n";
         format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
         break;
     case FOURCC_DXT3:
+        std::cout << "2\n";
+
         format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
         break;
     case FOURCC_DXT5:
+        std::cout << "3\n";
+
         format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         break;
     default:
         free(buffer);
         return 0;
     }
-
     // Create one OpenGL texture
     GLuint textureID;
     glGenTextures(1, &textureID);
@@ -83,12 +87,12 @@ GLuint loadDDS(const char* imagepath) {
 
     unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
     unsigned int offset = 0;
-
+    
     /* load the mipmaps */
     for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
     {
         unsigned int size = ((width + 3) / 4) * ((height + 3) / 4) * blockSize;
-        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
+        glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, width, height,
             0, size, buffer + offset);
 
         offset += size;

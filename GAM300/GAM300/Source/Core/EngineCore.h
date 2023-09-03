@@ -62,7 +62,7 @@ public:
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
-			//&EditorSystem::Instance(),
+			&EditorSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance()
