@@ -56,7 +56,7 @@ struct Scene
 	Scene& operator=(Scene&) = delete;
 
 
-	Entity& AddEntity(UUID uuid = CreateUUID())
+	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;

@@ -33,6 +33,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/InputSystem.h"
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
+#include "Utilities/FileWatcher.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -57,7 +58,7 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-
+		FileWatcher::Instance();
 
 		systems =
 		{

@@ -21,11 +21,6 @@ void ThreadsManager::Init()
 	quit = false;
 }
 
-void ThreadsManager::AddThread(std::thread* _thread)
-{
-	threads.push_back(_thread);
-}
-
 bool ThreadsManager::AcquireMutex(const std::string& mutexName)
 {
 	if (mutexes[mutexName] == 1)
@@ -42,10 +37,10 @@ void ThreadsManager::ReturnMutex(const std::string& mutexName)
 void ThreadsManager::Exit()
 {
 	quit = true;
-	for (std::thread* thread : threads)
+	PRINT("THREADS QUITTING\n");
+	for (std::thread& thread : threads)
 	{
-		thread->join();
-		delete thread;
+		thread.join();
 	}
 }
 
