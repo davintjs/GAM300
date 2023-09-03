@@ -7,7 +7,32 @@
 
 //extern Editor_Camera E_Camera;
 
-
+struct DDSHeader {
+    char dwMagic[4];
+    uint32_t dwSize;
+    uint32_t dwFlags;
+    uint32_t dwHeight;
+    uint32_t dwWidth;
+    uint32_t dwPitchOrLinearSize;
+    uint32_t dwDepth;
+    uint32_t dwMipMapCount;
+    uint32_t dwReserved1[11];
+    struct {
+        uint32_t dwSize;
+        uint32_t dwFlags;
+        uint32_t dwFourCC;
+        uint32_t dwRGBBitCount;
+        uint32_t dwRBitMask;
+        uint32_t dwGBitMask;
+        uint32_t dwBBitMask;
+        uint32_t dwABitMask;
+    } ddspf;
+    uint32_t dwCaps;
+    uint32_t dwCaps2;
+    uint32_t dwCaps3;
+    uint32_t dwCaps4;
+    uint32_t dwReserved2;
+};
 
 
 // should move somewhere else...
@@ -31,18 +56,34 @@ GLuint loadDDS(const char* imagepath) {
     /* verify the type of file */
     char filecode[4];
     fread(filecode, 1, 4, fp);
+
     if (strncmp(filecode, "DDS ", 4) != 0) {
         fclose(fp);
         return 0;
     }
 
+    DDSHeader ddsfile;
+    
     /* get the surface desc */
     fread(&header, 124, 1, fp);
 
+    unsigned int dwFlags = *(unsigned int*)&(header[28]); // Offset for the dwFlags field
+    bool isSRGB = (dwFlags & 0x200) != 0; // Check if the DDPF_SRGB flag is set
+    std::cout << "flag_1 " << std::hex << dwFlags << "\n";
+
+
+    unsigned int sizerino = *(unsigned int*)&(header[0]);
+
+    //unsigned long flag_1 = *(unsigned long*)&(header[4]);
     unsigned int height = *(unsigned int*)&(header[8]);
     unsigned int width = *(unsigned int*)&(header[12]);
     unsigned int linearSize = *(unsigned int*)&(header[16]);
+    //unsigned long flag_3 = *(unsigned long*)&(header[20]);
+    //unsigned int dwFlags = *(unsigned int*)&(header[28]);
+
     unsigned int mipMapCount = *(unsigned int*)&(header[24]);
+    //unsigned long flag_2 = *(unsigned long*)&(header[76]);
+
     unsigned int fourCC = *(unsigned int*)&(header[80]);
 
 
@@ -54,6 +95,34 @@ GLuint loadDDS(const char* imagepath) {
     fread(buffer, 1, bufsize, fp);
     /* close the file pointer */
     fclose(fp);
+        
+    //std::cout << "sizerino is " << sizerino << "\n";
+    //char hex_string_1[20];
+    //sprintf_s(hex_string_1, "%X", flag_1); //convert number to hex
+    //char hex_string_2[20];
+    //sprintf_s(hex_string_2, "%X", flag_2); //convert number to hex
+    //char hex_string_3[20];
+    //sprintf_s(hex_string_3, "%X", flag_3); //convert number to hex
+    //std::cout << "flag_1 " << std::hex << flag_1 << "\n";
+    //std::cout << "flag_2 " << std::hex << flag_2 << "\n";
+    //std::cout << "flag_3 " << std::hex << flag_3 << "\n";
+    //std::cout << "flag_2 " << flag_2 << "\n";
+    //std::cout << "flag_3 " << flag_3 << "\n";
+
+    //if (flag == 0x20) {
+    //    std::cout << flag << "\n";
+    //    std::cout << "here\n";
+    //    // The DDPF_SRGB flag is set, indicating sRGB color space.
+    //    // The texture uses sRGB color space.
+    //}
+    //else {
+    //    std::cout << flag << "\n";
+
+    //    std::cout << "not here\n";
+    //    // The DDPF_SRGB flag is not set.
+    //    // The texture uses linear RGB color space.
+    //}
+
 
     unsigned int components = (fourCC == FOURCC_DXT1) ? 3 : 4;
     unsigned int format;
@@ -86,6 +155,7 @@ GLuint loadDDS(const char* imagepath) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
+    std::cout << "block size is : " << blockSize << "\n";
     unsigned int offset = 0;
     
     /* load the mipmaps */
@@ -94,6 +164,9 @@ GLuint loadDDS(const char* imagepath) {
         unsigned int size = ((width + 3) / 4) * ((height + 3) / 4) * blockSize;
         glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, width, height,
             0, size, buffer + offset);
+       /* glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
+            0, size, buffer + offset)*/;
+
 
         offset += size;
         //width /= 2;
@@ -109,6 +182,15 @@ GLuint loadDDS(const char* imagepath) {
 
     free(buffer);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    // Print whether the DDS texture is in sRGB or RGB color space
+    if (isSRGB) {
+        std::cout << "DDS texture is in sRGB color space." << std::endl;
+    }
+    else {
+        std::cout << "DDS texture is in RGB color space." << std::endl;
+    }
 
     return textureID;
 
@@ -174,10 +256,19 @@ void Model::init(AssimpLoader* geom) {
     vboid = VBO;
     prim = GL_TRIANGLES;
     drawcount = _geom->_indices.size(); // number of slices 
-    setup_shader();
 
     // load default texture, todo
     texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+
+   /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
+    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");
+
+    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Normal_OpenGL.dds");
+    texturebuffer = loadDDS("Assets/Models/Skull_textured/sample_1280×853.dds");*/
+
+
+
+    setup_shader();
 
     debugAABB_init();
 }

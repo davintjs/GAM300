@@ -29,7 +29,7 @@ void GraphicsSystem::Init()
 	
 	//INIT GRAPHICS HERE
 	
-	glEnable(GL_EXT_texture_sRGB); // uNSURE
+	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
 
 
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
