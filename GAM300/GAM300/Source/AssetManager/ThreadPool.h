@@ -7,23 +7,23 @@
 #include <mutex>
 #include <condition_variable>
 
+constexpr int MAX_THREADS = 6;
+
 class ThreadPool
 {
 public:
-	ThreadPool() = delete;
-	ThreadPool(int numThreads);
+	ThreadPool();
 	~ThreadPool();
 
 	template <typename T>
 	void EnqueueTask(T&& task)
 	{
-		std::unique_lock<std::mutex> mLock(mQueueMutex);
-		mTasks.emplace(std::move(task));
-
+		{
+			std::unique_lock<std::mutex> mLock(mQueueMutex);
+			mTasks.emplace(std::move(task));
+		}
 		mQueueVariable.notify_one();
 	}
-
-	void RunTask();
 
 private:
 	std::vector<std::thread> mWorkerPool; // Worker threads pool
@@ -31,4 +31,6 @@ private:
 
 	std::mutex mQueueMutex;
 	std::condition_variable mQueueVariable;
+
+	bool stop = false;
 };
