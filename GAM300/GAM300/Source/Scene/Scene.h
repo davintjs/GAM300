@@ -63,6 +63,10 @@ struct Scene
 		entity.denseIndex = entities.GetDenseIndex(entity);
 		entities.SetActive(entity.denseIndex);
 		AddComponent<Transform>(entity);
+		Tag& tag = AddComponent<Tag>(entity);
+		tag.name = "New GameObject(";
+		tag.name += entities.size();
+		tag.name += ")";
 		return entity;
 	}
 

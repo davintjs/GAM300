@@ -108,7 +108,10 @@ private:
 	std::tuple<MultiComponentsArray<Ts>...> arrays;
 };
 
-
+struct Tag
+{
+	std::string name;
+};
 
 struct Transform
 {
@@ -167,7 +170,7 @@ This way, its a forward list with some cache locality and can scale infinitely
 So technically this would it a sparse set of 
 */
 
-using SingleComponentTypes = TemplatePack<Transform,Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Tag,Transform,Rigidbody, Animator>;
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
