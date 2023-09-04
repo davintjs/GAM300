@@ -64,6 +64,12 @@
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
+    <ClCompile Include="Source\Editor\Debugging.cpp" />
+    <ClCompile Include="Source\Editor\EditorScene.cpp" />
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
+    <ClCompile Include="Source\Editor\EditorContentBrowser.cpp" />
+    <ClCompile Include="Source\Editor\EditorInspector.cpp" />
+    <ClCompile Include="Source\Editor\EditorToolBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -119,6 +125,8 @@
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
+    <ClInclude Include="Source\Editor\Debugging.h" />
+    <ClInclude Include="Source\Editor\EditorHeaders.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

@@ -48,8 +48,22 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorContentBrowser.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorInspector.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
+    <ClCompile Include="Source\Editor\EditorScene.cpp" />
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Editor\Debugging.cpp" />
+    <ClCompile Include="Source\Editor\EditorToolBar.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -170,6 +184,7 @@
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Editor\Debugging.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
+    <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Editor\EditorTemplates.h" />
     <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Graphics\Framebuffer.h" />

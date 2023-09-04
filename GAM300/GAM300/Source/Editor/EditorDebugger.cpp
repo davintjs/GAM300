@@ -16,42 +16,27 @@
  /**************************************************************************************/
 
 #include "Precompiled.h"
-#include "Debugging.h"
+#include "EditorHeaders.h"
 
-Debugger::Debugger()
+void EditorDebugger::Init()
 {
     AutoScroll = true;
     Clear();
 }
 
-void Debugger::Clear() {
-    Buffer.clear();
-    LineOffsets.clear();
-    LineOffsets.push_back(0);
-}
-
-//using Variable Argument List in order to create and concatenate debug outputs
-//To add logs to logger, use this format: Debug_Sys.AddLog("[%i]{Type}Input Debug Text Here!\n", Debug_Sys.Debug_Counter++);
-void Debugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void EditorDebugger::Update(float dt)
 {
-    int old_size = Buffer.size();
-    va_list args;
-    va_start(args, fmt);
-    Buffer.appendfv(fmt, args);
-    va_end(args);
-    for (int new_size = Buffer.size(); old_size < new_size; old_size++)
-        if (Buffer[old_size] == '\n')
-            LineOffsets.push_back(old_size + 1);
+
 }
 
-void Debugger::Draw() {
+void EditorDebugger::Draw()
+{
     // Options menu
     if (ImGui::BeginPopup("Options"))
     {
         ImGui::Checkbox("Auto-scroll", &AutoScroll);
         ImGui::EndPopup();
     }
-
 
     // Main window
     if (ImGui::Button("Options"))
@@ -84,7 +69,8 @@ void Debugger::Draw() {
                     ImGui::TextUnformatted(line_start, line_end);
             }
         }
-        else {
+        else
+        {
             ImGuiListClipper clipper;
             clipper.Begin(LineOffsets.Size);
             while (clipper.Step())
@@ -107,7 +93,28 @@ void Debugger::Draw() {
     ImGui::EndChild();
 }
 
-void Debugger::Debug_Window(bool open)
+//using Variable Argument List in order to create and concatenate debug outputs
+//To add logs to logger, use this format: Debug_Sys.AddLog("[%i]{Type}Input Debug Text Here!\n", Debug_Sys.Debug_Counter++);
+void EditorDebugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+{
+    int old_size = Buffer.size();
+    va_list args;
+    va_start(args, fmt);
+    Buffer.appendfv(fmt, args);
+    va_end(args);
+    for (int new_size = Buffer.size(); old_size < new_size; old_size++)
+        if (Buffer[old_size] == '\n')
+            LineOffsets.push_back(old_size + 1);
+}
+
+void EditorDebugger::Clear()
+{
+    Buffer.clear();
+    LineOffsets.clear();
+    LineOffsets.push_back(0);
+}
+
+void EditorDebugger::Debug_Window(bool open)
 {
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::Begin("Logger");
@@ -119,4 +126,9 @@ void Debugger::Debug_Window(bool open)
     // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
     Draw();
     ImGui::End();
+}
+
+void EditorDebugger::Exit()
+{
+
 }
