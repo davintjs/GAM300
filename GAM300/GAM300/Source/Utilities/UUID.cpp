@@ -8,7 +8,10 @@ namespace
 	static std::mt19937_64 randomiser(randomDevice());
 }
 
-UUID CreateUUID()
+namespace Engine
 {
-	return uniformDistribution(randomiser);
+	UUID CreateUUID()
+	{
+		return uniformDistribution(randomiser);
+	}
 }

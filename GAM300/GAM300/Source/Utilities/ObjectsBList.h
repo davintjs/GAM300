@@ -32,7 +32,7 @@ public:
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex }, pNode{ _pNode } {}
+        Iterator(size_t _index, size_t _subIndex, Node* _pNode);
 
         /***************************************************************************/
         /*!
@@ -42,11 +42,7 @@ public:
                 Reference to object stored
         */
         /**************************************************************************/
-        T& operator*()
-        {
-            //for (auto& objectList : )
-            return pNode->sparseSetList[index][subIndex];
-        }
+        T& operator*();
 
         /***************************************************************************/
          /*!
@@ -56,25 +52,7 @@ public:
                 Next iterator
         */
         /**************************************************************************/
-        Iterator operator++()
-        {
-            //Same type of objects that belong to the same entity
-            //If it is full subIndex
-            //Go to the next object set, aka sparseSetList
-            ++subIndex;
-            while (pNode && subIndex >= pNode->sparseSetList[index].size())
-            {
-                ++index;
-                //If index is more than node size, go to next node
-                while (pNode && index >= pNode->sparseSetList.size())
-                {
-                    index = 0;
-                    pNode = pNode->next;
-                }
-                subIndex = 0;
-            }
-            return *this;
-        }
+        Iterator operator++();
 
         /***************************************************************************/
         /*!
@@ -84,11 +62,7 @@ public:
                 this iterator
         */
         /**************************************************************************/
-        Iterator operator++(int) {
-            Iterator tmp(*this);
-            operator++();
-            return tmp;
-        }
+        Iterator operator++(int);
 
         /***************************************************************************/
         /*!
@@ -100,9 +74,7 @@ public:
                 True if both iterators are of the same sparse index
         */
         /**************************************************************************/
-        bool operator==(const Iterator& other) const {
-            return pNode == other.pNode && index == other.index && subIndex == other.subIndex;
-        }
+        bool operator==(const Iterator& other) const;
 
         /***************************************************************************/
         /*!
@@ -114,85 +86,24 @@ public:
                 True if both iterators are NOT of the same sparse index
         */
         /**************************************************************************/
-        bool operator!=(const Iterator& other) const {
-            return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
-        }
-
-        bool IsActive()
-        {
-            auto& objectList = pNode->sparseSetList[index];
-            return objectList.IsActive(objectList.GetDenseIndex(subIndex));
-        }
+        bool operator!=(const Iterator& other) const;
+        bool IsActive();
     };
     template <typename... Args>
     T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
     ~ObjectsBList();
-    Iterator begin() 
-    {
-        Node* start = head;  
-        while (start) 
-        { 
-            for (auto& val : start->sparseSetList)
-            {
-                if (!val.empty())
-                    return Iterator(0, 0, start);
-            }
-            start = start->next;
-        } 
-        return Iterator(0, 0, nullptr); 
-    }
-    Iterator end() {return Iterator(0,0, nullptr); }
+    Iterator begin();
+    Iterator end();
 
-    size_t size() const { return size_; }
+    size_t size() const;
 
-    void SetActive(T& obj, bool val = true)
-    {
-        Node* start = head;
-        while (start)
-        {
-            for (auto it = start->sparseSetList.begin(); it != start->sparseSetList.end();++it)
-            {
-                if ((*it).contains(obj))
-                {
-                    (*it).SetActive(obj, val);
-                    return;
-                }
-            }
-            start = start->next;
-        }
-    }
+    void SetActive(T& obj, bool val = true);
 
-    T& DenseSubscript(ObjectIndex val)
-    {
-        Node* start = head;
-        while (val >= N)
-        {
-            val -= N;
-            start = start->next;
-        }
-        return start->sparseSet.DenseSubscript(val);
-    }
+    T& DenseSubscript(ObjectIndex val);
 
-    ObjectIndex GetDenseIndex(T& object)
-    {
-        Node* start = head;
-        size_t i = 0;
-        while (start)
-        {
-            for (auto& objectList : start->sparseSetList)
-            {
-                if (objectList.contains(object))
-                {
-                    return i + start->sparseSetList.GetDenseIndex(objectList);
-                }
-            }
-            i += N;
-            start = start->next;
-        }
-        ASSERT(true, "Object List does not contain this object");
-    }
+    ObjectIndex GetDenseIndex(T& object);
 private:
     Node* head = nullptr;
     Node* tail = nullptr;
