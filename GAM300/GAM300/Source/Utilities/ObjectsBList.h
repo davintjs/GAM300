@@ -101,7 +101,7 @@ public:
 
     void SetActive(T& obj, bool val = true);
 
-    T& DenseSubscript(ObjectIndex val);
+    auto& DenseSubscript(ObjectIndex val);
 
     ObjectsList<T, B_SZ>& DenseArray(ObjectIndex val);
 

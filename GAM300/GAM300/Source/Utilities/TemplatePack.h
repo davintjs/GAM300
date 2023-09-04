@@ -22,34 +22,16 @@ struct TemplatePack
 		return contains<T1,T, Ts...>();
 	}
 
-	static constexpr size_t Size()
+	static constexpr const size_t Size()
 	{
-		return 1 + sizeof(Ts...);
+		return 1 + sizeof...(Ts);
 	}
 
 	template <typename... T1s>
-	constexpr TemplatePack<T,Ts..., T1s...> Concatenate(TemplatePack<T1s...> pack)
+	constexpr auto Concatenate(TemplatePack<T1s...> pack)
 	{
 		return TemplatePack<T,Ts..., T1s...>();
 	}
-
-	//constexpr auto Pop()
-	//{
-	//	return Pop<>();
-	//}
-
-	//template <typename... T1s>
-	//constexpr auto Pop()
-	//{
-	//	if constexpr (sizeof...(Ts) + 1 > 1)
-	//	{
-	//		return TemplatePack<Ts...>().Pop<T1s..., T>();
-	//	}
-	//	else
-	//	{
-	//		return TemplatePack<T1s...>();
-	//	}
-	//}
 };
 
 #endif // !TEMPLATE_PACK_H

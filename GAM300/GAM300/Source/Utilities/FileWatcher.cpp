@@ -36,7 +36,7 @@ void FileWatcher::ThreadWork()
     }
     while (!THREADS.HasQuit())
     {
-        bool success = ReadDirectoryChangesW
+       /* bool success = ReadDirectoryChangesW
         (
             hDir,
             buffer,
@@ -86,6 +86,6 @@ void FileWatcher::ThreadWork()
             }
             std::wcout << start->FileName << std::endl;
             start = (FILE_NOTIFY_INFORMATION*)((char*)start + start->NextEntryOffset);
-        }
+        }*/
     }
 }

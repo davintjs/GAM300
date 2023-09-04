@@ -25,7 +25,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
-#include "Entity.h"
+
+constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
@@ -35,11 +36,10 @@ using Vector4 = glm::vec4;
 template <typename T>
 using ComponentsPtrArray = std::vector<T*>;
 
-template<typename T, typename... Ts>
+template<typename T,typename... Ts>
 struct GetComponentTypeGroup
 {
 	static constexpr const char* name = ComponentName(T);
-	static constexpr size_t e = sizeof...(Ts);
 	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
 	constexpr GetComponentTypeGroup() = default;
 
@@ -48,11 +48,11 @@ struct GetComponentTypeGroup
 	{
 		if constexpr (std::is_same<T, T1>())
 		{
-			return e;
+			return sizeof...(Ts);
 		}
 		else
 		{
-			return GetComponentTypeGroup<Ts...>::E();
+			return GetComponentTypeGroup<Ts...>::template E<T1>();
 		}
 	}
 };

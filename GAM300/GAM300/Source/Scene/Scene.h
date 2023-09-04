@@ -32,8 +32,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <bitset>
 #include "Core/Debug.h"
 #include "Entity.h"
-#include "Components.h"
+#include <vector>
 
+
+using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
+
+using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
@@ -70,6 +74,49 @@ struct Scene
 		return entity;
 	}
 
+	template<typename T, typename... Ts>
+	struct DestroyComponentsGroup
+	{
+		Scene& scene;
+		Entity& entity;
+		DestroyComponentsGroup(TemplatePack<T, Ts...> pack) {}
+		DestroyComponentsGroup(Scene& _scene, Entity& _entity) : scene{ _scene }, entity{_entity}
+		{
+			DestroyComponents<T, Ts...>();
+		}
+
+		template <typename T1, typename... T1s>
+		void DestroyComponents()
+		{
+			if (scene.HasComponent<T1>(entity))
+			{
+				if constexpr (SingleComponentTypes::Has<T1>())
+				{
+					auto& arr = scene.singleComponentsArrays.GetArray<T1>();
+					scene.componentsDeletionBuffer.GetArray<T1>().push_back(&arr.DenseSubscript(entity.denseIndex));
+					arr.SetActive(entity.denseIndex, false);
+					entity.hasComponentsBitset.set(GetComponentType::E<T1>(), false);
+				}
+				else if constexpr (MultiComponentTypes::Has<T1>())
+				{
+					auto& arr = scene.multiComponentsArrays.GetArray<T1>();
+					for (T1& component : arr.DenseSubscript(entity.denseIndex))
+					{
+						arr.SetActive(component, false);
+						scene.componentsDeletionBuffer.GetArray<T1>().push_back(&component);
+					}
+					entity.hasComponentsBitset.set(GetComponentType::E<T1>(), false);
+				}
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				DestroyComponents<T1s...>();
+			}
+		}
+	};
+
+	using DestroyEntityComponents = decltype(DestroyComponentsGroup((AllComponentTypes())));
+
 	template<typename T>
 	void Destroy(T& object)
 	{
@@ -77,6 +124,7 @@ struct Scene
 		{
 			entitiesDeletionBuffer.push_back(&object);
 			entities.SetActive(object.denseIndex,false);
+			DestroyEntityComponents(*this,object);
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
 		{
@@ -84,7 +132,7 @@ struct Scene
 			auto& arr = singleComponentsArrays.GetArray<T>();
 			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(index,false);
-			//entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
@@ -92,8 +140,8 @@ struct Scene
 			auto& arr = multiComponentsArrays.GetArray<T>();
 			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(object, false);
-			//if (arr.DenseArray(index).size() == 1)
-			//	entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+			if (arr.DenseSubscript(index).size() == 1)
+				entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
 		}
 		static_assert(true,"Not a valid type of object to destroy");
 	}
@@ -176,7 +224,7 @@ struct Scene
 	{
 		if constexpr (AllComponentTypes::Has<Component>())
 		{
-			return entities.DenseSubscript[denseIndex].hasComponentsBitset.test(GetComponentType::E<Component>());
+			return entities.DenseSubscript(denseIndex).hasComponentsBitset.test(GetComponentType::E<Component>());
 		}
 		return false;
 	}
@@ -185,19 +233,20 @@ struct Scene
 	Component& GetComponent(const Entity& entity)
 	{
 		//ASSERT(HasComponent<Component>(entity), "Entity does not have component");
-		if constexpr (SingleComponentsGroup::Has<Component>())
+		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().DenseSubscript[entity.denseIndex];
+			return singleComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
 		}
-		else if constexpr (MultiComponentsGroup::Has<Component>())
+		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return multiComponentsArrays.GetArray<Component>().DenseSubscript[entity.denseIndex];
+			return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex)[0];
 		}
 	}
 
 	template <typename Component>
 	Component& AddComponent(uint32_t index)
 	{
+		static_assert(AllComponentTypes::Has<Component>(), "Type is not a valid component!");
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
 			auto& arr = singleComponentsArrays.GetArray<Component>();
@@ -210,13 +259,9 @@ struct Scene
 		{
 			auto& arr = multiComponentsArrays.GetArray<Component>();
 			Component& component = arr.emplace(index);
-			//entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
 			arr.SetActive(component);
 			return component;
-		}
-		else
-		{
-			static_assert(true, "Type is not a valid component!");
 		}
 	}
 
