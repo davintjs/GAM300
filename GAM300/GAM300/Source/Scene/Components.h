@@ -118,6 +118,12 @@ struct Transform
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{1};
+	std::vector<Transform*>child;
+	Transform* Parent = nullptr;
+
+	bool isLeaf() {
+		return (child.size() > 0) ? true : false;
+	}
 };
 
 struct AudioSource
@@ -128,14 +134,17 @@ struct AudioSource
 
 struct BoxCollider
 {
+
 };
 
 struct SphereCollider
 {
+
 };
 
 struct CapsuleCollider
 {
+
 };
 
 struct Animator

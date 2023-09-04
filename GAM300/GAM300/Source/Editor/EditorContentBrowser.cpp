@@ -17,10 +17,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor.h"
 #include "EditorHeaders.h"
 
-static const std::string AssetDirectory = "Data";
+static const std::string AssetDirectory = "Assets";
 static std::string entityType = "default", entityName = "default";
 static std::filesystem::path CurrentDirectory = AssetDirectory;
-static std::string currentFolder = "Data";
+static std::string currentFolder = "Assets";
 
 void EditorContentBrowser::Init()
 {

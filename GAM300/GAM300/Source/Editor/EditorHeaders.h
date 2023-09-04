@@ -23,7 +23,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Core/SystemInterface.h"
 
-
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
 public:
@@ -36,6 +35,16 @@ private:
 };
 
 ENGINE_EDITOR_SYSTEM(EditorToolBar)
+{
+public:
+    void Init();
+    void Update(float dt);
+    void Exit();
+
+private:
+};
+
+ENGINE_EDITOR_SYSTEM(EditorHierarchy)
 {
 public:
     void Init();
@@ -83,26 +92,43 @@ private:
 };
 
 
-ENGINE_EDITOR_SYSTEM(EditorDebugger)
+struct Debugger
 {
-public:
-    void Init();
-    void Update(float dt);
-    void Exit();
+    ImGuiTextBuffer     Buffer;
+    ImGuiTextFilter     Filter;
+    ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
+    bool                AutoScroll;  // Keep scrolling if already at the bottom.
 
-    void Draw();
+    Debugger();
 
     void Clear();
 
     void AddLog(const char* fmt, ...) IM_FMTARGS(2);
 
+    void Draw();
+};
+
+ENGINE_EDITOR_SYSTEM(EditorDebugger)
+{
+public:
+
+   
+
+    void Init();
+    void Update(float dt);
+    void Exit();
+
     void Debug_Window(bool open);
+
+    Debugger Debug_Sys;
+
+    int debugcounter;
+    
 
 private:
     ImGuiTextBuffer     Buffer;
     ImGuiTextFilter     Filter;
     ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
-    int                 Debug_Counter;
     bool                AutoScroll;  // Keep scrolling if already at the bottom.
 
 };

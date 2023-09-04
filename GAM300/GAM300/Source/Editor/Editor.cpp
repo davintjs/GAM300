@@ -41,6 +41,7 @@ void EditorSystem::Init()
         &EditorScene::Instance(),
         &EditorInspector::Instance(),
         &EditorDebugger::Instance(),
+        &EditorHierarchy::Instance(),
     };
 
     for (ISystem* pSystem : editorSystems)
@@ -51,13 +52,11 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
-
-    bool demo = true;
-    ImGui::ShowDemoWindow(&demo);
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
     //Editor Functions
     Editor_Dockspace();
-    Editor_Hierarchy();
 
     for (ISystem* pSystem : editorSystems)
     {   
@@ -133,15 +132,5 @@ void EditorSystem::Editor_Dockspace() {
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
-    ImGui::End();
-}
-
-void EditorSystem::Editor_Hierarchy() {
-    ImGui::Begin("Hierarchy");
-
-    //List out all entities in current scene
-    //When clicked on, shows all children
-    //Drag and drop of entities into and from other entities to form groups (using a node system, parent child relationship)
-    //Add/Delete entities using right click
     ImGui::End();
 }

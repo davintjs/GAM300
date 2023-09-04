@@ -30,7 +30,6 @@ public:
 	void Exit();
 
 	void Editor_Dockspace();
-	void Editor_Hierarchy();
 
 private:
 	std::vector<ISystem*> editorSystems;

@@ -33,6 +33,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/Debug.h"
 #include "Entity.h"
 #include "Components.h"
+#include "Editor/EditorHeaders.h"
 
 
 struct Scene
@@ -65,8 +66,9 @@ struct Scene
 		AddComponent<Transform>(entity);
 		Tag& tag = AddComponent<Tag>(entity);
 		tag.name = "New GameObject(";
-		tag.name += entities.size();
+		tag.name += std::to_string(entities.size());
 		tag.name += ")";
+		EditorDebugger::Instance().Debug_Sys.AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		return entity;
 	}
 

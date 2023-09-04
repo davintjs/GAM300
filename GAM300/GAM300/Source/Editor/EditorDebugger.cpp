@@ -20,8 +20,7 @@
 
 void EditorDebugger::Init()
 {
-    AutoScroll = true;
-    Clear();
+
 }
 
 void EditorDebugger::Update(float dt)
@@ -29,7 +28,13 @@ void EditorDebugger::Update(float dt)
 
 }
 
-void EditorDebugger::Draw()
+Debugger::Debugger()
+{
+    AutoScroll = true;
+    Clear();
+}
+
+void Debugger::Draw()
 {
     // Options menu
     if (ImGui::BeginPopup("Options"))
@@ -95,7 +100,7 @@ void EditorDebugger::Draw()
 
 //using Variable Argument List in order to create and concatenate debug outputs
 //To add logs to logger, use this format: Debug_Sys.AddLog("[%i]{Type}Input Debug Text Here!\n", Debug_Sys.Debug_Counter++);
-void EditorDebugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void Debugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 {
     int old_size = Buffer.size();
     va_list args;
@@ -107,7 +112,7 @@ void EditorDebugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
-void EditorDebugger::Clear()
+void Debugger::Clear()
 {
     Buffer.clear();
     LineOffsets.clear();
@@ -120,11 +125,10 @@ void EditorDebugger::Debug_Window(bool open)
     ImGui::Begin("Logger");
     if (ImGui::SmallButton("[Debug] Test Debug Output"))
     {
-        Debug_Counter++;
-        AddLog("[%i]{Info} This is a test Debug output!\n", Debug_Counter);
+        Debug_Sys.AddLog("[%i]{Info} This is a test Debug output!\n", debugcounter++);
     }
     // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
-    Draw();
+    Debug_Sys.Draw();
     ImGui::End();
 }
 
