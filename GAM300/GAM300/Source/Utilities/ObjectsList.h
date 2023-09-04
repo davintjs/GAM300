@@ -115,6 +115,7 @@ public:
 
     T& DenseSubscript(ObjectIndex val);
 
+
     ObjectIndex GetDenseIndex(T& object);
 
     ObjectIndex GetDenseIndex(ObjectIndex sparseIndex);

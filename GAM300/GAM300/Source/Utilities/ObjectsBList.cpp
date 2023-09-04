@@ -216,7 +216,7 @@ void OBJECTSBLIST::SetActive(T& obj, bool val)
 
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
-T& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
+auto& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 {
 	Node* start = head;
 	while (val >= N)
@@ -224,9 +224,8 @@ T& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 		val -= N;
 		start = start->next;
 	}
-	return start->sparseSet.DenseSubscript(val);
+	return start->sparseSetList.DenseSubscript(val);
 }
-
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 ObjectIndex OBJECTSBLIST::GetDenseIndex(T& object)
