@@ -3,4 +3,4 @@
 //#include "Scene.h"
 
 
-Entity::Entity(UUID _uuid) : uuid{_uuid}{}
+Entity::Entity(Engine::UUID _uuid) : uuid{_uuid}{}

@@ -56,13 +56,17 @@ struct Scene
 	Scene& operator=(Scene&) = delete;
 
 
-	Entity& AddEntity(UUID uuid = CreateUUID())
+	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
 		entities.SetActive(entity.denseIndex);
 		AddComponent<Transform>(entity);
+		Tag& tag = AddComponent<Tag>(entity);
+		tag.name = "New GameObject(";
+		tag.name += entities.size();
+		tag.name += ")";
 		return entity;
 	}
 
