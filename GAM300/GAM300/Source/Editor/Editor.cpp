@@ -328,15 +328,24 @@ void EditorSystem::Editor_SceneViewport() {
 
 void EditorSystem::Editor_Toolbar() {
     ImGui::Begin("Toolbar");
+    //Play, Pause, Step(Optional)
     ImGui::End();
 }
 
 void EditorSystem::Editor_Inspector() {
     ImGui::Begin("Inspector");
+    //Get Selected Entities from mouse picking
+    //List out all components in order
+    //templated functionalities (input fields, checkboxes etc.)
     ImGui::End();
 }
 
 void EditorSystem::Editor_Hierarchy() {
     ImGui::Begin("Hierarchy");
+
+    //List out all entities in current scene
+    //When clicked on, shows all children
+    //Drag and drop of entities into and from other entities to form groups (using a node system, parent child relationship)
+    //Add/Delete entities using right click
     ImGui::End();
 }
