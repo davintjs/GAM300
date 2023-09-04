@@ -28,8 +28,12 @@ void GraphicsSystem::Init()
 	//INIT GRAPHICS HERE
 
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
-	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
-	testmodel.init(&assimp);// The Shader is set up inside this init function
+	 
+	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
+
+
+	//testmodel.init(&assimp);// The Shader is set up inside this init function
+	testmodel.init();// The Shader is set up inside this init function
 
 	// Magic Testing
 	LightSource.cubeinit();

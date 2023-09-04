@@ -110,13 +110,16 @@ GLuint loadDDS(const char* imagepath) {
 
 }
 
-void Model::init(AssimpLoader* geom) {
+//void Model::init(AssimpLoader* geom) {
+void Model::init() {
     // inside _vertices
     /*glm::vec3 pos;
     glm::vec3 normal;
     glm::vec3 tangent;
     glm::vec2 tex;
     glm::vec4 color;*/
+
+    DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
 
     GLuint VAO; 
     GLuint VBO;
@@ -127,7 +130,8 @@ void Model::init(AssimpLoader* geom) {
     glBindVertexArray(VAO);
     //std::cout << "box_wf vao is :" << VAO << "\n";
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     
@@ -144,7 +148,8 @@ void Model::init(AssimpLoader* geom) {
     //GLuint texturebuffer;
     glGenBuffers(1, &texturebuffer);
     glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
-    glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0].tex, GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].color, GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -153,13 +158,15 @@ void Model::init(AssimpLoader* geom) {
     //
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, geom->_indices.size() * sizeof(int32_t), &geom->_indices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, geom->_indices.size() * sizeof(int32_t), &geom->_indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._indices.size() * sizeof(int32_t), &totalGeoms[0].mMeshes[0]._indices[0], GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     vaoid = VAO;
     vboid = VBO;
     prim = GL_TRIANGLES;
-    drawcount = geom->_indices.size(); // number of slices 
+    drawcount = totalGeoms[0].mMeshes[0]._indices.size(); // number of slices 
+    //drawcount = geom->_indices.size(); // number of slices 
     setup_shader();
 }
 
@@ -555,58 +562,114 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
 
 // Should plan on when you want to deserialize each time -> every start up? or every click command or something
 // But right now just 1 model only
-//void Model::DeserializeGeoms(const std::string filePath)
-//{
-//    Geom tempGeom;
-//    std::ifstream ifs(filePath, std::ios::binary);
-//
-//    ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
-//    ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
-//
-//    size_t meshSize;
-//    ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
-//
-//    for (int i = 0; i < meshSize; ++i)
-//    {
-//        Mesh tempMesh;
-//
-//        size_t vertSize;
-//        ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
-//        ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
-//
-//        size_t indSize;
-//        ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
-//        ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
-//
-//        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
-//        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
-//        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
-//
-//        tempGeom.mMeshes.push_back(tempMesh);
-//    }
-//
-//    size_t matSize;
-//    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
-//
-//    for (int j = 0; j < matSize; ++j)
-//    {
-//        Material tempMat;
-//
-//        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
-//        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
-//        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
-//
-//        size_t texSize;
-//        ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-//        if (texSize > 0)
-//        {
-//            ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
-//        }
-//
-//        tempGeom._materials.push_back(tempMat);
-//    }
-//
-//    this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
-//
-//    ifs.close();
-//}
+void Model::DeserializeGeoms(const std::string filePath)
+{
+    Geom tempGeom;
+    std::ifstream ifs(filePath, std::ios::binary);
+
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
+
+    size_t meshSize;
+    ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+    for (int i = 0; i < meshSize; ++i)
+    {
+        Mesh tempMesh;
+
+        size_t vertSize;
+        ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+        tempMesh._vertices.resize(vertSize);
+        ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+
+        size_t indSize;
+        ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
+        tempMesh._indices.resize(indSize);
+        ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
+
+        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+        //ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+        //ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+        tempGeom.mMeshes.push_back(tempMesh);
+    }
+
+    size_t matSize;
+    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+
+    for (int j = 0; j < matSize; ++j)
+    {
+        Material tempMat;
+
+        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+
+        size_t texSize;
+        ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        if (texSize > 0)
+        {
+            tempMat.textures.resize(texSize);
+            ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+        }
+
+        tempGeom._materials.push_back(tempMat);
+    }
+
+    this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
+
+    ifs.close();
+
+    //Geom tempGeom;
+    //std::ifstream ifs(filePath, std::ios::binary);
+
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
+
+    //size_t meshSize;
+    //ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+    //for (int i = 0; i < meshSize; ++i)
+    //{
+    //    Mesh tempMesh;
+
+    //    size_t vertSize;
+    //    ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+
+    //    size_t indSize;
+    //    ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
+
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+    //    tempGeom.mMeshes.push_back(tempMesh);
+    //}
+
+    //size_t matSize;
+    //ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+
+    //for (int j = 0; j < matSize; ++j)
+    //{
+    //    Material tempMat;
+
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+
+    //    size_t texSize;
+    //    ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+    //    if (texSize > 0)
+    //    {
+    //        ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+    //    }
+
+    //    tempGeom._materials.push_back(tempMat);
+    //}
+
+    //this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
+
+    //ifs.close();
+}
