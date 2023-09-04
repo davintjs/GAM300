@@ -77,7 +77,7 @@ public:
 		{
 			pSystem->Init();
 		}
-
+		//PRINT(GetComponentType::E();
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();

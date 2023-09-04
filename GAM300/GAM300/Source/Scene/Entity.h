@@ -1,6 +1,8 @@
 #include "Utilities/UUID.h"
 #include "Utilities/ObjectsList.h"
 #include <vector>
+#include <Scene/Components.h>
+#include <bitset>
 
 #ifndef ENTITY_H
 #define ENTITY_H
@@ -21,6 +23,8 @@ public:
 	//Which array does this object belong in?
 	Scene* pScene;
 	ObjectIndex denseIndex;
+	std::bitset<10> hasComponentsBitset;
+	
 };
 
 using EntitiesPtrArray = std::vector<Entity*>;

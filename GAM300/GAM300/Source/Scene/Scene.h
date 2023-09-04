@@ -82,13 +82,18 @@ struct Scene
 		{
 			componentsDeletionBuffer.GetArray<T>().push_back(&object);
 			auto& arr = singleComponentsArrays.GetArray<T>();
-			arr.SetActive(arr.GetDenseIndex(object),false);
+			ObjectIndex index = arr.GetDenseIndex(object);
+			arr.SetActive(index,false);
+			//entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
 			componentsDeletionBuffer.GetArray<T>().push_back(&object);
 			auto& arr = multiComponentsArrays.GetArray<T>();
+			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(object, false);
+			//if (arr.DenseArray(index).size() == 1)
+			//	entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
 		}
 		static_assert(true,"Not a valid type of object to destroy");
 	}
@@ -157,12 +162,47 @@ struct Scene
 	}
 
 	template <typename Component>
+	bool HasComponent(const Entity& entity)
+	{
+		if constexpr (AllComponentTypes::Has<Component>())
+		{
+			return entity.hasComponentsBitset.test(GetComponentType::E<Component>());
+		}
+		return false;
+	}
+
+	template <typename Component>
+	bool HasComponent(ObjectIndex& denseIndex)
+	{
+		if constexpr (AllComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript[denseIndex].hasComponentsBitset.test(GetComponentType::E<Component>());
+		}
+		return false;
+	}
+
+	template <typename Component>
+	Component& GetComponent(const Entity& entity)
+	{
+		//ASSERT(HasComponent<Component>(entity), "Entity does not have component");
+		if constexpr (SingleComponentsGroup::Has<Component>())
+		{
+			return singleComponentsArrays.GetArray<Component>().DenseSubscript[entity.denseIndex];
+		}
+		else if constexpr (MultiComponentsGroup::Has<Component>())
+		{
+			return multiComponentsArrays.GetArray<Component>().DenseSubscript[entity.denseIndex];
+		}
+	}
+
+	template <typename Component>
 	Component& AddComponent(uint32_t index)
 	{
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
 			auto& arr = singleComponentsArrays.GetArray<Component>();
 			Component& component = arr.emplace(index);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
 			arr.SetActive(index);
 			return component;
 		}
@@ -170,6 +210,7 @@ struct Scene
 		{
 			auto& arr = multiComponentsArrays.GetArray<Component>();
 			Component& component = arr.emplace(index);
+			//entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
 			arr.SetActive(component);
 			return component;
 		}

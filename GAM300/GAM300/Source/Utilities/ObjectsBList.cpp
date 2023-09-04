@@ -229,6 +229,18 @@ T& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 
 
 template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+ObjectsList<T,B_SZ>& OBJECTSBLIST::DenseArray(ObjectIndex val)
+{
+	Node* start = head;
+	while (val >= N)
+	{
+		val -= N;
+		start = start->next;
+	}
+	return start->sparseSetList.DenseSubscript(val);
+}
+
+template <typename T, ObjectIndex N, ObjectIndex B_SZ>
 ObjectIndex OBJECTSBLIST::GetDenseIndex(T& object)
 {
 	Node* start = head;

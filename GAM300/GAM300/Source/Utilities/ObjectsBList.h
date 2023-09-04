@@ -103,6 +103,8 @@ public:
 
     T& DenseSubscript(ObjectIndex val);
 
+    ObjectsList<T, B_SZ>& DenseArray(ObjectIndex val);
+
     ObjectIndex GetDenseIndex(T& object);
 private:
     Node* head = nullptr;

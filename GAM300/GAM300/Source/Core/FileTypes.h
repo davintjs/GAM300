@@ -6,3 +6,11 @@ enum class FileType
 	MODEL,
 	TEXTURE
 };
+
+enum class FileState
+{
+	MODIFIED,
+	DELETED,
+	CREATED,
+	NONE
+};

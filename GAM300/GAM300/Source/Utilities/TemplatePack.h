@@ -22,6 +22,11 @@ struct TemplatePack
 		return contains<T1,T, Ts...>();
 	}
 
+	static constexpr size_t Size()
+	{
+		return 1 + sizeof(Ts...);
+	}
+
 	template <typename... T1s>
 	constexpr TemplatePack<T,Ts..., T1s...> Concatenate(TemplatePack<T1s...> pack)
 	{
