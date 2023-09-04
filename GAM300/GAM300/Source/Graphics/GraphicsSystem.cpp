@@ -16,7 +16,6 @@ Model LightSource;
 
 Model AffectedByLight;
 
-bool SwappingColorSpace = false;
 //Editor_Camera testCam;
 
 //Editor_Camera E_Camera;
@@ -26,11 +25,7 @@ void GraphicsSystem::Init()
 	
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
-	
 	//INIT GRAPHICS HERE
-	
-	glEnable(GL_EXT_texture_sRGB); // uNSURE
-
 
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
@@ -111,21 +106,6 @@ void GraphicsSystem::Update(float dt)
 	}
 
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
-	{
-		SwappingColorSpace = !SwappingColorSpace;
-		if (SwappingColorSpace)
-		{
-			glEnable(GL_FRAMEBUFFER_SRGB);
-
-		}
-		else
-		{
-			glDisable(GL_FRAMEBUFFER_SRGB);
-
-		}
-
-	}
 
 	testmodel.draw();
 
