@@ -1,10 +1,14 @@
-#pragma once
+
 
 #include "Core/SystemInterface.h"
 #include "Core/EventsManager.h"
 #include <thread>
 #include <string>
 #include <unordered_map>
+
+#ifndef MULTITHREADING_H
+#define MULTITHREADING_H
+
 
 #define THREADS ThreadsManager::Instance()
 
@@ -38,8 +42,12 @@ public:
 		\param _thread
 			Thread to keep track of
 	*/
-	/*******************************************************************************/
-	void AddThread(std::thread * _thread);
+	/*******************************************************************************/    
+	template <typename... Args>
+	std::thread& AddThread(Args&&... args)
+	{
+		return threads.emplace_back(std::forward<Args>(args)...);
+	}
 
 	/*******************************************************************************
 	/*!
@@ -76,7 +84,9 @@ public:
 	/*******************************************************************************/
 	bool HasQuit() const;
 private:
-	std::vector<std::thread*> threads;
+	std::vector<std::thread> threads;
 	std::unordered_map<std::string, bool> mutexes;
 	bool quit = false;
 };
+
+#endif // !MULTITHREADING_H

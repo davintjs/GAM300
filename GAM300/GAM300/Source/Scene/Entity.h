@@ -15,9 +15,9 @@ using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 struct Entity
 {
 public:
-	Entity(UUID _uuid = CreateUUID());
+	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
-	const UUID uuid;
+	const Engine::UUID uuid;
 	//Which array does this object belong in?
 	Scene* pScene;
 	ObjectIndex denseIndex;

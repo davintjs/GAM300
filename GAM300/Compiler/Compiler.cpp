@@ -716,25 +716,6 @@ void ModelLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.z = values[2];
 }
 
-std::string GenerateGUID(const std::string meshFileName) // Using meshFileName to convert to ascii value
-{
-	std::stringstream stream{};
-	for (size_t i = 0; i < meshFileName.length(); ++i)
-	{
-		int asc = static_cast<int>(meshFileName[i]); // Convert from char to int first
-		stream << std::hex << asc; // Convert to hexadecimal
-	}
-
-	std::uniform_real_distribution<double> distribution(0, 1000);
-	std::random_device rd;
-	std::default_random_engine generator(rd());
-	int number = static_cast<int>(distribution(generator));
-	stream << std::hex << number;
-
-	std::string GUID(stream.str()); // Concat the string of hex asc
-	return GUID;
-}
-
 void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFilePath, const std::string meshFileName)
 {
 	rapidjson::StringBuffer buffer;
@@ -765,9 +746,6 @@ void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFi
 	writer.Double(0.0);
 	writer.Double(0.0);
 	writer.EndArray();
-
-	writer.String("Mesh GUID");
-	writer.String(GenerateGUID(meshFileName).c_str());
 
 	writer.EndObject();
 
@@ -846,7 +824,8 @@ int main() {
 			}
 		}
 	}
-
+	int x;
 	std::cout << "Finished compiling all models!" << std::endl;
+	std::cin >> x;
 	return 0;
 }
