@@ -47,6 +47,56 @@ struct Texture
 
 struct Material
 {
+    // Constructors and destructor
+    Material() = default; // Default constructor
+    ~Material()
+    {
+        textures.clear();
+    }
+    Material(const Material& rhs)
+    {
+        this->Specular = rhs.Specular;
+        this->Diffuse = rhs.Diffuse;
+        this->Ambient = rhs.Ambient;
+
+        this->textures = rhs.textures;
+    }
+    Material(Material&& rhs)
+    {
+        this->Specular = std::move(rhs.Specular);
+        this->Diffuse = std::move(rhs.Diffuse);
+        this->Ambient = std::move(rhs.Ambient);
+
+        this->textures = std::move(rhs.textures);
+    }
+
+    Material& operator=(const Material& rhs)
+    {
+        this->Specular = rhs.Specular;
+        this->Diffuse = rhs.Diffuse;
+        this->Ambient = rhs.Ambient;
+
+        this->textures = rhs.textures;
+
+    }
+    Material& operator=(Material&& rhs)
+    {
+        this->Specular = std::move(rhs.Specular);
+        this->Diffuse = std::move(rhs.Diffuse);
+        this->Ambient = std::move(rhs.Ambient);
+
+        this->textures = std::move(rhs.textures);
+    }
+
+    Material(float sR, float sG, float sB, float shininess,
+        float dR, float dG, float dB, float dA,
+        float aR, float aG, float aB, float aA)
+    {
+        Specular = aiColor4D(sR, sG, sB, shininess);
+        Diffuse = aiColor4D(dR, dG, dB, dA);
+        Ambient = aiColor4D(aR, aG, aB, aA);
+    }
+
     aiColor4D Specular; // Shiny spots on the object when light hits the surface
     aiColor4D Diffuse; // Color when light his the surface and illuminates it
     aiColor4D Ambient; // Color the surface has when not exposed directly to light from object

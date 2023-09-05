@@ -45,7 +45,6 @@ public:
 	GLuint drawcount;
 	GLSLShader shader;
 
-
 	//AssimpLoader* _geom; 
 
 	std::vector<Geom> totalGeoms; // Contains all geom of the project
