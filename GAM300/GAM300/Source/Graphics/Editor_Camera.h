@@ -36,6 +36,8 @@ public:
 
 	void onResize(float _width, float _height);
 
+	glm::vec2 GetMouseInNDC();
+
 	void setDistanceToFocalPoint(float distance);
 	
 	void rotateCamera(glm::vec2 delta);

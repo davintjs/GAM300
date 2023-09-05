@@ -29,6 +29,7 @@ void EditorScene::Update(float dt)
 {
     if (ImGui::Begin("Scene"))
     {
+        scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
         ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
@@ -36,7 +37,6 @@ void EditorScene::Update(float dt)
         // Only if the current scene dimension is not the same as new dimension
         if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
         {
-            scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
             sceneDimension = { _newDimension.x, _newDimension.y };
             EditorCam.onResize(sceneDimension.x, sceneDimension.y);
 

@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 
+#include "Editor/EditorHeaders.h"
 #include "Editor_Camera.h"
 
 void Editor_Camera::Init()
@@ -74,6 +75,12 @@ void Editor_Camera::Update(float dt)
 		
 		updateView();
 	}
+
+	if (InputHandler::isMouseButtonPressed_L())
+	{
+		glm::vec2 position = GetMouseInNDC();
+		EditorDebugger::Instance().Debug_Sys.AddLog("Position: %f %f\n", position.x, position.y);
+	}
 }
 
 void Editor_Camera::updateView()
@@ -94,6 +101,19 @@ void Editor_Camera::onResize(float _width, float _height)
 	aspect = viewport.x / viewport.y;
 
 	persp_projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 1000000.f);
+}
+
+glm::vec2 Editor_Camera::GetMouseInNDC()
+{
+	glm::vec2 scenePosition = EditorScene::Instance().GetPosition();
+	glm::vec2 sceneDimension = EditorScene::Instance().GetDimension();
+	glm::vec2 mousePosition = InputHandler::getMousePos();
+	mousePosition.y = GLFW_Handler::height - mousePosition.y;
+	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y - scenePosition.y - 22.f };
+	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
+	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
+
+	return mouseTo1600By900;
 }
 
 
