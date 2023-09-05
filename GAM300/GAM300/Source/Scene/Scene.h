@@ -44,7 +44,6 @@ struct Scene
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
-
 	EntitiesPtrArray entitiesDeletionBuffer;
 	ComponentsBufferArray componentsDeletionBuffer;
 
@@ -198,6 +197,38 @@ struct Scene
 
 	template <typename Component>
 	bool ComponentIsEnabled(uint32_t index, size_t multiIndex);
+
+	template <typename Component>
+	auto& GetComponentsArray()
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return singleComponentsArrays.GetArray<Component>();
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return multiComponentsArrays.GetArray<Component>();
+		}
+	}
+
+	template <typename Component>
+	auto& GetComponents(Entity& entity)
+	{
+		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
+	}
+
+	template <typename Component>
+	auto& GetEntity(Component& component)
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(singleComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(multiComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+	}
 
 
 	template <typename Component>

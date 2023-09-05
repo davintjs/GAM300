@@ -4,12 +4,12 @@
 #include <bitset>
 #include "ObjectsList.h"
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 class ObjectsBList
 {
     struct Node
     {
-        SparseSet<ObjectsList<T,B_SZ>, N> sparseSetList;
+        ObjectList<T,N> objectList;
         //Forward List
         Node* next = nullptr;
     };
@@ -19,7 +19,6 @@ public:
     {
         Node* pNode;
         size_t index;
-        size_t subIndex;
         friend class ObjectsBList;
     public:
         /***************************************************************************/

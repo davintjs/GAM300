@@ -27,65 +27,72 @@ FileWatcher::~FileWatcher()
 
 void FileWatcher::ThreadWork()
 {    wchar_t filename[MAX_PATH];
-    FILE_NOTIFY_INFORMATION buffer[1024];
-    OVERLAPPED overlapped = { 0 };
+    char buffer[4096];
 
     if (hDir == INVALID_HANDLE_VALUE) {
         std::wcerr << L"Error opening directory: " << GetLastError() << std::endl;
         return;
     }
+    BYTE  fni[32 * 1024];
+    DWORD offset = 0;
+    TCHAR szFile[MAX_PATH];
+    DWORD bytesret;
+    PFILE_NOTIFY_INFORMATION pNotify;
+
     while (!THREADS.HasQuit())
     {
-       /* bool success = ReadDirectoryChangesW
-        (
-            hDir,
-            buffer,
-            sizeof(buffer),
-            TRUE,
-            FILE_NOTIFY_CHANGE_SECURITY |
-            FILE_NOTIFY_CHANGE_CREATION |
-            FILE_NOTIFY_CHANGE_LAST_ACCESS |
-            FILE_NOTIFY_CHANGE_LAST_WRITE |
-            FILE_NOTIFY_CHANGE_SIZE |
-            FILE_NOTIFY_CHANGE_ATTRIBUTES |
-            FILE_NOTIFY_CHANGE_DIR_NAME |
-            FILE_NOTIFY_CHANGE_FILE_NAME,
-            nullptr,
-            &overlapped,
-            nullptr
-        );
+        
+        //    FileState fileState{};
+        //    switch (pNotify->Action)
+        //    {
+        //    case FILE_ACTION_MODIFIED:
+        //        fileState = FileState::MODIFIED;
+        //        break;
+        //    case FILE_ACTION_ADDED:
+        //        fileState = FileState::CREATED;
+        //        break;
+        //    case FILE_ACTION_REMOVED:
+        //        fileState = FileState::DELETED;
+        //        break;
+        //    case FILE_ACTION_RENAMED_OLD_NAME:
+        //        PRINT("OLD NAME: ");
+        //        break;
+        //    case FILE_ACTION_RENAMED_NEW_NAME:
+        //        PRINT("NEW NAME: ");
+        //        break;
+        //    }
+        //    std::wcout << pNotify->FileName << std::endl;
+        //} while (pNotify->NextEntryOffset != 0);
+        //offset = 0;
+        //memset(fni, 0, 32 * 1024);
 
-        if (!success)
-        {
-            PRINT("FAILED TO DETECT CHANGES\n");
-            continue;
-        }
+        //ReadDirectoryChangesW
+        //(hDir, fni, sizeof(fni), 0,
+        //    FILE_NOTIFY_CHANGE_CREATION |
+        //    FILE_NOTIFY_CHANGE_SIZE |
+        //    FILE_NOTIFY_CHANGE_FILE_NAME,
+        //    &bytesret, NULL, NULL
+        //);
+        //do
+        //{
+        //    pNotify = (PFILE_NOTIFY_INFORMATION)&fni[offset];
+        //    offset += pNotify->NextEntryOffset;
 
-        FILE_NOTIFY_INFORMATION* start = buffer;
+        //    #if defined(UNICODE)
+        //    {
+        //        lstrcpynW(szFile, pNotify->FileName,
+        //            min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
+        //        std::wcout << pNotify->FileName << std::endl;
+        //    }
+        //    #else
+        //    {
+        //        int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
+        //            pNotify->FileNameLength / sizeof(WCHAR),
+        //            szFile, MAX_PATH - 1, NULL, NULL);
+        //        szFile[count] = TEXT('\0');
+        //    }
+        //    #endif
 
-        while (start && start->NextEntryOffset != 0) 
-        {
-            FileState fileState{};
-            switch (start->Action)
-            {
-            case FILE_ACTION_MODIFIED:
-                fileState = FileState::MODIFIED;
-                break;
-            case FILE_ACTION_ADDED:
-                fileState = FileState::CREATED;
-                break;
-            case FILE_ACTION_REMOVED:
-                fileState = FileState::DELETED;
-                break;
-            case FILE_ACTION_RENAMED_OLD_NAME:
-                PRINT("OLD NAME: ");
-                break;
-            case FILE_ACTION_RENAMED_NEW_NAME:
-                PRINT("NEW NAME: ");
-                break;
-            }
-            std::wcout << start->FileName << std::endl;
-            start = (FILE_NOTIFY_INFORMATION*)((char*)start + start->NextEntryOffset);
-        }*/
+        //} while (pNotify->NextEntryOffset != 0);
     }
 }

@@ -99,6 +99,8 @@ public:
 
     bool IsActive(ObjectIndex sparseIndex);
 
+    bool IsActiveDense(ObjectIndex denseIndex);
+
     void SetActive(ObjectIndex index, bool val = true);
 
     void SetActive(T& object, bool val = true);

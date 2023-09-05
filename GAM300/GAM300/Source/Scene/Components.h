@@ -108,6 +108,8 @@ private:
 	std::tuple<MultiComponentsArray<Ts>...> arrays;
 };
 
+#pragma region COMPONENTS
+
 struct Tag
 {
 	std::string name;
@@ -160,18 +162,16 @@ struct Script
 {
 	std::string name;
 };
+#pragma endregion
 
-//MULTI COMPONENT ARRAYS
-/*
-Lets say MAX_MULTI_COMPONENTS = 4
-For each GameObject, they will preallocate for 4 of the same components
-If there are more than 4, it will allocate for a new set of same components,
-This way, its a forward list with some cache locality and can scale infinitely
-So technically this would it a sparse set of 
-*/
 
+
+//Append here if you defined a new component and each entity should only ever have one of it
 using SingleComponentTypes = TemplatePack<Tag,Transform,Rigidbody, Animator>;
+
+//Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));

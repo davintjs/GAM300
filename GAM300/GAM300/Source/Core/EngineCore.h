@@ -82,6 +82,11 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
+		scene.GetComponentsArray<Transform>();
+
+
+		scene.GetComponentsArray<Script>();
+
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
 		//{

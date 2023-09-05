@@ -14,19 +14,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "ObjectsBList.h"
 
-#define OBJECTSBLIST ObjectsBList<T, N,B_SZ>
+#define OBJECTSBLIST ObjectsBList<T, N>
 #define ITERATOR OBJECTSBLIST::Iterator
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 ITERATOR::Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex }, pNode{ _pNode } {}
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 T& ITERATOR::operator*()
 {
 	return pNode->sparseSetList[index][subIndex];
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 typename ITERATOR ITERATOR::operator++()
 {
 	++subIndex;
@@ -43,7 +43,7 @@ typename ITERATOR ITERATOR::operator++()
 	return *this;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 typename ITERATOR ITERATOR::operator++(int)
 {
 	Iterator tmp(*this);
@@ -51,26 +51,26 @@ typename ITERATOR ITERATOR::operator++(int)
 	return tmp;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 bool ITERATOR::operator==(const Iterator& other) const
 {
 	return pNode == other.pNode && index == other.index && subIndex == other.subIndex;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 bool ITERATOR::operator!=(const Iterator& other) const
 {
 	return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 bool ITERATOR::IsActive()
 {
 	auto& objectList = pNode->sparseSetList[index];
-	return objectList.IsActive(objectList.GetDenseIndex(subIndex));
+	return objectList.IsActive(subIndex);
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 template <typename... Args>
 T& OBJECTSBLIST::emplace(ObjectIndex denseIndex, Args&&... args)
 {
@@ -90,7 +90,7 @@ T& OBJECTSBLIST::emplace(ObjectIndex denseIndex, Args&&... args)
 	return start->sparseSetList.emplace(denseIndex).emplace_back();
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 void OBJECTSBLIST::clear()
 {
 	Node* start = head;
@@ -101,8 +101,8 @@ void OBJECTSBLIST::clear()
 	}
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
-typename OBJECTSBLIST::Node* ObjectsBList<T, N, B_SZ>::CreateNode()
+template <typename T, ObjectIndex N>
+typename OBJECTSBLIST::Node* ObjectsBList<T, N>::CreateNode()
 {
 	if (emptyNodesPool == nullptr)
 		return new Node;
@@ -112,7 +112,7 @@ typename OBJECTSBLIST::Node* ObjectsBList<T, N, B_SZ>::CreateNode()
 	return newNode;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 void OBJECTSBLIST::DeleteNode(Node* prev, Node* pNode)
 {
 	if (prev)
@@ -130,7 +130,7 @@ void OBJECTSBLIST::DeleteNode(Node* prev, Node* pNode)
 	emptyNodesPool = pNode;
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 void OBJECTSBLIST::erase(T& val)
 {
 	Node* start = head;
@@ -151,7 +151,7 @@ void OBJECTSBLIST::erase(T& val)
 	ASSERT(start != nullptr, "Failed to erase value");
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 OBJECTSBLIST::~ObjectsBList()
 {
 	Node* start = head;
@@ -172,7 +172,7 @@ OBJECTSBLIST::~ObjectsBList()
 }
 
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 typename ITERATOR OBJECTSBLIST::begin()
 {
 	Node* start = head;
@@ -188,15 +188,15 @@ typename ITERATOR OBJECTSBLIST::begin()
 	return Iterator(0, 0, nullptr);
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 typename ITERATOR OBJECTSBLIST::end() { return Iterator(0, 0, nullptr); }
 
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 size_t OBJECTSBLIST::size() const { return size_; }
 
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 void OBJECTSBLIST::SetActive(T& obj, bool val)
 {
 	Node* start = head;
@@ -215,7 +215,7 @@ void OBJECTSBLIST::SetActive(T& obj, bool val)
 }
 
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 auto& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 {
 	Node* start = head;
@@ -227,7 +227,7 @@ auto& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 	return start->sparseSetList.DenseSubscript(val);
 }
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 ObjectIndex OBJECTSBLIST::GetDenseIndex(T& object)
 {
 	Node* start = head;

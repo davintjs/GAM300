@@ -193,10 +193,22 @@ bool OBJECTSLIST::IsActive(ObjectIndex sparseIndex)
 	Node* start = head;
 	while (start && sparseIndex >= N)
 	{
-		sparseIndex -= N;
+		sparseIndex -= start->sparseSet.size();
 		start = start->next;
 	}
 	return start->activeObjectsBitset.test(start->sparseSet.GetDenseIndex(sparseIndex));
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::IsActiveDense(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start && denseIndex >= N)
+	{
+		denseIndex -= N;
+		start = start->next;
+	}
+	return start->activeObjectsBitset.test(denseIndex);
 }
 
 template <typename T, ObjectIndex N>
