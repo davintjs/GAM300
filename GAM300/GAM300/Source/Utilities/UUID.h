@@ -13,12 +13,17 @@
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+#pragma once
+
 #ifndef UUID_H
 #define UUID_H
 
-using UUID = size_t;
+namespace Engine
+{
+	using UUID = size_t;
+	UUID CreateUUID();
+}
 
-UUID CreateUUID();
 
 #endif // !UUID_H
 
