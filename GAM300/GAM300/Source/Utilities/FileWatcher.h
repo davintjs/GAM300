@@ -9,6 +9,11 @@ public:
     FileWatcher();
 
     void ThreadWork();
+
+    ~FileWatcher();
+
+private:
+    void* hDir;
 };
 
 #endif

@@ -63,7 +63,9 @@ struct ReflectEntityEvent : IEvent
 template <FileType FTYPE>
 struct FileModifiedEvent : IEvent 
 {
-
+	FileModifiedEvent(const std::string& _filePath) : filePath{ _filePath }{};
+	std::string filePath;
+	FileState fileState;
 };
 
 

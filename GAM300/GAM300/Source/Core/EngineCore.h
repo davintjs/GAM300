@@ -77,7 +77,7 @@ public:
 		{
 			pSystem->Init();
 		}
-
+		//PRINT(GetComponentType::E();
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
@@ -96,10 +96,10 @@ public:
 		//std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		//TEST ENTITY CREATION
-		//for (int i = 0; i < 7; ++i)
-		//{
-		//	scene.AddEntity();
-		//}
+		for (int i = 0; i < 15; ++i)
+		{
+			scene.AddEntity();
+		}
 
 		//scene.Destroy(*(++(++scene.entities.begin())));
 
@@ -115,6 +115,11 @@ public:
 		scene.Destroy(script4);
 		//Script& script2 = scene.AddComponent<Script>(10);
 		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
+
+		scene.GetComponent<Script>(scene.entities[14]);
+		scene.Destroy(scene.entities[14]);
+
+		AllComponentTypes::Size();
 	}
 
 	/**************************************************************************/
