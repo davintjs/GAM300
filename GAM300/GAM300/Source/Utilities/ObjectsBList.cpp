@@ -18,27 +18,25 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define ITERATOR OBJECTSBLIST::Iterator
 
 template <typename T, ObjectIndex N>
-ITERATOR::Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex }, pNode{ _pNode } {}
+ITERATOR::Iterator(size_t _index, Node* _pNode) : index(_index), pNode{ _pNode } {}
 
 template <typename T, ObjectIndex N>
 T& ITERATOR::operator*()
 {
-	return pNode->sparseSetList[index][subIndex];
+	return pNode->sparseSetList[index];
 }
 
 template <typename T, ObjectIndex N>
 typename ITERATOR ITERATOR::operator++()
 {
-	++subIndex;
-	while (pNode && subIndex >= pNode->sparseSetList[index].size())
+	++index;
+	if (index >= pNode->sparseSetList.size())
 	{
-		++index;
-		while (pNode && index >= pNode->sparseSetList.size())
+		while (pNode && pNode->objectList.empty())
 		{
-			index = 0;
 			pNode = pNode->next;
 		}
-		subIndex = 0;
+		index = 0;
 	}
 	return *this;
 }
@@ -54,20 +52,19 @@ typename ITERATOR ITERATOR::operator++(int)
 template <typename T, ObjectIndex N>
 bool ITERATOR::operator==(const Iterator& other) const
 {
-	return pNode == other.pNode && index == other.index && subIndex == other.subIndex;
+	return pNode == other.pNode && index == other.index;
 }
 
 template <typename T, ObjectIndex N>
 bool ITERATOR::operator!=(const Iterator& other) const
 {
-	return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
+	return pNode != other.pNode || index != other.index;
 }
 
 template <typename T, ObjectIndex N>
 bool ITERATOR::IsActive()
 {
-	auto& objectList = pNode->sparseSetList[index];
-	return objectList.IsActive(subIndex);
+	return pNode->objectList.IsActive(index);
 }
 
 template <typename T, ObjectIndex N>
@@ -185,11 +182,11 @@ typename ITERATOR OBJECTSBLIST::begin()
 		}
 		start = start->next;
 	}
-	return Iterator(0, 0, nullptr);
+	return Iterator(0, nullptr);
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR OBJECTSBLIST::end() { return Iterator(0, 0, nullptr); }
+typename ITERATOR OBJECTSBLIST::end() { return Iterator(0, nullptr); }
 
 
 template <typename T, ObjectIndex N>
@@ -216,15 +213,17 @@ void OBJECTSBLIST::SetActive(T& obj, bool val)
 
 
 template <typename T, ObjectIndex N>
-auto& OBJECTSBLIST::DenseSubscript(ObjectIndex val)
+auto OBJECTSBLIST::DenseSubscript(ObjectIndex val)
 {
+	std::vector<T*> references;
 	Node* start = head;
-	while (val >= N)
+	while (start)
 	{
-		val -= N;
+		if (entities.)
+		references.push_back();
 		start = start->next;
 	}
-	return start->sparseSetList.DenseSubscript(val);
+	return std::;
 }
 
 template <typename T, ObjectIndex N>
