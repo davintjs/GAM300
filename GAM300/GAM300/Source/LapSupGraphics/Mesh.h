@@ -9,7 +9,7 @@ struct Vertex
     glm::vec3 normal;
     glm::vec3 tangent;
     glm::vec2 tex;
-    glm::vec4 color;
+    glm::vec4 color;  
 };
 
 struct Texture

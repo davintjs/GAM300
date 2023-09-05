@@ -123,7 +123,6 @@ GLuint loadDDS(const char* imagepath) {
     //    // The texture uses linear RGB color space.
     //}
 
-
     unsigned int components = (fourCC == FOURCC_DXT1) ? 3 : 4;
     unsigned int format;
     switch (fourCC)
@@ -143,6 +142,7 @@ GLuint loadDDS(const char* imagepath) {
         format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         break;
     default:
+        
         free(buffer);
         return 0;
     }
@@ -162,10 +162,10 @@ GLuint loadDDS(const char* imagepath) {
     for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
     {
         unsigned int size = ((width + 3) / 4) * ((height + 3) / 4) * blockSize;
-        glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, width, height,
+      /*  glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, width, height,
+            0, size, buffer + offset);*/
+        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
             0, size, buffer + offset);
-       /* glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-            0, size, buffer + offset)*/;
 
 
         offset += size;

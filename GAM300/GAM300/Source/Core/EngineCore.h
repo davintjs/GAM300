@@ -111,34 +111,25 @@ public:
 		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
-			////Start ImGui Frames
-			////std::cout << "start\n";
-			//ImGui_ImplOpenGL3_NewFrame();
-			//std::cout << "opengl new\n";
+			//Start ImGui Frames
+			ImGui_ImplOpenGL3_NewFrame();
 
-			//ImGui_ImplGlfw_NewFrame();
-			//std::cout << "glfw new\n";
+			ImGui_ImplGlfw_NewFrame();
 
-			//ImGui::NewFrame();
-			//std::cout << " new frame\n";
+			ImGui::NewFrame();
 
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->GetMode() & mode)
 					pSystem->Update(dt);
 			}
-			////End ImGui Frames
-			//std::cout << " after update loops\n";
+			//End ImGui Frames
 
-			////ImGui::EndFrame();
-			//std::cout << " end frame\n";
+			ImGui::EndFrame();
 
-			//ImGui::Render();
-			//std::cout << " render frame\n";
+			ImGui::Render();
 
-			//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			//std::cout << " render draw data\n";
-
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 		}

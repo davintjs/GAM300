@@ -59,8 +59,10 @@ void GraphicsSystem::Update(float dt)
 	
 	//Currently Putting in Camera Update loop here
 
+
+
 	// Bean: For binding framebuffer
-	//EditorCam.getFramebuffer().bind();
+	EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
@@ -109,8 +111,6 @@ void GraphicsSystem::Update(float dt)
 	{
 		LightSource.position.z += 10.f;
 	}
-
-
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
@@ -127,14 +127,17 @@ void GraphicsSystem::Update(float dt)
 
 	}
 
+	
+
 	testmodel.draw();
 
 	LightSource.lightSource_draw();
 
 	AffectedByLight.affectedByLight_draw(LightSource.position);
-
+	
 	// Bean: For unbinding framebuffer
-	//EditorCam.getFramebuffer().unbind();
+	EditorCam.getFramebuffer().unbind();
+	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void GraphicsSystem::Exit()

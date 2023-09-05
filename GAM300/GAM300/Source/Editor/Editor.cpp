@@ -43,13 +43,13 @@ void EditorSystem::Init()
 void EditorSystem::Update(float dt)
 {
 
-    //bool demo = true;
-    //ImGui::ShowDemoWindow(&demo);
+    bool demo = true;
+    ImGui::ShowDemoWindow(&demo);
 
     
 
     //Editor Functions
-   /* Editor_Dockspace();
+    Editor_Dockspace();
     Editor_MenuBar();
     Editor_Content_Browser();
     Editor_SceneViewport();
@@ -60,7 +60,7 @@ void EditorSystem::Update(float dt)
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-    colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);*/
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
     
 
 }
