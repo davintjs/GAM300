@@ -30,10 +30,13 @@ public:
 
 	// This below are all the things i use to testing with light stuffs
 	void cubeinit();
+	void instance_cubeinit();
+	void setup_instanced_shader();
 	void setup_lightshader();// The Light
 	void setup_affectedShader();// Impacted by Light
 	void lightSource_draw();
 	void affectedByLight_draw(glm::vec3 lightPos);
+	void instanceDraw();
 
 	glm::vec3 position;
 

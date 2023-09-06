@@ -20,7 +20,10 @@ void SceneManager::Init()
 void SceneManager::LoadScene(const char* path)
 {
 	loadedScenes.emplace_front(path);
-	
+	Scene& scene = GetCurrentScene();
+	Entity& titty = scene.AddEntity();
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0,-100.f,-800.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(5.f, 5.f, 5.f);
 	//Init scene
 }
 
