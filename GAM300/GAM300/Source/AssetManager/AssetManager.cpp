@@ -48,6 +48,15 @@ void AssetManager::Init()
 		
 		// Deserialize from meta file and load the asset asynchronously
 		this->AsyncLoadAsset(subFilePathMeta);
+
+		// if dds
+		if (strcmp(fileType.c_str(), "dds")) // Skip if not dds / ...
+		{
+			continue;
+		}
+		// load dds
+		//this->CreateTextureAsset(subFilePath);
+		// put in texture container
 	}
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not

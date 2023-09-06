@@ -44,7 +44,6 @@ private:
 	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
 	void UpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
 
-
 	std::string GenerateGUID(const std::string& fileName);
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
 	void DeserializeAssetMeta(const std::string& filePath);

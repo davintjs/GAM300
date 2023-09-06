@@ -106,6 +106,7 @@
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
+    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
     <ClCompile Include="Source\IOManager\InputHandler.cpp" />
     <ClCompile Include="Source\IOManager\InputSystem.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Graphics\Model3d.h" />
+    <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
     <ClInclude Include="Source\IOManager\InputHandler.h" />
     <ClInclude Include="Source\IOManager\InputSystem.h" />

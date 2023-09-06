@@ -5,6 +5,7 @@
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
+#include "TextureManager.h"
 
 //#include "../../Compiler/Mesh.h"
 

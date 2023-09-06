@@ -64,6 +64,7 @@
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
+    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -119,6 +120,7 @@
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
+    <ClInclude Include="Source\Graphics\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
