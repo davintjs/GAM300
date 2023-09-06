@@ -45,7 +45,6 @@ struct Scene
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
-
 	EntitiesPtrArray entitiesDeletionBuffer;
 	ComponentsBufferArray componentsDeletionBuffer;
 
@@ -94,20 +93,11 @@ struct Scene
 			{
 				if constexpr (SingleComponentTypes::Has<T1>())
 				{
-					auto& arr = scene.singleComponentsArrays.GetArray<T1>();
-					scene.componentsDeletionBuffer.GetArray<T1>().push_back(&arr.DenseSubscript(entity.denseIndex));
-					arr.SetActive(entity.denseIndex, false);
-					entity.hasComponentsBitset.set(GetComponentType::E<T1>(), false);
+					scene.singleComponentsArrays.GetArray<T1>().TryErase(entity.denseIndex);
 				}
 				else if constexpr (MultiComponentTypes::Has<T1>())
 				{
-					auto& arr = scene.multiComponentsArrays.GetArray<T1>();
-					for (T1& component : arr.DenseSubscript(entity.denseIndex))
-					{
-						arr.SetActive(component, false);
-						scene.componentsDeletionBuffer.GetArray<T1>().push_back(&component);
-					}
-					entity.hasComponentsBitset.set(GetComponentType::E<T1>(), false);
+					scene.multiComponentsArrays.GetArray<T1>().erase(entity.denseIndex);
 				}
 			}
 			if constexpr (sizeof...(T1s) != 0)
@@ -126,7 +116,6 @@ struct Scene
 		{
 			entitiesDeletionBuffer.push_back(&object);
 			entities.SetActive(object.denseIndex,false);
-			DestroyEntityComponents(*this,object);
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
 		{
@@ -189,17 +178,50 @@ struct Scene
 
 	void ClearBuffer()
 	{
+		//Destroy components
+		ClearBufferHelper(*this);
 		for (Entity* pEntity : entitiesDeletionBuffer)
 		{
+			DestroyEntityComponents(*this,*pEntity);
 			entities.erase(*pEntity);
 		}
 		entitiesDeletionBuffer.clear();
-
-		ClearBufferHelper(*this);
 	}
 
 	template <typename Component>
 	bool ComponentIsEnabled(uint32_t index, size_t multiIndex);
+
+	template <typename Component>
+	auto& GetComponentsArray()
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return singleComponentsArrays.GetArray<Component>();
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return multiComponentsArrays.GetArray<Component>();
+		}
+	}
+
+	template <typename Component>
+	auto& GetComponents(Entity& entity)
+	{
+		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
+	}
+
+	template <typename Component>
+	auto& GetEntity(Component& component)
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(singleComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(multiComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+	}
 
 
 	template <typename Component>
@@ -241,7 +263,7 @@ struct Scene
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex)[0];
+			return *multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex).front();
 		}
 	}
 

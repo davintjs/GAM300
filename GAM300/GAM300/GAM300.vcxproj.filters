@@ -127,6 +127,7 @@
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
+    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

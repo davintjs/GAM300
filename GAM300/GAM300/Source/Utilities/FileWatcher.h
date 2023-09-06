@@ -1,4 +1,5 @@
 #include "Core/SystemInterface.h"
+#include <thread>
 
 #ifndef FILEWATCHER_H
 #define FILEWATCHER_H
@@ -11,9 +12,9 @@ public:
     void ThreadWork();
 
     ~FileWatcher();
-
-private:
+    void Quit();
     void* hDir;
+    std::thread* thread;
 };
 
 #endif

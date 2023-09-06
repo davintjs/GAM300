@@ -95,9 +95,15 @@ public:
     void clear();
     void erase(T& val);
 
+    bool TryErase(T& val);
+
+    bool TryErase(ObjectIndex denseIndex);
+
     bool empty();
 
     bool IsActive(ObjectIndex sparseIndex);
+
+    bool IsActiveDense(ObjectIndex denseIndex);
 
     void SetActive(ObjectIndex index, bool val = true);
 
@@ -119,6 +125,13 @@ public:
     ObjectIndex GetDenseIndex(T& object);
 
     ObjectIndex GetDenseIndex(ObjectIndex sparseIndex);
+
+    T* TryGetDense(ObjectIndex denseIndex);
+
+    bool TrySetActive(ObjectIndex denseIndex, bool val = true);
+
+    bool TrySetActive(T& object, bool val = true);
+
 private:
     Node* head = nullptr;
     Node* tail = nullptr;
