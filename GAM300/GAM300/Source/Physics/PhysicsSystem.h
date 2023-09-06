@@ -33,24 +33,102 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 
 	const unsigned int maxObjects = 1024;
 	const unsigned int maxObjectMutexes = 0;
-	const unsigned int maxBodyPairs = 1024;
+	const unsigned int maxObjectPairs = 1024;
 	const unsigned int maxContactConstraints = 1024;
 
 	unsigned int step = 0;
 
-	//TODO:
-	// Add BroadPhaseLayers
-	// Add
+	bool simulating = false;
+
+	
 
 	JPH::PhysicsSystem* physicsSystem = nullptr;
 	JPH::BodyInterface* bodyInterface = nullptr;
 
+	BroadPhaseLayerInterface bpLayerInterface;
+	ObjectLayerPairFilter objectLayerPairFilter;
+	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
+
+	JPH::TempAllocatorImpl tempAllocator;
+	JPH::JobSystemSingleThreaded jobSystem;
+
+	//JPH::BodyIDVector bodyIDs;
+
+	void CreateRigidbody(Entity e);
+};
+
+// Layers that objects can be in and determines which other objects it can collide with
+namespace EngineObjectLayers {
+	static constexpr JPH::ObjectLayer STATIC = 0;
+	static constexpr JPH::ObjectLayer DYNAMIC = 1;
+	static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+};
+namespace EngineBroadPhaseLayers {
+	static constexpr JPH::BroadPhaseLayer STATIC(0);
+	static constexpr JPH::BroadPhaseLayer DYNAMIC(1);
+	static constexpr unsigned int NUM_LAYERS = 2;
 };
 
 
+// Determines if two object layers should collide
+class ObjectLayerPairFilter : public JPH::ObjectLayerPairFilter {
+public:
+	virtual bool ShouldCollide(JPH::ObjectLayer obj1, JPH::ObjectLayer obj2) const override {
+		switch (obj1) {
+		case EngineObjectLayers::STATIC:
+			return obj2 == EngineObjectLayers::DYNAMIC;
+		case EngineObjectLayers::DYNAMIC:
+			return true;
+		default:
+			return false;
+		
+
+		}
+	}
+
+};
+
+// Defines mapping between object and broadphase layers
+class BroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface {
+public:
+	BroadPhaseLayerInterface() {
+		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
+		bpLayers[EngineObjectLayers::DYNAMIC] = EngineBroadPhaseLayers::DYNAMIC;
+	}
+
+	virtual unsigned int GetNumBroadPhaseLayers() const override {
+		return EngineBroadPhaseLayers::NUM_LAYERS;
+	}
+
+	virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer objLayer) const override {
+		// TODO
+		// Error checking!!
+		
+		return bpLayers[objLayer];
+	}
+
+private:
+	JPH::BroadPhaseLayer bpLayers[EngineObjectLayers::NUM_LAYERS];
+};
+
+// Determines if an object layer can collide with a broadphase layer
+class ObjectvsBroadPhaseLayerFilter : public JPH::ObjectVsBroadPhaseLayerFilter {
+public:
+	virtual bool ShouldCollide(JPH::ObjectLayer objLayer, JPH::BroadPhaseLayer bPLayer) const override {
+		switch (objLayer) {
+		case EngineObjectLayers::STATIC:
+			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
+		case EngineObjectLayers::DYNAMIC:
+			return true;
+		default:
+			return false;
+		}
+	}
+};
 
 
-
-
+class EnginePhysicsObject {
+	JPH::Body* body = nullptr;
+};
 
 #endif
