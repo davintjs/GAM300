@@ -68,7 +68,7 @@ void GraphicsSystem::Update(float dt)
 
 
 	// Bean: For binding framebuffer
-	//EditorCam.getFramebuffer().bind();
+	EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
@@ -165,7 +165,7 @@ void GraphicsSystem::Update(float dt)
 	}
 
 	// Bean: For unbinding framebuffer
-	//EditorCam.getFramebuffer().unbind();
+	EditorCam.getFramebuffer().unbind();
 	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 

@@ -51,24 +51,24 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
-   ///* bool demo = true;
-   // ImGui::ShowDemoWindow(&demo);*/
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
-   // //Editor Functions
-   // Editor_Dockspace();
+    //Editor Functions
+    Editor_Dockspace();
 
-   // for (ISystem* pSystem : editorSystems)
-   // {   
-   //     pSystem->Update(dt);
-   // }
+    for (ISystem* pSystem : editorSystems)
+    {   
+        pSystem->Update(dt);
+    }
 
-   // //Debug Window in Editor
-   // EditorDebugger::Instance().Debug_Window(true);
+    //Debug Window in Editor
+    EditorDebugger::Instance().Debug_Window(true);
 
-   // ImGui::StyleColorsDark();
-   // ImVec4* colors = ImGui::GetStyle().Colors;
-   // colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-   // colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
+    ImGui::StyleColorsDark();
+    ImVec4* colors = ImGui::GetStyle().Colors;
+    colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
 }
 
 void EditorSystem::Exit()

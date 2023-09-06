@@ -83,13 +83,12 @@ void Editor_Camera::Update(float dt)
 	{
 		if (InputHandler::isMouseButtonPressed_L())
 		{
-			//Ray3D temp = Raycasting(GetMouseInNDC().x, GetMouseInNDC().y, getPerspMatrix(), getViewMatrix(), GetCameraPosition());
-			Ray3D temp = Raycasting(InputHandler::getMouseX(), InputHandler::getMouseY(), getPerspMatrix(), getViewMatrix(), GetCameraPosition());
+			Ray3D temp = Raycasting(GetMouseInNDC().x, GetMouseInNDC().y, getPerspMatrix(), getViewMatrix(), GetCameraPosition());
+			
+			// No Editor Version
+			//Ray3D temp = Raycasting(InputHandler::getMouseX(), InputHandler::getMouseY(), getPerspMatrix(), getViewMatrix(), GetCameraPosition());
 				
 			Ray_Container.push_back(temp);
-			std::cout << "mouse pos: " << InputHandler::getMouseX() << " , " << InputHandler::getMouseY() << "\n";
-			std::cout << "ray origin : " << temp.origin.x << " , " << temp.origin.y << " , " << temp.origin.z << "\n";
-			std::cout << "Cam : " << GetCameraPosition().x << " , " << GetCameraPosition().y << " , " << GetCameraPosition().z << "\n";
 
 
 
@@ -131,8 +130,9 @@ glm::vec2 Editor_Camera::GetMouseInNDC()
 	mousePosition.y = GLFW_Handler::height - mousePosition.y;
 	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y - scenePosition.y - 22.f };
 	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
-	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
 
+	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
+	mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
 	return mouseTo1600By900;
 }
 
@@ -265,9 +265,14 @@ Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::m
 	//float x = (2.0f * xpos) / EditorScene::Instance().GetDimension().x - 1.0f;
 	//float y = 1.0f - (2.0f * ypos) / EditorScene::Instance().GetDimension().y;
 
+	//float x = (2.0f * xpos) / EditorScene::Instance().GetDimension().x - 1.0f;
+	//float y = (2.0f * ypos) / EditorScene::Instance().GetDimension().y - 1.0f;
+
 
 	float x = (2.0f * xpos) / 1600.f - 1.0f;
 	float y = (2.0f * ypos) / 900.f - 1.0f;
+
+
 	float z = 1.0f;
 
 	glm::vec4 ray_clip(x, y, -1.0f, 1.0f);
