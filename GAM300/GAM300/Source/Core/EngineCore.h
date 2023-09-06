@@ -167,8 +167,8 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
-		THREADS.Exit();
 		FileWatcher::Instance().Quit();
+		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
 			(*iter)->Exit();

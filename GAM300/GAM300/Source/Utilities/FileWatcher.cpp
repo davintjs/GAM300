@@ -6,7 +6,7 @@
 
 FileWatcher::FileWatcher()
 {
-    THREADS.AddThread(&FileWatcher::ThreadWork, this);
+    thread = &THREADS.AddThread(&FileWatcher::ThreadWork, this);
     hDir = CreateFile(
         std::wstring(L"ASSETS").c_str(),
         FILE_LIST_DIRECTORY,
@@ -27,9 +27,7 @@ FileWatcher::~FileWatcher()
 
 void FileWatcher::Quit()
 {
-
-    //CancelSynchronousIo(thread->native_handle());
-    PRINT("DESTRUCTING");
+    CancelSynchronousIo(thread->native_handle());
 }
 
 void FileWatcher::ThreadWork()
@@ -47,35 +45,35 @@ void FileWatcher::ThreadWork()
     while (!THREADS.HasQuit())
     {
 
-        //offset = 0;
-        //memset(fni, 0, 32 * 1024);
+        offset = 0;
+        memset(fni, 0, 32 * 1024);
 
-        //ReadDirectoryChangesW
-        //(hDir, fni, sizeof(fni), 0,
-        //    FILE_NOTIFY_CHANGE_CREATION |
-        //    FILE_NOTIFY_CHANGE_SIZE |
-        //    FILE_NOTIFY_CHANGE_FILE_NAME,
-        //    &bytesret, NULL, NULL
-        //);
-        //do
-        //{
-        //    pNotify = (PFILE_NOTIFY_INFORMATION)&fni[offset];
-        //    offset += pNotify->NextEntryOffset;
-        //    #if defined(UNICODE)
-        //    {
-        //        lstrcpynW(szFile, pNotify->FileName,
-        //            min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
-        //        std::wcout << pNotify->FileName << std::endl;
-        //    }
-        //    #else
-        //    {
-        //        int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
-        //            pNotify->FileNameLength / sizeof(WCHAR),
-        //            szFile, MAX_PATH - 1, NULL, NULL);
-        //        szFile[count] = TEXT('\0');
-        //    }
-        //    #endif
-        //} while (pNotify->NextEntryOffset != 0);
+        ReadDirectoryChangesW
+        (hDir, fni, sizeof(fni), 0,
+            FILE_NOTIFY_CHANGE_CREATION |
+            FILE_NOTIFY_CHANGE_SIZE |
+            FILE_NOTIFY_CHANGE_FILE_NAME,
+            &bytesret, NULL, NULL
+        );
+        do
+        {
+            pNotify = (PFILE_NOTIFY_INFORMATION)&fni[offset];
+            offset += pNotify->NextEntryOffset;
+            #if defined(UNICODE)
+            {
+                lstrcpynW(szFile, pNotify->FileName,
+                    min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
+                std::wcout << pNotify->FileName << std::endl;
+            }
+            #else
+            {
+                int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
+                    pNotify->FileNameLength / sizeof(WCHAR),
+                    szFile, MAX_PATH - 1, NULL, NULL);
+                szFile[count] = TEXT('\0');
+            }
+            #endif
+        } while (pNotify->NextEntryOffset != 0);
     }
 }
 
