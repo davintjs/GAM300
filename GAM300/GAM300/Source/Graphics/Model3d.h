@@ -35,6 +35,8 @@ public:
 	void lightSource_draw();
 	void affectedByLight_draw(glm::vec3 lightPos);
 
+	
+
 	glm::vec3 position;
 
 	GLenum prim;
@@ -44,6 +46,9 @@ public:
 	GLuint drawcount;
 	GLSLShader shader;
 
+
+
+
 	// debug AABB
 	GLuint vaoidAABB;
 	GLSLShader shaderAABB;
@@ -51,6 +56,9 @@ public:
 	std::vector<glm::ivec2> idxAABB{};
 	void debugAABB_init(); // vao & shader
 	void debugAABB_draw(glm::mat4& SRT);
+
+	void lineinit();
+	void debugline_draw(glm::mat4& SRT);
 
 
 

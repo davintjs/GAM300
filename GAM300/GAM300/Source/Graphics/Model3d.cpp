@@ -858,3 +858,96 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
     glBindVertexArray(0);
     shaderAABB.UnUse();
 }
+
+void Model::lineinit()
+{
+    GLfloat vertices[] =
+    {
+        0.f,0.f,0.f
+        ,1.f,1.f,1.f
+    };
+
+    GLushort elements[] =
+    {
+        0,1
+    };
+    unsigned int temp_vaoID;
+    glGenVertexArrays(1, &temp_vaoID);
+    glBindVertexArray(temp_vaoID);
+
+
+    GLuint vbo_vertices;
+    glGenBuffers(1, &vbo_vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    GLuint ibo_elements;
+    glGenBuffers(1, &ibo_elements);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_elements);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), &elements[0], GL_STATIC_DRAW);
+
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+    vaoid = temp_vaoID;
+
+    // setup shader
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+
+    // Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+
+    std::cout << "DEBUG AABB SHADER\n";
+    shaderAABB.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
+    // if linking failed
+    if (GL_FALSE == shaderAABB.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shaderAABB.GetLog() << "\n";
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
+
+}
+
+void Model::debugline_draw(glm::mat4& SRT)
+{
+    shaderAABB.Use();
+    // UNIFORM VARIABLES ----------------------------------------
+    // Persp Projection
+    GLint uniform_var_loc1 =
+        glGetUniformLocation(this->shaderAABB.GetHandle(),
+            "persp_projection");
+    glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getPerspMatrix()));
+    GLint uniform_var_loc2 =
+        glGetUniformLocation(this->shaderAABB.GetHandle(),
+            "View");
+    glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getViewMatrix()));
+
+    // Scuffed SRT
+    GLint uniform_var_loc3 =
+        glGetUniformLocation(this->shaderAABB.GetHandle(),
+            "SRT");
+    glUniformMatrix4fv(uniform_var_loc3, 1, GL_FALSE,
+        glm::value_ptr(SRT));
+
+    glBindVertexArray(vaoid);
+    glDrawElements(GL_LINES,2, GL_UNSIGNED_SHORT, 0);
+
+    // unbind and free stuff
+    glBindVertexArray(0);
+    shaderAABB.UnUse();
+}

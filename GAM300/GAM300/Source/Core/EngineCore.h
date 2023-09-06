@@ -135,11 +135,11 @@ public:
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
-			ImGui_ImplOpenGL3_NewFrame();
+			/*ImGui_ImplOpenGL3_NewFrame();
 
 			ImGui_ImplGlfw_NewFrame();
 
-			ImGui::NewFrame();
+			ImGui::NewFrame();*/
 
 			for (ISystem* pSystem : systems)
 			{
@@ -148,11 +148,11 @@ public:
 			}
 			//End ImGui Frames
 
-			ImGui::EndFrame();
+			/*ImGui::EndFrame();
 
 			ImGui::Render();
 
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 		}
