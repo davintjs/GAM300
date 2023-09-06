@@ -7,6 +7,8 @@
 //3. Append to the template pack below the COMPONENTS region
 	//SingleComponentTypes if the entity should only have one of it
 	//MultiComponentTypes if the entity should multiple have of it
+//4. Rules for components, no member functions, 
+	//the respective systems that use each component should have functions to process, read, write data from the component structs
 
 void ITERATE_THROUGH_COMPONENTS()
 {
@@ -23,6 +25,10 @@ void ITERATE_THROUGH_COMPONENTS()
 		Rigidbody& rb = *it;
 		//Get Entity owning this rigidbody
 		Entity& entity = scene.GetEntity(rb);
+
+		//If entity is not active, skip
+		if (!scene.entities.IsActiveDense(entity.denseIndex))
+			continue;
 
 		//If object is not active, skip
 		if (!it.IsActive())
@@ -53,13 +59,22 @@ void ITERATE_THROUGH_ENTITIES()
 	Scene& scene = MySceneManager.GetCurrentScene();
 	for (Entity& entity : scene.entities)
 	{
-		if (scene.)
+		if (!scene.entities.IsActiveDense(entity.denseIndex))
+			continue;
+
+		//Do something with entity
 	}
 }
 
 void CREATION()
 {
-	Entity& entity = 
+	Scene& scene = MySceneManager.GetCurrentScene();
+	Entity& entity = scene.AddEntity();
+	//Ways to add component
+	scene.AddComponent<Script>(entity);
+	Script& script = scene.AddComponent<Script>(entity.denseIndex);
+	//Destroy component
+	scene.Destroy(script);
+	//Destroy entity
+	scene.Destroy(entity);
 }
-
-void ITERATE_

@@ -147,6 +147,40 @@ void OBJECTSLIST::DeleteNode(Node* prev, Node* pNode)
 	emptyNodesPool = pNode;
 }
 
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TryErase(T& val)
+{
+	Node* start = head;
+	while (start)
+	{
+		if (start->sparseSet.TryErase(val))
+		{
+			--size_;
+			return true;
+		}
+		start = start->next;
+	}
+	return false;
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TryErase(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start)
+	{
+		if (start->sparseSet.TryErase(denseIndex))
+		{
+			--size_;
+			return true;
+		}
+		start = start->next;
+		denseIndex -= N;
+	}
+	return false;
+}
+
 template <typename T, ObjectIndex N>
 void OBJECTSLIST::erase(T& val)
 {
@@ -296,6 +330,56 @@ ObjectIndex OBJECTSLIST::GetDenseIndex(ObjectIndex sparseIndex)
 		start = start->next;
 	}
 	return index + start->sparseSet.GetDenseIndex(sparseIndex);
+}
+
+template <typename T, ObjectIndex N>
+T* OBJECTSLIST::TryGetDense(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start && denseIndex >= N)
+	{
+		denseIndex -= N;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return nullptr;
+	return start->sparseSet.TryGetDense(denseIndex);
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TrySetActive(ObjectIndex denseIndex, bool val)
+{
+	Node* start = head;
+	while (start && denseIndex >= start->sparseSet.size())
+	{
+		//Failed to find
+		if (denseIndex < N)
+			break;
+		denseIndex -= N;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return false;
+	start->activeObjectsBitset.set(denseIndex, val);
+	return true;
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TrySetActive(T& object, bool val)
+{
+	Node* start = head;
+	while (start)
+	{
+		//Found
+		if (start->sparseSet.contains(object))
+			break;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return false;
+	ObjectIndex denseIndex = start->sparseSet.GetDenseIndex(object);
+	start->activeObjectsBitset.set(denseIndex, val);
+	return true;
 }
 
 template <typename T, ObjectIndex N>

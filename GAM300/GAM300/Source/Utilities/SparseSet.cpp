@@ -179,4 +179,47 @@ bool SPARSESET::empty() const { return !size_; }
 
 template <typename T, ObjectIndex N>
 bool SPARSESET::full() const { return size_ == N; }
+
+template <typename T, ObjectIndex N>
+T* SPARSESET::TryGetDense(ObjectIndex denseIndex) 
+{
+    if (denseIndex >= N)
+        return nullptr;
+    for (ObjectIndex i = 0; i < size_; ++i)
+    {
+        if (nodes[i].denseIndex == denseIndex)
+            return reinterpret_cast<T*>(data)+denseIndex;
+    }
+    return nullptr;
+};
+
+template <typename T, ObjectIndex N>
+bool SPARSESET::TryErase(T& object)
+{
+    if (!contains(object))
+        return false;
+    erase(object);
+    return true;
+}
+
+
+template <typename T, ObjectIndex N>
+bool SPARSESET::TryErase(ObjectIndex denseIndex)
+{
+    if (denseIndex >= N)
+        return false;
+    for (ObjectIndex i = 0; i < size_; ++i)
+    {
+        if (nodes[i].denseIndex == denseIndex)
+        {
+            reinterpret_cast<T*>(data)[denseIndex].~T();
+            --size_;
+            nodes[i].denseIndex = nodes[size_].denseIndex;
+            nodes[size_].denseIndex = denseIndex;
+            return true;
+        }
+    }
+    return false;
+}
+
 #pragma endregion

@@ -90,6 +90,7 @@ public:
     T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
+    void erase(ObjectIndex denseIndex);
     ~ObjectsBList();
     Iterator begin();
     Iterator end();
@@ -98,7 +99,7 @@ public:
 
     void SetActive(T& obj, bool val = true);
 
-    auto& DenseSubscript(ObjectIndex val);
+    auto DenseSubscript(ObjectIndex val);
 
     ObjectIndex GetDenseIndex(T& object);
 private:

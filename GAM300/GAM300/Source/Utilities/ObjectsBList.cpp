@@ -23,19 +23,20 @@ ITERATOR::Iterator(size_t _index, Node* _pNode) : index(_index), pNode{ _pNode }
 template <typename T, ObjectIndex N>
 T& ITERATOR::operator*()
 {
-	return pNode->sparseSetList[index];
+	return pNode->objectList[index];
 }
 
 template <typename T, ObjectIndex N>
 typename ITERATOR ITERATOR::operator++()
 {
 	++index;
-	if (index >= pNode->sparseSetList.size())
+	if (index >= pNode->objectList.size())
 	{
-		while (pNode && pNode->objectList.empty())
+		do
 		{
 			pNode = pNode->next;
-		}
+		} 
+		while (pNode && pNode->objectList.empty());
 		index = 0;
 	}
 	return *this;
@@ -74,17 +75,19 @@ T& OBJECTSBLIST::emplace(ObjectIndex denseIndex, Args&&... args)
 	if (head == nullptr)
 		head = tail = CreateNode();
 	Node* start = head;
-	while (denseIndex >= N)
+	while (start->objectList.TryGetDense(denseIndex) != nullptr)
 	{
 		if (start->next == nullptr)
+		{
 			start->next = CreateNode();
+			start = start->next;
+			tail = start;
+			break;
+		}
 		start = start->next;
-		denseIndex -= N;
 	}
-	if (start->next == nullptr)
-		tail = start;
 	++size_;
-	return start->sparseSetList.emplace(denseIndex).emplace_back();
+	return start->objectList.emplace(denseIndex);
 }
 
 template <typename T, ObjectIndex N>
@@ -134,18 +137,23 @@ void OBJECTSBLIST::erase(T& val)
 	//Look for node/sparseset that contains the value
 	while (start)
 	{
-		for (auto& subNode : start->sparseSetList)
-		{
-			if (subNode.contains(val))
-			{
-				subNode.erase(val);
-				--size_;
-				return;
-			}
-		}
+		if (start->objectList.TryErase(val))
+			return;
 		start = start->next;
 	}
 	ASSERT(start != nullptr, "Failed to erase value");
+}
+
+template <typename T, ObjectIndex N>
+void OBJECTSBLIST::erase(ObjectIndex denseIndex)
+{
+	Node* start{ head };
+	while (start)
+	{
+		if (start->objectList.TryErase(denseIndex))
+			--size_;
+		start = start->next;
+	}
 }
 
 template <typename T, ObjectIndex N>
@@ -168,21 +176,15 @@ OBJECTSBLIST::~ObjectsBList()
 	}
 }
 
-
 template <typename T, ObjectIndex N>
 typename ITERATOR OBJECTSBLIST::begin()
 {
 	Node* start = head;
-	while (start)
+	while (start && start->objectList.empty())
 	{
-		for (auto& val : start->sparseSetList)
-		{
-			if (!val.empty())
-				return Iterator(0, 0, start);
-		}
 		start = start->next;
 	}
-	return Iterator(0, nullptr);
+	return Iterator(0, start);
 }
 
 template <typename T, ObjectIndex N>
@@ -199,48 +201,38 @@ void OBJECTSBLIST::SetActive(T& obj, bool val)
 	Node* start = head;
 	while (start)
 	{
-		for (auto it = start->sparseSetList.begin(); it != start->sparseSetList.end(); ++it)
-		{
-			if ((*it).contains(obj))
-			{
-				(*it).SetActive(obj, val);
-				return;
-			}
-		}
+		if (start->objectList.TrySetActive(obj, val))
+			return;
 		start = start->next;
 	}
+	ASSERT(false,"FAILED TO SET ACTIVE");
 }
 
-
 template <typename T, ObjectIndex N>
-auto OBJECTSBLIST::DenseSubscript(ObjectIndex val)
+auto OBJECTSBLIST::DenseSubscript(ObjectIndex denseIndex)
 {
 	std::vector<T*> references;
 	Node* start = head;
 	while (start)
 	{
-		if (entities.)
-		references.push_back();
+		T* pObject = start->objectList.TryGetDense(denseIndex);
+		if (pObject)
+			references.push_back(pObject);
 		start = start->next;
 	}
-	return std::;
+	return std::move(references);
 }
 
 template <typename T, ObjectIndex N>
 ObjectIndex OBJECTSBLIST::GetDenseIndex(T& object)
 {
 	Node* start = head;
-	size_t i = 0;
 	while (start)
 	{
-		for (auto& objectList : start->sparseSetList)
+		if (start->objectList.contains(object))
 		{
-			if (objectList.contains(object))
-			{
-				return i + start->sparseSetList.GetDenseIndex(objectList);
-			}
+			return start->objectList.GetDenseIndex(object);
 		}
-		i += N;
 		start = start->next;
 	}
 	ASSERT(true, "Object List does not contain this object");
