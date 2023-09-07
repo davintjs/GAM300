@@ -19,40 +19,39 @@ void AssetManager::Init()
 		std::string subFilePathMeta = subFilePath;
 		std::string fileType{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()) + 1; ++i)
 		{
 			fileType += subFilePath[i];
 		}
 
-		if (strcmp(fileType.c_str(), "geom") || strcmp(fileType.c_str(), "dds")) // Skip if not geom / dds ...
+		if (!strcmp(fileType.c_str(), "geom") || !strcmp(fileType.c_str(), "dds")) // Skip if not geom or dds
 		{
-			continue;
-		}
+			// Removing extension to add .meta extension
+			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
+			subFilePathMeta += ".meta";
 
-		// Removing extension to add .meta extension
-		subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-		subFilePathMeta += ".meta";
-
-		if (!std::filesystem::exists(subFilePathMeta))
-		{
-			std::string fileName{};
-			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+			if (!std::filesystem::exists(subFilePathMeta))
 			{
-				fileName += subFilePath[j];
+				std::string fileName{};
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
+				CreateMetaFile(fileName, subFilePathMeta, fileType);
 			}
-			CreateMetaFile(fileName, subFilePathMeta, fileType);
-		}
 
-		// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
-		this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
-		
-		// Deserialize from meta file and load the asset asynchronously
-		this->AsyncLoadAsset(subFilePathMeta);
-		
-		if (!strcmp(fileType.c_str(), "dds")) // if dds ...
-		{
-			// get guid
-			//TextureManager.AddTexture(subFilePath, guid);
+			// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
+			this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
+
+			// Deserialize from meta file and load the asset asynchronously
+			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
+			{
+				this->AsyncLoadAsset(subFilePathMeta, true);
+			}
+			else
+			{
+				this->AsyncLoadAsset(subFilePathMeta);
+			}
 		}
 	}
 
@@ -120,16 +119,16 @@ void AssetManager::Exit()
 }
 
 // Multi-threaded loading of assets
-void AssetManager::AsyncLoadAsset(const std::string& metaFilePath)
+void AssetManager::AsyncLoadAsset(const std::string& metaFilePath, bool isDDS)
 {
-	AssetThread.EnqueueTask([this, metaFilePath] { LoadAsset(metaFilePath); });
+	AssetThread.EnqueueTask([this, metaFilePath, isDDS] { LoadAsset(metaFilePath, isDDS); });
 }
 
-void AssetManager::LoadAsset(const std::string& metaFilePath)
+void AssetManager::LoadAsset(const std::string& metaFilePath, bool isDDS)
 {
 	{
 		std::lock_guard<std::mutex> mLock(mAssetMutex);
-		DeserializeAssetMeta(metaFilePath);
+		DeserializeAssetMeta(metaFilePath, isDDS);
 	}
 	mAssetVariable.notify_all();
 }
@@ -239,7 +238,7 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 	return;
 }
 
-void AssetManager::DeserializeAssetMeta(const std::string& filePath)
+void AssetManager::DeserializeAssetMeta(const std::string& filePath, bool isDDS)
 {
 	std::ifstream ifs(filePath);
 	std::stringstream buffer;
@@ -265,6 +264,11 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath)
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
 	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, std::make_pair(pathTime, buff)));
+
+	if (isDDS) // If is DDS format, add to texture manager
+	{
+		TextureManager.AddTexture(filePath.c_str(), GUIDofAsset);
+	}
 
 	inputFile.close();
 }

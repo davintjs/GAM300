@@ -39,8 +39,8 @@ private:
 	Asset mTotalAssets;
 
 	// Helper functions
-	void AsyncLoadAsset(const std::string& metaFilePath);
-	void LoadAsset(const std::string& metaFilePath);
+	void AsyncLoadAsset(const std::string& metaFilePath, bool isDDS = false);
+	void LoadAsset(const std::string& metaFilePath, bool isDDS = false);
 	void AsyncUnloadAsset(const std::string& assetGUID);
 	void UnloadAsset(const std::string& assetGUID);
 	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
@@ -48,7 +48,7 @@ private:
 
 	std::string GenerateGUID(const std::string& fileName);
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
-	void DeserializeAssetMeta(const std::string& filePath);
+	void DeserializeAssetMeta(const std::string& filePath, bool isDDS = false);
 
 	void FileAddProtocol();
 	void FileRemoveProtocol();
