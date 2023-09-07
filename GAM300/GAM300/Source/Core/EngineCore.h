@@ -96,30 +96,30 @@ public:
 		//std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		//TEST ENTITY CREATION
-		for (int i = 0; i < 15; ++i)
-		{
-			scene.AddEntity();
-		}
+		//for (int i = 0; i < 15; ++i)
+		//{
+		//	scene.AddEntity();
+		//}
 
-		//scene.Destroy(*(++(++scene.entities.begin())));
+		////scene.Destroy(*(++(++scene.entities.begin())));
 
-		Script& script3 = scene.AddComponent<Script>(14);
-		scene.AddComponent<Script>(13);
-		scene.AddComponent<Script>(3);
-		//scene.Destroy(script3);
-		scene.AddComponent<Script>(14);
-		Script& script = scene.AddComponent<Script>(0);
-		Script& script4 = scene.AddComponent<Script>(0);
-		scene.AddComponent<Script>(0);
-		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
-		scene.Destroy(script4);
-		//Script& script2 = scene.AddComponent<Script>(10);
-		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
+		//Script& script3 = scene.AddComponent<Script>(14);
+		//scene.AddComponent<Script>(13);
+		//scene.AddComponent<Script>(3);
+		////scene.Destroy(script3);
+		//scene.AddComponent<Script>(14);
+		//Script& script = scene.AddComponent<Script>(0);
+		//Script& script4 = scene.AddComponent<Script>(0);
+		//scene.AddComponent<Script>(0);
+		////scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
+		//scene.Destroy(script4);
+		////Script& script2 = scene.AddComponent<Script>(10);
+		////scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
 
-		scene.GetComponent<Script>(scene.entities[14]);
-		scene.Destroy(scene.entities[14]);
+		//scene.GetComponent<Script>(scene.entities[14]);
+		//scene.Destroy(scene.entities[14]);
 
-		AllComponentTypes::Size();
+		//AllComponentTypes::Size();
 	}
 
 	/**************************************************************************/

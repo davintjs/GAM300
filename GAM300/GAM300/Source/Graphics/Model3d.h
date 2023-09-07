@@ -36,7 +36,7 @@ public:
 	void setup_affectedShader();// Impacted by Light
 	void lightSource_draw();
 	void affectedByLight_draw(glm::vec3 lightPos);
-	void instanceDraw();
+	void instanceDraw(int entitycount);
 
 	glm::vec3 position;
 

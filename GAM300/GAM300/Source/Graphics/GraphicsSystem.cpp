@@ -21,8 +21,8 @@ Model AffectedByLight;
 unsigned int testBoxbuffer;
 Model testBox;
 
-unsigned int entityPositionsBuffer;
-glm::mat4 entityPositions[100];
+unsigned int entitySRTBuffer;
+glm::mat4 entitySRT[EntityRenderLimit];
 //Editor_Camera testCam;
 
 //Editor_Camera E_Camera;
@@ -61,16 +61,17 @@ void GraphicsSystem::Init()
 			continue;
 		}*/
 		//Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
-		entityPositions[index] = glm::mat4(1.f);
+		entitySRT[index] = glm::mat4(1.f);
 		/*if (currentScene.singleComponentsArrays.GetArray<model>()) {
 
 		}*/
 		++index;
 	}
 
-	glGenBuffers(1, &entityPositionsBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, entityPositionsBuffer);
-	glBufferData(GL_ARRAY_BUFFER, currentScene.entities.size() * sizeof(glm::mat4), &entityPositions[0], GL_DYNAMIC_DRAW);
+	glGenBuffers(1, &entitySRTBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
+	glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, currentScene.entities.size() * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	InstanceSetup(testBox.vaoid);
@@ -100,7 +101,6 @@ void GraphicsSystem::Update(float dt)
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
 
 		);
-
 		glm::mat4 rotation_mat(
 			glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
 			glm::vec4(0.f, 1.f, 0.f, 0.f),
@@ -114,7 +114,9 @@ void GraphicsSystem::Update(float dt)
 			glm::vec4(trans.translation, 1.f)
 		);
 		glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
-		entityPositions[i] = SRT;
+		entitySRT[i] = SRT;
+		//entitySRT[i] = glm::mat4(1.f);
+		++i;
 	}
 
 	//Currently Putting in Camera Update loop here
@@ -171,27 +173,41 @@ void GraphicsSystem::Update(float dt)
 	}
 
 	// instanced bind
-	glBindBuffer(GL_ARRAY_BUFFER, entityPositionsBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, (currentScene.entities.size()) * sizeof(glm::mat4), &entityPositions[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, (currentScene.entities.size()) * sizeof(glm::mat4), &entitySRT[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	// instanced draw
-	testBox.instanceDraw();
+	testBox.instanceDraw(EntityRenderLimit);
 
-	testmodel.draw();
+	/*testmodel.draw();
 
 	LightSource.lightSource_draw();
 
-	/*AffectedByLight.affectedByLight_draw(LightSource.position);*/
+	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
 	// Bean: For unbinding framebuffer
 	EditorCam.getFramebuffer().unbind();
 }
 
 void InstanceSetup(GLuint vaoid) {
+	//entitySRTBuffer
 	glBindVertexArray(vaoid);
-	glBindBuffer(GL_ARRAY_BUFFER, entityPositionsBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	glVertexAttribDivisor(6, 1);
+	glBindVertexArray(0);
 }
 
 void GraphicsSystem::Exit()

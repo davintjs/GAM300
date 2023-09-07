@@ -7,13 +7,13 @@ void SceneManager::Init()
 	{
 		//Create empty scene
 		LoadScene("");
-		Scene& scene = GetCurrentScene();
+		/*Scene& scene = GetCurrentScene();
 		//Add 5 new entity into scene
 		scene.AddEntity();
 		scene.AddEntity();
 		scene.AddEntity();
 		scene.AddEntity();
-		scene.AddEntity();
+		scene.AddEntity();*/
 	}
 }
 
@@ -21,10 +21,22 @@ void SceneManager::LoadScene(const char* path)
 {
 	loadedScenes.emplace_front(path);
 	Scene& scene = GetCurrentScene();
+	
 	Entity& titty = scene.AddEntity();
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0,-100.f,-800.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(5.f, 5.f, 5.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+
+	/**/scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+
+	/*Entity& titty2 = scene.AddEntity();
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).translation = Vector3(100.f, 100.f, 100.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).scale = Vector3(40.f, 40.f, 40.f);*/
 	//Init scene
+
 }
 
 void SceneManager::Update(float dt)

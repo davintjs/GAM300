@@ -178,7 +178,7 @@ void Model::setup_instanced_shader() {
         "GAM300/Source/Graphics/InstancedRender.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
-    std::cout << "abnb2 SHADER\n";
+    std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
     std::cout << "\n\n";
 
@@ -226,9 +226,9 @@ void Model::draw() {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
     glm::mat4 scaling_mat(
-        glm::vec4(1.f, 0.f, 0.f, 0.f),
-        glm::vec4(0.f, 1.f, 0.f, 0.f),
-        glm::vec4(0.f, 0.f, 1.f, 0.f),
+        glm::vec4(0.1f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.1f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 0.1f, 0.f),
         glm::vec4(0.f, 0.f, 0.f, 1.f)
 
     );
@@ -245,7 +245,7 @@ void Model::draw() {
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(position, 1.f)
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
@@ -283,7 +283,7 @@ void Model::draw() {
     shader.UnUse();
 }
 
-void Model::instanceDraw() {
+void Model::instanceDraw(int entitycount) {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
     //glm::mat4 scaling_mat(
@@ -331,7 +331,7 @@ void Model::instanceDraw() {
         glm::value_ptr(SRT));*/
 
     glBindVertexArray(vaoid);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 36);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
     glBindVertexArray(0);
     shader.UnUse();
 }
