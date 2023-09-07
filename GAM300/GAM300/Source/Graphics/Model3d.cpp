@@ -208,13 +208,13 @@ void Model::init() {
     glm::vec3 tangent;
     glm::vec2 tex;
     glm::vec4 color;*/
-    _geom = geom;
 
     DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
 
     for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
     {
         std::cout << "ouch\n";
+
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
@@ -222,67 +222,69 @@ void Model::init() {
 
 
 
-    GLuint VAO; 
-    GLuint VBO;
-    GLuint EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-    //std::cout << "box_wf vao is :" << VAO << "\n";
+        GLuint VAO;
+        GLuint VBO;
+        GLuint EBO;
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+        glBindVertexArray(VAO);
+        //std::cout << "box_wf vao is :" << VAO << "\n";
 
-    // test vertex colors
-    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
-    //{
-    //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-    //}
+        // test vertex colors
+        //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+        //{
+        //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+        //}
 
-    // bind vbo and pass vertice data into the buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, _geom->_vertices.size() * sizeof(Vertex), &_geom->_vertices[0], GL_STATIC_DRAW);
+        // bind vbo and pass vertice data into the buffer
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[i]._vertices[0], GL_STATIC_DRAW);
 
-    // set the vertex attributes to tell vert shader pos, uv, normal etc.
-    // note offsetof uses the struct Vertex as first argument, and member name as second.
-    // it returns the offset to the member name :)
-    glEnableVertexAttribArray(0); //pos
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+        // set the vertex attributes to tell vert shader pos, uv, normal etc.
+        // note offsetof uses the struct Vertex as first argument, and member name as second.
+        // it returns the offset to the member name :)
+        glEnableVertexAttribArray(0); //pos
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
-    glEnableVertexAttribArray(1); // normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glEnableVertexAttribArray(1); // normal
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
-    glEnableVertexAttribArray(2); //tangent
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+        glEnableVertexAttribArray(2); //tangent
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
 
-    glEnableVertexAttribArray(3); // tex (uv coords)
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+        glEnableVertexAttribArray(3); // tex (uv coords)
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
 
-    glEnableVertexAttribArray(4); // color
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    
-
-    // bind indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _geom->_indices.size() * sizeof(int32_t), &_geom->_indices[0], GL_STATIC_DRAW);
-
-    glBindVertexArray(0); // unbind vao
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
-
-    vaoid = VAO;
-    vboid = VBO;
-    prim = GL_TRIANGLES;
-    drawcount = _geom->_indices.size(); // number of slices 
-
-    // load default texture, todo
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-
-   /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");
-
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Normal_OpenGL.dds");
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/sample_1280�853.dds");*/
+        glEnableVertexAttribArray(4); // color
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
 
+        // bind indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._indices.size() * sizeof(unsigned int), &totalGeoms[0].mMeshes[i]._indices[0], GL_STATIC_DRAW);
+
+        glBindVertexArray(0); // unbind vao
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+       /* vaoid = VAO;
+        vboid = VBO;*/
+        prim = GL_TRIANGLES;
+        //drawcount = _geom->_indices.size(); // number of slices 
+
+        // load default texture, todo
+        texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+
+        /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
+         texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");
+
+         texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Normal_OpenGL.dds");
+         texturebuffer = loadDDS("Assets/Models/Skull_textured/sample_1280�853.dds");*/
+        FBX_vaoid.push_back(VAO);
+        FBX_vboid.push_back(VBO);
+        FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+    }
 
     setup_shader();
 
@@ -461,7 +463,7 @@ void Model::draw() {
     glBindTexture(GL_TEXTURE_2D, 0);
     shader.UnUse();
 
-    debugAABB_draw(SRT);
+    //debugAABB_draw(SRT);
 }
 
 void Model::instanceDraw(int entitycount) {
@@ -949,98 +951,98 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
 
 void Model::debugAABB_init() // vao & shader
 {
-    // find min max points for each axis
-    glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
+    //// find min max points for each axis
+    //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
 
-    for (size_t i = 0; i < _geom->_vertices.size(); i++)
-    {
-        minpt.x = std::min(minpt.x, _geom->_vertices[i].pos.x);
-        minpt.y = std::min(minpt.y, _geom->_vertices[i].pos.y);
-        minpt.z = std::min(minpt.z, _geom->_vertices[i].pos.z);
+    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+    //{
+    //    minpt.x = std::min(minpt.x, _geom->_vertices[i].pos.x);
+    //    minpt.y = std::min(minpt.y, _geom->_vertices[i].pos.y);
+    //    minpt.z = std::min(minpt.z, _geom->_vertices[i].pos.z);
 
-        maxpt.x = std::max(maxpt.x, _geom->_vertices[i].pos.x);
-        maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
-        maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
-    }
+    //    maxpt.x = std::max(maxpt.x, _geom->_vertices[i].pos.x);
+    //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
+    //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
+    //}
 
-    pntAABB[0] = minpt;
-    pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
-    pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
-    pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
+    //pntAABB[0] = minpt;
+    //pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
+    //pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
+    //pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
 
-    pntAABB[4] = maxpt;
-    pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
-    pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
-    pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
-    
-    int indice = 0;
+    //pntAABB[4] = maxpt;
+    //pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
+    //pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
+    //pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
+    //
+    //int indice = 0;
 
-    idxAABB.push_back(glm::ivec2(indice, indice + 1));
-    idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
-    idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
-    idxAABB.push_back(glm::ivec2(indice + 3, indice));
+    //idxAABB.push_back(glm::ivec2(indice, indice + 1));
+    //idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
+    //idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
+    //idxAABB.push_back(glm::ivec2(indice + 3, indice));
 
-    idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
-    idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
-    idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
-    idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
+    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
+    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
+    //idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
+    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
 
-    idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
-    idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
-    idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
-    idxAABB.push_back(glm::ivec2(indice + 6, indice));
-
-
-    // setup vao
-    GLuint Pbuff; // point buffer
-    GLuint Ibuff; // indice buffer
-
-    glGenVertexArrays(1, &vaoidAABB);
-    glGenBuffers(1, &Pbuff);
-    glGenBuffers(1, &Ibuff);
-
-    glBindVertexArray(vaoidAABB);
-    glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
-        &idxAABB[0], GL_STATIC_DRAW);
-
-    glBindVertexArray(0); // unbind vao
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
+    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
+    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
+    //idxAABB.push_back(glm::ivec2(indice + 6, indice));
 
 
-    // setup shader
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //// setup vao
+    //GLuint Pbuff; // point buffer
+    //GLuint Ibuff; // indice buffer
 
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //glGenVertexArrays(1, &vaoidAABB);
+    //glGenBuffers(1, &Pbuff);
+    //glGenBuffers(1, &Ibuff);
 
-    std::cout << "DEBUG AABB SHADER\n";
-    shaderAABB.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
+    //glBindVertexArray(vaoidAABB);
+    //glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
 
-    // if linking failed
-    if (GL_FALSE == shaderAABB.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shaderAABB.GetLog() << "\n";
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
+
+    //glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
+    //    &idxAABB[0], GL_STATIC_DRAW);
+
+    //glBindVertexArray(0); // unbind vao
+    //glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+
+    //// setup shader
+    //std::vector<std::pair<GLenum, std::string>> shdr_files;
+    //// Vertex Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_VERTEX_SHADER,
+    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+
+    //// Fragment Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_FRAGMENT_SHADER,
+    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+
+    //std::cout << "DEBUG AABB SHADER\n";
+    //shaderAABB.CompileLinkValidate(shdr_files);
+    //std::cout << "\n\n";
+
+    //// if linking failed
+    //if (GL_FALSE == shaderAABB.IsLinked()) {
+    //    std::stringstream sstr;
+    //    sstr << "Unable to compile/link/validate shader programs\n";
+    //    sstr << shaderAABB.GetLog() << "\n";
+    //    std::cout << sstr.str();
+    //    std::exit(EXIT_FAILURE);
+    //}
 }
 
 void Model::debugAABB_draw(glm::mat4 & SRT)

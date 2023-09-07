@@ -70,7 +70,7 @@ public:
 
 
 
-	AssimpLoader* _geom;
+	//AssimpLoader* _geom;
 
 
 	//AssimpLoader* _geom; 
