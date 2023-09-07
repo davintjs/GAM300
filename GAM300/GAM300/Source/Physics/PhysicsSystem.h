@@ -45,6 +45,11 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::PhysicsSystem* physicsSystem = nullptr;
 	JPH::BodyInterface* bodyInterface = nullptr;
 
+	JPH::BoxShapeSettings* floorShapeSettings = nullptr;
+	JPH::ShapeRefC* floorShape = nullptr;
+	JPH::BodyCreationSettings* floorSettings = nullptr;
+	JPH::SphereShape* sphereShape = nullptr;
+
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;

@@ -14,6 +14,7 @@ void PhysicsSystem::Init() {
 	// Allocate memory for use in simulation
 	tempAllocator.Allocate(10 * 1024 * 1024);
 
+	
 }
 
 void PhysicsSystem::Update() {
@@ -81,6 +82,33 @@ void PhysicsSystem::OnSceneStart() {
 	// Iterate through rigidbody list
 	// for each rigidbody component, create a "Jolt Body" using the entity the rb component belongs to
 	
+
+
+	//Creating a rigid body that will be used as a floor 
+	//For this, we create the settings for the collision volume such as the shape 
+	floorShapeSettings = new JPH::BoxShapeSettings(JPH::Vec3(100.0f, 1.0f, 100.0f));
+
+	//Creating the shape 
+	JPH::ShapeSettings::ShapeResult floorShapeResult = floorShapeSettings->Create();
+
+	floorShape = new JPH::ShapeRefC(floorShapeResult.Get()); //	Can also check for HasError() or GetError() 
+
+	//Creating the settings for the body itself 
+	JPH::BodyCreationSettings floorSettings(*floorShape, JPH::RVec3(0.0, -1.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Static, EngineObjectLayers::STATIC);
+
+	JPH::Body* floor = bodyInterface->CreateBody(floorSettings);
+
+	//Add it to the real world 
+	bodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
+
+	//Next, we add a dynamic body (ball) to test 
+	sphereShape = new JPH::SphereShape(0.5f);
+
+	JPH::BodyCreationSettings sphereSettings(sphereShape, JPH::RVec3(0.0, 2.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
+	JPH::BodyID sphere_ID = bodyInterface->CreateAndAddBody(sphereSettings, JPH::EActivation::Activate);
+
+	//To give the body a velocity as we will be interacting with it 
+	bodyInterface->SetLinearVelocity(sphere_ID, JPH::Vec3(0.0f, -5.0f, 0.0f)); 
 
 	simulating = true;
 
