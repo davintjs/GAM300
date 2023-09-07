@@ -16,9 +16,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#define MAX_MULTI_COMPONENTS 1
-
-#include <string>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -38,7 +35,6 @@ using Vector4 = glm::vec4;
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
 {
-	static constexpr const char* name = ComponentName(T);
 	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
 	constexpr GetComponentTypeGroup() = default;
 
@@ -54,7 +50,22 @@ struct GetComponentTypeGroup
 			return GetComponentTypeGroup<Ts...>::template E<T1>();
 		}
 	}
+
+	template <typename T1>
+	static constexpr const char* Name()
+	{
+		if constexpr (std::is_same<T, T1>())
+		{
+			static const char* name = typeid(T).name() + strlen("struct ");
+			return name;
+		}
+		else
+		{
+			return GetComponentTypeGroup<Ts...>::template Name<T1>();
+		}
+	}
 };
+
 
 template<typename... Ts>
 struct SingleComponentsGroup

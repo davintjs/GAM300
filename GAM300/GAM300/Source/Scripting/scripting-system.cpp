@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma warning( disable : 26111 )
 #include "Precompiled.h"
 #include "Scripting/scripting-system.h"
-//#include "Scripting/compiler.h"
+#include "Scripting/Compiler.h"
 #include "Utilities/MultiThreading.h"
 #include "Core/SystemInterface.h"
 //#include "Scripting/script-wrappers.h"
@@ -35,7 +35,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <mutex>
 #include <mono/metadata/environment.h>
 
-#define SECONDS_TO_RECOMPILE 1
+
+#define SECONDS_TO_RECOMPILE 1.f
+
 namespace
 {
 	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
@@ -193,26 +195,19 @@ MonoType* ScriptingSystem::getMonoTypeFromName(std::string& name)
 
 void ScriptingSystem::RecompileThreadWork()
 {
-	while (!THREADS.HasQuit())
-	{
-		compilingStateReadable.lock();
-		while (compilingState == CompilingState::SwapAssembly);
-		compilingState = CompilingState::Compiling;
-		//Critical section
-		//while (!THREADS.AcquireMutex(MutexType::FileSystem));
-		//updateScriptFiles();
-		//tryRecompileDll();
-		//THREADS.returnMutex(MutexType::FileSystem);
-		//Critical section End
-		compilingStateReadable.unlock();
-		//Sleep(SECONDS_TO_RECOMPILE * 1000);
-	}
-}
-
-ScriptingSystem::ScriptingSystem()
-	//:scriptFiles{ FileSystem::Instance()->get_files_with_extension(".cs") }
-{
-
+	PRINT("RECOMPLING\n");
+	//compilingStateReadable.lock();
+	//while (compilingState == CompilingState::SwapAssembly);
+	//compilingState = CompilingState::Compiling;
+	//Critical section
+	//while (!THREADS.AcquireMutex(MutexType::FileSystem));
+	//tryRecompileDll();
+	//THREADS.returnMutex(MutexType::FileSystem);
+	Utils::CompileDll();
+	//compilingState = CompilingState::SwapAssembly;
+	//Critical section End
+	//compilingStateReadable.unlock();
+	PRINT("RECOMPLING END\n");
 }
 
 //template<typename T, typename... Ts>
@@ -231,7 +226,7 @@ void ScriptingSystem::Init()
 	InitMono();
 	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
-	THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
+	//THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
 	EVENT.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	//ENABLE FOR PLAY MODE
 	//swapDll();
@@ -258,6 +253,29 @@ void ScriptingSystem::Update(float dt)
 	//	swapDll();
 	//	compilingState = CompilingState::Wait;
 	//}
+
+	//Pause timer when recompiling
+	if (timeUntilRecompile > 0)
+	{
+		timeUntilRecompile -= dt;
+		if (timeUntilRecompile < 0)
+		{
+			PRINT("START RECOMPLING\n");
+			if (pRecompileThread == nullptr)
+			{
+				pRecompileThread = &THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
+			}
+			//Reuse thread
+			else
+			{
+				if (pRecompileThread->joinable())
+				{
+					pRecompileThread->join();
+					*pRecompileThread = std::thread(&ScriptingSystem::RecompileThreadWork, this);
+				}
+			}
+		}
+	}
 }
 
 void ScriptingSystem::Exit()
@@ -560,25 +578,6 @@ MonoObject* ScriptingSystem::createInstance(MonoClass* _mClass)
 	return mono_object_new(mAppDomain,_mClass);
 }
 
-void ScriptingSystem::tryRecompileDll()
-{
-	//bool startCompiling = false;
-	//for (File& scriptFile : scriptFiles)
-	//{
-	//	scriptFile.update_modification_timing();
-	//	if (scriptFile.is_modified() && !startCompiling)
-	//	{
-	//		startCompiling = true;
-	//		Utils::compileDll();
-	//		compilingState = CompilingState::SwapAssembly;
-	//	}
-	//}
-	//if (!startCompiling)
-	//{
-	//	compilingState = CompilingState::Wait;
-	//}
-}
-
 bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
 {
 	//using scriptFileListIter = std::list<File>::iterator;
@@ -660,6 +659,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 void ScriptingSystem::CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent)
 {
 	PRINT("SCRIPT CHANGE DETECTED!\n");
+	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
 
 //MonoObject* ScriptingSystem::ReflectGameObject(GameObject& gameObj)
