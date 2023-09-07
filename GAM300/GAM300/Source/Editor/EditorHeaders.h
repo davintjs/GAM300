@@ -104,39 +104,21 @@ public:
 private:
 };
 
-
-
-
 ENGINE_EDITOR_SYSTEM(EditorDebugger)
 {
 public:
-
-    struct Debugger
-    {
-        ImGuiTextBuffer     Buffer;
-        ImGuiTextFilter     Filter;
-        ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
-        bool                AutoScroll;  // Keep scrolling if already at the bottom.
-
-        Debugger();
-
-        void Clear();
-
-        void AddLog(const char* fmt, ...) IM_FMTARGS(2);
-
-        void Draw();
-    };
 
     void Init();
     void Update(float dt);
     void Exit();
 
-    void Debug_Window(bool open);
+    void Clear();
 
-    Debugger Debug_Sys;
+    void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+
+    void Draw();
 
     int debugcounter;
-    
 
 private:
     ImGuiTextBuffer     Buffer;

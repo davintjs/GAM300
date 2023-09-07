@@ -79,7 +79,7 @@ void Editor_Camera::Update(float dt)
 	if (InputHandler::isMouseButtonPressed_L())
 	{
 		glm::vec2 position = GetMouseInNDC();
-		EditorDebugger::Instance().Debug_Sys.AddLog("Position: %f %f\n", position.x, position.y);
+		EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
 	}
 }
 
