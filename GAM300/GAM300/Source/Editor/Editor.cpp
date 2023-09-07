@@ -32,7 +32,6 @@ void EditorSystem::Init()
 
     // Enable this for dockspace capabilities in dockspace mode		
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
     ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 

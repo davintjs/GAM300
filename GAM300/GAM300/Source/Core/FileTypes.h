@@ -7,10 +7,12 @@ enum class FileType
 	TEXTURE
 };
 
-enum class FileState
+enum class FileState : size_t
 {
-	MODIFIED,
-	DELETED,
-	CREATED,
+	CREATED = 0x00000001,
+	DELETED = 0x00000002,
+	MODIFIED = 0x00000003,
+	RENAMED_OLD = 0x00000004,
+	RENAMED_NEW = 0x00000005,
 	NONE
 };

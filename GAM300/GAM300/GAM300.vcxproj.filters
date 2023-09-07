@@ -71,6 +71,7 @@
     <ClCompile Include="Source\Editor\EditorToolBar.cpp" />
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
     <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
+    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -128,6 +129,7 @@
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
+    <ClInclude Include="Source\Scripting\scripting-system.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

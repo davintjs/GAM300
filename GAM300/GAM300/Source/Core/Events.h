@@ -18,6 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene/Scene.h"
 #include "Core/FileTypes.h"
+#include <filesystem>
 
 struct IEvent
 {
@@ -63,8 +64,8 @@ struct ReflectEntityEvent : IEvent
 template <FileType FTYPE>
 struct FileModifiedEvent : IEvent 
 {
-	FileModifiedEvent(const std::string& _filePath) : filePath{ _filePath }{};
-	std::string filePath;
+	FileModifiedEvent(const std::filesystem::path& _filePath, FileState _fileState) : filePath{_filePath}, fileState{_fileState}{};
+	std::filesystem::path filePath;
 	FileState fileState;
 };
 

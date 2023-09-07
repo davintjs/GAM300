@@ -3,6 +3,8 @@
 
 #include "Core/SystemInterface.h"
 
+#define EntityRenderLimit 10000
+
 ENGINE_SYSTEM(GraphicsSystem)
 {
 public:
