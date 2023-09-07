@@ -1,6 +1,6 @@
 /*!***************************************************************************************
 \file			EditorScene.cpp
-\project		GAM300
+\project		
 \author			Sean Ngo
 
 \par			Course : GAM300

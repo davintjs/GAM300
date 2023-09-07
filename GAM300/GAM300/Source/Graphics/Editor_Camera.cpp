@@ -8,7 +8,6 @@ extern std::vector<Ray3D> Ray_Container;
 
 void Editor_Camera::Init()
 {
-	
 	setDistanceToFocalPoint(1000.f);
 	setRotationSpeed(2.f);
 	updateView();

@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			EditorToolBar.cpp
+\file			YAMLUtils.cpp
 \project		
 \author         Sean Ngo
 
@@ -8,28 +8,10 @@
 
 \brief
     This file contains the definitions of the following:
-    1. Editor ToolBar
+    1. YAML Integration
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
-#include "Editor.h"
-#include "EditorHeaders.h"
-
-void EditorToolBar::Init()
-{
-
-}
-
-void EditorToolBar::Update(float dt)
-{
-    ImGui::Begin("Toolbar");
-    //Play, Pause, Step(Optional)
-    ImGui::End();
-}
-
-void EditorToolBar::Exit()
-{
-
-}
+#include "YAMLUtils.h"
