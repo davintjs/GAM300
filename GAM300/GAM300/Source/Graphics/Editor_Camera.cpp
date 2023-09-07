@@ -258,7 +258,7 @@ float Editor_Camera::getRotationSpeed()
 
 Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye)
 {
-	EditorDebugger::Instance().Debug_Sys.AddLog("Dimension: %f %f\n", EditorScene::Instance().GetDimension().x, EditorScene::Instance().GetDimension().y);
+	EditorDebugger::Instance().AddLog("Dimension: %f %f\n", EditorScene::Instance().GetDimension().x, EditorScene::Instance().GetDimension().y);
 
 	//ypos += GLFW_Handler::height;
 
