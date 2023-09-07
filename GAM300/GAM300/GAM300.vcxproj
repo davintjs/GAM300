@@ -128,7 +128,7 @@
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Physics\PhysicsSystem.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -337,7 +337,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)External\Mono;$(SolutionDir)External\Jolt_master;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)External\Mono;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>-IGNORE:4098 -IGNORE:4006 %(AdditionalOptions)</AdditionalOptions>
     </Link>

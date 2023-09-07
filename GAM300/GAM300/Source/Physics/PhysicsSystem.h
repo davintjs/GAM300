@@ -1,6 +1,3 @@
-#ifndef PHYSICSSYSTEM_H
-#define PHYSICSSYSTEM_H
-
 #include "Core/SystemInterface.h"
 #include "Scene/Entity.h"
 
@@ -16,6 +13,9 @@
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
+
+#ifndef PHYSICSSYSTEM_H
+#define PHYSICSSYSTEM_H
 
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
@@ -83,27 +83,9 @@ public:
 	}
 };
 
-
-
-
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
-
-	
-	void Init() {
-		// Register allocation hook
-		JPH::RegisterDefaultAllocator();
-
-		// Create factory
-		JPH::Factory::sInstance = new JPH::Factory();
-
-		// Register all JPH types
-		JPH::RegisterTypes();
-
-		// Allocate memory for use in simulation
-		tempAllocator.Allocate(10 * 1024 * 1024);
-
-	}
+	void Init();
 	void Update();
 	void Exit();
 
@@ -121,8 +103,6 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	unsigned int step = 0;
 
 	bool simulating = false;
-
-	
 
 	JPH::PhysicsSystem* physicsSystem = nullptr;
 	JPH::BodyInterface* bodyInterface = nullptr;

@@ -1,13 +1,21 @@
 #include "Precompiled.h"
 #include "PhysicsSystem.h"
 
+void PhysicsSystem::Init() 
+{
+	// Register allocation hook
+	JPH::RegisterDefaultAllocator();
 
+	// Create factory
+	JPH::Factory::sInstance = new JPH::Factory();
 
-//void PhysicsSystem::Init() {
-//
-//
-//	
-//}
+	// Register all JPH types
+	JPH::RegisterTypes();
+
+	// Allocate memory for use in simulation
+	tempAllocator.Allocate(10 * 1024 * 1024);
+
+}
 
 //void PhysicsSystem::Update() {
 //	
