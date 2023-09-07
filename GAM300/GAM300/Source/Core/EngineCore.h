@@ -34,6 +34,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
+#include "Scripting/scripting-system.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -65,6 +66,7 @@ public:
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
 			//&PhysicsSystem::Instance(),
+			&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),

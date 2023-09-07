@@ -3,6 +3,7 @@
 //#include "Core/FileTypes.h"
 #include <Utilities/MultiThreading.h>
 #include <Windows.h>
+#include <Core/EventsManager.h>
 
 FileWatcher::FileWatcher()
 {
@@ -21,8 +22,6 @@ FileWatcher::FileWatcher()
 FileWatcher::~FileWatcher()
 {
     CloseHandle(hDir);
-    //CancelIo(hDir);
-    //CloseHandle(hDir);
 }
 
 void FileWatcher::Quit()
@@ -41,6 +40,8 @@ void FileWatcher::ThreadWork()
     TCHAR szFile[MAX_PATH];
     DWORD bytesret;
     PFILE_NOTIFY_INFORMATION pNotify;
+    std::filesystem::path oldNameFile;
+
 
     while (!THREADS.HasQuit())
     {
@@ -59,43 +60,33 @@ void FileWatcher::ThreadWork()
         {
             pNotify = (PFILE_NOTIFY_INFORMATION)&fni[offset];
             offset += pNotify->NextEntryOffset;
+
             #if defined(UNICODE)
-            {
-                lstrcpynW(szFile, pNotify->FileName,
-                    min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
-                std::wcout << pNotify->FileName << std::endl;
-            }
+                {
+                    lstrcpynW(szFile, pNotify->FileName,
+                        min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
+                }
             #else
-            {
-                int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
-                    pNotify->FileNameLength / sizeof(WCHAR),
-                    szFile, MAX_PATH - 1, NULL, NULL);
-                szFile[count] = TEXT('\0');
-            }
+                {
+                    int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
+                        pNotify->FileNameLength / sizeof(WCHAR),
+                        szFile, MAX_PATH - 1, NULL, NULL);
+                    szFile[count] = TEXT('\0');
+                }
             #endif
+            FileState fileState = FileState(pNotify->Action);
+            std::wstring name{ pNotify->FileName };
+            std::filesystem::path filePath{ name };
+            //oldNameFile = pNotify->FileName;
+            if (filePath.extension() == ".cs")
+            {
+                PRINT("HARLO");
+                FileModifiedEvent<FileType::SCRIPT> fileScript{filePath,fileState};
+                EVENT.Publish(&fileScript);
+            }
+
         } while (pNotify->NextEntryOffset != 0);
     }
 }
 
-        
-        //    FileState fileState{};
-        //    switch (pNotify->Action)
-        //    {
-        //    case FILE_ACTION_MODIFIED:
-        //        fileState = FileState::MODIFIED;
-        //        break;
-        //    case FILE_ACTION_ADDED:
-        //        fileState = FileState::CREATED;
-        //        break;
-        //    case FILE_ACTION_REMOVED:
-        //        fileState = FileState::DELETED;
-        //        break;
-        //    case FILE_ACTION_RENAMED_OLD_NAME:
-        //        PRINT("OLD NAME: ");
-        //        break;
-        //    case FILE_ACTION_RENAMED_NEW_NAME:
-        //        PRINT("NEW NAME: ");
-        //        break;
-        //    }
-        //    std::wcout << pNotify->FileName << std::endl;
-        //} while (pNotify->NextEntryOffset != 0);
+    
