@@ -19,6 +19,7 @@
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Scene/SceneManager.h"
 
 void EditorSystem::Init()
 {
@@ -52,7 +53,7 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
-   /* bool demo = true;
+    /*bool demo = true;
     ImGui::ShowDemoWindow(&demo);*/
 
     //Editor Functions

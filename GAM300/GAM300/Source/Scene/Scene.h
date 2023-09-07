@@ -42,6 +42,7 @@ using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
+	std::string Scene_name;
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;

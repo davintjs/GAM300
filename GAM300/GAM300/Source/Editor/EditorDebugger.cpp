@@ -28,13 +28,13 @@ void EditorDebugger::Update(float dt)
 
 }
 
-Debugger::Debugger()
+EditorDebugger::Debugger::Debugger()
 {
     AutoScroll = true;
     Clear();
 }
 
-void Debugger::Draw()
+void EditorDebugger::Debugger::Draw()
 {
     // Options menu
     if (ImGui::BeginPopup("Options"))
@@ -100,7 +100,7 @@ void Debugger::Draw()
 
 //using Variable Argument List in order to create and concatenate debug outputs
 //To add logs to logger, use this format: Debug_Sys.AddLog("[%i]{Type}Input Debug Text Here!\n", Debug_Sys.Debug_Counter++);
-void Debugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void EditorDebugger::Debugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 {
     int old_size = Buffer.size();
     va_list args;
@@ -112,7 +112,7 @@ void Debugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
-void Debugger::Clear()
+void EditorDebugger::Debugger::Clear()
 {
     Buffer.clear();
     LineOffsets.clear();
