@@ -24,7 +24,7 @@ void AssetManager::Init()
 			fileType += subFilePath[i];
 		}
 
-		if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
+		if (strcmp(fileType.c_str(), "geom") || strcmp(fileType.c_str(), "dds")) // Skip if not geom / dds ...
 		{
 			continue;
 		}
@@ -48,15 +48,12 @@ void AssetManager::Init()
 		
 		// Deserialize from meta file and load the asset asynchronously
 		this->AsyncLoadAsset(subFilePathMeta);
-
-		// if dds
-		if (strcmp(fileType.c_str(), "dds")) // Skip if not dds / ...
+		
+		if (!strcmp(fileType.c_str(), "dds")) // if dds ...
 		{
-			continue;
+			// get guid
+			//TextureManager.AddTexture(subFilePath, guid);
 		}
-		// load dds
-		//this->CreateTextureAsset(subFilePath);
-		// put in texture container
 	}
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not

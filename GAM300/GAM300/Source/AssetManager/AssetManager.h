@@ -9,6 +9,8 @@
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
+#include "Graphics/TextureManager.h"
+
 // GUID, last file update time, data
 struct Asset
 {
