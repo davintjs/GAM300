@@ -25,6 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
+#include <vector>
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -33,8 +34,6 @@ using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
 
 #define ComponentName(Type) #Type
-template <typename T>
-using ComponentsPtrArray = std::vector<T*>;
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
