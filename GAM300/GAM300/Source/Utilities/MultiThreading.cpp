@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Precompiled.h"
 #include "MultiThreading.h"
+#include <Windows.h>
 
 void ThreadsManager::Init()
 {
@@ -37,14 +38,12 @@ void ThreadsManager::ReturnMutex(const std::string& mutexName)
 void ThreadsManager::Exit()
 {
 	quit = true;
-	PRINT("THREADS QUITTING\n");
 	for (std::thread& thread : threads)
 	{
+		CancelSynchronousIo(thread.native_handle());
 		thread.join();
 	}
-	
-	PRINT("threads quit");
-	}
+}
 
 bool ThreadsManager::HasQuit() const
 {
