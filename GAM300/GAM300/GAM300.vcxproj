@@ -26,7 +26,6 @@
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
-    <ClCompile Include="Source\AI\Mesh.cpp" />
     <ClCompile Include="Source\AI\NavMesh.cpp" />
     <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="Source\AI\Decorators\Inverter.h" />
     <ClInclude Include="Source\AI\Enemy.h" />
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
-    <ClInclude Include="Source\AI\Mesh.h" />
     <ClInclude Include="Source\AI\NavMesh.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />

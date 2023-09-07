@@ -3,13 +3,13 @@
 #include <vector>
 #include "Triangle3D.h"
 
-class Mesh
+class NavMesh
 {
 public:
-	Mesh(std::vector<Triangle3D> mTri);
-	~Mesh();
+	NavMesh(std::vector<Triangle3D> mTri);
+	~NavMesh();
 
-	const std::vector<Triangle3D> GetMeshTriangles() const;
+	const std::vector<Triangle3D> GetNavMeshTriangles() const;
 	const std::vector<glm::vec3> GetPoints() const;
 	const std::vector<unsigned int> GetIndices() const;
 
@@ -19,7 +19,7 @@ public:
 private:
 	void LinkTriangles(Triangle3D* mTri1, Triangle3D* mTri2);
 	void LinkAllTriangles();
-	void UpdateMesh();
+	void UpdateNavMesh();
 
 	std::vector<Triangle3D> mTriangles;
 	std::vector<glm::vec3> mPoints;

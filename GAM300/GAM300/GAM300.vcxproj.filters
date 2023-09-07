@@ -72,11 +72,10 @@
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
     <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
     <ClCompile Include="Source\Scripting\scripting-system.cpp" />
-    <ClCompile Include="Source\AI\NavMesh.cpp" />
     <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
     <ClCompile Include="Source\AI\Triangle3D.cpp" />
-    <ClCompile Include="Source\AI\Mesh.cpp" />
+    <ClCompile Include="Source\AI\NavMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -135,11 +134,10 @@
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scripting\scripting-system.h" />
-    <ClInclude Include="Source\AI\NavMesh.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AI\Triangle3D.h" />
-    <ClInclude Include="Source\AI\Mesh.h" />
+    <ClInclude Include="Source\AI\NavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

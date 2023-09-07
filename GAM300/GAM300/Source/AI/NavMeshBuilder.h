@@ -5,7 +5,7 @@
 
 #include "Polygon.h"
 #include "Triangle3D.h"
-#include "Mesh.h"
+#include "NavMesh.h"
 
 class NavMeshBuilder
 {
@@ -13,7 +13,7 @@ public:
 	NavMeshBuilder(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
 	~NavMeshBuilder();
 
-	Mesh* CreateMesh();
+	NavMesh* CreateNavMesh();
 
 	std::vector<Polygon>& GetRegion();
 	std::vector<Polygon>& GetHoles();
