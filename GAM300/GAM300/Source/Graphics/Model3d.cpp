@@ -130,8 +130,18 @@ void Model::init() {
     glBindVertexArray(VAO);
     //std::cout << "box_wf vao is :" << VAO << "\n";
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    int totalvertices = 0;
+    int totalindices = 0;
+    for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
+    {
+        totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
+        totalindices += totalGeoms[0].mMeshes[i]._indices.size();
+        std::cout << "total vertices count: " << totalvertices << "\n";
+        std::cout << "total indices count: " << totalindices << "\n";
+    }
     //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
     glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, totalvertices * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     
@@ -150,6 +160,8 @@ void Model::init() {
     glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
     //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
     glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0].tex, GL_STATIC_DRAW);
+
+    //glBufferData(GL_ARRAY_BUFFER, totalvertices * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0].tex, GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].color, GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -160,6 +172,7 @@ void Model::init() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, geom->_indices.size() * sizeof(int32_t), &geom->_indices[0], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._indices.size() * sizeof(int32_t), &totalGeoms[0].mMeshes[0]._indices[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindices * sizeof(int32_t), &totalGeoms[0].mMeshes[0]._indices[0], GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     vaoid = VAO;
