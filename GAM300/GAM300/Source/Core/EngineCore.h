@@ -143,7 +143,9 @@ public:
 		{
 			//Start ImGui Frames
 			ImGui_ImplOpenGL3_NewFrame();
+
 			ImGui_ImplGlfw_NewFrame();
+
 			ImGui::NewFrame();
 
 			for (ISystem* pSystem : systems)
@@ -152,8 +154,11 @@ public:
 					pSystem->Update(dt);
 			}
 			//End ImGui Frames
+
 			ImGui::EndFrame();
+
 			ImGui::Render();
+
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	

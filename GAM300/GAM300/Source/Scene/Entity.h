@@ -12,6 +12,7 @@ struct Entity;
 struct Entity
 {
 public:
+	bool is_enabled = true;
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
 	const Engine::UUID uuid;
@@ -20,6 +21,9 @@ public:
 	ObjectIndex denseIndex;
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
 };
+
+void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child);
+void Break_ParentChild(const ObjectIndex& _child);
 
 
 #endif // !ENTITY_H

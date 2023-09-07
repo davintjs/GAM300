@@ -42,6 +42,7 @@ using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
+	std::string Scene_name;
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
@@ -71,7 +72,7 @@ struct Scene
 		tag.name = "New GameObject(";
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
-		EditorDebugger::Instance().Debug_Sys.AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		return entity;
 	}
 

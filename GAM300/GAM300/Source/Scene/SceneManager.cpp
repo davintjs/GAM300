@@ -7,6 +7,8 @@ void SceneManager::Init()
 	{
 		//Create empty scene
 		LoadScene("");
+		Scene& scene = GetCurrentScene();
+		scene.Scene_name = "Test Scene";
 		/*Scene& scene = GetCurrentScene();
 		//Add 5 new entity into scene
 		scene.AddEntity();

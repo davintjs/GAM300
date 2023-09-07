@@ -19,6 +19,7 @@
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Scene/SceneManager.h"
 
 void EditorSystem::Init()
 {
@@ -31,7 +32,6 @@ void EditorSystem::Init()
 
     // Enable this for dockspace capabilities in dockspace mode		
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
     ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
@@ -52,8 +52,6 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
-   /* bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
 
     //Editor Functions
     Editor_Dockspace();
@@ -63,8 +61,8 @@ void EditorSystem::Update(float dt)
         pSystem->Update(dt);
     }
 
-    //Debug Window in Editor
-    EditorDebugger::Instance().Debug_Window(true);
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;

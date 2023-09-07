@@ -38,6 +38,8 @@ public:
 	void affectedByLight_draw(glm::vec3 lightPos);
 	void instanceDraw(int entitycount);
 
+	
+
 	glm::vec3 position;
 
 	GLenum prim;
@@ -46,6 +48,21 @@ public:
 	GLuint texturebuffer{};
 	GLuint drawcount;
 	GLSLShader shader;
+
+
+
+
+	// debug AABB
+	GLuint vaoidAABB;
+	GLSLShader shaderAABB;
+	glm::vec3 pntAABB[8];
+	std::vector<glm::ivec2> idxAABB{};
+	void debugAABB_init(); // vao & shader
+	void debugAABB_draw(glm::mat4& SRT);
+
+	void lineinit();
+	void debugline_draw(glm::mat4& SRT);
+
 
 
 	AssimpLoader* _geom;
