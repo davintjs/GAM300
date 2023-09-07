@@ -267,8 +267,8 @@ void ScriptingSystem::Exit()
 	//	mono_gchandle_free(hand);
 	//}
 	//gcHandles.clear();
-	unloadAppDomain();
-	shutdownMono();
+	//unloadAppDomain();
+	//shutdownMono();
 }
 
 MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)

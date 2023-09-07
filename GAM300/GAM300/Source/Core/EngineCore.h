@@ -71,7 +71,7 @@ public:
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
-			&AssetManager::Instance()
+			&AssetManager::Instance(),
 		};
 
 
@@ -170,6 +170,7 @@ public:
 	void Exit()
 	{
 		FileWatcher::Instance().Quit();
+		EVENT.Exit();
 		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
