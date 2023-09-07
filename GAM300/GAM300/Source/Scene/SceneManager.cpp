@@ -50,12 +50,11 @@ void SceneManager::Update(float dt)
 	//	PRINT("Entity: ", scene.entities.GetDenseIndex(entity), '\n');
 	//}
 
-
-	//auto& scriptArr = scene.multiComponentsArrays.GetArray<Script>();
+	//auto& scriptArr = scene.GetComponentsArray<Script>();
 	//for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
 	//{
-	//	if (!it.IsActive())
-	//		continue;
+	//	//if (!it.IsActive())
+	//	//	continue;
 	//	Script& script = *it;
 	//	PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
 	//}

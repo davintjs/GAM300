@@ -238,6 +238,12 @@ public:
     bool empty() const;
 
     bool full() const;
+
+    T* TryGetDense(ObjectIndex denseIndex);
+
+    bool TryErase(T& object);
+
+    bool TryErase(ObjectIndex denseIndex);
 };
 #include "SparseSet.cpp"
 

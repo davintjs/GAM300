@@ -200,6 +200,7 @@
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Scene\Entity.h" />
+    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
