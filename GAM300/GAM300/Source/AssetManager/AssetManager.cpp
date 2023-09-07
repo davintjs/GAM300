@@ -267,7 +267,7 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, bool isDDS)
 
 	if (isDDS) // If is DDS format, add to texture manager
 	{
-		TextureManager.AddTexture(filePath.c_str(), GUIDofAsset);
+		TextureManager.AddTexture(assetPath.c_str(), GUIDofAsset);
 	}
 
 	inputFile.close();
