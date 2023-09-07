@@ -48,7 +48,23 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorContentBrowser.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
+    <ClCompile Include="Source\Editor\EditorInspector.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
+    <ClCompile Include="Source\Editor\EditorScene.cpp" />
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
+    <ClCompile Include="Source\Editor\EditorToolBar.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -111,7 +127,6 @@
     <ClCompile Include="Source\IOManager\InputSystem.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
-    <ClCompile Include="Source\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -121,10 +136,16 @@
     <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
+    <ClCompile Include="Source\Utilities\FileWatcher.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
     <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsBList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Source\Utilities\ObjectsList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -155,6 +176,7 @@
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\AssetManager\ThreadPool.h" />
     <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
@@ -163,6 +185,7 @@
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Editor\Editor.h" />
+    <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Editor\EditorTemplates.h" />
     <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
@@ -174,13 +197,15 @@
     <ClInclude Include="Source\IOManager\InputSystem.h" />
     <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
     <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
-    <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Physics\PhysicsSystem.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Scene\Entity.h" />
+    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\Scripting\scripting-system.h" />
+    <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
     <ClInclude Include="Source\Utilities\PlatformUtils.h" />
     <ClInclude Include="Source\Utilities\ObjectsBList.h" />
@@ -207,13 +232,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -302,8 +327,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui\include;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\Jolt_master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui\include;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -333,7 +358,7 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui\include;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

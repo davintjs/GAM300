@@ -33,13 +33,21 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/Debug.h"
 #include "Entity.h"
 #include "Components.h"
+#include "Editor/EditorHeaders.h"
 
+
+using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
+
+using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
+	std::string Scene_name;
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
+	EntitiesPtrArray entitiesDeletionBuffer;
+	ComponentsBufferArray componentsDeletionBuffer;
 
 	enum class State : char 
 	{
@@ -53,25 +61,172 @@ struct Scene
 	Scene& operator=(Scene&) = delete;
 
 
-	Entity& AddEntity(UUID uuid = CreateUUID())
+	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
+		entities.SetActive(entity.denseIndex);
 		AddComponent<Transform>(entity);
+		Tag& tag = AddComponent<Tag>(entity);
+		tag.name = "New GameObject(";
+		tag.name += std::to_string(entities.size());
+		tag.name += ")";
+		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		return entity;
 	}
 
-	bool EntityIsActive(DenseIndex index);
+	template<typename T, typename... Ts>
+	struct DestroyComponentsGroup
+	{
+		Scene& scene;
+		Entity& entity;
+		DestroyComponentsGroup(TemplatePack<T, Ts...> pack) {}
+		DestroyComponentsGroup(Scene& _scene, Entity& _entity) : scene{ _scene }, entity{_entity}
+		{
+			DestroyComponents<T, Ts...>();
+		}
 
-	void EntitySetActive(DenseIndex index,bool value);
+		template <typename T1, typename... T1s>
+		void DestroyComponents()
+		{
+			if (scene.HasComponent<T1>(entity))
+			{
+				if constexpr (SingleComponentTypes::Has<T1>())
+				{
+					scene.singleComponentsArrays.GetArray<T1>().TryErase(entity.denseIndex);
+				}
+				else if constexpr (MultiComponentTypes::Has<T1>())
+				{
+					scene.multiComponentsArrays.GetArray<T1>().erase(entity.denseIndex);
+				}
+			}
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				DestroyComponents<T1s...>();
+			}
+		}
+	};
+
+	using DestroyEntityComponents = decltype(DestroyComponentsGroup((AllComponentTypes())));
+
+	template<typename T>
+	void Destroy(T& object)
+	{
+		if constexpr (std::is_same<T, Entity>())
+		{
+			entitiesDeletionBuffer.push_back(&object);
+			entities.SetActive(object.denseIndex,false);
+		}
+		else if constexpr (SingleComponentTypes::Has<T>())
+		{
+			componentsDeletionBuffer.GetArray<T>().push_back(&object);
+			auto& arr = singleComponentsArrays.GetArray<T>();
+			ObjectIndex index = arr.GetDenseIndex(object);
+			arr.SetActive(index,false);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+		}
+		else if constexpr (MultiComponentTypes::Has<T>())
+		{
+			componentsDeletionBuffer.GetArray<T>().push_back(&object);
+			auto& arr = multiComponentsArrays.GetArray<T>();
+			ObjectIndex index = arr.GetDenseIndex(object);
+			arr.SetActive(object, false);
+			if (arr.DenseSubscript(index).size() == 1)
+				entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+		}
+		static_assert(true,"Not a valid type of object to destroy");
+	}
+
+	template <typename T, typename... Ts>
+	struct ClearBufferStruct
+	{
+		ClearBufferStruct(TemplatePack<T, Ts...> pack) {}
+		ClearBufferStruct(Scene& _scene) : scene{ _scene }
+		{
+			CleanComponents<T, Ts...>();
+		}
+		Scene& scene;
+		template <typename T1, typename... T1s>
+		void CleanComponents()
+		{
+			auto& arr = scene.componentsDeletionBuffer.GetArray<T1>();
+			if constexpr (SingleComponentTypes::Has<T1>())
+			{
+				auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
+				for (T1* pComponent : arr)
+				{
+					compArray.erase(*pComponent);
+				}
+			}
+			else if constexpr (MultiComponentTypes::Has<T1>())
+			{
+				auto& compArray = scene.multiComponentsArrays.GetArray<T1>();
+				for (T1* pComponent : arr)
+				{
+					compArray.erase(*pComponent);
+				}
+			}
+			arr.clear();
+			if constexpr (sizeof...(T1s) != 0)
+			{
+				CleanComponents<T1s...>();
+			}
+		}
+	};
+
+	using ClearBufferHelper = decltype(ClearBufferStruct(AllComponentTypes()));
+
+	void ClearBuffer()
+	{
+		//Destroy components
+		ClearBufferHelper(*this);
+		for (Entity* pEntity : entitiesDeletionBuffer)
+		{
+			DestroyEntityComponents(*this,*pEntity);
+			entities.erase(*pEntity);
+		}
+		entitiesDeletionBuffer.clear();
+	}
 
 	template <typename Component>
-	bool ComponentIsEnabled(DenseIndex index, size_t multiIndex);
+	bool ComponentIsEnabled(uint32_t index, size_t multiIndex);
+
+	template <typename Component>
+	auto& GetComponentsArray()
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return singleComponentsArrays.GetArray<Component>();
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return multiComponentsArrays.GetArray<Component>();
+		}
+	}
+
+	template <typename Component>
+	auto& GetComponents(Entity& entity)
+	{
+		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
+	}
+
+	template <typename Component>
+	auto& GetEntity(Component& component)
+	{
+		if constexpr (SingleComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(singleComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+		else if constexpr (MultiComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(multiComponentsArrays.GetArray<Component>().GetDenseIndex(component));
+		}
+	}
 
 
 	template <typename Component>
-	void ComponentSetEnabled(DenseIndex index,bool value, size_t multiIndex = 0);
+	void ComponentSetEnabled(uint32_t index,bool value, size_t multiIndex = 0);
 
 	template <typename Component>
 	Component& AddComponent(const Entity& entity)
@@ -80,38 +235,58 @@ struct Scene
 	}
 
 	template <typename Component>
-	void RemoveComponent(Entity& entity,Component& component)
+	bool HasComponent(const Entity& entity)
 	{
-		//When removing a component, disable the object first
+		if constexpr (AllComponentTypes::Has<Component>())
+		{
+			return entity.hasComponentsBitset.test(GetComponentType::E<Component>());
+		}
+		return false;
+	}
+
+	template <typename Component>
+	bool HasComponent(ObjectIndex& denseIndex)
+	{
+		if constexpr (AllComponentTypes::Has<Component>())
+		{
+			return entities.DenseSubscript(denseIndex).hasComponentsBitset.test(GetComponentType::E<Component>());
+		}
+		return false;
+	}
+
+	template <typename Component>
+	Component& GetComponent(const Entity& entity)
+	{
+		//ASSERT(HasComponent<Component>(entity), "Entity does not have component");
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			singleComponentsArrays.GetArray<Component>().erase(component);
+			return singleComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			MultiComponentsArray<Component>& arr = multiComponentsArrays.GetArray<Component>();
-			arr.DenseSubscript(entity.denseIndex).erase(component);
-		}
-		else
-		{
-			static_assert(true, "Type is not a valid component!");
+			return *multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex).front();
 		}
 	}
 
 	template <typename Component>
-	Component& AddComponent(DenseIndex index)
+	Component& AddComponent(uint32_t index)
 	{
+		static_assert(AllComponentTypes::Has<Component>(), "Type is not a valid component!");
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().emplace(index);
+			auto& arr = singleComponentsArrays.GetArray<Component>();
+			Component& component = arr.emplace(index);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
+			arr.SetActive(index);
+			return component;
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return multiComponentsArrays.GetArray<Component>().emplace(index);
-		}
-		else
-		{
-			static_assert(true, "Type is not a valid component!");
+			auto& arr = multiComponentsArrays.GetArray<Component>();
+			Component& component = arr.emplace(index);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
+			arr.SetActive(component);
+			return component;
 		}
 	}
 
@@ -120,9 +295,9 @@ struct Scene
 };
 
 template <typename Component>
-bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
+bool Scene::ComponentIsEnabled(uint32_t index, size_t multiIndex)
 {
-	if constexpr (SingleComponentTypes::Has(Component))
+	if constexpr (SingleComponentTypes::Has<Component>())
 	{
 		ASSERT(multiIndex == 0);//, "Unable to find another component of given type as only one should exist on this gameObject");
 		singleComponentsArrays.GetArray<Component>().GetActive(index);
@@ -135,7 +310,7 @@ bool Scene::ComponentIsEnabled(DenseIndex index, size_t multiIndex)
 }
 
 template <typename Component>
-void Scene::ComponentSetEnabled(DenseIndex index, bool value, size_t multiIndex)
+void Scene::ComponentSetEnabled(uint32_t index, bool value, size_t multiIndex)
 {
 	if constexpr (SingleComponentTypes::Has(Component))
 	{

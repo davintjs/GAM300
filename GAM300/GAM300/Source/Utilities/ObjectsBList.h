@@ -1,26 +1,22 @@
 #ifndef OBJECTS_B_LIST_H
 #define OBJECTS_B_LIST_H
-#include "SparseSet.h"
-#include <bitset>
 #include "ObjectsList.h"
 
-using ObjectIndex = size_t;
-
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 class ObjectsBList
 {
     struct Node
     {
-        SparseSet<ObjectsList<T,B_SZ>, N> sparseSetList;
+        ObjectsList<T,N> objectList;
         //Forward List
         Node* next = nullptr;
     };
 
+public:
     class Iterator
     {
         Node* pNode;
         size_t index;
-        size_t subIndex;
         friend class ObjectsBList;
     public:
         /***************************************************************************/
@@ -33,7 +29,7 @@ class ObjectsBList
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, size_t _subIndex, Node* _pNode) : index(_index), subIndex{ _subIndex },pNode{ _pNode } {}
+        Iterator(size_t _index, Node* _pNode);
 
         /***************************************************************************/
         /*!
@@ -43,10 +39,7 @@ class ObjectsBList
                 Reference to object stored
         */
         /**************************************************************************/
-        T& operator*()
-        {
-            return pNode->sparseSetList[index][subIndex];
-        }
+        T& operator*();
 
         /***************************************************************************/
          /*!
@@ -56,18 +49,7 @@ class ObjectsBList
                 Next iterator
         */
         /**************************************************************************/
-        Iterator operator++() 
-        {
-            if (subIndex == pNode->sparseSetList[index].size())
-                ++index;
-            while (pNode && index >= pNode->sparseSetList.size())
-            {
-                index -= pNode->sparseSetList.size();
-                pNode = pNode->next;
-            }
-            ++subIndex;
-            return *this;
-        }
+        Iterator operator++();
 
         /***************************************************************************/
         /*!
@@ -77,11 +59,7 @@ class ObjectsBList
                 this iterator
         */
         /**************************************************************************/
-        Iterator operator++(int) {
-            Iterator tmp(*this);
-            operator++();
-            return tmp;
-        }
+        Iterator operator++(int);
 
         /***************************************************************************/
         /*!
@@ -93,9 +71,7 @@ class ObjectsBList
                 True if both iterators are of the same sparse index
         */
         /**************************************************************************/
-        bool operator==(const Iterator& other) const {
-            return pNode == other.pNode && index == other.index && subIndex == other.subIndex;
-        }
+        bool operator==(const Iterator& other) const;
 
         /***************************************************************************/
         /*!
@@ -107,47 +83,25 @@ class ObjectsBList
                 True if both iterators are NOT of the same sparse index
         */
         /**************************************************************************/
-        bool operator!=(const Iterator& other) const {
-            return pNode != other.pNode || subIndex != other.subIndex || index != other.index;
-        }
-
-
+        bool operator!=(const Iterator& other) const;
+        bool IsActive();
     };
-public:
     template <typename... Args>
-    T& emplace(DenseIndex index, Args&&... args);
+    T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
+    void erase(ObjectIndex denseIndex);
     ~ObjectsBList();
-    Iterator begin() {return Iterator(0,0, head);}
-    Iterator end() {return Iterator(0,0, nullptr);}
+    Iterator begin();
+    Iterator end();
 
-    size_t size() const { return size_; }
+    size_t size() const;
 
-    T& DenseSubscript(DenseIndex val)
-    {
-        Node* start = head;
-        while (val >= N)
-        {
-            val -= N;
-            start = start->next;
-        }
-        return start->sparseSet.DenseSubscript(val);
-    }
+    void SetActive(T& obj, bool val = true);
 
-    DenseIndex GetDenseIndex(T& object)
-    {
-        Node* start = head;
-        DenseIndex count = 0;
-        while (start != nullptr)
-        {
-            if (start->sparseSet.contains(object))
-                return start->sparseSet.GetDenseIndex(object) + count * N;
-            ++count;
-            start = start->next;
-        }
-        ASSERT(true, "Object List does not contain this object");
-    }
+    auto DenseSubscript(ObjectIndex val);
+
+    ObjectIndex GetDenseIndex(T& object);
 private:
     Node* head = nullptr;
     Node* tail = nullptr;

@@ -88,12 +88,12 @@ glm::vec2 InputHandler::getMousePos()
 
 double InputHandler::getMouseX()
 {
-	return getMousePos()[0];
+	return getMousePos().x;
 }
 
 double InputHandler::getMouseY()
 {
-	return getMousePos()[1];
+	return getMousePos().y;
 }
 
 void InputHandler::setMouseScroll(int state)

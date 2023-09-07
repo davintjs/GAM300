@@ -30,10 +30,15 @@ public:
 
 	// This below are all the things i use to testing with light stuffs
 	void cubeinit();
+	void instance_cubeinit();
+	void setup_instanced_shader();
 	void setup_lightshader();// The Light
 	void setup_affectedShader();// Impacted by Light
 	void lightSource_draw();
 	void affectedByLight_draw(glm::vec3 lightPos);
+	void instanceDraw(int entitycount);
+
+	
 
 	glm::vec3 position;
 
@@ -43,6 +48,21 @@ public:
 	GLuint texturebuffer{};
 	GLuint drawcount;
 	GLSLShader shader;
+
+
+
+
+	// debug AABB
+	GLuint vaoidAABB;
+	GLSLShader shaderAABB;
+	glm::vec3 pntAABB[8];
+	std::vector<glm::ivec2> idxAABB{};
+	void debugAABB_init(); // vao & shader
+	void debugAABB_draw(glm::mat4& SRT);
+
+	void lineinit();
+	void debugline_draw(glm::mat4& SRT);
+
 
 
 	AssimpLoader* _geom;

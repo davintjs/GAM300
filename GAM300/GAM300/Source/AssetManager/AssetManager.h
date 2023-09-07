@@ -1,27 +1,33 @@
 #pragma once
 
 #include <unordered_map>
-#include "Core/EngineCore.h"
+#include "Core/SystemInterface.h"
 #include "AssetManager/ThreadPool.h"
+
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
 
 // GUID, last file update time, data
 struct Asset
 {
 	std::vector<std::filesystem::file_time_type> mAssetsTime;
-	std::unordered_map<int, std::pair<std::filesystem::file_time_type, std::vector<char>>> mFilesData;
+	std::unordered_map<std::string, std::pair<std::filesystem::file_time_type, std::vector<char>>> mFilesData;
 };
 
 ENGINE_SYSTEM(AssetManager)
 {
 public:
-	void Init();
-	void Update();
-	void Exit();
-
-	void AsyncLoadAsset(const std::string & assetPath);
-	const std::vector<char>& GetAsset(const int& assetGUID);
+	const std::vector<char>& GetAsset(const std::string& assetGUID);
 
 private:
+	const std::string AssetPath = "Assets";
+
+	void Init();
+	void Update(float dt);
+	void Exit();
+
 	// Thread stuff
 	ThreadPool AssetThread;
 	std::mutex mAssetMutex;
@@ -30,6 +36,20 @@ private:
 	// Asset stuff
 	Asset mTotalAssets;
 
-	void LoadAsset(const std::string & filePath);
-	void CreateMetaFile(const std::string & filePath, const std::string & fileType);
+	// Helper functions
+	void AsyncLoadAsset(const std::string& metaFilePath);
+	void LoadAsset(const std::string& metaFilePath);
+	void AsyncUnloadAsset(const std::string& assetGUID);
+	void UnloadAsset(const std::string& assetGUID);
+	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
+	void UpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
+
+
+	std::string GenerateGUID(const std::string& fileName);
+	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
+	void DeserializeAssetMeta(const std::string& filePath);
+
+	void FileAddProtocol();
+	void FileRemoveProtocol();
+	void FileUpdateProtocol();
 };

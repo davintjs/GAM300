@@ -63,7 +63,15 @@
     <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
-    <ClCompile Include="Source\Physics\PhysicsSystem.cpp" />
+    <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
+    <ClCompile Include="Source\Editor\EditorScene.cpp" />
+    <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
+    <ClCompile Include="Source\Editor\EditorContentBrowser.cpp" />
+    <ClCompile Include="Source\Editor\EditorInspector.cpp" />
+    <ClCompile Include="Source\Editor\EditorToolBar.cpp" />
+    <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
+    <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
+    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -117,7 +125,11 @@
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
     <ClInclude Include="Source\Editor\EditorTemplates.h" />
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
-    <ClInclude Include="Source\Physics\PhysicsObject.h" />
+    <ClInclude Include="Source\Core\FileTypes.h" />
+    <ClInclude Include="Source\Utilities\FileWatcher.h" />
+    <ClInclude Include="Source\Editor\EditorHeaders.h" />
+    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
+    <ClInclude Include="Source\Scripting\scripting-system.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
