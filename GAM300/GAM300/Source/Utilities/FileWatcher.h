@@ -12,9 +12,8 @@ public:
     void ThreadWork();
 
     ~FileWatcher();
-    void Quit();
+
     void* hDir;
-    std::thread* thread;
 };
 
 #endif
