@@ -1,30 +1,34 @@
 #pragma once
 
-#include "Recast.h"
+#include <vector>
+#include "glm/glm.hpp"
 
-struct NavMeshConfigs
-{
-	float mAgentHeight = 1.5f;
-	float mAgentRadius = 0.3f;
-	//float mAgentClimbHeight = 0.f;
-	float mCellSize = 0.2f;
-	float mCellHeight = 0.2f;
-	//float mMaxEdgeLength = 4.0f;
-	//float mMaxSimplificationError = 1.3f;
-	//float mMinRegionSize = 3.0f;
-	//float mRegionMergeSize = 20.0f;
-	//float mDetailMeshSampleDistanceFactor = 1.0f;
-	//float mDetailMeshSampleErrorFactor = 1.0f;
-};
+#include "Polygon.h"
+#include "Triangle3D.h"
+#include "Mesh.h"
 
 class NavMeshBuilder
 {
 public:
-	NavMeshBuilder();
+	NavMeshBuilder(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
 	~NavMeshBuilder();
 
-	bool Build(const recastConfig)
+	Mesh* CreateMesh();
+
+	std::vector<Polygon>& GetRegion();
+	std::vector<Polygon>& GetHoles();
 
 private:
+	std::vector<Polygon> ComputeRegions(const std::vector<Triangle3D>& GroundTriangles);
+	std::vector<Triangle3D> GetGroundTriangles(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
+	void SetBoundary(Polygon* mBoundary);
+	void AddHole(Polygon* hole);
+	void RemoveHoles();
+	std::vector<Triangle3D> Triangulate();
 
+	int mTriCount = 0;
+	Polygon* mBoundary;
+	std::vector<Polygon> mHoles;
+	std::vector<Polygon> mObstacles;
+	std::vector<Polygon> mRegion;
 };
