@@ -191,22 +191,22 @@ MonoType* ScriptingSystem::getMonoTypeFromName(std::string& name)
 	return mono_reflection_type_from_name(name.data(), mAssemblyImage);
 }
 
-void ScriptingSystem::recompileThreadWork()
+void ScriptingSystem::RecompileThreadWork()
 {
-	//while (!tSys.Quit())
-	//{
-	//	compilingStateReadable.lock();
-	//	while (compilingState == CompilingState::SwapAssembly);
-	//	compilingState = CompilingState::Compiling;
-	//	//Critical section
-	//	while (!tSys.acquireMutex(MutexType::FileSystem));
-	//	updateScriptFiles();
-	//	tryRecompileDll();
-	//	tSys.returnMutex(MutexType::FileSystem);
-	//	//Critical section End
-	//	compilingStateReadable.unlock();
-	//	Sleep(SECONDS_TO_RECOMPILE * 1000);
-	//}
+	while (!THREADS.HasQuit())
+	{
+		compilingStateReadable.lock();
+		while (compilingState == CompilingState::SwapAssembly);
+		compilingState = CompilingState::Compiling;
+		//Critical section
+		//while (!THREADS.AcquireMutex(MutexType::FileSystem));
+		//updateScriptFiles();
+		//tryRecompileDll();
+		//THREADS.returnMutex(MutexType::FileSystem);
+		//Critical section End
+		compilingStateReadable.unlock();
+		//Sleep(SECONDS_TO_RECOMPILE * 1000);
+	}
 }
 
 ScriptingSystem::ScriptingSystem()
@@ -228,10 +228,10 @@ ScriptingSystem::ScriptingSystem()
 
 void ScriptingSystem::Init()
 {
-	//initMono();
+	InitMono();
 	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
-	THREADS.AddThread(&ScriptingSystem::recompileThreadWork, this);
+	THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
 	EVENT.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	//ENABLE FOR PLAY MODE
 	//swapDll();
@@ -268,7 +268,7 @@ void ScriptingSystem::Exit()
 	//}
 	//gcHandles.clear();
 	//unloadAppDomain();
-	//shutdownMono();
+	ShutdownMono();
 }
 
 MonoObject* ScriptingSystem::instantiateClass(MonoClass* mClass)
@@ -321,13 +321,13 @@ void ScriptingSystem::updateScriptClasses()
 	//}
 }
 
-void ScriptingSystem::initMono()
+void ScriptingSystem::InitMono()
 {
-	mono_set_assemblies_path("mono");
-	mRootDomain = mono_jit_init("CopiumJITRuntime");
+	mono_set_assemblies_path("Mono");
+	mRootDomain = mono_jit_init("JITRuntime");
 }
 
-void ScriptingSystem::shutdownMono()
+void ScriptingSystem::ShutdownMono()
 {
 	mono_jit_cleanup(mRootDomain);
 	mRootDomain = nullptr;
@@ -335,7 +335,7 @@ void ScriptingSystem::shutdownMono()
 
 void ScriptingSystem::createAppDomain()
 {
-	static char appName[] = "CopiumAppDomain";
+	static char appName[] = "AppDomain";
 	mAppDomain = mono_domain_create_appdomain(appName, nullptr);
 	mono_domain_set(mAppDomain, false);
 }
