@@ -100,7 +100,7 @@ public:
     void Init();
     void Update(float dt);
     void Exit();
-
+    bool isAddComponentPanel;
 private:
 };
 

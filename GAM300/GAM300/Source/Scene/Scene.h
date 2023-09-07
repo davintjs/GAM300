@@ -206,7 +206,7 @@ struct Scene
 	}
 
 	template <typename Component>
-	auto& GetComponents(Entity& entity)
+	auto GetComponents(Entity& entity)
 	{
 		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
 	}
