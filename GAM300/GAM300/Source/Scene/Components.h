@@ -117,6 +117,8 @@ struct Tag
 
 struct Transform
 {
+	bool is_enabled = true;
+	std::string str = "Transform";
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{1};
@@ -124,7 +126,27 @@ struct Transform
 	Transform* Parent = nullptr;
 
 	bool isLeaf() {
-		return (child.size() > 0) ? true : false;
+
+		return (child.size() > 0) ? false : true;
+	}
+
+	bool isEntityChild(Transform& ent) {
+		if (std::find(child.begin(), child.end(), &ent) != child.end()) {
+			return true;
+		}
+		for (int i = 0; i < child.size(); i++) {
+			if (!child[i]->isLeaf()) {
+				return isEntityChild(*child[i]);
+			}
+		}
+		return false;
+	}
+
+	bool isChild() {
+		if (Parent)
+			return true;
+		else
+			return false;
 	}
 };
 
@@ -159,6 +181,8 @@ struct Animator
 
 struct Rigidbody
 {
+	bool is_enabled = true;
+	std::string str = "Rigidbody";
 	Vector3 velocity{};					//velocity of object
 	Vector3 acceleration{};				//acceleration of object
 	Vector3 force{};					//forces acting on object, shud be an array

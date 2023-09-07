@@ -19,6 +19,7 @@
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Scene/SceneManager.h"
 
 void EditorSystem::Init()
 {
@@ -52,8 +53,6 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
-   /* bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
 
     //Editor Functions
     Editor_Dockspace();
@@ -63,8 +62,8 @@ void EditorSystem::Update(float dt)
         pSystem->Update(dt);
     }
 
-    //Debug Window in Editor
-    EditorDebugger::Instance().Debug_Window(true);
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
