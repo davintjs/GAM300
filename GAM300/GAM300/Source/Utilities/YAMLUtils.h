@@ -17,4 +17,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "yaml-cpp/yaml.h"
 
+void Emittion();
+
+void CreateYAMLMap(YAML::Emitter& out);
+
+void EndYAMLMap(YAML::Emitter& out, const std::string& filepath);
+
 #endif // !YAMLUTILS_H

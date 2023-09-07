@@ -15,3 +15,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "YAMLUtils.h"
+
+void Emittion()
+{
+    YAML::Emitter out;
+    out << "Hello World!";
+
+    std::cout << "Here's the output YAML:\n" << out.c_str();
+}
+
+void CreateYAMLMap(YAML::Emitter& out)
+{
+    out << YAML::BeginMap;
+}
+
+void EndYAMLMap(YAML::Emitter& out, const std::string& filepath)
+{
+    out << YAML::EndMap;
+
+    std::ofstream fout(filepath);
+    fout << out.c_str();
+}
