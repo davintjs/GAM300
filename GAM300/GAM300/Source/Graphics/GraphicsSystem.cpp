@@ -207,11 +207,11 @@ void GraphicsSystem::Update(float dt)
 	// instanced draw
 	testBox.instanceDraw(EntityRenderLimit);
 
-	/*testmodel.draw();
+	testmodel.draw();
 
 	LightSource.lightSource_draw();
 
-	AffectedByLight.affectedByLight_draw(LightSource.position);*/
+	AffectedByLight.affectedByLight_draw(LightSource.position);/**/
 
 	
 
