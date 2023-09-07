@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
 
-
+#include "YAMLUtils.h"
+#include "Properties.h"
 
 #endif // !SERIALIZER_H
