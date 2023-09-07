@@ -17,6 +17,7 @@ public:
 	// Model loader values
 	//glm::vec3 mPosCompressionScale;
 	//glm::vec2 mTexCompressionScale;
+
 	std::vector<Material> _materials{};
 };
 
@@ -44,6 +45,12 @@ public:
 	GLuint texturebuffer{};
 	GLuint drawcount;
 	GLSLShader shader;
+
+	std::vector<GLuint> FBX_vaoid;
+	std::vector<GLuint> FBX_vboid;
+	std::vector<GLuint> FBX_drawcount;
+
+
 
 	//AssimpLoader* _geom; 
 

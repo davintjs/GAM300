@@ -15,6 +15,9 @@
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
 #define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
 
+bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
+
+
 GLuint loadDDS(const char* imagepath) {
 
     unsigned char header[124];
@@ -121,6 +124,16 @@ void Model::init() {
 
     DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
 
+    for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
+    {
+        std::cout << "ouch\n";
+        /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
+        totalindices += totalGeoms[0].mMeshes[i]._indices.size();
+        std::cout << "total vertices count: " << totalvertices << "\n";
+        std::cout << "total indices count: " << totalindices << "\n";*/
+
+
+
     GLuint VAO; 
     GLuint VBO;
     GLuint EBO;
@@ -130,56 +143,47 @@ void Model::init() {
     glBindVertexArray(VAO);
     //std::cout << "box_wf vao is :" << VAO << "\n";
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    int totalvertices = 0;
-    int totalindices = 0;
-    for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
+   /* int totalvertices = 0;
+    int totalindices = 0;*/
+
+
+   /* for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
     {
         totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
         std::cout << "total indices count: " << totalindices << "\n";
-    }
+    }*/
     //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0], GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[i]._vertices[0], GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, totalvertices * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     
-    // test texture loading
-    //std::cout << texturebuffer << "first \n";
-    /*GLuint*/ texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-    //std::cout << texturebuffer << "second \n";
-    //test col link
-    //for (size_t i = 0; i < geom->_vertices.size(); i++)
-    //{
-    //    geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-    //}
-
-    //GLuint texturebuffer;
-    glGenBuffers(1, &texturebuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, texturebuffer);
-    //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].tex, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0].tex, GL_STATIC_DRAW);
-
-    //glBufferData(GL_ARRAY_BUFFER, totalvertices * sizeof(Vertex), &totalGeoms[0].mMeshes[0]._vertices[0].tex, GL_STATIC_DRAW);
-    //glBufferData(GL_ARRAY_BUFFER, geom->_vertices.size() * sizeof(Vertex), &geom->_vertices[0].color, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-    //
+    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, geom->_indices.size() * sizeof(int32_t), &geom->_indices[0], GL_STATIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[0]._indices.size() * sizeof(int32_t), &totalGeoms[0].mMeshes[0]._indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._indices.size() * sizeof(unsigned int), &totalGeoms[0].mMeshes[i]._indices[0], GL_STATIC_DRAW);
     //glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalindices * sizeof(int32_t), &totalGeoms[0].mMeshes[0]._indices[0], GL_STATIC_DRAW);
 
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+
+
     glBindVertexArray(0);
-    vaoid = VAO;
-    vboid = VBO;
+    //vaoid = VAO;
+    //vboid = VBO;
     prim = GL_TRIANGLES;
-    drawcount = totalGeoms[0].mMeshes[0]._indices.size(); // number of slices 
+    //drawcount = totalGeoms[0].mMeshes[i]._indices.size(); // number of slices
+    FBX_vaoid.push_back(VAO);
+    FBX_vboid.push_back(VBO);
+    FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+
     //drawcount = geom->_indices.size(); // number of slices 
+
+
+    }
+
     setup_shader();
 }
 
@@ -216,6 +220,22 @@ void Model::setup_shader() {
 }
 
 void Model::draw() {
+
+    /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+    {
+        mesh_1 = !mesh_1;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_2))
+    {
+        mesh_2 = !mesh_2;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_3))
+    {
+        mesh_3 = !mesh_3;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_4))
+    {
+        mesh_4 = !mesh_4;
+    }*/
+
+
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
     glm::mat4 scaling_mat(
@@ -238,7 +258,9 @@ void Model::draw() {
         glm::vec4(1.f, 0.f, 0.f, 0.f),
         glm::vec4(0.f, 1.f, 0.f, 0.f),
         glm::vec4(0.f, 0.f, 1.f, 0.f),
-        glm::vec4(position, 1.f)
+        //glm::vec4(position, 1.f)
+        glm::vec4(0.f, 0.f, 0.f, 1.f)
+
     );
     glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
     
@@ -268,12 +290,49 @@ void Model::draw() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+    
 
+    //glBindVertexArray(vaoid);
+    //if(mesh_1)
+    //{
+    //    glBindVertexArray(FBX_vaoid[1]);
 
-    glBindVertexArray(vaoid);
-    glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
+    //    glDrawElements(prim, FBX_drawcount[1], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+   
+    //    //glBindVertexArray(0);
+    //}  
+    //if (mesh_2)
+    //{
+    //    glBindVertexArray(FBX_vaoid[2]);
+
+    //    glDrawElements(prim, FBX_drawcount[2], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+
+    //    //glBindVertexArray(0);
+    //}
+    //if (mesh_3)
+    //{
+    //    glBindVertexArray(FBX_vaoid[3]);
+
+    //    glDrawElements(prim, FBX_drawcount[3], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+
+    //    //glBindVertexArray(0);
+    //}
+    //if (mesh_4)
+    //{
+
+    mesh_4 = true;
+    glBindVertexArray(FBX_vaoid[0]);
+
+    glDrawElements(prim, FBX_drawcount[0], GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
+
+        //glBindVertexArray(0);
+    //}
     shader.UnUse();
+
 }
 
 

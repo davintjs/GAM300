@@ -27,7 +27,7 @@ void ModelLoader::LoadModel()
 	ImportOptions =
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
 		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		//aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
 		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
 		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
 		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
@@ -35,8 +35,9 @@ void ModelLoader::LoadModel()
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
-		//aiPostProcessSteps::aiProcess_PreTransformVertices
+		aiPostProcessSteps::aiProcess_FindInvalidData 			// remove or fix invalid data
+	
+	| aiPostProcessSteps::aiProcess_PreTransformVertices;
 
 	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -520,10 +521,10 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 	aiGetMaterialColor(&material, AI_MATKEY_COLOR_AMBIENT, &ambientColor);
 	aiGetMaterialFloat(&material, AI_MATKEY_SHININESS, &shininess);
 
-	Material tempMat({
-		{specularColor.r, specularColor.g, specularColor.b, shininess},
-		{diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a},
-		{ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a} });
+	Material tempMat(
+		specularColor.r, specularColor.g, specularColor.b, shininess,
+		diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a,
+		ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a );
 
 	// Textures
 	aiString specName{};
