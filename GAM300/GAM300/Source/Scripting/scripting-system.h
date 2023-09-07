@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <string>
 #include <unordered_map>
+#include <mutex>
 
 extern "C"
 {
@@ -134,7 +135,7 @@ public:
 			Initializes mono by creating a root domain
 	*/
 	/**************************************************************************/
-	void initMono();
+	void InitMono();
 
 	/**************************************************************************/
 	/*!
@@ -142,7 +143,7 @@ public:
 			Cleans up mono and its domains
 	*/
 	/**************************************************************************/
-	void shutdownMono();
+	void ShutdownMono();
 
 	/**************************************************************************/
 	/*!
@@ -310,7 +311,7 @@ public:
 			Work for thread to check for script files and recompile if needed
 	*/
 	/**************************************************************************/
-	void recompileThreadWork();
+	void RecompileThreadWork();
 	/**************************************************************************/
 	/*!
 		\brief
@@ -560,9 +561,9 @@ public:
 	//std::unordered_map<MonoType*, ComponentType> reflectionMap;
 	//std::list<File>& scriptFiles;
 	//std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
-	//std::mutex compilingStateReadable;
+	std::mutex compilingStateReadable;
 	//std::vector<uint32_t> gcHandles;
-	//CompilingState compilingState{ CompilingState::Wait };
+	CompilingState compilingState{ CompilingState::Wait };
 	//bool inPlayMode{false};
 };
 

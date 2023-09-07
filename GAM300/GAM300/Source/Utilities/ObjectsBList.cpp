@@ -13,6 +13,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "ObjectsBList.h"
+#include <vector>
 
 #define OBJECTSBLIST ObjectsBList<T, N>
 #define ITERATOR OBJECTSBLIST::Iterator

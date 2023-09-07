@@ -35,6 +35,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
 #include "Scripting/scripting-system.h"
+#include "Utilities/YAMLUtils.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -127,6 +128,9 @@ public:
 		//scene.Destroy(scene.entities[14]);
 
 		//AllComponentTypes::Size();
+
+		// Bean: Serialization Tests
+		Emittion();
 	}
 
 	/**************************************************************************/
