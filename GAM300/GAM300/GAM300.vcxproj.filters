@@ -75,6 +75,7 @@
     <ClCompile Include="Source\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Source\Utilities\Serializer.cpp" />
     <ClCompile Include="Source\Utilities\YAMLUtils.cpp" />
+    <ClCompile Include="Source\Scene\Components.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -136,6 +137,7 @@
     <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Utilities\Serializer.h" />
     <ClInclude Include="Source\Utilities\YAMLUtils.h" />
+    <ClInclude Include="Source\Scripting\Compiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
