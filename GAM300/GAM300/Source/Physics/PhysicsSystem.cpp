@@ -4,16 +4,16 @@
 void PhysicsSystem::Init() 
 {
 	// Register allocation hook
-	JPH::RegisterDefaultAllocator();
+	//JPH::RegisterDefaultAllocator();
 
-	// Create factory
-	JPH::Factory::sInstance = new JPH::Factory();
+	//// Create factory
+	//JPH::Factory::sInstance = new JPH::Factory();
 
-	// Register all JPH types
-	JPH::RegisterTypes();
+	//// Register all JPH types
+	//JPH::RegisterTypes();
 
-	// Allocate memory for use in simulation
-	tempAllocator.Allocate(10 * 1024 * 1024);
+	//// Allocate memory for use in simulation
+	//tempAllocator.Allocate(10 * 1024 * 1024);
 
 }
 
