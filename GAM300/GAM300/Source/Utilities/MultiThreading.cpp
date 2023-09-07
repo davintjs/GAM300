@@ -42,7 +42,9 @@ void ThreadsManager::Exit()
 	{
 		thread.join();
 	}
-}
+	
+	PRINT("threads quit");
+	}
 
 bool ThreadsManager::HasQuit() const
 {
