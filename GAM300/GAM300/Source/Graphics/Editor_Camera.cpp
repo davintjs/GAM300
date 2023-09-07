@@ -108,8 +108,8 @@ glm::vec2 Editor_Camera::GetMouseInNDC()
 	glm::vec2 scenePosition = EditorScene::Instance().GetPosition();
 	glm::vec2 sceneDimension = EditorScene::Instance().GetDimension();
 	glm::vec2 mousePosition = InputHandler::getMousePos();
-	mousePosition.y = GLFW_Handler::height - mousePosition.y;
-	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y - scenePosition.y - 22.f };
+	mousePosition.y -= GLFW_Handler::height - scenePosition.y - sceneDimension.y;
+	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y + 22.f };
 	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
 	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
 
