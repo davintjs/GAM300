@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -33,7 +33,8 @@
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
-    <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,13 +141,11 @@
     <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
-    <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsBList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -189,7 +188,9 @@
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
-    <ClInclude Include="Source\AssetManager\ThreadPool.h" />
+    <ClInclude Include="Source\Scripting\Compiler.h" />
+    <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
+    <ClInclude Include="Source\Utilities\ThreadPool.h" />
     <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\Events.h" />
@@ -217,13 +218,10 @@
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Scripting\Compiler.h" />
-    <ClInclude Include="Source\Scripting\scripting-system.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
     <ClInclude Include="Source\Utilities\PlatformUtils.h" />
     <ClInclude Include="Source\Utilities\ObjectsBList.h" />
-    <ClInclude Include="Source\Utilities\MultiThreading.h" />
     <ClInclude Include="Source\Utilities\ObjectsList.h" />
     <ClInclude Include="Source\Utilities\Serializer.h">
       <SubType>
@@ -356,8 +354,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.lib;Joltd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.lib;Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>-IGNORE:4098 -IGNORE:4006 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -389,7 +387,7 @@ copy "$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.dll" "$(TargetDir)y
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cpp.lib;Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>

@@ -25,7 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <list>
 #include <map>
 
-#define EVENT EventsManager::Instance()
+#define EVENTS EventsManager::Instance()
 
 class IEventHandler
 {
@@ -75,7 +75,7 @@ public:
         void
     */
     /*******************************************************************************/
-    void Exit()
+    ~EventsManager()
     {
         for (auto& keyPair : subscribers)
         {
