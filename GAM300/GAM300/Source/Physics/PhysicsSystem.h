@@ -11,6 +11,8 @@
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
+#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
 
@@ -112,9 +114,9 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::BodyCreationSettings* floorSettings = nullptr;
 	JPH::SphereShape* sphereShape = nullptr;
 
-	//BroadPhaseLayerInterface bpLayerInterface;
-	//ObjectLayerPairFilter objectLayerPairFilter;
-	//ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
+	BroadPhaseLayerInterface bpLayerInterface;
+	ObjectLayerPairFilter objectLayerPairFilter;
+	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
 	JPH::TempAllocatorImpl tempAllocator;
 	JPH::JobSystemSingleThreaded jobSystem;
