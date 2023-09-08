@@ -65,18 +65,16 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
             Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(childId));
             Transform& targetEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
 
-            if (!currEntity.isLeaf()) {
-                if (!currEntity.isEntityChild(targetEntity)) {
-                    Set_ParentChild(Index, childId);
-                }
-            }
-            else {
+            if (currEntity.isLeaf()) {
                 if (childId != Index) {
                     Set_ParentChild(Index, childId);
                 }
             }
-
-            
+            else {
+                if (!currEntity.isEntityChild(targetEntity)) {
+                    Set_ParentChild(Index, childId);
+                }
+            }
         }
         ImGui::EndDragDropTarget();
     }
