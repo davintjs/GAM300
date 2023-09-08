@@ -14,7 +14,8 @@ void Texture_Manager::Update(float dt)
 
 void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
 {
-    mTextureContainer.emplace( GUID, std::pair(Filename, CreateTexture(Filename)) );
+    GLuint temp = CreateTexture(Filename);
+    mTextureContainer.emplace( GUID, std::pair(Filename, temp) );
 }
 
 /// Filename can be KTX or DDS files

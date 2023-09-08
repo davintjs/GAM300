@@ -15,11 +15,11 @@ public:
 
 	void AddTexture(char const* Filename, std::string GUID);
 	GLuint& GetTexture(std::string GUID);
+	GLuint CreateTexture(char const* Filename);
 
 private:
 
-	std::unordered_map<std::string, std::pair<std::string, unsigned int>> mTextureContainer; // GUID, <file name, GLuint>
+	std::unordered_map<std::string, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>
 	
-	GLuint CreateTexture(char const* Filename);
 };
 

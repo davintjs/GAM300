@@ -73,7 +73,7 @@ void Model::init(AssimpLoader* geom) {
     setup_shader();
 
     // load default texture, todo
-    //texturebuffer = create_texture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+    //texturebuffer = TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
     
     debugAABB_init();
 }

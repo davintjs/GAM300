@@ -48,6 +48,8 @@ void AssetManager::Init()
 			// Deserialize from meta file and load the asset asynchronously
 			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
 			{
+				// works here, something with the aync loading breaks gli
+				 //TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
 				this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 			}
 			else
@@ -269,7 +271,11 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 
 	if (isDDS) // If is DDS format, add to texture manager
 	{
-		TextureManager.AddTexture(assetPath.c_str(), GUIDofAsset);
+		// if this no die all is well ig
+		TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+		/*std::string filetype = assetPath + ".dds";
+		std::cout << assetPath;
+		TextureManager.AddTexture(assetPath.c_str(), GUIDofAsset);*/
 	}
 
 	inputFile.close();
