@@ -28,9 +28,13 @@ struct TemplatePack
 	}
 
 	template <typename... T1s>
-	constexpr auto Concatenate(TemplatePack<T1s...> pack)
+	constexpr static auto Concatenate(TemplatePack<T1s...> pack)
 	{
 		return TemplatePack<T,Ts..., T1s...>();
+	}
+
+	constexpr static auto Pop() {
+		return TemplatePack<Ts...>();
 	}
 };
 

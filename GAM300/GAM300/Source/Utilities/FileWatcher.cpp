@@ -75,7 +75,6 @@ void FileWatcher::ThreadWork()
             //oldNameFile = pNotify->FileName;
             if (filePath.extension() == ".cs")
             {
-                PRINT("HARLO");
                 FileModifiedEvent<FileType::SCRIPT> fileScript{filePath,fileState};
                 EVENT.Publish(&fileScript);
             }
