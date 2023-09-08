@@ -37,6 +37,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/ScriptingSystem.h"
 #include "Utilities/YAMLUtils.h"
 #include "EventsManager.h"
+#include "Debugging/Debugger.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -100,6 +101,7 @@ public:
 
 		// Bean: Serialization Tests
 		Emittion();
+		E_ASSERT(false,"SUP BITCH");
 	}
 
 	/**************************************************************************/

@@ -22,8 +22,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define TEXT_BUFFER_SIZE 128
 
-
-
 static ImGuiTableFlags windowFlags =
 ImGuiTableFlags_Resizable |
 ImGuiTableFlags_NoBordersInBody |
@@ -46,7 +44,9 @@ void DisplayType(const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    ImGui::InputText(idName.c_str(), &val);
+    static char buffer[2048];
+    strcpy_s(buffer, val.c_str());
+    ImGui::InputText(idName.c_str(), buffer,2048);
 }
 
 void DisplayType(const char* name, int& val)

@@ -30,19 +30,6 @@
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
     <ClCompile Include="Source\AI\Blackboard.cpp" />
     <ClCompile Include="Source\AI\BehaviorTreeBuilder.cpp" />
     <ClCompile Include="Source\AI\BehaviorTree.cpp" />
@@ -75,6 +62,20 @@
     <ClCompile Include="Source\Scene\Components.cpp" />
     <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\Debugging\Debugger.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -136,6 +137,7 @@
     <ClInclude Include="Source\Utilities\ThreadPool.h" />
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
+    <ClInclude Include="Source\Debugging\Debugger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
