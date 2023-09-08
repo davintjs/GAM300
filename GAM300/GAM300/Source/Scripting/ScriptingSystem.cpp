@@ -17,9 +17,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma warning( disable : 26110 )
 #pragma warning( disable : 26111 )
 #include "Precompiled.h"
-#include "Scripting/scripting-system.h"
+#include "Scripting/ScriptingSystem.h"
 #include "Scripting/Compiler.h"
-#include "Utilities/MultiThreading.h"
+#include "Utilities/ThreadPool.h"
 #include "Core/SystemInterface.h"
 //#include "Scripting/script-wrappers.h"
 #include <Scene/SceneManager.h>
@@ -227,7 +227,7 @@ void ScriptingSystem::Init()
 	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
 	//THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
-	EVENT.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	//ENABLE FOR PLAY MODE
 	//swapDll();
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
@@ -261,19 +261,7 @@ void ScriptingSystem::Update(float dt)
 		if (timeUntilRecompile < 0)
 		{
 			PRINT("START RECOMPLING\n");
-			if (pRecompileThread == nullptr)
-			{
-				pRecompileThread = &THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
-			}
-			//Reuse thread
-			else
-			{
-				if (pRecompileThread->joinable())
-				{
-					pRecompileThread->join();
-					*pRecompileThread = std::thread(&ScriptingSystem::RecompileThreadWork, this);
-				}
-			}
+			THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 		}
 	}
 }

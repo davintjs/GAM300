@@ -1,13 +1,13 @@
 
 #include "FileWatcher.h"
 //#include "Core/FileTypes.h"
-#include <Utilities/MultiThreading.h>
+#include <Utilities/ThreadPool.h>
 #include <Windows.h>
 #include <Core/EventsManager.h>
 
 FileWatcher::FileWatcher()
 {
-    THREADS.AddThread(&FileWatcher::ThreadWork, this);
+    THREADS.EnqueueTask([this] {ThreadWork(); });
     hDir = CreateFile(
         std::wstring(L"ASSETS").c_str(),
         FILE_LIST_DIRECTORY,
@@ -30,19 +30,17 @@ void FileWatcher::ThreadWork()
         std::wcerr << L"Error opening directory: " << GetLastError() << std::endl;
         return;
     }
-    BYTE  fni[32 * 1024];
+    BYTE  fni[64 * 1024];
     DWORD offset = 0;
     TCHAR szFile[MAX_PATH];
     DWORD bytesret;
     PFILE_NOTIFY_INFORMATION pNotify;
     std::filesystem::path oldNameFile;
 
-
-    while (!THREADS.HasQuit())
+    while (!THREADS.HasStopped())
     {
-
         offset = 0;
-        memset(fni, 0, 32 * 1024);
+        memset(fni, 0, 64 * 1024);
 
         ReadDirectoryChangesW
         (hDir, fni, sizeof(fni), 0,
@@ -76,7 +74,7 @@ void FileWatcher::ThreadWork()
             if (filePath.extension() == ".cs")
             {
                 FileModifiedEvent<FileType::SCRIPT> fileScript{filePath,fileState};
-                EVENT.Publish(&fileScript);
+                EVENTS.Publish(&fileScript);
             }
 
         } while (pNotify->NextEntryOffset != 0);

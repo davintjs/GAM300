@@ -554,7 +554,6 @@ public:
 	//std::list<File>& scriptFiles;
 	//std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 	std::mutex compilingStateReadable;
-	std::thread* pRecompileThread;
 	float timeUntilRecompile{0};
 	//std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };

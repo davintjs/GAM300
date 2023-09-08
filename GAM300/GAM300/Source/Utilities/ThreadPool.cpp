@@ -1,47 +1,59 @@
 #include "Precompiled.h"
 #include "ThreadPool.h"
+#include <Windows.h>
 
-ThreadPool::ThreadPool() : stop(false)
+void ThreadPool::Init()
 {
     for (size_t i = 0; i < MAX_THREADS; ++i)
     {
-        mWorkerPool.emplace_back([this]
+        mWorkerPool.emplace_back
+        (
+            [this]
             {
                 while (true)
                 {
                     std::function<void()> mTask;
-
                     {
-                        std::unique_lock<std::mutex> mLock(mQueueMutex);
-                        mQueueVariable.wait(mLock, [this]
+                        ACQUIRE_UNIQUE_LOCK
+                        (
+                            "Queue",
+                            [this]
                             {
                                 return stop || !mTasks.empty();
-                            });
+                            }
+                        );
 
                         if (stop && mTasks.empty())
                         {
                             return;
                         }
-
                         mTask = std::move(mTasks.front());
                         mTasks.pop();
                     }
                     mTask(); // Execute the task
                 }
-            });
+            }
+        );
     }
 }
 
-ThreadPool::~ThreadPool()
+void ThreadPool::Exit()
 {
+    stop = true;
+    for (auto pair : mutexes)
     {
-        std::unique_lock<std::mutex> lock(mQueueMutex);
-        stop = true;
+        ACQUIRE_SCOPED_LOCK(pair.first);
     }
 
-	mQueueVariable.notify_all();
 	for (auto& thread : mWorkerPool)
 	{
+        CancelSynchronousIo(thread.native_handle());
 		thread.join(); // Join all threads to main thread from the worker thread pool
 	}
+
+    //Delete Mutexes
+    for (auto& pair : mutexes)
+    {
+        delete pair.second;
+    }
 }

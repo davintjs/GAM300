@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include "Core/SystemInterface.h"
-#include "AssetManager/ThreadPool.h"
 
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
@@ -27,11 +26,6 @@ private:
 	void Init();
 	void Update(float dt);
 	void Exit();
-
-	// Thread stuff
-	ThreadPool AssetThread;
-	std::mutex mAssetMutex;
-	std::condition_variable mAssetVariable;
 
 	// Asset stuff
 	Asset mTotalAssets;

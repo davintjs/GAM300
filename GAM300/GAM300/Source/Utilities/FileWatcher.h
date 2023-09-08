@@ -4,7 +4,7 @@
 #ifndef FILEWATCHER_H
 #define FILEWATCHER_H
 
-SINGLETON(FileWatcher)
+class FileWatcher
 {
 public:
     FileWatcher();
