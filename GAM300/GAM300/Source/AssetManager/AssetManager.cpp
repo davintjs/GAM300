@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/ThreadPool.h"
+#include "Core/EventsManager.h"
 
 // Currently only loads geom files, future requires editing to support other file types of assets
 
@@ -11,6 +12,9 @@ void AssetManager::Init()
 		std::cout << "Check if proper assets filepath exists!" << std::endl;
 		exit(0);
 	}
+
+	//EVENT SUBSCRIPTIONS
+	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
@@ -57,6 +61,7 @@ void AssetManager::Init()
 // For run time update of files
 void AssetManager::Update(float dt)
 {
+	//Change this to an assert
 	if (!std::filesystem::exists(AssetPath))
 	{
 		std::cout << "Check if proper assets filepath exists!" << std::endl;
@@ -371,4 +376,62 @@ void AssetManager::FileUpdateProtocol()
 			}
 		}
 	}
+}
+
+
+void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
+{
+	namespace fs = std::filesystem;
+	fs::path filePath{ pEvent->filePath};
+
+	switch (pEvent->fileState)
+	{
+		case FileState::CREATED:
+		{
+			if (filePath.extension() == ".meta")
+				return;
+			PRINT("CREATED ");		
+			fs::path subFilePath = filePath.parent_path();
+			fs::path subFilePathMeta = subFilePath.append(filePath.filename().string()+".meta");
+
+			PRINT("META: ", subFilePathMeta, '\n');
+
+			//for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+			//{
+			//	fileType += subFilePath[i];
+			//}
+
+			//if (!std::filesystem::exists(subFilePathMeta))
+			//{
+			//	CreateMetaFile(filePath.filename(), subFilePathMeta.string(), fileType);
+			//}
+			break;
+		}
+		case FileState::DELETED:
+		{
+			PRINT("DELETED ");
+			break;
+		}
+		case FileState::MODIFIED:
+		{
+			PRINT("MODIFIED ");
+			break;
+		}
+		case FileState::RENAMED_OLD:
+		{
+			PRINT("RENAMED_OLD ");
+			break;
+		}
+		case FileState::RENAMED_NEW:
+		{
+			PRINT("RENAMED_NEW ");
+			break;
+		}
+		default:
+		{
+			PRINT("UNDEFINED ");
+			break;
+		}
+	}
+	std::wcout << filePath << std::endl;
 }

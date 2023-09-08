@@ -19,9 +19,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 void Emittion()
 {
     YAML::Emitter out;
-    out << "Hello World!";
+    //out << "Hello World!";
 
-    std::cout << "Here's the output YAML:\n" << out.c_str();
+    //std::cout << "Here's the output YAML:\n" << out.c_str();
 }
 
 void CreateYAMLMap(YAML::Emitter& out)

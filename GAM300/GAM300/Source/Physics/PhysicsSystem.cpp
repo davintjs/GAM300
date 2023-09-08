@@ -1,5 +1,7 @@
 #include "Precompiled.h"
 #include "PhysicsSystem.h"
+#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 void PhysicsSystem::Init() 
 {
@@ -15,6 +17,7 @@ void PhysicsSystem::Init()
 	//// Allocate memory for use in simulation
 	tempAllocator.Allocate(10 * 1024 * 1024);
 
+	//sphereShape = new JPH::SphereShape();
 }
 
 //void PhysicsSystem::Update() {
@@ -104,7 +107,6 @@ void PhysicsSystem::Init()
 //	bodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 //
 //	//Next, we add a dynamic body (ball) to test 
-//	sphereShape = new JPH::SphereShape(0.5f);
 //
 //	JPH::BodyCreationSettings sphereSettings(sphereShape, JPH::RVec3(0.0, 2.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
 //	JPH::BodyID sphere_ID = bodyInterface->CreateAndAddBody(sphereSettings, JPH::EActivation::Activate);

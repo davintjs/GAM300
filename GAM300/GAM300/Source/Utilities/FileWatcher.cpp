@@ -1,6 +1,5 @@
 
 #include "FileWatcher.h"
-//#include "Core/FileTypes.h"
 #include <Utilities/ThreadPool.h>
 #include <Windows.h>
 #include <Core/EventsManager.h>
@@ -30,23 +29,23 @@ void FileWatcher::ThreadWork()
         std::wcerr << L"Error opening directory: " << GetLastError() << std::endl;
         return;
     }
-    BYTE  fni[64 * 1024];
+    BYTE  fni[32 * 1024];
     DWORD offset = 0;
     TCHAR szFile[MAX_PATH];
     DWORD bytesret;
     PFILE_NOTIFY_INFORMATION pNotify;
-    std::filesystem::path oldNameFile;
 
     while (!THREADS.HasStopped())
     {
         offset = 0;
-        memset(fni, 0, 64 * 1024);
+        memset(fni, 0, 32 * 1024);
 
         ReadDirectoryChangesW
-        (hDir, fni, sizeof(fni), 0,
-            FILE_NOTIFY_CHANGE_CREATION |
-            FILE_NOTIFY_CHANGE_SIZE |
-            FILE_NOTIFY_CHANGE_FILE_NAME,
+        (hDir, fni, sizeof(fni), true,
+            FILE_NOTIFY_CHANGE_FILE_NAME |
+            FILE_NOTIFY_CHANGE_DIR_NAME |
+            FILE_NOTIFY_CHANGE_LAST_WRITE |
+            FILE_NOTIFY_CHANGE_CREATION,
             &bytesret, NULL, NULL
         );
         do
@@ -67,15 +66,8 @@ void FileWatcher::ThreadWork()
                     szFile[count] = TEXT('\0');
                 }
             #endif
-            FileState fileState = FileState(pNotify->Action);
-            std::wstring name{ pNotify->FileName };
-            std::filesystem::path filePath{ name };
-            //oldNameFile = pNotify->FileName;
-            if (filePath.extension() == ".cs")
-            {
-                FileModifiedEvent<FileType::SCRIPT> fileScript{filePath,fileState};
-                EVENTS.Publish(&fileScript);
-            }
+            FileModifiedEvent fileEvent(pNotify->FileName,FileState(pNotify->Action));
+            EVENTS.Publish(&fileEvent);
 
         } while (pNotify->NextEntryOffset != 0);
     }

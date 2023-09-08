@@ -7,6 +7,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
+#include "Core/Events.h"
 
 // GUID, last file update time, data
 struct Asset
@@ -46,4 +47,7 @@ private:
 	void FileAddProtocol();
 	void FileRemoveProtocol();
 	void FileUpdateProtocol();
+
+	//EVENT CALLBACKS
+	void CallbackFileModified(FileModifiedEvent * pEvent);
 };

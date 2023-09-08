@@ -227,7 +227,7 @@ void ScriptingSystem::Init()
 	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
 	//THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
+	//EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	//ENABLE FOR PLAY MODE
 	//swapDll();
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
@@ -644,11 +644,11 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 //	}
 //}
 
-void ScriptingSystem::CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent)
-{
-	PRINT("SCRIPT CHANGE DETECTED!\n");
-	timeUntilRecompile = SECONDS_TO_RECOMPILE;
-}
+//void ScriptingSystem::CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent)
+//{
+//	PRINT("SCRIPT CHANGE DETECTED!\n");
+//	timeUntilRecompile = SECONDS_TO_RECOMPILE;
+//}
 
 //MonoObject* ScriptingSystem::ReflectGameObject(GameObject& gameObj)
 //{

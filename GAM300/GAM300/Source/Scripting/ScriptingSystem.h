@@ -347,7 +347,7 @@ public:
 	template<typename T>
 	void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference);
 
-	void CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent);
+	//void CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent);
 
 	/*******************************************************************************
 	/*!
