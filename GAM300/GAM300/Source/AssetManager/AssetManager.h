@@ -11,11 +11,11 @@
 
 #include "Graphics/TextureManager.h"
 
-// GUID, last file update time, data
+// GUID, last file update time, file name, data
 struct Asset
 {
 	std::vector<std::filesystem::file_time_type> mAssetsTime;
-	std::unordered_map<std::string, std::pair<std::filesystem::file_time_type, std::vector<char>>> mFilesData;
+	std::unordered_map<std::string, std::pair<std::filesystem::file_time_type, std::pair<std::string, std::vector<char>>>> mFilesData;
 };
 
 ENGINE_SYSTEM(AssetManager)
@@ -39,8 +39,8 @@ private:
 	Asset mTotalAssets;
 
 	// Helper functions
-	void AsyncLoadAsset(const std::string& metaFilePath, bool isDDS = false);
-	void LoadAsset(const std::string& metaFilePath, bool isDDS = false);
+	void AsyncLoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS = false);
+	void LoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS = false);
 	void AsyncUnloadAsset(const std::string& assetGUID);
 	void UnloadAsset(const std::string& assetGUID);
 	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
@@ -48,9 +48,11 @@ private:
 
 	std::string GenerateGUID(const std::string& fileName);
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
-	void DeserializeAssetMeta(const std::string& filePath, bool isDDS = false);
+	void DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool isDDS = false);
 
 	void FileAddProtocol();
 	void FileRemoveProtocol();
 	void FileUpdateProtocol();
+
+	std::string GetGUID(std::string fileName);
 };
