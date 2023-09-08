@@ -101,7 +101,6 @@ public:
 
 		// Bean: Serialization Tests
 		Emittion();
-		E_ASSERT(false,"SUP BITCH");
 	}
 
 	/**************************************************************************/

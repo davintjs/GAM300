@@ -509,7 +509,7 @@ private:
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {
-                    auto component = curr_scene.GetComponent<T1>(entity);
+                    auto& component = curr_scene.GetComponent<T1>(entity);
                     DisplayComponentHelper(component);
                 }              
             }
