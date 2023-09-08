@@ -10,6 +10,7 @@ ENGINE_SYSTEM(GraphicsSystem)
 public:
 	void Init();
 	void Update(float dt);
+	void Draw();
 	void Exit();
 };
 #endif // !GRAPHICS_SYSTEM_H

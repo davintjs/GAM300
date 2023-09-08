@@ -67,25 +67,16 @@ void GraphicsSystem::Init()
 	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
+
 	int index = 0;
 	for (Entity& entity : currentScene.entities) {
-		
-		/*if (!currentScene.EntityIsActive(entity.denseIndex))
-		{
-			continue;
-		}*/
-		//Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 		entitySRT[index] = glm::mat4(1.f);
-		/*if (currentScene.singleComponentsArrays.GetArray<model>()) {
-
-		}*/
 		++index;
 	}
 
 	glGenBuffers(1, &entitySRTBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
 	glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER, currentScene.entities.size() * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	InstanceSetup(testBox.vaoid);
@@ -129,30 +120,13 @@ void GraphicsSystem::Update(float dt)
 		);
 		glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
 		entitySRT[i] = SRT;
-		//entitySRT[i] = glm::mat4(1.f);
 		++i;
 	}
-
-	//Currently Putting in Camera Update loop here
-
-
 
 	// Bean: For binding framebuffer
 	EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
-
-	//UPDATE OR RENDER GRAPHICS HERE
-
-	//UPDATE
-
-	//RENDER
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	glClearColor(0.f, 0.5f, 0.5f, 1.f);
-
-	glEnable(GL_DEPTH_BUFFER);
 
 	// This one is turbo scuffed i just putting here to test  light
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
@@ -203,30 +177,33 @@ void GraphicsSystem::Update(float dt)
 	}
 	// instanced bind
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, (currentScene.entities.size()) * sizeof(glm::mat4), &entitySRT[0]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	// instanced draw
-	testBox.instanceDraw(EntityRenderLimit);
+
+	Draw();
+
+	// Bean: For unbinding framebuffer
+	EditorCam.getFramebuffer().unbind();
+	//glDisable(GL_FRAMEBUFFER_SRGB);
+}
+
+void GraphicsSystem::Draw() {
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+	glEnable(GL_DEPTH_BUFFER);
 
 	testmodel.draw();
-	/*testmodel.draw();
+	testBox.instanceDraw(EntityRenderLimit);
 
-	LightSource.lightSource_draw();
-
-	AffectedByLight.affectedByLight_draw(LightSource.position);/**/
-
-	
-
+	/*LightSource.lightSource_draw();
+	AffectedByLight.affectedByLight_draw(LightSource.position);*/
+	// Temporary Raycast
 	if (Ray_Container.size() > 0)
 	{
 		for (int i = 0; i < Ray_Container.size(); ++i)
 		{
 			Ray3D ray = Ray_Container[i];
-			
-			//std::cout << "ray " << ray.origin.x << "\n";
-			//std::cout << "ray direc" << ray.direction.x << "\n";
-
 			glm::mat4 SRT
 			{
 				glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
@@ -234,15 +211,10 @@ void GraphicsSystem::Update(float dt)
 				glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
 				glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
 			};
-			//std::cout << "in here\n";
 			Line.debugline_draw(SRT);
-
 		}
 	}
 
-	// Bean: For unbinding framebuffer
-	EditorCam.getFramebuffer().unbind();
-	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void InstanceSetup(GLuint vaoid) {

@@ -284,6 +284,11 @@ void Model::init() {
         FBX_vaoid.push_back(VAO);
         FBX_vboid.push_back(VBO);
         FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+        GeneralModel model;
+        model.fbx_VAO = VAO;
+        model.fbx_VBO = VBO;
+        model.tex_VAO.emplace_back(texturebuffer);
+        _mGeneral_model.emplace_back(model);
     }
 
     setup_shader();
@@ -298,13 +303,11 @@ void Model::setup_instanced_shader() {
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
         "GAM300/Source/Graphics/InstancedRender.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
 
-// Fragment Shader
+    // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
         "GAM300/Source/Graphics/InstancedRender.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
@@ -315,7 +318,6 @@ void Model::setup_instanced_shader() {
         std::stringstream sstr;
         sstr << "Unable to compile/link/validate shader programs\n";
         sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
         std::cout << sstr.str();
         std::exit(EXIT_FAILURE);
     }
@@ -456,7 +458,7 @@ void Model::draw() {
 
     glDrawElements(prim, FBX_drawcount[0], GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(vaoid);
-    glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
+    //glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
 
     // unbind and free stuff
     glBindVertexArray(0);
@@ -468,31 +470,6 @@ void Model::draw() {
 
 void Model::instanceDraw(int entitycount) {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
-
-    //glm::mat4 scaling_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-
-    //);
-
-    //glm::mat4 rotation_mat(
-    //    glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    ////glm::mat3 translation_mat = glm::mat3(1.f);
-
-    //glm::mat4 translation_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    //glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
-
 
     shader.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -510,8 +487,6 @@ void Model::instanceDraw(int entitycount) {
         glm::value_ptr(EditorCam.getPerspMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
         glm::value_ptr(EditorCam.getViewMatrix()));
-   /* glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-        glm::value_ptr(SRT));*/
 
     glBindVertexArray(vaoid);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
@@ -525,49 +500,6 @@ void Model::instanceDraw(int entitycount) {
 
 void Model::instance_cubeinit()
 {
-    /*float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    };*/
 
     float vertices[] = {
         // positions            // Normals              // Tangents             // Texture Coords   // Colors

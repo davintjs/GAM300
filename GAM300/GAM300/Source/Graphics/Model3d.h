@@ -21,6 +21,12 @@ public:
 	std::vector<Material> _materials{};
 };
 
+struct GeneralModel {
+	GLuint fbx_VAO;
+	GLuint fbx_VBO;
+	std::vector<GLuint> tex_VAO;
+};
+
 class Model {
 public:
 
@@ -55,7 +61,7 @@ public:
 	std::vector<GLuint> FBX_vboid;
 	std::vector<GLuint> FBX_drawcount;
 
-
+	std::vector<GeneralModel> _mGeneral_model;
 
 	// debug AABB
 	GLuint vaoidAABB;
