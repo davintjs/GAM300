@@ -10,7 +10,7 @@
 \brief
 	This file declares all types of components
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef COMPONENTS_H
@@ -109,7 +109,7 @@ struct MultiComponentsGroup
 	template <typename T1>
 	constexpr MultiComponentsArray<T1>& GetArray()
 	{
-		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		static_assert((std::is_same_v<T1, Ts> || ...), "TESTES");
 		return std::get<MultiComponentsArray<T1>>(arrays);
 	}
 private:
@@ -134,20 +134,7 @@ struct Transform
 	Transform* Parent = nullptr;
 
 	bool isLeaf() {
-
-		return (child.size() > 0) ? false : true;
-	}
-
-	bool isEntityChild(Transform& ent) {
-		if (std::find(child.begin(), child.end(), &ent) != child.end()) {
-			return true;
-		}
-		for (int i = 0; i < child.size(); i++) {
-			if (!child[i]->isLeaf()) {
-				return isEntityChild(*child[i]);
-			}
-		}
-		return false;
+		return (child.size()) ? false : true;
 	}
 
 	bool isChild() {
@@ -156,6 +143,18 @@ struct Transform
 		else
 			return false;
 	}
+
+	bool isEntityChild(Transform& ent) {
+		if (std::find(child.begin(), child.end(), &ent) != child.end()) {
+			return true;
+		}
+		for (int i = 0; i < child.size(); i++) {
+				return child[i]->isEntityChild(ent);
+		}
+		return false;
+	}
+
+	
 };
 
 struct AudioSource
@@ -208,7 +207,7 @@ struct Script
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Tag,Transform,Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

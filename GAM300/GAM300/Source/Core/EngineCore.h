@@ -21,7 +21,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-#include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
@@ -34,8 +33,11 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
-#include "Scripting/scripting-system.h"
+#include "Utilities/ThreadPool.h"
+#include "Scripting/ScriptingSystem.h"
 #include "Utilities/YAMLUtils.h"
+#include "EventsManager.h"
+#include "Debugging/Debugger.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -60,8 +62,6 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-		FileWatcher::Instance();
-
 		systems =
 		{
 			&InputSystem::Instance(),
@@ -74,6 +74,8 @@ public:
 			&BehaviorTreeBuilder::Instance(),
 			&AssetManager::Instance(),
 		};
+
+		//MyFileWatcher.Init();
 
 
 		for (ISystem* pSystem : systems)
@@ -146,16 +148,16 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
-		EVENT.Exit();
-		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
 			(*iter)->Exit();
 		}
+		THREADS.Exit();
 	}
 private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
+	FileWatcher watcher;
 };
 #endif // !CORE_H

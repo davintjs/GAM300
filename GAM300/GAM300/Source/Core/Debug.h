@@ -1,15 +1,19 @@
-#include <cassert>
 #include <iostream>
-#include <typeinfo>
 
-#ifndef DEBUG_H
+#ifndef  DEBUG_H
 #define DEBUG_H
-#define ASSERT(expr) assert(expr);
 
-template <typename... Args>
-void PRINT(Args&&... args)
-{
-	((std::cout << std::forward<Args>(args)),...);
-}
+
+#if defined(DEBUG) | defined(_DEBUG)
+	#define PRINT(ARGS) printMessage(ARGS)
+
+	template <typename... Args>
+	static void printMessage(Args&&... args)
+	{
+		((std::cout << std::forward<Args>(args)), ...);
+	}
+#else
+	#define PRINT(ARGS) 
 
 #endif
+#endif // ! DEBUG_H

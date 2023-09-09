@@ -1,5 +1,8 @@
 #include "Precompiled.h"
 #include "AssetManager/AssetManager.h"
+#include "Utilities/ThreadPool.h"
+#include "Core/EventsManager.h"
+#include "Core/FileTypes.h"
 
 // Currently only loads geom files, future requires editing to support other file types of assets
 
@@ -10,6 +13,9 @@ void AssetManager::Init()
 		std::cout << "Check if proper assets filepath exists!" << std::endl;
 		exit(0);
 	}
+
+	//EVENT SUBSCRIPTIONS
+	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
@@ -56,6 +62,7 @@ void AssetManager::Init()
 // For run time update of files
 void AssetManager::Update(float dt)
 {
+	//Change this to an assert
 	if (!std::filesystem::exists(AssetPath))
 	{
 		std::cout << "Check if proper assets filepath exists!" << std::endl;
@@ -116,73 +123,67 @@ void AssetManager::Exit()
 // Multi-threaded loading of assets
 void AssetManager::AsyncLoadAsset(const std::string& metaFilePath)
 {
-	AssetThread.EnqueueTask([this, metaFilePath] { LoadAsset(metaFilePath); });
+	THREADS.EnqueueTask([this, metaFilePath] { LoadAsset(metaFilePath); });
 }
 
 void AssetManager::LoadAsset(const std::string& metaFilePath)
 {
-	{
-		std::lock_guard<std::mutex> mLock(mAssetMutex);
-		DeserializeAssetMeta(metaFilePath);
-	}
-	mAssetVariable.notify_all();
+	ACQUIRE_SCOPED_LOCK("Assets");
+	DeserializeAssetMeta(metaFilePath);
 }
 
 // Multi-threaded unloading of assets
 void AssetManager::AsyncUnloadAsset(const std::string& assetGUID)
 {
-	AssetThread.EnqueueTask([this, assetGUID] { UnloadAsset(assetGUID); });
+	THREADS.EnqueueTask([this, assetGUID] { UnloadAsset(assetGUID); });
 }
 
 void AssetManager::UnloadAsset(const std::string& assetGUID)
 {
-	{
-		std::lock_guard<std::mutex> mLock(mAssetMutex);
-		mTotalAssets.mFilesData.erase(assetGUID);
-		std::cout << "Done removing file from memory!" << std::endl;
-	}
-	mAssetVariable.notify_all();
+	ACQUIRE_SCOPED_LOCK("Assets");
+	mTotalAssets.mFilesData.erase(assetGUID);
+	std::cout << "Done removing file from memory!" << std::endl;
 }
 
 // Multi-threaded unloading of assets
 void AssetManager::AsyncUpdateAsset(const std::string& assetPath, const std::string& assetGUID)
 {
-	AssetThread.EnqueueTask([this, assetPath, assetGUID] { UpdateAsset(assetPath, assetGUID); });
+	THREADS.EnqueueTask([this, assetPath, assetGUID] { UpdateAsset(assetPath, assetGUID); });
 }
 
 void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& assetGUID)
 {
+	ACQUIRE_SCOPED_LOCK("Assets");
+
+	mTotalAssets.mFilesData[assetGUID].first = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
+
+	std::ifstream inputFile(assetPath.c_str());
+	if (!inputFile)
 	{
-		std::lock_guard<std::mutex> mLock(mAssetMutex);
-
-		mTotalAssets.mFilesData[assetGUID].first = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
-
-		std::ifstream inputFile(assetPath.c_str());
-		if (!inputFile)
-		{
-			std::cout << "Error opening file to update asset in memory!" << std::endl;
-			exit(0);
-		}
-
-		std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
-		mTotalAssets.mFilesData[assetGUID].second = std::move(buff); // Update the data in memory
-
-		std::cout << "Done updating file in memory!" << std::endl;
-
-		inputFile.close();
+		std::cout << "Error opening file to update asset in memory!" << std::endl;
+		exit(0);
 	}
 
-	mAssetVariable.notify_all();
+	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
+	mTotalAssets.mFilesData[assetGUID].second = std::move(buff); // Update the data in memory
+
+	std::cout << "Done updating file in memory!" << std::endl;
+
+	inputFile.close();
 }
 
 // Get a loaded asset
 const std::vector<char>& AssetManager::GetAsset(const std::string& assetGUID)
 {
-	std::unique_lock<std::mutex> mLock(mAssetMutex);
-	mAssetVariable.wait(mLock, [this, &assetGUID] // Wait if the asset is not loaded yet
-		{
-			return (mTotalAssets.mFilesData.find(assetGUID) != mTotalAssets.mFilesData.end());
-		});
+	auto func =
+	[this, &assetGUID] // Wait if the asset is not loaded yet
+	{
+		return (mTotalAssets.mFilesData.find(assetGUID) != mTotalAssets.mFilesData.end());
+	};
+	ACQUIRE_UNIQUE_LOCK
+	(
+		"Assets", func
+	);
 
 	return mTotalAssets.mFilesData[assetGUID].second;
 }
@@ -375,5 +376,69 @@ void AssetManager::FileUpdateProtocol()
 				this->AsyncUpdateAsset(assetPath, tempGUID); // Add the new data into memory
 			}
 		}
+	}
+}
+
+
+void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
+{
+	namespace fs = std::filesystem;
+	fs::path filePath{ pEvent->filePath};
+
+
+	switch (pEvent->fileState)
+	{
+		case FileState::CREATED:
+		{
+			if (filePath.extension() == ".meta")
+				return;
+			//PRINT("CREATED ");		
+			fs::path subFilePath = filePath.parent_path();
+			fs::path subFilePathMeta = subFilePath.append(filePath.filename().string()+".meta");
+
+			//PRINT("META: ", subFilePathMeta, '\n');
+
+			//for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+			//{
+			//	fileType += subFilePath[i];
+			//}
+
+			//if (!std::filesystem::exists(subFilePathMeta))
+			//{
+			//	CreateMetaFile(filePath.filename(), subFilePathMeta.string(), fileType);
+			//}
+			break;
+		}
+		case FileState::DELETED:
+		{
+			PRINT("DELETED ");
+			break;
+		}
+		case FileState::MODIFIED:
+		{
+			PRINT("MODIFIED ");
+			break;
+		}
+		case FileState::RENAMED_OLD:
+		{
+			PRINT("RENAMED_OLD ");
+			break;
+		}
+		case FileState::RENAMED_NEW:
+		{
+			PRINT("RENAMED_NEW ");
+			break;
+		}
+		default:
+		{
+			PRINT("UNDEFINED ");
+			break;
+		}
+
+	}
+	if (filePath.extension() == ".cs")
+	{
+		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
+		EVENTS.Publish(&scriptModifiedEvent);
 	}
 }

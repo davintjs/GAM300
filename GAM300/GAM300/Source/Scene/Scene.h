@@ -206,7 +206,7 @@ struct Scene
 	}
 
 	template <typename Component>
-	auto& GetComponents(Entity& entity)
+	auto GetComponents(Entity& entity)
 	{
 		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
 	}
@@ -293,34 +293,4 @@ struct Scene
 	std::filesystem::path filePath;
 	State state;
 };
-
-template <typename Component>
-bool Scene::ComponentIsEnabled(uint32_t index, size_t multiIndex)
-{
-	if constexpr (SingleComponentTypes::Has<Component>())
-	{
-		ASSERT(multiIndex == 0);//, "Unable to find another component of given type as only one should exist on this gameObject");
-		singleComponentsArrays.GetArray<Component>().GetActive(index);
-	}
-	else if constexpr (MultiComponentTypes::Has(Component))
-	{
-		multiComponentsArrays.GetArray<Component>().GetActive(index);
-	}
-	static_assert(true, "Type is not a valid component!");
-}
-
-template <typename Component>
-void Scene::ComponentSetEnabled(uint32_t index, bool value, size_t multiIndex)
-{
-	if constexpr (SingleComponentTypes::Has(Component))
-	{
-		ASSERT(multiIndex == 0, "Unable to find another component of given type as only one should exist on this gameObject");
-		singleComponentsArrays.GetArray<Component>().SetActive(index, value);
-	}
-	else if constexpr (MultiComponentTypes::Has(Component))
-	{
-		multiComponentsArrays.GetArray<Component>().SetActive(index, value);
-	}
-	static_assert(true, "Type is not a valid component!");
-}
 #endif SCENE_H

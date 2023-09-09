@@ -5,6 +5,7 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 #include <Windows.h>
+#include <commdlg.h>
 
 
 	std::string FileDialogs::OpenFile(const char* filter) {
