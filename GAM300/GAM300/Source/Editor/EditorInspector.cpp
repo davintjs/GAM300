@@ -430,7 +430,7 @@ void DisplayComponentHelper(T& component)
     else
     {
         //This means T is not a component
-        //PRINT(typeid(T).name());
+        PRINT(typeid(T).name());
     }
     if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
     {
@@ -526,7 +526,7 @@ private:
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
                 //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
-                DisplayComponentHelper(component);
+                DisplayComponentHelper(*component);
             }
         }
 
@@ -539,6 +539,46 @@ private:
 using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponentTypes()));
 
 void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
+
+template<typename T, typename... Ts>
+struct AddComponentsStruct
+{
+public:
+    constexpr AddComponentsStruct(TemplatePack<T, Ts...> pack) {}
+    AddComponentsStruct(Entity& entity)
+    {
+        AddNext<T, Ts...>(entity);
+    }
+private:
+    template<typename T1, typename... T1s>
+    void AddNext(Entity& entity)
+    {
+        if constexpr (SingleComponentTypes::Has<T1>()) {
+            if (!entity.pScene->HasComponent<T1>(entity))
+            {
+                if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                {
+                    entity.pScene->AddComponent<T1>(entity);
+                    EditorInspector::Instance().isAddComponentPanel = false;
+                }
+            }
+        }
+        else
+        {
+            if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            {
+                entity.pScene->AddComponent<T1>(entity);
+                EditorInspector::Instance().isAddComponentPanel = false;
+            }
+        }
+
+        if constexpr (sizeof...(T1s) != 0)
+        {
+            AddNext<T1s...>(entity);
+        }
+    }
+};
+using AddComponentsDisplay = decltype(AddComponentsStruct(DisplayableComponentTypes()));
 
 void AddComponentPanel(Entity& entity) {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
@@ -553,21 +593,7 @@ void AddComponentPanel(Entity& entity) {
 
     ImGui::Begin("Add Component", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar);
     
-    //To do: make this into a range for loop with container of all component types
-    if (CENTERED_CONTROL(ImGui::Button("Transform", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing())))) {
-        curr_scene.AddComponent<Transform>(entity);
-        EditorInspector::Instance().isAddComponentPanel = false;
-    }
-
-    if (CENTERED_CONTROL(ImGui::Button("Rigidbody", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing())))) {
-        curr_scene.AddComponent<Rigidbody>(entity);
-        EditorInspector::Instance().isAddComponentPanel = false;
-    }
-
-    if (CENTERED_CONTROL(ImGui::Button("Audio Source", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing())))) {
-        curr_scene.AddComponent<AudioSource>(entity);
-        EditorInspector::Instance().isAddComponentPanel = false;
-    }
+    (void)AddComponentsDisplay(entity);
 
     ImGui::End();
 }
