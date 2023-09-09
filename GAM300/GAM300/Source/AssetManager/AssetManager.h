@@ -23,6 +23,7 @@ public:
 
 private:
 	const std::string AssetPath = "Assets";
+	bool FileAdded = false; // For the filewatcher (Adding file calls both add and modified so this is for me to bypass modified)
 
 	void Init();
 	void Update(float dt);
