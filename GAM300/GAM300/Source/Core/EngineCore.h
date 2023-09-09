@@ -21,7 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-//#include "Physics/PhysicsSystem.h"
+#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"

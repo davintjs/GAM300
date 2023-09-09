@@ -1,8 +1,6 @@
 #ifndef PHYSICSSYSTEM_H
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
-#include "Scene/Entity.h"
-#include "Scene/SceneManager.h"
 
 
 #include "Jolt/Jolt.h"
@@ -49,7 +47,7 @@ public:
 };
 
 // Defines mapping between object and broadphase layers
-class BroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface {
+class BroadPhaseLayerInterface final: public JPH::BroadPhaseLayerInterface {
 public:
 	BroadPhaseLayerInterface() {
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
@@ -65,6 +63,17 @@ public:
 
 		return bpLayers[objLayer];
 	}
+
+	#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+	virtual const char* GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override
+	{
+		switch ((JPH::BroadPhaseLayer::Type)inLayer)
+		{
+		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::STATIC:	return "NON_MOVING";
+		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::DYNAMIC:		return "MOVING";
+		}
+	}
+	#endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
 
 private:
 	JPH::BroadPhaseLayer bpLayers[EngineObjectLayers::NUM_LAYERS];
@@ -94,9 +103,9 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	void OnSceneStart();
 	void OnSceneEnd();
 
-	//void PopulatePhysicsWorld();
-	//void UpdateGameObjects();
-	//void TestRun();
+	void PopulatePhysicsWorld();
+	void UpdateGameObjects();
+	void TestRun();
 
 
 	const unsigned int maxObjects = 1024;
@@ -126,14 +135,8 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::JobSystemSingleThreaded jobSystem;
 
 
-
-
 };
 
-void GlmVec3ToJoltVec3(Vector3 & gVec3, JPH::RVec3 & jVec3);
-void GlmVec3ToJoltQuat(Vector3 & gVec3, JPH::Quat & jQuat);
-void JoltVec3ToGlmVec3(JPH::RVec3 & jVec3, Vector3 & gVec3);
-void JoltQuatToGlmVec3(JPH::Quat & jQuat, Vector3 & gVec3);
 
 
 

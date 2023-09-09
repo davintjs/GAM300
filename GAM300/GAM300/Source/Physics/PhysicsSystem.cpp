@@ -1,5 +1,6 @@
-#include "Precompiled.h"
 #include "PhysicsSystem.h"
+
+#include "Scene/SceneManager.h"
 
 void PhysicsSystem::Init() 
 {
@@ -65,8 +66,8 @@ void PhysicsSystem::OnSceneStart() {
 	bodyInterface = &(physicsSystem->GetBodyInterface());
 
 	// Initialize Physics World
-	physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
-		bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
+	//physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
+	//	bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
 
 	// Optimise broad phase only if there is an excess amount of bodies
 	//physicsSystem->OptimizeBroadPhase();
@@ -85,7 +86,13 @@ void PhysicsSystem::OnSceneEnd() {
 	simulating = false;
 
 }
-/*
+
+
+void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3);
+void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat);
+void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3);
+void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3);
+
 void PhysicsSystem::PopulatePhysicsWorld() {
 	Scene& scene = MySceneManager.GetCurrentScene();
 	// check entity for collider and then check what kind of fucking collider he want
@@ -114,9 +121,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		// Linear + Angular Velocity
 		JPH::RVec3 linearVel;
-		GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
-		JPH::RVec3 angularVel;
-		GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
+		//GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
+		//JPH::RVec3 angularVel;
+		//GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
 
 		// Set enabled status
 		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
@@ -146,9 +153,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Friction
 			boxCreationSettings.mFriction = rb.friction;
 			// Linear Velocity
-			boxCreationSettings.mLinearVelocity = linearVel;
+			//boxCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
-			boxCreationSettings.mAngularVelocity = angularVel;
+			//boxCreationSettings.mAngularVelocity = angularVel;
 
 			JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
 			rb.RigidBodyID = box->GetID();
@@ -168,9 +175,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Friction
 			sphereCreationSettings.mFriction = rb.friction;
 			// Linear Velocity
-			sphereCreationSettings.mLinearVelocity = linearVel;
+			//sphereCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
-			sphereCreationSettings.mAngularVelocity = angularVel;
+			//sphereCreationSettings.mAngularVelocity = angularVel;
 
 			bodyInterface->AddBody(sphere->GetID(),enabledStatus);
 
@@ -190,9 +197,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Friction
 			capsuleCreationSettings.mFriction = rb.friction;
 			// Linear Velocity
-			capsuleCreationSettings.mLinearVelocity = linearVel;
+			//capsuleCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
-			capsuleCreationSettings.mAngularVelocity = angularVel;
+			//capsuleCreationSettings.mAngularVelocity = angularVel;
 
 			bodyInterface->AddBody(capsule->GetID(), enabledStatus);
 		}
@@ -282,7 +289,7 @@ void PhysicsSystem::TestRun() {
 	//
 	//PopulatePhysicsWorld();
 }
-*/
+
 // Math conversion helpers
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) {
 	jVec3.SetX(gVec3.x);
