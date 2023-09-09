@@ -25,6 +25,8 @@ unsigned int entitySRTBuffer;
 glm::mat4 entitySRT[EntityRenderLimit];
 Model Line;
 
+InstanceProperties properties[EntityRenderLimit];
+
 bool SwappingColorSpace = false;
 //Editor_Camera testCam;
 
@@ -192,6 +194,12 @@ void GraphicsSystem::Draw() {
 	glEnable(GL_DEPTH_BUFFER);
 
 	testmodel.draw();
+	// for  model : models{
+	//	for tex : model.tex_vaoid{
+	//		bind texture into uniform sampler2d
+	//	}
+	//	draw instance
+	// }
 	testBox.instanceDraw(EntityRenderLimit);
 
 	/*LightSource.lightSource_draw();

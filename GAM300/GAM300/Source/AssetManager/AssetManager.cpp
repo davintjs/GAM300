@@ -88,6 +88,8 @@ void AssetManager::Init()
 // For run time update of files
 void AssetManager::Update(float dt)
 {
+	
+	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(""));
 	////Change this to an assert
 	//if (!std::filesystem::exists(AssetPath))
 	//{

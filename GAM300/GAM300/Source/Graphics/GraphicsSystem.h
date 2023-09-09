@@ -5,6 +5,14 @@
 
 #define EntityRenderLimit 10000
 
+struct InstanceProperties
+{
+	// rmb to convert everything to AOS
+	glm::mat4 entitySRT;
+	// int morestuff;
+
+};
+
 ENGINE_SYSTEM(GraphicsSystem)
 {
 public:
