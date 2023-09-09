@@ -25,10 +25,8 @@ public:
 	template <typename T>
 	void EnqueueTask(T&& task)
 	{
-		{
-			AcquireScopedLock("Queue");
-			mTasks.emplace(std::move(task));
-		}
+		ACQUIRE_SCOPED_LOCK("Queue");
+		mTasks.emplace(std::move(task));
 	}
 
 	bool HasStopped() const
