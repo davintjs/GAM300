@@ -34,9 +34,14 @@ void SceneManager::LoadScene(const char* path)
 	scene.AddEntity();
 	scene.AddEntity();
 
-	/*Entity& titty2 = scene.AddEntity();
+	/*
+	* 
+	Entity& titty2 = scene.AddEntity();
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).translation = Vector3(100.f, 100.f, 100.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).scale = Vector3(40.f, 40.f, 40.f);*/
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).scale = Vector3(40.f, 40.f, 40.f);
+	
+	*/
+	
 	//Init scene
 
 }

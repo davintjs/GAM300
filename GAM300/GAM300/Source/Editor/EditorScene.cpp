@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved
 #include "Precompiled.h"
 
 #include "EditorHeaders.h"
+#include "ImGuizmo.h"
 
 // Bean: Need this to reference the editor camera's framebuffer
 #include "../Graphics/Editor_Camera.h"
@@ -42,7 +43,6 @@ void EditorScene::Update(float dt)
 
             EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
         }
-
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
     }

@@ -288,7 +288,7 @@ void Model::init() {
 
     setup_shader();
 
-    debugAABB_init();
+    //debugAABB_init();
 }
 
 
@@ -569,6 +569,9 @@ void Model::instance_cubeinit()
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
 
+    vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
+    vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
+    
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
 
@@ -587,6 +590,9 @@ void Model::instance_cubeinit()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
+
+    debugAABB_init();
+
 
 }
 
@@ -964,85 +970,87 @@ void Model::debugAABB_init() // vao & shader
     //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
     //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
     //}
+    glm::vec3 minpt = vertices_min;
+    glm::vec3 maxpt = vertices_max;
 
-    //pntAABB[0] = minpt;
-    //pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
-    //pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
-    //pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
+    pntAABB[0] = minpt;
+    pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
+    pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
+    pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
 
-    //pntAABB[4] = maxpt;
-    //pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
-    //pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
-    //pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
-    //
-    //int indice = 0;
+    pntAABB[4] = maxpt;
+    pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
+    pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
+    pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
+    
+    int indice = 0;
 
-    //idxAABB.push_back(glm::ivec2(indice, indice + 1));
-    //idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
-    //idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
-    //idxAABB.push_back(glm::ivec2(indice + 3, indice));
+    idxAABB.push_back(glm::ivec2(indice, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 3, indice));
 
-    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
-    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
-    //idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
-    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
 
-    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
-    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
-    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
-    //idxAABB.push_back(glm::ivec2(indice + 6, indice));
-
-
-    //// setup vao
-    //GLuint Pbuff; // point buffer
-    //GLuint Ibuff; // indice buffer
-
-    //glGenVertexArrays(1, &vaoidAABB);
-    //glGenBuffers(1, &Pbuff);
-    //glGenBuffers(1, &Ibuff);
-
-    //glBindVertexArray(vaoidAABB);
-    //glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
-
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
-
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
-    //    &idxAABB[0], GL_STATIC_DRAW);
-
-    //glBindVertexArray(0); // unbind vao
-    //glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice));
 
 
-    //// setup shader
-    //std::vector<std::pair<GLenum, std::string>> shdr_files;
-    //// Vertex Shader
-    //shdr_files.emplace_back(std::make_pair(
-    //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    // setup vao
+    GLuint Pbuff; // point buffer
+    GLuint Ibuff; // indice buffer
 
-    //// Fragment Shader
-    //shdr_files.emplace_back(std::make_pair(
-    //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    glGenVertexArrays(1, &vaoidAABB);
+    glGenBuffers(1, &Pbuff);
+    glGenBuffers(1, &Ibuff);
 
-    //std::cout << "DEBUG AABB SHADER\n";
-    //shaderAABB.CompileLinkValidate(shdr_files);
-    //std::cout << "\n\n";
+    glBindVertexArray(vaoidAABB);
+    glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
 
-    //// if linking failed
-    //if (GL_FALSE == shaderAABB.IsLinked()) {
-    //    std::stringstream sstr;
-    //    sstr << "Unable to compile/link/validate shader programs\n";
-    //    sstr << shaderAABB.GetLog() << "\n";
-    //    std::cout << sstr.str();
-    //    std::exit(EXIT_FAILURE);
-    //}
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
+        &idxAABB[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+
+    // setup shader
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+
+    // Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+
+    std::cout << "DEBUG AABB SHADER\n";
+    shaderAABB.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
+    // if linking failed
+    if (GL_FALSE == shaderAABB.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shaderAABB.GetLog() << "\n";
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 void Model::debugAABB_draw(glm::mat4 & SRT)

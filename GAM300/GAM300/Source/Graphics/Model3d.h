@@ -43,7 +43,7 @@ public:
 	
 
 	glm::vec3 position;
-
+	
 	GLenum prim;
 	GLuint vaoid;
 	GLuint vboid;
@@ -62,6 +62,10 @@ public:
 	GLSLShader shaderAABB;
 	glm::vec3 pntAABB[8];
 	std::vector<glm::ivec2> idxAABB{};
+
+	glm::vec3 vertices_min{};
+	glm::vec3 vertices_max{};
+
 	void debugAABB_init(); // vao & shader
 	void debugAABB_draw(glm::mat4& SRT);
 

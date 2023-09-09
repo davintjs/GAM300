@@ -43,7 +43,6 @@ void GraphicsSystem::Init()
 	
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
 
-
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
 	//testmodel.init(&assimp);// The Shader is set up inside this init function
@@ -101,6 +100,19 @@ void GraphicsSystem::Update(float dt)
 
 	currentScene.singleComponentsArrays.GetArray<Transform>();
 	
+	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+	bool checkForSelection = false;
+	Ray3D temp;
+	if (InputHandler::isMouse_L_DoubleClick())
+	{
+		std::cout << " shooting ray\n";
+		temp = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y, 
+			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
+		Ray_Container.push_back(temp);
+		checkForSelection = true;
+	}
+
+
 
 	int i = 0;
 	for (Entity& entity : currentScene.entities)
@@ -131,10 +143,29 @@ void GraphicsSystem::Update(float dt)
 		entitySRT[i] = SRT;
 		//entitySRT[i] = glm::mat4(1.f);
 		++i;
+		
+		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+		float intersected;
+		if (checkForSelection && (i==1))
+		{
+			std::cout << " looping\n";
+			std::cout << "scale : " << trans.scale.x << " , " << trans.scale.y << " , " << trans.scale.z << "\n";
+			std::cout << "pos : " << trans.translation.x << " , " << trans.translation.y << " , " << trans.translation.z << "\n";
+
+			glm::vec3 mins = trans.scale * glm::vec3(-0.5f, -0.5f, -0.5f);
+			glm::vec3 maxs = trans.scale * glm::vec3(0.5f, 0.5f, 0.5f);
+
+			glm::mat4 noscale = translation_mat * rotation_mat;
+			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
+				noscale, intersected))
+			{
+				std::cout << "hit\n";
+			}
+		}
+
 	}
 
 	//Currently Putting in Camera Update loop here
-
 
 
 	// Bean: For binding framebuffer
@@ -183,10 +214,12 @@ void GraphicsSystem::Update(float dt)
 
 		}
 	}
+
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
 	{
 		LightSource.position.z += 10.f;
 	}
+
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
@@ -239,6 +272,11 @@ void GraphicsSystem::Update(float dt)
 
 		}
 	}
+
+	
+
+
+
 
 	// Bean: For unbinding framebuffer
 	EditorCam.getFramebuffer().unbind();
