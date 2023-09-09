@@ -28,7 +28,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define NON_VALID_ENTITY -1
 
-
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
 public:
@@ -61,7 +60,7 @@ public:
     //void DisplayChildren(const ObjectIndex& Parent);
     ObjectIndex selectedEntity;
 
-    std::vector<Entity*>layer; 
+    std::vector<Entity*> layer;
 
     bool initLayer = true;
 private:

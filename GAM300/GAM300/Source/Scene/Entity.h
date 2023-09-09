@@ -23,6 +23,7 @@ public:
 };
 
 void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child);
+void Set_ParentChild(Transform& parent, Transform& child);
 void Break_ParentChild(const ObjectIndex& _child);
 
 

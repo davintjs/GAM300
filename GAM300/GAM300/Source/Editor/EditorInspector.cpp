@@ -521,10 +521,7 @@ private:
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
                 //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
-                DisplayComponentHelper(*component);
-
-                
-
+                DisplayComponentHelper(component);
             }
         }
 
