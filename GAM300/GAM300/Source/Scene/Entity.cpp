@@ -19,9 +19,6 @@ void Break_ParentChild(const ObjectIndex& _child) {
 }
 
 void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child) {
-
-	
-
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 	Transform& parent = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_parent));
 	Transform& child = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_child));
@@ -33,6 +30,12 @@ void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child) {
 		children.erase(it);
 	}
 
+	parent.child.push_back(&child);
+
+	child.Parent = &parent;
+}
+
+void Set_ParentChild(Transform& parent, Transform& child) {
 	parent.child.push_back(&child);
 
 	child.Parent = &parent;

@@ -63,6 +63,7 @@ struct Scene
 
 	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
+		
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
@@ -73,6 +74,7 @@ struct Scene
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
 		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		EditorHierarchy::Instance().layer.push_back(&entity);
 		return entity;
 	}
 
