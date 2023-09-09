@@ -128,9 +128,6 @@ public:
 		//scene.Destroy(scene.entities[14]);
 
 		//AllComponentTypes::Size();
-
-		// Bean: Serialization Tests
-		Emittion();
 	}
 
 	/**************************************************************************/

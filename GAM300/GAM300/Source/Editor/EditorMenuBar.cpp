@@ -2,6 +2,7 @@
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Core/EventsManager.h"
 
 #include "../Utilities/PlatformUtils.h"
 
@@ -36,6 +37,8 @@ void EditorMenuBar::Update(float dt)
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
                 //Save File
+                SaveSceneEvent saveScene;
+                EVENT.Publish(&saveScene);
             }
             //else
             //    //Do not allow the user to save when there's no file loaded!

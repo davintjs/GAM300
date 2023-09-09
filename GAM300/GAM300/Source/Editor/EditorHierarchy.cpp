@@ -187,7 +187,7 @@ void EditorHierarchy::Update(float dt) {
         initLayer = false;
     }*/
 
-    bool sceneopen = ImGui::TreeNodeEx(curr_scene.Scene_name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+    bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
     if(sceneopen){
         for (int i = 0; i < layer.size(); ++i) {

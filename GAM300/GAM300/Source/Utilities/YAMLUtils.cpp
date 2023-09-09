@@ -16,23 +16,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "YAMLUtils.h"
 
-void Emittion()
+template <typename T>
+void SerializeBasic(const T& _data, YAML::Emitter& out, const std::string& _key)
 {
-    YAML::Emitter out;
-    out << "Hello World!";
-
-    std::cout << "Here's the output YAML:\n" << out.c_str();
+    out << YAML::Key << _key << YAML::Value << _data;
 }
 
-void CreateYAMLMap(YAML::Emitter& out)
+template<>
+void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::string& _key)
 {
-    out << YAML::BeginMap;
-}
 
-void EndYAMLMap(YAML::Emitter& out, const std::string& filepath)
-{
-    out << YAML::EndMap;
-
-    std::ofstream fout(filepath);
-    fout << out.c_str();
 }

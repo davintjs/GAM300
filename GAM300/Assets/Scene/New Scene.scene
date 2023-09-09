@@ -1,0 +1,13 @@
+Scene: New Scene
+---
+GameObject:
+  m_UUID: 16164282962298598787
+  m_Index: 0
+---
+GameObject:
+  m_UUID: 10148344399934274869
+  m_Index: 1
+---
+GameObject:
+  m_UUID: 7776263144893702551
+  m_Index: 2

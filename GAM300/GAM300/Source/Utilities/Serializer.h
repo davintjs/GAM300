@@ -17,45 +17,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "YAMLUtils.h"
 #include "Properties.h"
+#include "Scene/Scene.h"
+#include "Scene/Entity.h"
 
-#include "glm/vec3.hpp"
-
-class Component : public property::base
+enum CLASSID
 {
-public:
-    virtual ~Component() = default;
+    OBJECT,
+    GAMEOBJECT,
+    COMPONENT
 };
 
-struct TransformComponent : public Component, public property::base
-{
-protected:
-    float position;
-    float rotation;
-    float scale;
+bool SceneSerializer(Scene& _scene);
 
-public:
-    void DefaultValues(void) noexcept
-    {
-        position = 1.f;
-        rotation = 1.f;
-        scale = 1.f;
-    }
+void Serialize(const std::string& _filepath);
+void SerializeRuntime(const std::string& _filepath);
 
-    void SanityCheck(void) const noexcept
-    {
-        assert(position == 1.f);
-        assert(rotation == 1.f);
-        assert(scale == 1.f);
-    }
+bool SerializeEntity(YAML::Emitter& out, Entity& _entity);
 
-    property_vtable()
-};
+void Deserialize(const std::string& _filepath);
+void DeserializeRuntime(const std::string& _filepath);
 
-property_begin_name(TransformComponent, "Transform")
-{
-    property_var(position),
-    property_var(rotation),
-    property_var(scale)
-}
-property_vend_h(TransformComponent)
 #endif // !SERIALIZER_H

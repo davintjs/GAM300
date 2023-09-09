@@ -17,10 +17,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "yaml-cpp/yaml.h"
 
-void Emittion();
+template <typename T>
+void SerializeBasic(const T& _data, YAML::Emitter& out, const std::string& _key);
 
-void CreateYAMLMap(YAML::Emitter& out);
-
-void EndYAMLMap(YAML::Emitter& out, const std::string& filepath);
+template<>
+void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::string& _key);
 
 #endif // !YAMLUTILS_H

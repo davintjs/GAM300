@@ -5,7 +5,10 @@
 
 Scene::Scene(const std::string& _filepath)
 {
-	PRINT("EMPTY SCENE CREATED!\n");
+	// Save scene name
+	filePath = _filepath;
+	sceneName = filePath.stem().string();
+
 	//If a filepath was given
 	if (!_filepath.empty())
 	{

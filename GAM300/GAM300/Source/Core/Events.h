@@ -41,6 +41,11 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
+struct SaveSceneEvent : IEvent
+{
+	SaveSceneEvent() {};
+};
+
 struct SceneChangingEvent : IEvent
 {
 	SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
