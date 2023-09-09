@@ -16,7 +16,7 @@ void AssetManager::Init()
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		subFilePath = dir.path().generic_string();
-		std::string subFilePathMeta = subFilePath;
+		std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
 		std::string fileType{};
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()) + 1; ++i)
@@ -48,9 +48,10 @@ void AssetManager::Init()
 			// Deserialize from meta file and load the asset asynchronously
 			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
 			{
-				// works here, something with the aync loading breaks gli
-				 //TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
 				this->AsyncLoadAsset(subFilePathMeta, fileName, true);
+				std::string filetype = assetPath + ".dds";
+
+				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 			}
 			else
 			{
@@ -205,6 +206,27 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 	return mTotalAssets.mFilesData[data].second.second;
 }
 
+// Get a loaded asset GUID
+std::string AssetManager::GetAssetGUID(const std::string& fileName)
+{
+	std::string data{};
+	std::unique_lock<std::mutex> mLock(mAssetMutex);
+	mAssetVariable.wait(mLock, [this, &fileName, &data] // Wait if the asset is not loaded yet
+		{
+			for (const auto& [Key, Val] : mTotalAssets.mFilesData)
+			{
+				if (Val.second.first == fileName)
+				{
+					data = Key;
+					return true;
+				}
+			}
+			return false;
+		});
+
+	return data;
+}
+
 std::string AssetManager::GenerateGUID(const std::string& fileName)
 {
 	std::stringstream stream{};
@@ -277,15 +299,6 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
 	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, std::make_pair(pathTime, std::make_pair(fileName, buff))));
-
-	if (isDDS) // If is DDS format, add to texture manager
-	{
-		// if this no die all is well ig
-		TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-		/*std::string filetype = assetPath + ".dds";
-		std::cout << assetPath;
-		TextureManager.AddTexture(assetPath.c_str(), GUIDofAsset);*/
-	}
 
 	inputFile.close();
 }

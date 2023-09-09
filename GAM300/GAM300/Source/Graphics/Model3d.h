@@ -6,6 +6,7 @@
 #include "LapSupGraphics/Compiler.h"
 #include "LapSupGraphics/Mesh.h"
 #include "TextureManager.h"
+#include "AssetManager/AssetManager.h"
 
 //#include "../../Compiler/Mesh.h"
 

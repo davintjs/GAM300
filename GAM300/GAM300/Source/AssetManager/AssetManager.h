@@ -22,6 +22,7 @@ ENGINE_SYSTEM(AssetManager)
 {
 public:
 	const std::vector<char>& GetAsset(const std::string& fileName);
+	std::string GetAssetGUID(const std::string& fileName);
 
 private:
 	const std::string AssetPath = "Assets";

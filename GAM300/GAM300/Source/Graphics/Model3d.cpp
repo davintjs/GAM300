@@ -161,6 +161,7 @@ void Model::draw() {
 
     // test
     //glActiveTexture(GL_TEXTURE0);
+    texturebuffer = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color"));
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
 
