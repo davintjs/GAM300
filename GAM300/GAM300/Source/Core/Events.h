@@ -16,9 +16,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "Scene/Scene.h"
-#include "Core/FileTypes.h"
-
 struct IEvent
 {
 protected:
@@ -40,39 +37,33 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
-struct SceneChangingEvent : IEvent
-{
-	SceneChangingEvent(Scene& _scene) : scene{ _scene } {}
-	Scene& scene;
-};
-
-template <typename T>
-struct ReflectComponentEvent : IEvent
-{
-	ReflectComponentEvent(T& _component) : component{ _component } {}
-	T& component;
-};
-
-struct ReflectEntityEvent : IEvent
-{
-	ReflectEntityEvent(Entity& _entity) : entity{ _entity} {}
-	Entity& entity;
-};
-
-
-//template <FileType FTYPE>
-//struct FileModifiedEvent : IEvent 
+//template <typename T>
+//struct ReflectComponentEvent : IEvent
 //{
-//	FileModifiedEvent(const std::filesystem::path& _filePath, FileState _fileState) : filePath{_filePath}, fileState{_fileState}{};
-//	std::filesystem::path filePath;
-//	FileState fileState;
+//	ReflectComponentEvent(T& _component) : component{ _component } {}
+//	T& component;
 //};
+//
+//struct ReflectEntityEvent : IEvent
+//{
+//	ReflectEntityEvent(Entity& _entity) : entity{ _entity} {}
+//	Entity& entity;
+//};
+
+
+template <size_t FTYPE>
+struct FileTypeModifiedEvent : IEvent 
+{
+	FileTypeModifiedEvent(const wchar_t* _fileName, size_t _fileState) : fileName{ _fileName }, fileState{_fileState}{};
+	const wchar_t* fileName;
+	size_t fileState;
+};
 
 struct FileModifiedEvent : IEvent
 {
-	FileModifiedEvent(wchar_t* _filePath, FileState _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
-	wchar_t* filePath;
-	FileState fileState;
+	FileModifiedEvent(const wchar_t* _filePath, size_t _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
+	const wchar_t* filePath;
+	size_t fileState;
 };
 
 //struct GetCurrentSceneEvent

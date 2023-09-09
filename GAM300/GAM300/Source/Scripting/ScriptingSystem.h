@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <string>
 #include <unordered_map>
 #include <mutex>
+#include <Core/FileTypes.h>
 
 extern "C"
 {
@@ -289,14 +290,14 @@ public:
 			Deletes an appDomain and any assemblies loaded in it
 	*/
 	/**************************************************************************/
-	void unloadAppDomain();
+	void UnloadAppDomain();
 	/**************************************************************************/
 	/*!
 		\brief
 			Reloads an assembly by creating a new domain
 	*/
 	/**************************************************************************/
-	void swapDll();
+	void SwapDll();
 	/**************************************************************************/
 	/*!
 		\brief
@@ -347,7 +348,7 @@ public:
 	template<typename T>
 	void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference);
 
-	//void CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent);
+	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent);
 
 	/*******************************************************************************
 	/*!
@@ -537,10 +538,10 @@ public:
 		Mono Instance of gameObject
 	*/
 	/*******************************************************************************/
-	template <typename T>
-	MonoObject* ReflectComponent(T& component);
-	template <>
-	MonoObject* ReflectComponent(Script& component);
+	//template <typename T>
+	//MonoObject* ReflectComponent(T& component);
+	//template <>
+	//MonoObject* ReflectComponent(Script& component);
 
 
 	//using MonoGameObjects = std::unordered_map<UUID, MonoObject*>;
@@ -555,7 +556,7 @@ public:
 	//std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
 	std::mutex compilingStateReadable;
 	float timeUntilRecompile{0};
-	//std::vector<uint32_t> gcHandles;
+	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
 	//bool inPlayMode{false};
 };

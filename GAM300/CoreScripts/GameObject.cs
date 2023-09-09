@@ -16,7 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 using System.Collections.Generic;
 using System;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public class GameObject
     {

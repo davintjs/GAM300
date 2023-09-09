@@ -10,7 +10,7 @@
 	template <typename... Args>
 	static void printMessage(Args&&... args)
 	{
-		((std::cout << std::forward<Args>(args)),...);
+		((std::cout << std::forward<Args>(args)), ...);
 	}
 #else
 	#define PRINT(ARGS) 

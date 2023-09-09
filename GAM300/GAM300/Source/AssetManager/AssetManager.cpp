@@ -2,6 +2,7 @@
 #include "AssetManager/AssetManager.h"
 #include "Utilities/ThreadPool.h"
 #include "Core/EventsManager.h"
+#include "Core/FileTypes.h"
 
 // Currently only loads geom files, future requires editing to support other file types of assets
 
@@ -384,17 +385,18 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	namespace fs = std::filesystem;
 	fs::path filePath{ pEvent->filePath};
 
+
 	switch (pEvent->fileState)
 	{
 		case FileState::CREATED:
 		{
 			if (filePath.extension() == ".meta")
 				return;
-			PRINT("CREATED ");		
+			//PRINT("CREATED ");		
 			fs::path subFilePath = filePath.parent_path();
 			fs::path subFilePathMeta = subFilePath.append(filePath.filename().string()+".meta");
 
-			PRINT("META: ", subFilePathMeta, '\n');
+			//PRINT("META: ", subFilePathMeta, '\n');
 
 			//for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 			//{
@@ -432,6 +434,11 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 			PRINT("UNDEFINED ");
 			break;
 		}
+
 	}
-	std::wcout << filePath << std::endl;
+	if (filePath.extension() == ".cs")
+	{
+		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
+		EVENTS.Publish(&scriptModifiedEvent);
+	}
 }

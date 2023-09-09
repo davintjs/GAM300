@@ -25,10 +25,6 @@ FileWatcher::~FileWatcher()
 
 void FileWatcher::ThreadWork()
 {
-    if (hDir == INVALID_HANDLE_VALUE) {
-        std::wcerr << L"Error opening directory: " << GetLastError() << std::endl;
-        return;
-    }
     BYTE  fni[32 * 1024];
     DWORD offset = 0;
     TCHAR szFile[MAX_PATH];
@@ -66,7 +62,7 @@ void FileWatcher::ThreadWork()
                     szFile[count] = TEXT('\0');
                 }
             #endif
-            FileModifiedEvent fileEvent(pNotify->FileName,FileState(pNotify->Action));
+            FileModifiedEvent fileEvent(pNotify->FileName,pNotify->Action);
             EVENTS.Publish(&fileEvent);
 
         } while (pNotify->NextEntryOffset != 0);

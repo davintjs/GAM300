@@ -16,9 +16,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
-    public class CopiumScript : Component
+    public class BeanScript : Component
     {
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {

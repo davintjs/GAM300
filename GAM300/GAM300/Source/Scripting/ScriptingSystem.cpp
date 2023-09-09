@@ -32,7 +32,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <mono/jit/jit.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/exception.h>
-#include <mutex>
 #include <mono/metadata/environment.h>
 
 
@@ -125,10 +124,6 @@ namespace Utils
 	}
 }
 
-	bool scriptIsLoaded(const std::filesystem::path&);
-	bool scriptPathExists(const std::filesystem::path& filePath);
-	//ScriptingEngine Namespace Functions
-
 #pragma region Struct ScriptMethods
 	ScriptClass::ScriptClass(const std::string& _name, MonoClass* _mClass) :
 		mClass{ _mClass }
@@ -200,9 +195,7 @@ void ScriptingSystem::RecompileThreadWork()
 	//while (compilingState == CompilingState::SwapAssembly);
 	//compilingState = CompilingState::Compiling;
 	//Critical section
-	//while (!THREADS.AcquireMutex(MutexType::FileSystem));
-	//tryRecompileDll();
-	//THREADS.returnMutex(MutexType::FileSystem);
+	ACQUIRE_SCOPED_LOCK("Assets");
 	Utils::CompileDll();
 	//compilingState = CompilingState::SwapAssembly;
 	//Critical section End
@@ -226,10 +219,9 @@ void ScriptingSystem::Init()
 	InitMono();
 	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
-	//THREADS.AddThread(&ScriptingSystem::RecompileThreadWork, this);
-	//EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	//ENABLE FOR PLAY MODE
-	//swapDll();
+	SwapDll();
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
@@ -246,34 +238,30 @@ void ScriptingSystem::Init()
 
 void ScriptingSystem::Update(float dt)
 {
-	//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("STATE: " + std::to_string((int)compilingState))));
-	//MyEventSystem->publish(new EditorConsoleLogEvent(std::string("PLAYMODE: " + std::to_string(inPlayMode))));
-	//if (compilingState == CompilingState::SwapAssembly && !inPlayMode)
-	//{
-	//	swapDll();
-	//	compilingState = CompilingState::Wait;
-	//}
-
 	//Pause timer when recompiling
 	if (timeUntilRecompile > 0)
 	{
 		timeUntilRecompile -= dt;
 		if (timeUntilRecompile < 0)
 		{
-			PRINT("START RECOMPLING\n");
 			THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 		}
+	}
+	else if (compilingState == CompilingState::SwapAssembly)
+	{
+		SwapDll();
+		compilingState = CompilingState::Wait;
 	}
 }
 
 void ScriptingSystem::Exit()
 {
-	//for (uint32_t hand : gcHandles)
-	//{
-	//	mono_gchandle_free(hand);
-	//}
-	//gcHandles.clear();
-	//unloadAppDomain();
+	for (uint32_t hand : gcHandles)
+	{
+		mono_gchandle_free(hand);
+	}
+	gcHandles.clear();
+	UnloadAppDomain();
 	ShutdownMono();
 }
 
@@ -346,7 +334,7 @@ void ScriptingSystem::createAppDomain()
 	mono_domain_set(mAppDomain, false);
 }
 
-void ScriptingSystem::unloadAppDomain()
+void ScriptingSystem::UnloadAppDomain()
 {
 	/*if (mAppDomain)
 	{
@@ -433,35 +421,30 @@ struct ReflectExistingStruct
 
 //using ReflectAll = decltype(ReflectExistingStruct(ComponentTypes()));
 
-void ScriptingSystem::swapDll()
+void ScriptingSystem::SwapDll()
 {
-	//MyEventSystem->publish(new EditorConsoleLogEvent("SWAPPING DLL"));
-
-	//PRINT("CLEARING HANDLES!");
-	//for (uint32_t hand : gcHandles)
-	//{
-	//	mono_gchandle_free(hand);
-
-	//}
-	//gcHandles.clear();
+	for (uint32_t hand : gcHandles)
+	{
+		mono_gchandle_free(hand);
+	}
+	gcHandles.clear();
 	//registerScriptWrappers();
 
-
-	//PRINT("UNLOADING APP DOMAIN!");
+	PRINT("UNLOADING APP DOMAIN!");
 	//mGameObjects.clear();
 	//mComponents.clear();
-	//unloadAppDomain();
-	//PRINT("RECREATING APP DOMAIN!");
-	//createAppDomain();
-	//PRINT("LOADING ASSEMBLY!");
-	//mCoreAssembly = Utils::loadAssembly(Paths::scriptsAssemblyPath);
-	//mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
-	//mGameObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "GameObject");
-	//mCopiumScript = mono_class_from_name(mAssemblyImage, "CopiumEngine", "CopiumScript");
-	//mCollision2D = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Collision2D");
-	//mScriptableObject = mono_class_from_name(mAssemblyImage, "CopiumEngine", "ScriptableObject");
-	//mComponent = mono_class_from_name(mAssemblyImage, "CopiumEngine", "Component");
-	//updateScriptClasses();
+	UnloadAppDomain();
+	PRINT("RECREATING APP DOMAIN!");
+	createAppDomain();
+	PRINT("LOADING ASSEMBLY!");
+	mCoreAssembly = Utils::loadAssembly("scripts.dll");
+	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
+	mGameObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "GameObject");
+	mCopiumScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "BeanScript");
+	mCollision2D = mono_class_from_name(mAssemblyImage, "BeanFactory", "Collision2D");
+	mScriptableObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "ScriptableObject");
+	mComponent = mono_class_from_name(mAssemblyImage, "BeanFactory", "Component");
+	updateScriptClasses();
 	//if (MySceneManager.get_current_scene())
 	//{
 	//	PRINT("REFLECTING!");
@@ -514,46 +497,6 @@ MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObje
 	return mono_field_get_value_object(mAppDomain, mField, mObject);
 }
 
-void ScriptingSystem::updateScriptFiles()
-{
-	//Check for new files
-	//namespace fs = std::filesystem;
-	//using scriptFileListIter = std::list<File>::iterator;
-	//scriptFileListIter scriptFilesIt = scriptFiles.begin();
-	//static std::list<File*> maskScriptFiles;
-	//maskScriptFiles.resize(scriptFiles.size());
-	//for (File& file : scriptFiles)
-	//{
-	//	maskScriptFiles.push_back(&file);
-	//}
-	//for (const fs::directory_entry& p : fs::recursive_directory_iterator(Paths::projectPath))
-	//{
-	//	const fs::path& pathRef{ p.path() };
-	//	if (pathRef.extension() != ".cs")
-	//		continue;
-
-	//	//Detect new scripts
-	//	if (!scriptIsLoaded(pathRef))
-	//	{
-	//		scriptFiles.emplace(scriptFilesIt, File(pathRef));
-	//	}
-	//	//Script was already loaded
-	//	else
-	//	{
-	//		//Set scripts to be masked
-	//		for (File* scriptFile : maskScriptFiles)
-	//		{
-	//			if (scriptFile && scriptFile->filePath == pathRef)
-	//			{
-	//				maskScriptFiles.remove(scriptFile);
-	//				break;
-	//			}
-	//		}
-	//		++scriptFilesIt;
-	//	}
-	//}
-}
-
 MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
 {
 	if (!_instance)
@@ -564,16 +507,6 @@ MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
 MonoObject* ScriptingSystem::createInstance(MonoClass* _mClass)
 {
 	return mono_object_new(mAppDomain,_mClass);
-}
-
-bool ScriptingSystem::scriptIsLoaded(const std::filesystem::path& filePath)
-{
-	//using scriptFileListIter = std::list<File>::iterator;
-	//for (scriptFileListIter it = scriptFiles.begin(); it != scriptFiles.end(); ++it)
-	//{
-	//	if (it->filePath == filePath) return true;
-	//}
-	return false;
 }
 
 MonoString* ScriptingSystem::createMonoString(const char* str)
@@ -644,11 +577,11 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 //	}
 //}
 
-//void ScriptingSystem::CallbackScriptModified(FileModifiedEvent<FileType::SCRIPT>* pEvent)
-//{
-//	PRINT("SCRIPT CHANGE DETECTED!\n");
-//	timeUntilRecompile = SECONDS_TO_RECOMPILE;
-//}
+void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
+{
+	PRINT("SCRIPT CHANGE DETECTED!\n");
+	timeUntilRecompile = SECONDS_TO_RECOMPILE;
+}
 
 //MonoObject* ScriptingSystem::ReflectGameObject(GameObject& gameObj)
 //{
