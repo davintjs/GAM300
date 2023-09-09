@@ -165,17 +165,20 @@ struct AudioSource
 
 struct BoxCollider
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
 };
 
 struct SphereCollider
 {
-
+	float radius = 1.0f; 
 };
 
 struct CapsuleCollider
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
 };
 
 struct Animator
@@ -196,6 +199,7 @@ struct Rigidbody
 	float mass{ 1.f };					//mass of object
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 struct Script

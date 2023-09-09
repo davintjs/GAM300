@@ -12,6 +12,7 @@
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
@@ -113,6 +114,8 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::ShapeRefC* floorShape = nullptr;
 	JPH::BodyCreationSettings* floorSettings = nullptr;
 	JPH::SphereShape* sphereShape = nullptr;
+	JPH::CapsuleShape* capsuleShape = nullptr;
+
 
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
@@ -120,6 +123,7 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 
 	JPH::TempAllocatorImpl tempAllocator;
 	JPH::JobSystemSingleThreaded jobSystem;
+
 };
 
 

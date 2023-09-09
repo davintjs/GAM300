@@ -103,11 +103,21 @@ void PhysicsSystem::OnSceneStart() {
 	bodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 
 	//Next, we add a dynamic body (ball) to test 
+	sphereShape = new JPH::SphereShape(0.5f);
 	JPH::BodyCreationSettings sphereSettings(sphereShape, JPH::RVec3(0.0, 2.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
 	JPH::BodyID sphere_ID = bodyInterface->CreateAndAddBody(sphereSettings, JPH::EActivation::Activate);
 
 	//To give the body a velocity as we will be interacting with it 
 	bodyInterface->SetLinearVelocity(sphere_ID, JPH::Vec3(0.0f, -5.0f, 0.0f)); 
+
+	simulating = true;
+
+	//Creating a capsule shape 
+	capsuleShape = new JPH::CapsuleShape(1.0f,0.5f);
+	JPH::BodyCreationSettings capsuleSettings(capsuleShape, JPH::RVec3(0.0, 2.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
+	JPH::BodyID capsule_ID = bodyInterface->CreateAndAddBody(capsuleSettings, JPH::EActivation::Activate);
+
+	bodyInterface->SetLinearVelocity(capsule_ID, JPH::Vec3(0.0f, -5.0f, 0.0f));
 
 	simulating = true;
 
