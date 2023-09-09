@@ -21,7 +21,7 @@ struct Asset
 ENGINE_SYSTEM(AssetManager)
 {
 public:
-	const std::vector<char>& GetAsset(const std::string& assetGUID);
+	const std::vector<char>& GetAsset(const std::string& fileName);
 
 private:
 	const std::string AssetPath = "Assets";
@@ -53,6 +53,4 @@ private:
 	void FileAddProtocol();
 	void FileRemoveProtocol();
 	void FileUpdateProtocol();
-
-	std::string GetGUID(std::string fileName);
 };

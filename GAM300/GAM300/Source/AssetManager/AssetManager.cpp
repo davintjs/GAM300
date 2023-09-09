@@ -185,15 +185,24 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 }
 
 // Get a loaded asset
-const std::vector<char>& AssetManager::GetAsset(const std::string& assetGUID)
+const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 {
+	std::string data{};
 	std::unique_lock<std::mutex> mLock(mAssetMutex);
-	mAssetVariable.wait(mLock, [this, &assetGUID] // Wait if the asset is not loaded yet
+	mAssetVariable.wait(mLock, [this, &fileName, &data] // Wait if the asset is not loaded yet
 		{
-			return (mTotalAssets.mFilesData.find(assetGUID) != mTotalAssets.mFilesData.end());
+			for (const auto& [Key, Val] : mTotalAssets.mFilesData)
+			{
+				if (Val.second.first == fileName)
+				{
+					data = Key;
+					return true;
+				}
+			}
+			return false;
 		});
 
-	return mTotalAssets.mFilesData[assetGUID].second.second;
+	return mTotalAssets.mFilesData[data].second.second;
 }
 
 std::string AssetManager::GenerateGUID(const std::string& fileName)
@@ -395,17 +404,4 @@ void AssetManager::FileUpdateProtocol()
 			}
 		}
 	}
-}
-
-std::string AssetManager::GetGUID(std::string fileName)
-{
-	for (const auto& [Key, Val] : mTotalAssets.mFilesData)
-	{
-		if (Val.second.first == fileName)
-		{
-			return Key;
-		}
-	}
-	std::cout << "GUID of binary asset not found with fileName!" << std::endl;
-	exit(0);
 }
