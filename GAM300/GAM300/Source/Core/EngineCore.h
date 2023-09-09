@@ -38,6 +38,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/YAMLUtils.h"
 #include "EventsManager.h"
 #include "Debugging/Debugger.h"
+#include "Scripting/LogicSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -62,29 +63,34 @@ public:
 	void Init()
 	{
 		THREADS.Init();
+		RegisterComponents();
 		systems =
 		{
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
-			//&PhysicsSystem::Instance(),
-			&ScriptingSystem::Instance(),
+			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
+			//&LogicSystem::Instance(),
+			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
 			&AssetManager::Instance(),
 		};
 
-		//MyFileWatcher.Init();
-
-
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
 		}
+
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
+
+		//SceneStartEvent startEvent{};
+		//ACQUIRE_SCOPED_LOCK("Assets");
+		//EVENTS.Publish(&startEvent);
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
@@ -153,6 +159,11 @@ public:
 			(*iter)->Exit();
 		}
 		THREADS.Exit();
+	}
+
+	void CallbackSceneStart(SceneStartEvent* pEvent)
+	{
+		mode = ENUM_SYSTEM_RUNTIME;
 	}
 private:
 	std::vector<ISystem*> systems;

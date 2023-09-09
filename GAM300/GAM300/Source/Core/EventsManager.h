@@ -63,7 +63,7 @@ private:
 typedef std::list<IEventHandler*> HandlerList;
 SINGLETON(EventsManager) {
 private:
-    std::map<std::type_index, HandlerList*> subscribers;
+    std::map<std::type_index, HandlerList> subscribers;
 public:
     /*******************************************************************************
     /*!
@@ -79,13 +79,12 @@ public:
     {
         for (auto& keyPair : subscribers)
         {
-            auto it{ keyPair.second->begin() };
-            while (it != keyPair.second->end())
+            auto it{ keyPair.second.begin() };
+            while (it != keyPair.second.end())
             {
                 delete* it;
                 ++it;
             }
-            delete keyPair.second;
         }
     }
 
@@ -106,13 +105,9 @@ public:
     template<typename EventType>
     void Publish(EventType * evnt)
     {
-        HandlerList* handlers = subscribers[typeid(EventType)];
+        HandlerList& handlers = subscribers[typeid(EventType)];
 
-        if (handlers == nullptr) {
-            return;
-        }
-
-        for (auto handler : *handlers) {
+        for (auto handler : handlers) {
             if (handler != nullptr) {
                 handler->exec(evnt);
             }
@@ -127,7 +122,7 @@ public:
 
     \param instance
         the object that owns the specified member function
-            
+
     \param memberFunction
         the member function of the instance
 
@@ -137,15 +132,8 @@ public:
     /*******************************************************************************/
     template<class T, class EventType>
     void Subscribe(T * instance, void (T:: * memberFunction)(EventType*)) {
-        HandlerList* handlers = subscribers[typeid(EventType)];
-
-        //First time initialization
-        if (handlers == nullptr) {
-            handlers = new HandlerList();
-            subscribers[typeid(EventType)] = handlers;
-        }
-
-        handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
+        HandlerList& handlers = subscribers[typeid(EventType)];
+        handlers.push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
     }
 };
 

@@ -47,10 +47,10 @@ void FileWatcher::ThreadWork()
 {
     BYTE  fni[32 * 1024];
     DWORD offset = 0;
-    char szFile[MAX_PATH];
+    TCHAR szFile[MAX_PATH];
     DWORD bytesret;
     PFILE_NOTIFY_INFORMATION pNotify;
-    std::unordered_set<std::pair<std::string,FileState>, PairHash, PairEqual> events;
+    std::unordered_set<std::pair<std::wstring,size_t>, PairHash, PairEqual> events;
 
 
     while (!THREADS.HasStopped())
@@ -72,12 +72,20 @@ void FileWatcher::ThreadWork()
             offset += pNotify->NextEntryOffset;
 
 
-            int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
-                pNotify->FileNameLength / sizeof(WCHAR),
-                szFile, MAX_PATH - 1, NULL, NULL);
-            szFile[count] = TEXT('\0');
-            events.insert(
-                std::make_pair(std::string(szFile), FileState(pNotify->Action)));
+            #if defined(UNICODE)
+            {
+                lstrcpynW(szFile, pNotify->FileName,
+                    min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
+            }
+            #else
+            {
+                int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
+                    pNotify->FileNameLength / sizeof(WCHAR),
+                    szFile, MAX_PATH - 1, NULL, NULL);
+                szFile[count] = TEXT('\0');
+            }
+            #endif
+            events.insert( std::make_pair(std::wstring(szFile), pNotify->Action));
         } while (pNotify->NextEntryOffset != 0);
 
         for (auto& pair : events)

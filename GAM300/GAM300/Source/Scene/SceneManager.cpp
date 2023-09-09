@@ -33,6 +33,7 @@ void SceneManager::LoadScene(const char* path)
 	scene.AddEntity();
 	scene.AddEntity();
 	scene.AddEntity();
+	scene.AddComponent<Script>(0).name = "Player";
 
 	/*Entity& titty2 = scene.AddEntity();
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).translation = Vector3(100.f, 100.f, 100.f);

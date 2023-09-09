@@ -61,10 +61,14 @@ struct FileTypeModifiedEvent : IEvent
 
 struct FileModifiedEvent : IEvent
 {
-	FileModifiedEvent(const char* _filePath, FileState _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
-	const char* filePath;
+	FileModifiedEvent(const wchar_t* _filePath, size_t _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
+	const wchar_t* filePath;
 	size_t fileState;
 };
+
+struct SceneStartEvent : IEvent{};
+
+struct SceneStopEvent : IEvent {};
 
 //struct GetCurrentSceneEvent
 //{

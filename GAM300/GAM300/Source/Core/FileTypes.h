@@ -2,16 +2,22 @@
 
 namespace FileType
 {
-	constexpr static size_t SCRIPT = 0;
-	constexpr static size_t MODEL = 1;
-	constexpr static size_t TEXTURE = 2;
-};
+	enum FILETYPE
+	{
+		SCRIPT,
+		MODEL,
+		TEXTURE
+	};
+}
 
 namespace FileState
 {
-	constexpr static size_t CREATED = 0x00000001;
-	constexpr static size_t DELETED = 0x00000002;
-	constexpr static size_t MODIFIED = 0x00000003;
-	constexpr static size_t RENAMED_OLD = 0x00000004;
-	constexpr static size_t RENAMED_NEW = 0x00000005;
+	enum FILESTATE
+	{
+		CREATED = 0x00000001,
+		DELETED = 0x00000002,
+		MODIFIED = 0x00000003,
+		RENAMED_OLD = 0x00000004,
+		RENAMED_NEW = 0x00000005
+	};
 }
