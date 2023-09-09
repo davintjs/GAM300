@@ -5,10 +5,8 @@
 
 
 #if defined(DEBUG) | defined(_DEBUG)
-	#define PRINT(ARGS) printMessage(ARGS)
-
 	template <typename... Args>
-	static void printMessage(Args&&... args)
+	static void PRINT(Args&&... args)
 	{
 		((std::cout << std::forward<Args>(args)),...);
 	}

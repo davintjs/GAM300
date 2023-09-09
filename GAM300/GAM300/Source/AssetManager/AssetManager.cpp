@@ -420,18 +420,14 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	namespace fs = std::filesystem;
 	fs::path filePath{ pEvent->filePath};
 
+	if (filePath.extension() == ".meta")
+		return;
+
 	switch (pEvent->fileState)
 	{
 		case FileState::CREATED:
 		{
-			if (filePath.extension() == ".meta")
-				return;
 			PRINT("CREATED ");		
-			fs::path subFilePath = filePath.parent_path();
-			fs::path subFilePathMeta = subFilePath.append(filePath.filename().string()+".meta");
-
-			PRINT("META: ", subFilePathMeta, '\n');
-
 			FileAddProtocol();
 
 			break;
@@ -463,5 +459,5 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 			break;
 		}
 	}
-	std::wcout << filePath << std::endl;
+	PRINT(filePath,'\n');
 }

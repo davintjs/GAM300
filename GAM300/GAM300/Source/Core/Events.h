@@ -70,8 +70,8 @@ struct ReflectEntityEvent : IEvent
 
 struct FileModifiedEvent : IEvent
 {
-	FileModifiedEvent(wchar_t* _filePath, FileState _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
-	wchar_t* filePath;
+	FileModifiedEvent(const char* _filePath, FileState _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
+	const char* filePath;
 	FileState fileState;
 };
 
