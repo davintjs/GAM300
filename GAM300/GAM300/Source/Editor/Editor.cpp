@@ -68,6 +68,8 @@ void EditorSystem::Update(float dt)
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
+    
+
 }
 
 void EditorSystem::Exit()

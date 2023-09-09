@@ -38,11 +38,7 @@ void GraphicsSystem::Init()
 	
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
-	
 	//INIT GRAPHICS HERE
-	
-	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
-
 
 	// Temporary Stuff, Things will be moved accordingly (hopefully)
 	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
@@ -161,6 +157,8 @@ void GraphicsSystem::Update(float dt)
 	{
 		LightSource.position.z += 10.f;
 	}
+
+
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
