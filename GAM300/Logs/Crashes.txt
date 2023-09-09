@@ -1,0 +1,5 @@
+[2023-09-09 19:45:53.571] [Error] [critical] 
+Caused By:	!mMethod
+Info:		MONO METHOD Start IN SCRIPT Player NOT FOUND
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 570)
+

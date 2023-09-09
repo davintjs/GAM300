@@ -1,15 +1,13 @@
 #ifndef OBJECTS_B_LIST_H
 #define OBJECTS_B_LIST_H
-#include "SparseSet.h"
-#include <bitset>
 #include "ObjectsList.h"
 
-template <typename T, ObjectIndex N, ObjectIndex B_SZ>
+template <typename T, ObjectIndex N>
 class ObjectsBList
 {
     struct Node
     {
-        SparseSet<ObjectsList<T,B_SZ>, N> sparseSetList;
+        ObjectsList<T,N> objectList;
         //Forward List
         Node* next = nullptr;
     };
@@ -19,7 +17,6 @@ public:
     {
         Node* pNode;
         size_t index;
-        size_t subIndex;
         friend class ObjectsBList;
     public:
         /***************************************************************************/
@@ -32,7 +29,7 @@ public:
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, size_t _subIndex, Node* _pNode);
+        Iterator(size_t _index, Node* _pNode);
 
         /***************************************************************************/
         /*!
@@ -93,6 +90,7 @@ public:
     T& emplace(ObjectIndex index, Args&&... args);
     void clear();
     void erase(T& val);
+    void erase(ObjectIndex denseIndex);
     ~ObjectsBList();
     Iterator begin();
     Iterator end();
@@ -101,7 +99,7 @@ public:
 
     void SetActive(T& obj, bool val = true);
 
-    T& DenseSubscript(ObjectIndex val);
+    auto DenseSubscript(ObjectIndex val);
 
     ObjectIndex GetDenseIndex(T& object);
 private:

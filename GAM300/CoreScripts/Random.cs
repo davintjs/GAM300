@@ -15,7 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System;
 
-namespace CopiumEngine
+namespace BeanFactory
 {
 
     public static class RNG

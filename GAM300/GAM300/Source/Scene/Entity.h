@@ -1,28 +1,30 @@
 #include "Utilities/UUID.h"
-#include "Utilities/ObjectsList.h"
-#include <vector>
+#include <bitset>
+#include "Components.h" 
 
 #ifndef ENTITY_H
 #define ENTITY_H
 
-constexpr size_t MAX_ENTITIES{ 5 };
-
 struct Scene;
 struct Entity;
 
-using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
 struct Entity
 {
 public:
+	bool is_enabled = true;
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
 	const Engine::UUID uuid;
 	//Which array does this object belong in?
 	Scene* pScene;
 	ObjectIndex denseIndex;
+	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
 };
 
-using EntitiesPtrArray = std::vector<Entity*>;
+void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child);
+void Set_ParentChild(Transform& parent, Transform& child);
+void Break_ParentChild(const ObjectIndex& _child);
+
 
 #endif // !ENTITY_H

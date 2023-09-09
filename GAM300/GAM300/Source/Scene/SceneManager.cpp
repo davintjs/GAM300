@@ -7,14 +7,39 @@ void SceneManager::Init()
 	{
 		//Create empty scene
 		LoadScene("");
+		Scene& scene = GetCurrentScene();
+		scene.Scene_name = "Test Scene";
+		/*Scene& scene = GetCurrentScene();
+		//Add 5 new entity into scene
+		scene.AddEntity();
+		scene.AddEntity();
+		scene.AddEntity();
+		scene.AddEntity();
+		scene.AddEntity();*/
 	}
 }
 
 void SceneManager::LoadScene(const char* path)
 {
 	loadedScenes.emplace_front(path);
+	Scene& scene = GetCurrentScene();
 	
+	Entity& titty = scene.AddEntity();
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+
+	/**/scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+	scene.AddEntity();
+	scene.AddComponent<Script>(0).name = "Player";
+
+	/*Entity& titty2 = scene.AddEntity();
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).translation = Vector3(100.f, 100.f, 100.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).scale = Vector3(40.f, 40.f, 40.f);*/
 	//Init scene
+
 }
 
 void SceneManager::Update(float dt)
@@ -28,12 +53,11 @@ void SceneManager::Update(float dt)
 	//	PRINT("Entity: ", scene.entities.GetDenseIndex(entity), '\n');
 	//}
 
-
-	//auto& scriptArr = scene.multiComponentsArrays.GetArray<Script>();
+	//auto& scriptArr = scene.GetComponentsArray<Script>();
 	//for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
 	//{
-	//	if (!it.IsActive())
-	//		continue;
+	//	//if (!it.IsActive())
+	//	//	continue;
 	//	Script& script = *it;
 	//	PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
 	//}

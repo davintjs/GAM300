@@ -16,7 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 using System;
 using System.Runtime.CompilerServices;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public static class InternalCalls
     {

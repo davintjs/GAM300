@@ -13,7 +13,8 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public struct Collision2D
     {

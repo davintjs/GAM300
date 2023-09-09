@@ -18,29 +18,21 @@
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
 #include "Core/SystemInterface.h"
-#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-
-
 ENGINE_SYSTEM(EditorSystem)
 {
+public:
 	void Init();
 	void Update(float dt);
 	void Exit();
 
 	void Editor_Dockspace();
-	void Editor_MenuBar();
-	void Editor_Content_Browser();
-	void Editor_SceneViewport();
-	void Editor_Toolbar();
-	void Editor_Inspector();
-	void Editor_Hierarchy();
 
+private:
+	std::vector<ISystem*> editorSystems;
 };
-
-
 
 //Inspector Functions
 //void Inspector_Transform(int index);

@@ -1,6 +1,8 @@
 #include "Core/SystemInterface.h"
 #include "Scene.h"
 
+#define MySceneManager SceneManager::Instance()
+
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 

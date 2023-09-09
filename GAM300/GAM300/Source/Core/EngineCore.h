@@ -21,7 +21,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-#include "Utilities/MultiThreading.h"
 //#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
@@ -34,6 +33,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
+#include "Utilities/ThreadPool.h"
+#include "Scripting/ScriptingSystem.h"
+#include "Utilities/YAMLUtils.h"
+#include "EventsManager.h"
+#include "Debugging/Debugger.h"
+#include "Scripting/LogicSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -58,29 +63,34 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-		FileWatcher::Instance();
-
+		RegisterComponents();
 		systems =
 		{
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
-			//&PhysicsSystem::Instance(),
+			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
+			//&LogicSystem::Instance(),
+			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
-			&AssetManager::Instance()
+			&AssetManager::Instance(),
 		};
-
 
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
 		}
 
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
+
+		//SceneStartEvent startEvent{};
+		//ACQUIRE_SCOPED_LOCK("Assets");
+		//EVENTS.Publish(&startEvent);
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
@@ -95,26 +105,8 @@ public:
 
 		//std::this_thread::sleep_for(std::chrono::seconds(10));
 
-		//TEST ENTITY CREATION
-		//for (int i = 0; i < 7; ++i)
-		//{
-		//	scene.AddEntity();
-		//}
-
-		//scene.Destroy(*(++(++scene.entities.begin())));
-
-		Script& script3 = scene.AddComponent<Script>(14);
-		scene.AddComponent<Script>(13);
-		scene.AddComponent<Script>(3);
-		//scene.Destroy(script3);
-		scene.AddComponent<Script>(14);
-		Script& script = scene.AddComponent<Script>(0);
-		Script& script4 = scene.AddComponent<Script>(0);
-		scene.AddComponent<Script>(0);
-		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script,false);
-		scene.Destroy(script4);
-		//Script& script2 = scene.AddComponent<Script>(10);
-		//scene.multiComponentsArrays.GetArray<Script>().SetActive(script2,false);
+		// Bean: Serialization Tests
+		Emittion();
 	}
 
 	/**************************************************************************/
@@ -157,15 +149,21 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
-		THREADS.Exit();
 		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
 		{
 			(*iter)->Exit();
 		}
+		THREADS.Exit();
+	}
+
+	void CallbackSceneStart(SceneStartEvent* pEvent)
+	{
+		mode = ENUM_SYSTEM_RUNTIME;
 	}
 private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
+	FileWatcher watcher;
 };
 #endif // !CORE_H

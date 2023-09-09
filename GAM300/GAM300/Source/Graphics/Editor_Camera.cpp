@@ -1,10 +1,13 @@
 #include "Precompiled.h"
 
+#include "Editor/EditorHeaders.h"
 #include "Editor_Camera.h"
+
+extern std::vector<Ray3D> Ray_Container;
+
 
 void Editor_Camera::Init()
 {
-	
 	setDistanceToFocalPoint(1000.f);
 	setRotationSpeed(2.f);
 	updateView();
@@ -66,13 +69,35 @@ void Editor_Camera::Update(float dt)
 			focalPoint += getRightVec() * 10.f;
 		}
 
-
+		
 		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
 		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
 		
 		
-		
+
 		updateView();
+	}
+
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_CONTROL))
+	{
+		if (InputHandler::isMouseButtonPressed_L())
+		{
+			Ray3D temp = Raycasting(GetMouseInNDC().x, GetMouseInNDC().y, getPerspMatrix(), getViewMatrix(), GetCameraPosition());
+			
+			// No Editor Version
+			//Ray3D temp = Raycasting(InputHandler::getMouseX(), InputHandler::getMouseY(), getPerspMatrix(), getViewMatrix(), GetCameraPosition());
+				
+			Ray_Container.push_back(temp);
+
+
+
+
+		}
+	}
+	if (InputHandler::isMouseButtonPressed_L())
+	{
+		glm::vec2 position = GetMouseInNDC();
+		EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
 	}
 }
 
@@ -94,6 +119,20 @@ void Editor_Camera::onResize(float _width, float _height)
 	aspect = viewport.x / viewport.y;
 
 	persp_projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 1000000.f);
+}
+
+glm::vec2 Editor_Camera::GetMouseInNDC()
+{
+	glm::vec2 scenePosition = EditorScene::Instance().GetPosition();
+	glm::vec2 sceneDimension = EditorScene::Instance().GetDimension();
+	glm::vec2 mousePosition = InputHandler::getMousePos();
+	mousePosition.y -= GLFW_Handler::height - scenePosition.y - sceneDimension.y;
+	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y + 22.f };
+	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
+
+	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
+	mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
+	return mouseTo1600By900;
 }
 
 
@@ -213,4 +252,39 @@ void Editor_Camera::setRotationSpeed(float speed)
 float Editor_Camera::getRotationSpeed()
 {
 	return rotationSpeed;
+}
+
+
+Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye)
+{
+	EditorDebugger::Instance().AddLog("Dimension: %f %f\n", EditorScene::Instance().GetDimension().x, EditorScene::Instance().GetDimension().y);
+
+	//ypos += GLFW_Handler::height;
+
+	//float x = (2.0f * xpos) / EditorScene::Instance().GetDimension().x - 1.0f;
+	//float y = 1.0f - (2.0f * ypos) / EditorScene::Instance().GetDimension().y;
+
+	//float x = (2.0f * xpos) / EditorScene::Instance().GetDimension().x - 1.0f;
+	//float y = (2.0f * ypos) / EditorScene::Instance().GetDimension().y - 1.0f;
+
+
+	float x = (2.0f * xpos) / 1600.f - 1.0f;
+	float y = (2.0f * ypos) / 900.f - 1.0f;
+
+
+	float z = 1.0f;
+
+	glm::vec4 ray_clip(x, y, -1.0f, 1.0f);
+	glm::vec4 ray_eye = glm::inverse(proj) * ray_clip;
+	ray_eye.z = -1.0f;
+	ray_eye.w = 0.0f;
+	glm::vec4 inverse_ray_world = glm::inverse(view) * ray_eye;
+	glm::vec3 ray_world = glm::vec3(inverse_ray_world);
+	ray_world = glm::normalize(ray_world);
+
+	Ray3D temp;
+	temp.origin = eye;
+	temp.direction = ray_world;
+
+	return temp;
 }

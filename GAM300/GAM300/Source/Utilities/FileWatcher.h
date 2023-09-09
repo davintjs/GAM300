@@ -3,12 +3,16 @@
 #ifndef FILEWATCHER_H
 #define FILEWATCHER_H
 
-SINGLETON(FileWatcher)
+class FileWatcher
 {
 public:
     FileWatcher();
 
     void ThreadWork();
+
+    ~FileWatcher();
+
+    void* hDir;
 };
 
 #endif

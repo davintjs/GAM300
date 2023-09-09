@@ -7,6 +7,27 @@
 
 #define EditorCam Editor_Camera::Instance()
 
+class Ray3D
+{
+public:
+	// Constructor
+	Ray3D() : origin(), direction() { return; }
+	Ray3D(const glm::vec3& o, const glm::vec3& d)
+		: origin(o), direction(d) {
+		return;
+	}
+	glm::vec3 lerp(const float t) const { return(origin + t * direction); }
+
+
+	// Containment method
+	bool contains(const glm::vec3& point, float* t = NULL) const;
+	// Returns paramter of intersection if containment is true and t != NULL
+
+	glm::vec3 origin;
+	glm::vec3 direction;
+};
+
+
 SINGLETON(Editor_Camera)
 {
 public:
@@ -35,6 +56,8 @@ public:
 	void updateView();
 
 	void onResize(float _width, float _height);
+
+	glm::vec2 GetMouseInNDC();
 
 	void setDistanceToFocalPoint(float distance);
 	
@@ -67,6 +90,9 @@ public:
 	float getRotationSpeed();
 
 	Framebuffer& getFramebuffer() { return framebuffer; }
+
+	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
+
 
 private:
 

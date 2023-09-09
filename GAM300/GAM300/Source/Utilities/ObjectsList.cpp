@@ -147,6 +147,40 @@ void OBJECTSLIST::DeleteNode(Node* prev, Node* pNode)
 	emptyNodesPool = pNode;
 }
 
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TryErase(T& val)
+{
+	Node* start = head;
+	while (start)
+	{
+		if (start->sparseSet.TryErase(val))
+		{
+			--size_;
+			return true;
+		}
+		start = start->next;
+	}
+	return false;
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TryErase(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start)
+	{
+		if (start->sparseSet.TryErase(denseIndex))
+		{
+			--size_;
+			return true;
+		}
+		start = start->next;
+		denseIndex -= N;
+	}
+	return false;
+}
+
 template <typename T, ObjectIndex N>
 void OBJECTSLIST::erase(T& val)
 {
@@ -156,7 +190,7 @@ void OBJECTSLIST::erase(T& val)
 	{
 		start = start->next;
 	}
-	ASSERT(start != nullptr, "Failed to erase value");
+	E_ASSERT(start != nullptr, "Failed to erase value");
 	start->sparseSet.erase(val);
 	--size_;
 }
@@ -193,10 +227,22 @@ bool OBJECTSLIST::IsActive(ObjectIndex sparseIndex)
 	Node* start = head;
 	while (start && sparseIndex >= N)
 	{
-		sparseIndex -= N;
+		sparseIndex -= start->sparseSet.size();
 		start = start->next;
 	}
 	return start->activeObjectsBitset.test(start->sparseSet.GetDenseIndex(sparseIndex));
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::IsActiveDense(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start && denseIndex >= N)
+	{
+		denseIndex -= N;
+		start = start->next;
+	}
+	return start->activeObjectsBitset.test(denseIndex);
 }
 
 template <typename T, ObjectIndex N>
@@ -269,7 +315,7 @@ ObjectIndex OBJECTSLIST::GetDenseIndex(T& object)
 		++count;
 		start = start->next;
 	}
-	ASSERT(true, "Object List does not contain this object");
+	E_ASSERT(true, "Object List does not contain this object");
 }
 
 template <typename T, ObjectIndex N>
@@ -284,6 +330,56 @@ ObjectIndex OBJECTSLIST::GetDenseIndex(ObjectIndex sparseIndex)
 		start = start->next;
 	}
 	return index + start->sparseSet.GetDenseIndex(sparseIndex);
+}
+
+template <typename T, ObjectIndex N>
+T* OBJECTSLIST::TryGetDense(ObjectIndex denseIndex)
+{
+	Node* start = head;
+	while (start && denseIndex >= N)
+	{
+		denseIndex -= N;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return nullptr;
+	return start->sparseSet.TryGetDense(denseIndex);
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TrySetActive(ObjectIndex denseIndex, bool val)
+{
+	Node* start = head;
+	while (start && denseIndex >= start->sparseSet.size())
+	{
+		//Failed to find
+		if (denseIndex < N)
+			break;
+		denseIndex -= N;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return false;
+	start->activeObjectsBitset.set(denseIndex, val);
+	return true;
+}
+
+template <typename T, ObjectIndex N>
+bool OBJECTSLIST::TrySetActive(T& object, bool val)
+{
+	Node* start = head;
+	while (start)
+	{
+		//Found
+		if (start->sparseSet.contains(object))
+			break;
+		start = start->next;
+	}
+	if (start == nullptr)
+		return false;
+	ObjectIndex denseIndex = start->sparseSet.GetDenseIndex(object);
+	start->activeObjectsBitset.set(denseIndex, val);
+	return true;
 }
 
 template <typename T, ObjectIndex N>
