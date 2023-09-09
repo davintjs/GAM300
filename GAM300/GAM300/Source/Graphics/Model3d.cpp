@@ -79,19 +79,7 @@ void Model::init() {
         glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
-       /* vaoid = VAO;
-        vboid = VBO;*/
         prim = GL_TRIANGLES;
-        //drawcount = _geom->_indices.size(); // number of slices 
-
-        // load default texture, todo
-        // texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-
-        /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
-         texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");
-
-         texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Normal_OpenGL.dds");
-         texturebuffer = loadDDS("Assets/Models/Skull_textured/sample_1280�853.dds");*/
         FBX_vaoid.push_back(VAO);
         FBX_vboid.push_back(VBO);
         FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());

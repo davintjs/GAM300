@@ -39,12 +39,6 @@ void AssetManager::Init()
 		{
 			continue;
 		}
-			// Removing extension to add .meta extension
-			// subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-			// subFilePathMeta += ".meta";
-
-			// std::string fileName{};
-			// for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
 		// Removing extension to add .meta extension
 		if (dir.is_directory())
 		{
@@ -71,29 +65,8 @@ void AssetManager::Init()
 			
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
 		}
-			// if (!std::filesystem::exists(subFilePathMeta))
-			// {
-			// 	CreateMetaFile(fileName, subFilePathMeta, fileType);
-			// }
-
-			// // Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
-			// this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
-
-			// // Deserialize from meta file and load the asset asynchronously
-			// if (!strcmp(fileType.c_str(), "dds")) // if dds ...
-			// {
-			// 	this->AsyncLoadAsset(subFilePathMeta, fileName, true);
-			// 	std::string filetype = assetPath + ".dds";
-
-			// 	TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
-			// }
-			// else
-			// {
-			// 	this->AsyncLoadAsset(subFilePathMeta, fileName);
-			// }
 		// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
 		//this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
-		std::cout << "problem here\n";
 		// Deserialize from meta file and load the asset asynchronously
 		if (!dir.is_directory())
 		{
@@ -106,10 +79,6 @@ void AssetManager::Init()
 
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 			}
-			/*else
-			{
-				this->AsyncLoadAsset(subFilePathMeta, fileName);
-			}*/
 		}
 	}
 
