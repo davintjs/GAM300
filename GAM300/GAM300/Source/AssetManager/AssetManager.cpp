@@ -33,7 +33,7 @@ void AssetManager::Init()
 			}
 		}
 
-		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta file or fbx file
+		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
@@ -294,6 +294,7 @@ void AssetManager::FileAddProtocol()
 		subFilePath = dir.path().generic_string();
 		std::string subFilePathMeta = subFilePath;
 		std::string fileType{};
+		std::string fileName{};
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
@@ -301,28 +302,40 @@ void AssetManager::FileAddProtocol()
 		}
 
 		// Check if this file is new by searching for its meta file
-		if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
+		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
 
 		// Removing extension to add .meta extension
-		subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-		subFilePathMeta += ".meta";
+		if (dir.is_directory())
+		{
+			subFilePathMeta += ".meta";
+		}
+		else
+		{
+			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
+			subFilePathMeta += ".meta";
+		}
 
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
-			std::string fileName{};
-			// Meta file does not exist, so this asset is new
-			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+			if (dir.is_directory())
 			{
-				fileName += subFilePath[j];
+				fileName = std::filesystem::path(dir).filename().generic_string();
+			}
+			else
+			{
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
 			}
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
-		}
 
-		// Deserialize from meta file and load the asset asynchronously
-		this->AsyncLoadAsset(subFilePathMeta);
+			// Deserialize from meta file and load the asset asynchronously
+			this->AsyncLoadAsset(subFilePathMeta);
+		}
 	}
 }
 
@@ -421,15 +434,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 
 			FileAddProtocol();
 
-			//for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
-			//{
-			//	fileType += subFilePath[i];
-			//}
-
-			//if (!std::filesystem::exists(subFilePathMeta))
-			//{
-			//	CreateMetaFile(filePath.filename(), subFilePathMeta.string(), fileType);
-			//}
 			break;
 		}
 		case FileState::DELETED:
@@ -441,7 +445,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		case FileState::MODIFIED:
 		{
 			PRINT("MODIFIED ");
-			FileUpdateProtocol();
 			break;
 		}
 		case FileState::RENAMED_OLD:
