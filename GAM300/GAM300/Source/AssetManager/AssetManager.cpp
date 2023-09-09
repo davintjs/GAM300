@@ -55,20 +55,21 @@ void AssetManager::Init()
 			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
 			subFilePathMeta += ".meta";
 		}
-
+		if (dir.is_directory())
+		{
+			fileName = std::filesystem::path(dir).filename().generic_string();
+		}
+		else
+		{
+			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+			{
+				fileName += subFilePath[j];
+			}
+		}
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
-			if (dir.is_directory())
-			{
-				fileName = std::filesystem::path(dir).filename().generic_string();
-			}
-			else
-			{
-				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
-				{
-					fileName += subFilePath[j];
-				}
-			}
+			
+			CreateMetaFile(fileName, subFilePathMeta, fileType);
 		}
 			// if (!std::filesystem::exists(subFilePathMeta))
 			// {
@@ -97,6 +98,18 @@ void AssetManager::Init()
 		if (!dir.is_directory())
 		{
 			this->AsyncLoadAsset(subFilePathMeta, fileName);
+
+			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
+			{
+				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
+				std::string filetype = assetPath/* + ".dds"*/;
+
+				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
+			}
+			/*else
+			{
+				this->AsyncLoadAsset(subFilePathMeta, fileName);
+			}*/
 		}
 	}
 
