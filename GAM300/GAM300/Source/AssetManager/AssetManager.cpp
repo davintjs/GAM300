@@ -23,36 +23,56 @@ void AssetManager::Init()
 		subFilePath = dir.path().generic_string();
 		std::string subFilePathMeta = subFilePath;
 		std::string fileType{};
+		std::string fileName{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		if (!dir.is_directory())
 		{
-			fileType += subFilePath[i];
+			for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 
-		if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
+		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta file or fbx file
 		{
 			continue;
 		}
 
 		// Removing extension to add .meta extension
-		subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-		subFilePathMeta += ".meta";
+		if (dir.is_directory())
+		{
+			subFilePathMeta += ".meta";
+		}
+		else
+		{
+			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
+			subFilePathMeta += ".meta";
+		}
 
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
-			std::string fileName{};
-			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+			if (dir.is_directory())
 			{
-				fileName += subFilePath[j];
+				fileName = std::filesystem::path(dir).filename().generic_string();
+			}
+			else
+			{
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
 			}
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
 		}
 
 		// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
-		this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
+		//this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
 		
 		// Deserialize from meta file and load the asset asynchronously
-		this->AsyncLoadAsset(subFilePathMeta);
+		if (!dir.is_directory())
+		{
+			this->AsyncLoadAsset(subFilePathMeta);
+		}
 	}
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
@@ -61,57 +81,57 @@ void AssetManager::Init()
 // For run time update of files
 void AssetManager::Update(float dt)
 {
-	//Change this to an assert
-	if (!std::filesystem::exists(AssetPath))
-	{
-		std::cout << "Check if proper assets filepath exists!" << std::endl;
-		exit(0);
-	}
+	////Change this to an assert
+	//if (!std::filesystem::exists(AssetPath))
+	//{
+	//	std::cout << "Check if proper assets filepath exists!" << std::endl;
+	//	exit(0);
+	//}
 
-	std::vector<std::filesystem::file_time_type> temp{};
+	//std::vector<std::filesystem::file_time_type> temp{};
 
-	std::string subFilePath{};
-	for (const auto& it : std::filesystem::recursive_directory_iterator(AssetPath))
-	{
-		subFilePath = it.path().generic_string();
-		std::string fileType{};
+	//std::string subFilePath{};
+	//for (const auto& it : std::filesystem::recursive_directory_iterator(AssetPath))
+	//{
+	//	subFilePath = it.path().generic_string();
+	//	std::string fileType{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
-		{
-			fileType += subFilePath[i];
-		}
+	//	for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+	//	{
+	//		fileType += subFilePath[i];
+	//	}
 
-		if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
-		{
-			continue;
-		}
-		temp.push_back(it.last_write_time()); // For comparison with our assets' last write time
-	}
+	//	if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
+	//	{
+	//		continue;
+	//	}
+	//	temp.push_back(it.last_write_time()); // For comparison with our assets' last write time
+	//}
 
-	if (temp.size() != this->mTotalAssets.mAssetsTime.size()) // File was added or removed from folder
-	{
-		if (temp.size() > this->mTotalAssets.mAssetsTime.size()) // File added
-		{
-			FileAddProtocol();
-		}
-		else // File removed
-		{
-			FileRemoveProtocol();
-		}
-		this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
-	}
-	else // No file added to folder, but check for update of last write time of existing files
-	{
-		for (int i = 0; i < this->mTotalAssets.mAssetsTime.size(); ++i)
-		{
-			if (this->mTotalAssets.mAssetsTime[i] != temp[i])
-			{
-				FileUpdateProtocol(); // Update the file data in memory
-				this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
-				break; // Skip the rest as all has been updated
-			}
-		}
-	}
+	//if (temp.size() != this->mTotalAssets.mAssetsTime.size()) // File was added or removed from folder
+	//{
+	//	if (temp.size() > this->mTotalAssets.mAssetsTime.size()) // File added
+	//	{
+	//		FileAddProtocol();
+	//	}
+	//	else // File removed
+	//	{
+	//		FileRemoveProtocol();
+	//	}
+	//	this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
+	//}
+	//else // No file added to folder, but check for update of last write time of existing files
+	//{
+	//	for (int i = 0; i < this->mTotalAssets.mAssetsTime.size(); ++i)
+	//	{
+	//		if (this->mTotalAssets.mAssetsTime[i] != temp[i])
+	//		{
+	//			FileUpdateProtocol(); // Update the file data in memory
+	//			this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
+	//			break; // Skip the rest as all has been updated
+	//		}
+	//	}
+	//}
 }
 
 void AssetManager::Exit()
@@ -211,8 +231,11 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 	std::string fileNameNum = GenerateGUID(fileName);
 	std::string fileAssetPath = filePath;
 	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen("meta") + 1);
-	fileAssetPath += '.' + fileType;
-
+	if (strcmp(fileType.c_str(), ""))
+	{
+		fileAssetPath += '.' + fileType;
+	}
+	
 	rapidjson::StringBuffer sb;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
 
@@ -396,6 +419,8 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 
 			PRINT("META: ", subFilePathMeta, '\n');
 
+			FileAddProtocol();
+
 			//for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 			//{
 			//	fileType += subFilePath[i];
@@ -410,11 +435,13 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		case FileState::DELETED:
 		{
 			PRINT("DELETED ");
+			FileRemoveProtocol();
 			break;
 		}
 		case FileState::MODIFIED:
 		{
 			PRINT("MODIFIED ");
+			FileUpdateProtocol();
 			break;
 		}
 		case FileState::RENAMED_OLD:
