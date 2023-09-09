@@ -1,5 +1,8 @@
+#ifndef PHYSICSSYSTEM_H
+#define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
 #include "Scene/Entity.h"
+#include "Scene/SceneManager.h"
 
 
 #include "Jolt/Jolt.h"
@@ -11,14 +14,10 @@
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
-#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
-#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
-
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include "Jolt/Physics/Collision/Shape/ConvexShape.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
-
-#ifndef PHYSICSSYSTEM_H
-#define PHYSICSSYSTEM_H
 
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
@@ -89,13 +88,15 @@ public:
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 
 	void OnSceneStart();
 	void OnSceneEnd();
 
-	void CreatePhysicsObject(Entity& e);
+	//void PopulatePhysicsWorld();
+	//void UpdateGameObjects();
+	//void TestRun();
 
 
 	const unsigned int maxObjects = 1024;
@@ -124,9 +125,15 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::TempAllocatorImpl tempAllocator;
 	JPH::JobSystemSingleThreaded jobSystem;
 
+
+
+
 };
 
-
+void GlmVec3ToJoltVec3(Vector3 & gVec3, JPH::RVec3 & jVec3);
+void GlmVec3ToJoltQuat(Vector3 & gVec3, JPH::Quat & jQuat);
+void JoltVec3ToGlmVec3(JPH::RVec3 & jVec3, Vector3 & gVec3);
+void JoltQuatToGlmVec3(JPH::Quat & jQuat, Vector3 & gVec3);
 
 
 

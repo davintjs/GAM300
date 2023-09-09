@@ -28,7 +28,7 @@ void SceneManager::LoadScene(const char* path)
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
 
-	/**/scene.AddEntity();
+	scene.AddEntity();
 	scene.AddEntity();
 	scene.AddEntity();
 	scene.AddEntity();

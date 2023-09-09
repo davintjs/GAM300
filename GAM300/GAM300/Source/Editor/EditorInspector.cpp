@@ -227,8 +227,8 @@ void DisplayComponent<Rigidbody>(Rigidbody& rb)
     ImGui::SameLine();
     ImGui::Text("Active");
     Display("Mass", rb.mass);
-    Display("Velocity", rb.velocity);
-    Display("Acceleration", rb.acceleration);
+    Display("Linear Velocity", rb.linearVelocity);
+    Display("Angular Velocity", rb.angularVelocity);
     Display("Force", rb.force);
     Display("Use Gravity", rb.useGravity);
     Display("Is Kinematic", rb.isKinematic);

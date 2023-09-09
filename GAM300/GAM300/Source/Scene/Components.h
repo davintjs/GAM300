@@ -24,6 +24,21 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsBList.h"
 #include <vector>
 
+// JPH
+#include "Jolt/Jolt.h"
+#include "Jolt/RegisterTypes.h"
+#include "Jolt/Core/Factory.h"
+#include "Jolt/Core/TempAllocator.h"
+#include "Jolt/Core/JobSystemSingleThreaded.h"
+#include "Jolt/Physics/PhysicsSettings.h"
+#include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/Collision/Shape/BoxShape.h"
+#include "Jolt/Physics/Collision/Shape/SphereShape.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+#include "Jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Body/BodyActivationListener.h"
+
 constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
@@ -193,10 +208,13 @@ struct Rigidbody
 {
 	bool is_enabled = true;
 	std::string str = "Rigidbody";
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
+	Vector3 linearVelocity{};					//velocity of object
+	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0<=x<=1)
 	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 	JPH::BodyID RigidBodyID;			//Body ID 
