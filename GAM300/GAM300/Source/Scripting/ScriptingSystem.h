@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Core\SystemInterface.h"
 #include <Core/events.h>
-#include <Scripting/script-fields.h>
+#include <Scripting/ScriptFields.h>
 
 #include <string>
 #include <unordered_map>
@@ -86,7 +86,7 @@ struct ScriptClass
 
 };
 
-ENGINE_SYSTEM(ScriptingSystem)
+ENGINE_EDITOR_SYSTEM(ScriptingSystem)
 {
 public:
 	/**************************************************************************/
@@ -166,7 +166,7 @@ public:
 			ID of gameObject to be reflected
 	*/
 	/**************************************************************************/
-	MonoObject* cloneInstance(MonoObject* _instance);
+	MonoObject* CloneInstance(MonoObject* _instance);
 
 	/*******************************************************************************
 	/*!
@@ -178,7 +178,7 @@ public:
 		MonoObject of a class
 	*/
 	/*******************************************************************************/
-	MonoObject* createInstance(MonoClass* _mClass);
+	MonoObject* CreateInstance(MonoClass* _mClass);
 
 	/**************************************************************************/
 	/*!
@@ -188,7 +188,7 @@ public:
 			Name of the new script
 	*/
 	/**************************************************************************/
-	std::string addEmptyScript(const std::string& _name);
+	std::string AddEmptyScript(const std::string& _name);
 
 	/*******************************************************************************
 	/*!
@@ -200,7 +200,7 @@ public:
 		MonoType found
 	*/
 	/*******************************************************************************/
-	MonoType* getMonoTypeFromName(std::string& name);
+	MonoType* GetMonoTypeFromName(std::string& name);
 
 	/*******************************************************************************
 	/*!
@@ -212,7 +212,7 @@ public:
 		Mono version of given string
 	*/
 	/*******************************************************************************/
-	MonoString* createMonoString(const char* str);
+	MonoString* CreateMonoString(const char* str);
 
 	/**************************************************************************/
 	/*!
@@ -224,7 +224,7 @@ public:
 			Lhs gameObject
 	*/
 	/**************************************************************************/
-	MonoObject* getFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
+	MonoObject* GetFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
 
 	/**************************************************************************/
 	/*!
@@ -498,7 +498,6 @@ public:
 	MonoEntities mEntities;
 	MonoComponents mComponents;
 	std::unordered_map<MonoType*, size_t> reflectionMap;
-	std::mutex compilingStateReadable;
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };

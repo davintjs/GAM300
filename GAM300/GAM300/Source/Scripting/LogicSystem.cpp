@@ -28,7 +28,6 @@ void LogicSystem::Init()
 void LogicSystem::Update(float dt)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
-	PRINT("THE LOGICS RUNNING\n");
 	auto& scripts = scene.GetComponentsArray<Script>();
 	for (auto it = scripts.begin(); it != scripts.end(); ++it)
 	{

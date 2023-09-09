@@ -34,6 +34,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <mono/metadata/exception.h>
 #include <mono/metadata/environment.h>
 
+#include <string.h>
+
 
 #define SECONDS_TO_RECOMPILE 1.f
 
@@ -156,22 +158,21 @@ namespace Utils
 
 #pragma endregion
 
-std::string ScriptingSystem::addEmptyScript(const std::string& _name)
+std::string ScriptingSystem::AddEmptyScript(const std::string& _name)
 {
-	//std::string filePath{ Paths::assetPath + "\\Scripts\\" + _name + ".cs" };
-	//std::ofstream file(filePath);
-	//file << "using CopiumEngine;\n";
-	//file << "using System;\n\n";
-	//file << "public class " << _name << ": CopiumScript\n{\n";
-	//file << "\tvoid Start()\n\t{\n\n\t}\n";
-	//file << "\tvoid Update()\n\t{\n\n\t}\n";
-	//file << "}\n";
-	//file.close();
-	//return filePath;
-	return std::string();
+	std::string filePath{ "Assets" + _name + ".cs"};
+	std::ofstream file(filePath);
+	file << "using BeanFactory;\n";
+	file << "using System;\n\n";
+	file << "public class " << _name << ": BeanScript\n{\n";
+	file << "\tvoid Start()\n\t{\n\n\t}\n";
+	file << "\tvoid Update()\n\t{\n\n\t}\n";
+	file << "}\n";
+	file.close();
+	return filePath;
 }
 
-MonoType* ScriptingSystem::getMonoTypeFromName(std::string& name)
+MonoType* ScriptingSystem::GetMonoTypeFromName(std::string& name)
 {
 	return mono_reflection_type_from_name(name.data(), mAssemblyImage);
 }
@@ -205,7 +206,6 @@ void ScriptingSystem::RecompileThreadWork()
 void ScriptingSystem::Init()
 {
 	InitMono();
-	//registerScriptWrappers();
 	//ENABLE FOR EDITOR MODE
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	THREADS.EnqueueTask([this] {RecompileThreadWork(); });
@@ -239,6 +239,7 @@ void ScriptingSystem::Update(float dt)
 	}
 	else if (compilingState == CompilingState::SwapAssembly)
 	{
+		ACQUIRE_SCOPED_LOCK("Assets");
 		SwapDll();
 	}
 }
@@ -283,7 +284,6 @@ void ScriptingSystem::UpdateScriptClasses()
 			continue;
 		if (mono_class_get_parent(_class) == mBeanScript)
 		{
-			PRINT("SCRIPT: ", name, '\n');
 			scriptClassMap[name] = ScriptClass{ name,_class };
 			reflectionMap[mono_class_get_type(_class)] = GetComponentType::E<Script>();
 		}
@@ -295,7 +295,6 @@ void ScriptingSystem::UpdateScriptClasses()
 		{
 			if (_class == mBeanScript)
 				continue;
-			PRINT("COMPONENT: ", name, '\n');
 			scriptClassMap[name] = ScriptClass{ name,_class };
 			reflectionMap[mono_class_get_type(_class)] = ComponentTypes[name];
 		}
@@ -408,14 +407,12 @@ using ReflectAll = decltype(ReflectExistingStruct(AllComponentTypes()));
 
 void ScriptingSystem::SwapDll()
 {
-	PRINT("SWAP DLL\n");
 	for (uint32_t hand : gcHandles)
 	{
 		mono_gchandle_free(hand);
 	}
 	gcHandles.clear();
 	RegisterScriptWrappers();
-
 	mEntities.clear();
 	mComponents.clear();
 	UnloadAppDomain();
@@ -430,14 +427,6 @@ void ScriptingSystem::SwapDll()
 	UpdateScriptClasses();
 	ReflectAll();
 	compilingState = CompilingState::Wait;
-	//COPIUM_ASSERT(!mGameObject, "GameObject C# script could not be loaded");
-	//COPIUM_ASSERT(!mCopiumScript, "CopiumScript C# script could not be loaded");
-	//COPIUM_ASSERT(!mCollision2D, "Collision2D C# script could not be loaded");
-	//COPIUM_ASSERT(!mScriptableObject, "ScriptableObject C# script could not be loaded");
-	//COPIUM_ASSERT(!mScriptableObject, "Scene C# script could not be loaded");
-	//messageSystem.dispatch(MESSAGE_TYPE::MT_CREATE_CS_GAMEOBJECT);
-	//messageSystem.dispatch(MESSAGE_TYPE::MT_SCRIPTING_UPDATED);
-	//MyEventSystem->publish(new EditorConsoleLogEvent("END SWAP DLL"));
 }
 
 MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -463,7 +452,7 @@ MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 	return nullptr;
 }
 
-MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
+MonoObject* ScriptingSystem::GetFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
 {
 	if (mAppDomain == nullptr)
 	{
@@ -473,19 +462,19 @@ MonoObject* ScriptingSystem::getFieldMonoObject(MonoClassField* mField, MonoObje
 	return mono_field_get_value_object(mAppDomain, mField, mObject);
 }
 
-MonoObject* ScriptingSystem::cloneInstance(MonoObject* _instance)
+MonoObject* ScriptingSystem::CloneInstance(MonoObject* _instance)
 {
 	if (!_instance)
 		return nullptr;
 	return mono_object_clone(_instance);
 }
 
-MonoObject* ScriptingSystem::createInstance(MonoClass* _mClass)
+MonoObject* ScriptingSystem::CreateInstance(MonoClass* _mClass)
 {
 	return mono_object_new(mAppDomain,_mClass);
 }
 
-MonoString* ScriptingSystem::createMonoString(const char* str)
+MonoString* ScriptingSystem::CreateMonoString(const char* str)
 {
 	if (!mAppDomain)
 	{
@@ -496,16 +485,15 @@ MonoString* ScriptingSystem::createMonoString(const char* str)
 
 void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 {
-	//PRINT("Get field value: " << mono_field_get_name(mClassFiend));
-	//if (field.fType == FieldType::String)
-	//{
-	//	MonoString* mono_string = createMonoString("");
-	//	mono_field_get_value(instance, mClassFiend, &mono_string);
-	//	char* str = mono_string_to_utf8(mono_string);
-	//	strcpy((char*)container, str);
-	//	return;
-	//}
-	//mono_field_get_value(instance, mClassFiend, container);
+	if (field.fType == FieldType::String)
+	{
+		MonoString* mono_string = CreateMonoString("");
+		mono_field_get_value(instance, mClassFiend, &mono_string);
+		char* str = mono_string_to_utf8(mono_string);
+		strcpy_s((char*)container, strlen(str)+1, str);
+		return;
+	}
+	mono_field_get_value(instance, mClassFiend, container);
 	return;
 }
 
@@ -517,7 +505,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
 	if (field.fType == FieldType::String)
 	{
-		MonoString* mono_string = createMonoString(reinterpret_cast<const char*>(value));
+		MonoString* mono_string = CreateMonoString(reinterpret_cast<const char*>(value));
 		mono_field_set_value(instance, mClassFiend, mono_string);
 		return;
 	}
@@ -525,33 +513,27 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	return;
 }
 
-//template<typename T>
-//void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference)
-//{
-//	//When you set a reference, you need to create a MonoObject of it first
-//
-//	//PRINT("set field ref: " << mono_field_get_name(mClassFiend));
-//	//ZACH: If setting to nullptr, no point checking
-//	if (reference == nullptr)
-//	{
-//		mono_field_set_value(instance, mClassFiend, nullptr);
-//		return;
-//	}
-//	//ZACH: Trying to set a component reference
-//	if constexpr (ComponentTypes::has<T>())
-//	{
-//		mono_field_set_value(instance, mClassFiend, ReflectComponent(*reference));
-//	}
-//	//ZACH: Trying to set a gameobject reference
-//	else if (std::is_same<T,GameObject>())
-//	{
-//		mono_field_set_value(instance, mClassFiend, ReflectGameObject(*reference));
-//	}
-//	else
-//	{
-//		static_assert(true);
-//	}
-//}
+template<typename T>
+void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference)
+{
+	//When you set a reference, you need to create a MonoObject of it first
+
+	if (reference == nullptr)
+	{
+		mono_field_set_value(instance, mClassFiend, nullptr);
+		return;
+	}
+	//ZACH: Trying to set a component reference
+	if constexpr (AllComponentTypes::Has<T>())
+	{
+		mono_field_set_value(instance, mClassFiend, ReflectComponent(*reference));
+	}
+	//ZACH: Trying to set a gameobject reference
+	else if  constexpr (std::is_same<T,Entity>())
+	{
+		mono_field_set_value(instance, mClassFiend, ReflectEntity(*reference));
+	}
+}
 
 
 void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
@@ -573,7 +555,6 @@ void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
-	PRINT("SCRIPT CHANGE DETECTED!\n");
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
 

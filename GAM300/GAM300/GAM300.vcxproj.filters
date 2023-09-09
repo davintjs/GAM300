@@ -141,6 +141,7 @@
     <ClInclude Include="Source\Debugging\Debugger.h" />
     <ClInclude Include="Source\Scripting\LogicSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
+    <ClInclude Include="Source\Scripting\ScriptFields.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

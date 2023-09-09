@@ -11,7 +11,10 @@ public class Player : BeanScript
 
     void Update()
     {
-        Console.WriteLine("Update from Player");
+        if (Input.GetKey(KeyCode.A))
+        {
+            Console.WriteLine("Update from Player");
+        }
     }
 
     void Exit()
