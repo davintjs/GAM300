@@ -35,7 +35,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
 #include "Scripting/scripting-system.h"
-
+#include "ImGuizmo.h"
 #define MyEngineCore EngineCore::Instance()
 
 enum class EngineState
@@ -148,11 +148,30 @@ public:
 
 			ImGui::NewFrame();
 
+			ImGuizmo::BeginFrame();
+
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->GetMode() & mode)
 					pSystem->Update(dt);
 			}
+
+			//ImGuizmo::SetOrthographic(false);
+			//ImGuizmo::SetDrawlist();	
+			//float windowWidth = (float)ImGui::GetWindowWidth();
+			//float windowHeight = (float)ImGui::GetWindowHeight();
+			//std::cout << "width : " << windowWidth << "\n";
+			//std::cout << "height : " << windowHeight << "\n";
+			//ImVec2 myrec = { (float)ImGui::GetWindowPos().x + (float)x_offset, (float)ImGui::GetWindowPos().y + (float)y_offset };
+			//ImGui::GetForegroundDrawList()->AddRect(myrec, myrec + ImVec2{ (float)tempviewport_x , (float)tempviewport_y }, 0xff0000ff);
+			//ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y, (float)tempviewport_x, (float)tempviewport_y);
+
+
+
+
+
+
+
 			//End ImGui Frames
 
 			ImGui::EndFrame();

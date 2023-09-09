@@ -148,9 +148,6 @@ void GraphicsSystem::Update(float dt)
 		float intersected;
 		if (checkForSelection && (i==1))
 		{
-			std::cout << " looping\n";
-			std::cout << "scale : " << trans.scale.x << " , " << trans.scale.y << " , " << trans.scale.z << "\n";
-			std::cout << "pos : " << trans.translation.x << " , " << trans.translation.y << " , " << trans.translation.z << "\n";
 
 			glm::vec3 mins = trans.scale * glm::vec3(-0.5f, -0.5f, -0.5f);
 			glm::vec3 maxs = trans.scale * glm::vec3(0.5f, 0.5f, 0.5f);
@@ -160,6 +157,8 @@ void GraphicsSystem::Update(float dt)
 				noscale, intersected))
 			{
 				std::cout << "hit\n";
+				EditorCam.ActiveObj = &entity;
+
 			}
 		}
 

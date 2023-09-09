@@ -4,6 +4,7 @@
 #include "IOManager/Handler_GLFW.h"
 #include "../Core/SystemInterface.h"
 #include "Framebuffer.h"
+#include "Scene/Entity.h"
 
 #define EditorCam Editor_Camera::Instance()
 
@@ -100,6 +101,7 @@ public:
 
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
+	Entity* ActiveObj{ nullptr };
 
 private:
 
