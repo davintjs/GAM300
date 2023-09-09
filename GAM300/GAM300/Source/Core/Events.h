@@ -61,8 +61,8 @@ struct FileTypeModifiedEvent : IEvent
 
 struct FileModifiedEvent : IEvent
 {
-	FileModifiedEvent(const wchar_t* _filePath, size_t _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
-	const wchar_t* filePath;
+	FileModifiedEvent(const char* _filePath, FileState _fileState) : filePath{ _filePath }, fileState{ _fileState }{};
+	const char* filePath;
 	size_t fileState;
 };
 
