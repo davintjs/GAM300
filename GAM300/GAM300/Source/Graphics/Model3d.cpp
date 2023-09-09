@@ -85,7 +85,7 @@ void Model::init() {
         //drawcount = _geom->_indices.size(); // number of slices 
 
         // load default texture, todo
-        texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+        // texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
 
         /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
          texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");

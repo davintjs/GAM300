@@ -37,7 +37,8 @@ void AssetManager::Init()
 		// if (!strcmp(fileType.c_str(), "geom") || !strcmp(fileType.c_str(), "dds")) // Skip if not geom or dds
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
-
+			continue;
+		}
 			// Removing extension to add .meta extension
 			// subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
 			// subFilePathMeta += ".meta";
@@ -68,7 +69,7 @@ void AssetManager::Init()
 					fileName += subFilePath[j];
 				}
 			}
-
+		}
 			// if (!std::filesystem::exists(subFilePathMeta))
 			// {
 			// 	CreateMetaFile(fileName, subFilePathMeta, fileType);
@@ -91,11 +92,11 @@ void AssetManager::Init()
 			// }
 		// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
 		//this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
-		
+		std::cout << "problem here\n";
 		// Deserialize from meta file and load the asset asynchronously
 		if (!dir.is_directory())
 		{
-			this->AsyncLoadAsset(subFilePathMeta);
+			this->AsyncLoadAsset(subFilePathMeta, fileName);
 		}
 	}
 
@@ -213,7 +214,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 	}
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
-	mTotalAssets.mFilesData[assetGUID].second = std::move(buff); // Update the data in memory
+	mTotalAssets.mFilesData[assetGUID].second.second = std::move(buff); // Update the data in memory
 
 	std::cout << "Done updating file in memory!" << std::endl;
 
@@ -236,7 +237,7 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 			}
 		}
 		return false;
-	}
+	};
 	ACQUIRE_UNIQUE_LOCK
 	(
 		"Assets", func
@@ -249,19 +250,23 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
 	std::string data{};
-	std::unique_lock<std::mutex> mLock(mAssetMutex);
-	mAssetVariable.wait(mLock, [this, &fileName, &data] // Wait if the asset is not loaded yet
+	auto func =
+		[this, &fileName, &data] // Wait if the asset is not loaded yet
+	{
+		for (const auto& [Key, Val] : mTotalAssets.mFilesData)
 		{
-			for (const auto& [Key, Val] : mTotalAssets.mFilesData)
+			if (Val.second.first == fileName)
 			{
-				if (Val.second.first == fileName)
-				{
-					data = Key;
-					return true;
-				}
+				data = Key;
+				return true;
 			}
-			return false;
-		});
+		}
+		return false;
+	};
+	ACQUIRE_UNIQUE_LOCK
+	(
+		"Assets", func
+	);
 
 	return data;
 }
@@ -377,7 +382,7 @@ void AssetManager::FileAddProtocol()
 			subFilePathMeta += ".meta";
 		}
 
-		std::string fileName{};
+		//std::string fileName{};
 		// Meta file does not exist, so this asset is new
 		for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
 		{
