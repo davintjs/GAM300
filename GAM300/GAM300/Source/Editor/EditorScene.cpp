@@ -65,7 +65,7 @@ void EditorScene::Update(float dt)
 
             Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(EditorCam.ActiveObj->denseIndex);
 
-            GizmoType = ImGuizmo::TRANSLATE;
+            GizmoType = ImGuizmo::UNIVERSAL;
 
             glm::vec4 translate = { trans.translation,0.f };
             glm::vec4 rotation = { trans.rotation,0.f };

@@ -117,7 +117,6 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 	for (Entity& entity : currentScene.entities)
 	{
-		
 		Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 		
 		glm::mat4 scaling_mat(
@@ -125,7 +124,6 @@ void GraphicsSystem::Update(float dt)
 			glm::vec4(0.f, trans.scale.y, 0.f, 0.f),
 			glm::vec4(0.f, 0.f, trans.scale.z, 0.f),
 			glm::vec4(0.f, 0.f, 0.f, 1.f)
-
 		);
 		glm::mat4 rotation_mat(
 			glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
@@ -139,7 +137,7 @@ void GraphicsSystem::Update(float dt)
 			glm::vec4(0.f, 0.f, 1.f, 0.f),
 			glm::vec4(trans.translation, 1.f)
 		);
-		glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
+		glm::mat4 SRT = translation_mat /** rotation_mat*/ * scaling_mat;
 		entitySRT[i] = SRT;
 		//entitySRT[i] = glm::mat4(1.f);
 		++i;
