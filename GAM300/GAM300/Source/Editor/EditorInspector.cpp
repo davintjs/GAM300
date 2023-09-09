@@ -423,9 +423,14 @@ void DisplayComponentHelper(T& component)
     {
         name = (component.name + " [Script]");
     }
+    else if constexpr (AllComponentTypes::Has<T>())
+    {
+        name = GetComponentType::Name<T>();
+    }
     else
     {
-        name = typeid(T).name();
+        //This means T is not a component
+        //PRINT(typeid(T).name());
     }
     if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
     {
@@ -521,10 +526,7 @@ private:
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
                 //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
-                DisplayComponentHelper(*component);
-
-                
-
+                DisplayComponentHelper(component);
             }
         }
 

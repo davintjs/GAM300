@@ -33,21 +33,21 @@ public:
 			Inits logic system
 	*/
 	/**************************************************************************/
-	void init();
+	void Init();
 	/**************************************************************************/
 	/*!
 		\brief
 			Calls the update function of UI buttons and Script Components
 	*/
 	/**************************************************************************/
-	void update();
+	void Update(float dt);
 	/**************************************************************************/
 	/*!
 		\brief
 			Cleanup of logic system
 	*/
 	/**************************************************************************/
-	void exit();
+	void Exit();
 
 	/**************************************************************************/
 	/*!
@@ -55,7 +55,7 @@ public:
 			Callback to when the scene is linked, aka finished deserializing
 	*/
 	/**************************************************************************/
-	//void CallbackSceneLinked(SceneLinkedEvent* IEvent);
+	void CallbackSceneStart(SceneStartEvent* IEvent);
 };
 
 

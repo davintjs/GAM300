@@ -63,6 +63,7 @@ struct Scene
 
 	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
+		
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
@@ -73,6 +74,7 @@ struct Scene
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
 		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		EditorHierarchy::Instance().layer.push_back(&entity);
 		return entity;
 	}
 
@@ -214,14 +216,17 @@ struct Scene
 	template <typename Component>
 	auto& GetEntity(Component& component)
 	{
-		if constexpr (SingleComponentTypes::Has<Component>())
-		{
-			return entities.DenseSubscript(singleComponentsArrays.GetArray<Component>().GetDenseIndex(component));
-		}
-		else if constexpr (MultiComponentTypes::Has<Component>())
-		{
-			return entities.DenseSubscript(multiComponentsArrays.GetArray<Component>().GetDenseIndex(component));
-		}
+		return entities.DenseSubscript(GetComponentsArray<Component>().GetDenseIndex(component));
+	}
+
+	bool IsActive(Entity& entity)
+	{
+		return entities.IsActiveDense(entity.denseIndex);
+	}
+
+	void SetActive(Entity& entity, bool val = true)
+	{
+		entities.SetActive(entity, val);
 	}
 
 

@@ -25,6 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <mutex>
 #include <Core/FileTypes.h>
 
+struct Script;
+struct Entity;
+
 extern "C"
 {
 	typedef struct _MonoClass MonoClass;
@@ -35,7 +38,7 @@ extern "C"
 	typedef struct _MonoString MonoString;
 }
 
-#define MyScriptingSystem (*ScriptingSystem::Instance())
+#define SCRIPTING ScriptingSystem::Instance()
 
 // Map of all the field types
 static std::unordered_map<std::string, FieldType> fieldTypeMap =
@@ -121,7 +124,7 @@ public:
 			Pointer to the clone
 	*/
 	/**************************************************************************/
-	MonoObject* instantiateClass(MonoClass * mClass);
+	MonoObject* InstantiateClass(MonoClass * mClass);
 	/**************************************************************************/
 	/*!
 		\brief
@@ -151,6 +154,8 @@ public:
 	*/
 	/**************************************************************************/
 	MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
+
+	void InvokeMethod(Script & script,const std::string& method);
 
 
 	/**************************************************************************/
@@ -224,66 +229,18 @@ public:
 	/**************************************************************************/
 	/*!
 		\brief
-			Checks if this script is a scriptable object
-
-		\param name
-			name of the object to be checked
-
-		\return 
-			true if script is a scriptable object
-			false if its not
-	*/
-	/**************************************************************************/
-	bool isScriptableObject(const std::string& name);
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Checks if the script is indeed a script
-
-		\param name
-			name of the script to check
-
-		\return
-			true if script is indeed a script
-			false if not
-
-	*/
-	/**************************************************************************/
-	bool isScript(const std::string& name);
-
-
-	/**************************************************************************/
-	/*!
-		\brief
 			Reloads and updates script classes
 	*/
 	/**************************************************************************/
-	void updateScriptClasses();
+	void UpdateScriptClasses();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Checks for addition or deletion of script files and updates a list
-			of loaded script files
-	*/
-	/**************************************************************************/
-	void updateScriptFiles();
-	/**************************************************************************/
-	/*!
-		\brief
-			Checks for any modified script files recompiles if there were
-			any modified script files
-	*/
-	/**************************************************************************/
-	void tryRecompileDll();
 	/**************************************************************************/
 	/*!
 		\brief
 			Creates an appDomain so that a new assembly can be loaded
 	*/
 	/**************************************************************************/
-	void createAppDomain();
+	void CreateAppDomain();
 	/**************************************************************************/
 	/*!
 		\brief
@@ -305,16 +262,6 @@ public:
 	*/
 	/**************************************************************************/
 	void RecompileThreadWork();
-	/**************************************************************************/
-	/*!
-		\brief
-			Checks whether a script is loaded as a File
-		\param filePath
-			Filepath to check whether the file is loaded
-	*/
-	/**************************************************************************/
-	bool scriptIsLoaded(const std::filesystem::path& filePath);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -329,7 +276,6 @@ public:
 	*/
 	/*******************************************************************************/
 	void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
-
 	/*******************************************************************************
 	/*!
 	*
@@ -524,7 +470,7 @@ public:
 		Mono Instance of gameObject
 	*/
 	/*******************************************************************************/
-	//MonoObject* ReflectGameObject(GameObject& gameObject);
+	MonoObject* ReflectEntity(Entity& entity);
 	/*******************************************************************************
 	/*!
 	*
@@ -538,27 +484,24 @@ public:
 		Mono Instance of gameObject
 	*/
 	/*******************************************************************************/
-	//template <typename T>
-	//MonoObject* ReflectComponent(T& component);
-	//template <>
-	//MonoObject* ReflectComponent(Script& component);
+	template <typename T>
+	MonoObject* ReflectComponent(T& component);
+	template <>
+	MonoObject* ReflectComponent(Script& component);
 
 
-	//using MonoGameObjects = std::unordered_map<UUID, MonoObject*>;
-	//using MonoComponents = std::unordered_map<UUID, MonoObject*>;
+	//DenseIndex
+	using MonoEntities = std::unordered_map<void*, MonoObject*>;
+	using MonoComponents = std::unordered_map<void*, MonoObject*>;
 
-	//std::unordered_map<std::string, ScriptClass> scriptClassMap;
-	//std::unordered_map<std::string, ScriptClass> scriptableObjectClassMap;
-	//MonoGameObjects mGameObjects;
-	//MonoComponents mComponents;
-	//std::unordered_map<MonoType*, ComponentType> reflectionMap;
-	//std::list<File>& scriptFiles;
-	//std::map<std::string, std::map<std::string,ScriptableObject>> scriptableObjects;
+	std::unordered_map<std::string, ScriptClass> scriptClassMap;
+	MonoEntities mEntities;
+	MonoComponents mComponents;
+	std::unordered_map<MonoType*, size_t> reflectionMap;
 	std::mutex compilingStateReadable;
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
-	//bool inPlayMode{false};
 };
 
 	/*******************************************************************************

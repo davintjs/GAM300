@@ -12,7 +12,7 @@
 // GUID, last file update time, data
 struct Asset
 {
-	std::vector<std::filesystem::file_time_type> mAssetsTime;
+	//std::vector<std::filesystem::file_time_type> mAssetsTime;
 	std::unordered_map<std::string, std::pair<std::filesystem::file_time_type, std::vector<char>>> mFilesData;
 };
 

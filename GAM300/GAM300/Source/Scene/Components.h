@@ -30,6 +30,10 @@ using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
 
+static std::map<std::string, size_t> ComponentTypes{};
+
+
+
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
 {
@@ -130,7 +134,8 @@ struct Transform
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{1};
-	std::vector<Transform*>child;
+	
+	std::vector<Transform*> child;
 	Transform* Parent = nullptr;
 
 	bool isLeaf() {
@@ -215,8 +220,19 @@ using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCol
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
+using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
+template<typename T, typename... Ts>
+static void RegisterComponents()
+{
+	ComponentTypes.emplace(GetComponentType::Name<T>(), GetComponentType::E<T>());
+	RegisterComponents<Ts...>();
+}
+
+template<typename... Ts>
+static void RegisterComponents()
+{}
 
 #endif // !COMPONENTS_H

@@ -66,6 +66,10 @@ struct FileModifiedEvent : IEvent
 	size_t fileState;
 };
 
+struct SceneStartEvent : IEvent{};
+
+struct SceneStopEvent : IEvent {};
+
 //struct GetCurrentSceneEvent
 //{
 //	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
