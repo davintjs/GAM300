@@ -401,11 +401,11 @@ void AssetManager::FileUpdateProtocol()
 			rapidjson::Document doc;
 			const std::string data(buffer.str());
 			doc.Parse(data.c_str());
-
+			
 			std::string assetPath = doc["FileAssetPath"].GetString();
 			const std::string tempGUID = doc["GUID"].GetString();
 			std::cout << tempGUID << std::endl;
-			if (mTotalAssets.mFilesData[tempGUID].first != std::filesystem::last_write_time(std::filesystem::path(assetPath)) && !std::filesystem::is_directory(assetPath))
+			if (!std::filesystem::is_directory(assetPath) && mTotalAssets.mFilesData[tempGUID].first != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
 			{
 				// The asset file associated with this meta file was updated
 				mTotalAssets.mFilesData[tempGUID].second.clear(); // Remove the data in memory
