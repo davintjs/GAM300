@@ -33,6 +33,21 @@ void AssetManager::Init()
 			}
 		}
 
+		if (dir.is_directory())
+		{
+			fileName = std::filesystem::path(dir).filename().generic_string();
+		}
+		else
+		{
+			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+			{
+				fileName += subFilePath[j];
+			}
+		}
+
+		// Add into file extensions list
+		mTotalAssets.mExtensionFiles[fileType].push_back(fileName);
+
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
@@ -51,17 +66,6 @@ void AssetManager::Init()
 
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
-			if (dir.is_directory())
-			{
-				fileName = std::filesystem::path(dir).filename().generic_string();
-			}
-			else
-			{
-				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
-				{
-					fileName += subFilePath[j];
-				}
-			}
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
 		}
 
@@ -174,7 +178,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 {
 	ACQUIRE_SCOPED_LOCK("Assets");
 
-	mTotalAssets.mFilesData[assetGUID].first = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
+	mTotalAssets.mFilesData[assetGUID].mFileTime = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
 
 	std::ifstream inputFile(assetPath.c_str());
 	if (!inputFile)
@@ -184,7 +188,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 	}
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
-	mTotalAssets.mFilesData[assetGUID].second = std::move(buff); // Update the data in memory
+	mTotalAssets.mFilesData[assetGUID].mData = std::move(buff); // Update the data in memory
 
 	std::cout << "Done updating file in memory!" << std::endl;
 
@@ -204,7 +208,7 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& assetGUID)
 		"Assets", func
 	);
 
-	return mTotalAssets.mFilesData[assetGUID].second;
+	return mTotalAssets.mFilesData[assetGUID].mData;
 }
 
 std::string AssetManager::GenerateGUID(const std::string& fileName)
@@ -281,7 +285,9 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath)
 
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
-	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, std::make_pair(pathTime, buff)));
+
+	FileInfo tempFI(pathTime, buff);
+	this->mTotalAssets.mFilesData.insert(std::make_pair(GUIDofAsset, tempFI));
 
 	inputFile.close();
 }
@@ -300,8 +306,7 @@ void AssetManager::FileAddProtocol()
 		{
 			fileType += subFilePath[i];
 		}
-
-		// Check if this file is new by searching for its meta file
+		
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
@@ -318,6 +323,7 @@ void AssetManager::FileAddProtocol()
 			subFilePathMeta += ".meta";
 		}
 
+		// Check if this file is new by searching for its meta file
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
 			if (dir.is_directory())
@@ -333,6 +339,8 @@ void AssetManager::FileAddProtocol()
 			}
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
 
+			mTotalAssets.mExtensionFiles["meta"].push_back(fileName); // Meta file
+			mTotalAssets.mExtensionFiles[fileType].push_back(fileName); // File name
 			// Deserialize from meta file and load the asset asynchronously
 			this->AsyncLoadAsset(subFilePathMeta);
 		}
@@ -365,11 +373,22 @@ void AssetManager::FileRemoveProtocol()
 			doc.Parse(data.c_str());
 
 			std::string assetPath = doc["FileAssetPath"].GetString();
+			std::string assetType = doc["FileType"].GetString();
 			std::string tempGUID = doc["GUID"].GetString();
 
 			if (!std::filesystem::exists(assetPath)) // If no longer in folder, delete the meta file and also remove from memory
 			{
 				std::filesystem::remove(subFilePath); // Delete meta file
+				
+				// Remove the file name in the extension map
+				std::string fileName{};
+				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
+				{
+					fileName += subFilePath[j];
+				}
+				mTotalAssets.mExtensionFiles[fileType].erase(std::remove(mTotalAssets.mExtensionFiles[fileType].begin(), mTotalAssets.mExtensionFiles[fileType].end(), fileName), mTotalAssets.mExtensionFiles[fileType].end()); // Meta file removal
+				mTotalAssets.mExtensionFiles[assetType].erase(std::remove(mTotalAssets.mExtensionFiles[assetType].begin(), mTotalAssets.mExtensionFiles[assetType].end(), fileName), mTotalAssets.mExtensionFiles[assetType].end()); // File name removal
+
 				this->AsyncUnloadAsset(tempGUID); // Unload asset from memory
 			}
 		}
@@ -404,11 +423,10 @@ void AssetManager::FileUpdateProtocol()
 			
 			std::string assetPath = doc["FileAssetPath"].GetString();
 			const std::string tempGUID = doc["GUID"].GetString();
-			std::cout << tempGUID << std::endl;
-			if (!std::filesystem::is_directory(assetPath) && mTotalAssets.mFilesData[tempGUID].first != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
+			if (!std::filesystem::is_directory(assetPath) && mTotalAssets.mFilesData[tempGUID].mFileTime != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
 			{
 				// The asset file associated with this meta file was updated
-				mTotalAssets.mFilesData[tempGUID].second.clear(); // Remove the data in memory
+				mTotalAssets.mFilesData[tempGUID].mData.clear(); // Remove the data in memory
 				this->AsyncUpdateAsset(assetPath, tempGUID); // Add the new data into memory
 			}
 		}
