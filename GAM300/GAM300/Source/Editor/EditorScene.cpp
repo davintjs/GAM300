@@ -53,10 +53,8 @@ void EditorScene::Update(float dt)
         ImGuizmo::SetDrawlist();	
         float windowWidth = (float)ImGui::GetWindowWidth();
         float windowHeight = (float)ImGui::GetWindowHeight();
-        std::cout << "width : " << windowWidth << "\n";
-        std::cout << "height : " << windowHeight << "\n";
 
-        // Might be wrong
+        // Might be wrong -> i think here is the one that need to offset the tab header if there is
         ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
         if (EditorCam.ActiveObj != nullptr)
@@ -85,6 +83,7 @@ void EditorScene::Update(float dt)
 
             if (ImGuizmo::IsUsing())
             {
+                EditorCam.canMove = false;
                 glm::vec4 After_Translate;
                 glm::vec4 After_Scale;
                 glm::vec4 After_Rotation;

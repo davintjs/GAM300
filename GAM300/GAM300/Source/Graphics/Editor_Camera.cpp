@@ -37,6 +37,7 @@ void Editor_Camera::Update(float dt)
 
 		if (InputHandler::isMouseButtonPressed_L()) // Rotating
 		{
+			if(canMove)
 			rotateCamera(delta);
 		}
 		else if (InputHandler::isMouseButtonPressed_R()) // Panning
@@ -97,6 +98,9 @@ void Editor_Camera::Update(float dt)
 		glm::vec2 position = GetMouseInNDC();
 		EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
 	}
+
+
+	canMove = true;// The false check happens in editorscene, incase guizmo is being used
 }
 
 void Editor_Camera::updateView()
@@ -381,7 +385,6 @@ bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 				return false;
 		}
 	}
-	std::cout << "clear x \n";
 
 	// Test intersection with the 2 planes perpendicular to the OBB's Y axis
 	// Exactly the same thing than above.
@@ -411,8 +414,6 @@ bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 		}
 	}
 
-	std::cout << "clear y \n";
-
 	// Test intersection with the 2 planes perpendicular to the OBB's Z axis
 	// Exactly the same thing than above.
 	{
@@ -440,7 +441,6 @@ bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 				return false;
 		}
 	}
-	std::cout << "clear z \n";
 
 	intersection_distance = tMin;
 	return true;

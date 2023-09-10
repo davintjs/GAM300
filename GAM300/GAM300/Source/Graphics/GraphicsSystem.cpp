@@ -105,12 +105,13 @@ void GraphicsSystem::Update(float dt)
 	Ray3D temp;
 	if (InputHandler::isMouse_L_DoubleClick())
 	{
-		std::cout << " shooting ray\n";
 		temp = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y, 
 			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
 		Ray_Container.push_back(temp);
 		checkForSelection = true;
 	}
+	float intersected = FLT_MAX;
+	float temp_intersect;
 
 
 
@@ -143,24 +144,32 @@ void GraphicsSystem::Update(float dt)
 		++i;
 		
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-		float intersected;
-		if (checkForSelection && (i==1))
+		if (checkForSelection)
 		{
-
-			glm::vec3 mins = trans.scale * glm::vec3(-0.5f, -0.5f, -0.5f);
+			glm::vec3 mins = trans.scale * glm::vec3(-0.5f, -0.5f, -0.5f);	
 			glm::vec3 maxs = trans.scale * glm::vec3(0.5f, 0.5f, 0.5f);
 
 			glm::mat4 noscale = translation_mat * rotation_mat;
-			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
-				noscale, intersected))
-			{
-				std::cout << "hit\n";
-				EditorCam.ActiveObj = &entity;
 
+			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
+				noscale, temp_intersect))
+			{
+				if (temp_intersect < intersected)
+				{
+					EditorCam.ActiveObj = &entity;
+					intersected = temp_intersect;
+				}
 			}
 		}
-
 	}
+
+	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+	if (intersected == FLT_MAX && checkForSelection) 
+	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
+		EditorCam.ActiveObj = nullptr;
+	}
+
+
 
 	//Currently Putting in Camera Update loop here
 
@@ -229,7 +238,6 @@ void GraphicsSystem::Update(float dt)
 			glDisable(GL_FRAMEBUFFER_SRGB);
 
 		}
-
 	}
 	// instanced bind
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
@@ -247,28 +255,29 @@ void GraphicsSystem::Update(float dt)
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
 	
+	// This is to render the Rays -> Uncomment if u wanna see
 
-	if (Ray_Container.size() > 0)
-	{
-		for (int i = 0; i < Ray_Container.size(); ++i)
-		{
-			Ray3D ray = Ray_Container[i];
-			
-			//std::cout << "ray " << ray.origin.x << "\n";
-			//std::cout << "ray direc" << ray.direction.x << "\n";
+	//if (Ray_Container.size() > 0)
+	//{
+	//	for (int i = 0; i < Ray_Container.size(); ++i)
+	//	{
+	//		Ray3D ray = Ray_Container[i];
+	//		
+	//		//std::cout << "ray " << ray.origin.x << "\n";
+	//		//std::cout << "ray direc" << ray.direction.x << "\n";
 
-			glm::mat4 SRT
-			{
-				glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
-				glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
-				glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
-				glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
-			};
-			//std::cout << "in here\n";
-			Line.debugline_draw(SRT);
+	//		glm::mat4 SRT
+	//		{
+	//			glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
+	//			glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
+	//			glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
+	//			glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
+	//		};
+	//		//std::cout << "in here\n";
+	//		Line.debugline_draw(SRT);
 
-		}
-	}
+	//	}
+	//}
 
 	
 
