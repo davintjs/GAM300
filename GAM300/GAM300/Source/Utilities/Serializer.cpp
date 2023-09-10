@@ -16,8 +16,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Serializer.h"
 
+Scene* localScene;
+
 bool SceneSerializer(Scene& _scene)
 {
+    localScene = &_scene;
+
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
@@ -63,10 +67,29 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity)
     out << YAML::BeginMap;
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
     out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
+
+    // Bean: Include components here
+    Scene& currScene = *localScene;
+
+    if (currScene.HasComponent<Tag>(_entity))
+    {
+        auto& component = currScene.GetComponent<Tag>(_entity);
+        out << YAML::Key << "m_Name" << YAML::Value << component.name;
+    }
+
+    if (currScene.HasComponent<Transform>(_entity))
+    {
+        auto& component = currScene.GetComponent<Transform>(_entity);
+        out << YAML::Key << "m_Position" << YAML::Value << component.translation;
+        out << YAML::Key << "m_Rotation" << YAML::Value << component.rotation;
+        out << YAML::Key << "m_Scale" << YAML::Value << component.scale;
+        out << YAML::Key << "m_Children" << YAML::Value << component.child;
+        out << YAML::Key << "m_Parent" << YAML::Value << &component.Parent;
+    }
+
     out << YAML::EndMap;
     out << YAML::EndMap;
 
-    // Bean: Include components here
     return true;
 }
 

@@ -1,13 +1,23 @@
 Scene: New Scene
 ---
 GameObject:
-  m_UUID: 16164282962298598787
+  m_UUID: 15038976902875749592
   m_Index: 0
+  m_Name: Object
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - fileID: true
+  m_Parent: true
 ---
 GameObject:
-  m_UUID: 10148344399934274869
+  m_UUID: 4010831942167993634
   m_Index: 1
----
-GameObject:
-  m_UUID: 7776263144893702551
-  m_Index: 2
+  m_Name: Child Object
+  m_Position: [6, 0, 0]
+  m_Rotation: [0, 15, 7.05000019]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: true
