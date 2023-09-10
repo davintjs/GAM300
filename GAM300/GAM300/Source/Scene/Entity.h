@@ -12,7 +12,6 @@ struct Entity;
 struct Entity
 {
 public:
-	bool is_enabled = true;
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
 	const Engine::UUID uuid;
@@ -23,6 +22,7 @@ public:
 };
 
 void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child);
+void Set_ParentChild(Transform& parent, Transform& child);
 void Break_ParentChild(const ObjectIndex& _child);
 
 

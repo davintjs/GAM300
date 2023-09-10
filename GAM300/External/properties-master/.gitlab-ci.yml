@@ -1,0 +1,48 @@
+###############################################################################
+# Reference: https://docs.gitlab.com/ee/ci/yaml/#stages
+###############################################################################
+stages:
+  - test-build
+
+###############################################################################
+# BUILDS
+###############################################################################
+buid:Clang:
+    stage: test-build
+    image: clangbuiltlinux/ubuntu 
+    #containers.ligo.org/docker/lalsuite-dev-clang:9
+#clangbuiltlinux/ubuntu
+#ubuntu:18.04 #duneci/base:8 #tafthorne/clang-cpputest-gcc ##registry.gitlab.com/itxtech/docker-env-cenisys:latest
+    before_script:
+         - apt-get update -qq && apt-get install -y -qq git make clang-9
+#        - apt-get update && apt-get --assume-yes install clang-9 
+    script:
+        - echo "Clang build..."
+        - clang++-9 --version
+        - cd builds
+        - ls
+        - CC=clang-9 CXX=clang++-9 CXXFLAGS=--std=c++2a CXXOPTIONS=-I"../src/Examples" make
+        - echo "Build OK. Running Clang Test..."
+        - cd ../release
+        - ./UnitTest
+    artifacts:
+        paths:
+            - ./release/
+
+build:GCC:
+    stage: test-build
+    image: gcc:latest
+    script:
+        - echo "GCC build..."
+        - g++ --version
+        - cd builds
+        - ls
+        # old flags. Used to require to use gnu++17 because of macros
+        # - CC=gcc CXX=g++ CXXFLAGS=-std=gnu++17 CXXOPTIONS=-I. make
+        - CC=gcc CXX=g++ CXXFLAGS=-std=c++17 CXXOPTIONS=-I"../src/Examples" make
+        - echo "Build OK. Running GCC Test..."
+        - cd ../release
+        - ./UnitTest
+    artifacts:
+        paths:
+            - ./release/

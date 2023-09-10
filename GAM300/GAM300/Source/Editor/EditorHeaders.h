@@ -20,14 +20,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include <imgui_stdlib.h>
+#include "imgui_stdlib.h"
 
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"
 #include "Scene/Entity.h"
 
 #define NON_VALID_ENTITY -1
-
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
@@ -61,7 +60,7 @@ public:
     //void DisplayChildren(const ObjectIndex& Parent);
     ObjectIndex selectedEntity;
 
-    std::vector<Entity*>layer; 
+    std::vector<Entity*> layer;
 
     bool initLayer = true;
 private:
@@ -100,7 +99,7 @@ public:
     void Init();
     void Update(float dt);
     void Exit();
-
+    bool isAddComponentPanel;
 private:
 };
 

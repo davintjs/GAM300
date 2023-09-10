@@ -16,7 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 using System;
 using System.Runtime.CompilerServices;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public static class InternalCalls
     {
@@ -62,13 +63,13 @@ namespace CopiumEngine
 
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool HasComponent(ulong ID, Type componentType);
+        internal extern static bool HasComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetActive(ulong ID, bool _active);
+        internal extern static void SetActive(GameObject gameObject, bool _active);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetActive(ulong ID);
+        internal extern static bool GetActive(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong CloneGameObject(ulong ID);
@@ -80,27 +81,29 @@ namespace CopiumEngine
         internal extern static void DestroyGameObject(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong AddComponent(ulong gameObjID, Type componentType);
+        internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Component GetComponent(ulong gameObjID, Type componentType);
+        internal extern static Component GetComponent(GameObject gameObject, Type componentType);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static GameObject GetGameObject(Component gameObject);
 
         #endregion
 
         #region TRANSFORM
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetLocalScale(ulong ID, out Vector3 scale);
+        internal extern static Transform GetTransformFromGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetLocalScale(ulong ID, ref Vector3 scale);
+        internal extern static Transform GetTransformFromComponent(Component component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetTranslation(ulong ID, out Vector3 translation);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
-
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetGlobalScale(ulong ID, out Vector3 scale);

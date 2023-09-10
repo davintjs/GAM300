@@ -13,6 +13,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "ObjectsBList.h"
+#include <vector>
 
 #define OBJECTSBLIST ObjectsBList<T, N>
 #define ITERATOR OBJECTSBLIST::Iterator
@@ -141,7 +142,7 @@ void OBJECTSBLIST::erase(T& val)
 			return;
 		start = start->next;
 	}
-	ASSERT(start != nullptr, "Failed to erase value");
+	E_ASSERT(start != nullptr, "Failed to erase value");
 }
 
 template <typename T, ObjectIndex N>
@@ -205,7 +206,7 @@ void OBJECTSBLIST::SetActive(T& obj, bool val)
 			return;
 		start = start->next;
 	}
-	ASSERT(false,"FAILED TO SET ACTIVE");
+	E_ASSERT(false,"FAILED TO SET ACTIVE");
 }
 
 template <typename T, ObjectIndex N>
@@ -235,5 +236,5 @@ ObjectIndex OBJECTSBLIST::GetDenseIndex(T& object)
 		}
 		start = start->next;
 	}
-	ASSERT(true, "Object List does not contain this object");
+	E_ASSERT(true, "Object List does not contain this object");
 }

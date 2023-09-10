@@ -23,6 +23,8 @@ void EditorHierarchy::Init() {
 //    }
 //}
 
+std::vector<Entity*>test;
+
 
 void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
 
@@ -36,12 +38,91 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
 
+
+
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
     Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
 
     if (currEntity.isLeaf()) {
-        NodeFlags |= ImGuiTreeNodeFlags_Leaf;
+        NodeFlags |= ImGuiTreeNodeFlags_Bullet;
+    }
+
+    //Invisible button for drag drop reordering
+    ImGui::InvisibleButton("##", ImVec2(ImGui::GetWindowContentRegionWidth(), 2.5f));
+
+    //Drag drop reordering implementation
+    if (ImGui::BeginDragDropTarget()) {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
+            const ObjectIndex childId = *static_cast<ObjectIndex*>(payload->Data);
+
+
+            if (childId != Index) {
+                Entity& currEntity = curr_scene.entities.DenseSubscript(childId);
+                Entity& targetEntity = curr_scene.entities.DenseSubscript(Index);
+
+                Transform& currTransform = curr_scene.GetComponent<Transform>(currEntity);
+                Transform& targetTransform = curr_scene.GetComponent<Transform>(targetEntity);
+
+                //auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+                //layer.erase(prev_it);
+                ////reorder (reinsert) the current entity into new layer position
+                //auto it = std::find(layer.begin(), layer.end(), &targetEntity);
+                //layer.insert(it, &currEntity);
+
+                //if target entity is a child
+                if (targetTransform.isChild()) {
+
+                    //if current entity has a parent
+                    if (currTransform.isChild()) {
+                        //if reordering within the same parent
+                        if (currTransform.parent->child == targetTransform.parent->child) {
+
+                            std::vector<Transform*>& arr = targetTransform.parent->child;
+                            //delete curr entity from layer position
+                            //           
+                            auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
+                            arr.erase(prev_it);
+                            //reorder (reinsert) the current entity into new layer position
+                            auto it = std::find(arr.begin(), arr.end(), &targetTransform);
+                            arr.insert(it, &currTransform);
+                        }
+                        //if current entity has a different previous parent, remove it.
+                        else{
+                            auto& children = currTransform.parent->child;
+                            auto it = std::find(children.begin(), children.end(), &currTransform);
+                            children.erase(it);
+                            Set_ParentChild(*targetTransform.parent, currTransform);
+
+                            std::vector<Transform*>& arr = targetTransform.parent->child;
+                            //Reorder entity to target entity location     
+                            auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
+                            arr.erase(prev_it);
+                            //reorder (reinsert) the current entity into new layer position
+                            auto it2 = std::find(arr.begin(), arr.end(), &targetTransform);
+                            arr.insert(it2, &currTransform);
+                        }                        
+                    }
+                   
+                }
+                else {
+                    //if current entity has a parent, delink it
+                    if (currTransform.isChild()) {
+                        Break_ParentChild(childId);
+                    }
+                    //delete instance of entity in container
+                    auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+                    layer.erase(prev_it);
+                    
+                    //reorder (reinsert) the current entity into new layer position
+                    auto it = std::find(layer.begin(), layer.end(), &targetEntity);
+                    layer.insert(it, &currEntity);
+                }
+
+            }
+
+        }
+        ImGui::EndDragDropTarget();
     }
 
     auto EntityName = curr_scene.GetComponent<Tag>(curr_scene.entities.DenseSubscript(Index)).name.c_str();
@@ -65,21 +146,21 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
             Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(childId));
             Transform& targetEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
 
-            if (!currEntity.isLeaf()) {
-                if (!currEntity.isEntityChild(targetEntity)) {
-                    Set_ParentChild(Index, childId);
-                }
-            }
-            else {
+            if (currEntity.isLeaf()) {
                 if (childId != Index) {
                     Set_ParentChild(Index, childId);
                 }
             }
-
-            
+            else {
+                if (!currEntity.isEntityChild(targetEntity)) {
+                    Set_ParentChild(Index, childId);
+                }
+            }
         }
         ImGui::EndDragDropTarget();
     }
+
+   
 
     if (open) {
         for (int i = 0; i < currEntity.child.size(); ++i) {
@@ -99,7 +180,7 @@ void EditorHierarchy::Update(float dt) {
     //Add/Delete entities using right click
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-   /* if (initLayer) {
+    /*if (initLayer) {
         for (int i = 0; i < curr_scene.entities.size(); ++i) {
             layer.push_back(&curr_scene.entities[i]);
         }
@@ -109,10 +190,7 @@ void EditorHierarchy::Update(float dt) {
     bool sceneopen = ImGui::TreeNodeEx(curr_scene.Scene_name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
     if(sceneopen){
-
-        
-
-        for (int i = 0; i < curr_scene.entities.size(); ++i) {
+        for (int i = 0; i < layer.size(); ++i) {
 
 
             /*std::string tag = "Entity " + std::to_string(i);
@@ -125,11 +203,14 @@ void EditorHierarchy::Update(float dt) {
                 layer.insert(layer.begin() + i, &curr_scene.entities.DenseSubscript(Index));
                 ImGui::EndDragDropTarget();
             }*/
+            
 
-            if (!curr_scene.GetComponent<Transform>(curr_scene.entities[i]).isChild()) {
-                DisplayEntity(curr_scene.entities[i].denseIndex);
+            if (!curr_scene.GetComponent<Transform>(*layer[i]).isChild()) {
+                DisplayEntity(layer[i]->denseIndex);
             }
         }
+
+        ImGui::InvisibleButton("##", ImGui::GetContentRegionAvail());
 
         if (ImGui::BeginDragDropTarget()) {
             /*if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
@@ -141,31 +222,50 @@ void EditorHierarchy::Update(float dt) {
             const ImGuiPayload* payload = ImGui::GetDragDropPayload();
             const ObjectIndex Index = *static_cast<ObjectIndex*>(payload->Data);
 
-            if (curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index)).isChild()) {
+            Entity& currEntity = curr_scene.entities.DenseSubscript(Index);
+
+            if (curr_scene.GetComponent<Transform>(currEntity).isChild()) {
                 Break_ParentChild(Index);
             }
+            else {
+                auto it = std::find(layer.begin(), layer.end(), &currEntity);
+                layer.erase(it);
+                layer.insert(layer.end(), &currEntity);
+            }
+
 
             ImGui::EndDragDropTarget();
         }
+        
 
         //ImGui::InvisibleButton("##", ImVec2(156, 1));
 
         //Right click adding of entities in hierarchy window
         if (ImGui::BeginPopupContextWindow(0, true)) {
             if (ImGui::MenuItem("Add Entity")) {
-                curr_scene.AddEntity();
+                selectedEntity = curr_scene.AddEntity().denseIndex;
             }
 
-            if (ImGui::MenuItem("Delete Entity")) {
-                Entity& ent = curr_scene.entities.DenseSubscript(selectedEntity);
-                //Delete all children of selected entity as well
-                auto currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
-                for (auto child : currEntity.child) {
-                    ObjectIndex id = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*child);
-                    curr_scene.Destroy(child);
+            std::string name = "Delete Entity";
+            if (selectedEntity != NON_VALID_ENTITY) {                
+                if (ImGui::MenuItem(name.c_str())) {
+                    Entity& ent = curr_scene.entities.DenseSubscript(selectedEntity);
+                    //Delete all children of selected entity as well
+                    auto currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
+                    for (auto child : currEntity.child) {
+                        ObjectIndex id = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*child);
+                        curr_scene.Destroy(child);
+                    }
+                    curr_scene.Destroy(ent);
+                    auto it = std::find(layer.begin(), layer.end(), &ent);
+                    EditorHierarchy::Instance().layer.erase(it);
+                    selectedEntity = NON_VALID_ENTITY;
                 }
-                curr_scene.Destroy(ent);
             }
+            else {
+                ImGui::TextDisabled(name.c_str());
+            }
+            
             ImGui::EndPopup();
         }
 

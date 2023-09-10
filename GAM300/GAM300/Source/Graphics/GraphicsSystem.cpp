@@ -25,6 +25,8 @@ unsigned int entitySRTBuffer;
 glm::mat4 entitySRT[EntityRenderLimit];
 Model Line;
 
+InstanceProperties properties[EntityRenderLimit];
+
 bool SwappingColorSpace = false;
 //Editor_Camera testCam;
 
@@ -38,7 +40,6 @@ void GraphicsSystem::Init()
 	
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
-	
 	//INIT GRAPHICS HERE
 	
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
@@ -66,25 +67,16 @@ void GraphicsSystem::Init()
 	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
+
 	int index = 0;
 	for (Entity& entity : currentScene.entities) {
-		
-		/*if (!currentScene.EntityIsActive(entity.denseIndex))
-		{
-			continue;
-		}*/
-		//Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 		entitySRT[index] = glm::mat4(1.f);
-		/*if (currentScene.singleComponentsArrays.GetArray<model>()) {
-
-		}*/
 		++index;
 	}
 
 	glGenBuffers(1, &entitySRTBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
 	glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER, currentScene.entities.size() * sizeof(glm::mat4), &entitySRT[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	InstanceSetup(testBox.vaoid);
@@ -120,26 +112,29 @@ void GraphicsSystem::Update(float dt)
 	{
 		Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
 		
-		glm::mat4 scaling_mat(
-			glm::vec4(trans.scale.x, 0.f, 0.f, 0.f),
-			glm::vec4(0.f, trans.scale.y, 0.f, 0.f),
-			glm::vec4(0.f, 0.f, trans.scale.z, 0.f),
-			glm::vec4(0.f, 0.f, 0.f, 1.f)
-		);
-		glm::mat4 rotation_mat(
-			glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
-			glm::vec4(0.f, 1.f, 0.f, 0.f),
-			glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
-			glm::vec4(0.f, 0.f, 0.f, 1.f)
-		);
-		glm::mat4 translation_mat(
-			glm::vec4(1.f, 0.f, 0.f, 0.f),
-			glm::vec4(0.f, 1.f, 0.f, 0.f),
-			glm::vec4(0.f, 0.f, 1.f, 0.f),
-			glm::vec4(trans.translation, 1.f)
-		);
-		glm::mat4 SRT = translation_mat /** rotation_mat*/ * scaling_mat;
-		entitySRT[i] = SRT;
+		//glm::mat4 scaling_mat(
+		//	glm::vec4(trans.scale.x, 0.f, 0.f, 0.f),
+		//	glm::vec4(0.f, trans.scale.y, 0.f, 0.f),
+		//	glm::vec4(0.f, 0.f, trans.scale.z, 0.f),
+		//	glm::vec4(0.f, 0.f, 0.f, 1.f)
+
+		//);
+		//glm::mat4 rotation_mat(
+		//	glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
+		//	glm::vec4(0.f, 1.f, 0.f, 0.f),
+		//	glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
+		//	glm::vec4(0.f, 0.f, 0.f, 1.f)
+		//);
+		//glm::mat4 translation_mat(
+		//	glm::vec4(1.f, 0.f, 0.f, 0.f),
+		//	glm::vec4(0.f, 1.f, 0.f, 0.f),
+		//	glm::vec4(0.f, 0.f, 1.f, 0.f),
+		//	glm::vec4(trans.translation, 1.f)
+		//);
+		//glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
+		//entitySRT[i] = SRT;
+		// 
+		entitySRT[i] = trans.GetLocalToWorldMatrix();
 		//entitySRT[i] = glm::mat4(1.f);
 		++i;
 		
@@ -179,18 +174,6 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
-	//UPDATE OR RENDER GRAPHICS HERE
-
-	//UPDATE
-
-	//RENDER
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	glClearColor(0.f, 0.5f, 0.5f, 1.f);
-
-	glEnable(GL_DEPTH_BUFFER);
-
 	// This one is turbo scuffed i just putting here to test  light
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
 	{
@@ -226,6 +209,7 @@ void GraphicsSystem::Update(float dt)
 		LightSource.position.z += 10.f;
 	}
 
+
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
@@ -241,17 +225,32 @@ void GraphicsSystem::Update(float dt)
 	}
 	// instanced bind
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, (currentScene.entities.size()) * sizeof(glm::mat4), &entitySRT[0]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	// instanced draw
-	testBox.instanceDraw(EntityRenderLimit);
+
+	Draw();
+
+	// Bean: For unbinding framebuffer
+	EditorCam.getFramebuffer().unbind();
+	//glDisable(GL_FRAMEBUFFER_SRGB);
+}
+
+void GraphicsSystem::Draw() {
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+	glEnable(GL_DEPTH_BUFFER);
 
 	testmodel.draw();
-	/*testmodel.draw();
+	// for  model : models{
+	//	for tex : model.tex_vaoid{
+	//		bind texture into uniform sampler2d
+	//	}
+	//	draw instance
+	// }
+	testBox.instanceDraw(EntityRenderLimit);
 
-	LightSource.lightSource_draw();
-
+	/*LightSource.lightSource_draw();
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
 	
@@ -284,28 +283,25 @@ void GraphicsSystem::Update(float dt)
 
 
 
-	// Bean: For unbinding framebuffer
-	EditorCam.getFramebuffer().unbind();
-	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
 void InstanceSetup(GLuint vaoid) {
 	//entitySRTBuffer
 	glBindVertexArray(vaoid);
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
-	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
 	glEnableVertexAttribArray(6);
-	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glVertexAttribDivisor(3, 1);
-	glVertexAttribDivisor(4, 1);
-	glVertexAttribDivisor(5, 1);
 	glVertexAttribDivisor(6, 1);
+	glVertexAttribDivisor(7, 1);
+	glVertexAttribDivisor(8, 1);
+	glVertexAttribDivisor(9, 1);
 	glBindVertexArray(0);
 }
 

@@ -61,13 +61,15 @@ void EditorSystem::Update(float dt)
         pSystem->Update(dt);
     }
 
-   /* bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
+    bool demo = true;
+    ImGui::ShowDemoWindow(&demo);
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
+    
+
 }
 
 void EditorSystem::Exit()
