@@ -31,36 +31,7 @@ namespace BeanFactory
 		None,
 	};
 
-    public class Component
-    {
-        public bool enabled
-        {
-            get
-            {
-                return false;
-                //return InternalCalls.GetComponentEnabled(ID);
-            }
-            set
-            {
-/*                Type componentType = GetType();
-                InternalCalls.SetComponentEnabled(ID,value);*/
-            }
-        }
-
-        public Transform transform
-        {
-            get 
-            {
-                Console.WriteLine("Internal calling");
-                return InternalCalls.GetTransformFromComponent(this, GetType()); 
-            }
-        }
-
-/*        public T GetComponent<T>() where T : Component, new()
-        {
-            return gameObject.GetComponent<T>();
-        }*/
-    }
+    public interface Component{}
 
     public class Transform
     {

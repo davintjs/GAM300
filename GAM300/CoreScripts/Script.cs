@@ -26,23 +26,39 @@ namespace BeanFactory
             return original;
         }
 
-/*        public GameObject Instantiate(GameObject original)
-        {
-            GameObject gameObject = new GameObject();
-            gameObject.ID = InternalCalls.CloneGameObject(original.ID);
-            return gameObject;
+        /*        public GameObject Instantiate(GameObject original)
+                {
+                    GameObject gameObject = new GameObject();
+                    gameObject.ID = InternalCalls.CloneGameObject(original.ID);
+                    return gameObject;
+                }
+
+                public GameObject Instantiate()
+                {
+                    GameObject gameObject = new GameObject();
+                    gameObject.ID = InternalCalls.InstantiateGameObject();
+                    return gameObject;
+                }
+
+                public static void Destroy(GameObject gameObj)
+                {
+                    InternalCalls.DestroyGameObject(gameObj.ID);
+                }*/
+
+        public Transform transform 
+        { 
+            get 
+            { 
+                return InternalCalls.GetTransformFromComponent(this, typeof(Script)); 
+            } 
         }
 
-        public GameObject Instantiate()
+        public GameObject gameObject
         {
-            GameObject gameObject = new GameObject();
-            gameObject.ID = InternalCalls.InstantiateGameObject();
-            return gameObject;
+            get
+            {
+                return InternalCalls.GetGameObjectFromScript(this);
+            }
         }
-
-        public static void Destroy(GameObject gameObj)
-        {
-            InternalCalls.DestroyGameObject(gameObj.ID);
-        }*/
     }
 }

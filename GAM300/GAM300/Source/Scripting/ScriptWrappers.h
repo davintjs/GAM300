@@ -142,6 +142,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return GetGameObjectHelper(pComponent,componentType, AllComponentTypes());
 	}
 
+	static Entity* GetGameObjectFromScript(Script* pScript)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		return &scene.GetEntity(*pScript);
+	}
+
 	static Transform* GetTransformFromGameObject(Entity* pEntity)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
@@ -173,17 +179,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
 		MonoType* mType = mono_reflection_type_get_type(componentType);
-		size_t cType;
-		if (monoComponentToType.find(mType) == monoComponentToType.end())
-		{
-			//Check if it is a script
-			E_ASSERT(SCRIPTING.IsScript(mono_class_from_mono_type(mType)), "Not a valid component");
-			cType = GetComponentType::E<Script>();
-		}
-		else
-		{
-			cType = monoComponentToType[mono_reflection_type_get_type(componentType)];
-		}
+		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
 		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
 	}
 
@@ -1202,7 +1198,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetMouseDown);
 		Register(GetTransformFromGameObject);
 		Register(GetTransformFromComponent);
-		Register(GetGameObject);
+		Register(GetGameObjectFromScript);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
 		//Register(SetTranslation);

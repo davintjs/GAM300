@@ -11,8 +11,9 @@ public class Player : Script
 
     void Update()
     {
-        //Vector3 newPos = transform.localPosition;
-/*        float speed = 0.4f;
+        Console.WriteLine(gameObject.name);
+        Vector3 newPos = transform.localPosition;
+        float speed = 0.4f;
         if (Input.GetKey(KeyCode.W))
         {
             newPos.z += speed;
@@ -29,7 +30,7 @@ public class Player : Script
         {
             newPos.x -= speed;
         }
-        transform.localPosition = newPos;*/
+        transform.localPosition = newPos;
     }
 
     void Exit()

@@ -394,12 +394,12 @@ struct ReflectExistingStruct
 	template <typename T1, typename... T1s>
 	void Reflect(Scene& scene)
 	{
-		for (T1& component : scene.GetComponentsArray<T1>())
-		{
-			SCRIPTING.ReflectComponent(component);
-		}
-		if constexpr (sizeof...(T1s) != 0)
-			Reflect<T1s...>(scene);
+		//for (T1& component : scene.GetComponentsArray<T1>())
+		//{
+		//	SCRIPTING.ReflectComponent(component);
+		//}
+		//if constexpr (sizeof...(T1s) != 0)
+		//	Reflect<T1s...>(scene);
 	}
 };
 
@@ -525,7 +525,7 @@ void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mC
 	//ZACH: Trying to set a component reference
 	if constexpr (AllComponentTypes::Has<T>())
 	{
-		mono_field_set_value(instance, mClassFiend, ReflectComponent(*reference));
+		//mono_field_set_value(instance, mClassFiend, ReflectComponent(*reference));
 	}
 	//ZACH: Trying to set a gameobject reference
 	else if  constexpr (std::is_same<T,Entity>())

@@ -21,6 +21,7 @@ namespace BeanFactory
 {
     public class GameObject
     {
+        private UInt64 denseIndex; 
         public bool activeSelf
         {
             get
@@ -29,7 +30,19 @@ namespace BeanFactory
             }
         }
 
-        //Checks if a gameObject has a component by calling back to c++
+        public string name
+        {
+            get
+            {
+                return "Yes";
+            }
+            set
+            {
+
+            }
+        }
+
+/*        //Checks if a gameObject has a component by calling back to c++
         public bool HasComponent<T>() where T : Component, new()
         {
             Type componentType = typeof(T);
@@ -40,7 +53,7 @@ namespace BeanFactory
         public T GetComponent<T>() where T : Component, new()
         {
             return InternalCalls.GetComponent(this, typeof(T)) as T;
-        }
+        }*/
 /*
         public T AddComponent<T>() where T : Component, new()
         {
@@ -52,6 +65,14 @@ namespace BeanFactory
         public void SetActive(bool _active)
         {
             InternalCalls.SetActive(this, _active);
+        }
+
+        public Transform transform
+        {
+            get
+            {
+                return InternalCalls.GetTransformFromGameObject(this);
+            }
         }
     }
 }

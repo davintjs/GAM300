@@ -68,9 +68,9 @@ public:
 		{
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
-			//&ScriptingSystem::Instance(),
+			&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
-			//&LogicSystem::Instance(),
+			&LogicSystem::Instance(),
 			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
@@ -88,9 +88,9 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
-		//SceneStartEvent startEvent{};
-		//ACQUIRE_SCOPED_LOCK("Assets");
-		//EVENTS.Publish(&startEvent);
+		SceneStartEvent startEvent{};
+		ACQUIRE_SCOPED_LOCK("Assets");
+		EVENTS.Publish(&startEvent);
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
@@ -118,7 +118,6 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
-		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
@@ -164,6 +163,6 @@ private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
-	//FileWatcher watcher;
+	FileWatcher watcher;
 };
 #endif // !CORE_H
