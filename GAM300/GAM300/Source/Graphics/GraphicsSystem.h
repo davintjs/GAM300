@@ -2,6 +2,7 @@
 #define GRAPHICS_SYSTEM_H
 
 #include "Core/SystemInterface.h"
+#include "glm/mat4x4.hpp"
 
 #define EntityRenderLimit 10000
 
