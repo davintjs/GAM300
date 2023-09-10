@@ -132,7 +132,7 @@ glm::vec2 Editor_Camera::GetMouseInNDC()
 	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
 
 	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
-	mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
+	//mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
 	return mouseTo1600By900;
 }
 

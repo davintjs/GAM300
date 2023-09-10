@@ -105,8 +105,6 @@ void GraphicsSystem::Update(float dt)
 	float intersected = FLT_MAX;
 	float temp_intersect;
 
-
-
 	int i = 0;
 	for (Entity& entity : currentScene.entities)
 	{
@@ -141,8 +139,16 @@ void GraphicsSystem::Update(float dt)
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 		if (checkForSelection)
 		{
-			glm::vec3 mins = trans.scale * glm::vec3(-0.5f, -0.5f, -0.5f);	
-			glm::vec3 maxs = trans.scale * glm::vec3(0.5f, 0.5f, 0.5f);
+			glm::mat4 translation_mat(
+					glm::vec4(1.f, 0.f, 0.f, 0.f),
+					glm::vec4(0.f, 1.f, 0.f, 0.f),
+					glm::vec4(0.f, 0.f, 1.f, 0.f),
+					glm::vec4(trans.translation, 1.f)
+				);
+			glm::mat4 rotation_mat = glm::toMat4(glm::quat(trans.rotation));
+
+			glm::vec3 mins = trans.scale * glm::vec3(-1.f, -1.f, -1.f);	
+			glm::vec3 maxs = trans.scale * glm::vec3(1.f, 1.f, 1.f);
 
 			glm::mat4 noscale = translation_mat * rotation_mat;
 
@@ -256,31 +262,28 @@ void GraphicsSystem::Draw() {
 	
 	// This is to render the Rays -> Uncomment if u wanna see
 
-	//if (Ray_Container.size() > 0)
-	//{
-	//	for (int i = 0; i < Ray_Container.size(); ++i)
-	//	{
-	//		Ray3D ray = Ray_Container[i];
-	//		
-	//		//std::cout << "ray " << ray.origin.x << "\n";
-	//		//std::cout << "ray direc" << ray.direction.x << "\n";
+	if (Ray_Container.size() > 0)
+	{
+		
+		for (int i = 0; i < Ray_Container.size(); ++i)
+		{
+			Ray3D ray = Ray_Container[i];
+			
+			//std::cout << "ray " << ray.origin.x << "\n";
+			//std::cout << "ray direc" << ray.direction.x << "\n";
 
-	//		glm::mat4 SRT
-	//		{
-	//			glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
-	//			glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
-	//			glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
-	//			glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
-	//		};
-	//		//std::cout << "in here\n";
-	//		Line.debugline_draw(SRT);
+			glm::mat4 SRT
+			{
+				glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
+				glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
+				glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
+				glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
+			};
+			//std::cout << "in here draw\n";
+			Line.debugline_draw(SRT);
 
-	//	}
-	//}
-
-	
-
-
+		}
+	}
 
 
 }

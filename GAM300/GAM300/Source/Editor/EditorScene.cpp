@@ -109,7 +109,7 @@ void EditorScene::Update(float dt)
             glm::vec4 scale = { trans.scale,0.f };
 
             glm::mat4 transform_1;
-            glm::mat4 transform_2;
+            //glm::mat4 transform_2;
 
 
             ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
