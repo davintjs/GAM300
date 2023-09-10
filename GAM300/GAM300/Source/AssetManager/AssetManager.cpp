@@ -456,10 +456,11 @@ void AssetManager::FileUpdateProtocol()
 			rapidjson::Document doc;
 			const std::string data(buffer.str());
 			doc.Parse(data.c_str());
-
+			
 			std::string assetPath = doc["FileAssetPath"].GetString();
 			const std::string tempGUID = doc["GUID"].GetString();
-			if (mTotalAssets.mFilesData[tempGUID].first != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
+			std::cout << tempGUID << std::endl;
+			if (!std::filesystem::is_directory(assetPath) && mTotalAssets.mFilesData[tempGUID].first != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
 			{
 				// The asset file associated with this meta file was updated
 				mTotalAssets.mFilesData[tempGUID].second.second.clear(); // Remove the data in memory
@@ -482,7 +483,8 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	{
 		case FileState::CREATED:
 		{
-			PRINT("CREATED ");		
+			PRINT("CREATED ");
+			this->FileAdded = true;
 			FileAddProtocol();
 
 			break;
@@ -495,7 +497,15 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::MODIFIED:
 		{
-			PRINT("MODIFIED ");
+			if (!FileAdded)
+			{
+				FileUpdateProtocol();
+				PRINT("MODIFIED ");
+			}
+			else
+			{
+				FileAdded = false;
+			}
 			break;
 		}
 		case FileState::RENAMED_OLD:
