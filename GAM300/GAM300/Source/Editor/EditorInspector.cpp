@@ -207,7 +207,9 @@ void DisplayComponent<Transform>(Transform& transform)
     //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
     //ImGui::Text("Active");
     Display("Position", transform.translation);
-    Display("Rotation", transform.rotation);
+    glm::vec3 rotation = glm::degrees(transform.rotation);
+    Display("Rotation", rotation);
+    transform.rotation = glm::radians(rotation);
     Display("Scale", transform.scale);
 }
 
@@ -601,7 +603,9 @@ void AddComponentPanel(Entity& entity) {
 void DisplayEntity(Entity& entity)
 {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    ImGui::Checkbox("##Active", &entity.is_enabled);
+    bool enabled = curr_scene.IsActive(entity);
+    ImGui::Checkbox("##Active", &enabled);
+    curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
     std::string entity_name = curr_scene.GetComponent<Tag>(entity).name;

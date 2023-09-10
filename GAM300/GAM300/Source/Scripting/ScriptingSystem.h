@@ -36,6 +36,8 @@ extern "C"
 	typedef struct _MonoClassField MonoClassField;
 	typedef struct _MonoType MonoType;
 	typedef struct _MonoString MonoString;
+	typedef struct _MonoAssembly MonoAssembly;
+	typedef struct _MonoImage MonoImage;
 }
 
 #define SCRIPTING ScriptingSystem::Instance()
@@ -296,6 +298,8 @@ public:
 
 	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent);
 
+	bool IsScript(MonoClass* monoClass);
+
 	/*******************************************************************************
 	/*!
 	*
@@ -489,13 +493,14 @@ public:
 	template <>
 	MonoObject* ReflectComponent(Script& component);
 
+	MonoImage* GetAssemblyImage();
+
 
 	//DenseIndex
 	using MonoEntities = std::unordered_map<void*, MonoObject*>;
 	using MonoComponents = std::unordered_map<void*, MonoObject*>;
 
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
-	MonoEntities mEntities;
 	MonoComponents mComponents;
 	std::unordered_map<MonoType*, size_t> reflectionMap;
 	float timeUntilRecompile{0};

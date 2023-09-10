@@ -16,9 +16,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 namespace BeanFactory
 {
-    public struct Collision2D
+/*    public struct Collision2D
     {
-        /*******************************************************************************
+        *//*******************************************************************************
         /*!
         * 
         \brief
@@ -26,18 +26,18 @@ namespace BeanFactory
         \param _gameObjectID
             ID of gameObject that was collided
         */
-        /*******************************************************************************/
+        /*******************************************************************************//*
         Collision2D(ulong _gameObjectID)
         {
             gameObject = null;
-/*            foreach (GameObject gameObj in Instances.gameObjects)
+*//*            foreach (GameObject gameObj in Instances.gameObjects)
             {
                 if (gameObj.ID == _gameObjectID)
                 {
                     gameObject = gameObj;
                     break;
                 }
-            }*/
+            }*//*
             if (gameObject == null)
             {
                 gameObject = new GameObject();
@@ -48,5 +48,5 @@ namespace BeanFactory
         public GameObject gameObject;
         public Transform transform;
         //public Rigidbody2D rigidbody;
-    }
+    }*/
 }

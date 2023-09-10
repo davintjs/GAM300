@@ -17,10 +17,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
 #include "IOManager/InputHandler.h"
+#include "Scene/SceneManager.h"
+#include "ScriptingSystem.h"
+
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
 
+	static std::unordered_map<MonoType*, size_t> monoComponentToType;
 
 
 	#define Register(METHOD) mono_add_internal_call("BeanFactory.InternalCalls::"#METHOD,METHOD)
@@ -111,7 +115,76 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	/*******************************************************************************/
 	static bool GetKey(int keyCode)
 	{
-		return InputHandler::isKeyButtonPressed(keyCode);
+		return InputHandler::isKeyButtonHolding(keyCode);
+	}
+
+	template<typename T, typename... Ts>
+	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
+	{
+		if (GetComponentType::E<T>() == componentType)
+		{
+			Scene& scene = SceneManager::Instance().GetCurrentScene();
+			return &scene.GetEntity(*((T*)pComponent));
+		}
+		if constexpr (sizeof...(Ts) != 0)
+		{
+			return GetGameObjectHelper( pComponent, componentType, TemplatePack<Ts...>());
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	static Entity* GetGameObject(void* pComponent, size_t componentType)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		return GetGameObjectHelper(pComponent,componentType, AllComponentTypes());
+	}
+
+	static Transform* GetTransformFromGameObject(Entity* pEntity)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		return &scene.GetComponent<Transform>(*pEntity);
+	}
+
+	template<typename T, typename... Ts>
+	static Transform* GetTransformFromComponentHelper(void* pComponent, size_t componentType, TemplatePack<T, Ts...>)
+	{
+		if constexpr (AllComponentTypes::Has<T>())
+		{
+			if (GetComponentType::E<T>() == componentType)
+			{
+				Scene& scene = SceneManager::Instance().GetCurrentScene();
+				return &scene.GetComponent<Transform>(*((T*)pComponent));
+			}
+		}
+		if constexpr (sizeof...(Ts) != 0)
+		{
+			return GetTransformFromComponentHelper(pComponent,componentType, TemplatePack<Ts...>());
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	static Transform* GetTransformFromComponent(void* pComponent, MonoReflectionType* componentType)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		size_t cType;
+		if (monoComponentToType.find(mType) == monoComponentToType.end())
+		{
+			//Check if it is a script
+			E_ASSERT(SCRIPTING.IsScript(mono_class_from_mono_type(mType)), "Not a valid component");
+			cType = GetComponentType::E<Script>();
+		}
+		else
+		{
+			cType = monoComponentToType[mono_reflection_type_get_type(componentType)];
+		}
+		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
 	}
 
 	///*******************************************************************************
@@ -1083,7 +1156,35 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	mono_free(str);
 	//}
 
+	template<typename T,typename... Ts>
+	static void RegisterComponent()
+	{
+		std::string typeName = "BeanFactory::";
+		typeName += GetComponentType::E<T>();
 
+		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
+		if (!managedType)
+		{
+			E_ASSERT(true,"Could not find component type");
+			return;
+		}
+		if constexpr (sizeof...(Ts) != 0)
+		{
+			return RegisterComponent<Ts...>();
+		}
+	}
+
+	template<typename... Component>
+	static void RegisterComponent(TemplatePack<Component...>)
+	{
+		RegisterComponent<Component...>();
+	}
+
+	static void RegisterComponents()
+	{
+		monoComponentToType.clear();
+		RegisterComponent(AllComponentTypes());
+	}
 
 	/*******************************************************************************
 	/*!
@@ -1093,11 +1194,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	/*******************************************************************************/
 	static void RegisterScriptWrappers()
 	{
+		RegisterComponents();
 		//Register(SetFullscreenMode);
 		Register(GetKey);
 		Register(GetKeyUp);
 		Register(GetKeyDown);
 		Register(GetMouseDown);
+		Register(GetTransformFromGameObject);
+		Register(GetTransformFromComponent);
+		Register(GetGameObject);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
 		//Register(SetTranslation);

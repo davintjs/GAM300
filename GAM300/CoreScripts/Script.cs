@@ -19,14 +19,14 @@ using System;
 
 namespace BeanFactory
 {
-    public class BeanScript : Component
+    public class Script : Component
     {
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
             return original;
         }
 
-        public GameObject Instantiate(GameObject original)
+/*        public GameObject Instantiate(GameObject original)
         {
             GameObject gameObject = new GameObject();
             gameObject.ID = InternalCalls.CloneGameObject(original.ID);
@@ -43,6 +43,6 @@ namespace BeanFactory
         public static void Destroy(GameObject gameObj)
         {
             InternalCalls.DestroyGameObject(gameObj.ID);
-        }
+        }*/
     }
 }

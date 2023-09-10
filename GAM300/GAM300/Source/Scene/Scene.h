@@ -259,17 +259,27 @@ struct Scene
 		return false;
 	}
 
-	template <typename Component>
-	Component& GetComponent(const Entity& entity)
+	template <typename Component, typename Owner>
+	Component& GetComponent(Owner& obj)
 	{
 		//ASSERT(HasComponent<Component>(entity), "Entity does not have component");
+		ObjectIndex denseIndex;
+		if constexpr (std::is_same_v<Entity, Owner>)
+		{
+			denseIndex = obj.denseIndex;
+		}
+		else
+		{
+			denseIndex = GetComponentsArray<Owner>().GetDenseIndex(obj);
+		}
+
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
+			return GetComponentsArray<Component>().DenseSubscript(denseIndex);
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return *multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex).front();
+			return *GetComponentsArray<Component>().DenseSubscript(denseIndex).front();
 		}
 	}
 

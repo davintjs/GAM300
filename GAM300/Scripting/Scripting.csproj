@@ -39,9 +39,6 @@
     <Compile Include="..\CoreScripts\Application.cs">
       <Link>Application.cs</Link>
     </Compile>
-    <Compile Include="..\CoreScripts\BeanScript.cs">
-      <Link>BeanScript.cs</Link>
-    </Compile>
     <Compile Include="..\CoreScripts\Collision.cs">
       <Link>Collision.cs</Link>
     </Compile>
@@ -77,6 +74,9 @@
     </Compile>
     <Compile Include="..\CoreScripts\Scene.cs">
       <Link>Scene.cs</Link>
+    </Compile>
+    <Compile Include="..\CoreScripts\Script.cs">
+      <Link>Script.cs</Link>
     </Compile>
     <Compile Include="..\CoreScripts\ScriptableObject.cs">
       <Link>ScriptableObject.cs</Link>

@@ -76,9 +76,9 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
                     //if current entity has a parent
                     if (currTransform.isChild()) {
                         //if reordering within the same parent
-                        if (currTransform.Parent->child == targetTransform.Parent->child) {
+                        if (currTransform.parent->child == targetTransform.parent->child) {
 
-                            std::vector<Transform*>& arr = targetTransform.Parent->child;
+                            std::vector<Transform*>& arr = targetTransform.parent->child;
                             //delete curr entity from layer position
                             //           
                             auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
@@ -89,12 +89,12 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
                         }
                         //if current entity has a different previous parent, remove it.
                         else{
-                            auto& children = currTransform.Parent->child;
+                            auto& children = currTransform.parent->child;
                             auto it = std::find(children.begin(), children.end(), &currTransform);
                             children.erase(it);
-                            Set_ParentChild(*targetTransform.Parent, currTransform);
+                            Set_ParentChild(*targetTransform.parent, currTransform);
 
-                            std::vector<Transform*>& arr = targetTransform.Parent->child;
+                            std::vector<Transform*>& arr = targetTransform.parent->child;
                             //Reorder entity to target entity location     
                             auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
                             arr.erase(prev_it);

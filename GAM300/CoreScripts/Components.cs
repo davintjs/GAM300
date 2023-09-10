@@ -33,123 +33,44 @@ namespace BeanFactory
 
     public class Component
     {
-        public ulong ID;
-        public GameObject gameObject;
-        public Transform transform;
-        public void Initialize (GameObject _gameObject, ulong _ID)
-        {
-            gameObject = _gameObject;
-            transform = gameObject.transform;
-            ID = _ID;
-        }
-
         public bool enabled
         {
             get
             {
-                return InternalCalls.GetComponentEnabled(ID);
+                return false;
+                //return InternalCalls.GetComponentEnabled(ID);
             }
             set
             {
-                Type componentType = GetType();
-                InternalCalls.SetComponentEnabled(ID,value);
+/*                Type componentType = GetType();
+                InternalCalls.SetComponentEnabled(ID,value);*/
             }
         }
 
-        void SetID(ulong _ID)
-            { ID = _ID; }
+        public Transform transform
+        {
+            get 
+            {
+                Console.WriteLine("Internal calling");
+                return InternalCalls.GetTransformFromComponent(this, GetType()); 
+            }
+        }
 
-        public T GetComponent<T>() where T : Component, new()
+/*        public T GetComponent<T>() where T : Component, new()
         {
             return gameObject.GetComponent<T>();
-        }
+        }*/
     }
 
-    public class Transform : Component
+    public class Transform
     {
-        public Vector3 position
-        {
-            get
-            {
-                InternalCalls.GetTranslation(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-            set
-            {
-                InternalCalls.SetTranslation(gameObject.ID, ref value);
-            }
-        }
-
-        public Vector3 localScale
-        {
-            get
-            {
-                InternalCalls.GetLocalScale(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-            set
-            {
-                InternalCalls.SetLocalScale(gameObject.ID, ref value);
-            }
-        }
-
-        public Vector3 worldPosition
-        {
-            get
-            {
-                InternalCalls.GetGlobalPosition(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-        }
-
-        public Vector3 worldScale
-        {
-            get
-            {
-                InternalCalls.GetGlobalScale(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-        }
-
-        public Vector3 localPosition
-        {
-            get
-            {
-                InternalCalls.GetTranslation(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-            set
-            {
-                InternalCalls.SetTranslation(gameObject.ID, ref value);
-            }
-        }
-
-        public Vector3 localRotation 
-        {
-            get
-            {
-                InternalCalls.GetRotation(gameObject.ID, out Vector3 vec3);
-                return vec3;
-            }
-            set
-            {
-                InternalCalls.SetRotation(gameObject.ID, ref value);
-            }
-        }
-
-        public Transform parent
-        {
-            set
-            {
-                if (value == null)
-                    InternalCalls.SetParent(0, gameObject.ID);
-                else
-                    InternalCalls.SetParent(value.gameObject.ID, gameObject.ID);
-            }
-        }
+        public Transform parent;
+        public Vector3 localPosition;
+        public Vector3 localRotation;
+        public Vector3 localScale;
     }
 
-    public class Rigidbody2D : Component
+/*    public class Rigidbody2D : Component
     {
         public Vector2 velocity
         {
@@ -351,5 +272,5 @@ namespace BeanFactory
         {
             InternalCalls.StopAnimation(ID);
         }
-    }
+    }*/
 }

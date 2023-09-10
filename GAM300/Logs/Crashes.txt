@@ -1,5 +1,5 @@
-[2023-09-09 21:12:15.603] [Error] [critical] 
-Caused By:	mScript
-Info:		MONO OBJECT OF  NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 561)
+[2023-09-10 14:12:26.265] [Error] [critical] 
+Caused By:	mMethod
+Info:		MONO METHOD WAS NULLPTR
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 433)
 

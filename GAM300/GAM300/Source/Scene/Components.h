@@ -16,9 +16,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>#
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
@@ -29,6 +32,7 @@ constexpr size_t MAX_ENTITIES{ 5 };
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
+using Quaternion = glm::quat;
 
 static std::map<std::string, size_t> ComponentTypes{};
 
@@ -129,23 +133,35 @@ struct Tag
 
 struct Transform
 {
-	bool is_enabled = true;
-	Vector3 translation{};
+	Vector3 scale{ 1 };
 	Vector3 rotation{};
-	Vector3 scale{1};
-	
+	Vector3 translation{};
+	Transform* parent = nullptr;
+
 	std::vector<Transform*> child;
-	Transform* Parent = nullptr;
 
 	bool isLeaf() {
 		return (child.size()) ? false : true;
 	}
 
 	bool isChild() {
-		if (Parent)
+		if (parent)
 			return true;
 		else
 			return false;
+	}
+
+	glm::mat4 GetLocalToWorldMatrix() const {
+		if (parent)
+			return parent->GetLocalToWorldMatrix() * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetLocalMatrix() const {
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		return glm::translate(glm::mat4(1.0f), translation) *
+			rot *
+			glm::scale(glm::mat4(1.0f), scale);
 	}
 
 	bool isEntityChild(Transform& ent) {
@@ -158,7 +174,56 @@ struct Transform
 		return false;
 	}
 
-	
+	void SetParent(Transform* newParent) {
+		// Calculate the global transformation matrix
+		if (parent) {
+			parent->RemoveChild(this);
+			//glm::mat4 globalTransform = GetLocalToWorldMatrix();
+
+			//translation = glm::vec3(globalTransform[3]);
+
+			//// Extract the non-uniform scale along each axis
+			//scale.x = glm::length(globalTransform[0]);
+			//scale.y = glm::length(globalTransform[1]);
+			//scale.z = glm::length(globalTransform[2]);
+
+			//// Extract the rotation as Euler angles (in radians)
+			//rotation = glm::eulerAngles(glm::toQuat(globalTransform));
+		}
+
+		// Set the new parent
+		parent = newParent;
+
+		if (parent) {
+
+			//glm::mat4 localTransform = GetLocalToWorldMatrix();
+			//glm::mat4 inverseParentTransform = glm::inverse(parent->GetLocalToWorldMatrix());
+			//glm::mat4 newLocalTransform = inverseParentTransform * localTransform;
+
+			//translation = glm::vec3(newLocalTransform[3]);
+
+			//// Extract the non-uniform scale along each axis
+			//scale.x = glm::length(newLocalTransform[0]);
+			//scale.y = glm::length(newLocalTransform[1]);
+			//scale.z = glm::length(newLocalTransform[2]);
+
+			//// Extract the rotation as Euler angles (in radians)
+			//rotation = glm::eulerAngles(glm::toQuat(newLocalTransform));
+
+			// Add the object to the new parent's child list
+			parent->child.push_back(this);
+		}
+	}
+
+	void RemoveChild(Transform* t)
+	{
+		auto it = std::find(child.begin(), child.end(),t);
+
+		// Check if an element satisfying the condition was found
+		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
+		// Erase the found element
+		child.erase(it);
+	}
 };
 
 struct AudioSource

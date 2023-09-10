@@ -47,7 +47,7 @@ namespace
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mComponent{ nullptr };
-	MonoClass* mBeanScript{ nullptr };
+	MonoClass* mScript{ nullptr };
 	MonoClass* mCollision2D{ nullptr };
 	MonoClass* mScriptableObject{};
 }
@@ -158,6 +158,10 @@ namespace Utils
 
 #pragma endregion
 
+	MonoImage* ScriptingSystem::GetAssemblyImage()
+	{
+		return mAssemblyImage;
+	}
 std::string ScriptingSystem::AddEmptyScript(const std::string& _name)
 {
 	std::string filePath{ "Assets" + _name + ".cs"};
@@ -282,7 +286,7 @@ void ScriptingSystem::UpdateScriptClasses()
 		_class = mono_class_from_name(mAssemblyImage, name_space, name);
 		if (!_class)
 			continue;
-		if (mono_class_get_parent(_class) == mBeanScript)
+		if (mono_class_get_parent(_class) == mScript)
 		{
 			scriptClassMap[name] = ScriptClass{ name,_class };
 			reflectionMap[mono_class_get_type(_class)] = GetComponentType::E<Script>();
@@ -293,7 +297,7 @@ void ScriptingSystem::UpdateScriptClasses()
 		}
 		else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 		{
-			if (_class == mBeanScript)
+			if (_class == mScript)
 				continue;
 			scriptClassMap[name] = ScriptClass{ name,_class };
 			reflectionMap[mono_class_get_type(_class)] = ComponentTypes[name];
@@ -337,7 +341,7 @@ void ScriptingSystem::UnloadAppDomain()
 			if (!_class)
 				continue;
 			MonoVTable* vTable = nullptr;
-			if (mono_class_get_parent(_class) == mBeanScript)
+			if (mono_class_get_parent(_class) == mScript)
 			{
 				vTable = mono_class_vtable(mAppDomain, _class);
 				scriptClassMap[name] = ScriptClass{ name,_class };
@@ -351,7 +355,7 @@ void ScriptingSystem::UnloadAppDomain()
 			}
 			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 			{
-				if (_class == mBeanScript)
+				if (_class == mScript)
 					continue;
 				vTable = mono_class_vtable(mAppDomain, _class);
 				scriptClassMap[name] = ScriptClass{ name,_class };
@@ -385,10 +389,6 @@ struct ReflectExistingStruct
 	ReflectExistingStruct() 
 	{
 		Scene& scene{ MySceneManager.GetCurrentScene()};
-		for (Entity& entity : scene.entities)
-		{
-			SCRIPTING.ReflectEntity(entity);
-		}
 		Reflect<T, Ts...>(scene);
 	}
 	template <typename T1, typename... T1s>
@@ -413,14 +413,13 @@ void ScriptingSystem::SwapDll()
 	}
 	gcHandles.clear();
 	RegisterScriptWrappers();
-	mEntities.clear();
 	mComponents.clear();
 	UnloadAppDomain();
 	CreateAppDomain();
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 	mGameObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "GameObject");
-	mBeanScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "BeanScript");
+	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
 	mCollision2D = mono_class_from_name(mAssemblyImage, "BeanFactory", "Collision2D");
 	mScriptableObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "ScriptableObject");
 	mComponent = mono_class_from_name(mAssemblyImage, "BeanFactory", "Component");
@@ -531,47 +530,31 @@ void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mC
 	//ZACH: Trying to set a gameobject reference
 	else if  constexpr (std::is_same<T,Entity>())
 	{
-		mono_field_set_value(instance, mClassFiend, ReflectEntity(*reference));
+		//mono_field_set_value(instance, mClassFiend, ReflectEntity(*reference));
 	}
 }
 
 
 void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 {
-	MonoObject* mScript = ReflectComponent(script);
+	//MonoObject* mNewScript = ReflectComponent(script);
 	//PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
-	E_ASSERT(mScript, std::string("MONO OBJECT OF ") + script.name + std::string(" NOT LOADED"));
+	//E_ASSERT(mNewScript, std::string("MONO OBJECT OF ") + script.name + std::string(" NOT LOADED"));
 	ScriptClass& scriptClass{ scriptClassMap[script.name] };
 	MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,method.c_str(),0)};
-	if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mBeanScript)
+	if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mScript)
 	{
-		mMethod = mono_class_get_method_from_name(mBeanScript, method.c_str(), 0);
+		mMethod = mono_class_get_method_from_name(mScript, method.c_str(), 0);
 		if (!mMethod)
 			return;
 	}
-	E_ASSERT(mMethod, std::string("MONO METHOD ") + method + std::string(" IN SCRIPT ") + script.name + std::string(" NOT FOUND"));
-	invoke(mScript,mMethod,nullptr);
+	//E_ASSERT(mMethod, std::string("MONO METHOD ") + method + std::string(" IN SCRIPT ") + script.name + std::string(" NOT FOUND"));
+	invoke((MonoObject*)(&script), mMethod, nullptr);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
-}
-
-MonoObject* ScriptingSystem::ReflectEntity(Entity& entity)
-{
-	auto pairIt = mEntities.find(&entity);
-	if (pairIt == mEntities.end())
-	{
-		size_t address = (size_t)&entity;
-		void* param = &address;
-		MonoMethod* reflectGameObject = mono_class_get_method_from_name(mGameObject, "Initialize", 1);
-		MonoObject* instance{InstantiateClass(mGameObject)};
-		invoke(instance, reflectGameObject, &param);
-		mEntities.emplace(&entity, instance);
-		return instance;
-	}
-	return (*pairIt).second;
 }
 
 template <typename T>
@@ -587,16 +570,24 @@ MonoObject* ScriptingSystem::ReflectComponent(T& component)
 			return nullptr;
 		}
 		ScriptClass& scriptClass = scriptClassMap[GetComponentType::Name<T>()];
-		MonoObject* gameObjectInstance{ReflectEntity(scene.GetEntity(component))};
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
-		void* params[2] = { gameObjectInstance,&address };
-		MonoMethod* reflectComponent = mono_class_get_method_from_name(mComponent, "Initialize", 2);
-		E_ASSERT(mComponent, "MonoObject was null");
-		invoke(instance, reflectComponent, params);
-		mComponents.emplace(&component, instance);
+		if constexpr (std::is_same<T, Transform>())
+		{
+			void* params[2] = { &scene.GetEntity(component),&address};
+			//E_ASSERT(mComponent, "MonoObject was null");
+			//invoke(instance, reflectComponent, params);
+			mComponents.emplace(&component, instance);
+		}
 		return instance;
 	}
 	return (*pairIt).second;
+}
+
+bool ScriptingSystem::IsScript(MonoClass* monoClass)
+{
+	if (mono_class_is_subclass_of(monoClass, mScript, false))
+		return true;
+	return false;
 }
 //
 template <>
@@ -610,13 +601,10 @@ MonoObject* ScriptingSystem::ReflectComponent(Script& component)
 		size_t address = (size_t)&component;
 		ScriptClass& scriptClass = scriptClassMap[component.name];
 		Scene& scene = MySceneManager.Instance().GetCurrentScene();
-		MonoObject* entityInstance{ ReflectEntity(scene.GetEntity(component)) };
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
-		void* params[2] = { entityInstance,&address };
+		void* params[2] = { &scene.GetEntity(component),&address };
 		//PRINT("C++ COMPONENT: " << (size_t)&component);
-		MonoMethod* reflectComponent = mono_class_get_method_from_name(mComponent, "Initialize", 2);
 		E_ASSERT(mComponent, "MonoObject was null");
-		invoke(instance, reflectComponent, params);
 		mComponents.emplace(&component, instance);
 		//Check fields, dont remove fields, but change them if their type is different
 
@@ -779,6 +767,8 @@ MonoObject* ScriptingSystem::ReflectComponent(Script& component)
 	}
 	return pairIt->second;
 }
+
+
 
 //void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 //{
