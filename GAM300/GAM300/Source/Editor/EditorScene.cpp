@@ -83,9 +83,14 @@ void EditorScene::Update(float dt)
 		//	}
 		//}
 
+
+
   //      float indent = (viewportEditorSize.x - sceneDimension.x) * 0.5f;
   //      if (indent > 0)
   //          ImGui::Indent(indent);
+
+
+
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
         ImGuizmo::SetOrthographic(false);
@@ -94,7 +99,16 @@ void EditorScene::Update(float dt)
         float windowHeight = (float)ImGui::GetWindowHeight();
 
         // Might be wrong -> i think here is the one that need to offset the tab header if there is
-        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y, windowWidth, windowHeight);
+        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y+22.f, windowWidth, windowHeight-22.f);
+        //
+        //std::cout << "SetRect x :" << (float)ImGui::GetWindowPos().x << "\n";
+        //std::cout << "SetRect y :" << (float)ImGui::GetWindowPos().y << "\n";
+
+        //
+        //ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+        //ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+        //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
+        //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
         if (EditorCam.ActiveObj != nullptr)
         {
@@ -105,7 +119,8 @@ void EditorScene::Update(float dt)
             GizmoType = ImGuizmo::UNIVERSAL;
 
             glm::vec4 translate = { trans.translation,0.f };
-            glm::vec4 rotation = { trans.rotation,0.f };
+            
+            glm::vec4 rotation = { /*glm::radians*/(trans.rotation),0.f };
             glm::vec4 scale = { trans.scale,0.f };
 
             glm::mat4 transform_1;
@@ -136,7 +151,8 @@ void EditorScene::Update(float dt)
                     //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = After_Translate;
-                trans.rotation = After_Rotation;
+                trans.rotation = /*glm::degrees*/(After_Rotation);
+                //trans.rotation.x = trans.rotation.x % 360;
                 trans.scale = After_Scale;
 
                     //if (m_GizmoType == ImGuizmo::ROTATE) {}

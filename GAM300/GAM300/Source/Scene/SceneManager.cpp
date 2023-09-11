@@ -30,8 +30,8 @@ void SceneManager::LoadScene(const char* path)
 
 	/*scene.AddEntity();
 	scene.AddEntity();
-	scene.AddEntity();
-	scene.AddEntity();
+	scene.AddEntiity();ty();
+	scene.AddEnt
 	scene.AddEntity();*/
 
 	// test instance rendering
