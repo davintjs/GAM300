@@ -36,8 +36,10 @@ void EditorMenuBar::Update(float dt)
             // Saving of scene files only if an active scene is open, using file dialogs
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
+                
+                std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
                 //Save File
-                SaveSceneEvent saveScene;
+                SaveSceneEvent saveScene(filepath);
                 EVENT.Publish(&saveScene);
             }
             //else

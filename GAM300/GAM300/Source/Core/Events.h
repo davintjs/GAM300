@@ -43,7 +43,8 @@ struct QuitEngineEvent : IEvent
 
 struct SaveSceneEvent : IEvent
 {
-	SaveSceneEvent() {};
+	SaveSceneEvent(const std::string& _filePath) :filePath{ _filePath } {}
+	std::string filePath;
 };
 
 struct SceneChangingEvent : IEvent

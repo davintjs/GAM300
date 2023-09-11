@@ -32,7 +32,7 @@ bool SceneSerializer(Scene& _scene);
 void Serialize(const std::string& _filepath);
 void SerializeRuntime(const std::string& _filepath);
 
-bool SerializeEntity(YAML::Emitter& out, Entity& _entity);
+bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 
 void Deserialize(const std::string& _filepath);
 void DeserializeRuntime(const std::string& _filepath);

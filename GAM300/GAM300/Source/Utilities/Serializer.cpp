@@ -16,12 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Serializer.h"
 
-Scene* localScene;
-
 bool SceneSerializer(Scene& _scene)
 {
-    localScene = &_scene;
-
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
@@ -29,7 +25,7 @@ bool SceneSerializer(Scene& _scene)
 
     for (Entity& entity : _scene.entities)
     {
-        bool serialized = SerializeEntity(out, entity);
+        bool serialized = SerializeEntity(out, entity, _scene);
         assert(serialized, "Unable To Serialize Entity!\n");
     }
 
@@ -60,7 +56,7 @@ void SerializeRuntime(const std::string& _filepath)
 
 }
 
-bool SerializeEntity(YAML::Emitter& out, Entity& _entity)
+bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 {
     out << YAML::BeginMap;
     out << YAML::Key << "GameObject" << YAML::Value;
@@ -68,18 +64,16 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity)
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
     out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
 
-    // Bean: Include components here
-    Scene& currScene = *localScene;
-
-    if (currScene.HasComponent<Tag>(_entity))
+    // Bean: Components are placed in different conditions, maybe implement using templates?
+    if (_scene.HasComponent<Tag>(_entity))
     {
-        auto& component = currScene.GetComponent<Tag>(_entity);
+        auto& component = _scene.GetComponent<Tag>(_entity);
         out << YAML::Key << "m_Name" << YAML::Value << component.name;
     }
 
-    if (currScene.HasComponent<Transform>(_entity))
+    if (_scene.HasComponent<Transform>(_entity))
     {
-        auto& component = currScene.GetComponent<Transform>(_entity);
+        auto& component = _scene.GetComponent<Transform>(_entity);
         out << YAML::Key << "m_Position" << YAML::Value << component.translation;
         out << YAML::Key << "m_Rotation" << YAML::Value << component.rotation;
         out << YAML::Key << "m_Scale" << YAML::Value << component.scale;
