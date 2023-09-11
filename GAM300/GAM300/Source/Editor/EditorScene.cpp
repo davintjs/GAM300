@@ -18,6 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "../Graphics/Editor_Camera.h"
+#include "Editor.h"
 
 // Bean: Need this to reference the editor camera's framebuffer
 
@@ -110,11 +111,12 @@ void EditorScene::Update(float dt)
         //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
-        if (EditorCam.ActiveObj != nullptr)
+        Entity* pEntity = EDITOR.GetSelectedEntity();
+        if (pEntity != nullptr)
         {
             Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
-            Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(EditorCam.ActiveObj->denseIndex);
+            Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(pEntity->denseIndex);
 
             GizmoType = ImGuizmo::UNIVERSAL;
 

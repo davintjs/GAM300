@@ -20,6 +20,7 @@
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 void EditorSystem::Init()
 {
@@ -34,6 +35,8 @@ void EditorSystem::Init()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
 
     editorSystems = {
         &EditorMenuBar::Instance(),
@@ -133,4 +136,21 @@ void EditorSystem::Editor_Dockspace() {
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
     ImGui::End();
+}
+
+
+Entity* EditorSystem::GetSelectedEntity()
+{
+    return selectedEntity;
+}
+
+void EditorSystem::SetSelectedEntity(Entity* pEntity)
+{
+    selectedEntity = pEntity;
+}
+
+void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
+{
+    PRINT("CALLLLLLLLLLLLBACK\n");
+    selectedEntity = pEvent->pEntity;
 }

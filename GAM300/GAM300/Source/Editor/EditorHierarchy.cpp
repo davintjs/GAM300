@@ -2,11 +2,14 @@
 #include "EditorHeaders.h"
 #include "Editor.h"
 #include "Scene/Scene.h"
+#include "Core/EventsManager.h"
 #include "Scene/SceneManager.h"
 
 void EditorHierarchy::Init() {
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
+    EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
+
 }
 
 //void EditorHierarchy::DisplayChildren(const ObjectIndex& parent) {
@@ -130,7 +133,9 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
 
     //select entity from hierarchy
     if (ImGui::IsItemClicked()) {
-        selectedEntity = Index;
+        SelectedEntityEvent selectedEvent{ curr_scene.entities.TryGetDense(Index)};
+        EVENTS.Publish(&selectedEvent);
+        //selectedEntity = Index;
     }
 
     if (ImGui::BeginDragDropSource()) {
@@ -243,7 +248,9 @@ void EditorHierarchy::Update(float dt) {
         //Right click adding of entities in hierarchy window
         if (ImGui::BeginPopupContextWindow(0, true)) {
             if (ImGui::MenuItem("Add Entity")) {
-                selectedEntity = curr_scene.AddEntity().denseIndex;
+                SelectedEntityEvent selectedEvent{ &curr_scene.AddEntity() };
+                EVENTS.Publish(&selectedEvent);
+                //selectedEntity = curr_scene.AddEntity().denseIndex;
             }
 
             std::string name = "Delete Entity";
@@ -259,7 +266,10 @@ void EditorHierarchy::Update(float dt) {
                     curr_scene.Destroy(ent);
                     auto it = std::find(layer.begin(), layer.end(), &ent);
                     EditorHierarchy::Instance().layer.erase(it);
-                    selectedEntity = NON_VALID_ENTITY;
+                    SelectedEntityEvent selectedEvent{ nullptr };
+                    EVENTS.Publish(&selectedEvent);
+                    //selectedEntity = NON_VALID_ENTITY;
+                    //EDITOR.SetSelectedEntity(nullptr);
                 }
             }
             else {
@@ -272,6 +282,14 @@ void EditorHierarchy::Update(float dt) {
         ImGui::TreePop();
     }     
     ImGui::End();
+}
+
+void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
+{
+    if (pEvent->pEntity)
+        selectedEntity = pEvent->pEntity->denseIndex;
+    else
+        selectedEntity = NON_VALID_ENTITY;
 }
 
 void EditorHierarchy::Exit() {

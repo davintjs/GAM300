@@ -25,6 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"
 #include "Scene/Entity.h"
+#include "Core/Events.h"
 
 #define NON_VALID_ENTITY -1
 
@@ -64,6 +65,7 @@ public:
 
     bool initLayer = true;
 private:
+    void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 };
 
 
