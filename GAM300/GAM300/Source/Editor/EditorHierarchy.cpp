@@ -83,8 +83,21 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
                             arr.insert(it2, &currTransform);
                         }                        
                     }
+                    //if current entity is a base node (no parent)
+                    else {
+                        //delete instance of entity in container
+                        auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+                        layer.erase(prev_it);
+
+                        auto& parent = targetTransform.parent->child;
+
+                        auto it = std::find(parent.begin(), parent.end(), &targetTransform);
+                        parent.insert(it, &currTransform);
+                        currTransform.parent = targetTransform.parent;
+                    }
                    
                 }
+                //if target entity is a base node (no parent)
                 else {
                     //if current entity has a parent, delink it
                     if (currTransform.isChild()) {
