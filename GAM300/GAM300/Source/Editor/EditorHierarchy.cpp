@@ -86,8 +86,8 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
                     //if current entity is a base node (no parent)
                     else {
                         //delete instance of entity in container
-                        auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
-                        layer.erase(prev_it);
+                        /*auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+                        layer.erase(prev_it);*/
 
                         auto& parent = targetTransform.parent->child;
 

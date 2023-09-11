@@ -1,91 +1,87 @@
 Scene: New Scene
 ---
 GameObject:
-  m_UUID: 16816444308674617233
+  m_UUID: 4543270545592566552
   m_Index: 0
+  m_IsActive: 1
   m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
   m_Rotation: [0, 0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
     - {}
-  m_Parent: ""
+  m_Parent: 0
 ---
 GameObject:
-  m_UUID: 15643079448676574129
+  m_UUID: 6904080256025061340
   m_Index: 1
+  m_IsActive: 1
   m_Name: New GameObject(2)
-  m_Position: [0, 0, 0]
+  m_Position: [0, 100, 0]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [100, 10, 10]
   m_Children:
     - {}
-  m_Parent: 17023224402184860067
+  m_Parent: 0
 ---
 GameObject:
-  m_UUID: 17285303167441947283
+  m_UUID: 10076630762584007947
   m_Index: 2
+  m_IsActive: 1
   m_Name: New GameObject(3)
-  m_Position: [0, 0, 0]
+  m_Position: [-166, -33, -459]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [24, 19, 0]
   m_Children:
     - {}
-  m_Parent: 14286496454827452908
+  m_Parent: 12108607671660588307
 ---
 GameObject:
-  m_UUID: 14286496454827452908
+  m_UUID: 12108607671660588307
   m_Index: 3
+  m_IsActive: 1
   m_Name: New GameObject(4)
-  m_Position: [0, 0, 0]
+  m_Position: [462, -142, -22]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [45, 5, 14]
   m_Children:
-    - fileID: 824492670988845539
-      fileID: 10720369640746075700
-      fileID: 17285303167441947283
-  m_Parent: ""
+    - fileID: 10076630762584007947
+      fileID: 1042206125573357640
+      fileID: 13619757767819494852
+  m_Parent: 0
 ---
 GameObject:
-  m_UUID: 10720369640746075700
+  m_UUID: 13619757767819494852
   m_Index: 4
+  m_IsActive: 1
   m_Name: New GameObject(5)
-  m_Position: [0, 0, 0]
+  m_Position: [461, 327, -219]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [42, 45, 41]
   m_Children:
-    - fileID: 15270783053294841417
-  m_Parent: 14286496454827452908
+    - {}
+  m_Parent: 12108607671660588307
 ---
 GameObject:
-  m_UUID: 17023224402184860067
+  m_UUID: 1042206125573357640
   m_Index: 5
+  m_IsActive: 1
   m_Name: New GameObject(6)
-  m_Position: [0, 0, 0]
+  m_Position: [-109, -64, 327]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    - fileID: 15643079448676574129
-  m_Parent: ""
----
-GameObject:
-  m_UUID: 824492670988845539
-  m_Index: 7
-  m_Name: New GameObject(8)
-  m_Position: [0, 0, 0]
-  m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [3, 2, 4]
   m_Children:
     - {}
-  m_Parent: 14286496454827452908
+  m_Parent: 12108607671660588307
 ---
 GameObject:
-  m_UUID: 15270783053294841417
+  m_UUID: 4628466139896460970
   m_Index: 6
+  m_IsActive: 1
   m_Name: New GameObject(7)
-  m_Position: [0, 0, 0]
+  m_Position: [-79, -118, -208]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [45, 18, 16]
   m_Children:
     - {}
-  m_Parent: 10720369640746075700
+  m_Parent: 0
