@@ -82,9 +82,9 @@ void Polygon::JoinPolygon(Polygon& polygon)
 
 }
 
-void Polygon::HoleInPolygon(Polygon& mHole)
+bool Polygon::HoleInPolygon(Polygon& mHole)
 {
-
+	return false;
 }
 
 void Polygon::SwitchOrientation()

@@ -19,6 +19,7 @@ public:
 	glm::vec3& operator[](unsigned int i) { return mPoints[i]; }
 	const glm::vec3& operator[](unsigned int i) const { return mPoints[i]; }
 
+	// Getter functions
 	std::vector<Triangle3D*> GetNeighbours();
 	const glm::vec3 GetMidPoint() const;
 	const glm::vec3 GetNormal() const;
@@ -27,6 +28,9 @@ public:
 
 	bool ContainsPoint(const glm::vec3& mPoint) const;
 
+	const int GetID();
+	void SetTriID(int id);
+
 private:
 	// NavMesh stuff
 	glm::vec3 mPoints[3];
@@ -34,6 +38,7 @@ private:
 	glm::vec3 mMidPoint;
 	glm::vec3 mNormal;
 	std::vector<Triangle3D*> mNeighbours;
+	int mTriID = 0;
 
 	// Pathfinding stuff
 	float mFinalCost = 0.f;

@@ -25,6 +25,16 @@ private:
 	void AddHole(Polygon* hole);
 	void RemoveHoles();
 	std::vector<Triangle3D> Triangulate();
+	void InitializeGroundTriangles(std::vector<Triangle3D>& GroundTriangles);
+	void FindAllNeighboursWithNormal(std::vector<Triangle3D>& triPos, Triangle3D neighbourTri, const glm::vec3 triNormal);
+
+	// Helper functions
+	template <typename T>
+	int sign(const T& val);
+	int IsTriangleOrientedClockWise(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& n);
+	bool PointsOnLine(std::vector<glm::vec3> points, const glm::vec3& n);
+	bool isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
+	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
 
 	int mTriCount = 0;
 	Polygon* mBoundary;

@@ -54,3 +54,13 @@ void Triangle3D::AddNeighbour(Triangle3D* mTri)
 {
     mNeighbours.push_back(mTri);
 }
+
+const int Triangle3D::GetID()
+{ 
+    return mTriID; 
+}
+
+void Triangle3D::SetTriID(int id)
+{ 
+    mTriID = id; 
+}
