@@ -63,7 +63,7 @@ private:
 typedef std::list<IEventHandler*> HandlerList;
 SINGLETON(EventsManager) {
 private:
-    std::map<std::type_index, HandlerList*> subscribers;
+    std::map<std::type_index, auto> subscribers;
 public:
     /*******************************************************************************
     /*!

@@ -56,6 +56,8 @@ void EditorSystem::Update(float dt)
     //Editor Functions
     Editor_Dockspace();
 
+    
+
     for (ISystem* pSystem : editorSystems)
     {   
         pSystem->Update(dt);

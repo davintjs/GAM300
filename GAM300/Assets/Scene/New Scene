@@ -1,0 +1,34 @@
+Scene: New Scene
+---
+GameObject:
+  m_UUID: 4699025372004358781
+  m_Index: 2
+  m_Name: New GameObject(3)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: true
+---
+GameObject:
+  m_UUID: 8577269749770426718
+  m_Index: 0
+  m_Name: New GameObject(1)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: true
+---
+GameObject:
+  m_UUID: 9271230168529642166
+  m_Index: 1
+  m_Name: New GameObject(2)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: true

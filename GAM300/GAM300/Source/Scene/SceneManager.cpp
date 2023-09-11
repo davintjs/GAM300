@@ -34,7 +34,7 @@ void SceneManager::CreateScene()
 		std::cout << "Warning Duplicate Scene!\n";
 		return;
 	}
-
+	EditorHierarchy::Instance().ClearLayer();
 	loadedScenes.emplace_front(filePath);
 }
 
@@ -42,6 +42,7 @@ void SceneManager::LoadScene(const char* path)
 {
 	loadedScenes.emplace_front(path);
 	Scene& scene = GetCurrentScene();
+	EditorHierarchy::Instance().ClearLayer();
 	
 	Entity& titty = scene.AddEntity();
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);

@@ -82,7 +82,6 @@ void EditorScene::Update(float dt)
   //      if (indent > 0)
   //          ImGui::Indent(indent);
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-
     }
     ImGui::End();
 
