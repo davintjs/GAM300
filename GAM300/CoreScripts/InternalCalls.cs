@@ -101,7 +101,7 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
 
-        internal extern static Transform GetTransformFromComponent(Component component, Type componentType);
+        internal extern static Transform GetTransformFromComponent(Object component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetTranslation(ulong ID, out Vector3 translation);

@@ -118,8 +118,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonHolding(keyCode);
 	}
 
+
+
 	template<typename T, typename... Ts>
-	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
+	static Entity* GetGameObjectRecursive(void* pComponent, size_t componentType)
 	{
 		if (GetComponentType::E<T>() == componentType)
 		{
@@ -128,13 +130,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
-			return GetGameObjectHelper( pComponent, componentType, TemplatePack<Ts...>());
+			return GetGameObjectRecursive<Ts...>(pComponent, componentType);
 		}
 		else
 		{
 			return nullptr;
 		}
 	}
+
+	template<typename T, typename... Ts>
+	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
+	{
+		return GetGameObjectRecursive<T, Ts...>(pComponent, componentType);
+	}
+
+	struct ComponentTypeIter
+	{
+
+	};
 
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
@@ -151,7 +164,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static Transform* GetTransformFromGameObject(Entity* pEntity)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
-		return &scene.GetComponent<Transform>(*pEntity);
+		Transform& t = scene.GetComponent<Transform>(*pEntity);
+		PRINT(t.translation.x,", ", t.translation.y, ", ", t.translation.z,"\n");
+		return &t;
 	}
 
 	template<typename T, typename... Ts>
@@ -240,14 +255,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/
-	//static MonoObject* GetComponent(GameObject* pGameObject, MonoReflectionType* componentType)
-	//{
-	//	auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
-	//	if (pair == scriptingSystem.reflectionMap.end())
-	//	{
-	//		return nullptr;
-	//	}
-	//	ComponentType cType = pair->second;
+	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+		//if (pair == monoComponentToType.end())
+		//{
+		//	E_ASSERT(SCRIPTING.IsScript(mono_type_get_class(mType)),"Not a valid component!");
+		//	return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
+		//}
+		return nullptr;
+	}
 
 	//	Component* component{ nullptr };
 	//	switch (cType)
@@ -389,18 +407,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	True if gameobject of ID has component of type
 	//*/
 	///*******************************************************************************/
-	//static bool HasComponent(GameObject* pGameObj, MonoReflectionType* componentType)
-	//{
-	//	MonoType* managedType = mono_reflection_type_get_type(componentType);
-	//	mono_class_from_mono_type(managedType);
-	//	const auto& pair = MyScriptingSystem.reflectionMap.find(managedType);
-	//	if (pair == MyScriptingSystem.reflectionMap.end())
-	//	{
-	//		return false;
-	//	}
-	//	ComponentType cType = pair->second;
-	//	return pGameObj->HasComponent(cType);
-	//}
+	static bool HasComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		return pEntity->hasComponentsBitset.test(monoComponentToType[managedType]);
+	}
 
 	////To be implemented
 	//static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
@@ -1204,7 +1215,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(SetTranslation);
 		//Register(GetGlobalPosition);
 		//Register(GetGlobalScale);
-		//Register(HasComponent);
+		Register(HasComponent);
 		//Register(RigidbodyAddForce);
 		//Register(RigidbodyGetVelocity);
 		//Register(RigidbodySetVelocity);
@@ -1225,7 +1236,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(QuitGame);
 		//Register(GetButtonState);
 		//Register(AddComponent);
-		//Register(GetComponent);
+		Register(GetComponent);
 		//Register(AudioSourcePlay);
 		//Register(AudioSourceStop);
 		//Register(AudioSourceSetVolume);

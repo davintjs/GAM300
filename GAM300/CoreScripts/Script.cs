@@ -19,8 +19,13 @@ using System;
 
 namespace BeanFactory
 {
-    public class Script : Component
+    public class Script
     {
+        private void Initialize(GameObject gameObj)
+        {
+            _gameObject = gameObj;
+            _transform = InternalCalls.GetTransformFromGameObject(gameObj);
+        }
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
             return original;
@@ -45,20 +50,10 @@ namespace BeanFactory
                     InternalCalls.DestroyGameObject(gameObj.ID);
                 }*/
 
-        public Transform transform 
-        { 
-            get 
-            { 
-                return InternalCalls.GetTransformFromComponent(this, typeof(Script)); 
-            } 
-        }
+        public Transform transform{ get{return _transform; } }
+        public GameObject gameObject{ get { return _gameObject; }}
 
-        public GameObject gameObject
-        {
-            get
-            {
-                return InternalCalls.GetGameObjectFromScript(this);
-            }
-        }
+        private Transform _transform;
+        private GameObject _gameObject;
     }
 }

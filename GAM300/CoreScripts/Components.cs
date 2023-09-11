@@ -31,7 +31,20 @@ namespace BeanFactory
 		None,
 	};
 
-    public interface Component{}
+    public class Component
+    {
+        virtual public Transform transform { get; }
+        virtual public GameObject gameObject { get; }
+        public bool HasComponent<T>()
+        {
+            return gameObject.HasComponent<T>();
+        }
+/*        public T GetComponent<T>() where T : Component
+        {
+            return gameObject.HasComponent<T>();
+        }*/
+    }
+
 
     public class Transform
     {

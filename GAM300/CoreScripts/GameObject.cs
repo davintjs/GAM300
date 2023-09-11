@@ -15,13 +15,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System.Collections.Generic;
 using System;
-
+using System.Collections;
 
 namespace BeanFactory
 {
     public class GameObject
     {
-        private UInt64 denseIndex; 
+        public UInt32 denseIndex;
+
         public bool activeSelf
         {
             get
@@ -42,25 +43,24 @@ namespace BeanFactory
             }
         }
 
-/*        //Checks if a gameObject has a component by calling back to c++
-        public bool HasComponent<T>() where T : Component, new()
+        //Checks if a gameObject has a component by calling back to c++
+        public bool HasComponent<T>()
         {
-            Type componentType = typeof(T);
-            return InternalCalls.HasComponent(this, componentType);
+            return InternalCalls.HasComponent(this, typeof(T));
         }
 
         //Gets a component by calling back to c++
-        public T GetComponent<T>() where T : Component, new()
+/*        public T GetComponent<T>() where T : Component, new()
         {
             return InternalCalls.GetComponent(this, typeof(T)) as T;
         }*/
-/*
-        public T AddComponent<T>() where T : Component, new()
-        {
-            T component = new T() { gameObject = this };
-            component.ID = InternalCalls.AddComponent(this, typeof(T));
-            return component;
-        }*/
+
+        /*        public T AddComponent<T>() where T : Component, new()
+                {
+                    T component = new T() { gameObject = this };
+                    component.ID = InternalCalls.AddComponent(this, typeof(T));
+                    return component;
+                }*/
 
         public void SetActive(bool _active)
         {

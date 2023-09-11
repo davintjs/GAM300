@@ -1,5 +1,5 @@
-[2023-09-10 22:29:19.766] [Error] [critical] 
+[2023-09-11 15:10:16.705] [Error] [critical] 
 Caused By:	mComponent
 Info:		MonoObject was null
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 607)
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 575)
 

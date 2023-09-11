@@ -6,12 +6,12 @@ public class Player : Script
 {
     void Start()
     {
-        Console.WriteLine("Start from Player");
+        Console.WriteLine("dazxda from Player");
     }
 
     void Update()
     {
-        Console.WriteLine(gameObject.name);
+        //Console.WriteLine("Sizeof:" + gameObject);
         Vector3 newPos = transform.localPosition;
         float speed = 0.4f;
         if (Input.GetKey(KeyCode.W))

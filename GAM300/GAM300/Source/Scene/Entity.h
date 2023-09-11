@@ -14,9 +14,9 @@ struct Entity
 public:
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
+	Scene* pScene;
 	const Engine::UUID uuid;
 	//Which array does this object belong in?
-	Scene* pScene;
 	ObjectIndex denseIndex;
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
 };
