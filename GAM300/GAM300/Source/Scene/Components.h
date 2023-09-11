@@ -18,8 +18,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>#
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
@@ -151,9 +151,17 @@ struct Transform
 			return false;
 	}
 
-	glm::mat4 GetLocalToWorldMatrix() const {
+	glm::mat4 GetWorldMatrix() const 
+	{
 		if (parent)
-			return parent->GetLocalToWorldMatrix() * GetLocalMatrix();
+			return parent->GetWorldMatrix() * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetInvertedWorldMatrix() const
+	{
+		if (parent)
+			return glm::inverse(parent->GetInvertedWorldMatrix()) * GetLocalMatrix();
 		return GetLocalMatrix();
 	}
 
@@ -178,39 +186,26 @@ struct Transform
 		// Calculate the global transformation matrix
 		if (parent) {
 			parent->RemoveChild(this);
-			glm::mat4 globalTransform = GetLocalToWorldMatrix();
-			//Set back to world space
-
-			translation = globalTransform[3];
-
-			//translation = glm::vec3(globalTransform[3]);
-
-			//// Extract the non-uniform scale along each axis
-			scale.x = glm::length(globalTransform[0]);
-			scale.y = glm::length(globalTransform[1]);
-			scale.z = glm::length(globalTransform[2]);
-
-			//// Extract the rotation as Euler angles (in radians)
-			rotation = glm::eulerAngles(glm::quat(globalTransform));
+			glm::mat4 globalTransform = GetWorldMatrix();
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);
 		}
 
 		// Set the new parent
-		glm::mat4 localTransform = GetLocalToWorldMatrix();
+		glm::mat4 localTransform = GetWorldMatrix();
 		parent = newParent;
 
 		if (parent) {
-			glm::mat4 inverseParentTransform = glm::inverse(parent->GetLocalMatrix());
-			localTransform = inverseParentTransform * localTransform;
-
-			translation = glm::vec3(localTransform[3]);
-
-			// Extract the non-uniform scale along each axis
-			scale.x = glm::length(localTransform[0]);
-			scale.y = glm::length(localTransform[1]);
-			scale.z = glm::length(localTransform[2]);
-
-			// Extract the rotation as Euler angles (in radians)
-			rotation = glm::eulerAngles(glm::quat(localTransform));
+			glm::mat4 parentTransform = parent->GetWorldMatrix();
+			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);

@@ -123,37 +123,44 @@ void EditorScene::Update(float dt)
             glm::vec4 rotation = { /*glm::radians*/(trans.rotation),0.f };
             glm::vec4 scale = { trans.scale,0.f };
 
-            glm::mat4 transform_1;
-            //glm::mat4 transform_2;
+            glm::mat4 transform_1 = trans.GetWorldMatrix();
+            ////glm::mat4 transform_2;
 
+            //ImGuizmo::Re
 
-            ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
-                glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform_1));
+            //ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
+            //    glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform_1));
 
 
             ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
-                (ImGuizmo::OPERATION)GizmoType, ImGuizmo::WORLD, glm::value_ptr(transform_1));
+                (ImGuizmo::OPERATION)GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform_1));
 
 
             if (ImGuizmo::IsUsing())
             {
                 EditorCam.canMove = false;
-                glm::vec4 After_Translate;
-                glm::vec4 After_Scale;
-                glm::vec4 After_Rotation;
-                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
-                    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
+                //glm::vec4 After_Translate;
+                //glm::vec4 After_Scale;
+                //glm::vec4 After_Rotation;
+                //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
+                //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
 
+                glm::vec3 a_translation;
+                glm::quat a_rot;
+                glm::vec3 a_scale;
+                glm::vec3 a_skew;
+                glm::vec4 a_perspective;
+                glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
               
                     //translate_after.x - tc.position.x;
                     //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
                     //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
                     //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
-                trans.translation = After_Translate;
-                trans.rotation = /*glm::degrees*/(After_Rotation);
+                trans.translation = a_translation;
+                trans.rotation = /*glm::degrees*/ glm::eulerAngles(a_rot);
                 //trans.rotation.x = trans.rotation.x % 360;
-                trans.scale = After_Scale;
+                trans.scale = a_scale;
 
                     //if (m_GizmoType == ImGuizmo::ROTATE) {}
                     //else

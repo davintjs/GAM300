@@ -132,7 +132,7 @@ void GraphicsSystem::Update(float dt)
 		//glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
 		//entitySRT[i] = SRT;
 		// 
-		entitySRT[i] = trans.GetLocalToWorldMatrix();
+		entitySRT[i] = trans.GetWorldMatrix();
 		//entitySRT[i] = glm::mat4(1.f);
 		++i;
 		
