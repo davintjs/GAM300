@@ -45,6 +45,12 @@ struct CreateSceneEvent : IEvent
 	Scene* scene;
 };
 
+struct LoadSceneEvent : IEvent
+{
+	LoadSceneEvent(const std::string& _filePath) :filePath{ _filePath } {}
+	std::string filePath;
+};
+
 struct SaveSceneEvent : IEvent
 {
 	SaveSceneEvent() {};
@@ -58,10 +64,11 @@ struct IsNewSceneEvent : IEvent
 	bool data;
 };
 
-struct SceneChangingEvent : IEvent {
-
+struct SceneChangingEvent : IEvent 
+{
 	SceneChangingEvent(Scene& _scene) : scene(_scene) {}
 	Scene& scene;
+	std::string filePath;
 };
 //template <typename T>
 //struct ReflectComponentEvent : IEvent

@@ -27,14 +27,17 @@ enum CLASSID
     COMPONENT
 };
 
-bool SceneSerializer(Scene& _scene);
 
 void Serialize(const std::string& _filepath);
 void SerializeRuntime(const std::string& _filepath);
 
+bool SerializeScene(Scene& _scene);
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 
 void Deserialize(const std::string& _filepath);
 void DeserializeRuntime(const std::string& _filepath);
+
+bool DeserializeScene(Scene& _scene);
+bool DeserializeEntity(YAML::Node& _node, Entity& _entity, Scene& _scene);
 
 #endif // !SERIALIZER_H

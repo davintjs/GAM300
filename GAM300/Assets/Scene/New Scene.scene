@@ -1,18 +1,7 @@
 Scene: New Scene
 ---
 GameObject:
-  m_UUID: 841309151978441093
-  m_Index: 1
-  m_Name: New GameObject(2)
-  m_Position: [0, 0, 0]
-  m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    - {}
-  m_Parent: true
----
-GameObject:
-  m_UUID: 6470361179198907502
+  m_UUID: 16816444308674617233
   m_Index: 0
   m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
@@ -20,4 +9,83 @@ GameObject:
   m_Scale: [1, 1, 1]
   m_Children:
     - {}
-  m_Parent: true
+  m_Parent: ""
+---
+GameObject:
+  m_UUID: 15643079448676574129
+  m_Index: 1
+  m_Name: New GameObject(2)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: 17023224402184860067
+---
+GameObject:
+  m_UUID: 17285303167441947283
+  m_Index: 2
+  m_Name: New GameObject(3)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: 14286496454827452908
+---
+GameObject:
+  m_UUID: 14286496454827452908
+  m_Index: 3
+  m_Name: New GameObject(4)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - fileID: 824492670988845539
+      fileID: 10720369640746075700
+      fileID: 17285303167441947283
+  m_Parent: ""
+---
+GameObject:
+  m_UUID: 10720369640746075700
+  m_Index: 4
+  m_Name: New GameObject(5)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - fileID: 15270783053294841417
+  m_Parent: 14286496454827452908
+---
+GameObject:
+  m_UUID: 17023224402184860067
+  m_Index: 5
+  m_Name: New GameObject(6)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - fileID: 15643079448676574129
+  m_Parent: ""
+---
+GameObject:
+  m_UUID: 824492670988845539
+  m_Index: 7
+  m_Name: New GameObject(8)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: 14286496454827452908
+---
+GameObject:
+  m_UUID: 15270783053294841417
+  m_Index: 6
+  m_Name: New GameObject(7)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {}
+  m_Parent: 10720369640746075700

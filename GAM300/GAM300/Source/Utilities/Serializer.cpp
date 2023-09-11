@@ -17,7 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Serializer.h"
 #include "Editor/EditorHeaders.h"
 
-bool SceneSerializer(Scene& _scene)
+bool SerializeScene(Scene& _scene)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -70,6 +70,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
     out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
+    out << YAML::Key << "m_IsActive" << YAML::Value << 1;
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     if (_scene.HasComponent<Tag>(_entity))
@@ -84,8 +85,13 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Position" << YAML::Value << component.translation;
         out << YAML::Key << "m_Rotation" << YAML::Value << component.rotation;
         out << YAML::Key << "m_Scale" << YAML::Value << component.scale;
-        out << YAML::Key << "m_Children" << YAML::Value << component.child;
-        out << YAML::Key << "m_Parent" << YAML::Value << &component.parent;
+        out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
+
+        if (component.parent)
+            out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).uuid;
+        else
+            out << YAML::Key << "m_Parent" << YAML::Value << 0;
+        
     }
 
     out << YAML::EndMap;
@@ -102,4 +108,26 @@ void Deserialize(const std::string& _filepath)
 void DeserializeRuntime(const std::string& _filepath)
 {
 
+}
+
+bool DeserializeScene(Scene& _scene)
+{
+    YAML::Node sceneNode = YAML::Load(_scene.filePath.string());
+    
+    _scene.sceneName = sceneNode["Scene"].as<std::string>();
+
+    for (size_t i = 0; i < sceneNode.size(); i++)
+    {
+        if (sceneNode[i].IsMap()) // Entity
+        {
+            
+        }
+    }
+    
+    return true;
+}
+
+bool DeserializeEntity(YAML::Node& _node, Entity& _entity, Scene& _scene)
+{
+    return true;
 }

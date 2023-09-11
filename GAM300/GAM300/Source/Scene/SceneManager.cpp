@@ -12,6 +12,7 @@ namespace
 void SceneManager::Init()
 {
 	EVENTS.Subscribe(this, &SceneManager::CallbackCreateScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
@@ -20,6 +21,19 @@ void SceneManager::Init()
 		CreateScene();
 		Scene& scene = GetCurrentScene();
 		scene.AddEntity();
+
+		Entity& titty = scene.AddEntity();
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+
+		// test instance rendering
+		for (int i = 0; i < 5; ++i)
+		{
+			Entity& tempent = scene.AddEntity();
+			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
+			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+		}
+		scene.AddComponent<Script>(0).name = "Player";
 	}
 }
 
@@ -38,23 +52,19 @@ void SceneManager::CreateScene()
 	loadedScenes.emplace_front(filePath);
 }
 
-void SceneManager::LoadScene(const char* path)
+void SceneManager::LoadScene(const std::string& _filePath)
 {
-	loadedScenes.emplace_front(path);
+	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	EditorHierarchy::Instance().ClearLayer();
 	
-	Entity& titty = scene.AddEntity();
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
-
-	// test instance rendering
-	for (int i = 0; i < 5; ++i) {
-		Entity& tempent = scene.AddEntity();
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand()%1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+	if (!DeserializeScene(scene))
+	{
+		std::cout << "Error loading scene!\n";
+		return;
 	}
-	scene.AddComponent<Script>(0).name = "Player";
+
+	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
 }
 
 bool SceneManager::SaveScene(const std::string& _filePath)
@@ -88,7 +98,7 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 		currentScene.filePath = filePath;
 	}
 
-	if (!SceneSerializer(currentScene))
+	if (!SerializeScene(currentScene))
 	{
 		std::cout << "Error saving current scene!\n";
 		return false;
@@ -102,6 +112,8 @@ void SceneManager::ChangeScene(Scene& _newScene)
 {
 	// Bean: Prompt to save current scene (save for now)
 	SaveScene(GetCurrentScene().filePath.string());
+
+	LoadScene(_newScene.filePath.string().c_str());
 }
 
 bool SceneManager::DuplicateScene()
@@ -146,6 +158,11 @@ void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
 {
 	CreateScene();
 	pEvent->scene = &GetCurrentScene();
+}
+
+void SceneManager::CallbackLoadScene(LoadSceneEvent* pEvent)
+{
+	LoadScene(pEvent->filePath);
 }
 
 void SceneManager::CallbackSaveScene(SaveSceneEvent* pEvent)

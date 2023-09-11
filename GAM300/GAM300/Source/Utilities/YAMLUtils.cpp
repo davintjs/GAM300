@@ -15,6 +15,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 
 #include "YAMLUtils.h"
+#include "Scene/Scene.h"
 #include "Scene/Components.h"
 
 
@@ -30,13 +31,13 @@ void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::stri
 
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Transform*>& _data)
+YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
     out << YAML::BeginSeq << YAML::BeginMap;
 
-    for (auto& data : _data)
+    for (auto& data : _data._transform)
     {
-        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << &data;
+        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << _data._scene.GetEntity(*data).uuid;
     }
     
     out << YAML::EndMap << YAML::EndSeq;

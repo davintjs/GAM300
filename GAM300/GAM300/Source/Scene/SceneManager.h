@@ -16,7 +16,7 @@ public:
 
 	void CreateScene();
 
-	void LoadScene(const char* path = "");
+	void LoadScene(const std::string& _filePath = "");
 
 	bool SaveScene(const std::string& _filePath = "");
 
@@ -27,6 +27,8 @@ public:
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
 	
 	void CallbackCreateScene(CreateSceneEvent* pEvent);
+
+	void CallbackLoadScene(LoadSceneEvent* pEvent);
 
 	void CallbackSaveScene(SaveSceneEvent* pEvent);
 

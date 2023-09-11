@@ -35,8 +35,9 @@ public:
     void Update(float dt);
     void Exit();
 
+    void OpenFile();
+
     void NewScene();
-    void OpenScene();
     void SaveScene();
 
 private:
