@@ -18,13 +18,19 @@ public:
 
 	void LoadScene(const char* path = "");
 
-	bool SaveScene();
+	bool SaveScene(const std::string& _filePath = "");
+
+	void ChangeScene(Scene& _newScene);
 
 	bool DuplicateScene();
 
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
 	
+	void CallbackCreateScene(CreateSceneEvent* pEvent);
+
 	void CallbackSaveScene(SaveSceneEvent* pEvent);
+
+	void CallbackIsNewScene(IsNewSceneEvent* pEvent);
 
 private:
 	std::list<Scene> loadedScenes;

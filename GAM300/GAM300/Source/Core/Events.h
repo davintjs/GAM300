@@ -41,10 +41,23 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
+struct CreateSceneEvent : IEvent
+{
+	CreateSceneEvent(Scene* _scene) : scene(_scene) {}
+	Scene* scene;
+};
+
 struct SaveSceneEvent : IEvent
 {
+	SaveSceneEvent() {};
 	SaveSceneEvent(const std::string& _filePath) :filePath{ _filePath } {}
 	std::string filePath;
+};
+
+struct IsNewSceneEvent : IEvent
+{
+	IsNewSceneEvent() : data(false) {}
+	bool data;
 };
 
 struct SceneChangingEvent : IEvent

@@ -13,15 +13,22 @@ void EditorMenuBar::Init()
 
 void EditorMenuBar::Update(float dt)
 {
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    {
+        if (ImGui::IsKeyDown(ImGuiKey_N))
+            NewScene();
+
+        if (ImGui::IsKeyDown(ImGuiKey_S))
+            SaveScene();
+    }
+
     if (ImGui::BeginMainMenuBar())
     {
         //File Menu functionality
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New", "Ctrl+N"))
-            {
-                //New Scene
-            }
+                NewScene();
 
             // Opening of files using file dialogs
             if (ImGui::MenuItem("Open", "Ctrl+O"))
@@ -35,13 +42,7 @@ void EditorMenuBar::Update(float dt)
 
             // Saving of scene files only if an active scene is open, using file dialogs
             if (ImGui::MenuItem("Save", "Ctrl+S"))
-            {
-                
-                std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
-                //Save File
-                SaveSceneEvent saveScene(filepath);
-                EVENT.Publish(&saveScene);
-            }
+                SaveScene();
             //else
             //    //Do not allow the user to save when there's no file loaded!
             //    ImGui::TextDisabled("Save", "Ctrl+S");
@@ -117,6 +118,42 @@ void EditorMenuBar::Update(float dt)
 
         ImGui::EndMainMenuBar();
     }
+}
+
+void EditorMenuBar::NewScene()
+{
+    //New Scene
+    CreateSceneEvent createScene(nullptr);
+    EVENT.Publish(&createScene);
+
+    // Load this new scene if there was a previously loaded one
+    SceneChangingEvent changeScene(*createScene.scene);
+    EVENT.Publish(&changeScene);
+}
+
+void EditorMenuBar::SaveScene()
+{
+    IsNewSceneEvent newScene;
+    EVENT.Publish(&newScene);
+
+    // Check if it is a new scene
+    if (newScene.data)
+    {
+        std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
+        //Save File
+        SaveSceneEvent saveScene(filepath);
+        EVENT.Publish(&saveScene);
+    }
+    else
+    {
+        SaveSceneEvent saveScene;
+        EVENT.Publish(&saveScene);
+    }
+}
+
+void EditorMenuBar::OpenScene()
+{
+
 }
 
 void EditorMenuBar::Exit()

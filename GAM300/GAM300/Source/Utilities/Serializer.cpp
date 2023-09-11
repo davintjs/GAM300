@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "Serializer.h"
+#include "Editor/EditorHeaders.h"
 
 bool SceneSerializer(Scene& _scene)
 {
@@ -23,11 +24,17 @@ bool SceneSerializer(Scene& _scene)
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
     out << YAML::EndMap;
 
-    for (Entity& entity : _scene.entities)
+    for (Entity* entity : EditorHierarchy::Instance().layer)
+    {
+        bool serialized = SerializeEntity(out, *entity, _scene);
+        assert(serialized, "Unable To Serialize Entity!\n");
+    }
+
+    /*for (Entity& entity : _scene.entities)
     {
         bool serialized = SerializeEntity(out, entity, _scene);
         assert(serialized, "Unable To Serialize Entity!\n");
-    }
+    }*/
 
     if(!out.good())
         std::cout << "Emitter error: " << out.GetLastError() << "\n";

@@ -35,6 +35,10 @@ public:
     void Update(float dt);
     void Exit();
 
+    void NewScene();
+    void OpenScene();
+    void SaveScene();
+
 private:
     bool exitApp = false;
 };

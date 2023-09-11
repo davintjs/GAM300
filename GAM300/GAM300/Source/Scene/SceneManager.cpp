@@ -3,9 +3,17 @@
 #include "Utilities/Serializer.h"
 #include "Core/EventsManager.h"
 
+namespace
+{
+	const std::string defaultName = "New Scene";
+	const std::string defaultPath = "Assets/Scene/";
+}
+
 void SceneManager::Init()
 {
+	EVENT.Subscribe(this, &SceneManager::CallbackCreateScene);
 	EVENT.Subscribe(this, &SceneManager::CallbackSaveScene);
+	EVENT.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
 	if (loadedScenes.empty())
 	{
@@ -17,7 +25,7 @@ void SceneManager::Init()
 
 void SceneManager::CreateScene()
 {
-	const std::string filePath("New Scene");
+	const std::string filePath(defaultPath + defaultName);
 
 	// Check Duplicate Scene
 	if (DuplicateScene())
@@ -40,10 +48,8 @@ void SceneManager::LoadScene(const char* path)
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
 }
 
-bool SceneManager::SaveScene()
+bool SceneManager::SaveScene(const std::string& _filePath)
 {
-	const std::string sceneFolder = "Assets/Scene/";
-
 	// Check if there is a loaded scene
 	if (loadedScenes.empty())
 	{
@@ -54,15 +60,23 @@ bool SceneManager::SaveScene()
 	// Get the current scene and save it
 	std::cout << "Saving Scene...\n";
 	Scene& currentScene = GetCurrentScene();
-	std::string filePath = currentScene.filePath.stem().string() + ".scene";
+	std::string filePath;
 
-	// Check for extension
-	if (filePath.find(".scene") == std::string::npos)
-		filePath += ".scene";
+	// If there is a specific file path
+	if (!_filePath.empty())
+	{
+		filePath = _filePath;
 
-	// Place scene in default scene folder
-	filePath = sceneFolder + filePath;
-	currentScene.filePath = filePath;
+		size_t pos = filePath.find_last_of('\\') + 1;
+		size_t pos2 = filePath.find_last_of('.');
+		currentScene.sceneName = filePath.substr(pos, pos2 - pos);
+
+		// Check for extension
+		if (filePath.find(".scene") == std::string::npos)
+			filePath += ".scene";
+
+		currentScene.filePath = filePath;
+	}
 
 	if (!SceneSerializer(currentScene))
 	{
@@ -72,6 +86,12 @@ bool SceneManager::SaveScene()
 
 	std::cout << "Scene \"" << currentScene.sceneName << "\" has been saved.\n";
 	return true;
+}
+
+void SceneManager::ChangeScene(Scene& _newScene)
+{
+	// Bean: Prompt to save current scene (save for now)
+	SaveScene(GetCurrentScene().filePath.string());
 }
 
 bool SceneManager::DuplicateScene()
@@ -112,11 +132,29 @@ void SceneManager::Update(float dt)
 	//PRINT('\n');
 }
 
+void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
+{
+	CreateScene();
+	pEvent->scene = &GetCurrentScene();
+}
 
 void SceneManager::CallbackSaveScene(SaveSceneEvent* pEvent)
 {
-	SaveScene();
+	SaveScene(pEvent->filePath);
 }
+
+void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
+{
+	if (loadedScenes.empty())
+	{
+		pEvent->data = true;
+	}
+	else if (GetCurrentScene().sceneName == defaultName)
+	{
+		pEvent->data = true;
+	}
+}
+
 
 void SceneManager::Exit()
 {
