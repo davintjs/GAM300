@@ -33,6 +33,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
+#include "ImGuizmo.h"
 #include "Utilities/ThreadPool.h"
 #include "Scripting/ScriptingSystem.h"
 #include "Utilities/YAMLUtils.h"
@@ -122,15 +123,18 @@ public:
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
+
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+			ImGuizmo::BeginFrame();
 
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->GetMode() & mode)
 					pSystem->Update(dt);
 			}
+
 			//End ImGui Frames
 			ImGui::EndFrame();
 			ImGui::Render();

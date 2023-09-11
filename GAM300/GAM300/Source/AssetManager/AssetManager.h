@@ -8,14 +8,25 @@
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "Core/Events.h"
-
 #include "Graphics/TextureManager.h"
+struct FileInfo
+{
+	FileInfo() {};
+	FileInfo(std::filesystem::file_time_type ft, std::string fn, std::vector<char> data) : mFileTime(ft), mFileName(fn), mData(data) {}
+	~FileInfo()
+	{
+		mData.clear();
+	}
 
-// GUID, last file update time, file name, data
+	std::filesystem::file_time_type mFileTime;
+	std::string mFileName;
+	std::vector<char> mData;
+};
+
 struct Asset
 {
-	std::vector<std::filesystem::file_time_type> mAssetsTime;
-	std::unordered_map<std::string, std::pair<std::filesystem::file_time_type, std::pair<std::string, std::vector<char>>>> mFilesData;
+	std::unordered_map<std::string, FileInfo> mFilesData;
+	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
 };
 
 ENGINE_SYSTEM(AssetManager)
@@ -51,6 +62,6 @@ private:
 	void FileRemoveProtocol();
 	void FileUpdateProtocol();
 
-	//EVENT CALLBACKS
+	// EVENT CALLBACKS
 	void CallbackFileModified(FileModifiedEvent * pEvent);
 };

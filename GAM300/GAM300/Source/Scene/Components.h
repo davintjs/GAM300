@@ -178,37 +178,39 @@ struct Transform
 		// Calculate the global transformation matrix
 		if (parent) {
 			parent->RemoveChild(this);
-			//glm::mat4 globalTransform = GetLocalToWorldMatrix();
+			glm::mat4 globalTransform = GetLocalToWorldMatrix();
+			//Set back to world space
+
+			translation = globalTransform[3];
 
 			//translation = glm::vec3(globalTransform[3]);
 
 			//// Extract the non-uniform scale along each axis
-			//scale.x = glm::length(globalTransform[0]);
-			//scale.y = glm::length(globalTransform[1]);
-			//scale.z = glm::length(globalTransform[2]);
+			scale.x = glm::length(globalTransform[0]);
+			scale.y = glm::length(globalTransform[1]);
+			scale.z = glm::length(globalTransform[2]);
 
 			//// Extract the rotation as Euler angles (in radians)
-			//rotation = glm::eulerAngles(glm::toQuat(globalTransform));
+			rotation = glm::eulerAngles(glm::quat(globalTransform));
 		}
 
 		// Set the new parent
+		glm::mat4 localTransform = GetLocalToWorldMatrix();
 		parent = newParent;
 
 		if (parent) {
+			glm::mat4 inverseParentTransform = glm::inverse(parent->GetLocalMatrix());
+			localTransform = inverseParentTransform * localTransform;
 
-			//glm::mat4 localTransform = GetLocalToWorldMatrix();
-			//glm::mat4 inverseParentTransform = glm::inverse(parent->GetLocalToWorldMatrix());
-			//glm::mat4 newLocalTransform = inverseParentTransform * localTransform;
+			translation = glm::vec3(localTransform[3]);
 
-			//translation = glm::vec3(newLocalTransform[3]);
+			// Extract the non-uniform scale along each axis
+			scale.x = glm::length(localTransform[0]);
+			scale.y = glm::length(localTransform[1]);
+			scale.z = glm::length(localTransform[2]);
 
-			//// Extract the non-uniform scale along each axis
-			//scale.x = glm::length(newLocalTransform[0]);
-			//scale.y = glm::length(newLocalTransform[1]);
-			//scale.z = glm::length(newLocalTransform[2]);
-
-			//// Extract the rotation as Euler angles (in radians)
-			//rotation = glm::eulerAngles(glm::toQuat(newLocalTransform));
+			// Extract the rotation as Euler angles (in radians)
+			rotation = glm::eulerAngles(glm::quat(localTransform));
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);

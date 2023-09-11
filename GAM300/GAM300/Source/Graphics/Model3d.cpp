@@ -83,6 +83,11 @@ void Model::init() {
         FBX_vaoid.push_back(VAO);
         FBX_vboid.push_back(VBO);
         FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+        GeneralModel model;
+        model.fbx_VAO = VAO;
+        model.fbx_VBO = VBO;
+        model.tex_VAO.emplace_back(texturebuffer);
+        _mGeneral_model.emplace_back(model);
     }
 
     setup_shader();
@@ -90,7 +95,7 @@ void Model::init() {
     // load default texture, todo
     //texturebuffer = TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
     
-    debugAABB_init();
+    // debugAABB_init();
 }
 
 
@@ -100,13 +105,11 @@ void Model::setup_instanced_shader() {
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
         "GAM300/Source/Graphics/InstancedRender.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
 
-// Fragment Shader
+    // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
         "GAM300/Source/Graphics/InstancedRender.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
@@ -117,7 +120,6 @@ void Model::setup_instanced_shader() {
         std::stringstream sstr;
         sstr << "Unable to compile/link/validate shader programs\n";
         sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
         std::cout << sstr.str();
         std::exit(EXIT_FAILURE);
     }
@@ -259,7 +261,7 @@ void Model::draw() {
 
     glDrawElements(prim, FBX_drawcount[0], GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(vaoid);
-    glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
+    //glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
 
     // unbind and free stuff
     glBindVertexArray(0);
@@ -271,31 +273,6 @@ void Model::draw() {
 
 void Model::instanceDraw(int entitycount) {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
-
-    //glm::mat4 scaling_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-
-    //);
-
-    //glm::mat4 rotation_mat(
-    //    glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    ////glm::mat3 translation_mat = glm::mat3(1.f);
-
-    //glm::mat4 translation_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    //glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
-
 
     shader.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -313,8 +290,6 @@ void Model::instanceDraw(int entitycount) {
         glm::value_ptr(EditorCam.getPerspMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
         glm::value_ptr(EditorCam.getViewMatrix()));
-   /* glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-        glm::value_ptr(SRT));*/
 
     glBindVertexArray(vaoid);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
@@ -328,49 +303,82 @@ void Model::instanceDraw(int entitycount) {
 
 void Model::instance_cubeinit()
 {
+
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        // positions            // Normals              // Tangents             // Texture Coords   // Colors
+        // FRONT FACE //
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+                                                                                                                     
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        // FRONT FACE END //                                                                                         
+                                                                                                                     
+        // BACK FACE //                                                                                              
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        // BACK FACE END //                                                                                          
+                                                                                                                     
+        // RIGHT FACE //                                                                                             
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+        // RIGHT FACE END //                                                                                         
+                                                                                                                     
+        // LEFT FACE //                                                                                              
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+                                                                                                                     
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        // LEFT FACE END //                                                                               
+                                                                                                          
+        // TOP FACE //                                                                                    
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        // TOP FACE END //                                                                                           
+                                                                                                                     
+        // BOTTOM FACE //                                                                                            
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+                                                                                                                     
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f // Vertex 0
+        // BOTTOM FACE END //
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
+
+    vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
+    vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
+    
+    //int indices[] = {
+    //    0, 1, 2, 2, 3, 0,  // Front face
+    //    4, 5, 6, 6, 7, 4,  // Back face
+    //    1, 5, 6, 6, 2, 1,  // Right face
+    //    0, 4, 7, 7, 3, 0,  // Left face
+    //    3, 2, 6, 6, 7, 3,  // Top face
+    //    0, 1, 5, 5, 4, 0   // Bottom face
+    //};
 
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
@@ -384,12 +392,25 @@ void Model::instance_cubeinit()
     glBindVertexArray(vaoid);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    // Tangent attribute
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    // Texture coord
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(9 * sizeof(float)));
+    glEnableVertexAttribArray(3);
+    // color coord
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
+    glEnableVertexAttribArray(4);
+
     glBindVertexArray(0);
+
+    debugAABB_init();
+
 
 }
 
@@ -767,85 +788,87 @@ void Model::debugAABB_init() // vao & shader
     //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
     //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
     //}
+    glm::vec3 minpt = vertices_min;
+    glm::vec3 maxpt = vertices_max;
 
-    //pntAABB[0] = minpt;
-    //pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
-    //pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
-    //pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
+    pntAABB[0] = minpt;
+    pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
+    pntAABB[2] = glm::vec4(minpt.x, maxpt.y, maxpt.z, 1.f);
+    pntAABB[3] = glm::vec4(minpt.x, maxpt.y, minpt.z, 1.f);
 
-    //pntAABB[4] = maxpt;
-    //pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
-    //pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
-    //pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
-    //
-    //int indice = 0;
+    pntAABB[4] = maxpt;
+    pntAABB[5] = glm::vec4(maxpt.x, maxpt.y, minpt.z, 1.f);
+    pntAABB[6] = glm::vec4(maxpt.x, minpt.y, minpt.z, 1.f);
+    pntAABB[7] = glm::vec4(maxpt.x, minpt.y, maxpt.z, 1.f);
+    
+    int indice = 0;
 
-    //idxAABB.push_back(glm::ivec2(indice, indice + 1));
-    //idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
-    //idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
-    //idxAABB.push_back(glm::ivec2(indice + 3, indice));
+    idxAABB.push_back(glm::ivec2(indice, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 3, indice));
 
-    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
-    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
-    //idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
-    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
 
-    //idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
-    //idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
-    //idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
-    //idxAABB.push_back(glm::ivec2(indice + 6, indice));
-
-
-    //// setup vao
-    //GLuint Pbuff; // point buffer
-    //GLuint Ibuff; // indice buffer
-
-    //glGenVertexArrays(1, &vaoidAABB);
-    //glGenBuffers(1, &Pbuff);
-    //glGenBuffers(1, &Ibuff);
-
-    //glBindVertexArray(vaoidAABB);
-    //glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
-
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
-
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
-    //    &idxAABB[0], GL_STATIC_DRAW);
-
-    //glBindVertexArray(0); // unbind vao
-    //glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice));
 
 
-    //// setup shader
-    //std::vector<std::pair<GLenum, std::string>> shdr_files;
-    //// Vertex Shader
-    //shdr_files.emplace_back(std::make_pair(
-    //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    // setup vao
+    GLuint Pbuff; // point buffer
+    GLuint Ibuff; // indice buffer
 
-    //// Fragment Shader
-    //shdr_files.emplace_back(std::make_pair(
-    //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    glGenVertexArrays(1, &vaoidAABB);
+    glGenBuffers(1, &Pbuff);
+    glGenBuffers(1, &Ibuff);
 
-    //std::cout << "DEBUG AABB SHADER\n";
-    //shaderAABB.CompileLinkValidate(shdr_files);
-    //std::cout << "\n\n";
+    glBindVertexArray(vaoidAABB);
+    glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
 
-    //// if linking failed
-    //if (GL_FALSE == shaderAABB.IsLinked()) {
-    //    std::stringstream sstr;
-    //    sstr << "Unable to compile/link/validate shader programs\n";
-    //    sstr << shaderAABB.GetLog() << "\n";
-    //    std::cout << sstr.str();
-    //    std::exit(EXIT_FAILURE);
-    //}
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
+        &idxAABB[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+
+    // setup shader
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+
+    // Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+
+    std::cout << "DEBUG AABB SHADER\n";
+    shaderAABB.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
+    // if linking failed
+    if (GL_FALSE == shaderAABB.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shaderAABB.GetLog() << "\n";
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 void Model::debugAABB_draw(glm::mat4 & SRT)
