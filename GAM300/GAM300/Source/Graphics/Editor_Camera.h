@@ -4,6 +4,7 @@
 #include "IOManager/Handler_GLFW.h"
 #include "../Core/SystemInterface.h"
 #include "Framebuffer.h"
+#include "Scene/Entity.h"
 
 #define EditorCam Editor_Camera::Instance()
 
@@ -27,6 +28,13 @@ public:
 	glm::vec3 direction;
 };
 
+bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
+	glm::vec3 ray_direction,     // Ray direction (NOT target position!), in world space. Must be normalize()'d.
+	glm::vec3 aabb_min,          // Minimum X,Y,Z coords of the mesh when not transformed at all.
+	glm::vec3 aabb_max,          // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh is centered, but it's not always the case.
+	glm::mat4 ModelMatrix,       // Transformation applied to the mesh (which will thus be also applied to its bounding box)
+	float& intersection_distance // Output : distance between ray_origin and the intersection with the OBB)
+);
 
 SINGLETON(Editor_Camera)
 {
@@ -93,7 +101,9 @@ public:
 
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
+	Entity* ActiveObj{ nullptr };
 
+	bool canMove = true;
 private:
 
 	glm::vec2 viewport{ 1600.f,900.f };

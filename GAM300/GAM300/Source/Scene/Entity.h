@@ -12,7 +12,6 @@ struct Entity;
 struct Entity
 {
 public:
-	bool is_enabled = true;
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
 	const Engine::UUID uuid;

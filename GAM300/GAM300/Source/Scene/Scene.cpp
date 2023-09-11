@@ -15,13 +15,3 @@ Scene::Scene(const std::string& _filepath)
 		//Deserialize
 	}
 }
-
-//bool Scene::EntityIsActive(EntityIndex index)
-//{
-//	return entities.GetActive(index);
-//}
-//
-//void Scene::EntitySetActive(EntityIndex index, bool value)
-//{
-//	entities.SetActive(index,value);
-//}
