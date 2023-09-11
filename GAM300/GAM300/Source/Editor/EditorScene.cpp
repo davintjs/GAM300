@@ -117,6 +117,11 @@ void EditorScene::Update(float dt)
             Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
             Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(pEntity->denseIndex);
+            for (int i = 0; i < 3; ++i)
+            {
+                if (fabs(trans.scale[i]) < 0.001f)
+                    trans.scale[i] = 0.001f;
+            }
 
             GizmoType = ImGuizmo::UNIVERSAL;
 
@@ -127,7 +132,6 @@ void EditorScene::Update(float dt)
 
             glm::mat4 transform_1 = trans.GetWorldMatrix();
             ////glm::mat4 transform_2;
-
             //ImGuizmo::Re
 
             //ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
