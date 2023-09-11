@@ -36,6 +36,11 @@ public:
     void Update(float dt);
     void Exit();
 
+    void OpenFile();
+
+    void NewScene();
+    void SaveScene();
+
 private:
     bool exitApp = false;
 };
@@ -58,6 +63,7 @@ public:
     void Exit();
 
     void DisplayEntity(const ObjectIndex& Index);
+    void ClearLayer();
     //void DisplayChildren(const ObjectIndex& Parent);
     ObjectIndex selectedEntity;
 

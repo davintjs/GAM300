@@ -2,6 +2,7 @@
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Core/EventsManager.h"
 
 #include "../Utilities/PlatformUtils.h"
 
@@ -12,31 +13,35 @@ void EditorMenuBar::Init()
 
 void EditorMenuBar::Update(float dt)
 {
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    {
+        if (ImGui::IsKeyDown(ImGuiKey_N))
+            NewScene();
+
+        if (ImGui::IsKeyDown(ImGuiKey_S))
+            SaveScene();
+
+        if (ImGui::IsKeyDown(ImGuiKey_O))
+            OpenFile();
+    }
+
     if (ImGui::BeginMainMenuBar())
     {
         //File Menu functionality
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New", "Ctrl+N"))
-            {
-                //New Scene
-            }
+                NewScene();
 
             // Opening of files using file dialogs
             if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
-                std::string Filename = FileDialogs::OpenFile("Text Files (*.txt)\0*.txt\0");
-                if (!Filename.empty())
-                {
-                    //Open File
-                }
+                OpenFile();
             }
 
             // Saving of scene files only if an active scene is open, using file dialogs
             if (ImGui::MenuItem("Save", "Ctrl+S"))
-            {
-                //Save File
-            }
+                SaveScene();
             //else
             //    //Do not allow the user to save when there's no file loaded!
             //    ImGui::TextDisabled("Save", "Ctrl+S");
@@ -111,6 +116,53 @@ void EditorMenuBar::Update(float dt)
         }
 
         ImGui::EndMainMenuBar();
+    }
+}
+
+void EditorMenuBar::NewScene()
+{
+    //New Scene
+    CreateSceneEvent createScene(nullptr);
+    EVENTS.Publish(&createScene);
+
+    // Load this new scene if there was a previously loaded one
+    SceneChangingEvent changeScene(*createScene.scene);
+    EVENTS.Publish(&changeScene);
+}
+
+void EditorMenuBar::SaveScene()
+{
+    IsNewSceneEvent newScene;
+    EVENTS.Publish(&newScene);
+
+    // Check if it is a new scene
+    if (newScene.data)
+    {
+        std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
+        //Save File
+        SaveSceneEvent saveScene(filepath);
+        EVENTS.Publish(&saveScene);
+    }
+    else
+    {
+        SaveSceneEvent saveScene;
+        EVENTS.Publish(&saveScene);
+    }
+}
+
+void EditorMenuBar::OpenFile()
+{
+    std::string Filename = FileDialogs::OpenFile("Text Files (*.txt)\0*.txt\0");
+    if (!Filename.empty())
+    {
+        //Open File
+
+        // Open Scene File
+        if (Filename.find(".scene") != std::string::npos)
+        {
+            LoadSceneEvent loadScene(Filename);
+            EVENTS.Publish(&loadScene);
+        }
     }
 }
 

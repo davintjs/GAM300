@@ -42,19 +42,22 @@ using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
-	std::string Scene_name;
-	EntitiesList entities;	//Vector should be in order
-	SingleComponentsArrays singleComponentsArrays;
-	MultiComponentsArrays multiComponentsArrays;
-	EntitiesPtrArray entitiesDeletionBuffer;
-	ComponentsBufferArray componentsDeletionBuffer;
-
 	enum class State : char 
 	{
 		Edit = 0,
 		Play,
 		Paused
 	};
+
+	std::string sceneName;
+	EntitiesList entities;	//Vector should be in order
+	SingleComponentsArrays singleComponentsArrays;
+	MultiComponentsArrays multiComponentsArrays;
+	EntitiesPtrArray entitiesDeletionBuffer;
+	ComponentsBufferArray componentsDeletionBuffer;
+	std::filesystem::path filePath;
+	State state;
+
 	Scene(const std::string& _filepath);
 
 	Scene(Scene&) = delete;
@@ -304,8 +307,5 @@ struct Scene
 			return component;
 		}
 	}
-
-	std::filesystem::path filePath;
-	State state;
 };
 #endif SCENE_H

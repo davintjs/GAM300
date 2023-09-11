@@ -17,6 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EVENTS_H
 
 struct Entity;
+struct Scene;
 
 struct IEvent
 {
@@ -39,6 +40,37 @@ struct QuitEngineEvent : IEvent
 	QuitEngineEvent() {};
 };
 
+struct CreateSceneEvent : IEvent
+{
+	CreateSceneEvent(Scene* _scene) : scene(_scene) {}
+	Scene* scene;
+};
+
+struct LoadSceneEvent : IEvent
+{
+	LoadSceneEvent(const std::string& _filePath) :filePath{ _filePath } {}
+	std::string filePath;
+};
+
+struct SaveSceneEvent : IEvent
+{
+	SaveSceneEvent() {};
+	SaveSceneEvent(const std::string& _filePath) :filePath{ _filePath } {}
+	std::string filePath;
+};
+
+struct IsNewSceneEvent : IEvent
+{
+	IsNewSceneEvent() : data(false) {}
+	bool data;
+};
+
+struct SceneChangingEvent : IEvent 
+{
+	SceneChangingEvent(Scene& _scene) : scene(_scene) {}
+	Scene& scene;
+	std::string filePath;
+};
 //template <typename T>
 //struct ReflectComponentEvent : IEvent
 //{

@@ -12,22 +12,10 @@ void EditorHierarchy::Init() {
 
 }
 
-//void EditorHierarchy::DisplayChildren(const ObjectIndex& parent) {
-//    ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
-//        ImGuiTreeNodeFlags_OpenOnDoubleClick |
-//        ImGuiTreeNodeFlags_SpanAvailWidth |
-//        ImGuiTreeNodeFlags_DefaultOpen;
-//
-//    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-//    Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
-//
-//    if (currEntity.isLeaf()) {
-//        NodeFlags |= ImGuiTreeNodeFlags_Leaf;
-//    }
-//}
-
-std::vector<Entity*>test;
-
+void EditorHierarchy::ClearLayer() {
+    layer.clear();
+    selectedEntity = NON_VALID_ENTITY;
+}
 
 void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
 
@@ -40,8 +28,6 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
     if (Index == selectedEntity) {
         NodeFlags |= ImGuiTreeNodeFlags_Selected;
     }
-
-
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
@@ -66,12 +52,6 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
 
                 Transform& currTransform = curr_scene.GetComponent<Transform>(currEntity);
                 Transform& targetTransform = curr_scene.GetComponent<Transform>(targetEntity);
-
-                //auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
-                //layer.erase(prev_it);
-                ////reorder (reinsert) the current entity into new layer position
-                //auto it = std::find(layer.begin(), layer.end(), &targetEntity);
-                //layer.insert(it, &currEntity);
 
                 //if target entity is a child
                 if (targetTransform.isChild()) {
@@ -106,8 +86,21 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index) {
                             arr.insert(it2, &currTransform);
                         }                        
                     }
+                    //if current entity is a base node (no parent)
+                    else {
+                        //delete instance of entity in container
+                        /*auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+                        layer.erase(prev_it);*/
+
+                        auto& parent = targetTransform.parent->child;
+
+                        auto it = std::find(parent.begin(), parent.end(), &targetTransform);
+                        parent.insert(it, &currTransform);
+                        currTransform.parent = targetTransform.parent;
+                    }
                    
                 }
+                //if target entity is a base node (no parent)
                 else {
                     //if current entity has a parent, delink it
                     if (currTransform.isChild()) {
@@ -185,32 +178,12 @@ void EditorHierarchy::Update(float dt) {
     //Add/Delete entities using right click
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-    /*if (initLayer) {
-        for (int i = 0; i < curr_scene.entities.size(); ++i) {
-            layer.push_back(&curr_scene.entities[i]);
-        }
-        initLayer = false;
-    }*/
-
-    bool sceneopen = ImGui::TreeNodeEx(curr_scene.Scene_name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+    bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
     if(sceneopen){
         for (int i = 0; i < layer.size(); ++i) {
-
-
-            /*std::string tag = "Entity " + std::to_string(i);
-            ImGui::InvisibleButton(tag.c_str(), ImVec2(156, 1));
-            if (ImGui::BeginDragDropTarget()) {
-                const ImGuiPayload* payload = ImGui::GetDragDropPayload();
-                const ObjectIndex Index = *static_cast<ObjectIndex*>(payload->Data);
-                auto it = std::find(layer.begin(), layer.end(), &curr_scene.entities.DenseSubscript(Index));
-                layer.erase(it);
-                layer.insert(layer.begin() + i, &curr_scene.entities.DenseSubscript(Index));
-                ImGui::EndDragDropTarget();
-            }*/
-            
-
             if (!curr_scene.GetComponent<Transform>(*layer[i]).isChild()) {
+                //Recursive function to display entities in a hierarchy tree
                 DisplayEntity(layer[i]->denseIndex);
             }
         }
@@ -241,9 +214,6 @@ void EditorHierarchy::Update(float dt) {
 
             ImGui::EndDragDropTarget();
         }
-        
-
-        //ImGui::InvisibleButton("##", ImVec2(156, 1));
 
         //Right click adding of entities in hierarchy window
         if (ImGui::BeginPopupContextWindow(0, true)) {
