@@ -11,9 +11,9 @@ namespace
 
 void SceneManager::Init()
 {
-	EVENT.Subscribe(this, &SceneManager::CallbackCreateScene);
-	EVENT.Subscribe(this, &SceneManager::CallbackSaveScene);
-	EVENT.Subscribe(this, &SceneManager::CallbackIsNewScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackCreateScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
 	if (loadedScenes.empty())
 	{

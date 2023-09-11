@@ -124,17 +124,17 @@ void EditorMenuBar::NewScene()
 {
     //New Scene
     CreateSceneEvent createScene(nullptr);
-    EVENT.Publish(&createScene);
+    EVENTS.Publish(&createScene);
 
     // Load this new scene if there was a previously loaded one
     SceneChangingEvent changeScene(*createScene.scene);
-    EVENT.Publish(&changeScene);
+    EVENTS.Publish(&changeScene);
 }
 
 void EditorMenuBar::SaveScene()
 {
     IsNewSceneEvent newScene;
-    EVENT.Publish(&newScene);
+    EVENTS.Publish(&newScene);
 
     // Check if it is a new scene
     if (newScene.data)
@@ -142,12 +142,12 @@ void EditorMenuBar::SaveScene()
         std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
         //Save File
         SaveSceneEvent saveScene(filepath);
-        EVENT.Publish(&saveScene);
+        EVENTS.Publish(&saveScene);
     }
     else
     {
         SaveSceneEvent saveScene;
-        EVENT.Publish(&saveScene);
+        EVENTS.Publish(&saveScene);
     }
 }
 

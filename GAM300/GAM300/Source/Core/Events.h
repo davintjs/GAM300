@@ -16,6 +16,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
+struct Scene;
+
 struct IEvent
 {
 protected:
@@ -56,7 +58,11 @@ struct IsNewSceneEvent : IEvent
 	bool data;
 };
 
-struct SceneChangingEvent : IEvent
+struct SceneChangingEvent : IEvent {
+
+	SceneChangingEvent(Scene& _scene) : scene(_scene) {}
+	Scene& scene;
+};
 //template <typename T>
 //struct ReflectComponentEvent : IEvent
 //{

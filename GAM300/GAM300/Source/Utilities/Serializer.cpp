@@ -85,7 +85,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Rotation" << YAML::Value << component.rotation;
         out << YAML::Key << "m_Scale" << YAML::Value << component.scale;
         out << YAML::Key << "m_Children" << YAML::Value << component.child;
-        out << YAML::Key << "m_Parent" << YAML::Value << &component.Parent;
+        out << YAML::Key << "m_Parent" << YAML::Value << &component.parent;
     }
 
     out << YAML::EndMap;
