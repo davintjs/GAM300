@@ -42,6 +42,7 @@ void EditorSystem::Init()
         &EditorInspector::Instance(),
         &EditorDebugger::Instance(),
         &EditorHierarchy::Instance(),
+        &EditorToolBar::Instance(),
     };
 
     for (ISystem* pSystem : editorSystems)

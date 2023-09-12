@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_stdlib.h"
+#include "imgui_internal.h"
 
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"

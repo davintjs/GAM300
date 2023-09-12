@@ -23,6 +23,8 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 
 static int GizmoType = 0;
 
+const char* GizmoWorld[] = { "Global", "Local" };
+static int coord_selection = 0;
 
 void EditorScene::Init()
 {
@@ -33,6 +35,21 @@ void EditorScene::Init()
 void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+
+    ImGuiWindowClass window_class;
+    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
+
+    ImGui::SetNextWindowClass(&window_class);
+
+    if (ImGui::Begin("Scene Toolbar")) {
+        ImGui::Dummy(ImVec2(0.0f, 3.f));
+        ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
+        ImGui::SetNextItemWidth(68.f);
+        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
+
+        //using Gizmo world (int) to toggle between world and local coords
+    }
+    ImGui::End();
 
     if (ImGui::Begin("Scene"))
     {
