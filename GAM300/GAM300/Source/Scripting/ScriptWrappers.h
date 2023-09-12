@@ -138,41 +138,52 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
-	template<typename T, typename... Ts>
-	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
-	{
-		return GetGameObjectRecursive<T, Ts...>(pComponent, componentType);
-	}
+#define GENERIC_RECURSIVE(TYPE,FUNC) \
+	template<typename T, typename... Ts>\
+	static TYPE* RecurseIter##FUNC(auto* pComponent, size_t componentType)\
+	{\
+		if (GetComponentType::E<T>() == componentType)\
+		{\
+			if constexpr (std::is_same<TYPE,void>())\
+			{\
+				Scene& scene = MySceneManager.GetCurrentScene(); \
+				return &scene.FUNC<T>(*pComponent); \
+			}\
+			else\
+			{\
+				Scene& scene = MySceneManager.GetCurrentScene(); \
+				return &scene.FUNC(*(reinterpret_cast<T*>(pComponent))); \
+			}\
+		}\
+		if constexpr (sizeof...(Ts) != 0)\
+		{\
+			return RecurseIter##FUNC<Ts...>(pComponent, componentType); \
+		}\
+		else \
+		{\
+			return nullptr; \
+		}\
+	}\
+	template<typename T, typename... Ts>\
+	static TYPE* RecurseStart##FUNC(auto* pComponent, size_t componentType,TemplatePack<T,Ts...>)\
+	{return RecurseIter##FUNC<T,Ts...>(pComponent,componentType);}\
+	
+ 
+	//template<typename T, typename... Ts>
+	//struct ComponentTypeIterStruct
+	//{
+	//public:
+	//	constexpr ComponentTypeIterStruct(TemplatePack<T, Ts...> pack) {}
+	//	ComponentTypeIterStruct()
+	//	{
+	//	}
+	//};
 
-	template<typename RET,typename T, typename... Ts>
-	struct ComponentTypeIterStruct
-	{
-	public:
-		constexpr ComponentTypeIterStruct(TemplatePack<T, Ts...> pack) {}
-		ComponentTypeIterStruct() = delete;
-		template <typename... Args>
-		ComponentTypeIterStruct(std::function<RET>(Args...) func)
-		{
-			Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-			//DisplayComponentHelper(curr_scene.GetComponent<Transform>(entity));
-			func();
-		}
-
-		RET Invoke(std::function<RET>(Args...) func)
-		{
-			return func();
-		}
-	};
-
-	template <typename RET>
-	using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
-
-	using GetComponentStruct = decltype
-
+	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
+	GENERIC_RECURSIVE(Entity,GetEntity);
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		return GetGameObjectHelper(pComponent,componentType, AllComponentTypes());
+		return RecurseStartGetEntity(pComponent, componentType, AllComponentTypes());
 	}
 
 	static Entity* GetGameObjectFromScript(Script* pScript)
@@ -212,6 +223,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static Transform* GetTransformFromComponent(void* pComponent, MonoReflectionType* componentType)
 	{
+		
 		Scene& scene = MySceneManager.GetCurrentScene();
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
@@ -275,21 +287,26 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/
-	static void* GetComponent(void* pComponent, MonoReflectionType* componentType)
+	GENERIC_RECURSIVE(void,GetComponent);
+	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())
 		{
-			MonoClass* mClass = mono_type_get_class(mType);
-			if (!SCRIPTING.IsScript(mClass))
-				return nullptr;
-			if 
-			const char* name = mono_class_get_name(mClass);
-			while (pEntity != name)
-			return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
+			//MonoClass* mClass = mono_type_get_class(mType);
+			//if (!SCRIPTING.IsScript(mClass))
+			//	return nullptr;
+			//GenericComponentIter iter(
+			//	[] -> Tag
+			//	{
+
+			//	});
+			//const char* name = mono_class_get_name(mClass);
+			//while (pEntity != name)
+			//return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
 		}
-		return nullptr;
+		return RecurseStartGetComponent(pEntity, pair->second, AllComponentTypes());
 	}
 	//	Component* component{ nullptr };
 	//	switch (cType)
@@ -1190,14 +1207,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
 	{
-		std::string typeName = "BeanFactory::";
-		typeName += GetComponentType::E<T>();
-
+		std::string typeName = "BeanFactory.";
+		typeName += GetComponentType::Name<T>();
 		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
-		if (!managedType)
+		if (managedType != nullptr)
 		{
-			E_ASSERT(true,"Could not find component type");
-			return;
+			E_ASSERT(managedType, "Could not find component type");
+			monoComponentToType.emplace(managedType, GetComponentType::E<T>());
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
@@ -1225,7 +1241,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	/*******************************************************************************/
 	static void RegisterScriptWrappers()
 	{
-		RegisterComponents();
 		//Register(SetFullscreenMode);
 		Register(GetKey);
 		Register(GetKeyUp);

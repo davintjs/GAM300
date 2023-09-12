@@ -254,11 +254,11 @@ struct Animator
 
 struct Rigidbody
 {
-	bool is_enabled = true;
 	Vector3 velocity{};					//velocity of object
 	Vector3 acceleration{};				//acceleration of object
 	Vector3 force{};					//forces acting on object, shud be an array
 	float mass{ 1.f };					//mass of object
+	bool is_enabled = true;
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 };

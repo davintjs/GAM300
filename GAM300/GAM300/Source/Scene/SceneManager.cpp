@@ -34,6 +34,7 @@ void SceneManager::Init()
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 		}
 		scene.AddComponent<Script>(0).name = "Player";
+		scene.AddComponent<Rigidbody>(0);
 	}
 }
 

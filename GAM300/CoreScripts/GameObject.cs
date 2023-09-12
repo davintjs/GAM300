@@ -55,12 +55,12 @@ namespace BeanFactory
             return InternalCalls.GetComponent(this, typeof(T)) as T;
         }
 
-        /*        public T AddComponent<T>() where T : Component, new()
-                {
-                    T component = new T() { gameObject = this };
-                    component.ID = InternalCalls.AddComponent(this, typeof(T));
-                    return component;
-                }*/
+        /*public T AddComponent<T>() where T : Component, new()
+        {
+            T component = new T() { gameObject = this };
+            component.ID = InternalCalls.AddComponent(this, typeof(T));
+            return component;
+        }*/
 
         public void SetActive(bool _active)
         {

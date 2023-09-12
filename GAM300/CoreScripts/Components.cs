@@ -22,15 +22,6 @@ using System.Threading.Tasks;
 
 namespace BeanFactory
 {
-    public enum ButtonState 
-    {
-        OnHover,
-		OnClick,
-		OnHeld,
-		OnRelease,
-		None,
-	};
-
     public class Component
     {
         virtual public Transform transform { get; }
@@ -41,12 +32,18 @@ namespace BeanFactory
         }
         public T GetComponent<T>() where T : Component
         {
-            return gameObject.GetComponent<T>();
+            return InternalCalls.GetComponent(gameObject, typeof(T)) as T;
         }
     }
+    public class Rigidbody : Component
+    {
+        public float mass;                  //mass of object
+        Vector3 velocity;                   //velocity of object
+        Vector3 acceleration;               //acceleration of object
+        Vector3 force;
+    }
 
-
-    public class Transform
+    public class Transform : Component
     {
         public Transform parent;
         public Vector3 localPosition;
@@ -54,27 +51,8 @@ namespace BeanFactory
         public Vector3 localScale;
     }
 
-/*    public class Rigidbody2D : Component
-    {
-        public Vector2 velocity
-        {
-            get
-            {
-                InternalCalls.RigidbodyGetVelocity(ID, out Vector2 vec2);
-                return vec2;
-            }
-            set
-            {
-                InternalCalls.RigidbodySetVelocity(ID, ref value);
-            }
-        }
 
-        public void AddForce(Vector2 force, ForceMode2D forceMode)
-        {
-            InternalCalls.RigidbodyAddForce(ID, ref force);
-        }
-    }
-
+/*
     public class Camera : Component
     {
     }

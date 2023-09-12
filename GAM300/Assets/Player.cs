@@ -4,31 +4,25 @@ using System.Collections.Generic;
 
 public class Player : Script
 {
+    Rigidbody rb;
+
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        Vector3 newPos = transform.localPosition;
         float speed = 0.4f;
-        if (Input.GetKey(KeyCode.W))
-        {
-            newPos.z += speed;
-        }
         if (Input.GetKey(KeyCode.A))
         {
-            newPos.x += speed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            newPos.z -= speed;
+            rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            newPos.x -= speed;
+            rb.mass += speed;
         }
-        transform.localPosition = newPos;
+        //transform.localPosition = newPos;
     }
 
     void Exit()

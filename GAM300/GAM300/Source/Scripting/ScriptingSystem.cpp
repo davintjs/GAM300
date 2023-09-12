@@ -415,6 +415,7 @@ void ScriptingSystem::SwapDll()
 	mCollision2D = mono_class_from_name(mAssemblyImage, "BeanFactory", "Collision2D");
 	mScriptableObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "ScriptableObject");
 	UpdateScriptClasses();
+	RegisterComponents();
 	ReflectAll();
 	compilingState = CompilingState::Wait;
 }
