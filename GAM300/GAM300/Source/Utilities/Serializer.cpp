@@ -70,7 +70,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
     out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
-    out << YAML::Key << "m_IsActive" << YAML::Value << 1;
+    out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     if (_scene.HasComponent<Tag>(_entity))
@@ -112,18 +112,64 @@ void DeserializeRuntime(const std::string& _filepath)
 
 bool DeserializeScene(Scene& _scene)
 {
-    YAML::Node sceneNode = YAML::Load(_scene.filePath.string());
-    
-    _scene.sceneName = sceneNode["Scene"].as<std::string>();
+    std::vector<YAML::Node> data;
 
-    for (size_t i = 0; i < sceneNode.size(); i++)
+    try
     {
-        if (sceneNode[i].IsMap()) // Entity
+        data = YAML::LoadAllFromFile(_scene.filePath.string());
+    }
+    catch (YAML::ParserException e)
+    {
+        std::cout << "Failed to load .scene file \"" << _scene.filePath.string() << "\" due to: " << e.what() << "\n";
+        return false;
+    }
+
+    if (!data[0]["Scene"])
+    {
+        std::cout << "Not a .scene file!\n";
+        return false;
+    }
+
+    _scene.sceneName = data[0]["Scene"].as<std::string>();
+
+    std::cout << "Deserializing scene \"" << _scene.sceneName << "\"\n";
+
+    for (size_t i = 1; i < data.size(); i++)
+    {
+        if (data[i]["GameObject"])
         {
+            YAML::Node object = data[i]["GameObject"];
+
+            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>());
+            entity.denseIndex = object["m_Index"].as<ObjectIndex>();
+            _scene.SetActive(entity, object["m_IsActive"].as<bool>());
             
+            // Bean: Create a constructor for entity with transform and tag
+            Transform& transform = _scene.GetComponent<Transform>(entity);
+            _scene.GetComponent<Tag>(entity).name = object["m_Name"].as<std::string>();
+            transform.translation = object["m_Position"].as<Vector3>();
+            transform.rotation = object["m_Rotation"].as<Vector3>();
+            transform.scale = object["m_Scale"].as<Vector3>();
+            
+            auto parent = object["m_Parent"];
+            if (parent)
+            {
+                Engine::UUID parentUUID = parent.as<Engine::UUID>();
+                if (parentUUID != 0)
+                {
+                    for (auto parent : _scene.entities)
+                    {
+                        if (parent.uuid == parentUUID)
+                        {
+                            transform.SetParent(&_scene.GetComponent<Transform>(parent));
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
-    
+
     return true;
 }
 
