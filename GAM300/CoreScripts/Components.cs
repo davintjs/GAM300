@@ -39,10 +39,10 @@ namespace BeanFactory
         {
             return gameObject.HasComponent<T>();
         }
-/*        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : Component
         {
-            return gameObject.HasComponent<T>();
-        }*/
+            return gameObject.GetComponent<T>();
+        }
     }
 
 

@@ -6,12 +6,10 @@ public class Player : Script
 {
     void Start()
     {
-        Console.WriteLine("dazxda from Player");
     }
 
     void Update()
     {
-        //Console.WriteLine("Sizeof:" + gameObject);
         Vector3 newPos = transform.localPosition;
         float speed = 0.4f;
         if (Input.GetKey(KeyCode.W))
@@ -35,6 +33,5 @@ public class Player : Script
 
     void Exit()
     {
-        Console.WriteLine("Exit from Player");
     }
 }

@@ -153,6 +153,5 @@ void EditorSystem::SetSelectedEntity(Entity* pEntity)
 
 void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    PRINT("CALLLLLLLLLLLLBACK\n");
     selectedEntity = pEvent->pEntity;
 }
