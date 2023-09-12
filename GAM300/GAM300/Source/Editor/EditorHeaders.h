@@ -64,6 +64,7 @@ public:
     void DisplayEntity(const ObjectIndex& Index);
     void ClearLayer();
     //void DisplayChildren(const ObjectIndex& Parent);
+
     ObjectIndex selectedEntity;
 
     std::vector<Entity*> layer;

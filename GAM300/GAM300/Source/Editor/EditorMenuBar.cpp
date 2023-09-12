@@ -158,6 +158,8 @@ void EditorMenuBar::OpenFile()
         // Open Scene File
         if (Filename.find(".scene") != std::string::npos)
         {
+            EditorHierarchy::Instance().ClearLayer();
+
             LoadSceneEvent loadScene(Filename);
             EVENTS.Publish(&loadScene);
         }

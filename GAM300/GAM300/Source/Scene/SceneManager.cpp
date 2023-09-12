@@ -56,7 +56,6 @@ void SceneManager::LoadScene(const std::string& _filePath)
 {
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
-	EditorHierarchy::Instance().ClearLayer();
 	
 	if (!DeserializeScene(scene))
 	{

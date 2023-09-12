@@ -22,7 +22,7 @@ bool SerializeScene(Scene& _scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
-    out << YAML::EndMap;
+    out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
     for (Entity* entity : EditorHierarchy::Instance().layer)
     {
@@ -35,6 +35,8 @@ bool SerializeScene(Scene& _scene)
         bool serialized = SerializeEntity(out, entity, _scene);
         assert(serialized, "Unable To Serialize Entity!\n");
     }*/
+    out << YAML::EndSeq;
+    out << YAML::EndMap;
 
     if(!out.good())
         std::cout << "Emitter error: " << out.GetLastError() << "\n";
@@ -112,36 +114,49 @@ void DeserializeRuntime(const std::string& _filepath)
 
 bool DeserializeScene(Scene& _scene)
 {
-    std::vector<YAML::Node> data;
+    YAML::Node data;
 
     try
     {
-        data = YAML::LoadAllFromFile(_scene.filePath.string());
+        data = YAML::LoadFile(_scene.filePath.string());
     }
     catch (YAML::ParserException e)
     {
         std::cout << "Failed to load .scene file \"" << _scene.filePath.string() << "\" due to: " << e.what() << "\n";
         return false;
     }
+    catch (YAML::BadFile e)
+    {
+        std::cout << "Failed to load .scene file \"" << _scene.filePath.string() << "\" due to: " << e.what() << "\n";
+        return false;
+    }
 
-    if (!data[0]["Scene"])
+    if (!data["Scene"])
     {
         std::cout << "Not a .scene file!\n";
         return false;
     }
 
-    _scene.sceneName = data[0]["Scene"].as<std::string>();
+    _scene.sceneName = data["Scene"].as<std::string>();
 
     std::cout << "Deserializing scene \"" << _scene.sceneName << "\"\n";
 
-    for (size_t i = 1; i < data.size(); i++)
+    std::map<Entity*, Engine::UUID> childEntities;
+
+    auto entities = data["Entities"];
+    if (!entities)
+        return false;
+
+    for (auto entity : entities)
     {
-        if (data[i]["GameObject"])
+        if (entity["GameObject"])
         {
-            YAML::Node object = data[i]["GameObject"];
+            YAML::Node object = entity["GameObject"];
 
             Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>());
-            entity.denseIndex = object["m_Index"].as<ObjectIndex>();
+
+            // Bean: Dont need cuz when parenting it reorders the object anyways
+            //entity.denseIndex = object["m_Index"].as<ObjectIndex>(); 
             _scene.SetActive(entity, object["m_IsActive"].as<bool>());
             
             // Bean: Create a constructor for entity with transform and tag
@@ -156,16 +171,21 @@ bool DeserializeScene(Scene& _scene)
             {
                 Engine::UUID parentUUID = parent.as<Engine::UUID>();
                 if (parentUUID != 0)
-                {
-                    for (auto parent : _scene.entities)
-                    {
-                        if (parent.uuid == parentUUID)
-                        {
-                            transform.SetParent(&_scene.GetComponent<Transform>(parent));
-                            break;
-                        }
-                    }
-                }
+                    childEntities[&entity] = parentUUID;
+            }
+        }
+    }
+
+    // Link all children with parents
+    for (auto pair : childEntities)
+    {
+        for (auto& entity : _scene.entities)
+        {
+            if (entity.uuid == pair.second)
+            {
+                Transform& transform = _scene.GetComponent<Transform>(*pair.first);
+                transform.SetParent(&_scene.GetComponent<Transform>(entity));
+                break;
             }
         }
     }
