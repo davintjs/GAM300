@@ -47,6 +47,21 @@ void EditorScene::Update(float dt)
         ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
+
+        float buttonWidth = 24.f;
+        ImGui::SameLine(); if (ImGui::Button("Q", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))){
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("W", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("E", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("R", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
 
         //using Gizmo world (int) to toggle between world and local coords
     }

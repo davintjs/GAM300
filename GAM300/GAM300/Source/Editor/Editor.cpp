@@ -64,8 +64,8 @@ void EditorSystem::Update(float dt)
         pSystem->Update(dt);
     }
 
-    bool demo = true;
-    ImGui::ShowDemoWindow(&demo);
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
