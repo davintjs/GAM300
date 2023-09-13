@@ -32,6 +32,11 @@ namespace BeanFactory
             return original;
         }
 
+        public static GameObject Destroy(GameObject gameObject)
+        {
+            return ;
+        }
+
         /*        public GameObject Instantiate(GameObject original)
                 {
                     GameObject gameObject = new GameObject();

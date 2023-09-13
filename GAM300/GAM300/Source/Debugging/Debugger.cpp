@@ -13,6 +13,7 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
+#include <Precompiled.h>
 #include "Debugger.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -84,15 +85,20 @@ void Debugger::error_log()
     spdlog::set_default_logger(std::make_shared<spdlog::logger>("Error", spdlog::sinks_init_list({ console_sink, file_sink })));
 }
 
-void Debugger::assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg)
+template <typename... Args>
+void Debugger::assert_to_file(std::string expr_str, bool expr, std::string file, int line, Args... args)
 {
     if (!expr)
     {
         error_log();
-        std::string temp =  "\nCaused By:\t" + expr_str + '\n' +
-                            "Info:\t\t" + msg + '\n' +
-                            "Source:\t\t" + file + " (Line: " + std::to_string(line) + ")\n";
-        FILE_CRITICAL(temp);
+
+        std::stringstream temp;
+        temp << "\nCaused By:\t" << expr_str << '\n' << "Info:\t\t";
+        ((temp << std::forward<Args>(args)), ...);
+        temp << "\nSource:\t\t" << file << " (Line: " << line << ")\n";
+
+        FILE_CRITICAL(temp.str()); // Assuming FILE_CRITICAL takes a std::string argument
+
         spdlog::drop("Error");
         abort();
     }

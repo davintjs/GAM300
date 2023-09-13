@@ -16,16 +16,54 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "EditorTemplates.h"
+
+void AlignForWidth(float width, float alignment = 0.5f)
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    float avail = ImGui::GetContentRegionAvail().x;
+    float off = (avail - width) * alignment;
+    if (off > 0.0f)
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+}
 
 void EditorToolBar::Init()
 {
 
 }
 
+
+
+
 void EditorToolBar::Update(float dt)
 {
-    ImGui::Begin("Toolbar");
+    ImGuiWindowClass window_class;
+    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
+    ImGui::SetNextWindowClass(&window_class);
+
+    static int Guizmo_world = 0;
+
+    ImGui::Begin("Toolbar", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
     //Play, Pause, Step(Optional)
+    // 
+    
+    //To do: change button to image button with play/pause icons
+
+
+
+    ImVec2 buttonSize = { 50.f, ImGui::GetTextLineHeight() + 10.f};
+    
+    ImGuiStyle& style = ImGui::GetStyle();
+    float width = 0.0f;
+    width += buttonSize.x;
+    width += style.ItemSpacing.x;
+    width += buttonSize.x;
+    AlignForWidth(width);
+
+    ImGui::Button("Play", buttonSize);
+    ImGui::SameLine();
+    ImGui::Button("Pause", buttonSize); // Fixed size
+    
     ImGui::End();
 }
 

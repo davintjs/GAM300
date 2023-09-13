@@ -267,6 +267,7 @@ struct Script
 {
 	std::string name;
 };
+
 #pragma endregion
 
 

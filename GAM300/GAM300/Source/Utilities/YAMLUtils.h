@@ -48,7 +48,7 @@ namespace YAML
     template<>
     struct convert<Transform>
     {
-
+        
     };
 
     template<>
