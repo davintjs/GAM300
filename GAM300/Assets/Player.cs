@@ -22,10 +22,11 @@ public class Player : Script
         {
             rb.mass += speed;
         }
+        Destroy(this);
         //transform.localPosition = newPos;
     }
 
     void Exit()
     {
     }
-}
+}c

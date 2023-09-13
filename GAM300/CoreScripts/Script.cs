@@ -32,9 +32,14 @@ namespace BeanFactory
             return original;
         }
 
-        public static GameObject Destroy(GameObject gameObject)
+        public static void Destroy(GameObject gameObject)
         {
-            return ;
+            InternalCalls.DestroyGameObject(gameObject);
+        }
+
+        public static void Destroy<T>(T component) where T : Component
+        {
+            InternalCalls.DestroyComponent(component,typeof(T));
         }
 
         /*        public GameObject Instantiate(GameObject original)

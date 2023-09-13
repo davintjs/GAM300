@@ -138,26 +138,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
-#define GENERIC_RECURSIVE(TYPE,FUNC) \
+#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 	template<typename T, typename... Ts>\
-	static TYPE* RecurseIter##FUNC(auto* pComponent, size_t componentType)\
+	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
 	{\
 		if (GetComponentType::E<T>() == componentType)\
 		{\
-			if constexpr (std::is_same<TYPE,void>())\
+			if constexpr (std::is_same<TYPE,void>)\
 			{\
-				Scene& scene = MySceneManager.GetCurrentScene(); \
-				return &scene.FUNC<T>(*pComponent); \
+				return;\
 			}\
 			else\
 			{\
-				Scene& scene = MySceneManager.GetCurrentScene(); \
-				return &scene.FUNC(*(reinterpret_cast<T*>(pComponent))); \
+				return nullptr;\
 			}\
 		}\
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
-			return RecurseIter##FUNC<Ts...>(pComponent, componentType); \
+			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
 		}\
 		else \
 		{\
@@ -165,9 +163,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}\
 	}\
 	template<typename T, typename... Ts>\
-	static TYPE* RecurseStart##FUNC(auto* pComponent, size_t componentType,TemplatePack<T,Ts...>)\
-	{return RecurseIter##FUNC<T,Ts...>(pComponent,componentType);}\
-	
+	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
+	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+
+
  
 	//template<typename T, typename... Ts>
 	//struct ComponentTypeIterStruct
@@ -180,10 +181,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//};
 
 	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
-	GENERIC_RECURSIVE(Entity,GetEntity);
+
+	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity);
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
-		return RecurseStartGetEntity(pComponent, componentType, AllComponentTypes());
+		return RecurseGetEntity(componentType,pComponent);
 	}
 
 	static Entity* GetGameObjectFromScript(Script* pScript)
@@ -196,7 +198,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
 		Transform& t = scene.GetComponent<Transform>(*pEntity);
-		PRINT(t.translation.x,", ", t.translation.y, ", ", t.translation.z,"\n");
 		return &t;
 	}
 
@@ -286,8 +287,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	\return
 	//		MonoObject to be returned to the script asking for it
 	//*/
-	///*******************************************************************************/
-	GENERIC_RECURSIVE(void,GetComponent);
+	///*******************************************************************************/v
+	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>);
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -306,7 +307,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			//while (pEntity != name)
 			//return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
 		}
-		return RecurseStartGetComponent(pEntity, pair->second, AllComponentTypes());
+		return RecurseGetComponent(pair->second,pEntity);
 	}
 	//	Component* component{ nullptr };
 	//	switch (cType)
@@ -662,24 +663,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//\brief
-	//	Get the button state
-
-	//\param gameObjID
-	//	ID of gameObject that has this component
-
-	//\return
-	//	the state of the button
-
-	//*/
-	///*******************************************************************************/
-	//static char GetButtonState(Button* pButton)
-	//{
-	//	return (char)pButton->state;
-	//}
-
-	///*******************************************************************************
-	///*!
-	//\brief
 	//	Clones a gameObject
 	//\param ID
 	//	ID of gameObject to be cloned
@@ -726,6 +709,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void DestroyGameObject(Entity* pGameObject)
 	{
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+	}
+
+	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy)
+	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
+	{
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		DestroyRecursive(monoComponentToType[managedType],pComponent);
 	}
 
 	///*******************************************************************************
@@ -1236,6 +1226,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetTransformFromGameObject);
 		Register(GetTransformFromComponent);
 		Register(GetGameObjectFromScript);
+
+		Register(DestroyGameObject);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
 		//Register(SetTranslation);
