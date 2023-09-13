@@ -41,6 +41,7 @@ void EditorScene::Update(float dt)
 
     ImGui::SetNextWindowClass(&window_class);
 
+    //Scene toolbar
     if (ImGui::Begin("Scene Toolbar")) {
         ImGui::Dummy(ImVec2(0.0f, 3.f));
         ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
@@ -51,6 +52,12 @@ void EditorScene::Update(float dt)
     }
     ImGui::End();
 
+    if (ImGui::Begin("Game")) {
+
+    }
+    ImGui::End();
+
+    //Editor scene viewport
     if (ImGui::Begin("Scene"))
     {
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -127,7 +134,7 @@ void EditorScene::Update(float dt)
         //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
-        if (EditorCam.ActiveObj != nullptr)
+        if (EditorCam.ActiveObj != nullptr && !EditorInspector::Instance().isAddComponentPanel)
         {
             Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 

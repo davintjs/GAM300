@@ -592,12 +592,12 @@ void AddComponentPanel(Entity& entity) {
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddComponentPanel = false;
     }
+    ImGui::OpenPopup("Add Component");
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
-    ImGui::Begin("Add Component", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-    
-    (void)AddComponentsDisplay(entity);
-
-    ImGui::End();
+        (void)AddComponentsDisplay(entity);
+        ImGui::EndPopup();
+    }
 }
 
 void DisplayEntity(Entity& entity)
