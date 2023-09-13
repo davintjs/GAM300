@@ -10,29 +10,57 @@
     This file contains the definitions of the following:
     1. YAML Integration
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
 #include "YAMLUtils.h"
+#include "Scene/Scene.h"
+#include "Scene/Components.h"
 
-void Emittion()
+
+template <typename T>
+void SerializeBasic(const T& _data, YAML::Emitter& out, const std::string& _key)
 {
-    YAML::Emitter out;
-    //out << "Hello World!";
-
-    //std::cout << "Here's the output YAML:\n" << out.c_str();
+    out << YAML::Key << _key << YAML::Value << _data;
 }
 
-void CreateYAMLMap(YAML::Emitter& out)
+template<>
+void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::string& _key)
 {
-    out << YAML::BeginMap;
+
 }
 
-void EndYAMLMap(YAML::Emitter& out, const std::string& filepath)
+YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
-    out << YAML::EndMap;
+    out << YAML::BeginSeq << YAML::BeginMap;
 
-    std::ofstream fout(filepath);
-    fout << out.c_str();
+    for (auto& data : _data._transform)
+    {
+        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << _data._scene.GetEntity(*data).uuid;
+    }
+    
+    out << YAML::EndMap << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+    return out;
 }

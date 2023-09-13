@@ -17,5 +17,27 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "YAMLUtils.h"
 #include "Properties.h"
+#include "Scene/Scene.h"
+#include "Scene/Entity.h"
+
+enum CLASSID
+{
+    OBJECT,
+    GAMEOBJECT,
+    COMPONENT
+};
+
+
+void Serialize(const std::string& _filepath);
+void SerializeRuntime(const std::string& _filepath);
+
+bool SerializeScene(Scene& _scene);
+bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
+
+void Deserialize(const std::string& _filepath);
+void DeserializeRuntime(const std::string& _filepath);
+
+bool DeserializeScene(Scene& _scene);
+bool DeserializeEntity(YAML::Node& _node, Entity& _entity, Scene& _scene);
 
 #endif // !SERIALIZER_H

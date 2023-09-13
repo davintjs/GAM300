@@ -33,11 +33,13 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
+#include "ImGuizmo.h"
 #include "Utilities/ThreadPool.h"
 #include "Scripting/ScriptingSystem.h"
 #include "Utilities/YAMLUtils.h"
 #include "EventsManager.h"
 #include "Debugging/Debugger.h"
+#include "Scripting/LogicSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -62,30 +64,36 @@ public:
 	void Init()
 	{
 		THREADS.Init();
+		RegisterComponents();
 		systems =
 		{
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
-			//&PhysicsSystem::Instance(),
-			&ScriptingSystem::Instance(),
+			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
+			//&LogicSystem::Instance(),
+			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
 			&AssetManager::Instance(),
 		};
 
-		//MyFileWatcher.Init();
-
-
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
 		}
+
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 
+		//SceneStartEvent startEvent{};
+		//ACQUIRE_SCOPED_LOCK("Assets");
+		//EVENTS.Publish(&startEvent);
+
+		PRINT("SIZEOF: ", sizeof(Entity));
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
 		//{
@@ -100,7 +108,6 @@ public:
 		//std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		// Bean: Serialization Tests
-		Emittion();
 	}
 
 	/**************************************************************************/
@@ -112,27 +119,24 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
-		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
+
 			ImGui_ImplOpenGL3_NewFrame();
-
 			ImGui_ImplGlfw_NewFrame();
-
 			ImGui::NewFrame();
+			ImGuizmo::BeginFrame();
 
 			for (ISystem* pSystem : systems)
 			{
 				if (pSystem->GetMode() & mode)
 					pSystem->Update(dt);
 			}
+
 			//End ImGui Frames
-
 			ImGui::EndFrame();
-
 			ImGui::Render();
-
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
@@ -153,6 +157,11 @@ public:
 			(*iter)->Exit();
 		}
 		THREADS.Exit();
+	}
+
+	void CallbackSceneStart(SceneStartEvent* pEvent)
+	{
+		mode = ENUM_SYSTEM_RUNTIME;
 	}
 private:
 	std::vector<ISystem*> systems;

@@ -17,7 +17,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public static class SceneManager
     {

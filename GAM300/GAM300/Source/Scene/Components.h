@@ -16,9 +16,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
@@ -44,6 +47,11 @@ constexpr size_t MAX_ENTITIES{ 5 };
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
+using Quaternion = glm::quat;
+
+static std::map<std::string, size_t> ComponentTypes{};
+
+
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
@@ -140,23 +148,43 @@ struct Tag
 
 struct Transform
 {
-	bool is_enabled = true;
-	std::string str = "Transform";
-	Vector3 translation{};
+	Vector3 scale{ 1 };
 	Vector3 rotation{};
-	Vector3 scale{1};
-	std::vector<Transform*>child;
-	Transform* Parent = nullptr;
+	Vector3 translation{};
+	Transform* parent = nullptr;
+
+	std::vector<Transform*> child;
 
 	bool isLeaf() {
 		return (child.size()) ? false : true;
 	}
 
 	bool isChild() {
-		if (Parent)
+		if (parent)
 			return true;
 		else
 			return false;
+	}
+
+	glm::mat4 GetWorldMatrix() const 
+	{
+		if (parent)
+			return parent->GetWorldMatrix() * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetInvertedWorldMatrix() const
+	{
+		if (parent)
+			return glm::inverse(parent->GetInvertedWorldMatrix()) * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetLocalMatrix() const {
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		return glm::translate(glm::mat4(1.0f), translation) *
+			rot *
+			glm::scale(glm::mat4(1.0f), scale);
 	}
 
 	bool isEntityChild(Transform& ent) {
@@ -169,7 +197,45 @@ struct Transform
 		return false;
 	}
 
-	
+	void SetParent(Transform* newParent) {
+		// Calculate the global transformation matrix
+		if (parent) {
+			parent->RemoveChild(this);
+			glm::mat4 globalTransform = GetWorldMatrix();
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);
+		}
+
+		// Set the new parent
+		glm::mat4 localTransform = GetWorldMatrix();
+		parent = newParent;
+
+		if (parent) {
+			glm::mat4 parentTransform = parent->GetWorldMatrix();
+			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);
+
+			// Add the object to the new parent's child list
+			parent->child.push_back(this);
+		}
+	}
+
+	void RemoveChild(Transform* t)
+	{
+		auto it = std::find(child.begin(), child.end(),t);
+
+		// Check if an element satisfying the condition was found
+		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
+		// Erase the found element
+		child.erase(it);
+	}
 };
 
 struct AudioSource
@@ -207,7 +273,6 @@ struct Animator
 struct Rigidbody
 {
 	bool is_enabled = true;
-	std::string str = "Rigidbody";
 	Vector3 linearVelocity{};					//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
@@ -237,8 +302,19 @@ using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCol
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
+using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
+template<typename T, typename... Ts>
+static void RegisterComponents()
+{
+	ComponentTypes.emplace(GetComponentType::Name<T>(), GetComponentType::E<T>());
+	RegisterComponents<Ts...>();
+}
+
+template<typename... Ts>
+static void RegisterComponents()
+{}
 
 #endif // !COMPONENTS_H

@@ -49,6 +49,7 @@
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
+    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
     <ClCompile Include="Source\Editor\EditorScene.cpp" />
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\EditorContentBrowser.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
+    <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -129,6 +131,7 @@
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
+    <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Physics\PhysicsObject.h" />
@@ -138,6 +141,9 @@
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
     <ClInclude Include="Source\Debugging\Debugger.h" />
+    <ClInclude Include="Source\Scripting\LogicSystem.h" />
+    <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
+    <ClInclude Include="Source\Scripting\ScriptFields.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

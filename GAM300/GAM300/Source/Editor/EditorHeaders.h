@@ -25,9 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"
 #include "Scene/Entity.h"
+#include "Core/Events.h"
 
 #define NON_VALID_ENTITY -1
-
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
@@ -35,6 +35,11 @@ public:
     void Init();
     void Update(float dt);
     void Exit();
+
+    void OpenFile();
+
+    void NewScene();
+    void SaveScene();
 
 private:
     bool exitApp = false;
@@ -58,13 +63,15 @@ public:
     void Exit();
 
     void DisplayEntity(const ObjectIndex& Index);
+    void ClearLayer();
     //void DisplayChildren(const ObjectIndex& Parent);
     ObjectIndex selectedEntity;
 
-    std::vector<Entity*>layer; 
+    std::vector<Entity*> layer;
 
     bool initLayer = true;
 private:
+    void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 };
 
 
