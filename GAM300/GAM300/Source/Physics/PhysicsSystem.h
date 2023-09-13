@@ -16,6 +16,7 @@
 #include "Jolt/Physics/Collision/Shape/ConvexShape.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
+#include "Jolt/Physics/Character/Character.h"
 
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
@@ -131,12 +132,15 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	void UpdateGameObjects();
 	void TestRun();
 
-
+	// Jolt Body creations
+	//void CreateJoltRigidbody(Rigidbody & rb);
+	//void CreateJoltCharacter(CharacterController & cc);
 
 	const unsigned int maxObjects = 1024;
 	const unsigned int maxObjectMutexes = 0;
 	const unsigned int maxObjectPairs = 1024;
 	const unsigned int maxContactConstraints = 1024;
+
 
 	unsigned int step = 0;
 

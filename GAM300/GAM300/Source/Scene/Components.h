@@ -276,16 +276,32 @@ struct Rigidbody
 	bool is_enabled = true;
 	bool is_trigger = false;
 
-	Vector3 linearVelocity{};					//velocity of object
+	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
 
-	float friction{ 0.1f };				//friction of body (0<=x<=1)
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
 	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 	JPH::BodyID RigidBodyID;			//Body ID 
+};
+
+struct CharacterController
+{
+	bool is_enabled = true;
+
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+
+
+	JPH::BodyID CharacterBodyID;
 };
 
 struct Script
@@ -297,7 +313,7 @@ struct Script
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, CharacterController>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

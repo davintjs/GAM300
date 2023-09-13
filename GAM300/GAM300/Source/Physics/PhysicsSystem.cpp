@@ -375,9 +375,22 @@ void PhysicsSystem::TestRun() {
 	//PopulatePhysicsWorld();
 }
 
+void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
+
+	JPH::CharacterSettings characterSetting;
+	characterSetting.mMass = cc.mass;
+	characterSetting.mFriction = cc.friction;
+	characterSetting.mGravityFactor = cc.gravityFactor;
+	characterSetting.mLayer = EngineObjectLayers::DYNAMIC;
+	characterSetting.mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
 
 
-//// Contact Listener
+
+
+	return;
+}
+
+// Contact Listener
 JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) {
 	std::cout << "Contact validate callback!\n";
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
