@@ -78,6 +78,7 @@
     <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
+    <ClCompile Include="Source\Graphics\MeshManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -144,6 +145,7 @@
     <ClInclude Include="Source\Scripting\LogicSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
+    <ClInclude Include="Source\Graphics\MeshManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

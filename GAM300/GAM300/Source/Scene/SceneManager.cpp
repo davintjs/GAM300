@@ -37,6 +37,7 @@ void SceneManager::LoadScene(const char* path)
 	// test instance rendering
 	for (int i = 0; i < 5; ++i) {
 		Entity& tempent = scene.AddEntity();
+		scene.AddComponent<MeshRenderer>(tempent);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand()%1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 	}

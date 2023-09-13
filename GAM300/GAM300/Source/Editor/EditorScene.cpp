@@ -144,14 +144,19 @@ void EditorScene::Update(float dt)
                 ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
                     glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
 
+
+
               
-                    //translate_after.x - tc.position.x;
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
-                    //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
+                //translate_after.x - tc.position.x;
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
+                //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = After_Translate;
-                trans.rotation = /*glm::degrees*/(After_Rotation);
+                //glm::quat quat_AR(After_Rotation);
+                //trans.rotation = glm::eulerAngles(quat_AR);
+                trans.rotation = After_Rotation;
+                std::cout << "rotation " << After_Rotation.x << " , " << After_Rotation.y << " , " << After_Rotation.z << "\n";
                 //trans.rotation.x = trans.rotation.x % 360;
                 trans.scale = After_Scale;
 

@@ -81,6 +81,9 @@ void AssetManager::Init()
 			}
 		}
 	}
+	MeshManager.GetGeomFromFiles("Assets/Models/Skull_textured/Skull_textured.geom");
+
+	MeshManager.Init();
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
 }

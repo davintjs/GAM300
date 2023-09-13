@@ -75,6 +75,7 @@ void DisplayType(const char* name, char*& val)
     ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
 
+
 void DisplayType(const char* name, float& val)
 {
     static float temp{};
@@ -248,6 +249,16 @@ template<>
 void DisplayComponent<AudioSource>(AudioSource& as) {
     Display("Loop", as.loop);
     Display("Volume", as.volume);
+}
+
+template <>
+void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
+{
+    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+    //ImGui::Text("Active");
+    Display("Mesh Name", meshyRendy.MeshName);
+
+
 }
 
 //template <>

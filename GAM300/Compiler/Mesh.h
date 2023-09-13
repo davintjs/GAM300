@@ -108,7 +108,7 @@ struct Material
     //std::vector<SampleHolder> _samples;
 };
 
-class Mesh {
+class Geom_Mesh {
 public:
     std::vector<Vertex> _vertices; // This individual mesh vertices
     std::vector<unsigned int> _indices; // This individual mesh indices
@@ -118,8 +118,8 @@ public:
 
     int materialIndex = 0; // Material index
 
-    Mesh() {};
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posOffset, glm::vec2 texOffset)
+    Geom_Mesh() {};
+    Geom_Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posOffset, glm::vec2 texOffset)
         :_vertices(vertices), _indices(indices), materialIndex(material)//, mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset)
     {};
 

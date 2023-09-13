@@ -270,12 +270,25 @@ struct Script
 {
 	std::string name;
 };
+
+
+struct MeshRenderer
+{
+	std::string MeshName;
+
+	//Lighting
+
+	// Material
+
+
+
+};
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator , MeshRenderer>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
