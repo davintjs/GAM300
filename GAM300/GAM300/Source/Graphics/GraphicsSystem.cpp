@@ -142,7 +142,7 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
-		std::cout << "entering update loop\n";
+		/*std::cout << "entering update loop\n";*/
 		int index = 1;
 		if (i == 3)
 		{
@@ -335,12 +335,12 @@ void GraphicsSystem::Update(float dt)
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->second.SRT_Buffer_Index[k]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			std::cout << "in here\n";
+			//std::cout << "in here\n";
 			Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim);
 		}
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
-	std::cout << "out\n";
+	//std::cout << "out\n";
 
 
 	//Draw(); // I just put the random shit inside here
