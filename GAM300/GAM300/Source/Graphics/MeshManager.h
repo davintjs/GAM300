@@ -23,6 +23,8 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
+
+	unsigned int index;
 };
 
 
@@ -75,9 +77,7 @@ private:
 
 	void CreateInstanceCube();
 
-	unsigned int InstanceSetup(GLuint vaoid);
+	unsigned int InstanceSetup(GLuint vaoid , unsigned int index);
 
-
-	//std::unordered_map<std::string, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>
 
 };

@@ -535,3 +535,4 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	}
 	PRINT(filePath,'\n');
 }
+

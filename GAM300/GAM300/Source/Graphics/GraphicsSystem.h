@@ -3,8 +3,17 @@
 
 #include "Core/SystemInterface.h"
 #include "glm/mat4x4.hpp"
+#include "GL/glew.h"
+
 
 #define EntityRenderLimit 10000
+
+// Naive Solution
+struct trans_mats
+{
+	glm::mat4 transformation_mat[EntityRenderLimit];
+	int index = 0;
+};
 
 struct InstanceProperties
 {
@@ -14,12 +23,15 @@ struct InstanceProperties
 
 };
 
+
+
 ENGINE_SYSTEM(GraphicsSystem)
 {
 public:
 	void Init();
 	void Update(float dt);
 	void Draw();
+	void Draw_Meshes(GLuint vaoid ,  unsigned int instance_count , unsigned int prim_count , GLenum prim_type);
 	void Exit();
 };
 #endif // !GRAPHICS_SYSTEM_H

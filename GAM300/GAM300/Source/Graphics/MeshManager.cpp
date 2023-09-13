@@ -2,7 +2,7 @@
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 
-extern glm::mat4 SRT_Buffers[50][EntityRenderLimit];
+extern trans_mats SRT_Buffers[50];
 
 void MESH_Manager::Init()
 {
@@ -30,7 +30,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string filePath)
     GeomImported newGeom(std::move(DeserializeGeoms(filePath)));
 
     Mesh newMesh;
-
+    newMesh.index = mContainer.size();
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
         std::cout << "ouch\n";
@@ -93,11 +93,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string filePath)
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(VAO));
-
-
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(VAO,newMesh.index) );
     }
-    mContainer.emplace(std::string("hehexd"), newMesh);
+    mContainer.emplace(std::string("temporary"), newMesh);
 }
 
 //Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid
@@ -171,6 +169,9 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
 void MESH_Manager::CreateInstanceCube()
 {
     Mesh newMesh;
+    newMesh.index = mContainer.size();
+
+
     float vertices[] = {
         // positions            // Normals              // Tangents             // Texture Coords   // Colors
         // FRONT FACE //
@@ -282,18 +283,16 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(vaoid));
-
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(vaoid , newMesh.index));
+   
     mContainer.emplace(std::string("Cube"), newMesh);
-
 }
 
-unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid) {
+unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid , unsigned int index) {
     unsigned int Mesh_SRT_Buffer;
     glGenBuffers(1, &Mesh_SRT_Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[0][0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[index].transformation_mat[0], GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
@@ -317,3 +316,6 @@ unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid) {
 
     return Mesh_SRT_Buffer;
 }
+
+
+
