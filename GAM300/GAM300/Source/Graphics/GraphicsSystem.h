@@ -15,6 +15,13 @@ struct trans_mats
 	int index = 0;
 };
 
+struct LightProperties
+{
+	glm::vec3 lightpos;
+	glm::vec3 lightColor;
+};
+
+
 struct InstanceProperties
 {
 	// rmb to convert everything to AOS
@@ -31,7 +38,8 @@ public:
 	void Init();
 	void Update(float dt);
 	void Draw();
-	void Draw_Meshes(GLuint vaoid ,  unsigned int instance_count , unsigned int prim_count , GLenum prim_type);
+	void Draw_Meshes(GLuint vaoid ,  unsigned int instance_count , 
+		unsigned int prim_count , GLenum prim_type, LightProperties LightSource);
 	void Exit();
 };
 #endif // !GRAPHICS_SYSTEM_H

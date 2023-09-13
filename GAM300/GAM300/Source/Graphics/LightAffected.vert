@@ -16,8 +16,6 @@ void main()
 {
 	FragmentPos = vec3(SRT * vec4(aVertexPosition, 1.0));
 
-
-
 	// DO THIS TRANSPOSE INVERSE IN CPU THEN UNIFORM INTO SHADER
     Normal = mat3(transpose(inverse(SRT))) * aNormalPosition;
 

@@ -38,9 +38,9 @@ std::vector<Ray3D> Ray_Container;
 
 // Naive Solution for now
 trans_mats SRT_Buffers[50];
-
 GLSLShader temp_instance_shader;
-
+LightProperties Lighting_Source;
+//bool isThereLight = false;
 
 void InstanceSetup(GLuint vaoid);
 
@@ -142,6 +142,18 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
+
+		Entity& entity = currentScene.GetEntity(renderer);
+		Transform& transform = currentScene.GetComponent<Transform>(entity);
+
+		if (i == 0)
+		{
+			renderer.isLightSource = true;
+			Lighting_Source.lightColor = glm::vec3(1.f, 1.f, 1.f);
+			Lighting_Source.lightpos = transform.translation;
+		}
+
+
 		/*std::cout << "entering update loop\n";*/
 		int index = 1;
 		if (i == 3)
@@ -155,9 +167,6 @@ void GraphicsSystem::Update(float dt)
 			index = 1;
 		}
 
-
-		Entity& entity = currentScene.GetEntity(renderer);
-		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
 
 
@@ -321,10 +330,10 @@ void GraphicsSystem::Update(float dt)
 		}
 	}
 	
-	// instanced bind
-	glBindBuffer(GL_ARRAY_BUFFER, MeshManager.mContainer.find("Cube")->second.SRT_Buffer_Index[0]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//// instanced bind
+	//glBindBuffer(GL_ARRAY_BUFFER, MeshManager.mContainer.find("Cube")->second.SRT_Buffer_Index[0]);
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	for (auto mesh = MeshManager.mContainer.begin(); mesh != MeshManager.mContainer.end(); mesh++)
 	{
@@ -336,7 +345,7 @@ void GraphicsSystem::Update(float dt)
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			//std::cout << "in here\n";
-			Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim);
+			Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim,Lighting_Source);
 		}
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
@@ -351,7 +360,8 @@ void GraphicsSystem::Update(float dt)
 	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
-void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, unsigned int prim_count, GLenum prim_type)
+void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 
+	unsigned int prim_count, GLenum prim_type, LightProperties LightSource)
 {
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -371,6 +381,13 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, unsi
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+	GLint uniform4 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+	GLint uniform5 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
+
 	// Scuffed SRT
 	// srt not uniform
 	/*GLint uniform3 =
@@ -380,6 +397,16 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, unsi
 		glm::value_ptr(EditorCam.getPerspMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1,
+		glm::value_ptr(LightSource.lightColor));
+	glUniform3fv(uniform4, 1,
+		glm::value_ptr(LightSource.lightpos));
+	glUniform3fv(uniform5, 1,
+		glm::value_ptr(EditorCam.GetCameraPosition()));
+
+
 
 	glBindVertexArray(vaoid);
 	glDrawArraysInstanced(prim_type, 0, prim_count, instance_count);

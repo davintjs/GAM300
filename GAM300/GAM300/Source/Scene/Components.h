@@ -272,11 +272,18 @@ struct Script
 };
 
 
+
 struct MeshRenderer
 {
 	std::string MeshName;
-
 	//Lighting
+
+	bool isLightSource = false;
+
+	struct LightSource
+	{
+		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
+	};
 
 	// Material
 
