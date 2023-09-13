@@ -35,9 +35,7 @@ void EditorMenuBar::Update(float dt)
 
             // Opening of files using file dialogs
             if (ImGui::MenuItem("Open", "Ctrl+O"))
-            {
                 OpenFile();
-            }
 
             // Saving of scene files only if an active scene is open, using file dialogs
             if (ImGui::MenuItem("Save", "Ctrl+S"))
@@ -152,7 +150,7 @@ void EditorMenuBar::SaveScene()
 
 void EditorMenuBar::OpenFile()
 {
-    std::string Filename = FileDialogs::OpenFile("Text Files (*.txt)\0*.txt\0");
+    std::string Filename = FileDialogs::OpenFile("All Files (*.*)\0*.*\0");
     if (!Filename.empty())
     {
         //Open File
@@ -160,6 +158,8 @@ void EditorMenuBar::OpenFile()
         // Open Scene File
         if (Filename.find(".scene") != std::string::npos)
         {
+            EditorHierarchy::Instance().ClearLayer();
+
             LoadSceneEvent loadScene(Filename);
             EVENTS.Publish(&loadScene);
         }

@@ -22,7 +22,7 @@ bool SerializeScene(Scene& _scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
-    out << YAML::EndMap;
+    out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
     for (Entity* entity : EditorHierarchy::Instance().layer)
     {
@@ -35,6 +35,8 @@ bool SerializeScene(Scene& _scene)
         bool serialized = SerializeEntity(out, entity, _scene);
         assert(serialized, "Unable To Serialize Entity!\n");
     }*/
+    out << YAML::EndSeq;
+    out << YAML::EndMap;
 
     if(!out.good())
         std::cout << "Emitter error: " << out.GetLastError() << "\n";
@@ -70,7 +72,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
     out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
-    out << YAML::Key << "m_IsActive" << YAML::Value << 1;
+    out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     if (_scene.HasComponent<Tag>(_entity))
@@ -112,18 +114,82 @@ void DeserializeRuntime(const std::string& _filepath)
 
 bool DeserializeScene(Scene& _scene)
 {
-    YAML::Node sceneNode = YAML::Load(_scene.filePath.string());
-    
-    _scene.sceneName = sceneNode["Scene"].as<std::string>();
+    YAML::Node data;
 
-    for (size_t i = 0; i < sceneNode.size(); i++)
+    try
     {
-        if (sceneNode[i].IsMap()) // Entity
+        data = YAML::LoadFile(_scene.filePath.string());
+    }
+    catch (YAML::ParserException e)
+    {
+        std::cout << "Failed to load .scene file \"" << _scene.filePath.string() << "\" due to: " << e.what() << "\n";
+        return false;
+    }
+    catch (YAML::BadFile e)
+    {
+        std::cout << "Failed to load .scene file \"" << _scene.filePath.string() << "\" due to: " << e.what() << "\n";
+        return false;
+    }
+
+    if (!data["Scene"])
+    {
+        std::cout << "Not a .scene file!\n";
+        return false;
+    }
+
+    _scene.sceneName = data["Scene"].as<std::string>();
+
+    std::cout << "Deserializing scene \"" << _scene.sceneName << "\"\n";
+
+    std::map<Entity*, Engine::UUID> childEntities;
+
+    auto entities = data["Entities"];
+    if (!entities)
+        return false;
+
+    for (auto entity : entities)
+    {
+        if (entity["GameObject"])
         {
+            YAML::Node object = entity["GameObject"];
+
+            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>());
+
+            // Bean: Dont need cuz when parenting it reorders the object anyways
+            //entity.denseIndex = object["m_Index"].as<ObjectIndex>(); 
+            _scene.SetActive(entity, object["m_IsActive"].as<bool>());
             
+            // Bean: Create a constructor for entity with transform and tag
+            Transform& transform = _scene.GetComponent<Transform>(entity);
+            _scene.GetComponent<Tag>(entity).name = object["m_Name"].as<std::string>();
+            transform.translation = object["m_Position"].as<Vector3>();
+            transform.rotation = object["m_Rotation"].as<Vector3>();
+            transform.scale = object["m_Scale"].as<Vector3>();
+            
+            auto parent = object["m_Parent"];
+            if (parent)
+            {
+                Engine::UUID parentUUID = parent.as<Engine::UUID>();
+                if (parentUUID != 0)
+                    childEntities[&entity] = parentUUID;
+            }
         }
     }
-    
+
+    // Link all children with parents
+    for (auto pair : childEntities)
+    {
+        for (auto& entity : _scene.entities)
+        {
+            if (entity.uuid == pair.second)
+            {
+                Transform& transform = _scene.GetComponent<Transform>(*pair.first);
+                transform.SetParent(&_scene.GetComponent<Transform>(entity));
+                break;
+            }
+        }
+    }
+
     return true;
 }
 
