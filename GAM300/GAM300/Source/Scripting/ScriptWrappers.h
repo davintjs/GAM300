@@ -337,19 +337,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//	\brief
-	//		Gets the delta time from the engine
-	//	\return
-	//		Delta time
-	//*/
-	///*******************************************************************************/
-	//static float GetDeltaTime()
-	//{
-	//	return (float)MyFrameRateController.getDt();
-	//}
-
-	///*******************************************************************************
-	///*!
-	//	\brief
 	//		Sets the parent to a child by uuid
 	//	\param newParentID
 	//		UUID of parent gameobject
@@ -687,18 +674,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	return &clone;
 	//}
 
-	///*******************************************************************************
-	///*!
-	//\brief
-	//	Destroys a gameobject by ID
-	//\param ID
-	//	GameObject ID of the gameObject to delete
-	//*/
-	///*******************************************************************************/
-	//static void DestroyGameObject(GameObject* pGameObject)
-	//{
-	//	MyGOF.Destroy(*pGameObject,MySceneManager.get_current_scene()->gameObjects,true);
-	//}
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void DestroyGameObject(Entity* pGameObject)
+	{
+		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+	}
 
 	///*******************************************************************************
 	///*!

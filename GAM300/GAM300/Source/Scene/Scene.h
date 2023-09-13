@@ -262,6 +262,14 @@ struct Scene
 		return false;
 	}
 
+	Entity& GetEntityByUUID(size_t UUID)
+	{
+		for (Entity& entity : entities)
+			if (UUID == entity.denseIndex)
+				return entity;
+		E_ASSERT(false,"Entity of UUID:","cannot be found");
+	}
+
 	template <typename Component, typename Owner>
 	Component& GetComponent(Owner& obj)
 	{

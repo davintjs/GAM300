@@ -78,7 +78,10 @@ namespace BeanFactory
         internal extern static ulong InstantiateGameObject();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyGameObject(ulong ID);
+        internal extern static void DestroyGameObject(GameObject gameObject);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void DestroyComponent(Component component);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
