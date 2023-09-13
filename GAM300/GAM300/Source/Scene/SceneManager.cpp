@@ -20,20 +20,37 @@ void SceneManager::Init()
 	{
 		CreateScene();
 		Scene& scene = GetCurrentScene();
-		scene.AddEntity();
 
-		Entity& titty = scene.AddEntity();
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+		Entity& floor = scene.AddEntity();
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).translation = Vector3(0.f, 0.f, 0.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).scale = Vector3(300.f, 10.0f, 300.f);
 
-		// test instance rendering
-		for (int i = 0; i < 5; ++i)
-		{
-			Entity& tempent = scene.AddEntity();
-			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-		}
-		scene.AddComponent<Script>(0).name = "Player";
+		Entity& box = scene.AddEntity();
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+
+		Entity& box2 = scene.AddEntity();
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+
+
+
+
+
+		//scene.AddEntity();
+
+		//Entity& titty = scene.AddEntity();
+		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+
+		//// test instance rendering
+		//for (int i = 0; i < 5; ++i)
+		//{
+		//	Entity& tempent = scene.AddEntity();
+		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
+		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+		//}
+		//scene.AddComponent<Script>(0).name = "Player";
 	}
 }
 
@@ -54,21 +71,23 @@ void SceneManager::CreateScene()
 
 void SceneManager::LoadScene(const std::string& _filePath)
 {
+	std::cout << "Load sceneeee\n";
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	EditorHierarchy::Instance().ClearLayer();
 	
+
 	if (!DeserializeScene(scene))
 	{
 		std::cout << "Error loading scene!\n";
 		return;
 	}
 
-	scene.AddEntity();
-	scene.AddEntity();
-	scene.AddEntity();
-	scene.AddEntity();
-	scene.AddEntity();
+	//scene.AddEntity();
+	//scene.AddEntity();
+	//scene.AddEntity();
+	//scene.AddEntity();
+	//scene.AddEntity();
 	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
 }
 

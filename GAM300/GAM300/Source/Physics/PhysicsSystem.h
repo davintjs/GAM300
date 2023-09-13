@@ -7,7 +7,7 @@
 #include "Jolt/RegisterTypes.h"
 #include "Jolt/Core/Factory.h"
 #include "Jolt/Core/TempAllocator.h"
-#include "Jolt/Core/JobSystemSingleThreaded.h"
+#include "Jolt/Core/JobSystemThreadPool.h"
 #include "Jolt/Physics/PhysicsSettings.h"
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
@@ -94,6 +94,30 @@ public:
 	}
 };
 
+
+// Contact Listener
+class EngineContactListener : public JPH::ContactListener {
+public:
+	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
+	virtual void OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	virtual void OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
+};
+
+//class EngineCollisionData {
+//public:
+//	EngineCollisionData() = default;
+//
+//private:
+//	JPH::BodyID& body1;
+//	JPH::BodyID& body2;
+//
+//	Vector3 body1CollisionPos;
+//	Vector3 body2CollisionPos;
+//
+//};
+
+
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
 	void Init();
@@ -106,6 +130,7 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	void PopulatePhysicsWorld();
 	void UpdateGameObjects();
 	void TestRun();
+
 
 
 	const unsigned int maxObjects = 1024;
@@ -131,9 +156,10 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	ObjectLayerPairFilter objectLayerPairFilter;
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
-	JPH::TempAllocatorImpl tempAllocator;
-	JPH::JobSystemSingleThreaded jobSystem;
+	JPH::TempAllocatorImpl* tempAllocator = nullptr;
+	JPH::JobSystemThreadPool* jobSystem = nullptr;
 
+	EngineContactListener engineContactListener;
 
 };
 

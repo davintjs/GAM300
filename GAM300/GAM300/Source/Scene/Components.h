@@ -26,6 +26,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include <vector>
+#include <map>
 
 // JPH
 #include "Jolt/Jolt.h"
@@ -273,6 +274,8 @@ struct Animator
 struct Rigidbody
 {
 	bool is_enabled = true;
+	bool is_trigger = false;
+
 	Vector3 linearVelocity{};					//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
