@@ -3,6 +3,7 @@
 #include "GraphicsSystem.h"
 
 extern trans_mats SRT_Buffers[50];
+extern InstanceProperties properties[EntityRenderLimit];
 
 void MESH_Manager::Init()
 {
@@ -291,12 +292,16 @@ void MESH_Manager::CreateInstanceCube()
 }
 
 unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid , unsigned int index) {
-    unsigned int Mesh_SRT_Buffer;
+    /**/unsigned int Mesh_SRT_Buffer;
     glGenBuffers(1, &Mesh_SRT_Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
     glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[index].transformation_mat[0], GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+   /* properties;
+    glGenBuffers(1, &Mesh_SRT_Buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[index].transformation_mat[0], GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 
     //entitySRTBuffer
     glBindVertexArray(vaoid);
