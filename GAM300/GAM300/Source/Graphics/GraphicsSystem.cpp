@@ -159,12 +159,12 @@ void GraphicsSystem::Update(float dt)
 		if (i == 3)
 		{
 			renderer.MeshName = "temporary";
-			index = 0;
+			index = 1;
 		}
 		else
 		{
 			renderer.MeshName = "Cube";
-			index = 1;
+			index = 2;
 		}
 
 
