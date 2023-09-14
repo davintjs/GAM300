@@ -166,6 +166,6 @@ private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_RUNTIME;
-	FileWatcher watcher;
+	//FileWatcher watcher;
 };
 #endif // !CORE_H

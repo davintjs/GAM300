@@ -76,6 +76,7 @@ void EditorScene::Update(float dt)
     //Editor scene viewport
     if (ImGui::Begin("Scene"))
     {
+        windowHovered = ImGui::IsWindowHovered();
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
         ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
