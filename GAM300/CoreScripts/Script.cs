@@ -19,30 +19,46 @@ using System;
 
 namespace BeanFactory
 {
-    public class Script : Component
+    public class Script
     {
+        private void Initialize(GameObject gameObj)
+        {
+            _gameObject = gameObj;
+            _transform = InternalCalls.GetTransformFromGameObject(gameObj);
+        }
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
             return original;
         }
 
-/*        public GameObject Instantiate(GameObject original)
+        public static GameObject Destroy(GameObject gameObject)
         {
-            GameObject gameObject = new GameObject();
-            gameObject.ID = InternalCalls.CloneGameObject(original.ID);
-            return gameObject;
+            return ;
         }
 
-        public GameObject Instantiate()
-        {
-            GameObject gameObject = new GameObject();
-            gameObject.ID = InternalCalls.InstantiateGameObject();
-            return gameObject;
-        }
+        /*        public GameObject Instantiate(GameObject original)
+                {
+                    GameObject gameObject = new GameObject();
+                    gameObject.ID = InternalCalls.CloneGameObject(original.ID);
+                    return gameObject;
+                }
 
-        public static void Destroy(GameObject gameObj)
-        {
-            InternalCalls.DestroyGameObject(gameObj.ID);
-        }*/
+                public GameObject Instantiate()
+                {
+                    GameObject gameObject = new GameObject();
+                    gameObject.ID = InternalCalls.InstantiateGameObject();
+                    return gameObject;
+                }
+
+                public static void Destroy(GameObject gameObj)
+                {
+                    InternalCalls.DestroyGameObject(gameObj.ID);
+                }*/
+
+        public Transform transform{ get{return _transform; } }
+        public GameObject gameObject{ get { return _gameObject; }}
+
+        private Transform _transform;
+        private GameObject _gameObject;
     }
 }

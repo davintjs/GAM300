@@ -126,7 +126,9 @@ public:
 			Pointer to the clone
 	*/
 	/**************************************************************************/
-	MonoObject* InstantiateClass(MonoClass * mClass);
+
+	template <typename... Args>
+	MonoObject* InstantiateClass(MonoClass * mClass, Args&&... args);
 	/**************************************************************************/
 	/*!
 		\brief
@@ -461,37 +463,7 @@ public:
 	//template<typename T, typename... Ts>
 	//void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
 
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Reflects GameObject into C#
-
-	\param gameObject
-		Object to reflect
-
-	\return
-		Mono Instance of gameObject
-	*/
-	/*******************************************************************************/
-	MonoObject* ReflectEntity(Entity& entity);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Reflects component into C#
-
-	\param component
-		Object to reflect
-
-	\return
-		Mono Instance of gameObject
-	*/
-	/*******************************************************************************/
-	template <typename T>
-	MonoObject* ReflectComponent(T& component);
-	template <>
-	MonoObject* ReflectComponent(Script& component);
+	MonoObject* ReflectScript(Script& component);
 
 	MonoImage* GetAssemblyImage();
 

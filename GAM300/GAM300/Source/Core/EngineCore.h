@@ -93,6 +93,7 @@ public:
 		//ACQUIRE_SCOPED_LOCK("Assets");
 		//EVENTS.Publish(&startEvent);
 
+		PRINT("SIZEOF: ", sizeof(Entity));
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
 		//{
@@ -107,7 +108,6 @@ public:
 		//std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		// Bean: Serialization Tests
-		Emittion();
 	}
 
 	/**************************************************************************/
@@ -119,7 +119,6 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
-		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
@@ -168,6 +167,6 @@ private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
-	//FileWatcher watcher;
+	FileWatcher watcher;
 };
 #endif // !CORE_H

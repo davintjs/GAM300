@@ -6,13 +6,14 @@ public class Player : Script
 {
     void Start()
     {
-        Console.WriteLine("Start from Player");
+        Console.WriteLine("dazxda from Player");
     }
 
     void Update()
     {
-        //Vector3 newPos = transform.localPosition;
-/*        float speed = 0.4f;
+        //Console.WriteLine("Sizeof:" + gameObject);
+        Vector3 newPos = transform.localPosition;
+        float speed = 0.4f;
         if (Input.GetKey(KeyCode.W))
         {
             newPos.z += speed;
@@ -29,7 +30,7 @@ public class Player : Script
         {
             newPos.x -= speed;
         }
-        transform.localPosition = newPos;*/
+        transform.localPosition = newPos;
     }
 
     void Exit()

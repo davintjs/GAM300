@@ -212,6 +212,11 @@ void DisplayComponent<Transform>(Transform& transform)
     Display("Rotation", rotation);
     transform.rotation = glm::radians(rotation);
     Display("Scale", transform.scale);
+    for (int i = 0; i < 3; ++i)
+    {
+        if (fabs(transform.scale[i]) < 0.001f)
+            transform.scale[i] = 0.001f;
+    }
 }
 
 template <>
