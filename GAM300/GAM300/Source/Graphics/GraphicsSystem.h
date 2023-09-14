@@ -23,8 +23,11 @@ struct LightProperties
 };
 
 
+static unsigned int InstancePropertyCount = 1;
+
 struct InstanceProperties
 {
+	unsigned int VAO;
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
