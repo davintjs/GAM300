@@ -147,7 +147,7 @@ void GraphicsSystem::Update(float dt)
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	bool checkForSelection = false;
 	Ray3D temp;
-	if (InputHandler::isMouse_L_DoubleClick())
+	if (InputHandler::isMouseButtonPressed_L())
 	{
 		temp = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y, 
 			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());

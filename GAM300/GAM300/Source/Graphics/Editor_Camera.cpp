@@ -34,12 +34,12 @@ void Editor_Camera::Update(float dt)
 		
 		prevMousePos = InputHandler::getMousePos();
 
-		if (InputHandler::isMouseButtonPressed_L()) // Rotating
+		if (InputHandler::isMouseButtonHolding_L()) // Rotating
 		{
 			if(canMove)
 			rotateCamera(delta);
 		}
-		else if (InputHandler::isMouseButtonPressed_R()) // Panning
+		else if (InputHandler::isMouseButtonHolding_R()) // Panning
 		{
 			panCamera(delta);
 		}
@@ -92,7 +92,7 @@ void Editor_Camera::Update(float dt)
 
 	
 
-	if (InputHandler::isMouseButtonPressed_L())
+	if (InputHandler::isMouseButtonHolding_L())
 	{
 		glm::vec2 position = GetMouseInNDC();
 		EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
