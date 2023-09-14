@@ -50,6 +50,7 @@ void Model::init() {
 
         // bind vbo and pass vertice data into the buffer
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
         glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[i]._vertices[0], GL_STATIC_DRAW);
 
         // set the vertex attributes to tell vert shader pos, uv, normal etc.
@@ -996,7 +997,7 @@ void Model::debugline_draw(glm::mat4& SRT)
 }
 void Model::DeserializeGeoms(const std::string filePath)
 {
-    Geom tempGeom;
+    troll_Geom tempGeom;
     std::ifstream ifs(filePath, std::ios::binary);
 
     //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
@@ -1007,7 +1008,7 @@ void Model::DeserializeGeoms(const std::string filePath)
 
     for (int i = 0; i < meshSize; ++i)
     {
-        Mesh tempMesh;
+        Geom_Mesh tempMesh;
 
         size_t vertSize;
         ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));

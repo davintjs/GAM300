@@ -3,6 +3,7 @@
 
 void Texture_Manager::Init()
 {
+    std::cout << "TEXTURE MANAGER INIT\n";
 	;
 }
 

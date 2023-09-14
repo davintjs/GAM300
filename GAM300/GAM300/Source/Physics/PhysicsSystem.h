@@ -1,21 +1,22 @@
+#ifndef PHYSICSSYSTEM_H
+#define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
-#include "Scene/Entity.h"
 
 
 #include "Jolt/Jolt.h"
 #include "Jolt/RegisterTypes.h"
 #include "Jolt/Core/Factory.h"
 #include "Jolt/Core/TempAllocator.h"
-#include "Jolt/Core/JobSystemSingleThreaded.h"
+#include "Jolt/Core/JobSystemThreadPool.h"
 #include "Jolt/Physics/PhysicsSettings.h"
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include "Jolt/Physics/Collision/Shape/ConvexShape.h"
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
-
-#ifndef PHYSICSSYSTEM_H
-#define PHYSICSSYSTEM_H
+#include "Jolt/Physics/Character/Character.h"
 
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
@@ -47,7 +48,7 @@ public:
 };
 
 // Defines mapping between object and broadphase layers
-class BroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface {
+class BroadPhaseLayerInterface final: public JPH::BroadPhaseLayerInterface {
 public:
 	BroadPhaseLayerInterface() {
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
@@ -63,6 +64,17 @@ public:
 
 		return bpLayers[objLayer];
 	}
+
+	#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+	virtual const char* GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override
+	{
+		switch ((JPH::BroadPhaseLayer::Type)inLayer)
+		{
+		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::STATIC:	return "NON_MOVING";
+		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::DYNAMIC:		return "MOVING";
+		}
+	}
+	#endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
 
 private:
 	JPH::BroadPhaseLayer bpLayers[EngineObjectLayers::NUM_LAYERS];
@@ -83,22 +95,52 @@ public:
 	}
 };
 
+
+// Contact Listener
+class EngineContactListener : public JPH::ContactListener {
+public:
+	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
+	virtual void OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	virtual void OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
+};
+
+//class EngineCollisionData {
+//public:
+//	EngineCollisionData() = default;
+//
+//private:
+//	JPH::BodyID& body1;
+//	JPH::BodyID& body2;
+//
+//	Vector3 body1CollisionPos;
+//	Vector3 body2CollisionPos;
+//
+//};
+
+
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
 	void Init();
-	void Update();
+	void Update(float dt);
 	void Exit();
 
 	void OnSceneStart();
 	void OnSceneEnd();
 
-	void CreatePhysicsObject(Entity& e);
+	void PopulatePhysicsWorld();
+	void UpdateGameObjects();
+	void TestRun();
 
+	// Jolt Body creations
+	//void CreateJoltRigidbody(Rigidbody & rb);
+	//void CreateJoltCharacter(CharacterController & cc);
 
 	const unsigned int maxObjects = 1024;
 	const unsigned int maxObjectMutexes = 0;
 	const unsigned int maxObjectPairs = 1024;
 	const unsigned int maxContactConstraints = 1024;
+
 
 	unsigned int step = 0;
 
@@ -111,15 +153,19 @@ ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 	JPH::ShapeRefC* floorShape = nullptr;
 	JPH::BodyCreationSettings* floorSettings = nullptr;
 	JPH::SphereShape* sphereShape = nullptr;
+	JPH::CapsuleShape* capsuleShape = nullptr;
 
-	//BroadPhaseLayerInterface bpLayerInterface;
-	//ObjectLayerPairFilter objectLayerPairFilter;
-	//ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
-	JPH::TempAllocatorImpl tempAllocator;
-	JPH::JobSystemSingleThreaded jobSystem;
+	BroadPhaseLayerInterface bpLayerInterface;
+	ObjectLayerPairFilter objectLayerPairFilter;
+	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
+
+	JPH::TempAllocatorImpl* tempAllocator = nullptr;
+	JPH::JobSystemThreadPool* jobSystem = nullptr;
+
+	EngineContactListener engineContactListener;
+
 };
-
 
 
 

@@ -21,7 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-//#include "Physics/PhysicsSystem.h"
+#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
@@ -72,7 +72,7 @@ public:
 			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
 			//&LogicSystem::Instance(),
-			//&PhysicsSystem::Instance(),
+			&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
@@ -165,7 +165,7 @@ public:
 private:
 	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
-	SystemMode mode = ENUM_SYSTEM_EDITOR;
+	SystemMode mode = ENUM_SYSTEM_RUNTIME;
 	FileWatcher watcher;
 };
 #endif // !CORE_H

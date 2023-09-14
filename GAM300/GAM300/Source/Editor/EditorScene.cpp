@@ -42,16 +42,38 @@ void EditorScene::Update(float dt)
 
     ImGui::SetNextWindowClass(&window_class);
 
+    //Scene toolbar
     if (ImGui::Begin("Scene Toolbar")) {
         ImGui::Dummy(ImVec2(0.0f, 3.f));
         ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
+
+        float buttonWidth = 24.f;
+        ImGui::SameLine(); if (ImGui::Button("Q", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))){
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("W", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("E", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
+        ImGui::SameLine(); if (ImGui::Button("R", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))) {
+            // Insert Logic here 
+        }
 
         //using Gizmo world (int) to toggle between world and local coords
     }
     ImGui::End();
 
+    if (ImGui::Begin("Game")) {
+
+    }
+    ImGui::End();
+
+    //Editor scene viewport
     if (ImGui::Begin("Scene"))
     {
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
@@ -168,6 +190,8 @@ void EditorScene::Update(float dt)
                 //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
                 //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
 
+
+
                 glm::vec3 a_translation;
                 glm::quat a_rot;
                 glm::vec3 a_scale;
@@ -175,10 +199,10 @@ void EditorScene::Update(float dt)
                 glm::vec4 a_perspective;
                 glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
               
-                    //translate_after.x - tc.position.x;
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
-                    //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
+                //translate_after.x - tc.position.x;
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
+                //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = a_translation;
                 trans.rotation = /*glm::degrees*/ glm::eulerAngles(a_rot);

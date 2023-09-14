@@ -75,6 +75,7 @@ void DisplayType(const char* name, char*& val)
     ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
 
+
 void DisplayType(const char* name, float& val)
 {
     static float temp{};
@@ -234,8 +235,8 @@ void DisplayComponent<Rigidbody>(Rigidbody& rb)
     ImGui::SameLine();
     ImGui::Text("Active");
     Display("Mass", rb.mass);
-    Display("Velocity", rb.velocity);
-    Display("Acceleration", rb.acceleration);
+    Display("Linear Velocity", rb.linearVelocity);
+    Display("Angular Velocity", rb.angularVelocity);
     Display("Force", rb.force);
     Display("Use Gravity", rb.useGravity);
     Display("Is Kinematic", rb.isKinematic);
@@ -253,6 +254,16 @@ template<>
 void DisplayComponent<AudioSource>(AudioSource& as) {
     Display("Loop", as.loop);
     Display("Volume", as.volume);
+}
+
+template <>
+void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
+{
+    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+    //ImGui::Text("Active");
+    Display("Mesh Name", meshyRendy.MeshName);
+
+
 }
 
 //template <>
@@ -424,7 +435,7 @@ template <typename T>
 void DisplayComponentHelper(T& component)
 {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth;
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
@@ -439,7 +450,54 @@ void DisplayComponentHelper(T& component)
         //This means T is not a component
         PRINT(typeid(T).name());
     }
-    if (ImGui::CollapsingHeader(name.c_str(), nodeFlags))
+    bool windowopen = ImGui::CollapsingHeader(name.c_str(), nodeFlags);
+
+    ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
+
+    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+
+    static bool comp_settings = false;
+
+    const char* popup = GetComponentType::Name<T>();
+
+    ImGui::PushID(GetComponentType::E<T>());
+
+    if (ImGui::Button("...")) {
+        ImGui::OpenPopup(popup);
+    }
+
+    //Component Settings window
+    ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
+    if (ImGui::BeginPopup(popup, win_flags)) {
+
+        if (ImGui::MenuItem("Reset")) {
+
+        }
+
+        if constexpr (!std::is_same<T, Transform>()) {
+            if (ImGui::MenuItem("Remove Component")) {
+                //Destroy current component of current selected entity in editor
+
+                curr_scene.Destroy(curr_scene.GetComponent<T>(curr_scene.entities.DenseSubscript(EditorHierarchy::Instance().selectedEntity)));
+            }
+        }
+        else {
+            ImGui::TextDisabled("Remove Component");
+        }
+
+        if (ImGui::MenuItem("Copy Component")) {
+
+        }
+
+        ImGui::EndPopup();
+    }
+
+    ImGui::PopID();
+
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
+
+
+    if (windowopen)
     {
         /*if (ImGui::BeginDragDropSource())
         {
@@ -493,6 +551,7 @@ void DisplayComponentHelper(T& component)
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
     }
+
 }
 
 
@@ -515,6 +574,8 @@ private:
     void DisplayNext(Entity& entity)
     {
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
+        
 
         if constexpr (SingleComponentTypes::Has<T1>()) {
             if (curr_scene.HasComponent<T1>(entity)) {
@@ -597,12 +658,12 @@ void AddComponentPanel(Entity& entity) {
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddComponentPanel = false;
     }
+    ImGui::OpenPopup("Add Component");
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
-    ImGui::Begin("Add Component", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-    
-    (void)AddComponentsDisplay(entity);
-
-    ImGui::End();
+        (void)AddComponentsDisplay(entity);
+        ImGui::EndPopup();
+    }
 }
 
 void DisplayEntity(Entity& entity)

@@ -185,13 +185,13 @@ struct Transform
 	void SetParent(Transform* newParent) {
 		// Calculate the global transformation matrix
 		if (parent) {
-			parent->RemoveChild(this);
+			/*parent->RemoveChild(this);
 			glm::mat4 globalTransform = GetWorldMatrix();
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 		}
 
 		// Set the new parent
@@ -199,13 +199,13 @@ struct Transform
 		parent = newParent;
 
 		if (parent) {
-			glm::mat4 parentTransform = parent->GetWorldMatrix();
+			/*glm::mat4 parentTransform = parent->GetWorldMatrix();
 			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);
@@ -231,17 +231,20 @@ struct AudioSource
 
 struct BoxCollider
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
 };
 
 struct SphereCollider
 {
-
+	float radius = 1.0f; 
 };
 
 struct CapsuleCollider
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
 };
 
 struct Animator
@@ -254,13 +257,35 @@ struct Animator
 
 struct Rigidbody
 {
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
-	Vector3 force{};					//forces acting on object, shud be an array
-	float mass{ 1.f };					//mass of object
 	bool is_enabled = true;
+	bool is_trigger = false;
+
+	Vector3 linearVelocity{};			//velocity of object
+	Vector3 angularVelocity{};
+	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
+	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	JPH::BodyID RigidBodyID;			//Body ID 
+};
+
+struct CharacterController
+{
+	bool is_enabled = true;
+
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+
+
+	JPH::BodyID CharacterBodyID;
 };
 
 struct Script
@@ -269,12 +294,32 @@ struct Script
 	std::map<std::string, Field> fields;
 };
 
+
+
+struct MeshRenderer
+{
+	std::string MeshName;
+	//Lighting
+
+	bool isLightSource = false;
+
+	struct LightSource
+	{
+		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
+	};
+
+	LightSource Light_Properties;
+	// Material
+
+
+
+};
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
