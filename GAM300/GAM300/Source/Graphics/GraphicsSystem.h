@@ -4,13 +4,14 @@
 #include "Core/SystemInterface.h"
 #include "glm/mat4x4.hpp"
 
-#define EntityRenderLimit 10000
+#define EntityRenderLimit 200
+#define EnitityInstanceLimit 200
 
 struct InstanceProperties
 {
 	// rmb to convert everything to AOS
-	GLuint entitySRT;
-	glm::mat4 entitySRT[EntityRenderLimit];
+	unsigned int entitySRTbuffer;
+	glm::mat4 entitySRT[EnitityInstanceLimit];
 	// int morestuff;
 
 };
