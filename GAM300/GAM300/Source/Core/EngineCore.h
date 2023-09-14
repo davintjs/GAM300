@@ -69,9 +69,9 @@ public:
 		{
 			&InputSystem::Instance(),
 			&SceneManager::Instance(),
-			&ScriptingSystem::Instance(),
+			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
-			&LogicSystem::Instance(),
+			//&LogicSystem::Instance(),
 			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),

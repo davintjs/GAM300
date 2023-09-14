@@ -137,38 +137,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			return nullptr;
 		}
 	}
-
-#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
-	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
-	{\
-		if (GetComponentType::E<T>() == componentType)\
-		{\
-			if constexpr (std::is_same<TYPE,void>)\
-			{\
-				return;\
-			}\
-			else\
-			{\
-				return nullptr;\
-			}\
-		}\
-		if constexpr (sizeof...(Ts) != 0)\
-		{\
-			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
-		}\
-		else \
-		{\
-			return nullptr; \
-		}\
-	}\
-	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
-	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
-
-
  
 	//template<typename T, typename... Ts>
 	//struct ComponentTypeIterStruct
@@ -182,7 +150,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
 
-	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity);
+	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity(*((T*)pComponent)));
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
 		return RecurseGetEntity(componentType,pComponent);
@@ -288,7 +256,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>);
+	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -711,7 +679,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
 	}
 
-	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy)
+	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pComponent))
 	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
 	{
 		MonoType* managedType = mono_reflection_type_get_type(componentType);

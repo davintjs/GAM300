@@ -26,6 +26,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include <vector>
+#include <Scripting/ScriptFields.h>
+#include <map>
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -35,8 +37,6 @@ using Vector4 = glm::vec4;
 using Quaternion = glm::quat;
 
 static std::map<std::string, size_t> ComponentTypes{};
-
-
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
@@ -266,6 +266,7 @@ struct Rigidbody
 struct Script
 {
 	std::string name;
+	std::map<std::string, Field> fields;
 };
 
 #pragma endregion
@@ -284,6 +285,45 @@ using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiCompo
 using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
+
+#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	{\
+		if (GetComponentType::E<T>() == componentType)\
+		{\
+			if constexpr (std::is_same<TYPE,void>())\
+			{\
+				FUNC;\
+				return;\
+			}\
+			else\
+			{\
+				return FUNC;\
+			}\
+		}\
+		if constexpr (sizeof...(Ts) != 0)\
+		{\
+			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
+		}\
+		else if constexpr(!std::is_same<TYPE,void>())\
+		{\
+			return nullptr; \
+		}\
+	}\
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
+	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+
+enum class FieldType :int
+{
+	Float = AllComponentTypes::Size(), Double,
+	Bool, Char, Short, Int, Long,
+	UShort, UInt, ULong, String,
+	Vector2, Vector3, GameObject, None
+};
 
 template<typename T, typename... Ts>
 static void RegisterComponents()
