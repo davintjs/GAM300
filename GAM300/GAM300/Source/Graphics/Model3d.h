@@ -11,10 +11,10 @@
 #include "../../Compiler/Mesh.h"
 
 // Just a wrapper class to hold all these values
-class Geom
+class troll_Geom
 {
 public:
-	std::vector<Mesh> mMeshes; // Total submeshes of this geom
+	std::vector<Geom_Mesh> mMeshes; // Total submeshes of this geom
 
 	// Model loader values
 	//glm::vec3 mPosCompressionScale;
@@ -103,7 +103,7 @@ public:
 
 	//AssimpLoader* _geom; 
 
-	std::vector<Geom> totalGeoms; // Contains all geom of the project
+	std::vector<troll_Geom> totalGeoms; // Contains all geom of the project
 
 private:
 	void DeserializeGeoms(const std::string filePath);

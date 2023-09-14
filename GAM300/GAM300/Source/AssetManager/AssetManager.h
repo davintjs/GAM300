@@ -9,6 +9,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "Core/Events.h"
 #include "Graphics/TextureManager.h"
+#include "Graphics/MeshManager.h"
+// GUID, last file update time, file name, data
 struct FileInfo
 {
 	FileInfo() {};

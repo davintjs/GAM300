@@ -185,13 +185,13 @@ struct Transform
 	void SetParent(Transform* newParent) {
 		// Calculate the global transformation matrix
 		if (parent) {
-			parent->RemoveChild(this);
+			/*parent->RemoveChild(this);
 			glm::mat4 globalTransform = GetWorldMatrix();
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 		}
 
 		// Set the new parent
@@ -199,13 +199,13 @@ struct Transform
 		parent = newParent;
 
 		if (parent) {
-			glm::mat4 parentTransform = parent->GetWorldMatrix();
+			/*glm::mat4 parentTransform = parent->GetWorldMatrix();
 			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);
@@ -268,12 +268,32 @@ struct Script
 	std::string name;
 };
 
+
+
+struct MeshRenderer
+{
+	std::string MeshName;
+	//Lighting
+
+	bool isLightSource = false;
+
+	struct LightSource
+	{
+		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
+	};
+
+	LightSource Light_Properties;
+	// Material
+
+
+
+};
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator , MeshRenderer>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

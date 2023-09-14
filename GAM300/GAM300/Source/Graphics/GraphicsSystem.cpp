@@ -11,6 +11,7 @@
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
+#include "MeshManager.h"
 
 //Temporary
 Model testmodel;
@@ -34,11 +35,44 @@ bool SwappingColorSpace = false;
 //Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
 
+
+
+// Naive Solution for now
+trans_mats SRT_Buffers[50];
+GLSLShader temp_instance_shader;
+LightProperties Lighting_Source;
+//bool isThereLight = false;
+
 void InstanceSetup(GLuint vaoid);
 
 void GraphicsSystem::Init()
 {
-	
+	std::vector<std::pair<GLenum, std::string>> shdr_files;
+	// Vertex Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/InstancedRender.vert"));
+
+	// Fragment Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/InstancedRender.frag"));
+
+	std::cout << "TEMP Instanced Render SHADER\n";
+	temp_instance_shader.CompileLinkValidate(shdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == temp_instance_shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate shader programs\n";
+		sstr << temp_instance_shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+
+
+
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
 	//INIT GRAPHICS HERE
@@ -107,6 +141,69 @@ void GraphicsSystem::Update(float dt)
 	float temp_intersect;
 
 	int i = 0;
+	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
+	{
+
+		Entity& entity = currentScene.GetEntity(renderer);
+		Transform& transform = currentScene.GetComponent<Transform>(entity);
+
+		if (i == 0)
+		{
+			renderer.isLightSource = true;
+			Lighting_Source.lightColor = renderer.Light_Properties.LightingColor;
+			Lighting_Source.lightpos = transform.translation;
+		}
+
+		/*std::cout << "entering update loop\n";*/
+		int index = 1;
+		if (i == 3)
+		{
+			renderer.MeshName = "temporary";
+			index = 0;
+		}
+		else
+		{
+			renderer.MeshName = "Cube";
+			index = 1;
+		}
+
+
+
+
+
+		SRT_Buffers[index].transformation_mat[ SRT_Buffers[index].index++ ] = transform.GetWorldMatrix();
+		entitySRT[i] = transform.GetWorldMatrix();
+		++i;
+
+		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+		if (checkForSelection)
+		{
+			glm::mat4 translation_mat(
+				glm::vec4(1.f, 0.f, 0.f, 0.f),
+				glm::vec4(0.f, 1.f, 0.f, 0.f),
+				glm::vec4(0.f, 0.f, 1.f, 0.f),
+				glm::vec4(transform.translation, 1.f)
+			);
+			glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
+
+			glm::vec3 mins = transform.scale * glm::vec3(-1.f, -1.f, -1.f);
+			glm::vec3 maxs = transform.scale * glm::vec3(1.f, 1.f, 1.f);
+
+			glm::mat4 noscale = translation_mat * rotation_mat;
+
+			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
+				noscale, temp_intersect))
+			{
+				if (temp_intersect < intersected)
+				{
+					EditorCam.ActiveObj = &entity;
+					intersected = temp_intersect;
+				}
+			}
+		}
+	}
+
+	/*
 	for (Entity& entity : currentScene.entities)
 	{
 		Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(entity.denseIndex);
@@ -165,6 +262,8 @@ void GraphicsSystem::Update(float dt)
 			}
 		}
 	}
+	*/
+
 
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
@@ -232,46 +331,148 @@ void GraphicsSystem::Update(float dt)
 
 		}
 	}
-	// instanced bind
-	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	//// instanced bind
+	//glBindBuffer(GL_ARRAY_BUFFER, MeshManager.mContainer.find("Cube")->second.SRT_Buffer_Index[0]);
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	Draw();
+	for (auto mesh = MeshManager.mContainer.begin(); mesh != MeshManager.mContainer.end(); mesh++)
+	{
+
+		// Looping through submeshes
+		for (int k = 0; k < mesh->second.SRT_Buffer_Index.size(); ++k)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->second.SRT_Buffer_Index[k]);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//std::cout << "in here\n";
+			Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim,Lighting_Source);
+		}
+		SRT_Buffers[mesh->second.index].index = 0;
+	}
+	//std::cout << "out\n";
+
+
+	//Draw(); // I just put the random shit inside here
+
 
 	// Bean: For unbinding framebuffer
 	EditorCam.getFramebuffer().unbind();
 	//glDisable(GL_FRAMEBUFFER_SRGB);
 }
 
-void GraphicsSystem::Draw() {
-
+void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 
+	unsigned int prim_count, GLenum prim_type, LightProperties LightSource)
+{
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
 
-	testmodel.draw();
-	// for  model : models{
-	//	for tex : model.tex_vaoid{
-	//		bind texture into uniform sampler2d
-	//	}
-	//	draw instance
-	// }
-	testBox.instanceDraw(EntityRenderLimit);
+	//testBox.instanceDraw(EntityRenderLimit);
 
-	/*LightSource.lightSource_draw();
-	AffectedByLight.affectedByLight_draw(LightSource.position);*/
+	// Should loop through the
 
-	
-	// This is to render the Rays -> Uncomment if u wanna see
+	glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
+	temp_instance_shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+	GLint uniform4 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+	GLint uniform5 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
+
+	// Scuffed SRT
+	// srt not uniform
+	/*GLint uniform3 =
+		glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
+
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1,
+		glm::value_ptr(LightSource.lightColor));
+	glUniform3fv(uniform4, 1,
+		glm::value_ptr(LightSource.lightpos));
+	glUniform3fv(uniform5, 1,
+		glm::value_ptr(EditorCam.GetCameraPosition()));
+
+
+
+	glBindVertexArray(vaoid);
+	glDrawArraysInstanced(prim_type, 0, prim_count, instance_count);
+	glBindVertexArray(0);
+
+	//glBindVertexArray(0);
+//}
+	temp_instance_shader.UnUse();
+}
+
+
+void GraphicsSystem::Draw() {
+
+
+
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+//	glEnable(GL_DEPTH_BUFFER);
+//
+//	//testBox.instanceDraw(EntityRenderLimit);
+//
+//	// Should loop through the
+//
+//	glEnable(GL_DEPTH_TEST); // might be sus to place this here
+//
+//	temp_instance_shader.Use();
+//	// UNIFORM VARIABLES ----------------------------------------
+//	// Persp Projection
+//	GLint uniform1 =
+//		glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+//	GLint uniform2 =
+//		glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+//	// Scuffed SRT
+//	// srt not uniform
+//	/*GLint uniform3 =
+//		glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
+//
+//	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+//		glm::value_ptr(EditorCam.getPerspMatrix()));
+//	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+//		glm::value_ptr(EditorCam.getViewMatrix()));
+//
+//	glBindVertexArray(MeshManager.mContainer.find("Cube")->second.Vaoids[0]);
+//	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 5);
+//	glBindVertexArray(0);
+//
+//	//glBindVertexArray(0);
+////}
+//	temp_instance_shader.UnUse();
+
+
+
+
+
+
+
+	// This is to render the Rays
 	if (Ray_Container.size() > 0)
 	{
-		
+
 		for (int i = 0; i < Ray_Container.size(); ++i)
 		{
 			Ray3D ray = Ray_Container[i];
-			
+
 			//std::cout << "ray " << ray.origin.x << "\n";
 			//std::cout << "ray direc" << ray.direction.x << "\n";
 
@@ -287,6 +488,28 @@ void GraphicsSystem::Draw() {
 
 		}
 	}
+	
+
+
+
+	
+	// Below stuff are like temporary /  Havent ported over stuffs
+	testmodel.draw();
+	// for  model : models{
+	//	for tex : model.tex_vaoid{
+	//		bind texture into uniform sampler2d
+	//	}
+	//	draw instance
+	// }
+
+
+	/*LightSource.lightSource_draw();
+	AffectedByLight.affectedByLight_draw(LightSource.position);*/
+
+	
+	
+
+	
 
 
 }
