@@ -300,23 +300,19 @@ struct MeshRenderer
 {
 	std::string MeshName = "Cube";
 	//Lighting
-
-	bool isLightSource = false;
-
-	struct LightSource
-	{
-		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
-	};
-
-	LightSource Light_Properties;
 	// Material
+};
+
+struct LightSource
+{
+	glm::vec3 lightingColor{ 1.f, 1.f, 1.f };
 };
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

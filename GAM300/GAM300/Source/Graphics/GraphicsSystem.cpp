@@ -16,7 +16,7 @@
 //Temporary
 Model testmodel;
 
-Model LightSource;
+//Model LightSource;
 
 Model AffectedByLight;
 
@@ -92,8 +92,8 @@ void GraphicsSystem::Init()
 	Line.lineinit();
 
 	// Magic Testing
-	LightSource.cubeinit();
-	LightSource.setup_lightshader();
+	//LightSource.cubeinit();
+	//LightSource.setup_lightshader();
 	
 	AffectedByLight.cubeinit();
 	AffectedByLight.setup_affectedShader();
@@ -101,7 +101,7 @@ void GraphicsSystem::Init()
 	// Setting up Positions
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
-	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
+	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
 	int index = 0;
@@ -157,6 +157,20 @@ void GraphicsSystem::Update(float dt)
 	float intersected = FLT_MAX;
 	float temp_intersect;
 
+	bool haveLight = false;
+	for (LightSource& lightSource : currentScene.GetComponentsArray<LightSource>())
+	{
+		haveLight = true;
+		Entity& entity{ currentScene.GetEntity(lightSource) };
+		Transform& transform = currentScene.GetComponent<Transform>(entity);
+
+		Lighting_Source.lightpos = transform.translation;
+		Lighting_Source.lightColor = lightSource.lightingColor;
+	}
+	if (!haveLight)
+	{
+		Lighting_Source.lightColor = glm::vec3(0.f, 0.f, 0.f);
+	}
 	int i = 0;
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
@@ -172,12 +186,8 @@ void GraphicsSystem::Update(float dt)
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
-		if (i == 0)
-		{
-			renderer.isLightSource = true;
-			Lighting_Source.lightColor = renderer.Light_Properties.LightingColor;
-			Lighting_Source.lightpos = transform.translation;
-		}
+
+		
 
 		///*std::cout << "entering update loop\n";*/
 		//int index = 1;
@@ -310,40 +320,40 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
-	// This one is turbo scuffed i just putting here to test  light
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
-	{
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-		{
-			LightSource.position.x -= 10.f;
-		}
-		else
-		{
-			LightSource.position.y += 10.f;
+	//// This one is turbo scuffed i just putting here to test  light
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
+	//{
+	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+	//	{
+	//		LightSource.position.x -= 10.f;
+	//	}
+	//	else
+	//	{
+	//		LightSource.position.y += 10.f;
 
-		}
-	}
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
-	{
-		LightSource.position.z -= 10.f;
-	}
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
-	{
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-		{
-			LightSource.position.x += 10.f;
-		}
-		else
-		{
-			LightSource.position.y -= 10.f;
+	//	}
+	//}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
+	//{
+	//	LightSource.position.z -= 10.f;
+	//}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
+	//{
+	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+	//	{
+	//		LightSource.position.x += 10.f;
+	//	}
+	//	else
+	//	{
+	//		LightSource.position.y -= 10.f;
 
-		}
-	}
+	//	}
+	//}
 
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
-	{
-		LightSource.position.z += 10.f;
-	}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
+	//{
+	//	LightSource.position.z += 10.f;
+	//}
 
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
@@ -531,7 +541,7 @@ void GraphicsSystem::Draw() {
 	// }
 
 
-	/*LightSource.lightSource_draw();
+	/* // LightSource.lightSource_draw();
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
 	
