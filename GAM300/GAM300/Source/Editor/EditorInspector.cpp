@@ -1,4 +1,4 @@
-ï»¿/*!***************************************************************************************
+/*!***************************************************************************************
 \file			EditorInspector.cpp
 \project		GAM300
 \author
@@ -10,7 +10,7 @@
     This file contains the definitions of the following:
     1.
 
-All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
@@ -19,9 +19,10 @@ All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
 #include "EditorTemplates.h";
-#include "Scene/Components.h"
 
-#define TEXT_BUFFER_SIZE 2048
+#define TEXT_BUFFER_SIZE 128
+
+
 
 static ImGuiTableFlags windowFlags =
 ImGuiTableFlags_Resizable |
@@ -45,9 +46,7 @@ void DisplayType(const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    static char buffer[2048];
-    strcpy_s(buffer, val.c_str());
-    ImGui::InputText(idName.c_str(), buffer,2048);
+    ImGui::InputText(idName.c_str(), &val);
 }
 
 void DisplayType(const char* name, int& val)
@@ -74,7 +73,6 @@ void DisplayType(const char* name, char*& val)
     idName += name;
     ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
-
 
 void DisplayType(const char* name, float& val)
 {
@@ -176,7 +174,7 @@ void Display(const char* name, T& val)
     ImGui::AlignTextToFramePadding();
     ImGui::TableNextColumn();
     ImGui::Text(name);
-    ImGui::TableNextColumn();
+    ImGui::SameLine();
     DisplayType(name, val);
 }
 
@@ -206,17 +204,10 @@ template <>
 void DisplayComponent<Transform>(Transform& transform)
 {
     //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-    //ImGui::Text("Active");
+    ImGui::Text("Active");
     Display("Position", transform.translation);
-    glm::vec3 rotation = glm::degrees(transform.rotation);
-    Display("Rotation", rotation);
-    transform.rotation = glm::radians(rotation);
+    Display("Rotation", transform.rotation);
     Display("Scale", transform.scale);
-    for (int i = 0; i < 3; ++i)
-    {
-        if (fabs(transform.scale[i]) < 0.001f)
-            transform.scale[i] = 0.001f;
-    }
 }
 
 template <>
@@ -235,8 +226,8 @@ void DisplayComponent<Rigidbody>(Rigidbody& rb)
     ImGui::SameLine();
     ImGui::Text("Active");
     Display("Mass", rb.mass);
-    Display("Linear Velocity", rb.linearVelocity);
-    Display("Angular Velocity", rb.angularVelocity);
+    Display("Velocity", rb.velocity);
+    Display("Acceleration", rb.acceleration);
     Display("Force", rb.force);
     Display("Use Gravity", rb.useGravity);
     Display("Is Kinematic", rb.isKinematic);
@@ -248,22 +239,6 @@ void DisplayComponent<Tag>(Tag& tag)
     //DisplayDragDrop();
     //spriteRenderer.sprite.set_name()
     Display("Entity Name", tag.name);
-}
-
-template<>
-void DisplayComponent<AudioSource>(AudioSource& as) {
-    Display("Loop", as.loop);
-    Display("Volume", as.volume);
-}
-
-template <>
-void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
-{
-    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-    //ImGui::Text("Active");
-    Display("Mesh Name", meshyRendy.MeshName);
-
-
 }
 
 //template <>
@@ -406,6 +381,7 @@ void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
 //        }
 //    }
 //}
+
 //template <>
 //void DisplayComponent<Image>(Image& image)
 //{
@@ -431,247 +407,66 @@ void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
 //    }
 //}
 
-template <typename T>
-void DisplayComponentHelper(T& component)
-{
+
+void DisplayComponents(const Entity& entity) {
+
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
-    static std::string name{};
-    if constexpr (std::is_same<T, Script>())
-    {
-        name = (component.name + " [Script]");
-    }
-    else if constexpr (AllComponentTypes::Has<T>())
-    {
-        name = GetComponentType::Name<T>();
-    }
-    else
-    {
-        //This means T is not a component
-        PRINT(typeid(T).name());
-    }
-    bool windowopen = ImGui::CollapsingHeader(name.c_str(), nodeFlags);
 
-    ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
-
-    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-
-    static bool comp_settings = false;
-
-    const char* popup = GetComponentType::Name<T>();
-
-    ImGui::PushID(GetComponentType::E<T>());
-
-    if (ImGui::Button("...")) {
-        ImGui::OpenPopup(popup);
-    }
-
-    //Component Settings window
-    ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
-    if (ImGui::BeginPopup(popup, win_flags)) {
-
-        if (ImGui::MenuItem("Reset")) {
-
-        }
-
-        if constexpr (!std::is_same<T, Transform>()) {
-            if (ImGui::MenuItem("Remove Component")) {
-                //Destroy current component of current selected entity in editor
-
-                curr_scene.Destroy(curr_scene.GetComponent<T>(curr_scene.entities.DenseSubscript(EditorHierarchy::Instance().selectedEntity)));
-            }
-        }
-        else {
-            ImGui::TextDisabled("Remove Component");
-        }
-
-        if (ImGui::MenuItem("Copy Component")) {
-
-        }
-
-        ImGui::EndPopup();
-    }
-
-    ImGui::PopID();
-
-    if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
+    ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
+        ImGuiTreeNodeFlags_OpenOnDoubleClick |
+        ImGuiTreeNodeFlags_DefaultOpen |
+        ImGuiTreeNodeFlags_Framed;
 
 
-    if (windowopen)
-    {
-        /*if (ImGui::BeginDragDropSource())
-        {
-            void* container = &component;
-            if constexpr (std::is_same<T, Script>())
-            {
-                ImGui::SetDragDropPayload(component.Name().c_str(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-            else
-            {
-                ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-        }*/
-
-        ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
-            | ImGuiTableFlags_PadOuterX;
-
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
-        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
-
-
-        if (ImGui::BeginTable("Component", 2, winFlags))
-        {
-            ImGui::Indent();
-            ImGui::TableSetupColumn("Text", 0, 0.4f);
-            ImGui::TableSetupColumn("Input", 0, 0.6f);
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
-
-            DisplayComponent(component);
-
-            //To do: Deletion of component in inspector
-            //ImGui::Spacing();
-            //if (CENTERED_CONTROL(ImGui::Button("Delete ", ImVec2(ImGui::GetWindowSize().x * 0.3, ImGui::GetTextLineHeightWithSpacing()))))
-            //{
-            //    //To do: delete component, get container of all component types and compare,
-            //    PRINT("DELETING");
-            //}
-
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
-
-            ImGui::Unindent();
-            ImGui::EndTable();
-        }
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
-    }
-
-}
-
-
-template<typename T, typename... Ts>
-struct DisplayComponentsStruct
-{
-public:
-    constexpr DisplayComponentsStruct(TemplatePack<T, Ts...> pack) {}
-    DisplayComponentsStruct() = delete;
-    DisplayComponentsStruct(Entity& entity)
-    {
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-        ImGui::TableNextColumn();
-        //DisplayComponentHelper(curr_scene.GetComponent<Transform>(entity));
-
-        DisplayNext<T, Ts...>(entity);
-    }
-private:
-    template<typename T1, typename... T1s>
-    void DisplayNext(Entity& entity)
-    {
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-
-        
-
-        if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (curr_scene.HasComponent<T1>(entity)) {
-                //dont display tag component as it is already on top of the inspector
-                if constexpr (!std::is_same<T1, Tag>())
-                {
-                    auto& component = curr_scene.GetComponent<T1>(entity);
-                    DisplayComponentHelper(component);
-                }              
-            }
-        }
-        else if constexpr (MultiComponentTypes::Has<T1>()) {
-
-            auto components = curr_scene.GetComponents<T1>(entity);
-            for (T1* component : components)
-            {
-                Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-                //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
-                DisplayComponentHelper(*component);
-            }
-        }
-
-        if constexpr (sizeof...(T1s) != 0)
-        {
-            DisplayNext<T1s...>(entity);
+    if (curr_scene.HasComponent<Transform>(entity)) {
+        if (ImGui::TreeNodeEx("Transform", NodeFlags)) {
+            DisplayComponent(curr_scene.GetComponent<Transform>(entity));
+            ImGui::TreePop();
+            ImGui::Separator();
         }
     }
-};
-using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponentTypes()));
 
-void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
-
-template<typename T, typename... Ts>
-struct AddComponentsStruct
-{
-public:
-    constexpr AddComponentsStruct(TemplatePack<T, Ts...> pack) {}
-    AddComponentsStruct(Entity& entity)
-    {
-        AddNext<T, Ts...>(entity);
-    }
-private:
-    template<typename T1, typename... T1s>
-    void AddNext(Entity& entity)
-    {
-        if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!entity.pScene->HasComponent<T1>(entity))
-            {
-                if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
-                {
-                    entity.pScene->AddComponent<T1>(entity);
-                    EditorInspector::Instance().isAddComponentPanel = false;
-                }
-            }
-        }
-        else
-        {
-            if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
-            {
-                entity.pScene->AddComponent<T1>(entity);
-                EditorInspector::Instance().isAddComponentPanel = false;
-            }
-        }
-
-        if constexpr (sizeof...(T1s) != 0)
-        {
-            AddNext<T1s...>(entity);
+    if (curr_scene.HasComponent<Tag>(entity)) {
+        if (ImGui::TreeNodeEx("Tag", NodeFlags)) {
+            DisplayComponent(curr_scene.GetComponent<Tag>(entity));
+            ImGui::TreePop();
+            ImGui::Separator();
         }
     }
-};
-using AddComponentsDisplay = decltype(AddComponentsStruct(DisplayableComponentTypes()));
 
-void AddComponentPanel(Entity& entity) {
-    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(ImVec2(300, 500));
+    /*if (curr_scene.HasComponent<Tag>(entity)) {
+        if (ImGui::TreeNodeEx("Tag", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
+            std::cout << "ok2\n";
+            DisplayComponent(curr_scene.GetComponent<Tag>(entity));
+            ImGui::TreePop();
+            ImGui::Separator();
+        }     
+    }*/
 
-    //press esc to exit add component window
-    if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-        EditorInspector::Instance().isAddComponentPanel = false;
+    if (curr_scene.HasComponent<Rigidbody>(entity)) {
+        if (ImGui::TreeNodeEx("Rigidbody", NodeFlags)) {
+            DisplayComponent(curr_scene.GetComponent<Rigidbody>(entity));
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
     }
-    ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
-
-        (void)AddComponentsDisplay(entity);
-        ImGui::EndPopup();
-    }
+    
+   /* if (curr_scene.HasComponent<Rigidbody>(entity)) {
+        bool open = ImGui::TreeNodeEx("Rigidbody", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed);
+        if (open) {
+            std::cout << "ok3\n";
+            DisplayComponent(curr_scene.GetComponent<Rigidbody>(entity));
+            ImGui::TreePop();
+            ImGui::Separator();
+        }
+    }*/
 }
 
 void DisplayEntity(Entity& entity)
 {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    bool enabled = curr_scene.IsActive(entity);
-    ImGui::Checkbox("##Active", &enabled);
-    curr_scene.SetActive(entity, enabled);
+
+    ImGui::Checkbox("##Active", &entity.is_enabled);
     ImGui::SameLine();
     static char buffer[256];
     std::string entity_name = curr_scene.GetComponent<Tag>(entity).name;
@@ -684,26 +479,21 @@ void DisplayEntity(Entity& entity)
     ImGui::PopItemWidth();
     curr_scene.GetComponent<Tag>(entity).name = buffer;
 
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
+    /*ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);*/
+    /*if (ImGui::BeginTable("Components", 1, tableFlags, ImVec2(0.f, ImGui::GetWindowSize().y * 0.8f)))
+   {
+       ImGui::PushID((int)entity.uuid);
+       DisplayComponents(entity);
+       ImGui::PopID();
+       ImGui::EndTable();
+   }
+   ImGui::PopStyleVar();*/
 
+    DisplayComponents(entity);
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-
-    if (ImGui::BeginTable("Components", 1, tableFlags))
-    {
-        ImGui::PushID((int)entity.uuid);
-        DisplayComponents(entity);
-        ImGui::PopID();
-        ImGui::Separator();
-        if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddComponentPanel = true;
-        }
-
-        ImGui::EndTable();
-        
-    }
-    ImGui::PopStyleVar();
+   
 
     /*static const float buttonSizeY = ImGui::CalcTextSize("Add Component").y;
     ImVec2 buttonSize(ImGui::GetWindowSize().x, buttonSizeY * 2);;
@@ -717,14 +507,11 @@ void DisplayEntity(Entity& entity)
 
 void EditorInspector::Init()
 {
-    isAddComponentPanel = false;
+
 }
 
 void EditorInspector::Update(float dt)
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
-    ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
-
     ImGui::Begin("Inspector");
     //Get Selected Entities from mouse picking
     //List out all components in order
@@ -736,18 +523,18 @@ void EditorInspector::Update(float dt)
 
 
     if (curr_index != NON_VALID_ENTITY) {
-        ImGui::Spacing();
         Entity& curr_entity = curr_scene.entities.DenseSubscript(curr_index);
         std::string Header = "Current Entity: " + curr_scene.GetComponent<Tag>(curr_entity).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
-    }
 
-    if (isAddComponentPanel) {
-        AddComponentPanel(curr_scene.entities.DenseSubscript(curr_index));
-    }
+        ImGui::Spacing();
+        if (CENTERED_CONTROL(ImGui::Button("Add Component"))) {
 
-    ImGui::PopStyleVar();
+        }
+    }
+  
+
     ImGui::End();
 }
 

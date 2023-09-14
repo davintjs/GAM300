@@ -1,14 +1,14 @@
 /*!***************************************************************************************
 \file			EditorContentBrowser.cpp
-\project		
-\author         Sean Ngo
+\project		GAM300
+\author
 
 \par			Course: GAM300
 \date           04/09/2023
 
 \brief
     This file contains the definitions of the following:
-    1. Content Browser
+    1.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -16,8 +16,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor.h"
 #include "EditorHeaders.h"
-#include "Graphics/TextureManager.h"
-#include "AssetManager/AssetManager.h"
 
 static const std::string AssetDirectory = "Assets";
 static std::string entityType = "default", entityName = "default";
@@ -73,13 +71,9 @@ void EditorContentBrowser::Update(float dt)
         //Draw the file / folder icon based on whether it is a directory or not
         std::string icon = it.is_directory() ? "foldericon" : "fileicon";
 
-        //icon = "fileicon";
-
         size_t icon_id = 0;
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        //To do: replace this when png is 
-        //icon_id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(""));
         ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
 
         //Drag drop logic for files

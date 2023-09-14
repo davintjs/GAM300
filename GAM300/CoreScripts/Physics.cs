@@ -16,8 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 using System.Collections;
 using System.Collections.Generic;
 
-
-namespace BeanFactory
+namespace CopiumEngine
 {
     public enum ForceMode2D
     {

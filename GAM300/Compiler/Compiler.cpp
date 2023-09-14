@@ -27,7 +27,7 @@ void ModelLoader::LoadModel()
 	ImportOptions =
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
 		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+		//aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
 		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
 		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
 		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
@@ -35,9 +35,8 @@ void ModelLoader::LoadModel()
 		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
 		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData 			// remove or fix invalid data
-	
-	| aiPostProcessSteps::aiProcess_PreTransformVertices;
+		aiPostProcessSteps::aiProcess_FindInvalidData;				// remove or fix invalid data
+		//aiPostProcessSteps::aiProcess_PreTransformVertices
 
 	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -171,7 +170,7 @@ void ModelLoader::ProcessGeom(const aiNode& node, const aiScene& scene)
 	}
 }
 
-Geom_Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
+Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 {
 	std::vector<TempVertex> tempVertex;
 	std::vector<unsigned int> tempIndices;
@@ -243,7 +242,7 @@ Geom_Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	// Calculate the material index of this mesh
 	int materialIndex = static_cast<int>(_materials.size() - 1);
 
-	return Geom_Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
+	return Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
 }
 
 void ModelLoader::Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind)
@@ -303,157 +302,129 @@ void ModelLoader::CompressVertices(std::vector<Vertex>& CompressVertices,
 	const std::vector<TempVertex> tempVertex,
 	std::pair<glm::vec3, glm::vec2>& mOffsets)
 {
+	// Get BoundingBox3D of the vertex position and texture coordinates
+	float mPosMinX = FLT_MAX, mPosMinY = FLT_MAX, mPosMinZ = FLT_MAX;
+	float mPosMaxX = -FLT_MAX, mPosMaxY = -FLT_MAX, mPosMaxZ = -FLT_MAX;
+
+	float mTexMinU = FLT_MAX, mTexMinV = FLT_MAX;
+	float mTexMaxU = -FLT_MAX, mTexMaxV = -FLT_MAX;
+	for (const auto& v : tempVertex)
+	{
+		// Position
+		mPosMinX = std::min(mPosMinX, v.pos.x);
+		mPosMinY = std::min(mPosMinY, v.pos.y);
+		mPosMinZ = std::min(mPosMinZ, v.pos.z);
+		mPosMaxX = std::max(mPosMaxX, v.pos.x);
+		mPosMaxY = std::max(mPosMaxY, v.pos.y);
+		mPosMaxZ = std::max(mPosMaxZ, v.pos.z);
+
+		// Texture
+		mTexMinU = std::min(mTexMinU, v.tex.x);
+		mTexMinV = std::min(mTexMinV, v.tex.y);
+		mTexMaxU = std::max(mTexMaxU, v.tex.x);
+		mTexMaxV = std::max(mTexMaxV, v.tex.y);
+	}
+
+	glm::vec3 minPos{ mPosMinX, mPosMinY, mPosMinZ };
+	glm::vec3 maxPos{ mPosMaxX, mPosMaxY, mPosMaxZ };
+	glm::vec2 minTex{ mTexMinU, mTexMinV };
+	glm::vec2 maxTex{ mTexMaxU, mTexMaxV };
+
+	BoundingBox3D mPosAABB, mTexAABB;
+	mPosAABB.mMin = minPos;
+	mPosAABB.mMax = maxPos;
+
+	mTexAABB.mMin = { minTex.x, minTex.y, 0.f };
+	mTexAABB.mMax = { maxTex.x, maxTex.y, 0.f };
+
+	glm::vec3 mPosCompressionScale = maxPos - minPos;
+	glm::vec2 mTexCompressionScale = maxTex - minTex;
+
+	// Here we update the global AABB containing all the meshes of the model
+	mGlobalPosAABB.mMin = { std::min(mGlobalPosAABB.mMin.x, mPosCompressionScale.x),
+							std::min(mGlobalPosAABB.mMin.y, mPosCompressionScale.y),
+							std::min(mGlobalPosAABB.mMin.z, mPosCompressionScale.z) };
+
+	mGlobalPosAABB.mMax = { std::max(mGlobalPosAABB.mMax.x, mPosCompressionScale.x),
+							std::max(mGlobalPosAABB.mMax.y, mPosCompressionScale.y),
+							std::max(mGlobalPosAABB.mMax.z, mPosCompressionScale.z) };
+
+	mGlobalTexAABB.mMin = { std::min(mGlobalTexAABB.mMin.x, mTexCompressionScale.x),
+							std::min(mGlobalTexAABB.mMin.y, mTexCompressionScale.y), 
+							0.f };
+
+	mGlobalTexAABB.mMax = { std::max(mGlobalTexAABB.mMax.x, mTexCompressionScale.x),
+						std::max(mGlobalTexAABB.mMax.y, mTexCompressionScale.y),
+						0.f };
+
+	// Store this scaling to our ModelLoader
+	this->mPosCompressionScale = mGlobalPosAABB.mMax - mGlobalPosAABB.mMin;
+	this->mTexCompressionScale = mGlobalTexAABB.mMax - mGlobalTexAABB.mMin;
+
+	// Here we want to get the offsets for this particular mesh
+	mOffsets.first = (mPosAABB.mMin + mPosAABB.mMax) / 2.f;
+	mOffsets.second = (mTexAABB.mMin + mTexAABB.mMax) / 2.f;
+
+	// Compressing the vertices here
 	for (const auto& vert : tempVertex)
 	{
+		// Position vertices
+		float val;
+		std::int16_t mPosX, mPosY, mPosZ, mNormalX, mNormalY, mTanX, mTanY, mTexU, mTexV;
+		std::int8_t mSign;
+
+		val = vert.pos.x - mOffsets.first.x / this->mPosCompressionScale.x;
+		mPosX = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.y - mOffsets.first.y / this->mPosCompressionScale.y;
+		mPosY = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = vert.pos.z - mOffsets.first.z / this->mPosCompressionScale.z;
+		mPosZ = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		// Extras
+		std::int16_t Nx = std::min((short)0x3FFF, static_cast<std::int16_t>(((vert.normal.x + 1) / 2.0f) * 0x3FFF));
+		if (vert.normal.z < 0)
+		{
+			if (Nx == 0)
+			{
+				Nx = -1;
+			}
+			else
+			{
+				Nx = -Nx;
+			}
+		}
+		mNormalX = Nx;
+		mNormalY = static_cast<std::int16_t>(vert.normal.y * (vert.normal.y >= 0 ? 0x1FF : 0x200));
+		mTanX = static_cast<std::int16_t>(vert.tangent.x * (vert.tangent.x >= 0 ? 0x1FF : 0x200));
+		mTanY = static_cast<std::int16_t>(vert.tangent.y * (vert.tangent.y >= 0 ? 0x1FF : 0x200));
+		mSign = vert.tangent.z >= 0 ? 0x1 : 0x3;
+
+		val = (vert.tex.x - mOffsets.second.x) / this->mTexCompressionScale.x;
+		mTexU = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
+		val = (vert.tex.y - mOffsets.second.y) / this->mTexCompressionScale.y;
+		mTexV = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
+
 		Vertex currVert;
-		currVert.pos.x = vert.pos.x;
-		currVert.pos.y = vert.pos.y;
-		currVert.pos.z = vert.pos.z;
-		currVert.normal.x = vert.normal.x;
-		currVert.normal.y = vert.normal.y;
-		currVert.normal.z = vert.normal.z;
-		currVert.tangent.x = vert.tangent.x;
-		currVert.tangent.y = vert.tangent.y;
-		currVert.tangent.z = vert.tangent.z;
-		//currVert.tanSign = vert.tangent.z >= 0 ? 0x1 : 0x3;
-		currVert.tex.x = vert.tex.x;
-		currVert.tex.y = vert.tex.y;
-		currVert.color.r = vert.color.r;
-		currVert.color.g = vert.color.g;
-		currVert.color.b = vert.color.b;
-		currVert.color.a = vert.color.a;
+		currVert.posX = mPosX;
+		currVert.posY = mPosY;
+		currVert.posZ = mPosZ;
+		currVert.normX = mNormalX;
+		currVert.normY = mNormalY;
+		currVert.tanX = mTanX;
+		currVert.tanY = mTanY;
+		currVert.tanSign = mSign;
+		currVert.texU = mTexU;
+		currVert.texV = mTexV;
+		currVert.colorR = vert.color.r;
+		currVert.colorG = vert.color.g;
+		currVert.colorB = vert.color.b;
+		currVert.colorA = vert.color.a;
 
 		CompressVertices.push_back(currVert);
 	}
-	
- 
-	//// Get BoundingBox3D of the vertex position and texture coordinates
-	//float mPosMinX = FLT_MAX, mPosMinY = FLT_MAX, mPosMinZ = FLT_MAX;
-	//float mPosMaxX = -FLT_MAX, mPosMaxY = -FLT_MAX, mPosMaxZ = -FLT_MAX;
-
-	//float mTexMinU = FLT_MAX, mTexMinV = FLT_MAX;
-	//float mTexMaxU = -FLT_MAX, mTexMaxV = -FLT_MAX;
-	//for (const auto& v : tempVertex)
-	//{
-	//	// Position
-	//	mPosMinX = std::min(mPosMinX, v.pos.x);
-	//	mPosMinY = std::min(mPosMinY, v.pos.y);
-	//	mPosMinZ = std::min(mPosMinZ, v.pos.z);
-	//	mPosMaxX = std::max(mPosMaxX, v.pos.x);
-	//	mPosMaxY = std::max(mPosMaxY, v.pos.y);
-	//	mPosMaxZ = std::max(mPosMaxZ, v.pos.z);
-
-	//	// Texture
-	//	mTexMinU = std::min(mTexMinU, v.tex.x);
-	//	mTexMinV = std::min(mTexMinV, v.tex.y);
-	//	mTexMaxU = std::max(mTexMaxU, v.tex.x);
-	//	mTexMaxV = std::max(mTexMaxV, v.tex.y);
-	//}
-
-	//glm::vec3 minPos{ mPosMinX, mPosMinY, mPosMinZ };
-	//glm::vec3 maxPos{ mPosMaxX, mPosMaxY, mPosMaxZ };
-	//glm::vec2 minTex{ mTexMinU, mTexMinV };
-	//glm::vec2 maxTex{ mTexMaxU, mTexMaxV };
-
-	//BoundingBox3D mPosAABB, mTexAABB;
-	//mPosAABB.mMin = minPos;
-	//mPosAABB.mMax = maxPos;
-
-	//mTexAABB.mMin = { minTex.x, minTex.y, 0.f };
-	//mTexAABB.mMax = { maxTex.x, maxTex.y, 0.f };
-
-	//glm::vec3 mPosCompressionScale = maxPos - minPos;
-	//glm::vec2 mTexCompressionScale = maxTex - minTex;
-
-	//// Here we update the global AABB containing all the meshes of the model
-	//mGlobalPosAABB.mMin = { std::min(mGlobalPosAABB.mMin.x, mPosCompressionScale.x),
-	//						std::min(mGlobalPosAABB.mMin.y, mPosCompressionScale.y),
-	//						std::min(mGlobalPosAABB.mMin.z, mPosCompressionScale.z) };
-
-	//mGlobalPosAABB.mMax = { std::max(mGlobalPosAABB.mMax.x, mPosCompressionScale.x),
-	//						std::max(mGlobalPosAABB.mMax.y, mPosCompressionScale.y),
-	//						std::max(mGlobalPosAABB.mMax.z, mPosCompressionScale.z) };
-
-	//mGlobalTexAABB.mMin = { std::min(mGlobalTexAABB.mMin.x, mTexCompressionScale.x),
-	//						std::min(mGlobalTexAABB.mMin.y, mTexCompressionScale.y), 
-	//						0.f };
-
-	//mGlobalTexAABB.mMax = { std::max(mGlobalTexAABB.mMax.x, mTexCompressionScale.x),
-	//					std::max(mGlobalTexAABB.mMax.y, mTexCompressionScale.y),
-	//					0.f };
-
-	//// Store this scaling to our ModelLoader
-	//this->mPosCompressionScale = mGlobalPosAABB.mMax - mGlobalPosAABB.mMin;
-	//this->mTexCompressionScale = mGlobalTexAABB.mMax - mGlobalTexAABB.mMin;
-
-	//// Here we want to get the offsets for this particular mesh
-	//mOffsets.first = (mPosAABB.mMin + mPosAABB.mMax) / 2.f;
-	//mOffsets.second = (mTexAABB.mMin + mTexAABB.mMax) / 2.f;
-
-	//// Compressing the vertices here
-	//for (const auto& vert : tempVertex)
-	//{
-	//	// Position vertices
-	//	float val;
-	//	std::int16_t mPosX, mPosY, mPosZ, mNormalX, mNormalY, mNormalZ, mTanX, mTanY, mTanZ, mTexU, mTexV;
-	//	std::int8_t mSign;
-
-	//	val = vert.pos.x - mOffsets.first.x / this->mPosCompressionScale.x;
-	//	mPosX = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
-
-	//	val = vert.pos.y - mOffsets.first.y / this->mPosCompressionScale.y;
-	//	mPosY = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
-
-	//	val = vert.pos.z - mOffsets.first.z / this->mPosCompressionScale.z;
-	//	mPosZ = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
-
-	//	// Extras
-	//	std::int16_t Nx = std::min((short)0x3FFF, static_cast<std::int16_t>(((vert.normal.x + 1) / 2.0f) * 0x3FFF));
-	//	if (vert.normal.z < 0)
-	//	{
-	//		if (Nx == 0)
-	//		{
-	//			Nx = -1;
-	//		}
-	//		else
-	//		{
-	//			Nx = -Nx;
-	//		}
-	//	}
-	//	mNormalX = Nx;
-	//	mNormalY = static_cast<std::int16_t>(vert.normal.y * (vert.normal.y >= 0 ? 0x1FF : 0x200));
-	//	mNormalZ = static_cast<std::int16_t>(vert.normal.z * (vert.normal.z >= 0 ? 0x1FF : 0x200));
-	//	mTanX = static_cast<std::int16_t>(vert.tangent.x * (vert.tangent.x >= 0 ? 0x1FF : 0x200));
-	//	mTanY = static_cast<std::int16_t>(vert.tangent.y * (vert.tangent.y >= 0 ? 0x1FF : 0x200));
-	//	mTanZ = static_cast<std::int16_t>(vert.tangent.z * (vert.tangent.y >= 0 ? 0x1FF : 0x200));
-	//	mSign = vert.tangent.z >= 0 ? 0x1 : 0x3;
-
-	//	val = (vert.tex.x - mOffsets.second.x) / this->mTexCompressionScale.x;
-	//	mTexU = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
-
-	//	val = (vert.tex.y - mOffsets.second.y) / this->mTexCompressionScale.y;
-	//	mTexV = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
-
-	//	Vertex currVert;
-	//	currVert.posX = mPosX;
-	//	currVert.posY = mPosY;
-	//	currVert.posZ = mPosZ;
-	//	currVert.normX = mNormalX;
-	//	currVert.normY = mNormalY;
-	//	currVert.normZ = mNormalZ;
-	//	currVert.tanX = mTanX;
-	//	currVert.tanY = mTanY;
-	//	currVert.tanZ = mTanZ;
-	//	currVert.tanSign = mSign;
-	//	currVert.texU = mTexU;
-	//	currVert.texV = mTexV;
-	//	currVert.colorR = vert.color.r;
-	//	currVert.colorG = vert.color.g;
-	//	currVert.colorB = vert.color.b;
-	//	currVert.colorA = vert.color.a;
-
-	//	CompressVertices.push_back(currVert);
-	//}
 }
 
 void ModelLoader::TransformVertices(std::vector<TempVertex> vert) // Apply the modifications to our vertices from desc to our geom
@@ -521,10 +492,10 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 	aiGetMaterialColor(&material, AI_MATKEY_COLOR_AMBIENT, &ambientColor);
 	aiGetMaterialFloat(&material, AI_MATKEY_SHININESS, &shininess);
 
-	Material tempMat(
-		specularColor.r, specularColor.g, specularColor.b, shininess,
-		diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a,
-		ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a );
+	Material tempMat({
+		{specularColor.r, specularColor.g, specularColor.b, shininess},
+		{diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a},
+		{ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a} });
 
 	// Textures
 	aiString specName{};
@@ -642,8 +613,8 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 	}
 
 	// Save the compression scale values of the position and texture of the FBX model
-	//serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
-	//serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
+	serializeFile.write(reinterpret_cast<char*>(&this->mPosCompressionScale), sizeof(glm::vec3));
+	serializeFile.write(reinterpret_cast<char*>(&this->mTexCompressionScale), sizeof(glm::vec2));
 
 	size_t meshSize = this->_meshes.size();
 	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
@@ -662,8 +633,8 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 
 
 		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
-		//serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
-		//serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture offset
 	}
 
 	size_t materialSize = this->_materials.size();
@@ -676,9 +647,9 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
 
 		size_t texSize = mat.textures.size(); // Save all textures of this material
-		serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
 		if (texSize > 0)
 		{
+			serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
 			serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		}
 	}

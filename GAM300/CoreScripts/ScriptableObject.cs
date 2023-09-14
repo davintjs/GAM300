@@ -1,7 +1,6 @@
 using System;
 
-
-namespace BeanFactory
+namespace CopiumEngine
 {
     public class ScriptableObject
     {

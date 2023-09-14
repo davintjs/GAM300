@@ -13,8 +13,7 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-
-namespace BeanFactory
+namespace CopiumEngine
 {
     public struct Vector2
     {

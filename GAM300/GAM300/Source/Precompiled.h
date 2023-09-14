@@ -1,10 +1,5 @@
 #pragma once
 
-
-
-#include "Debugging/Debugger.h"
-#include "Core/Debug.h"
-
 #include <algorithm>
 #include <array>
 #include <chrono>

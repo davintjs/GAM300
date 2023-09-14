@@ -8,6 +8,7 @@ extern std::vector<Ray3D> Ray_Container;
 
 void Editor_Camera::Init()
 {
+	
 	setDistanceToFocalPoint(1000.f);
 	setRotationSpeed(2.f);
 	updateView();
@@ -36,7 +37,6 @@ void Editor_Camera::Update(float dt)
 
 		if (InputHandler::isMouseButtonPressed_L()) // Rotating
 		{
-			if(canMove)
 			rotateCamera(delta);
 		}
 		else if (InputHandler::isMouseButtonPressed_R()) // Panning
@@ -51,6 +51,7 @@ void Editor_Camera::Update(float dt)
 		//--------------------------------------------------------------
 		// Moving the Editor Camera
 		//--------------------------------------------------------------
+
 
 		if (InputHandler::isKeyButtonHolding(GLFW_KEY_W))
 		{
@@ -69,9 +70,12 @@ void Editor_Camera::Update(float dt)
 			focalPoint += getRightVec() * 10.f;
 		}
 
+		
 		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
 		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
 		
+		
+
 		updateView();
 	}
 
@@ -87,19 +91,15 @@ void Editor_Camera::Update(float dt)
 			Ray_Container.push_back(temp);
 
 
+
+
 		}
 	}
-
-	
-
 	if (InputHandler::isMouseButtonPressed_L())
 	{
 		glm::vec2 position = GetMouseInNDC();
 		EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
 	}
-
-
-	canMove = true;// The false check happens in editorscene, incase guizmo is being used
 }
 
 void Editor_Camera::updateView()
@@ -127,14 +127,15 @@ glm::vec2 Editor_Camera::GetMouseInNDC()
 	glm::vec2 scenePosition = EditorScene::Instance().GetPosition();
 	glm::vec2 sceneDimension = EditorScene::Instance().GetDimension();
 	glm::vec2 mousePosition = InputHandler::getMousePos();
-	mousePosition.y -= GLFW_Handler::height - scenePosition.y - sceneDimension.y;
-	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y + 22.f };
+	mousePosition.y = GLFW_Handler::height - mousePosition.y;
+	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y - scenePosition.y - 22.f };
 	glm::vec2 mouseToNDC = mouseScenePosition / sceneDimension;
 
 	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
-	//mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
+	mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
 	return mouseTo1600By900;
 }
+
 
 glm::quat Editor_Camera::getOrientation()
 {
@@ -288,161 +289,3 @@ Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::m
 
 	return temp;
 }
-
-
-bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
-	glm::vec3 ray_direction,     // Ray direction (NOT target position!), in world space. Must be normalize()'d.
-	glm::vec3 aabb_min,          // Minimum X,Y,Z coords of the mesh when not transformed at all.
-	glm::vec3 aabb_max,          // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh is centered, but it's not always the case.
-	glm::mat4 ModelMatrix,       // Transformation applied to the mesh (which will thus be also applied to its bounding box)
-	float& intersection_distance // Output : distance between ray_origin and the intersection with the OBB)
-)
-{
-	//ray_direction = glm::normalize(ray_direction);
-	//float tMin = 0.0f;
-	//float tMax = 100000.0f;
-
-	//glm::vec3 OBBposition_worldspace(ModelMatrix[3].x, ModelMatrix[3].y, ModelMatrix[3].z);
-
-	//glm::vec3 delta = OBBposition_worldspace - ray_origin;
-
-	//for (int i = 0; i < 3; ++i)
-	//{
-	//	glm::vec3 axis(ModelMatrix[i].x, ModelMatrix[i].y, ModelMatrix[i].z);
-	//	float e = glm::dot(axis, delta);
-	//	float f = glm::dot(ray_direction, axis);
-
-	//	// Beware, don't do the division if f is near 0 ! See full source code for details.
-	//	std::cout << "f : " << f << "\n";
-	//	float t1 = (e + aabb_min[i]) / f; // Intersection with the "left" plane
-	//	float t2 = (e + aabb_max[i]) / f; // Intersection with the "right" plane
-
-	//	if (t1 > t2) { // if wrong order
-	//		float w = t1; t1 = t2; t2 = w; // swap t1 and t2
-	//	}
-	//	// tMax is the nearest "far" intersection (amongst the X,Y and Z planes pairs)
-	//	if (t2 < tMax) tMax = t2;
-	//	// tMin is the farthest "near" intersection (amongst the X,Y and Z planes pairs)
-	//	if (t1 > tMin) tMin = t1;
-	//	if (tMax < tMin)
-	//	{
-	//		std::cout << "tmax: " << tMax << "\n";
-	//		std::cout << "tMin: " << tMin << "\n";
-	//		std::cout << "failed in axis " << i << "\n";
-	//		return false;
-	//	}
-	//}
-	//return true;
-
-
-	// Intersection method from Real-Time Rendering and Essential Mathematics for Games
-
-	ray_direction = glm::normalize(ray_direction);
-
-
-	float tMin = 0.0f;
-	float tMax = 100000.0f;
-
-	glm::vec3 OBBposition_worldspace(ModelMatrix[3].x, ModelMatrix[3].y, ModelMatrix[3].z);
-
-	glm::vec3 delta = OBBposition_worldspace - ray_origin;
-
-	// Test intersection with the 2 planes perpendicular to the OBB's X axis
-	{
-		glm::vec3 xaxis(ModelMatrix[0].x, ModelMatrix[0].y, ModelMatrix[0].z);
-		float e = glm::dot(xaxis, delta);
-		float f = glm::dot(ray_direction, xaxis);
-
-		if (fabs(f) > 0.001f) { // Standard case
-
-			float t1 = (e + aabb_min.x) / f; // Intersection with the "left" plane
-			float t2 = (e + aabb_max.x) / f; // Intersection with the "right" plane
-			// t1 and t2 now contain distances betwen ray origin and ray-plane intersections
-
-			// We want t1 to represent the nearest intersection, 
-			// so if it's not the case, invert t1 and t2
-			if (t1 > t2) {
-				float w = t1; t1 = t2; t2 = w; // swap t1 and t2
-			}
-
-			// tMax is the nearest "far" intersection (amongst the X,Y and Z planes pairs)
-			if (t2 < tMax)
-				tMax = t2;
-			// tMin is the farthest "near" intersection (amongst the X,Y and Z planes pairs)
-			if (t1 > tMin)
-				tMin = t1;
-
-			// And here's the trick :
-			// If "far" is closer than "near", then there is NO intersection.
-			// See the images in the tutorials for the visual explanation.
-			if (tMax < tMin)
-				return false;
-
-		}
-		else { // Rare case : the ray is almost parallel to the planes, so they don't have any "intersection"
-			if (-e + aabb_min.x > 0.0f || -e + aabb_max.x < 0.0f)
-				return false;
-		}
-	}
-
-	// Test intersection with the 2 planes perpendicular to the OBB's Y axis
-	// Exactly the same thing than above.
-	{
-		glm::vec3 yaxis(ModelMatrix[1].x, ModelMatrix[1].y, ModelMatrix[1].z);
-		float e = glm::dot(yaxis, delta);
-		float f = glm::dot(ray_direction, yaxis);
-
-		if (fabs(f) > 0.001f) {
-
-			float t1 = (e + aabb_min.y) / f;
-			float t2 = (e + aabb_max.y) / f;
-
-			if (t1 > t2) { float w = t1; t1 = t2; t2 = w; }
-
-			if (t2 < tMax)
-				tMax = t2;
-			if (t1 > tMin)
-				tMin = t1;
-			if (tMin > tMax)
-				return false;
-
-		}
-		else {
-			if (-e + aabb_min.y > 0.0f || -e + aabb_max.y < 0.0f)
-				return false;
-		}
-	}
-
-	// Test intersection with the 2 planes perpendicular to the OBB's Z axis
-	// Exactly the same thing than above.
-	{
-		glm::vec3 zaxis(ModelMatrix[2].x, ModelMatrix[2].y, ModelMatrix[2].z);
-		float e = glm::dot(zaxis, delta);
-		float f = glm::dot(ray_direction, zaxis);
-
-		if (fabs(f) > 0.001f) {
-
-			float t1 = (e + aabb_min.z) / f;
-			float t2 = (e + aabb_max.z) / f;
-
-			if (t1 > t2) { float w = t1; t1 = t2; t2 = w; }
-
-			if (t2 < tMax)
-				tMax = t2;
-			if (t1 > tMin)
-				tMin = t1;
-			if (tMin > tMax)
-				return false;
-
-		}
-		else {
-			if (-e + aabb_min.z > 0.0f || -e + aabb_max.z < 0.0f)
-				return false;
-		}
-	}
-
-	intersection_distance = tMin;
-	return true;
-
-}
-

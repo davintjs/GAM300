@@ -12,17 +12,17 @@ struct Entity;
 struct Entity
 {
 public:
+	bool is_enabled = true;
 	Entity(Engine::UUID _uuid = Engine::CreateUUID());
 	Entity() = delete;
-	Scene* pScene;
 	const Engine::UUID uuid;
 	//Which array does this object belong in?
+	Scene* pScene;
 	ObjectIndex denseIndex;
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
 };
 
 void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child);
-void Set_ParentChild(Transform& parent, Transform& child);
 void Break_ParentChild(const ObjectIndex& _child);
 
 

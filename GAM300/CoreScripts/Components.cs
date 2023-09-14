@@ -19,8 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace BeanFactory
+namespace CopiumEngine
 {
     public enum ButtonState 
     {
@@ -33,28 +32,123 @@ namespace BeanFactory
 
     public class Component
     {
-        virtual public Transform transform { get; }
-        virtual public GameObject gameObject { get; }
-        public bool HasComponent<T>()
+        public ulong ID;
+        public GameObject gameObject;
+        public Transform transform;
+        public void Initialize (GameObject _gameObject, ulong _ID)
         {
-            return gameObject.HasComponent<T>();
+            gameObject = _gameObject;
+            transform = gameObject.transform;
+            ID = _ID;
         }
-/*        public T GetComponent<T>() where T : Component
+
+        public bool enabled
         {
-            return gameObject.HasComponent<T>();
-        }*/
+            get
+            {
+                return InternalCalls.GetComponentEnabled(ID);
+            }
+            set
+            {
+                Type componentType = GetType();
+                InternalCalls.SetComponentEnabled(ID,value);
+            }
+        }
+
+        void SetID(ulong _ID)
+            { ID = _ID; }
+
+        public T GetComponent<T>() where T : Component, new()
+        {
+            return gameObject.GetComponent<T>();
+        }
     }
 
-
-    public class Transform
+    public class Transform : Component
     {
-        public Transform parent;
-        public Vector3 localPosition;
-        public Vector3 localRotation;
-        public Vector3 localScale;
+        public Vector3 position
+        {
+            get
+            {
+                InternalCalls.GetTranslation(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetTranslation(gameObject.ID, ref value);
+            }
+        }
+
+        public Vector3 localScale
+        {
+            get
+            {
+                InternalCalls.GetLocalScale(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetLocalScale(gameObject.ID, ref value);
+            }
+        }
+
+        public Vector3 worldPosition
+        {
+            get
+            {
+                InternalCalls.GetGlobalPosition(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+        }
+
+        public Vector3 worldScale
+        {
+            get
+            {
+                InternalCalls.GetGlobalScale(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+        }
+
+        public Vector3 localPosition
+        {
+            get
+            {
+                InternalCalls.GetTranslation(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetTranslation(gameObject.ID, ref value);
+            }
+        }
+
+        public Vector3 localRotation 
+        {
+            get
+            {
+                InternalCalls.GetRotation(gameObject.ID, out Vector3 vec3);
+                return vec3;
+            }
+            set
+            {
+                InternalCalls.SetRotation(gameObject.ID, ref value);
+            }
+        }
+
+        public Transform parent
+        {
+            set
+            {
+                if (value == null)
+                    InternalCalls.SetParent(0, gameObject.ID);
+                else
+                    InternalCalls.SetParent(value.gameObject.ID, gameObject.ID);
+            }
+        }
     }
 
-/*    public class Rigidbody2D : Component
+    public class Rigidbody2D : Component
     {
         public Vector2 velocity
         {
@@ -256,5 +350,5 @@ namespace BeanFactory
         {
             InternalCalls.StopAnimation(ID);
         }
-    }*/
+    }
 }
