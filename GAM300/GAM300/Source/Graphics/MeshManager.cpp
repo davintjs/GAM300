@@ -33,7 +33,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     newMesh.index = mContainer.size();
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
-        std::cout << "ouch\n";
+        std::cout << "ouchie\n";
 
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
