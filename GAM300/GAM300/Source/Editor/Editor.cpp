@@ -20,6 +20,7 @@
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 void EditorSystem::Init()
 {
@@ -35,6 +36,8 @@ void EditorSystem::Init()
     ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
+
     editorSystems = {
         &EditorMenuBar::Instance(),
         &EditorContentBrowser::Instance(),
@@ -42,6 +45,7 @@ void EditorSystem::Init()
         &EditorInspector::Instance(),
         &EditorDebugger::Instance(),
         &EditorHierarchy::Instance(),
+        &EditorToolBar::Instance(),
     };
 
     for (ISystem* pSystem : editorSystems)
@@ -56,6 +60,8 @@ void EditorSystem::Update(float dt)
     //Editor Functions
     Editor_Dockspace();
 
+    
+
     for (ISystem* pSystem : editorSystems)
     {   
         pSystem->Update(dt);
@@ -68,6 +74,8 @@ void EditorSystem::Update(float dt)
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
+    
+
 }
 
 void EditorSystem::Exit()
@@ -131,4 +139,21 @@ void EditorSystem::Editor_Dockspace() {
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
     ImGui::End();
+}
+
+
+Entity* EditorSystem::GetSelectedEntity()
+{
+    return selectedEntity;
+}
+
+void EditorSystem::SetSelectedEntity(Entity* pEntity)
+{
+    selectedEntity = pEntity;
+}
+
+void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
+{
+    PRINT("CALLLLLLLLLLLLBACK\n");
+    selectedEntity = pEvent->pEntity;
 }

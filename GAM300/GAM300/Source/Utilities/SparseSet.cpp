@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 *****************************************************************************************/
 
 #include "SparseSet.h"
+#include "Debugging/Debugger.h"
 
 #define SPARSESET SparseSet<T, N>
 #define ITERATOR SPARSESET::Iterator
@@ -95,7 +96,7 @@ template <typename... Args>
 T& SPARSESET::emplace(ObjectIndex index, Args&&... args)
 {
     //Find and make to next element
-    ASSERT(index < N, " OUT OF BOUNDS");
+    E_ASSERT(index < N, " OUT OF BOUNDS");
     for (ObjectIndex i = size_; i < N; ++i)
     {
         if (nodes[i].denseIndex == index)
@@ -124,7 +125,7 @@ void SPARSESET::erase(ObjectIndex denseIndex)
             return;
         }
     }
-    ASSERT(false,"FAILED TO ERASE");
+    E_ASSERT(false,"FAILED TO ERASE");
 }
 
 template <typename T, ObjectIndex N>
@@ -146,7 +147,7 @@ bool SPARSESET::contains(T& pValue)
 template <typename T, ObjectIndex N>
 T& SPARSESET::operator[] (ObjectIndex i)
 {
-    ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
+    E_ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
     return *reinterpret_cast<T*>(data + nodes[i].denseIndex);
 }
 

@@ -16,7 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CopiumEngine
+
+namespace BeanFactory
 {
     public struct Color
     {

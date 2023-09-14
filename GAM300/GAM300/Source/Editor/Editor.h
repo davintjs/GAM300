@@ -18,10 +18,13 @@
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
 #include "Core/SystemInterface.h"
-#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "Core/Events.h"
 
+#define EDITOR EditorSystem::Instance()
+
+struct Entity;
 ENGINE_SYSTEM(EditorSystem)
 {
 public:
@@ -31,8 +34,14 @@ public:
 
 	void Editor_Dockspace();
 
+	Entity* GetSelectedEntity();
+	void SetSelectedEntity(Entity*);
+
+
+	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 private:
 	std::vector<ISystem*> editorSystems;
+	Entity* selectedEntity{nullptr};
 };
 
 //Inspector Functions

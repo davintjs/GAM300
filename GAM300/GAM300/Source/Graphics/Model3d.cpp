@@ -7,270 +7,96 @@
 
 //extern Editor_Camera E_Camera;
 
-struct DDSHeader {
-    char dwMagic[4];
-    uint32_t dwSize;
-    uint32_t dwFlags;
-    uint32_t dwHeight;
-    uint32_t dwWidth;
-    uint32_t dwPitchOrLinearSize;
-    uint32_t dwDepth;
-    uint32_t dwMipMapCount;
-    uint32_t dwReserved1[11];
-    struct {
-        uint32_t dwSize;
-        uint32_t dwFlags;
-        uint32_t dwFourCC;
-        uint32_t dwRGBBitCount;
-        uint32_t dwRBitMask;
-        uint32_t dwGBitMask;
-        uint32_t dwBBitMask;
-        uint32_t dwABitMask;
-    } ddspf;
-    uint32_t dwCaps;
-    uint32_t dwCaps2;
-    uint32_t dwCaps3;
-    uint32_t dwCaps4;
-    uint32_t dwReserved2;
-};
+bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
+
 
 
 // should move somewhere else...
-#define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
-#define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
-#define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
-
-GLuint loadDDS(const char* imagepath) {
-
-    unsigned char header[124];
-
-    FILE* fp;
-
-    /* try to open the file */
-    errno_t err = fopen_s(&fp, imagepath, "rb");
-    if (fp == NULL) {
-        printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar();
-        return 0;
-    }
-
-    /* verify the type of file */
-    char filecode[4];
-    fread(filecode, 1, 4, fp);
-
-    if (strncmp(filecode, "DDS ", 4) != 0) {
-        fclose(fp);
-        return 0;
-    }
-
-    DDSHeader ddsfile;
-    
-    /* get the surface desc */
-    fread(&header, 124, 1, fp);
-
-    unsigned int dwFlags = *(unsigned int*)&(header[28]); // Offset for the dwFlags field
-    bool isSRGB = (dwFlags & 0x200) != 0; // Check if the DDPF_SRGB flag is set
-    std::cout << "flag_1 " << std::hex << dwFlags << "\n";
-
-
-    unsigned int sizerino = *(unsigned int*)&(header[0]);
-
-    //unsigned long flag_1 = *(unsigned long*)&(header[4]);
-    unsigned int height = *(unsigned int*)&(header[8]);
-    unsigned int width = *(unsigned int*)&(header[12]);
-    unsigned int linearSize = *(unsigned int*)&(header[16]);
-    //unsigned long flag_3 = *(unsigned long*)&(header[20]);
-    //unsigned int dwFlags = *(unsigned int*)&(header[28]);
-
-    unsigned int mipMapCount = *(unsigned int*)&(header[24]);
-    //unsigned long flag_2 = *(unsigned long*)&(header[76]);
-
-    unsigned int fourCC = *(unsigned int*)&(header[80]);
-
-
-    unsigned char* buffer;
-    unsigned int bufsize;
-    /* how big is it going to be including all mipmaps? */
-    bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize;
-    buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char));
-    fread(buffer, 1, bufsize, fp);
-    /* close the file pointer */
-    fclose(fp);
-        
-    //std::cout << "sizerino is " << sizerino << "\n";
-    //char hex_string_1[20];
-    //sprintf_s(hex_string_1, "%X", flag_1); //convert number to hex
-    //char hex_string_2[20];
-    //sprintf_s(hex_string_2, "%X", flag_2); //convert number to hex
-    //char hex_string_3[20];
-    //sprintf_s(hex_string_3, "%X", flag_3); //convert number to hex
-    //std::cout << "flag_1 " << std::hex << flag_1 << "\n";
-    //std::cout << "flag_2 " << std::hex << flag_2 << "\n";
-    //std::cout << "flag_3 " << std::hex << flag_3 << "\n";
-    //std::cout << "flag_2 " << flag_2 << "\n";
-    //std::cout << "flag_3 " << flag_3 << "\n";
-
-    //if (flag == 0x20) {
-    //    std::cout << flag << "\n";
-    //    std::cout << "here\n";
-    //    // The DDPF_SRGB flag is set, indicating sRGB color space.
-    //    // The texture uses sRGB color space.
-    //}
-    //else {
-    //    std::cout << flag << "\n";
-
-    //    std::cout << "not here\n";
-    //    // The DDPF_SRGB flag is not set.
-    //    // The texture uses linear RGB color space.
-    //}
-
-    unsigned int components = (fourCC == FOURCC_DXT1) ? 3 : 4;
-    unsigned int format;
-    switch (fourCC)
-    {
-    case FOURCC_DXT1:
-        std::cout << "1\n";
-        format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-        break;
-    case FOURCC_DXT3:
-        std::cout << "2\n";
-
-        format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-        break;
-    case FOURCC_DXT5:
-        std::cout << "3\n";
-
-        format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-        break;
-    default:
-        
-        free(buffer);
-        return 0;
-    }
-    // Create one OpenGL texture
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-
-    // "Bind" the newly created texture : all future texture functions will modify this texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
-    std::cout << "block size is : " << blockSize << "\n";
-    unsigned int offset = 0;
-    
-    /* load the mipmaps */
-    for (unsigned int level = 0; level < mipMapCount && (width || height); ++level)
-    {
-        unsigned int size = ((width + 3) / 4) * ((height + 3) / 4) * blockSize;
-      /*  glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, width, height,
-            0, size, buffer + offset);*/
-        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-            0, size, buffer + offset);
-
-
-        offset += size;
-        //width /= 2;
-        //height /= 2;
-        width = std::max((int)width / 2, 1);
-        height = std::max((int)height / 2, 1);
-
-        // Deal with Non-Power-Of-Two textures. This code is not included in the webpage to reduce clutter.
-        if (width < 1) width = 1;
-        if (height < 1) height = 1;
-
-    }
-
-    free(buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-    // Print whether the DDS texture is in sRGB or RGB color space
-    if (isSRGB) {
-        std::cout << "DDS texture is in sRGB color space." << std::endl;
-    }
-    else {
-        std::cout << "DDS texture is in RGB color space." << std::endl;
-    }
-
-    return textureID;
-
-
-}
-
-void Model::init(AssimpLoader* geom) {
+void Model::init() {
     // inside _vertices
     /*glm::vec3 pos;
     glm::vec3 normal;
     glm::vec3 tangent;
     glm::vec2 tex;
     glm::vec4 color;*/
-    _geom = geom;
 
-    GLuint VAO; 
-    GLuint VBO;
-    GLuint EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glBindVertexArray(VAO);
-    //std::cout << "box_wf vao is :" << VAO << "\n";
+    DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
 
-    // test vertex colors
-    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
-    //{
-    //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-    //}
+    for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
+    {
+        std::cout << "ouch\n";
 
-    // bind vbo and pass vertice data into the buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, _geom->_vertices.size() * sizeof(Vertex), &_geom->_vertices[0], GL_STATIC_DRAW);
-
-    // set the vertex attributes to tell vert shader pos, uv, normal etc.
-    // note offsetof uses the struct Vertex as first argument, and member name as second.
-    // it returns the offset to the member name :)
-    glEnableVertexAttribArray(0); //pos
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-    glEnableVertexAttribArray(1); // normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-
-    glEnableVertexAttribArray(2); //tangent
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
-
-    glEnableVertexAttribArray(3); // tex (uv coords)
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
-
-    glEnableVertexAttribArray(4); // color
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
-    
-
-    // bind indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _geom->_indices.size() * sizeof(int32_t), &_geom->_indices[0], GL_STATIC_DRAW);
-
-    glBindVertexArray(0); // unbind vao
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
-
-    vaoid = VAO;
-    vboid = VBO;
-    prim = GL_TRIANGLES;
-    drawcount = _geom->_indices.size(); // number of slices 
-
-    // load default texture, todo
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
-
-   /* texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Mixed_AO.dds");
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Roughness.dds");
-
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/TD_Checker_Normal_OpenGL.dds");
-    texturebuffer = loadDDS("Assets/Models/Skull_textured/sample_1280×853.dds");*/
+        /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
+        totalindices += totalGeoms[0].mMeshes[i]._indices.size();
+        std::cout << "total vertices count: " << totalvertices << "\n";
+        std::cout << "total indices count: " << totalindices << "\n";*/
 
 
+
+        GLuint VAO;
+        GLuint VBO;
+        GLuint EBO;
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+        glBindVertexArray(VAO);
+        //std::cout << "box_wf vao is :" << VAO << "\n";
+
+        // test vertex colors
+        //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+        //{
+        //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+        //}
+
+        // bind vbo and pass vertice data into the buffer
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._vertices.size() * sizeof(Vertex), &totalGeoms[0].mMeshes[i]._vertices[0], GL_STATIC_DRAW);
+
+        // set the vertex attributes to tell vert shader pos, uv, normal etc.
+        // note offsetof uses the struct Vertex as first argument, and member name as second.
+        // it returns the offset to the member name :)
+        glEnableVertexAttribArray(0); //pos
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+        glEnableVertexAttribArray(1); // normal
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+        glEnableVertexAttribArray(2); //tangent
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+
+        glEnableVertexAttribArray(3); // tex (uv coords)
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+
+        glEnableVertexAttribArray(4); // color
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+
+
+        // bind indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalGeoms[0].mMeshes[i]._indices.size() * sizeof(unsigned int), &totalGeoms[0].mMeshes[i]._indices[0], GL_STATIC_DRAW);
+
+        glBindVertexArray(0); // unbind vao
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+        prim = GL_TRIANGLES;
+        FBX_vaoid.push_back(VAO);
+        FBX_vboid.push_back(VBO);
+        FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+        GeneralModel model;
+        model.fbx_VAO = VAO;
+        model.fbx_VBO = VBO;
+        model.tex_VAO.emplace_back(texturebuffer);
+        _mGeneral_model.emplace_back(model);
+    }
 
     setup_shader();
 
-    debugAABB_init();
+    // load default texture, todo
+    //texturebuffer = TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
+    
+    // debugAABB_init();
 }
 
 
@@ -280,13 +106,11 @@ void Model::setup_instanced_shader() {
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
         "GAM300/Source/Graphics/InstancedRender.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
 
-// Fragment Shader
+    // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
         "GAM300/Source/Graphics/InstancedRender.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
@@ -297,7 +121,6 @@ void Model::setup_instanced_shader() {
         std::stringstream sstr;
         sstr << "Unable to compile/link/validate shader programs\n";
         sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
         std::cout << sstr.str();
         std::exit(EXIT_FAILURE);
     }
@@ -333,6 +156,22 @@ void Model::setup_shader() {
 }
 
 void Model::draw() {
+
+    /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+    {
+        mesh_1 = !mesh_1;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_2))
+    {
+        mesh_2 = !mesh_2;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_3))
+    {
+        mesh_3 = !mesh_3;
+    }if (InputHandler::isKeyButtonPressed(GLFW_KEY_4))
+    {
+        mesh_4 = !mesh_4;
+    }*/
+
+
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
     glm::mat4 scaling_mat(
@@ -383,48 +222,58 @@ void Model::draw() {
 
     // test
     //glActiveTexture(GL_TEXTURE0);
+    texturebuffer = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color"));
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
+    
 
+    //glBindVertexArray(vaoid);
+    //if(mesh_1)
+    //{
+    //    glBindVertexArray(FBX_vaoid[1]);
+    //    glDrawElements(prim, FBX_drawcount[1], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+   
+    //    //glBindVertexArray(0);
+    //}  
+    //if (mesh_2)
+    //{
+    //    glBindVertexArray(FBX_vaoid[2]);
 
+    //    glDrawElements(prim, FBX_drawcount[2], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+
+    //    //glBindVertexArray(0);
+    //}
+    //if (mesh_3)
+    //{
+    //    glBindVertexArray(FBX_vaoid[3]);
+
+    //    glDrawElements(prim, FBX_drawcount[3], GL_UNSIGNED_INT, nullptr);
+    //    glBindVertexArray(0);
+
+    //    //glBindVertexArray(0);
+    //}
+    //if (mesh_4)
+    //{
+
+    mesh_4 = true;
+    glBindVertexArray(FBX_vaoid[0]);
+
+    glDrawElements(prim, FBX_drawcount[0], GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(vaoid);
-    glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
+    //glDrawElements(prim, drawcount, GL_UNSIGNED_INT, nullptr);
 
     // unbind and free stuff
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     shader.UnUse();
 
-    debugAABB_draw(SRT);
+    //debugAABB_draw(SRT);
 }
 
 void Model::instanceDraw(int entitycount) {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
-
-    //glm::mat4 scaling_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-
-    //);
-
-    //glm::mat4 rotation_mat(
-    //    glm::vec4(cos(90.f), 0.f, -sin(90.f), 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(sin(90.f), 0.f, cos(90.f), 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    ////glm::mat3 translation_mat = glm::mat3(1.f);
-
-    //glm::mat4 translation_mat(
-    //    glm::vec4(1.f, 0.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 1.f, 0.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 1.f, 0.f),
-    //    glm::vec4(0.f, 0.f, 0.f, 1.f)
-    //);
-    //glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
-
 
     shader.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -442,60 +291,95 @@ void Model::instanceDraw(int entitycount) {
         glm::value_ptr(EditorCam.getPerspMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
         glm::value_ptr(EditorCam.getViewMatrix()));
-   /* glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-        glm::value_ptr(SRT));*/
 
     glBindVertexArray(vaoid);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
     glBindVertexArray(0);
+
+        //glBindVertexArray(0);
+    //}
     shader.UnUse();
+
 }
 
 void Model::instance_cubeinit()
 {
+
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        // positions            // Normals              // Tangents             // Texture Coords   // Colors
+        // FRONT FACE //
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+                                                                                                                     
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        // FRONT FACE END //                                                                                         
+                                                                                                                     
+        // BACK FACE //                                                                                              
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        // BACK FACE END //                                                                                          
+                                                                                                                     
+        // RIGHT FACE //                                                                                             
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+        // RIGHT FACE END //                                                                                         
+                                                                                                                     
+        // LEFT FACE //                                                                                              
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+                                                                                                                     
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        // LEFT FACE END //                                                                               
+                                                                                                          
+        // TOP FACE //                                                                                    
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+                                                                                                                     
+         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+        // TOP FACE END //                                                                                           
+                                                                                                                     
+        // BOTTOM FACE //                                                                                            
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+                                                                                                                     
+         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f // Vertex 0
+        // BOTTOM FACE END //
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
+
+    vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
+    vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
+    
+    //int indices[] = {
+    //    0, 1, 2, 2, 3, 0,  // Front face
+    //    4, 5, 6, 6, 7, 4,  // Back face
+    //    1, 5, 6, 6, 2, 1,  // Right face
+    //    0, 4, 7, 7, 3, 0,  // Left face
+    //    3, 2, 6, 6, 7, 3,  // Top face
+    //    0, 1, 5, 5, 4, 0   // Bottom face
+    //};
 
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
@@ -509,12 +393,25 @@ void Model::instance_cubeinit()
     glBindVertexArray(vaoid);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    // Tangent attribute
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    // Texture coord
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(9 * sizeof(float)));
+    glEnableVertexAttribArray(3);
+    // color coord
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
+    glEnableVertexAttribArray(4);
+
     glBindVertexArray(0);
+
+    debugAABB_init();
+
 
 }
 
@@ -879,19 +776,21 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
 
 void Model::debugAABB_init() // vao & shader
 {
-    // find min max points for each axis
-    glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
+    //// find min max points for each axis
+    //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
 
-    for (size_t i = 0; i < _geom->_vertices.size(); i++)
-    {
-        minpt.x = std::min(minpt.x, _geom->_vertices[i].pos.x);
-        minpt.y = std::min(minpt.y, _geom->_vertices[i].pos.y);
-        minpt.z = std::min(minpt.z, _geom->_vertices[i].pos.z);
+    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+    //{
+    //    minpt.x = std::min(minpt.x, _geom->_vertices[i].pos.x);
+    //    minpt.y = std::min(minpt.y, _geom->_vertices[i].pos.y);
+    //    minpt.z = std::min(minpt.z, _geom->_vertices[i].pos.z);
 
-        maxpt.x = std::max(maxpt.x, _geom->_vertices[i].pos.x);
-        maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
-        maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
-    }
+    //    maxpt.x = std::max(maxpt.x, _geom->_vertices[i].pos.x);
+    //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
+    //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
+    //}
+    glm::vec3 minpt = vertices_min;
+    glm::vec3 maxpt = vertices_max;
 
     pntAABB[0] = minpt;
     pntAABB[1] = glm::vec4(minpt.x, minpt.y, maxpt.z, 1.f);
@@ -1095,4 +994,115 @@ void Model::debugline_draw(glm::mat4& SRT)
     // unbind and free stuff
     glBindVertexArray(0);
     shaderAABB.UnUse();
+}
+void Model::DeserializeGeoms(const std::string filePath)
+{
+    troll_Geom tempGeom;
+    std::ifstream ifs(filePath, std::ios::binary);
+
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
+
+    size_t meshSize;
+    ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+    for (int i = 0; i < meshSize; ++i)
+    {
+        Geom_Mesh tempMesh;
+
+        size_t vertSize;
+        ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+        tempMesh._vertices.resize(vertSize);
+        ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+
+        size_t indSize;
+        ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
+        tempMesh._indices.resize(indSize);
+        ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
+
+        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+        //ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+        //ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+        tempGeom.mMeshes.push_back(tempMesh);
+    }
+
+    size_t matSize;
+    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+
+    for (int j = 0; j < matSize; ++j)
+    {
+        Material tempMat;
+
+        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+
+        size_t texSize;
+        ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        if (texSize > 0)
+        {
+            tempMat.textures.resize(texSize);
+            ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+        }
+
+        tempGeom._materials.push_back(tempMat);
+    }
+
+    this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
+
+    ifs.close();
+
+    //Geom tempGeom;
+    //std::ifstream ifs(filePath, std::ios::binary);
+
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
+    //ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
+
+    //size_t meshSize;
+    //ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+    //for (int i = 0; i < meshSize; ++i)
+    //{
+    //    Mesh tempMesh;
+
+    //    size_t vertSize;
+    //    ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+
+    //    size_t indSize;
+    //    ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
+
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+    //    ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+    //    tempGeom.mMeshes.push_back(tempMesh);
+    //}
+
+    //size_t matSize;
+    //ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+
+    //for (int j = 0; j < matSize; ++j)
+    //{
+    //    Material tempMat;
+
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+    //    ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+
+    //    size_t texSize;
+    //    ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+    //    if (texSize > 0)
+    //    {
+    //        ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+    //    }
+
+    //    tempGeom._materials.push_back(tempMat);
+    //}
+
+    //this->totalGeoms.push_back(tempGeom); // Add this geom into our vector of geoms
+
+    //ifs.close();
 }

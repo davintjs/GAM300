@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CopiumEngine
+namespace BeanFactory
 {
     static class Application
     {
