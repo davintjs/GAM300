@@ -395,17 +395,6 @@ bool NavMeshBuilder::PointsOnLine(std::vector<glm::vec3> points, const glm::vec3
 	return true;
 }
 
-bool NavMeshBuilder::isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
-{
-	float signedArea = (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
-	signedArea *= 0.5f;
-	if (signedArea > 0.f)
-	{
-		return true;
-	}
-	return false;
-}
-
 bool NavMeshBuilder::Parallel(const glm::vec3& v1, const glm::vec3& v2)
 {
 	glm::vec3 test = glm::cross(v1, v2);

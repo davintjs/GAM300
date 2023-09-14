@@ -33,7 +33,6 @@ private:
 	int sign(const T& val);
 	int IsTriangleOrientedClockWise(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& n);
 	bool PointsOnLine(std::vector<glm::vec3> points, const glm::vec3& n);
-	bool isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
 	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
 
 	int mTriCount = 0;

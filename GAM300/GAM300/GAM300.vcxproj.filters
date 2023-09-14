@@ -57,7 +57,6 @@
     <ClCompile Include="Source\Editor\EditorToolBar.cpp" />
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
     <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
-    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
     <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
     <ClCompile Include="Source\AI\Triangle3D.cpp" />
@@ -84,6 +83,9 @@
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\AI\Segment2D.cpp" />
+    <ClCompile Include="Source\AI\Plane3D.cpp" />
+    <ClCompile Include="Source\AI\Line3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -140,7 +142,6 @@
     <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
-    <ClInclude Include="Source\Scripting\scripting-system.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AI\Triangle3D.h" />
@@ -156,6 +157,9 @@
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\AI\Segment2D.h" />
+    <ClInclude Include="Source\AI\Plane3D.h" />
+    <ClInclude Include="Source\AI\Line3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
