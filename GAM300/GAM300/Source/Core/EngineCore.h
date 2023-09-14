@@ -72,7 +72,7 @@ public:
 			//&ScriptingSystem::Instance(),
 			&EditorSystem::Instance(),
 			//&LogicSystem::Instance(),
-			&PhysicsSystem::Instance(),
+			//&PhysicsSystem::Instance(),
 			&GraphicsSystem::Instance(),
 			&Blackboard::Instance(),
 			&BehaviorTreeBuilder::Instance(),
