@@ -3,7 +3,7 @@
 #include <vector>
 #include "glm/glm.hpp"
 
-class Polygon
+class Polygon3D
 {
 public:
 	enum class Orientation
@@ -12,8 +12,8 @@ public:
 		COUNTERCLOCKWISE
 	};
 
-	Polygon(const std::vector<glm::vec3>& positions);
-	~Polygon();
+	Polygon3D(const std::vector<glm::vec3>& positions);
+	~Polygon3D();
 
 	// Getter functions
 	glm::vec3 GetNormal() const;
@@ -22,9 +22,9 @@ public:
 	glm::vec3 GetMaxPoint();
 	glm::vec3 GetMinPoint();
 
-	bool HoleInPolygon(Polygon& mHole);
+	bool HoleInPolygon(Polygon3D& mHole);
 	void SwitchOrientation();
-	void JoinPolygon(Polygon& polygon);
+	void JoinPolygon(Polygon3D& polygon);
 	void CalculateNormal(const std::vector<glm::vec3>& vertices);
 
 private:

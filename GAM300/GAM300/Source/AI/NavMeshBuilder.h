@@ -15,14 +15,14 @@ public:
 
 	NavMesh* CreateNavMesh();
 
-	std::vector<Polygon>& GetRegion();
-	std::vector<Polygon>& GetHoles();
+	std::vector<Polygon3D>& GetRegion();
+	std::vector<Polygon3D>& GetHoles();
 
 private:
-	std::vector<Polygon> ComputeRegions(const std::vector<Triangle3D>& GroundTriangles);
+	std::vector<Polygon3D> ComputeRegions(const std::vector<Triangle3D>& GroundTriangles);
 	std::vector<Triangle3D> GetGroundTriangles(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
-	void SetBoundary(Polygon* mBoundary);
-	void AddHole(Polygon* hole);
+	void SetBoundary(Polygon3D* mBoundary);
+	void AddHole(Polygon3D* hole);
 	void RemoveHoles();
 	std::vector<Triangle3D> Triangulate();
 	void InitializeGroundTriangles(std::vector<Triangle3D>& GroundTriangles);
@@ -37,8 +37,8 @@ private:
 	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
 
 	int mTriCount = 0;
-	Polygon* mBoundary;
-	std::vector<Polygon> mHoles;
-	std::vector<Polygon> mObstacles;
-	std::vector<Polygon> mRegion;
+	Polygon3D* mBoundary;
+	std::vector<Polygon3D> mHoles;
+	std::vector<Polygon3D> mObstacles;
+	std::vector<Polygon3D> mRegion;
 };

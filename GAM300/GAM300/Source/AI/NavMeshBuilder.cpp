@@ -19,20 +19,20 @@ NavMesh* NavMeshBuilder::CreateNavMesh()
 	return nullptr;
 }
 
-std::vector<Polygon>& NavMeshBuilder::GetRegion()
+std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
 {
 	return mRegion;
 }
 
-std::vector<Polygon>& NavMeshBuilder::GetHoles()
+std::vector<Polygon3D>& NavMeshBuilder::GetHoles()
 {
 	return mHoles;
 }
 
-std::vector<Polygon> NavMeshBuilder::ComputeRegions(const std::vector<Triangle3D>& GroundTriangles)
+std::vector<Polygon3D> NavMeshBuilder::ComputeRegions(const std::vector<Triangle3D>& GroundTriangles)
 {
 	std::vector<Triangle3D> copyTri = GroundTriangles;
-	std::vector<Polygon> resPolygons;
+	std::vector<Polygon3D> resPolygons;
 
 	while (copyTri.size() > 1)
 	{
@@ -97,7 +97,7 @@ std::vector<Polygon> NavMeshBuilder::ComputeRegions(const std::vector<Triangle3D
 				}
 			}
 		}
-		resPolygons.push_back(Polygon(triPos));
+		resPolygons.push_back(Polygon3D(triPos));
 	}
 	return resPolygons;
 }
@@ -123,19 +123,19 @@ std::vector<Triangle3D> NavMeshBuilder::GetGroundTriangles(const std::vector<glm
 	return resTri;
 }
 
-void NavMeshBuilder::SetBoundary(Polygon* boundary)
+void NavMeshBuilder::SetBoundary(Polygon3D* boundary)
 {
 	mBoundary = boundary;
 }
 
-void NavMeshBuilder::AddHole(Polygon* hole)
+void NavMeshBuilder::AddHole(Polygon3D* hole)
 {
 	mHoles.push_back(*hole);
 }
 
 void NavMeshBuilder::RemoveHoles()
 {
-	std::sort(mHoles.begin(), mHoles.end(), [](Polygon& p1, Polygon& p2)
+	std::sort(mHoles.begin(), mHoles.end(), [](Polygon3D& p1, Polygon3D& p2)
 		{
 			return p1.GetMaxPoint().y > p2.GetMaxPoint().y;
 		});

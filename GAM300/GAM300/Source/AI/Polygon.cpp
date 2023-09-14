@@ -2,7 +2,7 @@
 
 #include "Polygon.h"
 
-Polygon::Polygon(const std::vector<glm::vec3>& positions)
+Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
 	GenerateConvexHull(positions);
@@ -26,43 +26,43 @@ Polygon::Polygon(const std::vector<glm::vec3>& positions)
 	mNumberOfPoints = mPoints.size();
 }
 
-Polygon::~Polygon()
+Polygon3D::~Polygon3D()
 {
 
 }
 
-glm::vec3 Polygon::GetNormal() const
+glm::vec3 Polygon3D::GetNormal() const
 {
 	return mNormal;
 }
 
-Polygon::Orientation Polygon::GetOrientation() const
+Polygon3D::Orientation Polygon3D::GetOrientation() const
 {
 	return mOrientation;
 }
 
-std::vector<glm::vec3>& Polygon::GetPoints()
+std::vector<glm::vec3>& Polygon3D::GetPoints()
 {
 	return mPoints;
 }
 
-glm::vec3 Polygon::GetMaxPoint()
+glm::vec3 Polygon3D::GetMaxPoint()
 {
 	return maxPoint;
 }
 
 
-glm::vec3 Polygon::GetMinPoint()
+glm::vec3 Polygon3D::GetMinPoint()
 {
 	return minPoint;
 }
 
-void Polygon::GenerateConvexHull(const std::vector<glm::vec3>& points)
+void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 {
 
 }
 
-void Polygon::CalculateNormal(const std::vector<glm::vec3>& vertices)
+void Polygon3D::CalculateNormal(const std::vector<glm::vec3>& vertices)
 {
 	glm::vec3 normal{0.f, 0.f, 0.f};
 
@@ -77,17 +77,17 @@ void Polygon::CalculateNormal(const std::vector<glm::vec3>& vertices)
 	mNormal = glm::normalize(normal);
 }
 
-void Polygon::JoinPolygon(Polygon& polygon)
+void Polygon3D::JoinPolygon(Polygon3D& polygon)
 {
 
 }
 
-bool Polygon::HoleInPolygon(Polygon& mHole)
+bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 {
 	return false;
 }
 
-void Polygon::SwitchOrientation()
+void Polygon3D::SwitchOrientation()
 {
 	mOrientation == Orientation::CLOCKWISE ? Orientation::COUNTERCLOCKWISE : Orientation::CLOCKWISE; // Change the orientation
 
