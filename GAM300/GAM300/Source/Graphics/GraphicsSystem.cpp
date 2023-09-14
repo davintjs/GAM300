@@ -358,7 +358,7 @@ void GraphicsSystem::Update(float dt)
 	//std::cout << "out\n";
 
 
-	//Draw(); // I just put the random shit inside here
+	Draw(); // I just put the random shit inside here
 
 
 	// Bean: For unbinding framebuffer
