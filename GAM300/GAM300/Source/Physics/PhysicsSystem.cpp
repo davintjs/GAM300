@@ -209,6 +209,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Angular Velocity
 			boxCreationSettings.mAngularVelocity = angularVel;
 
+			//Sensor settings 
+			boxCreationSettings.mIsSensor = true;
+
 			JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
 			rb.RigidBodyID = box->GetID();
 
