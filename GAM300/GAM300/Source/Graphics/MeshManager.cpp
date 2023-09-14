@@ -25,7 +25,7 @@ void MESH_Manager::Exit()
 }
 
 
-void MESH_Manager::GetGeomFromFiles(const std::string filePath)
+void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::string& fileName)
 {
     GeomImported newGeom(std::move(DeserializeGeoms(filePath)));
 
@@ -94,8 +94,10 @@ void MESH_Manager::GetGeomFromFiles(const std::string filePath)
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup(VAO,newMesh.index) );
+
+
     }
-    mContainer.emplace(std::string("temporary"), newMesh);
+    mContainer.emplace(fileName, newMesh);
 }
 
 //Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid

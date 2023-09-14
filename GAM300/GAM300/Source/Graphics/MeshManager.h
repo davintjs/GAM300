@@ -56,7 +56,7 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void GetGeomFromFiles(const std::string filePath);
+	void GetGeomFromFiles(const std::string& filePath, const std::string& fileName);
 
 
 	// This is used when we are going to draw, u need to take the geom then render it

@@ -81,9 +81,12 @@ void AssetManager::Init()
 
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 			}
+			else if (!strcmp(fileType.c_str(), "geom"))
+			{
+				MeshManager.GetGeomFromFiles(subFilePath, fileName);
+			}
 		}
 	}
-	MeshManager.GetGeomFromFiles("Assets/Models/Skull_textured/Skull_textured.geom");
 
 	MeshManager.Init();
 
