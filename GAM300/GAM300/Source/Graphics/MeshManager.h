@@ -60,7 +60,17 @@ public:
 
 
 	// This is used when we are going to draw, u need to take the geom then render it
-	Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid
+	Mesh* DereferencingMesh(std::string mesh_Name) 
+	{ 
+		if (mContainer.find(mesh_Name) == mContainer.end())
+		{
+			return nullptr;
+		}
+		return &mContainer.find(mesh_Name)->second; 
+	
+	
+	
+	}// Either Geom or Vaoid
 
 
 

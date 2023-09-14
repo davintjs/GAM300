@@ -213,7 +213,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			boxCreationSettings.mIsSensor = true;
 
 			JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
-			rb.RigidBodyID = box->GetID();
+			//rb.RigidBodyID = box->GetID();
 
 		}
 		else if (scene.HasComponent<SphereCollider>(entity)) {
@@ -221,7 +221,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			SphereCollider& sc = scene.GetComponent<SphereCollider>(entity);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
-			rb.RigidBodyID = sphere->GetID();
+			//rb.RigidBodyID = sphere->GetID();
 
 			if (rb.isStatic)
 				sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
@@ -243,7 +243,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			CapsuleCollider& cc = scene.GetComponent<CapsuleCollider>(entity);
 			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
-			rb.RigidBodyID = capsule->GetID();
+			//rb.RigidBodyID = capsule->GetID();
 
 			if (rb.isStatic)
 				capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
@@ -280,8 +280,8 @@ void PhysicsSystem::UpdateGameObjects() {
 		Transform& t = scene.GetComponent<Transform>(entity);
 
 
-		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(rb.RigidBodyID);
-		JoltVec3ToGlmVec3(tmp, t.translation);
+		//JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(rb.RigidBodyID);
+		//JoltVec3ToGlmVec3(tmp, t.translation);
 		//convert
 		//t.translation = tmp;
 		// rinse and repeat for rotation and scale

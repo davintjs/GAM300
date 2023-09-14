@@ -160,7 +160,15 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
+		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
+		
+		if (t_Mesh == nullptr)
+		{
+			continue;
+		}
 
+		int index = t_Mesh->index;
+		
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
@@ -171,19 +179,20 @@ void GraphicsSystem::Update(float dt)
 			Lighting_Source.lightpos = transform.translation;
 		}
 
-		/*std::cout << "entering update loop\n";*/
-		int index = 1;
-		if (i == 3)
-		{
-			renderer.MeshName = "temporary";
-			index = 1;
-		}
-		else
-		{
-			renderer.MeshName = "Cube";
-			index = 2;
-		}
+		///*std::cout << "entering update loop\n";*/
+		//int index = 1;
+		//if (i == 3)
+		//{
+		//	renderer.MeshName = "temporary";
+		//	index = 1;
+		//}
+		//else
+		//{
+		//	renderer.MeshName = "Cube";
+		//	index = 2;
+		//}
 		
+
 		//properties[i].entitySRT[i]
 
 		SRT_Buffers[index].transformation_mat[ SRT_Buffers[index].index++ ] = transform.GetWorldMatrix();

@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "EditorTemplates.h";
 #include "Scene/Components.h"
+#include "Graphics/MeshManager.h"
 
 #define TEXT_BUFFER_SIZE 2048
 
@@ -255,15 +256,33 @@ void DisplayComponent<AudioSource>(AudioSource& as) {
     Display("Loop", as.loop);
     Display("Volume", as.volume);
 }
-
 template <>
 void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
 {
     //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
     //ImGui::Text("Active");
-    Display("Mesh Name", meshyRendy.MeshName);
-
-
+    //Display("Mesh Name", meshyRendy.MeshName);
+    ImGui::AlignTextToFramePadding();
+    ImGui::TableNextColumn();
+    ImGui::Text("MeshName");
+    ImGui::TableNextColumn();
+    std::vector<const char*> meshNames;
+    int number = 0;
+    bool found = false;
+    for (auto& pair : MeshManager.mContainer)
+    {
+        if (pair.first == meshyRendy.MeshName)
+            found = true;
+        meshNames.push_back(pair.first.c_str());
+        if (!found)
+        {
+            ++number;
+        }
+    }
+    ImGui::PushItemWidth(-1);
+    ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
+    ImGui::PopItemWidth();
+    meshyRendy.MeshName = meshNames[number];
 }
 
 //template <>

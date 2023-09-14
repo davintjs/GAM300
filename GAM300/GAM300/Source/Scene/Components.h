@@ -269,7 +269,7 @@ struct Rigidbody
 	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
-	JPH::BodyID RigidBodyID;			//Body ID 
+	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 struct CharacterController
@@ -285,7 +285,7 @@ struct CharacterController
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 
 
-	JPH::BodyID CharacterBodyID;
+	//JPH::BodyID CharacterBodyID;
 };
 
 struct Script
@@ -298,7 +298,7 @@ struct Script
 
 struct MeshRenderer
 {
-	std::string MeshName;
+	std::string MeshName = "Cube";
 	//Lighting
 
 	bool isLightSource = false;
@@ -310,9 +310,6 @@ struct MeshRenderer
 
 	LightSource Light_Properties;
 	// Material
-
-
-
 };
 #pragma endregion
 
