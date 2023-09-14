@@ -78,16 +78,22 @@ namespace BeanFactory
         internal extern static ulong InstantiateGameObject();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyGameObject(ulong ID);
+        internal extern static void DestroyGameObject(GameObject gameObject);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void DestroyComponent(Component component);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Component GetComponent(GameObject gameObject, Type componentType);
+        internal extern static Object GetComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static GameObject GetGameObject(Component gameObject);
+        internal extern static GameObject GetGameObject(Object gameObject);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static GameObject GetGameObjectFromScript(Script script);
 
         #endregion
 
@@ -97,18 +103,14 @@ namespace BeanFactory
         internal extern static Transform GetTransformFromGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Transform GetTransformFromComponent(Component component, Type componentType);
+
+        internal extern static Transform GetTransformFromComponent(Object component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetTranslation(ulong ID, out Vector3 translation);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetGlobalScale(ulong ID, out Vector3 scale);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetGlobalPosition(ulong ID, out Vector3 translation);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void GetRotation(ulong ID, out Vector3 translation);

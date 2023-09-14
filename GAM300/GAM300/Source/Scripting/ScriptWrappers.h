@@ -118,8 +118,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonHolding(keyCode);
 	}
 
+
+
 	template<typename T, typename... Ts>
-	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
+	static Entity* GetGameObjectRecursive(void* pComponent, size_t componentType)
 	{
 		if (GetComponentType::E<T>() == componentType)
 		{
@@ -128,7 +130,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
-			return GetGameObjectHelper( pComponent, componentType, TemplatePack<Ts...>());
+			return GetGameObjectRecursive<Ts...>(pComponent, componentType);
 		}
 		else
 		{
@@ -136,16 +138,35 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
+	template<typename T, typename... Ts>
+	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
+	{
+		return GetGameObjectRecursive<T, Ts...>(pComponent, componentType);
+	}
+
+	struct ComponentTypeIter
+	{
+
+	};
+
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
 		return GetGameObjectHelper(pComponent,componentType, AllComponentTypes());
 	}
 
+	static Entity* GetGameObjectFromScript(Script* pScript)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		return &scene.GetEntity(*pScript);
+	}
+
 	static Transform* GetTransformFromGameObject(Entity* pEntity)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
-		return &scene.GetComponent<Transform>(*pEntity);
+		Transform& t = scene.GetComponent<Transform>(*pEntity);
+		PRINT(t.translation.x,", ", t.translation.y, ", ", t.translation.z,"\n");
+		return &t;
 	}
 
 	template<typename T, typename... Ts>
@@ -173,17 +194,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
 		MonoType* mType = mono_reflection_type_get_type(componentType);
-		size_t cType;
-		if (monoComponentToType.find(mType) == monoComponentToType.end())
-		{
-			//Check if it is a script
-			E_ASSERT(SCRIPTING.IsScript(mono_class_from_mono_type(mType)), "Not a valid component");
-			cType = GetComponentType::E<Script>();
-		}
-		else
-		{
-			cType = monoComponentToType[mono_reflection_type_get_type(componentType)];
-		}
+		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
 		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
 	}
 
@@ -244,14 +255,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/
-	//static MonoObject* GetComponent(GameObject* pGameObject, MonoReflectionType* componentType)
-	//{
-	//	auto pair = scriptingSystem.reflectionMap.find(mono_reflection_type_get_type(componentType));
-	//	if (pair == scriptingSystem.reflectionMap.end())
-	//	{
-	//		return nullptr;
-	//	}
-	//	ComponentType cType = pair->second;
+	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+		//if (pair == monoComponentToType.end())
+		//{
+		//	E_ASSERT(SCRIPTING.IsScript(mono_type_get_class(mType)),"Not a valid component!");
+		//	return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
+		//}
+		return nullptr;
+	}
 
 	//	Component* component{ nullptr };
 	//	switch (cType)
@@ -323,19 +337,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//	\brief
-	//		Gets the delta time from the engine
-	//	\return
-	//		Delta time
-	//*/
-	///*******************************************************************************/
-	//static float GetDeltaTime()
-	//{
-	//	return (float)MyFrameRateController.getDt();
-	//}
-
-	///*******************************************************************************
-	///*!
-	//	\brief
 	//		Sets the parent to a child by uuid
 	//	\param newParentID
 	//		UUID of parent gameobject
@@ -393,18 +394,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	True if gameobject of ID has component of type
 	//*/
 	///*******************************************************************************/
-	//static bool HasComponent(GameObject* pGameObj, MonoReflectionType* componentType)
-	//{
-	//	MonoType* managedType = mono_reflection_type_get_type(componentType);
-	//	mono_class_from_mono_type(managedType);
-	//	const auto& pair = MyScriptingSystem.reflectionMap.find(managedType);
-	//	if (pair == MyScriptingSystem.reflectionMap.end())
-	//	{
-	//		return false;
-	//	}
-	//	ComponentType cType = pair->second;
-	//	return pGameObj->HasComponent(cType);
-	//}
+	static bool HasComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		return pEntity->hasComponentsBitset.test(monoComponentToType[managedType]);
+	}
 
 	////To be implemented
 	//static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
@@ -680,18 +674,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	return &clone;
 	//}
 
-	///*******************************************************************************
-	///*!
-	//\brief
-	//	Destroys a gameobject by ID
-	//\param ID
-	//	GameObject ID of the gameObject to delete
-	//*/
-	///*******************************************************************************/
-	//static void DestroyGameObject(GameObject* pGameObject)
-	//{
-	//	MyGOF.Destroy(*pGameObject,MySceneManager.get_current_scene()->gameObjects,true);
-	//}
+	/*******************************************************************************
+	/*!
+	\brief
+		Destroys a gameobject by ID
+	\param ID
+		GameObject ID of the gameObject to delete
+	*/
+	/*******************************************************************************/
+	static void DestroyGameObject(Entity* pGameObject)
+	{
+		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+	}
 
 	///*******************************************************************************
 	///*!
@@ -1202,13 +1196,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetMouseDown);
 		Register(GetTransformFromGameObject);
 		Register(GetTransformFromComponent);
-		Register(GetGameObject);
+		Register(GetGameObjectFromScript);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
 		//Register(SetTranslation);
 		//Register(GetGlobalPosition);
 		//Register(GetGlobalScale);
-		//Register(HasComponent);
+		Register(HasComponent);
 		//Register(RigidbodyAddForce);
 		//Register(RigidbodyGetVelocity);
 		//Register(RigidbodySetVelocity);
@@ -1229,7 +1223,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(QuitGame);
 		//Register(GetButtonState);
 		//Register(AddComponent);
-		//Register(GetComponent);
+		Register(GetComponent);
 		//Register(AudioSourcePlay);
 		//Register(AudioSourceStop);
 		//Register(AudioSourceSetVolume);

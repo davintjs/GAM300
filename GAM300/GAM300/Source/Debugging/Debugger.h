@@ -16,10 +16,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/ostream_sink.h>
-#include <spdlog/sinks/rotating_file_sink.h> // support for rotating file logging
 
 #include <memory>
 //#include "Editor/editor-consolelog.h"
@@ -62,7 +58,8 @@ public:
 		the message to display along with the error
 	*/
 	/**************************************************************************/
-	void assert_to_file(std::string expr_str, bool expr, std::string file, int line, std::string msg);
+	template <typename... Args>
+	void assert_to_file(std::string expr_str, bool expr, std::string file, int line, Args... args);
 
 	/***************************************************************************/
 	/*!
@@ -133,6 +130,6 @@ private:
 #define FILE_INFO(...)			::spdlog::info(__VA_ARGS__)
 
 //enter the condition to trigger the assert, followed by the message you want.
-#define E_ASSERT(Expr, Msg) DEBUGGER.assert_to_file(#Expr, Expr, __FILE__, __LINE__, Msg);
+#define E_ASSERT(Expr,...) DEBUGGER.assert_to_file(#Expr, Expr, __FILE__, __LINE__, __VA_ARGS__);
 
-#define Console_ToString(...)	DEBUGGER.::to_string(__VA_ARGS__)
+#define Console_ToString(...)	DEBUGGER.to_string(__VA_ARGS__)

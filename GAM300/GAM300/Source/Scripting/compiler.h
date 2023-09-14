@@ -42,7 +42,7 @@ namespace Utils
 				command += " " + p.path().string();
 		}
 
-
+		command += " -unsafe";
 		//command += " > output.txt";
 
 		system(command.c_str());

@@ -33,34 +33,18 @@ namespace BeanFactory
 
     public class Component
     {
-        public bool enabled
+        virtual public Transform transform { get; }
+        virtual public GameObject gameObject { get; }
+        public bool HasComponent<T>()
         {
-            get
-            {
-                return false;
-                //return InternalCalls.GetComponentEnabled(ID);
-            }
-            set
-            {
-/*                Type componentType = GetType();
-                InternalCalls.SetComponentEnabled(ID,value);*/
-            }
+            return gameObject.HasComponent<T>();
         }
-
-        public Transform transform
+/*        public T GetComponent<T>() where T : Component
         {
-            get 
-            {
-                Console.WriteLine("Internal calling");
-                return InternalCalls.GetTransformFromComponent(this, GetType()); 
-            }
-        }
-
-/*        public T GetComponent<T>() where T : Component, new()
-        {
-            return gameObject.GetComponent<T>();
+            return gameObject.HasComponent<T>();
         }*/
     }
+
 
     public class Transform
     {

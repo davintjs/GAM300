@@ -9,6 +9,7 @@
 
 #include "Editor/Editor.h"
 #include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 
 //Temporary
@@ -132,7 +133,7 @@ void GraphicsSystem::Update(float dt)
 		//glm::mat4 SRT = translation_mat * rotation_mat * scaling_mat;
 		//entitySRT[i] = SRT;
 		// 
-		entitySRT[i] = trans.GetLocalToWorldMatrix();
+		entitySRT[i] = trans.GetWorldMatrix();
 		//entitySRT[i] = glm::mat4(1.f);
 		++i;
 		
@@ -157,7 +158,8 @@ void GraphicsSystem::Update(float dt)
 			{
 				if (temp_intersect < intersected)
 				{
-					EditorCam.ActiveObj = &entity;
+					SelectedEntityEvent selectedEvent{ &entity };
+					EVENTS.Publish(&selectedEvent);
 					intersected = temp_intersect;
 				}
 			}
@@ -167,7 +169,8 @@ void GraphicsSystem::Update(float dt)
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		EditorCam.ActiveObj = nullptr;
+		SelectedEntityEvent selectedEvent{ nullptr };
+		EVENTS.Publish(&selectedEvent);
 	}
 
 
