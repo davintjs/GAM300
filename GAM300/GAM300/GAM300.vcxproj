@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -37,7 +37,66 @@
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
-    <ClCompile Include="Source\AssetManager\ThreadPool.cpp" />
+    <ClCompile Include="Source\Debugging\Debugger.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
+    <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -69,84 +128,35 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
-    <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\ImCurveEdit.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\ImGradient.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_demo.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_draw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_impl_glfw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_impl_opengl3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_stdlib.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_tables.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
+    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
     <ClCompile Include="Source\IOManager\InputHandler.cpp" />
     <ClCompile Include="Source\IOManager\InputSystem.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
     <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
+    <ClCompile Include="Source\Physics\PhysicsSystem.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Source\Scene\Components.cpp" />
     <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Scripting\scripting-system.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
-    <ClCompile Include="Source\Utilities\MultiThreading.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsBList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -157,6 +167,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Utilities\Serializer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\Utilities\SparseSet.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -166,6 +180,10 @@
     <ClCompile Include="Source\Utilities\UUID.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Utilities\YAMLUtils.cpp">
+      <SubType>
+      </SubType>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +203,14 @@
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
-    <ClInclude Include="Source\AssetManager\ThreadPool.h" />
+    <ClInclude Include="Source\Debugging\Debugger.h" />
+    <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Scripting\Compiler.h" />
+    <ClInclude Include="Source\Scripting\LogicSystem.h" />
+    <ClInclude Include="Source\Scripting\ScriptFields.h" />
+    <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
+    <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
+    <ClInclude Include="Source\Utilities\ThreadPool.h" />
     <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\Events.h" />
@@ -200,11 +225,13 @@
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />
     <ClInclude Include="Source\Graphics\Model3d.h" />
+    <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
     <ClInclude Include="Source\IOManager\InputHandler.h" />
     <ClInclude Include="Source\IOManager\InputSystem.h" />
     <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
     <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
+    <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Physics\PhysicsSystem.h" />
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\Scene\Components.h" />
@@ -212,16 +239,22 @@
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Scripting\scripting-system.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Utilities\ObjectsArray.h" />
     <ClInclude Include="Source\Utilities\PlatformUtils.h" />
     <ClInclude Include="Source\Utilities\ObjectsBList.h" />
-    <ClInclude Include="Source\Utilities\MultiThreading.h" />
     <ClInclude Include="Source\Utilities\ObjectsList.h" />
+    <ClInclude Include="Source\Utilities\Serializer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
+    <ClInclude Include="Source\Utilities\YAMLUtils.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.frag" />
@@ -234,7 +267,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{2ea1e690-1736-464d-b586-92e837ee3292}</ProjectGuid>
     <RootNamespace>GAM300</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -330,19 +363,29 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;JPH_PROFILE_ENABLED;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_USE_AVX2;JPH_USE_AVX;JPH_USE_SSE4_1;JPH_USE_SSE4_2;JPH_USE_LZCNT;JPH_USE_TZCNT;JPH_USE_F16C;JPH_USE_FMADD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>Default</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui\include;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\Recast\Recast\Include;$(SolutionDir)External\Recast\DebugUtils\Include;$(SolutionDir)External\Recast\Detour\Include;$(SolutionDir)External\Recast\DetourCrowd\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\yaml-cpp-master\include;$(SolutionDir)External\properties-master\src;$(SolutionDir)External\properties-master\src\Examples;$(SolutionDir)External\JoltPhysics-master;$(SolutionDir)External\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DiagnosticsFormat>Classic</DiagnosticsFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)External\Mono;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Debug;$(SolutionDir)External\spdlog\lib\Debug;$(SolutionDir)External\imgui\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.lib;spdlogd.lib;Jolt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>-IGNORE:4098 -IGNORE:4006 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -352,7 +395,7 @@ copy "$(SolutionDir)External\freetype-2.12.1\objs\freetype.dll" "$(TargetDir)fre
 copy "$(SolutionDir)External\GLEW\include\glew32.dll" "$(TargetDir)glew32.dll" /Y
 copy "$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.dll" "$(TargetDir)glfw3.dll" /Y
 copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y
-</Command>
+copy "$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.dll" "$(TargetDir)yaml-cppd.dll" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -366,15 +409,17 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui\include;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\Recast\Recast\Include;$(SolutionDir)External\Recast\DebugUtils\Include;$(SolutionDir)External\Recast\Detour\Include;$(SolutionDir)External\Recast\DetourCrowd\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\yaml-cpp-master\include;$(SolutionDir)External\properties-master\src;$(SolutionDir)External\properties-master\src\Examples;$(SolutionDir)External\JoltPhysics-master;$(SolutionDir)External\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019;$(SolutionDir)External\Mono;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Release;$(SolutionDir)External\spdlog\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cpp.lib;Jolt.lib;spdlog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mt.dll" "$(TargetDir)assimp-vc142-mt.dll" /Y
@@ -382,7 +427,8 @@ copy "$(SolutionDir)External\FMOD\lib\x64\fmod.dll" "$(TargetDir)fmod.dll" /Y
 copy "$(SolutionDir)External\freetype-2.12.1\objs\freetype.dll" "$(TargetDir)freetype.dll" /Y
 copy "$(SolutionDir)External\GLEW\include\glew32.dll" "$(TargetDir)glew32.dll" /Y
 copy "$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.dll" "$(TargetDir)glfw3.dll" /Y
-copy "$(SolutionDir)External\Mono\mono\lib\Release\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y</Command>
+copy "$(SolutionDir)External\Mono\mono\lib\Release\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y
+copy "$(SolutionDir)External\yaml-cpp-master\build\yaml-cpp.dll" "$(TargetDir)yaml-cpp.dll" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -42,19 +42,22 @@ using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
-	std::string Scene_name;
-	EntitiesList entities;	//Vector should be in order
-	SingleComponentsArrays singleComponentsArrays;
-	MultiComponentsArrays multiComponentsArrays;
-	EntitiesPtrArray entitiesDeletionBuffer;
-	ComponentsBufferArray componentsDeletionBuffer;
-
 	enum class State : char 
 	{
 		Edit = 0,
 		Play,
 		Paused
 	};
+
+	std::string sceneName;
+	EntitiesList entities;	//Vector should be in order
+	SingleComponentsArrays singleComponentsArrays;
+	MultiComponentsArrays multiComponentsArrays;
+	EntitiesPtrArray entitiesDeletionBuffer;
+	ComponentsBufferArray componentsDeletionBuffer;
+	std::filesystem::path filePath;
+	State state;
+
 	Scene(const std::string& _filepath);
 
 	Scene(Scene&) = delete;
@@ -63,6 +66,7 @@ struct Scene
 
 	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
+		
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
@@ -73,6 +77,7 @@ struct Scene
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
 		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		EditorHierarchy::Instance().layer.push_back(&entity);
 		return entity;
 	}
 
@@ -206,7 +211,7 @@ struct Scene
 	}
 
 	template <typename Component>
-	auto& GetComponents(Entity& entity)
+	auto GetComponents(Entity& entity)
 	{
 		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
 	}
@@ -214,14 +219,17 @@ struct Scene
 	template <typename Component>
 	auto& GetEntity(Component& component)
 	{
-		if constexpr (SingleComponentTypes::Has<Component>())
-		{
-			return entities.DenseSubscript(singleComponentsArrays.GetArray<Component>().GetDenseIndex(component));
-		}
-		else if constexpr (MultiComponentTypes::Has<Component>())
-		{
-			return entities.DenseSubscript(multiComponentsArrays.GetArray<Component>().GetDenseIndex(component));
-		}
+		return entities.DenseSubscript(GetComponentsArray<Component>().GetDenseIndex(component));
+	}
+
+	bool IsActive(Entity& entity)
+	{
+		return entities.IsActiveDense(entity.denseIndex);
+	}
+
+	void SetActive(Entity& entity, bool val = true)
+	{
+		entities.SetActive(entity, val);
 	}
 
 
@@ -254,17 +262,35 @@ struct Scene
 		return false;
 	}
 
-	template <typename Component>
-	Component& GetComponent(const Entity& entity)
+	Entity& GetEntityByUUID(size_t UUID)
+	{
+		for (Entity& entity : entities)
+			if (UUID == entity.denseIndex)
+				return entity;
+		E_ASSERT(false,"Entity of UUID:","cannot be found");
+	}
+
+	template <typename Component, typename Owner>
+	Component& GetComponent(Owner& obj)
 	{
 		//ASSERT(HasComponent<Component>(entity), "Entity does not have component");
+		ObjectIndex denseIndex;
+		if constexpr (std::is_same_v<Entity, Owner>)
+		{
+			denseIndex = obj.denseIndex;
+		}
+		else
+		{
+			denseIndex = GetComponentsArray<Owner>().GetDenseIndex(obj);
+		}
+
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
-			return singleComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
+			return GetComponentsArray<Component>().DenseSubscript(denseIndex);
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
-			return *multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex).front();
+			return *GetComponentsArray<Component>().DenseSubscript(denseIndex).front();
 		}
 	}
 
@@ -289,38 +315,5 @@ struct Scene
 			return component;
 		}
 	}
-
-	std::filesystem::path filePath;
-	State state;
 };
-
-template <typename Component>
-bool Scene::ComponentIsEnabled(uint32_t index, size_t multiIndex)
-{
-	if constexpr (SingleComponentTypes::Has<Component>())
-	{
-		ASSERT(multiIndex == 0);//, "Unable to find another component of given type as only one should exist on this gameObject");
-		singleComponentsArrays.GetArray<Component>().GetActive(index);
-	}
-	else if constexpr (MultiComponentTypes::Has(Component))
-	{
-		multiComponentsArrays.GetArray<Component>().GetActive(index);
-	}
-	static_assert(true, "Type is not a valid component!");
-}
-
-template <typename Component>
-void Scene::ComponentSetEnabled(uint32_t index, bool value, size_t multiIndex)
-{
-	if constexpr (SingleComponentTypes::Has(Component))
-	{
-		ASSERT(multiIndex == 0, "Unable to find another component of given type as only one should exist on this gameObject");
-		singleComponentsArrays.GetArray<Component>().SetActive(index, value);
-	}
-	else if constexpr (MultiComponentTypes::Has(Component))
-	{
-		multiComponentsArrays.GetArray<Component>().SetActive(index, value);
-	}
-	static_assert(true, "Type is not a valid component!");
-}
 #endif SCENE_H

@@ -190,7 +190,7 @@ void OBJECTSLIST::erase(T& val)
 	{
 		start = start->next;
 	}
-	ASSERT(start != nullptr, "Failed to erase value");
+	E_ASSERT(start != nullptr, "Failed to erase value");
 	start->sparseSet.erase(val);
 	--size_;
 }
@@ -315,7 +315,7 @@ ObjectIndex OBJECTSLIST::GetDenseIndex(T& object)
 		++count;
 		start = start->next;
 	}
-	ASSERT(true, "Object List does not contain this object");
+	E_ASSERT(true, "Object List does not contain this object");
 }
 
 template <typename T, ObjectIndex N>

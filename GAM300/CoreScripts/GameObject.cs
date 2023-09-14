@@ -15,54 +15,64 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
-namespace CopiumEngine
+namespace BeanFactory
 {
     public class GameObject
     {
-        public GameObject()
-        {
-            transform = new Transform();
-            transform.Initialize(this, 0);
-        }
-        public ulong ID;
-        public Transform transform;
-        private void Initialize(ulong _ID)
-        {
-            ID = _ID;
-        }
+        public UInt32 denseIndex;
 
         public bool activeSelf
         {
             get
             {
-                return InternalCalls.GetActive(ID);
+                return InternalCalls.GetActive(this);
+            }
+        }
+
+        public string name
+        {
+            get
+            {
+                return "Yes";
+            }
+            set
+            {
+
             }
         }
 
         //Checks if a gameObject has a component by calling back to c++
-        public bool HasComponent<T>() where T : Component, new()
+        public bool HasComponent<T>()
         {
-            Type componentType = typeof(T);
-            return InternalCalls.HasComponent(ID, componentType);
+            return InternalCalls.HasComponent(this, typeof(T));
         }
 
         //Gets a component by calling back to c++
-        public T GetComponent<T>() where T : Component, new()
+/*        public T GetComponent<T>() where T : Component, new()
         {
-            return InternalCalls.GetComponent(ID, typeof(T)) as T;
-        }
+            return InternalCalls.GetComponent(this, typeof(T)) as T;
+        }*/
 
-        public T AddComponent<T>() where T : Component, new()
-        {
-            T component = new T() { gameObject = this };
-            component.ID = InternalCalls.AddComponent(ID, typeof(T));
-            return component;
-        }
+        /*        public T AddComponent<T>() where T : Component, new()
+                {
+                    T component = new T() { gameObject = this };
+                    component.ID = InternalCalls.AddComponent(this, typeof(T));
+                    return component;
+                }*/
 
         public void SetActive(bool _active)
         {
-            InternalCalls.SetActive(ID, _active);
+            InternalCalls.SetActive(this, _active);
+        }
+
+        public Transform transform
+        {
+            get
+            {
+                return InternalCalls.GetTransformFromGameObject(this);
+            }
         }
     }
 }

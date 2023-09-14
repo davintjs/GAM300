@@ -10,36 +10,53 @@
 \brief
 	This file declares all types of components
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#define MAX_MULTI_COMPONENTS 1
-
-#include <string>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
+#include <vector>
+#include <map>
+
+// JPH
+#include "Jolt/Jolt.h"
+#include "Jolt/RegisterTypes.h"
+#include "Jolt/Core/Factory.h"
+#include "Jolt/Core/TempAllocator.h"
+#include "Jolt/Core/JobSystemSingleThreaded.h"
+#include "Jolt/Physics/PhysicsSettings.h"
+#include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/Collision/Shape/BoxShape.h"
+#include "Jolt/Physics/Collision/Shape/SphereShape.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+#include "Jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Body/BodyActivationListener.h"
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
+using Quaternion = glm::quat;
 
-#define ComponentName(Type) #Type
-template <typename T>
-using ComponentsPtrArray = std::vector<T*>;
+static std::map<std::string, size_t> ComponentTypes{};
+
+
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
 {
-	static constexpr const char* name = ComponentName(T);
 	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
 	constexpr GetComponentTypeGroup() = default;
 
@@ -55,7 +72,22 @@ struct GetComponentTypeGroup
 			return GetComponentTypeGroup<Ts...>::template E<T1>();
 		}
 	}
+
+	template <typename T1>
+	static constexpr const char* Name()
+	{
+		if constexpr (std::is_same<T, T1>())
+		{
+			static const char* name = typeid(T).name() + strlen("struct ");
+			return name;
+		}
+		else
+		{
+			return GetComponentTypeGroup<Ts...>::template Name<T1>();
+		}
+	}
 };
+
 
 template<typename... Ts>
 struct SingleComponentsGroup
@@ -101,7 +133,7 @@ struct MultiComponentsGroup
 	template <typename T1>
 	constexpr MultiComponentsArray<T1>& GetArray()
 	{
-		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		static_assert((std::is_same_v<T1, Ts> || ...), "TESTES");
 		return std::get<MultiComponentsArray<T1>>(arrays);
 	}
 private:
@@ -117,17 +149,43 @@ struct Tag
 
 struct Transform
 {
-	bool is_enabled = true;
-	std::string str = "Transform";
-	Vector3 translation{};
+	Vector3 scale{ 1 };
 	Vector3 rotation{};
-	Vector3 scale{1};
-	std::vector<Transform*>child;
-	Transform* Parent = nullptr;
+	Vector3 translation{};
+	Transform* parent = nullptr;
+
+	std::vector<Transform*> child;
 
 	bool isLeaf() {
+		return (child.size()) ? false : true;
+	}
 
-		return (child.size() > 0) ? false : true;
+	bool isChild() {
+		if (parent)
+			return true;
+		else
+			return false;
+	}
+
+	glm::mat4 GetWorldMatrix() const 
+	{
+		if (parent)
+			return parent->GetWorldMatrix() * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetInvertedWorldMatrix() const
+	{
+		if (parent)
+			return glm::inverse(parent->GetInvertedWorldMatrix()) * GetLocalMatrix();
+		return GetLocalMatrix();
+	}
+
+	glm::mat4 GetLocalMatrix() const {
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		return glm::translate(glm::mat4(1.0f), translation) *
+			rot *
+			glm::scale(glm::mat4(1.0f), scale);
 	}
 
 	bool isEntityChild(Transform& ent) {
@@ -135,18 +193,49 @@ struct Transform
 			return true;
 		}
 		for (int i = 0; i < child.size(); i++) {
-			if (!child[i]->isLeaf()) {
-				return isEntityChild(*child[i]);
-			}
+				return child[i]->isEntityChild(ent);
 		}
 		return false;
 	}
 
-	bool isChild() {
-		if (Parent)
-			return true;
-		else
-			return false;
+	void SetParent(Transform* newParent) {
+		// Calculate the global transformation matrix
+		if (parent) {
+			/*parent->RemoveChild(this);
+			glm::mat4 globalTransform = GetWorldMatrix();
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);*/
+		}
+
+		// Set the new parent
+		glm::mat4 localTransform = GetWorldMatrix();
+		parent = newParent;
+
+		if (parent) {
+			/*glm::mat4 parentTransform = parent->GetWorldMatrix();
+			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
+			rotation = glm::eulerAngles(rot);*/
+
+			// Add the object to the new parent's child list
+			parent->child.push_back(this);
+		}
+	}
+
+	void RemoveChild(Transform* t)
+	{
+		auto it = std::find(child.begin(), child.end(),t);
+
+		// Check if an element satisfying the condition was found
+		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
+		// Erase the found element
+		child.erase(it);
 	}
 };
 
@@ -158,17 +247,20 @@ struct AudioSource
 
 struct BoxCollider
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
 };
 
 struct SphereCollider
 {
-
+	float radius = 1.0f; 
 };
 
 struct CapsuleCollider
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
 };
 
 struct Animator
@@ -182,25 +274,67 @@ struct Animator
 struct Rigidbody
 {
 	bool is_enabled = true;
-	std::string str = "Rigidbody";
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
+	bool is_trigger = false;
+
+	Vector3 linearVelocity{};			//velocity of object
+	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	JPH::BodyID RigidBodyID;			//Body ID 
+};
+
+struct CharacterController
+{
+	bool is_enabled = true;
+
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+
+
+	JPH::BodyID CharacterBodyID;
 };
 
 struct Script
 {
 	std::string name;
 };
+
+
+
+struct MeshRenderer
+{
+	std::string MeshName;
+	//Lighting
+
+	bool isLightSource = false;
+
+	struct LightSource
+	{
+		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
+	};
+
+	LightSource Light_Properties;
+	// Material
+
+
+
+};
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Tag,Transform,Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -208,8 +342,19 @@ using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCol
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
 using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
+using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
+template<typename T, typename... Ts>
+static void RegisterComponents()
+{
+	ComponentTypes.emplace(GetComponentType::Name<T>(), GetComponentType::E<T>());
+	RegisterComponents<Ts...>();
+}
+
+template<typename... Ts>
+static void RegisterComponents()
+{}
 
 #endif // !COMPONENTS_H
