@@ -31,16 +31,22 @@ void SceneManager::Init()
 			Entity& tempent = scene.AddEntity();
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+			scene.AddComponent<MeshRenderer>(tempent);
 		}
 		scene.AddComponent<Script>(0).name = "Player";
 		scene.AddComponent<Rigidbody>(0);
 		Entity& box = scene.AddEntity();
+		scene.AddComponent<MeshRenderer>(box);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
 
 		Entity& box2 = scene.AddEntity();
+		scene.AddComponent<MeshRenderer>(box2);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+
+		Entity& lightsource = scene.AddEntity();
+		scene.AddComponent<LightSource>(lightsource);
 
 
 
