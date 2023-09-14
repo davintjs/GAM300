@@ -20,8 +20,8 @@ Model LightSource;
 
 Model AffectedByLight;
 
-unsigned int testBoxbuffer;
-Model testBox;
+//unsigned int testBoxbuffer;
+//Model testBox;
 
 unsigned int entitySRTBuffer;
 glm::mat4 entitySRT[EntityRenderLimit];
@@ -85,8 +85,8 @@ void GraphicsSystem::Init()
 	//testmodel.init(&assimp);// The Shader is set up inside this init function
 
 	testmodel.init();
-	testBox.instance_cubeinit();
-	testBox.setup_instanced_shader();
+	/*testBox.instance_cubeinit();
+	testBox.setup_instanced_shader();*/
 
 	// Euan RayCasting Testing
 	Line.lineinit();
@@ -105,24 +105,25 @@ void GraphicsSystem::Init()
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
 	int index = 0;
-	for (Entity& entity : currentScene.entities) {
-		// when looping entity, sort out the properties,
-		// count the instance 
+	//for (Entity& entity : currentScene.entities) {
+	//	// when looping entity, sort out the properties,
+	//	// count the instance 
 
 
-		entitySRT[index] = glm::mat4(1.f);
-		++index;
-	}
+	//	entitySRT[index] = glm::mat4(1.f);
+	//	++index;
+	//}
 
 	// for each mesh, it gets its own buffers and set up
-	/*for (int i = 0; i < InstancePropertyCount; ++i) {
+	/*
+	for (int i = 0; i < InstancePropertyCount; ++i) {
 		glGenBuffers(1, &(properties[i].entitySRTbuffer));
 		glBindBuffer(GL_ARRAY_BUFFER, properties[i].entitySRTbuffer);
 		glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(properties[i].entitySRT[0]), GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		InstancePropertySetup(properties[i]);
-	}*/
+	}
 
 	glGenBuffers(1, &entitySRTBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, entitySRTBuffer);
@@ -130,6 +131,7 @@ void GraphicsSystem::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	InstanceSetup(testBox.vaoid);
+	*/
 
 	EditorCam.Init();
 }
@@ -181,10 +183,8 @@ void GraphicsSystem::Update(float dt)
 			renderer.MeshName = "Cube";
 			index = 1;
 		}
-
-
-
-
+		
+		//properties[i].entitySRT[i]
 
 		SRT_Buffers[index].transformation_mat[ SRT_Buffers[index].index++ ] = transform.GetWorldMatrix();
 		entitySRT[i] = transform.GetWorldMatrix();
