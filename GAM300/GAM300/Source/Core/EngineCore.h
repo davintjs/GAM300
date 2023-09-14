@@ -83,7 +83,12 @@ public:
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
-			system_times.push_back(std::pair <std::string, float>(typeid(*pSystem).name(), 0));
+			
+			/*if (pSystem != nullptr) {
+				typeid(*pSystem);
+			}*/
+
+			system_times.push_back(std::pair <std::string, float>("System Name", 0));
 		}
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
