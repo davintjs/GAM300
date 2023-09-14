@@ -26,6 +26,22 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include <vector>
+#include <map>
+
+// JPH
+#include "Jolt/Jolt.h"
+#include "Jolt/RegisterTypes.h"
+#include "Jolt/Core/Factory.h"
+#include "Jolt/Core/TempAllocator.h"
+#include "Jolt/Core/JobSystemSingleThreaded.h"
+#include "Jolt/Physics/PhysicsSettings.h"
+#include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/Collision/Shape/BoxShape.h"
+#include "Jolt/Physics/Collision/Shape/SphereShape.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include <Jolt/Physics/Collision/Shape/ConvexShape.h>
+#include "Jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Body/BodyActivationListener.h"
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -231,17 +247,20 @@ struct AudioSource
 
 struct BoxCollider
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
 };
 
 struct SphereCollider
 {
-
+	float radius = 1.0f; 
 };
 
 struct CapsuleCollider
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
 };
 
 struct Animator
@@ -255,12 +274,34 @@ struct Animator
 struct Rigidbody
 {
 	bool is_enabled = true;
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
+	bool is_trigger = false;
+
+	Vector3 linearVelocity{};			//velocity of object
+	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	JPH::BodyID RigidBodyID;			//Body ID 
+};
+
+struct CharacterController
+{
+	bool is_enabled = true;
+
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+
+
+	JPH::BodyID CharacterBodyID;
 };
 
 struct Script
@@ -293,7 +334,7 @@ struct MeshRenderer
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator , MeshRenderer>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
