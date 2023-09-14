@@ -196,7 +196,11 @@ void GraphicsSystem::Update(float dt)
 			{
 				if (temp_intersect < intersected)
 				{
-					EditorCam.ActiveObj = &entity;
+					//EDITOR.SetSelectedEntity(&entity);
+					SelectedEntityEvent SelectingEntity(&entity);
+
+					EVENTS.Publish(&SelectingEntity);
+					//EditorCam.ActiveObj = &entity;
 					intersected = temp_intersect;
 				}
 			}
