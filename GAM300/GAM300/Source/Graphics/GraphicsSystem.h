@@ -9,7 +9,8 @@
 struct InstanceProperties
 {
 	// rmb to convert everything to AOS
-	glm::mat4 entitySRT;
+	GLuint entitySRT;
+	glm::mat4 entitySRT[EntityRenderLimit];
 	// int morestuff;
 
 };
