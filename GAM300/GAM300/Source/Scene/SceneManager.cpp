@@ -30,6 +30,7 @@ void SceneManager::Init()
 		for (int i = 0; i < 5; ++i)
 		{
 			Entity& tempent = scene.AddEntity();
+			scene.AddComponent<MeshRenderer>(tempent);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 		}
@@ -57,9 +58,9 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	
-	Entity& titty = scene.AddEntity();
+	/*Entity& titty = scene.AddEntity();
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);*/
 
 	/*scene.AddEntity();
 	scene.AddEntity();
@@ -67,19 +68,19 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	scene.AddEnt
 	scene.AddEntity();*/
 
-	// test instance rendering
-	for (int i = 0; i < 5; ++i) {
-		Entity& tempent = scene.AddEntity();
-		scene.AddComponent<MeshRenderer>(tempent);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand()%1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-	}
-	if (!DeserializeScene(scene))
+	//// test instance rendering
+	//for (int i = 0; i < 5; ++i) {
+	//	Entity& tempent = scene.AddEntity();
+	//	scene.AddComponent<MeshRenderer>(tempent);
+	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand()%1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
+	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+	//}
+	/*if (!DeserializeScene(scene))
 	{
 		std::cout << "Error loading scene!\n";
 		return;
 	}
-	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
+	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";*/
 }
 
 bool SceneManager::SaveScene(const std::string& _filePath)

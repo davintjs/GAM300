@@ -171,8 +171,8 @@ void GraphicsSystem::Update(float dt)
 
 
 
-		SRT_Buffers[index].transformation_mat[ SRT_Buffers[index].index++ ] = transform.GetLocalToWorldMatrix();
-		entitySRT[i] = transform.GetLocalToWorldMatrix();
+		SRT_Buffers[index].transformation_mat[ SRT_Buffers[index].index++ ] = transform.GetWorldMatrix();
+		entitySRT[i] = transform.GetWorldMatrix();
 		++i;
 
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
