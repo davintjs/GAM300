@@ -285,6 +285,7 @@ struct MeshRenderer
 		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
 	};
 
+	LightSource Light_Properties;
 	// Material
 
 

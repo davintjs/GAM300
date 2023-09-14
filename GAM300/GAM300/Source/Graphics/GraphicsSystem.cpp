@@ -149,10 +149,9 @@ void GraphicsSystem::Update(float dt)
 		if (i == 0)
 		{
 			renderer.isLightSource = true;
-			Lighting_Source.lightColor = glm::vec3(1.f, 1.f, 1.f);
+			Lighting_Source.lightColor = renderer.Light_Properties.LightingColor;
 			Lighting_Source.lightpos = transform.translation;
 		}
-
 
 		/*std::cout << "entering update loop\n";*/
 		int index = 1;
