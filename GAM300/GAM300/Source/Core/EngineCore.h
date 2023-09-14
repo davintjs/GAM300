@@ -21,7 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "FramerateController.h"
 #include "Editor/Editor.h"
 #include "SystemInterface.h"
-#include "Physics/PhysicsSystem.h"
+//#include "Physics/PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
@@ -42,6 +42,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scripting/LogicSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
+#define UPDATE_TIME 2.f;
 
 enum class EngineState
 {
@@ -82,16 +83,18 @@ public:
 		for (ISystem* pSystem : systems)
 		{
 			pSystem->Init();
+			system_times.push_back(std::pair <std::string, float>(typeid(*pSystem).name(), 0));
 		}
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
+		update_timer = 0.f;
 
-		SceneStartEvent startEvent{};
+		/*SceneStartEvent startEvent{};
 		ACQUIRE_SCOPED_LOCK("Assets");
-		EVENTS.Publish(&startEvent);
+		EVENTS.Publish(&startEvent);*/
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
@@ -118,6 +121,7 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
+		//MultiComponentsArrays arr;
 		if (state == EngineState::Run)
 		{
 			//Start ImGui Frames
@@ -126,12 +130,33 @@ public:
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 			ImGuizmo::BeginFrame();
-
+			double starttime = 0;
+			int i = 0;
+			float elapsedtime = 0;
+			bool update = false;
+			if (update_timer > 0.f) {
+				update_timer -= dt;
+			}
+			else {
+				update_timer = UPDATE_TIME;
+				update = true;
+			}
 			for (ISystem* pSystem : systems)
 			{
-				if (pSystem->GetMode() & mode)
+				if (pSystem->GetMode() & mode) {
+					starttime = glfwGetTime();
 					pSystem->Update(dt);
+					if (update) {
+						elapsedtime += system_times[i++].second = glfwGetTime() - starttime;
+					}	
+				}
 			}
+			if (update) {
+				systemtotaltime = elapsedtime;
+				update = false;
+			}
+				
+			FPS = 1.f / dt;
 
 			//End ImGui Frames
 			ImGui::EndFrame();
@@ -162,10 +187,20 @@ public:
 	{
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
+
+	float get_FPS() {
+		return FPS;
+	}
+
+	std::vector<std::pair<std::string, float>>system_times;
+	float systemtotaltime;
+
 private:
 	std::vector<ISystem*> systems;
+	float FPS; 
+	float update_timer;
 	EngineState state = EngineState::Run;
-	SystemMode mode = ENUM_SYSTEM_RUNTIME;
+	SystemMode mode = ENUM_SYSTEM_EDITOR;
 	FileWatcher watcher;
 };
 #endif // !CORE_H
