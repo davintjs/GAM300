@@ -1,3 +1,5 @@
+#ifndef PROPERTY_CONFIG_H
+#define PROPERTY_CONFIG_H
 
 using string_t = std::string;
 
@@ -189,3 +191,5 @@ namespace property
     }
 }
 
+
+#endif // !PROPERTY_CONFIG_H

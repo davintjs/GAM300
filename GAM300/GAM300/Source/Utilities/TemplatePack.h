@@ -2,6 +2,7 @@
 #define TEMPLATE_PACK_H
 #include <tuple>
 #include <type_traits>
+#include <variant>
 
 template<typename T, typename... Ts>
 static constexpr bool contains()
@@ -18,6 +19,9 @@ struct TemplateContainer
 template <typename... Ts>
 struct TemplatePack
 {
+	constexpr TemplatePack(){};
+	constexpr TemplatePack(std::variant<Ts...> pack){};
+
 	template<typename T1>
 	static constexpr bool Has()
 	{

@@ -22,6 +22,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/Components.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
+#include "PropertyConfig.h"
 
 #define TEXT_BUFFER_SIZE 2048
 
@@ -31,8 +32,15 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
+
 template <typename T>
 void Display(const char* name, T& val);
+
+template <typename T>
+void DisplayType(const char* name, T& val)
+{
+    PRINT(name," ", typeid(T).name(), '\n');
+}
 
 void DisplayType(const char* name, bool& val)
 {
@@ -68,6 +76,7 @@ void DisplayType(const char* name, char(&val)[SZ])
     idName += name;
     ImGui::InputTextMultiline(idName.c_str(), val, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
+
 
 void DisplayType(const char* name, char*& val)
 {
@@ -255,26 +264,28 @@ void DisplayComponent<Tag>(Tag& tag)
 template<>
 void DisplayComponent<AudioSource>(AudioSource& as) {
 
-    for (int i = 0; i < as.getPropertyVTable().m_Count; ++i) {
-        auto properties = as.getPropertyVTable().m_pEntry;
+    std::vector<property::entry> List;
+    property::SerializeEnum(as, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+        {
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+            List.push_back(property::entry { PropertyName, Data });
+        });
 
-        property::entry
 
-
-
-        std::visit([&](auto&& Value)
+    for (auto& [Name, Data] : List)
+    {
+        std::visit([&](auto& Value)
             {
                 using T = std::decay_t<decltype(Value)>;
-
-            }, properties[i]);
-
-        
-        using T = std::decay_t<decltype(data)>;
-
-        std::cout << "name: " << properties[i].m_pName << ", data type: " << typeid(T).name() << std::endl;
-
-        //Display(properties[i].m_pName, data);
+                //PRINT(typeid(T).name(),'\n');
+                Display<T>(Name.c_str(), Value);
+                //ReflectedTypes::DisplayHelper(Name,Value);
+            }
+        ,Data);
+        property::set(as, Name.c_str(), Data);
     }
+
     /*for(auto property : as.getPropertyVTable())
     Display(as.getPropertyVTable().m_pName, as.loop);
     Display("Volume", as.volume);*/
