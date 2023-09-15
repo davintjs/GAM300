@@ -38,6 +38,20 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorHeaders.h"
 
 
+template <class T>
+struct HandleHash {
+	std::size_t operator()(const Handle<T>& handle) const {
+		std::hash<T>{}(handle.uuid);
+	}
+};
+
+template <class T>
+struct HandleHash {
+	std::size_t operator()(const Handle<T>& lhs, const Handle<T>& rhs) const {
+		std::hash<T>{}(handle.uuid);
+	}
+};
+
 template<typename... Ts>
 struct HandlesTable
 {
@@ -80,7 +94,7 @@ struct HandlesTable
 	//}
 
 private:
-	std::tuple<std::unordered_set<Handle<Ts>>...> table;
+	std::tuple<std::unordered_set<Handle<Ts>, HandleHash<Ts>>...> table;
 };
 
 using AllObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
@@ -110,7 +124,7 @@ struct Scene
 	std::filesystem::path filePath;
 	State state;
 
-	std::unordered_map<Engine::UUID, Entity*> entityUUIDs;
+	//std::unordered_map<Engine::UUID, Entity*> entityUUIDs;
 
 	Scene(const std::string& _filepath);
 

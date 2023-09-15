@@ -22,8 +22,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define HANDLE_H
 
-
-
 //INCLUDES
 #include "Utilities/UUID.h"
 
@@ -36,8 +34,6 @@ public:
 	const Engine::UUID uuid;
 
 	T& Get();
-	std::size_t operator()() const;
-	bool operator==(const Handle<T>& rhs) const;
 private:
 	T* pObject{ nullptr };
 };
