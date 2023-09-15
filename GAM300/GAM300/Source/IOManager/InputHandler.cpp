@@ -69,12 +69,44 @@ void InputHandler::copyingCurrStatetoLast()
 
 bool InputHandler::isMouseButtonPressed_L()
 {
+	if (InputHandler::isMouseButtonHolding_L())
+	{
+		if (InputHandler::get_Prev_MouseButtonState(0) == 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+
+}
+
+
+bool InputHandler::isMouseButtonPressed_R()
+{
+
+	if (InputHandler::isMouseButtonHolding_R())
+	{
+		if (InputHandler::get_Prev_MouseButtonState(1) == 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool InputHandler::isMouseButtonHolding_L()
+{
 	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_LEFT);
 }
-bool InputHandler::isMouseButtonPressed_R()
+
+
+bool InputHandler::isMouseButtonHolding_R()
 {
 	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
 }
+
 
 glm::vec2 InputHandler::getMousePos()
 {
