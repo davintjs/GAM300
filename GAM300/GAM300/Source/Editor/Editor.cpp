@@ -21,6 +21,21 @@
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
+#include "Core/SystemsGroup.h"
+
+using EditorSystemsPack =
+TemplatePack
+<
+    EditorMenuBar,
+    EditorContentBrowser,
+    EditorScene,
+    EditorInspector,
+    EditorDebugger,
+    EditorHierarchy,
+    EditorToolBar
+>;
+
+using EditorSystems = decltype(SystemsGroup(EditorSystemsPack()));
 
 void EditorSystem::Init()
 {
@@ -38,20 +53,17 @@ void EditorSystem::Init()
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
 
-    editorSystems = {
-        &EditorMenuBar::Instance(),
-        &EditorContentBrowser::Instance(),
-        &EditorScene::Instance(),
-        &EditorInspector::Instance(),
-        &EditorDebugger::Instance(),
-        &EditorHierarchy::Instance(),
-        &EditorToolBar::Instance(),
-    };
+    //editorSystems = {
+    //    &EditorMenuBar::Instance(),
+    //    &EditorContentBrowser::Instance(),
+    //    &EditorScene::Instance(),
+    //    &EditorInspector::Instance(),
+    //    &EditorDebugger::Instance(),
+    //    &EditorHierarchy::Instance(),
+    //    &EditorToolBar::Instance(),
+    //};
 
-    for (ISystem* pSystem : editorSystems)
-    {
-        pSystem->Init();
-    }
+    EditorSystems::Init();
 }
 
 void EditorSystem::Update(float dt)
@@ -62,10 +74,13 @@ void EditorSystem::Update(float dt)
 
     
 
-    for (ISystem* pSystem : editorSystems)
-    {   
-        pSystem->Update(dt);
-    }
+    //for (ISystem* pSystem : editorSystems)
+    //{   
+    //    pSystem->Update(dt);
+    //}
+
+    auto func = [=](ISystem* sys) {sys->Update(dt); };
+    EditorSystems::Update(dt, func);
 
    /* bool demo = true;
     ImGui::ShowDemoWindow(&demo);*/
@@ -80,10 +95,11 @@ void EditorSystem::Update(float dt)
 
 void EditorSystem::Exit()
 {
-    for (auto iter = editorSystems.rbegin(); iter != editorSystems.rend(); ++iter)
-    {
-        (*iter)->Exit();
-    }
+    //for (auto iter = editorSystems.rbegin(); iter != editorSystems.rend(); ++iter)
+    //{
+    //    (*iter)->Exit();
+    //}
+    EditorSystems::Exit();
 
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();

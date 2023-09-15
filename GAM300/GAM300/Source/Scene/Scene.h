@@ -33,7 +33,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/Debug.h"
 #include "Entity.h"
 #include "Components.h"
-#include "Editor/EditorHeaders.h"
+#include <unordered_map>
 
 
 using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
@@ -58,6 +58,8 @@ struct Scene
 	std::filesystem::path filePath;
 	State state;
 
+	std::unordered_map<Engine::UUID, Entity*> entityUUIDs;
+
 	Scene(const std::string& _filepath);
 
 	Scene(Scene&) = delete;
@@ -76,8 +78,8 @@ struct Scene
 		tag.name = "New GameObject(";
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
-		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
-		EditorHierarchy::Instance().layer.push_back(&entity);
+		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		//EditorHierarchy::Instance().layer.push_back(&entity);
 		return entity;
 	}
 

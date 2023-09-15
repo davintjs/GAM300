@@ -1,5 +1,5 @@
-[2023-09-14 21:08:00.493] [Error] [critical] 
+[2023-09-15 09:57:58.333] [Error] [critical] 
 Caused By:	false
-Info:		Entity of UUID: cannot be found
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 270)
+Info:		Entity of UUID: 1 cannot be found
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 272)
 

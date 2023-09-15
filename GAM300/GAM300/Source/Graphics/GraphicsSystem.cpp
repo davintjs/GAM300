@@ -538,11 +538,6 @@ void GraphicsSystem::Draw() {
 	/* // LightSource.lightSource_draw();
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
-	
-	
-
-	
-
 
 }
 

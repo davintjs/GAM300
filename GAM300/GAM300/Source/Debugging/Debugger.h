@@ -45,25 +45,6 @@ public:
 	/***************************************************************************/
 	/*!
 	\brief
-		Used to stop the engine if the condition is true
-	\param expr_str
-		The error condition that was true which will be shown
-	\param expr
-		the assert condition
-	\param file
-		the file that caused an error
-	\param line
-		the line that caused an error
-	\param msg
-		the message to display along with the error
-	*/
-	/**************************************************************************/
-	template <typename... Args>
-	void assert_to_file(std::string expr_str, bool expr, std::string file, int line, Args... args);
-
-	/***************************************************************************/
-	/*!
-	\brief
 		Returns a string sent to the console
 	\return
 		the message as a string as well
@@ -130,6 +111,27 @@ private:
 #define FILE_INFO(...)			::spdlog::info(__VA_ARGS__)
 
 //enter the condition to trigger the assert, followed by the message you want.
-#define E_ASSERT(Expr,...) DEBUGGER.assert_to_file(#Expr, Expr, __FILE__, __LINE__, __VA_ARGS__);
+#define E_ASSERT(condition,...)\
+        if (!(condition)) {       \
+			DEBUGGER.error_log();\
+            std::ostringstream assertMessageStream; \
+			assertMessageStream << "\nCaused By:\t" << #condition << '\n' << "Info:\t\t";\
+            appendCustomAssertMessage(assertMessageStream, __VA_ARGS__); \
+			assertMessageStream << "\nSource:\t\t" << __FILE__ << " (Line: " << __LINE__ << ")\n";\
+			FILE_CRITICAL(assertMessageStream.str());\
+			spdlog::drop("Error");\
+			abort();\
+        }                              \
 
+// Helper function to append custom messages
+template <typename T>
+void appendCustomAssertMessage(std::ostringstream& stream, const T& arg) {
+	stream << arg;
+}
+
+template <typename T, typename... Args>
+void appendCustomAssertMessage(std::ostringstream& stream, const T& arg, const Args&... args) {
+	stream << arg << " ";
+	appendCustomAssertMessage(stream, args...);
+}
 #define Console_ToString(...)	DEBUGGER.to_string(__VA_ARGS__)

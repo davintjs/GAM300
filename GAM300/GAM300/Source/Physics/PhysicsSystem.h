@@ -121,6 +121,7 @@ public:
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
+public:
 	void Init();
 	void Update(float dt);
 	void Exit();
