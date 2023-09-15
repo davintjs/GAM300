@@ -33,8 +33,58 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/Debug.h"
 #include "Entity.h"
 #include "Components.h"
-#include <unordered_map>
+#include <unordered_set>
+#include "Handle.h"
+#include "Editor/EditorHeaders.h"
 
+
+template<typename... Ts>
+struct HandlesTable
+{
+	constexpr HandlesTable(TemplatePack<Ts...>) {}
+	HandlesTable() = default;
+	//template <typename T1>
+	//bool HasHandle(Engine::UUID uuid)
+	//{
+	//	auto& entries = std::get<std::unordered_set<Handle<T1>>>(table);
+	//	if (entries.find(uuid) == entries.end())
+	//		return false;
+	//	return true;
+	//}
+
+	//template <typename T1>
+	//constexpr Handle<T1>& GetHandle(Engine::UUID uuid)
+	//{
+	//	return std::get<std::unordered_set<Handle<T1>>>(table)[uuid];
+	//}
+
+	//template <typename T1>
+	//constexpr void erase(Engine::UUID uuid)
+	//{
+	//	auto& entries = std::get<std::unordered_set<Handle<Ts>>>(table);
+	//	entries.erase(uuid);
+	//}
+
+	//template <typename T1>
+	//constexpr void erase(Handle<T1>& handle)
+	//{
+	//	auto& entries = std::get<std::unordered_set<Handle<Ts>>>(table);
+	//	entries.erase(handle);
+	//}
+
+	//template <typename T1,typename... Args>
+	//constexpr Handle<T1>& emplace(Args&&... args)
+	//{
+	//	auto& table = std::get<std::unordered_set<Handle<Ts>>>(table);
+	//	table.emplace(args);
+	//}
+
+private:
+	std::tuple<std::unordered_set<Handle<Ts>>...> table;
+};
+
+using AllObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
+using SceneHandles = decltype(HandlesTable(AllObjects()));
 
 using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
@@ -55,6 +105,8 @@ struct Scene
 	MultiComponentsArrays multiComponentsArrays;
 	EntitiesPtrArray entitiesDeletionBuffer;
 	ComponentsBufferArray componentsDeletionBuffer;
+	//SceneHandles objectHandles;
+
 	std::filesystem::path filePath;
 	State state;
 
@@ -79,7 +131,7 @@ struct Scene
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
 		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
-		//EditorHierarchy::Instance().layer.push_back(&entity);
+		EditorHierarchy::Instance().layer.push_back(&entity);
 		return entity;
 	}
 
