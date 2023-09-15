@@ -25,7 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
-#include <vector>
+#include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
 
@@ -126,12 +126,12 @@ private:
 
 #pragma region COMPONENTS
 
-struct Tag
+struct Tag : Object
 {
 	std::string name;
 };
 
-struct Transform
+struct Transform : Object
 {
 	Vector3 scale{ 1 };
 	Vector3 rotation{};
@@ -182,7 +182,8 @@ struct Transform
 		return false;
 	}
 
-	void SetParent(Transform* newParent) {
+	void SetParent(Transform* newParent) 
+	{
 		// Calculate the global transformation matrix
 		if (parent) {
 			/*parent->RemoveChild(this);
@@ -223,31 +224,31 @@ struct Transform
 	}
 };
 
-struct AudioSource
+struct AudioSource : Object
 {
 	bool loop = false;
 	float volume = 1.0f;
 };
 
-struct BoxCollider
+struct BoxCollider : Object
 {
 	float x = 1.0f;
 	float y = 1.0f; 
 	float z = 1.0f; 
 };
 
-struct SphereCollider
+struct SphereCollider : Object
 {
 	float radius = 1.0f; 
 };
 
-struct CapsuleCollider
+struct CapsuleCollider : Object
 {
 	float height = 1.0f; 
 	float radius = 1.0f; 
 };
 
-struct Animator
+struct Animator : Object
 {
 };
 
@@ -255,11 +256,10 @@ struct Animator
 //{
 //};
 
-struct Rigidbody
+struct Rigidbody : Object
 {
 	bool is_enabled = true;
 	bool is_trigger = false;
-
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
@@ -272,40 +272,32 @@ struct Rigidbody
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
-struct CharacterController
+struct CharacterController : Object
 {
 	bool is_enabled = true;
-
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
-
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
-
-
 	//JPH::BodyID CharacterBodyID;
 };
 
-struct Script
+struct Script : Object
 {
 	std::string name;
 	std::map<std::string, Field> fields;
 };
 
-
-
-struct MeshRenderer
+struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
-	//Lighting
-	// Material
 };
 
-struct LightSource
+struct LightSource : Object
 {
-	glm::vec3 lightingColor{ 1.f, 1.f, 1.f };
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 };
 #pragma endregion
 

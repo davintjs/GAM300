@@ -95,6 +95,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Scene\Object.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
@@ -203,9 +206,11 @@
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\Core\SystemsGroup.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Debugging\Debugger.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
     <ClInclude Include="Source\Scripting\LogicSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
@@ -375,7 +380,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DiagnosticsFormat>Classic</DiagnosticsFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -411,6 +416,7 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\yaml-cpp-master\include;$(SolutionDir)External\properties-master\src;$(SolutionDir)External\properties-master\src\Examples;$(SolutionDir)External\JoltPhysics-master;$(SolutionDir)External\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -4,6 +4,7 @@
 
 ENGINE_SYSTEM(InputSystem)
 {
+public:
 	void Init();
 	void Update(float dt);
 	void Exit();

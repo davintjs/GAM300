@@ -84,6 +84,7 @@
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
+    <ClCompile Include="Source\Scene\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -155,6 +156,8 @@
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Scene\Object.h" />
+    <ClInclude Include="Source\Core\SystemsGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

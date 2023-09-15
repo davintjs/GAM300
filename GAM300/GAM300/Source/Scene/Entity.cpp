@@ -2,9 +2,6 @@
 #include "Entity.h"
 #include "SceneManager.h"
 
-
-Entity::Entity(Engine::UUID _uuid) : uuid{_uuid}{}
-
 void Break_ParentChild(const ObjectIndex& _child) {
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 	Transform& child = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_child));

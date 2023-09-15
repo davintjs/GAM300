@@ -13,7 +13,7 @@ public class Player : Script
 
     void Update()
     {
-        float speed = 0.4f;
+/*        float speed = 0.4f;
         if (Input.GetKey(KeyCode.A))
         {
             rb.mass -= speed;
@@ -22,11 +22,11 @@ public class Player : Script
         {
             rb.mass += speed;
         }
-        Destroy(this);
+        Destroy(this);*/
         //transform.localPosition = newPos;
     }
 
     void Exit()
     {
     }
-}c
+}
