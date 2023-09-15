@@ -265,9 +265,12 @@ struct Scene
 	Entity& GetEntityByUUID(size_t UUID)
 	{
 		for (Entity& entity : entities)
-			if (UUID == entity.denseIndex)
+			if (UUID == entity.uuid)
 				return entity;
-		E_ASSERT(false,"Entity of UUID:","cannot be found");
+
+		std::string str = "Entity of UUID:";
+		str += UUID + " cannot be found";
+		E_ASSERT(false, str.c_str());
 	}
 
 	template <typename Component, typename Owner>
