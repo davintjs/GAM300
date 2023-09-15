@@ -1,0 +1,3 @@
+C:\Users\nagat\Desktop\GAM300\GAM300\Scripting\obj\Release\Scripting.csproj.AssemblyReference.cache
+C:\Users\nagat\Desktop\GAM300\GAM300\Scripting\obj\Release\Scripting.csproj.SuggestedBindingRedirects.cache
+C:\Users\nagat\Desktop\GAM300\GAM300\Scripting\obj\Release\Scripting.csproj.CoreCompileInputs.cache

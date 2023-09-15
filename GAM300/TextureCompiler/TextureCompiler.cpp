@@ -16,8 +16,8 @@ int main()
 		return hr;
 	}
 
-	for (const auto& dir : std::filesystem::recursive_directory_iterator("../Assets/Textures"))
-	{
+	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets/Textures"))
+	{ 
 		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
 		{
 			for (const auto& _dir : std::filesystem::recursive_directory_iterator(dir)) // Looping through contents of the texture's folder
@@ -55,7 +55,7 @@ int main()
 					std::wstring textureFilePath = std::wstring(subFilePath.begin(), subFilePath.end()).c_str();
 					const wchar_t* pngFileName = textureFilePath.c_str();   // Replace with your PNG file path
 
-					std::string outputFilePath("../Assets/Resources/" + fileName + ".dds");
+					std::string outputFilePath("Assets/Resources/" + fileName + ".dds");
 					std::wstring outputTextureFilePath = std::wstring(outputFilePath.begin(), outputFilePath.end()).c_str();
 					const wchar_t* ddsFileName = outputTextureFilePath.c_str(); // Replace with your desired output DDS file path
 
@@ -99,6 +99,9 @@ int main()
 	// Cleanup COM
 	CoUninitialize();
 
-	return 0;
+	int x;
+	std::cout << "Finished compiling all textures!" << std::endl;
+	std::cin >> x;
 	
+	return 0;
 }
