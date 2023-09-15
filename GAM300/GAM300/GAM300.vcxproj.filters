@@ -84,6 +84,7 @@
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Scene\Object.cpp" />
+    <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">

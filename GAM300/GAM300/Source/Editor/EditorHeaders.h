@@ -140,4 +140,15 @@ private:
 
 };
 
+ENGINE_EDITOR_SYSTEM(EditorPerformanceViewer)
+{
+public:
+    void Init();
+    void Update(float dt);
+    void Exit();
+
+    float update_time;
+    std::vector<float>times;
+};
+
 #endif // !EDITORTOOLBAR_H

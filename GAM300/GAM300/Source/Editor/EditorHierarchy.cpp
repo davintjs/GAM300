@@ -219,30 +219,25 @@ void EditorHierarchy::Update(float dt)
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			/*if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
-
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
 				const ObjectIndex Index = *static_cast<ObjectIndex*>(payload->Data);
 
-				Break_ParentChild(Index);
-			}*/
-			const ImGuiPayload* payload = ImGui::GetDragDropPayload();
-			const ObjectIndex Index = *static_cast<ObjectIndex*>(payload->Data);
+				Entity& currEntity = curr_scene.entities.DenseSubscript(Index);
 
-			Entity& currEntity = curr_scene.entities.DenseSubscript(Index);
-
-			if (curr_scene.GetComponent<Transform>(currEntity).isChild())
-			{
-				Break_ParentChild(Index);
+				if (curr_scene.GetComponent<Transform>(currEntity).isChild())
+				{
+					Break_ParentChild(Index);
+				}
+				else
+				{
+					auto it = std::find(layer.begin(), layer.end(), &currEntity);
+					layer.erase(it);
+					layer.insert(layer.end(), &currEntity);
+				}
+		
 			}
-			else
-			{
-				auto it = std::find(layer.begin(), layer.end(), &currEntity);
-				layer.erase(it);
-				layer.insert(layer.end(), &currEntity);
-			}
-
-
 			ImGui::EndDragDropTarget();
+		
 		}
 
 		//Right click adding of entities in hierarchy window
