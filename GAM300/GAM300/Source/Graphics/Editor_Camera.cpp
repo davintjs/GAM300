@@ -26,18 +26,19 @@ void Editor_Camera::Update(float dt)
 	// To Move / Adjust the editor camera
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
+		isMoving = true;
 		//--------------------------------------------------------------
 		// Rotating / Panning / Zooming
 		//--------------------------------------------------------------
 
 		glm::vec2 delta = (InputHandler::getMousePos() - prevMousePos) * 0.003f;
-		
+
 		prevMousePos = InputHandler::getMousePos();
 
 		if (InputHandler::isMouseButtonHolding_L()) // Rotating
 		{
-			if(canMove)
-			rotateCamera(delta);
+			if (canMove)
+				rotateCamera(delta);
 		}
 		else if (InputHandler::isMouseButtonHolding_R()) // Panning
 		{
@@ -71,9 +72,11 @@ void Editor_Camera::Update(float dt)
 
 		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
 		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
-		
+
 		updateView();
 	}
+	else
+		isMoving = false;
 
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_CONTROL))
 	{

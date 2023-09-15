@@ -104,6 +104,7 @@ public:
 	//Entity* ActiveObj{ nullptr };
 
 	bool canMove = true;
+	bool isMoving = false;
 private:
 
 	glm::vec2 viewport{ 1600.f,900.f };
