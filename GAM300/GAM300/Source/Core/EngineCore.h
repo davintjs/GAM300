@@ -140,6 +140,7 @@ public:
 				float elapsedtime = 0;
 				bool update = false;
 
+				//performance viewer update timer (2s)
 				if (update_timer > 0.f) {
 					update_timer -= dt;
 				}
@@ -148,19 +149,19 @@ public:
 					update = true;
 				}
 
-				
-
 				auto func =
 				[&](ISystem* sys)
 				{
 						if (sys->GetMode() & mode)
 						{
 							starttime = glfwGetTime();
-							//INSERT UR PERF VIEWER FUNCTIONS HERE JO
+							//Update performance viewer every 2s
 							sys->Update(dt);
-							float timetaken = glfwGetTime() - starttime;
-							elapsedtime += timetaken;
-							system_times[typeid(*sys).name()] = timetaken;
+							if (update) {
+								float timetaken = glfwGetTime() - starttime;
+								elapsedtime += timetaken;
+								system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
+							}	
 						}
 				};
 				
@@ -169,7 +170,11 @@ public:
 
 				AllSystems::Update(dt, func);
 
-				systemtotaltime = elapsedtime;
+				if (update) {
+					systemtotaltime = elapsedtime;
+					update = false;
+				}
+				
 
 				ImGui::EndFrame();
 				ImGui::Render();

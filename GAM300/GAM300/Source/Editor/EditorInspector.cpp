@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "EditorTemplates.h";
 #include "Scene/Components.h"
 #include "Graphics/MeshManager.h"
+#include <variant>
 
 #define TEXT_BUFFER_SIZE 2048
 
@@ -253,8 +254,30 @@ void DisplayComponent<Tag>(Tag& tag)
 
 template<>
 void DisplayComponent<AudioSource>(AudioSource& as) {
-    Display("Loop", as.loop);
-    Display("Volume", as.volume);
+
+    for (int i = 0; i < as.getPropertyVTable().m_Count; ++i) {
+        auto properties = as.getPropertyVTable().m_pEntry;
+
+        property::entry
+
+
+
+        std::visit([&](auto&& Value)
+            {
+                using T = std::decay_t<decltype(Value)>;
+
+            }, properties[i]);
+
+        
+        using T = std::decay_t<decltype(data)>;
+
+        std::cout << "name: " << properties[i].m_pName << ", data type: " << typeid(T).name() << std::endl;
+
+        //Display(properties[i].m_pName, data);
+    }
+    /*for(auto property : as.getPropertyVTable())
+    Display(as.getPropertyVTable().m_pName, as.loop);
+    Display("Volume", as.volume);*/
 }
 template <>
 void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)

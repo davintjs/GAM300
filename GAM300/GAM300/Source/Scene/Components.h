@@ -133,35 +133,28 @@ struct Tag : Object
 	std::string name;
 };
 
-struct MyStruct { MyStruct() {}; void func(double) {}; int data; };
 
+//example of LIONant reflection
 
-struct test1 : property::base
-{
-	int             m_Int{ 0 };
-	float           m_Float{ 0 };
-	bool            m_Bool{ 0 };
-	std::string     m_String{};
-	oobb            m_OOBB{ 0 };
-
-	property_vtable()           // Allows the base class to get these properties  
-};
-
-property_begin(test1)
-{
-	property_var(m_Int)
-		, property_var(m_Float)
-		, property_var(m_String)
-		, property_var(m_Bool)
-		, property_var(m_OOBB)
-} property_vend_h(test1)
-
-
-
-
-
-
-
+//struct test1 : property::base
+//{
+//	int             m_Int{ 0 };
+//	float           m_Float{ 0 };
+//	bool            m_Bool{ 0 };
+//	std::string     m_String{};
+//	oobb            m_OOBB{ 0 };
+//
+//	property_vtable()           // Allows the base class to get these properties  
+//};
+//
+//property_begin(test1)
+//{
+//	property_var(m_Int)
+//		, property_var(m_Float)
+//		, property_var(m_String)
+//		, property_var(m_Bool)
+//		, property_var(m_OOBB)
+//} property_vend_h(test1)
 
 struct Transform : Object
 {
@@ -260,7 +253,13 @@ struct AudioSource : Object
 {
 	bool loop = false;
 	float volume = 1.0f;
+	property_vtable();
 };
+
+property_begin_name(AudioSource, "Audio Source") {
+		property_var(loop)
+		,property_var(volume)
+} property_vend_h(AudioSource)
 
 struct BoxCollider : Object
 {
