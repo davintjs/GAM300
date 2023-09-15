@@ -15,13 +15,13 @@ void EditorMenuBar::Update(float dt)
 {
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
-        if (ImGui::IsKeyDown(ImGuiKey_N))
+        if (ImGui::IsKeyPressed(ImGuiKey_N))
             NewScene();
 
-        if (ImGui::IsKeyDown(ImGuiKey_S))
+        if (ImGui::IsKeyPressed(ImGuiKey_S))
             SaveScene();
 
-        if (ImGui::IsKeyDown(ImGuiKey_O))
+        if (ImGui::IsKeyPressed(ImGuiKey_O))
             OpenFile();
     }
 

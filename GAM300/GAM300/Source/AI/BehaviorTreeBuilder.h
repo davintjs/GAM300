@@ -15,10 +15,10 @@ ENGINE_SYSTEM(BehaviorTreeBuilder)
 public:
     BehaviorTree* GetBehaviorTree(std::string treeName);
 
-private:
     void Init();
     void Update(float dt);
     void Exit();
+private:
 
     std::vector<BehaviorTree*> mBehaviorTrees;
 

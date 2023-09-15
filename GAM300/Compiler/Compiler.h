@@ -58,7 +58,7 @@ public:
 	void LoadModel();
 	void ProcessBones(const aiNode& node, const aiScene& scene);
 	void ProcessGeom(const aiNode& node, const aiScene& scene);
-	Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
+	Geom_Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
 	void Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind);
 	void CompressVertices(std::vector<Vertex>& CompressVertices,
 								const std::vector<TempVertex> tempVertex,
@@ -73,7 +73,7 @@ private:
 
 	Descriptor* _descriptor{ nullptr };
 
-	std::vector<Mesh> _meshes{}; // Individual meshes in the model, which also contains its individual vertices and indices
+	std::vector<Geom_Mesh> _meshes{}; // Individual meshes in the model, which also contains its individual vertices and indices
 
 	//glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions containing the whole model
 	//glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates containing the whole model

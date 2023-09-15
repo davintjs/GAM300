@@ -137,22 +137,23 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			return nullptr;
 		}
 	}
+ 
+	//template<typename T, typename... Ts>
+	//struct ComponentTypeIterStruct
+	//{
+	//public:
+	//	constexpr ComponentTypeIterStruct(TemplatePack<T, Ts...> pack) {}
+	//	ComponentTypeIterStruct()
+	//	{
+	//	}
+	//};
 
-	template<typename T, typename... Ts>
-	static Entity* GetGameObjectHelper(void* pComponent, size_t componentType,TemplatePack<T,Ts...>)
-	{
-		return GetGameObjectRecursive<T, Ts...>(pComponent, componentType);
-	}
+	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
 
-	struct ComponentTypeIter
-	{
-
-	};
-
+	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity(*((T*)pComponent)));
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		return GetGameObjectHelper(pComponent,componentType, AllComponentTypes());
+		return RecurseGetEntity(componentType,pComponent);
 	}
 
 	static Entity* GetGameObjectFromScript(Script* pScript)
@@ -165,7 +166,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
 		Transform& t = scene.GetComponent<Transform>(*pEntity);
-		PRINT(t.translation.x,", ", t.translation.y, ", ", t.translation.z,"\n");
 		return &t;
 	}
 
@@ -192,6 +192,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static Transform* GetTransformFromComponent(void* pComponent, MonoReflectionType* componentType)
 	{
+		
 		Scene& scene = MySceneManager.GetCurrentScene();
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
@@ -254,19 +255,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	\return
 	//		MonoObject to be returned to the script asking for it
 	//*/
-	///*******************************************************************************/
+	///*******************************************************************************/v
+	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
-		//if (pair == monoComponentToType.end())
-		//{
-		//	E_ASSERT(SCRIPTING.IsScript(mono_type_get_class(mType)),"Not a valid component!");
-		//	return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
-		//}
-		return nullptr;
+		if (pair == monoComponentToType.end())
+		{
+			PRINT("CANT FIND LAH CHIBAI\n");
+		}
+		PRINT("HELLOOOO PLS WORK\n");
+		return RecurseGetComponent(pair->second,pEntity);
 	}
-
 	//	Component* component{ nullptr };
 	//	switch (cType)
 	//	{
@@ -621,24 +622,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//\brief
-	//	Get the button state
-
-	//\param gameObjID
-	//	ID of gameObject that has this component
-
-	//\return
-	//	the state of the button
-
-	//*/
-	///*******************************************************************************/
-	//static char GetButtonState(Button* pButton)
-	//{
-	//	return (char)pButton->state;
-	//}
-
-	///*******************************************************************************
-	///*!
-	//\brief
 	//	Clones a gameObject
 	//\param ID
 	//	ID of gameObject to be cloned
@@ -685,6 +668,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void DestroyGameObject(Entity* pGameObject)
 	{
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+	}
+
+	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pComponent))
+	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
+	{
+		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		DestroyRecursive(monoComponentToType[managedType],pComponent);
 	}
 
 	///*******************************************************************************
@@ -1153,14 +1143,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
 	{
-		std::string typeName = "BeanFactory::";
-		typeName += GetComponentType::E<T>();
-
+		std::string typeName = "BeanFactory.";
+		typeName += GetComponentType::Name<T>();
 		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
-		if (!managedType)
+		if (managedType != nullptr)
 		{
-			E_ASSERT(true,"Could not find component type");
-			return;
+			E_ASSERT(managedType, "Could not find component type");
+			monoComponentToType.emplace(managedType, GetComponentType::E<T>());
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
@@ -1188,7 +1177,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	/*******************************************************************************/
 	static void RegisterScriptWrappers()
 	{
-		RegisterComponents();
 		//Register(SetFullscreenMode);
 		Register(GetKey);
 		Register(GetKeyUp);
@@ -1197,12 +1185,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetTransformFromGameObject);
 		Register(GetTransformFromComponent);
 		Register(GetGameObjectFromScript);
+
+		Register(DestroyGameObject);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
 		//Register(SetTranslation);
 		//Register(GetGlobalPosition);
 		//Register(GetGlobalScale);
 		Register(HasComponent);
+		Register(GetComponent);
 		//Register(RigidbodyAddForce);
 		//Register(RigidbodyGetVelocity);
 		//Register(RigidbodySetVelocity);
@@ -1223,7 +1214,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(QuitGame);
 		//Register(GetButtonState);
 		//Register(AddComponent);
-		Register(GetComponent);
 		//Register(AudioSourcePlay);
 		//Register(AudioSourceStop);
 		//Register(AudioSourceSetVolume);

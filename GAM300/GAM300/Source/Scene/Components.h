@@ -25,7 +25,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
-#include <vector>
+#include "Scene/Object.h"
+#include <Scripting/ScriptFields.h>
+#include <map>
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -35,8 +37,6 @@ using Vector4 = glm::vec4;
 using Quaternion = glm::quat;
 
 static std::map<std::string, size_t> ComponentTypes{};
-
-
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
@@ -126,12 +126,12 @@ private:
 
 #pragma region COMPONENTS
 
-struct Tag
+struct Tag : Object
 {
 	std::string name;
 };
 
-struct Transform
+struct Transform : Object
 {
 	Vector3 scale{ 1 };
 	Vector3 rotation{};
@@ -182,16 +182,17 @@ struct Transform
 		return false;
 	}
 
-	void SetParent(Transform* newParent) {
+	void SetParent(Transform* newParent) 
+	{
 		// Calculate the global transformation matrix
 		if (parent) {
-			parent->RemoveChild(this);
+			/*parent->RemoveChild(this);
 			glm::mat4 globalTransform = GetWorldMatrix();
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 		}
 
 		// Set the new parent
@@ -199,13 +200,13 @@ struct Transform
 		parent = newParent;
 
 		if (parent) {
-			glm::mat4 parentTransform = parent->GetWorldMatrix();
+			/*glm::mat4 parentTransform = parent->GetWorldMatrix();
 			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);
@@ -223,28 +224,31 @@ struct Transform
 	}
 };
 
-struct AudioSource
+struct AudioSource : Object
 {
 	bool loop = false;
 	float volume = 1.0f;
 };
 
-struct BoxCollider
+struct BoxCollider : Object
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
 };
 
-struct SphereCollider
+struct SphereCollider : Object
 {
-
+	float radius = 1.0f; 
 };
 
-struct CapsuleCollider
+struct CapsuleCollider : Object
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
 };
 
-struct Animator
+struct Animator : Object
 {
 };
 
@@ -252,28 +256,55 @@ struct Animator
 //{
 //};
 
-struct Rigidbody
+struct Rigidbody : Object
 {
 	bool is_enabled = true;
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
+	bool is_trigger = false;
+	Vector3 linearVelocity{};			//velocity of object
+	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
-struct Script
+struct CharacterController : Object
+{
+	bool is_enabled = true;
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	//JPH::BodyID CharacterBodyID;
+};
+
+struct Script : Object
 {
 	std::string name;
+	std::map<std::string, Field> fields;
 };
 
+struct MeshRenderer : Object
+{
+	std::string MeshName = "Cube";
+};
+
+struct LightSource : Object
+{
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+};
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -284,6 +315,45 @@ using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiCompo
 using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
+
+#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	{\
+		if (GetComponentType::E<T>() == componentType)\
+		{\
+			if constexpr (std::is_same<TYPE,void>())\
+			{\
+				FUNC;\
+				return;\
+			}\
+			else\
+			{\
+				return FUNC;\
+			}\
+		}\
+		if constexpr (sizeof...(Ts) != 0)\
+		{\
+			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
+		}\
+		else if constexpr(!std::is_same<TYPE,void>())\
+		{\
+			return nullptr; \
+		}\
+	}\
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
+	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+
+enum class FieldType :int
+{
+	Float = AllComponentTypes::Size(), Double,
+	Bool, Char, Short, Int, Long,
+	UShort, UInt, ULong, String,
+	Vector2, Vector3, GameObject, None
+};
 
 template<typename T, typename... Ts>
 static void RegisterComponents()

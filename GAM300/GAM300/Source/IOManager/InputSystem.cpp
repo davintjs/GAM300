@@ -25,7 +25,7 @@ void InputSystem::Update(float dt)
 		InputHandler::setFullscreen(!InputHandler::isFullscreen());
 	}
 
-	if (InputHandler::isMouseButtonPressed_L())
+	if (InputHandler::isMouseButtonHolding_L())
 	{
 		std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
 		
@@ -37,7 +37,6 @@ void InputSystem::Update(float dt)
 		{
 			InputHandler::setMouseButtonState(0, 2);
 
-			
 			if (InputHandler::doubleclick)
 			{
 				InputHandler::doubleclickAndHold = true;

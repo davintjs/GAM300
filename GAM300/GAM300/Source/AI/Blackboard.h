@@ -32,11 +32,11 @@ public:
             exit(EXIT_FAILURE);
         }
     }
-
-private:
     void Init() {};
     void Update(float dt) {};
     void Exit() {};
+
+private:
 
     template <typename T>
     static my_unordered_map<T>& getMap()

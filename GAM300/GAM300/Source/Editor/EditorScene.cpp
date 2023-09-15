@@ -17,15 +17,17 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 #include "EditorHeaders.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
+
+// Bean: Need this to reference the editor camera's framebuffer
 #include "../Graphics/Editor_Camera.h"
 #include "Editor.h"
 
-// Bean: Need this to reference the editor camera's framebuffer
-
-static int GizmoType = 0;
-
-const char* GizmoWorld[] = { "Global", "Local" };
-static int coord_selection = 0;
+namespace
+{
+    const char* GizmoWorld[] = { "Local", "Global" };
+    int GizmoType = ImGuizmo::TRANSLATE;
+    int coord_selection = 1;
+}
 
 void EditorScene::Init()
 {
@@ -42,18 +44,81 @@ void EditorScene::Update(float dt)
 
     ImGui::SetNextWindowClass(&window_class);
 
-    if (ImGui::Begin("Scene Toolbar")) {
+    //Scene toolbar
+    if (ImGui::Begin("Scene Toolbar")) 
+    {
         ImGui::Dummy(ImVec2(0.0f, 3.f));
         ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
 
-        //using Gizmo world (int) to toggle between world and local coords
+        float buttonWidth = 24.f;
+        ImVec2 btn = ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f);
+        ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
+        {
+            GizmoType = ImGuizmo::UNIVERSAL;
+        }
+        ImGui::SameLine(); if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        {
+            GizmoType = ImGuizmo::TRANSLATE;
+        }
+        ImGui::SameLine(); if (ImGui::Button("E", btn) || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        {
+            GizmoType = ImGuizmo::ROTATE;
+        }
+        ImGui::SameLine(); if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        {
+            GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
+        }
     }
     ImGui::End();
 
+    if (ImGui::Begin("Game")) 
+    {
+        // Bean: For Game Window
+        //float padding = 16.f;
+        //float AspectRatio = 16.f / 9.f;
+
+        //if (_newDimension.x != 0 && _newDimension.y != 0)
+        //{
+        //	bool modified = false;
+        //	_newDimension = glm::floor(_newDimension);
+
+        //	glm::vec2 adjusted = sceneDimension;
+        //	if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
+        //	{
+        //		modified = true;
+        //		adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
+        //	}
+
+        //	if (adjusted.x > _newDimension.x - padding)
+        //	{
+        //		modified = true;
+        //		adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
+        //	}
+
+        //	// If there is any changes to the dimension and modifications, return
+        //	if (adjusted != sceneDimension && modified)
+        //	{
+        //		sceneDimension = adjusted;
+
+        //		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
+
+        //		EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+        //	}
+        //}
+
+        /*float indent = (viewportEditorSize.x - sceneDimension.x) * 0.5f;
+        if (indent > 0)
+            ImGui::Indent(indent);*/
+    }
+    ImGui::End();
+
+    //Editor scene viewport
     if (ImGui::Begin("Scene"))
     {
+        windowHovered = ImGui::IsWindowHovered();
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
         ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
@@ -67,47 +132,6 @@ void EditorScene::Update(float dt)
 
             EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
         }
-
-		// Bean: For Game Window
-		//float padding = 16.f;
-		//float AspectRatio = 16.f / 9.f;
-
-		//if (_newDimension.x != 0 && _newDimension.y != 0)
-		//{
-		//	bool modified = false;
-		//	_newDimension = glm::floor(_newDimension);
-
-		//	glm::vec2 adjusted = sceneDimension;
-		//	if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
-		//	{
-		//		modified = true;
-		//		adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
-		//	}
-
-		//	if (adjusted.x > _newDimension.x - padding)
-		//	{
-		//		modified = true;
-		//		adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
-		//	}
-
-		//	// If there is any changes to the dimension and modifications, return
-		//	if (adjusted != sceneDimension && modified)
-		//	{
-		//		sceneDimension = adjusted;
-
-		//		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
-
-		//		EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
-		//	}
-		//}
-
-
-
-  //      float indent = (viewportEditorSize.x - sceneDimension.x) * 0.5f;
-  //      if (indent > 0)
-  //          ImGui::Indent(indent);
-
-
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
@@ -140,24 +164,17 @@ void EditorScene::Update(float dt)
                     trans.scale[i] = 0.001f;
             }
 
-            GizmoType = ImGuizmo::UNIVERSAL;
-
             glm::vec4 translate = { trans.translation,0.f };
             
-            glm::vec4 rotation = { /*glm::radians*/(trans.rotation),0.f };
+            glm::vec4 rotation = { trans.rotation,0.f };
             glm::vec4 scale = { trans.scale,0.f };
 
             glm::mat4 transform_1 = trans.GetWorldMatrix();
-            ////glm::mat4 transform_2;
-            //ImGuizmo::Re
-
             //ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
             //    glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform_1));
 
-
             ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
-                (ImGuizmo::OPERATION)GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform_1));
-
+                (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
             if (ImGuizmo::IsUsing())
             {
@@ -175,34 +192,25 @@ void EditorScene::Update(float dt)
                 glm::vec4 a_perspective;
                 glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
               
-                    //translate_after.x - tc.position.x;
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
-                    //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
-                    //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
+                //translate_after.x - tc.position.x;
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
+                //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
+                //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = a_translation;
-                trans.rotation = /*glm::degrees*/ glm::eulerAngles(a_rot);
-                //trans.rotation.x = trans.rotation.x % 360;
+                trans.rotation = glm::eulerAngles(a_rot);
                 trans.scale = a_scale;
-
-                    //if (m_GizmoType == ImGuizmo::ROTATE) {}
-                    //else
-                    //{
-                    //    tc.localScale += Orion::Math::Vec3(scale_after.x - tc.scale.x, scale_after.y - tc.scale.y, 0.f);
-                    //}
-
-                    //tc.localRotation += Orion::Math::Vec3(0, 0, rotation_after.z - tc.rotation.z);
              
             }
-
-
         }
-
-
     }
     ImGui::End();
 
     ImGui::PopStyleVar();
+
+    inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
+    if (inOperation)
+        std::cout << "Using Gizmos\n";
 }
 
 void EditorScene::Exit()

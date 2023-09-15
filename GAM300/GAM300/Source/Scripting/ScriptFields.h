@@ -19,19 +19,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <string>
 
-enum class FieldType :int
-{
-	None, Float, Double,
-	Bool, Char, Short, Int, Long,
-	UShort, UInt, ULong, String,
-	Vector2, Vector3, GameObject, Component
-};
-
 struct Field
 {
 	Field() = default;
 	void* data{ nullptr };
-	FieldType fType{};
+	size_t fType{};
 	std::string typeName;
 	/***************************************************************************/
 	/*!
@@ -44,7 +36,7 @@ struct Field
 		Data to store and copy from
 	*/
 	/**************************************************************************/
-	Field(FieldType _fType, size_t _size = 0, void* _data = nullptr) :
+	Field(size_t _fType, size_t _size = 0, void* _data = nullptr) :
 		fType{ _fType }
 	{
 		size = _size;

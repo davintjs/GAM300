@@ -9,6 +9,8 @@
 #include "rapidjson/stringbuffer.h"
 #include "Core/Events.h"
 #include "Graphics/TextureManager.h"
+#include "Graphics/MeshManager.h"
+// GUID, last file update time, file name, data
 struct FileInfo
 {
 	FileInfo() {};
@@ -34,14 +36,14 @@ ENGINE_SYSTEM(AssetManager)
 public:
 	const std::vector<char>& GetAsset(const std::string& fileName);
 	std::string GetAssetGUID(const std::string& fileName);
-
+	void Init();
+	void Update(float dt);
+	void Exit();
 private:
 	const std::string AssetPath = "Assets";
 	bool FileAdded = false; // For the filewatcher (Adding file calls both add and modified so this is for me to bypass modified)
 
-	void Init();
-	void Update(float dt);
-	void Exit();
+
 
 	// Asset stuff
 	Asset mTotalAssets;

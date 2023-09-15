@@ -81,8 +81,14 @@ void AssetManager::Init()
 
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 			}
+			else if (!strcmp(fileType.c_str(), "geom"))
+			{
+				MeshManager.GetGeomFromFiles(subFilePath, fileName);
+			}
 		}
 	}
+
+	MeshManager.Init();
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
 }
@@ -542,3 +548,4 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	}
 	PRINT(filePath,'\n');
 }
+
