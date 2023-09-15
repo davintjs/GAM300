@@ -48,10 +48,6 @@ void SceneManager::Init()
 		Entity& lightsource = scene.AddEntity();
 		scene.AddComponent<LightSource>(lightsource);
 
-
-
-
-
 		//scene.AddEntity();
 
 		//Entity& titty = scene.AddEntity();
@@ -80,7 +76,7 @@ void SceneManager::CreateScene()
 		std::cout << "Warning Duplicate Scene!\n";
 		return;
 	}
-	EditorHierarchy::Instance().ClearLayer();
+	//EditorHierarchy::Instance().ClearLayer();
 	loadedScenes.emplace_front(filePath);
 }
 

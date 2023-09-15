@@ -40,6 +40,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "EventsManager.h"
 #include "Debugging/Debugger.h"
 #include "Scripting/LogicSystem.h"
+#include "SystemsGroup.h"
 
 #define MyEngineCore EngineCore::Instance()
 
@@ -50,6 +51,37 @@ enum class EngineState
 	Paused,
 	Quit
 };
+
+#if defined(_BUILD)
+	using AllSystemsPack =
+	TemplatePack
+	<
+		InputSystem,
+		SceneManager,
+		//LogicSystem,
+		PhysicsSystem,
+		GraphicsSystem,
+		Blackboard,
+		AssetManager
+	>;
+#else
+	using AllSystemsPack =
+	TemplatePack
+	<
+		InputSystem,
+		SceneManager,
+		//ScriptingSystem,
+		EditorSystem,
+		//LogicSystem,
+		PhysicsSystem,
+		GraphicsSystem,
+		Blackboard,
+		BehaviorTreeBuilder,
+		AssetManager
+	>;
+#endif
+
+using AllSystems = decltype(SystemsGroup(AllSystemsPack()));
 
 ENGINE_SYSTEM(EngineCore)
 {
@@ -65,25 +97,7 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents();
-		systems =
-		{
-			&InputSystem::Instance(),
-			&SceneManager::Instance(),
-			&ScriptingSystem::Instance(),
-			&EditorSystem::Instance(),
-			&LogicSystem::Instance(),
-			//&PhysicsSystem::Instance(),
-			&GraphicsSystem::Instance(),
-			&Blackboard::Instance(),
-			&BehaviorTreeBuilder::Instance(),
-			&AssetManager::Instance(),
-		};
-
-		for (ISystem* pSystem : systems)
-		{
-			pSystem->Init();
-		}
-
+		AllSystems::Init();
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
@@ -122,21 +136,29 @@ public:
 		{
 			//Start ImGui Frames
 
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-			ImGuizmo::BeginFrame();
-
-			for (ISystem* pSystem : systems)
-			{
-				if (pSystem->GetMode() & mode)
-					pSystem->Update(dt);
-			}
+			#if defined(_BUILD)
+				AllSystems::Update(dt);
+			#else
+				ImGui_ImplOpenGL3_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				ImGui::NewFrame();
+				ImGuizmo::BeginFrame();
+				auto func =
+				[&](ISystem* sys)
+				{
+					if (sys->GetMode() & mode)
+					{
+						//INSERT UR PERF VIEWER FUNCTIONS HERE JO
+						sys->Update(dt);
+					}
+				};
+				AllSystems::Update(dt, func);
+				ImGui::EndFrame();
+				ImGui::Render();
+				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			#endif
 
 			//End ImGui Frames
-			ImGui::EndFrame();
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 		}
@@ -151,10 +173,7 @@ public:
 	/**************************************************************************/
 	void Exit()
 	{
-		for (auto iter = systems.rbegin(); iter != systems.rend(); ++iter)
-		{
-			(*iter)->Exit();
-		}
+		AllSystems::Exit();
 		THREADS.Exit();
 	}
 
@@ -163,7 +182,6 @@ public:
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
 private:
-	std::vector<ISystem*> systems;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_RUNTIME;
 	FileWatcher watcher;
