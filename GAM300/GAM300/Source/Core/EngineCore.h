@@ -53,17 +53,6 @@ enum class EngineState
 };
 
 #if defined(_BUILD)
-	using AllSystemsPack =
-	TemplatePack
-	<
-		InputSystem,
-		SceneManager,
-		//LogicSystem,
-		PhysicsSystem,
-		GraphicsSystem,
-		Blackboard,
-		AssetManager
-	>;
 #else
 	using AllSystemsPack =
 	TemplatePack
