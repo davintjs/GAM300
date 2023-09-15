@@ -78,9 +78,7 @@ void EditorSystem::Update(float dt)
     //{   
     //    pSystem->Update(dt);
     //}
-
-    auto func = [=](ISystem* sys) {sys->Update(dt); };
-    EditorSystems::Update(dt, func);
+    EditorSystems::Update(dt);
 
    /* bool demo = true;
     ImGui::ShowDemoWindow(&demo);*/
