@@ -74,6 +74,7 @@ public:
     bool initLayer = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
+    void CallbackEntityCreated(SelectedEntityEvent * pEvent);
 };
 
 
@@ -138,6 +139,17 @@ private:
     ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
     bool                AutoScroll;  // Keep scrolling if already at the bottom.
 
+};
+
+ENGINE_EDITOR_SYSTEM(EditorPerformanceViewer)
+{
+public:
+    void Init();
+    void Update(float dt);
+    void Exit();
+
+    float update_time;
+    std::vector<float>times;
 };
 
 #endif // !EDITORTOOLBAR_H
