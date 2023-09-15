@@ -8,6 +8,7 @@
 #include "../Core/FramerateController.h"
 
 #include "Editor/Editor.h"
+#include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
@@ -144,16 +145,9 @@ void GraphicsSystem::Update(float dt)
 
 	currentScene.singleComponentsArrays.GetArray<Transform>();
 	
-	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-	bool checkForSelection = false;
 	Ray3D temp;
-	if (InputHandler::isMouse_L_DoubleClick())
-	{
-		temp = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y, 
-			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
-		Ray_Container.push_back(temp);
-		checkForSelection = true;
-	}
+	bool checkForSelection = Raycasting(temp);
+	
 	float intersected = FLT_MAX;
 	float temp_intersect;
 
@@ -585,6 +579,25 @@ void InstancePropertySetup(InstanceProperties& prop) {
 	glVertexAttribDivisor(8, 1);
 	glVertexAttribDivisor(9, 1);
 	glBindVertexArray(0);
+}
+
+bool GraphicsSystem::Raycasting(Ray3D& _ray)
+{
+	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+
+	if (InputHandler::isMouseButtonPressed_L())
+	{
+		// Bean: Click within the scene imgui window
+		if (!EditorScene::Instance().WindowHovered())
+			return false;
+
+		_ray = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y,
+			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
+		Ray_Container.push_back(_ray);
+		return true;
+	}
+
+	return false;
 }
 
 void GraphicsSystem::Exit()

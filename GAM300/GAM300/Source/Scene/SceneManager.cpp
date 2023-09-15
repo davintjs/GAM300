@@ -82,22 +82,15 @@ void SceneManager::CreateScene()
 
 void SceneManager::LoadScene(const std::string& _filePath)
 {
-	std::cout << "Load sceneeee\n";
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	
-
 	if (!DeserializeScene(scene))
 	{
 		std::cout << "Error loading scene!\n";
 		return;
 	}
 
-	//scene.AddEntity();
-	//scene.AddEntity();
-	//scene.AddEntity();
-	//scene.AddEntity();
-	//scene.AddEntity();
 	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
 }
 
@@ -114,7 +107,6 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 	std::cout << "Saving Scene...\n";
 	Scene& currentScene = GetCurrentScene();
 	std::string filePath;
-
 
 	// If there is a specific file path
 	if (!_filePath.empty())

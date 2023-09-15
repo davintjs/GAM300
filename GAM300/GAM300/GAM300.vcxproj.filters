@@ -83,6 +83,8 @@
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
+    <ClCompile Include="Source\Scene\Handle.cpp" />
     <ClCompile Include="Source\Scene\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +159,7 @@
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Core\SystemsGroup.h" />
+    <ClInclude Include="Source\Scene\Handle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

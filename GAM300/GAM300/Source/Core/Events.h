@@ -110,6 +110,18 @@ struct SelectedEntityEvent : IEvent
 	Entity* pEntity;
 };
 
+template <typename T>
+struct ObjectCreatedEvent : IEvent
+{
+
+};
+
+struct EntityCreatedEvent : IEvent
+{
+	EntityCreatedEvent(Entity* _entity) : entity{ _entity } {}
+	Entity* entity;
+};
+
 //struct GetCurrentSceneEvent
 //{
 //	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
