@@ -97,10 +97,13 @@ public:
 
     glm::vec2 const GetDimension() { return sceneDimension; }
     glm::vec2 const GetPosition() { return scenePosition; }
+    bool const WindowHovered() { return windowHovered; }
 
 private:
     glm::vec2 sceneDimension;   // Dimensions of the viewport
     glm::vec2 scenePosition;    // Position of the viewport relative to the engine
+    glm::vec2 min, max;         // Minimum and maximum position of the viewport
+    bool windowHovered;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorInspector)

@@ -30,18 +30,13 @@ bool SerializeScene(Scene& _scene)
         assert(serialized, "Unable To Serialize Entity!\n");
     }
 
-    /*for (Entity& entity : _scene.entities)
-    {
-        bool serialized = SerializeEntity(out, entity, _scene);
-        assert(serialized, "Unable To Serialize Entity!\n");
-    }*/
     out << YAML::EndSeq;
     out << YAML::EndMap;
 
     if(!out.good())
         std::cout << "Emitter error: " << out.GetLastError() << "\n";
 
-    std::ofstream fout(_scene.filePath.string());
+    std::ofstream fout(_scene.filePath.string(), std::ios::out);
     fout << out.c_str();
 
     if (fout.fail())
@@ -67,11 +62,11 @@ void SerializeRuntime(const std::string& _filepath)
 
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 {
-    out << YAML::BeginMap;
+    out.SetIndent(0);
+    out << YAML::BeginMap << YAML::Block;
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
     out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
-    out << YAML::Key << "m_Index" << YAML::Value << _entity.denseIndex;
     out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
@@ -93,7 +88,6 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
             out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).uuid;
         else
             out << YAML::Key << "m_Parent" << YAML::Value << 0;
-        
     }
 
     out << YAML::EndMap;

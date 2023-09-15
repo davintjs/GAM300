@@ -1,0 +1,44 @@
+Scene: MultipleChild
+Entities:
+  - GameObject:
+      m_UUID: 8870631093721987307
+      m_IsActive: true
+      m_Name: New GameObject(1)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        - {fileID: 16472557874770943359}
+        - {fileID: 2219430451777230908}
+        - {fileID: 11257972185013465305}
+      m_Parent: 0
+  - GameObject:
+      m_UUID: 16472557874770943359
+      m_IsActive: true
+      m_Name: New GameObject(2)
+      m_Position: [0, -193.42099, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [100, 10, 10]
+      m_Children:
+        []
+      m_Parent: 8870631093721987307
+  - GameObject:
+      m_UUID: 2219430451777230908
+      m_IsActive: true
+      m_Name: New GameObject(3)
+      m_Position: [-1.47738901e-05, -94.5079346, 35]
+      m_Rotation: [1.18087328e-07, 1.92243187e-05, 1.29163936e-07]
+      m_Scale: [24, 19, 0.00100000005]
+      m_Children:
+        []
+      m_Parent: 8870631093721987307
+  - GameObject:
+      m_UUID: 11257972185013465305
+      m_IsActive: true
+      m_Name: New GameObject(4)
+      m_Position: [462, -142, -22]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [45, 5, 14]
+      m_Children:
+        []
+      m_Parent: 8870631093721987307

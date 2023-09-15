@@ -35,7 +35,7 @@ struct InstanceProperties
 
 };
 
-
+class Ray3D;
 
 ENGINE_SYSTEM(GraphicsSystem)
 {
@@ -46,5 +46,7 @@ public:
 	void Draw_Meshes(GLuint vaoid ,  unsigned int instance_count , 
 		unsigned int prim_count , GLenum prim_type, LightProperties LightSource);
 	void Exit();
+
+	bool Raycasting(Ray3D& _ray);
 };
 #endif // !GRAPHICS_SYSTEM_H
