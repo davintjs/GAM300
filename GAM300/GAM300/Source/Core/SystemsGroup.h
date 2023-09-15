@@ -19,7 +19,7 @@ struct SystemsGroup
 
 	constexpr static void Update(float dt)
 	{
-		(Ts::Instance().Update), ...);
+		(Ts::Instance().Update(), ...);
 	}
 
 	template<typename... T1s>
