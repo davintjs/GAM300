@@ -65,20 +65,33 @@ int main()
 					hr = DirectX::LoadFromWICFile(pngFileName, DirectX::WIC_FLAGS_NONE, nullptr, image);
 					if (FAILED(hr)) {
 						// Handle image loading failure
-						std::cout << "LoadFromWICFile unsuccessful." << std::endl;
-						CoUninitialize(); // Cleanup COM
-						return hr;
+						std::cout << "Loading texture unsuccessful." << std::endl;
+						//CoUninitialize(); // Cleanup COM
+						//return hr;
+						continue;
 					}
 
-
-
-					// Save the loaded image as DDS
-					hr = DirectX::SaveToDDSFile(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::DDS_FLAGS_NONE, ddsFileName);
+					DirectX::ScratchImage bcImage;
+					hr = Compress(image.GetImages(), image.GetImageCount(),
+						image.GetMetadata(), DXGI_FORMAT_BC1_UNORM,
+						DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
+						bcImage);
 					if (FAILED(hr)) {
 						// Handle DDS saving failure
-						std::cout << "SaveToDDSFile unsuccessful." << std::endl;
-						CoUninitialize(); // Cleanup COM
-						return hr;
+						std::cout << "Compression unsuccessful." << std::endl;
+						//CoUninitialize(); // Cleanup COM
+						//return hr;
+						continue;
+					}
+
+					// Save the loaded image as DDS
+					hr = DirectX::SaveToDDSFile(bcImage.GetImages(), bcImage.GetImageCount(), bcImage.GetMetadata(), DirectX::DDS_FLAGS_NONE, ddsFileName);
+					if (FAILED(hr)) {
+						// Handle DDS saving failure
+						std::cout << "Creating DDSFile unsuccessful." << std::endl;
+						//CoUninitialize(); // Cleanup COM
+						//return hr;
+						continue;
 					}
 
 					std::cout << " Done!" << std::endl;
