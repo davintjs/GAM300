@@ -29,6 +29,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Scripting/ScriptFields.h>
 #include <map>
 
+#include <Properties.h>
+
 constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
@@ -130,6 +132,36 @@ struct Tag : Object
 {
 	std::string name;
 };
+
+struct MyStruct { MyStruct() {}; void func(double) {}; int data; };
+
+
+struct test1 : property::base
+{
+	int             m_Int{ 0 };
+	float           m_Float{ 0 };
+	bool            m_Bool{ 0 };
+	std::string     m_String{};
+	oobb            m_OOBB{ 0 };
+
+	property_vtable()           // Allows the base class to get these properties  
+};
+
+property_begin(test1)
+{
+	property_var(m_Int)
+		, property_var(m_Float)
+		, property_var(m_String)
+		, property_var(m_Bool)
+		, property_var(m_OOBB)
+} property_vend_h(test1)
+
+
+
+
+
+
+
 
 struct Transform : Object
 {

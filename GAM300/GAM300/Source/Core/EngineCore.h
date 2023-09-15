@@ -137,9 +137,9 @@ public:
 				ImGuizmo::BeginFrame();
 				
 				double starttime = 0;
-				int i = 0;
 				float elapsedtime = 0;
 				bool update = false;
+
 				if (update_timer > 0.f) {
 					update_timer -= dt;
 				}
@@ -147,26 +147,30 @@ public:
 					update_timer = UPDATE_TIME;
 					update = true;
 				}
+
+				
+
 				auto func =
 				[&](ISystem* sys)
 				{
-					if (sys->GetMode() & mode)
-					{
-						starttime = glfwGetTime();
-						//INSERT UR PERF VIEWER FUNCTIONS HERE JO
-						sys->Update(dt);
-						if (update) {
-							elapsedtime += system_times[i++].second = glfwGetTime() - starttime;
-						}	
-					}
+						if (sys->GetMode() & mode)
+						{
+							starttime = glfwGetTime();
+							//INSERT UR PERF VIEWER FUNCTIONS HERE JO
+							sys->Update(dt);
+							float timetaken = glfwGetTime() - starttime;
+							elapsedtime += timetaken;
+							system_times[typeid(*sys).name()] = timetaken;
+						}
 				};
 				
-				if (update) {
-					systemtotaltime = elapsedtime;
-					update = false;
-				}
+			
 				FPS = 1.f / dt;
+
 				AllSystems::Update(dt, func);
+
+				systemtotaltime = elapsedtime;
+
 				ImGui::EndFrame();
 				ImGui::Render();
 				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -200,7 +204,7 @@ public:
 		return FPS;
 	}
 
-	std::vector<std::pair<std::string, float>>system_times;
+	std::map<std::string, float>system_times;
 	float systemtotaltime;
 
 private:

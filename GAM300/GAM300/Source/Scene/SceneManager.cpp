@@ -16,6 +16,13 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
+	test1 test;
+
+	for (int i = 0; i < test.getPropertyVTable().m_Count; ++i) {
+		auto var = test.getPropertyVTable().m_pEntry[i];
+	}
+
+
 	if (loadedScenes.empty())
 	{
 		CreateScene();
