@@ -42,3 +42,5 @@ Entities:
       m_Children:
         []
       m_Parent: 8870631093721987307
+      m_BoxCollider:
+        - {X: 1, Y: 1, Z: 1}

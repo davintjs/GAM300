@@ -585,7 +585,7 @@ bool GraphicsSystem::Raycasting(Ray3D& _ray)
 {
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 
-	if (InputHandler::isMouseButtonPressed_L())
+	if (!EditorScene::Instance().UsingGizmos() && !EditorCam.isMoving && InputHandler::isMouseButtonPressed_L())
 	{
 		// Bean: Click within the scene imgui window
 		if (!EditorScene::Instance().WindowHovered())

@@ -26,20 +26,21 @@ void Editor_Camera::Update(float dt)
 	// To Move / Adjust the editor camera
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
+		isMoving = true;
 		//--------------------------------------------------------------
 		// Rotating / Panning / Zooming
 		//--------------------------------------------------------------
 
 		glm::vec2 delta = (InputHandler::getMousePos() - prevMousePos) * 0.003f;
-		
+
 		prevMousePos = InputHandler::getMousePos();
 
-		if (InputHandler::isMouseButtonPressed_L()) // Rotating
+		if (InputHandler::isMouseButtonHolding_L()) // Rotating
 		{
-			if(canMove)
-			rotateCamera(delta);
+			if (canMove)
+				rotateCamera(delta);
 		}
-		else if (InputHandler::isMouseButtonPressed_R()) // Panning
+		else if (InputHandler::isMouseButtonHolding_R()) // Panning
 		{
 			panCamera(delta);
 		}
@@ -71,9 +72,11 @@ void Editor_Camera::Update(float dt)
 
 		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
 		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
-		
+
 		updateView();
 	}
+	else
+		isMoving = false;
 
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_CONTROL))
 	{
@@ -92,7 +95,7 @@ void Editor_Camera::Update(float dt)
 
 	
 
-	if (InputHandler::isMouseButtonPressed_L())
+	if (InputHandler::isMouseButtonHolding_L())
 	{
 		glm::vec2 position = GetMouseInNDC();
 		//EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
