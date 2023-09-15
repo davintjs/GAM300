@@ -32,7 +32,8 @@ TemplatePack
     EditorInspector,
     EditorDebugger,
     EditorHierarchy,
-    EditorToolBar
+    EditorToolBar,
+    EditorPerformanceViewer
 >;
 
 using EditorSystems = decltype(SystemsGroup(EditorSystemsPack()));
@@ -53,16 +54,6 @@ void EditorSystem::Init()
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
 
-    //editorSystems = {
-    //    &EditorMenuBar::Instance(),
-    //    &EditorContentBrowser::Instance(),
-    //    &EditorScene::Instance(),
-    //    &EditorInspector::Instance(),
-    //    &EditorDebugger::Instance(),
-    //    &EditorHierarchy::Instance(),
-    //    &EditorToolBar::Instance(),
-    //};
-
     EditorSystems::Init();
 }
 
@@ -77,9 +68,7 @@ void EditorSystem::Update(float dt)
     //{   
     //    pSystem->Update(dt);
     //}
-
-    auto func = [=](ISystem* sys) {sys->Update(dt); };
-    EditorSystems::Update(dt, func);
+    EditorSystems::Update(dt);
 
    /* bool demo = true;
     ImGui::ShowDemoWindow(&demo);*/

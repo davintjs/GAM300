@@ -1,18 +1,7 @@
 Scene: Test
 Entities:
   - GameObject:
-      m_UUID: 8297634275722002722
-      m_Index: 6
-      m_IsActive: true
-      m_Name: New GameObject(7)
-      m_Position: [-79, -118, -208]
-      m_Rotation: [0, 0, 0]
-      m_Scale: [45, 18, 16]
-      m_Children:
-        - {}
-      m_Parent: 0
-  - GameObject:
-      m_UUID: 13651076416087958535
+      m_UUID: 13256002843209229451
       m_Index: 0
       m_IsActive: true
       m_Name: New GameObject(1)
@@ -20,10 +9,10 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [1, 1, 1]
       m_Children:
-        - fileID: 5486612642517801704
+        []
       m_Parent: 0
   - GameObject:
-      m_UUID: 9545707207384687436
+      m_UUID: 13471942769799135059
       m_Index: 1
       m_IsActive: true
       m_Name: New GameObject(2)
@@ -31,10 +20,10 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [100, 10, 10]
       m_Children:
-        - fileID: 13362467027968157444
+        []
       m_Parent: 0
   - GameObject:
-      m_UUID: 13362467027968157444
+      m_UUID: 8416744585394970017
       m_Index: 2
       m_IsActive: true
       m_Name: New GameObject(3)
@@ -42,10 +31,10 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [24, 19, 0]
       m_Children:
-        - fileID: 4548159203960622913
-      m_Parent: 9545707207384687436
+        []
+      m_Parent: 0
   - GameObject:
-      m_UUID: 4548159203960622913
+      m_UUID: 12201654281567058623
       m_Index: 3
       m_IsActive: true
       m_Name: New GameObject(4)
@@ -53,10 +42,10 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [45, 5, 14]
       m_Children:
-        - fileID: 964932653850501915
-      m_Parent: 13362467027968157444
+        []
+      m_Parent: 0
   - GameObject:
-      m_UUID: 964932653850501915
+      m_UUID: 64701623519674358
       m_Index: 4
       m_IsActive: true
       m_Name: New GameObject(5)
@@ -64,10 +53,10 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [42, 45, 41]
       m_Children:
-        - {}
-      m_Parent: 4548159203960622913
+        []
+      m_Parent: 0
   - GameObject:
-      m_UUID: 5486612642517801704
+      m_UUID: 13716705401952457570
       m_Index: 5
       m_IsActive: true
       m_Name: New GameObject(6)
@@ -75,5 +64,16 @@ Entities:
       m_Rotation: [0, 0, 0]
       m_Scale: [3, 2, 4]
       m_Children:
-        - {}
-      m_Parent: 13651076416087958535
+        []
+      m_Parent: 0
+  - GameObject:
+      m_UUID: 12928781311636841175
+      m_Index: 6
+      m_IsActive: true
+      m_Name: New GameObject(7)
+      m_Position: [-79, -118, -208]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [45, 18, 16]
+      m_Children:
+        []
+      m_Parent: 0
