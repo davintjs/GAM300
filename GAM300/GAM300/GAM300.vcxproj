@@ -423,8 +423,8 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\yaml-cpp-master\src;$(SolutionDir)External\yaml-cpp-master\include;$(SolutionDir)External\properties-master\src;$(SolutionDir)External\properties-master\src\Examples;$(SolutionDir)External\JoltPhysics-master;$(SolutionDir)External\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
