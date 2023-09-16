@@ -156,6 +156,7 @@ struct Tag : Object
 //		, property_var(m_OOBB)
 //} property_vend_h(test1)
 
+
 struct Transform : Object
 {
 	Vector3 scale{ 1 };
@@ -165,12 +166,14 @@ struct Transform : Object
 
 	std::vector<Transform*> child;
 
+	
+
 	bool isLeaf() {
 		return (child.size()) ? false : true;
 	}
 
 	bool isChild() {
-		if (parent)
+		if (parent != nullptr)
 			return true;
 		else
 			return false;
@@ -192,6 +195,7 @@ struct Transform : Object
 
 	glm::mat4 GetLocalMatrix() const {
 		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		
 		return glm::translate(glm::mat4(1.0f), translation) *
 			rot *
 			glm::scale(glm::mat4(1.0f), scale);
@@ -247,7 +251,16 @@ struct Transform : Object
 		// Erase the found element
 		child.erase(it);
 	}
+
+	property_vtable();
+
 };
+
+property_begin_name(Transform, "Transform") {
+	property_var(scale.x), property_var(scale.y), property_var(scale.z)
+		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
+		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
+} property_vend_h(Transform)
 
 struct AudioSource : Object
 {
@@ -266,18 +279,36 @@ struct BoxCollider : Object
 	float x = 1.0f;
 	float y = 1.0f; 
 	float z = 1.0f; 
+	//property_vtable();
 };
+
+//property_begin_name(BoxCollider, "BoxCollider") {
+//	property_var(x)
+//		, property_var(y)
+//		, property_var(z)
+//} property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
 {
 	float radius = 1.0f; 
+	//property_vtable();
 };
+
+//property_begin_name(SphereCollider, "SphereCollider") {
+//	property_var(radius)
+//} property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
 {
 	float height = 1.0f; 
 	float radius = 1.0f; 
+	//property_vtable();
 };
+
+//property_begin_name(CapsuleCollider, "CapsuleCollider") {
+//	property_var(height)
+//		, property_var(radius)
+//} property_vend_h(CapsuleCollider)
 
 struct Animator : Object
 {

@@ -207,27 +207,61 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
+//This function uses LIONant functionality to serialize and display the component based on its contents (properties)
+template <typename T>
+void Property_Displayer(T& Object) {
+
+    if constexpr (std::is_same<T, Transform>()) {
+        Display("Position", Object.translation);
+        glm::vec3 rotation = glm::degrees(Object.rotation);
+        Display("Rotation", rotation);
+        Object.rotation = glm::radians(rotation);
+        Display("Scale", Object.scale);
+        for (int i = 0; i < 3; ++i)
+        {
+            if (fabs(Object.scale[i]) < 0.001f)
+                Object.scale[i] = 0.001f;
+        }
+    }
+    else {
+        std::vector<property::entry> List;
+        property::SerializeEnum(Object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+            {
+                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                List.push_back(property::entry { PropertyName, Data });
+            });
+
+
+        for (auto& [Name, Data] : List)
+        {
+            std::visit([&](auto& Value)
+                {
+                    using T = std::decay_t<decltype(Value)>;
+                    //PRINT(typeid(T).name(),'\n');
+                    Display<T>(Name.c_str(), Value);
+
+                }
+            , Data);
+            property::set(Object, Name.c_str(), Data);
+        }
+    }
+   
+}
+
 template <typename T>
 void DisplayComponent(T& component)
 {
     //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
 }
 
+//Cant use reflection system due to glm::vec3
 template <>
 void DisplayComponent<Transform>(Transform& transform)
 {
+    Property_Displayer(transform);
     //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
     //ImGui::Text("Active");
-    Display("Position", transform.translation);
-    glm::vec3 rotation = glm::degrees(transform.rotation);
-    Display("Rotation", rotation);
-    transform.rotation = glm::radians(rotation);
-    Display("Scale", transform.scale);
-    for (int i = 0; i < 3; ++i)
-    {
-        if (fabs(transform.scale[i]) < 0.001f)
-            transform.scale[i] = 0.001f;
-    }
 }
 
 template <>
@@ -261,34 +295,16 @@ void DisplayComponent<Tag>(Tag& tag)
     Display("Entity Name", tag.name);
 }
 
+
+
 template<>
 void DisplayComponent<AudioSource>(AudioSource& as) {
 
-    std::vector<property::entry> List;
-    property::SerializeEnum(as, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-        {
-            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-            assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            List.push_back(property::entry { PropertyName, Data });
-        });
-
-
-    for (auto& [Name, Data] : List)
-    {
-        std::visit([&](auto& Value)
-            {
-                using T = std::decay_t<decltype(Value)>;
-                //PRINT(typeid(T).name(),'\n');
-                Display<T>(Name.c_str(), Value);
-                //ReflectedTypes::DisplayHelper(Name,Value);
-            }
-        ,Data);
-        property::set(as, Name.c_str(), Data);
-    }
-
-    /*for(auto property : as.getPropertyVTable())
+    Property_Displayer(as);
+    /*
     Display(as.getPropertyVTable().m_pName, as.loop);
-    Display("Volume", as.volume);*/
+    Display("Volume", as.volume);
+    */
 }
 template <>
 void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)

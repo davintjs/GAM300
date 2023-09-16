@@ -6,10 +6,10 @@ using string_t = std::string;
 //--------------------------------------------------------------------------------------------
 // Some structure to show that you can add your own atomic structures
 //--------------------------------------------------------------------------------------------
-struct oobb
-{
-    float m_Min{}, m_Max{};
-};
+//struct oobb
+//{
+//    float m_Min{}, m_Max{};
+//};
 
 //--------------------------------------------------------------------------------------------
 // User settings
@@ -131,11 +131,10 @@ namespace property
         //--------------------------------------------------------------------------------------------
         using data_variant = std::variant
         <
-              int
+            int
             , bool
             , float
             , string_t
-            , oobb
             , size_t
             , uint32_t
         >;

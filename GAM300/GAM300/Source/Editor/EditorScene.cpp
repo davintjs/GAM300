@@ -53,8 +53,9 @@ void EditorScene::Update(float dt)
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
         ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
 
-        float buttonWidth = 24.f;
-        ImVec2 btn = ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f);
+        float buttonSize = 20.f;
+        ImVec2 btn = ImVec2(buttonSize, buttonSize);
+
         ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
         {
             GizmoType = ImGuizmo::UNIVERSAL;
