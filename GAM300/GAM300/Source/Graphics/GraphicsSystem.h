@@ -22,6 +22,14 @@ struct LightProperties
 	glm::vec3 lightColor;
 };
 
+struct Materials
+{
+	glm::vec4 Albedo;
+	glm::vec4 Specular;
+	glm::vec4 Diffuse;
+	glm::vec4 Ambient;
+	float Shininess;
+};
 
 static unsigned int InstancePropertyCount = 1;
 
@@ -44,7 +52,8 @@ public:
 	void Update(float dt);
 	void Draw();
 	void Draw_Meshes(GLuint vaoid ,  unsigned int instance_count , 
-		unsigned int prim_count , GLenum prim_type, LightProperties LightSource);
+		unsigned int prim_count , GLenum prim_type, LightProperties LightSource,
+		Materials Mat);
 	void Exit();
 
 	bool Raycasting(Ray3D& _ray);
