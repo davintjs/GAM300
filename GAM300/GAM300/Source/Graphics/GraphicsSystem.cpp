@@ -206,21 +206,31 @@ void GraphicsSystem::Update(float dt)
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 		if (checkForSelection)
 		{
-			glm::mat4 translation_mat(
-				glm::vec4(1.f, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, 1.f, 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(transform.translation, 1.f)
-			);
-			glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
+			//glm::mat4 translation_mat(
+			//	glm::vec4(1.f, 0.f, 0.f, 0.f),
+			//	glm::vec4(0.f, 1.f, 0.f, 0.f),
+			//	glm::vec4(0.f, 0.f, 1.f, 0.f),
+			//	glm::vec4(transform.translation, 1.f)
+			//);
+			//glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
 
-			glm::vec3 mins = transform.scale * glm::vec3(-1.f, -1.f, -1.f);
-			glm::vec3 maxs = transform.scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::mat4 transMatrix = transform.GetWorldMatrix();
 
-			glm::mat4 noscale = translation_mat * rotation_mat;
+			//glm::mat4 noscale = translation_mat * rotation_mat;
+
+			glm::vec3 translation;
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::vec3 scale;
+			glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
+
+			glm::vec3 mins = scale * glm::vec3(-1.f, -1.f, -1.f);
+			glm::vec3 maxs = scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::mat4 rotMat = glm::toMat4(rot);
 
 			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
-				noscale, temp_intersect))
+				glm::translate(glm::mat4(1.0f), translation) * rotMat, temp_intersect))
 			{
 				if (temp_intersect < intersected)
 				{

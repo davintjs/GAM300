@@ -184,7 +184,11 @@ void EditorScene::Update(float dt)
                 //glm::vec4 After_Rotation;
                 //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
                 //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
-
+                if (trans.parent)
+                {
+                    glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
+                    transform_1 = glm::inverse(parentTransform) * transform_1;
+                }
                 glm::vec3 a_translation;
                 glm::quat a_rot;
                 glm::vec3 a_scale;

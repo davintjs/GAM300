@@ -9,6 +9,7 @@ void EditorHierarchy::Init() {
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
+	EVENTS.Subscribe(this, &EditorHierarchy::CallbackSceneChanged);
 
 }
 
@@ -288,6 +289,11 @@ void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
         selectedEntity = pEvent->pEntity->denseIndex;
     else
         selectedEntity = NON_VALID_ENTITY;
+}
+
+void EditorHierarchy::CallbackSceneChanged(SceneChangingEvent* pEvent)
+{
+	layer.clear();
 }
 
 void EditorHierarchy::Exit() {

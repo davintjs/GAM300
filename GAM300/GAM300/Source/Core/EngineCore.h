@@ -208,6 +208,6 @@ private:
 	float update_timer;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
-	FileWatcher watcher;
+	//FileWatcher watcher;
 };
 #endif // !CORE_H
