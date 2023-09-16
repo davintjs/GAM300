@@ -71,6 +71,12 @@ struct SceneChangingEvent : IEvent
 	Scene& scene;
 	std::string filePath;
 };
+
+struct ClearEntitiesEvent: IEvent
+{
+	ClearEntitiesEvent() {};
+};
+
 //template <typename T>
 //struct ReflectComponentEvent : IEvent
 //{
