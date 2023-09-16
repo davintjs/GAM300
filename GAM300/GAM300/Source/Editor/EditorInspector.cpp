@@ -211,6 +211,7 @@ void Display(const char* string)
 template <typename T>
 void Property_Displayer(T& Object) {
 
+    //Need to manually display Vec3 types as property system does not register vec3 types
     if constexpr (std::is_same<T, Transform>()) {
         Display("Position", Object.translation);
         glm::vec3 rotation = glm::degrees(Object.rotation);
@@ -222,118 +223,171 @@ void Property_Displayer(T& Object) {
             if (fabs(Object.scale[i]) < 0.001f)
                 Object.scale[i] = 0.001f;
         }
+        return; //no other types other than vec3
     }
-    else {
-        std::vector<property::entry> List;
-        property::SerializeEnum(Object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-            {
-                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                List.push_back(property::entry { PropertyName, Data });
-            });
+    else if constexpr (std::is_same<T, Rigidbody>()) {
+        Display("Linear Velocity", Object.linearVelocity);
+        Display("Angular Velocity", Object.angularVelocity);
+        Display("Force", Object.force);
+    }
+    else if constexpr (std::is_same<T, CharacterController>()) {
+        Display("Velocity", Object.velocity);
+        Display("Force", Object.force);
+    }
+    else if constexpr (std::is_same<T, LightSource>()) {
+        Display("Light Color", Object.lightingColor);
+    }
 
-
-        for (auto& [Name, Data] : List)
+    //List all properties
+    std::vector<property::entry> List;
+    property::SerializeEnum(Object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            std::visit([&](auto& Value)
-                {
-                    using T = std::decay_t<decltype(Value)>;
-                    //PRINT(typeid(T).name(),'\n');
-                    Display<T>(Name.c_str(), Value);
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+            List.push_back(property::entry { PropertyName, Data });
+        });
 
-                }
-            , Data);
-            property::set(Object, Name.c_str(), Data);
+
+    for (auto& [Name, Data] : List)
+    {
+        if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
+            if ((Name.find(".x") != std::string::npos) ||
+                (Name.find(".y") != std::string::npos) ||
+                (Name.find(".z") != std::string::npos)) {
+                continue;
+            }
         }
+        std::visit([&](auto& Value)
+            {
+                using T = std::decay_t<decltype(Value)>;
+
+                //Edit name
+                auto it = Name.begin() + Name.find_first_of("/");
+                Name.erase(Name.begin(), ++it);
+                Name[0] = toupper(Name[0]); //Make first letter uppercase
+                
+                //Display Component value
+                Display<T>(Name.c_str(), Value);
+
+            }
+        , Data);
+        property::set(Object, Name.c_str(), Data);
     }
-   
+
+    if constexpr (std::is_same<T, MeshRenderer>()) {
+        //Combo field for mesh renderer
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("MeshName");
+        ImGui::TableNextColumn();
+        std::vector<const char*> meshNames;
+        int number = 0;
+        bool found = false;
+        for (auto& pair : MeshManager.mContainer)
+        {
+            if (pair.first == Object.MeshName)
+                found = true;
+            meshNames.push_back(pair.first.c_str());
+            if (!found)
+            {
+                ++number;
+            }
+        }
+        ImGui::PushItemWidth(-1);
+        ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
+        ImGui::PopItemWidth();
+        Object.MeshName = meshNames[number];
+    }
+
 }
 
 template <typename T>
 void DisplayComponent(T& component)
 {
     //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
+    Property_Displayer(component);
 }
 
-//Cant use reflection system due to glm::vec3
-template <>
-void DisplayComponent<Transform>(Transform& transform)
-{
-    Property_Displayer(transform);
-    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-    //ImGui::Text("Active");
-}
+////Cant use reflection system due to glm::vec3
+//template <>
+//void DisplayComponent<Transform>(Transform& transform)
+//{
+//    Property_Displayer(transform);
+//    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+//    //ImGui::Text("Active");
+//}
+//
+//template <>
+//void DisplayComponent<BoxCollider>(BoxCollider& boxCollider2D)
+//{
+//    //Display("Bounds", boxCollider2D.bounds);
+//}
 
-template <>
-void DisplayComponent<BoxCollider>(BoxCollider& boxCollider2D)
-{
-    //Display("Bounds", boxCollider2D.bounds);
-}
+//template <>
+//void DisplayComponent<Rigidbody>(Rigidbody& rb)
+//{
+//
+//    //DisplayDragDrop();
+//    //spriteRenderer.sprite.set_name()
+//    //ImGui::Checkbox("##Active", &rb.is_enabled);
+//    ImGui::SameLine();
+//    ImGui::Text("Active");
+//    Display("Mass", rb.mass);
+//    Display("Linear Velocity", rb.linearVelocity);
+//    Display("Angular Velocity", rb.angularVelocity);
+//    Display("Force", rb.force);
+//    Display("Use Gravity", rb.useGravity);
+//    Display("Is Kinematic", rb.isKinematic);
+//}
 
-template <>
-void DisplayComponent<Rigidbody>(Rigidbody& rb)
-{
-
-    //DisplayDragDrop();
-    //spriteRenderer.sprite.set_name()
-    //ImGui::Checkbox("##Active", &rb.is_enabled);
-    ImGui::SameLine();
-    ImGui::Text("Active");
-    Display("Mass", rb.mass);
-    Display("Linear Velocity", rb.linearVelocity);
-    Display("Angular Velocity", rb.angularVelocity);
-    Display("Force", rb.force);
-    Display("Use Gravity", rb.useGravity);
-    Display("Is Kinematic", rb.isKinematic);
-}
-
-template <>
-void DisplayComponent<Tag>(Tag& tag)
-{
-    //DisplayDragDrop();
-    //spriteRenderer.sprite.set_name()
-    Display("Entity Name", tag.name);
-}
-
-
-
-template<>
-void DisplayComponent<AudioSource>(AudioSource& as) {
-
-    Property_Displayer(as);
-    /*
-    Display(as.getPropertyVTable().m_pName, as.loop);
-    Display("Volume", as.volume);
-    */
-}
-template <>
-void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
-{
-    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-    //ImGui::Text("Active");
-    //Display("Mesh Name", meshyRendy.MeshName);
-    ImGui::AlignTextToFramePadding();
-    ImGui::TableNextColumn();
-    ImGui::Text("MeshName");
-    ImGui::TableNextColumn();
-    std::vector<const char*> meshNames;
-    int number = 0;
-    bool found = false;
-    for (auto& pair : MeshManager.mContainer)
-    {
-        if (pair.first == meshyRendy.MeshName)
-            found = true;
-        meshNames.push_back(pair.first.c_str());
-        if (!found)
-        {
-            ++number;
-        }
-    }
-    ImGui::PushItemWidth(-1);
-    ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
-    ImGui::PopItemWidth();
-    meshyRendy.MeshName = meshNames[number];
-}
+//template <>
+//void DisplayComponent<Tag>(Tag& tag)
+//{
+//    //DisplayDragDrop();
+//    //spriteRenderer.sprite.set_name()
+//    Display("Entity Name", tag.name);
+//}
+//
+//
+//
+//template<>
+//void DisplayComponent<AudioSource>(AudioSource& as) {
+//
+//    Property_Displayer(as);
+//    /*
+//    Display(as.getPropertyVTable().m_pName, as.loop);
+//    Display("Volume", as.volume);
+//    */
+//}
+//
+//template <>
+//void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
+//{
+//    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+//    //ImGui::Text("Active");
+//    Display("Mesh Name", meshyRendy.MeshName);
+//    ImGui::AlignTextToFramePadding();
+//    ImGui::TableNextColumn();
+//    ImGui::Text("MeshName");
+//    ImGui::TableNextColumn();
+//    std::vector<const char*> meshNames;
+//    int number = 0;
+//    bool found = false;
+//    for (auto& pair : MeshManager.mContainer)
+//    {
+//        if (pair.first == meshyRendy.MeshName)
+//            found = true;
+//        meshNames.push_back(pair.first.c_str());
+//        if (!found)
+//        {
+//            ++number;
+//        }
+//    }
+//    ImGui::PushItemWidth(-1);
+//    ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
+//    ImGui::PopItemWidth();
+//    meshyRendy.MeshName = meshNames[number];
+//}
 
 //template <>
 //void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer)

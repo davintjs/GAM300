@@ -130,7 +130,7 @@ namespace property
         // The properties which the property system is going to know about.
         //--------------------------------------------------------------------------------------------
         using data_variant = std::variant
-        <
+            <
             int
             , bool
             , float
