@@ -76,12 +76,15 @@ void SceneManager::CreateScene()
 		std::cout << "Warning Duplicate Scene!\n";
 		return;
 	}
-	//EditorHierarchy::Instance().ClearLayer();
+
 	loadedScenes.emplace_front(filePath);
 }
 
 void SceneManager::LoadScene(const std::string& _filePath)
 {
+	// Bean: Next time check if the scene has already been loaded
+
+
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	
@@ -137,7 +140,7 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 void SceneManager::ChangeScene(Scene& _newScene)
 {
 	// Bean: Prompt to save current scene (save for now)
-	SaveScene(GetCurrentScene().filePath.string());
+	//SaveScene(GetCurrentScene().filePath.string());
 
 	LoadScene(_newScene.filePath.string().c_str());
 }
@@ -182,12 +185,22 @@ void SceneManager::Update(float dt)
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
 {
+	// Bean: prompt to save current scene first
+
+	ClearEntitiesEvent clearEntitiesEvent;
+	EVENTS.Publish(&clearEntitiesEvent);
+
 	CreateScene();
 	pEvent->scene = &GetCurrentScene();
 }
 
 void SceneManager::CallbackLoadScene(LoadSceneEvent* pEvent)
 {
+	// Bean: prompt to save current scene first if havent done so
+
+	ClearEntitiesEvent clearEntitiesEvent;
+	EVENTS.Publish(&clearEntitiesEvent);
+
 	LoadScene(pEvent->filePath);
 }
 
