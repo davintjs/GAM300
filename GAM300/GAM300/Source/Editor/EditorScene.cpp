@@ -60,15 +60,18 @@ void EditorScene::Update(float dt)
         {
             GizmoType = ImGuizmo::UNIVERSAL;
         }
-        ImGui::SameLine(); if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("W", btn) 
+            || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("E", btn) || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("E", btn)
+            || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
         {
             GizmoType = ImGuizmo::ROTATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("R", btn) 
+            || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
         }
@@ -154,10 +157,9 @@ void EditorScene::Update(float dt)
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
         Entity* pEntity = EDITOR.GetSelectedEntity();
-        if (pEntity != nullptr)
+        Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+        if (pEntity != nullptr && pEntity->pScene == &currentScene)
         {
-            Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-
             Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(pEntity->denseIndex);
             for (int i = 0; i < 3; ++i)
             {
@@ -185,7 +187,11 @@ void EditorScene::Update(float dt)
                 //glm::vec4 After_Rotation;
                 //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
                 //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
-
+                if (trans.parent)
+                {
+                    glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
+                    transform_1 = glm::inverse(parentTransform) * transform_1;
+                }
                 glm::vec3 a_translation;
                 glm::quat a_rot;
                 glm::vec3 a_scale;

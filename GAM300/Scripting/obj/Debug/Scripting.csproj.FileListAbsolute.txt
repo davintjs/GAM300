@@ -3,3 +3,6 @@ C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\Scripting\obj\Debug\Scr
 C:\Users\jakel\Documents\GAM300\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.AssemblyReference.cache
 C:\Users\jakel\Documents\GAM300\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.SuggestedBindingRedirects.cache
 C:\Users\jakel\Documents\GAM300\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.CoreCompileInputs.cache
+C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.AssemblyReference.cache
+C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.SuggestedBindingRedirects.cache
+C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.CoreCompileInputs.cache

@@ -40,7 +40,7 @@ void ThreadPool::Init()
 void ThreadPool::Exit()
 {
     stop = true;
-    for (auto pair : mutexes)
+    for (auto& pair : mutexes)
     {
         ACQUIRE_SCOPED_LOCK(pair.first);
     }

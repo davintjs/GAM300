@@ -9,7 +9,7 @@ void EditorHierarchy::Init() {
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
-
+    EVENTS.Subscribe(this,&EditorHierarchy::CallbackClearEntities);
 }
 
 void EditorHierarchy::ClearLayer()
@@ -256,7 +256,7 @@ void EditorHierarchy::Update(float dt)
 				{
 					Entity& ent = curr_scene.entities.DenseSubscript(selectedEntity);
 					//Delete all children of selected entity as well
-					auto currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
+					auto& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
 					for (auto child : currEntity.child)
 					{
 						ObjectIndex id = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*child);
@@ -288,6 +288,11 @@ void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
         selectedEntity = pEvent->pEntity->denseIndex;
     else
         selectedEntity = NON_VALID_ENTITY;
+}
+
+void EditorHierarchy::CallbackClearEntities(ClearEntitiesEvent* pEvent)
+{
+	ClearLayer();
 }
 
 void EditorHierarchy::Exit() {
