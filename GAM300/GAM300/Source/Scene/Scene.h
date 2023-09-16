@@ -36,6 +36,7 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include <unordered_map>
 #include "Handle.h"
 #include "Editor/EditorHeaders.h"
+#include "Core/EventsManager.h"
 
 
 
@@ -84,7 +85,7 @@ struct HandlesTable
 		{
 
 		}
-		auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, object)));
+		auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, &object)));
 		return pair.first->second;
 	}
 
@@ -124,8 +125,31 @@ struct Scene
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
 
+	template<typename T>
+	Handle<T>& GetHandle(Engine::UUID uuid)
+	{
+		E_ASSERT
+		(
+			objectHandles.HasHandle<T>(uuid),
+			"UUID: ", uuid, " of ", typeid(T).name() + strlen("struct "), " doesn't exist in this scene"
+		);
+		return objectHandles.GetHandle<T>(uuid);
+	}
 
-	Entity& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
+	template<typename T>
+	Handle<T>& GetHandle(T& object)
+	{
+		E_ASSERT
+		(
+			objectHandles.HasHandle<T>(object.uuid),
+			"UUID: ", object.uuid, " of ", typeid(T).name() + strlen("struct "),
+			" doesn't exist in this scene"
+		);
+		return objectHandles.GetHandle<T>(object.uuid);
+	}
+
+
+	Handle<Entity>& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
 		while (objectHandles.HasHandle<Entity>(uuid))
 		{
@@ -134,7 +158,6 @@ struct Scene
 		Entity& entity = entities.emplace_back(uuid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
-		objectHandles.emplace(uuid,entity);
 		entities.SetActive(entity.denseIndex);
 		AddComponent<Transform>(entity);
 		Tag& tag = AddComponent<Tag>(entity);
@@ -143,7 +166,10 @@ struct Scene
 		tag.name += ")";
 		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		EditorHierarchy::Instance().layer.push_back(&entity);
-		return entity;
+		Handle<Entity>& handle = objectHandles.emplace(uuid, entity);
+		ObjectCreatedEvent e{ (handle) };
+		EVENTS.Publish(&e);
+		return handle;
 	}
 
 	template<typename T, typename... Ts>

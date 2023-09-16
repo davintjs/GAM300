@@ -21,31 +21,33 @@ void SceneManager::Init()
 		CreateScene();
 		Scene& scene = GetCurrentScene();
 
-		Entity& floor = scene.AddEntity();
+		Handle<Entity>& floorHandle = scene.AddEntity();
+		Entity& floor = floorHandle.Get();
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).translation = Vector3(0.f, 0.f, 0.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).scale = Vector3(300.f, 10.0f, 300.f);
 
 		// test instance rendering
 		for (int i = 0; i < 5; ++i)
 		{
-			Entity& tempent = scene.AddEntity();
+			Handle<Entity>& entHandle = scene.AddEntity();
+			Entity& tempent = entHandle.Get();
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 			scene.AddComponent<MeshRenderer>(tempent);
 		}
 		scene.AddComponent<Script>(0).name = "Player";
 		scene.AddComponent<Rigidbody>(0);
-		Entity& box = scene.AddEntity();
+		Entity& box = scene.AddEntity().Get();
 		scene.AddComponent<MeshRenderer>(box);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
 
-		Entity& box2 = scene.AddEntity();
+		Entity& box2 = scene.AddEntity().Get();
 		scene.AddComponent<MeshRenderer>(box2);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
 
-		Entity& lightsource = scene.AddEntity();
+		Entity& lightsource = scene.AddEntity().Get();
 		scene.AddComponent<LightSource>(lightsource);
 
 		//scene.AddEntity();

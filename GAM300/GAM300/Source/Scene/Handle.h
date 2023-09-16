@@ -29,17 +29,17 @@ template <typename T>
 class Handle
 {
 public:
-	Handle() = delete;
-	Handle(Engine::UUID, T&);
+	Handle(Engine::UUID = 0, T* = nullptr);
 	const Engine::UUID uuid;
 
 	T& Get();
+
+	bool IsValid();
+
+	static Handle<T>& Invalid();
 private:
 	T* pObject{ nullptr };
 };
-
-
-//USING
 
 #include "Handle.cpp"
 

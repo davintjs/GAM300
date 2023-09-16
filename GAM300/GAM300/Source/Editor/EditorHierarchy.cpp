@@ -141,7 +141,7 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 	//select entity from hierarchy
 	if (ImGui::IsItemClicked())
 	{
-        SelectedEntityEvent selectedEvent{ curr_scene.entities.TryGetDense(Index)};
+        SelectedEntityEvent selectedEvent{ curr_scene.GetHandle(*curr_scene.entities.TryGetDense(Index))};
         EVENTS.Publish(&selectedEvent);
 	}
 
@@ -245,7 +245,7 @@ void EditorHierarchy::Update(float dt)
 		{
 			if (ImGui::MenuItem("Add Entity"))
 			{
-                SelectedEntityEvent selectedEvent{ &curr_scene.AddEntity() };
+                SelectedEntityEvent selectedEvent{ curr_scene.AddEntity() };
                 EVENTS.Publish(&selectedEvent);
 			}
 
@@ -265,7 +265,7 @@ void EditorHierarchy::Update(float dt)
 					curr_scene.Destroy(ent);
 					auto it = std::find(layer.begin(), layer.end(), &ent);
 					EditorHierarchy::Instance().layer.erase(it);
-					SelectedEntityEvent selectedEvent{ nullptr };
+					SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
 					EVENTS.Publish(&selectedEvent);
 				}
 			}
@@ -284,8 +284,8 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    if (pEvent->pEntity)
-        selectedEntity = pEvent->pEntity->denseIndex;
+    if (pEvent->handle.IsValid())
+        selectedEntity = pEvent->handle.Get().denseIndex;
     else
         selectedEntity = NON_VALID_ENTITY;
 }
