@@ -69,10 +69,23 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
     Mesh newMesh;
     newMesh.index = mContainer.size();
+    glm::vec3 min(FLT_MAX);
+    glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
         std::cout << "ouchie\n";
+        for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
+        {
+            glm::vec3 pos = newGeom.mMeshes[i]._vertices[k].pos;
 
+            min.x = std::min(pos.x, min.x);
+            min.y = std::min(pos.y, min.y);
+            min.z = std::min(pos.z, min.z);
+
+            max.x = std::min(pos.x, max.x);
+            max.y = std::min(pos.y, max.y);
+            max.z = std::min(pos.z, max.z);
+        }
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
@@ -135,6 +148,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
 
     }
+    newMesh.vertices_min = min;
+    newMesh.vertices_max = max;
+
     mContainer.emplace(fileName, newMesh);
 }
 

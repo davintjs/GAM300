@@ -394,6 +394,13 @@ void GraphicsSystem::Update(float dt)
 		// Looping through submeshes
 		for (int k = 0; k < mesh->second.SRT_Buffer_Index.size(); ++k)
 		{
+			
+			//// I want to input normal map here
+			//GLuint texturebuffer = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color"));
+			//glBindTexture(GL_TEXTURE_2D,texturebuffer);
+			//glUniform1i(glGetUniformLocation(temp_instance_shader.GetHandle(), "myTextureSampler"), 0);
+
+
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->second.SRT_Buffer_Index[k]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -21,6 +21,8 @@ uniform vec4 Ambient;
 uniform float Shininess;
 uniform vec4 Albedos;
 
+uniform sampler2D myTextureSampler;
+
 
 
 void main()
