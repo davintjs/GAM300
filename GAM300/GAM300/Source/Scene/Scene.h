@@ -149,7 +149,7 @@ struct MultiHandlesTable
 	template <typename T1, typename... Args>
 	constexpr Handle<T1>& emplace(Engine::UUID uuid, T1& object)
 	{
-		auto& table = std::get<TaMultiTableble<T1>>(tables);
+		auto& table = std::get<MultiTable<T1>>(tables);
 		auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, &object)));
 		return pair.first->second;
 	}
