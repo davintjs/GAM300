@@ -236,9 +236,9 @@ void GraphicsSystem::Update(float dt)
 				{
 					//EDITOR.SetSelectedEntity(&entity);
 					currentScene.GetHandle<Entity>(entity);
-					//SelectedEntityEvent SelectingEntity(currentScene.GetHandle(entity));
+					SelectedEntityEvent SelectingEntity(currentScene.GetHandle(entity));
 
-					//EVENTS.Publish(&SelectingEntity);
+					EVENTS.Publish(&SelectingEntity);
 					//EditorCam.ActiveObj = &entity;
 					intersected = temp_intersect;
 				}
@@ -311,8 +311,8 @@ void GraphicsSystem::Update(float dt)
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		//SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
-		//EVENTS.Publish(&selectedEvent);
+		SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
+		EVENTS.Publish(&selectedEvent);
 	}
 
 

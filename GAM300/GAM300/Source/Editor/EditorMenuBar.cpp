@@ -5,6 +5,7 @@
 #include "Core/EventsManager.h"
 
 #include "../Utilities/PlatformUtils.h"
+#include "Utilities/ThreadPool.h"
 
 void EditorMenuBar::Init()
 {
@@ -39,7 +40,9 @@ void EditorMenuBar::Update(float dt)
 
             // Saving of scene files only if an active scene is open, using file dialogs
             if (ImGui::MenuItem("Save", "Ctrl+S"))
+            {
                 SaveScene();
+            }
             //else
             //    //Do not allow the user to save when there's no file loaded!
             //    ImGui::TextDisabled("Save", "Ctrl+S");
@@ -47,11 +50,12 @@ void EditorMenuBar::Update(float dt)
             // Save as functionality using file dialogs
             if (ImGui::MenuItem("Save As..", "Ctrl+Shift+S"))
             {
-                std::string Filename = FileDialogs::SaveFile("Text Files (*.txt)\0*.txt\0");
-                if (!Filename.empty())
-                {
-                    //DEBUG->Debugger.AddLog("[%i]{Info} File saved successfully!\n", DEBUG->debugcounter++);
-                }
+                IsNewSceneEvent newScene;
+                EVENTS.Publish(&newScene);
+                std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
+                //Save File
+                SaveSceneEvent saveScene(filepath);
+                EVENTS.Publish(&saveScene);
             }
             //else
             //    //Do not allow the user to save when there's no file loaded!
@@ -122,6 +126,11 @@ void EditorMenuBar::NewScene()
     //New Scene
     CreateSceneEvent createScene(nullptr);
     EVENTS.Publish(&createScene);
+
+    EditorHierarchy::Instance().ClearLayer();
+    // Load this new scene if there was a previously loaded one
+    SceneChangingEvent changeScene(*createScene.scene);
+    EVENTS.Publish(&changeScene);
 }
 
 void EditorMenuBar::SaveScene()

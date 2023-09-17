@@ -6,6 +6,7 @@
 #include <GLFW/glfw3native.h>
 #include <Windows.h>
 #include <commdlg.h>
+#include "ThreadPool.h"
 
 
 	std::string FileDialogs::OpenFile(const char* filter) {
@@ -28,6 +29,7 @@
 	}
 
 	std::string FileDialogs::SaveFile(const char* filter) {
+		ACQUIRE_SCOPED_LOCK("Assets");
 		OPENFILENAMEA ofn;
 		CHAR filesz[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));

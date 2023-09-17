@@ -53,23 +53,24 @@ void EditorScene::Update(float dt)
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
         ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
 
-        float buttonWidth = 24.f;
-        ImGui::SameLine(); if (ImGui::Button("Q", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f)) 
-            || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
+        float buttonSize = 20.f;
+        ImVec2 btn = ImVec2(buttonSize, buttonSize);
+
+        ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
         {
             GizmoType = ImGuizmo::UNIVERSAL;
         }
-        ImGui::SameLine(); if (ImGui::Button("W", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f)) 
+        ImGui::SameLine(); if (ImGui::Button("W", btn) 
             || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("E", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f))
+        ImGui::SameLine(); if (ImGui::Button("E", btn)
             || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
         {
             GizmoType = ImGuizmo::ROTATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("R", ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f)) 
+        ImGui::SameLine(); if (ImGui::Button("R", btn) 
             || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
