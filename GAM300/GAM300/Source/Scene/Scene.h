@@ -39,12 +39,18 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/EventsManager.h"
 
 
+template <typename T>
+using Table = std::unordered_map<Engine::UUID, Handle<T>>;
+
+template <typename T>
+using MultiTable = std::unordered_map<Engine::UUID, Table<T>>;
+
+//UUIDs are shared between components and entities
+//For multicomponents, they will have a secondary UUID for linkage
 
 template<typename... Ts>
 struct HandlesTable
 {
-	template <typename T>
-	using Table = std::unordered_map<Engine::UUID,Handle<T>>;
 
 	constexpr HandlesTable(TemplatePack<Ts...>) {}
 	HandlesTable() = default;
@@ -53,6 +59,15 @@ struct HandlesTable
 	{
 		auto& entries = std::get<Table<T1>>(tables);
 		if (entries.find(uuid) == entries.end())
+			return false;
+		return true;
+	}
+
+	template <typename T1>
+	bool HasHandle(T1& object)
+	{
+		auto& entries = std::get<Table<T1>>(tables);
+		if (entries.find(object.uuid) == entries.end())
 			return false;
 		return true;
 	}
@@ -93,8 +108,61 @@ private:
 	std::tuple<Table<Ts>...> tables;
 };
 
-using AllObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
-using SceneHandles = decltype(HandlesTable(AllObjects()));
+template<typename... Ts>
+struct MultiHandlesTable
+{
+
+	constexpr MultiHandlesTable(TemplatePack<Ts...>) {}
+	MultiHandlesTable() = default;
+	template <typename T1>
+	bool HasHandle(Engine::UUID uuid, Engine::UUID sub_uuid)
+	{
+		auto& entries = std::get<MultiTable<T1>>(tables);
+		auto it = entries.find(uuid);
+		if (it == entries.end())
+			return false;
+		if (it->find(sub_uuid) == it->end())
+			return false;
+		return true;
+	}
+
+	template <typename T1>
+	constexpr Handle<T1>& GetHandle(Engine::UUID uuid, Engine::UUID sub_uuid)
+	{
+		return std::get<MultiTable<T1>>(tables)[uuid][sub_uuid];
+	}
+
+	template <typename T1>
+	constexpr void erase(Engine::UUID uuid, Engine::UUID sub_uuid)
+	{
+		auto& entries = std::get<MultiTable<T1>>(tables);
+		entries.erase(uuid);
+	}
+
+	template <typename T1>
+	constexpr void erase(Handle<T1>& handle)
+	{
+		auto& entries = std::get<MultiTable<T1>>(tables);
+		entries.erase(handle);
+	}
+
+	template <typename T1, typename... Args>
+	constexpr Handle<T1>& emplace(Engine::UUID uuid, T1& object)
+	{
+		auto& table = std::get<TaMultiTableble<T1>>(tables);
+		auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, &object)));
+		return pair.first->second;
+	}
+
+private:
+	std::tuple<MultiTable<Ts>...> tables;
+};
+
+
+
+using SingleObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
+using SingleHandles = decltype(HandlesTable(SingleObjects()));
+using MultiHandles = decltype(MultiHandlesTable(MultiComponentTypes()));
 
 using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
@@ -115,7 +183,8 @@ struct Scene
 	MultiComponentsArrays multiComponentsArrays;
 	EntitiesPtrArray entitiesDeletionBuffer;
 	ComponentsBufferArray componentsDeletionBuffer;
-	SceneHandles objectHandles;
+	SingleHandles singleHandles;
+	MultiHandles multiHandles;
 
 	std::filesystem::path filePath;
 	State state;
@@ -130,10 +199,10 @@ struct Scene
 	{
 		E_ASSERT
 		(
-			objectHandles.HasHandle<T>(uuid),
+			singleHandles.HasHandle<T>(uuid),
 			"UUID: ", uuid, " of ", typeid(T).name() + strlen("struct "), " doesn't exist in this scene"
 		);
-		return objectHandles.GetHandle<T>(uuid);
+		return singleHandles.GetHandle<T>(uuid);
 	}
 
 	template<typename T>
@@ -141,17 +210,17 @@ struct Scene
 	{
 		E_ASSERT
 		(
-			objectHandles.HasHandle<T>(object.uuid),
+			singleHandles.HasHandle<T>(object.uuid),
 			"UUID: ", object.uuid, " of ", typeid(T).name() + strlen("struct "),
 			" doesn't exist in this scene"
 		);
-		return objectHandles.GetHandle<T>(object.uuid);
+		return singleHandles.GetHandle<T>(object.uuid);
 	}
 
 
 	Handle<Entity>& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
 	{
-		while (objectHandles.HasHandle<Entity>(uuid))
+		while (singleHandles.HasHandle<Entity>(uuid) || uuid == 0)
 		{
 			uuid = Engine::CreateUUID();
 		}
@@ -166,7 +235,7 @@ struct Scene
 		tag.name += ")";
 		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		EditorHierarchy::Instance().layer.push_back(&entity);
-		Handle<Entity>& handle = objectHandles.emplace(uuid, entity);
+		Handle<Entity>& handle = singleHandles.emplace(uuid, entity);
 		ObjectCreatedEvent e{ (handle) };
 		EVENTS.Publish(&e);
 		return handle;
@@ -308,6 +377,14 @@ struct Scene
 	}
 
 	template <typename Component>
+	Handle<Entity>& GetEntity(Engine::UUID& uuid)
+	{
+		if (singleHandles.HasHandle(uuid))
+			return singleHandles.GetHandle<Entity>(uuid);
+		return Handle<Entity>::Invalid();
+	}
+
+	template <typename Component>
 	auto& GetEntity(Component& component)
 	{
 		return entities.DenseSubscript(GetComponentsArray<Component>().GetDenseIndex(component));
@@ -389,12 +466,13 @@ struct Scene
 	}
 
 	template <typename Component>
-	Component& AddComponent(uint32_t index)
+	Component& AddComponent(Engine::UUID uuid)
 	{
 		static_assert(AllComponentTypes::Has<Component>(), "Type is not a valid component!");
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
 			auto& arr = singleComponentsArrays.GetArray<Component>();
+			GetEntity
 			Component& component = arr.emplace(index);
 			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
 			arr.SetActive(index);

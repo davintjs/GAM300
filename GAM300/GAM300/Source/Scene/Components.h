@@ -108,6 +108,7 @@ private:
 template <typename Component>
 using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES>;
 
+
 template<typename... Ts>
 struct MultiComponentsGroup
 {
