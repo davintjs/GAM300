@@ -39,8 +39,6 @@ std::vector<Ray3D> Ray_Container;
 
 // Naive Solution for now
 
-
-
 std::vector <Materials> temp_MaterialContainer;
 
 trans_mats SRT_Buffers[50];
@@ -199,9 +197,6 @@ void GraphicsSystem::Update(float dt)
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
-
-		
-
 		///*std::cout << "entering update loop\n";*/
 		//int index = 1;
 		//if (i == 3)
@@ -315,7 +310,6 @@ void GraphicsSystem::Update(float dt)
 	}
 	*/
 
-
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
@@ -343,7 +337,6 @@ void GraphicsSystem::Update(float dt)
 	//	else
 	//	{
 	//		LightSource.position.y += 10.f;
-
 	//	}
 	//}
 	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
@@ -359,7 +352,6 @@ void GraphicsSystem::Update(float dt)
 	//	else
 	//	{
 	//		LightSource.position.y -= 10.f;
-
 	//	}
 	//}
 
@@ -368,18 +360,16 @@ void GraphicsSystem::Update(float dt)
 	//	LightSource.position.z += 10.f;
 	//}
 
-
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
 		if (SwappingColorSpace)
 		{
 			glEnable(GL_FRAMEBUFFER_SRGB);
-}
+		}
 		else
 		{
 			glDisable(GL_FRAMEBUFFER_SRGB);
-
 		}
 	}
 	

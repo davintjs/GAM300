@@ -145,8 +145,6 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup(VAO,newMesh.index) );
-
-
     }
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;

@@ -25,9 +25,11 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
+#include "Graphics/GraphicStructsAndClass.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
+
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -290,9 +292,14 @@ struct Script : Object
 	std::map<std::string, Field> fields;
 };
 
+
+
 struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
+	//Materials mr_Material;
+
+	Materials mr_Material;
 };
 
 struct LightSource : Object
