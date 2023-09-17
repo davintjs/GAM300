@@ -228,6 +228,7 @@ struct Scene
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
 		entities.SetActive(entity.denseIndex);
+		Handle<Entity>& handle = singleHandles.emplace(uuid, entity);
 		AddComponent<Transform>(entity);
 		Tag& tag = AddComponent<Tag>(entity);
 		tag.name = "New GameObject(";
@@ -235,7 +236,6 @@ struct Scene
 		tag.name += ")";
 		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		EditorHierarchy::Instance().layer.push_back(&entity);
-		Handle<Entity>& handle = singleHandles.emplace(uuid, entity);
 		ObjectCreatedEvent e{ (handle) };
 		EVENTS.Publish(&e);
 		return handle;
@@ -407,7 +407,7 @@ struct Scene
 	template <typename Component>
 	Component& AddComponent(const Entity& entity)
 	{
-		return AddComponent<Component>(entity.denseIndex);
+		return AddComponent<Component>(entity.uuid);
 	}
 
 	template <typename Component>
@@ -472,17 +472,18 @@ struct Scene
 		if constexpr (SingleComponentTypes::Has<Component>())
 		{
 			auto& arr = singleComponentsArrays.GetArray<Component>();
-			GetEntity
-			Component& component = arr.emplace(index);
-			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
-			arr.SetActive(index);
+			Handle<Entity>& entityHandle{GetHandle<Entity>(uuid)};
+			Component& component = arr.emplace(entityHandle.Get().denseIndex);
+			entityHandle.Get().hasComponentsBitset.set(GetComponentType::E<Component>(), true);
+			arr.SetActive(entityHandle.Get().denseIndex);
 			return component;
 		}
 		else if constexpr (MultiComponentTypes::Has<Component>())
 		{
 			auto& arr = multiComponentsArrays.GetArray<Component>();
-			Component& component = arr.emplace(index);
-			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<Component>(), true);
+			Handle<Entity>& entityHandle{ GetHandle<Entity>(uuid) };
+			Component& component = arr.emplace(entityHandle.Get().denseIndex);
+			entityHandle.Get().hasComponentsBitset.set(GetComponentType::E<Component>(), true);
 			arr.SetActive(component);
 			return component;
 		}

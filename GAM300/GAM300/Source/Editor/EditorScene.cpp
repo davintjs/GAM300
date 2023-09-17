@@ -160,21 +160,14 @@ void EditorScene::Update(float dt)
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
         if (pEntity != nullptr && pEntity->pScene == &currentScene)
         {
-            Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(pEntity->denseIndex);
+            Transform& trans = currentScene.GetComponent<Transform>(*pEntity);
             for (int i = 0; i < 3; ++i)
             {
                 if (fabs(trans.scale[i]) < 0.001f)
                     trans.scale[i] = 0.001f;
             }
 
-            glm::vec4 translate = { trans.translation,0.f };
-            
-            glm::vec4 rotation = { trans.rotation,0.f };
-            glm::vec4 scale = { trans.scale,0.f };
-
             glm::mat4 transform_1 = trans.GetWorldMatrix();
-            //ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
-            //    glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform_1));
 
             ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
                 (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
@@ -182,11 +175,6 @@ void EditorScene::Update(float dt)
             if (ImGuizmo::IsUsing())
             {
                 EditorCam.canMove = false;
-                //glm::vec4 After_Translate;
-                //glm::vec4 After_Scale;
-                //glm::vec4 After_Rotation;
-                //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
-                //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
                 if (trans.parent)
                 {
                     glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
@@ -198,11 +186,6 @@ void EditorScene::Update(float dt)
                 glm::vec3 a_skew;
                 glm::vec4 a_perspective;
                 glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
-              
-                //translate_after.x - tc.position.x;
-                //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
-                //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
-                //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = a_translation;
                 trans.rotation = glm::eulerAngles(a_rot);

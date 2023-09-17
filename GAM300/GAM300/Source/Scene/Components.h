@@ -193,7 +193,7 @@ struct Transform : Object
 	}
 
 	glm::mat4 GetLocalMatrix() const {
-		glm::mat4 rot = glm::toMat4(glm::quat());
+		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
 		
 		return glm::translate(glm::mat4(1.0f), translation) *
 			rot *

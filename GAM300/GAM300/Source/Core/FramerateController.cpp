@@ -17,6 +17,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "FramerateController.h"
 #include <GLFW/glfw3.h>
+#include "Core/Debug.h"
 
 
 void FrameRateController::Init(double _maxFPS)
@@ -61,6 +62,7 @@ void FrameRateController::End()
 		accumulatedTime -= fixedDeltaTime;
 		++steps;
 	}
+	PRINT("STEPS: ",steps,'\n');
 	frameRate = 1 / deltaTime;
 }
 

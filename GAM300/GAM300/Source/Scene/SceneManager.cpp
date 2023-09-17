@@ -36,8 +36,8 @@ void SceneManager::Init()
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 			scene.AddComponent<MeshRenderer>(tempent);
 		}
-		scene.AddComponent<Script>(0).name = "Player";
-		scene.AddComponent<Rigidbody>(0);
+		scene.AddComponent<Script>(scene.entities[0]).name = "Player";
+		scene.AddComponent<Rigidbody>(scene.entities[0]);
 		Entity& box = scene.AddEntity().Get();
 		scene.AddComponent<MeshRenderer>(box);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
