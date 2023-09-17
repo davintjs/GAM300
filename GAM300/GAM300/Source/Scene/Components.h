@@ -29,6 +29,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Scripting/ScriptFields.h>
 #include <map>
 
+#include <Properties.h>
+
 constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
@@ -131,6 +133,30 @@ struct Tag : Object
 	std::string name;
 };
 
+
+//example of LIONant reflection
+
+//struct test1 : property::base
+//{
+//	int             m_Int{ 0 };
+//	float           m_Float{ 0 };
+//	bool            m_Bool{ 0 };
+//	std::string     m_String{};
+//	oobb            m_OOBB{ 0 };
+//
+//	property_vtable()           // Allows the base class to get these properties  
+//};
+//
+//property_begin(test1)
+//{
+//	property_var(m_Int)
+//		, property_var(m_Float)
+//		, property_var(m_String)
+//		, property_var(m_Bool)
+//		, property_var(m_OOBB)
+//} property_vend_h(test1)
+
+
 struct Transform : Object
 {
 	Vector3 scale{ 1 };
@@ -145,7 +171,7 @@ struct Transform : Object
 	}
 
 	bool isChild() {
-		if (parent)
+		if (parent != nullptr)
 			return true;
 		else
 			return false;
@@ -166,7 +192,8 @@ struct Transform : Object
 	}
 
 	glm::mat4 GetLocalMatrix() const {
-		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		glm::mat4 rot = glm::toMat4(glm::quat());
+		
 		return glm::translate(glm::mat4(1.0f), translation) *
 			rot *
 			glm::scale(glm::mat4(1.0f), scale);
@@ -222,31 +249,65 @@ struct Transform : Object
 		// Erase the found element
 		child.erase(it);
 	}
+
+	property_vtable();
+
 };
+
+
+property_begin_name(Transform, "Transform") {
+	property_var(scale.x), property_var(scale.y), property_var(scale.z)
+		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
+		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
+} property_vend_h(Transform)
 
 struct AudioSource : Object
 {
 	bool loop = false;
 	float volume = 1.0f;
+	property_vtable();
 };
+
+property_begin_name(AudioSource, "Audio Source") {
+		property_var(loop)
+		,property_var(volume)
+} property_vend_h(AudioSource)
 
 struct BoxCollider : Object
 {
 	float x = 1.0f;
 	float y = 1.0f; 
 	float z = 1.0f; 
+	property_vtable();
 };
+
+property_begin_name(BoxCollider, "BoxCollider") {
+	property_var(x)
+		, property_var(y)
+		, property_var(z)
+} property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
 {
 	float radius = 1.0f; 
+	property_vtable();
 };
+
+property_begin_name(SphereCollider, "SphereCollider") {
+	property_var(radius)
+} property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
 {
 	float height = 1.0f; 
 	float radius = 1.0f; 
+	property_vtable();
 };
+
+property_begin_name(CapsuleCollider, "CapsuleCollider") {
+	property_var(height)
+		, property_var(radius)
+} property_vend_h(CapsuleCollider)
 
 struct Animator : Object
 {
@@ -269,36 +330,80 @@ struct Rigidbody : Object
 	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	property_vtable();
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
+property_begin_name(Rigidbody, "Rigidbody") {
+
+	property_var(linearVelocity.x), property_var(linearVelocity.y), property_var(linearVelocity.z)
+		, property_var(angularVelocity.x), property_var(angularVelocity.y), property_var(angularVelocity.z)
+		, property_var(force.x), property_var(force.y), property_var(force.z)
+		, property_var(friction)
+		, property_var(mass)
+		, property_var(isStatic)
+		, property_var(isKinematic)
+		, property_var(useGravity)
+		, property_var(is_enabled)
+		, property_var(is_trigger)
+} property_vend_h(Rigidbody)
+
 struct CharacterController : Object
 {
-	bool is_enabled = true;
+
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	property_vtable();
 	//JPH::BodyID CharacterBodyID;
 };
+
+property_begin_name(CharacterController, "CharacterController") {
+	property_var(velocity.x), property_var(velocity.y), property_var(velocity.z)
+		, property_var(force.x), property_var(force.y), property_var(force.z)
+		, property_var(friction)
+		, property_var(mass)
+		, property_var(gravityFactor)
+		, property_var(slopeLimit)
+} property_vend_h(CharacterController)
 
 struct Script : Object
 {
 	std::string name;
 	std::map<std::string, Field> fields;
+	property_vtable();
 };
+
+property_begin_name(Script, "Script") {
+	property_var(name)
+		//, property_var(fields)
+} property_vend_h(Script)
 
 struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
+	property_vtable();
 };
+
+property_begin_name(MeshRenderer, "MeshRenderer") {
+	property_var(MeshName)
+		//, property_var(fields)
+} property_vend_h(MeshRenderer)
 
 struct LightSource : Object
 {
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	property_vtable()
 };
+
+property_begin_name(LightSource, "LightSource") {
+	property_var(lightingColor.x), property_var(lightingColor.y), property_var(lightingColor.z)
+		//, property_var(fields)
+} property_vend_h(LightSource)
+
 #pragma endregion
 
 

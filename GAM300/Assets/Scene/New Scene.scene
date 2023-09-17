@@ -1,0 +1,22 @@
+Scene: New Scene
+Entities:
+  - GameObject:
+      m_UUID: 5562602682880084682
+      m_IsActive: true
+      m_Name: New GameObject(2)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 0
+  - GameObject:
+      m_UUID: 5880685172933857078
+      m_IsActive: true
+      m_Name: New GameObject(1)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 0

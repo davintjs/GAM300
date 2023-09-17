@@ -16,6 +16,7 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
+
 	if (loadedScenes.empty())
 	{
 		CreateScene();

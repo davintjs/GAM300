@@ -122,6 +122,11 @@ void EditorMenuBar::NewScene()
     //New Scene
     CreateSceneEvent createScene(nullptr);
     EVENTS.Publish(&createScene);
+
+    EditorHierarchy::Instance().ClearLayer();
+    // Load this new scene if there was a previously loaded one
+    SceneChangingEvent changeScene(*createScene.scene);
+    EVENTS.Publish(&changeScene);
 }
 
 void EditorMenuBar::SaveScene()
