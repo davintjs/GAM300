@@ -53,21 +53,25 @@ void EditorScene::Update(float dt)
         ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
         ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
 
-        float buttonWidth = 24.f;
-        ImVec2 btn = ImVec2(buttonWidth, ImGui::GetContentRegionAvail().y * 0.8f);
+        float buttonSize = 20.f;
+        ImVec2 btn = ImVec2(buttonSize, buttonSize);
+
         ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
         {
             GizmoType = ImGuizmo::UNIVERSAL;
         }
-        ImGui::SameLine(); if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("W", btn) 
+            || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("E", btn) || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("E", btn)
+            || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
         {
             GizmoType = ImGuizmo::ROTATE;
         }
-        ImGui::SameLine(); if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        ImGui::SameLine(); if (ImGui::Button("R", btn) 
+            || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
         }
@@ -153,25 +157,17 @@ void EditorScene::Update(float dt)
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
         Entity* pEntity = EDITOR.GetSelectedEntity();
-        if (pEntity != nullptr)
+        Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+        if (pEntity != nullptr && pEntity->pScene == &currentScene)
         {
-            Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-
-            Transform& trans = currentScene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(pEntity->denseIndex);
+            Transform& trans = currentScene.GetComponent<Transform>(*pEntity);
             for (int i = 0; i < 3; ++i)
             {
                 if (fabs(trans.scale[i]) < 0.001f)
                     trans.scale[i] = 0.001f;
             }
 
-            glm::vec4 translate = { trans.translation,0.f };
-            
-            glm::vec4 rotation = { trans.rotation,0.f };
-            glm::vec4 scale = { trans.scale,0.f };
-
             glm::mat4 transform_1 = trans.GetWorldMatrix();
-            //ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(translate),
-            //    glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform_1));
 
             ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
                 (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
@@ -179,23 +175,17 @@ void EditorScene::Update(float dt)
             if (ImGuizmo::IsUsing())
             {
                 EditorCam.canMove = false;
-                //glm::vec4 After_Translate;
-                //glm::vec4 After_Scale;
-                //glm::vec4 After_Rotation;
-                //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), glm::value_ptr(After_Translate),
-                //    glm::value_ptr(After_Rotation), glm::value_ptr(After_Scale));
-
+                if (trans.parent)
+                {
+                    glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
+                    transform_1 = glm::inverse(parentTransform) * transform_1;
+                }
                 glm::vec3 a_translation;
                 glm::quat a_rot;
                 glm::vec3 a_scale;
                 glm::vec3 a_skew;
                 glm::vec4 a_perspective;
                 glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
-              
-                //translate_after.x - tc.position.x;
-                //tc.localPosition = Orion::Math::Vec3(translate_after.x, translate_after.y, tc.position.z);
-                //tc.localPosition = Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, tc.position.z);
-                //tc.localPosition += Orion::Math::Vec3(translate_after.x - tc.position.x, translate_after.y - tc.position.y, 0);
 
                 trans.translation = a_translation;
                 trans.rotation = glm::eulerAngles(a_rot);

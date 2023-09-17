@@ -348,6 +348,7 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 void AssetManager::FileAddProtocol()
 {
 	std::string subFilePath{};
+	ACQUIRE_SCOPED_LOCK("Assets");
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		subFilePath = dir.path().generic_string();
@@ -491,6 +492,10 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 {
 	namespace fs = std::filesystem;
 	fs::path filePath{ pEvent->filePath};
+	if (filePath.empty())
+	{
+		PRINT("EMPTY!\n");
+	}
 
 	if (filePath.extension() == ".meta")
 		return;
@@ -536,7 +541,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		default:
 		{
-			PRINT("UNDEFINED ");
+			//PRINT("UNDEFINED ");
 			break;
 		}
 
