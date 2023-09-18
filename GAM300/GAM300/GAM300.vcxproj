@@ -41,6 +41,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Debugging\DemoSystem.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -212,6 +216,10 @@
     <ClInclude Include="Source\Core\SystemsGroup.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Debugging\Debugger.h" />
+    <ClInclude Include="Source\Debugging\DemoSystem.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Scene\Handle.h">
       <SubType>

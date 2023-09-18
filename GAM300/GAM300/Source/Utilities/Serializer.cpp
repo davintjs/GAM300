@@ -65,7 +65,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "m_UUID" << YAML::Key << _entity.uuid;
+    out << YAML::Key << "m_EUID" << YAML::Key << _entity.euid;
     out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
@@ -85,7 +85,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
 
         if (component.parent)
-            out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).uuid;
+            out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).euid;
         else
             out << YAML::Key << "m_Parent" << YAML::Value << 0;
     }

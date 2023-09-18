@@ -5,11 +5,13 @@
 #include "Core/EventsManager.h"
 #include "Scene/SceneManager.h"
 
-void EditorHierarchy::Init() {
+void EditorHierarchy::Init() 
+{
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackClearEntities);
+	EVENTS.Subscribe(this, &EditorHierarchy::CallbackAddEntity);
 }
 
 void EditorHierarchy::ClearLayer()
@@ -293,6 +295,11 @@ void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 void EditorHierarchy::CallbackClearEntities(ClearEntitiesEvent* pEvent)
 {
 	ClearLayer();
+}
+
+void EditorHierarchy::CallbackAddEntity(ObjectCreatedEvent<Entity>* pEvent)
+{
+	layer.push_back(&pEvent->handle.Get());
 }
 
 void EditorHierarchy::Exit() {

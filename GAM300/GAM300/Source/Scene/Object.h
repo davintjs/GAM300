@@ -6,8 +6,9 @@
 
 struct Object : property::base
 {	
-	Object(Engine::UUID _uuid = Engine::CreateUUID());
-	const Engine::UUID uuid;
+	Object(Engine::UUID _euid = Engine::CreateUUID(), Engine::UUID _uuid = Engine::CreateUUID());
+	const Engine::UUID euid;	// Entity unique id
+	const Engine::UUID uuid;	// Unique identifier for each component
 	property_vtable();
 };
 

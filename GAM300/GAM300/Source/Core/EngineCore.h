@@ -41,6 +41,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/Debugger.h"
 #include "Scripting/LogicSystem.h"
 #include "SystemsGroup.h"
+#include "Debugging/DemoSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 2.f;
@@ -67,7 +68,8 @@ enum class EngineState
 		GraphicsSystem,
 		Blackboard,
 		BehaviorTreeBuilder,
-		AssetManager
+		AssetManager,
+		DemoSystem
 	>;
 #endif
 

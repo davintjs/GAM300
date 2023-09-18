@@ -100,20 +100,11 @@ void GraphicsSystem::Init()
 	AffectedByLight.setup_affectedShader();
 
 	// Setting up Positions
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
 	int index = 0;
-	//for (Entity& entity : currentScene.entities) {
-	//	// when looping entity, sort out the properties,
-	//	// count the instance 
-
-
-	//	entitySRT[index] = glm::mat4(1.f);
-	//	++index;
-	//}
 
 	// for each mesh, it gets its own buffers and set up
 	/*
