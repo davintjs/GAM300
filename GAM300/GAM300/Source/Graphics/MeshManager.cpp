@@ -4,6 +4,9 @@
 
 extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
+// extern InstanceProperties properties[EntityRenderLimit];
+extern std::vector <Materials> temp_MaterialContainer;
+
 
 void MESH_Manager::Init()
 {
@@ -21,7 +24,6 @@ void MESH_Manager::Exit()
 {
 	// Loop through the container, clear all the vaoid, vbo and draw count
 
-	
 	mContainer.clear();
 }
 
@@ -30,12 +32,61 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 {
     GeomImported newGeom(std::move(DeserializeGeoms(filePath)));
 
+    std::cout << "I have Materials : " << newGeom._materials.size() << 
+        "from " << filePath << "\n";
+
+    for (int i = 0; i < newGeom._materials.size(); ++i)
+    {
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.g << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.b << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.a << "\n";
+        std::cout << "\n\n";
+        std::cout << "Diffuse : " << newGeom._materials[i].Diffuse.r << "\n";
+        std::cout << "Diffuse : " << newGeom._materials[i].Diffuse.g << "\n";
+        std::cout << "Diffuse : " << newGeom._materials[i].Diffuse.b << "\n";
+        std::cout << "Diffuse : " << newGeom._materials[i].Diffuse.a << "\n";
+        std::cout << "\n\n";
+
+        std::cout << "Specular : " << newGeom._materials[i].Specular.r << "\n";
+        std::cout << "Specular : " << newGeom._materials[i].Specular.g << "\n";
+        std::cout << "Specular : " << newGeom._materials[i].Specular.b << "\n";
+        std::cout << "Specular : " << newGeom._materials[i].Specular.a << "\n";
+        std::cout << "\n\n";
+        Materials temporary;
+        temporary.Albedo = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+        temporary.Diffuse = glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
+            newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a);
+        
+        temporary.Specular = glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
+            newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a);
+
+        temporary.Ambient = glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
+            newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a);
+
+        temp_MaterialContainer.push_back(temporary);
+    }
+
     Mesh newMesh;
     newMesh.index = mContainer.size();
+    glm::vec3 min(FLT_MAX);
+    glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
         std::cout << "ouchie\n";
+        for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
+        {
+            glm::vec3 pos = newGeom.mMeshes[i]._vertices[k].pos;
 
+            min.x = std::min(pos.x, min.x);
+            min.y = std::min(pos.y, min.y);
+            min.z = std::min(pos.z, min.z);
+
+            max.x = std::min(pos.x, max.x);
+            max.y = std::min(pos.y, max.y);
+            max.z = std::min(pos.z, max.z);
+        }
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
@@ -108,6 +159,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties[newName]));
     }
+    newMesh.vertices_min = min;
+    newMesh.vertices_max = max;
+
     mContainer.emplace(fileName, newMesh);
 }
 

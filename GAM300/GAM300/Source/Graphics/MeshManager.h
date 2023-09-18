@@ -24,8 +24,8 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-
 	unsigned int index;
+
 };
 
 

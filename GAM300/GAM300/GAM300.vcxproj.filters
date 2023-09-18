@@ -160,6 +160,7 @@
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Core\SystemsGroup.h" />
     <ClInclude Include="Source\Scene\Handle.h" />
+    <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

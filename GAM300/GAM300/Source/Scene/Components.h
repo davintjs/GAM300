@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
+#include "Graphics/GraphicStructsAndClass.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
@@ -378,6 +379,7 @@ struct Script : Object
 	property_vtable();
 };
 
+
 property_begin_name(Script, "Script") {
 	property_var(name)
 		//, property_var(fields)
@@ -386,6 +388,9 @@ property_begin_name(Script, "Script") {
 struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
+	//Materials mr_Material;
+
+	Materials mr_Material;
 	property_vtable();
 };
 

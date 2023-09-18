@@ -37,8 +37,10 @@ bool SwappingColorSpace = false;
 std::vector<Ray3D> Ray_Container;
 
 
-
 // Naive Solution for now
+
+std::vector <Materials> temp_MaterialContainer;
+
 trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
 LightProperties Lighting_Source;
@@ -115,7 +117,6 @@ void GraphicsSystem::Init()
 void GraphicsSystem::Update(float dt)
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
-	
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	currentScene.singleComponentsArrays.GetArray<Transform>();
@@ -126,6 +127,20 @@ void GraphicsSystem::Update(float dt)
 	float intersected = FLT_MAX;
 	float temp_intersect;
 
+	// Temporary Material thing
+	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
+	temp_MaterialContainer[3].Diffuse = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
+	temp_MaterialContainer[3].Specular = glm::vec4{ 0.5f, 0.5f, 0.5f,1.f };
+	temp_MaterialContainer[3].Ambient = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
+	temp_MaterialContainer[3].Shininess = 32.f;
+
+
+	temp_MaterialContainer[3].Albedo.r = static_cast<float>(sin(glfwGetTime() * 2.0));
+	temp_MaterialContainer[3].Albedo.g = static_cast<float>(sin(glfwGetTime() * 0.7));
+	temp_MaterialContainer[3].Albedo.b = static_cast<float>(sin(glfwGetTime() * 1.3));
+
+
+	// Temporary Light stuff
 	bool haveLight = false;
 	for (LightSource& lightSource : currentScene.GetComponentsArray<LightSource>())
 	{
@@ -140,6 +155,8 @@ void GraphicsSystem::Update(float dt)
 	{
 		Lighting_Source.lightColor = glm::vec3(0.f, 0.f, 0.f);
 	}
+
+	// Update Loop
 	int i = 0;
 
 
@@ -243,7 +260,6 @@ void GraphicsSystem::Update(float dt)
 	//	else
 	//	{
 	//		LightSource.position.y += 10.f;
-
 	//	}
 	//}
 	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
@@ -259,7 +275,6 @@ void GraphicsSystem::Update(float dt)
 	//	else
 	//	{
 	//		LightSource.position.y -= 10.f;
-
 	//	}
 	//}
 
@@ -268,18 +283,16 @@ void GraphicsSystem::Update(float dt)
 	//	LightSource.position.z += 10.f;
 	//}
 
-
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
 		SwappingColorSpace = !SwappingColorSpace;
 		if (SwappingColorSpace)
 		{
 			glEnable(GL_FRAMEBUFFER_SRGB);
-}
+		}
 		else
 		{
 			glDisable(GL_FRAMEBUFFER_SRGB);
-
 		}
 	}
 	
@@ -313,7 +326,7 @@ void GraphicsSystem::Update(float dt)
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 
-	unsigned int prim_count, GLenum prim_type, LightProperties LightSource)
+	unsigned int prim_count, GLenum prim_type, LightProperties LightSource, Materials Mat)
 {
 	
 	
@@ -339,6 +352,22 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	GLint uniform5 =
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
 
+
+	// Material
+	GLint uniform6 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "Albedos");
+	GLint uniform7 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "Specular");
+	GLint uniform8 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "Diffuse");
+	GLint uniform9 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "Ambient");
+	GLint uniform10 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "Shininess");
+
+
+
+
 	// Scuffed SRT
 	// srt not uniform
 	/*GLint uniform3 =
@@ -348,14 +377,26 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getPerspMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getViewMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(EditorCam.GetCameraPosition()));
+
+	// Material
+	glUniform4fv(uniform6, 1,
+		glm::value_ptr(Mat.Albedo));
+	glUniform4fv(uniform7, 1,
+		glm::value_ptr(Mat.Specular));
+	glUniform4fv(uniform8, 1,
+		glm::value_ptr(Mat.Diffuse));
+	glUniform4fv(uniform9, 1,
+		glm::value_ptr(Mat.Ambient));
+	glUniform1f(uniform10,
+		Mat.Shininess);
+
+
 
 
 

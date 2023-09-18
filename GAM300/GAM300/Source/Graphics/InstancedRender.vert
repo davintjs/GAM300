@@ -10,8 +10,9 @@ layout (location = 6) in mat4 SRT;
 
 layout (location = 0) out vec4 vColor;
 
-out vec3 FragmentPos;
-out vec3 Normal;
+layout (location = 1) out vec3 FragmentPos;
+
+layout (location = 2) out vec3 Normal;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
