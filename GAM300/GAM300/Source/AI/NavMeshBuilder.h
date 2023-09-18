@@ -7,12 +7,17 @@
 #include "Triangle3D.h"
 #include "NavMesh.h"
 
-class NavMeshBuilder
+#define NAVMESHBUILDER NavMeshBuilder::Instance()
+
+SINGLETON(NavMeshBuilder)
 {
 public:
-	NavMeshBuilder(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
-	~NavMeshBuilder();
+	NavMeshBuilder() {};
+	~NavMeshBuilder() {};
 
+	void Exit();
+
+	void BuildNavMesh(const std::vector<glm::vec3>&GroundVertices, const std::vector<glm::ivec3>&GroundIndices);
 	NavMesh* CreateNavMesh();
 
 	std::vector<Polygon3D>& GetRegion();
@@ -33,11 +38,11 @@ private:
 	int sign(const T& val);
 	int IsTriangleOrientedClockWise(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& n);
 	bool PointsOnLine(std::vector<glm::vec3> points, const glm::vec3& n);
-	bool isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
 	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
 
 	int mTriCount = 0;
 	Polygon3D* mBoundary;
+	NavMesh* mNavMesh;
 	std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
 	std::vector<Polygon3D> mRegion;
