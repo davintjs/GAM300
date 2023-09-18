@@ -209,7 +209,7 @@ void Display(const char* string)
 
 //This function uses LIONant functionality to serialize and display the component based on its contents (properties)
 template <typename T>
-void Property_Displayer(T& Object) {
+void DisplayProperties(T& Object) {
 
     //Need to manually display Vec3 types as property system does not register vec3 types
     if constexpr (std::is_same<T, Transform>()) {
@@ -247,7 +247,6 @@ void Property_Displayer(T& Object) {
             List.push_back(property::entry { PropertyName, Data });
         });
 
-
     for (auto& [Name, Data] : List)
     {
         if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
@@ -268,10 +267,11 @@ void Property_Displayer(T& Object) {
                 
                 //Display Component value
                 Display<T>(Name.c_str(), Value);
-
+                
             }
         , Data);
         property::set(Object, Name.c_str(), Data);
+        
     }
 
     if constexpr (std::is_same<T, MeshRenderer>()) {
@@ -301,18 +301,16 @@ void Property_Displayer(T& Object) {
 
 }
 
-template <typename T>
-void DisplayComponent(T& component)
-{
-    //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
-    Property_Displayer(component);
-}
-
+//template <typename T>
+//void DisplayComponent(T& component)
+//{
+//    //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
+//}
 ////Cant use reflection system due to glm::vec3
 //template <>
 //void DisplayComponent<Transform>(Transform& transform)
 //{
-//    Property_Displayer(transform);
+//    DisplayProperties(transform);
 //    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
 //    //ImGui::Text("Active");
 //}
@@ -322,7 +320,6 @@ void DisplayComponent(T& component)
 //{
 //    //Display("Bounds", boxCollider2D.bounds);
 //}
-
 //template <>
 //void DisplayComponent<Rigidbody>(Rigidbody& rb)
 //{
@@ -339,7 +336,6 @@ void DisplayComponent(T& component)
 //    Display("Use Gravity", rb.useGravity);
 //    Display("Is Kinematic", rb.isKinematic);
 //}
-
 //template <>
 //void DisplayComponent<Tag>(Tag& tag)
 //{
@@ -353,7 +349,7 @@ void DisplayComponent(T& component)
 //template<>
 //void DisplayComponent<AudioSource>(AudioSource& as) {
 //
-//    Property_Displayer(as);
+//    DisplayProperties(as);
 //    /*
 //    Display(as.getPropertyVTable().m_pName, as.loop);
 //    Display("Volume", as.volume);
@@ -388,7 +384,6 @@ void DisplayComponent(T& component)
 //    ImGui::PopItemWidth();
 //    meshyRendy.MeshName = meshNames[number];
 //}
-
 //template <>
 //void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer)
 //{
@@ -415,7 +410,6 @@ void DisplayComponent(T& component)
 //        spriteRenderer.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
 //    }
 //}
-
 //template <>
 //void DisplayComponent<Text>(Text& text)
 //{
@@ -448,7 +442,6 @@ void DisplayComponent(T& component)
 //    //DisplayDragDrop();
 //    //spriteRenderer.sprite.set_name()
 //}
-
 //template <>
 //void DisplayComponent<Script>(Script& script)
 //{
@@ -654,15 +647,7 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-            DisplayComponent(component);
-
-            //To do: Deletion of component in inspector
-            //ImGui::Spacing();
-            //if (CENTERED_CONTROL(ImGui::Button("Delete ", ImVec2(ImGui::GetWindowSize().x * 0.3, ImGui::GetTextLineHeightWithSpacing()))))
-            //{
-            //    //To do: delete component, get container of all component types and compare,
-            //    PRINT("DELETING");
-            //}
+            DisplayProperties(component);
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -698,13 +683,11 @@ private:
     {
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-        
-
         if constexpr (SingleComponentTypes::Has<T1>()) {
             if (curr_scene.HasComponent<T1>(entity)) {
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
-                {
+                {   
                     auto& component = curr_scene.GetComponent<T1>(entity);
                     DisplayComponentHelper(component);
                 }              
