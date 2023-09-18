@@ -36,6 +36,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <string.h>
 
+std::unordered_map<ScriptingSystem::LogicState, std::string> ScriptingSystem::logicStateNames =
+{
+	{LogicState::AWAKE, "Awake"},
+	{ LogicState::START, "Start" },
+	{ LogicState::UPDATE, "Update" },
+	{ LogicState::LATEUPDATE, "LateUpdate" },
+	{ LogicState::EXIT, "Exit" },
+};
 
 #define SECONDS_TO_RECOMPILE 1.f
 
@@ -191,6 +199,7 @@ void ScriptingSystem::RecompileThreadWork()
 
 void ScriptingSystem::Init()
 {
+	logicState = LogicState::NONE;
 	#ifdef _BUILD
 		SwapDll();
 	#else
@@ -212,7 +221,16 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
-void ScriptingSystem::Update(float dt){}
+void ScriptingSystem::Update(float dt)
+{
+	if (logicState != LogicState::NONE)
+	{
+		while (!ran);
+		ACQUIRE_SCOPED_LOCK(Mono);
+		PRINT("Scripting Ran");
+		ran = false;
+	}
+}
 
 void ScriptingSystem::Exit(){}
 
@@ -360,6 +378,24 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{	
+		{
+			if (logicState != LogicState::NONE)
+			{
+				while (ran);
+				ACQUIRE_SCOPED_LOCK(Mono);
+				if (logicState == LogicState::LATEUPDATE)
+					logicState = static_cast<LogicState>(static_cast<int>(logicState) - 1);
+				else
+					logicState = static_cast<LogicState>(static_cast<int>(logicState) + 1);
+				for (Script& script : MySceneManager.GetCurrentScene().GetComponentsArray<Script>())
+				{
+					InvokeMethod(script,logicStateNames[logicState]);
+				}
+				ran = true;
+				continue;
+			}
+		}
+
 		#ifndef _BUILD
 		//Pause timer when recompiling
 		if (timeUntilRecompile > 0)
@@ -528,20 +564,19 @@ void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mC
 
 void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 {
-	//ACQUIRE_SCOPED_LOCK(Mono);
-	//MonoObject* mNewScript = ReflectScript(script);
-	////PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
-	//E_ASSERT(mNewScript, std::string("MONO OBJECT OF ") + script.name + std::string(" NOT LOADED"));
-	//ScriptClass& scriptClass{ scriptClassMap[script.name] };
-	//MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,method.c_str(),0)};
-	//if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mScript)
-	//{
-	//	mMethod = mono_class_get_method_from_name(mScript, method.c_str(), 0);
-	//	if (!mMethod)
-	//		return;
-	//}
-	//E_ASSERT(mMethod, std::string("MONO METHOD ") + method + std::string(" IN SCRIPT ") + script.name + std::string(" NOT FOUND"));
-	//invoke(mNewScript, mMethod, nullptr);
+	MonoObject* mNewScript = ReflectScript(script);
+	//PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
+	E_ASSERT(mNewScript, std::string("MONO OBJECT OF ") + script.name + std::string(" NOT LOADED"));
+	ScriptClass& scriptClass{ scriptClassMap[script.name] };
+	MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,method.c_str(),0)};
+	if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mScript)
+	{
+		mMethod = mono_class_get_method_from_name(mScript, method.c_str(), 0);
+		if (!mMethod)
+			return;
+	}
+	E_ASSERT(mMethod, std::string("MONO METHOD ") + method + std::string(" IN SCRIPT ") + script.name + std::string(" NOT FOUND"));
+	invoke(mNewScript, mMethod, nullptr);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
@@ -825,7 +860,9 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	while (mAppDomain == nullptr);
+	ACQUIRE_SCOPED_LOCK(Mono);
 	PRINT("SCRIPTING START");
+	logicState = LogicState::AWAKE;
 	//E_ASSERT(mAppDomain,"App domain is not loaded");
 	//inPlayMode = true;
 	//for (uint32_t hand : gcHandles)

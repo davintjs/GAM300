@@ -1,5 +1,5 @@
-[2023-09-18 02:02:38.996] [Error] [critical] 
-Caused By:	mAppDomain
-Info:		App domain is not loaded
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 822)
+[2023-09-18 15:32:43.219] [Error] [critical] 
+Caused By:	mNewScript
+Info:		MONO OBJECT OF Player NOT LOADED
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 557)
 

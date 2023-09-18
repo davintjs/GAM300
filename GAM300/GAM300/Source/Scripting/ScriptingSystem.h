@@ -88,7 +88,7 @@ struct ScriptClass
 
 };
 
-ENGINE_EDITOR_SYSTEM(ScriptingSystem)
+ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
 	/**************************************************************************/
@@ -468,7 +468,6 @@ public:
 
 	MonoImage* GetAssemblyImage();
 
-
 	//DenseIndex
 	using MonoEntities = std::unordered_map<void*, MonoObject*>;
 	using MonoComponents = std::unordered_map<void*, MonoObject*>;
@@ -479,6 +478,22 @@ public:
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
+
+	enum class LogicState
+	{
+		AWAKE,
+		START,
+		UPDATE,
+		LATEUPDATE,
+		EXIT,
+		NONE
+	};
+
+	static std::unordered_map<LogicState, std::string> logicStateNames;
+
+	LogicState logicState;
+
+	bool ran = false;
 };
 
 	/*******************************************************************************

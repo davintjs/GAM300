@@ -8,7 +8,7 @@ public class Player : Script
 
     void Start()
     {
-        Console.WriteLine("HERROOO");
+        Console.WriteLine("HERROOO FROM SCWIPT");
         //rb = GetComponent<Rigidbody>();
     }
 
