@@ -3,7 +3,7 @@
 #include "GraphicsSystem.h"
 
 extern trans_mats SRT_Buffers[50];
-extern InstanceProperties properties[EntityRenderLimit];
+extern std::map<std::string, InstanceProperties> properties;
 
 void MESH_Manager::Init()
 {
@@ -89,12 +89,17 @@ void MESH_Manager::GetGeomFromFiles(const std::string filePath)
         glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
+        InstanceProperties tempProp;
+        tempProp.VAO = VAO;
+        tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
+        properties.emplace(std::pair<std::string, InstanceProperties>(std::string("temporary"), tempProp));
+
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(VAO,newMesh.index) );
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["temporary"]));
     }
     mContainer.emplace(std::string("temporary"), newMesh);
 }
@@ -174,88 +179,38 @@ void MESH_Manager::CreateInstanceCube()
 
 
     float vertices[] = {
-        // positions            // Normals              // Tangents             // Texture Coords   // Colors
-        // FRONT FACE //
-        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+       -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+        1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+        1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+       -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+       -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+        1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+        1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+       -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
 
-         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-        -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-        // FRONT FACE END //                                                                                         
+    };
 
-        // BACK FACE //                                                                                              
-        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-
-         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-        -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-        -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-        // BACK FACE END //                                                                                          
-
-        // RIGHT FACE //                                                                                             
-         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-         1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-
-         1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-         1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-         // RIGHT FACE END //                                                                                         
-
-         // LEFT FACE //                                                                                              
-         -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-         -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-         -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-
-         -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-         -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-         -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-         // LEFT FACE END //                                                                               
-
-         // TOP FACE //                                                                                    
-         -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-          1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-          1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-
-          1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-         -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-         -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-         // TOP FACE END //                                                                                           
-
-         // BOTTOM FACE //                                                                                            
-         -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-          1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-          1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-
-          1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-         -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-         -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f // Vertex 0
-         // BOTTOM FACE END //
-
+    int indices[] = {
+        0, 1, 2, 2, 3, 0,  // Front face
+        4, 5, 6, 6, 7, 4,  // Back face
+        1, 5, 6, 6, 2, 1,  // Right face
+        0, 4, 7, 7, 3, 0,  // Left face
+        3, 2, 6, 6, 7, 3,  // Top face
+        0, 1, 5, 5, 4, 0   // Bottom face
     };
 
     newMesh.vertices_min = glm::vec3(-1.f, -1.f, -1.f);
     newMesh.vertices_max = glm::vec3(1.f, 1.f, 1.f);
-
-    //int indices[] = {
-    //    0, 1, 2, 2, 3, 0,  // Front face
-    //    4, 5, 6, 6, 7, 4,  // Back face
-    //    1, 5, 6, 6, 2, 1,  // Right face
-    //    0, 4, 7, 7, 3, 0,  // Left face
-    //    3, 2, 6, 6, 7, 3,  // Top face
-    //    0, 1, 5, 5, 4, 0   // Bottom face
-    //};
 
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
 
     GLuint vaoid;
     GLuint vboid;
+    GLuint ebo;
     glGenVertexArrays(1, &vaoid);
     glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboid);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -278,32 +233,36 @@ void MESH_Manager::CreateInstanceCube()
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
     glEnableVertexAttribArray(4);
 
-    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+    InstanceProperties tempProp;
+    tempProp.VAO = vaoid;
+    tempProp.drawCount = 36;
+    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(vaoid , newMesh.index));
-   
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["Cube"]));
+
     mContainer.emplace(std::string("Cube"), newMesh);
 }
 
-unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid , unsigned int index) {
-    /**/unsigned int Mesh_SRT_Buffer;
-    glGenBuffers(1, &Mesh_SRT_Buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[index].transformation_mat[0], GL_DYNAMIC_DRAW);
+unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
+    prop.entitySRTbuffer;
+    glGenBuffers(1, &prop.entitySRTbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(prop.entitySRT[0]), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-   /* properties;
-    glGenBuffers(1, &Mesh_SRT_Buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &SRT_Buffers[index].transformation_mat[0], GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 
     //entitySRTBuffer
-    glBindVertexArray(vaoid);
-    glBindBuffer(GL_ARRAY_BUFFER, Mesh_SRT_Buffer);
+    glBindVertexArray(prop.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
     glEnableVertexAttribArray(7);
@@ -319,7 +278,7 @@ unsigned int  MESH_Manager::InstanceSetup(GLuint vaoid , unsigned int index) {
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
 
-    return Mesh_SRT_Buffer;
+    return prop.entitySRTbuffer;
 }
 
 

@@ -10,6 +10,7 @@
 
 #include "Model3d.h"
 
+struct InstanceProperties;
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -77,7 +78,7 @@ private:
 
 	void CreateInstanceCube();
 
-	unsigned int InstanceSetup(GLuint vaoid , unsigned int index);
+	unsigned int InstanceSetup(InstanceProperties& prop);
 
 
 };
