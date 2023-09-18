@@ -220,6 +220,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Scene\Handle.h">
       <SubType>

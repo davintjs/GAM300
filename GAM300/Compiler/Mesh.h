@@ -61,6 +61,7 @@ struct Material
 
         this->textures = rhs.textures;
     }
+
     Material(Material&& rhs)
     {
         this->Specular = std::move(rhs.Specular);

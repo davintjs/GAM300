@@ -9,7 +9,8 @@
 #include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
-
+#define EntityRenderLimit 200
+#define EnitityInstanceLimit 200
 // Just a wrapper class to hold all these values
 class troll_Geom
 {
@@ -22,6 +23,8 @@ public:
 
 	std::vector<Material> _materials{};
 };
+
+
 
 //tempory model
 struct GeneralModel {
