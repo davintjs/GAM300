@@ -20,12 +20,7 @@
 //Model LightSource;
 
 Model AffectedByLight;
-
-//unsigned int testBoxbuffer;
-//Model testBox;
-
-//unsigned int entitySRTBuffer;
-//glm::mat4 entitySRT[EntityRenderLimit];
+bool haveTexture = false;
 Model Line;
 
 std::map<std::string, InstanceProperties> properties;
@@ -75,7 +70,28 @@ void GraphicsSystem::Init()
 		std::exit(EXIT_FAILURE);
 	}
 
-
+	/*Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	unsigned int textureCount = 0;
+	bool skip = false;
+	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>()) {
+		Entity& entity = currentScene.GetEntity(renderer);
+		std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
+		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
+		for (int j = 0; j <= textureCount; ++j) {
+			if (properties[renderer.MeshName].texture[j] == texID) {
+				skip = true;
+			}
+		}
+		if (skip) {
+			skip = false;
+			continue;
+		}
+		if (textureCount >= 31) {
+			PRINT("TOO MANY TEXTURE IN THIS GEOM!!");
+			break;
+		}
+		properties[renderer.MeshName].texture[textureCount++] = texID;
+	}*/
 
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
@@ -157,8 +173,19 @@ void GraphicsSystem::Update(float dt)
 		
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
-
-
+		/*std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
+		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
+		for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
+			if (properties[renderer.MeshName].texture[j] == texID) {
+				haveTexture = true;
+			}
+		}
+		if (!haveTexture) {
+			if (properties[renderer.MeshName].textureCount < 32) {
+				properties[renderer.MeshName].texture[properties[renderer.MeshName].textureCount++] = texID;
+			}
+		}
+		haveTexture = false;*/
 		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter++] = transform.GetWorldMatrix();
 		char maxcount = 32;
 		// newstring
@@ -170,7 +197,18 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
-			//std::cout << newName << "\n";
+
+			/*for (int j = 0; j <= properties[newName].textureCount; ++j) {
+				if (properties[newName].texture[j] == texID) {
+					haveTexture = true;
+				}
+			}
+			if (!haveTexture) {
+				if (properties[newName].textureCount < 32) {
+					properties[newName].texture[properties[newName].textureCount++] = texID;
+				}
+			}*/
+
 			properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
 		}
 		++i;
@@ -374,6 +412,11 @@ void GraphicsSystem::Draw() {
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
+		/*for (size_t i = 0; i < 32; i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, texIndex[i]);
+		}*/
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

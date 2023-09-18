@@ -32,10 +32,17 @@ static unsigned int InstancePropertyCount = 1;
 
 struct InstanceProperties
 {
+	// instanced stuff
 	unsigned int VAO;
-	// rmb to convert everything to AOS
-	unsigned int entitySRTbuffer;
-	glm::mat4 entitySRT[EnitityInstanceLimit];
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
+	unsigned int texture[32];// max 32 dds only
+	unsigned int textureCount = 0;
+	// buffers and corresponding arrays
+	unsigned int entitySRTbuffer;
+	glm::mat4 entitySRT[EnitityInstanceLimit];
+
+	unsigned int textureIndexBuffer;
+	unsigned int textureIndex[EnitityInstanceLimit];
+	
 };
