@@ -6,8 +6,8 @@
 class NavMesh
 {
 public:
-	NavMesh(std::vector<Triangle3D> mTri);
-	~NavMesh();
+	NavMesh(std::vector<Triangle3D> mTri) : mTriangles(mTri) {};
+	~NavMesh() {};
 
 	void LinkAllTriangles();
 
