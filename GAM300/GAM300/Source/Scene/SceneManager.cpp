@@ -21,21 +21,21 @@ void SceneManager::Init()
 	{
 		CreateScene();
 		Scene& scene = GetCurrentScene();
-
-		Entity& titty = scene.AddEntity();
+		Handle<Entity>& entHandle = scene.AddEntity();
+		Entity& titty = entHandle.Get();
 		MeshRenderer& titrender = scene.AddComponent<MeshRenderer>(titty);
-		titrender.MeshName = "temporary";
+		//titrender.MeshName = "Skull_textured";
+		titrender.MeshName = "Eyebot2";
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
 		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(1.f, 1.f, 1.f);
 
 		// test instance rendering
 		for (int i = 0; i < 5; ++i)
 		{
-			Entity& tempent = scene.AddEntity();
-			MeshRenderer& renderer = scene.AddComponent<MeshRenderer>(tempent);
-			renderer.MeshName = "Cube";
 			Handle<Entity>& entHandle = scene.AddEntity();
 			Entity& tempent = entHandle.Get();
+			MeshRenderer& renderer = scene.AddComponent<MeshRenderer>(tempent);
+			renderer.MeshName = "Cube";
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
 			scene.AddComponent<MeshRenderer>(tempent);

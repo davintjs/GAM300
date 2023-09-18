@@ -102,8 +102,8 @@ void GraphicsSystem::Init()
 	// Setting up Positions
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	//testmodel.position = glm::vec3(0.f, 0.f, -800.f);
-	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
-	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
+	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
+	//testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
@@ -159,6 +159,17 @@ void GraphicsSystem::Update(float dt)
 
 
 		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter++] = transform.GetWorldMatrix();
+		char maxcount = 32;
+		// newstring
+		for (char namecount = 0; namecount < maxcount; ++namecount) {
+			std::string newName = renderer.MeshName;
+			newName += ('1' + namecount);
+			if (properties.find(newName) == properties.end()) {
+				break;
+			}
+			std::cout << newName << "\n";
+			properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
+		}
 		++i;
 
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
@@ -414,6 +425,25 @@ void GraphicsSystem::Draw() {
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
 
 
+}
+
+bool GraphicsSystem::Raycasting(Ray3D& _ray)
+{
+	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+
+	if (!EditorScene::Instance().UsingGizmos() && !EditorCam.isMoving && InputHandler::isMouseButtonPressed_L())
+	{
+		// Bean: Click within the scene imgui window
+		if (!EditorScene::Instance().WindowHovered())
+			return false;
+
+		_ray = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y,
+			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
+		Ray_Container.push_back(_ray);
+		return true;
+	}
+
+	return false;
 }
 
 void GraphicsSystem::Exit()

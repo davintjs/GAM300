@@ -92,14 +92,21 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
         tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
-        properties.emplace(std::pair<std::string, InstanceProperties>(std::string("temporary"), tempProp));
+        std::string newName = fileName;
+        std::map<std::string, InstanceProperties>::iterator it;
+        it = properties.find(newName);
+        while (it != properties.end()) {
+            newName += ('0' + i);
+            it = properties.find(newName);
+        }
+        properties.emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
 
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["temporary"]));
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties[newName]));
     }
     mContainer.emplace(fileName, newMesh);
 }
@@ -177,7 +184,7 @@ void MESH_Manager::CreateInstanceCube()
     Mesh newMesh;
     newMesh.index = mContainer.size();
 
-
+    // positions            // Normals              // Tangents             // Texture Coords   // Colors
     float vertices[] = {
        -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
         1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
