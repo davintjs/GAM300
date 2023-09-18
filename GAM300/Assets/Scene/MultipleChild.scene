@@ -1,0 +1,61 @@
+Scene: MultipleChild
+Entities:
+  - GameObject:
+      m_UUID: 4547996270276880013
+      m_IsActive: true
+      m_Name: New GameObject(1)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        - {fileID: 18004322137879029134}
+        - {fileID: 15230141262467760670}
+        - {fileID: 5618307876085497225}
+      m_Parent: 0
+      m_Components:
+        - m_BoxCollider:
+            X: 1
+            Y: 1
+            Z: 1
+        - m_Animator:
+            {}
+        - m_MeshRenderer:
+            Name: Cube
+  - GameObject:
+      m_UUID: 5618307876085497225
+      m_IsActive: true
+      m_Name: New GameObject(2)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, -0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 4547996270276880013
+      m_Components:
+        - m_LightSource:
+            lightingColor: [1, 1, 1]
+  - GameObject:
+      m_UUID: 18004322137879029134
+      m_IsActive: true
+      m_Name: New GameObject(3)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, -0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 4547996270276880013
+      m_Components:
+        - m_SphereCollider:
+            Radius: 1
+  - GameObject:
+      m_UUID: 15230141262467760670
+      m_IsActive: true
+      m_Name: New GameObject(4)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, -0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 4547996270276880013
+      m_Components:
+        []

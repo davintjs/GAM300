@@ -36,6 +36,7 @@ public:
 
 private:
 	std::list<Scene> loadedScenes;
+	//Scene* currentScene;
 };
 
 #endif // !SCENE_MANAGER_H

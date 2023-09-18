@@ -81,13 +81,13 @@ namespace BeanFactory
         internal extern static void DestroyGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyComponent(Component component);
+        internal extern static void DestroyComponent(Component component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Object GetComponent(GameObject gameObject, Type componentType);
+        internal extern static Component GetComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static GameObject GetGameObject(Object gameObject);
@@ -105,50 +105,6 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
 
         internal extern static Transform GetTransformFromComponent(Object component, Type componentType);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetTranslation(ulong ID, out Vector3 translation);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTranslation(ulong ID, ref Vector3 translation);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetRotation(ulong ID, out Vector3 translation);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetRotation(ulong ID, ref Vector3 translation);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetParent(ulong newParentID, ulong childID);
-        #endregion
-
-        #region RIGIDBODY2D
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void RigidbodyAddForce(ulong ID, ref Vector2 force);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void RigidbodyGetVelocity(ulong entIDityID, out Vector2 velocity);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void RigidbodySetVelocity(ulong ID, ref Vector2 velocity);
-        #endregion
-
-        #region SPRITE_RENDERER
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetSpriteRendererColor(ulong ID, out Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetSpriteRendererColor(ulong ID, ref Color color);
-
-        #endregion
-
-        #region IMAGE
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetImageColor(ulong ID, out Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetImageColor(ulong ID, ref Color color);
 
         #endregion
 
@@ -178,28 +134,6 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioMute(bool mute);
         #endregion	
-
-        #region UI
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetUIInteractable(bool isInteractable);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool GetUIInteractable();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern char GetButtonState(ulong buttonID);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetButtonHoverColor(ulong ID, out Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetButtonHoverColor(ulong ID, ref Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetButtonClickedColor(ulong ID, out Color color);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetButtonClickedColor(ulong ID, ref Color color);
-        #endregion
 
         #region INPUT
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -234,9 +168,6 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetUICallback(string funcName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void QuitGame();

@@ -57,6 +57,10 @@
     <ClCompile Include="Source\Editor\EditorToolBar.cpp" />
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
     <ClCompile Include="Source\Editor\EditorDebugger.cpp" />
+    <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
+    <ClCompile Include="Source\AI\Polygon.cpp" />
+    <ClCompile Include="Source\AI\Triangle3D.cpp" />
+    <ClCompile Include="Source\AI\NavMesh.cpp" />
     <ClCompile Include="Source\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Source\Utilities\Serializer.cpp" />
     <ClCompile Include="Source\Utilities\YAMLUtils.cpp" />
@@ -79,6 +83,9 @@
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
+    <ClCompile Include="Source\Scene\Handle.cpp" />
+    <ClCompile Include="Source\Scene\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -135,6 +142,10 @@
     <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
+    <ClInclude Include="Source\AI\NavMeshBuilder.h" />
+    <ClInclude Include="Source\AI\Polygon.h" />
+    <ClInclude Include="Source\AI\Triangle3D.h" />
+    <ClInclude Include="Source\AI\NavMesh.h" />
     <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Utilities\Serializer.h" />
     <ClInclude Include="Source\Utilities\YAMLUtils.h" />
@@ -146,6 +157,9 @@
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Scene\Object.h" />
+    <ClInclude Include="Source\Core\SystemsGroup.h" />
+    <ClInclude Include="Source\Scene\Handle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

@@ -101,9 +101,10 @@ public:
 
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
-	Entity* ActiveObj{ nullptr };
+	//Entity* ActiveObj{ nullptr };
 
 	bool canMove = true;
+	bool isMoving = false;
 private:
 
 	glm::vec2 viewport{ 1600.f,900.f };

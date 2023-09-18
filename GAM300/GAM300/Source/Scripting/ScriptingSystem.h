@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Core\SystemInterface.h"
 #include <Core/events.h>
-#include <Scripting/ScriptFields.h>
+#include <Scene/Components.h>
 
 #include <string>
 #include <unordered_map>
@@ -56,9 +56,9 @@ static std::unordered_map<std::string, FieldType> fieldTypeMap =
 	{ "System.UInt32",				FieldType::UInt			},
 	{ "System.UInt64",				FieldType::ULong		},
 	{ "System.String",				FieldType::String		},
-	{ "CopiumEngine.Vector2",		FieldType::Vector2		},
-	{ "CopiumEngine.Vector3",		FieldType::Vector3		},
-	{ "CopiumEngine.GameObject",	FieldType::GameObject	},
+	{ "BeanFactory.Vector2",		FieldType::Vector2		},
+	{ "BeanFactory.Vector3",		FieldType::Vector3		},
+	{ "BeanFactory.GameObject",		FieldType::GameObject	},
 };
 
 

@@ -16,6 +16,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include "Scene/Handle.h"
+
 struct Entity;
 struct Scene;
 
@@ -71,6 +73,12 @@ struct SceneChangingEvent : IEvent
 	Scene& scene;
 	std::string filePath;
 };
+
+struct ClearEntitiesEvent: IEvent
+{
+	ClearEntitiesEvent() {};
+};
+
 //template <typename T>
 //struct ReflectComponentEvent : IEvent
 //{
@@ -106,8 +114,15 @@ struct SceneStopEvent : IEvent {};
 
 struct SelectedEntityEvent : IEvent
 {
-	SelectedEntityEvent(Entity* _pEntity) : pEntity{_pEntity}{}
-	Entity* pEntity;
+	SelectedEntityEvent(Handle<Entity>& _handle) : handle{ _handle }{}
+	Handle<Entity>& handle;
+};
+
+template <typename T>
+struct ObjectCreatedEvent : IEvent
+{
+	ObjectCreatedEvent(Handle<T>& _handle) : handle{ _handle } {}
+	Handle<T>& handle;
 };
 
 //struct GetCurrentSceneEvent

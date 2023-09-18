@@ -46,12 +46,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v);
 namespace YAML
 {
     template<>
-    struct convert<Transform>
-    {
-        
-    };
-
-    template<>
     struct convert<glm::vec2>
     {
         static Node encode(const glm::vec2& rhs)

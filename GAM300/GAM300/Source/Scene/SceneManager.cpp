@@ -16,11 +16,11 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
 
+
 	if (loadedScenes.empty())
 	{
 		CreateScene();
 		Scene& scene = GetCurrentScene();
-		scene.AddEntity();
 
 		Entity& titty = scene.AddEntity();
 		MeshRenderer& titrender = scene.AddComponent<MeshRenderer>(titty);
@@ -34,10 +34,41 @@ void SceneManager::Init()
 			Entity& tempent = scene.AddEntity();
 			MeshRenderer& renderer = scene.AddComponent<MeshRenderer>(tempent);
 			renderer.MeshName = "Cube";
+			Handle<Entity>& entHandle = scene.AddEntity();
+			Entity& tempent = entHandle.Get();
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
 			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+			scene.AddComponent<MeshRenderer>(tempent);
 		}
-		scene.AddComponent<Script>(0).name = "Player";
+		scene.AddComponent<Script>(scene.entities[0]).name = "Player";
+		scene.AddComponent<Rigidbody>(scene.entities[0]);
+		Entity& box = scene.AddEntity().Get();
+		scene.AddComponent<MeshRenderer>(box);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+
+		Entity& box2 = scene.AddEntity().Get();
+		scene.AddComponent<MeshRenderer>(box2);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
+		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+
+		Entity& lightsource = scene.AddEntity().Get();
+		scene.AddComponent<LightSource>(lightsource);
+
+		//scene.AddEntity();
+
+		//Entity& titty = scene.AddEntity();
+		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
+		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
+
+		//// test instance rendering
+		//for (int i = 0; i < 5; ++i)
+		//{
+		//	Entity& tempent = scene.AddEntity();
+		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
+		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+		//}
+		//scene.AddComponent<Script>(0).name = "Player";
 	}
 }
 
@@ -52,38 +83,25 @@ void SceneManager::CreateScene()
 		std::cout << "Warning Duplicate Scene!\n";
 		return;
 	}
-	EditorHierarchy::Instance().ClearLayer();
+
 	loadedScenes.emplace_front(filePath);
 }
 
 void SceneManager::LoadScene(const std::string& _filePath)
 {
+	// Bean: Next time check if the scene has already been loaded
+
+
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	
-	/*Entity& titty = scene.AddEntity();
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);*/
-
-	/*scene.AddEntity();
-	scene.AddEntity();
-	scene.AddEntiity();ty();
-	scene.AddEnt
-	scene.AddEntity();*/
-
-	//// test instance rendering
-	//for (int i = 0; i < 5; ++i) {
-	//	Entity& tempent = scene.AddEntity();
-	//	scene.AddComponent<MeshRenderer>(tempent);
-	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand()%1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-	//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-	//}
-	/*if (!DeserializeScene(scene))
+	if (!DeserializeScene(scene))
 	{
 		std::cout << "Error loading scene!\n";
 		return;
 	}
-	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";*/
+
+	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
 }
 
 bool SceneManager::SaveScene(const std::string& _filePath)
@@ -99,7 +117,6 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 	std::cout << "Saving Scene...\n";
 	Scene& currentScene = GetCurrentScene();
 	std::string filePath;
-
 
 	// If there is a specific file path
 	if (!_filePath.empty())
@@ -130,7 +147,7 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 void SceneManager::ChangeScene(Scene& _newScene)
 {
 	// Bean: Prompt to save current scene (save for now)
-	SaveScene(GetCurrentScene().filePath.string());
+	//SaveScene(GetCurrentScene().filePath.string());
 
 	LoadScene(_newScene.filePath.string().c_str());
 }
@@ -175,12 +192,22 @@ void SceneManager::Update(float dt)
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
 {
+	// Bean: prompt to save current scene first
+
+	ClearEntitiesEvent clearEntitiesEvent;
+	EVENTS.Publish(&clearEntitiesEvent);
+
 	CreateScene();
 	pEvent->scene = &GetCurrentScene();
 }
 
 void SceneManager::CallbackLoadScene(LoadSceneEvent* pEvent)
 {
+	// Bean: prompt to save current scene first if havent done so
+
+	ClearEntitiesEvent clearEntitiesEvent;
+	EVENTS.Publish(&clearEntitiesEvent);
+
 	LoadScene(pEvent->filePath);
 }
 

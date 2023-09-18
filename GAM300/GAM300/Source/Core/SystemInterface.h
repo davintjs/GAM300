@@ -114,39 +114,26 @@ enum SystemMode
 /**************************************************************************/
 class ISystem
 {
-    public:
-        /**************************************************************************/
-        /*!
-            \brief
-                Runs when engine starts
-        */
-        /**************************************************************************/
-        virtual void Init() = 0;
-        /**************************************************************************/
-        /*!
-            \brief
-                Runs every frame of the engine
-        */
-        /**************************************************************************/
-        virtual void Update(float dt) = 0;
-        /**************************************************************************/
-        /*!
-            \brief
-                Run when the engine exits
-        */
-        /**************************************************************************/
-        virtual void Exit() = 0;
-
-        virtual SystemMode GetMode() const {return ENUM_SYSTEM_ALL;}
+    /**************************************************************************/
+    /*!
+        \brief
+            Runs every frame of the engine
+    */
+    /**************************************************************************/
+public:
+    virtual void Update(float dt) = 0;
+    virtual SystemMode GetMode() const {return ENUM_SYSTEM_ALL;}
 };
 
 class IRuntimeSystem : public ISystem
 {
+public:
     virtual SystemMode GetMode() const{return ENUM_SYSTEM_RUNTIME;}
 };
 
 class IEditorSystem : public ISystem
 {
+public:
     virtual SystemMode GetMode() const{ return ENUM_SYSTEM_EDITOR; }
 };
 

@@ -33,7 +33,8 @@ void EditorToolBar::Init()
 }
 
 
-
+static bool scene_playing = false;
+static bool scene_paused = false;
 
 void EditorToolBar::Update(float dt)
 {
@@ -60,9 +61,16 @@ void EditorToolBar::Update(float dt)
     width += buttonSize.x;
     AlignForWidth(width);
 
-    ImGui::Button("Play", buttonSize);
+    std::string play_status = (scene_playing ? "Stop" : "Play"); 
+    if (ImGui::Button(play_status.c_str(), buttonSize)) {
+        scene_playing = scene_playing ? false : true;
+    }
+
     ImGui::SameLine();
-    ImGui::Button("Pause", buttonSize); // Fixed size
+    std::string pause_status = (scene_paused ? "Resume" : "Pause");
+    if (ImGui::Button(pause_status.c_str(), buttonSize)) {
+        scene_paused = scene_paused ? false : true;
+    }
     
     ImGui::End();
 }

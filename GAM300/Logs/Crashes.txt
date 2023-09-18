@@ -1,5 +1,5 @@
-[2023-09-11 15:10:16.705] [Error] [critical] 
-Caused By:	mComponent
-Info:		MonoObject was null
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 575)
+[2023-09-17 14:43:04.021] [Error] [critical] 
+Caused By:	singleHandles.HasHandle<T>(uuid)
+Info:		UUID:  0  of  Entity  doesn't exist in this scene
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 204)
 

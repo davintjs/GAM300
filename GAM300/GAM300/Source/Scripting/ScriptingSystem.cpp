@@ -39,6 +39,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define SECONDS_TO_RECOMPILE 1.f
 
+#define TEXT_BUFFER_SIZE 2048
+
 namespace
 {
 	MonoDomain* mRootDomain{ nullptr };		//JIT RUNTIME DOMAIN
@@ -47,7 +49,6 @@ namespace
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mGameObject{ nullptr };
 	MonoClass* mScript{ nullptr };
-	MonoClass* mCollision2D{ nullptr };
 	MonoClass* mScriptableObject{};
 }
 
@@ -95,33 +96,21 @@ namespace Utils
 		return assembly;
 	}
 
-	FieldType monoTypeToFieldType(MonoType* monoType)
+	size_t monoTypeToFieldType(MonoType* monoType)
 	{
-		//std::string typeName = mono_type_get_name_full(monoType, MONO_TYPE_NAME_FORMAT_FULL_NAME);
-		//auto it = fieldTypeMap.find(typeName);
-		//if (it == fieldTypeMap.end())
-		//{
-		//	if (typeName.find_first_of("CopiumEngine.") == 0)
-		//	{
-		//		std::string componentName = typeName.substr(typeName.find_last_of('.') + 1);
-
-		//		if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
-		//			return (FieldType)ComponentType::Script;
-		//		auto iter{ NAME_TO_CTYPE.find(componentName) };
-		//		if (iter == NAME_TO_CTYPE.end())
-		//		{
-		//			return FieldType::None;
-		//		}
-		//		//PRINT(componentName << " is a component");
-		//		return (FieldType)iter->second;
-		//	}
-		//	if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mCopiumScript)
-		//		return (FieldType)ComponentType::Script;
-		//	//PRINT(typeName << "is none type");
-		//	return FieldType::None;
-		//}
-		//return it->second;
-		return FieldType::None;
+		std::string typeName = mono_type_get_name_full(monoType, MONO_TYPE_NAME_FORMAT_FULL_NAME);
+		auto it = fieldTypeMap.find(typeName);
+		if (it == fieldTypeMap.end())
+		{
+			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mScript)
+				return GetComponentType::E<Script>();
+			auto iter{ monoComponentToType.find(monoType) };
+			if (iter == monoComponentToType.end())
+				return (size_t)FieldType::None;
+			else
+				return iter->second;
+		}
+		return (size_t)it->second;
 	}
 }
 
@@ -145,9 +134,9 @@ namespace Utils
 			if (flags & FIELD_ATTRIBUTE_PUBLIC)
 			{
 				MonoType* type = mono_field_get_type(field);
-				FieldType fieldType = Utils::monoTypeToFieldType(type);
+				size_t fieldType = Utils::monoTypeToFieldType(type);
 				//PRINT(mono_type_get_name(type) << (int)fieldType);
-				if (fieldType != FieldType::None)
+				if (fieldType != static_cast<size_t>(FieldType::None))
 				{
 					mFields[fieldName] = field;
 				}
@@ -412,9 +401,9 @@ void ScriptingSystem::SwapDll()
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 	mGameObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "GameObject");
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
-	mCollision2D = mono_class_from_name(mAssemblyImage, "BeanFactory", "Collision2D");
 	mScriptableObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "ScriptableObject");
 	UpdateScriptClasses();
+	RegisterComponents();
 	ReflectAll();
 	compilingState = CompilingState::Wait;
 }
@@ -475,7 +464,7 @@ MonoString* ScriptingSystem::CreateMonoString(const char* str)
 
 void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 {
-	if (field.fType == FieldType::String)
+	if (field.fType == (size_t)FieldType::String)
 	{
 		MonoString* mono_string = CreateMonoString("");
 		mono_field_get_value(instance, mClassFiend, &mono_string);
@@ -493,7 +482,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	field = value;
 	//If its a string, its a C# string so create one
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
-	if (field.fType == FieldType::String)
+	if (field.fType == (size_t)FieldType::String)
 	{
 		MonoString* mono_string = CreateMonoString(reinterpret_cast<const char*>(value));
 		mono_field_set_value(instance, mClassFiend, mono_string);
@@ -514,14 +503,16 @@ void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mC
 		return;
 	}
 	//ZACH: Trying to set a component reference
-	if constexpr (AllComponentTypes::Has<T>())
+	if constexpr (AllComponentTypes::Has<T>() || std::is_same<T, Entity>())
 	{
-		//mono_field_set_value(instance, mClassFiend, ReflectComponent(*reference));
-	}
-	//ZACH: Trying to set a gameobject reference
-	else if  constexpr (std::is_same<T,Entity>())
-	{
-		//mono_field_set_value(instance, mClassFiend, ReflectEntity(*reference));
+		if constexpr (std::is_same<T, Script>())
+		{
+			mono_field_set_value(instance, mClassFiend, ReflectScript(*reference));
+		}
+		else
+		{
+			mono_field_set_value(instance, mClassFiend, reference);
+		}
 	}
 }
 
@@ -573,9 +564,9 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 		mComponents.emplace(&component, instance);
 		//Check fields, dont remove fields, but change them if their type is different
 
-		std::list<std::string> validFieldNames{};
+		//std::list<std::string> validFieldNames{};
 
-		//for (auto& pair : component.fieldDataReferences)
+		//for (auto& pair : component.fields)
 		//{
 		//	validFieldNames.push_back(pair.first);
 		//}
@@ -586,26 +577,26 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 		//{
 		//	MonoClassField* mField = pair.second;
 		//	MonoType* type = mono_field_get_type(mField);
-		//	FieldType fieldType = Utils::monoTypeToFieldType(type);
+		//	size_t fieldType = Utils::monoTypeToFieldType(type);
 		//	const char* fieldName = pair.first.c_str();
 		//	std::string typeName = mono_type_get_name(type);
 		//	//PRINT(typeName << " " << (int)fieldType);
-		//	auto nameField{ script.fieldDataReferences.find(fieldName) };
+		//	auto nameField{ script.fields.find(fieldName) };
 		//	int alignment{};
 		//	int fieldSize = mono_type_size(type, &alignment);
 		//	//POINTER
-		//	if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
+		//	if (fieldType < AllComponentTypes::Size() || fieldType == (size_t)FieldType::GameObject)
 		//	{
 		//		fieldSize = sizeof(uint64_t);
 		//	}
-		//	else if(fieldType == FieldType::String)
+		//	else if(fieldType == (size_t)FieldType::String)
 		//	{
 		//		fieldSize = TEXT_BUFFER_SIZE;
 		//	}
 
 
 		//	//Field has not been created onto script yet
-		//	if (nameField == script.fieldDataReferences.end())
+		//	if (nameField == script.fields.end())
 		//	{
 		//		Field newField = Field(fieldType, fieldSize, nullptr);
 		//		size_t offset = typeName.find_last_of(".");
@@ -613,119 +604,126 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 		//			newField.typeName = typeName.substr(offset + 1);
 		//		else
 		//			newField.typeName = typeName;
-		//		if (fieldType == FieldType::Component || fieldType == FieldType::GameObject)
+		//		if (fieldType < AllComponentTypes::Size() || fieldType == (size_t)FieldType::GameObject)
 		//		{
 		//			newField = std::numeric_limits<uint64_t>::max();
 		//		}
 		//		else
 		//		{
-		//			MyEventSystem->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
+		//			//	MonoObject* mScript = ReflectComponent(pEvent->script);
+		//			//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
+		//			//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
+		//			//	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+		//			//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
+		//			//	SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->data);
+		//			//EVENTS->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
 		//		}
-		//		script.fieldDataReferences[fieldName] = std::move(newField);
+		//		script.fields[fieldName] = std::move(newField);
 		//	}
-			//Field exists
-			//else
-			//{
-			//	validFieldNames.remove(fieldName);
-			//	Field& field = nameField->second;
-			//	//If the field type is not the same
-			//	if (field.fType != fieldType)
-			//	{
-			//		field.Resize(fieldSize);
-			//		mono_field_get_value(instance, mField, field.data);
-			//	}
-			//	//Field exists, setback the values first
-			//	else
-			//	{
-			//			
-			//		if (field.fType == FieldType::GameObject)
-			//		{
-			//			GameObject* reference = script.fieldGameObjReferences[fieldName];
-			//			MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, reference));
-			//		}
-			//		else if (field.fType == FieldType::Component)
-			//		{
-			//			Component* reference = script.fieldComponentReferences[fieldName];
-			//			switch ((ComponentType)field.fType)
-			//			{
-			//			case(ComponentType::Animator):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Animator*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::AudioSource):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (AudioSource*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::BoxCollider2D):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (BoxCollider2D*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Button):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Button*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Camera):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Camera*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Image):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Image*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Rigidbody2D):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Rigidbody2D*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::SpriteRenderer):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SpriteRenderer*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Script):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Script*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::Text):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Text*)reference));
-			//				break;
-			//			}
-			//			case(ComponentType::SortingGroup):
-			//			{
-			//				MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SortingGroup*)reference));
-			//				break;
-			//			}
-			//			}
-			//		}
-			//		else
-			//		{
-			//			SetFieldValue(instance, mField, field,field.data);
-			//		}
-			//	}
-			//	//CHECK TYPENAME
-			//	//else if (field.typeName)
-			//}
+		//	//Field exists
+		//	else
+		//	{
+		//		validFieldNames.remove(fieldName);
+		//		Field& field = nameField->second;
+		//		//If the field type is not the same
+		//		if (field.fType != fieldType)
+		//		{
+		//			field.Resize(fieldSize);
+		//			mono_field_get_value(instance, mField, field.data);
+		//		}
+		//		//Field exists, setback the values first
+		//		else
+		//		{
+		//				
+		//			//if (field.fType == (size_t)FieldType::GameObject)
+		//			//{
+		//			//	Entity* reference = (Entity*)script.fields[fieldName].data;
+		//			//	SetFieldReference(script.fields[fieldName]., reference);
+		//			//	MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, reference));
+		//			//}
+		//			//else if (fieldType < AllComponentTypes::Size())
+		//			//{
+		//			//	Component* reference = script.fieldComponentReferences[fieldName];
+		//			//	switch ((ComponentType)field.fType)
+		//			//	{
+		//			//	case(ComponentType::Animator):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Animator*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::AudioSource):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (AudioSource*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::BoxCollider2D):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (BoxCollider2D*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Button):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Button*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Camera):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Camera*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Image):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Image*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Rigidbody2D):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Rigidbody2D*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::SpriteRenderer):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SpriteRenderer*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Script):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Script*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::Text):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Text*)reference));
+		//			//		break;
+		//			//	}
+		//			//	case(ComponentType::SortingGroup):
+		//			//	{
+		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SortingGroup*)reference));
+		//			//		break;
+		//			//	}
+		//			//	}
+		//			//}
+		//			//else
+		//			//{
+		//			//	SetFieldValue(instance, mField, field,field.data);
+		//			//}
+		//		}
+		//		//CHECK TYPENAME
+		//		//else if (field.typeName)
+		//	}
 		//}
 		//for (auto& name : validFieldNames)
 		//{
-		//	FieldType fType = script.fieldDataReferences[name].fType;
-		//	if (fType == FieldType::GameObject)
-		//	{
-		//		component.fieldGameObjReferences.erase(name);
-		//	}
-		//	else if (fType >= FieldType::Component)
-		//	{
-		//		component.fieldComponentReferences.erase(name);
-		//	}
-		//	component.fieldDataReferences.erase(name);
+		//	//size_t fType = script.fields[name].fType;
+		//	//if (fType == FieldType::GameObject)
+		//	//{
+		//	//	component.fieldGameObjReferences.erase(name);
+		//	//}
+		//	//else if (fType >= FieldType::Component)
+		//	//{
+		//	//	component.fieldComponentReferences.erase(name);
+		//	//}
+		//	//component.fieldDataReferences.erase(name);
 		//	//PRINT("INVALID FIELD: " << name);
 		//}
 		return instance;

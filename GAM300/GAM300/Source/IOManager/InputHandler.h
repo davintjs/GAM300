@@ -34,6 +34,10 @@ public:
 	static bool isMouseButtonPressed_L();
 	static bool isMouseButtonPressed_R();
 
+	static bool isMouseButtonHolding_L();
+	static bool isMouseButtonHolding_R();
+
+
 	static glm::vec2 getMousePos(); // < X , Y >
 
 	static void setFullscreen(bool);

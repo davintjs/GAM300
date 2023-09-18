@@ -25,7 +25,11 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
-#include <vector>
+#include "Scene/Object.h"
+#include <Scripting/ScriptFields.h>
+#include <map>
+
+#include <Properties.h>
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -35,8 +39,6 @@ using Vector4 = glm::vec4;
 using Quaternion = glm::quat;
 
 static std::map<std::string, size_t> ComponentTypes{};
-
-
 
 template<typename T,typename... Ts>
 struct GetComponentTypeGroup
@@ -108,6 +110,7 @@ private:
 template <typename Component>
 using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES>;
 
+
 template<typename... Ts>
 struct MultiComponentsGroup
 {
@@ -126,12 +129,36 @@ private:
 
 #pragma region COMPONENTS
 
-struct Tag
+struct Tag : Object
 {
 	std::string name;
 };
 
-struct Transform
+
+//example of LIONant reflection
+
+//struct test1 : property::base
+//{
+//	int             m_Int{ 0 };
+//	float           m_Float{ 0 };
+//	bool            m_Bool{ 0 };
+//	std::string     m_String{};
+//	oobb            m_OOBB{ 0 };
+//
+//	property_vtable()           // Allows the base class to get these properties  
+//};
+//
+//property_begin(test1)
+//{
+//	property_var(m_Int)
+//		, property_var(m_Float)
+//		, property_var(m_String)
+//		, property_var(m_Bool)
+//		, property_var(m_OOBB)
+//} property_vend_h(test1)
+
+
+struct Transform : Object
 {
 	Vector3 scale{ 1 };
 	Vector3 rotation{};
@@ -145,7 +172,7 @@ struct Transform
 	}
 
 	bool isChild() {
-		if (parent)
+		if (parent != nullptr)
 			return true;
 		else
 			return false;
@@ -167,6 +194,7 @@ struct Transform
 
 	glm::mat4 GetLocalMatrix() const {
 		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		
 		return glm::translate(glm::mat4(1.0f), translation) *
 			rot *
 			glm::scale(glm::mat4(1.0f), scale);
@@ -182,16 +210,17 @@ struct Transform
 		return false;
 	}
 
-	void SetParent(Transform* newParent) {
+	void SetParent(Transform* newParent) 
+	{
 		// Calculate the global transformation matrix
 		if (parent) {
-			/*parent->RemoveChild(this);
+			parent->RemoveChild(this);
 			glm::mat4 globalTransform = GetWorldMatrix();
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);*/
+			rotation = glm::eulerAngles(rot);
 		}
 
 		// Set the new parent
@@ -199,13 +228,13 @@ struct Transform
 		parent = newParent;
 
 		if (parent) {
-			/*glm::mat4 parentTransform = parent->GetWorldMatrix();
+			glm::mat4 parentTransform = parent->GetWorldMatrix();
 			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
-			rotation = glm::eulerAngles(rot);*/
+			rotation = glm::eulerAngles(rot);
 
 			// Add the object to the new parent's child list
 			parent->child.push_back(this);
@@ -221,30 +250,67 @@ struct Transform
 		// Erase the found element
 		child.erase(it);
 	}
+
+	property_vtable();
+
 };
 
-struct AudioSource
+
+property_begin_name(Transform, "Transform") {
+	property_var(scale.x), property_var(scale.y), property_var(scale.z)
+		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
+		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
+} property_vend_h(Transform)
+
+struct AudioSource : Object
 {
 	bool loop = false;
 	float volume = 1.0f;
+	property_vtable();
 };
 
-struct BoxCollider
+property_begin_name(AudioSource, "Audio Source") {
+		property_var(loop)
+		,property_var(volume)
+} property_vend_h(AudioSource)
+
+struct BoxCollider : Object
 {
-
+	float x = 1.0f;
+	float y = 1.0f; 
+	float z = 1.0f; 
+	property_vtable();
 };
 
-struct SphereCollider
+property_begin_name(BoxCollider, "BoxCollider") {
+	property_var(x)
+		, property_var(y)
+		, property_var(z)
+} property_vend_h(BoxCollider)
+
+struct SphereCollider : Object
 {
-
+	float radius = 1.0f; 
+	property_vtable();
 };
 
-struct CapsuleCollider
+property_begin_name(SphereCollider, "SphereCollider") {
+	property_var(radius)
+} property_vend_h(SphereCollider)
+
+struct CapsuleCollider : Object
 {
-
+	float height = 1.0f; 
+	float radius = 1.0f; 
+	property_vtable();
 };
 
-struct Animator
+property_begin_name(CapsuleCollider, "CapsuleCollider") {
+	property_var(height)
+		, property_var(radius)
+} property_vend_h(CapsuleCollider)
+
+struct Animator : Object
 {
 };
 
@@ -252,48 +318,99 @@ struct Animator
 //{
 //};
 
-struct Rigidbody
+struct Rigidbody : Object
 {
 	bool is_enabled = true;
-	Vector3 velocity{};					//velocity of object
-	Vector3 acceleration{};				//acceleration of object
+	bool is_trigger = false;
+	Vector3 linearVelocity{};			//velocity of object
+	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
+
+	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
+	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	property_vtable();
+	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
-struct Script
+property_begin_name(Rigidbody, "Rigidbody") {
+
+	property_var(linearVelocity.x), property_var(linearVelocity.y), property_var(linearVelocity.z)
+		, property_var(angularVelocity.x), property_var(angularVelocity.y), property_var(angularVelocity.z)
+		, property_var(force.x), property_var(force.y), property_var(force.z)
+		, property_var(friction)
+		, property_var(mass)
+		, property_var(isStatic)
+		, property_var(isKinematic)
+		, property_var(useGravity)
+		, property_var(is_enabled)
+		, property_var(is_trigger)
+} property_vend_h(Rigidbody)
+
+struct CharacterController : Object
+{
+
+	Vector3 velocity{};					// velocity of the character
+	Vector3 force{};					// forces acting on the character
+	float mass{ 1.f };					// mass of object
+	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
+	float gravityFactor{ 1.f };			// gravity modifier
+	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	property_vtable();
+	//JPH::BodyID CharacterBodyID;
+};
+
+property_begin_name(CharacterController, "CharacterController") {
+	property_var(velocity.x), property_var(velocity.y), property_var(velocity.z)
+		, property_var(force.x), property_var(force.y), property_var(force.z)
+		, property_var(friction)
+		, property_var(mass)
+		, property_var(gravityFactor)
+		, property_var(slopeLimit)
+} property_vend_h(CharacterController)
+
+struct Script : Object
 {
 	std::string name;
+	std::map<std::string, Field> fields;
+	property_vtable();
 };
 
+property_begin_name(Script, "Script") {
+	property_var(name)
+		//, property_var(fields)
+} property_vend_h(Script)
 
-
-struct MeshRenderer
+struct MeshRenderer : Object
 {
-	std::string MeshName;
-	//Lighting
-
-	bool isLightSource = false;
-
-	struct LightSource
-	{
-		glm::vec3 LightingColor{ 1.f, 1.f, 1.f };
-	};
-
-	LightSource Light_Properties;
-	// Material
-
-
-
+	std::string MeshName = "Cube";
+	property_vtable();
 };
+
+property_begin_name(MeshRenderer, "MeshRenderer") {
+	property_var(MeshName)
+		//, property_var(fields)
+} property_vend_h(MeshRenderer)
+
+struct LightSource : Object
+{
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	property_vtable()
+};
+
+property_begin_name(LightSource, "LightSource") {
+	property_var(lightingColor.x), property_var(lightingColor.y), property_var(lightingColor.z)
+		//, property_var(fields)
+} property_vend_h(LightSource)
+
 #pragma endregion
 
 
 
 //Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator , MeshRenderer>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
 
 //Append here if entity can have multiple of this
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -304,6 +421,45 @@ using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiCompo
 using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
+
+#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	{\
+		if (GetComponentType::E<T>() == componentType)\
+		{\
+			if constexpr (std::is_same<TYPE,void>())\
+			{\
+				FUNC;\
+				return;\
+			}\
+			else\
+			{\
+				return FUNC;\
+			}\
+		}\
+		if constexpr (sizeof...(Ts) != 0)\
+		{\
+			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
+		}\
+		else if constexpr(!std::is_same<TYPE,void>())\
+		{\
+			return nullptr; \
+		}\
+	}\
+	template<typename T, typename... Ts>\
+	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
+	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
+	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+
+enum class FieldType :int
+{
+	Float = AllComponentTypes::Size(), Double,
+	Bool, Char, Short, Int, Long,
+	UShort, UInt, ULong, String,
+	Vector2, Vector3, GameObject, None
+};
 
 template<typename T, typename... Ts>
 static void RegisterComponents()

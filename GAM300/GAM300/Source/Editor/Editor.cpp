@@ -21,6 +21,22 @@
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
+#include "Core/SystemsGroup.h"
+
+using EditorSystemsPack =
+TemplatePack
+<
+    EditorMenuBar,
+    EditorContentBrowser,
+    EditorScene,
+    EditorInspector,
+    EditorDebugger,
+    EditorHierarchy,
+    EditorToolBar,
+    EditorPerformanceViewer
+>;
+
+using EditorSystems = decltype(SystemsGroup(EditorSystemsPack()));
 
 void EditorSystem::Init()
 {
@@ -38,52 +54,38 @@ void EditorSystem::Init()
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
 
-    editorSystems = {
-        &EditorMenuBar::Instance(),
-        &EditorContentBrowser::Instance(),
-        &EditorScene::Instance(),
-        &EditorInspector::Instance(),
-        &EditorDebugger::Instance(),
-        &EditorHierarchy::Instance(),
-        &EditorToolBar::Instance(),
-    };
-
-    for (ISystem* pSystem : editorSystems)
-    {
-        pSystem->Init();
-    }
+    EditorSystems::Init();
 }
 
 void EditorSystem::Update(float dt)
 {
-
     //Editor Functions
     Editor_Dockspace();
 
     
 
-    for (ISystem* pSystem : editorSystems)
-    {   
-        pSystem->Update(dt);
-    }
+    //for (ISystem* pSystem : editorSystems)
+    //{   
+    //    pSystem->Update(dt);
+    //}
+    EditorSystems::Update(dt);
 
-    bool demo = true;
-    ImGui::ShowDemoWindow(&demo);
+   /* bool demo = true;
+    ImGui::ShowDemoWindow(&demo);*/
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.1f, 0.1f, 0.2f, 1.0f);
-    
-
 }
 
 void EditorSystem::Exit()
 {
-    for (auto iter = editorSystems.rbegin(); iter != editorSystems.rend(); ++iter)
-    {
-        (*iter)->Exit();
-    }
+    //for (auto iter = editorSystems.rbegin(); iter != editorSystems.rend(); ++iter)
+    //{
+    //    (*iter)->Exit();
+    //}
+    EditorSystems::Exit();
 
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
@@ -154,6 +156,8 @@ void EditorSystem::SetSelectedEntity(Entity* pEntity)
 
 void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    PRINT("CALLLLLLLLLLLLBACK\n");
-    selectedEntity = pEvent->pEntity;
+    if (pEvent->handle.IsValid())
+        selectedEntity = &pEvent->handle.Get();
+    else
+        selectedEntity = nullptr;
 }
