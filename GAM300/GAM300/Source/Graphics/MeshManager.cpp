@@ -239,27 +239,92 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.index = mContainer.size();
 
     // positions            // Normals              // Tangents             // Texture Coords   // Colors
-    float vertices[] = {
-       -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-        1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-        1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-       -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-       -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-        1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-        1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-       -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
+    //float vertices[] = {
+    //   -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
+    //    1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
+    //    1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
+    //   -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
+    //   -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
+    //    1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
+    //    1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
+    //   -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
 
+    //};
+
+    //int indices[] = {
+    //    0, 1, 2, 2, 3, 0,  // Front face
+    //    4, 5, 6, 6, 7, 4,  // Back face
+    //    1, 5, 6, 6, 2, 1,  // Right face
+    //    0, 4, 7, 7, 3, 0,  // Left face
+    //    3, 2, 6, 6, 7, 3,  // Top face
+    //    0, 1, 5, 5, 4, 0   // Bottom face
+    //};
+
+
+    GLfloat vertices[] = {
+        // Positions           Normals            Tangents          Texture Coords     Colors (RGB)
+        // Front face
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,      1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 0.0f,      1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,      1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f,      1.0f, 0.0f, 0.0f,
+
+        // Back face
+        -0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,      0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,      0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,      0.0f, 1.0f, 0.0f,
+
+        // Left face
+        -0.5f, 0.5f, 0.5f,     -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 0.0f,      0.0f, 0.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 1.0f,      0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 1.0f,      0.0f, 0.0f, 1.0f,
+
+        // Right face
+         0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 0.0f,      1.0f, 1.0f, 0.0f,
+         0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 1.0f,      1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 1.0f,      1.0f, 1.0f, 0.0f,
+
+         // Top face
+         -0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      0.0f, 1.0f, 1.0f,
+          0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      0.0f, 1.0f, 1.0f,
+          0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      0.0f, 1.0f, 1.0f,
+         -0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 1.0f,      0.0f, 1.0f, 1.0f,
+
+         // Bottom face
+         -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      1.0f, 1.0f, 0.0f,
+          0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f,
+          0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      1.0f, 1.0f, 0.0f,
+         -0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 1.0f,      1.0f, 1.0f, 0.0f
     };
 
-    int indices[] = {
-        0, 1, 2, 2, 3, 0,  // Front face
-        4, 5, 6, 6, 7, 4,  // Back face
-        1, 5, 6, 6, 2, 1,  // Right face
-        0, 4, 7, 7, 3, 0,  // Left face
-        3, 2, 6, 6, 7, 3,  // Top face
-        0, 1, 5, 5, 4, 0   // Bottom face
-    };
+    GLuint indices[] = {
+        // Front face
+        0, 1, 2,
+        2, 3, 0,
 
+        // Back face
+        4, 5, 6,
+        6, 7, 4,
+
+        // Left face
+        8, 9, 10,
+        10, 11, 8,
+
+        // Right face
+        12, 13, 14,
+        14, 15, 12,
+
+        // Top face
+        16, 17, 18,
+        18, 19, 16,
+
+        // Bottom face
+        20, 21, 22,
+        22, 23, 20
+    };
     newMesh.vertices_min = glm::vec3(-1.f, -1.f, -1.f);
     newMesh.vertices_max = glm::vec3(1.f, 1.f, 1.f);
 
@@ -279,19 +344,19 @@ void MESH_Manager::CreateInstanceCube()
     glBindVertexArray(vaoid);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     // Tangent attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     // Texture coord
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(9 * sizeof(float)));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)(9 * sizeof(float)));
     glEnableVertexAttribArray(3);
     // color coord
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void*)(11 * sizeof(float)));
     glEnableVertexAttribArray(4);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);

@@ -83,24 +83,9 @@ void GraphicsSystem::Init()
 	
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
 
-	// Temporary Stuff, Things will be moved accordingly (hopefully)
-	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
-	//testmodel.init(&assimp);// The Shader is set up inside this init function
-
-	//testmodel.init();
-	/*testBox.instance_cubeinit();
-	testBox.setup_instanced_shader();*/
-
 	// Euan RayCasting Testing
 	Line.lineinit();
-
-	// Magic Testing
-	//LightSource.cubeinit();
-	//LightSource.setup_lightshader();
 	
-	AffectedByLight.cubeinit();
-	AffectedByLight.setup_affectedShader();
-
 	// Setting up Positions
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	//testmodel.position = glm::vec3(0.f, 0.f, -800.f);
@@ -180,7 +165,9 @@ void GraphicsSystem::Update(float dt)
 		// newstring
 		for (char namecount = 0; namecount < maxcount; ++namecount) {
 			std::string newName = renderer.MeshName;
+			
 			newName += ('1' + namecount);
+			
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
@@ -250,38 +237,6 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
-	//// This one is turbo scuffed i just putting here to test  light
-	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
-	//{
-	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-	//	{
-	//		LightSource.position.x -= 10.f;
-	//	}
-	//	else
-	//	{
-	//		LightSource.position.y += 10.f;
-	//	}
-	//}
-	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
-	//{
-	//	LightSource.position.z -= 10.f;
-	//}
-	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
-	//{
-	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-	//	{
-	//		LightSource.position.x += 10.f;
-	//	}
-	//	else
-	//	{
-	//		LightSource.position.y -= 10.f;
-	//	}
-	//}
-
-	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
-	//{
-	//	LightSource.position.z += 10.f;
-	//}
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
 	{
@@ -296,27 +251,28 @@ void GraphicsSystem::Update(float dt)
 		}
 	}
 	
-	//// instanced bind
-	//glBindBuffer(GL_ARRAY_BUFFER, MeshManager.mContainer.find("Cube")->second.SRT_Buffer_Index[0]);
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// Using Mesh Manager
+	/*
+	// instanced bind
+	glBindBuffer(GL_ARRAY_BUFFER, MeshManager.mContainer.find("Cube")->second.SRT_Buffer_Index[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &entitySRT[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//for (auto mesh = MeshManager.mContainer.begin(); mesh != MeshManager.mContainer.end(); mesh++)
-	//{
+	for (auto mesh = MeshManager.mContainer.begin(); mesh != MeshManager.mContainer.end(); mesh++)
+	{
 
-	//	// Looping through submeshes
-	//	for (int k = 0; k < mesh->second.SRT_Buffer_Index.size(); ++k)
-	//	{
-	//		glBindBuffer(GL_ARRAY_BUFFER, mesh->second.SRT_Buffer_Index[k]);
-	//		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
-	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//		//std::cout << "in here\n";
-	//		Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim,Lighting_Source);
-	//	}
-	//	SRT_Buffers[mesh->second.index].index = 0;
-	//}
-	//std::cout << "out\n";
-	
+		// Looping through submeshes
+		for (int k = 0; k < mesh->second.SRT_Buffer_Index.size(); ++k)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->second.SRT_Buffer_Index[k]);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &SRT_Buffers[mesh->second.index].transformation_mat[0]);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			Draw_Meshes(mesh->second.Vaoids[k], SRT_Buffers[mesh->second.index].index + 1, mesh->second.Drawcounts[k], mesh->second.prim,Lighting_Source);
+		}
+		SRT_Buffers[mesh->second.index].index = 0;
+	}
+	*/
+
 	Draw(); // call draw after update
 
 
@@ -411,9 +367,12 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 
 void GraphicsSystem::Draw() {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
+
+	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -447,25 +406,6 @@ void GraphicsSystem::Draw() {
 
 		}
 	}
-	
-
-
-
-	
-	// Below stuff are like temporary /  Havent ported over stuffs
-	//testmodel.draw();
-	// for  model : models{
-	//	for tex : model.tex_vaoid{
-	//		bind texture into uniform sampler2d
-	//	}
-	//	draw instance
-	// }
-
-
-	/* // LightSource.lightSource_draw();
-	AffectedByLight.affectedByLight_draw(LightSource.position);*/
-
-
 }
 
 bool GraphicsSystem::Raycasting(Ray3D& _ray)
