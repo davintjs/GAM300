@@ -207,40 +207,38 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
-//This function uses LIONant functionality to serialize and display the component based on its contents (properties)
 template <typename T>
-void DisplayProperties(T& Object) {
+void Display_Property(T& comp) {
 
     //Need to manually display Vec3 types as property system does not register vec3 types
     if constexpr (std::is_same<T, Transform>()) {
-        Display("Position", Object.translation);
-        glm::vec3 rotation = glm::degrees(Object.rotation);
+        Display("Position", comp.translation);
+        glm::vec3 rotation = glm::degrees(comp.rotation);
         Display("Rotation", rotation);
-        Object.rotation = glm::radians(rotation);
-        Display("Scale", Object.scale);
+        comp.rotation = glm::radians(rotation);
+        Display("Scale", comp.scale);
         for (int i = 0; i < 3; ++i)
         {
-            if (fabs(Object.scale[i]) < 0.001f)
-                Object.scale[i] = 0.001f;
+            if (fabs(comp.scale[i]) < 0.001f)
+                comp.scale[i] = 0.001f;
         }
         return; //no other types other than vec3
     }
     else if constexpr (std::is_same<T, Rigidbody>()) {
-        Display("Linear Velocity", Object.linearVelocity);
-        Display("Angular Velocity", Object.angularVelocity);
-        Display("Force", Object.force);
+        Display("Linear Velocity", comp.linearVelocity);
+        Display("Angular Velocity", comp.angularVelocity);
+        Display("Force", comp.force);
     }
     else if constexpr (std::is_same<T, CharacterController>()) {
-        Display("Velocity", Object.velocity);
-        Display("Force", Object.force);
+        Display("Velocity", comp.velocity);
+        Display("Force", comp.force);
     }
     else if constexpr (std::is_same<T, LightSource>()) {
-        Display("Light Color", Object.lightingColor);
+        Display("Light Color", comp.lightingColor);
     }
 
-    //List all properties
     std::vector<property::entry> List;
-    property::SerializeEnum(Object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
             // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
             assert(Flags.m_isScope == false || PropertyName.back() == ']');
@@ -249,29 +247,27 @@ void DisplayProperties(T& Object) {
 
     for (auto& [Name, Data] : List)
     {
+
         if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
-            if ((Name.find(".x") != std::string::npos) ||
-                (Name.find(".y") != std::string::npos) ||
-                (Name.find(".z") != std::string::npos)) {
-                continue;
-            }
-        }
-        std::visit([&](auto& Value)
-            {
+                        if ((Name.find(".x") != std::string::npos) ||
+                            (Name.find(".y") != std::string::npos) ||
+                            (Name.find(".z") != std::string::npos)) continue;
+                    }
+
+        std::visit([&](auto& Value) {
+
                 using T = std::decay_t<decltype(Value)>;
 
                 //Edit name
-                auto it = Name.begin() + Name.find_first_of("/");
-                Name.erase(Name.begin(), ++it);
-                Name[0] = toupper(Name[0]); //Make first letter uppercase
-                
-                //Display Component value
-                Display<T>(Name.c_str(), Value);
-                
+                std::string DisplayName = Name;
+                auto it = DisplayName.begin() + DisplayName.find_first_of("/");
+                DisplayName.erase(DisplayName.begin(), ++it);
+                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
+
+                Display<T>(DisplayName.c_str(), Value);
             }
         , Data);
-        property::set(Object, Name.c_str(), Data);
-        
+        property::set(comp, Name.c_str(), Data);
     }
 
     if constexpr (std::is_same<T, MeshRenderer>()) {
@@ -285,7 +281,7 @@ void DisplayProperties(T& Object) {
         bool found = false;
         for (auto& pair : MeshManager.mContainer)
         {
-            if (pair.first == Object.MeshName)
+            if (pair.first == comp.MeshName)
                 found = true;
             meshNames.push_back(pair.first.c_str());
             if (!found)
@@ -296,23 +292,23 @@ void DisplayProperties(T& Object) {
         ImGui::PushItemWidth(-1);
         ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
         ImGui::PopItemWidth();
-        Object.MeshName = meshNames[number];
+        comp.MeshName = meshNames[number];
     }
-
 }
 
 //template <typename T>
 //void DisplayComponent(T& component)
 //{
-//    //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
+    //PRINT("Component of type: " << typeid(component).name() << " does not exist yet! ");
+    //DisplayProperties(component);
 //}
 ////Cant use reflection system due to glm::vec3
 //template <>
 //void DisplayComponent<Transform>(Transform& transform)
 //{
-//    DisplayProperties(transform);
-//    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-//    //ImGui::Text("Active");
+    //DisplayProperties(transform);
+    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+    //ImGui::Text("Active");
 //}
 //
 //template <>
@@ -346,14 +342,37 @@ void DisplayProperties(T& Object) {
 //
 //
 //
+//template <typename T>
+//void Display_Property(T& comp) {
+//
+//    std::vector<property::entry> List;
+//    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+//        {
+//            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+//            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+//            List.push_back(property::entry { PropertyName, Data });
+//        });
+//
+//    for (auto& [Name, Data] : List)
+//    {
+//        std::visit([&](auto& Value) {
+//
+//            using T1 = std::decay_t<decltype(Value)>;
+//
+//            //PRINT(typeid(T).name(),'\n');
+//            Display<T1>(Name.c_str(), Value);
+//            //ReflectedTypes::DisplayHelper(Name,Value);
+//            }
+//        , Data);
+//        property::set(comp, Name.c_str(), Data);
+//    }
+//}
 //template<>
 //void DisplayComponent<AudioSource>(AudioSource& as) {
 //
-//    DisplayProperties(as);
-//    /*
-//    Display(as.getPropertyVTable().m_pName, as.loop);
-//    Display("Volume", as.volume);
-//    */
+//    Display_Property(as);
+//
+//  
 //}
 //
 //template <>
@@ -647,7 +666,7 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-            DisplayProperties(component);
+            Display_Property(component);
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
