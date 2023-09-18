@@ -199,8 +199,6 @@ void EditorScene::Update(float dt)
     ImGui::PopStyleVar();
 
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
-    if (inOperation)
-        std::cout << "Using Gizmos\n";
 }
 
 void EditorScene::Exit()

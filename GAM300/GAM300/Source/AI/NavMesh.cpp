@@ -2,16 +2,6 @@
 
 #include "NavMesh.h"
 
-NavMesh::NavMesh(std::vector<Triangle3D> mTri) : mTriangles(mTri)
-{
-
-}
-
-NavMesh::~NavMesh()
-{
-
-}
-
 const std::vector<Triangle3D> NavMesh::GetNavMeshTriangles() const
 {
 	return mTriangles;

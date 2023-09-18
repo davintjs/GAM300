@@ -6,8 +6,10 @@
 class NavMesh
 {
 public:
-	NavMesh(std::vector<Triangle3D> mTri);
-	~NavMesh();
+	NavMesh(std::vector<Triangle3D> mTri) : mTriangles(mTri) {};
+	~NavMesh() {};
+
+	void LinkAllTriangles();
 
 	const std::vector<Triangle3D> GetNavMeshTriangles() const;
 	const std::vector<glm::vec3> GetPoints() const;
@@ -18,7 +20,6 @@ public:
 
 private:
 	void LinkTriangles(Triangle3D* mTri1, Triangle3D* mTri2);
-	void LinkAllTriangles();
 	void UpdateNavMesh();
 
 	std::vector<Triangle3D> mTriangles;
