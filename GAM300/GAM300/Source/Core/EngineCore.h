@@ -55,7 +55,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		SceneManager,
 		ScriptingSystem,
 		EditorSystem,
-		//LogicSystem,
+		LogicSystem,
 		//PhysicsSystem,
 		GraphicsSystem,
 		Blackboard,
@@ -86,9 +86,9 @@ public:
 		Scene& scene = SceneManager::Instance().GetCurrentScene();
 		update_timer = 0.f;
 
-		//SceneStartEvent startEvent{};
-		//ACQUIRE_SCOPED_LOCK(Assets);
-		//EVENTS.Publish(&startEvent);
+		SceneStartEvent startEvent{};
+		ACQUIRE_SCOPED_LOCK(Assets);
+		EVENTS.Publish(&startEvent);
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)

@@ -8,12 +8,13 @@ public class Player : Script
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        Console.WriteLine("HERROOO");
+        //rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-/*        float speed = 0.4f;
+        float speed = 0.4f;
         if (Input.GetKey(KeyCode.A))
         {
             rb.mass -= speed;
@@ -22,7 +23,8 @@ public class Player : Script
         {
             rb.mass += speed;
         }
-        Destroy(this);*/
+        Console.WriteLine("Sup");
+        //Destroy(this);
         //transform.localPosition = newPos;
     }
 

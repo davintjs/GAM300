@@ -171,7 +171,6 @@ MonoType* ScriptingSystem::GetMonoTypeFromName(std::string& name)
 
 void ScriptingSystem::RecompileThreadWork()
 {
-	PRINT("RECOMPLING\n");
 	//ACQUIRE_SCOPED_LOCK(Assets);
 	compilingState = CompilingState::Compiling;
 	Utils::CompileDll();
@@ -367,6 +366,7 @@ void ScriptingSystem::ThreadWork()
 		{
 			Sleep(1000);
 			ACQUIRE_SCOPED_LOCK(Mono);
+			ACQUIRE_SCOPED_LOCK(Assets);
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
 			{
@@ -391,8 +391,9 @@ void ScriptingSystem::ThreadWork()
 void ScriptingSystem::SwapDll()
 {
 	//Load Mono
-	ACQUIRE_SCOPED_LOCK(Assets);
-	//ACQUIRE_SCOPED_LOCK(Play);
+	PRINT("SWAPPING DLL\n");
+	//ACQUIRE_SCOPED_LOCK(Assets);
+	ACQUIRE_SCOPED_LOCK(Mono);
 	for (uint32_t hand : gcHandles)
 	{
 		mono_gchandle_free(hand);
@@ -411,6 +412,8 @@ void ScriptingSystem::SwapDll()
 	UpdateScriptClasses();
 	RegisterComponents();
 	ReflectAll();
+	invoke(mono_object_new(mAppDomain, scriptClassMap["Player"].mClass), scriptClassMap["Player"].mMethods["Start"]);
+	
 	compilingState = CompilingState::Wait;
 }
 
@@ -525,19 +528,20 @@ void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mC
 
 void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 {
-	MonoObject* mNewScript = ReflectScript(script);
-	//PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
+	//ACQUIRE_SCOPED_LOCK(Mono);
+	//MonoObject* mNewScript = ReflectScript(script);
+	////PRINT("Script Invoking " << pEvent->script.Name() << " " << pEvent->methodName << " ,ID: " << pEvent->script.uuid);
 	//E_ASSERT(mNewScript, std::string("MONO OBJECT OF ") + script.name + std::string(" NOT LOADED"));
-	ScriptClass& scriptClass{ scriptClassMap[script.name] };
-	MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,method.c_str(),0)};
-	if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mScript)
-	{
-		mMethod = mono_class_get_method_from_name(mScript, method.c_str(), 0);
-		if (!mMethod)
-			return;
-	}
+	//ScriptClass& scriptClass{ scriptClassMap[script.name] };
+	//MonoMethod* mMethod{ mono_class_get_method_from_name (scriptClass.mClass,method.c_str(),0)};
+	//if (!mMethod && mono_class_get_parent(scriptClass.mClass) == mScript)
+	//{
+	//	mMethod = mono_class_get_method_from_name(mScript, method.c_str(), 0);
+	//	if (!mMethod)
+	//		return;
+	//}
 	//E_ASSERT(mMethod, std::string("MONO METHOD ") + method + std::string(" IN SCRIPT ") + script.name + std::string(" NOT FOUND"));
-	invoke(mNewScript, mMethod, nullptr);
+	//invoke(mNewScript, mMethod, nullptr);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
@@ -820,8 +824,8 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 //
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	SwapDll();
-	//ACQUIRE_SCOPED_LOCK(Play);
+	while (mAppDomain == nullptr);
+	PRINT("SCRIPTING START");
 	//E_ASSERT(mAppDomain,"App domain is not loaded");
 	//inPlayMode = true;
 	//for (uint32_t hand : gcHandles)

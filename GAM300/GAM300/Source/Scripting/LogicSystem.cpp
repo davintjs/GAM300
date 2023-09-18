@@ -79,6 +79,7 @@ void LogicSystem::Exit()
 
 void LogicSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
+	PRINT("LOGIC START");
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& scripts = scene.GetComponentsArray<Script>();
 	for (auto it = scripts.begin(); it != scripts.end(); ++it)
