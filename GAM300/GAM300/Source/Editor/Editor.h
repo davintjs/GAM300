@@ -43,23 +43,3 @@ private:
 	std::vector<ISystem*> editorSystems;
 	Entity* selectedEntity{nullptr};
 };
-
-//Inspector Functions
-//void Inspector_Transform(int index);
-//void Inspector_Renderer(int index);
-//void Inspector_GameLogic(std::string type, int index);
-//void Inspector_Camera(int index);
-//void Inspector_Body(int index);
-//void Inspector_General(int index);
-
-// Editor Member functions
-//void Editor_Entity_Creator();
-
-//void Editor_PerformanceViewer();
-
-//void Editor_Update();
-//void Editor_New_Scene();
-//void Editor_PickEntity();
-//void Editor_Macros();
-//void Editor_Undo();
-//void Editor_Redo();

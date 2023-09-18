@@ -5,6 +5,7 @@
 #include <Core/EventsManager.h>
 #include <unordered_set>
 #include <string>
+#include "Core/Debug.h"
 
 FileWatcher::FileWatcher()
 {
@@ -12,7 +13,7 @@ FileWatcher::FileWatcher()
     hDir = CreateFile(
         std::wstring(L"ASSETS").c_str(),
         FILE_LIST_DIRECTORY,
-        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        FILE_SHARE_READ,
         nullptr,
         OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS,
@@ -95,6 +96,7 @@ void FileWatcher::ThreadWork()
         }
         events.clear();
     }
+    PRINT("File watcher exited safely\n");
 }
 
     

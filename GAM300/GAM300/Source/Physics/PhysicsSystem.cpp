@@ -1,3 +1,5 @@
+#include "Precompiled.h"
+
 #include "PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 
@@ -60,8 +62,9 @@ void PhysicsSystem::Update(float dt) {
 	JoltVec3ToGlmVec3(ballPos, gBallPos);
 	//std::cout << gBallPos.x << ',' << gBallPos.y << ',' << gBallPos.z << std::endl;
 
-	if (ball) {
-		Scene& scene = MySceneManager.GetCurrentScene();
+	Scene& scene = MySceneManager.GetCurrentScene();
+	if (ball && ball->pScene == &scene) 
+	{
 		Transform& t = scene.GetComponent<Transform>(*ball);
 		t.translation = gBallPos;
 
@@ -76,8 +79,8 @@ void PhysicsSystem::Update(float dt) {
 	JPH::RVec3 ballPos2 = bodyInterface->GetCenterOfMassPosition(testBallID2);
 	Vector3 gBallPos2;
 	JoltVec3ToGlmVec3(ballPos2, gBallPos2);
-	if (ball2) {
-		Scene& scene = MySceneManager.GetCurrentScene();
+	if (ball2 && ball2->pScene == &scene) 
+	{
 		Transform& t = scene.GetComponent<Transform>(*ball2);
 		t.translation = gBallPos2;
 

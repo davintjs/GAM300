@@ -9,7 +9,7 @@ void EditorHierarchy::Init() {
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
-
+    EVENTS.Subscribe(this,&EditorHierarchy::CallbackClearEntities);
 }
 
 void EditorHierarchy::ClearLayer()
@@ -141,7 +141,7 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 	//select entity from hierarchy
 	if (ImGui::IsItemClicked())
 	{
-        SelectedEntityEvent selectedEvent{ curr_scene.entities.TryGetDense(Index)};
+        SelectedEntityEvent selectedEvent{ curr_scene.GetHandle(*curr_scene.entities.TryGetDense(Index))};
         EVENTS.Publish(&selectedEvent);
 	}
 
@@ -245,7 +245,7 @@ void EditorHierarchy::Update(float dt)
 		{
 			if (ImGui::MenuItem("Add Entity"))
 			{
-                SelectedEntityEvent selectedEvent{ &curr_scene.AddEntity() };
+                SelectedEntityEvent selectedEvent{ curr_scene.AddEntity() };
                 EVENTS.Publish(&selectedEvent);
 			}
 
@@ -256,7 +256,7 @@ void EditorHierarchy::Update(float dt)
 				{
 					Entity& ent = curr_scene.entities.DenseSubscript(selectedEntity);
 					//Delete all children of selected entity as well
-					auto currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
+					auto& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
 					for (auto child : currEntity.child)
 					{
 						ObjectIndex id = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*child);
@@ -265,7 +265,7 @@ void EditorHierarchy::Update(float dt)
 					curr_scene.Destroy(ent);
 					auto it = std::find(layer.begin(), layer.end(), &ent);
 					EditorHierarchy::Instance().layer.erase(it);
-					SelectedEntityEvent selectedEvent{ nullptr };
+					SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
 					EVENTS.Publish(&selectedEvent);
 				}
 			}
@@ -284,10 +284,15 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    if (pEvent->pEntity)
-        selectedEntity = pEvent->pEntity->denseIndex;
+    if (pEvent->handle.IsValid())
+        selectedEntity = pEvent->handle.Get().denseIndex;
     else
         selectedEntity = NON_VALID_ENTITY;
+}
+
+void EditorHierarchy::CallbackClearEntities(ClearEntitiesEvent* pEvent)
+{
+	ClearLayer();
 }
 
 void EditorHierarchy::Exit() {

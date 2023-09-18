@@ -74,7 +74,8 @@ public:
     bool initLayer = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
-    void CallbackEntityCreated(SelectedEntityEvent * pEvent);
+    void CallbackEntityCreated(SelectedEntityEvent* pEvent);
+    void CallbackClearEntities(ClearEntitiesEvent* pEvent);
 };
 
 

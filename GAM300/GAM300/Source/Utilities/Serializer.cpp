@@ -91,85 +91,95 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     }
 
     // Bean: For when components have their own uuid
-    /*out << YAML::Key << "m_Components" << YAML::Value;
-    out << YAML::BeginSeq << YAML::EndSeq;*/
+    out << YAML::Key << "m_Components" << YAML::Value;
+    out << YAML::BeginSeq;
+
     if (_scene.HasComponent<AudioSource>(_entity))
     {
         auto& component = _scene.GetComponent<AudioSource>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_AudioSource" << YAML::Value;
-        out << YAML::BeginSeq << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<BoxCollider>(_entity))
     {
         auto& component = _scene.GetComponent<BoxCollider>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_BoxCollider" << YAML::Value;
-        out << YAML::BeginSeq << YAML::Flow;
-        out << YAML::BeginMap << "X" << component.x << "Y" << component.y << "Z" << component.z << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::BeginMap << YAML::Flow << "X" << component.x << "Y" << component.y << "Z" << component.z << YAML::EndMap;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<SphereCollider>(_entity))
     {
         auto& component = _scene.GetComponent<SphereCollider>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_SphereCollider" << YAML::Value;
-        out << YAML::BeginSeq;
         out << YAML::BeginMap << "Radius" << component.radius << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<CapsuleCollider>(_entity))
     {
         auto& component = _scene.GetComponent<CapsuleCollider>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_CapsuleCollider" << YAML::Value;
-        out << YAML::BeginSeq;
-        out << YAML::BeginMap << "Height" << component.height << YAML::EndMap;
-        out << YAML::BeginMap << "Radius" << component.radius << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::BeginMap;
+        out << "Height" << component.height;
+        out << "Radius" << component.radius;
+        out << YAML::EndMap;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<Animator>(_entity))
     {
         auto& component = _scene.GetComponent<Animator>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_Animator" << YAML::Value;
-        out << YAML::BeginSeq << YAML::EndSeq;
+        out << YAML::BeginMap << YAML::EndMap;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<CharacterController>(_entity))
     {
         auto& component = _scene.GetComponent<CharacterController>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_CharacterController" << YAML::Value;
-        out << YAML::BeginSeq << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<Script>(_entity))
     {
         auto& component = _scene.GetComponent<Script>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_Script" << YAML::Value;
-        out << YAML::BeginSeq;
-        out << YAML::BeginMap << "Name" << component.name << YAML::EndMap;
-        out << YAML::BeginMap << "Field" << 0 << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::BeginMap;
+        out << "Name" << component.name;
+        out << "Field" << 0;
+        out << YAML::EndMap;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<MeshRenderer>(_entity))
     {
         auto& component = _scene.GetComponent<MeshRenderer>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_MeshRenderer" << YAML::Value;
-        out << YAML::BeginSeq;
         out << YAML::BeginMap << "Name" << component.MeshName << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
     if (_scene.HasComponent<LightSource>(_entity))
     {
         auto& component = _scene.GetComponent<LightSource>(_entity);
+        out << YAML::BeginMap;
         out << YAML::Key << "m_LightSource" << YAML::Value;
-        out << YAML::BeginSeq;
         out << YAML::BeginMap << "lightingColor" << component.lightingColor << YAML::EndMap;
-        out << YAML::EndSeq;
+        out << YAML::EndMap;
     }
 
+    out << YAML::EndSeq;
     out << YAML::EndMap;
     out << YAML::EndMap;
 
@@ -227,7 +237,7 @@ bool DeserializeScene(Scene& _scene)
         {
             YAML::Node object = entity["GameObject"];
 
-            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>());
+            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>()).Get();
 
             // Bean: Dont need cuz when parenting it reorders the object anyways
             //entity.denseIndex = object["m_Index"].as<ObjectIndex>(); 
@@ -249,19 +259,76 @@ bool DeserializeScene(Scene& _scene)
             }
 
             // Bean: Components will be here temporarily
-            if (object["m_BoxCollider"])
+            for (auto component : object["m_Components"])
             {
-                auto component = object["m_BoxCollider"];
-                auto& boxCollider = _scene.AddComponent<BoxCollider>(entity);
-                boxCollider.x = component["X"].as<float>();
-                boxCollider.y = component["Y"].as<float>();
-                boxCollider.z = component["Z"].as<float>();
+                if (component["m_AudioSource"])
+                {
+                    auto node = component["m_AudioSource"];
+                    auto& audioSource = _scene.AddComponent<AudioSource>(entity);
+                }
+
+                if (component["m_BoxCollider"])
+                {
+                    auto node = component["m_BoxCollider"];
+                    auto& boxCollider = _scene.AddComponent<BoxCollider>(entity);
+                    boxCollider.x = node["X"].as<float>();
+                    boxCollider.y = node["Y"].as<float>();
+                    boxCollider.z = node["Z"].as<float>();
+                }
+
+                if (component["m_SphereCollider"])
+                {
+                    auto node = component["m_SphereCollider"];
+                    auto& sphereCollider = _scene.AddComponent<SphereCollider>(entity);
+                    sphereCollider.radius = node["Radius"].as<float>();
+                }
+
+                if (component["m_CapsuleCollider"])
+                {
+                    auto node = component["m_CapsuleCollider"];
+                    auto& capsuleCollider = _scene.AddComponent<CapsuleCollider>(entity);
+                    capsuleCollider.height = node["Height"].as<float>();
+                    capsuleCollider.radius = node["Radius"].as<float>();
+                }
+
+                if (component["m_Animator"])
+                {
+                    auto node = component["m_Animator"];
+                    auto& animator = _scene.AddComponent<Animator>(entity);
+                }
+
+                if (component["m_CharacterController"])
+                {
+                    auto node = component["m_CharacterController"];
+                    auto& characterController = _scene.AddComponent<CharacterController>(entity);
+                }
+
+                if (component["m_Script"])
+                {
+                    auto node = component["m_Script"];
+                    auto& script = _scene.AddComponent<Script>(entity);
+                    script.name = node["Name"].as<std::string>();
+                }
+
+                if (component["m_MeshRenderer"])
+                {
+                    auto node = component["m_MeshRenderer"];
+                    auto& meshRenderer = _scene.AddComponent<MeshRenderer>(entity);
+                    meshRenderer.MeshName = node["Name"].as<std::string>();
+                }
+
+                if (component["m_LightSource"])
+                {
+                    auto node = component["m_LightSource"];
+                    auto& lightSource = _scene.AddComponent<LightSource>(entity);
+                    lightSource.lightingColor = node["lightingColor"].as<glm::vec3>();
+                }
             }
         }
     }
 
     // Link all children with parents
-    for (auto pair : childEntities)
+    for (auto& pair : childEntities)
     {
         Transform& transform = _scene.GetComponent<Transform>(*pair.first);
         transform.SetParent(&_scene.GetComponent<Transform>(_scene.GetEntityByUUID(pair.second)));

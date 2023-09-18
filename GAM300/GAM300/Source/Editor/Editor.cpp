@@ -156,5 +156,8 @@ void EditorSystem::SetSelectedEntity(Entity* pEntity)
 
 void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    selectedEntity = pEvent->pEntity;
+    if (pEvent->handle.IsValid())
+        selectedEntity = &pEvent->handle.Get();
+    else
+        selectedEntity = nullptr;
 }
