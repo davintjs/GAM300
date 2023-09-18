@@ -419,7 +419,7 @@ void GraphicsSystem::Draw() {
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source);
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, temp_MaterialContainer[3]);
 		prop.iter = 0;
 	}
 

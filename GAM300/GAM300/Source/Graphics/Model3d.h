@@ -24,15 +24,7 @@ public:
 	std::vector<Material> _materials{};
 };
 
-struct InstanceProperties
-{
-	unsigned int VAO;
-	// rmb to convert everything to AOS
-	unsigned int entitySRTbuffer;
-	glm::mat4 entitySRT[EnitityInstanceLimit];
-	unsigned int drawCount = 0;
-	unsigned int iter = 0;
-};
+
 
 //tempory model
 struct GeneralModel {
