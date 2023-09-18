@@ -94,7 +94,10 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::Key << "m_Components" << YAML::Value;
     out << YAML::BeginSeq;
 
-    if (_scene.HasComponent<AudioSource>(_entity))
+    SerializeAllComponentsStruct componentSerializer;
+    bool hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene);
+
+    /*if (_scene.HasComponent<AudioSource>(_entity))
     {
         auto& component = _scene.GetComponent<AudioSource>(_entity);
         out << YAML::BeginMap;
@@ -177,11 +180,76 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_LightSource" << YAML::Value;
         out << YAML::BeginMap << "lightingColor" << component.lightingColor << YAML::EndMap;
         out << YAML::EndMap;
-    }
+    }*/
 
     out << YAML::EndSeq;
     out << YAML::EndMap;
     out << YAML::EndMap;
+
+    return hasSerialized;
+}
+
+template <typename T>
+bool SerializeComponent(YAML::Emitter& out, T& _component)
+{
+    std::string componentName = "m_";
+    componentName += GetComponentType::Name<T>();
+
+    if constexpr (std::is_same<T, Tag>() || std::is_same<T, Transform>())
+        return true;
+
+    out << YAML::BeginMap;
+    out << YAML::Key << componentName << YAML::Value << YAML::BeginSeq;
+
+    std::vector<property::entry> List;
+    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+        {
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+            List.push_back(property::entry { PropertyName, Data });
+        });
+
+    for (auto& [Name, Data] : List)
+    {
+        std::visit([&](auto& Value)
+            {
+                using T = std::decay_t<decltype(Value)>;
+                
+                // Edit name
+                auto it = Name.begin() + Name.find_first_of("/");
+                Name.erase(Name.begin(), ++it);
+                Name[0] = toupper(Name[0]); //Make first letter uppercase
+
+                // Store Component value
+                if (Name.find(".x") != std::string::npos)
+                {
+                    size_t pos = Name.find_last_of('.');
+                    Name.erase(pos, 2);
+                    out << YAML::BeginMap;
+                    out << YAML::Key << Name << YAML::Value;
+                    out << YAML::Flow << YAML::BeginSeq << Value;
+                }
+                else if (Name.find(".y") != std::string::npos)
+                {
+                    out << Value;
+                }
+                else if (Name.find(".z") != std::string::npos)
+                {
+                    out << Value << YAML::EndSeq;
+                    out << YAML::EndMap;
+                }
+                else
+                {
+                    out << YAML::BeginMap;
+                    out << YAML::Key << Name << YAML::Value << Value;
+                    out << YAML::EndMap;
+                }
+            }
+        , Data);
+        property::set(_component, Name.c_str(), Data);
+    }
+
+    out << YAML::EndSeq << YAML::EndMap;
 
     return true;
 }
@@ -237,10 +305,9 @@ bool DeserializeScene(Scene& _scene)
         {
             YAML::Node object = entity["GameObject"];
 
-            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>()).Get();
+            Entity& entity = _scene.AddEntity(object["m_EUID"].as<Engine::UUID>()).Get();
 
             // Bean: Dont need cuz when parenting it reorders the object anyways
-            //entity.denseIndex = object["m_Index"].as<ObjectIndex>(); 
             _scene.SetActive(entity, object["m_IsActive"].as<bool>());
             
             // Bean: Create a constructor for entity with transform and tag
@@ -321,7 +388,7 @@ bool DeserializeScene(Scene& _scene)
                 {
                     auto node = component["m_LightSource"];
                     auto& lightSource = _scene.AddComponent<LightSource>(entity);
-                    lightSource.lightingColor = node["lightingColor"].as<glm::vec3>();
+                    lightSource.lightingColor = node["LightingColor"].as<glm::vec3>();
                 }
             }
         }

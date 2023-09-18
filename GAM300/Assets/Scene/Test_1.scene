@@ -1,0 +1,19 @@
+Scene: Test_1
+Entities:
+  - GameObject:
+      m_EUID: 9026184056899096336
+      m_IsActive: true
+      m_Name: New GameObject(1)
+      m_Position: [0, 0, 0]
+      m_Rotation: [0, 0, 0]
+      m_Scale: [1, 1, 1]
+      m_Children:
+        []
+      m_Parent: 0
+      m_Components:
+        - m_LightSource:
+            - m_LightingColor: [4.5999999, 1.14999998, 3.70000005]
+        - m_BoxCollider:
+            - m_X: 1
+            - m_Y: 1
+            - m_Z: 1
