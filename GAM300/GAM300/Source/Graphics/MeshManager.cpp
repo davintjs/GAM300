@@ -32,12 +32,12 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 {
     GeomImported newGeom(std::move(DeserializeGeoms(filePath)));
 
-    std::cout << "I have Materials : " << newGeom._materials.size() << 
-        "from " << filePath << "\n";
+    /*std::cout << "I have Materials : " << newGeom._materials.size() << 
+        "from " << filePath << "\n";*/
 
     for (int i = 0; i < newGeom._materials.size(); ++i)
     {
-        std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
+        /*std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.g << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.b << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.a << "\n";
@@ -52,7 +52,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         std::cout << "Specular : " << newGeom._materials[i].Specular.g << "\n";
         std::cout << "Specular : " << newGeom._materials[i].Specular.b << "\n";
         std::cout << "Specular : " << newGeom._materials[i].Specular.a << "\n";
-        std::cout << "\n\n";
+        std::cout << "\n\n";*/
         Materials temporary;
         temporary.Albedo = glm::vec4(1.f, 1.f, 1.f, 1.f);
 

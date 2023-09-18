@@ -170,7 +170,7 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
-			std::cout << newName << "\n";
+			//std::cout << newName << "\n";
 			properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
 		}
 		++i;
