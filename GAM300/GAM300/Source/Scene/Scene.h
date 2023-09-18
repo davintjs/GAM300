@@ -234,7 +234,7 @@ struct Scene
 		tag.name = "New GameObject(";
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
-		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
+		EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
 		EditorHierarchy::Instance().layer.push_back(&entity);
 		ObjectCreatedEvent e{ (handle) };
 		EVENTS.Publish(&e);

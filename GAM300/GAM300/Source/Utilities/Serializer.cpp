@@ -246,9 +246,9 @@ bool DeserializeScene(Scene& _scene)
             // Bean: Create a constructor for entity with transform and tag
             Transform& transform = _scene.GetComponent<Transform>(entity);
             _scene.GetComponent<Tag>(entity).name = object["m_Name"].as<std::string>();
-            transform.translation = object["m_Position"].as<Vector3>();
-            transform.rotation = object["m_Rotation"].as<Vector3>();
-            transform.scale = object["m_Scale"].as<Vector3>();
+            transform.translation = Vector3(object["m_Position"].as<vec3>());
+            transform.rotation = Vector3(object["m_Rotation"].as<vec3>());
+            transform.scale = Vector3(object["m_Scale"].as<vec3>());
             
             auto parent = object["m_Parent"];
             if (parent)

@@ -34,7 +34,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
-using Vector3 = glm::vec3;
+using vec3 = glm::vec3;
 using Vector4 = glm::vec4;
 using Quaternion = glm::quat;
 
@@ -164,7 +164,7 @@ struct Transform : Object
 	Vector3 rotation{};
 	Vector3 translation{};
 	Transform* parent = nullptr;
-
+	
 	std::vector<Transform*> child;
 
 	bool isLeaf() {
@@ -193,11 +193,11 @@ struct Transform : Object
 	}
 
 	glm::mat4 GetLocalMatrix() const {
-		glm::mat4 rot = glm::toMat4(glm::quat(rotation));
+		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 		
-		return glm::translate(glm::mat4(1.0f), translation) *
+		return glm::translate(glm::mat4(1.0f), vec3(translation)) *
 			rot *
-			glm::scale(glm::mat4(1.0f), scale);
+			glm::scale(glm::mat4(1.0f),vec3(scale));
 	}
 
 	bool isEntityChild(Transform& ent) {
@@ -219,7 +219,12 @@ struct Transform : Object
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
-			glm::decompose(globalTransform, scale, rot, translation, skew, perspective);
+
+			vec3 _scale = vec3(scale);
+			vec3 _translation = vec3(translation);
+			glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
+			scale = _scale;
+			translation = _translation;
 			rotation = glm::eulerAngles(rot);
 		}
 
@@ -233,7 +238,12 @@ struct Transform : Object
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
-			glm::decompose(lTransform, scale, rot, translation, skew, perspective);
+
+			vec3 _scale = vec3(scale);
+			vec3 _translation = vec3(translation);
+			glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
+			scale = _scale;
+			translation = _translation;
 			rotation = glm::eulerAngles(rot);
 
 			// Add the object to the new parent's child list
@@ -255,12 +265,17 @@ struct Transform : Object
 
 };
 
+//property_begin_name(Transform, "Transform") {
+//	property_var(scale.x), property_var(scale.y), property_var(scale.z)
+//		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
+//		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
+//} property_vend_h(Transform)//
 
 property_begin_name(Transform, "Transform") {
-	property_var(scale.x), property_var(scale.y), property_var(scale.z)
-		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
-		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
-} property_vend_h(Transform)
+		property_var(scale),
+			property_var(rotation),
+			property_var(translation),
+	} property_vend_h(Transform)
 
 struct AudioSource : Object
 {
@@ -337,9 +352,9 @@ struct Rigidbody : Object
 
 property_begin_name(Rigidbody, "Rigidbody") {
 
-	property_var(linearVelocity.x), property_var(linearVelocity.y), property_var(linearVelocity.z)
-		, property_var(angularVelocity.x), property_var(angularVelocity.y), property_var(angularVelocity.z)
-		, property_var(force.x), property_var(force.y), property_var(force.z)
+	property_var(linearVelocity)
+		, property_var(angularVelocity)
+		, property_var(force)
 		, property_var(friction)
 		, property_var(mass)
 		, property_var(isStatic)
@@ -363,8 +378,8 @@ struct CharacterController : Object
 };
 
 property_begin_name(CharacterController, "CharacterController") {
-	property_var(velocity.x), property_var(velocity.y), property_var(velocity.z)
-		, property_var(force.x), property_var(force.y), property_var(force.z)
+	property_var(velocity)
+		, property_var(force)
 		, property_var(friction)
 		, property_var(mass)
 		, property_var(gravityFactor)
@@ -391,7 +406,6 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(MeshName)
-		//, property_var(fields)
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
@@ -401,8 +415,7 @@ struct LightSource : Object
 };
 
 property_begin_name(LightSource, "LightSource") {
-	property_var(lightingColor.x), property_var(lightingColor.y), property_var(lightingColor.z)
-		//, property_var(fields)
+	property_var(lightingColor)
 } property_vend_h(LightSource)
 
 #pragma endregion

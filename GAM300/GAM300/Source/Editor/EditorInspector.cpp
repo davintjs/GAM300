@@ -121,6 +121,8 @@ void DisplayType(const char* name, Vector3& val)
     static std::string idName{};
     idName = "##";
     idName += name;
+   
+
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
         ImGui::TableNextColumn();
@@ -211,31 +213,31 @@ template <typename T>
 void Display_Property(T& comp) {
 
     //Need to manually display Vec3 types as property system does not register vec3 types
-    if constexpr (std::is_same<T, Transform>()) {
-        Display("Position", comp.translation);
-        glm::vec3 rotation = glm::degrees(comp.rotation);
-        Display("Rotation", rotation);
-        comp.rotation = glm::radians(rotation);
-        Display("Scale", comp.scale);
-        for (int i = 0; i < 3; ++i)
-        {
-            if (fabs(comp.scale[i]) < 0.001f)
-                comp.scale[i] = 0.001f;
-        }
-        return; //no other types other than vec3
-    }
-    else if constexpr (std::is_same<T, Rigidbody>()) {
-        Display("Linear Velocity", comp.linearVelocity);
-        Display("Angular Velocity", comp.angularVelocity);
-        Display("Force", comp.force);
-    }
-    else if constexpr (std::is_same<T, CharacterController>()) {
-        Display("Velocity", comp.velocity);
-        Display("Force", comp.force);
-    }
-    else if constexpr (std::is_same<T, LightSource>()) {
-        Display("Light Color", comp.lightingColor);
-    }
+    //if constexpr (std::is_same<T, Transform>()) {
+    //    Display("Position", comp.translation);
+    //    glm::vec3 rotation = glm::degrees(comp.rotation);
+    //    Display("Rotation", rotation);
+    //    comp.rotation = glm::radians(rotation);
+    //    Display("Scale", comp.scale);
+    //    for (int i = 0; i < 3; ++i)
+    //    {
+    //        if (fabs(comp.scale[i]) < 0.001f)
+    //            comp.scale[i] = 0.001f;
+    //    }
+    //    return; //no other types other than vec3
+    //}
+    //else if constexpr (std::is_same<T, Rigidbody>()) {
+    //    Display("Linear Velocity", comp.linearVelocity);
+    //    Display("Angular Velocity", comp.angularVelocity);
+    //    Display("Force", comp.force);
+    //}
+    //else if constexpr (std::is_same<T, CharacterController>()) {
+    //    Display("Velocity", comp.velocity);
+    //    Display("Force", comp.force);
+    //}
+    //else if constexpr (std::is_same<T, LightSource>()) {
+    //    Display("Light Color", comp.lightingColor);
+    //}
 
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
@@ -248,15 +250,15 @@ void Display_Property(T& comp) {
     for (auto& [Name, Data] : List)
     {
 
-        if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
+        /*if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
                         if ((Name.find(".x") != std::string::npos) ||
                             (Name.find(".y") != std::string::npos) ||
                             (Name.find(".z") != std::string::npos)) continue;
-                    }
+                    }*/
 
         std::visit([&](auto& Value) {
 
-                using T = std::decay_t<decltype(Value)>;
+                using T1 = std::decay_t<decltype(Value)>;
 
                 //Edit name
                 std::string DisplayName = Name;
@@ -264,7 +266,9 @@ void Display_Property(T& comp) {
                 DisplayName.erase(DisplayName.begin(), ++it);
                 DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
 
-                Display<T>(DisplayName.c_str(), Value);
+                Display<T1>(DisplayName.c_str(), Value);
+                
+               
             }
         , Data);
         property::set(comp, Name.c_str(), Data);
