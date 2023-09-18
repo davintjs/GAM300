@@ -263,18 +263,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())
 		{
-			//MonoClass* mClass = mono_type_get_class(mType);
-			//if (!SCRIPTING.IsScript(mClass))
-			//	return nullptr;
-			//GenericComponentIter iter(
-			//	[] -> Tag
-			//	{
-
-			//	});
-			//const char* name = mono_class_get_name(mClass);
-			//while (pEntity != name)
-			//return &pEntity->pScene->GetComponent<Script>(pEntity->denseIndex);
+			PRINT("CANT FIND LAH CHIBAI\n");
 		}
+		PRINT("HELLOOOO PLS WORK\n");
 		return RecurseGetComponent(pair->second,pEntity);
 	}
 	//	Component* component{ nullptr };

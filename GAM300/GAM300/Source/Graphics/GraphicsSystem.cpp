@@ -8,6 +8,7 @@
 #include "../Core/FramerateController.h"
 
 #include "Editor/Editor.h"
+#include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
@@ -16,7 +17,7 @@
 //Temporary
 Model testmodel;
 
-Model LightSource;
+//Model LightSource;
 
 Model AffectedByLight;
 
@@ -92,8 +93,8 @@ void GraphicsSystem::Init()
 	Line.lineinit();
 
 	// Magic Testing
-	LightSource.cubeinit();
-	LightSource.setup_lightshader();
+	//LightSource.cubeinit();
+	//LightSource.setup_lightshader();
 	
 	AffectedByLight.cubeinit();
 	AffectedByLight.setup_affectedShader();
@@ -101,7 +102,7 @@ void GraphicsSystem::Init()
 	// Setting up Positions
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	testmodel.position = glm::vec3(0.f, 0.f, -800.f);
-	LightSource.position = glm::vec3(0.f, 0.f, -300.f);
+	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
 	int index = 0;
@@ -144,19 +145,26 @@ void GraphicsSystem::Update(float dt)
 
 	currentScene.singleComponentsArrays.GetArray<Transform>();
 	
-	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-	bool checkForSelection = false;
 	Ray3D temp;
-	if (InputHandler::isMouse_L_DoubleClick())
-	{
-		temp = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y, 
-			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
-		Ray_Container.push_back(temp);
-		checkForSelection = true;
-	}
+	bool checkForSelection = Raycasting(temp);
+	
 	float intersected = FLT_MAX;
 	float temp_intersect;
 
+	bool haveLight = false;
+	for (LightSource& lightSource : currentScene.GetComponentsArray<LightSource>())
+	{
+		haveLight = true;
+		Entity& entity{ currentScene.GetEntity(lightSource) };
+		Transform& transform = currentScene.GetComponent<Transform>(entity);
+
+		Lighting_Source.lightpos = transform.translation;
+		Lighting_Source.lightColor = lightSource.lightingColor;
+	}
+	if (!haveLight)
+	{
+		Lighting_Source.lightColor = glm::vec3(0.f, 0.f, 0.f);
+	}
 	int i = 0;
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
@@ -172,12 +180,8 @@ void GraphicsSystem::Update(float dt)
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
-		if (i == 0)
-		{
-			renderer.isLightSource = true;
-			Lighting_Source.lightColor = renderer.Light_Properties.LightingColor;
-			Lighting_Source.lightpos = transform.translation;
-		}
+
+		
 
 		///*std::cout << "entering update loop\n";*/
 		//int index = 1;
@@ -202,26 +206,37 @@ void GraphicsSystem::Update(float dt)
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 		if (checkForSelection)
 		{
-			glm::mat4 translation_mat(
-				glm::vec4(1.f, 0.f, 0.f, 0.f),
-				glm::vec4(0.f, 1.f, 0.f, 0.f),
-				glm::vec4(0.f, 0.f, 1.f, 0.f),
-				glm::vec4(transform.translation, 1.f)
-			);
-			glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
+			//glm::mat4 translation_mat(
+			//	glm::vec4(1.f, 0.f, 0.f, 0.f),
+			//	glm::vec4(0.f, 1.f, 0.f, 0.f),
+			//	glm::vec4(0.f, 0.f, 1.f, 0.f),
+			//	glm::vec4(transform.translation, 1.f)
+			//);
+			//glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
 
-			glm::vec3 mins = transform.scale * glm::vec3(-1.f, -1.f, -1.f);
-			glm::vec3 maxs = transform.scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::mat4 transMatrix = transform.GetWorldMatrix();
 
-			glm::mat4 noscale = translation_mat * rotation_mat;
+			//glm::mat4 noscale = translation_mat * rotation_mat;
+
+			glm::vec3 translation;
+			glm::quat rot;
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::vec3 scale;
+			glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
+
+			glm::vec3 mins = scale * glm::vec3(-1.f, -1.f, -1.f);
+			glm::vec3 maxs = scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::mat4 rotMat = glm::toMat4(rot);
 
 			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
-				noscale, temp_intersect))
+				glm::translate(glm::mat4(1.0f), translation) * rotMat, temp_intersect))
 			{
 				if (temp_intersect < intersected)
 				{
 					//EDITOR.SetSelectedEntity(&entity);
-					SelectedEntityEvent SelectingEntity(&entity);
+					currentScene.GetHandle<Entity>(entity);
+					SelectedEntityEvent SelectingEntity(currentScene.GetHandle(entity));
 
 					EVENTS.Publish(&SelectingEntity);
 					//EditorCam.ActiveObj = &entity;
@@ -296,7 +311,7 @@ void GraphicsSystem::Update(float dt)
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		SelectedEntityEvent selectedEvent{ nullptr };
+		SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
 		EVENTS.Publish(&selectedEvent);
 	}
 
@@ -310,40 +325,40 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update((float)MyFrameRateController.getDt());
 
-	// This one is turbo scuffed i just putting here to test  light
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
-	{
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-		{
-			LightSource.position.x -= 10.f;
-		}
-		else
-		{
-			LightSource.position.y += 10.f;
+	//// This one is turbo scuffed i just putting here to test  light
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_UP))
+	//{
+	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+	//	{
+	//		LightSource.position.x -= 10.f;
+	//	}
+	//	else
+	//	{
+	//		LightSource.position.y += 10.f;
 
-		}
-	}
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
-	{
-		LightSource.position.z -= 10.f;
-	}
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
-	{
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-		{
-			LightSource.position.x += 10.f;
-		}
-		else
-		{
-			LightSource.position.y -= 10.f;
+	//	}
+	//}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT))
+	//{
+	//	LightSource.position.z -= 10.f;
+	//}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_DOWN))
+	//{
+	//	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+	//	{
+	//		LightSource.position.x += 10.f;
+	//	}
+	//	else
+	//	{
+	//		LightSource.position.y -= 10.f;
 
-		}
-	}
+	//	}
+	//}
 
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
-	{
-		LightSource.position.z += 10.f;
-	}
+	//if (InputHandler::isKeyButtonHolding(GLFW_KEY_RIGHT))
+	//{
+	//	LightSource.position.z += 10.f;
+	//}
 
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
@@ -531,13 +546,8 @@ void GraphicsSystem::Draw() {
 	// }
 
 
-	/*LightSource.lightSource_draw();
+	/* // LightSource.lightSource_draw();
 	AffectedByLight.affectedByLight_draw(LightSource.position);*/
-
-	
-	
-
-	
 
 
 }
@@ -580,6 +590,25 @@ void InstancePropertySetup(InstanceProperties& prop) {
 	glVertexAttribDivisor(8, 1);
 	glVertexAttribDivisor(9, 1);
 	glBindVertexArray(0);
+}
+
+bool GraphicsSystem::Raycasting(Ray3D& _ray)
+{
+	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+
+	if (!EditorScene::Instance().UsingGizmos() && !EditorCam.isMoving && InputHandler::isMouseButtonPressed_L())
+	{
+		// Bean: Click within the scene imgui window
+		if (!EditorScene::Instance().WindowHovered())
+			return false;
+
+		_ray = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y,
+			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
+		Ray_Container.push_back(_ray);
+		return true;
+	}
+
+	return false;
 }
 
 void GraphicsSystem::Exit()
