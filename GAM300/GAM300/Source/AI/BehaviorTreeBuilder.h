@@ -8,9 +8,11 @@
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
+#define BEHAVIORTREEBUILDER BehaviorTreeBuilder::Instance()
+
 // This class builds the behavior trees from the trees folder upon start up
 // and store all of it into the vector of behavior trees upon 
-ENGINE_SYSTEM(BehaviorTreeBuilder)
+SINGLETON(BehaviorTreeBuilder)
 {
 public:
     BehaviorTree* GetBehaviorTree(std::string treeName);

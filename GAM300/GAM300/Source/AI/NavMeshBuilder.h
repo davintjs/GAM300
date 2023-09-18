@@ -7,12 +7,17 @@
 #include "Triangle3D.h"
 #include "NavMesh.h"
 
-class NavMeshBuilder
+#define NAVMESHBUILDER NavMeshBuilder::Instance()
+
+SINGLETON(NavMeshBuilder)
 {
 public:
-	NavMeshBuilder(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
-	~NavMeshBuilder();
+	NavMeshBuilder() {};
+	~NavMeshBuilder() {};
 
+	void Exit();
+
+	void BuildNavMesh(const std::vector<glm::vec3>&GroundVertices, const std::vector<glm::ivec3>&GroundIndices);
 	NavMesh* CreateNavMesh();
 
 	std::vector<Polygon3D>& GetRegion();
@@ -37,6 +42,7 @@ private:
 
 	int mTriCount = 0;
 	Polygon3D* mBoundary;
+	NavMesh* mNavMesh;
 	std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
 	std::vector<Polygon3D> mRegion;

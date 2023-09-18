@@ -9,6 +9,8 @@ public:
 	NavMesh(std::vector<Triangle3D> mTri);
 	~NavMesh();
 
+	void LinkAllTriangles();
+
 	const std::vector<Triangle3D> GetNavMeshTriangles() const;
 	const std::vector<glm::vec3> GetPoints() const;
 	const std::vector<unsigned int> GetIndices() const;
@@ -18,7 +20,6 @@ public:
 
 private:
 	void LinkTriangles(Triangle3D* mTri1, Triangle3D* mTri2);
-	void LinkAllTriangles();
 	void UpdateNavMesh();
 
 	std::vector<Triangle3D> mTriangles;

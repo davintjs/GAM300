@@ -228,7 +228,7 @@ void Polygon3D::CalculateNormal(const std::vector<glm::vec3>& vertices)
 
 void Polygon3D::JoinPolygon(Polygon3D& polygon)
 {
-
+	// TODO
 }
 
 bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
