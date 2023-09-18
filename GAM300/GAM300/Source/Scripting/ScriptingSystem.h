@@ -302,6 +302,7 @@ public:
 
 	bool IsScript(MonoClass* monoClass);
 
+	void ThreadWork();
 	/*******************************************************************************
 	/*!
 	*
@@ -427,7 +428,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackStartPreview(StartPreviewEvent* pEvent);
+	void CallbackSceneStart(SceneStartEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*

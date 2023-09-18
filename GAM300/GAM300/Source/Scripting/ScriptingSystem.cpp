@@ -172,15 +172,10 @@ MonoType* ScriptingSystem::GetMonoTypeFromName(std::string& name)
 void ScriptingSystem::RecompileThreadWork()
 {
 	PRINT("RECOMPLING\n");
-	//compilingStateReadable.lock();
-	//while (compilingState == CompilingState::SwapAssembly);
-	ACQUIRE_SCOPED_LOCK("Assets");
+	//ACQUIRE_SCOPED_LOCK(Assets);
 	compilingState = CompilingState::Compiling;
-	//Critical section
 	Utils::CompileDll();
 	compilingState = CompilingState::SwapAssembly;
-	//Critical section End
-	//compilingStateReadable.unlock();
 	PRINT("RECOMPLING END\n");
 }
 
@@ -197,13 +192,13 @@ void ScriptingSystem::RecompileThreadWork()
 
 void ScriptingSystem::Init()
 {
-	InitMono();
-	//ENABLE FOR EDITOR MODE
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
-	THREADS.EnqueueTask([this] {RecompileThreadWork(); });
-	ACQUIRE_UNIQUE_LOCK("Assets",[this]{return compilingState == CompilingState::SwapAssembly;});
-	//ENABLE FOR PLAY MODE
-	SwapDll();
+	#ifdef _BUILD
+		SwapDll();
+	#else
+		THREADS.EnqueueTask([this] {ThreadWork(); });
+		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
+		THREADS.EnqueueTask([this] {RecompileThreadWork(); });
+	#endif
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
@@ -214,38 +209,13 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectGameObject);
 	//SubscribeComponentBasedCallbacks(ComponentTypes());
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStartPreview);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
-void ScriptingSystem::Update(float dt)
-{
-	//Pause timer when recompiling
-	if (timeUntilRecompile > 0)
-	{
-		timeUntilRecompile -= dt;
-		if (timeUntilRecompile < 0)
-		{
-			THREADS.EnqueueTask([this] {RecompileThreadWork(); });
-		}
-	}
-	else if (compilingState == CompilingState::SwapAssembly)
-	{
-		ACQUIRE_SCOPED_LOCK("Assets");
-		SwapDll();
-	}
-}
+void ScriptingSystem::Update(float dt){}
 
-void ScriptingSystem::Exit()
-{
-	for (uint32_t hand : gcHandles)
-	{
-		mono_gchandle_free(hand);
-	}
-	gcHandles.clear();
-	UnloadAppDomain();
-	ShutdownMono();
-}
+void ScriptingSystem::Exit(){}
 
 template <typename... Args>
 MonoObject* ScriptingSystem::InstantiateClass(MonoClass* mClass, Args&&... args)
@@ -386,8 +356,43 @@ struct ReflectExistingStruct
 
 using ReflectAll = decltype(ReflectExistingStruct(AllComponentTypes()));
 
+void ScriptingSystem::ThreadWork()
+{
+	InitMono();
+	while (!THREADS.HasStopped())
+	{	
+		#ifndef _BUILD
+		//Pause timer when recompiling
+		if (timeUntilRecompile > 0)
+		{
+			Sleep(1000);
+			ACQUIRE_SCOPED_LOCK(Mono);
+			timeUntilRecompile -= 1;
+			if (timeUntilRecompile <= 0)
+			{
+				THREADS.EnqueueTask([this] {RecompileThreadWork(); });
+			}
+		}
+		else if (compilingState == CompilingState::SwapAssembly)
+		{
+			SwapDll();
+		}
+		#endif
+	}
+	for (uint32_t hand : gcHandles)
+	{
+		mono_gchandle_free(hand);
+	}
+	gcHandles.clear();
+	UnloadAppDomain();
+	ShutdownMono();
+}
+
 void ScriptingSystem::SwapDll()
 {
+	//Load Mono
+	ACQUIRE_SCOPED_LOCK(Assets);
+	//ACQUIRE_SCOPED_LOCK(Play);
 	for (uint32_t hand : gcHandles)
 	{
 		mono_gchandle_free(hand);
@@ -395,6 +400,7 @@ void ScriptingSystem::SwapDll()
 	gcHandles.clear();
 	RegisterScriptWrappers();
 	mComponents.clear();
+	//CHANGE THIS to be outside, only load assembly should be in the thread
 	UnloadAppDomain();
 	CreateAppDomain();
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
@@ -536,6 +542,7 @@ void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
+	ACQUIRE_SCOPED_LOCK(Mono);
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
 
@@ -811,18 +818,21 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 //	ReflectGameObject(pEvent->gameObject);
 //}
 //
-//void ScriptingSystem::CallbackStartPreview(StartPreviewEvent* pEvent)
-//{
-//	inPlayMode = true;
-//	for (uint32_t hand : gcHandles)
-//	{
-//		mono_gchandle_free(hand);
-//	}
-//	gcHandles.clear();
-//	mGameObjects.clear();
-//	mComponents.clear();
-//	ReflectAll();
-//}
+void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
+{
+	SwapDll();
+	//ACQUIRE_SCOPED_LOCK(Play);
+	//E_ASSERT(mAppDomain,"App domain is not loaded");
+	//inPlayMode = true;
+	//for (uint32_t hand : gcHandles)
+	//{
+	//	mono_gchandle_free(hand);
+	//}
+	//gcHandles.clear();
+	//mGameObjects.clear();
+	//mComponents.clear();
+	//ReflectAll();
+}
 //
 //void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
 //{

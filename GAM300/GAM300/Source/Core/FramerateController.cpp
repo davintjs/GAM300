@@ -62,7 +62,6 @@ void FrameRateController::End()
 		accumulatedTime -= fixedDeltaTime;
 		++steps;
 	}
-	PRINT("STEPS: ",steps,'\n');
 	frameRate = 1 / deltaTime;
 }
 

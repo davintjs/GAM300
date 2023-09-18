@@ -51,7 +51,6 @@ using MultiTable = std::unordered_map<Engine::UUID, Table<T>>;
 template<typename... Ts>
 struct HandlesTable
 {
-
 	constexpr HandlesTable(TemplatePack<Ts...>) {}
 	HandlesTable() = default;
 	template <typename T1>

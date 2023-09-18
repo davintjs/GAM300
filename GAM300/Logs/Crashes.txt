@@ -1,5 +1,5 @@
-[2023-09-17 14:43:04.021] [Error] [critical] 
-Caused By:	singleHandles.HasHandle<T>(uuid)
-Info:		UUID:  0  of  Entity  doesn't exist in this scene
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 204)
+[2023-09-18 02:02:38.996] [Error] [critical] 
+Caused By:	mAppDomain
+Info:		App domain is not loaded
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 822)
 

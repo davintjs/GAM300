@@ -86,8 +86,6 @@ void SceneManager::CreateScene()
 void SceneManager::LoadScene(const std::string& _filePath)
 {
 	// Bean: Next time check if the scene has already been loaded
-
-
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 	
@@ -144,7 +142,6 @@ void SceneManager::ChangeScene(Scene& _newScene)
 {
 	// Bean: Prompt to save current scene (save for now)
 	//SaveScene(GetCurrentScene().filePath.string());
-
 	LoadScene(_newScene.filePath.string().c_str());
 }
 

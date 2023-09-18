@@ -12,9 +12,9 @@ constexpr int MAX_THREADS = 6;
 
 #define THREADS ThreadPool::Instance()
 
-#define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock = ThreadPool::Instance().AcquireUniqueLock(MUTEX_NAME); ThreadPool::Instance().Wait(lock,FUNC)
+#define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireUniqueLock(#MUTEX_NAME); ThreadPool::Instance().Wait(lock##MUTEX_NAME,FUNC)
 
-#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock = ThreadPool::Instance().AcquireScopedLock(MUTEX_NAME);
+#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME);
 
 SINGLETON(ThreadPool)
 {
@@ -25,7 +25,7 @@ public:
 	template <typename T>
 	void EnqueueTask(T&& task)
 	{
-		ACQUIRE_SCOPED_LOCK("Queue");
+		ACQUIRE_SCOPED_LOCK(Queue);
 		mTasks.emplace(std::move(task));
 	}
 

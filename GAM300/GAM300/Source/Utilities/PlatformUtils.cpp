@@ -29,7 +29,7 @@
 	}
 
 	std::string FileDialogs::SaveFile(const char* filter) {
-		ACQUIRE_SCOPED_LOCK("Assets");
+		ACQUIRE_SCOPED_LOCK(Assets);
 		OPENFILENAMEA ofn;
 		CHAR filesz[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));

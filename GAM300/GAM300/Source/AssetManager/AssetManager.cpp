@@ -169,7 +169,7 @@ void AssetManager::LoadAsset(const std::string& metaFilePath, const std::string&
 	// 	DeserializeAssetMeta(metaFilePath, fileName, isDDS);
 	// }
 	// mAssetVariable.notify_all();
-	ACQUIRE_SCOPED_LOCK("Assets");
+	ACQUIRE_SCOPED_LOCK(Assets);
 	DeserializeAssetMeta(metaFilePath, fileName, isDDS);
 }
 
@@ -182,7 +182,7 @@ void AssetManager::AsyncUnloadAsset(const std::string& assetGUID)
 void AssetManager::UnloadAsset(const std::string& assetGUID)
 {
 	//May need to unique lock this
-	ACQUIRE_SCOPED_LOCK("Assets");
+	ACQUIRE_SCOPED_LOCK(Assets);
 	mTotalAssets.mFilesData.erase(assetGUID);
 	std::cout << "Done removing file from memory!" << std::endl;
 }
@@ -195,7 +195,7 @@ void AssetManager::AsyncUpdateAsset(const std::string& assetPath, const std::str
 
 void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& assetGUID)
 {
-	ACQUIRE_SCOPED_LOCK("Assets");
+	ACQUIRE_SCOPED_LOCK(Assets);
 
 	mTotalAssets.mFilesData[assetGUID].mFileTime = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
 
@@ -233,7 +233,7 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 	};
 	ACQUIRE_UNIQUE_LOCK
 	(
-		"Assets", func
+		Assets, func
 	);
 
 	return mTotalAssets.mFilesData[data].mData;
@@ -258,7 +258,7 @@ std::string AssetManager::GetAssetGUID(const std::string& fileName)
 	};
 	ACQUIRE_UNIQUE_LOCK
 	(
-		"Assets", func
+		Assets, func
 	);
 
 	return data;
@@ -348,7 +348,7 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 void AssetManager::FileAddProtocol()
 {
 	std::string subFilePath{};
-	ACQUIRE_SCOPED_LOCK("Assets");
+	ACQUIRE_SCOPED_LOCK(Assets);
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		subFilePath = dir.path().generic_string();
