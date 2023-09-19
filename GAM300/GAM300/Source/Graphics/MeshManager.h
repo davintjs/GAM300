@@ -10,6 +10,7 @@
 
 #include "Model3d.h"
 
+struct InstanceProperties;
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -23,8 +24,8 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-
 	unsigned int index;
+
 };
 
 
@@ -87,7 +88,7 @@ private:
 
 	void CreateInstanceCube();
 
-	unsigned int InstanceSetup(GLuint vaoid , unsigned int index);
+	unsigned int InstanceSetup(InstanceProperties& prop);
 
 
 };

@@ -29,6 +29,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
 //#include "AI/Enemy.h"
+#include "AI/NavMeshBuilder.h"
 #include "IOManager/InputSystem.h"
 #include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
@@ -41,6 +42,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/Debugger.h"
 #include "Scripting/LogicSystem.h"
 #include "SystemsGroup.h"
+#include "Debugging/DemoSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 2.f;
@@ -66,8 +68,8 @@ enum class EngineState
 		//PhysicsSystem,
 		GraphicsSystem,
 		Blackboard,
-		BehaviorTreeBuilder,
-		AssetManager
+		AssetManager,
+		DemoSystem
 	>;
 #endif
 
@@ -98,18 +100,10 @@ public:
 		ACQUIRE_SCOPED_LOCK("Assets");
 		EVENTS.Publish(&startEvent);
 
-		//ThreadPool mThreadP;
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	mThreadP.EnqueueTask([i]
-		//		{
-		//			std::cout << "Task " << i << " is being executed by thread " << std::this_thread::get_id() << std::endl;
-		//			std::this_thread::sleep_for(std::chrono::seconds(1));
-		//			std::cout << "Task " << i << " completed" << std::endl;
-		//		});
-		//}
-
-		//std::this_thread::sleep_for(std::chrono::seconds(10));
+		// NavMesh testing
+		std::vector<glm::vec3> GroundVertices{glm::vec3(1.f, 1.f, 1.f)};
+		std::vector<glm::ivec3> GroundIndices{glm::ivec3(0, 0, 0)};
+		NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
 
 		// Bean: Serialization Tests
 	}
@@ -198,6 +192,8 @@ public:
 	{
 		AllSystems::Exit();
 		THREADS.Exit();
+		BEHAVIORTREEBUILDER.Exit();
+		NAVMESHBUILDER.Exit();
 	}
 
 	void CallbackSceneStart(SceneStartEvent* pEvent)

@@ -2,6 +2,9 @@
 
 #include <vector>
 #include "glm/glm.hpp"
+#include "Segment2D.h"
+#include "Plane3D.h"
+#include "Line3D.h"
 
 class Polygon3D
 {
@@ -29,6 +32,9 @@ public:
 
 private:
 	void GenerateConvexHull(const std::vector<glm::vec3>& points);
+	float PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p);
+	bool Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt);
+	bool Intersects(const Line3D& line, const Plane3D& plane, float* rt);
 
 	glm::vec3 minPoint;
 	glm::vec3 maxPoint;
@@ -37,3 +43,14 @@ private:
 	Orientation mOrientation;
 	glm::vec3 mNormal;
 };
+
+static bool isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
+{
+	float signedArea = (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
+	signedArea *= 0.5f;
+	if (signedArea > 0.f)
+	{
+		return true;
+	}
+	return false;
+}

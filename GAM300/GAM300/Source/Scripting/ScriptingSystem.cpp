@@ -558,7 +558,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 		Scene& scene = MySceneManager.Instance().GetCurrentScene();
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		void* param = &scene.GetEntity(component);
-		PRINT(scene.GetEntity(component).uuid);
+		PRINT(scene.GetEntity(component).euid);
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
 		invoke(instance, reflectComponent, &param);
 		mComponents.emplace(&component, instance);

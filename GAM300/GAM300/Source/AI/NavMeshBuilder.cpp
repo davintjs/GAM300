@@ -2,21 +2,20 @@
 
 #include "NavMeshBuilder.h"
 
-NavMeshBuilder::NavMeshBuilder(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
+void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
 {
 	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(GroundVertices, GroundIndices);
-	mRegion = ComputeRegions(GroundTriangles);
+	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
+	mNavMesh = CreateNavMesh(); // Create the navmesh
+	mNavMesh->LinkAllTriangles();
 }
 
-NavMeshBuilder::~NavMeshBuilder()
-{
-
-}
-
-// TODO : But need take into account new and delete
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	return nullptr;
+	RemoveHoles(); // Remove holes in the boundary
+	NavMesh* mNavMesh = new NavMesh(Triangulate());
+
+	return mNavMesh;
 }
 
 std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
@@ -155,7 +154,7 @@ void NavMeshBuilder::RemoveHoles()
 				polygon.JoinPolygon(hole); // Add the hole into the polygon
 			}
 		}
-	 }
+	}
 }
 
 std::vector<Triangle3D> NavMeshBuilder::Triangulate()
@@ -395,17 +394,6 @@ bool NavMeshBuilder::PointsOnLine(std::vector<glm::vec3> points, const glm::vec3
 	return true;
 }
 
-bool NavMeshBuilder::isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
-{
-	float signedArea = (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
-	signedArea *= 0.5f;
-	if (signedArea > 0.f)
-	{
-		return true;
-	}
-	return false;
-}
-
 bool NavMeshBuilder::Parallel(const glm::vec3& v1, const glm::vec3& v2)
 {
 	glm::vec3 test = glm::cross(v1, v2);
@@ -414,4 +402,13 @@ bool NavMeshBuilder::Parallel(const glm::vec3& v1, const glm::vec3& v2)
 		return true;
 	}
 	return false;
+}
+
+void NavMeshBuilder::Exit()
+{
+	mHoles.clear();
+	mObstacles.clear();
+	mRegion.clear();
+
+	delete mNavMesh;
 }

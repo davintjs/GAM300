@@ -121,6 +121,8 @@ void DisplayType(const char* name, Vector3& val)
     static std::string idName{};
     idName = "##";
     idName += name;
+   
+
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
         ImGui::TableNextColumn();
@@ -207,71 +209,69 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
-//This function uses LIONant functionality to serialize and display the component based on its contents (properties)
 template <typename T>
-void Property_Displayer(T& Object) {
+void Display_Property(T& comp) {
 
     //Need to manually display Vec3 types as property system does not register vec3 types
-    if constexpr (std::is_same<T, Transform>()) {
-        Display("Position", Object.translation);
-        glm::vec3 rotation = glm::degrees(Object.rotation);
-        Display("Rotation", rotation);
-        Object.rotation = glm::radians(rotation);
-        Display("Scale", Object.scale);
-        for (int i = 0; i < 3; ++i)
-        {
-            if (fabs(Object.scale[i]) < 0.001f)
-                Object.scale[i] = 0.001f;
-        }
-        return; //no other types other than vec3
-    }
-    else if constexpr (std::is_same<T, Rigidbody>()) {
-        Display("Linear Velocity", Object.linearVelocity);
-        Display("Angular Velocity", Object.angularVelocity);
-        Display("Force", Object.force);
-    }
-    else if constexpr (std::is_same<T, CharacterController>()) {
-        Display("Velocity", Object.velocity);
-        Display("Force", Object.force);
-    }
-    else if constexpr (std::is_same<T, LightSource>()) {
-        Display("Light Color", Object.lightingColor);
-    }
+    //if constexpr (std::is_same<T, Transform>()) {
+    //    Display("Position", comp.translation);
+    //    glm::vec3 rotation = glm::degrees(comp.rotation);
+    //    Display("Rotation", rotation);
+    //    comp.rotation = glm::radians(rotation);
+    //    Display("Scale", comp.scale);
+    //    for (int i = 0; i < 3; ++i)
+    //    {
+    //        if (fabs(comp.scale[i]) < 0.001f)
+    //            comp.scale[i] = 0.001f;
+    //    }
+    //    return; //no other types other than vec3
+    //}
+    //else if constexpr (std::is_same<T, Rigidbody>()) {
+    //    Display("Linear Velocity", comp.linearVelocity);
+    //    Display("Angular Velocity", comp.angularVelocity);
+    //    Display("Force", comp.force);
+    //}
+    //else if constexpr (std::is_same<T, CharacterController>()) {
+    //    Display("Velocity", comp.velocity);
+    //    Display("Force", comp.force);
+    //}
+    //else if constexpr (std::is_same<T, LightSource>()) {
+    //    Display("Light Color", comp.lightingColor);
+    //}
 
-    //List all properties
     std::vector<property::entry> List;
-    property::SerializeEnum(Object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
             // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
             assert(Flags.m_isScope == false || PropertyName.back() == ']');
             List.push_back(property::entry { PropertyName, Data });
         });
 
-
     for (auto& [Name, Data] : List)
     {
-        if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
-            if ((Name.find(".x") != std::string::npos) ||
-                (Name.find(".y") != std::string::npos) ||
-                (Name.find(".z") != std::string::npos)) {
-                continue;
-            }
-        }
-        std::visit([&](auto& Value)
-            {
-                using T = std::decay_t<decltype(Value)>;
+
+        /*if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
+                        if ((Name.find(".x") != std::string::npos) ||
+                            (Name.find(".y") != std::string::npos) ||
+                            (Name.find(".z") != std::string::npos)) continue;
+                    }*/
+
+        std::visit([&](auto& Value) {
+
+                using T1 = std::decay_t<decltype(Value)>;
 
                 //Edit name
-                auto it = Name.begin() + Name.find_first_of("/");
-                Name.erase(Name.begin(), ++it);
-                Name[0] = toupper(Name[0]); //Make first letter uppercase
-                
-                //Display Component value
-                Display<T>(Name.c_str(), Value);
+                std::string DisplayName = Name;
+                auto it = DisplayName.begin() + DisplayName.find_first_of("/");
+                DisplayName.erase(DisplayName.begin(), ++it);
+                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
 
+                Display<T1>(DisplayName.c_str(), Value);
+                
+               
             }
         , Data);
-        property::set(Object, Name.c_str(), Data);
+        property::set(comp, Name.c_str(), Data);
     }
 
     if constexpr (std::is_same<T, MeshRenderer>()) {
@@ -285,7 +285,7 @@ void Property_Displayer(T& Object) {
         bool found = false;
         for (auto& pair : MeshManager.mContainer)
         {
-            if (pair.first == Object.MeshName)
+            if (pair.first == comp.MeshName)
                 found = true;
             meshNames.push_back(pair.first.c_str());
             if (!found)
@@ -296,25 +296,23 @@ void Property_Displayer(T& Object) {
         ImGui::PushItemWidth(-1);
         ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
         ImGui::PopItemWidth();
-        Object.MeshName = meshNames[number];
+        comp.MeshName = meshNames[number];
     }
-
 }
 
-template <typename T>
-void DisplayComponent(T& component)
-{
-    //PRINT("Component of type: " << GetComponentType<T>::name << " does not exist yet! ");
-    Property_Displayer(component);
-}
-
+//template <typename T>
+//void DisplayComponent(T& component)
+//{
+    //PRINT("Component of type: " << typeid(component).name() << " does not exist yet! ");
+    //DisplayProperties(component);
+//}
 ////Cant use reflection system due to glm::vec3
 //template <>
 //void DisplayComponent<Transform>(Transform& transform)
 //{
-//    Property_Displayer(transform);
-//    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-//    //ImGui::Text("Active");
+    //DisplayProperties(transform);
+    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
+    //ImGui::Text("Active");
 //}
 //
 //template <>
@@ -322,7 +320,6 @@ void DisplayComponent(T& component)
 //{
 //    //Display("Bounds", boxCollider2D.bounds);
 //}
-
 //template <>
 //void DisplayComponent<Rigidbody>(Rigidbody& rb)
 //{
@@ -339,7 +336,6 @@ void DisplayComponent(T& component)
 //    Display("Use Gravity", rb.useGravity);
 //    Display("Is Kinematic", rb.isKinematic);
 //}
-
 //template <>
 //void DisplayComponent<Tag>(Tag& tag)
 //{
@@ -350,14 +346,37 @@ void DisplayComponent(T& component)
 //
 //
 //
+//template <typename T>
+//void Display_Property(T& comp) {
+//
+//    std::vector<property::entry> List;
+//    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+//        {
+//            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+//            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+//            List.push_back(property::entry { PropertyName, Data });
+//        });
+//
+//    for (auto& [Name, Data] : List)
+//    {
+//        std::visit([&](auto& Value) {
+//
+//            using T1 = std::decay_t<decltype(Value)>;
+//
+//            //PRINT(typeid(T).name(),'\n');
+//            Display<T1>(Name.c_str(), Value);
+//            //ReflectedTypes::DisplayHelper(Name,Value);
+//            }
+//        , Data);
+//        property::set(comp, Name.c_str(), Data);
+//    }
+//}
 //template<>
 //void DisplayComponent<AudioSource>(AudioSource& as) {
 //
-//    Property_Displayer(as);
-//    /*
-//    Display(as.getPropertyVTable().m_pName, as.loop);
-//    Display("Volume", as.volume);
-//    */
+//    Display_Property(as);
+//
+//  
 //}
 //
 //template <>
@@ -388,7 +407,6 @@ void DisplayComponent(T& component)
 //    ImGui::PopItemWidth();
 //    meshyRendy.MeshName = meshNames[number];
 //}
-
 //template <>
 //void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer)
 //{
@@ -415,7 +433,6 @@ void DisplayComponent(T& component)
 //        spriteRenderer.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
 //    }
 //}
-
 //template <>
 //void DisplayComponent<Text>(Text& text)
 //{
@@ -448,7 +465,6 @@ void DisplayComponent(T& component)
 //    //DisplayDragDrop();
 //    //spriteRenderer.sprite.set_name()
 //}
-
 //template <>
 //void DisplayComponent<Script>(Script& script)
 //{
@@ -654,15 +670,7 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-            DisplayComponent(component);
-
-            //To do: Deletion of component in inspector
-            //ImGui::Spacing();
-            //if (CENTERED_CONTROL(ImGui::Button("Delete ", ImVec2(ImGui::GetWindowSize().x * 0.3, ImGui::GetTextLineHeightWithSpacing()))))
-            //{
-            //    //To do: delete component, get container of all component types and compare,
-            //    PRINT("DELETING");
-            //}
+            Display_Property(component);
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -698,13 +706,11 @@ private:
     {
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-        
-
         if constexpr (SingleComponentTypes::Has<T1>()) {
             if (curr_scene.HasComponent<T1>(entity)) {
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
-                {
+                {   
                     auto& component = curr_scene.GetComponent<T1>(entity);
                     DisplayComponentHelper(component);
                 }              
@@ -815,7 +821,7 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.uuid);
+        ImGui::PushID((int)entity.euid);
         DisplayComponents(entity);
         ImGui::PopID();
         ImGui::Separator();

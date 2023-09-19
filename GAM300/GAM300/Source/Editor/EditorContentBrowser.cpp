@@ -18,6 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorHeaders.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
+#include "Core/EventsManager.h"
 
 static const std::string AssetDirectory = "Assets";
 static std::string entityType = "default", entityName = "default";
@@ -65,8 +66,11 @@ void EditorContentBrowser::Update(float dt)
     //using filesystem to iterate through all folders/files inside the "/Data" directory
     for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
     {
-        ImGui::PushID(i++);
         const auto& path = it.path();
+        if (path.string().find("meta") != std::string::npos) continue;
+
+        ImGui::PushID(i++);
+        
         auto relativepath = std::filesystem::relative(path, AssetDirectory);
         std::string pathStr = relativepath.filename().string();
 
@@ -100,12 +104,26 @@ void EditorContentBrowser::Update(float dt)
             }
         }
 
-        //double click logic to open scene file
-        /*if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
-            if (!it.is_directory()) {
+        //double click logics
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 
+            //Open script file in VSCode
+            if ((path.string().find(".cs") != std::string::npos)) {
+                std::string command = "code " + path.string();
+
+                int result = std::system(command.c_str());
+
+                //E_ASSERT(result, path.string(), " script file cannot be opened!");  
             }
-        }*/
+
+            //Open Scene file
+            if ((path.string().find(".scene") != std::string::npos)) {
+                //Open scene file logic here
+                LoadSceneEvent loadScene(path.string());
+                EVENTS.Publish(&loadScene);
+                EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
+            }       
+        }
 
         //render file name below icon
         ImGui::TextWrapped(pathStr.c_str());
