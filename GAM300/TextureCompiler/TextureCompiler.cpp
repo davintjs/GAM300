@@ -16,7 +16,7 @@ int main()
 		return hr;
 	}
 
-	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets/Textures"))
+	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets"))
 	{ 
 		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
 		{
