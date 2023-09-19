@@ -10,11 +10,6 @@ layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
 
 
-
-
-
-
-
 out vec4 FragColor;
 
 

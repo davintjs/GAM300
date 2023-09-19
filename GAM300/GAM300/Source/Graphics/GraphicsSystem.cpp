@@ -275,13 +275,13 @@ void GraphicsSystem::Update(float dt)
 
 	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
 	
-	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
+	//std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
 
-	Materials materialsArray[3]; // Create an array of 3 Materials
-	// Calculate the size of the array
-	size_t sizeOfArray = sizeof(materialsArray);
+	//Materials materialsArray[3]; // Create an array of 3 Materials
+	//// Calculate the size of the array
+	//size_t sizeOfArray = sizeof(materialsArray);
 
-	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
+	//std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
 	
 		
 	

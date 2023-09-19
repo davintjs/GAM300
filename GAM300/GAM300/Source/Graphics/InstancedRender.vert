@@ -4,7 +4,7 @@ layout (location = 1) in vec3 aVertexNormal;
 
 layout (location = 2) in vec3 aVertexTangent;
 layout (location = 3) in vec2 aVertexTexCoord; //UVs info
-layout (location = 4) in vec4 aVertexColor;
+layout (location = 4) in vec4 aVertexColor; // This can throw
 
 layout (location = 6) in mat4 SRT;
 
