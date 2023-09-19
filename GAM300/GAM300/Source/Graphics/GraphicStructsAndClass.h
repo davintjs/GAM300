@@ -36,6 +36,10 @@ struct InstanceProperties
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
+	
+
+
+
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
 };
