@@ -90,5 +90,8 @@ private:
 
 	unsigned int InstanceSetup(InstanceProperties& prop);
 
+	// Did not make this version because i realized that its all within instance properties
+	//unsigned int InstanceSetup_MAT(InstanceProperties& prop);
+
 
 };

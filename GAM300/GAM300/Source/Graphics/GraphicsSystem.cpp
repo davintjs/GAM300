@@ -159,7 +159,19 @@ void GraphicsSystem::Update(float dt)
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
 
-		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter++] = transform.GetWorldMatrix();
+		renderer.mr_Material.Albedo = temp_MaterialContainer[3].Albedo;
+		renderer.mr_Material.Ambient = temp_MaterialContainer[3].Ambient;
+		renderer.mr_Material.Diffuse = temp_MaterialContainer[3].Diffuse;
+		renderer.mr_Material.Shininess = temp_MaterialContainer[3].Shininess;
+		renderer.mr_Material.Specular = temp_MaterialContainer[3].Specular;
+
+
+
+		properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
+		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
+
+
+		++(properties[renderer.MeshName].iter);
 		char maxcount = 32;
 		// newstring
 		for (char namecount = 0; namecount < maxcount; ++namecount) {
@@ -171,7 +183,10 @@ void GraphicsSystem::Update(float dt)
 				break;
 			}
 			//std::cout << newName << "\n";
-			properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
+
+			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
+			properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
+			++(properties[newName].iter);
 		}
 		++i;
 
@@ -250,6 +265,27 @@ void GraphicsSystem::Update(float dt)
 		}
 	}
 	
+	/*
+	GLint maxVertexAttribs;
+	glGetProgramiv(temp_instance_shader.GetHandle(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxVertexAttribs);
+	std::cout << "max vertex attribs :" << maxVertexAttribs << "\n";
+	*/
+
+
+
+	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
+	
+	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
+
+	Materials materialsArray[3]; // Create an array of 3 Materials
+	// Calculate the size of the array
+	size_t sizeOfArray = sizeof(materialsArray);
+
+	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
+	
+		
+	
+
 	// Using Mesh Manager
 	/*
 	// instanced bind
@@ -377,6 +413,17 @@ void GraphicsSystem::Draw() {
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
+		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
+		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
+		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
+
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, temp_MaterialContainer[3]);
 		prop.iter = 0;
 	}

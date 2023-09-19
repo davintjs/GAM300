@@ -37,7 +37,8 @@ struct InstanceProperties
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
 	
-
+	unsigned int entityMATbuffer;
+	Materials entityMAT[EnitityInstanceLimit];
 
 
 	unsigned int drawCount = 0;

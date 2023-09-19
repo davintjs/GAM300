@@ -380,6 +380,9 @@ void MESH_Manager::CreateInstanceCube()
 }
 
 unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
+
+
+    // SRT Buffer set up
     prop.entitySRTbuffer;
     glGenBuffers(1, &prop.entitySRTbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -403,6 +406,44 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     glVertexAttribDivisor(8, 1);
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
+
+    // Material Buffer Setup
+    prop.entityMATbuffer;
+    glBindVertexArray(prop.VAO);
+
+    glGenBuffers(1, &prop.entityMATbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
+
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit *sizeof(Materials), &(prop.entityMAT[0]), GL_STATIC_DRAW);
+    // Albedo
+    glEnableVertexAttribArray(10);
+
+    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
+    // Specular
+    glEnableVertexAttribArray(11);
+
+    glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(sizeof(glm::vec4)));
+    // Diffuse
+    glEnableVertexAttribArray(12);
+
+    glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(2 * sizeof(glm::vec4)));
+    // Ambient
+    glEnableVertexAttribArray(13);
+
+    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(glm::vec4)));
+    // Shininess
+    glEnableVertexAttribArray(14);
+
+    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(4 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(10, 1);
+    glVertexAttribDivisor(11, 1);
+    glVertexAttribDivisor(12, 1);
+    glVertexAttribDivisor(13, 1);
+    glVertexAttribDivisor(14, 1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+
 
     return prop.entitySRTbuffer;
 }
