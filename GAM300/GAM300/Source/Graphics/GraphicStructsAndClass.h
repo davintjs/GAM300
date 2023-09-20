@@ -32,6 +32,7 @@ struct Materials
 	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
 
 
+
 	glm::vec4 Albedo; // This means colour for now
 	glm::vec4 Specular;
 	glm::vec4 Diffuse;

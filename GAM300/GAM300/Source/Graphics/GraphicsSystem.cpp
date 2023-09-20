@@ -164,7 +164,7 @@ void GraphicsSystem::Update(float dt)
 		renderer.mr_Material.Diffuse = temp_MaterialContainer[3].Diffuse;
 		renderer.mr_Material.Shininess = temp_MaterialContainer[3].Shininess;
 		renderer.mr_Material.Specular = temp_MaterialContainer[3].Specular;
-
+		//renderer.mr_Material.textureid = ???
 
 
 		properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
