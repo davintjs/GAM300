@@ -65,12 +65,13 @@ Model SkyBox_Model;
 void GraphicsSystem::Init()
 {
 	// Theophelia make a function
-	std::string left = "Assets/Resources/left.dds";
+	/**/std::string left = "Assets/Resources/left.dds";
 	std::string back = "Assets/Resources/back.dds";
 	std::string front = "Assets/Resources/front.dds";
 	std::string right = "Assets/Resources/right.dds";
 	std::string top = "Assets/Resources/top.dds";
 	std::string bottom = "Assets/Resources/bottom.dds";
+
 	
 	std::vector<std::string> faces
 	{
@@ -82,133 +83,12 @@ void GraphicsSystem::Init()
 
 	int width, height, nrChannels;
 	unsigned int err = 0;
-	for (unsigned int i = 0; i < faces.size(); i++)
+	
+	for (size_t i = 0; i < faces.size(); i++)
 	{
 		gli::texture Texture = gli::load(faces[i]);
 
-
-		gli::gl GL(gli::gl::PROFILE_GL33);
-
-		gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
-		GLenum Target = GL.translate(Texture.target());
-		glm::tvec3<GLsizei> const Extent(Texture.extent());
-		GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-
-
-
-		switch (Texture.target())
-		{
-		case gli::TARGET_1D:
-			glTexStorage1D(
-				Target, static_cast<GLint>(Texture.levels()), Format.Internal, Extent.x);
-			break;
-		case gli::TARGET_1D_ARRAY:
-		case gli::TARGET_2D:
-		case gli::TARGET_CUBE:
-			glTexStorage2D(
-				Target, static_cast<GLint>(Texture.levels()), Format.Internal,
-				Extent.x, Texture.target() == gli::TARGET_2D ? Extent.y : FaceTotal);
-			break;
-		case gli::TARGET_2D_ARRAY:
-		case gli::TARGET_3D:
-		case gli::TARGET_CUBE_ARRAY:
-			glTexStorage3D(
-				Target, static_cast<GLint>(Texture.levels()), Format.Internal,
-				Extent.x, Extent.y,
-				Texture.target() == gli::TARGET_3D ? Extent.z : FaceTotal);
-			break;
-		default:
-			assert(0);
-			break;
-		}
-
-		for (std::size_t Layer = 0; Layer < Texture.layers(); ++Layer)
-			for (std::size_t Face = 0; Face < Texture.faces(); ++Face)
-				for (std::size_t Level = 0; Level < Texture.levels(); ++Level)
-				{
-					GLsizei const LayerGL = static_cast<GLsizei>(Layer);
-					glm::tvec3<GLsizei> Extent(Texture.extent(Level));
-					Target = gli::is_target_cube(Texture.target())
-						? static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Face)
-						: Target;
-
-					switch (Texture.target())
-					{
-					case gli::TARGET_1D:
-						if (gli::is_compressed(Texture.format()))
-							glCompressedTexSubImage1D(
-								Target, static_cast<GLint>(Level), 0, Extent.x,
-								Format.Internal, static_cast<GLsizei>(Texture.size(Level)),
-								Texture.data(Layer, Face, Level));
-						else
-							glTexSubImage1D(
-								Target, static_cast<GLint>(Level), 0, Extent.x,
-								Format.External, Format.Type,
-								Texture.data(Layer, Face, Level));
-						break;
-					case gli::TARGET_1D_ARRAY:
-					case gli::TARGET_2D:
-					case gli::TARGET_CUBE:
-						if (gli::is_compressed(Texture.format()))
-							glCompressedTexSubImage2D(
-								Target, static_cast<GLint>(Level),
-								0, 0,
-								Extent.x,
-								Texture.target() == gli::TARGET_1D_ARRAY ? LayerGL : Extent.y,
-								Format.Internal, static_cast<GLsizei>(Texture.size(Level)),
-								Texture.data(Layer, Face, Level));
-						else
-							glTexSubImage2D(
-								Target, static_cast<GLint>(Level),
-								0, 0,
-								Extent.x,
-								Texture.target() == gli::TARGET_1D_ARRAY ? LayerGL : Extent.y,
-								Format.External, Format.Type,
-								Texture.data(Layer, Face, Level));
-						break;
-					case gli::TARGET_2D_ARRAY:
-					case gli::TARGET_3D:
-					case gli::TARGET_CUBE_ARRAY:
-						if (gli::is_compressed(Texture.format()))
-							glCompressedTexSubImage3D(
-								Target, static_cast<GLint>(Level),
-								0, 0, 0,
-								Extent.x, Extent.y,
-								Texture.target() == gli::TARGET_3D ? Extent.z : LayerGL,
-								Format.Internal, static_cast<GLsizei>(Texture.size(Level)),
-								Texture.data(Layer, Face, Level));
-						else
-							glTexSubImage3D(
-								Target, static_cast<GLint>(Level),
-								0, 0, 0,
-								Extent.x, Extent.y,
-								Texture.target() == gli::TARGET_3D ? Extent.z : LayerGL,
-								Format.External, Format.Type,
-								Texture.data(Layer, Face, Level));
-						break;
-					default: assert(0); break;
-					}
-				}
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-		//															width , height
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, 1600, 900, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture.data());
-		while (!(err = glGetError())) {
-			std::cout << err;
-		}
-		// Make a fail test case
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, 512, 512, 0, GL_BGRA, GL_HALF_FLOAT, Texture.data());
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

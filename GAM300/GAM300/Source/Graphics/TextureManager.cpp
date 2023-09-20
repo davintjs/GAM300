@@ -22,8 +22,8 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
 /// Filename can be KTX or DDS files
 GLuint Texture_Manager::CreateTexture(char const* Filename)
 {
-    std::cout << "filename is : " << Filename << "\n";
-    std::string left = "Assets/Resources/left.dds";
+    /*std::cout << "filename is : " << Filename << "\n";
+    */std::string left = "Assets/Resources/left.dds";
     std::string back = "Assets/Resources/back.dds";
     std::string front = "Assets/Resources/front.dds";
     std::string right = "Assets/Resources/right.dds";
@@ -62,7 +62,6 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
         std::cout << "HIT\n";
         return 0;
     }
-
     gli::texture Texture = gli::load(Filename);
     if (Texture.empty())
         return 0;
@@ -137,7 +136,6 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
                 case gli::TARGET_1D_ARRAY:
                 case gli::TARGET_2D:
                 case gli::TARGET_CUBE:
-                    std::cout << "FUCK U\n";
                     if (gli::is_compressed(Texture.format()))
                         glCompressedTexSubImage2D(
                             Target, static_cast<GLint>(Level),
@@ -158,7 +156,6 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
                 case gli::TARGET_2D_ARRAY:
                 case gli::TARGET_3D:
                 case gli::TARGET_CUBE_ARRAY:
-                    std::cout << "FUCK ME\n";
 
                     if (gli::is_compressed(Texture.format()))
                         glCompressedTexSubImage3D(
