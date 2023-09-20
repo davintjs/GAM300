@@ -320,17 +320,17 @@ struct Animator : Object
 
 struct Rigidbody : Object
 {
-	bool is_enabled = true;
-	bool is_trigger = false;
+	Vector3 pad{};			//velocity of object
+	Vector3 pad2{};			//velocity of object
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
-
 	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
 	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	bool is_trigger = false;
 	property_vtable();
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
@@ -345,7 +345,6 @@ property_begin_name(Rigidbody, "Rigidbody") {
 		, property_var(isStatic)
 		, property_var(isKinematic)
 		, property_var(useGravity)
-		, property_var(is_enabled)
 		, property_var(is_trigger)
 } property_vend_h(Rigidbody)
 

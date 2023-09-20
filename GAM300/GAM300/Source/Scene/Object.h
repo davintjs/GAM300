@@ -7,8 +7,13 @@
 struct Object : property::base
 {	
 	Object(Engine::UUID _uuid = Engine::CreateUUID());
-	const Engine::UUID uuid;
+	Engine::UUID GetEntityID() const{ return euid; }
+	Engine::UUID UUID () const { return uuid; }
 	property_vtable();
+
+private:
+	Engine::UUID uuid;
+	Engine::UUID euid;
 };
 
 property_begin_name(Object, "Object") {

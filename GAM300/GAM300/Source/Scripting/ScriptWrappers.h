@@ -257,7 +257,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-	GENERIC_RECURSIVE(MonoObject*, RecurseGetComponent, reinterpret_cast<MonoObject*>(&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent)));
+#include <Properties.h>
+	GENERIC_RECURSIVE(void*, RecurseGetComponent, &SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -266,8 +267,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
-		void* yes = &SceneManager::Instance().GetCurrentScene().GetComponent<Rigidbody>(*pEntity);
-		return yes;
+		size_t addr = reinterpret_cast<size_t>(RecurseGetComponent(pair->second, pEntity));
+		addr += 16;
+		return reinterpret_cast<void*>(addr);
 	}
 	//	Component* component{ nullptr };
 	//	switch (cType)

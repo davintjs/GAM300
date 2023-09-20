@@ -815,7 +815,7 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.uuid);
+        ImGui::PushID((int)entity.UUID());
         DisplayComponents(entity);
         ImGui::PopID();
         ImGui::Separator();

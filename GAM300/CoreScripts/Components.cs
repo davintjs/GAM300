@@ -30,21 +30,22 @@ namespace BeanFactory
         {
             return gameObject.HasComponent<T>();
         }
-/*        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : Component
         {
-            Object obj = InternalCalls.GetComponent(gameObject, typeof(T));
-            Console.WriteLine("HELLO!");
-            T newObj = obj as T;
-            Console.WriteLine("Bye!");
-            return obj as T;
-        }*/
+            return (T)InternalCalls.GetComponent(gameObject, typeof(T));
+        }
     }
     public class Rigidbody : Component
     {
+        public Vector3 linearVelocity;         //velocity of object
+        public Vector3 angularVelocity;              //acceleration of object
+        public Vector3 force;
         public float mass;                  //mass of object
-        Vector3 velocity;                   //velocity of object
-        Vector3 acceleration;               //acceleration of object
-        Vector3 force;
+    }
+
+    public class Test : Component
+    {
+
     }
 
     public class Transform : Component

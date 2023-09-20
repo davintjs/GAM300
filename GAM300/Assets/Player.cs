@@ -8,9 +8,7 @@ public class Player : Script
 
     void Start()
     {
-        Console.WriteLine("HERROOO FROM SCWIPT");
         rb = GetComponent<Rigidbody>();
-        Console.WriteLine("ENDED FROM SCWIPT");
     }
 
     void Update()
@@ -18,11 +16,11 @@ public class Player : Script
         float speed = 0.4f;
         if (Input.GetKey(KeyCode.A))
         {
-            rb.mass -= speed;
+            rb.linearVelocity.x -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            rb.mass += speed;
+            rb.linearVelocity.x += speed;
         }
         //Console.WriteLine("Sup");
         //Destroy(this);

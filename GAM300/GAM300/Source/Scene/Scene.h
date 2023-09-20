@@ -209,11 +209,11 @@ struct Scene
 	{
 		E_ASSERT
 		(
-			singleHandles.HasHandle<T>(object.uuid),
-			"UUID: ", object.uuid, " of ", typeid(T).name() + strlen("struct "),
+			singleHandles.HasHandle<T>(object.UUID()),
+			"UUID: ", object.UUID(), " of ", typeid(T).name() + strlen("struct "),
 			" doesn't exist in this scene"
 		);
-		return singleHandles.GetHandle<T>(object.uuid);
+		return singleHandles.GetHandle<T>(object.UUID());
 	}
 
 
@@ -403,11 +403,6 @@ struct Scene
 	template <typename Component>
 	void ComponentSetEnabled(uint32_t index,bool value, size_t multiIndex = 0);
 
-	template <typename Component>
-	Component& AddComponent(const Entity& entity)
-	{
-		return AddComponent<Component>(entity.uuid);
-	}
 
 	template <typename Component>
 	bool HasComponent(const Entity& entity)
@@ -432,7 +427,7 @@ struct Scene
 	Entity& GetEntityByUUID(size_t UUID)
 	{
 		for (Entity& entity : entities)
-			if (UUID == entity.uuid)
+			if (UUID == entity.UUID())
 				return entity;
 
 		std::string str = "Entity of UUID:";
@@ -486,6 +481,13 @@ struct Scene
 			arr.SetActive(component);
 			return component;
 		}
+	}
+
+
+	template <typename Component>
+	Component& AddComponent(const Entity& entity)
+	{
+		return AddComponent<Component>(entity.UUID());
 	}
 };
 #endif SCENE_H

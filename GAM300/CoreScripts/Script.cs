@@ -19,7 +19,7 @@ using System;
 
 namespace BeanFactory
 {
-    public class Script
+    public class Script : Component
     {
         private void Initialize(GameObject gameObj)
         {
@@ -41,38 +41,10 @@ namespace BeanFactory
             InternalCalls.DestroyComponent(component,typeof(T));
         }
 
-        /*        public GameObject Instantiate(GameObject original)
-                {
-                    GameObject gameObject = new GameObject();
-                    gameObject.ID = InternalCalls.CloneGameObject(original.ID);
-                    return gameObject;
-                }
-
-                public GameObject Instantiate()
-                {
-                    GameObject gameObject = new GameObject();
-                    gameObject.ID = InternalCalls.InstantiateGameObject();
-                    return gameObject;
-                }
-
-                public static void Destroy(GameObject gameObj)
-                {
-                    InternalCalls.DestroyGameObject(gameObj.ID);
-                }*/
-
-        public Transform transform{ get{return _transform; } }
-        public GameObject gameObject{ get { return _gameObject; }}
+        override public Transform transform{ get{return _transform; } }
+        override public GameObject gameObject{ get { return _gameObject; }}
 
         private Transform _transform;
         private GameObject _gameObject;
-
-        public T GetComponent<T>() where T : Component
-        {
-            Object obj = InternalCalls.GetComponent(gameObject, typeof(T));
-            Console.WriteLine("HELLO!");
-            T newObj = obj as T;
-            Console.WriteLine("Bye!");
-            return obj as T;
-        }
     }
 }

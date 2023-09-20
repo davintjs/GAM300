@@ -379,9 +379,6 @@ void ScriptingSystem::ThreadWork()
 				continue;
 			if (logicState == LogicState::UPDATE)
 			{
-				Scene& scene = MySceneManager.GetCurrentScene();
-				scene.GetComponent<Rigidbody>(scene.entities[0]);
-				PRINT(scene.entities[0].denseIndex);
 				InvokeAllScripts("Update");
 				InvokeAllScripts("LateUpdate");
 			}
@@ -466,6 +463,7 @@ MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 			if (exception)
 			{
 				const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
+				PRINT(message, '\n');
 				//MyEventSystem->publish(new EditorConsoleLogEvent(message));
 			}
 			return obj;
@@ -605,7 +603,6 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 		Scene& scene = MySceneManager.Instance().GetCurrentScene();
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		void* param = &scene.GetEntity(component);
-		PRINT(scene.GetEntity(component).uuid);
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
 		invoke(instance, reflectComponent, &param);
 		mComponents.emplace(&component, instance);

@@ -180,8 +180,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		// Set enabled status
 		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
-		if (!rb.is_enabled)
-			enabledStatus = JPH::EActivation::DontActivate;
+		//if (!rb.is_enabled)
+		//	enabledStatus = JPH::EActivation::DontActivate;
 
 		// Motion Type
 		JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
