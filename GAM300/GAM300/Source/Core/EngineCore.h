@@ -39,7 +39,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/YAMLUtils.h"
 #include "EventsManager.h"
 #include "Debugging/Debugger.h"
-#include "Scripting/LogicSystem.h"
 #include "SystemsGroup.h"
 
 #define MyEngineCore EngineCore::Instance()
@@ -55,7 +54,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		SceneManager,
 		ScriptingSystem,
 		EditorSystem,
-		//LogicSystem,
 		//PhysicsSystem,
 		GraphicsSystem,
 		Blackboard,
@@ -83,7 +81,6 @@ public:
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
-		Scene& scene = SceneManager::Instance().GetCurrentScene();
 		update_timer = 0.f;
 
 		SceneStartEvent startEvent{};

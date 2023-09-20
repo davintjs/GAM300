@@ -100,7 +100,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Source\Scene\Object.cpp" />
-    <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
@@ -219,7 +218,6 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
-    <ClInclude Include="Source\Scripting\LogicSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />

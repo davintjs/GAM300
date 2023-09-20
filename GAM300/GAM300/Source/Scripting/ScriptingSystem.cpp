@@ -36,15 +36,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <string.h>
 
-std::unordered_map<ScriptingSystem::LogicState, std::string> ScriptingSystem::logicStateNames =
-{
-	{LogicState::AWAKE, "Awake"},
-	{ LogicState::START, "Start" },
-	{ LogicState::UPDATE, "Update" },
-	{ LogicState::LATEUPDATE, "LateUpdate" },
-	{ LogicState::EXIT, "Exit" },
-};
-
 #define SECONDS_TO_RECOMPILE 1.f
 
 #define TEXT_BUFFER_SIZE 2048
@@ -186,17 +177,6 @@ void ScriptingSystem::RecompileThreadWork()
 	PRINT("RECOMPLING END\n");
 }
 
-//template<typename T, typename... Ts>
-//void ScriptingSystem::SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack)
-//{
-//	MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<T>);
-//	MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectComponent<T>);
-//	if constexpr (sizeof...(Ts) != 0)
-//	{
-//		SubscribeComponentBasedCallbacks(TemplatePack<Ts...>());
-//	}
-//}
-
 void ScriptingSystem::Init()
 {
 	logicState = LogicState::NONE;
@@ -225,10 +205,10 @@ void ScriptingSystem::Update(float dt)
 {
 	if (logicState != LogicState::NONE)
 	{
-		while (!ran);
-		ACQUIRE_SCOPED_LOCK(Mono);
-		PRINT("Scripting Ran");
+		//Sync logic thread with main thread
 		ran = false;
+		//Logic thread running because ran is set to false
+		while (ran == false);
 	}
 }
 
@@ -373,27 +353,50 @@ struct ReflectExistingStruct
 
 using ReflectAll = decltype(ReflectExistingStruct(AllComponentTypes()));
 
+void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& scriptsArray = scene.GetComponentsArray<Script>();
+	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
+	{
+		if (!it.IsActive())
+			continue;
+		Script& script = *it;
+		if (!scene.IsActive(scene.GetEntity(script)))
+			continue;
+		InvokeMethod(script, funcName);
+	}
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	InitMono();
 	while (!THREADS.HasStopped())
 	{	
+		if (logicState != LogicState::NONE)
 		{
-			if (logicState != LogicState::NONE)
-			{
-				while (ran);
-				ACQUIRE_SCOPED_LOCK(Mono);
-				if (logicState == LogicState::LATEUPDATE)
-					logicState = static_cast<LogicState>(static_cast<int>(logicState) - 1);
-				else
-					logicState = static_cast<LogicState>(static_cast<int>(logicState) + 1);
-				for (Script& script : MySceneManager.GetCurrentScene().GetComponentsArray<Script>())
-				{
-					InvokeMethod(script,logicStateNames[logicState]);
-				}
-				ran = true;
+			if (ran)
 				continue;
+			if (logicState == LogicState::UPDATE)
+			{
+				Scene& scene = MySceneManager.GetCurrentScene();
+				scene.GetComponent<Rigidbody>(scene.entities[0]);
+				PRINT(scene.entities[0].denseIndex);
+				InvokeAllScripts("Update");
+				InvokeAllScripts("LateUpdate");
 			}
+			else if (logicState == LogicState::START)
+			{
+				InvokeAllScripts("Awake");
+				InvokeAllScripts("Start");
+				logicState = LogicState::UPDATE;
+			}
+			else
+			{
+				InvokeAllScripts("Exit");
+			}
+			//FINISHED RUNNING
+			ran = true;
 		}
 
 		#ifndef _BUILD
@@ -448,8 +451,6 @@ void ScriptingSystem::SwapDll()
 	UpdateScriptClasses();
 	RegisterComponents();
 	ReflectAll();
-	invoke(mono_object_new(mAppDomain, scriptClassMap["Player"].mClass), scriptClassMap["Player"].mMethods["Start"]);
-	
 	compilingState = CompilingState::Wait;
 }
 
@@ -859,10 +860,9 @@ MonoObject* ScriptingSystem::ReflectScript(Script& component)
 //
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	while (mAppDomain == nullptr);
-	ACQUIRE_SCOPED_LOCK(Mono);
-	PRINT("SCRIPTING START");
-	logicState = LogicState::AWAKE;
+	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
+	logicState = LogicState::START;
+	ran = true;
 	//E_ASSERT(mAppDomain,"App domain is not loaded");
 	//inPlayMode = true;
 	//for (uint32_t hand : gcHandles)

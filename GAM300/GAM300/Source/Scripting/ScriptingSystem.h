@@ -468,6 +468,8 @@ public:
 
 	MonoImage* GetAssemblyImage();
 
+	void InvokeAllScripts(const std::string& funcName);
+
 	//DenseIndex
 	using MonoEntities = std::unordered_map<void*, MonoObject*>;
 	using MonoComponents = std::unordered_map<void*, MonoObject*>;
@@ -481,10 +483,8 @@ public:
 
 	enum class LogicState
 	{
-		AWAKE,
 		START,
 		UPDATE,
-		LATEUPDATE,
 		EXIT,
 		NONE
 	};
@@ -493,7 +493,7 @@ public:
 
 	LogicState logicState;
 
-	bool ran = false;
+	std::atomic_bool ran;
 };
 
 	/*******************************************************************************

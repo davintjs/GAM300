@@ -449,7 +449,7 @@ struct Scene
 		{
 			denseIndex = obj.denseIndex;
 		}
-		else
+		else if constexpr (AllComponentTypes::Has<Owner>())
 		{
 			denseIndex = GetComponentsArray<Owner>().GetDenseIndex(obj);
 		}

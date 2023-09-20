@@ -374,7 +374,7 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	std::string name;
-	std::map<std::string, Field> fields;
+	//std::map<std::string, Field> fields;
 	property_vtable();
 };
 

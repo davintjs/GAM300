@@ -19,11 +19,10 @@ using System;
 
 namespace BeanFactory
 {
-    public class Script : Component
+    public class Script
     {
         private void Initialize(GameObject gameObj)
         {
-            Console.WriteLine("SCRIPT INITIALIZED");
             _gameObject = gameObj;
             _transform = InternalCalls.GetTransformFromGameObject(gameObj);
         }
@@ -61,10 +60,19 @@ namespace BeanFactory
                     InternalCalls.DestroyGameObject(gameObj.ID);
                 }*/
 
-        override public Transform transform{ get{return _transform; } }
-        override public GameObject gameObject{ get { return _gameObject; }}
+        public Transform transform{ get{return _transform; } }
+        public GameObject gameObject{ get { return _gameObject; }}
 
         private Transform _transform;
         private GameObject _gameObject;
+
+        public T GetComponent<T>() where T : Component
+        {
+            Object obj = InternalCalls.GetComponent(gameObject, typeof(T));
+            Console.WriteLine("HELLO!");
+            T newObj = obj as T;
+            Console.WriteLine("Bye!");
+            return obj as T;
+        }
     }
 }

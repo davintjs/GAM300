@@ -196,6 +196,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Scene& scene = MySceneManager.GetCurrentScene();
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
+		PRINT("WORKED");
 		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
 	}
 
@@ -256,7 +257,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
+	GENERIC_RECURSIVE(MonoObject*, RecurseGetComponent, reinterpret_cast<MonoObject*>(&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent)));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -265,8 +266,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
-		PRINT("HELLOOOO PLS WORK\n");
-		return RecurseGetComponent(pair->second,pEntity);
+		void* yes = &SceneManager::Instance().GetCurrentScene().GetComponent<Rigidbody>(*pEntity);
+		return yes;
 	}
 	//	Component* component{ nullptr };
 	//	switch (cType)

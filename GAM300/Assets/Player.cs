@@ -9,7 +9,8 @@ public class Player : Script
     void Start()
     {
         Console.WriteLine("HERROOO FROM SCWIPT");
-        //rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        Console.WriteLine("ENDED FROM SCWIPT");
     }
 
     void Update()
@@ -23,7 +24,7 @@ public class Player : Script
         {
             rb.mass += speed;
         }
-        Console.WriteLine("Sup");
+        //Console.WriteLine("Sup");
         //Destroy(this);
         //transform.localPosition = newPos;
     }
