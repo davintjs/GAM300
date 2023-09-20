@@ -180,13 +180,12 @@ void ScriptingSystem::RecompileThreadWork()
 void ScriptingSystem::Init()
 {
 	logicState = LogicState::NONE;
-	InitMono();
 	#ifdef _BUILD
 		SwapDll();
 	#else
-		//THREADS.EnqueueTask([this] {ThreadWork(); });
+		THREADS.EnqueueTask([this] {ThreadWork(); });
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
-		//THREADS.EnqueueTask([this] {RecompileThreadWork(); });
+		THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 	#endif
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
@@ -198,7 +197,7 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectGameObject);
 	//SubscribeComponentBasedCallbacks(ComponentTypes());
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
-	//EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
@@ -213,7 +212,7 @@ void ScriptingSystem::Update(float dt)
 	}
 }
 
-void ScriptingSystem::Exit() { ShutdownMono(); }
+void ScriptingSystem::Exit() {}
 
 template <typename... Args>
 MonoObject* ScriptingSystem::InstantiateClass(MonoClass* mClass, Args&&... args)
@@ -378,21 +377,21 @@ void ScriptingSystem::ThreadWork()
 		{
 			if (ran)
 				continue;
-			//if (logicState == LogicState::UPDATE)
-			//{
-			//	InvokeAllScripts("Update");
-			//	InvokeAllScripts("LateUpdate");
-			//}
-			//else if (logicState == LogicState::START)
-			//{
-			//	InvokeAllScripts("Awake");
-			//	InvokeAllScripts("Start");
-			//	logicState = LogicState::UPDATE;
-			//}
-			//else
-			//{
-			//	InvokeAllScripts("Exit");
-			//}
+			if (logicState == LogicState::UPDATE)
+			{
+				InvokeAllScripts("Update");
+				InvokeAllScripts("LateUpdate");
+			}
+			else if (logicState == LogicState::START)
+			{
+				InvokeAllScripts("Awake");
+				InvokeAllScripts("Start");
+				logicState = LogicState::UPDATE;
+			}
+			else
+			{
+				InvokeAllScripts("Exit");
+			}
 			//FINISHED RUNNING
 			ran = true;
 		}
@@ -410,19 +409,19 @@ void ScriptingSystem::ThreadWork()
 				THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 			}
 		}
-		//else if (compilingState == CompilingState::SwapAssembly)
-		//{
-		//	SwapDll();
-		//}
+		else if (compilingState == CompilingState::SwapAssembly)
+		{
+			SwapDll();
+		}
 		#endif
 	}
-	//for (uint32_t hand : gcHandles)
-	//{
-	//	mono_gchandle_free(hand);
-	//}
-	//gcHandles.clear();
-	//UnloadAppDomain();
-	//
+	for (uint32_t hand : gcHandles)
+	{
+		mono_gchandle_free(hand);
+	}
+	gcHandles.clear();
+	UnloadAppDomain();
+	
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
 }

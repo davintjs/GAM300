@@ -83,9 +83,9 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
 
-		//SceneStartEvent startEvent{};
-		//ACQUIRE_SCOPED_LOCK(Assets);
-		//EVENTS.Publish(&startEvent);
+		SceneStartEvent startEvent{};
+		ACQUIRE_SCOPED_LOCK(Assets);
+		EVENTS.Publish(&startEvent);
 
 		//ThreadPool mThreadP;
 		//for (int i = 0; i < 10; ++i)
