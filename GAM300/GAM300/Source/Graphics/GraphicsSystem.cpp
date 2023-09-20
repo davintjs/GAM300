@@ -173,9 +173,25 @@ void GraphicsSystem::Update(float dt)
 		
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
-		/*std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
-		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
-		for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
+
+		// change to material when its done, texute shouldnt have compontent, materal consist of texture
+		//if (currentScene.HasComponent<Texture>(entity)) {
+		//	std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
+		//	unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
+		//	for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
+		//		if (properties[renderer.MeshName].texture[j] == texID) {
+		//			haveTexture = true;
+		//		}
+		//	}
+		//	if (!haveTexture) {
+		//		if (properties[renderer.MeshName].textureCount < 32) {
+		//			properties[renderer.MeshName].texture[properties[renderer.MeshName].textureCount++] = texID;
+		//		}
+		//	}
+		//	//haveTexture = false;
+		//}
+		
+		/*for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
 			if (properties[renderer.MeshName].texture[j] == texID) {
 				haveTexture = true;
 			}
@@ -209,10 +225,21 @@ void GraphicsSystem::Update(float dt)
 			
 			newName += ('1' + namecount);
 			
-			if (properties.find(newName) == properties.end()) {
+			/*if (properties.find(newName) == properties.end()) {
 				break;
 			}
-
+			if (currentScene.HasComponent<Texture>(entity)) {
+				for (int j = 0; j <= properties[newName].textureCount; ++j) {
+					if (properties[newName].texture[j] == texID) {
+						haveTexture = true;
+					}
+				}
+				if (!haveTexture) {
+					if (properties[newName].textureCount < 32) {
+						properties[newName].texture[properties[newName].textureCount++] = texID;
+					}
+				}
+			}*/
 			/*for (int j = 0; j <= properties[newName].textureCount; ++j) {
 				if (properties[newName].texture[j] == texID) {
 					haveTexture = true;
