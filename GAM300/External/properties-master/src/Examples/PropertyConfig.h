@@ -1,6 +1,8 @@
 #ifndef PROPERTY_CONFIG_H
 #define PROPERTY_CONFIG_H
 
+#include <glm/glm.hpp>
+
 using string_t = std::string;
 
 //--------------------------------------------------------------------------------------------
@@ -10,6 +12,51 @@ using string_t = std::string;
 //{
 //    float m_Min{}, m_Max{};
 //};
+
+class Vector3 {
+public:
+
+    float x, y, z;
+
+    //Constructors
+    Vector3() : x(0.f), y(0.f), z(0.f) {}
+    Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+    Vector3(float i) : x(i), y(i), z(i) {}
+
+    Vector3(Vector3& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+    Vector3(glm::vec3 vec) : x(vec.x), y(vec.y), z(vec.z) {}
+
+    //Operator Overloads
+    Vector3& operator=(const Vector3& Vec3) {
+        x = Vec3.x;
+        y = Vec3.y;
+        z = Vec3.z;
+        return *this;
+    }
+
+    Vector3& operator=(const glm::vec3& glmVec3) {
+        x = glmVec3.x;
+        y = glmVec3.y;
+        z = glmVec3.z;
+        return *this;
+    }
+
+    float& operator[](int id) {
+
+        //E_ASSERT((id < 0 || id > 2),  "Vector3 Subscript operator out of range!");
+
+        if (id == 0) return x;
+        if (id == 1) return y;
+        if (id == 2) return z;
+    }
+
+    // Conversion operator from Vector3 to glm::vec3
+    operator glm::vec3() const {
+        return glm::vec3(x, y, z);
+    }
+
+};
+
 
 //--------------------------------------------------------------------------------------------
 // User settings
@@ -137,6 +184,7 @@ namespace property
             , string_t
             , size_t
             , uint32_t
+            , Vector3
         >;
     
         //--------------------------------------------------------------------------------------------

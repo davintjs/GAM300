@@ -19,9 +19,20 @@ struct LightProperties
 	glm::vec3 lightColor;
 };
 
+
+//struct Albedo
+//{
+//	Texture pointer;
+//	glm::vec4 Colour;
+//};
+
 struct Materials
 {
-	glm::vec4 Albedo;
+	// Slam Texture Pointer / Reference whatever GUID magic idk in here
+	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
+
+
+	glm::vec4 Albedo; // This means colour for now
 	glm::vec4 Specular;
 	glm::vec4 Diffuse;
 	glm::vec4 Ambient;
@@ -34,6 +45,14 @@ struct InstanceProperties
 {
 	// instanced stuff
 	unsigned int VAO;
+	// rmb to convert everything to AOS
+	unsigned int entitySRTbuffer;
+	glm::mat4 entitySRT[EnitityInstanceLimit];
+	
+	unsigned int entityMATbuffer;
+	Materials entityMAT[EnitityInstanceLimit];
+
+
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
 	unsigned int texture[32];// max 32 dds only
