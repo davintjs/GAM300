@@ -87,6 +87,10 @@ void GraphicsSystem::Init()
 	for (size_t i = 0; i < faces.size(); i++)
 	{
 		gli::texture Texture = gli::load(faces[i]);
+		gli::gl GL(gli::gl::PROFILE_GL33);
+
+		gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
+
 
 			glCompressedTexImage2D(
 				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
@@ -98,6 +102,11 @@ void GraphicsSystem::Init()
 				GLsizei(Texture.size()),
 				Texture.data());
 
+		//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGB, 1000, 1000, 0, GL_RGB, GL_FLOAT, Texture.data());
+	
+		//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, static_cast<GLint>(Texture.levels()), Format.Internal, Texture.extent().x, Texture.extent().y, 0, GL_RGB, GL_FLOAT, Texture.data());
+
+	
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
