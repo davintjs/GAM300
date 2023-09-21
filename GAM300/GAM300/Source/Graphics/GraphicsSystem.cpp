@@ -356,11 +356,13 @@ void GraphicsSystem::Update(float dt)
 		}
 	}
 	
-	/*
-	GLint maxVertexAttribs;
+
+	// Dont delete this -> To run on lab computers
+	
+	/*GLint maxVertexAttribs;
 	glGetProgramiv(temp_instance_shader.GetHandle(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxVertexAttribs);
-	std::cout << "max vertex attribs :" << maxVertexAttribs << "\n";
-	*/
+	std::cout << "max vertex attribs :" << maxVertexAttribs << "\n";*/
+	
 
 
 

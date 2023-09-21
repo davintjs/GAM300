@@ -8,7 +8,6 @@
 
 void AssetManager::Init()
 {
-	std::cout << "enter init\n";
 	if (!std::filesystem::exists(AssetPath))
 	{
 		std::cout << "Check if proper assets filepath exists!" << std::endl;
@@ -79,9 +78,7 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
-				std::cout << "before\n";
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
-				std::cout << "after\n";
 
 			}
 			else if (!strcmp(fileType.c_str(), "geom"))
@@ -92,7 +89,6 @@ void AssetManager::Init()
 	}
 
 	MeshManager.Init();
-	std::cout << "exiting init\n";
 
 	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
 }

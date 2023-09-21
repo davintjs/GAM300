@@ -91,7 +91,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
-        std::cout << "ouchie\n";
+        //std::cout << "ouchie\n";
         for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
         {
             glm::vec3 pos = newGeom.mMeshes[i]._vertices[k].pos;

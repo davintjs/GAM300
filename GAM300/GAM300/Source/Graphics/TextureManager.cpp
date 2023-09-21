@@ -171,7 +171,6 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
                 default: assert(0); break;
                 }
             }
-    std::cout << TextureName << "\n";
     return TextureName;
 }
 
