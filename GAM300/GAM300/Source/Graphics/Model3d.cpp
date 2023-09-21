@@ -1237,7 +1237,7 @@ void Model::SkyBoxDraw(GLuint skyboxtex)
             "view");
 
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.getViewMatrix()))));
 
     glBindVertexArray(vaoid);
 

@@ -569,8 +569,10 @@ void GraphicsSystem::Draw() {
 		}
 	}
 
-
+	glDepthFunc(GL_LEQUAL);
 	SkyBox_Model.SkyBoxDraw(Skybox_Tex);
+	glDepthFunc(GL_LESS);
+
 
 }
 

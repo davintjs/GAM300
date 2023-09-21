@@ -31,35 +31,29 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     std::string bottom = "Assets/Resources/bottom.dds";
     if (Filename == left)
     {
-        std::cout << "HIT\n";
         return 0;
 
     } 
     if (Filename == back)
     {
-        std::cout << "HIT\n";
         return 0;
     } 
     if (Filename == front)
     {
-        std::cout << "HIT\n";
         return 0;
     } 
     if (Filename == right)
     {
-        std::cout << "HIT\n";
         return 0;
 
     } 
     if (Filename == top)
     {
-        std::cout << "HIT\n";
         return 0;
 
     }
     if (Filename == bottom)
     {
-        std::cout << "HIT\n";
         return 0;
     }
     gli::texture Texture = gli::load(Filename);
