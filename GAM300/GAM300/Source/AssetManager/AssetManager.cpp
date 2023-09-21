@@ -24,7 +24,11 @@ void AssetManager::Init()
 
 		if (!dir.is_directory())
 		{
-			for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
 			{
 				fileType += subFilePath[i];
 			}
@@ -346,7 +350,14 @@ void AssetManager::FileAddProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 		
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
@@ -399,7 +410,14 @@ void AssetManager::FileRemoveProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 
 		if (!strcmp(fileType.c_str(), "meta"))
@@ -447,7 +465,14 @@ void AssetManager::FileUpdateProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 
 		// Find the last write time of this file corresponding to it in memory
