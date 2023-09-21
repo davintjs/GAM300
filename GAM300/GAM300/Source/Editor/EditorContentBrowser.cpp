@@ -30,6 +30,8 @@ void EditorContentBrowser::Init()
 
 }
 
+#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
+
 void EditorContentBrowser::Update(float dt)
 {
     ImGui::Begin("Content Browser");
@@ -77,13 +79,32 @@ void EditorContentBrowser::Update(float dt)
         //Draw the file / folder icon based on whether it is a directory or not
         std::string icon = it.is_directory() ? "foldericon" : "fileicon";
 
-        //icon = "fileicon";
+
 
         size_t icon_id = 0;
+
+        //Get file extension
+        /*std::string ext = relativepath.string();
+        auto it2 = ext.begin() + ext.find_last_of(".");
+        ext.erase(ext.begin(), it2);*/
+
+
+        if (relativepath.parent_path().string() == "Icons") {
+            std::string filename = relativepath.string();
+            //
+            auto it = filename.begin() + filename.find_last_of("\\") + 1;
+            filename.erase(filename.begin(), it);
+            it = filename.begin() + filename.find_first_of(".");
+            filename.erase(it, filename.end());
+            //PRINT(filename);
+            icon = filename;
+            
+        }
+
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         //To do: replace this when png is 
-        //icon_id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(""));
+        icon_id = GET_TEXTURE_ID(icon);
         ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
 
         //Drag drop logic for files
