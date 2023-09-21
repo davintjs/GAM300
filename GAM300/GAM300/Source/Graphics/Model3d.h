@@ -9,7 +9,8 @@
 #include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
-
+#define EntityRenderLimit 200
+#define EnitityInstanceLimit 200
 // Just a wrapper class to hold all these values
 class troll_Geom
 {
@@ -22,6 +23,8 @@ public:
 
 	std::vector<Material> _materials{};
 };
+
+
 
 //tempory model
 struct GeneralModel {
@@ -64,7 +67,9 @@ public:
 	void affectedByLight_draw(glm::vec3 lightPos);
 	void instanceDraw(int entitycount);
 
-	
+	void SkyBoxinit();
+	void setup_skybox_shader();
+	void SkyBoxDraw(GLuint skyboxtex);
 
 	glm::vec3 position;
 	

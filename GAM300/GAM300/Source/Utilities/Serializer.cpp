@@ -10,7 +10,7 @@
     This file contains the definitions of the following:
     1. Serialization
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
@@ -65,7 +65,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "m_UUID" << YAML::Key << _entity.UUID();
+    out << YAML::Key << "m_EUID" << YAML::Key << _entity.EUID();
     out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
@@ -85,7 +85,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
 
         if (component.parent)
-            out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).UUID();
+            out << YAML::Key << "m_Parent" << YAML::Value << _scene.GetEntity(*component.parent).EUID();
         else
             out << YAML::Key << "m_Parent" << YAML::Value << 0;
     }
@@ -246,9 +246,9 @@ bool DeserializeScene(Scene& _scene)
             // Bean: Create a constructor for entity with transform and tag
             Transform& transform = _scene.GetComponent<Transform>(entity);
             _scene.GetComponent<Tag>(entity).name = object["m_Name"].as<std::string>();
-            transform.translation = object["m_Position"].as<Vector3>();
-            transform.rotation = object["m_Rotation"].as<Vector3>();
-            transform.scale = object["m_Scale"].as<Vector3>();
+            transform.translation = Vector3(object["m_Position"].as<vec3>());
+            transform.rotation = Vector3(object["m_Rotation"].as<vec3>());
+            transform.scale = Vector3(object["m_Scale"].as<vec3>());
             
             auto parent = object["m_Parent"];
             if (parent)

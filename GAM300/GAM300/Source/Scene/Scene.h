@@ -209,11 +209,11 @@ struct Scene
 	{
 		E_ASSERT
 		(
-			singleHandles.HasHandle<T>(object.UUID()),
-			"UUID: ", object.UUID(), " of ", typeid(T).name() + strlen("struct "),
+			singleHandles.HasHandle<T>(object.EUID()),
+			"EUID: ", object.EUID(), " of ", typeid(T).name() + strlen("struct "),
 			" doesn't exist in this scene"
 		);
-		return singleHandles.GetHandle<T>(object.UUID());
+		return singleHandles.GetHandle<T>(object.euid);
 	}
 
 
@@ -233,10 +233,12 @@ struct Scene
 		tag.name = "New GameObject(";
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
-		//EditorDebugger::Instance().AddLog("[%i]{Entity}New Entity Created!\n", EditorDebugger::Instance().debugcounter++);
-		EditorHierarchy::Instance().layer.push_back(&entity);
+
+		//EditorHierarchy::Instance().layer.push_back(&entity);
+		// Add the entity to the inspector
 		ObjectCreatedEvent e{ (handle) };
 		EVENTS.Publish(&e);
+
 		return handle;
 	}
 
@@ -427,10 +429,10 @@ struct Scene
 	Entity& GetEntityByUUID(size_t UUID)
 	{
 		for (Entity& entity : entities)
-			if (UUID == entity.UUID())
+			if (UUID == entity.EUID())
 				return entity;
 
-		std::string str = "Entity of UUID:";
+		std::string str = "Entity of EUID:";
 		str += UUID + " cannot be found";
 		E_ASSERT(false, str.c_str());
 	}

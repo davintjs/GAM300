@@ -15,57 +15,6 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
-
-
-	if (loadedScenes.empty())
-	{
-		CreateScene();
-		Scene& scene = GetCurrentScene();
-
-		Handle<Entity>& floorHandle = scene.AddEntity();
-		Entity& floor = floorHandle.Get();
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).translation = Vector3(0.f, 0.f, 0.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(floor.denseIndex).scale = Vector3(300.f, 10.0f, 300.f);
-
-		// test instance rendering
-		for (int i = 0; i < 5; ++i)
-		{
-			Handle<Entity>& entHandle = scene.AddEntity();
-			Entity& tempent = entHandle.Get();
-			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-			scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-			scene.AddComponent<MeshRenderer>(tempent);
-		}
-		scene.AddComponent<Script>(scene.entities[0]).name = "Player";
-		scene.AddComponent<Rigidbody>(scene.entities[0]);
-		Entity& box = scene.AddEntity().Get();
-		scene.AddComponent<MeshRenderer>(box);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
-
-		Entity& box2 = scene.AddEntity().Get();
-		scene.AddComponent<MeshRenderer>(box2);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
-
-		Entity& lightsource = scene.AddEntity().Get();
-		scene.AddComponent<LightSource>(lightsource);
-
-		//scene.AddEntity();
-
-		//Entity& titty = scene.AddEntity();
-		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-		//scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(100.f, 10.f, 10.f);
-
-		//// test instance rendering
-		//for (int i = 0; i < 5; ++i)
-		//{
-		//	Entity& tempent = scene.AddEntity();
-		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-		//	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-		//}
-		//scene.AddComponent<Script>(0).name = "Player";
-	}
 }
 
 void SceneManager::CreateScene()
@@ -153,34 +102,7 @@ bool SceneManager::DuplicateScene()
 void SceneManager::Update(float dt)
 {
 	Scene& scene = GetCurrentScene();
-	//for (auto it = scene.entities.begin(); it != scene.entities.end(); ++it)
-	//{
-	//	if (!it.IsActive())
-	//		continue;
-	//	Entity& entity = *it;
-	//	PRINT("Entity: ", scene.entities.GetDenseIndex(entity), '\n');
-	//}
-
-	//auto& scriptArr = scene.GetComponentsArray<Script>();
-	//for (auto it = scriptArr.begin(); it != scriptArr.end(); ++it)
-	//{
-	//	//if (!it.IsActive())
-	//	//	continue;
-	//	Script& script = *it;
-	//	PRINT("Script: ", scriptArr.GetDenseIndex(script), '\n');
-	//}
-	//PRINT('\n');
-
-	//Issue with this, iterating over empty multicomponents
-	//for (Script& script : scene.multiComponentsArrays.GetArray<Script>())
-	//{
-	//	PRINT("Script: ", scene.multiComponentsArrays.GetArray<Script>().GetDenseIndex(script), '\n');
-	//}
 	scene.ClearBuffer();
-
-	//for (Transform& transfrom : loadedScenes.front().singleComponentsArrays.GetArray<Transform>())
-
-	//PRINT('\n');
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
