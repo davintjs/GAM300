@@ -5,7 +5,7 @@
 
 
 
-int main() 
+int main()
 {
 	std::cout << "Compiling textures..." << std::endl;
 
@@ -17,7 +17,7 @@ int main()
 	}
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets"))
-	{ 
+	{
 		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
 		{
 			for (const auto& _dir : std::filesystem::recursive_directory_iterator(dir)) // Looping through contents of the texture's folder
@@ -44,57 +44,58 @@ int main()
 					{
 						fileName += subFilePath[j];
 					}
-					std::cout << "Compiling " << fileName << "...";
 
-
-
-					// future optimisation, check if the dds ver of the pg/jpg alr exists
-
-
-					// Specify the input PNG file and output DDS file
-					std::wstring textureFilePath = std::wstring(subFilePath.begin(), subFilePath.end()).c_str();
-					const wchar_t* pngFileName = textureFilePath.c_str();   // Replace with your PNG file path
 
 					std::string outputFilePath("Assets/Resources/" + fileName + ".dds");
-					std::wstring outputTextureFilePath = std::wstring(outputFilePath.begin(), outputFilePath.end()).c_str();
-					const wchar_t* ddsFileName = outputTextureFilePath.c_str(); // Replace with your desired output DDS file path
 
-					// Load PNG image into a ScratchImage
-					DirectX::ScratchImage image;
+					// optimisation, checks if the dds ver of the png/jpg alr exists
+					if (!std::filesystem::exists(outputFilePath))
+					{
+						std::cout << "Compiling " << fileName << "...";
 
-					hr = DirectX::LoadFromWICFile(pngFileName, DirectX::WIC_FLAGS_NONE, nullptr, image);
-					if (FAILED(hr)) {
-						// Handle image loading failure
-						std::cout << "Loading texture unsuccessful." << std::endl;
-						//CoUninitialize(); // Cleanup COM
-						//return hr;
-						continue;
+						// Specify the input PNG file and output DDS file
+						std::wstring textureFilePath = std::wstring(subFilePath.begin(), subFilePath.end()).c_str();
+						const wchar_t* pngFileName = textureFilePath.c_str();   // Replace with your PNG file path
+
+						std::wstring outputTextureFilePath = std::wstring(outputFilePath.begin(), outputFilePath.end()).c_str();
+						const wchar_t* ddsFileName = outputTextureFilePath.c_str(); // Replace with your desired output DDS file path
+
+						// Load PNG image into a ScratchImage
+						DirectX::ScratchImage image;
+
+						hr = DirectX::LoadFromWICFile(pngFileName, DirectX::WIC_FLAGS_NONE, nullptr, image);
+						if (FAILED(hr)) {
+							// Handle image loading failure
+							std::cout << "Loading texture unsuccessful." << std::endl;
+							//CoUninitialize(); // Cleanup COM
+							//return hr;
+							continue;
+						}
+
+						DirectX::ScratchImage bcImage;
+						hr = Compress(image.GetImages(), image.GetImageCount(),
+							image.GetMetadata(), DXGI_FORMAT_BC1_UNORM,
+							DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
+							bcImage);
+						if (FAILED(hr)) {
+							// Handle DDS saving failure
+							std::cout << "Compression unsuccessful." << std::endl;
+							//CoUninitialize(); // Cleanup COM
+							//return hr;
+							continue;
+						}
+
+						// Save the loaded image as DDS
+						hr = DirectX::SaveToDDSFile(bcImage.GetImages(), bcImage.GetImageCount(), bcImage.GetMetadata(), DirectX::DDS_FLAGS_NONE, ddsFileName);
+						if (FAILED(hr)) {
+							// Handle DDS saving failure
+							std::cout << "Creating DDSFile unsuccessful." << std::endl;
+							//CoUninitialize(); // Cleanup COM
+							//return hr;
+							continue;
+						}
+						std::cout << " Done!" << std::endl;
 					}
-
-					DirectX::ScratchImage bcImage;
-					hr = Compress(image.GetImages(), image.GetImageCount(),
-						image.GetMetadata(), DXGI_FORMAT_BC1_UNORM,
-						DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
-						bcImage);
-					if (FAILED(hr)) {
-						// Handle DDS saving failure
-						std::cout << "Compression unsuccessful." << std::endl;
-						//CoUninitialize(); // Cleanup COM
-						//return hr;
-						continue;
-					}
-
-					// Save the loaded image as DDS
-					hr = DirectX::SaveToDDSFile(bcImage.GetImages(), bcImage.GetImageCount(), bcImage.GetMetadata(), DirectX::DDS_FLAGS_NONE, ddsFileName);
-					if (FAILED(hr)) {
-						// Handle DDS saving failure
-						std::cout << "Creating DDSFile unsuccessful." << std::endl;
-						//CoUninitialize(); // Cleanup COM
-						//return hr;
-						continue;
-					}
-
-					std::cout << " Done!" << std::endl;
 				}
 
 				// Skip this file if not png / jpg
@@ -115,6 +116,6 @@ int main()
 	int x;
 	std::cout << "Finished compiling all textures!" << std::endl;
 	std::cin >> x;
-	
+
 	return 0;
 }
