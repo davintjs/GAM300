@@ -373,7 +373,7 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	std::string name;
-	//std::map<std::string, Field> fields;
+	std::map<std::string, Field> fields;
 	property_vtable();
 };
 
@@ -454,10 +454,10 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
 enum class FieldType :int
 {
-	Float = AllComponentTypes::Size(), Double,
+	GameObject = AllComponentTypes::Size(), Float, Double,
 	Bool, Char, Short, Int, Long,
 	UShort, UInt, ULong, String,
-	Vector2, Vector3, GameObject, None
+	Vector2, Vector3, None
 };
 
 template<typename T, typename... Ts>

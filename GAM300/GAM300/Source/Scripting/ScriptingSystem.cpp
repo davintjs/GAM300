@@ -594,186 +594,101 @@ bool ScriptingSystem::IsScript(MonoClass* monoClass)
 }
 //
 
-MonoObject* ScriptingSystem::ReflectScript(Script& component)
+MonoObject* ScriptingSystem::ReflectScript(Script& script)
 {
-	auto pairIt = mComponents.find(&component);
+	auto pairIt = mComponents.find(&script);
 	if (pairIt == mComponents.end())
 	{
-		if (scriptClassMap.find(component.name) == scriptClassMap.end())
+		if (scriptClassMap.find(script.name) == scriptClassMap.end())
 			return nullptr;
-		ScriptClass& scriptClass = scriptClassMap[component.name];
+		ScriptClass& scriptClass = scriptClassMap[script.name];
 		Scene& scene = MySceneManager.Instance().GetCurrentScene();
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
-		void* param = &scene.GetEntity(component);
+		void* param = &scene.GetEntity(script);
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
 		invoke(instance, reflectComponent, &param);
-		mComponents.emplace(&component, instance);
+		mComponents.emplace(&script, instance);
 		//Check fields, dont remove fields, but change them if their type is different
 
-		//std::list<std::string> validFieldNames{};
+		std::list<std::string> validFieldNames{};
 
-		//for (auto& pair : component.fields)
-		//{
-		//	validFieldNames.push_back(pair.first);
-		//}
-
-		////PRINT("Creating: " << component.Name() << " of id: " << component.uuid);
-		//Script& script{ *reinterpret_cast<Script*>(&component) };
-		//for (auto& pair : scriptClass.mFields)
-		//{
-		//	MonoClassField* mField = pair.second;
-		//	MonoType* type = mono_field_get_type(mField);
-		//	size_t fieldType = Utils::monoTypeToFieldType(type);
-		//	const char* fieldName = pair.first.c_str();
-		//	std::string typeName = mono_type_get_name(type);
-		//	//PRINT(typeName << " " << (int)fieldType);
-		//	auto nameField{ script.fields.find(fieldName) };
-		//	int alignment{};
-		//	int fieldSize = mono_type_size(type, &alignment);
-		//	//POINTER
-		//	if (fieldType < AllComponentTypes::Size() || fieldType == (size_t)FieldType::GameObject)
-		//	{
-		//		fieldSize = sizeof(uint64_t);
-		//	}
-		//	else if(fieldType == (size_t)FieldType::String)
-		//	{
-		//		fieldSize = TEXT_BUFFER_SIZE;
-		//	}
+		for (auto& pair : script.fields)
+		{
+			validFieldNames.push_back(pair.first);
+		}
+		for (auto& pair : scriptClass.mFields)
+		{
+			MonoClassField* mField = pair.second;
+			MonoType* type = mono_field_get_type(mField);
+			FieldType fieldType = (FieldType)Utils::monoTypeToFieldType(type);
+			const char* fieldName = pair.first.c_str();
+			std::string typeName = mono_type_get_name(type);
+			auto nameField{ script.fields.find(fieldName) };
+			int alignment{};
+			int fieldSize = mono_type_size(type, &alignment);
+			if (fieldType >= FieldType::GameObject)
+			{
+				fieldSize = sizeof(uint64_t);
+			}
+			else if (fieldType == FieldType::String)
+			{
+				fieldSize = TEXT_BUFFER_SIZE;
+			}
 
 
-		//	//Field has not been created onto script yet
-		//	if (nameField == script.fields.end())
-		//	{
-		//		Field newField = Field(fieldType, fieldSize, nullptr);
-		//		size_t offset = typeName.find_last_of(".");
-		//		if (offset != std::string::npos)
-		//			newField.typeName = typeName.substr(offset + 1);
-		//		else
-		//			newField.typeName = typeName;
-		//		if (fieldType < AllComponentTypes::Size() || fieldType == (size_t)FieldType::GameObject)
-		//		{
-		//			newField = std::numeric_limits<uint64_t>::max();
-		//		}
-		//		else
-		//		{
-		//			//	MonoObject* mScript = ReflectComponent(pEvent->script);
-		//			//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-		//			//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-		//			//	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-		//			//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-		//			//	SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->data);
-		//			//EVENTS->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
-		//		}
-		//		script.fields[fieldName] = std::move(newField);
-		//	}
-		//	//Field exists
-		//	else
-		//	{
-		//		validFieldNames.remove(fieldName);
-		//		Field& field = nameField->second;
-		//		//If the field type is not the same
-		//		if (field.fType != fieldType)
-		//		{
-		//			field.Resize(fieldSize);
-		//			mono_field_get_value(instance, mField, field.data);
-		//		}
-		//		//Field exists, setback the values first
-		//		else
-		//		{
-		//				
-		//			//if (field.fType == (size_t)FieldType::GameObject)
-		//			//{
-		//			//	Entity* reference = (Entity*)script.fields[fieldName].data;
-		//			//	SetFieldReference(script.fields[fieldName]., reference);
-		//			//	MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, reference));
-		//			//}
-		//			//else if (fieldType < AllComponentTypes::Size())
-		//			//{
-		//			//	Component* reference = script.fieldComponentReferences[fieldName];
-		//			//	switch ((ComponentType)field.fType)
-		//			//	{
-		//			//	case(ComponentType::Animator):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Animator*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::AudioSource):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (AudioSource*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::BoxCollider2D):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (BoxCollider2D*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Button):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Button*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Camera):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Camera*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Image):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Image*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Rigidbody2D):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Rigidbody2D*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::SpriteRenderer):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SpriteRenderer*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Script):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Script*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::Text):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (Text*)reference));
-		//			//		break;
-		//			//	}
-		//			//	case(ComponentType::SortingGroup):
-		//			//	{
-		//			//		MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, fieldName, (SortingGroup*)reference));
-		//			//		break;
-		//			//	}
-		//			//	}
-		//			//}
-		//			//else
-		//			//{
-		//			//	SetFieldValue(instance, mField, field,field.data);
-		//			//}
-		//		}
-		//		//CHECK TYPENAME
-		//		//else if (field.typeName)
-		//	}
-		//}
-		//for (auto& name : validFieldNames)
-		//{
-		//	//size_t fType = script.fields[name].fType;
-		//	//if (fType == FieldType::GameObject)
-		//	//{
-		//	//	component.fieldGameObjReferences.erase(name);
-		//	//}
-		//	//else if (fType >= FieldType::Component)
-		//	//{
-		//	//	component.fieldComponentReferences.erase(name);
-		//	//}
-		//	//component.fieldDataReferences.erase(name);
-		//	//PRINT("INVALID FIELD: " << name);
-		//}
+			//Field has not been created onto script yet
+			if (nameField == script.fields.end())
+			{
+				Field newField = Field((size_t)fieldType, fieldSize, nullptr);
+				size_t offset = typeName.find_last_of(".");
+				if (offset != std::string::npos)
+					newField.typeName = typeName.substr(offset + 1);
+				else
+					newField.typeName = typeName;
+				if (fieldType >= FieldType::GameObject)
+				{
+					newField = std::numeric_limits<uint64_t>::max();
+				}
+				else
+				{
+					//GetFieldValue();
+					//MyEventSystem->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
+				}
+				script.fields[fieldName] = std::move(newField);
+			}
+			//Field exists
+			else
+			{
+				validFieldNames.remove(fieldName);
+				Field& field = nameField->second;
+				//If the field type is not the same
+				if (field.fType != (size_t)fieldType)
+				{
+					field.Resize(fieldSize);
+					mono_field_get_value(instance, mField, field.data);
+				}
+				//Field exists, setback the values first
+				else
+				{
+					if (field.fType >= (size_t)FieldType::GameObject)
+					{
+
+					}
+					else
+					{
+						SetFieldValue(instance, mField, field, field.data);
+					}
+				}
+			}
+		}
+		for (auto& name : validFieldNames)
+		{
+			script.fields.erase(name);
+			//PRINT("INVALID FIELD: " << name);
+		}
 		return instance;
 	}
+	/*return (*pairIt).second;*/
 	return pairIt->second;
 }
 
