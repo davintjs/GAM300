@@ -75,8 +75,8 @@ private:
 
 	std::vector<Geom_Mesh> _meshes{}; // Individual meshes in the model, which also contains its individual vertices and indices
 
-	//glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions containing the whole model
-	//glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates containing the whole model
+	glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions containing the whole model
+	glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates containing the whole model
 
 	// I think this bottom part we should eventually phase out, and save the individual meshes
 	// vertices and indices instead of whole chunk at one go

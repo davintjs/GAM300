@@ -6,32 +6,32 @@
 
 struct Vertex
 {
-    //std::int16_t posX;
-    //std::int16_t posY;
-    //std::int16_t posZ;
+    std::int16_t posX;
+    std::int16_t posY;
+    std::int16_t posZ;
 
-    //std::int16_t normX;
-    //std::int16_t normY;
-    //std::int16_t normZ;
+    std::int16_t normX;
+    std::int16_t normY;
+    std::int16_t normZ;
 
-    //std::int16_t tanX;
-    //std::int16_t tanY;
-    //std::int16_t tanZ;
-    //std::int8_t  tanSign;
+    std::int16_t tanX;
+    std::int16_t tanY;
+    std::int16_t tanZ;
+    std::int8_t  tanSign;
 
-    //std::int16_t texU;
-    //std::int16_t texV;
+    std::int16_t texU;
+    std::int16_t texV;
 
-    //std::int8_t colorR;
-    //std::int8_t colorG;
-    //std::int8_t colorB;
-    //std::int8_t colorA;
+    std::int8_t colorR;
+    std::int8_t colorG;
+    std::int8_t colorB;
+    std::int8_t colorA;
 
-    glm::vec3 pos;
-    glm::vec3 normal;
-    glm::vec3 tangent;
-    glm::vec2 tex;
-    glm::ivec4 color;
+    //glm::vec3 pos;
+    //glm::vec3 normal;
+    //glm::vec3 tangent;
+    //glm::vec2 tex;
+    //glm::ivec4 color;
 };
 
 struct Texture
