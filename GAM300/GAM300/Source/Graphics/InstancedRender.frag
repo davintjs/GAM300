@@ -14,19 +14,12 @@ out vec4 FragColor;
 
 
 
-//in vec3 Normal;  
-//in vec3 FragmentPos; 
-//
-// uniform vec3 objectColor;
+
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 
-uniform vec4 Specular;
-uniform vec4 Diffuse;
-uniform vec4 Ambient;
-uniform float Shininess;
-uniform vec4 Albedos;
+
 
 uniform sampler2D myTextureSampler;
 

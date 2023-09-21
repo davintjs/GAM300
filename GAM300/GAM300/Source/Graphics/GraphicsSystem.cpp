@@ -34,7 +34,13 @@ std::vector<Ray3D> Ray_Container;
 
 // Naive Solution for now
 
-std::vector <Materials> temp_MaterialContainer;
+//std::vector <Materials> temp_MaterialContainer;
+
+std::vector <glm::vec4> temp_AlbedoContainer;
+std::vector <glm::vec4> temp_SpecularContainer;
+std::vector <glm::vec4> temp_DiffuseContainer;
+std::vector <glm::vec4> temp_AmbientContainer;
+std::vector <float> temp_ShininessContainer;
 
 trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
@@ -44,8 +50,83 @@ LightProperties Lighting_Source;
 //void InstanceSetup(GLuint vaoid);
 //void InstancePropertySetup(InstanceProperties& prop);
 
+//std::vector<std::string> faces
+//{
+//	FileSystem::getPath("resources/textures/skybox/right.jpg"),
+//	FileSystem::getPath("resources/textures/skybox/left.jpg"),
+//	FileSystem::getPath("resources/textures/skybox/top.jpg"),
+//	FileSystem::getPath("resources/textures/skybox/bottom.jpg"),
+//	FileSystem::getPath("resources/textures/skybox/front.jpg"),
+//	FileSystem::getPath("resources/textures/skybox/back.jpg")
+//};
+GLuint Skybox_Tex;
+Model SkyBox_Model;
+
+
 void GraphicsSystem::Init()
 {
+	// Theophelia make a function
+	/**/std::string left = "Assets/Resources/left.dds";
+	std::string back = "Assets/Resources/back.dds";
+	std::string front = "Assets/Resources/front.dds";
+	std::string right = "Assets/Resources/right.dds";
+	std::string top = "Assets/Resources/top.dds";
+	std::string bottom = "Assets/Resources/bottom.dds";
+
+	
+	std::vector<std::string> faces
+	{
+		right,left,top,bottom,front,back
+	};
+
+	glGenTextures(1, &Skybox_Tex);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
+
+	int width, height, nrChannels;
+	unsigned int err = 0;
+	
+	for (size_t i = 0; i < faces.size(); i++)
+	{
+		gli::texture Texture = gli::load(faces[i]);
+
+			glCompressedTexImage2D(
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0,
+				GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+				Texture.extent().x,
+				Texture.extent().y,
+				0,
+				GLsizei(Texture.size()),
+				Texture.data());
+
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	
+	SkyBox_Model.SkyBoxinit();
+	SkyBox_Model.setup_skybox_shader();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
 	std::vector<std::pair<GLenum, std::string>> shdr_files;
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
@@ -126,18 +207,18 @@ void GraphicsSystem::Update(float dt)
 	
 	float intersected = FLT_MAX;
 	float temp_intersect;
-
+	
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
-	temp_MaterialContainer[3].Diffuse = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
-	temp_MaterialContainer[3].Specular = glm::vec4{ 0.5f, 0.5f, 0.5f,1.f };
-	temp_MaterialContainer[3].Ambient = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
-	temp_MaterialContainer[3].Shininess = 32.f;
+	temp_DiffuseContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
+	temp_SpecularContainer[3] = glm::vec4{ 0.5f, 0.5f, 0.5f,1.f };
+	temp_AmbientContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
+	temp_ShininessContainer[3] = 32.f;
 
 
-	temp_MaterialContainer[3].Albedo.r = static_cast<float>(sin(glfwGetTime() * 2.0));
-	temp_MaterialContainer[3].Albedo.g = static_cast<float>(sin(glfwGetTime() * 0.7));
-	temp_MaterialContainer[3].Albedo.b = static_cast<float>(sin(glfwGetTime() * 1.3));
+	temp_AlbedoContainer[3].r = static_cast<float>(sin(glfwGetTime() * 2.0));
+	temp_AlbedoContainer[3].g = static_cast<float>(sin(glfwGetTime() * 0.7));
+	temp_AlbedoContainer[3].b = static_cast<float>(sin(glfwGetTime() * 1.3));
 
 
 	// Temporary Light stuff
@@ -205,15 +286,20 @@ void GraphicsSystem::Update(float dt)
 		//properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter++] = transform.GetWorldMatrix();
 
 
-		renderer.mr_Material.Albedo = temp_MaterialContainer[3].Albedo;
-		renderer.mr_Material.Ambient = temp_MaterialContainer[3].Ambient;
-		renderer.mr_Material.Diffuse = temp_MaterialContainer[3].Diffuse;
-		renderer.mr_Material.Shininess = temp_MaterialContainer[3].Shininess;
-		renderer.mr_Material.Specular = temp_MaterialContainer[3].Specular;
+		renderer.mr_Albedo = temp_AlbedoContainer[3];
+		renderer.mr_Ambient = temp_AmbientContainer[3];
+		renderer.mr_Diffuse = temp_DiffuseContainer[3];
+		renderer.mr_Shininess = temp_ShininessContainer[3];
+		renderer.mr_Specular = temp_SpecularContainer[3];
+		
 
 
-
-		properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
+		//properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
+		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
+		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
+		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
+		properties[renderer.MeshName].Specular[properties[renderer.MeshName].iter] = renderer.mr_Specular;
+		properties[renderer.MeshName].Shininess[properties[renderer.MeshName].iter] = renderer.mr_Shininess;
 		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
 
 
@@ -255,7 +341,12 @@ void GraphicsSystem::Update(float dt)
 			//std::cout << newName << "\n";
 
 			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
+			//properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
+			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
+			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
+			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
+			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
+			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
 			++(properties[newName].iter);
 		}
 		++i;
@@ -378,6 +469,7 @@ void GraphicsSystem::Update(float dt)
 	}
 	*/
 
+
 	Draw(); // call draw after update
 
 
@@ -387,7 +479,7 @@ void GraphicsSystem::Update(float dt)
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 
-	unsigned int prim_count, GLenum prim_type, LightProperties LightSource, Materials Mat)
+	unsigned int prim_count, GLenum prim_type, LightProperties LightSource, glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin)// Materials Mat)
 {
 	
 	
@@ -447,16 +539,15 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 	// Material
 	glUniform4fv(uniform6, 1,
-		glm::value_ptr(Mat.Albedo));
+		glm::value_ptr(Albe));
 	glUniform4fv(uniform7, 1,
-		glm::value_ptr(Mat.Specular));
+		glm::value_ptr(Spec));
 	glUniform4fv(uniform8, 1,
-		glm::value_ptr(Mat.Diffuse));
+		glm::value_ptr(Diff));
 	glUniform4fv(uniform9, 1,
-		glm::value_ptr(Mat.Ambient));
+		glm::value_ptr(Ambi));
 	glUniform1f(uniform10,
-		Mat.Shininess);
-
+		Shin);
 
 
 
@@ -477,6 +568,8 @@ void GraphicsSystem::Draw() {
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
 
+
+
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
@@ -489,8 +582,28 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
@@ -498,8 +611,11 @@ void GraphicsSystem::Draw() {
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
+		
+		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, temp_MaterialContainer[3]);
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
+			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 		prop.iter = 0;
 	}
 
@@ -527,6 +643,10 @@ void GraphicsSystem::Draw() {
 
 		}
 	}
+
+
+	SkyBox_Model.SkyBoxDraw(Skybox_Tex);
+
 }
 
 bool GraphicsSystem::Raycasting(Ray3D& _ray)
