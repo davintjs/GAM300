@@ -1,12 +1,9 @@
 #pragma once
 
 #include <vector>
+
 #include "glm/glm.hpp"
-#include "Segment2D.h"
-#include "Segment3D.h"
-#include "Plane3D.h"
-#include "Line3D.h"
-#include "Triangle3D.h"
+#include "Geometry.h"
 
 class Polygon3D
 {
