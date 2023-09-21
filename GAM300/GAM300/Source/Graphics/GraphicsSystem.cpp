@@ -39,7 +39,7 @@ std::vector<Ray3D> Ray_Container;
 
 // Naive Solution for now
 
-//std::vector <Materials> temp_MaterialContainer;
+std::vector <Materials> temp_MaterialContainer;
 
 std::vector <glm::vec4> temp_AlbedoContainer;
 std::vector <glm::vec4> temp_SpecularContainer;
@@ -114,21 +114,6 @@ void GraphicsSystem::Init()
 	
 	SkyBox_Model.SkyBoxinit();
 	SkyBox_Model.setup_skybox_shader();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
@@ -303,8 +288,8 @@ void GraphicsSystem::Update(float dt)
 			glm::vec3 scale;
 			glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
 
-			glm::vec3 mins = scale * glm::vec3(-1.f, -1.f, -1.f);
-			glm::vec3 maxs = scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
+			glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
 			glm::mat4 rotMat = glm::toMat4(rot);
 
 			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
@@ -368,14 +353,15 @@ void GraphicsSystem::Update(float dt)
 
 	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
 	
-	//std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
+	/*
+	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
 
-	//Materials materialsArray[3]; // Create an array of 3 Materials
-	//// Calculate the size of the array
-	//size_t sizeOfArray = sizeof(materialsArray);
+	Materials materialsArray[3]; // Create an array of 3 Materials
+	// Calculate the size of the array
+	size_t sizeOfArray = sizeof(materialsArray);
 
-	//std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
-	
+	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
+	*/
 		
 	
 
@@ -438,17 +424,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
 
 
-	// Material
-	GLint uniform6 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Albedos");
-	GLint uniform7 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Specular");
-	GLint uniform8 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Diffuse");
-	GLint uniform9 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Ambient");
-	GLint uniform10 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Shininess");
+
 
 
 
@@ -469,17 +445,13 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(EditorCam.GetCameraPosition()));
 
-	// Material
-	glUniform4fv(uniform6, 1,
-		glm::value_ptr(Albe));
-	glUniform4fv(uniform7, 1,
-		glm::value_ptr(Spec));
-	glUniform4fv(uniform8, 1,
-		glm::value_ptr(Diff));
-	glUniform4fv(uniform9, 1,
-		glm::value_ptr(Ambi));
-	glUniform1f(uniform10,
-		Shin);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,TextureManager.GetTexture(
+		AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color")));
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(
+		AssetManager::Instance().GetAssetGUID("TD_Checker_Normal_OpenGL")));
 
 
 
@@ -505,6 +477,7 @@ void GraphicsSystem::Draw() {
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
+		
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

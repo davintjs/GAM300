@@ -23,6 +23,9 @@ layout (location = 0) out vec4 vColor;
 layout (location = 1) out vec3 FragmentPos;
 layout (location = 2) out vec3 Normal;
 
+layout (location = 4) out vec2 Tex_Coord;
+
+
 layout (location = 10) out vec4 frag_albedo;
 layout (location = 11) out vec4 frag_specular;
 layout (location = 12) out vec4 frag_diffuse;
@@ -54,4 +57,5 @@ void main()
 	frag_diffuse = Diffuse;
 	frag_ambient = Ambient;
 	frag_shininess = Shininess;
+	Tex_Coord = aVertexTexCoord;
 } 

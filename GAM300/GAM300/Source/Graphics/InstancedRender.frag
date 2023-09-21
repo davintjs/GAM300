@@ -3,6 +3,9 @@ layout (location = 0) in vec4 vColor;
 layout (location = 1) in vec3 FragmentPos;
 layout (location = 2) in vec3 Normal;
 
+layout (location = 4) in vec2 Tex_Coord;
+
+
 layout (location = 10) in vec4 frag_albedo;
 layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
@@ -20,8 +23,9 @@ uniform vec3 lightPos;
 uniform vec3 camPos;
 
 
+layout(binding=0) uniform sampler2D myTextureSampler;
 
-uniform sampler2D myTextureSampler;
+layout(binding=1) uniform sampler2D normalSampler;
 
 
 
@@ -61,5 +65,7 @@ void main()
     vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
     result = (ambience + diffusion + speculation) * vec3(frag_albedo);
     FragColor = vec4(result, 1.0);
+    
+    FragColor = texture(myTextureSampler,Tex_Coord);
 
 }

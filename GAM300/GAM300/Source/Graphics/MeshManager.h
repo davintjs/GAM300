@@ -14,6 +14,7 @@ struct InstanceProperties;
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
+
 	std::vector<GLuint> Vaoids;
 	std::vector<GLuint> Vboids;
 	std::vector<GLuint> Drawcounts;
