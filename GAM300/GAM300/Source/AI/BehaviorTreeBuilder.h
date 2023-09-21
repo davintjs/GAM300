@@ -21,7 +21,7 @@ public:
     void Update(float dt);
     void Exit();
 private:
-
+    const std::string BHTFiles = "GAM300/Source/AI/Trees";
     std::vector<BehaviorTree*> mBehaviorTrees;
 
     BehaviorNode* BuildNode(std::string nodeType, std::string nodeName);
