@@ -175,5 +175,7 @@
     <None Include="Source\Graphics\BasicLighting.frag" />
     <None Include="Source\Graphics\LightAffected.vert" />
     <None Include="Source\Graphics\LightAffected.frag" />
+    <None Include="Source\Graphics\Skybox.vert" />
+    <None Include="Source\Graphics\Skybox.frag" />
   </ItemGroup>
 </Project>
