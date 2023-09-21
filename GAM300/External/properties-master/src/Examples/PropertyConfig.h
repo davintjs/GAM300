@@ -2,6 +2,7 @@
 #define PROPERTY_CONFIG_H
 
 #include <glm/glm.hpp>
+#include <imgui.h>
 
 using string_t = std::string;
 
@@ -86,6 +87,14 @@ public:
         x = glmVec4.x;
         y = glmVec4.y;
         z = glmVec4.z;
+        return *this;
+    }
+
+    Vector4& operator=(const ImVec4& imvec4) {
+        w = imvec4.w;
+        x = imvec4.x;
+        y = imvec4.y;
+        z = imvec4.z;
         return *this;
     }
 

@@ -42,6 +42,8 @@ void DisplayType(const char* name, T& val)
     PRINT(name," ", typeid(T).name(), '\n');
 }
 
+
+
 void DisplayType(const char* name, bool& val)
 {
     static std::string idName{};
@@ -144,6 +146,58 @@ void DisplayType(const char* name, Vector3& val)
     }
 }
 
+void DisplayType(const char* name, Vector4& val)
+{
+    //static_assert(sizeof(T) == sizeof(float) * 4);
+    static float temp{};
+    static std::string idName{};
+    idName = "##";
+    idName += name;
+
+    //std::string var = name;
+    //if (var.find("Albedo") != std::string::npos) {}
+    ImGui::ColorEdit4("MyColor##2", (float*)&val, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::SameLine(); 
+    /*ImGui::TableNextColumn();
+    ImGui::Text(name);
+    ImGui::TableNextColumn();*/
+    //static ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview;
+
+    if (ImGui::BeginTable("Color4", 4, windowFlags))
+    {
+        ImGui::TableNextColumn();
+        ImGui::AlignTextToFramePadding();
+        idName += 'W';
+        ImGui::Text("w"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+        DisplayType(idName.c_str(), val.w);
+
+        ImGui::TableNextColumn();
+        idName.back() = 'X';
+        ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+        DisplayType(idName.c_str(), val.x);
+
+        ImGui::TableNextColumn();
+        idName.back() = 'Y';
+        ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+        DisplayType(idName.c_str(), val.y);
+
+        ImGui::TableNextColumn();
+        idName.back() = 'Z';
+        ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+        DisplayType(idName.c_str(), val.z);
+        ImGui::EndTable();
+    }
+
+    //ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
+
+
+     //if (ImGui::ColorEdit4("MyColor##2", (float*)&color, miscFlags))
+     //{
+     //    //editedColor = reinterpret_cast<float*>(&val);
+     //    val = color;
+     //}
+}
+
 void DisplayType(const char* name, Vector2& val)
 {
     static float temp{};
@@ -211,69 +265,6 @@ void Display(const char* string)
 
 template <typename T>
 void Display_Property(T& comp) {
-
-    //Need to manually display Vec3 types as property system does not register vec3 types
-    //if constexpr (std::is_same<T, Transform>()) {
-    //    Display("Position", comp.translation);
-    //    glm::vec3 rotation = glm::degrees(comp.rotation);
-    //    Display("Rotation", rotation);
-    //    comp.rotation = glm::radians(rotation);
-    //    Display("Scale", comp.scale);
-    //    for (int i = 0; i < 3; ++i)
-    //    {
-    //        if (fabs(comp.scale[i]) < 0.001f)
-    //            comp.scale[i] = 0.001f;
-    //    }
-    //    return; //no other types other than vec3
-    //}
-    //else if constexpr (std::is_same<T, Rigidbody>()) {
-    //    Display("Linear Velocity", comp.linearVelocity);
-    //    Display("Angular Velocity", comp.angularVelocity);
-    //    Display("Force", comp.force);
-    //}
-    //else if constexpr (std::is_same<T, CharacterController>()) {
-    //    Display("Velocity", comp.velocity);
-    //    Display("Force", comp.force);
-    //}
-    //else if constexpr (std::is_same<T, LightSource>()) {
-    //    Display("Light Color", comp.lightingColor);
-    //}
-
-    std::vector<property::entry> List;
-    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-        {
-            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-            assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            List.push_back(property::entry { PropertyName, Data });
-        });
-
-    for (auto& [Name, Data] : List)
-    {
-
-        /*if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
-                        if ((Name.find(".x") != std::string::npos) ||
-                            (Name.find(".y") != std::string::npos) ||
-                            (Name.find(".z") != std::string::npos)) continue;
-                    }*/
-
-        std::visit([&](auto& Value) {
-
-                using T1 = std::decay_t<decltype(Value)>;
-
-                //Edit name
-                std::string DisplayName = Name;
-                auto it = DisplayName.begin() + DisplayName.find_first_of("/");
-                DisplayName.erase(DisplayName.begin(), ++it);
-                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
-
-                Display<T1>(DisplayName.c_str(), Value);
-                
-               
-            }
-        , Data);
-        property::set(comp, Name.c_str(), Data);
-    }
-
     if constexpr (std::is_same<T, MeshRenderer>()) {
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
@@ -298,6 +289,33 @@ void Display_Property(T& comp) {
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
+    std::vector<property::entry> List;
+    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+        {
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+            List.push_back(property::entry { PropertyName, Data });
+        });
+
+    int id = 0;
+    for (auto& [Name, Data] : List)
+    {
+
+        std::visit([&](auto& Value) {
+                using T1 = std::decay_t<decltype(Value)>;
+                //Edit name
+                std::string DisplayName = Name;
+                auto it = DisplayName.begin() + DisplayName.find_first_of("/");
+                DisplayName.erase(DisplayName.begin(), ++it);
+                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
+                ImGui::PushID(Name.c_str());
+                Display<T1>(DisplayName.c_str(), Value);
+                ImGui::PopID();          
+            }
+        , Data);
+        property::set(comp, Name.c_str(), Data);
+    }
+
 }
 
 //template <typename T>

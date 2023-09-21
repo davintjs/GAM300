@@ -36,7 +36,7 @@ constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
 using vec3 = glm::vec3;
-using Vector4 = glm::vec4;
+using vec4 = glm::vec4;
 using Quaternion = glm::quat;
 
 static std::map<std::string, size_t> ComponentTypes{};
@@ -161,9 +161,10 @@ struct Tag : Object
 
 struct Transform : Object
 {
-	Vector3 scale{ 1 };
-	Vector3 rotation{};
 	Vector3 translation{};
+	Vector3 rotation{};
+	Vector3 scale{ 1 };
+	
 	Transform* parent = nullptr;
 	
 	std::vector<Transform*> child;
@@ -280,9 +281,10 @@ struct Transform : Object
 //} property_vend_h(Transform)//
 
 property_begin_name(Transform, "Transform") {
-		property_var(scale),
+		property_var(translation),
 			property_var(rotation),
-			property_var(translation),
+			property_var(scale),
+			
 	} property_vend_h(Transform)
 
 struct AudioSource : Object
@@ -413,17 +415,22 @@ struct MeshRenderer : Object
 	//Materials mr_Material;
 
 	// Materials stuff below here
-	glm::vec4 mr_Albedo;
-	glm::vec4 mr_Specular;
-	glm::vec4 mr_Diffuse;
-	glm::vec4 mr_Ambient;
+	Vector4 mr_Albedo;
+	Vector4 mr_Specular;
+	Vector4 mr_Diffuse;
+	Vector4 mr_Ambient;
 	float mr_Shininess;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
-	property_var(MeshName)
+	//property_var(MeshName),
+		property_var(mr_Albedo)
+		, property_var(mr_Specular)
+		, property_var(mr_Diffuse)
+		, property_var(mr_Ambient)
+		, property_var(mr_Shininess)
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
