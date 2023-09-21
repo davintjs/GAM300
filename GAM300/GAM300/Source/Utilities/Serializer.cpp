@@ -237,7 +237,7 @@ bool DeserializeScene(Scene& _scene)
         {
             YAML::Node object = entity["GameObject"];
 
-            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>()).Get();
+            Entity& entity = _scene.AddEntity(object["m_UUID"].as<Engine::UUID>());
 
             // Bean: Dont need cuz when parenting it reorders the object anyways
             //entity.denseIndex = object["m_Index"].as<ObjectIndex>(); 

@@ -34,13 +34,12 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Entity.h"
 #include "Components.h"
 #include <unordered_map>
-#include "Handle.h"
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
 
 
 template <typename T>
-using Table = std::unordered_map<Engine::UUID, Handle<T>>;
+using Table = std::unordered_map<Engine::UUID, T*>;
 
 template <typename T>
 using MultiTable = std::unordered_map<Engine::UUID, Table<T>>;
@@ -54,7 +53,7 @@ struct HandlesTable
 	constexpr HandlesTable(TemplatePack<Ts...>) {}
 	HandlesTable() = default;
 	template <typename T1>
-	bool HasHandle(Engine::UUID uuid)
+	bool Has(Engine::UUID uuid)
 	{
 		auto& entries = std::get<Table<T1>>(tables);
 		if (entries.find(uuid) == entries.end())
@@ -63,7 +62,7 @@ struct HandlesTable
 	}
 
 	template <typename T1>
-	bool HasHandle(T1& object)
+	bool Has(T1& object)
 	{
 		auto& entries = std::get<Table<T1>>(tables);
 		if (entries.find(object.uuid) == entries.end())
@@ -72,7 +71,7 @@ struct HandlesTable
 	}
 
 	template <typename T1>
-	constexpr Handle<T1>& GetHandle(Engine::UUID uuid)
+	constexpr T1& Get(Engine::UUID uuid)
 	{
 		return std::get<Table<T1>>(tables)[uuid];
 	}
@@ -92,14 +91,10 @@ struct HandlesTable
 	}
 
 	template <typename T1,typename... Args>
-	constexpr Handle<T1>& emplace(Engine::UUID uuid,T1& object)
+	constexpr T1* emplace(Engine::UUID uuid,T1* object)
 	{
 		auto& table = std::get<Table<T1>>(tables);
-		if (MultiComponentTypes::Has<T1>())
-		{
-
-		}
-		auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, &object)));
+		auto pair = table.emplace(std::make_pair(uuid, object));
 		return pair.first->second;
 	}
 
@@ -126,7 +121,7 @@ struct MultiHandlesTable
 	}
 
 	template <typename T1>
-	constexpr Handle<T1>& GetHandle(Engine::UUID uuid, Engine::UUID sub_uuid)
+	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid)
 	{
 		return std::get<MultiTable<T1>>(tables)[uuid][sub_uuid];
 	}
@@ -194,7 +189,7 @@ struct Scene
 	Scene& operator=(Scene&) = delete;
 
 	template<typename T>
-	Handle<T>& GetHandle(Engine::UUID uuid)
+	T& Get(Engine::UUID uuid)
 	{
 		E_ASSERT
 		(
@@ -204,8 +199,8 @@ struct Scene
 		return singleHandles.GetHandle<T>(uuid);
 	}
 
-	template<typename T>
-	Handle<T>& GetHandle(T& object)
+	template<typename T, typename Owner>
+	T& Get(Owner& object)
 	{
 		E_ASSERT
 		(
@@ -217,29 +212,26 @@ struct Scene
 	}
 
 
-	Handle<Entity>& AddEntity(Engine::UUID uuid = Engine::CreateUUID())
+	Entity* AddEntity(Engine::UUID euid = Engine::CreateUUID())
 	{
-		while (singleHandles.HasHandle<Entity>(uuid) || uuid == 0)
+		while (singleHandles.Has<Entity>(euid) || euid == 0)
 		{
-			uuid = Engine::CreateUUID();
+			euid = Engine::CreateUUID();
 		}
-		Entity& entity = entities.emplace_back(uuid);
+		Entity& entity = entities.emplace_back(euid);
 		entity.pScene = this;
 		entity.denseIndex = entities.GetDenseIndex(entity);
 		entities.SetActive(entity.denseIndex);
-		Handle<Entity>& handle = singleHandles.emplace(uuid, entity);
+		singleHandles.emplace(euid, &entity);
 		AddComponent<Transform>(entity);
 		Tag& tag = AddComponent<Tag>(entity);
 		tag.name = "New GameObject(";
 		tag.name += std::to_string(entities.size());
 		tag.name += ")";
-
-		//EditorHierarchy::Instance().layer.push_back(&entity);
 		// Add the entity to the inspector
-		ObjectCreatedEvent e{ (handle) };
+		ObjectCreatedEvent<Entity> e = {entity.EUID()};
 		EVENTS.Publish(&e);
-
-		return handle;
+		return &entity;
 	}
 
 	template<typename T, typename... Ts>
@@ -375,20 +367,6 @@ struct Scene
 	auto GetComponents(Entity& entity)
 	{
 		return multiComponentsArrays.GetArray<Component>().DenseSubscript(entity.denseIndex);
-	}
-
-	template <typename Component>
-	Handle<Entity>& GetEntity(Engine::UUID& uuid)
-	{
-		if (singleHandles.HasHandle(uuid))
-			return singleHandles.GetHandle<Entity>(uuid);
-		return Handle<Entity>::Invalid();
-	}
-
-	template <typename Component>
-	auto& GetEntity(Component& component)
-	{
-		return entities.DenseSubscript(GetComponentsArray<Component>().GetDenseIndex(component));
 	}
 
 	bool IsActive(Entity& entity)

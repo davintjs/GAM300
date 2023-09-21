@@ -86,7 +86,6 @@
     <ClCompile Include="Source\AI\Plane3D.cpp" />
     <ClCompile Include="Source\AI\Line3D.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
-    <ClCompile Include="Source\Scene\Handle.cpp" />
     <ClCompile Include="Source\Scene\Object.cpp" />
     <ClCompile Include="Source\Debugging\DemoSystem.cpp" />
   </ItemGroup>
@@ -164,7 +163,6 @@
     <ClInclude Include="Source\AI\Line3D.h" />
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Core\SystemsGroup.h" />
-    <ClInclude Include="Source\Scene\Handle.h" />
     <ClInclude Include="Source\Debugging\DemoSystem.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
   </ItemGroup>
