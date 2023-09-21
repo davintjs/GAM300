@@ -78,8 +78,8 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
-
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
+
 			}
 			else if (!strcmp(fileType.c_str(), "geom"))
 			{

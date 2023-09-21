@@ -90,6 +90,7 @@ public:
 		THREADS.Init();
 		RegisterComponents();
 		AllSystems::Init();
+
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
