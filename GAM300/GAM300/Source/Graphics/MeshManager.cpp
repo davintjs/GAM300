@@ -5,7 +5,14 @@
 extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
-extern std::vector <Materials> temp_MaterialContainer;
+//extern std::vector <Materials> temp_MaterialContainer;
+
+// v scuffed ik i am sorry ;v;
+extern std::vector <glm::vec4> temp_AlbedoContainer;
+extern std::vector <glm::vec4> temp_SpecularContainer;
+extern std::vector <glm::vec4> temp_DiffuseContainer;
+extern std::vector <glm::vec4> temp_AmbientContainer;
+extern std::vector <float> temp_ShininessContainer;
 
 
 void MESH_Manager::Init()
@@ -53,19 +60,29 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         std::cout << "Specular : " << newGeom._materials[i].Specular.b << "\n";
         std::cout << "Specular : " << newGeom._materials[i].Specular.a << "\n";
         std::cout << "\n\n";*/
-        Materials temporary;
-        temporary.Albedo = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
-        temporary.Diffuse = glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
-            newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a);
-        
-        temporary.Specular = glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
-            newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a);
+        //Materials temporary;
+        //temporary.Albedo = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
-        temporary.Ambient = glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
-            newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a);
+        //temporary.Diffuse = glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
+        //    newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a);
+        //
+        //temporary.Specular = glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
+        //    newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a);
 
-        temp_MaterialContainer.push_back(temporary);
+        //temporary.Ambient = glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
+        //    newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a);
+
+        //temp_MaterialContainer.push_back(temporary);
+
+        temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
+        temp_DiffuseContainer.push_back(glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
+            newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a));
+        temp_SpecularContainer.push_back(glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
+            newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a));
+        temp_AmbientContainer.push_back(glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
+            newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a));
+        temp_ShininessContainer.push_back(0.f);
     }
 
     Mesh newMesh;
@@ -407,40 +424,108 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
 
-    // Material Buffer Setup
-    prop.entityMATbuffer;
+
+    // Albedo Buffer Setup
+    prop.AlbedoBuffer;
+    glGenBuffers(1, &prop.AlbedoBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Albedo[0]), GL_STATIC_DRAW);
+
     glBindVertexArray(prop.VAO);
-
-    glGenBuffers(1, &prop.entityMATbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
-
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit *sizeof(Materials), &(prop.entityMAT[0]), GL_STATIC_DRAW);
-    
-    // Albedo
     glEnableVertexAttribArray(10);
-    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
-
-    // Specular
-    glEnableVertexAttribArray(11);
-    glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(sizeof(glm::vec4)));
-    // Diffuse
-    glEnableVertexAttribArray(12);
-    glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(2 * sizeof(glm::vec4)));
-    // Ambient
-    glEnableVertexAttribArray(13);
-    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(glm::vec4)));
-    // Shininess
-    glEnableVertexAttribArray(14);
-    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(4 * sizeof(glm::vec4)));
-    
+    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glVertexAttribDivisor(10, 1);
-    glVertexAttribDivisor(11, 1);
-    glVertexAttribDivisor(12, 1);
-    glVertexAttribDivisor(13, 1);
-    glVertexAttribDivisor(14, 1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Specular Buffer Setup
+    prop.SpecularBuffer;
+    glGenBuffers(1, &prop.SpecularBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Specular[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(11);
+    glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(11, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Diffuse Buffer Setup
+    prop.DiffuseBuffer;
+    glGenBuffers(1, &prop.DiffuseBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Diffuse[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(12);
+    glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(12, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Ambient Buffer Setup
+    prop.AmbientBuffer;
+    glGenBuffers(1, &prop.AmbientBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Ambient[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(13);
+    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(13, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Shininess Buffer Setup
+    prop.ShininessBuffer;
+    glGenBuffers(1, &prop.ShininessBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), &(prop.Shininess[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(14);
+    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribDivisor(14, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    //// Material Buffer Setup
+    //prop.entityMATbuffer;
+    //glBindVertexArray(prop.VAO);
+
+    //glGenBuffers(1, &prop.entityMATbuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
+
+    //glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit *sizeof(Materials), &(prop.entityMAT[0]), GL_STATIC_DRAW);
+    //// Albedo
+    //glEnableVertexAttribArray(10);
+
+    //glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)0);
+    //// Specular
+    //glEnableVertexAttribArray(11);
+
+    //glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(sizeof(glm::vec4)));
+    //// Diffuse
+    //glEnableVertexAttribArray(12);
+
+    //glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(2 * sizeof(glm::vec4)));
+    //// Ambient
+    //glEnableVertexAttribArray(13);
+
+    //glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(3 * sizeof(glm::vec4)));
+    //// Shininess
+    //glEnableVertexAttribArray(14);
+
+    //glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, 17 * sizeof(float), (void*)(4 * sizeof(glm::vec4)));
+    //glVertexAttribDivisor(10, 1);
+    //glVertexAttribDivisor(11, 1);
+    //glVertexAttribDivisor(12, 1);
+    //glVertexAttribDivisor(13, 1);
+    //glVertexAttribDivisor(14, 1);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindVertexArray(0);
 
 
 
