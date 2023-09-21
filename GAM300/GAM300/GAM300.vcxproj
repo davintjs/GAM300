@@ -32,6 +32,7 @@
     <ClCompile Include="Source\AI\Plane3D.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
     <ClCompile Include="Source\AI\Segment2D.cpp" />
+    <ClCompile Include="Source\AI\Segment3D.cpp" />
     <ClCompile Include="Source\AI\Triangle3D.cpp" />
     <ClCompile Include="Source\AppEntry\Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -215,6 +216,7 @@
     <ClInclude Include="Source\AI\Plane3D.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AI\Segment2D.h" />
+    <ClInclude Include="Source\AI\Segment3D.h" />
     <ClInclude Include="Source\AI\Triangle3D.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
