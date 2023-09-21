@@ -215,8 +215,15 @@ struct Transform : Object
 	{
 		// Calculate the global transformation matrix
 		if (parent) {
-			parent->RemoveChild(this);
-			glm::mat4 globalTransform = GetWorldMatrix();
+			//parent->RemoveChild(this);
+			//parent->RemoveChild(this);
+			/*auto _parent = parent->child;
+			auto it = std::find(_parent.begin(), _parent.end(), this);
+			if (it == _parent.end()) {
+				std::cout << "cant find\n";
+			}*/
+			
+			/*glm::mat4 globalTransform = GetWorldMatrix();
 			glm::quat rot;
 			glm::vec3 skew;
 			glm::vec4 perspective;
@@ -226,7 +233,7 @@ struct Transform : Object
 			glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
 			scale = _scale;
 			translation = _translation;
-			rotation = glm::eulerAngles(rot);
+			rotation = glm::eulerAngles(rot);*/
 		}
 
 		// Set the new parent
@@ -257,7 +264,7 @@ struct Transform : Object
 		auto it = std::find(child.begin(), child.end(),t);
 
 		// Check if an element satisfying the condition was found
-		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
+		//E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
 		// Erase the found element
 		child.erase(it);
 	}
