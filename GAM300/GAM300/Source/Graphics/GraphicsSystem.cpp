@@ -49,6 +49,7 @@ std::vector <float> temp_ShininessContainer;
 
 trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
+GLSLShader temp_debug_shader;
 LightProperties Lighting_Source;
 //bool isThereLight = false;
 
@@ -137,6 +138,32 @@ void GraphicsSystem::Init()
 		std::stringstream sstr;
 		sstr << "Unable to compile/link/validate shader programs\n";
 		sstr << temp_instance_shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+
+
+	//debug shader
+	std::vector<std::pair<GLenum, std::string>> debugshdr_files;
+	// Vertex Shader
+	debugshdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/InstancedDebugRender.vert"));
+
+	// Fragment Shader
+	debugshdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/InstancedDebugRender.frag"));
+
+	std::cout << "TEMP debug Render SHADER\n";
+	temp_debug_shader.CompileLinkValidate(debugshdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == temp_debug_shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate debug shader programs\n";
+		sstr << temp_debug_shader.GetLog() << "\n";
 		std::cout << sstr.str();
 		std::exit(EXIT_FAILURE);
 	}
@@ -516,6 +543,13 @@ void GraphicsSystem::Draw() {
 
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
+	
+		// FOR DEBUG DRAW
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		Draw_Debug(prop.debugVAO, prop.iter);
+
 		prop.iter = 0;
 	}
 
@@ -575,4 +609,27 @@ void GraphicsSystem::Exit()
 	//std::cout << "-- Graphics Exit -- " << std::endl;
 
 	//CLEANUP GRAPHICS HERE
+}
+
+void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
+{
+	temp_debug_shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+
+	glBindVertexArray(vaoid);
+	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
+	glDrawElementsInstanced(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0, instance_count);
+
+	// unbind and free stuff
+	glBindVertexArray(0);
+	temp_debug_shader.UnUse();
 }

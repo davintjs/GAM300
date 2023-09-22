@@ -95,5 +95,6 @@ private:
 	// Did not make this version because i realized that its all within instance properties
 	//unsigned int InstanceSetup_MAT(InstanceProperties& prop);
 
+	void debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop); // vao
 
 };
