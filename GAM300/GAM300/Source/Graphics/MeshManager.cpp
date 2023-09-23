@@ -100,9 +100,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
             min.y = std::min(pos.y, min.y);
             min.z = std::min(pos.z, min.z);
 
-            max.x = std::min(pos.x, max.x);
-            max.y = std::min(pos.y, max.y);
-            max.z = std::min(pos.z, max.z);
+            max.x = std::max(pos.x, max.x);
+            max.y = std::max(pos.y, max.y);
+            max.z = std::max(pos.z, max.z);
         }
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
