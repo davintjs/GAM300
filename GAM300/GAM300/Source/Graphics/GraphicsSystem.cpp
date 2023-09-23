@@ -326,22 +326,6 @@ void GraphicsSystem::Update(float dt)
 	EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update(dt);
-
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
-	{
-		SwappingColorSpace = !SwappingColorSpace;
-		if (SwappingColorSpace)
-		{
-			glEnable(GL_FRAMEBUFFER_SRGB);
-		}
-		else
-		{
-			glDisable(GL_FRAMEBUFFER_SRGB);
-		}
-	}
-	
-
 	// Dont delete this -> To run on lab computers
 	
 	/*GLint maxVertexAttribs;
@@ -394,6 +378,7 @@ void GraphicsSystem::Update(float dt)
 	// Bean: For unbinding framebuffer
 	EditorCam.getFramebuffer().unbind();
 	//glDisable(GL_FRAMEBUFFER_SRGB);
+
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 

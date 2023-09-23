@@ -47,10 +47,12 @@ layout(binding=1) uniform sampler2D normalSampler;
 
 void main()
 {
+    float gamma = 2.2;
 
     
 
-    // DONT DELETE THE CODE, I JUST TESTING THE NORMAL MAPPING
+    // COLOR CODE
+
 //    if(lightColor == vec3(0.f,0.f,0.f))
 //    {
 //        FragColor = vec4(vColor); // set all 4 vector values to 1.0
@@ -87,8 +89,7 @@ void main()
 //    FragColor = vec4(result, 1.0);
 
 
-
-
+// NORMAL MAPPING
 // 
      // obtain normal from normal map in range [0,1]
     vec3 normal = texture(normalSampler, Tex_Coord).rgb;
@@ -100,7 +101,9 @@ void main()
 
 
     // get diffuse color
-    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
+
+    vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma));
+//    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
     // ambient
     vec3 ambient = 0.1 * color;
     // diffuse
@@ -123,6 +126,13 @@ void main()
 
 
 
-//    FragColor = texture(myTextureSampler,Tex_Coord);
+// FragColor = texture(myTextureSampler,Tex_Coord);
+
+
+
+
+
+// Gamma Correction -> Last Step
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
 
 }
