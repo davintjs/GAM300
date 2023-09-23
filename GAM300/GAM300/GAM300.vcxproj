@@ -274,6 +274,8 @@
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.frag" />
     <None Include="Source\Graphics\BasicLighting.vert" />
+    <None Include="Source\Graphics\HDR.frag" />
+    <None Include="Source\Graphics\HDR.vert" />
     <None Include="Source\Graphics\LightAffected.frag" />
     <None Include="Source\Graphics\LightAffected.vert" />
     <None Include="Source\Graphics\Skybox.frag" />

@@ -12,14 +12,14 @@ void Framebuffer::init()
 		glDeleteTextures(1, &depthAttachment);
 	}
 
-	glCreateFramebuffers(1, &get_buffer_object_id());
+	glGenFramebuffers(1, &get_buffer_object_id());
 	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 
 	// Creating the color attachment
 	glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 	glBindTexture(GL_TEXTURE_2D, colorAttachment);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width,
-		height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, // Tweaked This -> Euan
+		height, 0, GL_RGBA, GL_FLOAT, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -27,6 +27,12 @@ void Framebuffer::init()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
 	// Creating the depth and stencil attachment
+
+	//glGenRenderbuffers(1, &depthAttachment);
+	//glBindRenderbuffer(GL_RENDERBUFFER, depthAttachment);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthAttachment);
+
 	glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
 	glBindTexture(GL_TEXTURE_2D, depthAttachment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width,

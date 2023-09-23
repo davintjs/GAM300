@@ -34,9 +34,9 @@ layout (location = 16) in vec3 TangentFragPos;
 out vec4 FragColor;
 
 
-//uniform vec3 lightColor;
-//uniform vec3 lightPos;
-//uniform vec3 camPos;
+uniform vec3 lightColor;
+uniform vec3 lightPos;
+uniform vec3 camPos;
 
 
 layout(binding=0) uniform sampler2D myTextureSampler;
@@ -90,7 +90,7 @@ void main()
 
 
 // NORMAL MAPPING
-// 
+
      // obtain normal from normal map in range [0,1]
     vec3 normal = texture(normalSampler, Tex_Coord).rgb;
     
@@ -102,16 +102,19 @@ void main()
 
     // get diffuse color
 
-    vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma));
+    vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+
+
+
 //    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
     // ambient
-    vec3 ambient = 0.1 * color;
+    vec3 ambient = 0.0 * color;
     // diffuse
     vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
 //    vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
 //    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
-    vec3 diffuse = diff * color;
+    vec3 diffuse = lightColor * diff * color;
     // specular
     vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
 //    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
@@ -122,17 +125,42 @@ void main()
     vec3 specular = vec3(0.2) * spec;
     FragColor = vec4(ambient + diffuse + specular, 1.0);
 
-
-
-
-
 // FragColor = texture(myTextureSampler,Tex_Coord);
 
 
 
 
 
-// Gamma Correction -> Last Step
-    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
+
+
+
+
+
+//        vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+//        vec3 normal = texture(normalSampler, Tex_Coord).rgb;
+//        // ambient
+//        vec3 ambient = 0.0 * color;
+//        // lighting
+//        vec3 lighting = vec3(0.0);
+//   
+//        // diffuse
+//        vec3 lightDir = normalize(FragmentPos - lightPos);
+//        float diff = max(dot(lightDir, normal), 0.0);
+//        vec3 diffuse = lightColor * diff * color;      
+//        vec3 result = diffuse;        
+//
+//        // attenuation (use quadratic as we have gamma correction)
+//        float distance = length(FragmentPos - lightPos);
+//        result *= 1.0 / (distance * distance);
+//        
+//        
+//        
+//        lighting += result;
+//                
+//    FragColor = vec4(ambient + lighting, 1.0);
+//
+
+// Gamma Correction -> Currently this is moved to the post processing
+//    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
 
 }

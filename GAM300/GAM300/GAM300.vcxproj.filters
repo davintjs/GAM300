@@ -170,5 +170,7 @@
     <None Include="Source\Graphics\LightAffected.frag" />
     <None Include="Source\Graphics\Skybox.vert" />
     <None Include="Source\Graphics\Skybox.frag" />
+    <None Include="Source\Graphics\HDR.vert" />
+    <None Include="Source\Graphics\HDR.frag" />
   </ItemGroup>
 </Project>
