@@ -86,18 +86,26 @@ void main()
 //    result = (ambience + diffusion + speculation) * vec3(frag_albedo);
 //    FragColor = vec4(result, 1.0);
 
+
+
+
+// 
      // obtain normal from normal map in range [0,1]
     vec3 normal = texture(normalSampler, Tex_Coord).rgb;
     
     // transform normal vector to range [-1,1]
     normal = normalize(normal * 2.0 - 1.0);  // this normal is in tangent space
    
+//    vec3 normal = normalize(Normal);
+
+
     // get diffuse color
     vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
     // ambient
     vec3 ambient = 0.1 * color;
     // diffuse
     vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
+//    vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
 //    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
