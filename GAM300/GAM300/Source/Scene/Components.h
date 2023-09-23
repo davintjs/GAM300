@@ -405,7 +405,13 @@ struct MeshRenderer : Object
 	std::string MeshName = "Cube";
 	//Materials mr_Material;
 
-	Materials mr_Material;
+	// Materials stuff below here
+	glm::vec4 mr_Albedo;
+	glm::vec4 mr_Specular;
+	glm::vec4 mr_Diffuse;
+	glm::vec4 mr_Ambient;
+	float mr_Shininess;
+
 	property_vtable();
 };
 

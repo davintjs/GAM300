@@ -1127,3 +1127,127 @@ void Model::DeserializeGeoms(const std::string filePath)
 
     //ifs.close();
 }
+
+
+void Model::SkyBoxinit()
+{
+    float skyboxVertices[] = {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+    };
+
+    // skybox VAO
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    vaoid = skyboxVAO;
+    vboid = skyboxVBO;
+
+}
+
+void Model::setup_skybox_shader()
+{
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Source/Graphics/Skybox.vert"));
+    //"Assets/Shaders/OrionVertShader.vert"));
+
+// Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Source/Graphics/Skybox.frag"));
+    //"Assets/Shaders/OrionFragShader.frag"));
+
+    std::cout << "SKYBOX SHADER\n";
+    shader.CompileLinkValidate(shdr_files);
+    std::cout << "\n\n";
+
+    // if linking failed
+    if (GL_FALSE == shader.IsLinked()) {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << shader.GetLog() << "\n";
+        //ORION_ENGINE_ERROR(sstr.str());
+        std::cout << sstr.str();
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+void Model::SkyBoxDraw(GLuint skyboxtex)
+{
+    shader.Use();
+    GLint uniform_var_loc1 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "projection");
+
+    glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
+        glm::value_ptr(EditorCam.getPerspMatrix()));
+    
+    
+    GLint uniform_var_loc2 =
+        glGetUniformLocation(this->shader.GetHandle(),
+            "view");
+
+    glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
+        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.getViewMatrix()))));
+
+    glBindVertexArray(vaoid);
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxtex);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+
+    shader.UnUse();
+
+}

@@ -67,7 +67,9 @@ public:
 	void affectedByLight_draw(glm::vec3 lightPos);
 	void instanceDraw(int entitycount);
 
-	
+	void SkyBoxinit();
+	void setup_skybox_shader();
+	void SkyBoxDraw(GLuint skyboxtex);
 
 	glm::vec3 position;
 	
