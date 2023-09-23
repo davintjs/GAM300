@@ -8,7 +8,7 @@ public class Player : Script
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = Get<Rigidbody>();
     }
 
     void Update()

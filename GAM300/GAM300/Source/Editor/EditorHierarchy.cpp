@@ -20,7 +20,7 @@ void EditorHierarchy::ClearLayer()
 	selectedEntity = NON_VALID_ENTITY;
 }
 
-void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
+void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 {
 
 	// ImGuiTreeNodeFlags_SpanAvailWidth
@@ -29,14 +29,14 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
 		ImGuiTreeNodeFlags_DefaultOpen;
 
-	if (Index == selectedEntity)
+	if (euid == selectedEntity)
 	{
 		NodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
 
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-	Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
+	Transform& currEntity = curr_scene.Get<Transform>(euid);
 
 	if (currEntity.isLeaf())
 	{
@@ -51,16 +51,16 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity"))
 		{
-			const ObjectIndex childId = *static_cast<ObjectIndex*>(payload->Data);
+			Engine::UUID childId = *static_cast<Engine::UUID*>(payload->Data);
 
 
-			if (childId != Index)
+			if (childId != euid)
 			{
-				Entity& currEntity = curr_scene.entities.DenseSubscript(childId);
-				Entity& targetEntity = curr_scene.entities.DenseSubscript(Index);
+				Entity& currEntity = curr_scene.Get<Entity>(childId);
+				Entity& targetEntity = curr_scene.Get<Entity>(euid);
 
-				Transform& currTransform = curr_scene.GetComponent<Transform>(currEntity);
-				Transform& targetTransform = curr_scene.GetComponent<Transform>(targetEntity);
+				Transform& currTransform = curr_scene.Get<Transform>(currEntity);
+				Transform& targetTransform = curr_scene.Get<Transform>(targetEntity);
 
 				//if target entity is a child
 				if (targetTransform.isChild())
@@ -86,9 +86,7 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 						else
 						{
 							auto& children = currTransform.parent->child;
-							auto it = std::find(children.begin(), children.end(), &currTransform);
-							children.erase(it);
-							Set_ParentChild(*targetTransform.parent, currTransform);
+							currTransform.SetParent(targetTransform.parent);
 
 							std::vector<Transform*>& arr = targetTransform.parent->child;
 							//Reorder entity to target entity location     
@@ -120,7 +118,7 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 					//if current entity has a parent, delink it
 					if (currTransform.isChild())
 					{
-						Break_ParentChild(childId);
+						currTransform.SetParent(nullptr);
 					}
 					//delete instance of entity in container
 					auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
@@ -137,20 +135,20 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 		ImGui::EndDragDropTarget();
 	}
 
-	auto EntityName = curr_scene.GetComponent<Tag>(curr_scene.entities.DenseSubscript(Index)).name.c_str();
+	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
 	bool open = ImGui::TreeNodeEx(EntityName, NodeFlags);
 
 	//select entity from hierarchy
 	if (ImGui::IsItemClicked())
 	{
-        SelectedEntityEvent selectedEvent{ curr_scene.GetHandle(*curr_scene.entities.TryGetDense(Index))};
+        SelectedEntityEvent selectedEvent{&curr_scene.Get<Entity>(euid)};
         EVENTS.Publish(&selectedEvent);
 	}
 
 	if (ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload("Entity", &selectedEntity, sizeof(selectedEntity));
-		ImGui::Text(curr_scene.GetComponent<Tag>(curr_scene.entities.DenseSubscript(selectedEntity)).name.c_str());
+		ImGui::Text(curr_scene.Get<Tag>(selectedEntity).name.c_str());
 		ImGui::EndDragDropSource();
 	}
 
@@ -158,23 +156,23 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity"))
 		{
-			const ObjectIndex childId = *static_cast<ObjectIndex*>(payload->Data);
+			Engine::UUID childId = *static_cast<Engine::UUID*>(payload->Data);
 
-			Transform& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(childId));
-			Transform& targetEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(Index));
+			Transform& currEntity = curr_scene.Get<Transform>(childId);
+			Transform& targetEntity = curr_scene.Get<Transform>(euid);
 
 			if (currEntity.isLeaf())
 			{
-				if (childId != Index)
+				if (childId != euid)
 				{
-					Set_ParentChild(Index, childId);
+					currEntity.SetParent(&targetEntity);
 				}
 			}
 			else
 			{
 				if (!currEntity.isEntityChild(targetEntity))
 				{
-					Set_ParentChild(Index, childId);
+					currEntity.SetParent(&targetEntity);
 				}
 			}
 		}
@@ -187,7 +185,7 @@ void EditorHierarchy::DisplayEntity(const ObjectIndex& Index)
 	{
 		for (int i = 0; i < currEntity.child.size(); ++i)
 		{
-			ObjectIndex childId = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*currEntity.child[i]);
+			Engine::UUID childId = currEntity.child[i]->EUID();
 			DisplayEntity(childId);
 		}
 		ImGui::TreePop();
@@ -210,10 +208,10 @@ void EditorHierarchy::Update(float dt)
 	{
 		for (int i = 0; i < layer.size(); ++i)
 		{
-			if (!curr_scene.GetComponent<Transform>(*layer[i]).isChild())
+			if (!curr_scene.Get<Transform>(*layer[i]).isChild())
 			{
 				//Recursive function to display entities in a hierarchy tree
-				DisplayEntity(layer[i]->denseIndex);
+				DisplayEntity(layer[i]->EUID());
 			}
 		}
 
@@ -222,19 +220,20 @@ void EditorHierarchy::Update(float dt)
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity")) {
-				const ObjectIndex Index = *static_cast<ObjectIndex*>(payload->Data);
+				Engine::UUID Index = *static_cast<Engine::UUID*>(payload->Data);
 
-				Entity& currEntity = curr_scene.entities.DenseSubscript(Index);
+				Transform& currTrans = curr_scene.Get<Transform>(Index);
 
-				if (curr_scene.GetComponent<Transform>(currEntity).isChild())
+				if (currTrans.isChild())
 				{
-					Break_ParentChild(Index);
+					currTrans.SetParent(nullptr);
 				}
 				else
 				{
-					auto it = std::find(layer.begin(), layer.end(), &currEntity);
+					Entity& entity = curr_scene.Get<Entity>(Index);
+					auto it = std::find(layer.begin(), layer.end(), &entity);
 					layer.erase(it);
-					layer.insert(layer.end(), &currEntity);
+					layer.insert(layer.end(), &entity);
 				}
 		
 			}
@@ -247,7 +246,7 @@ void EditorHierarchy::Update(float dt)
 		{
 			if (ImGui::MenuItem("Add Entity"))
 			{
-                SelectedEntityEvent selectedEvent{ curr_scene.AddEntity() };
+                SelectedEntityEvent selectedEvent{ curr_scene.Add<Entity>() };
                 EVENTS.Publish(&selectedEvent);
 			}
 
@@ -256,18 +255,17 @@ void EditorHierarchy::Update(float dt)
 			{
 				if (ImGui::MenuItem(name.c_str()))
 				{
-					Entity& ent = curr_scene.entities.DenseSubscript(selectedEntity);
+					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
-					auto& currEntity = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(selectedEntity));
+					auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
 					for (auto child : currEntity.child)
 					{
-						ObjectIndex id = curr_scene.singleComponentsArrays.GetArray<Transform>().GetDenseIndex(*child);
 						curr_scene.Destroy(child);
 					}
 					curr_scene.Destroy(ent);
 					auto it = std::find(layer.begin(), layer.end(), &ent);
 					EditorHierarchy::Instance().layer.erase(it);
-					SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
+					SelectedEntityEvent selectedEvent{0};
 					EVENTS.Publish(&selectedEvent);
 				}
 			}
@@ -286,8 +284,8 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    if (pEvent->handle.IsValid())
-        selectedEntity = pEvent->handle.Get().denseIndex;
+    if (pEvent->pEntity)
+        selectedEntity = pEvent->pEntity->EUID();
     else
         selectedEntity = NON_VALID_ENTITY;
 }
@@ -299,7 +297,7 @@ void EditorHierarchy::CallbackClearEntities(ClearEntitiesEvent* pEvent)
 
 void EditorHierarchy::CallbackAddEntity(ObjectCreatedEvent<Entity>* pEvent)
 {
-	layer.push_back(&pEvent->handle.Get());
+	layer.push_back(pEvent->pObject);
 }
 
 void EditorHierarchy::Exit() {

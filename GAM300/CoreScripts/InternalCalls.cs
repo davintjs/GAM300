@@ -54,7 +54,7 @@ namespace BeanFactory
 
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetComponentEnabled(ulong compId);
+        internal extern static bool GetEnabled(ulong compId);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetComponentEnabled(ulong compId, bool enabled);
@@ -84,10 +84,10 @@ namespace BeanFactory
         internal extern static void DestroyComponent(Component component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
+        internal extern static ulong Add(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Component GetComponent(GameObject gameObject, Type componentType);
+        internal extern static Component Get(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static GameObject GetGameObject(Object gameObject);

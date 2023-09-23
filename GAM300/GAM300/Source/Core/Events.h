@@ -113,15 +113,15 @@ struct SceneStopEvent : IEvent {};
 
 struct SelectedEntityEvent : IEvent
 {
-	SelectedEntityEvent(Engine::UUID _euid) : euid{ _euid }{}
-	Engine::UUID euid;
+	SelectedEntityEvent(Entity* _pEntity) : pEntity{ _pEntity }{}
+	Entity* pEntity;
 };
 
 template <typename T>
 struct ObjectCreatedEvent : IEvent
 {
-	ObjectCreatedEvent(Engine::UUID _euid) : euid{ _euid } {}
-	Engine::UUID euid;
+	ObjectCreatedEvent(T* _pObject) : pObject{ _pObject } {}
+	T* pObject;
 };
 
 //struct GetCurrentSceneEvent

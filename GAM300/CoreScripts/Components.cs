@@ -30,9 +30,9 @@ namespace BeanFactory
         {
             return gameObject.HasComponent<T>();
         }
-        public T GetComponent<T>() where T : Component
+        public T Get<T>() where T : Component
         {
-            return (T)InternalCalls.GetComponent(gameObject, typeof(T));
+            return (T)InternalCalls.Get(gameObject, typeof(T));
         }
     }
     public class Rigidbody : Component

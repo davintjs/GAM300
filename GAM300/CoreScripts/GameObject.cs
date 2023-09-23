@@ -50,15 +50,15 @@ namespace BeanFactory
         }
 
         //Gets a component by calling back to c++
-        public T GetComponent<T>() where T : Component, new()
+        public T Get<T>() where T : Component, new()
         {
-            return InternalCalls.GetComponent(this, typeof(T)) as T;
+            return InternalCalls.Get(this, typeof(T)) as T;
         }
 
-        /*public T AddComponent<T>() where T : Component, new()
+        /*public T Add<T>() where T : Component, new()
         {
             T component = new T() { gameObject = this };
-            component.ID = InternalCalls.AddComponent(this, typeof(T));
+            component.ID = InternalCalls.Add(this, typeof(T));
             return component;
         }*/
 

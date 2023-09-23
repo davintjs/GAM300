@@ -617,7 +617,7 @@ void DisplayComponentHelper(T& component)
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
 
-                curr_scene.Destroy(curr_scene.GetComponent<T>(curr_scene.entities.DenseSubscript(EditorHierarchy::Instance().selectedEntity)));
+                curr_scene.Destroy(curr_scene.Get<T>(EditorHierarchy::Instance().selectedEntity));
             }
         }
         else {
@@ -648,7 +648,7 @@ void DisplayComponentHelper(T& component)
             }
             else
             {
-                ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
+                ImGui::SetDragDropPayload(GetComponentTypeName<T>(), &container, sizeof(void*));
                 ImGui::EndDragDropSource();
             }
         }*/
@@ -696,7 +696,7 @@ public:
     {
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
-        //DisplayComponentHelper(curr_scene.GetComponent<Transform>(entity));
+        //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
 
         DisplayNext<T, Ts...>(entity);
     }
@@ -711,14 +711,14 @@ private:
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {   
-                    auto& component = curr_scene.GetComponent<T1>(entity);
+                    auto& component = curr_scene.Get<T1>(entity);
                     DisplayComponentHelper(component);
                 }              
             }
         }
         else if constexpr (MultiComponentTypes::Has<T1>()) {
 
-            auto components = curr_scene.GetComponents<T1>(entity);
+            auto components = curr_scene.Gets<T1>(entity);
             for (T1* component : components)
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
@@ -738,25 +738,25 @@ using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponent
 void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
 
 template<typename T, typename... Ts>
-struct AddComponentsStruct
+struct AddsStruct
 {
 public:
-    constexpr AddComponentsStruct(TemplatePack<T, Ts...> pack) {}
-    AddComponentsStruct(Entity& entity)
+    constexpr AddsStruct(TemplatePack<T, Ts...> pack) {}
+    AddsStruct(Entity& entity)
     {
-        AddNext<T, Ts...>(entity);
+        AddNext<T, Ts...>(entity,MySceneManager.GetCurrentScene());
     }
 private:
     template<typename T1, typename... T1s>
-    void AddNext(Entity& entity)
+    void AddNext(Entity& entity, Scene& scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!entity.pScene->HasComponent<T1>(entity))
+            if (!scene.HasComponent<T1>(entity))
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    entity.pScene->AddComponent<T1>(entity);
-                    EditorInspector::Instance().isAddComponentPanel = false;
+                    scene.Add<T1>(entity);
+                    EditorInspector::Instance().isAddPanel = false;
                 }
             }
         }
@@ -764,20 +764,20 @@ private:
         {
             if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
             {
-                entity.pScene->AddComponent<T1>(entity);
-                EditorInspector::Instance().isAddComponentPanel = false;
+                scene.Add<T1>(entity);
+                EditorInspector::Instance().isAddPanel = false;
             }
         }
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            AddNext<T1s...>(entity);
+            AddNext<T1s...>(entity,scene);
         }
     }
 };
-using AddComponentsDisplay = decltype(AddComponentsStruct(DisplayableComponentTypes()));
+using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
-void AddComponentPanel(Entity& entity) {
+void AddPanel(Entity& entity) {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -785,12 +785,12 @@ void AddComponentPanel(Entity& entity) {
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-        EditorInspector::Instance().isAddComponentPanel = false;
+        EditorInspector::Instance().isAddPanel = false;
     }
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
-        (void)AddComponentsDisplay(entity);
+        (void)AddsDisplay(entity);
         ImGui::EndPopup();
     }
 }
@@ -803,15 +803,15 @@ void DisplayEntity(Entity& entity)
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
-    std::string entity_name = curr_scene.GetComponent<Tag>(entity).name;
+    std::string entity_name = curr_scene.Get<Tag>(entity).name;
     strcpy_s(buffer, entity_name.c_str());
     ImGui::PushItemWidth(-1);
     if (ImGui::InputText("##gameObjName", buffer, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
-        curr_scene.GetComponent<Tag>(entity).name = buffer;
+        curr_scene.Get<Tag>(entity).name = buffer;
     }
 
     ImGui::PopItemWidth();
-    curr_scene.GetComponent<Tag>(entity).name = buffer;
+    curr_scene.Get<Tag>(entity).name = buffer;
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -821,12 +821,12 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.euid);
+        ImGui::PushID((int)entity.EUID());
         DisplayComponents(entity);
         ImGui::PopID();
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddComponentPanel = true;
+            EditorInspector::Instance().isAddPanel = true;
         }
 
         ImGui::EndTable();
@@ -841,12 +841,12 @@ void DisplayEntity(Entity& entity)
     /*if (ImGui::Button("Add Component", buttonSize)) {
         isAddingComponent = true;
     }
-    AddComponentPanel(gameObject, isAddingComponent);*/
+    AddPanel(gameObject, isAddingComponent);*/
 }
 
 void EditorInspector::Init()
 {
-    isAddComponentPanel = false;
+    isAddPanel = false;
 }
 
 void EditorInspector::Update(float dt)
@@ -859,21 +859,21 @@ void EditorInspector::Update(float dt)
     //List out all components in order
     //templated functionalities (input fields, checkboxes etc.)
 
-    const ObjectIndex curr_index = EditorHierarchy::Instance().selectedEntity;
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
 
     if (curr_index != NON_VALID_ENTITY) {
         ImGui::Spacing();
-        Entity& curr_entity = curr_scene.entities.DenseSubscript(curr_index);
-        std::string Header = "Current Entity: " + curr_scene.GetComponent<Tag>(curr_entity).name;
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+        std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
     }
 
-    if (isAddComponentPanel) {
-        AddComponentPanel(curr_scene.entities.DenseSubscript(curr_index));
+    if (isAddPanel) {
+        AddPanel(curr_scene.Get<Entity>(curr_index));
     }
 
     ImGui::PopStyleVar();

@@ -11,9 +11,10 @@ struct Object : property::base
 	Engine::UUID UUID () const { return uuid; }
 	property_vtable();
 
-private:
+protected:
 	Engine::UUID uuid;
 	Engine::UUID euid;
+	friend struct Scene;
 };
 
 property_begin_name(Object, "Object") {

@@ -63,11 +63,11 @@ public:
     void Update(float dt);
     void Exit();
 
-    void DisplayEntity(const ObjectIndex& Index);
+    void DisplayEntity(Engine::UUID euid);
     void ClearLayer();
     //void DisplayChildren(const ObjectIndex& Parent);
 
-    ObjectIndex selectedEntity;
+    Engine::UUID selectedEntity;
 
     std::vector<Entity*> layer;
 
@@ -116,7 +116,7 @@ public:
     void Init();
     void Update(float dt);
     void Exit();
-    bool isAddComponentPanel;
+    bool isAddPanel;
 private:
 };
 

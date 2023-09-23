@@ -126,7 +126,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		if (GetComponentType::E<T>() == componentType)
 		{
 			Scene& scene = SceneManager::Instance().GetCurrentScene();
-			return &scene.GetEntity(*((T*)pComponent));
+			return &scene.Get<Entity>(*((T*)pComponent));
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
@@ -150,7 +150,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
 
-	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity(*((T*)pComponent)));
+	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().Get<Entity>(*((T*)pComponent)));
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
 	{
 		return RecurseGetEntity(componentType,pComponent);
@@ -159,13 +159,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static Entity* GetGameObjectFromScript(Script* pScript)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
-		return &scene.GetEntity(*pScript);
+		return &scene.Get<Entity>(*pScript);
 	}
 
 	static Transform* GetTransformFromGameObject(Entity* pEntity)
 	{
 		Scene& scene = MySceneManager.GetCurrentScene();
-		Transform& t = scene.GetComponent<Transform>(*pEntity);
+		Transform& t = scene.Get<Transform>(*pEntity);
 		return &t;
 	}
 
@@ -177,7 +177,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			if (GetComponentType::E<T>() == componentType)
 			{
 				Scene& scene = SceneManager::Instance().GetCurrentScene();
-				return &scene.GetComponent<Transform>(*((T*)pComponent));
+				return &scene.Get<Transform>(*((T*)pComponent));
 			}
 		}
 		if constexpr (sizeof...(Ts) != 0)
@@ -248,7 +248,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//	\brief
-	//		GetComponent for C#
+	//		Get for C#
 	//	\param gameObjID
 	//		ID of gameObject to look for component
 	//	\param componentType
@@ -258,7 +258,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//*/
 	///*******************************************************************************/v
 #include <Properties.h>
-	GENERIC_RECURSIVE(void*, RecurseGetComponent, &SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
+	GENERIC_RECURSIVE(void*, RecurseGet, &SceneManager::Instance().GetCurrentScene().Get<T>(*(Entity*)pComponent));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -267,7 +267,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
-		size_t addr = reinterpret_cast<size_t>(RecurseGetComponent(pair->second, pEntity));
+		size_t addr = reinterpret_cast<size_t>(RecurseGet(pair->second, pEntity));
 		addr += 16;
 		return reinterpret_cast<void*>(addr);
 	}
@@ -276,58 +276,58 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	{
 	//	case(ComponentType::Animator):
 	//	{
-	//		component = pGameObject->GetComponent<Animator>();
+	//		component = pGameObject->Get<Animator>();
 	//		break;
 	//	}
 	//	case(ComponentType::AudioSource):
 	//	{
-	//		component = pGameObject->GetComponent<AudioSource>();
+	//		component = pGameObject->Get<AudioSource>();
 	//		break;
 	//	}
 	//	case(ComponentType::BoxCollider2D):
 	//	{
-	//		component = pGameObject->GetComponent<BoxCollider2D>();
+	//		component = pGameObject->Get<BoxCollider2D>();
 	//		break;
 	//	}
 	//	case(ComponentType::Button):
 	//	{
-	//		component = pGameObject->GetComponent<Button>();
+	//		component = pGameObject->Get<Button>();
 	//		break;
 	//	}
 	//	case(ComponentType::Camera):
 	//	{
-	//		component = pGameObject->GetComponent<Camera>();
+	//		component = pGameObject->Get<Camera>();
 	//		break;
 	//	}
 	//	case(ComponentType::Image):
 	//	{
-	//		component = pGameObject->GetComponent<Image>();
+	//		component = pGameObject->Get<Image>();
 	//		break;
 	//	}
 	//	case(ComponentType::Rigidbody2D):
 	//	{
-	//		component = pGameObject->GetComponent<Rigidbody2D>();
+	//		component = pGameObject->Get<Rigidbody2D>();
 	//		break;
 	//	}
 	//	case(ComponentType::SpriteRenderer):
 	//	{
-	//		component = pGameObject->GetComponent<SpriteRenderer>();
+	//		component = pGameObject->Get<SpriteRenderer>();
 	//		break;
 	//	}
 	//	case(ComponentType::Script):
 	//	{
 	//		//Different scripts
-	//		component = pGameObject->GetComponent<Script>();
+	//		component = pGameObject->Get<Script>();
 	//		break;
 	//	}
 	//	case(ComponentType::Text):
 	//	{
-	//		component = pGameObject->GetComponent<Text>();
+	//		component = pGameObject->Get<Text>();
 	//		break;
 	//	}
 	//	case(ComponentType::SortingGroup):
 	//	{
-	//		component = pGameObject->GetComponent<SortingGroup>();
+	//		component = pGameObject->Get<SortingGroup>();
 	//		break;
 	//	}
 	//	}
@@ -405,7 +405,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	////To be implemented
-	//static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
+	//static UUID Add(UUID UUID, MonoReflectionType* componentType)
 	//{
 	//	//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
 	//	//if (gameObj == nullptr)
@@ -415,7 +415,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	//}
 	//	//MonoType* managedType = mono_reflection_type_get_type(componentType);
 	//	//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-	//	//return gameObj->AddComponent(cType)->id;
+	//	//return gameObj->Add(cType)->id;
 	//	return 0;
 	//}
 	//
@@ -541,7 +541,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	whether the component is enabled
 	//*/
 	///*******************************************************************************/
-	//static bool GetComponentEnabled(Component* pComponent)
+	//static bool GetEnabled(Component* pComponent)
 	//{
 	//	return pComponent->enabled;
 	//}
@@ -1216,7 +1216,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(DestroyGameObject);
 		//Register(QuitGame);
 		//Register(GetButtonState);
-		//Register(AddComponent);
+		//Register(Add);
 		//Register(AudioSourcePlay);
 		//Register(AudioSourceStop);
 		//Register(AudioSourceSetVolume);
@@ -1227,7 +1227,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(PauseAllAnimation);
 		//Register(PlayAllAnimation);
 		//Register(StopAnimation);
-		//Register(GetComponentEnabled);
+		//Register(GetEnabled);
 		//Register(SetComponentEnabled);
 		//Register(SetParent);
 		//Register(GetFPS);

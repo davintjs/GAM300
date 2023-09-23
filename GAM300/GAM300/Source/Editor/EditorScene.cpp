@@ -17,6 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 #include "EditorHeaders.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
+#include <glm/gtx/matrix_decompose.hpp>
 
 // Bean: Need this to reference the editor camera's framebuffer
 #include "../Graphics/Editor_Camera.h"
@@ -158,9 +159,9 @@ void EditorScene::Update(float dt)
 
         Entity* pEntity = EDITOR.GetSelectedEntity();
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-        if (pEntity != nullptr && pEntity->pScene == &currentScene)
+        if (pEntity != nullptr)
         {
-            Transform& trans = currentScene.GetComponent<Transform>(*pEntity);
+            Transform& trans = currentScene.Get<Transform>(*pEntity);
             for (int i = 0; i < 3; ++i)
             {
                 if (fabs(trans.scale[i]) < 0.001f)

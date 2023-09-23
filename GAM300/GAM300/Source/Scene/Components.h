@@ -17,11 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define COMPONENTS_H
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
@@ -165,105 +161,17 @@ struct Transform : Object
 	Vector3 rotation{};
 	Vector3 translation{};
 	Transform* parent = nullptr;
-	
 	std::vector<Transform*> child;
-
-	bool isLeaf() {
-		return (child.size()) ? false : true;
-	}
-
-	bool isChild() {
-		if (parent != nullptr)
-			return true;
-		else
-			return false;
-	}
-
-	glm::mat4 GetWorldMatrix() const 
-	{
-		if (parent)
-			return parent->GetWorldMatrix() * GetLocalMatrix();
-		return GetLocalMatrix();
-	}
-
-	glm::mat4 GetInvertedWorldMatrix() const
-	{
-		if (parent)
-			return glm::inverse(parent->GetInvertedWorldMatrix()) * GetLocalMatrix();
-		return GetLocalMatrix();
-	}
-
-	glm::mat4 GetLocalMatrix() const {
-		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
-		
-		return glm::translate(glm::mat4(1.0f), vec3(translation)) *
-			rot *
-			glm::scale(glm::mat4(1.0f),vec3(scale));
-	}
-
-	bool isEntityChild(Transform& ent) {
-		if (std::find(child.begin(), child.end(), &ent) != child.end()) {
-			return true;
-		}
-		for (int i = 0; i < child.size(); i++) {
-				return child[i]->isEntityChild(ent);
-		}
-		return false;
-	}
-
-	void SetParent(Transform* newParent) 
-	{
-		// Calculate the global transformation matrix
-		if (parent) {
-			parent->RemoveChild(this);
-			glm::mat4 globalTransform = GetWorldMatrix();
-			glm::quat rot;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-
-			vec3 _scale = vec3(scale);
-			vec3 _translation = vec3(translation);
-			glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
-			scale = _scale;
-			translation = _translation;
-			rotation = glm::eulerAngles(rot);
-		}
-
-		// Set the new parent
-		glm::mat4 localTransform = GetWorldMatrix();
-		parent = newParent;
-
-		if (parent) {
-			glm::mat4 parentTransform = parent->GetWorldMatrix();
-			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
-			glm::quat rot;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-
-			vec3 _scale = vec3(scale);
-			vec3 _translation = vec3(translation);
-			glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-			scale = _scale;
-			translation = _translation;
-			rotation = glm::eulerAngles(rot);
-
-			// Add the object to the new parent's child list
-			parent->child.push_back(this);
-		}
-	}
-
-	void RemoveChild(Transform* t)
-	{
-		auto it = std::find(child.begin(), child.end(),t);
-
-		// Check if an element satisfying the condition was found
-		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
-		// Erase the found element
-		child.erase(it);
-	}
-
+	bool isLeaf();
+	bool isChild();
+	glm::mat4 GetWorldMatrix() const;
+	glm::mat4 GetInvertedWorldMatrix() const;
+	glm::mat4 GetLocalMatrix() const;
+	bool isEntityChild(Transform& ent);
+	void SetParent(Transform* newParent);
+	void RemoveChild(Transform* t);
+	~Transform();
 	property_vtable();
-
 };
 
 //property_begin_name(Transform, "Transform") {

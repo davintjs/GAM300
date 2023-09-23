@@ -63,9 +63,9 @@ void PhysicsSystem::Update(float dt) {
 	//std::cout << gBallPos.x << ',' << gBallPos.y << ',' << gBallPos.z << std::endl;
 
 	Scene& scene = MySceneManager.GetCurrentScene();
-	if (ball && ball->pScene == &scene) 
+	if (ball) 
 	{
-		Transform& t = scene.GetComponent<Transform>(*ball);
+		Transform& t = scene.Get<Transform>(*ball);
 		t.translation = gBallPos;
 
 
@@ -79,9 +79,9 @@ void PhysicsSystem::Update(float dt) {
 	JPH::RVec3 ballPos2 = bodyInterface->GetCenterOfMassPosition(testBallID2);
 	Vector3 gBallPos2;
 	JoltVec3ToGlmVec3(ballPos2, gBallPos2);
-	if (ball2 && ball2->pScene == &scene) 
+	if (ball2) 
 	{
-		Transform& t = scene.GetComponent<Transform>(*ball2);
+		Transform& t = scene.Get<Transform>(*ball2);
 		t.translation = gBallPos2;
 
 
@@ -150,12 +150,12 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	Scene& scene = MySceneManager.GetCurrentScene();
 	// check entity for collider and then check what kind of fucking collider he want
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
-	auto& rbArray = scene.GetComponentsArray<Rigidbody>();
+	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
-		Entity& entity = scene.GetEntity(rb);
+		Entity& entity = scene.Get<Entity>(rb);
 
-		if (!scene.entities.IsActiveDense(entity.denseIndex))
+		if (!scene.IsActive(entity))
 			continue;
 		if (!it.IsActive())
 			continue;
@@ -165,7 +165,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			continue;
 
 		// Position, Rotation and Scale of collider
-		Transform& t = scene.GetComponent<Transform>(entity);
+		Transform& t = scene.Get<Transform>(entity);
 		JPH::RVec3 scale;
 		JPH::RVec3 pos;
 		GlmVec3ToJoltVec3(t.translation, pos);
@@ -196,7 +196,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		if (scene.HasComponent<BoxCollider>(entity)) {
 
-			BoxCollider& bc = scene.GetComponent<BoxCollider>(entity);
+			BoxCollider& bc = scene.Get<BoxCollider>(entity);
 			Vector3 colliderScale(bc.x * t.scale.x, bc.y * t.scale.y, bc.z * t.scale.z);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
@@ -221,7 +221,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 		else if (scene.HasComponent<SphereCollider>(entity)) {
 
-			SphereCollider& sc = scene.GetComponent<SphereCollider>(entity);
+			SphereCollider& sc = scene.Get<SphereCollider>(entity);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
 			//rb.RigidBodyID = sphere->GetID();
@@ -243,7 +243,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		else if (scene.HasComponent<CapsuleCollider>(entity)) {
 
 
-			CapsuleCollider& cc = scene.GetComponent<CapsuleCollider>(entity);
+			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
 			//rb.RigidBodyID = capsule->GetID();
@@ -276,11 +276,11 @@ void PhysicsSystem::UpdateGameObjects() {
 	physicsSystem->GetBodies(bidVector);
 
 	Scene& scene = MySceneManager.GetCurrentScene();
-	auto& rbArray = scene.GetComponentsArray<Rigidbody>();
+	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
-		Entity& entity = scene.GetEntity(rb);
-		Transform& t = scene.GetComponent<Transform>(entity);
+		Entity& entity = scene.Get<Entity>(rb);
+		Transform& t = scene.Get<Transform>(entity);
 
 
 		//JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(rb.RigidBodyID);
@@ -296,8 +296,8 @@ void PhysicsSystem::UpdateGameObjects() {
 
 void PhysicsSystem::TestRun() {
 
-	ball = &MySceneManager.GetCurrentScene().entities[1];
-	ball2 = &MySceneManager.GetCurrentScene().entities[2];
+	ball = &MySceneManager.GetCurrentScene().GetArray<Entity>()[1];
+	ball2 = &MySceneManager.GetCurrentScene().GetArray<Entity>()[2];
 
 	// Create the JPH physics world and INIT it
 	physicsSystem = new JPH::PhysicsSystem();

@@ -4,7 +4,7 @@
 
 void Break_ParentChild(const ObjectIndex& _child) {
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-	Transform& child = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_child));
+	Transform& child = curr_scene.Get<Transform>(curr_scene.GetArray<Entity>().DenseSubscript(_child));
 
 	//remove child from old parent
 	auto& children = child.parent->child;
@@ -16,10 +16,10 @@ void Break_ParentChild(const ObjectIndex& _child) {
 
 }
 
-void Set_ParentChild(const ObjectIndex& _parent, const ObjectIndex& _child) {
+void Set_ParentChild(Engine::UUID _parent, Engine::UUID _child) {
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-	Transform& parent = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_parent));
-	Transform& child = curr_scene.GetComponent<Transform>(curr_scene.entities.DenseSubscript(_child));
+	Transform& parent = curr_scene.Get<Transform>(curr_scene.GetArray<Entity>().DenseSubscript(_parent));
+	Transform& child = curr_scene.Get<Transform>(curr_scene.GetArray<Entity>().DenseSubscript(_child));
 
 	//if child has a previous parent, replace parent with this new one, remove child from old parent
 	if (child.isChild()) {

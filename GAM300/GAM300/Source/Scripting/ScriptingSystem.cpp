@@ -344,7 +344,7 @@ struct ReflectExistingStruct
 	ReflectExistingStruct() 
 	{
 		Scene& scene{ MySceneManager.GetCurrentScene()};
-		for (auto& component : scene.GetComponentsArray<Script>())
+		for (auto& component : scene.GetArray<Script>())
 		{
 			SCRIPTING.ReflectScript(component);
 		}
@@ -356,14 +356,14 @@ using ReflectAll = decltype(ReflectExistingStruct(AllComponentTypes()));
 void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
-	auto& scriptsArray = scene.GetComponentsArray<Script>();
+	auto& scriptsArray = scene.GetArray<Script>();
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
-		if (!it.IsActive())
-			continue;
+		//if (!it.IsActive())
+		//	continue;
 		Script& script = *it;
-		if (!scene.IsActive(scene.GetEntity(script)))
-			continue;
+		//if (!scene.IsActive(scene.Get<Entity>(script)))
+		//	continue;
 		InvokeMethod(script, funcName);
 	}
 }
@@ -604,7 +604,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 		ScriptClass& scriptClass = scriptClassMap[script.name];
 		Scene& scene = MySceneManager.Instance().GetCurrentScene();
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
-		void* param = &scene.GetEntity(script);
+		void* param = &scene.Get<Entity>(script);
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
 		invoke(instance, reflectComponent, &param);
 		mComponents.emplace(&script, instance);
