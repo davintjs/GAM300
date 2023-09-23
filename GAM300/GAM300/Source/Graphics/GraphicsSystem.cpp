@@ -325,7 +325,7 @@ void GraphicsSystem::Update(float dt)
 	// Bean: For binding framebuffer
 	EditorCam.getFramebuffer().bind();
 
-	EditorCam.Update((float)MyFrameRateController.getDt());
+	EditorCam.Update(dt);
 
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))

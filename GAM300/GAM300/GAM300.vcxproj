@@ -25,14 +25,11 @@
     <ClCompile Include="Source\AI\ControlFlow\Sequencer.cpp" />
     <ClCompile Include="Source\AI\Decorators\Inverter.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
+    <ClCompile Include="Source\AI\Geometry.cpp" />
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
-    <ClCompile Include="Source\AI\Line3D.cpp" />
     <ClCompile Include="Source\AI\NavMesh.cpp" />
     <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
-    <ClCompile Include="Source\AI\Plane3D.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
-    <ClCompile Include="Source\AI\Segment2D.cpp" />
-    <ClCompile Include="Source\AI\Triangle3D.cpp" />
     <ClCompile Include="Source\AppEntry\Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Precompiled.h</PrecompiledHeaderFile>
@@ -102,10 +99,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
-    <ClCompile Include="Source\Scene\Handle.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Source\Scene\Object.cpp" />
     <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
@@ -207,15 +200,12 @@
     <ClInclude Include="Source\AI\ControlFlow\Sequencer.h" />
     <ClInclude Include="Source\AI\Decorators\Inverter.h" />
     <ClInclude Include="Source\AI\Enemy.h" />
+    <ClInclude Include="Source\AI\Geometry.h" />
     <ClInclude Include="Source\AI\LeafNodes\MoveToPosition.h" />
-    <ClInclude Include="Source\AI\Line3D.h" />
     <ClInclude Include="Source\AI\NavMesh.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />
-    <ClInclude Include="Source\AI\Plane3D.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
-    <ClInclude Include="Source\AI\Segment2D.h" />
-    <ClInclude Include="Source\AI\Triangle3D.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
@@ -228,10 +218,7 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
-    <ClInclude Include="Source\Scene\Handle.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Source\Scene\Handle.h" />
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
     <ClInclude Include="Source\Scripting\LogicSystem.h" />
@@ -440,7 +427,7 @@ copy "$(SolutionDir)External\Mono\mono\lib\Debug\mono-2.0-sgen.dll" "$(TargetDir
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)GAM300\Source;$(SolutionDir)External\assimp\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\freetype-2.12.1\include;$(SolutionDir)External\GLEW\include;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\include;$(SolutionDir)External\GLM;$(SolutionDir)External\imgui;$(SolutionDir)External\Mono\mono\include;$(SolutionDir)External\rapidjson;$(SolutionDir)External\stb_master\include;$(SolutionDir)External\yaml-cpp-master\src;$(SolutionDir)External\yaml-cpp-master\include;$(SolutionDir)External\properties-master\src;$(SolutionDir)External\properties-master\src\Examples;$(SolutionDir)External\JoltPhysics-master;$(SolutionDir)External\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

@@ -1,10 +1,9 @@
 #pragma once
 
 #include <vector>
+
 #include "glm/glm.hpp"
-#include "Segment2D.h"
-#include "Plane3D.h"
-#include "Line3D.h"
+#include "Geometry.h"
 
 class Polygon3D
 {
@@ -34,7 +33,10 @@ private:
 	void GenerateConvexHull(const std::vector<glm::vec3>& points);
 	float PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p);
 	bool Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt);
+	bool Intersects(const Segment3D& seg1, const Segment3D& seg2, float* rt);
 	bool Intersects(const Line3D& line, const Plane3D& plane, float* rt);
+	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
+	float CalculateSquaredDistance(const glm::vec3& mVec);
 
 	glm::vec3 minPoint;
 	glm::vec3 maxPoint;
