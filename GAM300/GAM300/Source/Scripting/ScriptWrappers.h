@@ -258,7 +258,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//*/
 	///*******************************************************************************/v
 #include <Properties.h>
-	GENERIC_RECURSIVE(void*, RecurseGet, &SceneManager::Instance().GetCurrentScene().Get<T>(*(Entity*)pComponent));
+	GENERIC_RECURSIVE(void*, RecurseGet, &SceneManager::Instance().GetCurrentScene().Get<T>(((Entity*)pComponent)->EUID()));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -268,7 +268,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
 		size_t addr = reinterpret_cast<size_t>(RecurseGet(pair->second, pEntity));
-		addr += 16;
+		PRINT(sizeof(Object),'\n');
+		addr += sizeof(Object);
 		return reinterpret_cast<void*>(addr);
 	}
 	//	Component* component{ nullptr };

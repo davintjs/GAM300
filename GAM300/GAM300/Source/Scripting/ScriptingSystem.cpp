@@ -359,11 +359,14 @@ void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 	auto& scriptsArray = scene.GetArray<Script>();
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
-		//if (!it.IsActive())
-		//	continue;
+		PRINT("Script\n");
+		if (!it.IsActive())
+			continue;
+		PRINT("Script active\n");
 		Script& script = *it;
-		//if (!scene.IsActive(scene.Get<Entity>(script)))
-		//	continue;
+		if (!scene.IsActive(scene.Get<Entity>(script)))
+			continue;
+		PRINT("GameObject active\n");
 		InvokeMethod(script, funcName);
 	}
 }

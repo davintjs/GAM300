@@ -8,11 +8,13 @@ public class Player : Script
 
     void Start()
     {
-        rb = Get<Rigidbody>();
+        Console.WriteLine("STARTED");
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
+        Console.WriteLine("UPDATE");
         float speed = 0.4f;
         if (Input.GetKey(KeyCode.A))
         {

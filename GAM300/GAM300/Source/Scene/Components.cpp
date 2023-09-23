@@ -65,8 +65,7 @@ void Transform::SetParent(Transform* newParent)
 	parent = newParent;
 
 	if (parent) {
-		glm::mat4 parentTransform = parent->GetWorldMatrix();
-		glm::mat4 lTransform = glm::inverse(parentTransform) * globalTransform;
+		glm::mat4 lTransform = glm::inverse(parent->GetWorldMatrix()) * globalTransform;
 		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
 		scale = _scale;
 		translation = _translation;

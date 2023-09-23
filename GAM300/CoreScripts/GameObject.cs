@@ -50,9 +50,9 @@ namespace BeanFactory
         }
 
         //Gets a component by calling back to c++
-        public T Get<T>() where T : Component, new()
+        public T GetComponent<T>() where T : Component, new()
         {
-            return InternalCalls.Get(this, typeof(T)) as T;
+            return InternalCalls.GetComponent(this, typeof(T)) as T;
         }
 
         /*public T Add<T>() where T : Component, new()

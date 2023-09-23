@@ -244,8 +244,8 @@ struct Animator : Object
 
 struct Rigidbody : Object
 {
-	Vector3 pad{};			//velocity of object
-	Vector3 pad2{};			//velocity of object
+	//C# header padding
+	char padding[32];
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array

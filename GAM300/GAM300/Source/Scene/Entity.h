@@ -14,7 +14,6 @@ struct Entity : Object
 {
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
 	property_vtable();
-	friend struct Scene;
 };
 
 property_begin_name(Entity, "Entity") {
