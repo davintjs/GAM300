@@ -4,10 +4,10 @@
 #include "glm/glm.hpp"
 
 #include "Polygon.h"
-#include "Triangle3D.h"
-#include "NavMesh.h"
 
 #define NAVMESHBUILDER NavMeshBuilder::Instance()
+
+class NavMesh;
 
 SINGLETON(NavMeshBuilder)
 {

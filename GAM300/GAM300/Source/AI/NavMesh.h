@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "Triangle3D.h"
+
+#include "Geometry.h"
 
 class NavMesh
 {

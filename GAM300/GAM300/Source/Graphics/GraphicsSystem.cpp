@@ -68,9 +68,111 @@ LightProperties Lighting_Source;
 GLuint Skybox_Tex;
 Model SkyBox_Model;
 
+GLSLShader HDR_Shader;
+bool hdr = false;
+float exposure = 0.1f;
+
+// renderQuad() renders a 1x1 XY quad in NDC
+// -----------------------------------------
+unsigned int quadVAO = 0;
+unsigned int quadVBO;
+
+void renderQuad()
+{
+	if (quadVAO == 0)
+	{
+		float quadVertices[] = {
+			// positions        // texture Coords
+			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		// setup plane VAO
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
+}
+
+void HDR_Shader_init()
+{
+	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
+	std::vector<std::pair<GLenum, std::string>> shdr_files;
+	// Vertex Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/HDR.vert"));
+
+	// Fragment Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/HDR.frag"));
+
+	std::cout << "HDR SHADER\n";
+	HDR_Shader.CompileLinkValidate(shdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == HDR_Shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate shader programs\n";
+		sstr << HDR_Shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+
+
+//unsigned int hdrFBO;
+//unsigned int rboDepth;
+
+
+
+
 
 void GraphicsSystem::Init()
 {
+	
+	//glGenFramebuffers(1, &hdrFBO);
+	//// create floating point color buffer
+	//unsigned int colorBuffer;
+	//glGenTextures(1, &colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//// create depth buffer (renderbuffer)
+	//glGenRenderbuffers(1, &rboDepth);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+	//// attach buffers
+	//glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	std::cout << "Framebuffer not complete!" << std::endl;
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+
+
+
+
+
 	// Theophelia make a function
 	/**/std::string left = "Assets/Resources/left.dds";
 	std::string back = "Assets/Resources/back.dds";
@@ -104,7 +206,6 @@ void GraphicsSystem::Init()
 				0,
 				GLsizei(Texture.size()),
 				Texture.data());
-
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -174,6 +275,9 @@ void GraphicsSystem::Init()
 
 	//INIT GRAPHICS HERE
 	
+	HDR_Shader_init();
+
+
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
 
 	// Euan RayCasting Testing
@@ -350,25 +454,9 @@ void GraphicsSystem::Update(float dt)
 
 
 	// Bean: For binding framebuffer
-	EditorCam.getFramebuffer().bind();
+	//EditorCam.getFramebuffer().bind();
 
-	EditorCam.Update((float)MyFrameRateController.getDt());
-
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
-	{
-		SwappingColorSpace = !SwappingColorSpace;
-		if (SwappingColorSpace)
-		{
-			glEnable(GL_FRAMEBUFFER_SRGB);
-		}
-		else
-		{
-			glDisable(GL_FRAMEBUFFER_SRGB);
-		}
-	}
-	
-
+	EditorCam.Update(dt);
 	// Dont delete this -> To run on lab computers
 	
 	/*GLint maxVertexAttribs;
@@ -413,14 +501,64 @@ void GraphicsSystem::Update(float dt)
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
 	*/
-
+	glViewport(0, 0, 1600, 900);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
+	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
 
+	EditorCam.getFramebuffer().unbind();
+	
+	EditorCam.getFramebuffer().bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
 	// Bean: For unbinding framebuffer
+	
+	HDR_Shader.Use();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+
+
+
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+	{
+		hdr = !hdr;
+	}
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
+	{
+		if (exposure == 0.1)
+		{
+			exposure = 5.0;
+		}
+		else
+		{
+			exposure =  0.1;
+		}
+
+	}
+	GLint uniform1 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+
+	glUniform1i(uniform1, hdr);
+
+	GLint uniform2 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
+
+	glUniform1f(uniform2, exposure);
+
+	renderQuad();
 	EditorCam.getFramebuffer().unbind();
+
+	std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
+
+	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+	// -------------------------------------------------------------------------------
 	//glDisable(GL_FRAMEBUFFER_SRGB);
+
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count, 
@@ -467,6 +605,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
+	std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,

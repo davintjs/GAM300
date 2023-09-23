@@ -1,11 +1,11 @@
 #include "Precompiled.h"
 
-#include "Triangle3D.h"
+#include "Geometry.h"
 
 Triangle3D::Triangle3D(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
 {
-	mMidPoint = (p1 + p2 + p3) / 3.f;
-	mNormal = glm::cross((p2 - p1), (p3 - p1));
+    mMidPoint = (p1 + p2 + p3) / 3.f;
+    mNormal = glm::cross((p2 - p1), (p3 - p1));
 }
 
 Triangle3D::~Triangle3D()
@@ -15,16 +15,16 @@ Triangle3D::~Triangle3D()
 
 std::vector<Triangle3D*> Triangle3D::GetNeighbours()
 {
-	return mNeighbours;
+    return mNeighbours;
 }
 
 const glm::vec3 Triangle3D::GetMidPoint() const
 {
-	return mMidPoint;
+    return mMidPoint;
 }
 const glm::vec3 Triangle3D::GetNormal() const
 {
-	return mNormal;
+    return mNormal;
 }
 
 bool Triangle3D::ContainsPoint(const glm::vec3& mPoint) const
@@ -56,11 +56,11 @@ void Triangle3D::AddNeighbour(Triangle3D* mTri)
 }
 
 const int Triangle3D::GetID()
-{ 
-    return mTriID; 
+{
+    return mTriID;
 }
 
 void Triangle3D::SetTriID(int id)
-{ 
-    mTriID = id; 
+{
+    mTriID = id;
 }

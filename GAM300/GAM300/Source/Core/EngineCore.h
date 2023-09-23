@@ -64,12 +64,12 @@ enum class EngineState
 		SceneManager,
 		//ScriptingSystem,
 		EditorSystem,
-		//LogicSystem,
-		//PhysicsSystem,
+		DemoSystem,
+
+		PhysicsSystem,
 		GraphicsSystem,
 		Blackboard,
-		AssetManager,
-		DemoSystem
+		AssetManager
 	>;
 #endif
 
@@ -159,9 +159,6 @@ public:
 							}	
 						}
 				};
-				
-			
-				FPS = 1.f / dt;
 
 				AllSystems::Update(dt, func);
 
@@ -169,8 +166,6 @@ public:
 					systemtotaltime = elapsedtime;
 					update = false;
 				}
-				
-
 				ImGui::EndFrame();
 				ImGui::Render();
 				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -202,15 +197,10 @@ public:
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
 
-	float get_FPS() {
-		return FPS;
-	}
-
 	std::map<std::string, float>system_times;
 	float systemtotaltime;
 
 private:
-	float FPS; 
 	float update_timer;
 	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
