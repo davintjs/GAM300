@@ -133,7 +133,8 @@ void HDR_Shader_init()
 
 
 
-
+//unsigned int hdrFBO;
+//unsigned int rboDepth;
 
 
 
@@ -141,6 +142,36 @@ void HDR_Shader_init()
 
 void GraphicsSystem::Init()
 {
+	
+	//glGenFramebuffers(1, &hdrFBO);
+	//// create floating point color buffer
+	//unsigned int colorBuffer;
+	//glGenTextures(1, &colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//// create depth buffer (renderbuffer)
+	//glGenRenderbuffers(1, &rboDepth);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+	//// attach buffers
+	//glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	std::cout << "Framebuffer not complete!" << std::endl;
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+
+
+
+
+
 	// Theophelia make a function
 	/**/std::string left = "Assets/Resources/left.dds";
 	std::string back = "Assets/Resources/back.dds";
@@ -174,7 +205,6 @@ void GraphicsSystem::Init()
 				0,
 				GLsizei(Texture.size()),
 				Texture.data());
-
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -397,7 +427,7 @@ void GraphicsSystem::Update(float dt)
 
 
 	// Bean: For binding framebuffer
-	EditorCam.getFramebuffer().bind();
+	//EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update(dt);
 	// Dont delete this -> To run on lab computers
@@ -444,27 +474,35 @@ void GraphicsSystem::Update(float dt)
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
 	*/
-
+	glViewport(0, 0, 1600, 900);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
+	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
 
-
-	// Bean: For unbinding framebuffer
 	EditorCam.getFramebuffer().unbind();
+	
+	EditorCam.getFramebuffer().bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+
+	// Bean: For unbinding framebuffer
+	
 	HDR_Shader.Use();
+
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().get_color_attachment_id());
+	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+
+
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
 	{
 		hdr = !hdr;
-
 	}
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
 	{
-
 		if (exposure == 0.1)
 		{
 			exposure = 5.0;
@@ -475,7 +513,6 @@ void GraphicsSystem::Update(float dt)
 		}
 
 	}
-
 	GLint uniform1 =
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
 
@@ -486,10 +523,8 @@ void GraphicsSystem::Update(float dt)
 
 	glUniform1f(uniform2, exposure);
 
-	
-	
-	
 	renderQuad();
+	EditorCam.getFramebuffer().unbind();
 
 	std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
 

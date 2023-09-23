@@ -56,12 +56,16 @@ public:
 
 	GLuint& get_buffer_object_id() { return frameBufferObjectID; }
 
+	unsigned int hdrFBO;
+	unsigned int rboDepth;
+	unsigned int colorBuffer;
 
 private:
 	GLuint frameBufferObjectID = 0;
 
 	GLuint colorAttachment = 0;
 	GLuint depthAttachment = 0;
+
 
 	GLuint width = 0, height = 0;
 };
