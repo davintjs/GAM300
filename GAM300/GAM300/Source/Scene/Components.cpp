@@ -47,42 +47,30 @@ void Transform::SetParent(Transform* newParent)
 {
 	if (newParent == parent)
 		return;
+	glm::quat rot;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	vec3 _scale;
+	vec3 _translation;
+	glm::mat4 globalTransform = GetWorldMatrix();
 	// Calculate the global transformation matrix
 	if (parent) {
 		parent->RemoveChild(this);
-		glm::mat4 globalTransform = GetWorldMatrix();
-		glm::quat rot;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-
-		PRINT("Unparented");
-		vec3 _scale = vec3(scale);
-		vec3 _translation = vec3(translation);
-		glm::decompose(globalTransform, scale, rot, _translation, skew, perspective);
+		glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
 		scale = _scale;
 		translation = _translation;
 		rotation = glm::eulerAngles(rot);
 	}
 
-	// Set the new parent
-	glm::mat4 localTransform = GetWorldMatrix();
 	parent = newParent;
 
 	if (parent) {
 		glm::mat4 parentTransform = parent->GetWorldMatrix();
-		glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
-		glm::quat rot;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		PRINT("Reparented");
-
-		vec3 _scale = vec3(scale);
-		vec3 _translation = vec3(translation);
+		glm::mat4 lTransform = glm::inverse(parentTransform) * globalTransform;
 		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
 		scale = _scale;
 		translation = _translation;
 		rotation = glm::eulerAngles(rot);
-
 		// Add the object to the new parent's child list
 		parent->child.push_back(this);
 	}

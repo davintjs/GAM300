@@ -106,9 +106,13 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 						auto& parent = targetTransform.parent->child;
 
-						auto it = std::find(parent.begin(), parent.end(), &targetTransform);
-						parent.insert(it, &currTransform);
-						currTransform.parent = targetTransform.parent;
+						currTransform.SetParent(targetTransform.parent);
+						if (parent.size() > 0)
+						{
+							parent.pop_back();
+							auto it = std::find(parent.begin(), parent.end(), &targetTransform);
+							parent.insert(it,&currTransform);
+						}
 					}
 
 				}
@@ -232,6 +236,7 @@ void EditorHierarchy::Update(float dt)
 				{
 					Entity& entity = curr_scene.Get<Entity>(Index);
 					auto it = std::find(layer.begin(), layer.end(), &entity);
+					
 					layer.erase(it);
 					layer.insert(layer.end(), &entity);
 				}
