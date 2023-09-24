@@ -169,51 +169,9 @@ void GraphicsSystem::Init()
 
 
 
+	Skybox_Tex = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("skybox_default_top"));
 
 
-
-
-	// Theophelia make a function
-	/**/std::string left = "Assets/Resources/left.dds";
-	std::string back = "Assets/Resources/back.dds";
-	std::string front = "Assets/Resources/front.dds";
-	std::string right = "Assets/Resources/right.dds";
-	std::string top = "Assets/Resources/top.dds";
-	std::string bottom = "Assets/Resources/bottom.dds";
-
-	
-	std::vector<std::string> faces
-	{
-		right,left,top,bottom,front,back
-	};
-
-	glGenTextures(1, &Skybox_Tex);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
-
-	int width, height, nrChannels;
-	unsigned int err = 0;
-	
-	for (size_t i = 0; i < faces.size(); i++)
-	{
-		gli::texture Texture = gli::load(faces[i]);
-
-			glCompressedTexImage2D(
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0,
-				GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-				Texture.extent().x,
-				Texture.extent().y,
-				0,
-				GLsizei(Texture.size()),
-				Texture.data());
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	
 	SkyBox_Model.SkyBoxinit();
 	SkyBox_Model.setup_skybox_shader();
 
@@ -553,7 +511,7 @@ void GraphicsSystem::Update(float dt)
 	renderQuad();
 	EditorCam.getFramebuffer().unbind();
 
-	std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
+	//std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
 
 	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 	// -------------------------------------------------------------------------------
@@ -605,7 +563,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
-	std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
+	//std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,

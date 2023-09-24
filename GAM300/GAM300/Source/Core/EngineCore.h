@@ -67,9 +67,9 @@ enum class EngineState
 		DemoSystem,
 
 		PhysicsSystem,
-		GraphicsSystem,
 		Blackboard,
-		AssetManager
+		AssetManager,
+		GraphicsSystem
 	>;
 #endif
 
