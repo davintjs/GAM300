@@ -25,7 +25,7 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 class FrameRateController : public Singleton<FrameRateController> {
 public:
-	void Init(double _maxFPS = 60.0);
+	void Init(float _fixedDt);
 	/*******************************************************************************
 	/*!
 	*
@@ -50,21 +50,15 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	void End();
+	float End();
 private:
-	double frameCount{ 0 };
 	double frameStart{ 0 }, frameEnd{ 0 };
-	double deltaTime{ 0 };
 	double fixedDeltaTime{ 0 };
-	double frameRate{ 0 };
-	double maxFrameRate{ 0 };
 	double accumulatedTime{ 0 };
 	size_t steps{ 0 };
 public:
-	double getDt() const { return deltaTime; }
-	double getFixedDt() const { return fixedDeltaTime; }
-	double getFPS() const { return frameRate; }
-	size_t getSteps() const { return steps; }
+	double GetFixedDt() const { return fixedDeltaTime; }
+	size_t GetSteps() const { return steps; }
 };
 
 
