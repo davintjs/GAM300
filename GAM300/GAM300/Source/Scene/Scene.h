@@ -144,7 +144,6 @@ using SingleObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entit
 using SingleHandles = decltype(HandlesTable(SingleObjects()));
 using MultiHandles = decltype(MultiHandlesTable(MultiComponentTypes()));
 
-using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
 
 using GetType = decltype(GetTypeGroup(AllObjectTypes()));
 

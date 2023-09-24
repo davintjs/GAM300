@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Player : Script
 {
     Rigidbody rb;
+    public float babei;
 
     void Start()
     {
@@ -14,15 +15,18 @@ public class Player : Script
 
     void Update()
     {
-        Console.WriteLine("UPDATE");
+        if (transform.parent != null)
+            Console.WriteLine("Has parent");
         float speed = 0.4f;
         if (Input.GetKey(KeyCode.A))
         {
-            rb.linearVelocity.x -= speed;
+            transform.localPosition.x -= speed;
+            rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            rb.linearVelocity.x += speed;
+            transform.localPosition.x += speed;
+            rb.mass += speed;
         }
         //Console.WriteLine("Sup");
         //Destroy(this);

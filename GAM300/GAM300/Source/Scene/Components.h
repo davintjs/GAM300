@@ -35,6 +35,8 @@ using vec3 = glm::vec3;
 using Vector4 = glm::vec4;
 using Quaternion = glm::quat;
 
+struct Entity;
+
 static std::map<std::string, size_t> ComponentTypes{};
 
 template<typename T,typename... Ts>
@@ -174,17 +176,12 @@ struct Transform : Object
 	property_vtable();
 };
 
-//property_begin_name(Transform, "Transform") {
-//	property_var(scale.x), property_var(scale.y), property_var(scale.z)
-//		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
-//		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
-//} property_vend_h(Transform)//
-
-property_begin_name(Transform, "Transform") {
-		property_var(scale),
-			property_var(rotation),
-			property_var(translation),
-	} property_vend_h(Transform)
+property_begin_name(Transform, "Transform") 
+{
+	property_var(translation),
+	property_var(rotation),
+	property_var(scale),
+} property_vend_h(Transform)
 
 struct AudioSource : Object
 {
@@ -231,7 +228,7 @@ struct CapsuleCollider : Object
 
 property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_var(height)
-		, property_var(radius)
+	,property_var(radius)
 } property_vend_h(CapsuleCollider)
 
 struct Animator : Object
@@ -272,7 +269,6 @@ property_begin_name(Rigidbody, "Rigidbody") {
 
 struct CharacterController : Object
 {
-
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
 	float mass{ 1.f };					// mass of object
@@ -409,12 +405,10 @@ struct GenericRecursiveStruct
 
 using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
-enum class FieldType :int
-{
-	GameObject = AllComponentTypes::Size(), Float, Double,
-	Bool, Char, Short, Int, Long,
-	UShort, UInt, ULong, String,
-	Vector2, Vector3, None
-};
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3, None>;
+
+using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
+using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
+using GetFieldType = decltype(GetTypeGroup(AllFieldTypes()));
 
 #endif // !COMPONENTS_H

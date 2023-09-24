@@ -145,9 +145,6 @@ public:
 					}	
 				}
 			};
-				
-			
-			FPS = 1.f / dt;
 
 			AllSystems::Update(dt, func);
 

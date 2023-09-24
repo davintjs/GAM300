@@ -105,7 +105,7 @@ namespace Utils
 				return GetType::E<Script>();
 			auto iter{ monoComponentToType.find(monoType) };
 			if (iter == monoComponentToType.end())
-				return (size_t)FieldType::None;
+				return AllFieldTypes::Size();
 			else
 				return iter->second;
 		}
@@ -135,7 +135,7 @@ namespace Utils
 				MonoType* type = mono_field_get_type(field);
 				size_t fieldType = Utils::monoTypeToFieldType(type);
 				//PRINT(mono_type_get_name(type) << (int)fieldType);
-				if (fieldType != static_cast<size_t>(FieldType::None))
+				if (fieldType < AllFieldTypes::Size())
 				{
 					mFields[fieldName] = field;
 				}
@@ -359,14 +359,11 @@ void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 	auto& scriptsArray = scene.GetArray<Script>();
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
-		PRINT("Script\n");
 		if (!it.IsActive())
 			continue;
-		PRINT("Script active\n");
 		Script& script = *it;
 		if (!scene.IsActive(scene.Get<Entity>(script)))
 			continue;
-		PRINT("GameObject active\n");
 		InvokeMethod(script, funcName);
 	}
 }
@@ -513,7 +510,7 @@ MonoString* ScriptingSystem::CreateMonoString(const char* str)
 
 void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
 {
-	if (field.fType == (size_t)FieldType::String)
+	if (field.fType == GetFieldType::E<std::string>())
 	{
 		MonoString* mono_string = CreateMonoString("");
 		mono_field_get_value(instance, mClassFiend, &mono_string);
@@ -531,38 +528,18 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	field = value;
 	//If its a string, its a C# string so create one
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
-	if (field.fType == (size_t)FieldType::String)
+	if (field.fType == GetFieldType::E<std::string>())
 	{
 		MonoString* mono_string = CreateMonoString(reinterpret_cast<const char*>(value));
 		mono_field_set_value(instance, mClassFiend, mono_string);
 		return;
 	}
+	//else if (field.fType == GetType::E<Script>())
+	//{
+	//	mono_field_set_value(instance, mClassFiend, ReflectScript(*reference));
+	//}
 	mono_field_set_value(instance, mClassFiend, (void*)value);
 	return;
-}
-
-template<typename T>
-void ScriptingSystem::SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference)
-{
-	//When you set a reference, you need to create a MonoObject of it first
-
-	if (reference == nullptr)
-	{
-		mono_field_set_value(instance, mClassFiend, nullptr);
-		return;
-	}
-	//ZACH: Trying to set a component reference
-	if constexpr (AllComponentTypes::Has<T>() || std::is_same<T, Entity>())
-	{
-		if constexpr (std::is_same<T, Script>())
-		{
-			mono_field_set_value(instance, mClassFiend, ReflectScript(*reference));
-		}
-		else
-		{
-			mono_field_set_value(instance, mClassFiend, reference);
-		}
-	}
 }
 
 
@@ -623,17 +600,17 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 		{
 			MonoClassField* mField = pair.second;
 			MonoType* type = mono_field_get_type(mField);
-			FieldType fieldType = (FieldType)Utils::monoTypeToFieldType(type);
+			size_t fieldType = Utils::monoTypeToFieldType(type);
 			const char* fieldName = pair.first.c_str();
 			std::string typeName = mono_type_get_name(type);
 			auto nameField{ script.fields.find(fieldName) };
 			int alignment{};
 			int fieldSize = mono_type_size(type, &alignment);
-			if (fieldType >= FieldType::GameObject)
+			if (fieldType < AllObjectTypes::Size())
 			{
 				fieldSize = sizeof(uint64_t);
 			}
-			else if (fieldType == FieldType::String)
+			else if (fieldType == GetFieldType::E<std::string>())
 			{
 				fieldSize = TEXT_BUFFER_SIZE;
 			}
@@ -648,15 +625,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 					newField.typeName = typeName.substr(offset + 1);
 				else
 					newField.typeName = typeName;
-				if (fieldType >= FieldType::GameObject)
-				{
-					newField = std::numeric_limits<uint64_t>::max();
-				}
-				else
-				{
-					//GetFieldValue();
-					//MyEventSystem->publish(new ScriptGetFieldEvent(script, fieldName, newField.data));
-				}
+				newField = 0;
 				script.fields[fieldName] = std::move(newField);
 			}
 			//Field exists
@@ -673,21 +642,14 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 				//Field exists, setback the values first
 				else
 				{
-					if (field.fType >= (size_t)FieldType::GameObject)
-					{
-
-					}
-					else
-					{
-						SetFieldValue(instance, mField, field, field.data);
-					}
+					//Look at this again
+					SetFieldValue(instance, mField, field, field.data);
 				}
 			}
 		}
 		for (auto& name : validFieldNames)
 		{
 			script.fields.erase(name);
-			//PRINT("INVALID FIELD: " << name);
 		}
 		return instance;
 	}
@@ -728,11 +690,6 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 //	ReflectAll();
 //}
 //
-//template <typename T>
-//void ScriptingSystem::CallbackReflectComponent(ReflectComponentEvent<T>* pEvent)
-//{
-//	ReflectComponent(pEvent->component);
-//}
 //
 //
 //void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)

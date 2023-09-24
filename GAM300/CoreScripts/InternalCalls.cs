@@ -87,7 +87,9 @@ namespace BeanFactory
         internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Object Get(Object owner, Type objType);
+        internal extern static T Get<T>(Object owner, Type objType);
+
+        internal static T Get<T>(Object owner) { return Get<T>(owner,typeof(T)); }
 
         #endregion
 

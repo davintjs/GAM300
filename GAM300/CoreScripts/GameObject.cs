@@ -21,7 +21,6 @@ namespace BeanFactory
 {
     public class GameObject
     {
-        public UInt32 denseIndex;
 
         public bool activeSelf
         {
@@ -52,7 +51,7 @@ namespace BeanFactory
         //Gets a component by calling back to c++
         public T GetComponent<T>() where T : Component, new()
         {
-            return InternalCalls.Get(this, typeof(T)) as T;
+            return InternalCalls.Get<T>(this);
         }
 
         /*public T Add<T>() where T : Component, new()
@@ -71,7 +70,7 @@ namespace BeanFactory
         {
             get
             {
-                return InternalCalls.GetTransformFromGameObject(this);
+                return InternalCalls.Get<Transform>(this);
             }
         }
     }

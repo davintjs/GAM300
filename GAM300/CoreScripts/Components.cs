@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 
 namespace BeanFactory
@@ -27,45 +28,48 @@ namespace BeanFactory
         virtual public Transform transform 
         {
             get
-            { 
-                return InternalCalls.Get(this, typeof(Transform)) as Transform; 
+            {
+                return InternalCalls.Get<Transform>(this);
             }
         }
         virtual public GameObject gameObject 
         {
             get
-            { 
-                return InternalCalls.Get(this, typeof(GameObject)) as GameObject; 
+            {
+                return InternalCalls.Get<GameObject>(this);
             } 
         }
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();
         }
-        public T GetComponent<T>() where T : Component
+        virtual public T GetComponent<T>() where T : Component
         {
-            return InternalCalls.Get(gameObject, typeof(T)) as T;
+            return InternalCalls.Get<T>(this);
         }
     }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class Rigidbody : Component
     {
         public Vector3 linearVelocity;         //velocity of object
         public Vector3 angularVelocity;              //acceleration of object
         public Vector3 force;
-        public float mass;                  //mass of object
+        public float friction = 0.1f;                //friction of body (0 <= x <= 1)
+        public float mass = 1f;                 //mass of object
+        public bool isStatic = true;             //is object static? If true will override isKinematic!
+        public bool isKinematic = true;          //is object simulated?
+        public bool useGravity = true;           //is object affected by gravity?
+        public bool is_trigger = false;
     }
 
-    public class Test : Component
-    {
-
-    }
-
+    [StructLayout(LayoutKind.Sequential)]
     public class Transform : Component
     {
-        public Transform parent;
         public Vector3 localPosition;
         public Vector3 localRotation;
         public Vector3 localScale;
+        public Transform parent;
     }
 
 

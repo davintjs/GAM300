@@ -167,6 +167,40 @@ void DisplayType(const char* name, Vector2& val)
     }
 }
 
+
+
+template <typename T, typename... Ts>
+void DisplayField(const char* name, Field& field)
+{
+    if (GetFieldType::E<T>() == field.fType)
+    {
+        DisplayType(name,field.Get<T>());
+        return;
+    }
+    if constexpr (sizeof...(Ts) != 0)
+    {
+        DisplayField<Ts...>(name, field);
+    }
+}
+
+template <typename T, typename... Ts>
+void DisplayField(const char* name, Field& field, TemplatePack<T,Ts...>)
+{
+    DisplayField<T,Ts...>(name,field);
+}
+
+void DisplayType(const char* name, Field& val)
+{
+    if (val.fType < AllObjectTypes::Size())
+    {
+        //Display Drag n drop
+    }
+    else
+    {
+        DisplayField(name,val,FieldTypes());
+    }
+}
+
 //void DisplayType(const char* name, AABB& val)
 //{
 //    static std::string idName{};
@@ -465,86 +499,31 @@ void Display_Property(T& comp) {
 //    //DisplayDragDrop();
 //    //spriteRenderer.sprite.set_name()
 //}
-//template <>
-//void DisplayComponent<Script>(Script& script)
-//{
-//    static Field buffer(FieldType::None, 128);
-//    for (auto pair : script.fieldDataReferences)
-//    {
-//        const char* name = pair.first.c_str();
-//        Field& field{ pair.second };
-//        //    //Component Enum + ComponentType Enum
-//        if (field.fType >= FieldType::Component)
-//        {
-//            ComponentType cType = (ComponentType)field.fType;
-//            switch (cType) {
-//            case ComponentType::Animator:
-//                Display(name, (Animator*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Animator*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::AudioSource:
-//                Display(name, (AudioSource*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (AudioSource*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::BoxCollider2D:
-//                Display(name, (BoxCollider2D*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (BoxCollider2D*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Button:
-//                Display(name, (Button*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Button*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Camera:
-//                Display(name, (Camera*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Camera*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Image:
-//                Display(name, (Image*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Image*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Rigidbody2D:
-//                Display(name, (Rigidbody2D*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Rigidbody2D*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::SpriteRenderer:
-//                Display(name, (SpriteRenderer*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SpriteRenderer*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Script:
-//                Display(name, (Script*&)script.fieldComponentReferences[name], field.typeName.c_str());
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Script*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Transform:
-//                Display(name, (Transform*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Transform*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Text:
-//                Display(name, (Text*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Text*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::SortingGroup:
-//                Display(name, (SortingGroup*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SortingGroup*)script.fieldComponentReferences[name]));
-//                break;
-//            default:
-//                // handle invalid case
-//                break;
-//            }
-//        }
-//        else if (field.fType == FieldType::GameObject)
-//        {
-//            Display(name, script.fieldGameObjReferences[name]);
-//            MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, script.fieldGameObjReferences[name]));
-//        }
-//        else
-//        {
-//            buffer.fType = field.fType;
-//            MyEventSystem->publish(new ScriptGetFieldEvent(script, name, field.data));
-//            Display(name, field);
-//            MyEventSystem->publish(new ScriptSetFieldEvent(script, name, field.data));
-//        }
-//    }
-//}
+
+void DisplayComponent(Script& script)
+{
+    for (auto pair : script.fields)
+    {
+        const char* name = pair.first.c_str();
+        Field& field{ pair.second };
+        //    //Component Enum + ComponentType Enum
+        if (field.fType < AllObjectTypes::Size())
+        {       
+            size_t cType = field.fType;
+            if (cType = GetType::E<Script>())
+            {
+            }
+            else
+            {
+                Display(name, field);
+            }
+        }
+        else
+        {
+            Display(name, field);
+        }
+    }
+}
 //template <>
 //void DisplayComponent<Image>(Image& image)
 //{
@@ -670,7 +649,14 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-            Display_Property(component);
+            if constexpr (std::is_same_v<T,Script>)
+            {
+                DisplayComponent(component);
+            }
+            else
+            {
+                Display_Property(component);
+            }
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();

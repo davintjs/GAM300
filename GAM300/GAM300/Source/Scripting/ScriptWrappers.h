@@ -184,7 +184,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
-		//addr += sizeof(Object);
+		addr += 8;
 		return reinterpret_cast<void*>(addr);
 	}
 	//	Component* component{ nullptr };

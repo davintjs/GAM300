@@ -1,5 +1,5 @@
-[2023-09-23 21:16:01.309] [Error] [critical] 
-Caused By:	it != child.end()
-Info:		FAILED TO REMOVE CHILD
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Components.cpp (Line: 95)
+[2023-09-25 03:20:59.370] [Error] [critical] 
+Caused By:	sizeof(T) < size
+Info:		FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptFields.h (Line: 53)
 
