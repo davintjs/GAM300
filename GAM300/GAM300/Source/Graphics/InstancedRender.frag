@@ -2,28 +2,23 @@
 layout (location = 0) in vec4 vColor;
 layout (location = 1) in vec3 FragmentPos;
 layout (location = 2) in vec3 Normal;
+layout (location = 3) in vec2 frag_TexCoord;
 
 layout (location = 10) in vec4 frag_albedo;
 layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
 layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
+layout (location = 15) in float texture_index;
 
 
 out vec4 FragColor;
-
-
-
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 
-
-
-uniform sampler2D myTextureSampler;
-
-
+layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
 void main()
 {
@@ -60,6 +55,12 @@ void main()
         
     vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
     result = (ambience + diffusion + speculation) * vec3(frag_albedo);
-    FragColor = vec4(result, 1.0);
+    int index = int(texture_index + 0.5f);
+    if (index < 32){
+        FragColor = texture(myTextureSampler[index], frag_TexCoord);
+    }else{
+        FragColor = vec4(result, 1.0);
+    }
+
 
 }

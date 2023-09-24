@@ -61,7 +61,7 @@ LightProperties Lighting_Source;
 //};
 GLuint Skybox_Tex;
 Model SkyBox_Model;
-
+unsigned int ReturnTextureIdx(std::string MeshName,GLuint id);
 
 void GraphicsSystem::Init()
 {
@@ -109,21 +109,6 @@ void GraphicsSystem::Init()
 	
 	SkyBox_Model.SkyBoxinit();
 	SkyBox_Model.setup_skybox_shader();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
@@ -254,37 +239,17 @@ void GraphicsSystem::Update(float dt)
 		
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
-		// change to material when its done, texute shouldnt have compontent, materal consist of texture
-		//if (currentScene.HasComponent<Texture>(entity)) {
-		//	std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
-		//	unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
-		//	for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
-		//		if (properties[renderer.MeshName].texture[j] == texID) {
-		//			haveTexture = true;
-		//		}
-		//	}
-		//	if (!haveTexture) {
-		//		if (properties[renderer.MeshName].textureCount < 32) {
-		//			properties[renderer.MeshName].texture[properties[renderer.MeshName].textureCount++] = texID;
-		//		}
-		//	}
-		//	//haveTexture = false;
-		//}
-		
-		/*for (int j = 0; j <= properties[renderer.MeshName].textureCount; ++j) {
-			if (properties[renderer.MeshName].texture[j] == texID) {
-				haveTexture = true;
-			}
+		GLuint textureID = 0;
+		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
+		// use bool to see if texture exist instead...
+		if (renderer.AlbedoTexture != "") {
+			textureID = 
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
-		if (!haveTexture) {
-			if (properties[renderer.MeshName].textureCount < 32) {
-				properties[renderer.MeshName].texture[properties[renderer.MeshName].textureCount++] = texID;
-			}
-		}
-		haveTexture = false;*/
-		//properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter++] = transform.GetWorldMatrix();
 
+		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = float(ReturnTextureIdx(renderer.MeshName, textureID));
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];
@@ -292,9 +257,6 @@ void GraphicsSystem::Update(float dt)
 		renderer.mr_Shininess = temp_ShininessContainer[3];
 		renderer.mr_Specular = temp_SpecularContainer[3];
 		
-
-
-		//properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
 		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
@@ -311,10 +273,11 @@ void GraphicsSystem::Update(float dt)
 			
 			newName += ('1' + namecount);
 			
-			/*if (properties.find(newName) == properties.end()) {
+			if (properties.find(newName) == properties.end()) {
 				break;
 			}
-			if (currentScene.HasComponent<Texture>(entity)) {
+
+			/*if (currentScene.HasComponent<Texture>(entity)) {
 				for (int j = 0; j <= properties[newName].textureCount; ++j) {
 					if (properties[newName].texture[j] == texID) {
 						haveTexture = true;
@@ -341,7 +304,6 @@ void GraphicsSystem::Update(float dt)
 			//std::cout << newName << "\n";
 
 			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			//properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
 			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
 			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
 			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
@@ -608,14 +570,19 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
+		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.textureIndex[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 		
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
-
+		for (int i = 0; i < 32; ++i) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
+		}
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 		prop.iter = 0;
@@ -671,6 +638,23 @@ bool GraphicsSystem::Raycasting(Ray3D& _ray)
 
 	return false;
 }
+
+unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
+	if (!id) {
+		return 33;
+	}
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount; ++iter) {
+		if (properties[MeshName].texture[iter] == 0) {
+			properties[MeshName].texture[iter] = id;
+			return iter;
+		}
+		if (properties[MeshName].texture[iter] == id) {
+			return iter;
+		}
+	}
+	return 33;
+}
+
 
 void GraphicsSystem::Exit()
 {
