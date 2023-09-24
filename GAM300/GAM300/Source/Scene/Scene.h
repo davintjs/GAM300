@@ -204,6 +204,8 @@ public:
 		return singleHandles.Get<T>(object.euid);
 	}
 
+	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pComponent)->EUID()));
+
 	template<typename T, typename... Ts>
 	struct DestroyComponentsGroup
 	{
@@ -429,7 +431,7 @@ public:
 			object->uuid = uuid;
 			singleHandles.emplace(euid, object);
 			entity.hasComponentsBitset.set(GetComponentType::E<T>(), true);
-			//arr.SetActive(*object);
+			arr.SetActive(*object);
 		}
 		if (object)
 		{

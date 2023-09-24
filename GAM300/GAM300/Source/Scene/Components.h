@@ -355,7 +355,7 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
 	{\
 		if (GetComponentType::E<T>() == componentType)\
 		{\
@@ -379,10 +379,38 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 		}\
 	}\
 	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
+	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
 	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
-	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
+	TYPE FUNC_NAME(size_t componentType, void* pComponent)\
 	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+
+template <typename T, typename... Ts>
+struct GenericRecursiveStruct
+{
+	constexpr GenericRecursiveStruct(TemplatePack<T,Ts...>) {}
+	GenericRecursiveStruct() = default;
+
+	template <typename RET, typename... ARGS>
+	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	{
+		return Invoke<T, Ts...>(func,args);
+	}
+
+	template<typename T1,typename T1s ,typename RET ,typename... ARGS>
+	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	{
+		if constexpr (std::is_same<RET, T1>())
+		{
+			return func(std::forward(func));
+		}
+		if constexpr (sizeof...(Ts) != 0)\
+		{
+			return Invoke<T1s...>(func, args);
+		}
+	}
+};
+
+using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
 enum class FieldType :int
 {

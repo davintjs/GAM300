@@ -118,8 +118,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonHolding(keyCode);
 	}
 
-
-
 	template<typename T, typename... Ts>
 	static Entity* GetGameObjectRecursive(void* pComponent, size_t componentType)
 	{
@@ -137,18 +135,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			return nullptr;
 		}
 	}
- 
-	//template<typename T, typename... Ts>
-	//struct ComponentTypeIterStruct
-	//{
-	//public:
-	//	constexpr ComponentTypeIterStruct(TemplatePack<T, Ts...> pack) {}
-	//	ComponentTypeIterStruct()
-	//	{
-	//	}
-	//};
-
-	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
 
 	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().Get<Entity>(*((T*)pComponent)));
 	static Entity* GetGameObject(void* pComponent, size_t componentType)
@@ -257,8 +243,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-#include <Properties.h>
-	GENERIC_RECURSIVE(void*, RecurseGet, &SceneManager::Instance().GetCurrentScene().Get<T>(((Entity*)pComponent)->EUID()));
 	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -267,8 +251,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
-		size_t addr = reinterpret_cast<size_t>(RecurseGet(pair->second, pEntity));
-		PRINT(sizeof(Object),'\n');
+		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
 		addr += sizeof(Object);
 		return reinterpret_cast<void*>(addr);
 	}
