@@ -30,7 +30,7 @@ void EditorPerformanceViewer::Init()
 void EditorPerformanceViewer::Update(float dt)
 {
     if (ImGui::Begin("Performance Viewer")) {
-        ImGui::Text("FPS: %1.f fps", EngineCore::Instance().get_FPS());
+        ImGui::Text("FPS: %1.f fps", 1.f/dt);
         for (auto system : EngineCore::Instance().system_times) {
             ImGui::Text(system.first.c_str());
             ImGui::SameLine();

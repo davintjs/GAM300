@@ -8,11 +8,7 @@
 
 void AssetManager::Init()
 {
-	if (!std::filesystem::exists(AssetPath))
-	{
-		std::cout << "Check if proper assets filepath exists!" << std::endl;
-		exit(0);
-	}
+	E_ASSERT(std::filesystem::exists(AssetPath), "Check if proper assets filepath exists!");
 
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
@@ -28,7 +24,11 @@ void AssetManager::Init()
 
 		if (!dir.is_directory())
 		{
-			for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
 			{
 				fileType += subFilePath[i];
 			}
@@ -200,11 +200,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 	mTotalAssets.mFilesData[assetGUID].mFileTime = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
 
 	std::ifstream inputFile(assetPath.c_str());
-	if (!inputFile)
-	{
-		std::cout << "Error opening file to update asset in memory!" << std::endl;
-		exit(0);
-	}
+	E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
 	mTotalAssets.mFilesData[assetGUID].mData = std::move(buff); // Update the data in memory
@@ -328,11 +324,7 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	const std::string GUIDofAsset = doc["GUID"].GetString();
 
 	std::ifstream inputFile(assetPath.c_str());
-	if (!inputFile)
-	{
-		std::cout << "Error opening file to load asset into memory!" << std::endl;
-		exit(0);
-	}
+	E_ASSERT(inputFile, "Error opening file to load asset into memory!");
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
 
@@ -358,7 +350,14 @@ void AssetManager::FileAddProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 		
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
@@ -411,7 +410,14 @@ void AssetManager::FileRemoveProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 
 		if (!strcmp(fileType.c_str(), "meta"))
@@ -459,7 +465,14 @@ void AssetManager::FileUpdateProtocol()
 
 		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
 		{
-			fileType += subFilePath[i];
+			// Check if is file with no extension
+			auto check = subFilePath.find_last_of('.');
+			E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+			for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+			{
+				fileType += subFilePath[i];
+			}
 		}
 
 		// Find the last write time of this file corresponding to it in memory

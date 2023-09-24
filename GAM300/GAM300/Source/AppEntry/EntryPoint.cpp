@@ -20,15 +20,14 @@ int main(int, char**) {
 
 	app->Init();
 	MyEngineCore.Init();
-	MyFrameRateController.Init();
+	MyFrameRateController.Init(1/60.f);
 
 	float dt = 0;
 	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
 	{
 		MyFrameRateController.Start();
 		MyEngineCore.Update(dt);
-		MyFrameRateController.End();
-		dt = MyFrameRateController.getDt();
+		dt = MyFrameRateController.End();
 	}
 	//app->Run();
 	MyEngineCore.Exit();

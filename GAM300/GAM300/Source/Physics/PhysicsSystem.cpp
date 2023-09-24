@@ -2,6 +2,8 @@
 
 #include "PhysicsSystem.h"
 #include "Scene/SceneManager.h"
+#include "Core/FramerateController.h"
+
 
 
 JPH::BodyID testBallID;
@@ -44,6 +46,7 @@ void PhysicsSystem::Update(float dt) {
 
 	// Update physics simulation by a step
 	// TODO: change to use engine dt
+	//PRINT(MyFrameRateController.GetSteps(),'\n');
 	step++;
 	physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
 

@@ -187,15 +187,10 @@ public:
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
 
-	float get_FPS() {
-		return FPS;
-	}
-
 	std::map<std::string, float>system_times;
 	float systemtotaltime;
 
 private:
-	float FPS; 
 	float update_timer;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
 	FileWatcher watcher;

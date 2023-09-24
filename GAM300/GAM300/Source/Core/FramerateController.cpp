@@ -20,14 +20,10 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/Debug.h"
 
 
-void FrameRateController::Init(double _maxFPS)
+void FrameRateController::Init(float _fixedDt)
 {
-	frameCount = 0;
-	maxFrameRate = _maxFPS;
-	frameRate = _maxFPS;
-	fixedDeltaTime = 1 / _maxFPS;
-	deltaTime = 0.0;
-	accumulatedTime = 0.0;
+	fixedDeltaTime	= _fixedDt;
+	accumulatedTime = 0.0f;
 }
 
 /*******************************************************************************
@@ -46,23 +42,17 @@ void FrameRateController::Start()
 	frameStart = glfwGetTime();
 }
 
-void FrameRateController::End()
+float FrameRateController::End()
 {
 	steps = 0;
 	frameEnd = glfwGetTime();
-	deltaTime = frameEnd - frameStart;
-	while (deltaTime < fixedDeltaTime)
-	{
-		frameEnd = glfwGetTime();
-		deltaTime = frameEnd - frameStart;
-	}
+	float deltaTime = frameEnd - frameStart;
+	//if (deltaTime > 1 / 15.0f) deltaTime = 1 / 15.0f;
 	accumulatedTime += deltaTime;
-	while (accumulatedTime > fixedDeltaTime)
+	while (accumulatedTime >= fixedDeltaTime)
 	{
 		accumulatedTime -= fixedDeltaTime;
 		++steps;
 	}
-	frameRate = 1 / deltaTime;
+	return deltaTime;
 }
-
-

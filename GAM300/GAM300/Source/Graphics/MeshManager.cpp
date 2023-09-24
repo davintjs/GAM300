@@ -128,25 +128,25 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         // bind vbo and pass vertice data into the buffer
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-        glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(Vertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(gVertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
 
         // set the vertex attributes to tell vert shader pos, uv, normal etc.
         // note offsetof uses the struct Vertex as first argument, and member name as second.
         // it returns the offset to the member name :)
         glEnableVertexAttribArray(0); //pos
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
 
         glEnableVertexAttribArray(1); // normal
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
 
         glEnableVertexAttribArray(2); //tangent
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
 
         glEnableVertexAttribArray(3); // tex (uv coords)
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex));
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tex));
 
         glEnableVertexAttribArray(4); // color
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, color));
 
 
         // bind indices
@@ -195,20 +195,23 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
     GeomImported tempGeom;
     std::ifstream ifs(filePath, std::ios::binary);
 
-    //ifs.read(reinterpret_cast<char*>(&tempGeom.mPosCompressionScale), sizeof(tempGeom.mPosCompressionScale));
-    //ifs.read(reinterpret_cast<char*>(&tempGeom.mTexCompressionScale), sizeof(tempGeom.mTexCompressionScale));
-
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
 
     for (int i = 0; i < meshSize; ++i)
     {
-        Geom_Mesh tempMesh;
+        gMesh tempMesh;
 
+        std::vector<Vertex> tempVerts;
         size_t vertSize;
         ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
-        tempMesh._vertices.resize(vertSize);
-        ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
+        tempVerts.resize(vertSize);
+        ifs.read(reinterpret_cast<char*>(&tempVerts[0]), vertSize * sizeof(Vertex));
+
+        //size_t vertSize;
+        //ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
+        //tempMesh._vertices.resize(vertSize);
+        //ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
 
         size_t indSize;
         ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
@@ -216,8 +219,15 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
         ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
 
         ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
-        //ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
-        //ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionScale), sizeof(glm::vec3));
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionScale), sizeof(glm::vec2));
+
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+
+        tempMesh._vertices.resize(vertSize); // Resize our vertices vector
+        DecompressVertices(tempMesh._vertices, tempVerts, tempMesh.mPosCompressionScale, tempMesh.mTexCompressionScale, tempMesh.mPosCompressionOffset, tempMesh.mTexCompressionOffset); // Converts Vertex to gVertex
 
         tempGeom.mMeshes.push_back(tempMesh);
     }
@@ -244,10 +254,47 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
         tempGeom._materials.push_back(tempMat);
     }
 
-    
-
     ifs.close();
+
     return tempGeom;
+}
+
+void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
+    const std::vector<Vertex>& oVertices,
+    const glm::vec3& mPosCompressScale,
+    const glm::vec2& mTexCompressScale,
+    const glm::vec3& mPosOffset,
+    const glm::vec2& mTexOffset)
+{
+    E_ASSERT(mMeshVertices.size() == oVertices.size(), "Both vertices vector sizes not equal for decompressing.");
+
+    for (int i = 0; i < mMeshVertices.size(); ++i)
+    {
+        // Position
+        mMeshVertices[i].pos.x = (oVertices[i].posX >= 0 ? static_cast<float>(oVertices[i].posX) / 0x7FFF : static_cast<float>(oVertices[i].posX) / 0x8000) * mPosCompressScale.x + mPosOffset.x;
+        mMeshVertices[i].pos.y = (oVertices[i].posY >= 0 ? static_cast<float>(oVertices[i].posY) / 0x7FFF : static_cast<float>(oVertices[i].posY) / 0x8000) * mPosCompressScale.y + mPosOffset.y;
+        mMeshVertices[i].pos.z = (oVertices[i].posZ >= 0 ? static_cast<float>(oVertices[i].posZ) / 0x7FFF : static_cast<float>(oVertices[i].posZ) / 0x8000) * mPosCompressScale.z + mPosOffset.z;
+
+        // Texture
+        mMeshVertices[i].tex.x = (oVertices[i].texU >= 0 ? static_cast<float>(oVertices[i].texU) / 0x7FFF : static_cast<float>(oVertices[i].texU) / 0x8000) * mTexCompressScale.x + mTexOffset.x;
+        mMeshVertices[i].tex.y = (oVertices[i].texV >= 0 ? static_cast<float>(oVertices[i].texV) / 0x7FFF : static_cast<float>(oVertices[i].texV) / 0x8000) * mTexCompressScale.y + mTexOffset.y;
+
+        // Normal
+        mMeshVertices[i].normal.x = static_cast<float>((oVertices[i].normX >= 0 ? oVertices[i].normX / 0x7FFF : oVertices[i].normX / 0x8000));
+        mMeshVertices[i].normal.y = static_cast<float>((oVertices[i].normY >= 0 ? oVertices[i].normY / 0x7FFF : oVertices[i].normY / 0x8000));
+        mMeshVertices[i].normal.z = static_cast<float>((oVertices[i].normZ >= 0 ? oVertices[i].normZ / 0x7FFF : oVertices[i].normZ / 0x8000));
+
+        // Tangent
+        mMeshVertices[i].tangent.x = static_cast<float>((oVertices[i].tanX >= 0 ? oVertices[i].tanX / 0x7FFF : oVertices[i].tanX / 0x8000));
+        mMeshVertices[i].tangent.y = static_cast<float>((oVertices[i].tanY >= 0 ? oVertices[i].tanY / 0x7FFF : oVertices[i].tanY / 0x8000));
+        mMeshVertices[i].tangent.z = static_cast<float>((oVertices[i].tanZ >= 0 ? oVertices[i].tanZ / 0x7FFF : oVertices[i].tanZ / 0x8000));
+
+        // Color
+        mMeshVertices[i].color.r = oVertices[i].colorR;
+        mMeshVertices[i].color.g = oVertices[i].colorG;
+        mMeshVertices[i].color.b = oVertices[i].colorB;
+        mMeshVertices[i].color.a = oVertices[i].colorA;
+    }
 }
 
 void MESH_Manager::CreateInstanceCube()

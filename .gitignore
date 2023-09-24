@@ -43,7 +43,7 @@ dlldata.c
 *.a
 
 # Executables
-*.exe
+GAM300.exe
 *.recipe
 *.out
 *.tlog

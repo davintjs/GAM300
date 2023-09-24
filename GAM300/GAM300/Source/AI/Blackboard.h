@@ -22,15 +22,9 @@ public:
     {
         const auto& map = getMap<T>();
         auto res = map.mMap.find(key);
-        if (res != map.mMap.end())
-        {
-            return res->second;
-        }
-        else
-        {
-            std::cerr << "Unable to get a return value from blackboard!" << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        E_ASSERT(res == map.mMap.end(), "Unable to get a return value from blackboard!");
+
+        return res->second;
     }
     void Init() {};
     void Update(float dt) {};

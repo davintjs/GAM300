@@ -61,8 +61,9 @@ public:
 	Geom_Mesh ProcessMesh(const aiMesh& mesh, const aiScene& scene);
 	void Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind);
 	void CompressVertices(std::vector<Vertex>& CompressVertices,
-								const std::vector<TempVertex> tempVertex,
-								std::pair<glm::vec3, glm::vec2>& mOffsets);
+							const std::vector<TempVertex> tempVertex,
+							std::pair<glm::vec3, glm::vec2>& mOffsets,
+							std::pair<glm::vec3, glm::vec2>& mScales);
 	void TransformVertices(std::vector<TempVertex> vert);
 	void ImportMaterialAndTextures(const aiMaterial& material);
 

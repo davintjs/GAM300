@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 
 #include "NavMeshBuilder.h"
+#include "NavMesh.h"
 
 void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
 {

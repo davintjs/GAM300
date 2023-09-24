@@ -31,19 +31,13 @@ BehaviorTree* BehaviorTreeBuilder::GetBehaviorTree(std::string treeName)
 		}
 	}
 
-	std::cout << "Nullptr returned while trying to find behavior tree..." << std::endl;
-	exit(0);
-	return nullptr;
+	E_ASSERT(false, "Nullptr returned while trying to find behavior tree...");
 }
 
 void BehaviorTreeBuilder::BuildTrees()
 {
-	const std::filesystem::path treesFile("GAM300/Source/AI/Trees");
-	if (!std::filesystem::exists(treesFile))
-	{
-		std::cout << "Behavior tree file does not exist! Check if proper filepath is entered." << std::endl;
-		exit(0);
-	}
+	const std::filesystem::path treesFile(BHTFiles);
+	E_ASSERT(std::filesystem::exists(treesFile), "Behavior tree file does not exist! Check if proper filepath is entered.");
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(treesFile))
 	{
@@ -58,11 +52,7 @@ void BehaviorTreeBuilder::BuildTrees()
 
 		// Reading the file data here to build the tree and store into our vector of trees
 		std::ifstream ifs(filePath);
-		if (!ifs)
-		{
-			std::cout << "Error opening behavior tree file to read data!" << std::endl;
-			exit(0);
-		}
+		E_ASSERT(ifs, "Error opening behavior tree file to read data!");
 
 		std::stringstream buffer;
 		buffer << ifs.rdbuf();
@@ -135,8 +125,7 @@ BehaviorNode* BehaviorTreeBuilder::BuildNode(std::string nodeType, std::string n
 	}
 	else
 	{
-		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
-		exit(0);
+		E_ASSERT(false, "Nullptr returned while building behavior tree node.");
 	}
 
 	return nullptr;
@@ -152,8 +141,7 @@ BehaviorNode* BehaviorTreeBuilder::DeserializeControlFlow(std::string nodeName)
 	}
 	else
 	{
-		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
-		exit(0);
+		E_ASSERT(false, "Nullptr returned while deserializing control flow.");
 	}
 
 	return nullptr;
@@ -169,8 +157,7 @@ BehaviorNode* BehaviorTreeBuilder::DeserializeDecorator(std::string nodeName)
 	}
 	else
 	{
-		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
-		exit(0);
+		E_ASSERT(false, "Nullptr returned while deserializing decorator.");
 	}
 
 	return nullptr;
@@ -186,8 +173,7 @@ BehaviorNode* BehaviorTreeBuilder::DeserializeLeafNode(std::string nodeName)
 	}
 	else
 	{
-		std::cout << "Nullptr returned while building behavior tree node..." << std::endl;
-		exit(0);
+		E_ASSERT(false, "Nullptr returned while deserializing leaf node.");
 	}
 
 	return nullptr;
