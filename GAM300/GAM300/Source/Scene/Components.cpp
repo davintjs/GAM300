@@ -6,7 +6,7 @@
 //
 //
 //template <>
-//const char* GetComponentTypeGroup<>::name = "";
+//const char* GetTypeGroup<>::name = "";
 bool Transform::isLeaf() {
 	return (child.size()) ? false : true;
 }

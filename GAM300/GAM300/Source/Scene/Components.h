@@ -38,10 +38,10 @@ using Quaternion = glm::quat;
 static std::map<std::string, size_t> ComponentTypes{};
 
 template<typename T,typename... Ts>
-struct GetComponentTypeGroup
+struct GetTypeGroup
 {
-	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
-	constexpr GetComponentTypeGroup() = default;
+	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
+	constexpr GetTypeGroup() = default;
 
 	template <typename T1>
 	static constexpr size_t E()
@@ -52,7 +52,7 @@ struct GetComponentTypeGroup
 		}
 		else
 		{
-			return GetComponentTypeGroup<Ts...>::template E<T1>();
+			return GetTypeGroup<Ts...>::template E<T1>();
 		}
 	}
 
@@ -66,7 +66,7 @@ struct GetComponentTypeGroup
 		}
 		else
 		{
-			return GetComponentTypeGroup<Ts...>::template Name<T1>();
+			return GetTypeGroup<Ts...>::template Name<T1>();
 		}
 	}
 };
@@ -157,9 +157,9 @@ struct Tag : Object
 
 struct Transform : Object
 {
-	Vector3 scale{ 1 };
-	Vector3 rotation{};
 	Vector3 translation{};
+	Vector3 rotation{};
+	Vector3 scale{ 1 };
 	Transform* parent = nullptr;
 	std::vector<Transform*> child;
 	bool isLeaf();
@@ -244,8 +244,6 @@ struct Animator : Object
 
 struct Rigidbody : Object
 {
-	//C# header padding
-	char padding[32];
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
@@ -351,13 +349,12 @@ using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes(
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
 using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
-using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 	template<typename T, typename... Ts>\
-	TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	{\
-		if (GetComponentType::E<T>() == componentType)\
+		if (GetType::E<T>() == objType)\
 		{\
 			if constexpr (std::is_same<TYPE,void>())\
 			{\
@@ -371,7 +368,7 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 		}\
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
-			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
+			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
 		}\
 		else if constexpr(!std::is_same<TYPE,void>())\
 		{\
@@ -379,10 +376,10 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 		}\
 	}\
 	template<typename T, typename... Ts>\
-	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
-	TYPE FUNC_NAME(size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
+	{return FUNC_NAME##Iter<T,Ts...>(objType,pObject);}\
+	TYPE FUNC_NAME(size_t objType, void* pObject)\
+	{return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 template <typename T, typename... Ts>
 struct GenericRecursiveStruct
@@ -419,16 +416,5 @@ enum class FieldType :int
 	UShort, UInt, ULong, String,
 	Vector2, Vector3, None
 };
-
-template<typename T, typename... Ts>
-static void RegisterComponents()
-{
-	ComponentTypes.emplace(GetComponentType::Name<T>(), GetComponentType::E<T>());
-	RegisterComponents<Ts...>();
-}
-
-template<typename... Ts>
-static void RegisterComponents()
-{}
 
 #endif // !COMPONENTS_H

@@ -144,7 +144,25 @@ using SingleObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entit
 using SingleHandles = decltype(HandlesTable(SingleObjects()));
 using MultiHandles = decltype(MultiHandlesTable(MultiComponentTypes()));
 
-using AllObjectTypes = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
+using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
+
+using GetType = decltype(GetTypeGroup(AllObjectTypes()));
+
+template<typename T, typename... Ts>
+static void RegisterComponentsHelper()
+{
+	ComponentTypes.emplace(GetType::Name<T>(), GetType::E<T>());
+	if constexpr (sizeof...(Ts) != 0)
+	{
+		RegisterComponentsHelper<Ts...>();
+	}
+}
+
+template<typename... Ts>
+static void RegisterComponents(TemplatePack<Ts...>)
+{
+	RegisterComponentsHelper<Ts...>();
+}
 
 using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
 
@@ -204,7 +222,7 @@ public:
 		return singleHandles.Get<T>(object.euid);
 	}
 
-	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pComponent)->EUID()));
+	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
 	template<typename T, typename... Ts>
 	struct DestroyComponentsGroup
@@ -254,7 +272,7 @@ public:
 			auto& arr = singleComponentsArrays.GetArray<T>();
 			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(index,false);
-			entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+			entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
@@ -263,7 +281,7 @@ public:
 			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(object, false);
 			if (arr.DenseSubscript(index).size() == 1)
-				entities.DenseSubscript(index).hasComponentsBitset.set(GetComponentType::E<T>(), false);
+				entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
 		}
 		static_assert(true,"Not a valid type of object to destroy");
 	}
@@ -373,7 +391,7 @@ public:
 	{
 		if constexpr (AllComponentTypes::Has<Component>())
 		{
-			return entity.hasComponentsBitset.test(GetComponentType::E<Component>());
+			return entity.hasComponentsBitset.test(GetType::E<Component>());
 		}
 		return false;
 	}
@@ -383,7 +401,7 @@ public:
 	{
 		if constexpr (AllComponentTypes::Has<Component>())
 		{
-			return entities.DenseSubscript(denseIndex).hasComponentsBitset.test(GetComponentType::E<Component>());
+			return entities.DenseSubscript(denseIndex).hasComponentsBitset.test(GetType::E<Component>());
 		}
 		return false;
 	}
@@ -430,7 +448,8 @@ public:
 			object->euid = euid;
 			object->uuid = uuid;
 			singleHandles.emplace(euid, object);
-			entity.hasComponentsBitset.set(GetComponentType::E<T>(), true);
+			PRINT(GetType::E<T>(), '\n');
+			entity.hasComponentsBitset.set(GetType::E<T>(), true);
 			arr.SetActive(*object);
 		}
 		if (object)

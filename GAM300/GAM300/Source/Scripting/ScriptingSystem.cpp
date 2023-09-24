@@ -102,7 +102,7 @@ namespace Utils
 		if (it == fieldTypeMap.end())
 		{
 			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mScript)
-				return GetComponentType::E<Script>();
+				return GetType::E<Script>();
 			auto iter{ monoComponentToType.find(monoType) };
 			if (iter == monoComponentToType.end())
 				return (size_t)FieldType::None;
@@ -244,7 +244,7 @@ void ScriptingSystem::UpdateScriptClasses()
 		if (mono_class_get_parent(_class) == mScript)
 		{
 			scriptClassMap[name] = ScriptClass{ name,_class };
-			reflectionMap[mono_class_get_type(_class)] = GetComponentType::E<Script>();
+			reflectionMap[mono_class_get_type(_class)] = GetType::E<Script>();
 		}
 		else if(mono_class_get_parent(_class) == mScriptableObject)
 		{
@@ -300,7 +300,7 @@ void ScriptingSystem::UnloadAppDomain()
 			{
 				vTable = mono_class_vtable(mAppDomain, _class);
 				scriptClassMap[name] = ScriptClass{ name,_class };
-				reflectionMap[mono_class_get_type(_class)] = GetComponentType::E<Script>();
+				reflectionMap[mono_class_get_type(_class)] = GetType::E<Script>();
 
 			}
 			else if (mono_class_get_parent(_class) == mScriptableObject)

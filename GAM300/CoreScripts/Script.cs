@@ -24,7 +24,7 @@ namespace BeanFactory
         private void Initialize(GameObject gameObj)
         {
             _gameObject = gameObj;
-            _transform = InternalCalls.GetTransformFromGameObject(gameObj);
+            _transform = InternalCalls.Get(gameObj,typeof(Transform)) as Transform;
         }
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {

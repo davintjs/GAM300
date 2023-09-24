@@ -14,6 +14,7 @@ struct Object : property::base
 protected:
 	Engine::UUID uuid;
 	Engine::UUID euid;
+	char padding[8];
 	friend struct Scene;
 };
 

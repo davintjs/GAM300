@@ -78,7 +78,7 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-		RegisterComponents();
+		RegisterComponents(AllObjectTypes());
 		AllSystems::Init();
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);

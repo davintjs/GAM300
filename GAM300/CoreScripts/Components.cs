@@ -24,15 +24,27 @@ namespace BeanFactory
 {
     public class Component
     {
-        virtual public Transform transform { get; }
-        virtual public GameObject gameObject { get; }
+        virtual public Transform transform 
+        {
+            get
+            { 
+                return InternalCalls.Get(this, typeof(Transform)) as Transform; 
+            }
+        }
+        virtual public GameObject gameObject 
+        {
+            get
+            { 
+                return InternalCalls.Get(this, typeof(GameObject)) as GameObject; 
+            } 
+        }
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();
         }
         public T GetComponent<T>() where T : Component
         {
-            return (T)InternalCalls.GetComponent(gameObject, typeof(T));
+            return InternalCalls.Get(gameObject, typeof(T)) as T;
         }
     }
     public class Rigidbody : Component

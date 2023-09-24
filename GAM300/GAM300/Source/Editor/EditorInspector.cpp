@@ -582,7 +582,7 @@ void DisplayComponentHelper(T& component)
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
-        name = GetComponentType::Name<T>();
+        name = GetType::Name<T>();
     }
     else
     {
@@ -597,9 +597,9 @@ void DisplayComponentHelper(T& component)
 
     static bool comp_settings = false;
 
-    const char* popup = GetComponentType::Name<T>();
+    const char* popup = GetType::Name<T>();
 
-    ImGui::PushID(GetComponentType::E<T>());
+    ImGui::PushID(GetType::E<T>());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);
@@ -648,7 +648,7 @@ void DisplayComponentHelper(T& component)
             }
             else
             {
-                ImGui::SetDragDropPayload(GetComponentTypeName<T>(), &container, sizeof(void*));
+                ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
                 ImGui::EndDragDropSource();
             }
         }*/
@@ -753,7 +753,7 @@ private:
         if constexpr (SingleComponentTypes::Has<T1>()) {
             if (!scene.HasComponent<T1>(entity))
             {
-                if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
                     scene.Add<T1>(entity);
                     EditorInspector::Instance().isAddPanel = false;
@@ -762,7 +762,7 @@ private:
         }
         else
         {
-            if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
             {
                 scene.Add<T1>(entity);
                 EditorInspector::Instance().isAddPanel = false;

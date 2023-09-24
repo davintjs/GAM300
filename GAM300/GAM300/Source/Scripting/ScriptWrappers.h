@@ -118,74 +118,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonHolding(keyCode);
 	}
 
-	template<typename T, typename... Ts>
-	static Entity* GetGameObjectRecursive(void* pComponent, size_t componentType)
-	{
-		if (GetComponentType::E<T>() == componentType)
-		{
-			Scene& scene = SceneManager::Instance().GetCurrentScene();
-			return &scene.Get<Entity>(*((T*)pComponent));
-		}
-		if constexpr (sizeof...(Ts) != 0)
-		{
-			return GetGameObjectRecursive<Ts...>(pComponent, componentType);
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().Get<Entity>(*((T*)pComponent)));
-	static Entity* GetGameObject(void* pComponent, size_t componentType)
-	{
-		return RecurseGetEntity(componentType,pComponent);
-	}
-
-	static Entity* GetGameObjectFromScript(Script* pScript)
-	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		return &scene.Get<Entity>(*pScript);
-	}
-
-	static Transform* GetTransformFromGameObject(Entity* pEntity)
-	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		Transform& t = scene.Get<Transform>(*pEntity);
-		return &t;
-	}
-
-	template<typename T, typename... Ts>
-	static Transform* GetTransformFromComponentHelper(void* pComponent, size_t componentType, TemplatePack<T, Ts...>)
-	{
-		if constexpr (AllComponentTypes::Has<T>())
-		{
-			if (GetComponentType::E<T>() == componentType)
-			{
-				Scene& scene = SceneManager::Instance().GetCurrentScene();
-				return &scene.Get<Transform>(*((T*)pComponent));
-			}
-		}
-		if constexpr (sizeof...(Ts) != 0)
-		{
-			return GetTransformFromComponentHelper(pComponent,componentType, TemplatePack<Ts...>());
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	static Transform* GetTransformFromComponent(void* pComponent, MonoReflectionType* componentType)
-	{
-		
-		Scene& scene = MySceneManager.GetCurrentScene();
-		MonoType* mType = mono_reflection_type_get_type(componentType);
-		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
-		PRINT("WORKED");
-		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
-	}
-
 	///*******************************************************************************
 	///*!
 	//\brief
@@ -243,7 +175,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
+	static void* Get(Object* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -252,7 +184,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
-		addr += sizeof(Object);
+		//addr += sizeof(Object);
 		return reinterpret_cast<void*>(addr);
 	}
 	//	Component* component{ nullptr };
@@ -657,7 +589,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
 	}
 
-	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pComponent))
+	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
 	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
 	{
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
@@ -1131,12 +1063,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void RegisterComponent()
 	{
 		std::string typeName = "BeanFactory.";
-		typeName += GetComponentType::Name<T>();
+		typeName += GetType::Name<T>();
 		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
 		if (managedType != nullptr)
 		{
 			E_ASSERT(managedType, "Could not find component type");
-			monoComponentToType.emplace(managedType, GetComponentType::E<T>());
+			monoComponentToType.emplace(managedType, GetType::E<T>());
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
@@ -1169,10 +1101,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetKeyUp);
 		Register(GetKeyDown);
 		Register(GetMouseDown);
-		Register(GetTransformFromGameObject);
-		Register(GetTransformFromComponent);
-		Register(GetGameObjectFromScript);
-
 		Register(DestroyGameObject);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
@@ -1180,7 +1108,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(GetGlobalPosition);
 		//Register(GetGlobalScale);
 		Register(HasComponent);
-		Register(GetComponent);
+		Register(Get);
 		//Register(RigidbodyAddForce);
 		//Register(RigidbodyGetVelocity);
 		//Register(RigidbodySetVelocity);
