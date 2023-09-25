@@ -53,6 +53,7 @@ struct InstanceProperties
 {
 	// instanced stuff
 	unsigned int VAO;
+	unsigned int debugVAO;
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];

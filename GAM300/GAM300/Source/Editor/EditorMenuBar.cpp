@@ -142,6 +142,11 @@ void EditorMenuBar::SaveScene()
     if (newScene.data)
     {
         std::string filepath = FileDialogs::SaveFile("Scene (*.scene)\0*.scene\0");
+
+        // If the user does not want to save the file and exit file dialog
+        if (filepath.empty())
+            return;
+
         //Save File
         SaveSceneEvent saveScene(filepath);
         EVENTS.Publish(&saveScene);

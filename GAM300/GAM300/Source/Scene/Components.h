@@ -17,11 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define COMPONENTS_H
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
@@ -36,16 +32,18 @@ constexpr size_t MAX_ENTITIES{ 5 };
 
 using Vector2 = glm::vec2;
 using vec3 = glm::vec3;
-using Vector4 = glm::vec4;
+using vec4 = glm::vec4;
 using Quaternion = glm::quat;
+
+struct Entity;
 
 static std::map<std::string, size_t> ComponentTypes{};
 
 template<typename T,typename... Ts>
-struct GetComponentTypeGroup
+struct GetTypeGroup
 {
-	constexpr GetComponentTypeGroup(TemplatePack<T,Ts...> pack) {}
-	constexpr GetComponentTypeGroup() = default;
+	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
+	constexpr GetTypeGroup() = default;
 
 	template <typename T1>
 	static constexpr size_t E()
@@ -56,7 +54,7 @@ struct GetComponentTypeGroup
 		}
 		else
 		{
-			return GetComponentTypeGroup<Ts...>::template E<T1>();
+			return GetTypeGroup<Ts...>::template E<T1>();
 		}
 	}
 
@@ -70,7 +68,7 @@ struct GetComponentTypeGroup
 		}
 		else
 		{
-			return GetComponentTypeGroup<Ts...>::template Name<T1>();
+			return GetTypeGroup<Ts...>::template Name<T1>();
 		}
 	}
 };
@@ -161,122 +159,30 @@ struct Tag : Object
 
 struct Transform : Object
 {
-	Vector3 scale{ 1 };
-	Vector3 rotation{};
 	Vector3 translation{};
-	Transform* parent = nullptr;
+	Vector3 rotation{};
+	Vector3 scale{ 1 };
 	
+	Transform* parent = nullptr;
 	std::vector<Transform*> child;
-
-	bool isLeaf() {
-		return (child.size()) ? false : true;
-	}
-
-	bool isChild() {
-		if (parent != nullptr)
-			return true;
-		else
-			return false;
-	}
-
-	glm::mat4 GetWorldMatrix() const 
-	{
-		if (parent)
-			return parent->GetWorldMatrix() * GetLocalMatrix();
-		return GetLocalMatrix();
-	}
-
-	glm::mat4 GetInvertedWorldMatrix() const
-	{
-		if (parent)
-			return glm::inverse(parent->GetInvertedWorldMatrix()) * GetLocalMatrix();
-		return GetLocalMatrix();
-	}
-
-	glm::mat4 GetLocalMatrix() const {
-		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
-		
-		return glm::translate(glm::mat4(1.0f), vec3(translation)) *
-			rot *
-			glm::scale(glm::mat4(1.0f),vec3(scale));
-	}
-
-	bool isEntityChild(Transform& ent) {
-		if (std::find(child.begin(), child.end(), &ent) != child.end()) {
-			return true;
-		}
-		for (int i = 0; i < child.size(); i++) {
-				return child[i]->isEntityChild(ent);
-		}
-		return false;
-	}
-
-	void SetParent(Transform* newParent) 
-	{
-		// Calculate the global transformation matrix
-		if (parent) {
-			parent->RemoveChild(this);
-			glm::mat4 globalTransform = GetWorldMatrix();
-			glm::quat rot;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-
-			vec3 _scale = vec3(scale);
-			vec3 _translation = vec3(translation);
-			glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
-			scale = _scale;
-			translation = _translation;
-			rotation = glm::eulerAngles(rot);
-		}
-
-		// Set the new parent
-		glm::mat4 localTransform = GetWorldMatrix();
-		parent = newParent;
-
-		if (parent) {
-			glm::mat4 parentTransform = parent->GetWorldMatrix();
-			glm::mat4 lTransform = glm::inverse(parentTransform) * localTransform;
-			glm::quat rot;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-
-			vec3 _scale = vec3(scale);
-			vec3 _translation = vec3(translation);
-			glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-			scale = _scale;
-			translation = _translation;
-			rotation = glm::eulerAngles(rot);
-
-			// Add the object to the new parent's child list
-			parent->child.push_back(this);
-		}
-	}
-
-	void RemoveChild(Transform* t)
-	{
-		auto it = std::find(child.begin(), child.end(),t);
-
-		// Check if an element satisfying the condition was found
-		E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
-		// Erase the found element
-		child.erase(it);
-	}
-
+	bool isLeaf();
+	bool isChild();
+	glm::mat4 GetWorldMatrix() const;
+	glm::mat4 GetInvertedWorldMatrix() const;
+	glm::mat4 GetLocalMatrix() const;
+	bool isEntityChild(Transform& ent);
+	void SetParent(Transform* newParent);
+	void RemoveChild(Transform* t);
+	~Transform();
 	property_vtable();
-
 };
 
-//property_begin_name(Transform, "Transform") {
-//	property_var(scale.x), property_var(scale.y), property_var(scale.z)
-//		, property_var(rotation.x), property_var(rotation.y), property_var(rotation.z)
-//		, property_var(translation.x), property_var(translation.y), property_var(translation.z)
-//} property_vend_h(Transform)//
-
-property_begin_name(Transform, "Transform") {
-		property_var(scale),
-			property_var(rotation),
-			property_var(translation),
-	} property_vend_h(Transform)
+property_begin_name(Transform, "Transform") 
+{
+	property_var(translation),
+	property_var(rotation),
+	property_var(scale),
+} property_vend_h(Transform)
 
 struct AudioSource : Object
 {
@@ -286,8 +192,8 @@ struct AudioSource : Object
 };
 
 property_begin_name(AudioSource, "Audio Source") {
-		property_var(loop)
-		,property_var(volume)
+	property_var(loop),
+		property_var(volume)
 } property_vend_h(AudioSource)
 
 struct BoxCollider : Object
@@ -299,9 +205,10 @@ struct BoxCollider : Object
 };
 
 property_begin_name(BoxCollider, "BoxCollider") {
-	property_var(x)
-		, property_var(y)
-		, property_var(z)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(x),
+		property_var(y),
+		property_var(z),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
@@ -311,7 +218,8 @@ struct SphereCollider : Object
 };
 
 property_begin_name(SphereCollider, "SphereCollider") {
-	property_var(radius)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(radius)
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
@@ -322,8 +230,9 @@ struct CapsuleCollider : Object
 };
 
 property_begin_name(CapsuleCollider, "CapsuleCollider") {
-	property_var(height)
-		, property_var(radius)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(height),
+		property_var(radius)
 } property_vend_h(CapsuleCollider)
 
 struct Animator : Object
@@ -336,38 +245,34 @@ struct Animator : Object
 
 struct Rigidbody : Object
 {
-	bool is_enabled = true;
-	bool is_trigger = false;
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
 	Vector3 force{};					//forces acting on object, shud be an array
-
 	float friction{ 0.1f };				//friction of body (0 <= x <= 1)
 	float mass{ 1.f };					//mass of object
 	bool isStatic{ true };				//is object static? If true will override isKinematic!
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
+	bool is_trigger = false;
 	property_vtable();
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
-
-	property_var(linearVelocity)
-		, property_var(angularVelocity)
-		, property_var(force)
-		, property_var(friction)
-		, property_var(mass)
-		, property_var(isStatic)
-		, property_var(isKinematic)
-		, property_var(useGravity)
-		, property_var(is_enabled)
-		, property_var(is_trigger)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(linearVelocity),
+		property_var(angularVelocity),
+		property_var(force),
+		property_var(friction),
+		property_var(mass),
+		property_var(isStatic),
+		property_var(isKinematic),
+		property_var(useGravity),
+		property_var(is_trigger)
 } property_vend_h(Rigidbody)
 
 struct CharacterController : Object
 {
-
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
 	float mass{ 1.f };					// mass of object
@@ -379,12 +284,13 @@ struct CharacterController : Object
 };
 
 property_begin_name(CharacterController, "CharacterController") {
-	property_var(velocity)
-		, property_var(force)
-		, property_var(friction)
-		, property_var(mass)
-		, property_var(gravityFactor)
-		, property_var(slopeLimit)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(velocity),
+		property_var(force),
+		property_var(friction),
+		property_var(mass),
+		property_var(gravityFactor),
+		property_var(slopeLimit)
 } property_vend_h(CharacterController)
 
 struct Script : Object
@@ -394,9 +300,9 @@ struct Script : Object
 	property_vtable();
 };
 
-
 property_begin_name(Script, "Script") {
-	property_var(name)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(name),
 		//, property_var(fields)
 } property_vend_h(Script)
 
@@ -408,17 +314,22 @@ struct MeshRenderer : Object
 	//Materials mr_Material;
 
 	// Materials stuff below here
-	glm::vec4 mr_Albedo;
-	glm::vec4 mr_Specular;
-	glm::vec4 mr_Diffuse;
-	glm::vec4 mr_Ambient;
+	Vector4 mr_Albedo;
+	Vector4 mr_Specular;
+	Vector4 mr_Diffuse;
+	Vector4 mr_Ambient;
 	float mr_Shininess;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
-	property_var(MeshName)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(mr_Albedo),
+		property_var(mr_Specular),
+		property_var(mr_Diffuse),
+		property_var(mr_Ambient),
+		property_var(mr_Shininess)
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
@@ -428,7 +339,8 @@ struct LightSource : Object
 };
 
 property_begin_name(LightSource, "LightSource") {
-	property_var(lightingColor)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(lightingColor)
 } property_vend_h(LightSource)
 
 #pragma endregion
@@ -446,13 +358,12 @@ using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes(
 using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
 using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
 using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
-using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Iter(size_t componentType,void* pComponent)\
+	TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	{\
-		if (GetComponentType::E<T>() == componentType)\
+		if (GetType::E<T>() == objType)\
 		{\
 			if constexpr (std::is_same<TYPE,void>())\
 			{\
@@ -466,7 +377,7 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 		}\
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
-			return FUNC_NAME##Iter<Ts...>(componentType,pComponent); \
+			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
 		}\
 		else if constexpr(!std::is_same<TYPE,void>())\
 		{\
@@ -474,28 +385,43 @@ using GetComponentType = decltype(GetComponentTypeGroup(AllComponentTypes()));
 		}\
 	}\
 	template<typename T, typename... Ts>\
-	static TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Iter<T,Ts...>(componentType,pComponent);}\
-	static TYPE FUNC_NAME(size_t componentType, void* pComponent)\
-	{return FUNC_NAME##Start(AllComponentTypes(), componentType,pComponent);}\
+	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
+	{return FUNC_NAME##Iter<T,Ts...>(objType,pObject);}\
+	TYPE FUNC_NAME(size_t objType, void* pObject)\
+	{return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
-enum class FieldType :int
+template <typename T, typename... Ts>
+struct GenericRecursiveStruct
 {
-	Float = AllComponentTypes::Size(), Double,
-	Bool, Char, Short, Int, Long,
-	UShort, UInt, ULong, String,
-	Vector2, Vector3, GameObject, None
+	constexpr GenericRecursiveStruct(TemplatePack<T,Ts...>) {}
+	GenericRecursiveStruct() = default;
+
+	template <typename RET, typename... ARGS>
+	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	{
+		return Invoke<T, Ts...>(func,args);
+	}
+
+	template<typename T1,typename T1s ,typename RET ,typename... ARGS>
+	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	{
+		if constexpr (std::is_same<RET, T1>())
+		{
+			return func(std::forward(func));
+		}
+		if constexpr (sizeof...(Ts) != 0)\
+		{
+			return Invoke<T1s...>(func, args);
+		}
+	}
 };
 
-template<typename T, typename... Ts>
-static void RegisterComponents()
-{
-	ComponentTypes.emplace(GetComponentType::Name<T>(), GetComponentType::E<T>());
-	RegisterComponents<Ts...>();
-}
+using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
-template<typename... Ts>
-static void RegisterComponents()
-{}
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3, None>;
+
+using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
+using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
+using GetFieldType = decltype(GetTypeGroup(AllFieldTypes()));
 
 #endif // !COMPONENTS_H

@@ -12,7 +12,7 @@
 	Contains the definitions for FrameRateController class, its constructor and
 	member functions.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2022 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "FramerateController.h"

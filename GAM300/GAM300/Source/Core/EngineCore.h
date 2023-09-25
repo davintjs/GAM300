@@ -40,36 +40,26 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/YAMLUtils.h"
 #include "EventsManager.h"
 #include "Debugging/Debugger.h"
-#include "Scripting/LogicSystem.h"
 #include "SystemsGroup.h"
 #include "Debugging/DemoSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 2.f;
 
-enum class EngineState
-{
-	Run,
-	Editor,
-	Paused,
-	Quit
-};
-
 #if defined(_BUILD)
 #else
 	using AllSystemsPack =
 	TemplatePack
 	<
+		AssetManager,
 		InputSystem,
 		SceneManager,
-		//ScriptingSystem,
+		ScriptingSystem,
 		EditorSystem,
-		DemoSystem,
-
-		PhysicsSystem,
+		//PhysicsSystem,
 		GraphicsSystem,
 		Blackboard,
-		AssetManager
+		DemoSystem
 	>;
 #endif
 
@@ -88,17 +78,16 @@ public:
 	void Init()
 	{
 		THREADS.Init();
-		RegisterComponents();
+		RegisterComponents(AllObjectTypes());
 		AllSystems::Init();
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
-		Scene& scene = SceneManager::Instance().GetCurrentScene();
 		update_timer = 0.f;
 
 		SceneStartEvent startEvent{};
-		ACQUIRE_SCOPED_LOCK("Assets");
+		ACQUIRE_SCOPED_LOCK(Assets);
 		EVENTS.Publish(&startEvent);
 
 		// NavMesh testing
@@ -118,63 +107,61 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
-		//MultiComponentsArrays arr;
-		if (state == EngineState::Run)
-		{
-			//Start ImGui Frames
 
-			#if defined(_BUILD)
-				AllSystems::Update(dt);
-			#else
-				ImGui_ImplOpenGL3_NewFrame();
-				ImGui_ImplGlfw_NewFrame();
-				ImGui::NewFrame();
-				ImGuizmo::BeginFrame();
+		//Start ImGui Frames
+		#if defined(_BUILD)
+			AllSystems::Update(dt);
+		#else
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			ImGuizmo::BeginFrame();
 				
-				double starttime = 0;
-				float elapsedtime = 0;
-				bool update = false;
+			double starttime = 0;
+			float elapsedtime = 0;
+			bool update = false;
 
-				//performance viewer update timer (2s)
-				if (update_timer > 0.f) {
-					update_timer -= dt;
-				}
-				else {
-					update_timer = UPDATE_TIME;
-					update = true;
-				}
+			//performance viewer update timer (2s)
+			if (update_timer > 0.f) {
+				update_timer -= dt;
+			}
+			else {
+				update_timer = UPDATE_TIME;
+				update = true;
+			}
 
-				auto func =
-				[&](ISystem* sys)
+			auto func =
+			[&](ISystem* sys)
+			{
+				if (sys->GetMode() & mode)
 				{
-						if (sys->GetMode() & mode)
-						{
-							starttime = glfwGetTime();
-							//Update performance viewer every 2s
-							sys->Update(dt);
-							if (update) {
-								float timetaken = glfwGetTime() - starttime;
-								elapsedtime += timetaken;
-								system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
-							}	
-						}
-				};
-
-				AllSystems::Update(dt, func);
-
-				if (update) {
-					systemtotaltime = elapsedtime;
-					update = false;
+					starttime = glfwGetTime();
+					//Update performance viewer every 2s
+					sys->Update(dt);
+					if (update) {
+						float timetaken = glfwGetTime() - starttime;
+						elapsedtime += timetaken;
+						system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
+					}	
 				}
-				ImGui::EndFrame();
-				ImGui::Render();
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			#endif
+			};
 
-			//End ImGui Frames
+			AllSystems::Update(dt, func);
 
-			glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
-		}
+			if (update) {
+				systemtotaltime = elapsedtime;
+				update = false;
+			}
+				
+
+			ImGui::EndFrame();
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		#endif
+
+		//End ImGui Frames
+
+		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 	}
 
 	/**************************************************************************/
@@ -202,7 +189,6 @@ public:
 
 private:
 	float update_timer;
-	EngineState state = EngineState::Run;
 	SystemMode mode = ENUM_SYSTEM_EDITOR;
 	FileWatcher watcher;
 };
