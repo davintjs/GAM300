@@ -19,7 +19,7 @@ void MESH_Manager::Init()
 {
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
 	CreateInstanceCube();
-
+    
 }
 
 void MESH_Manager::Update(float dt)
@@ -178,6 +178,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     }
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties[fileName]);
 
     mContainer.emplace(fileName, newMesh);
 }
@@ -389,8 +390,8 @@ void MESH_Manager::CreateInstanceCube()
         20, 21, 22,
         22, 23, 20
     };
-    newMesh.vertices_min = glm::vec3(-1.f, -1.f, -1.f);
-    newMesh.vertices_max = glm::vec3(1.f, 1.f, 1.f);
+    newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
+    newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
 
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
@@ -439,6 +440,7 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["Cube"]));
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Cube"]);
 
     mContainer.emplace(std::string("Cube"), newMesh);
 }
@@ -590,4 +592,105 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 }
 
 
+
+void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
+{
+    //// find min max points for each axis
+    //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
+
+    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+    //{
+    //    minpt.x = std::min(minpt.x, _geom->_vertices[i].pos.x);
+    //    minpt.y = std::min(minpt.y, _geom->_vertices[i].pos.y);
+    //    minpt.z = std::min(minpt.z, _geom->_vertices[i].pos.z);
+
+    //    maxpt.x = std::max(maxpt.x, _geom->_vertices[i].pos.x);
+    //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
+    //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
+    //}
+    glm::vec3 pntAABB[8];
+    std::vector<glm::ivec2> idxAABB{};
+
+    pntAABB[0] = minpt;
+    pntAABB[1] = glm::vec3(minpt.x, minpt.y, maxpt.z);
+    pntAABB[2] = glm::vec3(minpt.x, maxpt.y, maxpt.z);
+    pntAABB[3] = glm::vec3(minpt.x, maxpt.y, minpt.z);
+
+    pntAABB[4] = maxpt;
+    pntAABB[5] = glm::vec3(maxpt.x, maxpt.y, minpt.z);
+    pntAABB[6] = glm::vec3(maxpt.x, minpt.y, minpt.z);
+    pntAABB[7] = glm::vec3(maxpt.x, minpt.y, maxpt.z);
+
+    int indice = 0;
+
+    idxAABB.push_back(glm::ivec2(indice, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 1, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 2, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 3, indice));
+
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 5));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 6));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice + 7));
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 4));
+
+    idxAABB.push_back(glm::ivec2(indice + 7, indice + 1));
+    idxAABB.push_back(glm::ivec2(indice + 4, indice + 2));
+    idxAABB.push_back(glm::ivec2(indice + 5, indice + 3));
+    idxAABB.push_back(glm::ivec2(indice + 6, indice));
+
+
+    // setup vao
+    //GLuint DebugVaoid; // point buffer
+    GLuint Pbuff; // point buffer
+    GLuint Ibuff; // indice buffer
+
+    glGenVertexArrays(1, &prop.debugVAO);
+    glGenBuffers(1, &Pbuff);
+    glGenBuffers(1, &Ibuff);
+
+    glBindVertexArray(prop.debugVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, Pbuff);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 8, &pntAABB[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Ibuff);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 2 * idxAABB.size(),
+        &idxAABB[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+
+
+    //entitySRTBuffer
+    glBindVertexArray(prop.debugVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glBindVertexArray(0);
+
+    //entitySRTBuffer
+    glBindVertexArray(prop.debugVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+    glEnableVertexAttribArray(8);
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(9);
+    glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
+    glVertexAttribDivisor(9, 1);
+    glBindVertexArray(0);
+    //return DebugVaoid;
+}
 

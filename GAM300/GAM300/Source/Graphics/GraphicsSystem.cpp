@@ -46,6 +46,7 @@ std::vector <float> temp_ShininessContainer;
 
 trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
+GLSLShader temp_debug_shader;
 LightProperties Lighting_Source;
 //bool isThereLight = false;
 
@@ -166,51 +167,9 @@ void GraphicsSystem::Init()
 
 
 
+	Skybox_Tex = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("skybox_default_top"));
 
 
-
-
-	// Theophelia make a function
-	/**/std::string left = "Assets/Resources/left.dds";
-	std::string back = "Assets/Resources/back.dds";
-	std::string front = "Assets/Resources/front.dds";
-	std::string right = "Assets/Resources/right.dds";
-	std::string top = "Assets/Resources/top.dds";
-	std::string bottom = "Assets/Resources/bottom.dds";
-
-	
-	std::vector<std::string> faces
-	{
-		right,left,top,bottom,front,back
-	};
-
-	glGenTextures(1, &Skybox_Tex);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
-
-	int width, height, nrChannels;
-	unsigned int err = 0;
-	
-	for (size_t i = 0; i < faces.size(); i++)
-	{
-		gli::texture Texture = gli::load(faces[i]);
-
-			glCompressedTexImage2D(
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0,
-				GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-				Texture.extent().x,
-				Texture.extent().y,
-				0,
-				GLsizei(Texture.size()),
-				Texture.data());
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	
 	SkyBox_Model.SkyBoxinit();
 	SkyBox_Model.setup_skybox_shader();
 
@@ -240,28 +199,33 @@ void GraphicsSystem::Init()
 		std::exit(EXIT_FAILURE);
 	}
 
-	/*Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	unsigned int textureCount = 0;
-	bool skip = false;
-	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>()) {
-		Entity& entity = currentScene.GetEntity(renderer);
-		std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
-		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
-		for (int j = 0; j <= textureCount; ++j) {
-			if (properties[renderer.MeshName].texture[j] == texID) {
-				skip = true;
-			}
-		}
-		if (skip) {
-			skip = false;
-			continue;
-		}
-		if (textureCount >= 31) {
-			PRINT("TOO MANY TEXTURE IN THIS GEOM!!");
-			break;
-		}
-		properties[renderer.MeshName].texture[textureCount++] = texID;
-	}*/
+
+	//debug shader
+	std::vector<std::pair<GLenum, std::string>> debugshdr_files;
+	// Vertex Shader
+	debugshdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/InstancedDebugRender.vert"));
+
+	// Fragment Shader
+	debugshdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/InstancedDebugRender.frag"));
+
+	std::cout << "TEMP debug Render SHADER\n";
+	temp_debug_shader.CompileLinkValidate(debugshdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == temp_debug_shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate debug shader programs\n";
+		sstr << temp_debug_shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+
+
 
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
@@ -636,6 +600,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
+	//std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,
@@ -722,6 +687,13 @@ void GraphicsSystem::Draw() {
 		}
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
+	
+		// FOR DEBUG DRAW
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		Draw_Debug(prop.debugVAO, prop.iter);
+
 		prop.iter = 0;
 	}
 
@@ -800,4 +772,27 @@ void GraphicsSystem::Exit()
 	//std::cout << "-- Graphics Exit -- " << std::endl;
 
 	//CLEANUP GRAPHICS HERE
+}
+
+void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
+{
+	temp_debug_shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+
+	glBindVertexArray(vaoid);
+	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
+	glDrawElementsInstanced(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0, instance_count);
+
+	// unbind and free stuff
+	glBindVertexArray(0);
+	temp_debug_shader.UnUse();
 }

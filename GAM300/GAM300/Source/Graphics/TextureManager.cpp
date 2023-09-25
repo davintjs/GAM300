@@ -15,47 +15,43 @@ void Texture_Manager::Update(float dt)
 
 void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
 {
-    GLuint temp = CreateTexture(Filename);
-    mTextureContainer.emplace( GUID, std::pair(Filename, temp) );
+    GLuint temp{};
+
+    // check if from skybox
+    std::string searchWord = "skybox";
+    const char* found = strstr(Filename, searchWord.c_str());
+
+    if (found != nullptr) {
+        //std::cout << "skybox" << std::endl;
+        
+        // if filename_top, we create skybox texture as the other .dds should have been loaded in
+        searchWord = "_top";
+        const char* found = strstr(Filename, searchWord.c_str());
+        if (found != nullptr) {
+        
+            size_t length = found - Filename;
+            char* subString = new char[length + 1];
+
+            strncpy(subString, Filename, length);
+            subString[length] = '\0';
+
+            temp = CreateSkyboxTexture(subString);
+            delete[] subString;
+
+            mTextureContainer.emplace(GUID, std::pair(Filename, temp));
+        }
+    }
+    else {
+        //std::cout << "not skybox" << std::endl;
+        temp = CreateTexture(Filename);
+        mTextureContainer.emplace(GUID, std::pair(Filename, temp));
+    }
+
 }
 
 /// Filename can be KTX or DDS files
 GLuint Texture_Manager::CreateTexture(char const* Filename)
 {
-    /*std::cout << "filename is : " << Filename << "\n";
-    */std::string left = "Assets/Resources/left.dds";
-    std::string back = "Assets/Resources/back.dds";
-    std::string front = "Assets/Resources/front.dds";
-    std::string right = "Assets/Resources/right.dds";
-    std::string top = "Assets/Resources/top.dds";
-    std::string bottom = "Assets/Resources/bottom.dds";
-    if (Filename == left)
-    {
-        return 0;
-
-    } 
-    if (Filename == back)
-    {
-        return 0;
-    } 
-    if (Filename == front)
-    {
-        return 0;
-    } 
-    if (Filename == right)
-    {
-        return 0;
-
-    } 
-    if (Filename == top)
-    {
-        return 0;
-
-    }
-    if (Filename == bottom)
-    {
-        return 0;
-    }
     gli::texture Texture = gli::load(Filename);
     if (Texture.empty())
         return 0;
@@ -180,6 +176,54 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
                 }
             }
     return TextureName;
+}
+
+GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
+{
+    /*std::cout << "filename is : " << Filename << "\n";*/
+    std::string FilenameStr(Filename);
+
+    std::string left = FilenameStr + "_left.dds";
+    std::string back = FilenameStr + "_back.dds";
+    std::string front = FilenameStr + "_front.dds";
+    std::string right = FilenameStr + "_right.dds";
+    std::string top = FilenameStr + "_top.dds";
+    std::string bottom = FilenameStr + "_bottom.dds";
+
+    std::vector<std::string> faces
+    {
+        right,left,top,bottom,front,back
+    };
+
+    GLuint Skybox_Tex = 0;
+    glGenTextures(1, &Skybox_Tex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
+
+    int width, height, nrChannels;
+    unsigned int err = 0;
+
+    for (size_t i = 0; i < faces.size(); i++)
+    {
+        gli::texture Texture = gli::load(faces[i]);
+
+        glCompressedTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+            Texture.extent().x,
+            Texture.extent().y,
+            0,
+            GLsizei(Texture.size()),
+            Texture.data());
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    return Skybox_Tex;
 }
 
 GLuint& Texture_Manager::GetTexture(std::string GUID)
