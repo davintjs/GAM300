@@ -64,7 +64,7 @@ private:
                 //dont Serialize tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {
-                    auto& component = _scene.GetComponent<T1>(entity);
+                    auto& component = _scene.Get<T1>(entity);
                     if (!SerializeComponent(out, component))
                         return false;
                 }
@@ -72,14 +72,14 @@ private:
         }
         else if constexpr (MultiComponentTypes::Has<T1>())
         {
-
-            auto components = _scene.GetComponents<T1>(entity);
-            for (T1* component : components)
-            {
-                //SerializeType("Enabled", component->is_enabled); ImGui::SameLine();
-                if (!SerializeComponent(out, *component))
-                    return false;
-            }
+            // Bean: Uncomment once zac implements multi component
+            //auto components = _scene.Get<T1>(entity);
+            //for (T1* component : components)
+            //{
+            //    //SerializeType("Enabled", component->is_enabled); ImGui::SameLine();
+            //    if (!SerializeComponent(out, *component))
+            //        return false;
+            //}
         }
 
         if constexpr (sizeof...(T1s) != 0)

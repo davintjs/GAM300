@@ -1,5 +1,5 @@
-[2023-09-25 14:23:06.477] [Error] [critical] 
+[2023-09-25 17:07:58.268] [Error] [critical] 
 Caused By:	handles.Has<T>(euid)
-Info:		Entity euid:  8558750349329837226  of  Entity  doesn't exist in this scene
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 170)
+Info:		Entity euid:  3722304989  of  Tag  doesn't exist in this scene
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 182)
 

@@ -268,7 +268,6 @@ property_begin_name(Rigidbody, "Rigidbody") {
 		property_var(isStatic),
 		property_var(isKinematic),
 		property_var(useGravity),
-		property_var(is_enabled),
 		property_var(is_trigger)
 } property_vend_h(Rigidbody)
 

@@ -193,7 +193,8 @@ template <typename T>
 bool SerializeComponent(YAML::Emitter& out, T& _component)
 {
     std::string componentName = "m_";
-    componentName += GetComponentType::Name<T>();
+    
+    componentName += GetType::Name<T>();
 
     if constexpr (std::is_same<T, Tag>() || std::is_same<T, Transform>())
         return true;
