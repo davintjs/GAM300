@@ -371,7 +371,7 @@ void GraphicsSystem::Update(float dt)
 		{
 			normidx = 33;
 		}
-		std::cout << normidx << "\n";
+		//std::cout << normidx << "\n";
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];

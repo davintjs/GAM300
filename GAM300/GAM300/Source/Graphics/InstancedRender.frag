@@ -77,9 +77,8 @@ if(Tex_index<32)
 
     // ambient lighting
     // float ambientStrength = 0.1;
-//   vec3 ambience = vec3(frag_ambient) * lightColor;
    vec3 ambience = vec3(frag_ambient) * colour;
-//   vec3 ambience = 0.1f * ;
+//    vec3 ambience = vec3(frag_ambient) * 0;
 //    vec3 result = ambient * objectColor;
 //    FragColor = vec4(result, 1.0);
 
@@ -132,6 +131,8 @@ if(NM_index < 32)
 
      // ambient
 //     vec3 ambient = 0.1 * color;
+//    vec3 ambient = vec3(frag_ambient) * 0;
+
      vec3 ambient = vec3(frag_ambient) * color;
      // diffuse
      vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
