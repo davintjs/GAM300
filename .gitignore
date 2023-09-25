@@ -28,6 +28,7 @@ dlldata.c
 *.ipdb
 *.db
 GAM300.pdb
+vc143.pdb
 
 # Compiled Dynamic libraries
 *.so
