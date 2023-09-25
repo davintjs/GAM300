@@ -26,8 +26,8 @@ dlldata.c
 *.tlog
 *.idb
 *.ipdb
-*.pdb
 *.db
+GAM300.pdb
 
 # Compiled Dynamic libraries
 *.so
