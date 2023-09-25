@@ -54,13 +54,12 @@ void main()
     vec3 speculation = lightColor * (vec3(frag_specular) * spec) ;  
         
     vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
-    result = (ambience + diffusion + speculation) * vec3(frag_albedo);
-    int index = int(texture_index + 0.5f);
+    
+    int index = int(texture_index - 0.5f);
     if (index < 32){
-        FragColor = texture(myTextureSampler[index], frag_TexCoord);
+        result = (ambience + diffusion + speculation) * vec3(texture(myTextureSampler[index], frag_TexCoord));
     }else{
-        FragColor = vec4(result, 1.0);
+        result = (ambience + diffusion + speculation) * vec3(frag_albedo);
     }
-
-
+    FragColor = vec4(result, 1.0);
 }

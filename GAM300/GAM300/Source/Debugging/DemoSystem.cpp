@@ -29,8 +29,8 @@ void DemoSystem::Init()
 	Handle<Entity>& entHandle = scene.AddEntity();
 	Entity& titty = entHandle.Get();
 	MeshRenderer& titrender = scene.AddComponent<MeshRenderer>(titty);
-	//titrender.MeshName = "Skull_textured";
-	titrender.MeshName = "Eyebot2";
+	titrender.MeshName = "Skull_textured";
+	titrender.AlbedoTexture = "TD_Checker_Base_Color";
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
 	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(1.f, 1.f, 1.f);
 

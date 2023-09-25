@@ -182,6 +182,10 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+	for (auto& [name, prop] : properties) {
+		std::fill_n(prop.textureIndex, EnitityInstanceLimit, 0.f);
+		std::fill_n(prop.texture, 32, 0.f);
+	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -643,12 +647,14 @@ unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
 	if (!id) {
 		return 33;
 	}
-	for (unsigned int iter = 0; iter < properties[MeshName].textureCount; ++iter) {
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount+1; ++iter) {
 		if (properties[MeshName].texture[iter] == 0) {
 			properties[MeshName].texture[iter] = id;
+			properties[MeshName].textureCount++;
 			return iter;
 		}
 		if (properties[MeshName].texture[iter] == id) {
+			properties[MeshName].textureCount++;
 			return iter;
 		}
 	}
