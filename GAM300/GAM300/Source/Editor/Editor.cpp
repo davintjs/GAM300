@@ -70,7 +70,7 @@ void EditorSystem::Update(float dt)
     //}
     EditorSystems::Update(dt);
 
-   /* bool demo = true;
+    /*bool demo = true;
     ImGui::ShowDemoWindow(&demo);*/
 
     ImGui::StyleColorsDark();

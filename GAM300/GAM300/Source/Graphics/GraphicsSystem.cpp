@@ -239,8 +239,7 @@ void GraphicsSystem::Update(float dt)
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
 
-
-		renderer.mr_Albedo = temp_AlbedoContainer[3];
+		/*renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];
 		renderer.mr_Diffuse = temp_DiffuseContainer[3];
 		renderer.mr_Shininess = temp_ShininessContainer[3];

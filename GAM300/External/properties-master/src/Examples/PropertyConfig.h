@@ -2,6 +2,7 @@
 #define PROPERTY_CONFIG_H
 
 #include <glm/glm.hpp>
+#include <imgui.h>
 
 using string_t = std::string;
 
@@ -53,6 +54,63 @@ public:
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec3() const {
         return glm::vec3(x, y, z);
+    }
+
+};
+
+
+
+class Vector4 {
+public:
+    
+    float w, x, y, z;
+
+    //Constructors
+    Vector4() : x(0.f), y(0.f), z(0.f), w(0.f) {}
+    Vector4(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
+    Vector4(float i) : w(i), x(i), y(i), z(i) {}
+
+    Vector4(Vector4& vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
+    Vector4(glm::vec4 vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
+
+    //Operator Overloads
+    Vector4& operator=(const Vector4& Vec4) {
+        w = Vec4.w;
+        x = Vec4.x;
+        y = Vec4.y;
+        z = Vec4.z;
+        return *this;
+    }
+
+    Vector4& operator=(const glm::vec4& glmVec4) {
+        w = glmVec4.w;
+        x = glmVec4.x;
+        y = glmVec4.y;
+        z = glmVec4.z;
+        return *this;
+    }
+
+    Vector4& operator=(const ImVec4& imvec4) {
+        w = imvec4.w;
+        x = imvec4.x;
+        y = imvec4.y;
+        z = imvec4.z;
+        return *this;
+    }
+
+    float& operator[](int id) {
+
+        //E_ASSERT((id < 0 || id > 2),  "Vector3 Subscript operator out of range!");
+
+        if (id == 0) return w;
+        if (id == 1) return x;
+        if (id == 2) return y;
+        if (id == 3) return z;
+    }
+
+    // Conversion operator from Vector3 to glm::vec3
+    operator glm::vec4() const {
+        return glm::vec4(w, x, y, z);
     }
 
 };
@@ -185,6 +243,7 @@ namespace property
             , size_t
             , uint32_t
             , Vector3
+            , Vector4
         >;
     
         //--------------------------------------------------------------------------------------------
