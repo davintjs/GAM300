@@ -18,15 +18,36 @@ void Framebuffer::init()
 	// Creating the color attachment
 	glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 	glBindTexture(GL_TEXTURE_2D, colorAttachment);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width,
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, // Tweaked This -> Euan
+	//	height, 0, GL_RGBA, GL_FLOAT, nullptr);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, // Sean
 		height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	/*
 	// Attaching color attachment onto framebuffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
 	// Creating the depth and stencil attachment
+
+	//glGenRenderbuffers(1, &depthAttachment);
+	//glBindRenderbuffer(GL_RENDERBUFFER, depthAttachment);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+
+	//GLuint stencilattachment;
+	//glGenRenderbuffers(1, &stencilattachment);
+	//glBindRenderbuffer(GL_RENDERBUFFER, stencilattachment);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_COMPONENTS, width, height);
+
+
+
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthAttachment);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilattachment);
+	*/
+
 	glCreateTextures(GL_TEXTURE_2D, 1, &depthAttachment);
 	glBindTexture(GL_TEXTURE_2D, depthAttachment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width,
@@ -57,12 +78,45 @@ void Framebuffer::init()
 
 	COPIUM_ASSERT(errorId != GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");*/
 
+
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+	
+
+
+
+	glGenFramebuffers(1, &hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+
+	// create floating point color buffer
+	glGenTextures(1, &colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorBuffer, 0);
+
+	// create depth buffer (renderbuffer)
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+	// attach buffers
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 }
 
 void Framebuffer::bind()
 {
 	glViewport(0, 0, width, height);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 }
 

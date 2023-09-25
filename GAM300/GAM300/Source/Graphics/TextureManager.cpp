@@ -64,7 +64,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
     GLenum Target = GL.translate(Texture.target());
 
-    GLuint TextureName = 0;
+    GLuint TextureName = 0; 
     glGenTextures(1, &TextureName);
     glBindTexture(Target, TextureName);
     glTexParameteri(Target, GL_TEXTURE_BASE_LEVEL, 0);
@@ -76,7 +76,15 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
 
     glm::tvec3<GLsizei> const Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
+    if ( gli::is_srgb(Texture.format()) )
+    {
+        std::cout << " SRGB\n";
+    }
+    else
+    {
+        std::cout << " RGB\n";
 
+    }
     switch (Texture.target())
     {
     case gli::TARGET_1D:

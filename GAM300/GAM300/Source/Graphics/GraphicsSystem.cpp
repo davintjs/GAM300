@@ -22,12 +22,7 @@
 //Model LightSource;
 
 Model AffectedByLight;
-
-//unsigned int testBoxbuffer;
-//Model testBox;
-
-//unsigned int entitySRTBuffer;
-//glm::mat4 entitySRT[EntityRenderLimit];
+bool haveTexture = false;
 Model Line;
 
 std::map<std::string, InstanceProperties> properties;
@@ -41,7 +36,7 @@ std::vector<Ray3D> Ray_Container;
 
 // Naive Solution for now
 
-//std::vector <Materials> temp_MaterialContainer;
+std::vector <Materials> temp_MaterialContainer;
 
 std::vector <glm::vec4> temp_AlbedoContainer;
 std::vector <glm::vec4> temp_SpecularContainer;
@@ -69,9 +64,112 @@ LightProperties Lighting_Source;
 GLuint Skybox_Tex;
 Model SkyBox_Model;
 
+GLSLShader HDR_Shader;
+bool hdr = false;
+float exposure = 0.1f;
+
+// renderQuad() renders a 1x1 XY quad in NDC
+// -----------------------------------------
+unsigned int quadVAO = 0;
+unsigned int quadVBO;
+
+void renderQuad()
+{
+	if (quadVAO == 0)
+	{
+		float quadVertices[] = {
+			// positions        // texture Coords
+			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		// setup plane VAO
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
+}
+
+void HDR_Shader_init()
+{
+	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
+	std::vector<std::pair<GLenum, std::string>> shdr_files;
+	// Vertex Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/HDR.vert"));
+
+	// Fragment Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/HDR.frag"));
+
+	std::cout << "HDR SHADER\n";
+	HDR_Shader.CompileLinkValidate(shdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == HDR_Shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate shader programs\n";
+		sstr << HDR_Shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+
+
+//unsigned int hdrFBO;
+//unsigned int rboDepth;
+
+
+
+
+unsigned int ReturnTextureIdx(std::string MeshName,GLuint id);
 
 void GraphicsSystem::Init()
 {
+	
+	//glGenFramebuffers(1, &hdrFBO);
+	//// create floating point color buffer
+	//unsigned int colorBuffer;
+	//glGenTextures(1, &colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//// create depth buffer (renderbuffer)
+	//glGenRenderbuffers(1, &rboDepth);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+	//// attach buffers
+	//glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	std::cout << "Framebuffer not complete!" << std::endl;
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+
+
+
+
+
 	// Theophelia make a function
 	/**/std::string left = "Assets/Resources/left.dds";
 	std::string back = "Assets/Resources/back.dds";
@@ -105,7 +203,6 @@ void GraphicsSystem::Init()
 				0,
 				GLsizei(Texture.size()),
 				Texture.data());
-
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -116,21 +213,6 @@ void GraphicsSystem::Init()
 	
 	SkyBox_Model.SkyBoxinit();
 	SkyBox_Model.setup_skybox_shader();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
@@ -158,12 +240,36 @@ void GraphicsSystem::Init()
 		std::exit(EXIT_FAILURE);
 	}
 
-
+	/*Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	unsigned int textureCount = 0;
+	bool skip = false;
+	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>()) {
+		Entity& entity = currentScene.GetEntity(renderer);
+		std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
+		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
+		for (int j = 0; j <= textureCount; ++j) {
+			if (properties[renderer.MeshName].texture[j] == texID) {
+				skip = true;
+			}
+		}
+		if (skip) {
+			skip = false;
+			continue;
+		}
+		if (textureCount >= 31) {
+			PRINT("TOO MANY TEXTURE IN THIS GEOM!!");
+			break;
+		}
+		properties[renderer.MeshName].texture[textureCount++] = texID;
+	}*/
 
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
 	//INIT GRAPHICS HERE
 	
+	HDR_Shader_init();
+
+
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	
 
 	// Euan RayCasting Testing
@@ -183,6 +289,10 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+	for (auto& [name, prop] : properties) {
+		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
+		std::fill_n(prop.texture, 32, 0.f);
+	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	
@@ -236,8 +346,26 @@ void GraphicsSystem::Update(float dt)
 
 		int index = t_Mesh->index;
 		
-		Entity& entity = currentScene.Get<Entity>(renderer);
-		Transform& transform = currentScene.Get<Transform>(entity);
+		Entity& entity = currentScene.GetEntity(renderer);
+		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		//InstanceProperties* currentProp = &properties[renderer.MeshName];
+
+		GLuint textureID = 0;
+		GLuint normalMapID = 0;
+		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
+		// use bool to see if texture exist instead...
+		if (renderer.AlbedoTexture != "") {
+			textureID = 
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
+		}
+		if (renderer.NormalMap != "") {
+			normalMapID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
+		}
+		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
+		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
+
+		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];
@@ -245,9 +373,6 @@ void GraphicsSystem::Update(float dt)
 		renderer.mr_Shininess = temp_ShininessContainer[3];
 		renderer.mr_Specular = temp_SpecularContainer[3];
 		
-
-
-		//properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
 		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
@@ -267,10 +392,34 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
+
+			/*if (currentScene.HasComponent<Texture>(entity)) {
+				for (int j = 0; j <= properties[newName].textureCount; ++j) {
+					if (properties[newName].texture[j] == texID) {
+						haveTexture = true;
+					}
+				}
+				if (!haveTexture) {
+					if (properties[newName].textureCount < 32) {
+						properties[newName].texture[properties[newName].textureCount++] = texID;
+					}
+				}
+			}*/
+			/*for (int j = 0; j <= properties[newName].textureCount; ++j) {
+				if (properties[newName].texture[j] == texID) {
+					haveTexture = true;
+				}
+			}
+			if (!haveTexture) {
+				if (properties[newName].textureCount < 32) {
+					properties[newName].texture[properties[newName].textureCount++] = texID;
+				}
+			}*/
+
+			// properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
 			//std::cout << newName << "\n";
 
 			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			//properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
 			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
 			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
 			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
@@ -302,8 +451,8 @@ void GraphicsSystem::Update(float dt)
 			glm::vec3 scale;
 			glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
 
-			glm::vec3 mins = scale * glm::vec3(-1.f, -1.f, -1.f);
-			glm::vec3 maxs = scale * glm::vec3(1.f, 1.f, 1.f);
+			glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
+			glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
 			glm::mat4 rotMat = glm::toMat4(rot);
 
 			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
@@ -334,25 +483,9 @@ void GraphicsSystem::Update(float dt)
 
 
 	// Bean: For binding framebuffer
-	EditorCam.getFramebuffer().bind();
+	//EditorCam.getFramebuffer().bind();
 
 	EditorCam.Update(dt);
-
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_G))
-	{
-		SwappingColorSpace = !SwappingColorSpace;
-		if (SwappingColorSpace)
-		{
-			glEnable(GL_FRAMEBUFFER_SRGB);
-		}
-		else
-		{
-			glDisable(GL_FRAMEBUFFER_SRGB);
-		}
-	}
-	
-
 	// Dont delete this -> To run on lab computers
 	
 	/*GLint maxVertexAttribs;
@@ -364,14 +497,15 @@ void GraphicsSystem::Update(float dt)
 
 	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
 	
-	//std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
+	/*
+	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
 
-	//Materials materialsArray[3]; // Create an array of 3 Materials
-	//// Calculate the size of the array
-	//size_t sizeOfArray = sizeof(materialsArray);
+	Materials materialsArray[3]; // Create an array of 3 Materials
+	// Calculate the size of the array
+	size_t sizeOfArray = sizeof(materialsArray);
 
-	//std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
-	
+	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
+	*/
 		
 	
 
@@ -397,13 +531,64 @@ void GraphicsSystem::Update(float dt)
 	}
 	*/
 
+	glViewport(0, 0, 1600, 900);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
+	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
 
+	EditorCam.getFramebuffer().unbind();
+	
+	EditorCam.getFramebuffer().bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
 	// Bean: For unbinding framebuffer
+	
+	HDR_Shader.Use();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+
+
+
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+	//{
+	//	hdr = !hdr;
+	//}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
+	//{
+	//	if (exposure == 0.1)
+	//	{
+	//		exposure = 5.0;
+	//	}
+	//	else
+	//	{
+	//		exposure =  0.1;
+	//	}
+	//}
+
+	//GLint uniform1 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+
+	//glUniform1i(uniform1, hdr);
+
+	//GLint uniform2 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
+
+	//glUniform1f(uniform2, exposure);
+
+	renderQuad();
 	EditorCam.getFramebuffer().unbind();
+
+	//std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
+
+	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+	// -------------------------------------------------------------------------------
 	//glDisable(GL_FRAMEBUFFER_SRGB);
+
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
@@ -435,17 +620,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
 
 
-	// Material
-	GLint uniform6 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Albedos");
-	GLint uniform7 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Specular");
-	GLint uniform8 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Diffuse");
-	GLint uniform9 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Ambient");
-	GLint uniform10 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "Shininess");
+
 
 
 
@@ -466,17 +641,13 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(EditorCam.GetCameraPosition()));
 
-	// Material
-	glUniform4fv(uniform6, 1,
-		glm::value_ptr(Albe));
-	glUniform4fv(uniform7, 1,
-		glm::value_ptr(Spec));
-	glUniform4fv(uniform8, 1,
-		glm::value_ptr(Diff));
-	glUniform4fv(uniform9, 1,
-		glm::value_ptr(Ambi));
-	glUniform1f(uniform10,
-		Shin);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,TextureManager.GetTexture(
+		AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color")));
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(
+		AssetManager::Instance().GetAssetGUID("TD_Checker_Normal_OpenGL")));
 
 
 
@@ -502,6 +673,12 @@ void GraphicsSystem::Draw() {
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
+		
+		/*for (size_t i = 0; i < 32; i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, texIndex[i]);
+		}*/
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -530,14 +707,19 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
+		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.textureIndex[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 		
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
-
+		for (int i = 0; i < 32; ++i) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
+		}
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 		prop.iter = 0;
@@ -593,6 +775,25 @@ bool GraphicsSystem::Raycasting(Ray3D& _ray)
 
 	return false;
 }
+
+unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
+	if (!id) {
+		return 33;
+	}
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount+1; ++iter) {
+		if (properties[MeshName].texture[iter] == 0) {
+			properties[MeshName].texture[iter] = id;
+			properties[MeshName].textureCount++;
+			return iter;
+		}
+		if (properties[MeshName].texture[iter] == id) {
+			properties[MeshName].textureCount++;
+			return iter;
+		}
+	}
+	return 33;
+}
+
 
 void GraphicsSystem::Exit()
 {

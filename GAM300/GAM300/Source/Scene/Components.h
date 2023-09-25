@@ -309,6 +309,8 @@ property_begin_name(Script, "Script") {
 struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
+	std::string AlbedoTexture = "";
+	std::string NormalMap = "";
 	//Materials mr_Material;
 
 	// Materials stuff below here
