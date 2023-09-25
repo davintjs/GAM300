@@ -299,6 +299,9 @@ public:
 	bool IsScript(MonoClass* monoClass);
 
 	void ThreadWork();
+
+	//Updates by setting field values back into C#
+	void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -411,28 +414,4 @@ public:
 
 	std::atomic_bool ran;
 };
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function for when a field reference is set
-
-	\param pEvent
-		ptr to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//template<typename T>
-	//void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
-	//{
-	//	MonoObject* mScript = ReflectComponent(pEvent->script);
-	//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-	//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-	//	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-	//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + " COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-	//	SetFieldReference<T>(mScript, mClassField,pEvent->reference);
-	//}
 #endif // !SCRIPTING_SYSTEM_H

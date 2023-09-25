@@ -38,14 +38,42 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/EventsManager.h"
 
 
-template <typename T>
-using Table = std::unordered_map<Engine::UUID, T*>;
+using Handle = Object;
+
+using SingleObjectTypes = decltype(TemplatePack<Entity>::Concatenate(SingleComponentTypes()));
 
 template <typename T>
-using MultiTable = std::unordered_map<Engine::UUID, Table<T>>;
+struct HandleHash {
+	std::size_t operator()(const Handle& p) const {
+		if constexpr (SingleObjectTypes::Has<T>())
+		{
+			return p.EUID();
+		}
+		else
+		{
+			std::size_t h1 = p.EUID();
+			std::size_t h2 = p.UUID();
+			return h1 ^ h2;
+		}
+	}
+};
 
-//UUIDs are shared between components and entities
-//For multicomponents, they will have a secondary UUID for linkage
+template <typename T>
+struct HandleEqual {
+	bool operator()(const Handle& lhs, const Handle& rhs) const {
+		if constexpr (SingleObjectTypes::Has<T>())
+		{
+			return lhs.EUID() == rhs.EUID();
+		}
+		else
+		{
+			return lhs.EUID() == rhs.EUID() && lhs.UUID() == rhs.UUID();
+		}
+	}
+};
+
+template <typename T>
+using Table = std::unordered_map<Handle, T*,HandleHash<T>,HandleEqual<T>>;
 
 template<typename... Ts>
 struct HandlesTable
@@ -53,10 +81,10 @@ struct HandlesTable
 	constexpr HandlesTable(TemplatePack<Ts...>) {}
 	HandlesTable() = default;
 	template <typename T1>
-	bool Has(Engine::UUID uuid)
+	bool Has(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
 		auto& entries = std::get<Table<T1>>(tables);
-		if (entries.find(uuid) == entries.end())
+		if (entries.find(Object{euid,uuid}) == entries.end())
 			return false;
 		return true;
 	}
@@ -64,86 +92,34 @@ struct HandlesTable
 	template <typename T1>
 	bool Has(T1& object)
 	{
-		auto& entries = std::get<Table<T1>>(tables);
-		if (entries.find(object.uuid) == entries.end())
-			return false;
-		return true;
+		return Has<T1>(object.EUID(),object.UUID());
 	}
 
 	template <typename T1>
-	constexpr T1& Get(Engine::UUID uuid)
+	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
-		return *std::get<Table<T1>>(tables)[uuid];
+		return *std::get<Table<T1>>(tables)[{euid,uuid}];
 	}
 
 	template <typename T1>
-	constexpr void Remove(Engine::UUID uuid)
+	constexpr void Remove(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
 		auto& entries = std::get<Table<T1>>(tables);
-		entries.erase(uuid);
+		entries.erase(Handle{euid,uuid});
 	}
 
 	template <typename T1,typename... Args>
-	constexpr T1* emplace(Engine::UUID uuid,T1* object)
+	constexpr T1* emplace(T1* object)
 	{
 		auto& table = std::get<Table<T1>>(tables);
-		auto pair = table.emplace(std::make_pair(uuid, object));
+		auto pair = table.emplace(std::make_pair(Handle{object->EUID(),object->UUID()}, object));
 		return pair.first->second;
 	}
-
 private:
 	std::tuple<Table<Ts>...> tables;
 };
 
-template<typename... Ts>
-struct MultiHandlesTable
-{
-
-	constexpr MultiHandlesTable(TemplatePack<Ts...>) {}
-	MultiHandlesTable() = default;
-	template <typename T1>
-	bool HasHandle(Engine::UUID uuid, Engine::UUID sub_uuid)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		auto it = entries.find(uuid);
-		if (it == entries.end())
-			return false;
-		if (it->find(sub_uuid) == it->end())
-			return false;
-		return true;
-	}
-
-	template <typename T1>
-	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid)
-	{
-		return std::get<MultiTable<T1>>(tables)[euid][uuid];
-	}
-
-	template <typename T1>
-	constexpr void erase(Engine::UUID euid, Engine::UUID uuid)
-	{
-		//auto& entries = std::get<MultiTable<T1>>(tables);
-		//entries.erase(uuid);
-	}
-
-	//template <typename T1, typename... Args>
-	//constexpr T1& emplace(Engine::UUID uuid, T1& object)
-	//{
-	//	auto& table = std::get<MultiTable<T1>>(tables);
-	//	auto pair = table.emplace(std::make_pair(uuid, Handle<T1>(uuid, &object)));
-	//	return pair.first->second;
-	//}
-
-private:
-	std::tuple<MultiTable<Ts>...> tables;
-};
-
-
-
-using SingleObjects = decltype(AllComponentTypes::Concatenate(TemplatePack<Entity>()));
-using SingleHandles = decltype(HandlesTable(SingleObjects()));
-using MultiHandles = decltype(MultiHandlesTable(MultiComponentTypes()));
-
+using Handles = decltype(HandlesTable(AllObjectTypes()));
 
 using GetType = decltype(GetTypeGroup(AllObjectTypes()));
 
@@ -184,8 +160,7 @@ private:
 	MultiComponentsArrays multiComponentsArrays;
 	EntitiesPtrArray entitiesDeletionBuffer;
 	ComponentsBufferArray componentsDeletionBuffer;
-	SingleHandles singleHandles;
-	MultiHandles multiHandles;
+	Handles handles;
 
 public:
 
@@ -198,14 +173,14 @@ public:
 	Scene& operator=(Scene&) = delete;
 
 	template<typename T>
-	T& Get(Engine::UUID euid)
+	T& Get(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
 		E_ASSERT
 		(
-			singleHandles.Has<T>(euid),
-			"Entiy euid: ", euid, " of ", typeid(T).name() + strlen("struct "), " doesn't exist in this scene"
+			handles.Has<T>(euid),
+			"Entity euid: ", euid, " of ", typeid(T).name() + strlen("struct "), " doesn't exist in this scene"
 		);
-		return singleHandles.Get<T>(euid);
+		return handles.Get<T>(euid,uuid);
 	}
 
 	template<typename T, typename Owner>
@@ -218,7 +193,7 @@ public:
 		//	"EUID: ", object.EUID(), " of ", typeid(T).name() + strlen("struct "),
 		//	" doesn't exist in this scene"
 		//);
-		return singleHandles.Get<T>(object.euid);
+		return handles.Get<T>(object.euid);
 	}
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
@@ -432,7 +407,7 @@ public:
 			object->euid = euid;
 			object->uuid = arr.GetDenseIndex(*object);
 			arr.SetActive(object->uuid);
-			singleHandles.emplace(euid, object);
+			handles.emplace(object);
 			Add<Transform>(*object);
 			Tag* tag = Add<Tag>(*object);
 			tag->name = "New GameObject(";
@@ -446,8 +421,7 @@ public:
 			object = &arr.emplace(entity.uuid);
 			object->euid = euid;
 			object->uuid = uuid;
-			singleHandles.emplace(euid, object);
-			PRINT(GetType::E<T>(), '\n');
+			handles.emplace(object);
 			entity.hasComponentsBitset.set(GetType::E<T>(), true);
 			arr.SetActive(*object);
 		}

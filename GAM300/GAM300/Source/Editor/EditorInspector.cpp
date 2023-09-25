@@ -167,14 +167,61 @@ void DisplayType(const char* name, Vector2& val)
     }
 }
 
+template <typename T>
+void DisplayType(const char* name, T*& container)
+{
+    if constexpr (AllObjectTypes::Has<T>())
+    {
 
+        static std::string btnName;
+        Object& object = *reinterpret_cast<Object*>(container);
+        if (object.EUID() != 0)
+        {
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(object.EUID()).name;
+        }
+        else
+        {
+            btnName = "None";
+        }
+        btnName += "("; 
+        if constexpr (std::is_same_v<T,Entity>)
+        {
+            btnName += "GameObject";
+        }
+        else
+        {
+            btnName += GetType::Name<T>();
+        }
+        btnName += ")";
+        ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Object");
+            if (payload)
+            {
+                container = (T*)(*reinterpret_cast<void**>(payload->Data));
+            }
+            ImGui::EndDragDropTarget();
+        }
+    }
+    //Store uuid;
+}
 
 template <typename T, typename... Ts>
 void DisplayField(const char* name, Field& field)
 {
     if (GetFieldType::E<T>() == field.fType)
     {
-        DisplayType(name,field.Get<T>());
+        if (field.fType < AllObjectTypes::Size())
+        {
+            T* value = reinterpret_cast<T*>(field.data);
+            DisplayType(name,value);
+        }
+        else
+        {
+            DisplayType(name, field.Get<T>());
+        }
         return;
     }
     if constexpr (sizeof...(Ts) != 0)
@@ -191,14 +238,7 @@ void DisplayField(const char* name, Field& field, TemplatePack<T,Ts...>)
 
 void DisplayType(const char* name, Field& val)
 {
-    if (val.fType < AllObjectTypes::Size())
-    {
-        //Display Drag n drop
-    }
-    else
-    {
-        DisplayField(name,val,FieldTypes());
-    }
+    DisplayField(name, val, AllFieldTypes());
 }
 
 //void DisplayType(const char* name, AABB& val)
@@ -502,7 +542,7 @@ void Display_Property(T& comp) {
 
 void DisplayComponent(Script& script)
 {
-    for (auto pair : script.fields)
+    for (auto& pair : script.fields)
     {
         const char* name = pair.first.c_str();
         Field& field{ pair.second };
@@ -516,11 +556,15 @@ void DisplayComponent(Script& script)
             else
             {
                 Display(name, field);
+                ScriptSetFieldEvent e{ script,name };
+                EVENTS.Publish(&e);
             }
         }
         else
         {
             Display(name, field);
+            ScriptSetFieldEvent e{ script,name };
+            EVENTS.Publish(&e);
         }
     }
 }
@@ -617,20 +661,7 @@ void DisplayComponentHelper(T& component)
 
     if (windowopen)
     {
-        /*if (ImGui::BeginDragDropSource())
-        {
-            void* container = &component;
-            if constexpr (std::is_same<T, Script>())
-            {
-                ImGui::SetDragDropPayload(component.Name().c_str(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-            else
-            {
-                ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-        }*/
+
 
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp

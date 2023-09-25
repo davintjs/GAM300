@@ -46,9 +46,7 @@ namespace
 	MonoDomain* mAppDomain{ nullptr };		//APP DOMAIN
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
-	MonoClass* mGameObject{ nullptr };
 	MonoClass* mScript{ nullptr };
-	MonoClass* mScriptableObject{};
 }
 
 namespace Utils
@@ -104,10 +102,12 @@ namespace Utils
 			if (mono_class_get_parent(mono_class_from_mono_type(monoType)) == mScript)
 				return GetType::E<Script>();
 			auto iter{ monoComponentToType.find(monoType) };
-			if (iter == monoComponentToType.end())
-				return AllFieldTypes::Size();
-			else
-				return iter->second;
+			for (auto& pair : monoComponentToType)
+			{
+				if (mono_type_get_name(pair.first) == typeName)
+					return pair.second;
+			}
+			return AllFieldTypes::Size();
 		}
 		return (size_t)it->second;
 	}
@@ -198,6 +198,7 @@ void ScriptingSystem::Init()
 	//SubscribeComponentBasedCallbacks(ComponentTypes());
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
@@ -245,10 +246,6 @@ void ScriptingSystem::UpdateScriptClasses()
 		{
 			scriptClassMap[name] = ScriptClass{ name,_class };
 			reflectionMap[mono_class_get_type(_class)] = GetType::E<Script>();
-		}
-		else if(mono_class_get_parent(_class) == mScriptableObject)
-		{
-			//scriptableObjectClassMap[name] = ScriptClass{ name,_class };
 		}
 		else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 		{
@@ -302,11 +299,6 @@ void ScriptingSystem::UnloadAppDomain()
 				scriptClassMap[name] = ScriptClass{ name,_class };
 				reflectionMap[mono_class_get_type(_class)] = GetType::E<Script>();
 
-			}
-			else if (mono_class_get_parent(_class) == mScriptableObject)
-			{
-				vTable = mono_class_vtable(mAppDomain, _class);
-				//scriptableObjectClassMap[name] = ScriptClass{ name,_class };
 			}
 			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
 			{
@@ -437,18 +429,15 @@ void ScriptingSystem::SwapDll()
 		mono_gchandle_free(hand);
 	}
 	gcHandles.clear();
-	RegisterScriptWrappers();
 	mComponents.clear();
-	//CHANGE THIS to be outside, only load assembly should be in the thread
 	UnloadAppDomain();
 	CreateAppDomain();
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
-	mGameObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "GameObject");
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
-	mScriptableObject = mono_class_from_name(mAssemblyImage, "BeanFactory", "ScriptableObject");
-	UpdateScriptClasses();
+	RegisterScriptWrappers();
 	RegisterComponents();
+	UpdateScriptClasses();
 	ReflectAll();
 	compilingState = CompilingState::Wait;
 }
@@ -522,23 +511,22 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 	return;
 }
 
-void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value)
+void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClassField, Field& field, const void* value)
 {
-	//THIS FUNCTION ONLY WORKS FOR BASIC TYPES
 	field = value;
 	//If its a string, its a C# string so create one
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
 	if (field.fType == GetFieldType::E<std::string>())
 	{
 		MonoString* mono_string = CreateMonoString(reinterpret_cast<const char*>(value));
-		mono_field_set_value(instance, mClassFiend, mono_string);
+		mono_field_set_value(instance, mClassField, mono_string);
 		return;
 	}
 	//else if (field.fType == GetType::E<Script>())
 	//{
 	//	mono_field_set_value(instance, mClassFiend, ReflectScript(*reference));
 	//}
-	mono_field_set_value(instance, mClassFiend, (void*)value);
+	mono_field_set_value(instance, mClassField, (void*)value);
 	return;
 }
 
@@ -614,8 +602,6 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 			{
 				fieldSize = TEXT_BUFFER_SIZE;
 			}
-
-
 			//Field has not been created onto script yet
 			if (nameField == script.fields.end())
 			{
@@ -625,7 +611,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 					newField.typeName = typeName.substr(offset + 1);
 				else
 					newField.typeName = typeName;
-				newField = 0;
+				memset(newField.data,0,newField.GetSize());
 				script.fields[fieldName] = std::move(newField);
 			}
 			//Field exists
@@ -703,15 +689,16 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 //	GetFieldValue(mScript,mClassField,pEvent->script.fieldDataReferences[pEvent->fieldName],pEvent->container);
 //}
 //
-//void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
-//{
-//	MonoObject* mScript = ReflectComponent(pEvent->script);
-//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-//	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-//	SetFieldValue(mScript, mClassField, pEvent->script.fieldDataReferences[pEvent->fieldName], pEvent->data);
-//}
+void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
+{
+	MonoObject* mScript = ReflectScript(pEvent->script);
+	E_ASSERT(mScript,"MONO OBJECT OF ",pEvent->script.name,"NOT LOADED");
+	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
+	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
+	E_ASSERT(mClassField, "FIELD ",pEvent->fieldName,"COULD NOT BE FOUND IN SCRIPT ",pEvent->script.name);
+	Field& field = pEvent->script.fields[pEvent->fieldName];
+	SetFieldValue(mScript, mClassField, field, field.data);
+}
 //
 //
 //void ScriptingSystem::CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent)

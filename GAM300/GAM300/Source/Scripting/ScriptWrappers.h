@@ -1063,11 +1063,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void RegisterComponent()
 	{
 		std::string typeName = "BeanFactory.";
-		typeName += GetType::Name<T>();
+		if constexpr (std::is_same_v<Entity, T>)
+		{
+			typeName += "GameObject";
+		}
+		else
+		{
+			typeName += GetType::Name<T>();
+		}
 		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
 		if (managedType != nullptr)
 		{
-			E_ASSERT(managedType, "Could not find component type");
 			monoComponentToType.emplace(managedType, GetType::E<T>());
 		}
 		if constexpr (sizeof...(Ts) != 0)
@@ -1076,16 +1082,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
-	template<typename... Component>
-	static void RegisterComponent(TemplatePack<Component...>)
+	template<typename... T>
+	static void RegisterComponent(TemplatePack<T...>)
 	{
-		RegisterComponent<Component...>();
+		RegisterComponent<T...>();
 	}
 
 	static void RegisterComponents()
 	{
 		monoComponentToType.clear();
-		RegisterComponent(AllComponentTypes());
+		RegisterComponent(AllObjectTypes());
 	}
 
 	/*******************************************************************************

@@ -19,6 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/UUID.h"
 struct Entity;
 struct Scene;
+struct Script;
 
 struct IEvent
 {
@@ -124,21 +125,14 @@ struct ObjectCreatedEvent : IEvent
 	T* pObject;
 };
 
-//struct GetCurrentSceneEvent
-//{
-//	GetCurrentSceneEvent(Scene& _scene) :scene{ _scene } {};
-//	Scene& scene;
-//};
+struct ScriptSetFieldEvent : IEvent
+{
+	ScriptSetFieldEvent(Script& _script, const char* _fieldName) : script{ _script }, fieldName{ _fieldName } {}
+	Script& script;
+	const char* fieldName;
+};
 
-//template <typename T>
-//struct ComponentAddEvent : IEvent
-//{
-//	ComponentAddEvent(const Entity& _entity, T*& _componentContainer, UUID _uuid = UUID()) :
-//		entity{ _entity }, componentContainer{ _componentContainer }, uuid{_uuid} {}
-//	Entity& entity;
-//	T*& componentContainer;
-//	UUID uuid;
-//};
+
 //
 //template <typename T>
 //struct ComponentDeleteEvent : IEvent
