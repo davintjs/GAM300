@@ -9,7 +9,7 @@ layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
 layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
-layout (location = 15) in float texture_index;
+layout (location = 15) in vec2 texture_index;
 
 
 out vec4 FragColor;
@@ -55,7 +55,8 @@ void main()
         
     vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
     
-    int index = int(texture_index - 0.5f);
+    // int index = int(texture_index.x + 0.5f); // .x is texture
+    int index = int(texture_index.y + 0.5f);    // .y is normal map
     if (index < 32){
         result = (ambience + diffusion + speculation) * vec3(texture(myTextureSampler[index], frag_TexCoord));
     }else{

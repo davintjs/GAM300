@@ -497,7 +497,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);
-    glVertexAttribPointer(15, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribPointer(15, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
     glVertexAttribDivisor(15, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

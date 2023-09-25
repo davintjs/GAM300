@@ -14,7 +14,7 @@ layout (location = 11) in vec4 Specular;
 layout (location = 12) in vec4 Diffuse;
 layout (location = 13) in vec4 Ambient;
 layout (location = 14) in float Shininess;
-layout (location = 15) in float texture_index;
+layout (location = 15) in vec2 texture_index;
 
 
 
@@ -31,7 +31,7 @@ layout (location = 11) out vec4 frag_specular;
 layout (location = 12) out vec4 frag_diffuse;
 layout (location = 13) out vec4 frag_ambient;
 layout (location = 14) out float frag_shininess;
-layout (location = 15) out float frag_texture_index;
+layout (location = 15) out vec2 frag_texture_index;
 
 
 

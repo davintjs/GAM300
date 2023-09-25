@@ -183,7 +183,7 @@ void GraphicsSystem::Init()
 void GraphicsSystem::Update(float dt)
 {
 	for (auto& [name, prop] : properties) {
-		std::fill_n(prop.textureIndex, EnitityInstanceLimit, 0.f);
+		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 		std::fill_n(prop.texture, 32, 0.f);
 	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
@@ -246,14 +246,21 @@ void GraphicsSystem::Update(float dt)
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
 		GLuint textureID = 0;
+		GLuint normalMapID = 0;
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
 			textureID = 
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
+		if (renderer.NormalMap != "") {
+			normalMapID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
+		}
+		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
+		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
 
-		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = float(ReturnTextureIdx(renderer.MeshName, textureID));
+		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];

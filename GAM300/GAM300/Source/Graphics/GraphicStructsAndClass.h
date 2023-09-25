@@ -74,8 +74,7 @@ struct InstanceProperties
 	float Shininess[EnitityInstanceLimit];
 
 	unsigned int textureIndexBuffer;
-	float textureIndex[EnitityInstanceLimit];
-
+	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
 
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
