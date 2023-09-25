@@ -39,7 +39,7 @@ void Display(const char* name, T& val);
 template <typename T>
 void DisplayType(const char* name, T& val)
 {
-    PRINT(name," ", typeid(T).name(), '\n');
+    //PRINT(name," ", typeid(T).name(), '\n');
 }
 
 
@@ -628,7 +628,7 @@ void DisplayComponentHelper(T& component)
     else
     {
         //This means T is not a component
-        PRINT(typeid(T).name());
+        //PRINT(typeid(T).name());
     }
     bool windowopen = ImGui::CollapsingHeader(name.c_str(), nodeFlags);
 

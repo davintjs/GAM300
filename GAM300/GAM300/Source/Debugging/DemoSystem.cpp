@@ -25,24 +25,21 @@ void DemoSystem::Init()
 	EVENTS.Publish(&createScene);
 
 	Scene& scene = *createScene.scene;
-
-	Handle<Entity>& entHandle = scene.AddEntity();
-	Entity& titty = entHandle.Get();
-	MeshRenderer& titrender = scene.AddComponent<MeshRenderer>(titty);
+	Entity& titty = *scene.Add<Entity>();
+	MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
 	titrender.MeshName = "Skull_textured";
 	titrender.AlbedoTexture = "TD_Checker_Base_Color";
 	titrender.NormalMap = "TD_Checker_Normal_OpenGL";
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(150.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(1.f, 1.f, 1.f);
+	scene.Get<Transform>(titty).translation = Vector3(150.f, 100.f, 0.f);
+	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 
-	Handle<Entity>& entHandle2 = scene.AddEntity();
-	Entity& titty2 = entHandle2.Get();
-	MeshRenderer& titrender2 = scene.AddComponent<MeshRenderer>(titty2);
+	Entity& titty2 = *scene.Add<Entity>();
+	MeshRenderer& titrender2 = *scene.Add<MeshRenderer>(titty2);
 	titrender2.MeshName = "Skull_textured";
 	titrender2.AlbedoTexture = "TD_Checker_Base_Color";
 	titrender2.NormalMap = "";
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).translation = Vector3(-150.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty2.denseIndex).scale = Vector3(1.f, 1.f, 1.f);
+	scene.Get<Transform>(titty).translation = Vector3(-150.f, 100.f, 0.f);
+	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 
 	// test instance rendering
 	for (int i = 0; i < 5; ++i)

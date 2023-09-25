@@ -310,8 +310,8 @@ void GraphicsSystem::Update(float dt)
 
 		int index = t_Mesh->index;
 		
-		Entity& entity = currentScene.GetEntity(renderer);
-		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		Entity& entity = currentScene.Get<Entity>(renderer);
+		Transform& transform = currentScene.Get<Transform>(entity);
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
 		GLuint textureID = 0;
