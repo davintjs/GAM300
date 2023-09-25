@@ -138,7 +138,7 @@ if(Tex_index<32)
     vec3 reflectDir = reflect(-lightDir, norm);  
 
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0); // look at basic lighting for the 32
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), frag_shininess); // look at basic lighting for the 32
 
 //    float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
     vec3 speculation = (vec3(frag_specular) * spec) ; 
@@ -189,7 +189,7 @@ if(NM_index < 32)
  //    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
      vec3 reflectDir = reflect(-lightDir, normal);
      vec3 halfwayDir = normalize(lightDir + viewDir);  
-     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+     float spec = pow(max(dot(normal, halfwayDir), 0.0), frag_shininess);
 
 //     float spec = pow(max(dot(normal, halfwayDir), 0.0), frag_shininess);
 ////     float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
