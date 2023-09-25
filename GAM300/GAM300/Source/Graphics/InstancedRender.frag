@@ -58,7 +58,49 @@ void main()
     float gamma = 2.2;
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
-     FragColor = vec4(frag_albedo);
+
+
+//     FragColor = vec4(frag_albedo);
+
+ vec3 colour = vec3(frag_albedo);
+    
+    // Initial   
+    //    FragColor = vec4(lightColor * objectColor, 1.0);
+
+    // ambient lighting
+    // float ambientStrength = 0.1;
+//   vec3 ambience = vec3(frag_ambient) * colour;
+    vec3 ambience = vec3(frag_ambient) * colour;
+//    vec3 result = ambient * objectColor;
+//    FragColor = vec4(result, 1.0);
+
+    // diffuse 
+   vec3 norm = normalize(Normal);
+   vec3 lightDir = normalize(lightPos - FragmentPos);
+   float diff = max(dot(norm, lightDir), 0.0);
+   vec3 diffusion = (diff * colour) * vec3(frag_diffuse);
+//
+//    vec3 result = (ambient + diffuse) * objectColor;
+//    FragColor = vec4(result, 1.0);
+//
+    // specular
+    vec3 viewDir = normalize(camPos - FragmentPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), frag_shininess); // look at basic lighting for the 32
+
+//    float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
+    vec3 speculation = (vec3(frag_specular) * spec) ; 
+    vec3 result = (ambience + diffusion + speculation) ;
+//    result = (ambience + diffusion + speculation) * vec3(frag_albedo);
+    FragColor = vec4(result, 1.0);
+
+    FragColor = vec4(result, 1.0);
+
+
+
+
 
 if(Tex_index<32)
 {
@@ -71,15 +113,14 @@ if(Tex_index<32)
     }
 
     vec3 colour = vec3(pow(texture(myTextureSampler[Tex_index], Tex_Coord).rgb, vec3(gamma)));
-
+    
     // Initial   
     //    FragColor = vec4(lightColor * objectColor, 1.0);
 
     // ambient lighting
     // float ambientStrength = 0.1;
-//   vec3 ambience = vec3(frag_ambient) * lightColor;
-   vec3 ambience = vec3(frag_ambient) * colour;
-//   vec3 ambience = 0.1f * ;
+//   vec3 ambience = vec3(frag_ambient) * colour;
+    vec3 ambience = vec3(frag_ambient) * 0;
 //    vec3 result = ambient * objectColor;
 //    FragColor = vec4(result, 1.0);
 
@@ -87,7 +128,7 @@ if(Tex_index<32)
    vec3 norm = normalize(Normal);
    vec3 lightDir = normalize(lightPos - FragmentPos);
    float diff = max(dot(norm, lightDir), 0.0);
-   vec3 diffusion = lightColor * (diff * vec3(frag_diffuse));
+   vec3 diffusion = (diff * colour);
 //
 //    vec3 result = (ambient + diffuse) * objectColor;
 //    FragColor = vec4(result, 1.0);
@@ -95,12 +136,16 @@ if(Tex_index<32)
     // specular
     vec3 viewDir = normalize(camPos - FragmentPos);
     vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
-    vec3 speculation = lightColor * (vec3(frag_specular) * spec) ;  
-        
-    vec3 result = (ambience + diffusion + speculation) * colour;
+
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), frag_shininess); // look at basic lighting for the 32
+
+//    float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
+    vec3 speculation = (vec3(frag_specular) * spec) ; 
+    vec3 result = (ambience + diffusion + speculation) ;
 //    result = (ambience + diffusion + speculation) * vec3(frag_albedo);
     FragColor = vec4(result, 1.0);
+//    FragColor = vec4(lightDir, 1.0);
 
 
 //
@@ -113,7 +158,9 @@ if(NM_index < 32)
 
       // obtain normal from normal map in range [0,1]
      vec3 normal = texture(myTextureSampler[NM_index], Tex_Coord).rgb;
-    
+
+    normal.z = normal.z == 0 ? 1 : normal.z;
+
      // transform normal vector to range [-1,1]
      normal = normalize(normal * 2.0 - 1.0);  // this normal is in tangent space
    
@@ -121,26 +168,29 @@ if(NM_index < 32)
 
  //
      // get diffuse color
-
+     
      vec3 color = pow(texture(myTextureSampler[Tex_index], Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
  //    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
 
      // ambient
-     vec3 ambient = 0.1 * color;
+//     vec3 ambient = 0.1 * color;
+    vec3 ambient = vec3(frag_ambient) * 0;
+
 //     vec3 ambient = vec3(frag_ambient) * color;
      // diffuse
-     vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
-//     vec3 tempdir = normalize(TangentLightPos - TangentFragPos);
+//     vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
+     vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
  //    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
-     float diff = max(dot(lightDir, normal), 0.0);
+     float diff = max(dot(normal, lightDir), 0.0);
 //     vec3 diffuse = lightColor * (diff *  vec3(frag_diffuse));
-     vec3 diffuse =  (diff *  colour);
+     vec3 diffuse =  diff * colour  ;
      // specular
      vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
  //    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
      vec3 reflectDir = reflect(-lightDir, normal);
      vec3 halfwayDir = normalize(lightDir + viewDir);  
-     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+     float spec = pow(max(dot(normal, halfwayDir), 0.0), frag_shininess);
+
 //     float spec = pow(max(dot(normal, halfwayDir), 0.0), frag_shininess);
 ////     float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
 
@@ -151,14 +201,16 @@ if(NM_index < 32)
 
 
 
-     vec3 specular = vec3(0.2) * spec;
+     vec3 specular = vec3(frag_specular) * spec;
 //     vec3 specular = vec3(frag_specular) * spec;
 //    vec3 specular = (vec3(frag_specular) * spec) ;  
 
      FragColor = vec4(ambient + diffuse + specular, 1.0);
+     FragColor = vec4(ambient + diffuse , 1.0);
+//     FragColor = vec4(lightDir, 1.0);
 //     FragColor = vec4(ambient + diffuse + speculation, 1.0);
 
-// FragColor = texture(myTextureSampler,Tex_Coord);
+// FragColor = texture(myTextureSampler[NM_index],Tex_Coord);
 
 
  }
