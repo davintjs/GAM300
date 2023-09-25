@@ -1,5 +1,5 @@
-[2023-09-25 14:23:06.477] [Error] [critical] 
-Caused By:	handles.Has<T>(euid)
-Info:		Entity euid:  8558750349329837226  of  Entity  doesn't exist in this scene
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 170)
+[2023-09-25 18:19:47.126] [Error] [critical] 
+Caused By:	mNewScript
+Info:		MONO OBJECT OF  NOT LOADED
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 538)
 

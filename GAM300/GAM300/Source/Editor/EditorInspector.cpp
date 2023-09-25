@@ -174,10 +174,10 @@ void DisplayType(const char* name, T*& container)
     {
 
         static std::string btnName;
-        Object& object = *reinterpret_cast<Object*>(container);
-        if (object.EUID() != 0)
+        Engine::UUID* value = reinterpret_cast<Engine::UUID*>(container);
+        if (*value != 0)
         {
-            btnName = MySceneManager.GetCurrentScene().Get<Tag>(object.EUID()).name;
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(*value).name;
         }
         else
         {
@@ -735,7 +735,7 @@ private:
         }
         else if constexpr (MultiComponentTypes::Has<T1>()) {
 
-            auto components = curr_scene.Gets<T1>(entity);
+            auto components = curr_scene.GetMulti<T1>(entity);
             for (T1* component : components)
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
