@@ -1,5 +1,0 @@
-[2023-09-25 18:19:47.126] [Error] [critical] 
-Caused By:	mNewScript
-Info:		MONO OBJECT OF  NOT LOADED
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 538)
-
