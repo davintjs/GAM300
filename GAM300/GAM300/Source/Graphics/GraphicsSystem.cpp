@@ -321,10 +321,13 @@ void GraphicsSystem::Update(float dt)
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
+			std::cout << "albedo tex\n";
 			textureID = 
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
 		if (renderer.NormalMap != "") {
+			std::cout << "normal tex\n";
+
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
@@ -363,7 +366,13 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
+			//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
+			GLuint textureID = 0;
+			GLuint normalMapID = 0;
+			//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
+			// use bool to see if texture exist instead...
+		
 			/*if (currentScene.HasComponent<Texture>(entity)) {
 				for (int j = 0; j <= properties[newName].textureCount; ++j) {
 					if (properties[newName].texture[j] == texID) {
