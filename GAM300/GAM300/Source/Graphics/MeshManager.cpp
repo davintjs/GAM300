@@ -203,29 +203,26 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
     {
         gMesh tempMesh;
 
+        // Vertices
         std::vector<Vertex> tempVerts;
         size_t vertSize;
         ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
         tempVerts.resize(vertSize);
         ifs.read(reinterpret_cast<char*>(&tempVerts[0]), vertSize * sizeof(Vertex));
 
-        //size_t vertSize;
-        //ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
-        //tempMesh._vertices.resize(vertSize);
-        //ifs.read(reinterpret_cast<char*>(&tempMesh._vertices[0]), vertSize * sizeof(Vertex));
-
+        // Indices
         size_t indSize;
         ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
         tempMesh._indices.resize(indSize);
         ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
 
-        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex));
+        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex)); // Material Index
 
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionScale), sizeof(glm::vec3));
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionScale), sizeof(glm::vec2));
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionScale), sizeof(glm::vec3)); // Position Scale
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionScale), sizeof(glm::vec2)); // Texture Scale
 
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3));
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2));
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position Offset
+        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture Offset
 
         tempMesh._vertices.resize(vertSize); // Resize our vertices vector
         DecompressVertices(tempMesh._vertices, tempVerts, tempMesh.mPosCompressionScale, tempMesh.mTexCompressionScale, tempMesh.mPosCompressionOffset, tempMesh.mTexCompressionOffset); // Converts Vertex to gVertex
@@ -281,14 +278,14 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
         mMeshVertices[i].tex.y = (oVertices[i].texV >= 0 ? static_cast<float>(oVertices[i].texV) / 0x7FFF : static_cast<float>(oVertices[i].texV) / 0x8000) * mTexCompressScale.y + mTexOffset.y;
 
         // Normal
-        mMeshVertices[i].normal.x = static_cast<float>((oVertices[i].normX >= 0 ? oVertices[i].normX / 0x7FFF : oVertices[i].normX / 0x8000));
-        mMeshVertices[i].normal.y = static_cast<float>((oVertices[i].normY >= 0 ? oVertices[i].normY / 0x7FFF : oVertices[i].normY / 0x8000));
-        mMeshVertices[i].normal.z = static_cast<float>((oVertices[i].normZ >= 0 ? oVertices[i].normZ / 0x7FFF : oVertices[i].normZ / 0x8000));
+        mMeshVertices[i].normal.x = (oVertices[i].normX >= 0 ? static_cast<float>(oVertices[i].normX) / 0x7FFF : static_cast<float>(oVertices[i].normX) / 0x8000);
+        mMeshVertices[i].normal.y = (oVertices[i].normY >= 0 ? static_cast<float>(oVertices[i].normY) / 0x7FFF : static_cast<float>(oVertices[i].normY) / 0x8000);
+        mMeshVertices[i].normal.z = (oVertices[i].normZ >= 0 ? static_cast<float>(oVertices[i].normZ) / 0x7FFF : static_cast<float>(oVertices[i].normZ) / 0x8000);
 
         // Tangent
-        mMeshVertices[i].tangent.x = static_cast<float>((oVertices[i].tanX >= 0 ? oVertices[i].tanX / 0x7FFF : oVertices[i].tanX / 0x8000));
-        mMeshVertices[i].tangent.y = static_cast<float>((oVertices[i].tanY >= 0 ? oVertices[i].tanY / 0x7FFF : oVertices[i].tanY / 0x8000));
-        mMeshVertices[i].tangent.z = static_cast<float>((oVertices[i].tanZ >= 0 ? oVertices[i].tanZ / 0x7FFF : oVertices[i].tanZ / 0x8000));
+        mMeshVertices[i].tangent.x = (oVertices[i].tanX >= 0 ? static_cast<float>(oVertices[i].tanX) / 0x7FFF : static_cast<float>(oVertices[i].tanX) / 0x8000);
+        mMeshVertices[i].tangent.y = (oVertices[i].tanY >= 0 ? static_cast<float>(oVertices[i].tanX) / 0x7FFF : static_cast<float>(oVertices[i].tanY) / 0x8000);
+        mMeshVertices[i].tangent.z = (oVertices[i].tanZ >= 0 ? static_cast<float>(oVertices[i].tanZ) / 0x7FFF : static_cast<float>(oVertices[i].tanZ) / 0x8000);
 
         // Color
         mMeshVertices[i].color.r = oVertices[i].colorR;
