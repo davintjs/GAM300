@@ -125,7 +125,7 @@ typedef struct {
 MONO_API void          mono_register_bundled_assemblies (const MonoBundledAssembly **assemblies);
 MONO_API void          mono_register_config_for_assembly (const char* assembly_name, const char* config_xml);
 MONO_API void          mono_register_symfile_for_assembly (const char* assembly_name, const mono_byte *raw_contents, int size);
-MONO_API void	      mono_register_machine_config (const char *config_xml);
+MONO_API void		mono_register_machine_config (const char *config_xml);
 
 MONO_API void          mono_set_rootdir (void);
 MONO_API void          mono_set_dirs (const char *assembly_dir, const char *config_dir);

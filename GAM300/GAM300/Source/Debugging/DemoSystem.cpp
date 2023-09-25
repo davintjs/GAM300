@@ -26,39 +26,37 @@ void DemoSystem::Init()
 
 	Scene& scene = *createScene.scene;
 
-	Handle<Entity>& entHandle = scene.AddEntity();
-	Entity& titty = entHandle.Get();
-	MeshRenderer& titrender = scene.AddComponent<MeshRenderer>(titty);
+	Entity& titty = *scene.Add<Entity>();
+	MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
 	//titrender.MeshName = "Skull_textured";
 	titrender.MeshName = "Eyebot2";
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(titty.denseIndex).scale = Vector3(1.f, 1.f, 1.f);
+	scene.Get<Transform>(titty).translation = Vector3(0.f, 100.f, 0.f);
+	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 
 	// test instance rendering
 	for (int i = 0; i < 5; ++i)
 	{
-		Handle<Entity>& entHandle = scene.AddEntity();
-		Entity& tempent = entHandle.Get();
-		MeshRenderer& renderer = scene.AddComponent<MeshRenderer>(tempent);
+		Entity& tempent = *scene.Add<Entity>();
+		MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);
 		renderer.MeshName = "Cube";
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-		scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(tempent.denseIndex).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-		scene.AddComponent<MeshRenderer>(tempent);
+		scene.Get<Transform>(tempent).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
+		scene.Get<Transform>(tempent).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
+		scene.Add<MeshRenderer>(tempent);
 	}
-	scene.AddComponent<Script>(scene.entities[0]).name = "Player";
-	scene.AddComponent<Rigidbody>(scene.entities[0]);
-	Entity& box = scene.AddEntity().Get();
-	scene.AddComponent<MeshRenderer>(box);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).translation = Vector3(0.f, 100.f, 0.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+	scene.Add<Script>(scene.GetArray<Entity>()[0])->name = "Player";
+	scene.Add<Rigidbody>(scene.GetArray<Entity>()[0]);
+	Entity& box = *scene.Add<Entity>();
+	scene.Add<MeshRenderer>(box);
+	scene.Get<Transform>(box).translation = Vector3(0.f, 100.f, 0.f);
+	scene.Get<Transform>(box).scale = Vector3(25.f, 25.f, 25.f);
 
-	Entity& box2 = scene.AddEntity().Get();
-	scene.AddComponent<MeshRenderer>(box2);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).translation = Vector3(0.f, 200.0f, 35.f);
-	scene.singleComponentsArrays.GetArray<Transform>().DenseSubscript(box2.denseIndex).scale = Vector3(25.f, 25.f, 25.f);
+	Entity& box2 = *scene.Add<Entity>();
+	scene.Add<MeshRenderer>(box2);
+	scene.Get<Transform>(box2).translation = Vector3(0.f, 200.0f, 35.f);
+	scene.Get<Transform>(box2).scale = Vector3(25.f, 25.f, 25.f);
 
-	Entity& lightsource = scene.AddEntity().Get();
-	scene.AddComponent<LightSource>(lightsource);
+	Entity& lightsource = *scene.Add<Entity>();
+	scene.Add<LightSource>(lightsource);
 }
 
 void DemoSystem::Update(float dt)

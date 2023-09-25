@@ -6,6 +6,8 @@
 #include "Model3d.h"
 #include "Editor_Camera.h"
 #include "../Core/FramerateController.h"
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "Editor/Editor.h"
 #include "Editor/EditorHeaders.h"
@@ -183,8 +185,6 @@ void GraphicsSystem::Update(float dt)
 {
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-
-	currentScene.singleComponentsArrays.GetArray<Transform>();
 	
 	Ray3D temp;
 	bool checkForSelection = Raycasting(temp);
@@ -207,11 +207,11 @@ void GraphicsSystem::Update(float dt)
 
 	// Temporary Light stuff
 	bool haveLight = false;
-	for (LightSource& lightSource : currentScene.GetComponentsArray<LightSource>())
+	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
 		haveLight = true;
-		Entity& entity{ currentScene.GetEntity(lightSource) };
-		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		Entity& entity{ currentScene.Get<Entity>(lightSource) };
+		Transform& transform = currentScene.Get<Transform>(entity);
 
 		Lighting_Source.lightpos = transform.translation;
 		Lighting_Source.lightColor = lightSource.lightingColor;
@@ -225,7 +225,7 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 
 
-	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
+	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
 		
@@ -236,8 +236,8 @@ void GraphicsSystem::Update(float dt)
 
 		int index = t_Mesh->index;
 		
-		Entity& entity = currentScene.GetEntity(renderer);
-		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		Entity& entity = currentScene.Get<Entity>(renderer);
+		Transform& transform = currentScene.Get<Transform>(entity);
 
 		/*renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];
@@ -311,12 +311,8 @@ void GraphicsSystem::Update(float dt)
 			{
 				if (temp_intersect < intersected)
 				{
-					//EDITOR.SetSelectedEntity(&entity);
-					currentScene.GetHandle<Entity>(entity);
-					SelectedEntityEvent SelectingEntity(currentScene.GetHandle(entity));
-
+					SelectedEntityEvent SelectingEntity(&entity);
 					EVENTS.Publish(&SelectingEntity);
-					//EditorCam.ActiveObj = &entity;
 					intersected = temp_intersect;
 				}
 			}
@@ -328,7 +324,7 @@ void GraphicsSystem::Update(float dt)
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection) 
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		SelectedEntityEvent selectedEvent{ Handle<Entity>::Invalid()};
+		SelectedEntityEvent selectedEvent{ 0};
 		EVENTS.Publish(&selectedEvent);
 	}
 

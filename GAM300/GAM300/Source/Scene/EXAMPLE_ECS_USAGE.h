@@ -18,7 +18,7 @@ void ITERATE_THROUGH_COMPONENTS()
 	
 	//Iterator method, MOST PREFERRED
 	//You can substitute Rigidbody for any other kinds of components like Transform,Tag,Script,etc...
-	auto& rbArray = scene.GetComponentsArray<Rigidbody>();
+	auto& rbArray = scene.GetsArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it)
 	{
 		//Get object from iterator
@@ -42,7 +42,7 @@ void ITERATE_THROUGH_COMPONENTS()
 
 	//For range Loop, LEAST PREFERRED
 	//You can substitute Rigidbody for any other kinds of components
-	auto& rbArray = scene.GetComponentsArray<Rigidbody>();
+	auto& rbArray = scene.GetsArray<Rigidbody>();
 	size_t i = 0;
 	for (Rigidbody& rb : rbArray)
 	{
@@ -69,10 +69,10 @@ void ITERATE_THROUGH_ENTITIES()
 void CREATION()
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
-	Entity& entity = scene.AddEntity();
+	Entity& entity = scene.Add<Entity>();
 	//Ways to add component
-	scene.AddComponent<Script>(entity);
-	Script& script = scene.AddComponent<Script>(entity.denseIndex);
+	scene.Add<Script>(entity);
+	Script& script = scene.Add<Script>(entity.denseIndex);
 	//Destroy component
 	scene.Destroy(script);
 	//Destroy entity

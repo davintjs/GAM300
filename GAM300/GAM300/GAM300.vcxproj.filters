@@ -80,7 +80,6 @@
     <ClCompile Include="Source\Editor\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
-    <ClCompile Include="Source\Scripting\LogicSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
     <ClCompile Include="Source\Scene\Object.cpp" />
@@ -152,7 +151,6 @@
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\Compiler.h" />
     <ClInclude Include="Source\Debugging\Debugger.h" />
-    <ClInclude Include="Source\Scripting\LogicSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />

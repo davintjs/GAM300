@@ -42,7 +42,7 @@ namespace BeanFactory
             {
                 gameObject = new GameObject();
             }
-            //rigidbody = gameObject.GetComponent<Rigidbody2D>();
+            //rigidbody = gameObject.Get<Rigidbody2D>();
             transform = gameObject.transform;
         }
         public GameObject gameObject;

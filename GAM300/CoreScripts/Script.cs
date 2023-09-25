@@ -23,9 +23,8 @@ namespace BeanFactory
     {
         private void Initialize(GameObject gameObj)
         {
-            Console.WriteLine("SCRIPT INITIALIZED");
             _gameObject = gameObj;
-            _transform = InternalCalls.GetTransformFromGameObject(gameObj);
+            _transform = InternalCalls.Get<Transform>(gameObject);
         }
         public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
         {
@@ -42,29 +41,15 @@ namespace BeanFactory
             InternalCalls.DestroyComponent(component,typeof(T));
         }
 
-        /*        public GameObject Instantiate(GameObject original)
-                {
-                    GameObject gameObject = new GameObject();
-                    gameObject.ID = InternalCalls.CloneGameObject(original.ID);
-                    return gameObject;
-                }
-
-                public GameObject Instantiate()
-                {
-                    GameObject gameObject = new GameObject();
-                    gameObject.ID = InternalCalls.InstantiateGameObject();
-                    return gameObject;
-                }
-
-                public static void Destroy(GameObject gameObj)
-                {
-                    InternalCalls.DestroyGameObject(gameObj.ID);
-                }*/
-
         override public Transform transform{ get{return _transform; } }
         override public GameObject gameObject{ get { return _gameObject; }}
 
         private Transform _transform;
         private GameObject _gameObject;
+
+        override public T GetComponent<T>()
+        {
+            return InternalCalls.Get<T>(gameObject);
+        }
     }
 }

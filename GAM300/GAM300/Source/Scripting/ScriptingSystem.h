@@ -43,22 +43,21 @@ extern "C"
 #define SCRIPTING ScriptingSystem::Instance()
 
 // Map of all the field types
-static std::unordered_map<std::string, FieldType> fieldTypeMap =
+static std::unordered_map<std::string, size_t> fieldTypeMap =
 {
-	{ "System.Single",				FieldType::Float		},
-	{ "System.Double",				FieldType::Double		},
-	{ "System.Boolean",				FieldType::Bool			},
-	{ "System.Char",				FieldType::Char			},
-	{ "System.Int16",				FieldType::Short		},
-	{ "System.Int32",				FieldType::Int			},
-	{ "System.Int64",				FieldType::Long			},
-	{ "System.UInt16",				FieldType::UShort		},
-	{ "System.UInt32",				FieldType::UInt			},
-	{ "System.UInt64",				FieldType::ULong		},
-	{ "System.String",				FieldType::String		},
-	{ "BeanFactory.Vector2",		FieldType::Vector2		},
-	{ "BeanFactory.Vector3",		FieldType::Vector3		},
-	{ "BeanFactory.GameObject",		FieldType::GameObject	},
+	{ "System.Single",				GetFieldType::E<float>()},
+	{ "System.Double",				GetFieldType::E<double>()},
+	{ "System.Boolean",				GetFieldType::E<bool>()},
+	{ "System.Char",				GetFieldType::E<char>()},
+	{ "System.Int16",				GetFieldType::E<short>()},
+	{ "System.Int32",				GetFieldType::E<int>()},
+	{ "System.Int64",				GetFieldType::E<int64_t>()},
+	{ "System.UInt16",				GetFieldType::E<uint16_t>()},
+	{ "System.UInt32",				GetFieldType::E<uint32_t>()},
+	{ "System.UInt64",				GetFieldType::E<uint64_t>()},
+	{ "System.String",				GetFieldType::E<std::string>()},
+	{ "BeanFactory.Vector2",		GetFieldType::E<Vector2>()},
+	{ "BeanFactory.Vector3",		GetFieldType::E<Vector3>()}
 };
 
 
@@ -88,7 +87,7 @@ struct ScriptClass
 
 };
 
-ENGINE_EDITOR_SYSTEM(ScriptingSystem)
+ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
 	/**************************************************************************/
@@ -295,13 +294,14 @@ public:
 	/*******************************************************************************/
 	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
 
-	template<typename T>
-	void SetFieldReference(MonoObject* instance, MonoClassField* mClassFiend, T* reference);
-
 	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent);
 
 	bool IsScript(MonoClass* monoClass);
 
+	void ThreadWork();
+
+	//Updates by setting field values back into C#
+	void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -316,78 +316,6 @@ public:
 	*/
 	/*******************************************************************************/
 	//void CallbackSceneChanging(SceneChangingEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a component is reflected
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//template <typename T>
-	//void CallbackReflectComponent(ReflectComponentEvent<T>* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a script is invoked
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//void CallbackScriptInvokeMethod(ScriptInvokeMethodEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a field is set
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a field is accessed
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a field reference is set
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//template<typename T>
-	//void CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -427,7 +355,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackStartPreview(StartPreviewEvent* pEvent);
+	void CallbackSceneStart(SceneStartEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -457,19 +385,12 @@ public:
 	/*******************************************************************************/
 	//void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
 
-	//void CallbackReflectGameObject(ReflectGameObjectEvent* pEvent);
-
-	//Event subscription helper
-	//template<typename T, typename... Ts>
-	//void SubscribeComponentBasedCallbacks(TemplatePack<T, Ts...> pack);
-
 	MonoObject* ReflectScript(Script& component);
 
 	MonoImage* GetAssemblyImage();
 
+	void InvokeAllScripts(const std::string& funcName);
 
-	//DenseIndex
-	using MonoEntities = std::unordered_map<void*, MonoObject*>;
 	using MonoComponents = std::unordered_map<void*, MonoObject*>;
 
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
@@ -478,29 +399,19 @@ public:
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
+
+	enum class LogicState
+	{
+		START,
+		UPDATE,
+		EXIT,
+		NONE
+	};
+
+	static std::unordered_map<LogicState, std::string> logicStateNames;
+
+	LogicState logicState;
+
+	std::atomic_bool ran;
 };
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function for when a field reference is set
-
-	\param pEvent
-		ptr to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//template<typename T>
-	//void ScriptingSystem::CallbackScriptSetFieldReference(ScriptSetFieldReferenceEvent<T>* pEvent)
-	//{
-	//	MonoObject* mScript = ReflectComponent(pEvent->script);
-	//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-	//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-	//	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
-	//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + " COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-	//	SetFieldReference<T>(mScript, mClassField,pEvent->reference);
-	//}
 #endif // !SCRIPTING_SYSTEM_H

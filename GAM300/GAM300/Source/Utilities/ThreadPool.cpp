@@ -15,7 +15,7 @@ void ThreadPool::Init()
                 {
                     std::function<void()> mTask;
                     {
-                        ACQUIRE_SCOPED_LOCK("Queue");
+                        ACQUIRE_SCOPED_LOCK(Queue);
                         if (mTasks.empty())
                             continue;
                         mTask = std::move(mTasks.front());
@@ -34,7 +34,7 @@ void ThreadPool::Init()
 void ThreadPool::Exit()
 {
     {
-        ACQUIRE_SCOPED_LOCK("Queue");
+        ACQUIRE_SCOPED_LOCK(Queue);
         stop = true;
         //Clear all tasks
         mTasks={};

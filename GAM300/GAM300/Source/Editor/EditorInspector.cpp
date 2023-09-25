@@ -221,6 +221,80 @@ void DisplayType(const char* name, Vector2& val)
     }
 }
 
+template <typename T>
+void DisplayType(const char* name, T*& container)
+{
+    if constexpr (AllObjectTypes::Has<T>())
+    {
+
+        static std::string btnName;
+        Object& object = *reinterpret_cast<Object*>(container);
+        if (object.EUID() != 0)
+        {
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(object.EUID()).name;
+        }
+        else
+        {
+            btnName = "None";
+        }
+        btnName += "("; 
+        if constexpr (std::is_same_v<T,Entity>)
+        {
+            btnName += "GameObject";
+        }
+        else
+        {
+            btnName += GetType::Name<T>();
+        }
+        btnName += ")";
+        ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Object");
+            if (payload)
+            {
+                container = (T*)(*reinterpret_cast<void**>(payload->Data));
+            }
+            ImGui::EndDragDropTarget();
+        }
+    }
+    //Store uuid;
+}
+
+template <typename T, typename... Ts>
+void DisplayField(const char* name, Field& field)
+{
+    if (GetFieldType::E<T>() == field.fType)
+    {
+        if (field.fType < AllObjectTypes::Size())
+        {
+            T* value = reinterpret_cast<T*>(field.data);
+            DisplayType(name,value);
+        }
+        else
+        {
+            DisplayType(name, field.Get<T>());
+        }
+        return;
+    }
+    if constexpr (sizeof...(Ts) != 0)
+    {
+        DisplayField<Ts...>(name, field);
+    }
+}
+
+template <typename T, typename... Ts>
+void DisplayField(const char* name, Field& field, TemplatePack<T,Ts...>)
+{
+    DisplayField<T,Ts...>(name,field);
+}
+
+void DisplayType(const char* name, Field& val)
+{
+    DisplayField(name, val, AllFieldTypes());
+}
+
 //void DisplayType(const char* name, AABB& val)
 //{
 //    static std::string idName{};
@@ -483,86 +557,35 @@ void Display_Property(T& comp) {
 //    //DisplayDragDrop();
 //    //spriteRenderer.sprite.set_name()
 //}
-//template <>
-//void DisplayComponent<Script>(Script& script)
-//{
-//    static Field buffer(FieldType::None, 128);
-//    for (auto pair : script.fieldDataReferences)
-//    {
-//        const char* name = pair.first.c_str();
-//        Field& field{ pair.second };
-//        //    //Component Enum + ComponentType Enum
-//        if (field.fType >= FieldType::Component)
-//        {
-//            ComponentType cType = (ComponentType)field.fType;
-//            switch (cType) {
-//            case ComponentType::Animator:
-//                Display(name, (Animator*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Animator*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::AudioSource:
-//                Display(name, (AudioSource*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (AudioSource*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::BoxCollider2D:
-//                Display(name, (BoxCollider2D*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (BoxCollider2D*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Button:
-//                Display(name, (Button*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Button*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Camera:
-//                Display(name, (Camera*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Camera*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Image:
-//                Display(name, (Image*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Image*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Rigidbody2D:
-//                Display(name, (Rigidbody2D*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Rigidbody2D*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::SpriteRenderer:
-//                Display(name, (SpriteRenderer*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SpriteRenderer*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Script:
-//                Display(name, (Script*&)script.fieldComponentReferences[name], field.typeName.c_str());
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Script*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Transform:
-//                Display(name, (Transform*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Transform*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::Text:
-//                Display(name, (Text*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (Text*)script.fieldComponentReferences[name]));
-//                break;
-//            case ComponentType::SortingGroup:
-//                Display(name, (SortingGroup*&)script.fieldComponentReferences[name]);
-//                MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, (SortingGroup*)script.fieldComponentReferences[name]));
-//                break;
-//            default:
-//                // handle invalid case
-//                break;
-//            }
-//        }
-//        else if (field.fType == FieldType::GameObject)
-//        {
-//            Display(name, script.fieldGameObjReferences[name]);
-//            MyEventSystem->publish(new ScriptSetFieldReferenceEvent(script, name, script.fieldGameObjReferences[name]));
-//        }
-//        else
-//        {
-//            buffer.fType = field.fType;
-//            MyEventSystem->publish(new ScriptGetFieldEvent(script, name, field.data));
-//            Display(name, field);
-//            MyEventSystem->publish(new ScriptSetFieldEvent(script, name, field.data));
-//        }
-//    }
-//}
+
+void DisplayComponent(Script& script)
+{
+    for (auto& pair : script.fields)
+    {
+        const char* name = pair.first.c_str();
+        Field& field{ pair.second };
+        //    //Component Enum + ComponentType Enum
+        if (field.fType < AllObjectTypes::Size())
+        {       
+            size_t cType = field.fType;
+            if (cType = GetType::E<Script>())
+            {
+            }
+            else
+            {
+                Display(name, field);
+                ScriptSetFieldEvent e{ script,name };
+                EVENTS.Publish(&e);
+            }
+        }
+        else
+        {
+            Display(name, field);
+            ScriptSetFieldEvent e{ script,name };
+            EVENTS.Publish(&e);
+        }
+    }
+}
 //template <>
 //void DisplayComponent<Image>(Image& image)
 //{
@@ -600,7 +623,7 @@ void DisplayComponentHelper(T& component)
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
-        name = GetComponentType::Name<T>();
+        name = GetType::Name<T>();
     }
     else
     {
@@ -615,9 +638,9 @@ void DisplayComponentHelper(T& component)
 
     static bool comp_settings = false;
 
-    const char* popup = GetComponentType::Name<T>();
+    const char* popup = GetType::Name<T>();
 
-    ImGui::PushID(GetComponentType::E<T>());
+    ImGui::PushID(GetType::E<T>());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);
@@ -635,7 +658,7 @@ void DisplayComponentHelper(T& component)
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
 
-                curr_scene.Destroy(curr_scene.GetComponent<T>(curr_scene.entities.DenseSubscript(EditorHierarchy::Instance().selectedEntity)));
+                curr_scene.Destroy(curr_scene.Get<T>(EditorHierarchy::Instance().selectedEntity));
             }
         }
         else {
@@ -656,20 +679,7 @@ void DisplayComponentHelper(T& component)
 
     if (windowopen)
     {
-        /*if (ImGui::BeginDragDropSource())
-        {
-            void* container = &component;
-            if constexpr (std::is_same<T, Script>())
-            {
-                ImGui::SetDragDropPayload(component.Name().c_str(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-            else
-            {
-                ImGui::SetDragDropPayload(GetTypeName<T>(), &container, sizeof(void*));
-                ImGui::EndDragDropSource();
-            }
-        }*/
+
 
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
@@ -688,7 +698,14 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-            Display_Property(component);
+            if constexpr (std::is_same_v<T,Script>)
+            {
+                DisplayComponent(component);
+            }
+            else
+            {
+                Display_Property(component);
+            }
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -714,7 +731,7 @@ public:
     {
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
-        //DisplayComponentHelper(curr_scene.GetComponent<Transform>(entity));
+        //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
 
         DisplayNext<T, Ts...>(entity);
     }
@@ -729,14 +746,14 @@ private:
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {   
-                    auto& component = curr_scene.GetComponent<T1>(entity);
+                    auto& component = curr_scene.Get<T1>(entity);
                     DisplayComponentHelper(component);
                 }              
             }
         }
         else if constexpr (MultiComponentTypes::Has<T1>()) {
 
-            auto components = curr_scene.GetComponents<T1>(entity);
+            auto components = curr_scene.Gets<T1>(entity);
             for (T1* component : components)
             {
                 Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
@@ -756,46 +773,46 @@ using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponent
 void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
 
 template<typename T, typename... Ts>
-struct AddComponentsStruct
+struct AddsStruct
 {
 public:
-    constexpr AddComponentsStruct(TemplatePack<T, Ts...> pack) {}
-    AddComponentsStruct(Entity& entity)
+    constexpr AddsStruct(TemplatePack<T, Ts...> pack) {}
+    AddsStruct(Entity& entity)
     {
-        AddNext<T, Ts...>(entity);
+        AddNext<T, Ts...>(entity,MySceneManager.GetCurrentScene());
     }
 private:
     template<typename T1, typename... T1s>
-    void AddNext(Entity& entity)
+    void AddNext(Entity& entity, Scene& scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!entity.pScene->HasComponent<T1>(entity))
+            if (!scene.HasComponent<T1>(entity))
             {
-                if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    entity.pScene->AddComponent<T1>(entity);
-                    EditorInspector::Instance().isAddComponentPanel = false;
+                    scene.Add<T1>(entity);
+                    EditorInspector::Instance().isAddPanel = false;
                 }
             }
         }
         else
         {
-            if (CENTERED_CONTROL(ImGui::Button(GetComponentType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
             {
-                entity.pScene->AddComponent<T1>(entity);
-                EditorInspector::Instance().isAddComponentPanel = false;
+                scene.Add<T1>(entity);
+                EditorInspector::Instance().isAddPanel = false;
             }
         }
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            AddNext<T1s...>(entity);
+            AddNext<T1s...>(entity,scene);
         }
     }
 };
-using AddComponentsDisplay = decltype(AddComponentsStruct(DisplayableComponentTypes()));
+using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
-void AddComponentPanel(Entity& entity) {
+void AddPanel(Entity& entity) {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -803,12 +820,12 @@ void AddComponentPanel(Entity& entity) {
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-        EditorInspector::Instance().isAddComponentPanel = false;
+        EditorInspector::Instance().isAddPanel = false;
     }
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
-        (void)AddComponentsDisplay(entity);
+        (void)AddsDisplay(entity);
         ImGui::EndPopup();
     }
 }
@@ -821,15 +838,15 @@ void DisplayEntity(Entity& entity)
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
-    std::string entity_name = curr_scene.GetComponent<Tag>(entity).name;
+    std::string entity_name = curr_scene.Get<Tag>(entity).name;
     strcpy_s(buffer, entity_name.c_str());
     ImGui::PushItemWidth(-1);
     if (ImGui::InputText("##gameObjName", buffer, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
-        curr_scene.GetComponent<Tag>(entity).name = buffer;
+        curr_scene.Get<Tag>(entity).name = buffer;
     }
 
     ImGui::PopItemWidth();
-    curr_scene.GetComponent<Tag>(entity).name = buffer;
+    curr_scene.Get<Tag>(entity).name = buffer;
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -839,12 +856,12 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.euid);
+        ImGui::PushID((int)entity.EUID());
         DisplayComponents(entity);
         ImGui::PopID();
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddComponentPanel = true;
+            EditorInspector::Instance().isAddPanel = true;
         }
 
         ImGui::EndTable();
@@ -859,12 +876,12 @@ void DisplayEntity(Entity& entity)
     /*if (ImGui::Button("Add Component", buttonSize)) {
         isAddingComponent = true;
     }
-    AddComponentPanel(gameObject, isAddingComponent);*/
+    AddPanel(gameObject, isAddingComponent);*/
 }
 
 void EditorInspector::Init()
 {
-    isAddComponentPanel = false;
+    isAddPanel = false;
 }
 
 void EditorInspector::Update(float dt)
@@ -877,21 +894,21 @@ void EditorInspector::Update(float dt)
     //List out all components in order
     //templated functionalities (input fields, checkboxes etc.)
 
-    const ObjectIndex curr_index = EditorHierarchy::Instance().selectedEntity;
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
 
     if (curr_index != NON_VALID_ENTITY) {
         ImGui::Spacing();
-        Entity& curr_entity = curr_scene.entities.DenseSubscript(curr_index);
-        std::string Header = "Current Entity: " + curr_scene.GetComponent<Tag>(curr_entity).name;
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+        std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
     }
 
-    if (isAddComponentPanel) {
-        AddComponentPanel(curr_scene.entities.DenseSubscript(curr_index));
+    if (isAddPanel) {
+        AddPanel(curr_scene.Get<Entity>(curr_index));
     }
 
     ImGui::PopStyleVar();

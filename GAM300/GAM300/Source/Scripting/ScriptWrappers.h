@@ -118,87 +118,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonHolding(keyCode);
 	}
 
-
-
-	template<typename T, typename... Ts>
-	static Entity* GetGameObjectRecursive(void* pComponent, size_t componentType)
-	{
-		if (GetComponentType::E<T>() == componentType)
-		{
-			Scene& scene = SceneManager::Instance().GetCurrentScene();
-			return &scene.GetEntity(*((T*)pComponent));
-		}
-		if constexpr (sizeof...(Ts) != 0)
-		{
-			return GetGameObjectRecursive<Ts...>(pComponent, componentType);
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
- 
-	//template<typename T, typename... Ts>
-	//struct ComponentTypeIterStruct
-	//{
-	//public:
-	//	constexpr ComponentTypeIterStruct(TemplatePack<T, Ts...> pack) {}
-	//	ComponentTypeIterStruct()
-	//	{
-	//	}
-	//};
-
-	//using GenericComponentIter = decltype(ComponentTypeIterStruct(AllComponentTypes()));
-
-	GENERIC_RECURSIVE(Entity*,RecurseGetEntity,&SceneManager::Instance().GetCurrentScene().GetEntity(*((T*)pComponent)));
-	static Entity* GetGameObject(void* pComponent, size_t componentType)
-	{
-		return RecurseGetEntity(componentType,pComponent);
-	}
-
-	static Entity* GetGameObjectFromScript(Script* pScript)
-	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		return &scene.GetEntity(*pScript);
-	}
-
-	static Transform* GetTransformFromGameObject(Entity* pEntity)
-	{
-		Scene& scene = MySceneManager.GetCurrentScene();
-		Transform& t = scene.GetComponent<Transform>(*pEntity);
-		return &t;
-	}
-
-	template<typename T, typename... Ts>
-	static Transform* GetTransformFromComponentHelper(void* pComponent, size_t componentType, TemplatePack<T, Ts...>)
-	{
-		if constexpr (AllComponentTypes::Has<T>())
-		{
-			if (GetComponentType::E<T>() == componentType)
-			{
-				Scene& scene = SceneManager::Instance().GetCurrentScene();
-				return &scene.GetComponent<Transform>(*((T*)pComponent));
-			}
-		}
-		if constexpr (sizeof...(Ts) != 0)
-		{
-			return GetTransformFromComponentHelper(pComponent,componentType, TemplatePack<Ts...>());
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	static Transform* GetTransformFromComponent(void* pComponent, MonoReflectionType* componentType)
-	{
-		
-		Scene& scene = MySceneManager.GetCurrentScene();
-		MonoType* mType = mono_reflection_type_get_type(componentType);
-		size_t cType= monoComponentToType[mono_reflection_type_get_type(componentType)];
-		return GetTransformFromComponentHelper(pComponent, cType, AllComponentTypes());
-	}
-
 	///*******************************************************************************
 	///*!
 	//\brief
@@ -247,7 +166,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	///*******************************************************************************
 	///*!
 	//	\brief
-	//		GetComponent for C#
+	//		Get for C#
 	//	\param gameObjID
 	//		ID of gameObject to look for component
 	//	\param componentType
@@ -256,8 +175,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//		MonoObject to be returned to the script asking for it
 	//*/
 	///*******************************************************************************/v
-	GENERIC_RECURSIVE(void*, RecurseGetComponent, (void*)&SceneManager::Instance().GetCurrentScene().GetComponent<T>(*(Entity*)pComponent));
-	static void* GetComponent(Entity* pEntity, MonoReflectionType* componentType)
+	static void* Get(Object* pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -265,66 +183,67 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			PRINT("CANT FIND LAH CHIBAI\n");
 		}
-		PRINT("HELLOOOO PLS WORK\n");
-		return RecurseGetComponent(pair->second,pEntity);
+		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
+		addr += 8;
+		return reinterpret_cast<void*>(addr);
 	}
 	//	Component* component{ nullptr };
 	//	switch (cType)
 	//	{
 	//	case(ComponentType::Animator):
 	//	{
-	//		component = pGameObject->GetComponent<Animator>();
+	//		component = pGameObject->Get<Animator>();
 	//		break;
 	//	}
 	//	case(ComponentType::AudioSource):
 	//	{
-	//		component = pGameObject->GetComponent<AudioSource>();
+	//		component = pGameObject->Get<AudioSource>();
 	//		break;
 	//	}
 	//	case(ComponentType::BoxCollider2D):
 	//	{
-	//		component = pGameObject->GetComponent<BoxCollider2D>();
+	//		component = pGameObject->Get<BoxCollider2D>();
 	//		break;
 	//	}
 	//	case(ComponentType::Button):
 	//	{
-	//		component = pGameObject->GetComponent<Button>();
+	//		component = pGameObject->Get<Button>();
 	//		break;
 	//	}
 	//	case(ComponentType::Camera):
 	//	{
-	//		component = pGameObject->GetComponent<Camera>();
+	//		component = pGameObject->Get<Camera>();
 	//		break;
 	//	}
 	//	case(ComponentType::Image):
 	//	{
-	//		component = pGameObject->GetComponent<Image>();
+	//		component = pGameObject->Get<Image>();
 	//		break;
 	//	}
 	//	case(ComponentType::Rigidbody2D):
 	//	{
-	//		component = pGameObject->GetComponent<Rigidbody2D>();
+	//		component = pGameObject->Get<Rigidbody2D>();
 	//		break;
 	//	}
 	//	case(ComponentType::SpriteRenderer):
 	//	{
-	//		component = pGameObject->GetComponent<SpriteRenderer>();
+	//		component = pGameObject->Get<SpriteRenderer>();
 	//		break;
 	//	}
 	//	case(ComponentType::Script):
 	//	{
 	//		//Different scripts
-	//		component = pGameObject->GetComponent<Script>();
+	//		component = pGameObject->Get<Script>();
 	//		break;
 	//	}
 	//	case(ComponentType::Text):
 	//	{
-	//		component = pGameObject->GetComponent<Text>();
+	//		component = pGameObject->Get<Text>();
 	//		break;
 	//	}
 	//	case(ComponentType::SortingGroup):
 	//	{
-	//		component = pGameObject->GetComponent<SortingGroup>();
+	//		component = pGameObject->Get<SortingGroup>();
 	//		break;
 	//	}
 	//	}
@@ -402,7 +321,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	////To be implemented
-	//static UUID AddComponent(UUID UUID, MonoReflectionType* componentType)
+	//static UUID Add(UUID UUID, MonoReflectionType* componentType)
 	//{
 	//	//GameObject* gameObj = sceneManager.FindGameObjectByID(UUID);
 	//	//if (gameObj == nullptr)
@@ -412,7 +331,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	//}
 	//	//MonoType* managedType = mono_reflection_type_get_type(componentType);
 	//	//ComponentType cType = s_EntityHasComponentFuncs[mono_type_get_name(managedType)];
-	//	//return gameObj->AddComponent(cType)->id;
+	//	//return gameObj->Add(cType)->id;
 	//	return 0;
 	//}
 	//
@@ -538,7 +457,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	whether the component is enabled
 	//*/
 	///*******************************************************************************/
-	//static bool GetComponentEnabled(Component* pComponent)
+	//static bool GetEnabled(Component* pComponent)
 	//{
 	//	return pComponent->enabled;
 	//}
@@ -670,7 +589,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
 	}
 
-	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pComponent))
+	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
 	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
 	{
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
@@ -1144,12 +1063,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void RegisterComponent()
 	{
 		std::string typeName = "BeanFactory.";
-		typeName += GetComponentType::Name<T>();
+		if constexpr (std::is_same_v<Entity, T>)
+		{
+			typeName += "GameObject";
+		}
+		else
+		{
+			typeName += GetType::Name<T>();
+		}
 		MonoType* managedType = mono_reflection_type_from_name(typeName.data(), SCRIPTING.GetAssemblyImage());
 		if (managedType != nullptr)
 		{
-			E_ASSERT(managedType, "Could not find component type");
-			monoComponentToType.emplace(managedType, GetComponentType::E<T>());
+			monoComponentToType.emplace(managedType, GetType::E<T>());
 		}
 		if constexpr (sizeof...(Ts) != 0)
 		{
@@ -1157,16 +1082,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
-	template<typename... Component>
-	static void RegisterComponent(TemplatePack<Component...>)
+	template<typename... T>
+	static void RegisterComponent(TemplatePack<T...>)
 	{
-		RegisterComponent<Component...>();
+		RegisterComponent<T...>();
 	}
 
 	static void RegisterComponents()
 	{
 		monoComponentToType.clear();
-		RegisterComponent(AllComponentTypes());
+		RegisterComponent(AllObjectTypes());
 	}
 
 	/*******************************************************************************
@@ -1182,10 +1107,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetKeyUp);
 		Register(GetKeyDown);
 		Register(GetMouseDown);
-		Register(GetTransformFromGameObject);
-		Register(GetTransformFromComponent);
-		Register(GetGameObjectFromScript);
-
 		Register(DestroyGameObject);
 		//Register(GetMousePosition);
 		//Register(GetTranslation);
@@ -1193,7 +1114,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(GetGlobalPosition);
 		//Register(GetGlobalScale);
 		Register(HasComponent);
-		Register(GetComponent);
+		Register(Get);
 		//Register(RigidbodyAddForce);
 		//Register(RigidbodyGetVelocity);
 		//Register(RigidbodySetVelocity);
@@ -1213,7 +1134,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(DestroyGameObject);
 		//Register(QuitGame);
 		//Register(GetButtonState);
-		//Register(AddComponent);
+		//Register(Add);
 		//Register(AudioSourcePlay);
 		//Register(AudioSourceStop);
 		//Register(AudioSourceSetVolume);
@@ -1224,7 +1145,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Register(PauseAllAnimation);
 		//Register(PlayAllAnimation);
 		//Register(StopAnimation);
-		//Register(GetComponentEnabled);
+		//Register(GetEnabled);
 		//Register(SetComponentEnabled);
 		//Register(SetParent);
 		//Register(GetFPS);
