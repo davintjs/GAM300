@@ -4,6 +4,7 @@
 layout (location = 0) in vec4 vColor;
 layout (location = 1) in vec3 FragmentPos;
 layout (location = 2) in vec3 Normal;
+layout (location = 3) in vec2 frag_TexCoord;
 
 layout (location = 4) in vec2 Tex_Coord;
 
@@ -13,6 +14,7 @@ layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
 layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
+layout (location = 15) in vec2 texture_index;
 
 layout (location = 5) in vec3 TangentLightPos;
 layout (location = 15) in vec3 TangentViewPos;
@@ -42,11 +44,12 @@ uniform vec3 lightPos;
 uniform vec3 camPos;
 
 
-layout(binding=0) uniform sampler2D myTextureSampler;
+//layout(binding=0) uniform sampler2D myTextureSampler;
 
-layout(binding=1) uniform sampler2D normalSampler;
+//layout(binding=1) uniform sampler2D normalSampler;
 
 
+layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
 void main()
 {
@@ -242,4 +245,19 @@ void main()
 // Gamma Correction -> Currently this is moved to the post processing
 //    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
 
+    vec3 viewDir = normalize(camPos - FragmentPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
+    vec3 speculation = lightColor * (vec3(frag_specular) * spec) ;  
+        
+    vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
+    
+    // int index = int(texture_index.x + 0.5f); // .x is texture
+    int index = int(texture_index.y + 0.5f);    // .y is normal map
+    if (index < 32){
+        result = (ambience + diffusion + speculation) * vec3(texture(myTextureSampler[index], frag_TexCoord));
+    }else{
+        result = (ambience + diffusion + speculation) * vec3(frag_albedo);
+    }
+    FragColor = vec4(result, 1.0);
 }

@@ -41,6 +41,7 @@ struct Materials
 {
 	// Slam Texture Pointer / Reference whatever GUID magic idk in here
 	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
+	// store guid also
 	std::string current = "defaulttexture"; // to get dds
 	std::unordered_map<std::string, Settings> mSettingsContainer; // GUID, <file name, GLuint>
 
@@ -50,14 +51,12 @@ static unsigned int InstancePropertyCount = 1;
 
 struct InstanceProperties
 {
+	// instanced stuff
 	unsigned int VAO;
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
 	
-	//unsigned int entityMATbuffer;
-	//Materials entityMAT[EnitityInstanceLimit];
-
 	// make into individual buffers
 	unsigned int AlbedoBuffer;
 	glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
@@ -74,7 +73,13 @@ struct InstanceProperties
 	unsigned int ShininessBuffer;
 	float Shininess[EnitityInstanceLimit];
 
+	unsigned int textureIndexBuffer;
+	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
 
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
+	unsigned int texture[32];// max 32 dds only
+	unsigned int textureCount = 0;
+	
+	void BatchTexture(std::string texture);
 };

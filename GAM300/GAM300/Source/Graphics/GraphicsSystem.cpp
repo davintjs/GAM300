@@ -20,12 +20,7 @@
 //Model LightSource;
 
 Model AffectedByLight;
-
-//unsigned int testBoxbuffer;
-//Model testBox;
-
-//unsigned int entitySRTBuffer;
-//glm::mat4 entitySRT[EntityRenderLimit];
+bool haveTexture = false;
 Model Line;
 
 std::map<std::string, InstanceProperties> properties;
@@ -139,6 +134,7 @@ void HDR_Shader_init()
 
 
 
+unsigned int ReturnTextureIdx(std::string MeshName,GLuint id);
 
 void GraphicsSystem::Init()
 {
@@ -242,7 +238,28 @@ void GraphicsSystem::Init()
 		std::exit(EXIT_FAILURE);
 	}
 
-
+	/*Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	unsigned int textureCount = 0;
+	bool skip = false;
+	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>()) {
+		Entity& entity = currentScene.GetEntity(renderer);
+		std::string& textureName = currentScene.GetComponent<Texture>(entity).filepath;
+		unsigned int texID = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(textureName));
+		for (int j = 0; j <= textureCount; ++j) {
+			if (properties[renderer.MeshName].texture[j] == texID) {
+				skip = true;
+			}
+		}
+		if (skip) {
+			skip = false;
+			continue;
+		}
+		if (textureCount >= 31) {
+			PRINT("TOO MANY TEXTURE IN THIS GEOM!!");
+			break;
+		}
+		properties[renderer.MeshName].texture[textureCount++] = texID;
+	}*/
 
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
@@ -270,6 +287,10 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+	for (auto& [name, prop] : properties) {
+		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
+		std::fill_n(prop.texture, 32, 0.f);
+	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -327,7 +348,24 @@ void GraphicsSystem::Update(float dt)
 		
 		Entity& entity = currentScene.GetEntity(renderer);
 		Transform& transform = currentScene.GetComponent<Transform>(entity);
+		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
+		GLuint textureID = 0;
+		GLuint normalMapID = 0;
+		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
+		// use bool to see if texture exist instead...
+		if (renderer.AlbedoTexture != "") {
+			textureID = 
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
+		}
+		if (renderer.NormalMap != "") {
+			normalMapID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
+		}
+		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
+		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
+
+		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];
 		renderer.mr_Ambient = temp_AmbientContainer[3];
@@ -335,9 +373,6 @@ void GraphicsSystem::Update(float dt)
 		renderer.mr_Shininess = temp_ShininessContainer[3];
 		renderer.mr_Specular = temp_SpecularContainer[3];
 		
-
-
-		//properties[renderer.MeshName].entityMAT[properties[renderer.MeshName].iter] = renderer.mr_Material;
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
 		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
@@ -357,10 +392,34 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
+
+			/*if (currentScene.HasComponent<Texture>(entity)) {
+				for (int j = 0; j <= properties[newName].textureCount; ++j) {
+					if (properties[newName].texture[j] == texID) {
+						haveTexture = true;
+					}
+				}
+				if (!haveTexture) {
+					if (properties[newName].textureCount < 32) {
+						properties[newName].texture[properties[newName].textureCount++] = texID;
+					}
+				}
+			}*/
+			/*for (int j = 0; j <= properties[newName].textureCount; ++j) {
+				if (properties[newName].texture[j] == texID) {
+					haveTexture = true;
+				}
+			}
+			if (!haveTexture) {
+				if (properties[newName].textureCount < 32) {
+					properties[newName].texture[properties[newName].textureCount++] = texID;
+				}
+			}*/
+
+			// properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
 			//std::cout << newName << "\n";
 
 			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			//properties[newName].entityMAT[properties[newName].iter] = renderer.mr_Material;
 			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
 			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
 			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
@@ -617,6 +676,11 @@ void GraphicsSystem::Draw() {
 	for (auto& [name, prop] : properties)
 	{
 		
+		/*for (size_t i = 0; i < 32; i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, texIndex[i]);
+		}*/
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -645,14 +709,19 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
+		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.textureIndex[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 		
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
-
+		for (int i = 0; i < 32; ++i) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
+		}
 		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 		prop.iter = 0;
@@ -708,6 +777,25 @@ bool GraphicsSystem::Raycasting(Ray3D& _ray)
 
 	return false;
 }
+
+unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
+	if (!id) {
+		return 33;
+	}
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount+1; ++iter) {
+		if (properties[MeshName].texture[iter] == 0) {
+			properties[MeshName].texture[iter] = id;
+			properties[MeshName].textureCount++;
+			return iter;
+		}
+		if (properties[MeshName].texture[iter] == id) {
+			properties[MeshName].textureCount++;
+			return iter;
+		}
+	}
+	return 33;
+}
+
 
 void GraphicsSystem::Exit()
 {

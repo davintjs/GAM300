@@ -15,13 +15,13 @@ layout (location = 11) in vec4 Specular;
 layout (location = 12) in vec4 Diffuse;
 layout (location = 13) in vec4 Ambient;
 layout (location = 14) in float Shininess;
+layout (location = 15) in vec2 texture_index;
 
 // Out
 layout (location = 0) out vec4 vColor;
 layout (location = 1) out vec3 FragmentPos;
 layout (location = 2) out vec3 Normal;
-
-layout (location = 4) out vec2 Tex_Coord;
+layout (location = 3) out vec2 frag_TexCoord;
 
 
 layout (location = 10) out vec4 frag_albedo;
@@ -29,6 +29,7 @@ layout (location = 11) out vec4 frag_specular;
 layout (location = 12) out vec4 frag_diffuse;
 layout (location = 13) out vec4 frag_ambient;
 layout (location = 14) out float frag_shininess;
+layout (location = 15) out vec2 frag_texture_index;
 
 layout (location = 5) out vec3 TangentLightPos;
 layout (location = 15) out vec3 TangentViewPos;
@@ -66,7 +67,6 @@ void main()
 	frag_diffuse = Diffuse;
 	frag_ambient = Ambient;
 	frag_shininess = Shininess;
-	Tex_Coord = aVertexTexCoord;
 
 	mat3 normalMatrix = transpose(inverse(mat3(SRT)));
     vec3 T = normalize(normalMatrix * aVertexTangent);
@@ -83,4 +83,6 @@ void main()
 //    vs_out.TangentFragPos  = TBN * FragmentPos;
 //
 
+	frag_TexCoord = aVertexTexCoord;
+	frag_texture_index = texture_index;
 } 
