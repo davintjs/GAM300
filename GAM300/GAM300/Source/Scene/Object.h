@@ -13,7 +13,8 @@ struct Object : property::base
 };
 
 property_begin_name(Object, "Object") {
-	//property_var(uuid)
+	property_var(euid).Name("EUID"),
+		property_var(uuid).Name("UUID"),
 }property_vend_h(Object)
 
 #endif // !OBJECT_H

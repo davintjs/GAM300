@@ -286,8 +286,8 @@ struct AudioSource : Object
 };
 
 property_begin_name(AudioSource, "Audio Source") {
-		property_var(loop)
-		,property_var(volume)
+	property_var(loop),
+		property_var(volume)
 } property_vend_h(AudioSource)
 
 struct BoxCollider : Object
@@ -299,9 +299,10 @@ struct BoxCollider : Object
 };
 
 property_begin_name(BoxCollider, "BoxCollider") {
-	property_var(x)
-		, property_var(y)
-		, property_var(z)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(x),
+		property_var(y),
+		property_var(z),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
@@ -311,7 +312,8 @@ struct SphereCollider : Object
 };
 
 property_begin_name(SphereCollider, "SphereCollider") {
-	property_var(radius)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(radius)
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
@@ -322,8 +324,9 @@ struct CapsuleCollider : Object
 };
 
 property_begin_name(CapsuleCollider, "CapsuleCollider") {
-	property_var(height)
-		, property_var(radius)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(height),
+		property_var(radius)
 } property_vend_h(CapsuleCollider)
 
 struct Animator : Object
@@ -352,17 +355,17 @@ struct Rigidbody : Object
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
-
-	property_var(linearVelocity)
-		, property_var(angularVelocity)
-		, property_var(force)
-		, property_var(friction)
-		, property_var(mass)
-		, property_var(isStatic)
-		, property_var(isKinematic)
-		, property_var(useGravity)
-		, property_var(is_enabled)
-		, property_var(is_trigger)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(linearVelocity),
+		property_var(angularVelocity),
+		property_var(force),
+		property_var(friction),
+		property_var(mass),
+		property_var(isStatic),
+		property_var(isKinematic),
+		property_var(useGravity),
+		property_var(is_enabled),
+		property_var(is_trigger)
 } property_vend_h(Rigidbody)
 
 struct CharacterController : Object
@@ -379,12 +382,13 @@ struct CharacterController : Object
 };
 
 property_begin_name(CharacterController, "CharacterController") {
-	property_var(velocity)
-		, property_var(force)
-		, property_var(friction)
-		, property_var(mass)
-		, property_var(gravityFactor)
-		, property_var(slopeLimit)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(velocity),
+		property_var(force),
+		property_var(friction),
+		property_var(mass),
+		property_var(gravityFactor),
+		property_var(slopeLimit)
 } property_vend_h(CharacterController)
 
 struct Script : Object
@@ -394,9 +398,9 @@ struct Script : Object
 	property_vtable();
 };
 
-
 property_begin_name(Script, "Script") {
-	property_var(name)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(name),
 		//, property_var(fields)
 } property_vend_h(Script)
 
@@ -416,7 +420,8 @@ struct MeshRenderer : Object
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
-	property_var(MeshName)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(MeshName)
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
@@ -426,7 +431,8 @@ struct LightSource : Object
 };
 
 property_begin_name(LightSource, "LightSource") {
-	property_var(lightingColor)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(lightingColor)
 } property_vend_h(LightSource)
 
 #pragma endregion

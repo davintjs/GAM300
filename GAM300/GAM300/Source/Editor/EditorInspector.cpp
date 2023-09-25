@@ -249,7 +249,6 @@ void Display_Property(T& comp) {
 
     for (auto& [Name, Data] : List)
     {
-
         /*if constexpr (std::is_same<T, Rigidbody>() || std::is_same<T, CharacterController>() || std::is_same<T, LightSource>()) {
                         if ((Name.find(".x") != std::string::npos) ||
                             (Name.find(".y") != std::string::npos) ||
@@ -262,7 +261,7 @@ void Display_Property(T& comp) {
 
                 //Edit name
                 std::string DisplayName = Name;
-                auto it = DisplayName.begin() + DisplayName.find_first_of("/");
+                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                 DisplayName.erase(DisplayName.begin(), ++it);
                 DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
 

@@ -27,7 +27,7 @@ bool SerializeScene(Scene& _scene)
     for (Entity* entity : EditorHierarchy::Instance().layer)
     {
         bool serialized = SerializeEntity(out, *entity, _scene);
-        assert(serialized, "Unable To Serialize Entity!\n");
+        E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }
 
     out << YAML::EndSeq;
@@ -201,6 +201,10 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     out << YAML::BeginMap;
     out << YAML::Key << componentName << YAML::Value << YAML::BeginSeq;
 
+    
+    // Store UUID for each component
+    // Store reference to gameobject
+
     std::vector<property::entry> List;
     property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
@@ -216,34 +220,14 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
                 using T = std::decay_t<decltype(Value)>;
                 
                 // Edit name
-                auto it = Name.begin() + Name.find_first_of("/");
+                auto it = Name.begin() + Name.find_last_of("/");
                 Name.erase(Name.begin(), ++it);
-                Name[0] = toupper(Name[0]); //Make first letter uppercase
-
+                Name[0] = (char)toupper(Name[0]); //Make first letter uppercase
+                
                 // Store Component value
-                if (Name.find(".x") != std::string::npos)
-                {
-                    size_t pos = Name.find_last_of('.');
-                    Name.erase(pos, 2);
-                    out << YAML::BeginMap;
-                    out << YAML::Key << Name << YAML::Value;
-                    out << YAML::Flow << YAML::BeginSeq << Value;
-                }
-                else if (Name.find(".y") != std::string::npos)
-                {
-                    out << Value;
-                }
-                else if (Name.find(".z") != std::string::npos)
-                {
-                    out << Value << YAML::EndSeq;
-                    out << YAML::EndMap;
-                }
-                else
-                {
-                    out << YAML::BeginMap;
-                    out << YAML::Key << Name << YAML::Value << Value;
-                    out << YAML::EndMap;
-                }
+                out << YAML::BeginMap;
+                out << YAML::Key << Name << YAML::Value << Value;
+                out << YAML::EndMap;
             }
         , Data);
         property::set(_component, Name.c_str(), Data);
