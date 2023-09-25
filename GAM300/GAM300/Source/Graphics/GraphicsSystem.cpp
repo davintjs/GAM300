@@ -474,6 +474,7 @@ void GraphicsSystem::Update(float dt)
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
 	*/
+
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
@@ -497,36 +498,36 @@ void GraphicsSystem::Update(float dt)
 
 
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
-	{
-		hdr = !hdr;
-	}
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
-	{
-		if (exposure == 0.1)
-		{
-			exposure = 5.0;
-		}
-		else
-		{
-			exposure =  0.1;
-		}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+	//{
+	//	hdr = !hdr;
+	//}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
+	//{
+	//	if (exposure == 0.1)
+	//	{
+	//		exposure = 5.0;
+	//	}
+	//	else
+	//	{
+	//		exposure =  0.1;
+	//	}
+	//}
 
-	}
-	GLint uniform1 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+	//GLint uniform1 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
 
-	glUniform1i(uniform1, hdr);
+	//glUniform1i(uniform1, hdr);
 
-	GLint uniform2 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
+	//GLint uniform2 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
 
-	glUniform1f(uniform2, exposure);
+	//glUniform1f(uniform2, exposure);
 
 	renderQuad();
 	EditorCam.getFramebuffer().unbind();
 
-	std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
+	//std::cout << "hdr: " << (hdr ? "on" : "off") << "| exposure: " << exposure << std::endl;
 
 	// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 	// -------------------------------------------------------------------------------
@@ -578,7 +579,6 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
-	std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,
