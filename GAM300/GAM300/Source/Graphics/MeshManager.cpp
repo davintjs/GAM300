@@ -493,7 +493,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);

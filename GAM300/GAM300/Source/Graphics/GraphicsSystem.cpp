@@ -30,7 +30,7 @@ bool SwappingColorSpace = false;
 
 //Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
-
+bool gay = false;
 
 // Naive Solution for now
 
@@ -333,8 +333,10 @@ void GraphicsSystem::Update(float dt)
 
 	// Update Loop
 	int i = 0;
-
-
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
+	{
+		gay = !gay;
+	}
 	for (MeshRenderer& renderer : currentScene.GetComponentsArray<MeshRenderer>())
 	{
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
@@ -364,7 +366,12 @@ void GraphicsSystem::Update(float dt)
 		}
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
-
+		// button here change norm idx to 33
+		if (gay)
+		{
+			normidx = 33;
+		}
+		std::cout << normidx << "\n";
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
 		renderer.mr_Albedo = temp_AlbedoContainer[3];
@@ -643,14 +650,6 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(EditorCam.GetCameraPosition()));
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D,TextureManager.GetTexture(
-		AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color")));
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(
-		AssetManager::Instance().GetAssetGUID("TD_Checker_Normal_OpenGL")));
-
 
 
 
@@ -710,7 +709,7 @@ void GraphicsSystem::Draw() {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.textureIndex[0]));
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
