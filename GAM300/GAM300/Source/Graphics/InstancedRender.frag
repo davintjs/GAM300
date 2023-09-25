@@ -1,7 +1,7 @@
 #version 450 core
 
 // IN
-layout (location = 0) in vec4 vColor;
+// layout (location = 0) in vec4 vColor;
 layout (location = 1) in vec3 FragmentPos;
 layout (location = 2) in vec3 Normal;
 layout (location = 3) in vec2 frag_TexCoord;
@@ -14,7 +14,7 @@ layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
 layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
-layout (location = 15) in vec2 texture_index;
+layout (location = 0) in vec2 texture_index;
 
 layout (location = 5) in vec3 TangentLightPos;
 layout (location = 15) in vec3 TangentViewPos;
@@ -69,15 +69,15 @@ void main()
 //
 //    // ambient lighting
 //    // float ambientStrength = 0.1;
-//    vec3 ambience = vec3(frag_ambient) * lightColor;
+   vec3 ambience = vec3(frag_ambient) * lightColor;
 ////    vec3 result = ambient * objectColor;
 ////    FragColor = vec4(result, 1.0);
 //
 //    // diffuse 
-//    vec3 norm = normalize(Normal);
-//    vec3 lightDir = normalize(lightPos - FragmentPos);
-//    float diff = max(dot(norm, lightDir), 0.0);
-//    vec3 diffusion = lightColor * (diff * vec3(frag_diffuse));
+   vec3 norm = normalize(Normal);
+   vec3 lightDir = normalize(lightPos - FragmentPos);
+   float diff = max(dot(norm, lightDir), 0.0);
+   vec3 diffusion = lightColor * (diff * vec3(frag_diffuse));
 //
 ////    vec3 result = (ambient + diffuse) * objectColor;
 ////    FragColor = vec4(result, 1.0);
@@ -95,40 +95,40 @@ void main()
 //
 ////
 //
-// NORMAL MAPPING
+// // NORMAL MAPPING
 
-     // obtain normal from normal map in range [0,1]
-    vec3 normal = texture(normalSampler, Tex_Coord).rgb;
+//      // obtain normal from normal map in range [0,1]
+//     vec3 normal = texture(normalSampler, Tex_Coord).rgb;
     
-    // transform normal vector to range [-1,1]
-    normal = normalize(normal * 2.0 - 1.0);  // this normal is in tangent space
+//     // transform normal vector to range [-1,1]
+//     normal = normalize(normal * 2.0 - 1.0);  // this normal is in tangent space
    
-//    vec3 normal = normalize(Normal);
+// //    vec3 normal = normalize(Normal);
 
-//
-    // get diffuse color
+// //
+//     // get diffuse color
 
-    vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
-//    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
+//     vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+// //    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
 
-    // ambient
-    vec3 ambient = 0.0 * color;
-//    vec3 ambient = vec3(frag_ambient) * color;
-    // diffuse
-    vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
-//    vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
-//    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = lightColor * diff * color;
-    // specular
-    vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
-//    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+//     // ambient
+//     vec3 ambient = 0.0 * color;
+// //    vec3 ambient = vec3(frag_ambient) * color;
+//     // diffuse
+//     vec3 lightDir = normalize(-TangentLightPos + TangentFragPos);
+// //    vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
+// //    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+//     float diff = max(dot(normal, lightDir), 0.0);
+//     vec3 diffuse = lightColor * diff * color;
+//     // specular
+//     vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
+// //    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+//     vec3 reflectDir = reflect(-lightDir, normal);
+//     vec3 halfwayDir = normalize(lightDir + viewDir);  
+//     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-    vec3 specular = vec3(0.2) * spec;
-    FragColor = vec4(ambient + diffuse + specular, 1.0);
+//     vec3 specular = vec3(0.2) * spec;
+//     FragColor = vec4(ambient + diffuse + specular, 1.0);
 
 // FragColor = texture(myTextureSampler,Tex_Coord);
 
@@ -250,7 +250,7 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), frag_shininess); // look at basic lighting for the 32
     vec3 speculation = lightColor * (vec3(frag_specular) * spec) ;  
         
-    vec3 result = (ambience + diffusion + speculation) * vec3(vColor);
+    vec3 result = (ambience + diffusion + speculation) * vec3(frag_albedo);
     
     // int index = int(texture_index.x + 0.5f); // .x is texture
     int index = int(texture_index.y + 0.5f);    // .y is normal map

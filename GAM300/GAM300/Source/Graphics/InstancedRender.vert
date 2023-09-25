@@ -18,7 +18,7 @@ layout (location = 14) in float Shininess;
 layout (location = 15) in vec2 texture_index;
 
 // Out
-layout (location = 0) out vec4 vColor;
+// layout (location = 0) out vec4 vColor;
 layout (location = 1) out vec3 FragmentPos;
 layout (location = 2) out vec3 Normal;
 layout (location = 3) out vec2 frag_TexCoord;
@@ -29,7 +29,7 @@ layout (location = 11) out vec4 frag_specular;
 layout (location = 12) out vec4 frag_diffuse;
 layout (location = 13) out vec4 frag_ambient;
 layout (location = 14) out float frag_shininess;
-layout (location = 15) out vec2 frag_texture_index;
+layout (location = 0) out vec2 frag_texture_index;
 
 layout (location = 5) out vec3 TangentLightPos;
 layout (location = 15) out vec3 TangentViewPos;
@@ -54,7 +54,6 @@ uniform mat4 View;
 
 void main()
 {
-	vColor = aVertexColor;
 	gl_Position = persp_projection * View * SRT * vec4(aVertexPosition, 1.0f);
 
 	FragmentPos = vec3(SRT * vec4(aVertexPosition, 1.0));
