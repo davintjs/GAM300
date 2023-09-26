@@ -67,8 +67,7 @@ void AssetManager::Init()
 		{
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
 		}
-		// Add this asset file time to our tracking vector of last write time (Only if geom / ... file)
-		//this->mTotalAssets.mAssetsTime.push_back(std::filesystem::last_write_time(dir));
+
 		// Deserialize from meta file and load the asset asynchronously
 		if (!dir.is_directory())
 		{
@@ -348,7 +347,7 @@ void AssetManager::FileAddProtocol()
 		std::string fileType{};
 		std::string fileName{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		if (!dir.is_directory())
 		{
 			// Check if is file with no extension
 			auto check = subFilePath.find_last_of('.');
@@ -359,7 +358,7 @@ void AssetManager::FileAddProtocol()
 				fileType += subFilePath[i];
 			}
 		}
-		
+
 		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
@@ -394,6 +393,7 @@ void AssetManager::FileAddProtocol()
 
 			mTotalAssets.mExtensionFiles["meta"].push_back(fileName); // Meta file
 			mTotalAssets.mExtensionFiles[fileType].push_back(fileName); // File name
+
 			// Deserialize from meta file and load the asset asynchronously
 			this->AsyncLoadAsset(subFilePathMeta, fileName);
 		}
@@ -408,7 +408,7 @@ void AssetManager::FileRemoveProtocol()
 		subFilePath = dir.path().generic_string();
 		std::string fileType{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		if (!dir.is_directory())
 		{
 			// Check if is file with no extension
 			auto check = subFilePath.find_last_of('.');
@@ -463,7 +463,7 @@ void AssetManager::FileUpdateProtocol()
 		subFilePath = dir.path().generic_string();
 		std::string fileType{};
 
-		for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
+		if (!dir.is_directory())
 		{
 			// Check if is file with no extension
 			auto check = subFilePath.find_last_of('.');
