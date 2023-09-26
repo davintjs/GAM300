@@ -47,7 +47,7 @@ void AssetManager::Init()
 		// Add into file extensions list
 		mTotalAssets.mExtensionFiles[fileType].push_back(fileName);
 
-		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
+		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "jpg") || !strcmp(fileType.c_str(), "png") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
