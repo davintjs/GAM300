@@ -144,17 +144,20 @@ void EditorSystem::Editor_Dockspace() {
 }
 
 
-Entity* EditorSystem::GetSelectedEntity()
+Engine::UUID EditorSystem::GetSelectedEntity()
 {
     return selectedEntity;
 }
 
 void EditorSystem::SetSelectedEntity(Entity* pEntity)
 {
-    selectedEntity = pEntity;
+    selectedEntity = pEntity->EUID();
 }
 
 void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    selectedEntity = pEvent->pEntity;
+    if (pEvent->pEntity)
+        selectedEntity = pEvent->pEntity->EUID();
+    else
+        selectedEntity = 0;
 }

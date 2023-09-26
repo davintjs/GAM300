@@ -34,6 +34,9 @@ public:
 
 	void CallbackIsNewScene(IsNewSceneEvent* pEvent);
 
+	void CallbackSceneStart(SceneStartEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
+
 private:
 	std::list<Scene> loadedScenes;
 	//Scene* currentScene;

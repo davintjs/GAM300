@@ -1,5 +1,5 @@
-[2023-09-26 20:55:18.063] [Error] [critical] 
-Caused By:	check != std::string::npos
-Info:		File with no extension found! Remove it from the assets folder.
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 355)
+[2023-09-26 23:03:00.306] [Error] [critical] 
+Caused By:	it != child.end()
+Info:		FAILED TO REMOVE CHILD
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Components.cpp (Line: 83)
 

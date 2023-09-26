@@ -86,10 +86,6 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
 
-		SceneStartEvent startEvent{};
-		ACQUIRE_SCOPED_LOCK(Assets);
-		EVENTS.Publish(&startEvent);
-
 		// NavMesh testing
 		std::vector<glm::vec3> GroundVertices{
 				glm::vec3(-0.5f, -0.5f, -0.5f),
