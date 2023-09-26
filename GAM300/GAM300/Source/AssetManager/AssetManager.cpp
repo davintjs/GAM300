@@ -4,8 +4,6 @@
 #include "Core/EventsManager.h"
 #include "Core/FileTypes.h"
 
-// Currently only loads geom files, future requires editing to support other file types of assets
-
 void AssetManager::Init()
 {
 	E_ASSERT(std::filesystem::exists(AssetPath), "Check if proper assets filepath exists!");
@@ -97,66 +95,12 @@ void AssetManager::Init()
 	}
 
 	MeshManager.Init();
-
-	//SceneManager::Instance().GetCurrentScene(); // Should be loading according to scene, but temporarily not
 }
 
 // For run time update of files
 void AssetManager::Update(float dt)
 {
-	
-	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(""));
-	////Change this to an assert
-	//if (!std::filesystem::exists(AssetPath))
-	//{
-	//	std::cout << "Check if proper assets filepath exists!" << std::endl;
-	//	exit(0);
-	//}
-
-	//std::vector<std::filesystem::file_time_type> temp{};
-
-	//std::string subFilePath{};
-	//for (const auto& it : std::filesystem::recursive_directory_iterator(AssetPath))
-	//{
-	//	subFilePath = it.path().generic_string();
-	//	std::string fileType{};
-
-	//	for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
-	//	{
-	//		fileType += subFilePath[i];
-	//	}
-
-	//	if (strcmp(fileType.c_str(), "geom")) // Skip if not geom / ...
-	//	{
-	//		continue;
-	//	}
-	//	temp.push_back(it.last_write_time()); // For comparison with our assets' last write time
-	//}
-
-	//if (temp.size() != this->mTotalAssets.mAssetsTime.size()) // File was added or removed from folder
-	//{
-	//	if (temp.size() > this->mTotalAssets.mAssetsTime.size()) // File added
-	//	{
-	//		FileAddProtocol();
-	//	}
-	//	else // File removed
-	//	{
-	//		FileRemoveProtocol();
-	//	}
-	//	this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
-	//}
-	//else // No file added to folder, but check for update of last write time of existing files
-	//{
-	//	for (int i = 0; i < this->mTotalAssets.mAssetsTime.size(); ++i)
-	//	{
-	//		if (this->mTotalAssets.mAssetsTime[i] != temp[i])
-	//		{
-	//			FileUpdateProtocol(); // Update the file data in memory
-	//			this->mTotalAssets.mAssetsTime = temp; // Update vector of time to most current
-	//			break; // Skip the rest as all has been updated
-	//		}
-	//	}
-	//}
+	UNREFERENCED_PARAMETER(dt);
 }
 
 void AssetManager::Exit()
@@ -172,11 +116,6 @@ void AssetManager::AsyncLoadAsset(const std::string& metaFilePath, const std::st
 
 void AssetManager::LoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS)
 {
-	// {
-	// 	std::lock_guard<std::mutex> mLock(mAssetMutex);
-	// 	DeserializeAssetMeta(metaFilePath, fileName, isDDS);
-	// }
-	// mAssetVariable.notify_all();
 	ACQUIRE_SCOPED_LOCK(Assets);
 	DeserializeAssetMeta(metaFilePath, fileName, isDDS);
 }
@@ -563,7 +502,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		default:
 		{
-			//PRINT("UNDEFINED ");
 			break;
 		}
 
@@ -575,4 +513,3 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	}
 	PRINT(filePath,'\n');
 }
-
