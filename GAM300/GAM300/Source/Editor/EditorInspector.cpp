@@ -374,7 +374,11 @@ void Display_Property(T& comp) {
     int id = 0;
     for (auto& [Name, Data] : List)
     {
+        //find out how to use flags
+        /*property::flags::type Flags;
+        if (Flags.m_isDontShow) continue;*/
 
+        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos)) continue;
         std::visit([&](auto& Value) {
                 using T1 = std::decay_t<decltype(Value)>;
                 //Edit name
@@ -630,6 +634,19 @@ void DisplayComponentHelper(T& component)
         //This means T is not a component
         //PRINT(typeid(T).name());
     }
+    
+    ImVec4 check_color = ImGui::GetStyleColorVec4(ImGuiCol_FrameBg);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
+
+    //For Zac to change to component is_enabled
+    static bool checkbox = true;
+    std::string label = "##" + name;
+    ImGui::Checkbox(label.c_str(), &checkbox);
+
+    ImGui::PopStyleColor(); 
+    
+    ImGui::SameLine(ImGui::GetItemRectSize().x + 10.f);
+
     bool windowopen = ImGui::CollapsingHeader(name.c_str(), nodeFlags);
 
     ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
@@ -675,7 +692,8 @@ void DisplayComponentHelper(T& component)
     ImGui::PopID();
 
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
-
+    
+    
 
     if (windowopen)
     {
@@ -688,6 +706,7 @@ void DisplayComponentHelper(T& component)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
 
+        
 
         if (ImGui::BeginTable("Component", 2, winFlags))
         {
@@ -698,6 +717,12 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
+           
+
+            //ImGui::PushID(component.UUID);
+           
+            //ImGui::SameLine();
+
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
@@ -706,6 +731,8 @@ void DisplayComponentHelper(T& component)
             {
                 Display_Property(component);
             }
+
+            //ImGui::PopID();
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
