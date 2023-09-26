@@ -4,6 +4,9 @@
 
 Triangle3D::Triangle3D(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
 {
+    mPoints[0] = p1;
+    mPoints[1] = p2;
+    mPoints[2] = p3;
     mMidPoint = (p1 + p2 + p3) / 3.f;
     mNormal = glm::cross((p2 - p1), (p3 - p1));
 }
