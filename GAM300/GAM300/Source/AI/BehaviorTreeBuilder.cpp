@@ -9,7 +9,7 @@ void BehaviorTreeBuilder::Init()
 
 void BehaviorTreeBuilder::Update(float dt)
 {
-
+	UNREFERENCED_PARAMETER(dt);
 }
 
 void BehaviorTreeBuilder::Exit()
