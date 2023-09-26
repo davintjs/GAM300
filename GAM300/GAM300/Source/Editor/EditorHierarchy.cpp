@@ -151,7 +151,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("Entity", &selectedEntity, sizeof(selectedEntity));
+		ImGui::SetDragDropPayload("Entity", &selectedEntity, sizeof(Handle));
 		ImGui::Text(curr_scene.Get<Tag>(selectedEntity).name.c_str());
 		ImGui::EndDragDropSource();
 	}

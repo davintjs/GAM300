@@ -164,7 +164,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			continue;
 
 		// If no collider is attached with the rigidbody, reject gameobject
-		if (!scene.HasComponent<BoxCollider>(entity) || !scene.HasComponent<SphereCollider>(entity) || !scene.HasComponent<CapsuleCollider>(entity))
+		if (!scene.Has<BoxCollider>(entity) || !scene.Has<SphereCollider>(entity) || !scene.Has<CapsuleCollider>(entity))
 			continue;
 
 		// Position, Rotation and Scale of collider
@@ -197,7 +197,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		
 
-		if (scene.HasComponent<BoxCollider>(entity)) {
+		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& bc = scene.Get<BoxCollider>(entity);
 			Vector3 colliderScale(bc.x * t.scale.x, bc.y * t.scale.y, bc.z * t.scale.z);
@@ -222,7 +222,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			//rb.RigidBodyID = box->GetID();
 
 		}
-		else if (scene.HasComponent<SphereCollider>(entity)) {
+		else if (scene.Has<SphereCollider>(entity)) {
 
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
@@ -243,7 +243,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			bodyInterface->AddBody(sphere->GetID(),enabledStatus);
 
 		}
-		else if (scene.HasComponent<CapsuleCollider>(entity)) {
+		else if (scene.Has<CapsuleCollider>(entity)) {
 
 
 			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);

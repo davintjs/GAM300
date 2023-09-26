@@ -53,8 +53,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 	<
 		AssetManager,
 		InputSystem,
-		SceneManager,
 		EditorSystem,
+		SceneManager,
 		DemoSystem,//RUN AFTER EDITOR
 		ScriptingSystem, // AFTER DEMO
 		//PhysicsSystem, //AFTER SCRIPTING

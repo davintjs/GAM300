@@ -379,10 +379,6 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
 		}\
-		else if constexpr(!std::is_same<TYPE,void>())\
-		{\
-			return nullptr; \
-		}\
 	}\
 	template<typename T, typename... Ts>\
 	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
