@@ -228,7 +228,7 @@ void DisplayType(const char* name, T*& container)
     {
 
         static std::string btnName;
-        Engine::UUID* value = reinterpret_cast<Engine::UUID*>(container);
+        Engine::UUID* value = (Engine::UUID*)container;
         if (*value != 0)
         {
             btnName = MySceneManager.GetCurrentScene().Get<Tag>(*value).name;
@@ -251,15 +251,15 @@ void DisplayType(const char* name, T*& container)
 
         if (ImGui::BeginDragDropTarget())
         {
-            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Object");
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetType::Name<T>());
             if (payload)
             {
-                container = (T*)(*reinterpret_cast<void**>(payload->Data));
+                *container = *(Engine::UUID*)(payload->Data);
+                PRINT("RECEIVE:" , *(Engine::UUID*)payload->Data,'\n');
             }
             ImGui::EndDragDropTarget();
         }
     }
-    //Store uuid;
 }
 
 template <typename T, typename... Ts>
