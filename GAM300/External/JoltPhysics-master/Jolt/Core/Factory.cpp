@@ -5,7 +5,6 @@
 #include <Jolt/Jolt.h>
 
 #include <Jolt/Core/Factory.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 JPH_NAMESPACE_BEGIN
 

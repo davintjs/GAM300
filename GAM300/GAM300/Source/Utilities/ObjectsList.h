@@ -17,7 +17,7 @@ class ObjectsList
     class Iterator
     {
         Node* pNode;
-        size_t index;
+        ObjectIndex index;
         friend class ObjectsList;
     public:
         /***************************************************************************/
@@ -30,7 +30,7 @@ class ObjectsList
                 Referenced sparse set
         */
         /**************************************************************************/
-        Iterator(size_t _index, Node* _pNode);
+        Iterator(ObjectIndex _index, Node* _pNode);
 
         /***************************************************************************/
         /*!
@@ -120,7 +120,6 @@ public:
     size_t size() const;
 
     T& DenseSubscript(ObjectIndex val);
-
 
     ObjectIndex GetDenseIndex(T& object);
 

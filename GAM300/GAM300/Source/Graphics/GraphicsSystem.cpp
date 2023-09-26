@@ -268,6 +268,8 @@ void GraphicsSystem::Update(float dt)
 	
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
+
+
 	temp_DiffuseContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
 	temp_SpecularContainer[3] = glm::vec4{ 0.5f, 0.5f, 0.5f,1.f };
 	temp_AmbientContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
@@ -321,10 +323,13 @@ void GraphicsSystem::Update(float dt)
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
+			std::cout << "albedo tex\n";
 			textureID = 
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
 		if (renderer.NormalMap != "") {
+			std::cout << "normal tex\n";
+
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
@@ -335,14 +340,14 @@ void GraphicsSystem::Update(float dt)
 		{
 			normidx = 33;
 		}
-		std::cout << normidx << "\n";
+		//std::cout << normidx << "\n";
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
-		renderer.mr_Albedo = temp_AlbedoContainer[3];
-		renderer.mr_Ambient = temp_AmbientContainer[3];
-		renderer.mr_Diffuse = temp_DiffuseContainer[3];
-		renderer.mr_Shininess = temp_ShininessContainer[3];
-		renderer.mr_Specular = temp_SpecularContainer[3];
+		//renderer.mr_Albedo = temp_AlbedoContainer[3];
+		//renderer.mr_Ambient = temp_AmbientContainer[3];
+		//renderer.mr_Diffuse = temp_DiffuseContainer[3];
+		//renderer.mr_Shininess = temp_ShininessContainer[3];
+		//renderer.mr_Specular = temp_SpecularContainer[3];
 		
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
@@ -363,7 +368,13 @@ void GraphicsSystem::Update(float dt)
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
+			//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
+			GLuint textureID = 0;
+			GLuint normalMapID = 0;
+			//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
+			// use bool to see if texture exist instead...
+		
 			/*if (currentScene.HasComponent<Texture>(entity)) {
 				for (int j = 0; j <= properties[newName].textureCount; ++j) {
 					if (properties[newName].texture[j] == texID) {

@@ -783,7 +783,7 @@ private:
             auto components = curr_scene.GetMulti<T1>(entity);
             for (T1* component : components)
             {
-                Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+                //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
                 //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
                 DisplayComponentHelper(*component);
             }

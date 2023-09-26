@@ -158,7 +158,6 @@
     <ClInclude Include="Source\Core\SystemsGroup.h" />
     <ClInclude Include="Source\Debugging\DemoSystem.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
-    <ClInclude Include="Source\Scene\Handle.h" />
     <ClInclude Include="Source\AI\Geometry.h" />
   </ItemGroup>
   <ItemGroup>

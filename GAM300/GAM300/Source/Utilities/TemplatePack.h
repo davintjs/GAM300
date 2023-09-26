@@ -34,7 +34,7 @@ struct TemplatePack
 	}
 
 	template <typename... T1s>
-	constexpr static auto Concatenate(TemplatePack<T1s...> pack)
+	constexpr static auto Concatenate(TemplatePack<T1s...>)
 	{
 		return TemplatePack<Ts..., T1s...>();
 	}

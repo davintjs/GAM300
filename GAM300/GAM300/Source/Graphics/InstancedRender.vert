@@ -69,9 +69,12 @@ void main()
 	frag_shininess = Shininess;
 	Tex_Coord = aVertexTexCoord;
 	frag_texture_index = texture_index;
+	
 	mat3 normalMatrix = transpose(inverse(mat3(SRT)));
-    vec3 T = normalize(normalMatrix * aVertexTangent);
+    
+	vec3 T = normalize(normalMatrix * aVertexTangent);
     vec3 N = normalize(normalMatrix * aVertexNormal);
+
     T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
     

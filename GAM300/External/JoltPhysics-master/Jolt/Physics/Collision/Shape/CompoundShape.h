@@ -106,7 +106,7 @@ public:
 #endif // JPH_DEBUG_RENDERER
 
 	// See: Shape::ColideSoftBodyVertices
-	virtual void					CollideSoftBodyVertices(Mat44Arg inCenterOfMassTransform, Vec3Arg inScale, Array<SoftBodyVertex> &ioVertices, float inDeltaTime, Vec3Arg inDisplacementDueToGravity, int inCollidingShapeIndex) const override;
+	virtual void					CollideSoftBodyVertices(Mat44Arg inCenterOfMassTransform, Vec3Arg inScale, SoftBodyVertex *ioVertices, uint inNumVertices, float inDeltaTime, Vec3Arg inDisplacementDueToGravity, int inCollidingShapeIndex) const override;
 
 	// See Shape::TransformShape
 	virtual void					TransformShape(Mat44Arg inCenterOfMassTransform, TransformedShapeCollector &ioCollector) const override;
@@ -244,7 +244,7 @@ public:
 	const SubShapes &				GetSubShapes() const									{ return mSubShapes; }
 
 	/// Get the total number of sub shapes
-	uint							GetNumSubShapes() const									{ return (uint)mSubShapes.size(); }
+	uint							GetNumSubShapes() const									{ return uint(mSubShapes.size()); }
 
 	/// Access to a particular sub shape
 	const SubShape &				GetSubShape(uint inIdx) const							{ return mSubShapes[inIdx]; }
@@ -319,7 +319,7 @@ protected:
 	inline uint						GetSubShapeIDBits() const
 	{
 		// Ensure we have enough bits to encode our shape [0, n - 1]
-		uint32 n = (uint32)mSubShapes.size() - 1;
+		uint32 n = uint32(mSubShapes.size()) - 1;
 		return 32 - CountLeadingZeros(n);
 	}
 

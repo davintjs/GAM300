@@ -90,7 +90,7 @@ public:
 	virtual void			CollidePoint(Vec3Arg inPoint, const SubShapeIDCreator &inSubShapeIDCreator, CollidePointCollector &ioCollector, const ShapeFilter &inShapeFilter = { }) const override;
 
 	// See: Shape::ColideSoftBodyVertices
-	virtual void			CollideSoftBodyVertices(Mat44Arg inCenterOfMassTransform, Vec3Arg inScale, Array<SoftBodyVertex> &ioVertices, float inDeltaTime, Vec3Arg inDisplacementDueToGravity, int inCollidingShapeIndex) const override;
+	virtual void			CollideSoftBodyVertices(Mat44Arg inCenterOfMassTransform, Vec3Arg inScale, SoftBodyVertex *ioVertices, uint inNumVertices, float inDeltaTime, Vec3Arg inDisplacementDueToGravity, int inCollidingShapeIndex) const override;
 
 	// See Shape::GetTrianglesStart
 	virtual void			GetTrianglesStart(GetTrianglesContext &ioContext, const AABox &inBox, Vec3Arg inPositionCOM, QuatArg inRotation, Vec3Arg inScale) const override;
@@ -114,13 +114,13 @@ public:
 	const Array<Plane> &	GetPlanes() const													{ return mPlanes; }
 
 	/// Get the number of vertices in this convex hull
-	inline uint				GetNumPoints() const												{ return (uint)mPoints.size(); }
+	inline uint				GetNumPoints() const												{ return uint(mPoints.size()); }
 
 	/// Get a vertex of this convex hull relative to the center of mass
 	inline Vec3				GetPoint(uint inIndex) const										{ return mPoints[inIndex].mPosition; }
 
 	/// Get the number of faces in this convex hull
-	inline uint				GetNumFaces() const													{ return (uint)mFaces.size(); }
+	inline uint				GetNumFaces() const													{ return uint(mFaces.size()); }
 
 	/// Get the number of vertices in a face
 	inline uint				GetNumVerticesInFace(uint inFaceIndex) const						{ return mFaces[inFaceIndex].mNumVertices; }

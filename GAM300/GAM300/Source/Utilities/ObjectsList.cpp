@@ -15,21 +15,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "ObjectsList.h"
 
 #define OBJECTSLIST ObjectsList<T, N>
-#define ITERATOR OBJECTSLIST::Iterator
+#define OL_ITER OBJECTSLIST::Iterator
 
 
 template <typename T, ObjectIndex N>
-ITERATOR::Iterator(size_t _index, Node * _pNode) : index(_index), pNode{_pNode} {}
+OL_ITER::Iterator(ObjectIndex _index, Node * _pNode) : index(_index), pNode{_pNode} {}
 
 
 template <typename T, ObjectIndex N>
-T& ITERATOR::operator*() const
+T& OL_ITER::operator*() const
 {
 	return pNode->sparseSet[index];
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR ITERATOR::operator++()
+typename OL_ITER OL_ITER::operator++()
 {
 	++index;
 	while (pNode && index >= pNode->sparseSet.size())
@@ -41,7 +41,7 @@ typename ITERATOR ITERATOR::operator++()
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR ITERATOR::operator++(int)
+typename OL_ITER OL_ITER::operator++(int)
 {
 	Iterator tmp(*this);
 	operator++();
@@ -49,19 +49,19 @@ typename ITERATOR ITERATOR::operator++(int)
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::operator==(const Iterator& other) const
+bool OL_ITER::operator==(const Iterator& other) const
 {
 	return pNode == other.pNode && index == other.index;
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::operator!=(const Iterator& other) const
+bool OL_ITER::operator!=(const Iterator& other) const
 {
 	return pNode != other.pNode || index != other.index;
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::IsActive()
+bool OL_ITER::IsActive()
 {
 	return pNode->activeObjectsBitset.test(pNode->sparseSet.GetDenseIndex(index));
 }
@@ -316,6 +316,7 @@ ObjectIndex OBJECTSLIST::GetDenseIndex(T& object)
 		start = start->next;
 	}
 	E_ASSERT(true, "Object List does not contain this object");
+	return std::numeric_limits<ObjectIndex>::max();
 }
 
 template <typename T, ObjectIndex N>
@@ -383,7 +384,7 @@ bool OBJECTSLIST::TrySetActive(T& object, bool val)
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR OBJECTSLIST::begin() { Node* start = head;  while (start && start->sparseSet.empty()) start = start->next; return Iterator(0, start); }
+typename OL_ITER OBJECTSLIST::begin() { Node* start = head;  while (start && start->sparseSet.empty()) start = start->next; return Iterator(0, start); }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR OBJECTSLIST::end() { return Iterator(0, nullptr); }
+typename OL_ITER OBJECTSLIST::end() { return Iterator(0, nullptr); }

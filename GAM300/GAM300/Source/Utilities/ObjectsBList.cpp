@@ -16,19 +16,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 
 #define OBJECTSBLIST ObjectsBList<T, N>
-#define ITERATOR OBJECTSBLIST::Iterator
+#define OBL_ITER OBJECTSBLIST::Iterator
 
 template <typename T, ObjectIndex N>
-ITERATOR::Iterator(size_t _index, Node* _pNode) : index(_index), pNode{ _pNode } {}
+OBL_ITER::Iterator(size_t _index, Node* _pNode) : index(_index), pNode{ _pNode } {}
 
 template <typename T, ObjectIndex N>
-T& ITERATOR::operator*()
+T& OBL_ITER::operator*()
 {
 	return pNode->objectList[index];
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR ITERATOR::operator++()
+typename OBL_ITER OBL_ITER::operator++()
 {
 	++index;
 	if (index >= pNode->objectList.size())
@@ -44,7 +44,7 @@ typename ITERATOR ITERATOR::operator++()
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR ITERATOR::operator++(int)
+typename OBL_ITER OBL_ITER::operator++(int)
 {
 	Iterator tmp(*this);
 	operator++();
@@ -52,19 +52,19 @@ typename ITERATOR ITERATOR::operator++(int)
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::operator==(const Iterator& other) const
+bool OBL_ITER::operator==(const Iterator& other) const
 {
 	return pNode == other.pNode && index == other.index;
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::operator!=(const Iterator& other) const
+bool OBL_ITER::operator!=(const Iterator& other) const
 {
 	return pNode != other.pNode || index != other.index;
 }
 
 template <typename T, ObjectIndex N>
-bool ITERATOR::IsActive()
+bool OBL_ITER::IsActive()
 {
 	return pNode->objectList.IsActive(index);
 }
@@ -178,7 +178,7 @@ OBJECTSBLIST::~ObjectsBList()
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR OBJECTSBLIST::begin()
+typename OBL_ITER OBJECTSBLIST::begin()
 {
 	Node* start = head;
 	while (start && start->objectList.empty())
@@ -189,7 +189,7 @@ typename ITERATOR OBJECTSBLIST::begin()
 }
 
 template <typename T, ObjectIndex N>
-typename ITERATOR OBJECTSBLIST::end() { return Iterator(0, nullptr); }
+typename OBL_ITER OBJECTSBLIST::end() { return Iterator(0, nullptr); }
 
 
 template <typename T, ObjectIndex N>
