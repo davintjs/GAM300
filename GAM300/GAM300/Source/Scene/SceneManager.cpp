@@ -15,6 +15,8 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStart);
+	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStop);
 }
 
 void SceneManager::CreateScene()
@@ -147,6 +149,15 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 	}
 }
 
+void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
+{
+	//Publish scene change
+}
+
+void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	//Publish scene change
+}
 
 void SceneManager::Exit()
 {

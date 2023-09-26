@@ -208,9 +208,15 @@ private:
 public:
 
 	std::filesystem::path filePath;
-	State state;
 
 	Scene(const std::string& _filepath);
+	Scene(const Scene& rhs)
+	{
+		//for (const Entity& entity : rhs.entities)
+		//{
+		//	Add<Entity>(entity.euid);
+		//}
+	}
 
 	Scene(Scene&) = delete;
 	Scene& operator=(Scene&) = delete;
