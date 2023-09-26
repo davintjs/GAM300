@@ -169,5 +169,7 @@
     <None Include="Source\Graphics\Skybox.frag" />
     <None Include="Source\Graphics\HDR.vert" />
     <None Include="Source\Graphics\HDR.frag" />
+    <None Include="Source\Graphics\PBR.frag" />
+    <None Include="Source\Graphics\PBR.vert" />
   </ItemGroup>
 </Project>

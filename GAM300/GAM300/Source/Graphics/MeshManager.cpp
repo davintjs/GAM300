@@ -510,7 +510,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // Ambient Buffer Setup
+    // Ambient Buffer SetupF
     prop.AmbientBuffer;
     glGenBuffers(1, &prop.AmbientBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
