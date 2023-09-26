@@ -9,6 +9,7 @@ void MoveToPosition::Enter()
 
 void MoveToPosition::Tick(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	std::cout << "Leaf node running..." << std::endl;
 	onSuccess();
 }

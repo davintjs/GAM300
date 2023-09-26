@@ -59,7 +59,7 @@ private:
     {
         if constexpr (SingleComponentTypes::Has<T1>())
         {
-            if (_scene.HasComponent<T1>(entity))
+            if (_scene.Has<T1>(entity))
             {
                 //dont Serialize tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())

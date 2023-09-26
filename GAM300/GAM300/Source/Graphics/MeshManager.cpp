@@ -241,13 +241,13 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
         ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
         ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
 
-        size_t texSize;
-        ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-        if (texSize > 0)
-        {
-            tempMat.textures.resize(texSize);
-            ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
-        }
+        //size_t texSize;
+        //ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        //if (texSize > 0)
+        //{
+        //    tempMat.textures.resize(texSize);
+        //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+        //}
 
         tempGeom._materials.push_back(tempMat);
     }

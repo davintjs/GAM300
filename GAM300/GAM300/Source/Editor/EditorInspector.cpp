@@ -24,6 +24,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <variant>
 #include "PropertyConfig.h"
 
+#define BUTTON_HEIGHT .1 //Percent
+#define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
 
 static ImGuiTableFlags windowFlags =
@@ -32,6 +34,8 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
+bool isAddingReference = false;
+void** pEditedContainer{ nullptr };
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -222,16 +226,60 @@ void DisplayType(const char* name, Vector2& val)
 }
 
 template <typename T>
-void DisplayType(const char* name, T*& container)
+void AddReferencePanel(T* container)
+{
+    //ZACH: If no one is adding reference or the container does not match
+    if (!isAddingReference)
+    {
+        return;
+    }
+    Scene& scene = MySceneManager.GetCurrentScene();
+    static ImGuiTextFilter filter;
+    static std::string windowName;
+    windowName = "Add ";
+    windowName += GetType::Name<T>();
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
+    windowName += " Reference";
+    if (ImGui::Begin(windowName.c_str(), &isAddingReference))
+    {
+        ImGui::PushItemWidth(-1);
+        filter.Draw("##References");
+        ImGui::PopItemWidth();
+        static std::string buttonName{};
+        for (T& object : scene.GetArray<T>())
+        {
+            ImVec2 buttonSize = ImGui::GetWindowSize();
+            buttonSize.y *= (float)BUTTON_HEIGHT;
+            Tag& tag = scene.Get<Tag>(object);
+            buttonName = tag.name;
+            if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+            {
+                isAddingReference = false;
+                Handle* value = (Handle*)container;
+                *value = Handle(object.EUID(),object.UUID());
+                break;
+            }
+        }
+        ImGui::End();
+    }
+    //Reset the edited container back to false
+    if (isAddingReference == false)
+    {
+        pEditedContainer = nullptr;
+    }
+}
+
+template <typename T>
+void DisplayType(const char* name, T* container)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
-
         static std::string btnName;
-        Engine::UUID* value = reinterpret_cast<Engine::UUID*>(container);
-        if (*value != 0)
+        Handle* value = (Handle*)container;
+        if (value->euid != 0)
         {
-            btnName = MySceneManager.GetCurrentScene().Get<Tag>(*value).name;
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(value->euid).name;
         }
         else
         {
@@ -248,18 +296,21 @@ void DisplayType(const char* name, T*& container)
         }
         btnName += ")";
         ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
-
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        {
+            isAddingReference = true;
+        }
         if (ImGui::BeginDragDropTarget())
         {
-            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Object");
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetType::Name<T>());
             if (payload)
             {
-                container = (T*)(*reinterpret_cast<void**>(payload->Data));
+                *value = *(Handle*)payload->Data;
             }
             ImGui::EndDragDropTarget();
         }
+        AddReferencePanel(container);
     }
-    //Store uuid;
 }
 
 template <typename T, typename... Ts>
@@ -374,7 +425,11 @@ void Display_Property(T& comp) {
     int id = 0;
     for (auto& [Name, Data] : List)
     {
+        //find out how to use flags
+        /*property::flags::type Flags;
+        if (Flags.m_isDontShow) continue;*/
 
+        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos)) continue;
         std::visit([&](auto& Value) {
                 using T1 = std::decay_t<decltype(Value)>;
                 //Edit name
@@ -564,26 +619,9 @@ void DisplayComponent(Script& script)
     {
         const char* name = pair.first.c_str();
         Field& field{ pair.second };
-        //    //Component Enum + ComponentType Enum
-        if (field.fType < AllObjectTypes::Size())
-        {       
-            size_t cType = field.fType;
-            if (cType = GetType::E<Script>())
-            {
-            }
-            else
-            {
-                Display(name, field);
-                ScriptSetFieldEvent e{ script,name };
-                EVENTS.Publish(&e);
-            }
-        }
-        else
-        {
-            Display(name, field);
-            ScriptSetFieldEvent e{ script,name };
-            EVENTS.Publish(&e);
-        }
+        Display(name, field);
+        ScriptSetFieldEvent e{ script,name };
+        EVENTS.Publish(&e);
     }
 }
 //template <>
@@ -630,6 +668,19 @@ void DisplayComponentHelper(T& component)
         //This means T is not a component
         //PRINT(typeid(T).name());
     }
+    
+    ImVec4 check_color = ImGui::GetStyleColorVec4(ImGuiCol_FrameBg);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
+
+    //For Zac to change to component is_enabled
+    static bool checkbox = true;
+    std::string label = "##" + name;
+    ImGui::Checkbox(label.c_str(), &checkbox);
+
+    ImGui::PopStyleColor(); 
+    
+    ImGui::SameLine(ImGui::GetItemRectSize().x + 10.f);
+
     bool windowopen = ImGui::CollapsingHeader(name.c_str(), nodeFlags);
 
     ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
@@ -675,7 +726,8 @@ void DisplayComponentHelper(T& component)
     ImGui::PopID();
 
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
-
+    
+    
 
     if (windowopen)
     {
@@ -688,6 +740,7 @@ void DisplayComponentHelper(T& component)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
 
+        
 
         if (ImGui::BeginTable("Component", 2, winFlags))
         {
@@ -698,6 +751,12 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
+           
+
+            //ImGui::PushID(component.UUID);
+           
+            //ImGui::SameLine();
+
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
@@ -706,6 +765,8 @@ void DisplayComponentHelper(T& component)
             {
                 Display_Property(component);
             }
+
+            //ImGui::PopID();
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -742,7 +803,7 @@ private:
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (curr_scene.HasComponent<T1>(entity)) {
+            if (curr_scene.Has<T1>(entity)) {
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {   
@@ -786,7 +847,7 @@ private:
     void AddNext(Entity& entity, Scene& scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!scene.HasComponent<T1>(entity))
+            if (!scene.Has<T1>(entity))
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {

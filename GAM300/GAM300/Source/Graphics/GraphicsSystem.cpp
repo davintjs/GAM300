@@ -350,11 +350,12 @@ void GraphicsSystem::Update(float dt)
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
+			//std::cout << "albedo tex\n";
 			textureID = 
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
-		if (renderer.NormalMap != "") 
-		{
+		if (renderer.NormalMap != "") {
+			//std::cout << "normal tex\n";
 
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
