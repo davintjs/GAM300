@@ -104,7 +104,6 @@ void EditorScene::Update(float dt)
         ImGui::SameLine(); ImGui::Dummy(ImVec2(30.0f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        static bool debug_draw = false;
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw));
     }
     ImGui::End();

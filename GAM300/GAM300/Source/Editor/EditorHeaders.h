@@ -101,6 +101,7 @@ public:
     glm::vec2 const GetPosition() { return scenePosition; }
     bool const WindowHovered() { return windowHovered; }
     bool const UsingGizmos() { return inOperation; }
+    bool const DebugDraw() { return debug_draw; }
 
 private:
     glm::vec2 sceneDimension;   // Dimensions of the viewport
@@ -108,6 +109,7 @@ private:
     glm::vec2 min, max;         // Minimum and maximum position of the viewport
     bool windowHovered;
     bool inOperation;
+    bool debug_draw;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorInspector)
