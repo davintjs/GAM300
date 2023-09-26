@@ -19,13 +19,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include "UUID.h"
 
 class Scene;
 struct Transform;
 
 struct Child
 {
-    std::vector<Transform*> _transform;
+    std::vector<Engine::UUID> _transform;
     Scene& _scene;
 };
 

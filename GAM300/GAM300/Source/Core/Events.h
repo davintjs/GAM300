@@ -27,16 +27,6 @@ protected:
 	virtual ~IEvent() {};
 };
 
-struct StartPreviewEvent : IEvent
-{
-	StartPreviewEvent(){}
-};
-
-struct StopPreviewEvent : IEvent
-{
-	StopPreviewEvent(){}
-};
-
 struct QuitEngineEvent : IEvent
 {
 	QuitEngineEvent() {};
@@ -71,27 +61,7 @@ struct SceneChangingEvent : IEvent
 {
 	SceneChangingEvent(Scene& _scene) : scene(_scene) {}
 	Scene& scene;
-	std::string filePath;
 };
-
-struct ClearEntitiesEvent: IEvent
-{
-	ClearEntitiesEvent() {};
-};
-
-//template <typename T>
-//struct ReflectComponentEvent : IEvent
-//{
-//	ReflectComponentEvent(T& _component) : component{ _component } {}
-//	T& component;
-//};
-//
-//struct ReflectEntityEvent : IEvent
-//{
-//	ReflectEntityEvent(Entity& _entity) : entity{ _entity} {}
-//	Entity& entity;
-//};
-
 
 template <size_t FTYPE>
 struct FileTypeModifiedEvent : IEvent 
@@ -111,6 +81,8 @@ struct FileModifiedEvent : IEvent
 struct SceneStartEvent : IEvent{};
 
 struct SceneStopEvent : IEvent {};
+
+struct SceneCleanupEvent : IEvent {};
 
 struct SelectedEntityEvent : IEvent
 {

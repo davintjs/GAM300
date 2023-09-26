@@ -208,17 +208,53 @@ private:
 public:
 
 	std::filesystem::path filePath;
+	using Layer = std::list<Engine::UUID>;
+
+	Layer layer;
 
 	Scene(const std::string& _filepath);
-	Scene(const Scene& rhs)
+
+	template <typename T,typename... Ts>
+	void CloneHelper(Scene& rhs)
 	{
-		//for (const Entity& entity : rhs.entities)
-		//{
-		//	Add<Entity>(entity.euid);
-		//}
+		for (T& object : rhs.GetArray<T>())
+		{
+			if constexpr (!std::is_same_v<T, Transform> && !std::is_same_v<T, Tag>)
+			{
+				T* pObject = Add<T>(object.euid, object.uuid);
+				*pObject = object;
+				if (!rhs.IsActive(object))
+				{
+					SetActive(*pObject, false);
+				}
+			}
+			else
+			{
+				T& obj = Get<T>(object.euid);
+				obj = object;
+			}
+		
+		}
+		if constexpr (sizeof...(Ts) != 0)
+		{
+			CloneHelper<Ts...>(rhs);
+		}
 	}
 
-	Scene(Scene&) = delete;
+	template <typename T, typename... Ts>
+	void CloneHelper(Scene& rhs,TemplatePack<T,Ts...>)
+	{
+		CloneHelper<T,Ts...>(rhs);
+		//CloneLinkHelper<Ts...>(rhs);
+	}
+
+
+
+	Scene(Scene& rhs) : sceneName{rhs.sceneName}
+	{
+		CloneHelper(rhs, AllObjectTypes());
+	} 
+
 	Scene& operator=(Scene&) = delete;
 
 	template<typename T>
@@ -309,6 +345,7 @@ public:
 		{
 			entitiesDeletionBuffer.push_back(&object);
 			entities.SetActive(object.uuid,false);
+			layer.erase(std::find(layer.begin(), layer.end(), object.euid));
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
 		{
@@ -374,7 +411,6 @@ public:
 	{
 		for (Entity* pEntity : entitiesDeletionBuffer)
 		{
-			PRINT("Deleted entity\n");
 			DestroyEntityComponents(*this,*pEntity);
 			entities.erase(*pEntity);
 		}
@@ -415,7 +451,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return arr.IsActiveDense(arr.GetDenseIndex(object));
+			return true;
 		}
 	}
 
@@ -498,6 +534,7 @@ public:
 			tag->name = "New GameObject(";
 			tag->name += std::to_string(arr.size());
 			tag->name += ")";
+			layer.push_back(euid);
 			// Add the entity to the inspector
 		}
 		else if constexpr (AllComponentTypes::Has<T>())

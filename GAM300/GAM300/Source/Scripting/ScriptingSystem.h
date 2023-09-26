@@ -315,7 +315,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackSceneChanging(SceneChangingEvent* pEvent);
+	void CallbackSceneChanging(SceneChangingEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -369,7 +369,8 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackStopPreview(StopPreviewEvent* pEvent);
+	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -404,6 +405,7 @@ public:
 		START,
 		UPDATE,
 		EXIT,
+		CLEANUP,
 		NONE
 	};
 

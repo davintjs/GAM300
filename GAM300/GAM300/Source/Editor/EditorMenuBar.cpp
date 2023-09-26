@@ -127,7 +127,6 @@ void EditorMenuBar::NewScene()
     CreateSceneEvent createScene(nullptr);
     EVENTS.Publish(&createScene);
 
-    EditorHierarchy::Instance().ClearLayer();
     // Load this new scene if there was a previously loaded one
     SceneChangingEvent changeScene(*createScene.scene);
     EVENTS.Publish(&changeScene);
@@ -168,8 +167,6 @@ void EditorMenuBar::OpenFile()
         // Open Scene File
         if (Filename.find(".scene") != std::string::npos)
         {
-            EditorHierarchy::Instance().ClearLayer();
-
             LoadSceneEvent loadScene(Filename);
             EVENTS.Publish(&loadScene);
         }

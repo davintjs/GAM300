@@ -24,9 +24,9 @@ bool SerializeScene(Scene& _scene)
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
-    for (Entity* entity : EditorHierarchy::Instance().layer)
+    for (Engine::UUID euid : _scene.layer)
     {
-        bool serialized = SerializeEntity(out, *entity, _scene);
+        bool serialized = SerializeEntity(out, _scene.Get<Entity>(euid), _scene);
         E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }
 
@@ -85,7 +85,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
 
         if (component.parent)
-            out << YAML::Key << "m_Parent" << YAML::Value << _scene.Get<Entity>(*component.parent).EUID();
+            out << YAML::Key << "m_Parent" << YAML::Value << component.parent;
         else
             out << YAML::Key << "m_Parent" << YAML::Value << 0;
     }
