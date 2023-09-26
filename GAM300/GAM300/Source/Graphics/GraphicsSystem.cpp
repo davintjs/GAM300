@@ -1,8 +1,6 @@
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 
-#include "LapSupGraphics/Compiler.h"
-#include "LapSupGraphics/Mesh.h"
 #include "Model3d.h"
 #include "Editor_Camera.h"
 #include "../Core/FramerateController.h"

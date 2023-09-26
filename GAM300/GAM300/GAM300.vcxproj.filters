@@ -21,8 +21,6 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
-    <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
-    <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
@@ -99,8 +97,6 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
-    <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
-    <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
