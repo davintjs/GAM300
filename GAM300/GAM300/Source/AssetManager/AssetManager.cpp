@@ -21,7 +21,7 @@ void AssetManager::Init()
 		std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
 		std::string fileType{};
 		std::string fileName{};
-
+		
 		if (!dir.is_directory())
 		{
 			// Check if is file with no extension
@@ -66,6 +66,15 @@ void AssetManager::Init()
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
+		}
+
+		// Mark meta files as hidden files
+		std::wstring wideStr = std::wstring(subFilePathMeta.begin(), subFilePathMeta.end());
+		const wchar_t* fileLPCWSTR = wideStr.c_str();
+		int attribute = GetFileAttributes(fileLPCWSTR);
+		if ((attribute & FILE_ATTRIBUTE_HIDDEN) == 0)
+		{
+			SetFileAttributes(fileLPCWSTR, attribute | FILE_ATTRIBUTE_HIDDEN);
 		}
 
 		// Deserialize from meta file and load the asset asynchronously
