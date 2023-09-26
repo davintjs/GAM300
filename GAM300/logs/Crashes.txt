@@ -1,0 +1,5 @@
+[2023-09-26 16:42:29.291] [Error] [critical] 
+Caused By:	check != std::string::npos
+Info:		File with no extension found! Remove it from the assets folder.
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 355)
+

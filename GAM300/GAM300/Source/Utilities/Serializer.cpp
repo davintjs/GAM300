@@ -206,8 +206,9 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     // Store UUID for each component
     // Store reference to gameobject
 
+    property::flags::type flags;
     std::vector<property::entry> List;
-    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, flags)
         {
             // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
             assert(Flags.m_isScope == false || PropertyName.back() == ']');
@@ -290,7 +291,7 @@ bool DeserializeScene(Scene& _scene)
         {
             YAML::Node object = entity["GameObject"];
 
-            Entity& entity = *_scene.Add<Entity>(object["m_UUID"].as<Engine::UUID>());
+            Entity& entity = *_scene.Add<Entity>(object["m_EUID"].as<Engine::UUID>());
 
             // Bean: Dont need cuz when parenting it reorders the object anyways
             _scene.SetActive(entity, object["m_IsActive"].as<bool>());

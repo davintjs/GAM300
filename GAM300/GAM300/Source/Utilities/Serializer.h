@@ -72,14 +72,13 @@ private:
         }
         else if constexpr (MultiComponentTypes::Has<T1>())
         {
-            // Bean: Uncomment once zac implements multi component
-            //auto components = _scene.Get<T1>(entity);
-            //for (T1* component : components)
-            //{
-            //    //SerializeType("Enabled", component->is_enabled); ImGui::SameLine();
-            //    if (!SerializeComponent(out, *component))
-            //        return false;
-            //}
+            auto components = _scene.GetMulti<T1>(entity);
+            for (T1* component : components)
+            {
+                //SerializeType("Enabled", component->is_enabled); ImGui::SameLine();
+                if (!SerializeComponent(out, *component))
+                    return false;
+            }
         }
 
         if constexpr (sizeof...(T1s) != 0)
