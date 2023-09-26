@@ -70,6 +70,7 @@ namespace BeanFactory
         {
             get
             {
+                
                 return InternalCalls.Get<Transform>(this);
             }
         }

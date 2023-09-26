@@ -38,39 +38,13 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/EventsManager.h"
 
 
-using Handle = Object;
+struct Handle
+{
+	Engine::UUID euid;
+	Engine::UUID uuid;
+};
 
 using SingleObjectTypes = decltype(TemplatePack<Entity>::Concatenate(SingleComponentTypes()));
-
-//template <typename T>
-//struct HandleHash {
-//	std::size_t operator()(const Handle& p) const {
-//		if constexpr (SingleObjectTypes::Has<T>())
-//		{
-//			return p.EUID();
-//		}
-//		else
-//		{
-//			std::size_t h1 = p.EUID();
-//			std::size_t h2 = p.UUID();
-//			return h1 ^ h2;
-//		}
-//	}
-//};
-//
-//template <typename T>
-//struct HandleEqual {
-//	bool operator()(const Handle& lhs, const Handle& rhs) const {
-//		if constexpr (SingleObjectTypes::Has<T>())
-//		{
-//			return lhs.EUID() == rhs.EUID();
-//		}
-//		else
-//		{
-//			return lhs.EUID() == rhs.EUID() && lhs.UUID() == rhs.UUID();
-//		}
-//	}
-//};
 
 template <typename T>
 using Table = std::unordered_map<Engine::UUID,T*>;
@@ -130,11 +104,12 @@ struct MultiHandlesTable
 	template <typename T1>
 	bool Has(Engine::UUID euid, Engine::UUID uuid)
 	{
-		auto& entries = std::get<Table<T1>>(tables);
+		auto& entries = std::get<MultiTable<T1>>(tables);
 		auto entIt = entries.find(euid);
 		if (entIt == entries.end())
 			return false;
-		if (entIt->second.find(uuid) == entIt->second.end())
+		Table<T1>& subEntries = entIt->second;
+		if (subEntries.find(uuid) == subEntries.end())
 			return false;
 		return true;
 	}
@@ -267,6 +242,8 @@ public:
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
+	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(((Engine::UUID)pObject)));
+
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)
 	{
@@ -296,15 +273,18 @@ public:
 		template <typename T1, typename... T1s>
 		void DestroyComponents()
 		{
-			if (scene.HasComponent<T1>(entity))
+			if (scene.Has<T1>(entity))
 			{
 				if constexpr (SingleComponentTypes::Has<T1>())
 				{
-					scene.singleComponentsArrays.GetArray<T1>().TryErase(entity.UUID());
+					scene.Destroy(scene.Get<T1>(entity));
 				}
 				else if constexpr (MultiComponentTypes::Has<T1>())
 				{
-					scene.multiComponentsArrays.GetArray<T1>().erase(entity.UUID());
+					for (T1* pComponent : scene.GetMulti<T1>(entity.euid))
+					{
+						scene.Destroy(*pComponent);
+					}
 				}
 			}
 			if constexpr (sizeof...(T1s) != 0)
@@ -341,7 +321,11 @@ public:
 			if (arr.DenseSubscript(index).size() == 1)
 				entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
 		}
-		static_assert(true,"Not a valid type of object to destroy");
+		else
+		{
+			static_assert(true, "Not a valid type of object to destroy");
+		}
+		EraseHandle(object);
 	}
 
 
@@ -362,17 +346,13 @@ public:
 			{
 				auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
 				for (T1* pComponent : arr)
-				{
 					compArray.erase(*pComponent);
-				}
 			}
 			else if constexpr (MultiComponentTypes::Has<T1>())
 			{
 				auto& compArray = scene.multiComponentsArrays.GetArray<T1>();
 				for (T1* pComponent : arr)
-				{
 					compArray.erase(*pComponent);
-				}
 			}
 			arr.clear();
 			if constexpr (sizeof...(T1s) != 0)
@@ -386,14 +366,15 @@ public:
 
 	void ClearBuffer()
 	{
-		//Destroy components
-		ClearBufferHelper(*this);
 		for (Entity* pEntity : entitiesDeletionBuffer)
 		{
+			PRINT("Deleted entity\n");
 			DestroyEntityComponents(*this,*pEntity);
 			entities.erase(*pEntity);
 		}
 		entitiesDeletionBuffer.clear();
+		//Destroy components
+		ClearBufferHelper(*this);
 	}
 
 	template <typename T>
@@ -420,15 +401,15 @@ public:
 		auto& arr = GetArray<T>();
 		if constexpr (std::is_same_v<T, Entity>)
 		{
-			return arr.IsActive(object.uuid);
+			return arr.IsActiveDense(arr.GetDenseIndex(object));
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
 		{
-			return arr.IsActive(arr.GetDenseIndex());
+			return arr.IsActiveDense(arr.GetDenseIndex(object));
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return arr.IsActive(arr.GetDenseIndex());
+			return arr.IsActiveDense(arr.GetDenseIndex(object));
 		}
 	}
 
@@ -440,7 +421,7 @@ public:
 
 
 	template <typename Component>
-	bool HasComponent(const Entity& entity)
+	bool Has(const Entity& entity)
 	{
 		if constexpr (AllComponentTypes::Has<Component>())
 		{
@@ -449,15 +430,34 @@ public:
 		return false;
 	}
 
-	template <typename Component>
-	bool HasComponent(ObjectIndex& denseIndex)
+	template <typename T>
+	bool HasHandle(const Handle& handle)
 	{
-		if constexpr (AllComponentTypes::Has<Component>())
+		if constexpr (SingleObjectTypes::Has<T>())
 		{
-			return entities.DenseSubscript(denseIndex).hasComponentsBitset.test(GetType::E<Component>());
+			return singleHandles.Has<T>(handle.euid);
+		}
+		else if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return multiHandles.Has<T>(handle.euid,handle.uuid);
 		}
 		return false;
 	}
+
+	template <typename T>
+	void EraseHandle(T& object)
+	{
+		if constexpr (SingleObjectTypes::Has<T>())
+		{
+			return singleHandles.Remove<T>(object.euid);
+		}
+		else if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return multiHandles.Remove<T>(object.euid, object.uuid);
+		}
+	}
+
+	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
 
 	template <typename T, typename Owner>
 	T* Add(const Owner& owner)
