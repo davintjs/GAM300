@@ -14,9 +14,9 @@ void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
 	RemoveHoles(); // Remove holes in the boundary
-	NavMesh* mNavMesh = new NavMesh(Triangulate());
+	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
-	return mNavMesh;
+	return _NavMesh;
 }
 
 std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
@@ -266,11 +266,11 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 						}
 					}
 
-					for (int i = 0; i < vertices.size(); i++)
+					for (int k = 0; k < vertices.size(); k++)
 					{
-						if (vertices[i] == secondPoint)
+						if (vertices[k] == secondPoint)
 						{
-							vertices.erase(vertices.begin() + i);
+							vertices.erase(vertices.begin() + k);
 							break;
 						}
 					}
