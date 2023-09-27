@@ -35,7 +35,7 @@ ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
 bool isAddingReference = false;
-void** pEditedContainer{ nullptr };
+void* pEditedContainer{ nullptr };
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -229,7 +229,8 @@ template <typename T>
 void AddReferencePanel(T* container)
 {
     //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference)
+    if (!isAddingReference || (T*)pEditedContainer != container)
+    if (!isAddingReference || (T*)pEditedContainer != container)
     {
         return;
     }
@@ -271,7 +272,7 @@ void AddReferencePanel(T* container)
 }
 
 template <typename T>
-void DisplayType(const char* name, T* container)
+void DisplayType(const char* name, T* container, const char* altName = nullptr)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
@@ -292,13 +293,21 @@ void DisplayType(const char* name, T* container)
         }
         else
         {
-            btnName += GetType::Name<T>();
+            if (altName)
+            {
+                btnName += altName;
+            }
+            else
+            {
+                btnName += GetType::Name<T>();
+            }
         }
         btnName += ")";
         ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             isAddingReference = true;
+            pEditedContainer = reinterpret_cast<void*>(container);
         }
         if (ImGui::BeginDragDropTarget())
         {
@@ -321,7 +330,14 @@ void DisplayField(const char* name, Field& field)
         if (field.fType < AllObjectTypes::Size())
         {
             T* value = reinterpret_cast<T*>(field.data);
-            DisplayType(name,value);
+            if constexpr (std::is_same<T, Script>())
+            {
+                DisplayType(name, value,field.typeName.c_str());
+            }
+            else
+            {
+                DisplayType(name, value);
+            }
         }
         else
         {
@@ -436,7 +452,7 @@ void Display_Property(T& comp) {
                 std::string DisplayName = Name;
                 auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                 DisplayName.erase(DisplayName.begin(), ++it);
-                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
+
                 ImGui::PushID(Name.c_str());
                 Display<T1>(DisplayName.c_str(), Value);
                 ImGui::PopID();          
@@ -673,9 +689,10 @@ void DisplayComponentHelper(T& component)
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
     //For Zac to change to component is_enabled
-    static bool checkbox = true;
+    bool checkbox = curr_scene.IsActive(component);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
+    curr_scene.SetActive(component,checkbox);
 
     ImGui::PopStyleColor(); 
     
@@ -858,10 +875,27 @@ private:
         }
         else
         {
-            if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            if constexpr (std::is_same_v<T1, Script>)
             {
-                scene.Add<T1>(entity);
-                EditorInspector::Instance().isAddPanel = false;
+                GetScriptNamesEvent nameEvent;
+                EVENTS.Publish(&nameEvent);
+
+                for (size_t i = 0; i < nameEvent.count; ++i)
+                {
+                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    {
+                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        EditorInspector::Instance().isAddPanel = false;
+                    }
+                }
+            }
+            else
+            {
+                if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                {
+                    scene.Add<T1>(entity);
+                    EditorInspector::Instance().isAddPanel = false;
+                }
             }
         }
 
@@ -959,10 +993,10 @@ void EditorInspector::Update(float dt)
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-
-    if (curr_index != NON_VALID_ENTITY) {
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+    //if (curr_index != NON_VALID_ENTITY) {
+    if (&curr_entity) {
         ImGui::Spacing();
-        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
         std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);

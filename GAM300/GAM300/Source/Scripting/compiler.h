@@ -30,22 +30,9 @@ namespace Utils
 	/**************************************************************************/
 	static void CompileDll()
 	{
-		std::string command {"Tools\\Roslyn\\csc.exe -target:library -out:scripts.dll"};
-		for (fs::directory_entry p : fs::recursive_directory_iterator("Assets"))
-		{
-			if (p.path().extension() == ".cs")
-				command += " " + p.path().string();
-		}
-		for (fs::directory_entry p : fs::recursive_directory_iterator("CoreScripts"))
-		{
-			if (p.path().extension() == ".cs")
-				command += " " + p.path().string();
-		}
+		const char* command {"Tools\\Roslyn\\csc.exe -r:System.Numerics.dll -recurse:*.cs -platform:x64 -t:library -out:scripts.dll -unsafe"};
 
-		command += " -unsafe";
-		//command += " > output.txt";
-
-		system(command.c_str());
+		system(command);
 		//std::ifstream myfile("output.txt"); // this is equivalent to the above 
 		//std::string buffer;
 		//char mychar;

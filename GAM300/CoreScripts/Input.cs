@@ -13,6 +13,7 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
+using GlmSharp;
 
 namespace BeanFactory
 {
@@ -65,15 +66,15 @@ namespace BeanFactory
 
         public static bool GetMouseDown(int mouseCode) { return InternalCalls.GetMouseDown(mouseCode); }
 
-        public static Vector2 GetMousePosition() 
+        public static vec2 GetMousePosition() 
         { 
-            InternalCalls.GetMousePosition(out Vector2 pos);
+            InternalCalls.GetMousePosition(out vec2 pos);
             return pos;
         }
 
-        public static Vector2 GetGameNDC()
+        public static vec2 GetGameNDC()
         {
-            InternalCalls.GetGameNDC(out Vector2 pos);
+            InternalCalls.GetGameNDC(out vec2 pos);
             return pos;
         }
     }

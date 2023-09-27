@@ -191,12 +191,13 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetNames);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackGetScriptNames);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
@@ -372,7 +373,20 @@ void ScriptingSystem::ThreadWork()
 {
 	InitMono();
 	while (!THREADS.HasStopped())
-	{	
+	{
+		{
+			ACQUIRE_SCOPED_LOCK(Mono);
+			if (MySceneManager.HasScene())
+			{
+				Scene& scene{ MySceneManager.GetCurrentScene() };
+				for (Handle& handle : reflectionQueue)
+				{
+					ReflectScript(scene.Get<Script>(handle.euid, handle.uuid));
+				}
+				reflectionQueue.clear();
+			}
+		}
+
 		if (logicState != LogicState::NONE)
 		{
 			if (ran)
@@ -384,12 +398,14 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
+				ACQUIRE_SCOPED_LOCK(Mono);
 				for (uint32_t hand : gcHandles)
 				{
 					mono_gchandle_free(hand);
 				}
 				gcHandles.clear();
 				mComponents.clear();
+				reflectionQueue.clear();
 				ReflectAll();
 				InvokeAllScripts("Awake");
 				InvokeAllScripts("Start");
@@ -402,10 +418,12 @@ void ScriptingSystem::ThreadWork()
 			}
 			else
 			{
+				ACQUIRE_SCOPED_LOCK(Mono);
 				for (uint32_t hand : gcHandles)
 				{
 					mono_gchandle_free(hand);
 				}
+				reflectionQueue.clear();
 				gcHandles.clear();
 				mComponents.clear();
 				ReflectAll();
@@ -450,7 +468,7 @@ void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	//ACQUIRE_SCOPED_LOCK(Assets);
+	ACQUIRE_SCOPED_LOCK(Assets);
 	ACQUIRE_SCOPED_LOCK(Mono);
 	for (uint32_t hand : gcHandles)
 	{
@@ -489,6 +507,8 @@ MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 		}
 		catch (...)
 		{
+
+
 		}
 	}
 	return nullptr;
@@ -541,14 +561,14 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Engine::UUID euid = *(Engine::UUID*)field.data;
+		Handle handle = *(Handle*)field.data;
 		Scene& scene = MySceneManager.GetCurrentScene();
-		if (euid == 0)
+		if (handle.euid == 0)
 		{
 			mono_field_set_value(instance, mClassField, nullptr);
 			return;
 		}
-		void* obj = scene.GetByUUID(field.fType, (void*)euid);
+		void* obj = scene.GetByUUID(field.fType, &handle);
 		if (field.fType == GetType::E<Script>())
 		{
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)obj));
@@ -643,7 +663,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 					newField.typeName = typeName.substr(offset + 1);
 				else
 					newField.typeName = typeName;
-				memset(newField.data,0,newField.GetSize());
+				mono_field_get_value(instance, mField, newField.data);
 				script.fields[fieldName] = std::move(newField);
 			}
 			//Field exists
@@ -723,6 +743,7 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
+	reflectionQueue.clear();
 	logicState = LogicState::START;
 	ran = true;
 }
@@ -741,15 +762,26 @@ void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 }
 
 
-//
-//void ScriptingSystem::CallbackScriptGetNames(ScriptGetNamesEvent* pEvent)
-//{
-//	for (auto& pair : scriptClassMap)
-//	{
-//		if ((int)NAME_TO_CTYPE[pair.first] == 0)
-//			pEvent->names.push_back(pair.first.c_str());
-//	}
-//}
+
+void ScriptingSystem::CallbackGetScriptNames(GetScriptNamesEvent* pEvent)
+{
+	static std::vector<const char*> names;
+	names.clear();
+	for (auto& pair : scriptClassMap)
+	{
+		if (IsScript(pair.second.mClass))
+			names.push_back(pair.first.c_str());
+	}
+	pEvent->arr = names.data();
+	pEvent->count = names.size();
+}
+
+void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
+{
+	ACQUIRE_SCOPED_LOCK(Mono);
+	reflectionQueue.emplace_back(pEvent->pObject->EUID(), pEvent->pObject->UUID());
+}
+
 //
 //
 //void ScriptingSystem::CallbackScriptNew(ScriptNewEvent* pEvent)

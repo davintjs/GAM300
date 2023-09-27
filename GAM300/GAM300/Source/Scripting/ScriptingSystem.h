@@ -24,9 +24,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <unordered_map>
 #include <mutex>
 #include <Core/FileTypes.h>
+#include <vector>
 
 struct Script;
 struct Entity;
+struct Handle;
 
 extern "C"
 {
@@ -56,8 +58,8 @@ static std::unordered_map<std::string, size_t> fieldTypeMap =
 	{ "System.UInt32",				GetFieldType::E<uint32_t>()},
 	{ "System.UInt64",				GetFieldType::E<uint64_t>()},
 	{ "System.String",				GetFieldType::E<std::string>()},
-	{ "BeanFactory.Vector2",		GetFieldType::E<Vector2>()},
-	{ "BeanFactory.Vector3",		GetFieldType::E<Vector3>()}
+	{ "GlmSharp.vec2",				GetFieldType::E<Vector2>()},
+	{ "GlmSharp.vec3",				GetFieldType::E<Vector3>()}
 };
 
 
@@ -326,7 +328,7 @@ public:
 		Pointer to event with script name
 	*/
 	/*******************************************************************************/
-	//void CallbackScriptNew(ScriptNewEvent* pEvent);
+	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
 	/*******************************************************************************
 	/*!
@@ -384,7 +386,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
+	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
 
 	MonoObject* ReflectScript(Script& component);
 
@@ -399,6 +401,7 @@ public:
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
+	std::vector<Handle> reflectionQueue;
 
 	enum class LogicState
 	{

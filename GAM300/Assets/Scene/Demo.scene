@@ -1,0 +1,124 @@
+Scene: Demo
+---
+GameObject:
+  m_EUID: 1152583654968391819
+  m_IsActive: true
+  m_Name: Great Great GrandParent
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 696673764624007431}
+  m_Parent: 0
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 696673764624007431
+  m_IsActive: true
+  m_Name: Great GrandParent
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 8442792626510119974}
+  m_Parent: 1152583654968391819
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 8442792626510119974
+  m_IsActive: true
+  m_Name: GrandParent
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 10996250995113881035}
+  m_Parent: 696673764624007431
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 10996250995113881035
+  m_IsActive: true
+  m_Name: Parent
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 1683943125590069549}
+    - {fileID: 15170027834309550252}
+  m_Parent: 8442792626510119974
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 1683943125590069549
+  m_IsActive: true
+  m_Name: Child 1
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 10996250995113881035
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 15170027834309550252
+  m_IsActive: true
+  m_Name: Child 2
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 10996250995113881035
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 15747035786140600945
+  m_IsActive: true
+  m_Name: Light
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 17396916668165317090}  # LightSource
+---
+LightSource:
+  EUID: 15747035786140600945
+  UUID: 17396916668165317090
+  LightingColor: [1, 1, 1]
+---
+GameObject:
+  m_EUID: 16161311050767057142
+  m_IsActive: true
+  m_Name: Helmet
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 10468212378749459511
+  m_IsActive: true
+  m_Name: Player
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    []

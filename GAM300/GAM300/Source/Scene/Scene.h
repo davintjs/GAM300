@@ -276,6 +276,12 @@ public:
 		}
 	}
 
+	template<typename T>
+	T& Get(Handle& handle)
+	{
+		return Get<T>(handle.euid, handle.uuid);
+	}
+
 	template<typename T, typename Owner>
 	T& Get(Owner& object)
 	{
@@ -284,7 +290,7 @@ public:
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
-	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(((Engine::UUID)pObject)));
+	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
 
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)
@@ -501,17 +507,18 @@ public:
 
 	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
 
-	template <typename T, typename Owner>
-	T* Add(const Owner& owner)
+	template <typename T, typename Owner, typename... Args>
+	T* Add(const Owner& owner,Args&&... args)
 	{
-		return Add<T>(owner.EUID());
+		return Add<T>(owner.EUID(), Engine::CreateUUID(), args...);
 	}
 
-	template <typename T>
+	template <typename T, typename... Args>
 	T* Add
 	(
 		Engine::UUID euid = Engine::CreateUUID(), 
-		Engine::UUID uuid = Engine::CreateUUID()
+		Engine::UUID uuid = Engine::CreateUUID(),
+		Args&&... args
 	)
 	{
 		static_assert(AllObjectTypes::Has<T>(),"Type is not a valid scene object");
@@ -524,7 +531,7 @@ public:
 			//{
 			//	euid = Engine::CreateUUID();
 			//}
-			object = &arr.emplace_back();
+			object = &arr.emplace_back(args...);
 			object->euid = euid;
 			object->uuid = arr.GetDenseIndex(*object);
 			arr.SetActive(object->uuid);
@@ -540,7 +547,7 @@ public:
 		else if constexpr (AllComponentTypes::Has<T>())
 		{
 			Entity& entity{ Get<Entity>(euid) };
-			object = &arr.emplace(entity.uuid);
+			object = &arr.emplace(entity.uuid,args...);
 			object->euid = euid;
 			object->uuid = uuid;
 			if constexpr (SingleComponentTypes::Has<T>())
