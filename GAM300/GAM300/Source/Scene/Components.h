@@ -295,6 +295,8 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	std::string name;
+	Script() {}
+	Script(const char* _name):name{_name}{}
 	std::map<std::string, Field> fields;
 	property_vtable();
 };

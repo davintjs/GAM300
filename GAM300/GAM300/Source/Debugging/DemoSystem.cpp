@@ -42,17 +42,7 @@ void DemoSystem::Init()
 	scene.Get<Transform>(titty).translation = Vector3(-150.f, 100.f, 0.f);
 	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 
-	// test instance rendering
-	for (int i = 0; i < 5; ++i)
-	{
-		Entity& tempent = *scene.Add<Entity>();
-		MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);
-		renderer.MeshName = "Cube";
-		scene.Get<Transform>(tempent).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-		scene.Get<Transform>(tempent).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-		scene.Add<MeshRenderer>(tempent);
-	}
-	scene.Add<Script>(scene.GetArray<Entity>()[0])->name = "Player";
+	scene.Add<Script>(scene.GetArray<Entity>()[0],"Player");
 	scene.Add<Rigidbody>(scene.GetArray<Entity>()[0]);
 	Entity& box = *scene.Add<Entity>();
 	scene.Add<MeshRenderer>(box);

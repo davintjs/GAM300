@@ -24,6 +24,8 @@ public:
 
 	bool DuplicateScene();
 
+	bool HasScene();
+
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
 	
 	void CallbackCreateScene(CreateSceneEvent* pEvent);

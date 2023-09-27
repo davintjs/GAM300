@@ -230,6 +230,7 @@ void AddReferencePanel(T* container)
 {
     //ZACH: If no one is adding reference or the container does not match
     if (!isAddingReference || (T*)pEditedContainer != container)
+    if (!isAddingReference || (T*)pEditedContainer != container)
     {
         return;
     }
@@ -688,9 +689,10 @@ void DisplayComponentHelper(T& component)
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
     //For Zac to change to component is_enabled
-    static bool checkbox = true;
+    bool checkbox = curr_scene.IsActive(component);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
+    curr_scene.SetActive(component,checkbox);
 
     ImGui::PopStyleColor(); 
     
@@ -873,10 +875,27 @@ private:
         }
         else
         {
-            if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            if constexpr (std::is_same_v<T1, Script>)
             {
-                scene.Add<T1>(entity);
-                EditorInspector::Instance().isAddPanel = false;
+                GetScriptNamesEvent nameEvent;
+                EVENTS.Publish(&nameEvent);
+
+                for (size_t i = 0; i < nameEvent.count; ++i)
+                {
+                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    {
+                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        EditorInspector::Instance().isAddPanel = false;
+                    }
+                }
+            }
+            else
+            {
+                if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                {
+                    scene.Add<T1>(entity);
+                    EditorInspector::Instance().isAddPanel = false;
+                }
             }
         }
 

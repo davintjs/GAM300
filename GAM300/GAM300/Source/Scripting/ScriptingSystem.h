@@ -24,9 +24,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <unordered_map>
 #include <mutex>
 #include <Core/FileTypes.h>
+#include <vector>
 
 struct Script;
 struct Entity;
+struct Handle;
 
 extern "C"
 {
@@ -326,7 +328,7 @@ public:
 		Pointer to event with script name
 	*/
 	/*******************************************************************************/
-	//void CallbackScriptNew(ScriptNewEvent* pEvent);
+	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
 	/*******************************************************************************
 	/*!
@@ -384,7 +386,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackScriptGetNames(ScriptGetNamesEvent* pEvent);
+	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
 
 	MonoObject* ReflectScript(Script& component);
 
@@ -399,6 +401,7 @@ public:
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
+	std::vector<Handle> reflectionQueue;
 
 	enum class LogicState
 	{
