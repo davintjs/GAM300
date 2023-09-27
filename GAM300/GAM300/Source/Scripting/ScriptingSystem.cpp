@@ -190,15 +190,13 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetNames);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackReflectGameObject);
-	//SubscribeComponentBasedCallbacks(ComponentTypes());
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptSetFieldReference<GameObject>);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
@@ -386,16 +384,36 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
+				for (uint32_t hand : gcHandles)
+				{
+					mono_gchandle_free(hand);
+				}
+				gcHandles.clear();
+				mComponents.clear();
+				ReflectAll();
 				InvokeAllScripts("Awake");
 				InvokeAllScripts("Start");
 				logicState = LogicState::UPDATE;
 			}
-			else
+			else if (logicState == LogicState::EXIT)
 			{
 				InvokeAllScripts("Exit");
+				logicState = LogicState::CLEANUP;
+			}
+			else
+			{
+				for (uint32_t hand : gcHandles)
+				{
+					mono_gchandle_free(hand);
+				}
+				gcHandles.clear();
+				mComponents.clear();
+				ReflectAll();
+				logicState = LogicState::NONE;
 			}
 			//FINISHED RUNNING
 			ran = true;
+			continue;
 		}
 
 		#ifndef _BUILD
@@ -476,16 +494,6 @@ MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 		}
 	}
 	return nullptr;
-}
-
-MonoObject* ScriptingSystem::GetFieldMonoObject(MonoClassField* mField, MonoObject* mObject)
-{
-	if (mAppDomain == nullptr)
-	{
-		PRINT("APP DOMAIN WAS NULL");
-		return nullptr;
-	}
-	return mono_field_get_value_object(mAppDomain, mField, mObject);
 }
 
 MonoObject* ScriptingSystem::CloneInstance(MonoObject* _instance)
@@ -669,38 +677,6 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 	return pairIt->second;
 }
 
-
-
-//void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
-//{
-//	//If there is no assembly loaded at all
-//	if (mAssemblyImage == nullptr)
-//	{
-//		//Wait if it is still compiling
-//		compilingStateReadable.lock();
-//		while (compilingState == CompilingState::Compiling) {
-//			PRINT("COMPILING!!");
-//		};
-//		//If it finished compiling and needs to swap
-//		if (compilingState == CompilingState::SwapAssembly)
-//		{
-//			PRINT("SWAP ASSEMBLY!!");
-//			//Swap dll and set back to wait for compiling
-//			swapDll();
-//			compilingState = CompilingState::Wait;
-//		}
-//		compilingStateReadable.unlock();
-//	}
-//	for (uint32_t hand : gcHandles)
-//	{
-//		mono_gchandle_free(hand);
-//	}
-//	gcHandles.clear();
-//	mGameObjects.clear();
-//	mComponents.clear();
-//	PRINT("CREATING NEW SCENE!");
-//	ReflectAll();
-//}
 //
 //
 //
@@ -745,35 +721,28 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 //	ReflectGameObject(pEvent->gameObject);
 //}
 //
+
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
 	logicState = LogicState::START;
 	ran = true;
-	//E_ASSERT(mAppDomain,"App domain is not loaded");
-	//inPlayMode = true;
-	//for (uint32_t hand : gcHandles)
-	//{
-	//	mono_gchandle_free(hand);
-	//}
-	//gcHandles.clear();
-	//mGameObjects.clear();
-	//mComponents.clear();
-	//ReflectAll();
 }
-//
-//void ScriptingSystem::CallbackStopPreview(StopPreviewEvent* pEvent)
-//{
-//	inPlayMode = false;
-//	for (uint32_t hand : gcHandles)
-//	{
-//		mono_gchandle_free(hand);
-//	}
-//	gcHandles.clear();
-//	mGameObjects.clear();
-//	mComponents.clear();
-//	ReflectAll();
-//}
+void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
+{
+	logicState = LogicState::EXIT;
+	ran = false;
+	while (ran == false);
+}
+
+void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	logicState = LogicState::CLEANUP;
+	ran = false;
+	while (ran == false);
+}
+
+
 //
 //void ScriptingSystem::CallbackScriptGetNames(ScriptGetNamesEvent* pEvent)
 //{

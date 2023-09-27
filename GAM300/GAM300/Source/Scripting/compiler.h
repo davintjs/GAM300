@@ -30,7 +30,7 @@ namespace Utils
 	/**************************************************************************/
 	static void CompileDll()
 	{
-		std::string command {"Tools\\Roslyn\\csc.exe -target:library -out:scripts.dll"};
+		std::string command {"Tools\\Roslyn\\csc.exe /reference:External\\GlmSharp\\bin\\GlmSharp.dll -target:library -out:scripts.dll"};
 		for (fs::directory_entry p : fs::recursive_directory_iterator("Assets"))
 		{
 			if (p.path().extension() == ".cs")

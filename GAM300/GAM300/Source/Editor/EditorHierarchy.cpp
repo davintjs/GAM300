@@ -10,14 +10,6 @@ void EditorHierarchy::Init()
     //no selected entity at start
     selectedEntity = NON_VALID_ENTITY;
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
-    EVENTS.Subscribe(this,&EditorHierarchy::CallbackClearEntities);
-	EVENTS.Subscribe(this, &EditorHierarchy::CallbackAddEntity);
-}
-
-void EditorHierarchy::ClearLayer()
-{
-	layer.clear();
-	selectedEntity = NON_VALID_ENTITY;
 }
 
 void EditorHierarchy::DisplayEntity(Engine::UUID euid)
@@ -36,6 +28,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
+	Scene::Layer& layer = curr_scene.layer;
 	Transform& currEntity = curr_scene.Get<Transform>(euid);
 
 	if (currEntity.isLeaf())
@@ -62,6 +55,9 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 				Transform& currTransform = curr_scene.Get<Transform>(currEntity);
 				Transform& targetTransform = curr_scene.Get<Transform>(targetEntity);
 
+				Transform& currParent = curr_scene.Get<Transform>(currTransform.parent);
+				Transform& targetParent = curr_scene.Get<Transform>(targetTransform.parent);
+
 				//if target entity is a child
 				if (targetTransform.isChild())
 				{
@@ -69,32 +65,33 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					//if current entity has a parent
 					if (currTransform.isChild())
 					{
+						
 						//if reordering within the same parent
-						if (currTransform.parent->child == targetTransform.parent->child)
+						if (currParent.child == targetParent.child)
 						{
 
-							std::vector<Transform*>& arr = targetTransform.parent->child;
+							auto& arr = targetParent.child;
 							//delete curr entity from layer position
 							//           
-							auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
+							auto prev_it = std::find(arr.begin(), arr.end(), currTransform.EUID());
 							arr.erase(prev_it);
 							//reorder (reinsert) the current entity into new layer position
-							auto it = std::find(arr.begin(), arr.end(), &targetTransform);
-							arr.insert(it, &currTransform);
+							auto it = std::find(arr.begin(), arr.end(), targetTransform.EUID());
+							arr.insert(it, currEntity.EUID());
 						}
 						//if current entity has a different previous parent, remove it.
 						else
 						{
-							auto& children = currTransform.parent->child;
-							currTransform.SetParent(targetTransform.parent);
+							auto& children = currParent.child;
+							currTransform.SetParent(&targetParent);
 
-							std::vector<Transform*>& arr = targetTransform.parent->child;
+							auto& arr = targetParent.child;
 							//Reorder entity to target entity location     
-							auto prev_it = std::find(arr.begin(), arr.end(), &currTransform);
+							auto prev_it = std::find(arr.begin(), arr.end(), currTransform.EUID());
 							arr.erase(prev_it);
 							//reorder (reinsert) the current entity into new layer position
-							auto it2 = std::find(arr.begin(), arr.end(), &targetTransform);
-							arr.insert(it2, &currTransform);
+							auto it2 = std::find(arr.begin(), arr.end(), targetTransform.EUID());
+							arr.insert(it2, currTransform.EUID());
 						}
 					}
 					//if current entity is a base node (no parent)
@@ -104,14 +101,14 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 						/*auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
 						layer.erase(prev_it);*/
 
-						auto& parent = targetTransform.parent->child;
+						auto& parent = targetParent.child;
 
-						currTransform.SetParent(targetTransform.parent);
+						currTransform.SetParent(&targetParent);
 						if (parent.size() > 0)
 						{
 							parent.pop_back();
-							auto it = std::find(parent.begin(), parent.end(), &targetTransform);
-							parent.insert(it,&currTransform);
+							auto it = std::find(parent.begin(), parent.end(), targetTransform.EUID());
+							parent.insert(it,currTransform.EUID());
 						}
 					}
 
@@ -125,12 +122,12 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 						currTransform.SetParent(nullptr);
 					}
 					//delete instance of entity in container
-					auto prev_it = std::find(layer.begin(), layer.end(), &currEntity);
+					auto prev_it = std::find(layer.begin(), layer.end(), currEntity.EUID());
 					layer.erase(prev_it);
 
 					//reorder (reinsert) the current entity into new layer position
-					auto it = std::find(layer.begin(), layer.end(), &targetEntity);
-					layer.insert(it, &currEntity);
+					auto it = std::find(layer.begin(), layer.end(), targetEntity.EUID());
+					layer.insert(it, currEntity.EUID());
 				}
 
 			}
@@ -189,7 +186,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	{
 		for (int i = 0; i < currEntity.child.size(); ++i)
 		{
-			Engine::UUID childId = currEntity.child[i]->EUID();
+			Engine::UUID childId = currEntity.child[i];
 			DisplayEntity(childId);
 		}
 		ImGui::TreePop();
@@ -208,14 +205,15 @@ void EditorHierarchy::Update(float dt)
 
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
+	Scene::Layer& layer = curr_scene.layer;
 	if (sceneopen)
 	{
-		for (int i = 0; i < layer.size(); ++i)
+		for (Engine::UUID euid : layer)
 		{
-			if (!curr_scene.Get<Transform>(*layer[i]).isChild())
+			if (!curr_scene.Get<Transform>(euid).isChild())
 			{
 				//Recursive function to display entities in a hierarchy tree
-				DisplayEntity(layer[i]->EUID());
+				DisplayEntity(euid);
 			}
 		}
 
@@ -235,10 +233,10 @@ void EditorHierarchy::Update(float dt)
 				else
 				{
 					Entity& entity = curr_scene.Get<Entity>(Index);
-					auto it = std::find(layer.begin(), layer.end(), &entity);
+					auto it = std::find(layer.begin(), layer.end(), entity.EUID());
 					
 					layer.erase(it);
-					layer.insert(layer.end(), &entity);
+					layer.insert(layer.end(), entity.EUID());
 				}
 		
 			}
@@ -268,8 +266,8 @@ void EditorHierarchy::Update(float dt)
 						curr_scene.Destroy(child);
 					}
 					curr_scene.Destroy(ent);
-					auto it = std::find(layer.begin(), layer.end(), &ent);
-					EditorHierarchy::Instance().layer.erase(it);
+					auto it = std::find(layer.begin(), layer.end(), ent.EUID());
+					layer.erase(it);
 					SelectedEntityEvent selectedEvent{0};
 					EVENTS.Publish(&selectedEvent);
 				}
@@ -293,16 +291,6 @@ void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
         selectedEntity = pEvent->pEntity->EUID();
     else
         selectedEntity = NON_VALID_ENTITY;
-}
-
-void EditorHierarchy::CallbackClearEntities(ClearEntitiesEvent* pEvent)
-{
-	ClearLayer();
-}
-
-void EditorHierarchy::CallbackAddEntity(ObjectCreatedEvent<Entity>* pEvent)
-{
-	layer.push_back(pEvent->pObject);
 }
 
 void EditorHierarchy::Exit() {

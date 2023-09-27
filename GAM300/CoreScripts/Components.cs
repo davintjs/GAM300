@@ -13,12 +13,8 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using GlmSharp;
 
 
 namespace BeanFactory
@@ -52,9 +48,9 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class Rigidbody : Component
     {
-        public Vector3 linearVelocity;         //velocity of object
-        public Vector3 angularVelocity;              //acceleration of object
-        public Vector3 force;
+        public vec3 linearVelocity;         //velocity of object
+        public vec3 angularVelocity;              //acceleration of object
+        public vec3 force;
         public float friction = 0.1f;                //friction of body (0 <= x <= 1)
         public float mass = 1f;                 //mass of object
         public bool isStatic = true;             //is object static? If true will override isKinematic!
@@ -66,9 +62,9 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class Transform : Component
     {
-        public Vector3 localPosition;
-        public Vector3 localRotation;
-        public Vector3 localScale;
+        public vec3 localPosition;
+        public vec3 localRotation;
+        public vec3 localScale;
         public Transform parent;
     }
 
