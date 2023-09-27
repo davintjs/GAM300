@@ -1,7 +1,7 @@
 #ifndef PHYSICSSYSTEM_H
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
-
+#include "Core/Events.h"
 
 #include "Jolt/Jolt.h"
 #include "Jolt/RegisterTypes.h"
@@ -126,12 +126,16 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void OnSceneStart();
-	void OnSceneEnd();
 
 	void PopulatePhysicsWorld();
 	void UpdateGameObjects();
 	void TestRun();
+
+
+	// Scene Callbacks
+	void CallbackSceneStart(SceneStartEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
+
 
 	// Jolt Body creations
 	//void CreateJoltRigidbody(Rigidbody & rb);
