@@ -51,6 +51,8 @@ static unsigned int InstancePropertyCount = 1;
 
 struct InstanceProperties
 {
+	GLenum drawType;
+
 	// instanced stuff
 	unsigned int VAO;
 	unsigned int debugVAO;
