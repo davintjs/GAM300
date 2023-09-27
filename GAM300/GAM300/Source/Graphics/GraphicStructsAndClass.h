@@ -58,6 +58,7 @@ struct InstanceProperties
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
 	
+	// -------------- BLINN PHONG --------------------------
 	// make into individual buffers
 	unsigned int AlbedoBuffer;
 	glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
@@ -73,6 +74,23 @@ struct InstanceProperties
 
 	unsigned int ShininessBuffer;
 	float Shininess[EnitityInstanceLimit];
+
+	// -------------- PBR --------------------------
+	// USES Albedo Buffer from above too
+	// 
+	// make into individual buffers
+	//unsigned int AlbedoBuffer;
+	//glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
+
+	unsigned int Metal_Rough_AO_Texture_Buffer;
+	glm::vec3 M_R_A_Texture[EnitityInstanceLimit];
+
+	unsigned int Metal_Rough_AO_Texture_Constant;
+	glm::vec3 M_R_A_Constant[EnitityInstanceLimit];
+
+
+
+
 
 	unsigned int textureIndexBuffer;
 	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)

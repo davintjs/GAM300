@@ -2,16 +2,20 @@
 //-------------------------
 //          COMING IN
 //-------------------------
+
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoords;
+layout (location = 2) in vec3 aTangents;
+layout (location = 3) in vec2 aTexCoords;
+layout (location = 4) in vec2 aColor;
 
 layout (location = 6) in mat4 SRT;
 
 layout (location = 10) in vec4 Albedo;
 layout (location = 11) in vec3 Metal_Rough_AO_index; // Texture Index
-layout (location = 12) in vec3 Metal_Rough_AO_constant; // Material Instance Constants
-layout (location = 15) in vec2 texture_index;
+layout (location = 15) in vec2 texture_index;layout (location = 12) in vec3 Metal_Rough_AO_constant; // Material Instance Constants
+
 
 
 
