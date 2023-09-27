@@ -916,6 +916,8 @@ void GraphicsSystem::Exit()
 
 void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 {
+	glm::vec3 color{ 1.f, 0.f, 1.f };
+
 	temp_debug_shader.Use();
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
@@ -923,10 +925,13 @@ void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "uColor");
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getPerspMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(vaoid);
 	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
@@ -939,6 +944,8 @@ void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 
 void GraphicsSystem::Draw_Grid(GLuint vaoid, unsigned int instance_count)
 {
+	glm::vec3 color{ 1.f, 1.f, 1.f };
+
 	temp_debug_shader.Use();
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
@@ -946,10 +953,13 @@ void GraphicsSystem::Draw_Grid(GLuint vaoid, unsigned int instance_count)
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "uColor");
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getPerspMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(vaoid);
 	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
