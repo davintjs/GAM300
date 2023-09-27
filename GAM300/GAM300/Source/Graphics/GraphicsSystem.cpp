@@ -30,8 +30,8 @@ bool SwappingColorSpace = false;
 
 //Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
-bool test_button_1 = false;
-bool test_button_2 = false;
+//bool test_button_1 = false;
+//bool test_button_2 = false;
 
 // Naive Solution for now
 
@@ -320,6 +320,18 @@ void GraphicsSystem::Update(float dt)
 
 		Lighting_Source.lightpos = transform.translation;
 		Lighting_Source.lightColor = lightSource.lightingColor;
+
+		if (currentScene.Has<MeshRenderer>(entity))
+		{
+			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
+			mesh_component.mr_Albedo = glm::vec4(Lighting_Source.lightColor,1.f);
+
+			mesh_component.mr_metallic = -1.f;
+			mesh_component.mr_roughness = -1.f;
+			mesh_component.ao = -1.f;
+
+		}
+
 	}
 	if (!haveLight)
 	{
@@ -328,14 +340,15 @@ void GraphicsSystem::Update(float dt)
 
 	// Update Loop
 	int i = 0;
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
-	{
-		test_button_1 = !test_button_1;
-	}
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_O))
-	{
-		test_button_2 = !test_button_2;
-	}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
+	//{
+	//	test_button_1 = !test_button_1;
+	//}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_O))
+	//{
+	//	test_button_2 = !test_button_2;
+	//}
+
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
@@ -406,18 +419,18 @@ void GraphicsSystem::Update(float dt)
 		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 
 
-		// button here change norm idx to 33
-		if (test_button_1)
-		{
-			std::cout << "force change normal\n";
-			normidx = 33;
-			
-		}
-		if (test_button_2)
-		{
-			std::cout << "force change roughness\n";
-			roughidx = 33;
-		}
+		//// button here change norm idx to 33
+		//if (test_button_1)
+		//{
+		//	std::cout << "force change normal\n";
+		//	normidx = 33;
+		//	
+		//}
+		//if (test_button_2)
+		//{
+		//	std::cout << "force change roughness\n";
+		//	roughidx = 33;
+		//}
 		//std::cout << normidx << "\n";
 
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
@@ -798,8 +811,6 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
-
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -826,29 +837,29 @@ void GraphicsSystem::Draw() {
 	}
 
 
-	// This is to render the Rays
-	if (Ray_Container.size() > 0)
-	{
+	//// This is to render the Rays
+	//if (Ray_Container.size() > 0)
+	//{
 
-		for (int i = 0; i < Ray_Container.size(); ++i)
-		{
-			Ray3D ray = Ray_Container[i];
+	//	for (int i = 0; i < Ray_Container.size(); ++i)
+	//	{
+	//		Ray3D ray = Ray_Container[i];
 
-			//std::cout << "ray " << ray.origin.x << "\n";
-			//std::cout << "ray direc" << ray.direction.x << "\n";
+	//		//std::cout << "ray " << ray.origin.x << "\n";
+	//		//std::cout << "ray direc" << ray.direction.x << "\n";
 
-			glm::mat4 SRT
-			{
-				glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
-				glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
-				glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
-				glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
-			};
-			//std::cout << "in here draw\n";
-			Line.debugline_draw(SRT);
+	//		glm::mat4 SRT
+	//		{
+	//			glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
+	//			glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
+	//			glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
+	//			glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
+	//		};
+	//		//std::cout << "in here draw\n";
+	//		Line.debugline_draw(SRT);
 
-		}
-	}
+	//	}
+	//}
 
 	glDepthFunc(GL_LEQUAL);
 	SkyBox_Model.SkyBoxDraw(Skybox_Tex);
