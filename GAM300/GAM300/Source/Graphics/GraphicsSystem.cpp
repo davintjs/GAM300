@@ -369,11 +369,7 @@ void GraphicsSystem::Update(float dt)
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
-		if (renderer.RoughnessTexture != "") {
-			//std::cout << "albedo tex\n";
-			RoughnessID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
-		}
+
 
 		if (renderer.MetallicTexture != "") {
 			//std::cout << "normal tex\n";
@@ -381,6 +377,12 @@ void GraphicsSystem::Update(float dt)
 			MetallicID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
 		}
+		if (renderer.RoughnessTexture != "") {
+			//std::cout << "albedo tex\n";
+			RoughnessID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
+		}
+
 		if (renderer.AoTexture != "") {
 			//std::cout << "normal tex\n";
 			AoID =
@@ -391,9 +393,18 @@ void GraphicsSystem::Update(float dt)
 
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
-		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
+
+
 		float metalidx = float(ReturnTextureIdx(renderer.MeshName, MetallicID));
+		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
 		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
+
+
+		float metal_constant = renderer.mr_metallic;
+		float rough_constant = renderer.mr_roughness;
+		float ao_constant = renderer.ao;
+		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+
 
 		// button here change norm idx to 33
 		if (test_button_1)
@@ -477,6 +488,7 @@ void GraphicsSystem::Update(float dt)
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
 
 			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
 

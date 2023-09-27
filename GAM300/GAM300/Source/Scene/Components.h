@@ -321,9 +321,9 @@ struct MeshRenderer : Object
 	float mr_Shininess;
 
 
-	float mr_metallic;
-	float mr_roughness;
-	float ao;
+	float mr_metallic = 0.5f;
+	float mr_roughness = 0.5f;
+	float ao = 0.5f;
 
 	std::string MetallicTexture = "";
 	std::string RoughnessTexture = "";

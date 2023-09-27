@@ -123,15 +123,15 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 
 void main()
 {		
-vec3 lightpos_test[4];
-    lightpos_test[0] = vec3(-100.f,100.f,100.f);
-    lightpos_test[1] = vec3(100.f,100.f,100.f);
-    lightpos_test[2] = vec3(-100.f,-100.f,100.f);
-    lightpos_test[3]= vec3(100.f,-100.f,100.f);
+//vec3 lightpos_test[4];
+//    lightpos_test[0] = vec3(-100.f,100.f,100.f);
+//    lightpos_test[1] = vec3(100.f,100.f,100.f);
+//    lightpos_test[2] = vec3(-100.f,-100.f,100.f);
+//    lightpos_test[3]= vec3(100.f,-100.f,100.f);
+//
 
-
-    vec3 lightstrength = vec3(30000.f,30000.f,30000.f);
-
+//    vec3 lightstrength = vec3(30000.f,30000.f,30000.f);
+//
 
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
@@ -146,16 +146,17 @@ vec3 lightpos_test[4];
     float roughness;
     float ao;
 
-
+    // ALBEDO
     if (Tex_index < 32)
     {
         albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
     }
-//    else
-//    {
-//        albedo = vec3(frag_Albedo);
-//    }
+    else
+    {
+        albedo = vec3(frag_Albedo);
+    }
 
+    // METALLIC 
     if (Metallic_index < 32)
     {
         if(Metallic_index == Roughness_index)
@@ -165,10 +166,11 @@ vec3 lightpos_test[4];
         else
             metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
     }
-//    else
-//    {
-//        metallic = 0.6f;
-//    }
+    else
+    {
+        metallic = frag_Metal_Rough_AO_constant.r;
+    }
+    // ROUGHNESS
     if (Roughness_index < 32)
     {
 
@@ -179,42 +181,31 @@ vec3 lightpos_test[4];
         else
             roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
     }
-//    else
-//    {
-//        roughness = 0.6f;
-//    }
+    else
+    {
+        roughness = frag_Metal_Rough_AO_constant.g;
+
+    }
+    // AO
     if (AO_index < 32)
     {
         ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
     }
+    else
+    {
+        ao = frag_Metal_Rough_AO_constant.b;
+    }
 
 
-
-//    FragColor = vec4(roughness,1.f,1.f,1.f);
-//    return;
-
-//    else
-//    {
-//        ao = frag_Metal_Rough_AO_constant.z;
-//    }
     vec3 N ;
     if (NM_index < 32)
     {
         N = getNormalFromMap(NM_index);
-//        FragColor = vec4(N, 1.0);
-//                 return;
     }
     else
     {
-
-    N = normalize(Normal);
-//    FragColor = vec4(1.f,0.f,0.f, 1.0);
-//                 return;
-//
-
+        N = normalize(Normal);
     }
-
-
 
     vec3 V = normalize(camPos - WorldPos);
 
@@ -236,8 +227,8 @@ vec3 lightpos_test[4];
 //        float distance = length(lightpos_test[i] - WorldPos);
         float distance = length(lightPos - WorldPos);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = lightstrength * attenuation;
-//        vec3 radiance = lightColor * attenuation;
+//        vec3 radiance = lightstrength * attenuation;
+        vec3 radiance = lightColor * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
