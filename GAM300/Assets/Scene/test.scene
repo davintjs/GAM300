@@ -1,0 +1,127 @@
+Scene: test
+---
+GameObject:
+  m_EUID: 14255134087423936283
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_Position: [-150, 100, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 10765976162303420207}  # Rigidbody
+    - component: {fileID: 3315458660716154346}  # MeshRenderer
+    - component: {fileID: 17006442978029670983}  # Script
+---
+Rigidbody:
+  EUID: 14255134087423936283
+  UUID: 10765976162303420207
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+MeshRenderer:
+  EUID: 14255134087423936283
+  UUID: 3315458660716154346
+  Mr_Albedo: [0, 0, 0, 0]
+  Mr_Specular: [0, 0, 0, 0]
+  Mr_Diffuse: [0, 0, 0, 0]
+  Mr_Ambient: [0, 0, 0, 0]
+  Mr_Shininess: 0
+---
+Script:
+  EUID: 14255134087423936283
+  UUID: 17006442978029670983
+  Name: Player
+---
+GameObject:
+  m_EUID: 17092579988806660244
+  m_IsActive: true
+  m_Name: New GameObject(2)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 13241609389773491702}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 17092579988806660244
+  UUID: 13241609389773491702
+  Mr_Albedo: [0, 0, 0, 0]
+  Mr_Specular: [0, 0, 0, 0]
+  Mr_Diffuse: [0, 0, 0, 0]
+  Mr_Ambient: [0, 0, 0, 0]
+  Mr_Shininess: 0
+---
+GameObject:
+  m_EUID: 15897582833960276018
+  m_IsActive: true
+  m_Name: New GameObject(3)
+  m_Position: [0, 100, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [25, 25, 25]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 2781639271768731129}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 15897582833960276018
+  UUID: 2781639271768731129
+  Mr_Albedo: [0, 0, 0, 0]
+  Mr_Specular: [0, 0, 0, 0]
+  Mr_Diffuse: [0, 0, 0, 0]
+  Mr_Ambient: [0, 0, 0, 0]
+  Mr_Shininess: 0
+---
+GameObject:
+  m_EUID: 1096421573922284297
+  m_IsActive: true
+  m_Name: New GameObject(4)
+  m_Position: [0, 200, 35]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [25, 25, 25]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 3227138233293572638}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 1096421573922284297
+  UUID: 3227138233293572638
+  Mr_Albedo: [0, 0, 0, 0]
+  Mr_Specular: [0, 0, 0, 0]
+  Mr_Diffuse: [0, 0, 0, 0]
+  Mr_Ambient: [0, 0, 0, 0]
+  Mr_Shininess: 0
+---
+GameObject:
+  m_EUID: 16440294556857463613
+  m_IsActive: true
+  m_Name: New GameObject(5)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 12778563229951867862}  # LightSource
+---
+LightSource:
+  EUID: 16440294556857463613
+  UUID: 12778563229951867862
+  LightingColor: [150, 150, 150]

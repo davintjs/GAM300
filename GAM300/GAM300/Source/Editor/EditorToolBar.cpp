@@ -69,14 +69,12 @@ void EditorToolBar::Update(float dt)
         {
             PRINT("SCENE START\n");
             SceneStartEvent startEvent{};
-            ACQUIRE_SCOPED_LOCK(Assets);
             EVENTS.Publish(&startEvent);
         }
         else
         {
             PRINT("SCENE STOP\n");
             SceneStopEvent stopEvent{};
-            ACQUIRE_SCOPED_LOCK(Assets);
             EVENTS.Publish(&stopEvent);
 
         }
