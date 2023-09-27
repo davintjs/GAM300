@@ -226,10 +226,9 @@ void DisplayType(const char* name, Vector2& val)
 }
 
 template <typename T>
-void AddReferencePanel(T* container)
+void AddReferencePanel(T*& container)
 {
     //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference || (T*)pEditedContainer != container)
     if (!isAddingReference || (T*)pEditedContainer != container)
     {
         return;
@@ -257,8 +256,7 @@ void AddReferencePanel(T* container)
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
                 isAddingReference = false;
-                Handle* value = (Handle*)container;
-                *value = Handle(object.EUID(),object.UUID());
+                container = &object;
                 break;
             }
         }
@@ -272,15 +270,14 @@ void AddReferencePanel(T* container)
 }
 
 template <typename T>
-void DisplayType(const char* name, T* container, const char* altName = nullptr)
+void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
         static std::string btnName;
-        Handle* value = (Handle*)container;
-        if (value->euid != 0)
+        if (container)
         {
-            btnName = MySceneManager.GetCurrentScene().Get<Tag>(value->euid).name;
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(container->EUID()).name;
         }
         else
         {
@@ -314,7 +311,8 @@ void DisplayType(const char* name, T* container, const char* altName = nullptr)
             const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetType::Name<T>());
             if (payload)
             {
-                *value = *(Handle*)payload->Data;
+                Handle handle = *(Handle*)payload->Data;
+                container = &MySceneManager.GetCurrentScene().Get<T>(handle);
             }
             ImGui::EndDragDropTarget();
         }
@@ -386,15 +384,6 @@ void Display(const char* name, T& val)
     ImGui::Text(name);
     ImGui::TableNextColumn();
     DisplayType(name, val);
-}
-
-void Display(const char* name, Script*& val, const char* scriptName)
-{
-    ImGui::AlignTextToFramePadding();
-    ImGui::TableNextColumn();
-    ImGui::Text(name);
-    ImGui::TableNextColumn();
-    //DisplayType(name, val, scriptName);
 }
 
 void Display(const char* string)
@@ -534,13 +523,6 @@ void Display_Property(T& comp) {
 //        property::set(comp, Name.c_str(), Data);
 //    }
 //}
-//template<>
-//void DisplayComponent<AudioSource>(AudioSource& as) {
-//
-//    Display_Property(as);
-//
-//  
-//}
 //
 //template <>
 //void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
@@ -631,13 +613,14 @@ void Display_Property(T& comp) {
 
 void DisplayComponent(Script& script)
 {
-    for (auto& pair : script.fields)
+    ScriptGetFieldsEvent getFieldsEvent{script};
+    EVENTS.Publish(&getFieldsEvent);
+    for (size_t i = 0; i < getFieldsEvent.count; ++i)
     {
-        const char* name = pair.first.c_str();
-        Field& field{ pair.second };
-        Display(name, field);
-        ScriptSetFieldEvent e{ script,name };
-        EVENTS.Publish(&e);
+        Field& field{ getFieldsEvent.pStart[i]};
+        Display(field.name.c_str(), field);
+        //ScriptSetFieldEvent e{ script,name };
+        //EVENTS.Publish(&e);
     }
 }
 //template <>

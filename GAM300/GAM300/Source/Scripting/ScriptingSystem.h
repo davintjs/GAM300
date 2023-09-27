@@ -304,6 +304,9 @@ public:
 
 	//Updates by setting field values back into C#
 	void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+
+
+	void CallbackScriptGetFields(ScriptGetFieldsEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*

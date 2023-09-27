@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 struct Entity;
 struct Scene;
 struct Script;
+struct Field;
 
 struct IEvent
 {
@@ -106,11 +107,19 @@ struct ObjectCreatedEvent : IEvent
 
 struct ScriptSetFieldEvent : IEvent
 {
-	ScriptSetFieldEvent(Script& _script, const char* _fieldName) : script{ _script }, fieldName{ _fieldName } {}
+	ScriptSetFieldEvent(Script& _script, const char* _fieldName, void* _data) : script{ _script }, fieldName{ _fieldName }, data{ _data }{}
 	Script& script;
 	const char* fieldName;
+	void* data;
 };
 
+struct ScriptGetFieldsEvent : IEvent
+{
+	ScriptGetFieldsEvent(Script& _script) : script{ _script } {}
+	Script& script;
+	Field* pStart;
+	size_t count;
+};
 
 //
 //template <typename T>

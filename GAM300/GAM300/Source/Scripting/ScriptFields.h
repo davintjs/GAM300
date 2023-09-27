@@ -25,6 +25,7 @@ struct Field
 	void* data{ nullptr };
 	size_t fType{};
 	std::string typeName;
+	std::string name;
 	/***************************************************************************/
 	/*!
 	\brief
@@ -36,40 +37,17 @@ struct Field
 		Data to store and copy from
 	*/
 	/**************************************************************************/
-	Field(size_t _fType, size_t _size = 0, void* _data = nullptr) :
-		fType{ _fType }
-	{
-		size = _size;
-		if (size)
-			data = new char[size];
-		else
-			data = nullptr;
-		if (_data)
-			memcpy(data, _data, size);
-	}
+	Field(size_t _fType, void* _data, std::string _name) : 
+		fType{ _fType }, data{ _data }, name{ _name }{}
 	template<typename T>
 	void operator=(const T& val)
 	{
-		E_ASSERT(sizeof(T) <= size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
 		memcpy(data, &val, sizeof(T));
-	}
-	template<typename T>
-	void operator=(const T* val)
-	{
-		memcpy(data, val, size);
 	}
 	template<typename T>
 	T& Get()
 	{
-		E_ASSERT(sizeof(T) <= size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
 		return *static_cast<T*>(data);
-	}
-	void Resize(size_t _size)
-	{
-		if (data)
-			delete[] data;
-		size = _size;
-		data = new char[size];
 	}
 	/***************************************************************************/
 	/*!
@@ -84,43 +62,25 @@ struct Field
 	{
 		if (data)
 			delete[] data;
-		size = rhs.size;
-		data = new char[size];
+		data = rhs.data;
 		fType = rhs.fType;
 		typeName = rhs.typeName;
-		memcpy(data, rhs.data, size);
 	}
 	Field(Field&& rhs)
 	{
-		size = rhs.size;
 		data = rhs.data;
 		fType = rhs.fType;
 		typeName = std::move(rhs.typeName);
 		rhs.data = nullptr;
 	}
+
 	Field& operator=(Field&& rhs)
 	{
-		size = rhs.size;
 		data = rhs.data;
 		fType = rhs.fType;
 		typeName = std::move(rhs.typeName);
 		rhs.data = nullptr;
 		return *this;
-	}
-	/***************************************************************************/
-	/*!
-	\brief
-		Destructor that frees memory
-	*/
-	/**************************************************************************/
-	~Field()
-	{
-		if (data)
-			delete[] data;
-	}
-	size_t GetSize() const
-	{
-		return size;
 	}
 private:
 	size_t size{ 0 };

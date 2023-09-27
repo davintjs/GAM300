@@ -193,6 +193,7 @@ void ScriptingSystem::Init()
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackGetScriptNames);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetFields);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
@@ -345,24 +346,9 @@ void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 	auto& scriptsArray = scene.GetArray<Script>();
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
-		Script& script = *it;
-		for (auto& field : script.fields)
-		{
-			if (field.second.fType >= AllObjectTypes::Size())
-				continue;
-			Entity& entity = scene.Get<Entity>(script);
-			//Reference got deleted
-			Handle* pHandle = (Handle*)field.second.data;
-			if (!scene.HasHandle(field.second.fType, pHandle))
-			{
-				memset(field.second.data, 0, field.second.GetSize());
-				ScriptSetFieldEvent e{ script,field.first.c_str()};
-				CallbackScriptSetField(&e);
-			}
-		}
-
 		if (!it.IsActive())
 			continue;
+		Script& script = *it;
 		if (!scene.IsActive(scene.Get<Entity>(script)))
 			continue;
 		InvokeMethod(script, funcName);
@@ -374,18 +360,18 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{
-		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			if (MySceneManager.HasScene())
-			{
-				Scene& scene{ MySceneManager.GetCurrentScene() };
-				for (Handle& handle : reflectionQueue)
-				{
-					ReflectScript(scene.Get<Script>(handle.euid, handle.uuid));
-				}
-				reflectionQueue.clear();
-			}
-		}
+		//{
+		//	ACQUIRE_SCOPED_LOCK(Mono);
+		//	if (MySceneManager.HasScene())
+		//	{
+		//		Scene& scene{ MySceneManager.GetCurrentScene() };
+		//		for (Handle& handle : reflectionQueue)
+		//		{
+		//			ReflectScript(scene.Get<Script>(handle.euid, handle.uuid));
+		//		}
+		//		reflectionQueue.clear();
+		//	}
+		//}
 
 		if (logicState != LogicState::NONE)
 		{
@@ -628,66 +614,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 		invoke(instance, reflectComponent, &param);
 		mComponents.emplace(&script, instance);
 		//Check fields, dont remove fields, but change them if their type is different
-
-		std::list<std::string> validFieldNames{};
-
-		for (auto& pair : script.fields)
-		{
-			validFieldNames.push_back(pair.first);
-		}
-		for (auto& pair : scriptClass.mFields)
-		{
-			MonoClassField* mField = pair.second;
-			MonoType* type = mono_field_get_type(mField);
-			size_t fieldType = Utils::monoTypeToFieldType(type);
-			const char* fieldName = pair.first.c_str();
-			std::string typeName = mono_type_get_name(type);
-			auto nameField{ script.fields.find(fieldName) };
-			int alignment{};
-			int fieldSize = mono_type_size(type, &alignment);
-			if (fieldType < AllObjectTypes::Size())
-			{
-				fieldSize = sizeof(Object);
-			}
-			else if (fieldType == GetFieldType::E<std::string>())
-			{
-				fieldSize = TEXT_BUFFER_SIZE;
-			}
-			//Field has not been created onto script yet
-			if (nameField == script.fields.end())
-			{
-				Field newField = Field((size_t)fieldType, fieldSize, nullptr);
-				size_t offset = typeName.find_last_of(".");
-				if (offset != std::string::npos)
-					newField.typeName = typeName.substr(offset + 1);
-				else
-					newField.typeName = typeName;
-				mono_field_get_value(instance, mField, newField.data);
-				script.fields[fieldName] = std::move(newField);
-			}
-			//Field exists
-			else
-			{
-				validFieldNames.remove(fieldName);
-				Field& field = nameField->second;
-				//If the field type is not the same
-				if (field.fType != (size_t)fieldType)
-				{
-					field.Resize(fieldSize);
-					mono_field_get_value(instance, mField, field.data);
-				}
-				//Field exists, setback the values first
-				else
-				{
-					//Look at this again
-					SetFieldValue(instance, mField, field);
-				}
-			}
-		}
-		for (auto& name : validFieldNames)
-		{
-			script.fields.erase(name);
-		}
+		//Set back fields from previous scene
 		return instance;
 	}
 	/*return (*pairIt).second;*/
@@ -715,8 +642,29 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
 	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 	E_ASSERT(mClassField, "FIELD ",pEvent->fieldName,"COULD NOT BE FOUND IN SCRIPT ",pEvent->script.name);
-	Field& field = pEvent->script.fields[pEvent->fieldName];
-	SetFieldValue(mScript, mClassField, field);
+	//SetFieldValue(mScript, mClassField, pEvent.field);
+}
+
+
+void ScriptingSystem::CallbackScriptGetFields(ScriptGetFieldsEvent* pEvent)
+{
+	static std::vector<Field> fields;
+	pEvent->pStart = nullptr;
+	pEvent->count = 0;
+	fields.clear();
+	if (mAppDomain == nullptr)
+		return;
+	MonoObject* mScript = ReflectScript(pEvent->script);
+	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
+	for (auto& pair : scriptClass.mFields)
+	{
+		size_t fType = Utils::monoTypeToFieldType(mono_field_get_type(pair.second));
+		mono_jit_thread_attach(mRootDomain);
+		MonoObject* obj = mono_field_get_value_object(mRootDomain, pair.second, mScript);
+		fields.emplace_back(fType, obj,pair.first);
+	}
+	pEvent->pStart = fields.data();
+	pEvent->count = fields.size();
 }
 //
 //
