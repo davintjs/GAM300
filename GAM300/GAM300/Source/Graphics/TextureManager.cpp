@@ -72,15 +72,15 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
 
     glm::tvec3<GLsizei> const Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-    if ( gli::is_srgb(Texture.format()) )
-    {
-        std::cout << " SRGB\n";
-    }
-    else
-    {
-        std::cout << " RGB\n";
+    //if ( gli::is_srgb(Texture.format()) )
+    //{
+    //    std::cout << " SRGB\n";
+    //}
+    //else
+    //{
+    //    std::cout << " RGB\n";
 
-    }
+    //}
     switch (Texture.target())
     {
     case gli::TARGET_1D:
