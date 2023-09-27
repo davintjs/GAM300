@@ -35,13 +35,24 @@ bool SerializeScene(Scene& _scene);
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 
 template <typename T>
-bool SerializeComponent(YAML::Emitter& out, T& _component);
+bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id);
+
+void SerializeScript(YAML::Emitter& out, Script& _component);
 
 void Deserialize(const std::string& _filepath);
 void DeserializeRuntime(const std::string& _filepath);
 
 bool DeserializeScene(Scene& _scene);
-bool DeserializeEntity(YAML::Node& _node, Entity& _entity, Scene& _scene);
+void DeserializeGameObject(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities);
+
+template <typename T>
+void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Emitter& out);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
 
 template<typename T, typename... Ts>
 struct SerializeComponentsStruct
@@ -49,42 +60,36 @@ struct SerializeComponentsStruct
 public:
     constexpr SerializeComponentsStruct(TemplatePack<T, Ts...> pack) {}
     SerializeComponentsStruct() = default;
-    bool SerializeComponents(YAML::Emitter& out, Entity& entity, Scene& _scene)
+    bool SerializeComponents(YAML::Emitter& out, Entity& _entity, Scene& _scene, const bool& _id = true)
     {
-        return SerializeNext<T, Ts...>(out, entity, _scene);
+        return SerializeNext<T, Ts...>(out, _entity, _scene, _id);
     }
 private:
     template<typename T1, typename... T1s>
-    bool SerializeNext(YAML::Emitter& out, Entity& entity, Scene& _scene)
+    bool SerializeNext(YAML::Emitter& out, Entity& _entity, Scene& _scene, const bool& _id)
     {
         if constexpr (SingleComponentTypes::Has<T1>())
         {
-            if (_scene.Has<T1>(entity))
+            if (_scene.Has<T1>(_entity))
             {
-                //dont Serialize tag component as it is already on top of the inspector
-                if constexpr (!std::is_same<T1, Tag>())
-                {
-                    auto& component = _scene.Get<T1>(entity);
-                    if (!SerializeComponent(out, component))
-                        return false;
-                }
+                auto& component = _scene.Get<T1>(_entity);
+                if (!SerializeComponent(out, component, _id))
+                    return false;
             }
         }
         else if constexpr (MultiComponentTypes::Has<T1>())
         {
-            // Bean: Uncomment once zac implements multi component
-            //auto components = _scene.Get<T1>(entity);
-            //for (T1* component : components)
-            //{
-            //    //SerializeType("Enabled", component->is_enabled); ImGui::SameLine();
-            //    if (!SerializeComponent(out, *component))
-            //        return false;
-            //}
+            auto components = _scene.GetMulti<T1>(_entity);
+            for (T1* component : components)
+            {
+                if (!SerializeComponent(out, *component, _id))
+                    return false;
+            }
         }
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            if (!SerializeNext<T1s...>(out, entity, _scene))
+            if (!SerializeNext<T1s...>(out, _entity, _scene, _id))
                 return false;
         }
 

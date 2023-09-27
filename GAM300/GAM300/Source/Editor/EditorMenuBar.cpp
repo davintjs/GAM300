@@ -159,7 +159,9 @@ void EditorMenuBar::SaveScene()
 
 void EditorMenuBar::OpenFile()
 {
-    std::string Filename = FileDialogs::OpenFile("All Files (*.*)\0*.*\0");
+    // Bean: open specific file types, for now this function only open scene files
+    //std::string Filename = FileDialogs::OpenFile("All Files (*.*)\0*.*\0");
+    std::string Filename = FileDialogs::OpenFile("Scene (*.scene)\0*.scene\0");
     if (!Filename.empty())
     {
         //Open File

@@ -452,7 +452,7 @@ void Display_Property(T& comp) {
                 std::string DisplayName = Name;
                 auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                 DisplayName.erase(DisplayName.begin(), ++it);
-                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
+
                 ImGui::PushID(Name.c_str());
                 Display<T1>(DisplayName.c_str(), Value);
                 ImGui::PopID();          
@@ -993,10 +993,10 @@ void EditorInspector::Update(float dt)
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-
-    if (curr_index != NON_VALID_ENTITY) {
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+    //if (curr_index != NON_VALID_ENTITY) {
+    if (&curr_entity) {
         ImGui::Spacing();
-        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
         std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
