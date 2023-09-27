@@ -726,10 +726,12 @@ void GraphicsSystem::Draw() {
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 	
 		// FOR DEBUG DRAW
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		if (prop.debugVAO) {
+			Draw_Debug(prop.debugVAO, prop.iter);
+		}
+		/*glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		Draw_Debug(prop.debugVAO, prop.iter);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 
 		prop.iter = 0;
 	}

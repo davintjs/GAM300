@@ -10,6 +10,7 @@
 #include "Core/Events.h"
 #include "Graphics/TextureManager.h"
 #include "Graphics/MeshManager.h"
+#include "Audio/AudioManager.h"
 // GUID, last file update time, file name, data
 struct FileInfo
 {

@@ -91,6 +91,11 @@ void AssetManager::Init()
 			{
 				MeshManager.GetGeomFromFiles(subFilePath, fileName);
 			}
+			else if (!strcmp(fileType.c_str(), "mp3") || !strcmp(fileType.c_str(), "wav")) {
+				AUDIOMANAGER.AddMusic(subFilePath.c_str(), fileName);
+				AUDIOMANAGER.AddSFX(subFilePath.c_str(), fileName);
+				//AUDIOMANAGER.AddMusic(assetPath.c_str(), fileName);
+			}
 		}
 	}
 

@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
+#include "Audio/AudioSystem.h"
 //#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
@@ -57,6 +58,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		SceneManager,
 		DemoSystem,//RUN AFTER EDITOR
 		ScriptingSystem, // AFTER DEMO
+		AudioSystem,
 		//PhysicsSystem, //AFTER SCRIPTING
 		GraphicsSystem,
 		Blackboard
@@ -79,6 +81,7 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
+		AUDIOMANAGER.InitAudioManager();
 		AllSystems::Init();
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);

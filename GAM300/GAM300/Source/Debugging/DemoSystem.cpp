@@ -27,6 +27,10 @@ void DemoSystem::Init()
 	Scene& scene = *createScene.scene;
 	Entity& titty = *scene.Add<Entity>();
 	MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
+	AudioSource& titAudio = *scene.Add<AudioSource>(titty);
+	titAudio.channel = AudioSource::Channel::MUSIC;
+	//titAudio.play = true;
+	titAudio.currentSound = "LoLnvDie";
 	titrender.MeshName = "DamagedHelmet";
 	titrender.AlbedoTexture = "Default_albedo";
 	titrender.NormalMap = "Default_normal";
@@ -36,6 +40,10 @@ void DemoSystem::Init()
 
 	Entity& titty2 = *scene.Add<Entity>();
 	MeshRenderer& titrender2 = *scene.Add<MeshRenderer>(titty2);
+	AudioSource& titAudio2 = *scene.Add<AudioSource>(titty);
+	titAudio2.channel = AudioSource::Channel::SFX;
+	titAudio2.play = true;
+	titAudio2.currentSound = "Lan_YAY";
 	titrender2.MeshName = "Skull_textured";
 	titrender2.AlbedoTexture = "TD_Checker_Base_Color";
 	titrender2.NormalMap = "";

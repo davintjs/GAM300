@@ -83,6 +83,8 @@
     <ClCompile Include="Source\Scene\Object.cpp" />
     <ClCompile Include="Source\Debugging\DemoSystem.cpp" />
     <ClCompile Include="Source\AI\Geometry.cpp" />
+    <ClCompile Include="Source\Audio\AudioManager.cpp" />
+    <ClCompile Include="Source\Audio\AudioSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -155,6 +157,8 @@
     <ClInclude Include="Source\Debugging\DemoSystem.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\AI\Geometry.h" />
+    <ClInclude Include="Source\Audio\AudioManager.h" />
+    <ClInclude Include="Source\Audio\AudioSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />
