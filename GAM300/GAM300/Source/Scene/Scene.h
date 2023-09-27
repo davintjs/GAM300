@@ -272,7 +272,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return multiHandles.Get<T>(euid,uuid);
+			return *GetMulti(object.euid).front();
 		}
 	}
 
@@ -285,7 +285,14 @@ public:
 	template<typename T, typename Owner>
 	T& Get(Owner& object)
 	{
-		return Get<T>(object.euid,object.uuid);
+		if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return *GetMulti(object.euid).front();
+		}
+		else
+		{
+			return Get<T>(object.euid);
+		}
 	}
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
