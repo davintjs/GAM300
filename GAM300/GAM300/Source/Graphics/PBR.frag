@@ -12,6 +12,8 @@ layout (location = 4) in vec3 frag_Metal_Rough_AO_index;
 layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
+
+
 //-------------------------
 //          GOING OUT
 //-------------------------
@@ -53,8 +55,12 @@ const float PI = 3.14159265359;
 // technique somewhere later in the normal mapping tutorial.
 vec3 getNormalFromMap(int NM_index)
 {
-    vec3 tangentNormal = texture(myTextureSampler[NM_index], TexCoords).xyz * 2.0 - 1.0;
-    
+//    vec3 normal = texture(myTextureSampler[NM_index], TexCoords).xyz;
+    vec3 tangentNormal = (texture(myTextureSampler[NM_index], TexCoords).rgb * 2.0) - 1.0;
+//    normal.z = normal.z == 0 ? 1 : normal.z;
+
+     // transform normal vector to range [-1,1]
+
     vec3 Q1  = dFdx(WorldPos);
     vec3 Q2  = dFdy(WorldPos);
     vec2 st1 = dFdx(TexCoords);
@@ -64,6 +70,7 @@ vec3 getNormalFromMap(int NM_index)
     vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
     vec3 B  = -normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
+
 
     return normalize(TBN * tangentNormal);
 }
@@ -115,6 +122,15 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 
 void main()
 {		
+vec3 lightpos_test[4];
+    lightpos_test[0] = vec3(-100.f,100.f,100.f);
+    lightpos_test[1] = vec3(100.f,100.f,100.f);
+    lightpos_test[2] = vec3(-100.f,-100.f,100.f);
+    lightpos_test[3]= vec3(100.f,-100.f,100.f);
+
+
+    vec3 lightstrength = vec3(30000.f,30000.f,30000.f);
+
 
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
@@ -133,48 +149,58 @@ void main()
     if (Tex_index < 32)
     {
         albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
-
     }
-    else
-    {
-        albedo = vec3(frag_Albedo);
-    }
+//    else
+//    {
+//        albedo = vec3(frag_Albedo);
+//    }
 
     if (Metallic_index < 32)
     {
-        metallic  = texture(myTextureSampler[Metallic_index], TexCoords).r;   
+        metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
        
     }
-    else
-    {
-        metallic = frag_Metal_Rough_AO_constant.x;
-    }
+//    else
+//    {
+//        metallic = frag_Metal_Rough_AO_constant.x;
+//    }
     if (Roughness_index < 32)
     {
-        roughness  = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+        roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
         
     }
-    else
-    {
-        roughness = frag_Metal_Rough_AO_constant.y;
-    }
+//    else
+//    {
+//        roughness = frag_Metal_Rough_AO_constant.y;
+//    }
     if (AO_index < 32)
     {
         ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
        
     }
-    else
-    {
-        ao = frag_Metal_Rough_AO_constant.z;
-    }
+//    else
+//    {
+//        ao = frag_Metal_Rough_AO_constant.z;
+//    }
+    vec3 N ;
     if (NM_index < 32)
     {
-        albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
-//        FragColor = vec4(1.f,1.f,1.f,1.f);
-//        return;
+        N = getNormalFromMap(NM_index);
+//        FragColor = vec4(N, 1.0);
+//                 return;
+    }
+    else
+    {
+
+    N = normalize(Normal);
+//    FragColor = vec4(1.f,0.f,0.f, 1.0);
+//                 return;
+//
 
     }
-    vec3 N = getNormalFromMap(NM_index);
+
+
+
     vec3 V = normalize(camPos - WorldPos);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
@@ -189,14 +215,14 @@ void main()
         
 //        return;
         // calculate per-light radiance
-//        vec3 L = normalize(lightPositions[i] - WorldPos);
+//        vec3 L = normalize(lightpos_test[i] - WorldPos);
         vec3 L = normalize(lightPos - WorldPos);
         vec3 H = normalize(V + L);
-//        float distance = length(lightPositions[i] - WorldPos);
+//        float distance = length(lightpos_test[i] - WorldPos);
         float distance = length(lightPos - WorldPos);
         float attenuation = 1.0 / (distance * distance);
-//        vec3 radiance = lightColors[i] * attenuation;
-        vec3 radiance = lightColor * attenuation;
+        vec3 radiance = lightstrength * attenuation;
+//        vec3 radiance = lightColor * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
@@ -204,8 +230,8 @@ void main()
         vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
            
         vec3 numerator    = NDF * G * F; 
-//       float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-        float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+       float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+//        float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
         vec3 specular = numerator / denominator;
         
         // kS is equal to Fresnel
@@ -221,11 +247,17 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-
+//        radiance = vec3(1.f,1.f,1.f);
         // add to outgoing radiance Lo
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
-    
+    if(Lo == vec3(0.f,0.f,0.f))
+    {
+         FragColor = vec4(Lo, 1.0);
+     return;
+
+
+    }
 
     vec3 ambient = vec3(0.03) * albedo * ao;
     
@@ -236,6 +268,5 @@ void main()
 //    color = color / (color + vec3(1.0));
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
-
     FragColor = vec4(color, 1.0);
 }

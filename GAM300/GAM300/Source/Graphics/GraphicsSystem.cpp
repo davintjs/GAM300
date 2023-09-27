@@ -282,6 +282,7 @@ void GraphicsSystem::Update(float dt)
 {
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
+		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(0.f));
 		std::fill_n(prop.texture, 32, 0.f);
 	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
@@ -693,7 +694,6 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
-	std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,

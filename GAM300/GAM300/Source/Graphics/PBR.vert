@@ -57,6 +57,10 @@ void main()
     frag_Metal_Rough_AO_constant = Metal_Rough_AO_constant;
     frag_texture_index = texture_index;
 
+    
+    Normal = mat3(transpose(inverse(SRT))) * aNormal;
+
+
     gl_Position =  persp_projection * View * vec4(WorldPos, 1.0);
 
 
