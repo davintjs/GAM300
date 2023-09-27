@@ -254,7 +254,10 @@ struct Rigidbody : Object
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 	bool is_trigger = false;
+
 	property_vtable();
+	UINT32 bid{0};
+
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
@@ -280,6 +283,7 @@ struct CharacterController : Object
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	property_vtable();
+	UINT32 bid{0};
 	//JPH::BodyID CharacterBodyID;
 };
 

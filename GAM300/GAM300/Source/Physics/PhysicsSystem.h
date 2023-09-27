@@ -104,7 +104,7 @@ public:
 	virtual void OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
 	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
 };
-
+#pragma region In Progress
 //class EngineCollisionData {
 //public:
 //	EngineCollisionData() = default;
@@ -117,7 +117,7 @@ public:
 //	Vector3 body2CollisionPos;
 //
 //};
-
+#pragma endregion
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
@@ -137,34 +137,33 @@ public:
 	//void CreateJoltRigidbody(Rigidbody & rb);
 	//void CreateJoltCharacter(CharacterController & cc);
 
-	const unsigned int maxObjects = 1024;
-	const unsigned int maxObjectMutexes = 0;
-	const unsigned int maxObjectPairs = 1024;
-	const unsigned int maxContactConstraints = 1024;
+	const unsigned int maxObjects =					 1024;
+	const unsigned int maxObjectMutexes =				0;
+	const unsigned int maxObjectPairs =				 1024;
+	const unsigned int maxContactConstraints =		 1024;
 
 
 	unsigned int step = 0;
 
-	bool simulating = false;
+	JPH::TempAllocatorImpl* tempAllocator =		  nullptr;
+	JPH::JobSystemThreadPool* jobSystem =		  nullptr;
+	EngineContactListener* engineContactListener;
 
-	JPH::PhysicsSystem* physicsSystem = nullptr;
-	JPH::BodyInterface* bodyInterface = nullptr;
+	JPH::PhysicsSystem* physicsSystem =			  nullptr;
+	JPH::BodyInterface* bodyInterface =			  nullptr;
 
-	JPH::BoxShapeSettings* floorShapeSettings = nullptr;
-	JPH::ShapeRefC* floorShape = nullptr;
-	JPH::BodyCreationSettings* floorSettings = nullptr;
-	JPH::SphereShape* sphereShape = nullptr;
-	JPH::CapsuleShape* capsuleShape = nullptr;
+	JPH::BoxShapeSettings* floorShapeSettings =   nullptr;
+	JPH::ShapeRefC* floorShape =				  nullptr;
+	//JPH::BodyCreationSettings* floorSettings = nullptr;
+	JPH::SphereShape* sphereShape =				  nullptr;
+	JPH::CapsuleShape* capsuleShape =			  nullptr;
 
 
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
-	JPH::TempAllocatorImpl* tempAllocator = nullptr;
-	JPH::JobSystemThreadPool* jobSystem = nullptr;
 
-	EngineContactListener engineContactListener;
 
 };
 
