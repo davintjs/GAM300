@@ -272,7 +272,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return *GetMulti(object.euid).front();
+			return *GetMulti<T>(euid).front();
 		}
 	}
 
@@ -287,7 +287,7 @@ public:
 	{
 		if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return *GetMulti(object.euid).front();
+			return *GetMulti<T>(object.euid).front();
 		}
 		else
 		{
