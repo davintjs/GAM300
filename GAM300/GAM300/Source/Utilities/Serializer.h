@@ -37,11 +37,22 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 template <typename T>
 bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id);
 
+void SerializeScript(YAML::Emitter& out, Script& _component);
+
 void Deserialize(const std::string& _filepath);
 void DeserializeRuntime(const std::string& _filepath);
 
 bool DeserializeScene(Scene& _scene);
-bool DeserializeEntity(YAML::Node& _node, Entity& _entity, Scene& _scene);
+void DeserializeGameObject(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities);
+
+template <typename T>
+void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Emitter& out);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
 
 template<typename T, typename... Ts>
 struct SerializeComponentsStruct

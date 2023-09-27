@@ -450,7 +450,7 @@ void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	//ACQUIRE_SCOPED_LOCK(Assets);
+	ACQUIRE_SCOPED_LOCK(Assets);
 	ACQUIRE_SCOPED_LOCK(Mono);
 	for (uint32_t hand : gcHandles)
 	{

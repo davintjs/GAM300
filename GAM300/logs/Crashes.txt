@@ -1,5 +1,5 @@
-[2023-09-26 23:03:00.306] [Error] [critical] 
-Caused By:	it != child.end()
-Info:		FAILED TO REMOVE CHILD
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Components.cpp (Line: 83)
+[2023-09-27 20:43:29.834] [Error] [critical] 
+Caused By:	false
+Info:		FAILED TO SET ACTIVE
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\ObjectsBList.cpp (Line: 209)
 

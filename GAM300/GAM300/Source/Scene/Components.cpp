@@ -8,6 +8,8 @@
 //
 //template <>
 //const char* GetTypeGroup<>::name = "";
+std::map<std::string, size_t> ComponentTypes{};
+
 bool Transform::isLeaf() {
 	return (child.size()) ? false : true;
 }

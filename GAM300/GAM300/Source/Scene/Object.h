@@ -9,7 +9,7 @@ struct Object : property::base
 	Object(Engine::UUID _euid = Engine::CreateUUID(), Engine::UUID _uuid = Engine::CreateUUID());
 	Object(const Object& rhs) = default;
 	Engine::UUID EUID() const{ return euid; }
-	Engine::UUID UUID () const { return uuid; }
+	Engine::UUID UUID() const { return uuid; }
 	property_vtable();
 
 protected:
