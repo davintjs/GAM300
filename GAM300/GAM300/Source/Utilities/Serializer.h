@@ -59,7 +59,7 @@ private:
     {
         if constexpr (SingleComponentTypes::Has<T1>())
         {
-            if (_scene.Has<T1>(entity))
+            if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
                 if (!SerializeComponent(out, component, _id))
