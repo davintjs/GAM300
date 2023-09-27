@@ -198,6 +198,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
 }
 
@@ -427,6 +428,7 @@ void ScriptingSystem::ThreadWork()
 				gcHandles.clear();
 				mComponents.clear();
 				ReflectAll();
+				PRINT("CLEARED ALL\n");
 				logicState = LogicState::NONE;
 			}
 			//FINISHED RUNNING
@@ -749,6 +751,13 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
 	logicState = LogicState::EXIT;
+	ran = false;
+	while (ran == false);
+}
+
+void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
+{
+	logicState = LogicState::CLEANUP;
 	ran = false;
 	while (ran == false);
 }

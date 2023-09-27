@@ -3,36 +3,22 @@ Scene: M1
 GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
-  m_Name: New GameObject(1)
-  m_Position: [39.3076401, 100, -183.284454]
+  m_Name: Helmet
+  m_Position: [156.493225, 116.136734, -102.836266]
   m_Rotation: [0, -1.24213362, 0]
   m_Scale: [0.999999404, 1, 0.999999404]
   m_Children:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 8446400210824080222}  # Rigidbody
     - component: {fileID: 10413881243206984898}  # MeshRenderer
-    - component: {fileID: 2971925039104169006}  # Script
----
-Rigidbody:
-  EUID: 22203055554271501
-  UUID: 8446400210824080222
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
+    - component: {fileID: 3228960295039125621}  # Script
 ---
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
   MeshName: DamagedHelmet
-  mr_Albedo: [0, 0, 0, 0]
+  mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: Default_albedo
   NormalMap: Default_normal
   mr_metallic: 0.5
@@ -44,19 +30,19 @@ MeshRenderer:
 ---
 Script:
   EUID: 22203055554271501
-  UUID: 2971925039104169006
+  UUID: 3228960295039125621
   Name: Player
-  gameObj: {fileID: 0}  # GameObject
+  gameObj: {fileID: 22203055554271501}  # GameObject
   player2: {fileID: 14829735431805717965}  # Component
   speed: 10
 ---
 GameObject:
   m_EUID: 10914712046654813073
   m_IsActive: true
-  m_Name: New GameObject(2)
-  m_Position: [-97.8209686, 228.760849, 174.699799]
-  m_Rotation: [0, -1.34406304, 0]
-  m_Scale: [0.999987245, 1, 0.999987245]
+  m_Name: Skull
+  m_Position: [-97.8209686, 228.760849, 464.239532]
+  m_Rotation: [0, -1.34406257, 0]
+  m_Scale: [0.999987185, 1, 0.999987185]
   m_Children:
     []
   m_Parent: 0
@@ -81,9 +67,9 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: New GameObject(3)
-  m_Position: [-1.66893005e-06, 170.727509, -23.4976425]
+  m_Position: [-3.05175781e-05, 358.816711, -23.4976406]
   m_Rotation: [0, -0, 0]
-  m_Scale: [25, 25, 25]
+  m_Scale: [100, 100, 100]
   m_Children:
     []
   m_Parent: 0
@@ -101,7 +87,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: true
+  IsKinematic: false
   UseGravity: true
   Is_trigger: false
 ---
@@ -109,7 +95,7 @@ MeshRenderer:
   EUID: 16942626329878887566
   UUID: 1245608959500342360
   MeshName: Cube
-  mr_Albedo: [0, 0, 0, 0]
+  mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: 0.5
@@ -132,7 +118,7 @@ GameObject:
   m_Name: New GameObject(4)
   m_Position: [0, 0, 35]
   m_Rotation: [0, -0, 0]
-  m_Scale: [500, 1, 500]
+  m_Scale: [1000, 1, 1000]
   m_Children:
     []
   m_Parent: 0
@@ -158,7 +144,7 @@ MeshRenderer:
   EUID: 8552727112136102457
   UUID: 15321682287644036185
   MeshName: Cube
-  mr_Albedo: [0, 0, 0, 0]
+  mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: 0.5
@@ -178,10 +164,10 @@ BoxCollider:
 GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
-  m_Name: New GameObject(5)
-  m_Position: [-235.865295, 170.1604, -60.9622002]
+  m_Name: LightSource
+  m_Position: [-235.865295, 170.1604, -325.762299]
   m_Rotation: [0, -0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [100, 100, 100]
   m_Children:
     []
   m_Parent: 0
@@ -197,9 +183,9 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: New GameObject(6)
-  m_Position: [0, 214.397476, 0]
+  m_Position: [-39.6391068, 132.64801, -28.8153381]
   m_Rotation: [0, -0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [100, 100, 100]
   m_Children:
     []
   m_Parent: 0
@@ -217,7 +203,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: true
+  IsKinematic: false
   UseGravity: true
   Is_trigger: false
 ---
@@ -225,7 +211,7 @@ MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
   MeshName: Cube
-  mr_Albedo: [0, 0, 0, 0]
+  mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: 0.5
