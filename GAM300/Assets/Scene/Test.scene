@@ -1,23 +1,55 @@
 Scene: Test
-Entities:
-  - GameObject:
-      m_EUID: 12104249763951105151
-      m_IsActive: true
-      m_Name: New GameObject(1)
-      m_Position: [0, 0, 0]
-      m_Rotation: [0, 0, 0]
-      m_Scale: [1, 1, 1]
-      m_Children:
-        []
-      m_Parent: 0
-      m_Components:
-        - m_LightSource:
-            - EUID: 12104249763951105151
-            - UUID: 17526595113239463160
-            - LightingColor: [1, 1, 1]
-        - m_BoxCollider:
-            - EUID: 12104249763951105151
-            - UUID: 10134199946817898567
-            - X: 1
-            - Y: 1
-            - Z: 1
+---
+GameObject:
+  m_EUID: 6148163323083925703
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 11132270634199605104}  # MeshRenderer
+    - component: {fileID: 11462382427060937445}  # LightSource
+    - component: {fileID: 3288815709768983774}  # BoxCollider
+---
+MeshRenderer:
+  - EUID: 6148163323083925703
+  - UUID: 11132270634199605104
+  - Mr_Albedo: [0, 0, 0, 0]
+  - Mr_Specular: [0, 0, 0, 0]
+  - Mr_Diffuse: [0, 0, 0, 0]
+  - Mr_Ambient: [0, 0, 0, 0]
+  - Mr_Shininess: 0
+---
+LightSource:
+  - EUID: 6148163323083925703
+  - UUID: 11462382427060937445
+  - LightingColor: [1, 1, 1]
+---
+BoxCollider:
+  - EUID: 6148163323083925703
+  - UUID: 3288815709768983774
+  - X: 1
+  - Y: 1
+  - Z: 1
+---
+GameObject:
+  m_EUID: 17684585184777066093
+  m_IsActive: true
+  m_Name: New GameObject(2)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 13775895441499731850}  # LightSource
+---
+LightSource:
+  - EUID: 17684585184777066093
+  - UUID: 13775895441499731850
+  - LightingColor: [1, 1, 1]

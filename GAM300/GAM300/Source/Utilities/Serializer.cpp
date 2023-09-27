@@ -22,7 +22,7 @@ bool SerializeScene(Scene& _scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
-    out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+    out << YAML::EndMap;
 
     for (Engine::UUID euid : _scene.layer)
     {
@@ -30,8 +30,7 @@ bool SerializeScene(Scene& _scene)
         E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }
 
-    out << YAML::EndSeq;
-    out << YAML::EndMap;
+    
 
     if(!out.good())
         std::cout << "Emitter error: " << out.GetLastError() << "\n";
@@ -65,7 +64,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::BeginMap;
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "m_EUID" << YAML::Key << _entity.EUID();
+    out << YAML::Key << "m_EUID" << YAML::Value << _entity.EUID();
     out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
@@ -186,29 +185,38 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::EndMap;
     out << YAML::EndMap;
 
+    hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene, false);
+
     return hasSerialized;
 }
 
 template <typename T>
-bool SerializeComponent(YAML::Emitter& out, T& _component)
+bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
 {
-    std::string componentName = "m_";
-    
-    componentName += GetType::Name<T>();
-
     if constexpr (std::is_same<T, Tag>() || std::is_same<T, Transform>())
         return true;
+
+    if (_id)
+    {
+        // Store UUID for each component
+        std::string componentName = GetType::Name<T>();
+        out << YAML::BeginMap;
+        out << YAML::Key << "component" << YAML::Key << YAML::Flow << YAML::BeginMap;
+        out << YAML::Key << "fileID" << YAML::Value << _component.UUID() << YAML::EndMap << YAML::Comment(componentName);
+        out << YAML::EndMap;
+        return true;
+    }
+    
+
+    // Store reference to gameobject
+
+    std::string componentName = GetType::Name<T>();
 
     out << YAML::BeginMap;
     out << YAML::Key << componentName << YAML::Value << YAML::BeginSeq;
 
-    
-    // Store UUID for each component
-    // Store reference to gameobject
-
-    property::flags::type flags;
     std::vector<property::entry> List;
-    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, flags)
+    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
             // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
             assert(Flags.m_isScope == false || PropertyName.back() == ']');
@@ -291,14 +299,14 @@ bool DeserializeScene(Scene& _scene)
         {
             YAML::Node object = entity["GameObject"];
 
-            Entity& entity = *_scene.Add<Entity>(object["m_EUID"].as<Engine::UUID>());
+            Entity& refEntity = *_scene.Add<Entity>(object["m_EUID"].as<Engine::UUID>());
 
             // Bean: Dont need cuz when parenting it reorders the object anyways
-            _scene.SetActive(entity, object["m_IsActive"].as<bool>());
+            _scene.SetActive(refEntity, object["m_IsActive"].as<bool>());
             
             // Bean: Create a constructor for entity with transform and tag
-            Transform& transform = _scene.Get<Transform>(entity);
-            _scene.Get<Tag>(entity).name = object["m_Name"].as<std::string>();
+            Transform& transform = _scene.Get<Transform>(refEntity);
+            _scene.Get<Tag>(refEntity).name = object["m_Name"].as<std::string>();
             transform.translation = Vector3(object["m_Position"].as<vec3>());
             transform.rotation = Vector3(object["m_Rotation"].as<vec3>());
             transform.scale = Vector3(object["m_Scale"].as<vec3>());
@@ -308,7 +316,7 @@ bool DeserializeScene(Scene& _scene)
             {
                 Engine::UUID parentUUID = parent.as<Engine::UUID>();
                 if (parentUUID != 0)
-                    childEntities[&entity] = parentUUID;
+                    childEntities[&refEntity] = parentUUID;
             }
 
             // Bean: Components will be here temporarily
@@ -317,13 +325,13 @@ bool DeserializeScene(Scene& _scene)
                 if (component["m_AudioSource"])
                 {
                     auto node = component["m_AudioSource"];
-                    auto& audioSource = *_scene.Add<AudioSource>(entity);
+                    auto& audioSource = *_scene.Add<AudioSource>(refEntity);
                 }
 
                 if (component["m_BoxCollider"])
                 {
                     auto node = component["m_BoxCollider"];
-                    auto& boxCollider = *_scene.Add<BoxCollider>(entity);
+                    auto& boxCollider = *_scene.Add<BoxCollider>(refEntity);
                     boxCollider.x = node["X"].as<float>();
                     boxCollider.y = node["Y"].as<float>();
                     boxCollider.z = node["Z"].as<float>();
@@ -332,14 +340,14 @@ bool DeserializeScene(Scene& _scene)
                 if (component["m_SphereCollider"])
                 {
                     auto node = component["m_SphereCollider"];
-                    auto& sphereCollider = *_scene.Add<SphereCollider>(entity);
+                    auto& sphereCollider = *_scene.Add<SphereCollider>(refEntity);
                     sphereCollider.radius = node["Radius"].as<float>();
                 }
 
                 if (component["m_CapsuleCollider"])
                 {
                     auto node = component["m_CapsuleCollider"];
-                    auto& capsuleCollider = *_scene.Add<CapsuleCollider>(entity);
+                    auto& capsuleCollider = *_scene.Add<CapsuleCollider>(refEntity);
                     capsuleCollider.height = node["Height"].as<float>();
                     capsuleCollider.radius = node["Radius"].as<float>();
                 }
@@ -347,33 +355,33 @@ bool DeserializeScene(Scene& _scene)
                 if (component["m_Animator"])
                 {
                     auto node = component["m_Animator"];
-                    auto& animator = *_scene.Add<Animator>(entity);
+                    auto& animator = *_scene.Add<Animator>(refEntity);
                 }
 
                 if (component["m_CharacterController"])
                 {
                     auto node = component["m_CharacterController"];
-                    auto& characterController = *_scene.Add<CharacterController>(entity);
+                    auto& characterController = *_scene.Add<CharacterController>(refEntity);
                 }
 
                 if (component["m_Script"])
                 {
                     auto node = component["m_Script"];
-                    auto& script = *_scene.Add<Script>(entity);
+                    auto& script = *_scene.Add<Script>(refEntity);
                     script.name = node["Name"].as<std::string>();
                 }
 
                 if (component["m_MeshRenderer"])
                 {
                     auto node = component["m_MeshRenderer"];
-                    auto& meshRenderer = *_scene.Add<MeshRenderer>(entity);
+                    auto& meshRenderer = *_scene.Add<MeshRenderer>(refEntity);
                     meshRenderer.MeshName = node["Name"].as<std::string>();
                 }
 
                 if (component["m_LightSource"])
                 {
                     auto node = component["m_LightSource"];
-                    auto& lightSource = *_scene.Add<LightSource>(entity);
+                    auto& lightSource = *_scene.Add<LightSource>(refEntity);
                     lightSource.lightingColor = node["lightingColor"].as<glm::vec3>();
                 }
             }
