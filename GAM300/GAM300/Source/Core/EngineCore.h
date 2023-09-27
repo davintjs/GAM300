@@ -53,8 +53,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 	<
 		AssetManager,
 		InputSystem,
-		SceneManager,
 		EditorSystem,
+		SceneManager,
 		DemoSystem,//RUN AFTER EDITOR
 		ScriptingSystem, // AFTER DEMO
 		//PhysicsSystem, //AFTER SCRIPTING
@@ -86,13 +86,19 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
 
-		SceneStartEvent startEvent{};
-		ACQUIRE_SCOPED_LOCK(Assets);
-		EVENTS.Publish(&startEvent);
-
 		// NavMesh testing
-		std::vector<glm::vec3> GroundVertices{glm::vec3(1.f, 1.f, 1.f)};
-		std::vector<glm::ivec3> GroundIndices{glm::ivec3(0, 0, 0)};
+		std::vector<glm::vec3> GroundVertices{
+				glm::vec3(-0.5f, -0.5f, -0.5f),
+				glm::vec3(0.5f, -0.5f, -0.5f),
+				glm::vec3(0.5f, 0.5f, -0.5f),
+				glm::vec3(-0.5f, 0.5f, -0.5f),
+		};
+
+		std::vector<glm::ivec3> GroundIndices{
+				glm::ivec3(0, 1, 2),
+				glm::ivec3(2, 3, 0),
+		};
+
 		NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
 
 		// Bean: Serialization Tests

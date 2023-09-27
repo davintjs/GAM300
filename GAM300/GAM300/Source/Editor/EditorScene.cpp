@@ -57,25 +57,55 @@ void EditorScene::Update(float dt)
         float buttonSize = 20.f;
         ImVec2 btn = ImVec2(buttonSize, buttonSize);
 
+        static int toggled = 2;
+        ImVec4 untoggledColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f); // Dark grey
+        ImVec4 toggledColor = ImVec4(0.0f, 0.447f, 0.898f, 1.0f);
+        ImVec4 buttonColor = untoggledColor;
+
+        buttonColor = (toggled == 1) ? toggledColor : untoggledColor;          
+        ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
         {
             GizmoType = ImGuizmo::UNIVERSAL;
+            toggled = 1;
         }
+        ImGui::PopStyleColor();
+
+        buttonColor = (toggled == 2) ? toggledColor : untoggledColor;
+        ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         ImGui::SameLine(); if (ImGui::Button("W", btn) 
             || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
+            toggled = 2;
         }
+        ImGui::PopStyleColor();
+
+        buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
+        ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         ImGui::SameLine(); if (ImGui::Button("E", btn)
             || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
         {
             GizmoType = ImGuizmo::ROTATE;
+            toggled = 3;
         }
+        ImGui::PopStyleColor();
+
+        buttonColor = (toggled == 4) ? toggledColor : untoggledColor;
+        ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         ImGui::SameLine(); if (ImGui::Button("R", btn) 
             || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
+            toggled = 4;
         }
+        ImGui::PopStyleColor();
+
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(30.0f, 0.f));
+
+        //For thoe to change to toggle debug drawing
+        static bool debug_draw = false;
+        ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw));
     }
     ImGui::End();
 
@@ -157,11 +187,11 @@ void EditorScene::Update(float dt)
         //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
-        Entity* pEntity = EDITOR.GetSelectedEntity();
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-        if (pEntity != nullptr)
+        if (EDITOR.GetSelectedEntity() != 0)
         {
-            Transform& trans = currentScene.Get<Transform>(*pEntity);
+            Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+            Transform& trans = currentScene.Get<Transform>(entity);
             for (int i = 0; i < 3; ++i)
             {
                 if (fabs(trans.scale[i]) < 0.001f)
@@ -178,7 +208,8 @@ void EditorScene::Update(float dt)
                 EditorCam.canMove = false;
                 if (trans.parent)
                 {
-                    glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
+                    Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
+                    glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                     transform_1 = glm::inverse(parentTransform) * transform_1;
                 }
                 glm::vec3 a_translation;

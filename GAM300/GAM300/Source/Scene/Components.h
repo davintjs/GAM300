@@ -163,8 +163,8 @@ struct Transform : Object
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
 	
-	Transform* parent = nullptr;
-	std::vector<Transform*> child;
+	Engine::UUID parent=0;
+	std::vector<Engine::UUID> child;
 	bool isLeaf();
 	bool isChild();
 	glm::mat4 GetWorldMatrix() const;
@@ -173,7 +173,6 @@ struct Transform : Object
 	bool isEntityChild(Transform& ent);
 	void SetParent(Transform* newParent);
 	void RemoveChild(Transform* t);
-	~Transform();
 	property_vtable();
 };
 
@@ -382,10 +381,6 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
-		}\
-		else if constexpr(!std::is_same<TYPE,void>())\
-		{\
-			return nullptr; \
 		}\
 	}\
 	template<typename T, typename... Ts>\
