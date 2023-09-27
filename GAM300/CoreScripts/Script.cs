@@ -15,7 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 
 using System;
-
+using GlmSharp;
 
 namespace BeanFactory
 {
@@ -26,7 +26,7 @@ namespace BeanFactory
             _gameObject = gameObj;
             _transform = InternalCalls.Get<Transform>(gameObject);
         }
-        public static T Instantiate<T>(T original, Vector3 pos, Vector3 rotation)
+        public static T Instantiate<T>(T original, vec3 pos, vec3 rotation)
         {
             return original;
         }

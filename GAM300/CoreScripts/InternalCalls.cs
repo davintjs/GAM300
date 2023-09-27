@@ -95,13 +95,6 @@ namespace BeanFactory
 
         #region TRANSFORM
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Transform GetTransformFromGameObject(GameObject gameObject);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-
-        internal extern static Transform GetTransformFromComponent(Object component, Type componentType);
-
         #endregion
 
         #region SCENE
@@ -145,7 +138,7 @@ namespace BeanFactory
         public static extern bool GetMouseDown(int mouseCode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetMousePosition(out Vector2 pos);
+        public static extern void GetMousePosition(out GlmSharp.vec2 pos);
         #endregion
 
         #region TEXT
@@ -175,6 +168,6 @@ namespace BeanFactory
         public static extern void Log(string message);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetGameNDC(out Vector2 pos);
+        public static extern void GetGameNDC(out GlmSharp.vec2 pos);
     }
 }

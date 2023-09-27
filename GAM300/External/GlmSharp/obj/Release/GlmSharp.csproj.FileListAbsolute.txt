@@ -1,0 +1,7 @@
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\bin\Release\GlmSharp.XML
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\bin\Release\GlmSharp.dll
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\bin\Release\GlmSharp.pdb
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Release\GlmSharp.csproj.AssemblyReference.cache
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Release\GlmSharp.csproj.CoreCompileInputs.cache
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Release\GlmSharp.dll
+C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Release\GlmSharp.pdb

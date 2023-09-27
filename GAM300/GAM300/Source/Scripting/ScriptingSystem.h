@@ -56,8 +56,8 @@ static std::unordered_map<std::string, size_t> fieldTypeMap =
 	{ "System.UInt32",				GetFieldType::E<uint32_t>()},
 	{ "System.UInt64",				GetFieldType::E<uint64_t>()},
 	{ "System.String",				GetFieldType::E<std::string>()},
-	{ "BeanFactory.Vector2",		GetFieldType::E<Vector2>()},
-	{ "BeanFactory.Vector3",		GetFieldType::E<Vector3>()}
+	{ "GlmSharp.vec2",				GetFieldType::E<Vector2>()},
+	{ "GlmSharp.vec3",				GetFieldType::E<Vector3>()}
 };
 
 
