@@ -96,6 +96,8 @@ void SceneManager::ChangeScene(Scene& _newScene)
 	LoadScene(_newScene.filePath.string().c_str());
 }
 
+bool SceneManager::HasScene() { return !loadedScenes.empty(); }
+
 bool SceneManager::DuplicateScene()
 {
 	return false;

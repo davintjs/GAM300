@@ -867,30 +867,30 @@ void Model::debugAABB_init() // vao & shader
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
 
-    // setup shader
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //// setup shader
+    //std::vector<std::pair<GLenum, std::string>> shdr_files;
+    //// Vertex Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_VERTEX_SHADER,
+    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
 
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //// Fragment Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_FRAGMENT_SHADER,
+    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
 
-    std::cout << "DEBUG AABB SHADER\n";
-    shaderAABB.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
+    //std::cout << "DEBUG AABB SHADER\n";
+    //shaderAABB.CompileLinkValidate(shdr_files);
+    //std::cout << "\n\n";
 
-    // if linking failed
-    if (GL_FALSE == shaderAABB.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shaderAABB.GetLog() << "\n";
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
+    //// if linking failed
+    //if (GL_FALSE == shaderAABB.IsLinked()) {
+    //    std::stringstream sstr;
+    //    sstr << "Unable to compile/link/validate shader programs\n";
+    //    sstr << shaderAABB.GetLog() << "\n";
+    //    std::cout << sstr.str();
+    //    std::exit(EXIT_FAILURE);
+    //}
 }
 
 void Model::debugAABB_draw(glm::mat4 & SRT)
@@ -959,30 +959,30 @@ void Model::lineinit()
     glBindVertexArray(0);
     vaoid = temp_vaoID;
 
-    // setup shader
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //// setup shader
+    //std::vector<std::pair<GLenum, std::string>> shdr_files;
+    //// Vertex Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_VERTEX_SHADER,
+    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
 
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //// Fragment Shader
+    //shdr_files.emplace_back(std::make_pair(
+    //    GL_FRAGMENT_SHADER,
+    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
 
-    std::cout << "DEBUG AABB SHADER\n";
-    shaderAABB.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
+    //std::cout << "DEBUG AABB SHADER\n";
+    //shaderAABB.CompileLinkValidate(shdr_files);
+    //std::cout << "\n\n";
 
-    // if linking failed
-    if (GL_FALSE == shaderAABB.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shaderAABB.GetLog() << "\n";
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
+    //// if linking failed
+    //if (GL_FALSE == shaderAABB.IsLinked()) {
+    //    std::stringstream sstr;
+    //    sstr << "Unable to compile/link/validate shader programs\n";
+    //    sstr << shaderAABB.GetLog() << "\n";
+    //    std::cout << sstr.str();
+    //    std::exit(EXIT_FAILURE);
+    //}
 
 }
 

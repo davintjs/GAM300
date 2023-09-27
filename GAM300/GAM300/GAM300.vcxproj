@@ -142,8 +142,6 @@
     <ClCompile Include="Source\IOManager\Handler_GLFW.cpp" />
     <ClCompile Include="Source\IOManager\InputHandler.cpp" />
     <ClCompile Include="Source\IOManager\InputSystem.cpp" />
-    <ClCompile Include="Source\LapSupGraphics\Compiler.cpp" />
-    <ClCompile Include="Source\LapSupGraphics\Mesh.cpp" />
     <ClCompile Include="Source\Physics\PhysicsSystem.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -241,8 +239,6 @@
     <ClInclude Include="Source\IOManager\Handler_GLFW.h" />
     <ClInclude Include="Source\IOManager\InputHandler.h" />
     <ClInclude Include="Source\IOManager\InputSystem.h" />
-    <ClInclude Include="Source\LapSupGraphics\Compiler.h" />
-    <ClInclude Include="Source\LapSupGraphics\Mesh.h" />
     <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Physics\PhysicsSystem.h" />
     <ClInclude Include="Source\Precompiled.h" />
@@ -275,6 +271,8 @@
     <None Include="Source\Graphics\HDR.vert" />
     <None Include="Source\Graphics\LightAffected.frag" />
     <None Include="Source\Graphics\LightAffected.vert" />
+    <None Include="Source\Graphics\PBR.frag" />
+    <None Include="Source\Graphics\PBR.vert" />
     <None Include="Source\Graphics\Skybox.frag" />
     <None Include="Source\Graphics\Skybox.vert" />
   </ItemGroup>

@@ -296,6 +296,8 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	std::string name;
+	Script() {}
+	Script(const char* _name):name{_name}{}
 	std::map<std::string, Field> fields;
 	property_vtable();
 };
@@ -315,10 +317,22 @@ struct MeshRenderer : Object
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
+
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
 	float mr_Shininess;
+
+
+	float mr_metallic = 0.5f;
+	float mr_roughness = 0.5f;
+	float ao = 0.5f;
+
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture= "";
+
+
 
 	property_vtable();
 };

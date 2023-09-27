@@ -1,0 +1,18 @@
+{
+    "Mesh FilePath": "Assets/Models/DamagedHelmet/DamagedHelmet.fbx",
+    "Mesh Scale": [
+        1.0,
+        1.0,
+        1.0
+    ],
+    "Mesh Rotation": [
+        10.0,
+        78.0,
+        0.0
+    ],
+    "Mesh Translation": [
+        0.0,
+        0.0,
+        0.0
+    ]
+}

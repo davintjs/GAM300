@@ -86,7 +86,7 @@ template <typename T, ObjectIndex N>
 template <typename... Args>
 T& SPARSESET::emplace_back(Args&&... args)
 {
-    T& back = *new (data + nodes[size_].denseIndex) T(std::forward<Args>(args)...); // Construct the new element in the array
+    T& back = *new (data + nodes[size_].denseIndex) T(args...); // Construct the new element in the array
     ++size_;
     return back;
 }
@@ -104,7 +104,7 @@ T& SPARSESET::emplace(ObjectIndex index, Args&&... args)
             nodes[i].denseIndex = nodes[size_].denseIndex;
             nodes[size_].denseIndex = index;
             ++size_;
-            return *new (data + index) T(std::forward<Args>(args)...); // Construct the new element in the array
+            return *new (data + index) T(args...); // Construct the new element in the array
         }
     }
     //Already exists

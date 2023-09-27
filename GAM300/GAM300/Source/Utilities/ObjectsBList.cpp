@@ -88,7 +88,7 @@ T& OBJECTSBLIST::emplace(ObjectIndex denseIndex, Args&&... args)
 		start = start->next;
 	}
 	++size_;
-	return start->objectList.emplace(denseIndex);
+	return start->objectList.emplace(denseIndex, args...);
 }
 
 template <typename T, ObjectIndex N>
