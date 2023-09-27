@@ -339,11 +339,23 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(mr_Albedo).Name("Mr_Albedo"),
-		property_var(mr_Specular).Name("Mr_Specular"),
-		property_var(mr_Diffuse).Name("Mr_Diffuse"),
-		property_var(mr_Ambient).Name("Mr_Ambient"),
-		property_var(mr_Shininess).Name("Mr_Shininess")
+		property_var(MeshName),
+		property_var(mr_Albedo),
+		property_var(AlbedoTexture),
+
+		property_var(NormalMap),		
+		/*property_var(mr_Specular),
+		property_var(mr_Diffuse),
+		property_var(mr_Ambient),
+		property_var(mr_Shininess),*/
+		property_var(mr_metallic),
+		property_var(MetallicTexture),
+
+		property_var(mr_roughness),
+		property_var(RoughnessTexture),
+
+		property_var(ao),
+		property_var(AoTexture),
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object

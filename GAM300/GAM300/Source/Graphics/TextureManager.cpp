@@ -226,9 +226,12 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     return Skybox_Tex;
 }
 
-GLuint& Texture_Manager::GetTexture(std::string GUID)
+GLuint Texture_Manager::GetTexture(std::string GUID)
 {
-	return mTextureContainer.find(GUID)->second.second;
+    if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
+        return mTextureContainer.find(GUID)->second.second;
+    }
+    return UINT_MAX;
 }
 
 void Texture_Manager::Exit()
