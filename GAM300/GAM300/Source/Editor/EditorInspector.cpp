@@ -430,6 +430,7 @@ void Display_Property(T& comp) {
         if (Flags.m_isDontShow) continue;*/
 
         if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos)) continue;
+
         std::visit([&](auto& Value) {
                 using T1 = std::decay_t<decltype(Value)>;
                 //Edit name
@@ -439,6 +440,91 @@ void Display_Property(T& comp) {
                 DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
                 ImGui::PushID(Name.c_str());
                 Display<T1>(DisplayName.c_str(), Value);
+
+                //temporary implementation
+                if (DisplayName == "AlbedoTexture") {
+                    ImGui::SameLine();
+                    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+                    static const std::string AssetDirectory = "Assets/Icons";
+                    static std::filesystem::path CurrentDirectory = AssetDirectory;
+                    static std::string currentFolder = "Assets/Icons";
+
+                    static std::string button_name = "Texture";
+
+                    if (ImGui::Button(button_name.c_str())) {
+                        ImGui::OpenPopup("Texture");
+                    }
+
+                    //Component Settings window
+                    ImGui::SetNextWindowSize(ImVec2(250.f, 150.f));
+                    if (ImGui::BeginPopup("Texture", win_flags)) {
+                        static float padding = 15.f;
+                        static float iconsize = 50.f;
+                        float cellsize = iconsize + padding;
+
+                        float window_width = ImGui::GetContentRegionAvail().x;
+                        int columncount = (int)(window_width / cellsize);
+                        if (columncount < 1) { columncount = 1; }
+
+                        ImGui::Columns(columncount, 0, false);
+
+                        int i = 0;
+                        //using filesystem to iterate through all folders/files inside the "/Data" directory
+                        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
+                        {
+                            const auto& path = it.path();
+                            if (path.string().find("meta") != std::string::npos) continue;
+
+                            ImGui::PushID(i++);
+
+                            auto relativepath = std::filesystem::relative(path, AssetDirectory);
+                            std::string pathStr = relativepath.filename().string();
+
+                            //Draw the file / folder icon based on whether it is a directory or not
+                            std::string icon = it.is_directory() ? "foldericon" : "fileicon";
+
+                            size_t icon_id = 0;
+
+                            std::string filename = relativepath.string();
+
+                            auto it = filename.begin() + filename.find_first_of(".");
+                            filename.erase(it, filename.end());
+                            //PRINT(filename);
+                            icon = filename;
+
+                            //render respective file icon textures
+                            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                            icon_id = GET_TEXTURE_ID(icon);
+                            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
+
+                            ImGui::PopStyleColor();
+
+                            //Change directory into the folder clicked
+                            /*if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                            {
+                                if (it.is_directory())
+                                {
+                                    currentFolder = pathStr;
+                                    CurrentDirectory /= path.filename();
+                                }
+                            }*/
+
+                            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                            {
+                                button_name = filename;
+                            }
+
+                            //render file name below icon
+                            ImGui::TextWrapped(pathStr.c_str());
+                            ImGui::NextColumn();
+                            ImGui::PopID();
+                        }
+                        ImGui::Columns(1);
+                        ImGui::EndPopup();
+                    }
+
+                }
+
                 ImGui::PopID();          
             }
         , Data);
@@ -686,8 +772,6 @@ void DisplayComponentHelper(T& component)
     ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
 
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-
-    static bool comp_settings = false;
 
     const char* popup = GetType::Name<T>();
 

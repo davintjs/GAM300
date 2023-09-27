@@ -21,7 +21,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/EventsManager.h"
 
 static const std::string AssetDirectory = "Assets";
-static std::string entityType = "default", entityName = "default";
 static std::filesystem::path CurrentDirectory = AssetDirectory;
 static std::string currentFolder = "Assets";
 
@@ -29,8 +28,6 @@ void EditorContentBrowser::Init()
 {
 
 }
-
-#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 
 void EditorContentBrowser::Update(float dt)
 {
@@ -97,22 +94,13 @@ void EditorContentBrowser::Update(float dt)
             it = filename.begin() + filename.find_first_of(".");
             filename.erase(it, filename.end());
             //PRINT(filename);
-            icon = filename;
-            
+            icon = filename;  
         }
 
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        //To do: replace this when png is 
         icon_id = GET_TEXTURE_ID(icon);
         ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
-
-        //Drag drop logic for files
-        /*if (ImGui::BeginDragDropSource()) {
-            std::string filepath = relativepath.string();
-            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", filepath.c_str(), filepath.size() + 1);
-            ImGui::EndDragDropSource();
-        }*/
 
         ImGui::PopStyleColor();
         //Change directory into the folder clicked
