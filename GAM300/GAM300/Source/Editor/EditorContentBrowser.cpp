@@ -114,7 +114,7 @@ void EditorContentBrowser::Update(float dt)
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         icon_id = GET_TEXTURE_ID(icon);
-        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
+        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
         ImGui::PopStyleColor();
         //Change directory into the folder clicked
