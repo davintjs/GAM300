@@ -22,11 +22,12 @@ out vec4 FragColor;
 //          UNIFORMS
 //-------------------------
 
-layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
+
+layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
 
 
@@ -53,7 +54,7 @@ const float PI = 3.14159265359;
 vec3 getNormalFromMap(int NM_index)
 {
     vec3 tangentNormal = texture(myTextureSampler[NM_index], TexCoords).xyz * 2.0 - 1.0;
-
+    
     vec3 Q1  = dFdx(WorldPos);
     vec3 Q2  = dFdy(WorldPos);
     vec2 st1 = dFdx(TexCoords);
@@ -118,9 +119,9 @@ void main()
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
 
-    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.5f); // .x is texture
-    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.5f);    // .y is normal map
-    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.5f);    // .y is normal map
+    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.5f); // .x is metallic texture
+    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.5f);    // .y is roughness texture
+    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.5f);    // .z is ao texture
 
 
     vec3 albedo;
@@ -132,6 +133,7 @@ void main()
     if (Tex_index < 32)
     {
         albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+
     }
     else
     {
@@ -140,7 +142,8 @@ void main()
 
     if (Metallic_index < 32)
     {
-        metallic  = texture(myTextureSampler[Metallic_index], TexCoords).r;    
+        metallic  = texture(myTextureSampler[Metallic_index], TexCoords).r;   
+       
     }
     else
     {
@@ -149,6 +152,7 @@ void main()
     if (Roughness_index < 32)
     {
         roughness  = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+        
     }
     else
     {
@@ -156,13 +160,20 @@ void main()
     }
     if (AO_index < 32)
     {
-        ao  = texture(myTextureSampler[AO_index], TexCoords).r;    
+        ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
+       
     }
     else
     {
         ao = frag_Metal_Rough_AO_constant.z;
     }
+    if (NM_index < 32)
+    {
+        albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+//        FragColor = vec4(1.f,1.f,1.f,1.f);
+//        return;
 
+    }
     vec3 N = getNormalFromMap(NM_index);
     vec3 V = normalize(camPos - WorldPos);
 
@@ -175,6 +186,8 @@ void main()
     vec3 Lo = vec3(0.0);
     for(int i = 0; i < 4; ++i) 
     {
+        
+//        return;
         // calculate per-light radiance
 //        vec3 L = normalize(lightPositions[i] - WorldPos);
         vec3 L = normalize(lightPos - WorldPos);
@@ -183,7 +196,7 @@ void main()
         float distance = length(lightPos - WorldPos);
         float attenuation = 1.0 / (distance * distance);
 //        vec3 radiance = lightColors[i] * attenuation;
-        vec3 radiance = lightPos * attenuation;
+        vec3 radiance = lightColor * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
@@ -191,7 +204,7 @@ void main()
         vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
            
         vec3 numerator    = NDF * G * F; 
-//        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+//       float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
         float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
         vec3 specular = numerator / denominator;
         

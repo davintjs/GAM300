@@ -347,6 +347,9 @@ void GraphicsSystem::Update(float dt)
 
 		GLuint textureID = 0;
 		GLuint normalMapID = 0;
+		GLuint RoughnessID = 0;
+		GLuint MetallicID = 0;
+		GLuint AoID = 0;
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
@@ -360,16 +363,41 @@ void GraphicsSystem::Update(float dt)
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
+		if (renderer.RoughnessTexture != "") {
+			//std::cout << "albedo tex\n";
+			RoughnessID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
+		}
+
+		if (renderer.MetallicTexture != "") {
+			//std::cout << "normal tex\n";
+
+			MetallicID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
+		}
+		if (renderer.AoTexture != "") {
+			//std::cout << "normal tex\n";
+			AoID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
+		}
+
+		
+
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
+		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
+		float metalidx = float(ReturnTextureIdx(renderer.MeshName, MetallicID));
+		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
+
 		// button here change norm idx to 33
 		if (gay)
 		{
 			normidx = 33;
 		}
 		//std::cout << normidx << "\n";
+		
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-
+		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
 		//renderer.mr_Albedo = temp_AlbedoContainer[3];
 		//renderer.mr_Ambient = temp_AmbientContainer[3];
 		//renderer.mr_Diffuse = temp_DiffuseContainer[3];
@@ -434,6 +462,12 @@ void GraphicsSystem::Update(float dt)
 			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
+			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+
 			++(properties[newName].iter);
 		}
 		++i;
@@ -614,19 +648,33 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 	glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
-	temp_instance_shader.Use();
+	//temp_instance_shader.Use();
+	temp_PBR_shader.Use();
+
+
+
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
+	//GLint uniform1 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+	//GLint uniform2 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+	//GLint uniform3 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+	//GLint uniform4 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+	//GLint uniform5 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
 	GLint uniform1 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "View");
 	GLint uniform3 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightColor");
 	GLint uniform4 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightPos");
 	GLint uniform5 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "camPos");
 
 
 
@@ -645,7 +693,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
-	//std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
+	std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,
@@ -660,7 +708,13 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 	//glBindVertexArray(0);
 //}
-	temp_instance_shader.UnUse();
+
+
+
+
+	//temp_instance_shader.UnUse();
+
+	temp_PBR_shader.UnUse();
 }
 
 
@@ -693,21 +747,34 @@ void GraphicsSystem::Draw() {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
