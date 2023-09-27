@@ -27,9 +27,10 @@ void DemoSystem::Init()
 	Scene& scene = *createScene.scene;
 	Entity& titty = *scene.Add<Entity>();
 	MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
-	titrender.MeshName = "Skull_textured";
-	titrender.AlbedoTexture = "TD_Checker_Base_Color";
-	titrender.NormalMap = "TD_Checker_Normal_OpenGL";
+	titrender.MeshName = "DamagedHelmet";
+	titrender.AlbedoTexture = "Default_albedo";
+	titrender.NormalMap = "Default_normal";
+
 	scene.Get<Transform>(titty).translation = Vector3(150.f, 100.f, 0.f);
 	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 

@@ -1,8 +1,6 @@
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 
-#include "LapSupGraphics/Compiler.h"
-#include "LapSupGraphics/Mesh.h"
 #include "Model3d.h"
 #include "Editor_Camera.h"
 #include "../Core/FramerateController.h"
@@ -46,6 +44,7 @@ std::vector <float> temp_ShininessContainer;
 
 trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
+GLSLShader temp_PBR_shader;
 GLSLShader temp_debug_shader;
 LightProperties Lighting_Source;
 //bool isThereLight = false;
@@ -129,7 +128,34 @@ void HDR_Shader_init()
 	}
 }
 
+void PBR_Shader_init()
+{
+	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
+	std::vector<std::pair<GLenum, std::string>> shdr_files;
+	// Vertex Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_VERTEX_SHADER,
+		"GAM300/Source/Graphics/PBR.vert"));
 
+	// Fragment Shader
+	shdr_files.emplace_back(std::make_pair(
+		GL_FRAGMENT_SHADER,
+		"GAM300/Source/Graphics/PBR.frag"));
+
+	std::cout << "PBR SHADER\n";
+	temp_PBR_shader.CompileLinkValidate(shdr_files);
+	std::cout << "\n\n";
+
+	// if linking failed
+	if (GL_FALSE == temp_PBR_shader.IsLinked()) {
+		std::stringstream sstr;
+		sstr << "Unable to compile/link/validate shader programs\n";
+		sstr << temp_PBR_shader.GetLog() << "\n";
+		std::cout << sstr.str();
+		std::exit(EXIT_FAILURE);
+	}
+
+}
 
 //unsigned int hdrFBO;
 //unsigned int rboDepth;
@@ -232,6 +258,7 @@ void GraphicsSystem::Init()
 	//INIT GRAPHICS HERE
 	
 	HDR_Shader_init();
+	PBR_Shader_init();
 
 
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required	

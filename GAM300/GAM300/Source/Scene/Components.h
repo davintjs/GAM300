@@ -314,10 +314,22 @@ struct MeshRenderer : Object
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
+
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
 	float mr_Shininess;
+
+
+	float mr_metallic;
+	float mr_roughness;
+	float ao;
+
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture= "";
+
+
 
 	property_vtable();
 };
