@@ -6,10 +6,6 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-struct Scene;
-struct Entity;
-
-
 struct Entity : Object
 {
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;

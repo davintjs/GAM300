@@ -14,6 +14,52 @@ using string_t = std::string;
 //    float m_Min{}, m_Max{};
 //};
 
+class Vector2
+{
+public:
+
+    float x, y;
+
+    //Constructors
+    Vector2() : x(0.f), y(0.f) {}
+    Vector2(float x_, float y_, float z_) : x(x_), y(y_) {}
+    Vector2(float i) : x(i), y(i) {}
+
+    Vector2(Vector2& vec) : x(vec.x), y(vec.y) {}
+    Vector2(glm::vec2 vec) : x(vec.x), y(vec.y) {}
+
+    //Operator Overloads
+    Vector2& operator=(const Vector2& Vec2)
+    {
+        x = Vec2.x;
+        y = Vec2.y;
+        return *this;
+    }
+
+    Vector2& operator=(const glm::vec2& glmVec2)
+    {
+        x = glmVec2.x;
+        y = glmVec2.y;
+        return *this;
+    }
+
+    float& operator[](int id)
+    {
+
+        //E_ASSERT((id < 0 || id > 2),  "Vector2 Subscript operator out of range!");
+
+        if (id == 0) return x;
+        if (id == 1) return y;
+    }
+
+    // Conversion operator from Vector2 to glm::vec2
+    operator glm::vec2() const
+    {
+        return glm::vec2(x, y);
+    }
+
+};
+
 class Vector3 {
 public:
 

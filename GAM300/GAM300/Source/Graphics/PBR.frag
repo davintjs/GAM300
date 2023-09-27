@@ -145,7 +145,7 @@ void main()
     float metallic;
     float roughness;
     float ao;
-
+    bool Am_Light = false;// this whole thing is temp
     // ALBEDO
     if (Tex_index < 32)
     {
@@ -169,11 +169,22 @@ void main()
     else
     {
         metallic = frag_Metal_Rough_AO_constant.r;
+
+        int metal_test = int(metallic-0.1f);
+        if(metal_test == -1)
+        {
+//                FragColor = vec4(1.f,1.f,1.f,1.f);
+//                return;
+//
+            Am_Light = true;
+        }
+        else
+             Am_Light = false;
+
     }
     // ROUGHNESS
     if (Roughness_index < 32)
     {
-
         if (Metallic_index == Roughness_index)
         {
             roughness = texture(myTextureSampler[Roughness_index], TexCoords).g;   
@@ -184,7 +195,13 @@ void main()
     else
     {
         roughness = frag_Metal_Rough_AO_constant.g;
-
+        int rough_test = int(roughness-0.1f);
+        if(rough_test == -1)
+        {
+            Am_Light = true;
+        }
+        else
+             Am_Light = false;
     }
     // AO
     if (AO_index < 32)
@@ -194,8 +211,21 @@ void main()
     else
     {
         ao = frag_Metal_Rough_AO_constant.b;
-    }
 
+        int ao_test = int(ao-0.1f);
+        if(ao_test == -1)
+        {
+            Am_Light = true;
+        }
+        else
+             Am_Light = false;
+    }
+    
+    if(Am_Light)
+    {
+        FragColor = vec4(lightColor,1.f);
+        return;
+    }
 
     vec3 N ;
     if (NM_index < 32)
@@ -206,6 +236,9 @@ void main()
     {
         N = normalize(Normal);
     }
+
+    
+   
 
     vec3 V = normalize(camPos - WorldPos);
 

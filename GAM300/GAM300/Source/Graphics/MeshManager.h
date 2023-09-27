@@ -119,6 +119,7 @@ private:
 		const glm::vec2& mTexOffset);
 
 	void CreateInstanceCube();
+	void CreateInstanceSphere();
 	void CreateInstanceLine();
 
 	unsigned int InstanceSetup(InstanceProperties& prop);

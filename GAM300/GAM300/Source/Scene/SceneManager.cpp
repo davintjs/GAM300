@@ -40,17 +40,13 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	loadedScenes.emplace_front(_filePath);
 	Scene& scene = GetCurrentScene();
 
-
-	if (!DeserializeScene(scene))
+	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
+	/*if (!DeserializeScene(scene))
 	{
 		std::cout << "Error loading scene!\n";
 		return;
-	}/**/
-	Entity& tit = *scene.Add<Entity>();
-	Transform& tit_trans = scene.Get<Transform>(tit);
-	tit_trans.scale = vec3(20.f, 20.f, 20.f);
-	MeshRenderer& tit_render = scene.Get<MeshRenderer>(tit);
-	std::cout << "Scene \"" << scene.sceneName << "\" has been loaded.\n";
+	}*/
+	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }
 
 bool SceneManager::SaveScene(const std::string& _filePath)

@@ -1,5 +1,5 @@
-[2023-09-27 14:08:34.426] [Error] [critical] 
-Caused By:	inputFile
-Info:		Error opening file to load asset into memory!
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 274)
+[2023-09-27 20:53:19.930] [Error] [critical] 
+Caused By:	false
+Info:		FAILED TO SET ACTIVE
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\ObjectsBList.cpp (Line: 209)
 

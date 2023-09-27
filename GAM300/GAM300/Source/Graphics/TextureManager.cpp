@@ -72,15 +72,15 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
 
     glm::tvec3<GLsizei> const Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-    if ( gli::is_srgb(Texture.format()) )
-    {
-        std::cout << " SRGB\n";
-    }
-    else
-    {
-        std::cout << " RGB\n";
+    //if ( gli::is_srgb(Texture.format()) )
+    //{
+    //    std::cout << " SRGB\n";
+    //}
+    //else
+    //{
+    //    std::cout << " RGB\n";
 
-    }
+    //}
     switch (Texture.target())
     {
     case gli::TARGET_1D:
@@ -226,9 +226,12 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     return Skybox_Tex;
 }
 
-GLuint& Texture_Manager::GetTexture(std::string GUID)
+GLuint Texture_Manager::GetTexture(std::string GUID)
 {
-	return mTextureContainer.find(GUID)->second.second;
+    if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
+        return mTextureContainer.find(GUID)->second.second;
+    }
+    return UINT_MAX;
 }
 
 void Texture_Manager::Exit()

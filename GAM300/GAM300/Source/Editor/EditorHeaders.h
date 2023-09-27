@@ -30,6 +30,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/Events.h"
 
 #define NON_VALID_ENTITY 0
+#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
+#define FIND_TEXTURE(filepath) TextureManager.FindTexture()
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {

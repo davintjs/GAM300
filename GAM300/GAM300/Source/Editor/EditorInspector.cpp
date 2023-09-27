@@ -46,8 +46,6 @@ void DisplayType(const char* name, T& val)
     //PRINT(name," ", typeid(T).name(), '\n');
 }
 
-
-
 void DisplayType(const char* name, bool& val)
 {
     static std::string idName{};
@@ -127,27 +125,30 @@ void DisplayType(const char* name, Vector3& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-   
 
-    if (ImGui::BeginTable("Vector3", 3, windowFlags))
-    {
-        ImGui::TableNextColumn();
-        ImGui::AlignTextToFramePadding();
-        idName += 'X';
-        ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.x);
+    /*if (name == "LightingColor") {
 
-        ImGui::TableNextColumn();
-        idName.back() = 'Y';
-        ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.y);
-
-        ImGui::TableNextColumn();
-        idName.back() = 'Z';
-        ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.z);
-        ImGui::EndTable();
     }
+    else*/
+        if (ImGui::BeginTable("Vector3", 3, windowFlags))
+        {
+            ImGui::TableNextColumn();
+            ImGui::AlignTextToFramePadding();
+            idName += 'X';
+            ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+            DisplayType(idName.c_str(), val.x);
+
+            ImGui::TableNextColumn();
+            idName.back() = 'Y';
+            ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+            DisplayType(idName.c_str(), val.y);
+
+            ImGui::TableNextColumn();
+            idName.back() = 'Z';
+            ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+            DisplayType(idName.c_str(), val.z);
+            ImGui::EndTable();
+        }
 }
 
 void DisplayType(const char* name, Vector4& val)
@@ -160,14 +161,22 @@ void DisplayType(const char* name, Vector4& val)
 
     //std::string var = name;
     //if (var.find("Albedo") != std::string::npos) {}
-    ImGui::ColorEdit4("MyColor##2", (float*)&val, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::SameLine(); 
+    static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
+    //ImVec4(val.x / 255.0f, val.y / 255.0f, val.z / 255.0f, val.w / 255.0f);
+    
+    if (ImGui::ColorEdit4("MyColor##4", (float*)&color), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
+        val = ImVec4(color.w, color.z, color.x, color.y);
+    }
+
+    
+
+    // ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel
     /*ImGui::TableNextColumn();
     ImGui::Text(name);
     ImGui::TableNextColumn();*/
     //static ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview;
 
-    if (ImGui::BeginTable("Color4", 4, windowFlags))
+    /*if (ImGui::BeginTable("Color4", 4, windowFlags))
     {
         ImGui::TableNextColumn();
         ImGui::AlignTextToFramePadding();
@@ -190,7 +199,7 @@ void DisplayType(const char* name, Vector4& val)
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
         DisplayType(idName.c_str(), val.z);
         ImGui::EndTable();
-    }
+    }*/
 
     //ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
 
@@ -404,6 +413,152 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
+
+void ChangeTexture(std::string& texture, std::string& newTex) {
+    texture = newTex;
+}
+
+template<typename T>
+void ChangeTexture(T& texture, std::string& newTex) {
+    ChangeTexture(texture, newTex);
+}
+template <typename T> 
+void DisplayTexturePicker(T& Value) {
+
+    using T1 = std::decay_t<decltype(Value)>;
+
+    ImGui::SameLine();
+    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    static const std::string AssetDirectory = "Assets";
+    static std::filesystem::path CurrentDirectory = AssetDirectory;
+    static std::string currentFolder = "Assets";
+
+
+    if (ImGui::Button("Edit")) {
+        ImGui::OpenPopup("Texture");
+    }
+
+    //Component Settings window
+    ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+
+    if (ImGui::BeginPopup("Texture", win_flags)) {
+        ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
+        // Back button to return to parent directory
+        if (CurrentDirectory != std::filesystem::path(AssetDirectory))
+        {
+            if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
+            {
+                CurrentDirectory = CurrentDirectory.parent_path();
+                currentFolder = CurrentDirectory.string();
+            }
+        }
+
+        static float padding = 15.f;
+        static float iconsize = 50.f;
+        float cellsize = iconsize + padding;
+
+        float window_width = ImGui::GetContentRegionAvail().x;
+        int columncount = (int)(window_width / cellsize);
+        if (columncount < 1) { columncount = 1; }
+
+        ImGui::Columns(columncount, 0, false);
+
+        //remove texture icon
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+        auto id = GET_TEXTURE_ID("Cancel_Icon");
+        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
+            std::string empty = "";
+            ChangeTexture<T1>(Value, empty);
+            
+            ImGui::PopStyleColor();
+            ImGui::EndPopup(); 
+            ImGui::CloseCurrentPopup();
+            return;
+        };
+        ImGui::PopStyleColor();
+        //render file name below icon
+        ImGui::TextWrapped("Remove Texture");
+        ImGui::NextColumn();
+
+        int i = 0;
+        //using filesystem to iterate through all folders/files inside the "/Data" directory
+        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
+        {
+            const auto& path = it.path();
+            //if not png or dds file, dont show
+            if ((path.string().find("meta") != std::string::npos)) continue;
+
+            ImGui::PushID(i++);
+
+            auto relativepath = std::filesystem::relative(path, AssetDirectory);
+            std::string pathStr = relativepath.filename().string();
+
+            //Draw the file / folder icon based on whether it is a directory or not
+            std::string icon = it.is_directory() ? "foldericon" : "fileicon";
+
+            size_t icon_id = 0;
+
+            /*auto it2 = filename.begin() + filename.find_first_of(".");
+            filename.erase(it2, filename.end());*/
+
+            std::string filename = "";
+
+            if (!it.is_directory()) {
+
+                filename = relativepath.string();
+
+                auto it2 = filename.begin();
+
+                if (filename.find_last_of("\\") != std::string::npos) {
+                    it2 = filename.begin() + filename.find_last_of("\\") + 1;
+                    filename.erase(filename.begin(), it2);
+                }
+                if (filename.find_first_of(".") != std::string::npos) {
+                    it2 = filename.begin() + filename.find_first_of(".");
+                    filename.erase(it2, filename.end());
+                }
+                //PRINT(filename);
+                auto tex = GET_TEXTURE_ID(filename);
+
+                if (tex != UINT_MAX) {
+                    icon = filename;
+                }
+            }
+
+            //render respective file icon textures
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+            icon_id = GET_TEXTURE_ID(icon);
+            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
+
+            ImGui::PopStyleColor();
+
+            //Change directory into the folder clicked
+            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+            {
+                if (it.is_directory())
+                {
+                    currentFolder = pathStr;
+                    CurrentDirectory /= path.filename();
+                }
+            }
+
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                //update texture
+                ChangeTexture<T1>(Value, icon);
+            }
+
+            //render file name below icon
+            ImGui::TextWrapped(pathStr.c_str());
+            ImGui::NextColumn();
+            ImGui::PopID();
+        }
+        ImGui::Columns(1);
+        ImGui::EndPopup();
+    }
+}
+
+
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
@@ -445,16 +600,25 @@ void Display_Property(T& comp) {
         /*property::flags::type Flags;
         if (Flags.m_isDontShow) continue;*/
 
-        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos)) continue;
+        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos) || (Name.find("MeshName") != std::string::npos)) continue;
+
         std::visit([&](auto& Value) {
                 using T1 = std::decay_t<decltype(Value)>;
+
                 //Edit name
                 std::string DisplayName = Name;
                 auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                 DisplayName.erase(DisplayName.begin(), ++it);
-                DisplayName[0] = toupper(DisplayName[0]); //Make first letter uppercase
+
                 ImGui::PushID(Name.c_str());
                 Display<T1>(DisplayName.c_str(), Value);
+
+                //temporary implementation for texture picker
+                if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
+                    || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
+                    DisplayTexturePicker(Value);
+                }
+
                 ImGui::PopID();          
             }
         , Data);
@@ -703,8 +867,6 @@ void DisplayComponentHelper(T& component)
     ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 30.f);
 
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-
-    static bool comp_settings = false;
 
     const char* popup = GetType::Name<T>();
 
@@ -993,10 +1155,10 @@ void EditorInspector::Update(float dt)
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
-
-    if (curr_index != NON_VALID_ENTITY) {
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+    //if (curr_index != NON_VALID_ENTITY) {
+    if (&curr_entity) {
         ImGui::Spacing();
-        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
         std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
