@@ -90,6 +90,13 @@ struct SelectedEntityEvent : IEvent
 	Entity* pEntity;
 };
 
+struct GetScriptNamesEvent : IEvent
+{
+	GetScriptNamesEvent() {};
+	const char** arr;
+	size_t count;
+};
+
 template <typename T>
 struct ObjectCreatedEvent : IEvent
 {

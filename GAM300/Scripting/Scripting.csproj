@@ -65,11 +65,8 @@
   <ItemGroup>
     <Compile Include="..\CoreScripts\*.cs" />
     <Compile Include="..\Assets\*.cs" />
-    <Compile Include="..\External\GlmSharp\bin\Debug\GlmSharp.dll" />
-    <Compile Include="..\External\GlmSharp\bin\Debug\GlmSharp.pdb" />
-    <Compile Include="..\External\GlmSharp\bin\Release\GlmSharp.dll" />
-    <Compile Include="..\External\GlmSharp\bin\Release\GlmSharp.pdb" />
-    <Compile Include="..\External\GlmSharp\bin\Release\GlmSharp.XML" />
+    <Compile Include="..\External\GlmSharp\bin\GlmSharp.dll" />
+    <Compile Include="..\External\GlmSharp\bin\GlmSharp.pdb" />
     <Compile Include="..\External\GlmSharp\Extensions.cs" />
     <Compile Include="..\External\GlmSharp\GlmSharp.csproj" />
     <Compile Include="..\External\GlmSharp\Half.cs" />

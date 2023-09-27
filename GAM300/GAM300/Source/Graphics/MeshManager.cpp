@@ -174,7 +174,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties[newName]));
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties[newName]));
     }
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
@@ -436,12 +436,13 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["Cube"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Cube"]));
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Cube"]);
 
     mContainer.emplace(std::string("Cube"), newMesh);
 }
 
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
 unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 
 
@@ -588,7 +589,90 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
+unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
+
+    // SRT Buffer set up
+    prop.entitySRTbuffer;
+    glGenBuffers(1, &prop.entitySRTbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(prop.entitySRT[0]), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //entitySRTBuffer
+    glBindVertexArray(prop.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+    glEnableVertexAttribArray(8);
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(9);
+    glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
+    glVertexAttribDivisor(9, 1);
+    glBindVertexArray(0);
+
+
+    // Albedo Buffer Setup
+    prop.AlbedoBuffer;
+    glGenBuffers(1, &prop.AlbedoBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Albedo[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(10);
+    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(10, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Metal_Rough_AO_Texture_Buffer Buffer Setup
+    prop.Metal_Rough_AO_Texture_Buffer;
+    glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(11);
+    glVertexAttribPointer(11, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribDivisor(11, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Diffuse Buffer Setup
+    prop.Metal_Rough_AO_Texture_Constant;
+    glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Constant);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(12);
+    glVertexAttribPointer(12, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribDivisor(12, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    prop.textureIndexBuffer;
+    glGenBuffers(1, &prop.textureIndexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(15);
+    glVertexAttribPointer(15, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribDivisor(15, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return prop.entitySRTbuffer;
+}
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
 {
