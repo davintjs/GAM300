@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Player : Script
 {
     Rigidbody rb;
-    public float babei;
+    public float speed = 10f;
     public GameObject gameObj;
     public Player player2;
 
@@ -16,7 +16,6 @@ public class Player : Script
 
     void Update()
     {
-        float speed = 21f;
         if (Input.GetKey(KeyCode.Q))
         {
             gameObj.transform.localRotation.y += speed/360f;

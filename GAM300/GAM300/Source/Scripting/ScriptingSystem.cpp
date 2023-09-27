@@ -662,7 +662,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script)
 					newField.typeName = typeName.substr(offset + 1);
 				else
 					newField.typeName = typeName;
-				memset(newField.data,0,newField.GetSize());
+				mono_field_get_value(instance, mField, newField.data);
 				script.fields[fieldName] = std::move(newField);
 			}
 			//Field exists
