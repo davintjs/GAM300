@@ -82,7 +82,7 @@ void DemoSystem::Init()
 	Entity& box2 = *scene.Add<Entity>();
 	scene.Add<MeshRenderer>(box2);
 	scene.Get<MeshRenderer>(box2).MeshName = "Cube";
-	scene.Get<Transform>(box2).translation = Vector3(0.f, 200.0f, 35.f);
+	scene.Get<Transform>(box2).translation = Vector3(0.f, 200.0f, 15.f);
 	scene.Get<Transform>(box2).scale = Vector3(25.f, 25.f, 25.f);
 	scene.Add<Rigidbody>(box2);
 	scene.Add<BoxCollider>(box2);

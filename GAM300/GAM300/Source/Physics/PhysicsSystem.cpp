@@ -49,11 +49,12 @@ void PhysicsSystem::Init()
 void PhysicsSystem::Update(float dt) {
 	// Handle Inputs
 	
-	std::cout << "physics update\n";
 	//step++;
-	if(physicsSystem)
-		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
+	if (physicsSystem) {
+		physicsSystem->Update(dt*9, 1, tempAllocator, jobSystem);
+	}
 
+	std::cout << "Physics update!\n";
 	/*
 	JPH::RVec3 ballPos = bodyInterface->GetCenterOfMassPosition(testBallID);
 	Vector3 gBallPos;
@@ -161,7 +162,7 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) {
 void PhysicsSystem::PopulatePhysicsWorld() {
 	Scene& scene = MySceneManager.GetCurrentScene();
 
-	BoxCollider& test = scene.Get<BoxCollider>(scene.GetArray<Entity>()[0]);
+	//BoxCollider& test = scene.Get<BoxCollider>(scene.GetArray<Entity>()[0]);
 	// check entity for collider and then check what kind of fucking collider he want
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
 	auto& rbArray = scene.GetArray<Rigidbody>();
@@ -218,7 +219,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
-			Vector3 colliderScale(boxCollider.x * t.scale.x, boxCollider.y * t.scale.y, boxCollider.z * t.scale.z);
+			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
 
