@@ -537,6 +537,7 @@ void GraphicsSystem::Update(float dt)
 
 	}
 
+	SetupGrid(100);
 
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 	if (intersected == FLT_MAX && checkForSelection)
@@ -748,12 +749,9 @@ void GraphicsSystem::Draw() {
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
 
-
-
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
-
 		/*for (size_t i = 0; i < 32; i++)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
@@ -822,7 +820,18 @@ void GraphicsSystem::Draw() {
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			Draw_Debug(prop.debugVAO, prop.iter);
+
+			if (EditorScene::Instance().DebugDraw())
+				Draw_Debug(prop.debugVAO, prop.iter);
+		}
+
+		if (name == "Line")
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			Draw_Grid(prop.VAO, prop.iter);
 		}
 
 		prop.iter = 0;
@@ -926,4 +935,46 @@ void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 	// unbind and free stuff
 	glBindVertexArray(0);
 	temp_debug_shader.UnUse();
+}
+
+void GraphicsSystem::Draw_Grid(GLuint vaoid, unsigned int instance_count)
+{
+	temp_debug_shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+
+	glBindVertexArray(vaoid);
+	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
+	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, instance_count);
+
+	// unbind and free stuff
+	glBindVertexArray(0);
+	temp_debug_shader.UnUse();
+}
+
+void GraphicsSystem::SetupGrid(int gridamt) 
+{
+	float spacing = 100.f;
+	float length = gridamt * spacing * 0.5f;
+
+	properties["Line"].iter = gridamt * 2;
+
+	for (int i = 0; i < gridamt; i++)
+	{
+		glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
+		glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
+		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
+
+		properties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
+		properties["Line"].entitySRT[i + gridamt] = transMatrixX * rotMatrix * scalMatrix; // x axis
+	}
 }
