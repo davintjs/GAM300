@@ -69,7 +69,7 @@ void EditorContentBrowser::Update(float dt)
         if (path.string().find("meta") != std::string::npos) continue;
 
         ImGui::PushID(i++);
-        
+
         auto relativepath = std::filesystem::relative(path, AssetDirectory);
         std::string pathStr = relativepath.filename().string();
 
@@ -85,18 +85,32 @@ void EditorContentBrowser::Update(float dt)
         auto it2 = ext.begin() + ext.find_last_of(".");
         ext.erase(ext.begin(), it2);*/
 
+        std::string parentpath = relativepath.parent_path().string();
 
-        if (relativepath.parent_path().string() == "Icons") {
-            std::string filename = relativepath.string();
-            //
-            auto it = filename.begin() + filename.find_last_of("\\") + 1;
-            filename.erase(filename.begin(), it);
-            it = filename.begin() + filename.find_first_of(".");
-            filename.erase(it, filename.end());
-            //PRINT(filename);
-            icon = filename;  
+        std::string filename = relativepath.string();
+        
+        if (!it.is_directory()) {
+            
+            auto it2 = filename.begin();
+
+            //if (filename.find("Resources") == std::string::npos) {
+
+                if (filename.find_last_of("\\") != std::string::npos) {
+                    it2 = filename.begin() + filename.find_last_of("\\") + 1;
+                    filename.erase(filename.begin(), it2);
+                }
+                it2 = filename.begin() + filename.find_first_of(".");
+                filename.erase(it2, filename.end());
+
+                //PRINT(filename);
+
+                GLint tex = GET_TEXTURE_ID(filename);
+                if (tex != UINT_MAX) {
+                    icon = filename;
+                }
+            //}              
         }
-
+       
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         icon_id = GET_TEXTURE_ID(icon);
@@ -131,7 +145,7 @@ void EditorContentBrowser::Update(float dt)
                 LoadSceneEvent loadScene(path.string());
                 EVENTS.Publish(&loadScene);
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
-            }       
+            }
         }
 
         //render file name below icon
