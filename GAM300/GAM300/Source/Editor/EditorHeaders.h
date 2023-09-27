@@ -16,6 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define EDITORTOOLBAR_H
 
 #include <glm/vec2.hpp>
+#include <unordered_map>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -28,7 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/Entity.h"
 #include "Core/Events.h"
 
-#define NON_VALID_ENTITY -1
+#define NON_VALID_ENTITY 0
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
@@ -64,18 +65,12 @@ public:
     void Exit();
 
     void DisplayEntity(Engine::UUID euid);
-    void ClearLayer();
     //void DisplayChildren(const ObjectIndex& Parent);
-
     Engine::UUID selectedEntity;
-
-    std::vector<Entity*> layer;
 
     bool initLayer = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
-    void CallbackClearEntities(ClearEntitiesEvent* pEvent);
-    void CallbackAddEntity(ObjectCreatedEvent<Entity>* pEvent);
 };
 
 

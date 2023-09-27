@@ -292,7 +292,7 @@ public:
 		False if operation failed, true if it was successful
 	*/
 	/*******************************************************************************/
-	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field, const void* value);
+	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field);
 
 	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent);
 
@@ -315,7 +315,7 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackSceneChanging(SceneChangingEvent* pEvent);
+	void CallbackSceneChanging(SceneChangingEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -369,7 +369,8 @@ public:
 		void
 	*/
 	/*******************************************************************************/
-	//void CallbackStopPreview(StopPreviewEvent* pEvent);
+	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -395,7 +396,6 @@ public:
 
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
 	MonoComponents mComponents;
-	std::unordered_map<MonoType*, size_t> reflectionMap;
 	float timeUntilRecompile{0};
 	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
@@ -405,6 +405,7 @@ public:
 		START,
 		UPDATE,
 		EXIT,
+		CLEANUP,
 		NONE
 	};
 

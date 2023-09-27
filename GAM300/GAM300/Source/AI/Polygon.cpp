@@ -23,7 +23,7 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 		glm::vec3 p = mPoints[i];
 	}
 
-	mNumberOfPoints = mPoints.size();
+	mNumberOfPoints = static_cast<int>(mPoints.size());
 }
 
 Polygon3D::~Polygon3D()
@@ -174,16 +174,16 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 			// Remove all points that were added to the convex hull
 			for (int i = 0; i < colinearPoints.size(); ++i)
 			{
-				int index = 0;
+				int index2 = 0;
 				for (int j = 0; j < tempPoint.size(); ++j)
 				{
 					if (tempPoint[j] == colinearPoints[i])
 					{
-						index = j;
+						index2 = j;
 						break;
 					}
 				}
-				tempPoint.erase(tempPoint.begin() + index);
+				tempPoint.erase(tempPoint.begin() + index2);
 			}
 
 			colinearPoints.clear();
@@ -244,9 +244,9 @@ void Polygon3D::JoinPolygon(Polygon3D& polygon)
 		}
 	}
 
-	glm::vec3 secondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f)); // Might need to do rounding for floating error??
+	glm::vec3 tempSecondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f)); // Might need to do rounding for floating error??
 	
-	Segment3D infiniteLine(rightVertex, secondPoint); // Starting from the right most vertex of the hole's polygon, extend the line infinitely to the right
+	Segment3D infiniteLine(rightVertex, tempSecondPoint); // Starting from the right most vertex of the hole's polygon, extend the line infinitely to the right
 
 	// Find the closest edge of the boundary polygon that intersects the infinite line
 	glm::vec3 intersectionPoint;
@@ -425,7 +425,7 @@ void Polygon3D::SwitchOrientation()
 	mOrientation == Orientation::CLOCKWISE ? Orientation::COUNTERCLOCKWISE : Orientation::CLOCKWISE; // Change the orientation
 
 	int leftTracker = 1; // Start from 2nd index as 1st index no change
-	int rightTracker = mPoints.size() - 1; // Start from last index
+	int rightTracker = static_cast<int>(mPoints.size()) - 1; // Start from last index
 
 	while (leftTracker < rightTracker)
 	{

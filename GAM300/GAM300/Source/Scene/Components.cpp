@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include "Scene/SceneManager.h"
 //
 //
 //template <>
@@ -12,7 +13,7 @@ bool Transform::isLeaf() {
 }
 
 bool Transform::isChild() {
-	if (parent != nullptr)
+	if (parent != 0)
 		return true;
 	else
 		return false;
@@ -21,7 +22,7 @@ bool Transform::isChild() {
 glm::mat4 Transform::GetWorldMatrix() const
 {
 	if (parent)
-		return parent->GetWorldMatrix() * GetLocalMatrix();
+		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetWorldMatrix() * GetLocalMatrix();
 	return GetLocalMatrix();
 }
 
@@ -34,18 +35,19 @@ glm::mat4 Transform::GetLocalMatrix() const {
 }
 
 bool Transform::isEntityChild(Transform& ent) {
-	if (std::find(child.begin(), child.end(), &ent) != child.end()) {
+	if (std::find(child.begin(), child.end(), ent.EUID()) != child.end()) {
 		return true;
 	}
-	for (int i = 0; i < child.size(); i++) {
-		return child[i]->isEntityChild(ent);
+	for (int i = 0; i < child.size(); i++) 
+	{
+		return MySceneManager.GetCurrentScene().Get<Transform>(child[i]).isEntityChild(ent);
 	}
 	return false;
 }
 
 void Transform::SetParent(Transform* newParent)
 {
-	if (newParent == parent)
+	if (newParent->EUID() == parent)
 		return;
 	glm::quat rot;
 	glm::vec3 skew;
@@ -55,42 +57,34 @@ void Transform::SetParent(Transform* newParent)
 	glm::mat4 globalTransform = GetWorldMatrix();
 	// Calculate the global transformation matrix
 	if (parent) {
-		parent->RemoveChild(this);
+		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
+		parentTrans.RemoveChild(this);
 		glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
 		scale = _scale;
 		translation = _translation;
 		rotation = glm::eulerAngles(rot);
 	}
 
-	parent = newParent;
+	parent = newParent->EUID();
 
 	if (parent) {
-		glm::mat4 lTransform = glm::inverse(parent->GetWorldMatrix()) * globalTransform;
+		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
+		glm::mat4 lTransform = glm::inverse(parentTrans.GetWorldMatrix()) * globalTransform;
 		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
 		scale = _scale;
 		translation = _translation;
 		rotation = glm::eulerAngles(rot);
 		// Add the object to the new parent's child list
-		parent->child.push_back(this);
+		parentTrans.child.push_back(EUID());
 	}
 }
 
 
 void Transform::RemoveChild(Transform* t)
 {
-	auto it = std::find(child.begin(), child.end(), t);
+	auto it = std::find(child.begin(), child.end(), t->EUID());
 	// Check if an element satisfying the condition was found
 	E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
 	// Erase the found element
 	child.erase(it);
-}
-
-
-Transform::~Transform()
-{
-	SetParent(nullptr);
-	for (Transform* transform : child)
-	{
-		transform->SetParent(parent);
-	}
 }

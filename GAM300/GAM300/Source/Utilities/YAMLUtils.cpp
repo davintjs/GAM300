@@ -35,10 +35,10 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
     out << YAML::BeginSeq;
 
-    for (auto& data : _data._transform)
+    for (auto data : _data._transform)
     {
         out << YAML::Flow << YAML::BeginMap;
-        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << _data._scene.Get<Entity>(*data).EUID();
+        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << data;
         out << YAML::EndMap;
     }
     

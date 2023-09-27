@@ -34,12 +34,12 @@ public:
 
 	void Editor_Dockspace();
 
-	Entity* GetSelectedEntity();
+	Engine::UUID GetSelectedEntity();
 	void SetSelectedEntity(Entity*);
 
 
 	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 private:
 	std::vector<ISystem*> editorSystems;
-	Entity* selectedEntity{nullptr};
+	Engine::UUID selectedEntity{0};
 };

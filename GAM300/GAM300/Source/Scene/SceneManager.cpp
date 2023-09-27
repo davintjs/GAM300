@@ -15,6 +15,8 @@ void SceneManager::Init()
 	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
+	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStart);
+	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStop);
 }
 
 void SceneManager::CreateScene()
@@ -113,9 +115,6 @@ void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
 {
 	// Bean: prompt to save current scene first
 
-	ClearEntitiesEvent clearEntitiesEvent;
-	EVENTS.Publish(&clearEntitiesEvent);
-
 	CreateScene();
 	pEvent->scene = &GetCurrentScene();
 }
@@ -123,9 +122,6 @@ void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
 void SceneManager::CallbackLoadScene(LoadSceneEvent* pEvent)
 {
 	// Bean: prompt to save current scene first if havent done so
-
-	ClearEntitiesEvent clearEntitiesEvent;
-	EVENTS.Publish(&clearEntitiesEvent);
 
 	LoadScene(pEvent->filePath);
 }
@@ -147,6 +143,20 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 	}
 }
 
+void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
+{
+	//Publish scene change
+	loadedScenes.emplace_front(GetCurrentScene());
+	GetCurrentScene().sceneName += " [PREVIEW]";
+}
+
+void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	SceneCleanupEvent e;
+	EVENTS.Publish(&e);
+	loadedScenes.pop_front();
+	//Publish scene change
+}
 
 void SceneManager::Exit()
 {

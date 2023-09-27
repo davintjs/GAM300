@@ -17,6 +17,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "EditorTemplates.h"
+#include "Core/EventsManager.h"
+#include "Utilities/ThreadPool.h"
 
 void AlignForWidth(float width, float alignment = 0.5f)
 {
@@ -63,6 +65,21 @@ void EditorToolBar::Update(float dt)
 
     std::string play_status = (scene_playing ? "Stop" : "Play"); 
     if (ImGui::Button(play_status.c_str(), buttonSize)) {
+        if (!scene_playing)
+        {
+            PRINT("SCENE START\n");
+            SceneStartEvent startEvent{};
+            ACQUIRE_SCOPED_LOCK(Assets);
+            EVENTS.Publish(&startEvent);
+        }
+        else
+        {
+            PRINT("SCENE STOP\n");
+            SceneStopEvent stopEvent{};
+            ACQUIRE_SCOPED_LOCK(Assets);
+            EVENTS.Publish(&stopEvent);
+
+        }
         scene_playing = scene_playing ? false : true;
     }
 

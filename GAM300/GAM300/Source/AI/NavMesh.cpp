@@ -19,6 +19,8 @@ const std::vector<unsigned int> NavMesh::GetIndices() const
 
 bool NavMesh::FindPath(glm::vec3& mStart, glm::vec3& mEnd)
 {
+	UNREFERENCED_PARAMETER(mStart);
+	UNREFERENCED_PARAMETER(mEnd);
 	return false;
 }
 
