@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-
+#include "Core/EventsManager.h"
 #include "PhysicsSystem.h"
 #include "Scene/SceneManager.h"
 #include "Core/FramerateController.h"
@@ -18,48 +18,44 @@ void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat);
 void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3);
 void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3);
 
+
 void PhysicsSystem::Init() 
 {
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
+
+
+
+
+
+
+
 	// Register allocation hook
 	JPH::RegisterDefaultAllocator();
 
-	//// Create factory
+	// Create factory
 	JPH::Factory::sInstance = new JPH::Factory();
 
-	//// Register all JPH types
+	// Register all JPH types
 	JPH::RegisterTypes();
 
 	tempAllocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024);
+	
 	jobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, JPH::thread::hardware_concurrency()-1);
 	
-	
-	
-	
-	TestRun();
-
+	engineContactListener = new EngineContactListener;
 
 }
 void PhysicsSystem::Update(float dt) {
+	// Handle Inputs
+	
+	//step++;
+	if (physicsSystem) {
+		physicsSystem->Update(dt*9, 1, tempAllocator, jobSystem);
+	}
 
-	if (!simulating)
-		return;
-
-	// Update physics simulation by a step
-	// TODO: change to use engine dt
-	//PRINT(MyFrameRateController.GetSteps(),'\n');
-	step++;
-	physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
-
-	// Update gameobject positions with corresponding physics object positions
+	std::cout << "Physics update!\n";
 	/*
-	* TODO:
-	* 1. how to link a game object to the physics object
-	*	- rigidbody component hold the bodyid?
-	*	- rigidbody component hold body ptr?
-	*/ 
-
-	//std::cout << "Physics System Update!\n";
-
 	JPH::RVec3 ballPos = bodyInterface->GetCenterOfMassPosition(testBallID);
 	Vector3 gBallPos;
 	JoltVec3ToGlmVec3(ballPos, gBallPos);
@@ -94,9 +90,9 @@ void PhysicsSystem::Update(float dt) {
 		JoltQuatToGlmVec3(ballQuat, ballRotEuler);
 		t.rotation = ballRotEuler;
 	}
-		
+	*/	
 
-	//UpdateGameObjects();
+	UpdateGameObjects();
 
 }
 void PhysicsSystem::Exit() {
@@ -110,17 +106,28 @@ void PhysicsSystem::Exit() {
 		JPH::Factory::sInstance = nullptr;
 	}
 
+	delete engineContactListener;
+
 	// Destroy Physics World
 	if (physicsSystem) {
 		delete physicsSystem;
 		physicsSystem = nullptr;
 	}
 
+	if (jobSystem) {
+		delete jobSystem;
+		jobSystem = nullptr;
+	}
+
+	if (tempAllocator) {
+		delete tempAllocator;
+		tempAllocator = nullptr;
+	}
+
 }
 
-void PhysicsSystem::OnSceneStart() {
-
-
+void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) {
+	
 	// Create the JPH physics world and INIT it
 	physicsSystem = new JPH::PhysicsSystem();
 
@@ -128,43 +135,55 @@ void PhysicsSystem::OnSceneStart() {
 	bodyInterface = &(physicsSystem->GetBodyInterface());
 
 	// Initialize Physics World
-	//physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
-	//	bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
+	physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
+		bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
 
 	// Optimise broad phase only if there is an excess amount of bodies
 	//physicsSystem->OptimizeBroadPhase();
 
-	simulating = true;
+	PopulatePhysicsWorld();
+
+
+	std::cout << "Physics System scene start test\n";
 
 }
-void PhysicsSystem::OnSceneEnd() {
+void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) {
 
+	std::cout << "Physics System scene stop test\n";
 
-	// Clear all existing Physics Objects
+	// Delete the current physics system, must set to nullptr
 	if (physicsSystem) {
 		delete physicsSystem;
 		physicsSystem = nullptr;
 	}
-	simulating = false;
-
 }
+
 
 void PhysicsSystem::PopulatePhysicsWorld() {
 	Scene& scene = MySceneManager.GetCurrentScene();
+
+	//BoxCollider& test = scene.Get<BoxCollider>(scene.GetArray<Entity>()[0]);
 	// check entity for collider and then check what kind of fucking collider he want
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
 	auto& rbArray = scene.GetArray<Rigidbody>();
+	auto& bcArray = scene.GetArray<BoxCollider>();
+	std::cout << "Number of rigidbodies:" << rbArray.size();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+			
+	
 		Rigidbody& rb = *it;
 		Entity& entity = scene.Get<Entity>(rb);
+		
 
 		if (!scene.IsActive(entity))
 			continue;
 		if (!it.IsActive())
 			continue;
 
+
+
 		// If no collider is attached with the rigidbody, reject gameobject
-		if (!scene.Has<BoxCollider>(entity) || !scene.Has<SphereCollider>(entity) || !scene.Has<CapsuleCollider>(entity))
+		if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
 			continue;
 
 		// Position, Rotation and Scale of collider
@@ -183,7 +202,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		// Set enabled status
 		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
-		//if (!rb.is_enabled)
+		//if (!rb.a)
 		//	enabledStatus = JPH::EActivation::DontActivate;
 
 		// Motion Type
@@ -196,17 +215,18 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 
 		
-
+		// Create rigidbody's collider shape
 		if (scene.Has<BoxCollider>(entity)) {
 
-			BoxCollider& bc = scene.Get<BoxCollider>(entity);
-			Vector3 colliderScale(bc.x * t.scale.x, bc.y * t.scale.y, bc.z * t.scale.z);
+			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)
 				boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
 			// Set all necessary settings for the body
 			// Friction
 			boxCreationSettings.mFriction = rb.friction;
@@ -216,18 +236,18 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			boxCreationSettings.mAngularVelocity = angularVel;
 
 			//Sensor settings 
-			boxCreationSettings.mIsSensor = true;
+			boxCreationSettings.mIsSensor = false;
 
+			// Create the actual jolt body
 			JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
-			//rb.RigidBodyID = box->GetID();
+			bodyInterface->AddBody(box->GetID(), enabledStatus);
+			rb.bid = box->GetID().GetIndexAndSequenceNumber();
 
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
 
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
-			//rb.RigidBodyID = sphere->GetID();
 
 			if (rb.isStatic)
 				sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
@@ -236,20 +256,19 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Friction
 			sphereCreationSettings.mFriction = rb.friction;
 			// Linear Velocity
-			//sphereCreationSettings.mLinearVelocity = linearVel;
+			sphereCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
-			//sphereCreationSettings.mAngularVelocity = angularVel;
+			sphereCreationSettings.mAngularVelocity = angularVel;
 
+			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
 			bodyInterface->AddBody(sphere->GetID(),enabledStatus);
-
+			rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
 		}
 		else if (scene.Has<CapsuleCollider>(entity)) {
 
 
 			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
-			//rb.RigidBodyID = capsule->GetID();
 
 			if (rb.isStatic)
 				capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
@@ -258,25 +277,29 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Friction
 			capsuleCreationSettings.mFriction = rb.friction;
 			// Linear Velocity
-			//capsuleCreationSettings.mLinearVelocity = linearVel;
+			capsuleCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
-			//capsuleCreationSettings.mAngularVelocity = angularVel;
+			capsuleCreationSettings.mAngularVelocity = angularVel;
 
+			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
 			bodyInterface->AddBody(capsule->GetID(), enabledStatus);
+			rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
 		}
 		else {
 			continue;
 		}
 
 
-		
-
 	}
+
+	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
+
 
 }
 void PhysicsSystem::UpdateGameObjects() {
-	JPH::BodyIDVector bidVector;
-	physicsSystem->GetBodies(bidVector);
+
+	if (!physicsSystem)
+		return;
 
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
@@ -286,14 +309,39 @@ void PhysicsSystem::UpdateGameObjects() {
 		Transform& t = scene.Get<Transform>(entity);
 
 
-		//JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(rb.RigidBodyID);
-		//JoltVec3ToGlmVec3(tmp, t.translation);
-		//convert
-		//t.translation = tmp;
-		// rinse and repeat for rotation and scale
-		//update velocity
+		Vector3 tmpVec;
+		JPH::BodyID tmpBID(rb.bid);
+		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(tmpBID);
+		JoltVec3ToGlmVec3(tmp, tmpVec);	
+		t.translation = tmpVec;
+
+
+		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);
+		JoltQuatToGlmVec3(tmpQuat, tmpVec);
+		t.rotation = tmpVec;
+
+		//tmp = bodyInterface->GetLinearVelocity(tmpBID);
+		//JoltVec3ToGlmVec3(tmp, rb.linearVelocity);
+
+		//tmp = bodyInterface->GetAngularVelocity(tmpBID);
+		//JoltVec3ToGlmVec3(tmp, rb.angularVelocity);
+
+
+		//Transform& t = scene.Get<Transform>(*ball);
+		//t.translation = gBallPos;
+
+
+		//Vector3 ballRotEuler;
+		//JPH::Quat ballQuat = bodyInterface->GetRotation(testBallID);
+		//JoltQuatToGlmVec3(ballQuat, ballRotEuler);
+		//t.rotation = ballRotEuler;
 
 	}
+
+	//auto& ccArray = scene.GetArray<CharacterController>();
+	//for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
+
+	//}
 }
 
 
@@ -312,7 +360,7 @@ void PhysicsSystem::TestRun() {
 	physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
 		bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
 
-	physicsSystem->SetContactListener(&engineContactListener);
+	physicsSystem->SetContactListener(engineContactListener);
 
 
 	// Optimise broad phase only if there is an excess amount of bodies
@@ -369,18 +417,6 @@ void PhysicsSystem::TestRun() {
 
 	std::cout << "Number of bodies after:" << physicsSystem->GetNumBodies() << std::endl;
 
-
-	simulating = true;
-
-	////Creating a capsule shape 
-	//capsuleShape = new JPH::CapsuleShape(1.0f, 0.5f);
-	//JPH::BodyCreationSettings capsuleSettings(capsuleShape, JPH::RVec3(0.0, 2.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
-	//JPH::BodyID capsule_ID = bodyInterface->CreateAndAddBody(capsuleSettings, JPH::EActivation::Activate);
-
-	//bodyInterface->SetLinearVelocity(capsule_ID, JPH::Vec3(0.0f, -5.0f, 0.0f));
-
-
-	//
 	//PopulatePhysicsWorld();
 }
 
@@ -393,7 +429,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 	characterSetting.mLayer = EngineObjectLayers::DYNAMIC;
 	characterSetting.mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
 
-
+	(void)psystem;
 
 
 	return;
@@ -401,17 +437,35 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 
 // Contact Listener
 JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) {
-	std::cout << "Contact validate callback!\n";
+	
+	(void)body1;
+	(void)body2;
+	(void)inBaseOffset;
+	(void)collisionResult;
+	
+	//std::cout << "Contact validate callback!\n";
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
-	std::cout << "Contact was added!\n";
+	(void)body1;
+	(void)body2;
+	(void)manifold;
+	(void)ioSettings;
+	
+	//std::cout << "Contact was added!\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
-	std::cout << "Contact persisting!\n";
+	(void)body1;
+	(void)body2;
+	(void)manifold;
+	(void)ioSettings;
+	
+	//std::cout << "Contact persisting!\n";
 }
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
-	std::cout << "Contact removed!\n";
+	(void)subShapePair;
+	
+	//std::cout << "Contact removed!\n";
 }
 
 // Math conversion helpers
