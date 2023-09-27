@@ -21,6 +21,8 @@ public:
 		//Materials Mat);
 
 	void Draw_Debug(GLuint vaoid, unsigned int instance_count);
+	void Draw_Grid(GLuint vaoid, unsigned int instance_count);
+	void SetupGrid(int gridamt);
 
 	void Exit();
 

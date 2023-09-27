@@ -1,6 +1,0 @@
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\bin\Debug\GlmSharp.dll
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\bin\Debug\GlmSharp.pdb
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Debug\GlmSharp.csproj.AssemblyReference.cache
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Debug\GlmSharp.csproj.CoreCompileInputs.cache
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Debug\GlmSharp.dll
-C:\Users\FLESH\Desktop\GlmSharp-master\GlmSharp-master\GlmSharp\GlmSharp\obj\Debug\GlmSharp.pdb

@@ -30,6 +30,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/Events.h"
 
 #define NON_VALID_ENTITY 0
+#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
+#define FIND_TEXTURE(filepath) TextureManager.FindTexture()
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
@@ -96,6 +98,7 @@ public:
     glm::vec2 const GetPosition() { return scenePosition; }
     bool const WindowHovered() { return windowHovered; }
     bool const UsingGizmos() { return inOperation; }
+    bool const DebugDraw() { return debug_draw; }
 
 private:
     glm::vec2 sceneDimension;   // Dimensions of the viewport
@@ -103,6 +106,7 @@ private:
     glm::vec2 min, max;         // Minimum and maximum position of the viewport
     bool windowHovered;
     bool inOperation;
+    bool debug_draw;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorInspector)

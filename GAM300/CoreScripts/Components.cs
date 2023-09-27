@@ -65,7 +65,57 @@ namespace BeanFactory
         public vec3 localPosition;
         public vec3 localRotation;
         public vec3 localScale;
-        public Transform parent;
+        public vec3 forward
+        {
+            get
+            {
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat *= glm.Translate(new vec3(0,0,1));
+                return glm.Normalized(glm.GetTranslation(mat));
+            }
+        }
+        public vec3 back
+        {
+            get
+            {
+                return -forward;
+            }
+        }
+        public vec3 right
+        {
+            get
+            {
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat *= glm.Translate(new vec3(1, 0, 0));
+                return glm.Normalized(glm.GetTranslation(mat));
+            }
+        }
+
+        public vec3 left
+        {
+            get
+            {
+                return -right;
+            }
+        }
+
+        public vec3 up
+        {
+            get
+            {
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat *= glm.Translate(new vec3(0, 1, 0));
+                return glm.Normalized(glm.GetTranslation(mat));
+            }
+        }
+
+        public vec3 down
+        {
+            get
+            {
+                return -up;
+            }
+        }
     }
 
 

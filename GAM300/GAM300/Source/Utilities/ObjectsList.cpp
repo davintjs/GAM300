@@ -103,7 +103,7 @@ T& OBJECTSLIST::emplace(ObjectIndex index, Args&&... args)
 	if (start->next == nullptr)
 		tail = start;
 	++size_;
-	return start->sparseSet.emplace(index);
+	return start->sparseSet.emplace(index,std::forward<Args>(args)...);
 }
 
 template <typename T, ObjectIndex N>

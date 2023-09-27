@@ -463,8 +463,11 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		PRINT("EMPTY!\n");
 	}
 
-	if (filePath.extension() == ".meta")
+	if (filePath.extension() == ".meta" || filePath.string().find("~") != std::string::npos)
+	{
+		PRINT("IGNORED: ", filePath,'\n');
 		return;
+	}
 
 	switch (pEvent->fileState)
 	{

@@ -22,7 +22,6 @@ layout (location = 15) in vec3 TangentViewPos;
 layout (location = 16) in vec3 TangentFragPos;
 
 
-
 //    vec3 TangentLightPos;
 //    vec3 TangentViewPos;
 //    vec3 TangentFragPos;

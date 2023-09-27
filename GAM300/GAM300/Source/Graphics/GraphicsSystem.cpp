@@ -30,7 +30,8 @@ bool SwappingColorSpace = false;
 
 //Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
-bool gay = false;
+//bool test_button_1 = false;
+//bool test_button_2 = false;
 
 // Naive Solution for now
 
@@ -163,11 +164,11 @@ void PBR_Shader_init()
 
 
 
-unsigned int ReturnTextureIdx(std::string MeshName,GLuint id);
+unsigned int ReturnTextureIdx(std::string MeshName, GLuint id);
 
 void GraphicsSystem::Init()
 {
-	
+
 	//glGenFramebuffers(1, &hdrFBO);
 	//// create floating point color buffer
 	//unsigned int colorBuffer;
@@ -256,7 +257,7 @@ void GraphicsSystem::Init()
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
 	//INIT GRAPHICS HERE
-	
+
 	HDR_Shader_init();
 	PBR_Shader_init();
 
@@ -265,7 +266,7 @@ void GraphicsSystem::Init()
 
 	// Euan RayCasting Testing
 	Line.lineinit();
-	
+
 	// Setting up Positions
 	//testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
@@ -282,17 +283,18 @@ void GraphicsSystem::Update(float dt)
 {
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
+		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
 		std::fill_n(prop.texture, 32, 0.f);
 	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	
+
 	Ray3D temp;
 	bool checkForSelection = Raycasting(temp);
-	
+
 	float intersected = FLT_MAX;
 	float temp_intersect;
-	
+
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
 
@@ -318,6 +320,18 @@ void GraphicsSystem::Update(float dt)
 
 		Lighting_Source.lightpos = transform.translation;
 		Lighting_Source.lightColor = lightSource.lightingColor;
+
+		if (currentScene.Has<MeshRenderer>(entity))
+		{
+			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
+			mesh_component.mr_Albedo = glm::vec4(Lighting_Source.lightColor,1.f);
+
+			mesh_component.mr_metallic = -1.f;
+			mesh_component.mr_roughness = -1.f;
+			mesh_component.ao = -1.f;
+
+		}
+
 	}
 	if (!haveLight)
 	{
@@ -326,32 +340,40 @@ void GraphicsSystem::Update(float dt)
 
 	// Update Loop
 	int i = 0;
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
-	{
-		gay = !gay;
-	}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
+	//{
+	//	test_button_1 = !test_button_1;
+	//}
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_O))
+	//{
+	//	test_button_2 = !test_button_2;
+	//}
+
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
-		
+
 		if (t_Mesh == nullptr)
 		{
 			continue;
 		}
 
 		int index = t_Mesh->index;
-		
+
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
 		GLuint textureID = 0;
 		GLuint normalMapID = 0;
+		GLuint RoughnessID = 0;
+		GLuint MetallicID = 0;
+		GLuint AoID = 0;
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
 			//std::cout << "albedo tex\n";
-			textureID = 
+			textureID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
 		if (renderer.NormalMap != "") {
@@ -360,22 +382,65 @@ void GraphicsSystem::Update(float dt)
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
+
+
+		if (renderer.MetallicTexture != "") {
+			//std::cout << "normal tex\n";
+
+			MetallicID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
+		}
+		if (renderer.RoughnessTexture != "") {
+			//std::cout << "albedo tex\n";
+			RoughnessID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
+		}
+
+		if (renderer.AoTexture != "") {
+			//std::cout << "normal tex\n";
+			AoID =
+				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
+		}
+
+
+
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
-		// button here change norm idx to 33
-		if (gay)
-		{
-			normidx = 33;
-		}
-		//std::cout << normidx << "\n";
-		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 
+
+		float metalidx = float(ReturnTextureIdx(renderer.MeshName, MetallicID));
+		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
+		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
+
+
+		float metal_constant = renderer.mr_metallic;
+		float rough_constant = renderer.mr_roughness;
+		float ao_constant = renderer.ao;
+		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+
+
+		//// button here change norm idx to 33
+		//if (test_button_1)
+		//{
+		//	std::cout << "force change normal\n";
+		//	normidx = 33;
+		//	
+		//}
+		//if (test_button_2)
+		//{
+		//	std::cout << "force change roughness\n";
+		//	roughidx = 33;
+		//}
+		//std::cout << normidx << "\n";
+
+		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
+		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
 		//renderer.mr_Albedo = temp_AlbedoContainer[3];
 		//renderer.mr_Ambient = temp_AmbientContainer[3];
 		//renderer.mr_Diffuse = temp_DiffuseContainer[3];
 		//renderer.mr_Shininess = temp_ShininessContainer[3];
 		//renderer.mr_Specular = temp_SpecularContainer[3];
-		
+
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
 		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
@@ -389,9 +454,9 @@ void GraphicsSystem::Update(float dt)
 		// newstring
 		for (char namecount = 0; namecount < maxcount; ++namecount) {
 			std::string newName = renderer.MeshName;
-			
+
 			newName += ('1' + namecount);
-			
+
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
@@ -401,7 +466,7 @@ void GraphicsSystem::Update(float dt)
 			GLuint normalMapID = 0;
 			//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 			// use bool to see if texture exist instead...
-		
+
 			/*if (currentScene.HasComponent<Texture>(entity)) {
 				for (int j = 0; j <= properties[newName].textureCount; ++j) {
 					if (properties[newName].texture[j] == texID) {
@@ -434,6 +499,13 @@ void GraphicsSystem::Update(float dt)
 			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
+			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+
 			++(properties[newName].iter);
 		}
 		++i;
@@ -475,14 +547,15 @@ void GraphicsSystem::Update(float dt)
 				}
 			}
 		}
-		
+
 	}
 
+	SetupGrid(100);
 
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-	if (intersected == FLT_MAX && checkForSelection) 
+	if (intersected == FLT_MAX && checkForSelection)
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		SelectedEntityEvent selectedEvent{ 0};
+		SelectedEntityEvent selectedEvent{ 0 };
 		EVENTS.Publish(&selectedEvent);
 	}
 
@@ -496,16 +569,16 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update(dt);
 	// Dont delete this -> To run on lab computers
-	
+
 	/*GLint maxVertexAttribs;
 	glGetProgramiv(temp_instance_shader.GetHandle(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxVertexAttribs);
 	std::cout << "max vertex attribs :" << maxVertexAttribs << "\n";*/
-	
+
 
 
 
 	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
-	
+
 	/*
 	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
 
@@ -515,8 +588,8 @@ void GraphicsSystem::Update(float dt)
 
 	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
 	*/
-		
-	
+
+
 
 	// Using Mesh Manager
 	/*
@@ -547,7 +620,7 @@ void GraphicsSystem::Update(float dt)
 	Draw(); // call draw after update
 
 	EditorCam.getFramebuffer().unbind();
-	
+
 	EditorCam.getFramebuffer().bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
@@ -555,7 +628,7 @@ void GraphicsSystem::Update(float dt)
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
 	// Bean: For unbinding framebuffer
-	
+
 	HDR_Shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
@@ -604,9 +677,9 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	unsigned int prim_count, GLenum prim_type, LightProperties LightSource,
 	glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin)
 {
-	
-	
-	
+
+
+
 
 	//testBox.instanceDraw(EntityRenderLimit);
 
@@ -614,19 +687,33 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 	glEnable(GL_DEPTH_TEST); // might be sus to place this here
 
-	temp_instance_shader.Use();
+	//temp_instance_shader.Use();
+	temp_PBR_shader.Use();
+
+
+
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
+	//GLint uniform1 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+	//GLint uniform2 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+	//GLint uniform3 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+	//GLint uniform4 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+	//GLint uniform5 =
+	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
 	GLint uniform1 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "persp_projection");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "View");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "View");
 	GLint uniform3 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightColor");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightColor");
 	GLint uniform4 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightPos");
 	GLint uniform5 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "camPos");
 
 
 
@@ -645,7 +732,6 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glm::value_ptr(EditorCam.getViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(LightSource.lightColor));
-	//std::cout << "LightSource Light COlor" << LightSource.lightColor.x << "\n";
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(LightSource.lightpos));
 	glUniform3fv(uniform5, 1,
@@ -655,12 +741,18 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 
 	glBindVertexArray(vaoid);
-	glDrawElementsInstanced(GL_TRIANGLES, prim_count, GL_UNSIGNED_INT, 0, instance_count);
+	glDrawElementsInstanced(prim_type, prim_count, GL_UNSIGNED_INT, 0, instance_count);
 	glBindVertexArray(0);
 
 	//glBindVertexArray(0);
 //}
-	temp_instance_shader.UnUse();
+
+
+
+
+	//temp_instance_shader.UnUse();
+
+	temp_PBR_shader.UnUse();
 }
 
 
@@ -670,12 +762,9 @@ void GraphicsSystem::Draw() {
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
 
-
-
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
-		
 		/*for (size_t i = 0; i < 32; i++)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
@@ -688,25 +777,36 @@ void GraphicsSystem::Draw() {
 		//glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
 		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
 		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
+
+		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
@@ -716,50 +816,61 @@ void GraphicsSystem::Draw() {
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
-		
+
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 		for (int i = 0; i < 32; ++i) {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, Lighting_Source,
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
-	
+
 		// FOR DEBUG DRAW
-		if (prop.debugVAO) {
-			Draw_Debug(prop.debugVAO, prop.iter);
+		if (EditorScene::Instance().DebugDraw())
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			if(prop.debugVAO)
+				Draw_Debug(prop.debugVAO, prop.iter);
 		}
-		/*glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+
+		if (name == "Line")
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			if (prop.VAO)
+				Draw_Grid(prop.VAO, prop.iter);
+		}
 
 		prop.iter = 0;
 	}
 
 
-	// This is to render the Rays
-	if (Ray_Container.size() > 0)
-	{
+	//// This is to render the Rays
+	//if (Ray_Container.size() > 0)
+	//{
 
-		for (int i = 0; i < Ray_Container.size(); ++i)
-		{
-			Ray3D ray = Ray_Container[i];
+	//	for (int i = 0; i < Ray_Container.size(); ++i)
+	//	{
+	//		Ray3D ray = Ray_Container[i];
 
-			//std::cout << "ray " << ray.origin.x << "\n";
-			//std::cout << "ray direc" << ray.direction.x << "\n";
+	//		//std::cout << "ray " << ray.origin.x << "\n";
+	//		//std::cout << "ray direc" << ray.direction.x << "\n";
 
-			glm::mat4 SRT
-			{
-				glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
-				glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
-				glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
-				glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
-			};
-			//std::cout << "in here draw\n";
-			Line.debugline_draw(SRT);
+	//		glm::mat4 SRT
+	//		{
+	//			glm::vec4(ray.direction.x * 1000000.f, 0.f , 0.f , 0.f),
+	//			glm::vec4(0.f, ray.direction.y * 1000000.f, 0.f , 0.f),
+	//			glm::vec4(0.f , 0.f , ray.direction.z * 1000000.f , 0.f),
+	//			glm::vec4(ray.origin.x, ray.origin.y, ray.origin.z,1.f)
+	//		};
+	//		//std::cout << "in here draw\n";
+	//		Line.debugline_draw(SRT);
 
-		}
-	}
+	//	}
+	//}
 
 	glDepthFunc(GL_LEQUAL);
 	SkyBox_Model.SkyBoxDraw(Skybox_Tex);
@@ -791,7 +902,7 @@ unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
 	if (!id) {
 		return 33;
 	}
-	for (unsigned int iter = 0; iter < properties[MeshName].textureCount+1; ++iter) {
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount + 1; ++iter) {
 		if (properties[MeshName].texture[iter] == 0) {
 			properties[MeshName].texture[iter] = id;
 			properties[MeshName].textureCount++;
@@ -815,6 +926,8 @@ void GraphicsSystem::Exit()
 
 void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 {
+	glm::vec3 color{ 1.f, 0.f, 1.f };
+
 	temp_debug_shader.Use();
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
@@ -822,10 +935,13 @@ void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
 		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "uColor");
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getPerspMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(vaoid);
 	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
@@ -834,4 +950,51 @@ void GraphicsSystem::Draw_Debug(GLuint vaoid, unsigned int instance_count)
 	// unbind and free stuff
 	glBindVertexArray(0);
 	temp_debug_shader.UnUse();
+}
+
+void GraphicsSystem::Draw_Grid(GLuint vaoid, unsigned int instance_count)
+{
+	glm::vec3 color{ 1.f, 1.f, 1.f };
+
+	temp_debug_shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(temp_debug_shader.GetHandle(), "uColor");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
+
+	glBindVertexArray(vaoid);
+	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
+	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, instance_count);
+
+	// unbind and free stuff
+	glBindVertexArray(0);
+	temp_debug_shader.UnUse();
+}
+
+void GraphicsSystem::SetupGrid(int gridamt) 
+{
+	float spacing = 100.f;
+	float length = gridamt * spacing * 0.5f;
+
+	properties["Line"].iter = gridamt * 2;
+
+	for (int i = 0; i < gridamt; i++)
+	{
+		glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
+		glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
+		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
+
+		properties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
+		properties["Line"].entitySRT[i + gridamt] = transMatrixX * rotMatrix * scalMatrix; // x axis
+	}
 }

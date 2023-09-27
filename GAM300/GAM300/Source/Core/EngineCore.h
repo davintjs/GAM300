@@ -191,7 +191,8 @@ public:
 	void CallbackSceneStart(SceneStartEvent* pEvent)
 	{
 		mode = ENUM_SYSTEM_RUNTIME;
-	}
+	}	
+	
 
 	std::map<std::string, float>system_times;
 	float systemtotaltime;
