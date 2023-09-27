@@ -469,6 +469,8 @@ void MESH_Manager::CreateInstanceSphere()
     const unsigned int Y_SEGMENTS = 64;
     const float PI = 3.14159265359f;
 
+    glm::vec3 min(FLT_MAX);
+    glm::vec3 max(FLT_MIN);
 
     for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
     {
@@ -483,6 +485,14 @@ void MESH_Manager::CreateInstanceSphere()
             positions.push_back(glm::vec3(xPos, yPos, zPos));
             uv.push_back(glm::vec2(xSegment, ySegment));
             normals.push_back(glm::vec3(xPos, yPos, zPos));
+            min.x = std::min(xPos, min.x);
+            min.y = std::min(yPos, min.y);
+            min.z = std::min(zPos, min.z);
+
+            max.x = std::max(xPos, max.x);
+            max.y = std::max(yPos, max.y);
+            max.z = std::max(zPos, max.z);
+
         }
     }
     bool oddRow = false;
@@ -548,8 +558,11 @@ void MESH_Manager::CreateInstanceSphere()
     newMesh.prim = GL_TRIANGLE_STRIP;
     newMesh.Drawcounts.push_back(indices.size());
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Sphere"]));
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Sphere"]);
 
+    newMesh.vertices_min = min;
+    newMesh.vertices_max = max;
+
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Sphere"]);
     mContainer.emplace(std::string("Sphere"), newMesh);
 
 
