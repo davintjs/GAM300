@@ -163,8 +163,8 @@ struct Transform : Object
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
 	
-	Transform* parent = nullptr;
-	std::vector<Transform*> child;
+	Engine::UUID parent=0;
+	std::vector<Engine::UUID> child;
 	bool isLeaf();
 	bool isChild();
 	glm::mat4 GetWorldMatrix() const;
@@ -173,7 +173,6 @@ struct Transform : Object
 	bool isEntityChild(Transform& ent);
 	void SetParent(Transform* newParent);
 	void RemoveChild(Transform* t);
-	~Transform();
 	property_vtable();
 };
 
@@ -296,6 +295,8 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	std::string name;
+	Script() {}
+	Script(const char* _name):name{_name}{}
 	std::map<std::string, Field> fields;
 	property_vtable();
 };
@@ -315,10 +316,22 @@ struct MeshRenderer : Object
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
+
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
 	float mr_Shininess;
+
+
+	float mr_metallic = 0.5f;
+	float mr_roughness = 0.5f;
+	float ao = 0.5f;
+
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture= "";
+
+
 
 	property_vtable();
 };
@@ -378,10 +391,6 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
-		}\
-		else if constexpr(!std::is_same<TYPE,void>())\
-		{\
-			return nullptr; \
 		}\
 	}\
 	template<typename T, typename... Ts>\

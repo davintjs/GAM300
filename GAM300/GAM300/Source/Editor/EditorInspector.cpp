@@ -24,6 +24,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <variant>
 #include "PropertyConfig.h"
 
+#define BUTTON_HEIGHT .1 //Percent
+#define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
 
 static ImGuiTableFlags windowFlags =
@@ -32,6 +34,8 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
+bool isAddingReference = false;
+void* pEditedContainer{ nullptr };
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -222,16 +226,61 @@ void DisplayType(const char* name, Vector2& val)
 }
 
 template <typename T>
-void DisplayType(const char* name, T*& container)
+void AddReferencePanel(T* container)
+{
+    //ZACH: If no one is adding reference or the container does not match
+    if (!isAddingReference || (T*)pEditedContainer != container)
+    if (!isAddingReference || (T*)pEditedContainer != container)
+    {
+        return;
+    }
+    Scene& scene = MySceneManager.GetCurrentScene();
+    static ImGuiTextFilter filter;
+    static std::string windowName;
+    windowName = "Add ";
+    windowName += GetType::Name<T>();
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
+    windowName += " Reference";
+    if (ImGui::Begin(windowName.c_str(), &isAddingReference))
+    {
+        ImGui::PushItemWidth(-1);
+        filter.Draw("##References");
+        ImGui::PopItemWidth();
+        static std::string buttonName{};
+        for (T& object : scene.GetArray<T>())
+        {
+            ImVec2 buttonSize = ImGui::GetWindowSize();
+            buttonSize.y *= (float)BUTTON_HEIGHT;
+            Tag& tag = scene.Get<Tag>(object);
+            buttonName = tag.name;
+            if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
+            {
+                isAddingReference = false;
+                Handle* value = (Handle*)container;
+                *value = Handle(object.EUID(),object.UUID());
+                break;
+            }
+        }
+        ImGui::End();
+    }
+    //Reset the edited container back to false
+    if (isAddingReference == false)
+    {
+        pEditedContainer = nullptr;
+    }
+}
+
+template <typename T>
+void DisplayType(const char* name, T* container, const char* altName = nullptr)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
-
         static std::string btnName;
-        Engine::UUID* value = reinterpret_cast<Engine::UUID*>(container);
-        if (*value != 0)
+        Handle* value = (Handle*)container;
+        if (value->euid != 0)
         {
-            btnName = MySceneManager.GetCurrentScene().Get<Tag>(*value).name;
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(value->euid).name;
         }
         else
         {
@@ -244,22 +293,33 @@ void DisplayType(const char* name, T*& container)
         }
         else
         {
-            btnName += GetType::Name<T>();
+            if (altName)
+            {
+                btnName += altName;
+            }
+            else
+            {
+                btnName += GetType::Name<T>();
+            }
         }
         btnName += ")";
         ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
-
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        {
+            isAddingReference = true;
+            pEditedContainer = reinterpret_cast<void*>(container);
+        }
         if (ImGui::BeginDragDropTarget())
         {
-            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Object");
+            const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetType::Name<T>());
             if (payload)
             {
-                container = (T*)(*reinterpret_cast<void**>(payload->Data));
+                *value = *(Handle*)payload->Data;
             }
             ImGui::EndDragDropTarget();
         }
+        AddReferencePanel(container);
     }
-    //Store uuid;
 }
 
 template <typename T, typename... Ts>
@@ -270,7 +330,14 @@ void DisplayField(const char* name, Field& field)
         if (field.fType < AllObjectTypes::Size())
         {
             T* value = reinterpret_cast<T*>(field.data);
-            DisplayType(name,value);
+            if constexpr (std::is_same<T, Script>())
+            {
+                DisplayType(name, value,field.typeName.c_str());
+            }
+            else
+            {
+                DisplayType(name, value);
+            }
         }
         else
         {
@@ -568,26 +635,9 @@ void DisplayComponent(Script& script)
     {
         const char* name = pair.first.c_str();
         Field& field{ pair.second };
-        //    //Component Enum + ComponentType Enum
-        if (field.fType < AllObjectTypes::Size())
-        {       
-            size_t cType = field.fType;
-            if (cType = GetType::E<Script>())
-            {
-            }
-            else
-            {
-                Display(name, field);
-                ScriptSetFieldEvent e{ script,name };
-                EVENTS.Publish(&e);
-            }
-        }
-        else
-        {
-            Display(name, field);
-            ScriptSetFieldEvent e{ script,name };
-            EVENTS.Publish(&e);
-        }
+        Display(name, field);
+        ScriptSetFieldEvent e{ script,name };
+        EVENTS.Publish(&e);
     }
 }
 //template <>
@@ -639,9 +689,10 @@ void DisplayComponentHelper(T& component)
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
     //For Zac to change to component is_enabled
-    static bool checkbox = true;
+    bool checkbox = curr_scene.IsActive(component);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
+    curr_scene.SetActive(component,checkbox);
 
     ImGui::PopStyleColor(); 
     
@@ -769,7 +820,7 @@ private:
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (curr_scene.HasComponent<T1>(entity)) {
+            if (curr_scene.Has<T1>(entity)) {
                 //dont display tag component as it is already on top of the inspector
                 if constexpr (!std::is_same<T1, Tag>())
                 {   
@@ -813,7 +864,7 @@ private:
     void AddNext(Entity& entity, Scene& scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!scene.HasComponent<T1>(entity))
+            if (!scene.Has<T1>(entity))
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
@@ -824,10 +875,27 @@ private:
         }
         else
         {
-            if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+            if constexpr (std::is_same_v<T1, Script>)
             {
-                scene.Add<T1>(entity);
-                EditorInspector::Instance().isAddPanel = false;
+                GetScriptNamesEvent nameEvent;
+                EVENTS.Publish(&nameEvent);
+
+                for (size_t i = 0; i < nameEvent.count; ++i)
+                {
+                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    {
+                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        EditorInspector::Instance().isAddPanel = false;
+                    }
+                }
+            }
+            else
+            {
+                if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                {
+                    scene.Add<T1>(entity);
+                    EditorInspector::Instance().isAddPanel = false;
+                }
             }
         }
 

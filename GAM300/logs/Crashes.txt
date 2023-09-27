@@ -1,0 +1,5 @@
+[2023-09-27 14:08:34.426] [Error] [critical] 
+Caused By:	inputFile
+Info:		Error opening file to load asset into memory!
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 274)
+

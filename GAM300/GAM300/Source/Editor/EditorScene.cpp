@@ -186,11 +186,11 @@ void EditorScene::Update(float dt)
         //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
-        Entity* pEntity = EDITOR.GetSelectedEntity();
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-        if (pEntity != nullptr)
+        if (EDITOR.GetSelectedEntity() != 0)
         {
-            Transform& trans = currentScene.Get<Transform>(*pEntity);
+            Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+            Transform& trans = currentScene.Get<Transform>(entity);
             for (int i = 0; i < 3; ++i)
             {
                 if (fabs(trans.scale[i]) < 0.001f)
@@ -207,7 +207,8 @@ void EditorScene::Update(float dt)
                 EditorCam.canMove = false;
                 if (trans.parent)
                 {
-                    glm::mat4 parentTransform = trans.parent->GetWorldMatrix();
+                    Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
+                    glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                     transform_1 = glm::inverse(parentTransform) * transform_1;
                 }
                 glm::vec3 a_translation;

@@ -634,12 +634,12 @@ void ModelLoader::SerializeBinaryGeom(const std::string filepath)
 		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
 		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
 
-		size_t texSize = mat.textures.size(); // Save all textures of this material
-		serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-		if (texSize > 0)
-		{
-			serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
-		}
+		//size_t texSize = mat.textures.size(); // Save all textures of this material
+		//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+		//if (texSize > 0)
+		//{
+		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
+		//}
 	}
 
 	serializeFile.flush();

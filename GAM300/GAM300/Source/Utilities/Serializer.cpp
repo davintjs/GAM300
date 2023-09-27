@@ -24,9 +24,9 @@ bool SerializeScene(Scene& _scene)
     out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
-    for (Entity* entity : EditorHierarchy::Instance().layer)
+    for (Engine::UUID euid : _scene.layer)
     {
-        bool serialized = SerializeEntity(out, *entity, _scene);
+        bool serialized = SerializeEntity(out, _scene.Get<Entity>(euid), _scene);
         E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }
 
@@ -70,13 +70,13 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     // Bean: Components should have its own category like Entities, and just loop thru
-    if (_scene.HasComponent<Tag>(_entity))
+    if (_scene.Has<Tag>(_entity))
     {
         auto& component = _scene.Get<Tag>(_entity);
         out << YAML::Key << "m_Name" << YAML::Value << component.name;
     }
 
-    if (_scene.HasComponent<Transform>(_entity))
+    if (_scene.Has<Transform>(_entity))
     {
         auto& component = _scene.Get<Transform>(_entity);
         out << YAML::Key << "m_Position" << YAML::Value << component.translation;
@@ -85,7 +85,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
         out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
 
         if (component.parent)
-            out << YAML::Key << "m_Parent" << YAML::Value << _scene.Get<Entity>(*component.parent).EUID();
+            out << YAML::Key << "m_Parent" << YAML::Value << component.parent;
         else
             out << YAML::Key << "m_Parent" << YAML::Value << 0;
     }

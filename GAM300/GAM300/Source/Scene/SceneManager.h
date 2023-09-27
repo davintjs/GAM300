@@ -24,6 +24,8 @@ public:
 
 	bool DuplicateScene();
 
+	bool HasScene();
+
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
 	
 	void CallbackCreateScene(CreateSceneEvent* pEvent);
@@ -33,6 +35,9 @@ public:
 	void CallbackSaveScene(SaveSceneEvent* pEvent);
 
 	void CallbackIsNewScene(IsNewSceneEvent* pEvent);
+
+	void CallbackSceneStart(SceneStartEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 
 private:
 	std::list<Scene> loadedScenes;
