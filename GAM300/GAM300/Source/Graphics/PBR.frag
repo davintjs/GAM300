@@ -135,9 +135,9 @@ vec3 lightpos_test[4];
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
 
-    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.5f); // .x is metallic texture
-    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.5f);    // .y is roughness texture
-    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.5f);    // .z is ao texture
+    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.01f); // .x is metallic texture
+    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.01f);    // .y is roughness texture
+    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.01f);    // .z is ao texture
 
 
     vec3 albedo;
@@ -157,27 +157,31 @@ vec3 lightpos_test[4];
 
     if (Metallic_index < 32)
     {
-        metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
-       
+        metallic = texture(myTextureSampler[Roughness_index], TexCoords).r;   
     }
 //    else
 //    {
-//        metallic = frag_Metal_Rough_AO_constant.x;
+//        metallic = 0.6f;
 //    }
     if (Roughness_index < 32)
     {
-        roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+        roughness = texture(myTextureSampler[Metallic_index], TexCoords).r;    
         
     }
 //    else
 //    {
-//        roughness = frag_Metal_Rough_AO_constant.y;
+//        roughness = 0.6f;
 //    }
     if (AO_index < 32)
     {
         ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
-       
     }
+
+
+
+//    FragColor = vec4(metallic,1.f,1.f,1.f);
+//    return;
+
 //    else
 //    {
 //        ao = frag_Metal_Rough_AO_constant.z;
@@ -210,7 +214,7 @@ vec3 lightpos_test[4];
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
-    for(int i = 0; i < 4; ++i) 
+    for(int i = 0; i < 1; ++i) 
     {
         
 //        return;
@@ -230,8 +234,8 @@ vec3 lightpos_test[4];
         vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
            
         vec3 numerator    = NDF * G * F; 
-       float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-//        float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+//       float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+        float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
         vec3 specular = numerator / denominator;
         
         // kS is equal to Fresnel
@@ -243,13 +247,13 @@ vec3 lightpos_test[4];
         // multiply kD by the inverse metalness such that only non-metals 
         // have diffuse lighting, or a linear blend if partly metal (pure metals
         // have no diffuse light).
-        kD *= 1.0 - metallic;	  
+        kD *=( 1.0 - metallic);	  
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
 //        radiance = vec3(1.f,1.f,1.f);
         // add to outgoing radiance Lo
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += ( (kD * albedo) / (PI + specular)) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
     if(Lo == vec3(0.f,0.f,0.f))
     {

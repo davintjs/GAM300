@@ -163,11 +163,11 @@ void PBR_Shader_init()
 
 
 
-unsigned int ReturnTextureIdx(std::string MeshName,GLuint id);
+unsigned int ReturnTextureIdx(std::string MeshName, GLuint id);
 
 void GraphicsSystem::Init()
 {
-	
+
 	//glGenFramebuffers(1, &hdrFBO);
 	//// create floating point color buffer
 	//unsigned int colorBuffer;
@@ -256,7 +256,7 @@ void GraphicsSystem::Init()
 	//std::cout << "-- Graphics Init -- " << std::endl;
 
 	//INIT GRAPHICS HERE
-	
+
 	HDR_Shader_init();
 	PBR_Shader_init();
 
@@ -265,7 +265,7 @@ void GraphicsSystem::Init()
 
 	// Euan RayCasting Testing
 	Line.lineinit();
-	
+
 	// Setting up Positions
 	//testmodel.position = glm::vec3(0.f, 0.f, -800.f);
 	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
@@ -287,13 +287,13 @@ void GraphicsSystem::Update(float dt)
 	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	
+
 	Ray3D temp;
 	bool checkForSelection = Raycasting(temp);
-	
+
 	float intersected = FLT_MAX;
 	float temp_intersect;
-	
+
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
 
@@ -334,14 +334,14 @@ void GraphicsSystem::Update(float dt)
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
-		
+
 		if (t_Mesh == nullptr)
 		{
 			continue;
 		}
 
 		int index = t_Mesh->index;
-		
+
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
@@ -355,7 +355,7 @@ void GraphicsSystem::Update(float dt)
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
 			//std::cout << "albedo tex\n";
-			textureID = 
+			textureID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
 		if (renderer.NormalMap != "") {
@@ -382,7 +382,7 @@ void GraphicsSystem::Update(float dt)
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
 		}
 
-		
+
 
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
@@ -393,10 +393,11 @@ void GraphicsSystem::Update(float dt)
 		// button here change norm idx to 33
 		if (gay)
 		{
-			normidx = 33;
+			metalidx = 33;
+			roughidx = 33;
 		}
 		//std::cout << normidx << "\n";
-		
+
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
 		//renderer.mr_Albedo = temp_AlbedoContainer[3];
@@ -404,7 +405,7 @@ void GraphicsSystem::Update(float dt)
 		//renderer.mr_Diffuse = temp_DiffuseContainer[3];
 		//renderer.mr_Shininess = temp_ShininessContainer[3];
 		//renderer.mr_Specular = temp_SpecularContainer[3];
-		
+
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
 		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
@@ -418,9 +419,9 @@ void GraphicsSystem::Update(float dt)
 		// newstring
 		for (char namecount = 0; namecount < maxcount; ++namecount) {
 			std::string newName = renderer.MeshName;
-			
+
 			newName += ('1' + namecount);
-			
+
 			if (properties.find(newName) == properties.end()) {
 				break;
 			}
@@ -430,7 +431,7 @@ void GraphicsSystem::Update(float dt)
 			GLuint normalMapID = 0;
 			//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 			// use bool to see if texture exist instead...
-		
+
 			/*if (currentScene.HasComponent<Texture>(entity)) {
 				for (int j = 0; j <= properties[newName].textureCount; ++j) {
 					if (properties[newName].texture[j] == texID) {
@@ -510,14 +511,14 @@ void GraphicsSystem::Update(float dt)
 				}
 			}
 		}
-		
+
 	}
 
 
 	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-	if (intersected == FLT_MAX && checkForSelection) 
+	if (intersected == FLT_MAX && checkForSelection)
 	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		SelectedEntityEvent selectedEvent{ 0};
+		SelectedEntityEvent selectedEvent{ 0 };
 		EVENTS.Publish(&selectedEvent);
 	}
 
@@ -531,16 +532,16 @@ void GraphicsSystem::Update(float dt)
 
 	EditorCam.Update(dt);
 	// Dont delete this -> To run on lab computers
-	
+
 	/*GLint maxVertexAttribs;
 	glGetProgramiv(temp_instance_shader.GetHandle(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxVertexAttribs);
 	std::cout << "max vertex attribs :" << maxVertexAttribs << "\n";*/
-	
+
 
 
 
 	// DONT DELETE THIS - EUAN need to check if like got padding or anything cause it wil break the instancing
-	
+
 	/*
 	std::cout << "size of material struct is : " << sizeof(Materials) << "\n";
 
@@ -550,8 +551,8 @@ void GraphicsSystem::Update(float dt)
 
 	std::cout << "Size of Materials array: " << sizeOfArray << " bytes" << std::endl;
 	*/
-		
-	
+
+
 
 	// Using Mesh Manager
 	/*
@@ -582,7 +583,7 @@ void GraphicsSystem::Update(float dt)
 	Draw(); // call draw after update
 
 	EditorCam.getFramebuffer().unbind();
-	
+
 	EditorCam.getFramebuffer().bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
@@ -590,7 +591,7 @@ void GraphicsSystem::Update(float dt)
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
 	// Bean: For unbinding framebuffer
-	
+
 	HDR_Shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
@@ -639,9 +640,9 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	unsigned int prim_count, GLenum prim_type, LightProperties LightSource,
 	glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin)
 {
-	
-	
-	
+
+
+
 
 	//testBox.instanceDraw(EntityRenderLimit);
 
@@ -729,7 +730,7 @@ void GraphicsSystem::Draw() {
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
-		
+
 		/*for (size_t i = 0; i < 32; i++)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
@@ -742,7 +743,7 @@ void GraphicsSystem::Draw() {
 		//glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
 		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
 		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -783,15 +784,15 @@ void GraphicsSystem::Draw() {
 		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
-		
+
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 		for (int i = 0; i < 32; ++i) {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source, 
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source,
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
-	
+
 		// FOR DEBUG DRAW
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -856,7 +857,7 @@ unsigned int ReturnTextureIdx(std::string MeshName, GLuint id) {
 	if (!id) {
 		return 33;
 	}
-	for (unsigned int iter = 0; iter < properties[MeshName].textureCount+1; ++iter) {
+	for (unsigned int iter = 0; iter < properties[MeshName].textureCount + 1; ++iter) {
 		if (properties[MeshName].texture[iter] == 0) {
 			properties[MeshName].texture[iter] = id;
 			properties[MeshName].textureCount++;
