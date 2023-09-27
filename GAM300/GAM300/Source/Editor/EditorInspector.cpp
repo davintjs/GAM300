@@ -35,7 +35,7 @@ ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
 bool isAddingReference = false;
-void** pEditedContainer{ nullptr };
+void* pEditedContainer{ nullptr };
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -229,7 +229,7 @@ template <typename T>
 void AddReferencePanel(T* container)
 {
     //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference)
+    if (!isAddingReference || (T*)pEditedContainer != container)
     {
         return;
     }
@@ -271,7 +271,7 @@ void AddReferencePanel(T* container)
 }
 
 template <typename T>
-void DisplayType(const char* name, T* container)
+void DisplayType(const char* name, T* container, const char* altName = nullptr)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
@@ -292,13 +292,21 @@ void DisplayType(const char* name, T* container)
         }
         else
         {
-            btnName += GetType::Name<T>();
+            if (altName)
+            {
+                btnName += altName;
+            }
+            else
+            {
+                btnName += GetType::Name<T>();
+            }
         }
         btnName += ")";
         ImGui::Button(btnName.c_str(), ImVec2(-FLT_MIN, 0.f));
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             isAddingReference = true;
+            pEditedContainer = reinterpret_cast<void*>(container);
         }
         if (ImGui::BeginDragDropTarget())
         {
@@ -321,7 +329,14 @@ void DisplayField(const char* name, Field& field)
         if (field.fType < AllObjectTypes::Size())
         {
             T* value = reinterpret_cast<T*>(field.data);
-            DisplayType(name,value);
+            if constexpr (std::is_same<T, Script>())
+            {
+                DisplayType(name, value,field.typeName.c_str());
+            }
+            else
+            {
+                DisplayType(name, value);
+            }
         }
         else
         {

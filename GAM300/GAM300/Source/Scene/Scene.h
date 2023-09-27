@@ -276,6 +276,12 @@ public:
 		}
 	}
 
+	template<typename T>
+	T& Get(Handle& handle)
+	{
+		return Get<T>(handle.euid, handle.uuid);
+	}
+
 	template<typename T, typename Owner>
 	T& Get(Owner& object)
 	{
@@ -284,7 +290,7 @@ public:
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
-	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(((Engine::UUID)pObject)));
+	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
 
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)

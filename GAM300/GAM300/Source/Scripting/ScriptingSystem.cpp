@@ -450,7 +450,6 @@ void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	//ACQUIRE_SCOPED_LOCK(Assets);
 	ACQUIRE_SCOPED_LOCK(Mono);
 	for (uint32_t hand : gcHandles)
 	{
@@ -543,14 +542,14 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Engine::UUID euid = *(Engine::UUID*)field.data;
+		Handle handle = *(Handle*)field.data;
 		Scene& scene = MySceneManager.GetCurrentScene();
-		if (euid == 0)
+		if (handle.euid == 0)
 		{
 			mono_field_set_value(instance, mClassField, nullptr);
 			return;
 		}
-		void* obj = scene.GetByUUID(field.fType, (void*)euid);
+		void* obj = scene.GetByUUID(field.fType, &handle);
 		if (field.fType == GetType::E<Script>())
 		{
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)obj));
