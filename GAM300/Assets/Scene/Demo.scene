@@ -85,17 +85,27 @@ GameObject:
   m_Name: Light
   m_Position: [0, 0, 0]
   m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Scale: [10, 10, 10]
   m_Children:
     []
   m_Parent: 0
   m_Components:
+    - component: {fileID: 13061232690764554647}  # MeshRenderer
     - component: {fileID: 17396916668165317090}  # LightSource
+---
+MeshRenderer:
+  EUID: 15747035786140600945
+  UUID: 13061232690764554647
+  Mr_Albedo: [1, 50000, 50000, 50000]
+  Mr_Specular: [0, 0, 0, 0]
+  Mr_Diffuse: [0, 0, 0, 0]
+  Mr_Ambient: [0, 0, 0, 0]
+  Mr_Shininess: 0
 ---
 LightSource:
   EUID: 15747035786140600945
   UUID: 17396916668165317090
-  LightingColor: [1, 1, 1]
+  LightingColor: [50000, 50000, 50000]
 ---
 GameObject:
   m_EUID: 16161311050767057142
@@ -121,4 +131,12 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    []
+    - component: {fileID: 9150750579475757610}  # Script
+---
+Script:
+  EUID: 10468212378749459511
+  UUID: 9150750579475757610
+  Name: Player
+  gameObj: {fileID: 16161311050767057142}  # GameObject
+  player2: {fileID: 9150750579475757610}  # Component
+  speed: 5
