@@ -727,7 +727,7 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 
 
 	glBindVertexArray(vaoid);
-	glDrawElementsInstanced(GL_TRIANGLES, prim_count, GL_UNSIGNED_INT, 0, instance_count);
+	glDrawElementsInstanced(prim_type, prim_count, GL_UNSIGNED_INT, 0, instance_count);
 	glBindVertexArray(0);
 
 	//glBindVertexArray(0);
@@ -813,7 +813,7 @@ void GraphicsSystem::Draw() {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, GL_TRIANGLES, Lighting_Source,
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, Lighting_Source,
 			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
