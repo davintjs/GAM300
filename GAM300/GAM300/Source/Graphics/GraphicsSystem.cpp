@@ -831,8 +831,7 @@ void GraphicsSystem::Draw() {
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			if (EditorScene::Instance().DebugDraw())
+			if(prop.debugVAO)
 				Draw_Debug(prop.debugVAO, prop.iter);
 		}
 
@@ -841,8 +840,8 @@ void GraphicsSystem::Draw() {
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			Draw_Grid(prop.VAO, prop.iter);
+			if (prop.VAO)
+				Draw_Grid(prop.VAO, prop.iter);
 		}
 
 		prop.iter = 0;
