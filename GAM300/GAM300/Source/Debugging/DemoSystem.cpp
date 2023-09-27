@@ -41,7 +41,9 @@ void DemoSystem::Init()
 	MeshRenderer& titrender2 = *scene.Add<MeshRenderer>(titty2);
 	titrender2.MeshName = "Skull_textured";
 	titrender2.AlbedoTexture = "TD_Checker_Base_Color";
-	titrender2.NormalMap = "";
+	titrender2.NormalMap = "TD_Checker_Base_Color";
+	titrender2.RoughnessTexture = "TD_Checker_Roughness";
+	titrender2.AoTexture = "TD_Checker_Mixed_AO";
 	scene.Get<Transform>(titty).translation = Vector3(-150.f, 100.f, 0.f);
 	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
 

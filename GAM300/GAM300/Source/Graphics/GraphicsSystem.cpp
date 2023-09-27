@@ -30,7 +30,8 @@ bool SwappingColorSpace = false;
 
 //Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
-bool gay = false;
+bool test_button_1 = false;
+bool test_button_2 = false;
 
 // Naive Solution for now
 
@@ -282,7 +283,7 @@ void GraphicsSystem::Update(float dt)
 {
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
-		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(0.f));
+		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
 		std::fill_n(prop.texture, 32, 0.f);
 	}
 	//std::cout << "-- Graphics Update -- " << std::endl;
@@ -329,7 +330,11 @@ void GraphicsSystem::Update(float dt)
 	int i = 0;
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_P))
 	{
-		gay = !gay;
+		test_button_1 = !test_button_1;
+	}
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_O))
+	{
+		test_button_2 = !test_button_2;
 	}
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
@@ -391,9 +396,15 @@ void GraphicsSystem::Update(float dt)
 		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
 
 		// button here change norm idx to 33
-		if (gay)
+		if (test_button_1)
 		{
-			metalidx = 33;
+			std::cout << "force change normal\n";
+			normidx = 33;
+			
+		}
+		if (test_button_2)
+		{
+			std::cout << "force change roughness\n";
 			roughidx = 33;
 		}
 		//std::cout << normidx << "\n";

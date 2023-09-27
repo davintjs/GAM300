@@ -55,9 +55,10 @@ const float PI = 3.14159265359;
 // technique somewhere later in the normal mapping tutorial.
 vec3 getNormalFromMap(int NM_index)
 {
-//    vec3 normal = texture(myTextureSampler[NM_index], TexCoords).xyz;
-    vec3 tangentNormal = (texture(myTextureSampler[NM_index], TexCoords).rgb * 2.0) - 1.0;
-//    normal.z = normal.z == 0 ? 1 : normal.z;
+    vec3 normal = texture(myTextureSampler[NM_index], TexCoords).xyz;
+    normal.z = normal.z == 0 ? 1 : normal.z;
+
+    vec3 tangentNormal = (normal * 2.0) - 1.0;
 
      // transform normal vector to range [-1,1]
 
@@ -157,7 +158,12 @@ vec3 lightpos_test[4];
 
     if (Metallic_index < 32)
     {
-        metallic = texture(myTextureSampler[Roughness_index], TexCoords).r;   
+        if(Metallic_index == Roughness_index)
+        {
+            metallic = texture(myTextureSampler[Metallic_index], TexCoords).b;   
+        }
+        else
+            metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
     }
 //    else
 //    {
@@ -165,8 +171,13 @@ vec3 lightpos_test[4];
 //    }
     if (Roughness_index < 32)
     {
-        roughness = texture(myTextureSampler[Metallic_index], TexCoords).r;    
-        
+
+        if (Metallic_index == Roughness_index)
+        {
+            roughness = texture(myTextureSampler[Roughness_index], TexCoords).g;   
+        }
+        else
+            roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
     }
 //    else
 //    {
@@ -179,7 +190,7 @@ vec3 lightpos_test[4];
 
 
 
-//    FragColor = vec4(metallic,1.f,1.f,1.f);
+//    FragColor = vec4(roughness,1.f,1.f,1.f);
 //    return;
 
 //    else
@@ -247,21 +258,15 @@ vec3 lightpos_test[4];
         // multiply kD by the inverse metalness such that only non-metals 
         // have diffuse lighting, or a linear blend if partly metal (pure metals
         // have no diffuse light).
-        kD *=( 1.0 - metallic);	  
+        kD *= 1.0 - metallic;	  
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
 //        radiance = vec3(1.f,1.f,1.f);
         // add to outgoing radiance Lo
-        Lo += ( (kD * albedo) / (PI + specular)) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
-    if(Lo == vec3(0.f,0.f,0.f))
-    {
-         FragColor = vec4(Lo, 1.0);
-     return;
-
-
-    }
+   
 
     vec3 ambient = vec3(0.03) * albedo * ao;
     
