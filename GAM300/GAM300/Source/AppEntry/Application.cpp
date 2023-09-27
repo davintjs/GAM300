@@ -12,8 +12,6 @@
 #include "stb/stb_image.h"
 #include <glm/gtc/type_ptr.hpp> // for glm functions
 
-#include "LapSupGraphics/Compiler.h"
-#include "LapSupGraphics/Mesh.h"
 #include "../Source/Graphics/Model3d.h"
 #include "Graphics/Editor_Camera.h"
 

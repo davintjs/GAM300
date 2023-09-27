@@ -471,6 +471,8 @@ MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 		}
 		catch (...)
 		{
+
+
 		}
 	}
 	return nullptr;
