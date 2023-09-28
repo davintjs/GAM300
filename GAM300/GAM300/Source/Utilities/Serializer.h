@@ -128,8 +128,15 @@ private:
             if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
-                if (!SerializeComponent(out, component, _id))
-                    return false;
+                if constexpr (std::is_same<T1, Tag>() || std::is_same<T1, Transform>())
+                {
+                    return true;
+                }
+                else
+                {
+                    if (!SerializeComponent(out, component, _id))
+                        return false;
+                }
             }
         }
         else if constexpr (MultiComponentTypes::Has<T1>())

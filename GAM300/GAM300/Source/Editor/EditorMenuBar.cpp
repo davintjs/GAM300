@@ -29,6 +29,7 @@ void EditorMenuBar::Init()
 
 void EditorMenuBar::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
         if (ImGui::IsKeyPressed(ImGuiKey_N))

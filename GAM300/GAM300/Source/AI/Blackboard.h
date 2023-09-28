@@ -27,7 +27,7 @@ public:
         return res->second;
     }
     void Init() {};
-    void Update(float dt) {};
+    void Update(float) {};
     void Exit() {};
 
 private:

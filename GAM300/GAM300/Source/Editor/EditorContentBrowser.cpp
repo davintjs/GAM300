@@ -31,6 +31,7 @@ void EditorContentBrowser::Init()
 
 void EditorContentBrowser::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::Begin("Content Browser");
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
     //ImGuiIO& io = ImGui::GetIO(); (void)io;

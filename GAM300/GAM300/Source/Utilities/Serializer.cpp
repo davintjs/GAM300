@@ -35,12 +35,12 @@ GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((std::pa
 
 void Serialize(const std::string& _filepath)
 {
-
+    (void)_filepath;
 }
 
 void SerializeRuntime(const std::string& _filepath)
 {
-
+    (void)_filepath;
 }
 
 bool SerializeScene(Scene& _scene)
@@ -140,9 +140,6 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 template <typename T>
 bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
 {
-    if constexpr (std::is_same<T, Tag>() || std::is_same<T, Transform>())
-        return true;
-
     if (_id)
     {
         // Store UUID for each component
@@ -196,12 +193,12 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
 
 void Deserialize(const std::string& _filepath)
 {
-
+    (void)_filepath;
 }
 
 void DeserializeRuntime(const std::string& _filepath)
 {
-
+    (void)_filepath;
 }
 
 bool DeserializeScene(Scene& _scene)

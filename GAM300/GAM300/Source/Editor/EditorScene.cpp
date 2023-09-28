@@ -39,6 +39,7 @@ void EditorScene::Init()
 
 void EditorScene::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     ImGuiWindowClass window_class;
@@ -165,7 +166,7 @@ void EditorScene::Update(float dt)
             sceneDimension = { _newDimension.x, _newDimension.y };
             EditorCam.onResize(sceneDimension.x, sceneDimension.y);
 
-            EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+            EditorCam.getFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });

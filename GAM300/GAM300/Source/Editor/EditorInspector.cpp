@@ -18,7 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "EditorHeaders.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
-#include "EditorTemplates.h";
+#include "EditorTemplates.h"
 #include "Scene/Components.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
@@ -962,7 +962,7 @@ public:
     DisplayComponentsStruct() = delete;
     DisplayComponentsStruct(Entity& entity)
     {
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
         //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
 
@@ -1063,7 +1063,7 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void AddPanel(Entity& entity) {
-    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
@@ -1136,6 +1136,7 @@ void EditorInspector::Init()
 
 void EditorInspector::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
     ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
 

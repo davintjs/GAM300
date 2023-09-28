@@ -31,9 +31,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Properties.h"
 #include "UUID.h"
 
-extern class Scene;
-extern struct Transform;
-extern struct Field;
+class Scene;
+struct Transform;
+struct Field;
 
 struct Child
 {
