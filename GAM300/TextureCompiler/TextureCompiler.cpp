@@ -113,9 +113,7 @@ int main()
 	// Cleanup COM
 	CoUninitialize();
 
-	int x;
 	std::cout << "Finished compiling all textures!" << std::endl;
-	std::cin >> x;
 
 	return 0;
 }
