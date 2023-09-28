@@ -186,7 +186,7 @@ property_begin_name(Transform, "Transform")
 struct AudioSource : Object
 {
 	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
-	std::vector<std::string> ChannelName =
+	std::vector<const char*> ChannelName =
 	{
 		"Music",
 		"SFX",
