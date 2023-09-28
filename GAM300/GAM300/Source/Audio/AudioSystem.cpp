@@ -13,22 +13,25 @@ void AudioSystem::Update(float dt) {
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	for (AudioSource& audio : currentScene.GetArray<AudioSource>()) {
 		if (!audio.play) {
+			if (audio.channel == AudioSource::Channel::MUSIC) {
+				AUDIOMANAGER.PauseMusic();
+			}
 			continue;
 		}
-		audio.play = false;
 		if (audio.channel == AudioSource::Channel::MUSIC) {
 			// music should auto loop
+			AUDIOMANAGER.SetMusicVolume(audio.volume);
 			AUDIOMANAGER.PlayMusic(audio.currentSound);
-			continue;
 		}
 		if (audio.channel == AudioSource::Channel::SFX) {
 			//no loop
+			audio.play = false;
+			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			AUDIOMANAGER.PlaySFX(audio.currentSound);
 			continue;
 		}
-
 	}
-	AUDIOMANAGER.Update(dt);
+	AUDIOMANAGER.Update(dt); // this is for loops and other fancy stuff
 }
 void AudioSystem::Exit() {
 

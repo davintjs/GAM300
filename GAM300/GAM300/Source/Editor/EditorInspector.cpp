@@ -585,6 +585,30 @@ void Display_Property(T& comp) {
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
+    // @joe do the drop down hahaha, idk how to do it
+    //if constexpr (std::is_same<T, AudioSource>()) {
+    //    //Combo field for mesh renderer
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TableNextColumn();
+    //    ImGui::Text("Channel");
+    //    ImGui::TableNextColumn();
+    //    std::vector<const char*> channelNames;
+    //    int number = 0;
+    //    bool found = false;
+    //    for (int i = 0; i < int(AudioSource::Channel::COUNT); ++i) {
+    //        if (int(comp.channel) == i)
+    //        {
+    //            channelNames.emplace_back(comp.ChannelName[i]);
+    //            number = i;
+    //        }
+    //    }
+    //    ImGui::PushItemWidth(-1);
+    //    ImGui::Combo("Channel", &number, channelNames.data(), channelNames.size(), 5);
+    //    ImGui::PopItemWidth();
+    //    //comp.ChannelName = ChannelNames[number];
+    //    comp.channel = static_cast<AudioSource::Channel>(number);
+    //}
+
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
