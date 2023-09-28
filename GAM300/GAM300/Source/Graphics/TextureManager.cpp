@@ -1,21 +1,16 @@
-/**************************************************************************************/
-/*!
-//    \file			TextureManager.cpp
-//    \author(s) 	Euphrasia Theophelia Tan Ee Mun
-//                 	Euan Lim Yiren
-//
-//    \date   	    15th September 2023
-//    \brief		This file contains the functions that are used to create textures 
-//                  from a dds file and retrieve textures from a GUID.
-//
-//    \Percentage   Theophelia 80%
-//                  Euan 20%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+/*!***************************************************************************************
+\file			TextureManager.cpp
+\project
+\author         Euphrasia Theophelia Tan Ee Mun, Euan Lim Yiren
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the Texture Manager and the definitions of its related functions. 
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #include "Precompiled.h"
 #include "TextureManager.h"
@@ -52,7 +47,9 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
             size_t length = found - Filename;
             char* subString = new char[length + 1];
 
-            strncpy(subString, Filename, length);
+            //strncpy(subString, Filename, length);
+            //subString[length] = '\0';
+            strncpy_s(subString, length + 1, Filename, length);
             subString[length] = '\0';
 
             temp = CreateSkyboxTexture(subString);
@@ -93,7 +90,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     glTexParameteri(Target, GL_TEXTURE_SWIZZLE_B, Format.Swizzles[2]);
     glTexParameteri(Target, GL_TEXTURE_SWIZZLE_A, Format.Swizzles[3]);
 
-    glm::tvec3<GLsizei> const Extent(Texture.extent());
+    glm::tvec3<GLsizei> /*const*/ Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
 
     switch (Texture.target())
@@ -127,7 +124,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
             for (std::size_t Level = 0; Level < Texture.levels(); ++Level)
             {
                 GLsizei const LayerGL = static_cast<GLsizei>(Layer);
-                glm::tvec3<GLsizei> Extent(Texture.extent(Level));
+                /*glm::tvec3<GLsizei>*/ Extent = Texture.extent(Level);
                 Target = gli::is_target_cube(Texture.target())
                     ? static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Face)
                     : Target;
@@ -222,7 +219,7 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
         gli::texture Texture = gli::load(faces[i]);
 
         glCompressedTexImage2D(
-            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + (GLenum)i,
             0,
             GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
             Texture.extent().x,

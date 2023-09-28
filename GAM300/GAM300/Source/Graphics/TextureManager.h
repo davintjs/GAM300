@@ -1,20 +1,16 @@
-/**************************************************************************************/
-/*!
-//    \file			TextureManager.h
-//    \author(s) 	Euphrasia Theophelia Tan Ee Mun
-//
-//    \date   	    15th September 2023
-//    \brief		This file contains the declarations of functions that are used to 
-//  				create textures from a dds file and retrieve textures from a GUID
-//					and a container for the textures.
-//
-//    \Percentage   Theophelia 100%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+/*!***************************************************************************************
+\file			TextureManager.h
+\project
+\author         Euphrasia Theophelia Tan Ee Mun
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the Texture Manager and the declarations of its related functions.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #pragma once
 

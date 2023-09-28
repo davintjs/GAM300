@@ -1,18 +1,16 @@
-/**************************************************************************************/
-/*!
-//    \file			InstancedDebugRender.vert
-//    \author(s) 	Euphrasia Theophelia Tan Ee Mun
-//
-//    \date   	    15th September 2023
-//    \brief		This file is the vert file for drawing debug lines.
-//
-//    \Percentage   Theophelia 100%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
-*/
-/**************************************************************************************/
+/*!***************************************************************************************
+\file			InstancedDebugRender.vert
+\project
+\author         Euphrasia Theophelia Tan Ee Mun
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file is the vert file for drawing debug lines.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #version 450 core
 layout (location = 0) in vec3 aVertexPosition;
