@@ -66,6 +66,7 @@ GLuint Skybox_Tex;
 Model SkyBox_Model;
 
 GLSLShader HDR_Shader;
+
 bool hdr = false;
 float exposure = 1.0;
 
@@ -636,7 +637,7 @@ void GraphicsSystem::Update(float dt)
 	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
 	if (hdr)
 	{
-		std::cout << "HDR is up\n";
+		//std::cout << "HDR is up\n";
 	}
 
 
@@ -657,7 +658,7 @@ void GraphicsSystem::Update(float dt)
 	}
 	if (exposure == 5.0)
 	{
-		std::cout << "exposure is diff\n";
+		//std::cout << "exposure is diff\n";
 	}
 	GLint uniform1 =
 		glGetUniformLocation(HDR_Shader.GetHandle(), "hdr");
