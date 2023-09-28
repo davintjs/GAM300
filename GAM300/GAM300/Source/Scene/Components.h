@@ -343,10 +343,9 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(MeshName),
+		property_var(MeshName).Flags(property::flags::DONTSHOW),
 		property_var(mr_Albedo),
 		property_var(AlbedoTexture),
-
 		property_var(NormalMap),		
 		/*property_var(mr_Specular),
 		property_var(mr_Diffuse),

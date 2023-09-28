@@ -585,46 +585,39 @@ void Display_Property(T& comp) {
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
-    std::vector<property::entry> List;
+    //std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-            assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            List.push_back(property::entry { PropertyName, Data });
-        });
+            if (!Flags.m_isDontShow){
+                auto entry = property::entry { PropertyName, Data };
+                std::visit([&](auto& Value) {
+                    using T1 = std::decay_t<decltype(Value)>;
 
-    int id = 0;
-    for (auto& [Name, Data] : List)
-    {
-        //find out how to use flags
-        /*property::flags::type Flags;
-        if (Flags.m_isDontShow) continue;*/
+                    //Edit name
+                    std::string DisplayName = entry.first;
+                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                    DisplayName.erase(DisplayName.begin(), ++it);
 
-        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos) || (Name.find("MeshName") != std::string::npos)) continue;
+                    ImGui::PushID(entry.first.c_str());
+                    Display<T1>(DisplayName.c_str(), Value);
 
-        std::visit([&](auto& Value) {
-                using T1 = std::decay_t<decltype(Value)>;
+                    //temporary implementation for texture picker
+                    if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
+                        DisplayTexturePicker(Value);
+                    }
 
-                //Edit name
-                std::string DisplayName = Name;
-                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                DisplayName.erase(DisplayName.begin(), ++it);
+                    ImGui::PopID();
+                    }
+                , Data);
+                property::set(comp, entry.first.c_str(), Data);
 
-                ImGui::PushID(Name.c_str());
-                Display<T1>(DisplayName.c_str(), Value);
-
-                //temporary implementation for texture picker
-                if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                    || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
-                    DisplayTexturePicker(Value);
-                }
-
-                ImGui::PopID();          
+                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //List.push_back(property::entry { PropertyName, Data });
             }
-        , Data);
-        property::set(comp, Name.c_str(), Data);
-    }
-
+           
+        });
 }
 
 //template <typename T>
