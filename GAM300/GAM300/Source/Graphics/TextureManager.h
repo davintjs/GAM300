@@ -31,9 +31,16 @@ public:
 	void Update(float dt);
 	void Exit();
 
+	// used in asset manager to add dds textures to the texture container
 	void AddTexture(char const* Filename, std::string GUID);
+
+	// uses GUID to retrieve a texture from the texture container
 	GLuint GetTexture(std::string GUID);
+
+	// creates a texture and returns it to be stored in the texture container
 	GLuint CreateTexture(char const* Filename);
+
+	// creates a skybox texture and returns it to be stored in the texture container
 	GLuint CreateSkyboxTexture(char const* Filename);
 
 private:

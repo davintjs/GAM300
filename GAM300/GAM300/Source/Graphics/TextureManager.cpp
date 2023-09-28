@@ -45,7 +45,7 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
         
         // if filename_top, we create skybox texture as the other .dds should have been loaded in
         searchWord = "_top";
-        const char* found = strstr(Filename, searchWord.c_str());
+        found = strstr(Filename, searchWord.c_str());
 
         if (found != nullptr) {
         
@@ -214,8 +214,8 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     glGenTextures(1, &Skybox_Tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
 
-    int width, height, nrChannels;
-    unsigned int err = 0;
+    //int width{}, height{}, nrChannels{};
+    //unsigned int err = 0;
 
     for (size_t i = 0; i < faces.size(); i++)
     {
