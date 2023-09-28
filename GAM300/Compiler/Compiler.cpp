@@ -812,8 +812,8 @@ int main() {
 			}
 		}
 	}
-	int x;
+
 	std::cout << "Finished compiling all models!" << std::endl;
-	std::cin >> x;
+
 	return 0;
 }
