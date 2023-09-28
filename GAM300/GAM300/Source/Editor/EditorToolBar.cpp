@@ -40,6 +40,7 @@ static bool scene_paused = false;
 
 void EditorToolBar::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGuiWindowClass window_class;
     window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
     ImGui::SetNextWindowClass(&window_class);
@@ -69,14 +70,12 @@ void EditorToolBar::Update(float dt)
         {
             PRINT("SCENE START\n");
             SceneStartEvent startEvent{};
-            ACQUIRE_SCOPED_LOCK(Assets);
             EVENTS.Publish(&startEvent);
         }
         else
         {
             PRINT("SCENE STOP\n");
             SceneStopEvent stopEvent{};
-            ACQUIRE_SCOPED_LOCK(Assets);
             EVENTS.Publish(&stopEvent);
 
         }

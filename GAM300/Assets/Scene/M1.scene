@@ -1,0 +1,224 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: M1
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 22203055554271501
+  m_IsActive: true
+  m_Name: Helmet
+  m_Position: [156.493225, 116.136734, 360.909332]
+  m_Rotation: [8.45425205e-08, -1.50000012, 0]
+  m_Scale: [0.999995291, 1, 0.999995291]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 10413881243206984898}  # MeshRenderer
+    - component: {fileID: 17218963974942543520}  # Script
+---
+MeshRenderer:
+  EUID: 22203055554271501
+  UUID: 10413881243206984898
+  MeshName: Sphere
+  mr_Albedo: [1, 1, 1, 1]
+  AlbedoTexture: ""
+  NormalMap: Default_normal
+  mr_metallic: 0.5
+  MetallicTexture: Default_metalRoughness
+  mr_roughness: 0.5
+  RoughnessTexture: Default_metalRoughness
+  ao: 0.5
+  AoTexture: Default_AO
+---
+Script:
+  EUID: 22203055554271501
+  UUID: 17218963974942543520
+  Name: Player
+  gameObj: {fileID: 0}  # GameObject
+  player2: {fileID: 6}  # Component
+  speed: 10
+---
+GameObject:
+  m_EUID: 16942626329878887566
+  m_IsActive: true
+  m_Name: Falling Cube 1
+  m_Position: [-3.05175781e-05, 358.816711, -23.4976406]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [100, 100, 100]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 9923304188943745678}  # Rigidbody
+    - component: {fileID: 1245608959500342360}  # MeshRenderer
+    - component: {fileID: 9199614747982128663}  # BoxCollider
+---
+Rigidbody:
+  EUID: 16942626329878887566
+  UUID: 9923304188943745678
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+MeshRenderer:
+  EUID: 16942626329878887566
+  UUID: 1245608959500342360
+  MeshName: Cube
+  mr_Albedo: [1, 1, 1, 1]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: 0.5
+  MetallicTexture: ""
+  mr_roughness: 0.5
+  RoughnessTexture: ""
+  ao: 0.5
+  AoTexture: ""
+---
+BoxCollider:
+  EUID: 16942626329878887566
+  UUID: 9199614747982128663
+  X: 1
+  Y: 1
+  Z: 1
+---
+GameObject:
+  m_EUID: 10548661867949210258
+  m_IsActive: true
+  m_Name: Falling Cube 2
+  m_Position: [-39.6391068, 132.64801, -28.8153381]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [100, 100, 100]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 6571208101418498788}  # Rigidbody
+    - component: {fileID: 7126588879192483760}  # MeshRenderer
+    - component: {fileID: 6281041356284068935}  # BoxCollider
+---
+Rigidbody:
+  EUID: 10548661867949210258
+  UUID: 6571208101418498788
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+MeshRenderer:
+  EUID: 10548661867949210258
+  UUID: 7126588879192483760
+  MeshName: Cube
+  mr_Albedo: [1, 1, 1, 1]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: 0.5
+  MetallicTexture: ""
+  mr_roughness: 0.5
+  RoughnessTexture: ""
+  ao: 0.5
+  AoTexture: ""
+---
+BoxCollider:
+  EUID: 10548661867949210258
+  UUID: 6281041356284068935
+  X: 1
+  Y: 1
+  Z: 1
+---
+GameObject:
+  m_EUID: 8552727112136102457
+  m_IsActive: true
+  m_Name: Floor
+  m_Position: [0, 1, 35]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1000, 1, 1000]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 13671943860368736027}  # Rigidbody
+    - component: {fileID: 15321682287644036185}  # MeshRenderer
+    - component: {fileID: 16306965832790122227}  # BoxCollider
+---
+Rigidbody:
+  EUID: 8552727112136102457
+  UUID: 13671943860368736027
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+MeshRenderer:
+  EUID: 8552727112136102457
+  UUID: 15321682287644036185
+  MeshName: Cube
+  mr_Albedo: [1, 1, 1, 1]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: 0.5
+  MetallicTexture: ""
+  mr_roughness: 0.5
+  RoughnessTexture: ""
+  ao: 0.5
+  AoTexture: ""
+---
+BoxCollider:
+  EUID: 8552727112136102457
+  UUID: 16306965832790122227
+  X: 1
+  Y: 1
+  Z: 1
+---
+GameObject:
+  m_EUID: 6606253624498158492
+  m_IsActive: true
+  m_Name: LightSource
+  m_Position: [-259.751099, 112.862083, 323.042511]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [2, 2, 2]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 2676873232007418467}  # MeshRenderer
+    - component: {fileID: 2383003823628521294}  # LightSource
+---
+MeshRenderer:
+  EUID: 6606253624498158492
+  UUID: 2676873232007418467
+  MeshName: Sphere
+  mr_Albedo: [1, 500000, 500000, 500000]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: -1
+  MetallicTexture: ""
+  mr_roughness: -1
+  RoughnessTexture: ""
+  ao: -1
+  AoTexture: ""
+---
+LightSource:
+  EUID: 6606253624498158492
+  UUID: 2383003823628521294
+  LightingColor: [500000, 500000, 500000]

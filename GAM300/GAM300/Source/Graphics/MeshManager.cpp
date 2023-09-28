@@ -2,7 +2,6 @@
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 
-extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
 //extern std::vector <Materials> temp_MaterialContainer;
@@ -21,10 +20,12 @@ void MESH_Manager::Init()
 	CreateInstanceCube();
     CreateInstanceSphere();
     
+    CreateInstanceLine();
 }
 
 void MESH_Manager::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
 	// Empty by design
 }
 
@@ -298,7 +299,7 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 void MESH_Manager::CreateInstanceCube()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     // positions            // Normals              // Tangents             // Texture Coords   // Colors
     //float vertices[] = {
@@ -449,7 +450,7 @@ void MESH_Manager::CreateInstanceCube()
 void MESH_Manager::CreateInstanceSphere()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     GLuint vaoid;
     GLuint vboid;
@@ -478,9 +479,9 @@ void MESH_Manager::CreateInstanceSphere()
         {
             float xSegment = (float)x / (float)X_SEGMENTS;
             float ySegment = (float)y / (float)Y_SEGMENTS;
-            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-            float yPos = std::cos(ySegment * PI);
-            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
+            float yPos = std::cos(ySegment * PI) * 15.f;
+            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
 
             positions.push_back(glm::vec3(xPos, yPos, zPos));
             uv.push_back(glm::vec2(xSegment, ySegment));
@@ -801,6 +802,63 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
+void MESH_Manager::CreateInstanceLine()
+{
+    Mesh newMesh;
+    newMesh.index = mContainer.size();
+
+    GLfloat vertices[] = {
+        -1.f, 0.f, 0.f,   
+        1.0f, 0.f, 0.f
+    };
+
+    GLuint indices[] = {
+        0, 1
+    };
+    newMesh.vertices_min = glm::vec3(-1.f, 0.f, 0.f);
+    newMesh.vertices_max = glm::vec3(-1.f, 0.f, 0.f);
+
+    // first, configure the cube's VAO (and VBO)
+    //unsigned int VBO, cubeVAO;
+
+    GLuint vaoid;
+    GLuint vboid;
+    GLuint ebo;
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(vaoid);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+    InstanceProperties tempProp;
+    tempProp.VAO = vaoid;
+    tempProp.drawCount = 2;
+    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
+    newMesh.Vaoids.push_back(vaoid);
+    newMesh.Vboids.push_back(vboid);
+    newMesh.prim = GL_LINES;
+    newMesh.Drawcounts.push_back(2);
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Line"]));
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
+
+    mContainer.emplace(std::string("Line"), newMesh);
+
+}
+
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
 {
     //// find min max points for each axis
@@ -872,15 +930,6 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     glBindVertexArray(0); // unbind vao
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
-
-
-
-    //entitySRTBuffer
-    glBindVertexArray(prop.debugVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-    glBindVertexArray(0);
 
     //entitySRTBuffer
     glBindVertexArray(prop.debugVAO);

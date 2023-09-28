@@ -28,6 +28,8 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
+
+
 	Scene::Layer& layer = curr_scene.layer;
 	Transform& currEntity = curr_scene.Get<Transform>(euid);
 
@@ -195,6 +197,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 void EditorHierarchy::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	ImGui::Begin("Hierarchy");
 
 	//List out all entities in current scene
@@ -283,6 +286,8 @@ void EditorHierarchy::Update(float dt)
 		ImGui::TreePop();
 	}
 	ImGui::End();
+
+	
 }
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)

@@ -1,17 +1,23 @@
+/*!***************************************************************************************
+\file			GraphicStructandClass.h
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains structs and classes the graphics needs
+
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #pragma once
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
 
 #define EntityRenderLimit 200
 #define EnitityInstanceLimit 200
-
-
-// Naive Solution
-struct trans_mats
-{
-	glm::mat4 transformation_mat[EntityRenderLimit];
-	int index = 0;
-};
 
 struct LightProperties
 {
@@ -27,27 +33,25 @@ struct LightProperties
 //};
 
 
-struct Settings
-{
-	glm::vec4 Albedo; // This means colour for now
-	glm::vec4 Specular;
-	glm::vec4 Diffuse;
-	glm::vec4 Ambient;
-	float Shininess;
-	std::string normalmap;
-};
-
-struct Materials 
-{
-	// Slam Texture Pointer / Reference whatever GUID magic idk in here
-	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
-	// store guid also
-	std::string current = "defaulttexture"; // to get dds
-	std::unordered_map<std::string, Settings> mSettingsContainer; // GUID, <file name, GLuint>
-
-};
-
-static unsigned int InstancePropertyCount = 1;
+//struct Settings
+//{
+//	glm::vec4 Albedo; // This means colour for now
+//	glm::vec4 Specular;
+//	glm::vec4 Diffuse;
+//	glm::vec4 Ambient;
+//	float Shininess;
+//	std::string normalmap;
+//};
+//
+//struct Materials 
+//{
+//	// Slam Texture Pointer / Reference whatever GUID magic idk in here
+//	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
+//	// store guid also
+//	std::string current = "defaulttexture"; // to get dds
+//	std::unordered_map<std::string, Settings> mSettingsContainer; // GUID, <file name, GLuint>
+//
+//};
 
 struct InstanceProperties
 {
@@ -55,7 +59,7 @@ struct InstanceProperties
 
 	// instanced stuff
 	unsigned int VAO;
-	unsigned int debugVAO;
+	unsigned int debugVAO{};
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];

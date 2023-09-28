@@ -14,7 +14,7 @@ public:
 	void Exit();
 
 	void AddTexture(char const* Filename, std::string GUID);
-	GLuint& GetTexture(std::string GUID);
+	GLuint GetTexture(std::string GUID);
 	GLuint CreateTexture(char const* Filename);
 	GLuint CreateSkyboxTexture(char const* Filename);
 

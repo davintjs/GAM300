@@ -21,7 +21,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/EventsManager.h"
 
 static const std::string AssetDirectory = "Assets";
-static std::string entityType = "default", entityName = "default";
 static std::filesystem::path CurrentDirectory = AssetDirectory;
 static std::string currentFolder = "Assets";
 
@@ -30,10 +29,9 @@ void EditorContentBrowser::Init()
 
 }
 
-#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
-
 void EditorContentBrowser::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::Begin("Content Browser");
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
     //ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -72,7 +70,7 @@ void EditorContentBrowser::Update(float dt)
         if (path.string().find("meta") != std::string::npos) continue;
 
         ImGui::PushID(i++);
-        
+
         auto relativepath = std::filesystem::relative(path, AssetDirectory);
         std::string pathStr = relativepath.filename().string();
 
@@ -88,31 +86,36 @@ void EditorContentBrowser::Update(float dt)
         auto it2 = ext.begin() + ext.find_last_of(".");
         ext.erase(ext.begin(), it2);*/
 
+        std::string parentpath = relativepath.parent_path().string();
 
-        if (relativepath.parent_path().string() == "Icons") {
-            std::string filename = relativepath.string();
-            //
-            auto it = filename.begin() + filename.find_last_of("\\") + 1;
-            filename.erase(filename.begin(), it);
-            it = filename.begin() + filename.find_first_of(".");
-            filename.erase(it, filename.end());
-            //PRINT(filename);
-            icon = filename;
+        std::string filename = relativepath.string();
+        
+        if (!it.is_directory()) {
             
-        }
+            auto it2 = filename.begin();
 
+            //if (filename.find("Resources") == std::string::npos) {
+
+                if (filename.find_last_of("\\") != std::string::npos) {
+                    it2 = filename.begin() + filename.find_last_of("\\") + 1;
+                    filename.erase(filename.begin(), it2);
+                }
+                it2 = filename.begin() + filename.find_first_of(".");
+                filename.erase(it2, filename.end());
+
+                //PRINT(filename);
+
+                GLint tex = GET_TEXTURE_ID(filename);
+                if (tex != UINT_MAX) {
+                    icon = filename;
+                }
+            //}              
+        }
+       
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        //To do: replace this when png is 
         icon_id = GET_TEXTURE_ID(icon);
-        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 });
-
-        //Drag drop logic for files
-        /*if (ImGui::BeginDragDropSource()) {
-            std::string filepath = relativepath.string();
-            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", filepath.c_str(), filepath.size() + 1);
-            ImGui::EndDragDropSource();
-        }*/
+        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
         ImGui::PopStyleColor();
         //Change directory into the folder clicked
@@ -143,7 +146,7 @@ void EditorContentBrowser::Update(float dt)
                 LoadSceneEvent loadScene(path.string());
                 EVENTS.Publish(&loadScene);
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
-            }       
+            }
         }
 
         //render file name below icon

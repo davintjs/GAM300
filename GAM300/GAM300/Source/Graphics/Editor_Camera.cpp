@@ -21,8 +21,8 @@ void Editor_Camera::Init()
 
 
 void Editor_Camera::Update(float dt)
-//void Update()
 {
+	UNREFERENCED_PARAMETER(dt);
 	// To Move / Adjust the editor camera
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
@@ -271,11 +271,11 @@ Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::m
 	//float y = (2.0f * ypos) / EditorScene::Instance().GetDimension().y - 1.0f;
 
 
-	float x = (2.0f * xpos) / 1600.f - 1.0f;
-	float y = (2.0f * ypos) / 900.f - 1.0f;
+	float x = (2.0f * (float)xpos) / 1600.f - 1.0f;
+	float y = (2.0f * (float)ypos) / 900.f - 1.0f;
 
 
-	float z = 1.0f;
+	//float z = 1.0f;
 
 	glm::vec4 ray_clip(x, y, -1.0f, 1.0f);
 	glm::vec4 ray_eye = glm::inverse(proj) * ray_clip;

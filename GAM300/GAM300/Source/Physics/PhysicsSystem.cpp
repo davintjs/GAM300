@@ -40,12 +40,6 @@ void PhysicsSystem::Init()
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
 
-
-
-
-
-
-
 	// Register allocation hook
 	JPH::RegisterDefaultAllocator();
 
@@ -64,13 +58,50 @@ void PhysicsSystem::Init()
 }
 void PhysicsSystem::Update(float dt) {
 	// Handle Inputs
-	
+	if (!physicsSystem)
+		return;
+
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& rbArray = scene.GetArray<Rigidbody>();
+	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+		Rigidbody& rb = *it;
+		Entity& entity = scene.Get<Entity>(rb);
+		Transform& t = scene.Get<Transform>(entity);
+
+
+		Vector3 tmpVec;
+		JPH::BodyID tmpBID(rb.bid);
+		JPH::RVec3 tmp;
+		GlmVec3ToJoltVec3(t.translation, tmp);
+		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
+
+		JPH::Quat tmpQuat;
+		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
+		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::Activate);
+
+		//tmp = bodyInterface->GetLinearVelocity(tmpBID);
+		//JoltVec3ToGlmVec3(tmp, rb.linearVelocity);
+
+		//tmp = bodyInterface->GetAngularVelocity(tmpBID);
+		//JoltVec3ToGlmVec3(tmp, rb.angularVelocity);
+
+
+		//Transform& t = scene.Get<Transform>(*ball);
+		//t.translation = gBallPos;
+
+
+		//Vector3 ballRotEuler;
+		//JPH::Quat ballQuat = bodyInterface->GetRotation(testBallID);
+		//JoltQuatToGlmVec3(ballQuat, ballRotEuler);
+		//t.rotation = ballRotEuler;
+
+	}
 	//step++;
 	if (physicsSystem) {
 		physicsSystem->Update(dt*9, 1, tempAllocator, jobSystem);
 	}
 
-	std::cout << "Physics update!\n";
+	//std::cout << "Physics update!\n";
 	/*
 	JPH::RVec3 ballPos = bodyInterface->GetCenterOfMassPosition(testBallID);
 	Vector3 gBallPos;
@@ -142,8 +173,9 @@ void PhysicsSystem::Exit() {
 
 }
 
-void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) {
-	
+void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) 
+{
+	(void)pEvent;
 	// Create the JPH physics world and INIT it
 	physicsSystem = new JPH::PhysicsSystem();
 
@@ -163,8 +195,9 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) {
 	std::cout << "Physics System scene start test\n";
 
 }
-void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) {
-
+void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
+{
+	(void)pEvent;
 	std::cout << "Physics System scene stop test\n";
 
 	// Delete the current physics system, must set to nullptr

@@ -120,6 +120,7 @@ private:
 
 	void CreateInstanceCube();
 	void CreateInstanceSphere();
+	void CreateInstanceLine();
 
 	unsigned int InstanceSetup(InstanceProperties& prop);
 	unsigned int InstanceSetup_PBR(InstanceProperties& prop);

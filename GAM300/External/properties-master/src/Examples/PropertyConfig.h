@@ -22,7 +22,7 @@ public:
 
     //Constructors
     Vector2() : x(0.f), y(0.f) {}
-    Vector2(float x_, float y_, float z_) : x(x_), y(y_) {}
+    Vector2(float x_, float y_) : x(x_), y(y_) {}
     Vector2(float i) : x(i), y(i) {}
 
     Vector2(Vector2& vec) : x(vec.x), y(vec.y) {}

@@ -7,10 +7,11 @@
 \date           04/09/2023
 
 \brief
-	This file contains the definitions of the following :
+	This file contains the definitions of the following:
 	1. Editor Scene
+    2. Editor Game
 
-All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
 
@@ -38,6 +39,7 @@ void EditorScene::Init()
 
 void EditorScene::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     ImGuiWindowClass window_class;
@@ -104,7 +106,6 @@ void EditorScene::Update(float dt)
         ImGui::SameLine(); ImGui::Dummy(ImVec2(30.0f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        static bool debug_draw = false;
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw));
     }
     ImGui::End();
@@ -165,7 +166,7 @@ void EditorScene::Update(float dt)
             sceneDimension = { _newDimension.x, _newDimension.y };
             EditorCam.onResize(sceneDimension.x, sceneDimension.y);
 
-            EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+            EditorCam.getFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });

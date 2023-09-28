@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			EditorMenuBar.cpp
+\project
+\author         Sean Ngo
+\co-author      Joseph Ho
+
+\par			Course: GAM300
+\date           04/09/2023
+
+\brief
+    This file contains the definitions of the following:
+    1. Editor Menubar which is mainly for engine utility 
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Editor.h"
@@ -14,6 +29,7 @@ void EditorMenuBar::Init()
 
 void EditorMenuBar::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
         if (ImGui::IsKeyPressed(ImGuiKey_N))
