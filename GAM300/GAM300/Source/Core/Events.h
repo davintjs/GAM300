@@ -107,18 +107,26 @@ struct ObjectCreatedEvent : IEvent
 
 struct ScriptSetFieldEvent : IEvent
 {
-	ScriptSetFieldEvent(Script& _script, const char* _fieldName, void* _data) : script{ _script }, fieldName{ _fieldName }, data{ _data }{}
+	ScriptSetFieldEvent(Script& _script, const char* _fieldName, Field& _field) : script{ _script }, fieldName{ _fieldName }, field{ _field }{}
 	Script& script;
 	const char* fieldName;
-	void* data;
+	Field& field;
 };
 
-struct ScriptGetFieldsEvent : IEvent
+struct ScriptGetFieldEvent : IEvent
 {
-	ScriptGetFieldsEvent(Script& _script) : script{ _script } {}
+	ScriptGetFieldEvent(Script& _script, const char* _fieldName, Field& _field) : script{ _script }, fieldName{ _fieldName }, field{ _field }{}
 	Script& script;
-	Field* pStart;
-	size_t count;
+	const char* fieldName;
+	Field& field;
+};
+
+struct ScriptGetFieldNamesEvent : IEvent
+{
+	ScriptGetFieldNamesEvent(Script& _script) : script{ _script } {}
+	Script& script;
+	const char** pStart{nullptr};
+	size_t count{0};
 };
 
 //

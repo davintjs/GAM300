@@ -23,6 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/MeshManager.h"
 #include <variant>
 #include "PropertyConfig.h"
+#include "Utilities./ThreadPool.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -327,7 +328,7 @@ void DisplayField(const char* name, Field& field)
     {
         if (field.fType < AllObjectTypes::Size())
         {
-            T* value = reinterpret_cast<T*>(field.data);
+            T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
                 DisplayType(name, value,field.typeName.c_str());
@@ -613,14 +614,23 @@ void Display_Property(T& comp) {
 
 void DisplayComponent(Script& script)
 {
-    ScriptGetFieldsEvent getFieldsEvent{script};
-    EVENTS.Publish(&getFieldsEvent);
-    for (size_t i = 0; i < getFieldsEvent.count; ++i)
+    ACQUIRE_SCOPED_LOCK(Mono);
+    static char buffer[2048];
+    ScriptGetFieldNamesEvent getFieldNamesEvent{script};
+    EVENTS.Publish(&getFieldNamesEvent);
+    for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
-        Field& field{ getFieldsEvent.pStart[i]};
-        Display(field.name.c_str(), field);
-        //ScriptSetFieldEvent e{ script,name };
-        //EVENTS.Publish(&e);
+        const char* fieldName = getFieldNamesEvent.pStart[i];
+        Field field{ AllFieldTypes::Size(),buffer };
+        ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
+        EVENTS.Publish(&getFieldEvent);
+        if (field.fType < AllFieldTypes::Size())
+        {
+            Display(fieldName, field);
+            ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
+            EVENTS.Publish(&setFieldEvent);
+        }
+
     }
 }
 //template <>

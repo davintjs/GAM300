@@ -25,7 +25,6 @@ struct Field
 	void* data{ nullptr };
 	size_t fType{};
 	std::string typeName;
-	std::string name;
 	/***************************************************************************/
 	/*!
 	\brief
@@ -37,8 +36,8 @@ struct Field
 		Data to store and copy from
 	*/
 	/**************************************************************************/
-	Field(size_t _fType, void* _data, std::string _name) : 
-		fType{ _fType }, data{ _data }, name{ _name }{}
+	Field(size_t _fType, void* _data) :
+		fType{ _fType }, data{ _data }{}
 	template<typename T>
 	void operator=(const T& val)
 	{

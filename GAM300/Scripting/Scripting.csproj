@@ -257,7 +257,6 @@
     <Compile Include="..\External\GlmSharp\obj\Debug\GlmSharp.csproj.FileListAbsolute.txt" />
     <Compile Include="..\External\GlmSharp\obj\Debug\GlmSharp.dll" />
     <Compile Include="..\External\GlmSharp\obj\Debug\GlmSharp.pdb" />
-    <Compile Include="..\External\GlmSharp\obj\Release\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
     <Compile Include="..\External\GlmSharp\obj\Release\GlmSharp.csproj.AssemblyReference.cache" />
     <Compile Include="..\External\GlmSharp\obj\Release\GlmSharp.csproj.CoreCompileInputs.cache" />
     <Compile Include="..\External\GlmSharp\obj\Release\GlmSharp.csproj.FileListAbsolute.txt" />

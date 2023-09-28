@@ -37,13 +37,6 @@ All content � 2022 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
 
-
-struct Handle
-{
-	Engine::UUID euid;
-	Engine::UUID uuid;
-};
-
 using SingleObjectTypes = decltype(TemplatePack<Entity>::Concatenate(SingleComponentTypes()));
 
 template <typename T>
@@ -209,6 +202,7 @@ public:
 
 	std::filesystem::path filePath;
 	using Layer = std::list<Engine::UUID>;
+	const Engine::UUID uuid = Engine::CreateUUID();
 
 	Layer layer;
 
@@ -247,7 +241,6 @@ public:
 		CloneHelper<T,Ts...>(rhs);
 		//CloneLinkHelper<Ts...>(rhs);
 	}
-
 
 
 	Scene(Scene& rhs) : sceneName{rhs.sceneName}

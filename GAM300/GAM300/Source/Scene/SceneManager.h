@@ -26,6 +26,8 @@ public:
 
 	bool HasScene();
 
+	Scene& GetPreviousScene() { return *std::next(loadedScenes.begin()); }
+
 	Scene& GetCurrentScene() { return loadedScenes.front(); }
 	
 	void CallbackCreateScene(CreateSceneEvent* pEvent);

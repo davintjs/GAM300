@@ -1,5 +1,5 @@
-[2023-09-28 01:36:59.934] [Error] [critical] 
+[2023-09-29 01:53:36.847] [Error] [critical] 
 Caused By:	mClass
 Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 222)
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 224)
 
