@@ -14,6 +14,7 @@ struct SystemsGroup
 
 	constexpr static void Update(float dt, std::function<void(ISystem*)> func)
 	{
+		UNREFERENCED_PARAMETER(dt);
 		(func(&Ts::Instance()), ...);
 	}
 

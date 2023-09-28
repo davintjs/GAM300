@@ -12,6 +12,7 @@ void InputSystem::Init()
 
 void InputSystem::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	InputHandler::copyingCurrStatetoLast();
 
 	InputHandler::mouseReset();

@@ -204,6 +204,7 @@ void ScriptingSystem::Init()
 
 void ScriptingSystem::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	if (logicState != LogicState::NONE)
 	{
 		//Sync logic thread with main thread
@@ -375,7 +376,7 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{
-		{
+		if (mCoreAssembly) {
 			ACQUIRE_SCOPED_LOCK(Mono);
 			if (MySceneManager.HasScene())
 			{
@@ -388,7 +389,7 @@ void ScriptingSystem::ThreadWork()
 			}
 		}
 
-		if (logicState != LogicState::NONE)
+		if (mCoreAssembly && logicState != LogicState::NONE)
 		{
 			if (ran)
 				continue;
@@ -477,9 +478,15 @@ void ScriptingSystem::SwapDll()
 	}
 	gcHandles.clear();
 	mComponents.clear();
+	mCoreAssembly = Utils::loadAssembly("scripts.dll");
+	if (mCoreAssembly == nullptr)
+	{
+		PRINT("Failed to load scripts, fix all errors\n");
+		compilingState = CompilingState::Wait;
+		return;
+	}
 	UnloadAppDomain();
 	CreateAppDomain();
-	mCoreAssembly = Utils::loadAssembly("scripts.dll");
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
 	RegisterScriptWrappers();
@@ -603,6 +610,7 @@ void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
+	(void)pEvent;
 	ACQUIRE_SCOPED_LOCK(Mono);
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
@@ -743,6 +751,7 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
+	(void)pEvent;
 	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
 	reflectionQueue.clear();
 	logicState = LogicState::START;
@@ -750,6 +759,7 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 }
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::EXIT;
 	ran = false;
 	while (ran == false);
@@ -757,6 +767,7 @@ void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::CLEANUP;
 	ran = false;
 	while (ran == false);
@@ -764,6 +775,7 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::CLEANUP;
 	ran = false;
 	while (ran == false);

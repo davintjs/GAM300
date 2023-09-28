@@ -93,8 +93,8 @@ struct SelectedEntityEvent : IEvent
 struct GetScriptNamesEvent : IEvent
 {
 	GetScriptNamesEvent() {};
-	const char** arr;
-	size_t count;
+	const char** arr = nullptr;
+	size_t count = 0;
 };
 
 template <typename T>

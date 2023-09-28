@@ -1,3 +1,16 @@
+/*!***************************************************************************************
+\file			PBR.frag
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	Fragment Shader for PBR
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #version 450 core
 
 //-------------------------
@@ -28,6 +41,7 @@ out vec4 FragColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
+uniform bool hdr;
 
 layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
@@ -49,10 +63,7 @@ layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
-// Easy trick to get tangent-normals to world-space to keep PBR code simplified.
-// Don't worry if you don't get what's going on; you generally want to do normal 
-// mapping the usual way for performance anyways; I do plan make a note of this 
-// technique somewhere later in the normal mapping tutorial.
+
 vec3 getNormalFromMap(int NM_index)
 {
     vec3 normal = texture(myTextureSampler[NM_index], TexCoords).xyz;
@@ -301,5 +312,10 @@ void main()
 //    color = color / (color + vec3(1.0));
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
+
+
+if(hdr)
+    color = color / (color + vec3(1.0));
+
     FragColor = vec4(color, 1.0);
 }

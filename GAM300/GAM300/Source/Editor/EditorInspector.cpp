@@ -18,7 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "EditorHeaders.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
-#include "EditorTemplates.h";
+#include "EditorTemplates.h"
 #include "Scene/Components.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
@@ -161,11 +161,11 @@ void DisplayType(const char* name, Vector4& val)
 
     //std::string var = name;
     //if (var.find("Albedo") != std::string::npos) {}
-    static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
+    //static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
     //ImVec4(val.x / 255.0f, val.y / 255.0f, val.z / 255.0f, val.w / 255.0f);
     
-    if (ImGui::ColorEdit4("MyColor##4", (float*)&color), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
-        val = ImVec4(color.w, color.z, color.x, color.y);
+    if (ImGui::ColorEdit4("MyColor##4", (float*)&val), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
+        //val = ImVec4(color.w, color.z, color.x, color.y);
     }
 
     
@@ -585,46 +585,63 @@ void Display_Property(T& comp) {
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
-    std::vector<property::entry> List;
+    // @joe do the drop down hahaha, idk how to do it
+    //if constexpr (std::is_same<T, AudioSource>()) {
+    //    //Combo field for mesh renderer
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TableNextColumn();
+    //    ImGui::Text("Channel");
+    //    ImGui::TableNextColumn();
+    //    std::vector<const char*> channelNames;
+    //    int number = 0;
+    //    bool found = false;
+    //    for (int i = 0; i < int(AudioSource::Channel::COUNT); ++i) {
+    //        if (int(comp.channel) == i)
+    //        {
+    //            channelNames.emplace_back(comp.ChannelName[i]);
+    //            number = i;
+    //        }
+    //    }
+    //    ImGui::PushItemWidth(-1);
+    //    ImGui::Combo("Channel", &number, channelNames.data(), channelNames.size(), 5);
+    //    ImGui::PopItemWidth();
+    //    //comp.ChannelName = ChannelNames[number];
+    //    comp.channel = static_cast<AudioSource::Channel>(number);
+    //}
+
+    //std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-            assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            List.push_back(property::entry { PropertyName, Data });
-        });
+            if (!Flags.m_isDontShow){
+                auto entry = property::entry { PropertyName, Data };
+                std::visit([&](auto& Value) {
+                    using T1 = std::decay_t<decltype(Value)>;
 
-    int id = 0;
-    for (auto& [Name, Data] : List)
-    {
-        //find out how to use flags
-        /*property::flags::type Flags;
-        if (Flags.m_isDontShow) continue;*/
+                    //Edit name
+                    std::string DisplayName = entry.first;
+                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                    DisplayName.erase(DisplayName.begin(), ++it);
 
-        if((Name.find("EUID") != std::string::npos) || (Name.find("UUID") != std::string::npos) || (Name.find("MeshName") != std::string::npos)) continue;
+                    ImGui::PushID(entry.first.c_str());
+                    Display<T1>(DisplayName.c_str(), Value);
 
-        std::visit([&](auto& Value) {
-                using T1 = std::decay_t<decltype(Value)>;
+                    //temporary implementation for texture picker
+                    if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
+                        DisplayTexturePicker(Value);
+                    }
 
-                //Edit name
-                std::string DisplayName = Name;
-                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                DisplayName.erase(DisplayName.begin(), ++it);
+                    ImGui::PopID();
+                    }
+                , Data);
+                property::set(comp, entry.first.c_str(), Data);
 
-                ImGui::PushID(Name.c_str());
-                Display<T1>(DisplayName.c_str(), Value);
-
-                //temporary implementation for texture picker
-                if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                    || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
-                    DisplayTexturePicker(Value);
-                }
-
-                ImGui::PopID();          
+                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //List.push_back(property::entry { PropertyName, Data });
             }
-        , Data);
-        property::set(comp, Name.c_str(), Data);
-    }
-
+           
+        });
 }
 
 //template <typename T>
@@ -969,7 +986,7 @@ public:
     DisplayComponentsStruct() = delete;
     DisplayComponentsStruct(Entity& entity)
     {
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
         //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
 
@@ -1070,7 +1087,7 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void AddPanel(Entity& entity) {
-    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
@@ -1143,6 +1160,7 @@ void EditorInspector::Init()
 
 void EditorInspector::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
     ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
 

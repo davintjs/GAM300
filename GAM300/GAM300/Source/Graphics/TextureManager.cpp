@@ -29,7 +29,7 @@ void Texture_Manager::Init()
 
 void Texture_Manager::Update(float dt)
 {
-	;
+    UNREFERENCED_PARAMETER(dt);
 }
 
 void Texture_Manager::AddTexture(char const* Filename, std::string GUID)

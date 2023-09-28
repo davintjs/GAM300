@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			GraphicsSystem.cpp
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definations of Graphics System
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 
@@ -26,16 +40,7 @@ Model Line;
 std::map<std::string, InstanceProperties> properties;
 
 bool SwappingColorSpace = false;
-//Editor_Camera testCam;
-
-//Editor_Camera E_Camera;
 std::vector<Ray3D> Ray_Container;
-//bool test_button_1 = false;
-//bool test_button_2 = false;
-
-// Naive Solution for now
-
-std::vector <Materials> temp_MaterialContainer;
 
 std::vector <glm::vec4> temp_AlbedoContainer;
 std::vector <glm::vec4> temp_SpecularContainer;
@@ -43,7 +48,6 @@ std::vector <glm::vec4> temp_DiffuseContainer;
 std::vector <glm::vec4> temp_AmbientContainer;
 std::vector <float> temp_ShininessContainer;
 
-trans_mats SRT_Buffers[50];
 GLSLShader temp_instance_shader;
 GLSLShader temp_PBR_shader;
 GLSLShader temp_debug_shader;
@@ -66,8 +70,9 @@ GLuint Skybox_Tex;
 Model SkyBox_Model;
 
 GLSLShader HDR_Shader;
-bool hdr = false;
-float exposure = 0.1f;
+
+//bool hdr = false;
+//float exposure = 1.0;
 
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
@@ -103,7 +108,6 @@ void renderQuad()
 
 void HDR_Shader_init()
 {
-	//TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("right"));
 	std::vector<std::pair<GLenum, std::string>> shdr_files;
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
@@ -115,16 +119,17 @@ void HDR_Shader_init()
 		GL_FRAGMENT_SHADER,
 		"GAM300/Source/Graphics/HDR.frag"));
 
-	std::cout << "HDR SHADER\n";
+	PRINT("HDR SHADER");
 	HDR_Shader.CompileLinkValidate(shdr_files);
-	std::cout << "\n\n";
+	PRINT("HDR SHADER\n\n");
+
 
 	// if linking failed
 	if (GL_FALSE == HDR_Shader.IsLinked()) {
 		std::stringstream sstr;
 		sstr << "Unable to compile/link/validate shader programs\n";
 		sstr << HDR_Shader.GetLog() << "\n";
-		std::cout << sstr.str();
+		PRINT(sstr.str());
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -143,16 +148,15 @@ void PBR_Shader_init()
 		GL_FRAGMENT_SHADER,
 		"GAM300/Source/Graphics/PBR.frag"));
 
-	std::cout << "PBR SHADER\n";
+	PRINT("PBR SHADER\n");
 	temp_PBR_shader.CompileLinkValidate(shdr_files);
-	std::cout << "\n\n";
 
 	// if linking failed
 	if (GL_FALSE == temp_PBR_shader.IsLinked()) {
 		std::stringstream sstr;
 		sstr << "Unable to compile/link/validate shader programs\n";
 		sstr << temp_PBR_shader.GetLog() << "\n";
-		std::cout << sstr.str();
+		PRINT(sstr.str());
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -161,14 +165,12 @@ void PBR_Shader_init()
 //unsigned int hdrFBO;
 //unsigned int rboDepth;
 
-
-
-
 unsigned int ReturnTextureIdx(std::string MeshName, GLuint id);
 
 void GraphicsSystem::Init()
 {
-
+	hdr = false;
+	exposure = 1.f;
 	//glGenFramebuffers(1, &hdrFBO);
 	//// create floating point color buffer
 	//unsigned int colorBuffer;
@@ -213,16 +215,15 @@ void GraphicsSystem::Init()
 		GL_FRAGMENT_SHADER,
 		"GAM300/Source/Graphics/InstancedRender.frag"));
 
-	std::cout << "TEMP Instanced Render SHADER\n";
+	PRINT("TEMP Instanced Render SHADER\n");
 	temp_instance_shader.CompileLinkValidate(shdr_files);
-	std::cout << "\n\n";
-
+	PRINT("\n\n");
 	// if linking failed
 	if (GL_FALSE == temp_instance_shader.IsLinked()) {
 		std::stringstream sstr;
 		sstr << "Unable to compile/link/validate shader programs\n";
 		sstr << temp_instance_shader.GetLog() << "\n";
-		std::cout << sstr.str();
+		PRINT(sstr.str());
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -239,22 +240,18 @@ void GraphicsSystem::Init()
 		GL_FRAGMENT_SHADER,
 		"GAM300/Source/Graphics/InstancedDebugRender.frag"));
 
-	std::cout << "TEMP debug Render SHADER\n";
+	PRINT("TEMP debug Render SHADER\n");
 	temp_debug_shader.CompileLinkValidate(debugshdr_files);
-	std::cout << "\n\n";
+	PRINT("\n\n");
 
 	// if linking failed
 	if (GL_FALSE == temp_debug_shader.IsLinked()) {
 		std::stringstream sstr;
 		sstr << "Unable to compile/link/validate debug shader programs\n";
 		sstr << temp_debug_shader.GetLog() << "\n";
-		std::cout << sstr.str();
+		PRINT(sstr.str());
 		std::exit(EXIT_FAILURE);
 	}
-
-
-
-	//std::cout << "-- Graphics Init -- " << std::endl;
 
 	//INIT GRAPHICS HERE
 
@@ -274,7 +271,6 @@ void GraphicsSystem::Init()
 	//LightSource.position = glm::vec3(0.f, 0.f, -300.f);
 	AffectedByLight.position = glm::vec3(0.f, 0.f, -500.f);
 
-	int index = 0;
 
 	EditorCam.Init();
 }
@@ -286,7 +282,6 @@ void GraphicsSystem::Update(float dt)
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
 		std::fill_n(prop.texture, 32, 0.f);
 	}
-	//std::cout << "-- Graphics Update -- " << std::endl;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	Ray3D temp;
@@ -329,6 +324,7 @@ void GraphicsSystem::Update(float dt)
 			mesh_component.mr_metallic = -1.f;
 			mesh_component.mr_roughness = -1.f;
 			mesh_component.ao = -1.f;
+			mesh_component.ao = -1.f;
 
 		}
 
@@ -358,7 +354,7 @@ void GraphicsSystem::Update(float dt)
 			continue;
 		}
 
-		int index = t_Mesh->index;
+		//int index = t_Mesh->index;
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -372,12 +368,10 @@ void GraphicsSystem::Update(float dt)
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 		if (renderer.AlbedoTexture != "") {
-			//std::cout << "albedo tex\n";
 			textureID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
 		if (renderer.NormalMap != "") {
-			//std::cout << "normal tex\n";
 
 			normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
@@ -385,19 +379,16 @@ void GraphicsSystem::Update(float dt)
 
 
 		if (renderer.MetallicTexture != "") {
-			//std::cout << "normal tex\n";
 
 			MetallicID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
 		}
 		if (renderer.RoughnessTexture != "") {
-			//std::cout << "albedo tex\n";
 			RoughnessID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
 		}
 
 		if (renderer.AoTexture != "") {
-			//std::cout << "normal tex\n";
 			AoID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
 		}
@@ -422,24 +413,16 @@ void GraphicsSystem::Update(float dt)
 		//// button here change norm idx to 33
 		//if (test_button_1)
 		//{
-		//	std::cout << "force change normal\n";
 		//	normidx = 33;
 		//	
 		//}
 		//if (test_button_2)
 		//{
-		//	std::cout << "force change roughness\n";
 		//	roughidx = 33;
 		//}
-		//std::cout << normidx << "\n";
 
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
 		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
-		//renderer.mr_Albedo = temp_AlbedoContainer[3];
-		//renderer.mr_Ambient = temp_AmbientContainer[3];
-		//renderer.mr_Diffuse = temp_DiffuseContainer[3];
-		//renderer.mr_Shininess = temp_ShininessContainer[3];
-		//renderer.mr_Specular = temp_SpecularContainer[3];
 
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
@@ -462,36 +445,8 @@ void GraphicsSystem::Update(float dt)
 			}
 			//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
-			GLuint textureID = 0;
-			GLuint normalMapID = 0;
-			//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
-			// use bool to see if texture exist instead...
-
-			/*if (currentScene.HasComponent<Texture>(entity)) {
-				for (int j = 0; j <= properties[newName].textureCount; ++j) {
-					if (properties[newName].texture[j] == texID) {
-						haveTexture = true;
-					}
-				}
-				if (!haveTexture) {
-					if (properties[newName].textureCount < 32) {
-						properties[newName].texture[properties[newName].textureCount++] = texID;
-					}
-				}
-			}*/
-			/*for (int j = 0; j <= properties[newName].textureCount; ++j) {
-				if (properties[newName].texture[j] == texID) {
-					haveTexture = true;
-				}
-			}
-			if (!haveTexture) {
-				if (properties[newName].textureCount < 32) {
-					properties[newName].texture[properties[newName].textureCount++] = texID;
-				}
-			}*/
-
-			// properties[newName].entitySRT[properties[newName].iter++] = transform.GetWorldMatrix();
-			//std::cout << newName << "\n";
+			/*GLuint textureID = 0;
+			GLuint normalMapID = 0;*/
 
 			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
 			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
@@ -513,13 +468,6 @@ void GraphicsSystem::Update(float dt)
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
 		if (checkForSelection)
 		{
-			//glm::mat4 translation_mat(
-			//	glm::vec4(1.f, 0.f, 0.f, 0.f),
-			//	glm::vec4(0.f, 1.f, 0.f, 0.f),
-			//	glm::vec4(0.f, 0.f, 1.f, 0.f),
-			//	glm::vec4(transform.translation, 1.f)
-			//);
-			//glm::mat4 rotation_mat = glm::toMat4(glm::quat(transform.rotation));
 
 			glm::mat4 transMatrix = transform.GetWorldMatrix();
 
@@ -633,34 +581,20 @@ void GraphicsSystem::Update(float dt)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	if (hdr)
+	{
+		//std::cout << "HDR is up\n";
+	}
 
+	GLint uniform1 =
+		glGetUniformLocation(HDR_Shader.GetHandle(), "hdr");
 
+	glUniform1i(uniform1, hdr);
 
-	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
-	//{
-	//	hdr = !hdr;
-	//}
-	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
-	//{
-	//	if (exposure == 0.1)
-	//	{
-	//		exposure = 5.0;
-	//	}
-	//	else
-	//	{
-	//		exposure =  0.1;
-	//	}
-	//}
+	GLint uniform2 =
+		glGetUniformLocation(HDR_Shader.GetHandle(), "exposure");
 
-	//GLint uniform1 =
-	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
-
-	//glUniform1i(uniform1, hdr);
-
-	//GLint uniform2 =
-	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
-
-	//glUniform1f(uniform2, exposure);
+	glUniform1f(uniform2, exposure);
 
 	renderQuad();
 	EditorCam.getFramebuffer().unbind();
@@ -674,12 +608,9 @@ void GraphicsSystem::Update(float dt)
 }
 
 void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
-	unsigned int prim_count, GLenum prim_type, LightProperties LightSource,
-	glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin)
+	unsigned int prim_count, GLenum prim_type, LightProperties LightSource)
+	//,glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin)
 {
-
-
-
 
 	//testBox.instanceDraw(EntityRenderLimit);
 
@@ -716,6 +647,10 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "camPos");
 
 
+	GLint uniform6 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+
+	glUniform1i(uniform6, hdr);
 
 
 
@@ -822,8 +757,8 @@ void GraphicsSystem::Draw() {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, Lighting_Source,
-			temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
+		Draw_Meshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, Lighting_Source);
+			//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
 		if (EditorScene::Instance().DebugDraw())

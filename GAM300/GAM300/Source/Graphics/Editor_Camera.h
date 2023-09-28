@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			Editor_Camera.h
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the declaration of the editor camera and it's related functionalities
+	that includes:
+	1. Ray3D Class for ray casting ( Mouse Picking) and collision with OBB
+	2. Editor Camera and it's functionalities
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #pragma once
 
 #include "glslshader.h"
@@ -28,6 +45,7 @@ public:
 	glm::vec3 direction;
 };
 
+// Ray to Obb Test
 bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 	glm::vec3 ray_direction,     // Ray direction (NOT target position!), in world space. Must be normalize()'d.
 	glm::vec3 aabb_min,          // Minimum X,Y,Z coords of the mesh when not transformed at all.
@@ -61,20 +79,31 @@ public:
 	void Update(float dt);
 	//void Update();
 	
+	// update cam_mat
 	void updateView();
 
+	// Adjust Prespective projection based off viewport
 	void onResize(float _width, float _height);
 
+	// Get mouse coord in NDC
 	glm::vec2 GetMouseInNDC();
 
+	// set distanceto distanceToFP
 	void setDistanceToFocalPoint(float distance);
 	
+	// rotate camera
 	void rotateCamera(glm::vec2 delta);
+	
+	// pan camera
 	void panCamera(glm::vec2 delta);
+	
+	// zoom camera
 	void zoomCamera();
 
+	// Change viewport size
 	void setViewportSize(float width , float height);
 
+	// Set rotation speed
 	void setRotationSpeed(float speed);
 
 	// Getting Things relative to Cameras
@@ -99,9 +128,9 @@ public:
 
 	Framebuffer& getFramebuffer() { return framebuffer; }
 
+	// Shoots a Ray from camera
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
-	//Entity* ActiveObj{ nullptr };
 
 	bool canMove = true;
 	bool isMoving = false;

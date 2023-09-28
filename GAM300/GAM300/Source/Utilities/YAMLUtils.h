@@ -8,7 +8,19 @@
 
 \brief
     This file contains the declarations of the following:
-    1. YAML Integration
+    1. YAML Helper Functions
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
+        d. The transform component Child data 
+    2. YAML Encoder
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
+    3. YAML Decoder
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -19,9 +31,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Properties.h"
 #include "UUID.h"
 
-extern class Scene;
-extern struct Transform;
-extern struct Field;
+class Scene;
+struct Transform;
+struct Field;
 
 struct Child
 {
@@ -29,20 +41,16 @@ struct Child
     Scene& _scene;
 };
 
-template <typename T>
-void SerializeBasic(const T& _data, YAML::Emitter& out, const std::string& _key);
-
-template<>
-void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::string& _key);
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const Field& _data);
-
+// Overload for output for the Emitter specifically for child struct
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data);
 
+// Overload for output for the Emitter specifically for Vector2
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector2& v);
 
+// Overload for output for the Emitter specifically for Vector3
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector3& v);
 
+// Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
 
 namespace YAML
@@ -51,6 +59,7 @@ namespace YAML
     template<>
     struct convert<Vector2>
     {
+        // Encoding for Vector2 during deserialization
         static Node encode(const Vector2& rhs)
         {
             Node node;
@@ -59,6 +68,7 @@ namespace YAML
             return node;
         }
 
+        // Decoding for Vector2 during deserialization
         static bool decode(const Node& node, Vector2& rhs)
         {
             if (!node.IsSequence() || node.size() != 2)
@@ -75,6 +85,7 @@ namespace YAML
     template<>
     struct convert<Vector3>
     {
+        // Encoding for Vector3 during deserialization
         static Node encode(const Vector3& rhs)
         {
             Node node;
@@ -84,6 +95,7 @@ namespace YAML
             return node;
         }
 
+        // Decoding for Vector3 during deserialization
         static bool decode(const Node& node, Vector3& rhs)
         {
             if (!node.IsSequence() || node.size() != 3)
@@ -101,6 +113,7 @@ namespace YAML
     template<>
     struct convert<Vector4>
     {
+        // Encoding for Vector4 during deserialization
         static Node encode(const Vector4& rhs)
         {
             Node node;
@@ -111,6 +124,7 @@ namespace YAML
             return node;
         }
 
+        // Decoding for Vector4 during deserialization
         static bool decode(const Node& node, Vector4& rhs)
         {
             if (!node.IsSequence() || node.size() != 4)

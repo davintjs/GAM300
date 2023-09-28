@@ -1,8 +1,21 @@
+/*!***************************************************************************************
+\file			MeshManager.cpp
+\project
+\author         Euan Lim, Davin Tan,Jake Lian, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the Mesh Manager and it's related Functionalities's definitions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 
-extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
 //extern std::vector <Materials> temp_MaterialContainer;
@@ -26,6 +39,7 @@ void MESH_Manager::Init()
 
 void MESH_Manager::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
 	// Empty by design
 }
 
@@ -77,6 +91,11 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         //temp_MaterialContainer.push_back(temporary);
 
+
+
+
+
+        // Pushing into the buffers
         temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
         temp_DiffuseContainer.push_back(glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
             newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a));
@@ -88,7 +107,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     }
 
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
     glm::vec3 min(FLT_MAX);
     glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
@@ -161,13 +180,13 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
-        tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
+        tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
         tempProp.drawType = GL_TRIANGLES;
         std::string newName = fileName;
         std::map<std::string, InstanceProperties>::iterator it;
         it = properties.find(newName);
         while (it != properties.end()) {
-            newName += ('0' + i);
+            newName += char('0' + i);
             it = properties.find(newName);
         }
         properties.emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
@@ -175,7 +194,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
-        newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
+        newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties[newName]));
     }
@@ -299,7 +318,7 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 void MESH_Manager::CreateInstanceCube()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     // positions            // Normals              // Tangents             // Texture Coords   // Colors
     //float vertices[] = {
@@ -450,7 +469,7 @@ void MESH_Manager::CreateInstanceCube()
 void MESH_Manager::CreateInstanceSphere()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     GLuint vaoid;
     GLuint vboid;
@@ -552,12 +571,12 @@ void MESH_Manager::CreateInstanceSphere()
     InstanceProperties tempProp;
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
-    tempProp.drawCount = indices.size() ;
+    tempProp.drawCount = (unsigned int)(indices.size()) ;
     properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLE_STRIP;
-    newMesh.Drawcounts.push_back(indices.size());
+    newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Sphere"]));
 
     newMesh.vertices_min = min;
@@ -717,7 +736,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
-// THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
 unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
 
@@ -805,7 +824,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 void MESH_Manager::CreateInstanceLine()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)(mContainer.size());
 
     GLfloat vertices[] = {
         -1.f, 0.f, 0.f,   
