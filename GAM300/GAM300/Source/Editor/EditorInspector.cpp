@@ -161,11 +161,11 @@ void DisplayType(const char* name, Vector4& val)
 
     //std::string var = name;
     //if (var.find("Albedo") != std::string::npos) {}
-    static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
+    //static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
     //ImVec4(val.x / 255.0f, val.y / 255.0f, val.z / 255.0f, val.w / 255.0f);
     
-    if (ImGui::ColorEdit4("MyColor##4", (float*)&color), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
-        val = ImVec4(color.w, color.z, color.x, color.y);
+    if (ImGui::ColorEdit4("MyColor##4", (float*)&val), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
+        //val = ImVec4(color.w, color.z, color.x, color.y);
     }
 
     

@@ -376,7 +376,7 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{
-		{
+		if (mCoreAssembly) {
 			ACQUIRE_SCOPED_LOCK(Mono);
 			if (MySceneManager.HasScene())
 			{
@@ -389,7 +389,7 @@ void ScriptingSystem::ThreadWork()
 			}
 		}
 
-		if (logicState != LogicState::NONE)
+		if (mCoreAssembly && logicState != LogicState::NONE)
 		{
 			if (ran)
 				continue;
@@ -478,9 +478,15 @@ void ScriptingSystem::SwapDll()
 	}
 	gcHandles.clear();
 	mComponents.clear();
+	mCoreAssembly = Utils::loadAssembly("scripts.dll");
+	if (mCoreAssembly == nullptr)
+	{
+		PRINT("Failed to load scripts, fix all errors\n");
+		compilingState = CompilingState::Wait;
+		return;
+	}
 	UnloadAppDomain();
 	CreateAppDomain();
-	mCoreAssembly = Utils::loadAssembly("scripts.dll");
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
 	RegisterScriptWrappers();
