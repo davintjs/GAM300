@@ -88,7 +88,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     }
 
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
     glm::vec3 min(FLT_MAX);
     glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
@@ -161,7 +161,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
-        tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
+        tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
         tempProp.drawType = GL_TRIANGLES;
         std::string newName = fileName;
         std::map<std::string, InstanceProperties>::iterator it;
