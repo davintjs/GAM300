@@ -26,6 +26,7 @@ void MESH_Manager::Init()
 
 void MESH_Manager::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
 	// Empty by design
 }
 
@@ -299,7 +300,7 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 void MESH_Manager::CreateInstanceCube()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     // positions            // Normals              // Tangents             // Texture Coords   // Colors
     //float vertices[] = {
@@ -450,7 +451,7 @@ void MESH_Manager::CreateInstanceCube()
 void MESH_Manager::CreateInstanceSphere()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     GLuint vaoid;
     GLuint vboid;

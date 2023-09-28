@@ -149,7 +149,7 @@ public:
 					//Update performance viewer every 2s
 					sys->Update(dt);
 					if (update) {
-						float timetaken = glfwGetTime() - starttime;
+						float timetaken = (float)(glfwGetTime() - starttime);
 						elapsedtime += timetaken;
 						system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
 					}	
@@ -191,10 +191,12 @@ public:
 
 	void CallbackSceneStart(SceneStartEvent* pEvent)
 	{
+		(void)pEvent;
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
 	void CallbackSceneStop(SceneStopEvent* pEvent) 
 	{
+		(void)pEvent;
 		mode = ENUM_SYSTEM_EDITOR;
 	}
 

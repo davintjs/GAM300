@@ -204,6 +204,7 @@ void ScriptingSystem::Init()
 
 void ScriptingSystem::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	if (logicState != LogicState::NONE)
 	{
 		//Sync logic thread with main thread
@@ -603,6 +604,7 @@ void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
+	(void)pEvent;
 	ACQUIRE_SCOPED_LOCK(Mono);
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
@@ -743,6 +745,7 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
+	(void)pEvent;
 	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
 	reflectionQueue.clear();
 	logicState = LogicState::START;
@@ -750,6 +753,7 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 }
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::EXIT;
 	ran = false;
 	while (ran == false);
@@ -757,6 +761,7 @@ void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::CLEANUP;
 	ran = false;
 	while (ran == false);
@@ -764,6 +769,7 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::CLEANUP;
 	ran = false;
 	while (ran == false);

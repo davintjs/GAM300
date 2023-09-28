@@ -145,7 +145,7 @@ bool SPARSESET::contains(T& pValue)
 }
 
 template <typename T, ObjectIndex N>
-T& SPARSESET::operator[] (ObjectIndex i)
+T& SPARSESET::operator[] (size_t i)
 {
     E_ASSERT(i < size_, "ARRAY OUT OF BOUNDS");
     return *reinterpret_cast<T*>(data + nodes[i].denseIndex);

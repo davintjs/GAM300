@@ -128,7 +128,7 @@ void DemoSystem::Init()
 
 void DemoSystem::Update(float dt)
 {
-
+	UNREFERENCED_PARAMETER(dt);
 }
 
 void DemoSystem::Exit()

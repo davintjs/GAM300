@@ -157,8 +157,9 @@ void PhysicsSystem::Exit() {
 
 }
 
-void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) {
-	
+void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) 
+{
+	(void)pEvent;
 	// Create the JPH physics world and INIT it
 	physicsSystem = new JPH::PhysicsSystem();
 
@@ -178,8 +179,9 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) {
 	std::cout << "Physics System scene start test\n";
 
 }
-void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) {
-
+void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
+{
+	(void)pEvent;
 	std::cout << "Physics System scene stop test\n";
 
 	// Delete the current physics system, must set to nullptr

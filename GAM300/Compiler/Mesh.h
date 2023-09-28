@@ -107,11 +107,11 @@ public:
     std::vector<Vertex> _vertices; // This individual mesh vertices
     std::vector<unsigned int> _indices; // This individual mesh indices
 
-    glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions of this sub mesh
-    glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates of this sub mesh
+    glm::vec3 mPosCompressionScale{}; // Scale value according to the bounding box of the vertices positions of this sub mesh
+    glm::vec2 mTexCompressionScale{}; // Scale value according to the bounding box of the texture coordinates of this sub mesh
 
-    glm::vec3 mPosCompressionOffset; // This individual mesh vertices' positions' center offset from original
-    glm::vec2 mTexCompressionOffset; // This individual mesh textures' coordinates' center offset from original
+    glm::vec3 mPosCompressionOffset{}; // This individual mesh vertices' positions' center offset from original
+    glm::vec2 mTexCompressionOffset{}; // This individual mesh textures' coordinates' center offset from original
 
     int materialIndex = 0; // Material index
 

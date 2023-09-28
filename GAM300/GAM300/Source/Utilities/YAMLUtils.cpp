@@ -8,33 +8,27 @@
 
 \brief
     This file contains the definitions of the following:
-    1. YAML Integration
+    1. YAML Helper Functions
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
+        d. The transform component Child data 
+    2. YAML Encoder
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
+    3. YAML Decoder
+        a. Vector 2
+        b. Vector 3
+        c. Vector 4
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
 #include "YAMLUtils.h"
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
-
-
-template <typename T>
-void SerializeBasic(const T& _data, YAML::Emitter& out, const std::string& _key)
-{
-    out << YAML::Key << _key << YAML::Value << _data;
-}
-
-template<>
-void SerializeBasic<bool>(const bool& _data, YAML::Emitter& out, const std::string& _key)
-{
-
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const Field& _data)
-{
-    return out;
-}
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
