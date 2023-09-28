@@ -45,6 +45,7 @@ namespace EngineObjectLayers {
 	inline constexpr JPH::ObjectLayer DYNAMIC = 1;
 	inline constexpr JPH::ObjectLayer NUM_LAYERS = 2;
 };
+// For broadphase layers
 namespace EngineBroadPhaseLayers {
 	inline constexpr JPH::BroadPhaseLayer STATIC(0);
 	inline constexpr JPH::BroadPhaseLayer DYNAMIC(1);
@@ -54,6 +55,7 @@ namespace EngineBroadPhaseLayers {
  //Determines if two object layers should collide
 class ObjectLayerPairFilter : public JPH::ObjectLayerPairFilter {
 public:
+	// Check if two objects can collide or not, depending on the object layer they are in
 	virtual bool ShouldCollide(JPH::ObjectLayer obj1, JPH::ObjectLayer obj2) const override {
 		switch (obj1) {
 		case EngineObjectLayers::STATIC:
@@ -75,10 +77,12 @@ public:
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
 		bpLayers[EngineObjectLayers::DYNAMIC] = EngineBroadPhaseLayers::DYNAMIC;
 	}
+	// Get number of broadphase layers
 	virtual unsigned int GetNumBroadPhaseLayers() const override {
 		return EngineBroadPhaseLayers::NUM_LAYERS;
 
 	}
+	// Get a broadphase layer
 	virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer objLayer) const override {
 		// TODO
 		// Error checking!!
@@ -87,6 +91,7 @@ public:
 	}
 
 	#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+	// Get the name of a broadphase layer
 	virtual const char* GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override
 	{
 		switch ((JPH::BroadPhaseLayer::Type)inLayer)
@@ -106,6 +111,8 @@ private:
 // Determines if an object layer can collide with a broadphase layer
 class ObjectvsBroadPhaseLayerFilter : public JPH::ObjectVsBroadPhaseLayerFilter {
 public:
+
+	// Check if an object in an object layer should collide with a broadphase layer
 	virtual bool ShouldCollide(JPH::ObjectLayer objLayer, JPH::BroadPhaseLayer bPLayer) const override {
 		switch (objLayer) {
 		case EngineObjectLayers::STATIC:
@@ -119,12 +126,17 @@ public:
 };
 
 
-// Contact Listener
+// Contact Listener (collision)
 class EngineContactListener : public JPH::ContactListener {
 public:
+
+	// Callback to validate a collision (contact)
 	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
+	// Callback when new collision is registered
 	virtual void OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	// Callback when a collision persists to next update frame
 	virtual void OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
+	// Callback for when a collision is removed
 	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
 };
 #pragma region In Progress
@@ -145,24 +157,28 @@ public:
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
 public:
+
+	// Initialise the Physics System
 	void Init();
+	// Updates the Physics System
 	void Update(float dt);
+	// Clean-up duty
 	void Exit();
 
-
+	// Clone any gameobject with rigidbodies, character controller into a Jolt Body for simulations
 	void PopulatePhysicsWorld();
+
+	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
+
+	// A testing function
 	void TestRun();
 
 
-	// Scene Callbacks
+	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
+	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
-
-
-	// Jolt Body creations
-	//void CreateJoltRigidbody(Rigidbody & rb);
-	//void CreateJoltCharacter(CharacterController & cc);
 
 	const unsigned int maxObjects =					 1024;
 	const unsigned int maxObjectMutexes =				0;

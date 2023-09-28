@@ -468,6 +468,7 @@ void PhysicsSystem::TestRun() {
 	//PopulatePhysicsWorld();
 }
 
+// Create and add a Jolt Character to a Jolt physics system using a character controller
 void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
@@ -497,7 +498,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 	return;
 }
 
-// Contact Listener
+// Contact Listeners
 JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) {
 	
 	(void)body1;
