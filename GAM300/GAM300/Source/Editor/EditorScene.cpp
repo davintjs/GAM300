@@ -7,10 +7,11 @@
 \date           04/09/2023
 
 \brief
-	This file contains the definitions of the following :
+	This file contains the definitions of the following:
 	1. Editor Scene
+    2. Editor Game
 
-All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
 

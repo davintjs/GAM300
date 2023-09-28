@@ -1,0 +1,28 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: Test 1
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 9676812423302306959
+  m_IsActive: true
+  m_Name: Obj 1
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 12973005303737397547}  # BoxCollider
+---
+BoxCollider:
+  EUID: 9676812423302306959
+  UUID: 12973005303737397547
+  X: 1
+  Y: 1
+  Z: 1
