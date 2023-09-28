@@ -42,8 +42,6 @@ std::map<std::string, InstanceProperties> properties;
 bool SwappingColorSpace = false;
 std::vector<Ray3D> Ray_Container;
 
-std::vector <Materials> temp_MaterialContainer;
-
 std::vector <glm::vec4> temp_AlbedoContainer;
 std::vector <glm::vec4> temp_SpecularContainer;
 std::vector <glm::vec4> temp_DiffuseContainer;
@@ -123,7 +121,8 @@ void HDR_Shader_init()
 
 	PRINT("HDR SHADER");
 	HDR_Shader.CompileLinkValidate(shdr_files);
-	std::cout << "\n\n";
+	PRINT("HDR SHADER\n\n");
+
 
 	// if linking failed
 	if (GL_FALSE == HDR_Shader.IsLinked()) {

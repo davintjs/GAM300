@@ -84,8 +84,6 @@ void AudioManager::Update(float dt) {
 	}
 	else if (currentMusic == 0 && !nextMusicPath.empty()) {
 		PlayMusic(nextMusicPath);
-		//fade = FADE_IN;
-		//nextMusicPath.clear();
 	}
 	currentFX->setVolume(GetSFXVolume() * loopfxVolume);
 	system->update();
@@ -93,33 +91,18 @@ void AudioManager::Update(float dt) {
 
 
 void AudioManager::AddMusic(const std::string& path, const std::string& name) {
-	/*if (sounds[CATEGORY_MUSIC].find(path) != sounds[CATEGORY_MUSIC].end()) {
-		std::cout << path << "already exist\n";
-		return;
-	}*/
+
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC], 0, &sound);
-	if (r != FMOD_OK) {
-		std::cout << path << " doesnt exist!\n";
-		return;
-	}
-	//std::cout << path << " exist!\n";
-
+	E_ASSERT(r == FMOD_OK, path , " doesnt exist!\n");
 	sounds[CATEGORY_MUSIC].insert(std::make_pair(name, sound));
 }
 
 void AudioManager::AddLoopFX(const std::string& path, const std::string& name) {
-	/*if (sounds[CATEGORY_MUSIC].find(path) != sounds[CATEGORY_MUSIC].end()) {
-		std::cout << path << "already exist\n";
-		return;
-	}*/
+
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_LOOPFX], 0, &sound);
-	if (r != FMOD_OK) {
-		std::cout << path << " doesnt exist!\n";
-		return;
-	}
-	//std::cout << path << " exist!\n";
+	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
 
 	sounds[CATEGORY_LOOPFX].insert(std::make_pair(name, sound));
 }
@@ -127,10 +110,7 @@ void AudioManager::AddLoopFX(const std::string& path, const std::string& name) {
 void AudioManager::AddSFX(const std::string& path, const std::string& name) {
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_SFX], 0, &sound);
-	if (r != FMOD_OK) {
-		std::cout << path << " doesnt exist!\n";
-		return;
-	}
+	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
 	sounds[CATEGORY_SFX].insert(std::make_pair(name, sound));
 }
 
@@ -151,10 +131,7 @@ void AudioManager::PlayMusic(const std::string name) {
 	}
 	// Find the Music in the corresponding sound map
 	SoundMap::iterator sound = sounds[CATEGORY_MUSIC].find(name);
-	if (sound == sounds[CATEGORY_MUSIC].end()) {
-		std::cout << name << " not found\n";
-		return;
-	}
+	E_ASSERT(sound != sounds[CATEGORY_MUSIC].end(), name, " not found!\n");
 	// Start playing Music with volume set to 0 and fade in
 	currentMusicPath = name;
 	system->playSound(sound->second, 0, true, &currentMusic);
@@ -183,10 +160,7 @@ void AudioManager::PlayLoopFX(const std::string name, float pan, float vol) {
 	}
 	// Find the Music in the corresponding sound map
 	SoundMap::iterator sound = sounds[CATEGORY_LOOPFX].find(name);
-	if (sound == sounds[CATEGORY_LOOPFX].end()) {
-		std::cout << name << " not found\n";
-		return;
-	}
+	E_ASSERT(sound != sounds[CATEGORY_LOOPFX].end(), name, " not found!\n");
 	// Start playing Music with volume set to 0 and fade in
 	currentFXPath = name;
 	system->playSound(sound->second, 0, true, &currentFX);
