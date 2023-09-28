@@ -17,6 +17,8 @@ void Editor_Camera::Init()
 
 	framebuffer.set_size((unsigned int) 1600, (unsigned int) 900);
 	framebuffer.init();
+	//bool pass = false;
+	//E_ASSERT(pass, "Ccoord" , 15 ,"hehe");
 }
 
 
