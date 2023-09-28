@@ -348,6 +348,8 @@ void CloneHelper(Field& rhs, YAML::Emitter& out)
             if constexpr (!std::is_same<T, None>())
                 out << YAML::Value << value;
         }
+
+        return;
     }
 
     if constexpr (sizeof...(Ts) != 0)
@@ -365,9 +367,9 @@ void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>)
 template <typename T, typename... Ts>
 void CloneHelper(Field& rhs, YAML::Node& node)
 {
-    /*YAML::Emitter out;
+    YAML::Emitter out;
     out << node;
-    PRINT(out.c_str(), '\n');*/
+    PRINT(out.c_str(), '\n');
     if (rhs.fType == GetFieldType::E<T>())
     {
         if constexpr (AllObjectTypes::Has<T>())
@@ -378,7 +380,6 @@ void CloneHelper(Field& rhs, YAML::Node& node)
                 handle.euid = node["fileID"].as<Engine::UUID>();
             else
                 handle.uuid = node["fileID"].as<Engine::UUID>();
-            return;
         }
         else
         {
@@ -386,8 +387,8 @@ void CloneHelper(Field& rhs, YAML::Node& node)
             T& value = rhs.Get<T>();
             if constexpr (!std::is_same<T, None>())
                 value = node.as<T>();
-            return;
         }
+        return;
     }
 
     if constexpr (sizeof...(Ts) != 0)
