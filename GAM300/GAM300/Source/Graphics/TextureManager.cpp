@@ -1,3 +1,22 @@
+/**************************************************************************************/
+/*!
+//    \file			TextureManager.cpp
+//    \author(s) 	Euphrasia Theophelia Tan Ee Mun
+//                 	Euan Lim Yiren
+//
+//    \date   	    15th September 2023
+//    \brief		This file contains the functions that are used to create textures 
+//                  from a dds file and retrieve textures from a GUID.
+//
+//    \Percentage   Theophelia 80%
+//                  Euan 20%
+//
+//    Copyright (C) 2022 DigiPen Institute of Technology.
+//    Reproduction or disclosure of this file or its contents without the
+//    prior written consent of DigiPen Institute of Technology is prohibited.
+ */
+ /**************************************************************************************/
+
 #include "Precompiled.h"
 #include "TextureManager.h"
 
@@ -22,11 +41,12 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
     const char* found = strstr(Filename, searchWord.c_str());
 
     if (found != nullptr) {
-        //std::cout << "skybox" << std::endl;
+        // if skybox
         
         // if filename_top, we create skybox texture as the other .dds should have been loaded in
         searchWord = "_top";
         const char* found = strstr(Filename, searchWord.c_str());
+
         if (found != nullptr) {
         
             size_t length = found - Filename;
@@ -36,14 +56,17 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
             subString[length] = '\0';
 
             temp = CreateSkyboxTexture(subString);
+            E_ASSERT(temp, "Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.");
+
             delete[] subString;
 
             mTextureContainer.emplace(GUID, std::pair(Filename, temp));
         }
     }
     else {
-        //std::cout << "not skybox" << std::endl;
+        // if not skybox
         temp = CreateTexture(Filename);
+        E_ASSERT(temp, "Texture creation failed.");
         mTextureContainer.emplace(GUID, std::pair(Filename, temp));
     }
 
@@ -72,15 +95,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
 
     glm::tvec3<GLsizei> const Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-    //if ( gli::is_srgb(Texture.format()) )
-    //{
-    //    std::cout << " SRGB\n";
-    //}
-    //else
-    //{
-    //    std::cout << " RGB\n";
 
-    //}
     switch (Texture.target())
     {
     case gli::TARGET_1D:
@@ -231,6 +246,7 @@ GLuint Texture_Manager::GetTexture(std::string GUID)
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
         return mTextureContainer.find(GUID)->second.second;
     }
+
     return UINT_MAX;
 }
 
