@@ -6,14 +6,6 @@
 #define EntityRenderLimit 200
 #define EnitityInstanceLimit 200
 
-
-// Naive Solution
-struct trans_mats
-{
-	glm::mat4 transformation_mat[EntityRenderLimit];
-	int index = 0;
-};
-
 struct LightProperties
 {
 	glm::vec3 lightpos;

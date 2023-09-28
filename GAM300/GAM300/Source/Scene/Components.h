@@ -185,15 +185,26 @@ property_begin_name(Transform, "Transform")
 
 struct AudioSource : Object
 {
+	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
+	std::vector<std::string> ChannelName =
+	{
+		"Music",
+		"SFX",
+		"Looping SFX"
+	};
 	bool loop = false;
+	bool play = false;
 	float volume = 1.0f;
+	std::string currentSound = "";
 	property_vtable();
 };
 
 property_begin_name(AudioSource, "Audio Source") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+		//property_var(ChannelName).Name("channel"),
 		property_var(loop).Name("Loop"),
-		property_var(volume).Name("Volume")
+		property_var(volume).Name("Volume"),
+		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
 
 struct BoxCollider : Object

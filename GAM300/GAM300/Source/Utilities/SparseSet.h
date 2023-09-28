@@ -199,7 +199,7 @@ public:
             Reference to object that was gotten through subscript
     */
     /**************************************************************************/
-    T& operator[] (uint32_t i);
+    T& operator[] (size_t i);
 
     T& DenseSubscript (ObjectIndex val);
 

@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			Framebuffer.cpp
+\project
+\author         Sean Ngo
+
+\par			Course: GAM300
+\date           10/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. Framebuffer class which contains the basic two functions, init and exit
+		a. Bind and Unbinding of the framebuffer
+		b. Resizing the framebuffer viewport
+		c. Getters and Setters for private data members
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Framebuffer.h"

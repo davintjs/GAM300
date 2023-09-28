@@ -23,7 +23,6 @@ void Editor_Camera::Init()
 
 
 void Editor_Camera::Update(float dt)
-//void Update()
 {
 	UNREFERENCED_PARAMETER(dt);
 	// To Move / Adjust the editor camera

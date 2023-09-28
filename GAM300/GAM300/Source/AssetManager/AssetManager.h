@@ -10,6 +10,7 @@
 #include "Core/Events.h"
 #include "Graphics/TextureManager.h"
 #include "Graphics/MeshManager.h"
+#include "Audio/AudioManager.h"
 // GUID, last file update time, file name, data
 struct FileInfo
 {
@@ -42,7 +43,7 @@ public:
 
 private:
 	const std::string AssetPath = "Assets";
-	bool FileAdded = false; // For the filewatcher (Adding file calls both add and modified so this is for me to bypass modified)
+	//bool FileAdded = false; // For the filewatcher (Adding file calls both add and modified so this is for me to bypass modified)
 
 	// Asset stuff
 	Asset mTotalAssets;
@@ -59,9 +60,9 @@ private:
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
 	void DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool isDDS = false);
 
-	void FileAddProtocol();
-	void FileRemoveProtocol();
-	void FileUpdateProtocol();
+	void FileAddProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension);
+	void FileRemoveProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension);
+	void FileUpdateProtocol(const std::string& filePath, const std::string& fileExtension);
 
 	// EVENT CALLBACKS
 	void CallbackFileModified(FileModifiedEvent * pEvent);

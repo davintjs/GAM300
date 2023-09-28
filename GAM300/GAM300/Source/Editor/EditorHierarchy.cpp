@@ -197,6 +197,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 void EditorHierarchy::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	ImGui::Begin("Hierarchy");
 
 	//List out all entities in current scene

@@ -57,6 +57,7 @@ struct SingleHandlesTable
 	template <typename T1>
 	bool Has(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
+		(void)uuid;
 		auto& entries = std::get<Table<T1>>(tables);
 		if (entries.find(euid) == entries.end())
 			return false;
@@ -141,6 +142,7 @@ struct MultiHandlesTable
 	template <typename T1>
 	constexpr void Remove(Engine::UUID euid, Engine::UUID uuid)
 	{
+		(void)uuid;
 		auto& entries = std::get<MultiTable<T1>>(tables);
 		entries[euid].erase(euid);
 		if (entries[euid].size() == 0)
@@ -260,6 +262,7 @@ public:
 	template<typename T>
 	T& Get(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
+		(void)uuid;
 		//E_ASSERT
 		//(
 		//	handles.Has<T>(euid),
@@ -357,7 +360,7 @@ public:
 		if constexpr (std::is_same<T, Entity>())
 		{
 			entitiesDeletionBuffer.push_back(&object);
-			entities.SetActive(object.uuid,false);
+			entities.SetActive((ObjectIndex)object.uuid,false);
 			layer.erase(std::find(layer.begin(), layer.end(), object.euid));
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
@@ -482,7 +485,10 @@ public:
 		{
 			return entity.hasComponentsBitset.test(GetType::E<Component>());
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 
 	template <typename T>
@@ -492,11 +498,19 @@ public:
 		{
 			return singleHandles.Has<T>(handle.euid);
 		}
-		else if constexpr (MultiComponentTypes::Has<T>())
+		else
+		{
+			return false;
+		}
+		
+		if constexpr (MultiComponentTypes::Has<T>())
 		{
 			return multiHandles.Has<T>(handle.euid,handle.uuid);
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 
 	template <typename T>
@@ -541,7 +555,7 @@ public:
 			object = &arr.emplace_back(args...);
 			object->euid = euid;
 			object->uuid = arr.GetDenseIndex(*object);
-			arr.SetActive(object->uuid);
+			arr.SetActive((ObjectIndex)object->uuid);
 			singleHandles.emplace(object, object->euid);
 			Add<Transform>(*object);
 			Tag* tag = Add<Tag>(*object);
@@ -554,7 +568,7 @@ public:
 		else if constexpr (AllComponentTypes::Has<T>())
 		{
 			Entity& entity{ Get<Entity>(euid) };
-			object = &arr.emplace(entity.uuid,args...);
+			object = &arr.emplace((ObjectIndex)entity.uuid,args...);
 			object->euid = euid;
 			object->uuid = uuid;
 			if constexpr (SingleComponentTypes::Has<T>())

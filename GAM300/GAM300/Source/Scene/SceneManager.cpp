@@ -108,6 +108,7 @@ bool SceneManager::DuplicateScene()
 
 void SceneManager::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	Scene& scene = GetCurrentScene();
 	scene.ClearBuffer();
 }
@@ -146,6 +147,7 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 
 void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
+	(void)pEvent;
 	//Publish scene change
 	loadedScenes.emplace_front(GetCurrentScene());
 	GetCurrentScene().sceneName += " [PREVIEW]";
@@ -153,6 +155,7 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 
 void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 {
+	(void)pEvent;
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
 	loadedScenes.pop_front();

@@ -18,7 +18,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "EditorHeaders.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneManager.h"
-#include "EditorTemplates.h";
+#include "EditorTemplates.h"
 #include "Scene/Components.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
@@ -585,6 +585,30 @@ void Display_Property(T& comp) {
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
+    // @joe do the drop down hahaha, idk how to do it
+    //if constexpr (std::is_same<T, AudioSource>()) {
+    //    //Combo field for mesh renderer
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TableNextColumn();
+    //    ImGui::Text("Channel");
+    //    ImGui::TableNextColumn();
+    //    std::vector<const char*> channelNames;
+    //    int number = 0;
+    //    bool found = false;
+    //    for (int i = 0; i < int(AudioSource::Channel::COUNT); ++i) {
+    //        if (int(comp.channel) == i)
+    //        {
+    //            channelNames.emplace_back(comp.ChannelName[i]);
+    //            number = i;
+    //        }
+    //    }
+    //    ImGui::PushItemWidth(-1);
+    //    ImGui::Combo("Channel", &number, channelNames.data(), channelNames.size(), 5);
+    //    ImGui::PopItemWidth();
+    //    //comp.ChannelName = ChannelNames[number];
+    //    comp.channel = static_cast<AudioSource::Channel>(number);
+    //}
+
     //std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
@@ -962,7 +986,7 @@ public:
     DisplayComponentsStruct() = delete;
     DisplayComponentsStruct(Entity& entity)
     {
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
         //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
 
@@ -1063,7 +1087,7 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void AddPanel(Entity& entity) {
-    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
@@ -1136,6 +1160,7 @@ void EditorInspector::Init()
 
 void EditorInspector::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
     ImGui::SetNextWindowSizeConstraints(ImVec2(320, 180), ImVec2(FLT_MAX, FLT_MAX));
 
