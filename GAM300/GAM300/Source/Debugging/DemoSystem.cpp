@@ -93,6 +93,7 @@ void DemoSystem::Init()
 	scene.Get<MeshRenderer>(character).MeshName = "Cube";
 	scene.Get<Transform>(character).translation = Vector3(50.f, 200.0f, 0.f);
 	scene.Get<Transform>(character).scale = Vector3(25.f, 25.f, 25.f);
+	scene.Add<CharacterController>(character);
 
 	Entity& lightsource = *scene.Add<Entity>();
 	//scene.Add<LightSource>(lightsource);

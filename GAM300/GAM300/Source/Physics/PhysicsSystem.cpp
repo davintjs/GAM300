@@ -1,3 +1,19 @@
+﻿/*!***************************************************************************************
+\file			PhysicsSystem.cpp
+\project
+\author         Matthew Lau
+\co-authors		Desmond Too
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the definitions of:
+	1. Physics System
+	2. Math conversion helper functions
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "Core/EventsManager.h"
 #include "PhysicsSystem.h"
@@ -422,15 +438,29 @@ void PhysicsSystem::TestRun() {
 
 void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 
-	JPH::CharacterSettings characterSetting;
-	characterSetting.mMass = cc.mass;
-	characterSetting.mFriction = cc.friction;
-	characterSetting.mGravityFactor = cc.gravityFactor;
-	characterSetting.mLayer = EngineObjectLayers::DYNAMIC;
-	characterSetting.mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
+	Scene& scene = MySceneManager.GetCurrentScene();
+	Entity& entity = scene.Get<Entity>(cc);
+	Transform& t = scene.Get<Transform>(entity);
 
-	(void)psystem;
+	JPH::Ref<JPH::CharacterSettings> characterSetting;
+	characterSetting->mMass = cc.mass;
+	characterSetting->mFriction = cc.friction;
+	characterSetting->mGravityFactor = cc.gravityFactor;
+	characterSetting->mLayer = EngineObjectLayers::DYNAMIC;
+	characterSetting->mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
+	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -t.scale.x);
 
+	// Character Shape (default capsule)
+	JPH::RefConst<JPH::Shape> characterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0.5f*t.scale.y + t.scale.x, 0),
+													JPH::Quat::sIdentity(), new JPH::CapsuleShape(0.5f * t.scale.y, t.scale.x)).Create().Get();
+	characterSetting->mShape = characterShape;
+
+
+	JPH::Ref<JPH::Character> character = new JPH::Character(characterSetting, JPH::RVec3::sZero(), JPH::Quat::sIdentity(), 0, psystem);
+	JPH::EActivation activeStatus = JPH::EActivation::Activate;
+	if (!scene.IsActive(cc))
+		activeStatus = JPH::EActivation::DontActivate;
+	character->AddToPhysicsSystem(activeStatus);
 
 	return;
 }

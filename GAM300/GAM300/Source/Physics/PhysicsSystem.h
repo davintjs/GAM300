@@ -1,8 +1,28 @@
+/*!***************************************************************************************
+\file			PhysicsSystem.h
+\project
+\author         Matthew Lau
+\co-authors		Desmond Too
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the declarations of:
+	1. Physics System
+	2. ObjectLayerPairFilter
+	3. BroadPhaseLayerInterface
+	4. ObjectvsBroadPhaseLayerFilter
+	5. EngineContactListener
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #ifndef PHYSICSSYSTEM_H
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
 #include "Core/Events.h"
 
+// Jolt includes
 #include "Jolt/Jolt.h"
 #include "Jolt/RegisterTypes.h"
 #include "Jolt/Core/Factory.h"
@@ -17,6 +37,7 @@
 #include "Jolt/Physics/Body/BodyCreationSettings.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
 #include "Jolt/Physics/Character/Character.h"
+#include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
@@ -158,7 +179,6 @@ public:
 
 	JPH::BoxShapeSettings* floorShapeSettings =   nullptr;
 	JPH::ShapeRefC* floorShape =				  nullptr;
-	//JPH::BodyCreationSettings* floorSettings = nullptr;
 	JPH::SphereShape* sphereShape =				  nullptr;
 	JPH::CapsuleShape* capsuleShape =			  nullptr;
 
