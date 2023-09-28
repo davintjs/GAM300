@@ -54,12 +54,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 	<
 		AssetManager,
 		InputSystem,
-		EditorSystem,
 		SceneManager,
+		EditorSystem,
 		DemoSystem,//RUN AFTER EDITOR
 		ScriptingSystem, // AFTER DEMO
 		AudioSystem,
-		//PhysicsSystem, //AFTER SCRIPTING
+		PhysicsSystem, //AFTER SCRIPTING
 		GraphicsSystem,
 		Blackboard
 	>;
@@ -85,6 +85,7 @@ public:
 		AllSystems::Init();
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
@@ -191,8 +192,11 @@ public:
 	void CallbackSceneStart(SceneStartEvent* pEvent)
 	{
 		mode = ENUM_SYSTEM_RUNTIME;
-	}	
-	
+	}
+	void CallbackSceneStop(SceneStopEvent* pEvent) 
+	{
+		mode = ENUM_SYSTEM_EDITOR;
+	}
 
 	std::map<std::string, float>system_times;
 	float systemtotaltime;

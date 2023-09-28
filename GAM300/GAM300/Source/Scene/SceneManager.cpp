@@ -46,6 +46,9 @@ void SceneManager::LoadScene(const std::string& _filePath)
 		std::cout << "Error loading scene!\n";
 		return;
 	}*/
+
+	SceneChangingEvent e{ scene };
+	EVENTS.Publish(&e);
 	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }
 

@@ -479,9 +479,9 @@ void MESH_Manager::CreateInstanceSphere()
         {
             float xSegment = (float)x / (float)X_SEGMENTS;
             float ySegment = (float)y / (float)Y_SEGMENTS;
-            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-            float yPos = std::cos(ySegment * PI);
-            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
+            float yPos = std::cos(ySegment * PI) * 15.f;
+            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
 
             positions.push_back(glm::vec3(xPos, yPos, zPos));
             uv.push_back(glm::vec2(xSegment, ySegment));

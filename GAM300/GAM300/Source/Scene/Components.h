@@ -265,7 +265,10 @@ struct Rigidbody : Object
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 	bool is_trigger = false;
+
 	property_vtable();
+	UINT32 bid{0};
+
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
@@ -291,6 +294,7 @@ struct CharacterController : Object
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	property_vtable();
+	UINT32 bid{0};
 	//JPH::BodyID CharacterBodyID;
 };
 
@@ -350,10 +354,9 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(MeshName),
+		property_var(MeshName).Flags(property::flags::DONTSHOW),
 		property_var(mr_Albedo),
 		property_var(AlbedoTexture),
-
 		property_var(NormalMap),		
 		/*property_var(mr_Specular),
 		property_var(mr_Diffuse),

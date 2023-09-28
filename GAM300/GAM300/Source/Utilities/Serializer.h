@@ -27,6 +27,13 @@ enum CLASSID
     COMPONENT
 };
 
+struct DeComponent
+{
+    YAML::Node* node;
+    Scene* scene;
+    std::map<Entity*, Engine::UUID>* entityRef;
+    std::map<Entity*, Engine::UUID>* componentRef;
+};
 
 void Serialize(const std::string& _filepath);
 void SerializeRuntime(const std::string& _filepath);
@@ -53,6 +60,12 @@ void CloneHelper(Field& rhs, YAML::Emitter& out);
 
 template <typename T, typename... Ts>
 void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Node& node);
+
+template <typename T, typename... Ts>
+void CloneHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>);
 
 template<typename T, typename... Ts>
 struct SerializeComponentsStruct
