@@ -152,7 +152,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
 	mTotalAssets.mFilesData[assetGUID].mData = std::move(buff); // Update the data in memory
 
-	std::cout << "Done updating file in memory!" << std::endl;
+	std::cout << "Done updating file in memory!" << assetPath << std::endl;
 
 	inputFile.close();
 }

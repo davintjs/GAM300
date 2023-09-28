@@ -8,9 +8,17 @@
 
 \brief
     This file contains the definitions of the following:
-    1. Serialization
+    1. Scene Serialization
+        a. Scene Settings
+        b. Entity
+        c. Components
+    2. Scene Deserialization
+        a. Scene Settings
+        b. Entity
+        c. Components
+    3. Clone Helper for De/Serialization which copies fields for the script component
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
@@ -18,6 +26,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorHeaders.h"
 
 GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((std::pair<YAML::Node*, Scene*>*)pObject)));
+
+
+void Serialize(const std::string& _filepath)
+{
+
+}
+
+void SerializeRuntime(const std::string& _filepath)
+{
+
+}
 
 bool SerializeScene(Scene& _scene)
 {
@@ -46,17 +65,6 @@ bool SerializeScene(Scene& _scene)
 
     fout.close();
     return true;
-}
-
-// Bean: Encapsulation for all different types of serializing like Scene, Prefab, NavMesh Data etc
-void Serialize(const std::string& _filepath)
-{
-
-}
-
-void SerializeRuntime(const std::string& _filepath)
-{
-
 }
 
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
@@ -185,12 +193,12 @@ bool DeserializeScene(Scene& _scene)
     catch (YAML::ParserException e)
     {
         std::string exception = "Failed to load .scene file \"" + _scene.filePath.string() + "\" due to: " + e.what() + "\n";
-        E_ASSERT(true, exception);
+        E_ASSERT(false, exception);
     }
     catch (YAML::BadFile e)
     {
         std::string exception = "Failed to load .scene file \"" + _scene.filePath.string() + "\" due to: " + e.what() + "\n";
-        E_ASSERT(true, exception);
+        E_ASSERT(false, exception);
     }
 
     if (!data[0]["Scene"])
@@ -212,7 +220,7 @@ bool DeserializeScene(Scene& _scene)
 
         if (node["GameObject"]) // Deserialize Gameobject
         {
-            DeserializeGameObject(node, _scene, childEntities);
+            DeserializeEntity(node, _scene, childEntities);
         }
         else // Deserialize component
         {
@@ -237,7 +245,7 @@ bool DeserializeScene(Scene& _scene)
     return true;
 }
 
-void DeserializeGameObject(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities)
+void DeserializeEntity(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities)
 {
     YAML::Node object = _node["GameObject"];
 
@@ -260,7 +268,7 @@ void DeserializeGameObject(YAML::Node& _node, Scene& _scene, std::map<Entity*, E
             _childEntities[&refEntity] = parentUUID;
     }
     else
-        E_ASSERT(true, "No parent node found in gameobject!\n");
+        E_ASSERT(false, "No parent node found in gameobject!\n");
 }
 
 template <typename T>
@@ -291,7 +299,7 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
                     }
                     else
                     {
-                        E_ASSERT(true, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
+                        E_ASSERT(false, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
                     }
                 }
             , entry.second);
@@ -322,7 +330,7 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
         }
     }
     else
-        E_ASSERT(true, "Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
+        E_ASSERT(false, "Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
 }
 
 template <typename T, typename... Ts>
