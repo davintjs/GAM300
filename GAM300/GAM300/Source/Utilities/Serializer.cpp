@@ -25,6 +25,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Serializer.h"
 #include "Editor/EditorHeaders.h"
 
+namespace
+{
+    const std::string versionID = "1.1";
+}
+
 GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((std::pair<YAML::Node*, Scene*>*)pObject)));
 
 
@@ -41,10 +46,13 @@ void SerializeRuntime(const std::string& _filepath)
 bool SerializeScene(Scene& _scene)
 {
     YAML::Emitter out;
-    out << YAML::BeginMap;
-    out << YAML::Key << "Scene" << YAML::Value << _scene.sceneName;
-    out << YAML::EndMap;
+    std::string versionStr = "Serializer Version " + versionID;
+    out << versionStr;
 
+    // Serialize Scene Settings
+    E_ASSERT(SerializeSettings(out, _scene), "Unable To Serialize Entity!\n");
+
+    // Serialize Entities & Components
     for (Engine::UUID euid : _scene.layer)
     {
         bool serialized = SerializeEntity(out, _scene.Get<Entity>(euid), _scene);
@@ -64,6 +72,20 @@ bool SerializeScene(Scene& _scene)
     }
 
     fout.close();
+    return true;
+}
+
+bool SerializeSettings(YAML::Emitter& out, Scene& _scene)
+{
+    out << YAML::BeginMap;
+    out << YAML::Key << "Scene Settings" << YAML::Value << YAML::BeginMap;
+    out << YAML::Key << "Name" << YAML::Value << _scene.sceneName;
+    out << YAML::Key << "m_OcclusionCullingSettings" << YAML::Value << "None";
+    out << YAML::Key << "m_RenderSettings" << YAML::Value << "None";
+    out << YAML::Key << "m_LightMapSettings" << YAML::Value << "None";
+    out << YAML::Key << "m_NavMeshSettings" << YAML::Value << "None";
+    out << YAML::EndMap << YAML::EndMap << YAML::Comment("All settings above are just examples");
+
     return true;
 }
 
@@ -201,20 +223,22 @@ bool DeserializeScene(Scene& _scene)
         E_ASSERT(false, exception);
     }
 
-    if (!data[0]["Scene"])
+    // Deserialize Scene Settings
+    if (data[0])
     {
-        PRINT("Not a .scene file!\n");
-        return false;
+        std::string versioning = data[0].as<std::string>();
+        versioning.erase(0, 19);
+        if (versioning.compare(versionID))
+            PRINT("Warning! Serializer version ", versioning, " is different from ", versionID, ", update the serializer!\n");
     }
 
-    _scene.sceneName = data[0]["Scene"].as<std::string>();
-    PRINT("Deserializing scene \"" + _scene.sceneName + "\"\n");
+    E_ASSERT(DeserializeSettings(data[1], _scene), "Error Deserializing scene!\n");
 
     // For parenting of child entities after all entities have been added
     std::map<Entity*, Engine::UUID> childEntities;
 
-    // Start from 1 since 0 is the name of the scene
-    for (size_t i = 1; i < data.size(); i++)
+    // Start from 1 since 0 is the versioning and 1 is for scene settings
+    for (size_t i = 2; i < data.size(); i++)
     {
         YAML::Node node = data[i];
 
@@ -241,6 +265,20 @@ bool DeserializeScene(Scene& _scene)
         Transform& transform = _scene.Get<Transform>(*pair.first);
         transform.SetParent(&_scene.Get<Transform>(_scene.Get<Entity>(pair.second)));
     }
+
+    return true;
+}
+
+bool DeserializeSettings(YAML::Node& _node, Scene& _scene)
+{
+    if (!_node["Scene Settings"])
+    {
+        PRINT("Not a .scene file!\n");
+        return false;
+    }
+
+    _scene.sceneName = _node["Scene Settings"]["Name"].as<std::string>();
+    PRINT("Deserializing scene \"" + _scene.sceneName + "\"\n");
 
     return true;
 }

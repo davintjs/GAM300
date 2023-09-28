@@ -54,6 +54,9 @@ void SerializeRuntime(const std::string& _filepath);
 // Serialize the scene
 bool SerializeScene(Scene& _scene);
 
+// Serialize the settings in the scene
+bool SerializeSettings(YAML::Emitter& out, Scene& _scene);
+
 // Serialize the entities in the specific scene
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 
@@ -73,6 +76,9 @@ void DeserializeRuntime(const std::string& _filepath);
 
 // Deserialize the scene
 bool DeserializeScene(Scene& _scene);
+
+// Deserialize the scene setttings
+bool DeserializeSettings(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the entities in the specific scene
 void DeserializeEntity(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities);
