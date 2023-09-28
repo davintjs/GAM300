@@ -25,52 +25,32 @@ void DemoSystem::Init()
 	EVENTS.Publish(&createScene);
 
 	Scene& scene = *createScene.scene;
-	Entity& titty = *scene.Add<Entity>();
-	MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
-	AudioSource& titAudio = *scene.Add<AudioSource>(titty);
-	titAudio.channel = AudioSource::Channel::MUSIC;
-	//titAudio.play = true;
-	titAudio.currentSound = "LoLnvDie";
-	titrender.MeshName = "DamagedHelmet";
-	titrender.AlbedoTexture = "Default_albedo";
-	titrender.NormalMap = "Default_normal";
-	titrender.RoughnessTexture = "Default_metalRoughness";
-	titrender.MetallicTexture = "Default_metalRoughness";
-	titrender.AoTexture = "Default_AO";
-	//Entity& titty = *scene.Add<Entity>();
-	//MeshRenderer& titrender = *scene.Add<MeshRenderer>(titty);
-	//titrender.MeshName = "DamagedHelmet";
-	//titrender.AlbedoTexture = "Default_albedo";
-	//titrender.NormalMap = "Default_normal";
-	//titrender.RoughnessTexture = "Default_metalRoughness";
-	//titrender.MetallicTexture = "Default_metalRoughness";
-	//titrender.AoTexture = "Default_AO";
+	Entity& testEntity = *scene.Add<Entity>();
+	MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
+	AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
+	entityAudio.channel = AudioSource::Channel::MUSIC;
+	//entityAudio.play = true;
+	entityAudio.currentSound = "LoLnvDie";
+	entityRender.MeshName = "DamagedHelmet";
+	entityRender.AlbedoTexture = "Default_albedo";
+	entityRender.NormalMap = "Default_normal";
+	entityRender.RoughnessTexture = "Default_metalRoughness";
+	entityRender.MetallicTexture = "Default_metalRoughness";
+	entityRender.AoTexture = "Default_AO";
 
-	//scene.Get<Transform>(titty).translation = Vector3(150.f, 100.f, 0.f);
-	//scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
-
-	Entity& titty2 = *scene.Add<Entity>();
-	MeshRenderer& titrender2 = *scene.Add<MeshRenderer>(titty2);
-	AudioSource& titAudio2 = *scene.Add<AudioSource>(titty);
-	titAudio2.channel = AudioSource::Channel::SFX;
-	titAudio2.play = true;
-	titAudio2.currentSound = "Lan_YAY";
-	titrender2.MeshName = "Skull_textured";
-	titrender2.AlbedoTexture = "TD_Checker_Base_Color";
-	titrender2.NormalMap = "TD_Checker_Base_Color";
-	titrender2.RoughnessTexture = "TD_Checker_Roughness";
-	titrender2.AoTexture = "TD_Checker_Mixed_AO";
-	scene.Get<Transform>(titty).translation = Vector3(-150.f, 100.f, 0.f);
-	scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
-	//Entity& titty2 = *scene.Add<Entity>();
-	//MeshRenderer& titrender2 = *scene.Add<MeshRenderer>(titty2);
-	//titrender2.MeshName = "Skull_textured";
-	//titrender2.AlbedoTexture = "TD_Checker_Base_Color";
-	//titrender2.NormalMap = "TD_Checker_Base_Color";
-	//titrender2.RoughnessTexture = "TD_Checker_Roughness";
-	//titrender2.AoTexture = "TD_Checker_Mixed_AO";
-	//scene.Get<Transform>(titty).translation = Vector3(-150.f, 100.f, 0.f);
-	//scene.Get<Transform>(titty).scale = Vector3(1.f, 1.f, 1.f);
+	Entity& testEntity2 = *scene.Add<Entity>();
+	MeshRenderer& entityRender2 = *scene.Add<MeshRenderer>(testEntity2);
+	AudioSource& entityAudio2 = *scene.Add<AudioSource>(testEntity2);
+	entityAudio2.channel = AudioSource::Channel::SFX;
+	//entityAudio2.play = true;
+	entityAudio2.currentSound = "Lan_YAY";
+	entityRender2.MeshName = "Skull_textured";
+	entityRender2.AlbedoTexture = "TD_Checker_Base_Color";
+	entityRender2.NormalMap = "TD_Checker_Base_Color";
+	entityRender2.RoughnessTexture = "TD_Checker_Roughness";
+	entityRender2.AoTexture = "TD_Checker_Mixed_AO";
+	scene.Get<Transform>(testEntity).translation = Vector3(-150.f, 100.f, 0.f);
+	scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
 
 	//// test instance rendering
 	//for (int i = 0; i < 5; ++i)

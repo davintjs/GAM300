@@ -2,7 +2,6 @@
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 
-extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
 //extern std::vector <Materials> temp_MaterialContainer;
