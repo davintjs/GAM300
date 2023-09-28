@@ -12,7 +12,7 @@ GameObject:
   m_Parent: 0
   m_Components:
     - component: {fileID: 10413881243206984898}  # MeshRenderer
-    - component: {fileID: 3574322747018797454}  # Script
+    - component: {fileID: 14971799315270126619}  # Script
 ---
 MeshRenderer:
   EUID: 22203055554271501
@@ -30,10 +30,10 @@ MeshRenderer:
 ---
 Script:
   EUID: 22203055554271501
-  UUID: 3574322747018797454
+  UUID: 14971799315270126619
   Name: Player
   gameObj: {fileID: 0}  # GameObject
-  player2: {fileID: 3574322747018797454}  # Component
+  player2: {fileID: 72615020032623}  # Component
   speed: 10
 ---
 GameObject:
@@ -187,7 +187,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-259.751099, 170.160309, -361.306763]
+  m_Position: [-259.751099, 113.530281, 351.118988]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
