@@ -917,7 +917,7 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
         glm::value_ptr(SRT));
 
     glBindVertexArray(vaoidAABB);
-    glDrawElements(GL_LINES, 2 * idxAABB.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINES, (GLsizei)(2 * idxAABB.size()), GL_UNSIGNED_INT, 0);
 
     // unbind and free stuff
     glBindVertexArray(0);
