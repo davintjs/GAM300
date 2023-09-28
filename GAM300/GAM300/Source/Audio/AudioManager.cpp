@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			AudioManager.cpp
+\project
+\author         Lian Khai Kiat
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definations of Audio Manager that does the following:
+	1. Add sounds into system
+	2. Play Sounds
+	3. Stop Sounds
+	4. Pause Musics
+	5. Set settings for each channels
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include <Precompiled.h>
 #include "AudioManager.h"
 
