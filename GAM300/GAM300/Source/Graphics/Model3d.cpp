@@ -83,7 +83,7 @@ void Model::init() {
         prim = GL_TRIANGLES;
         FBX_vaoid.push_back(VAO);
         FBX_vboid.push_back(VBO);
-        FBX_drawcount.push_back(totalGeoms[0].mMeshes[i]._indices.size());
+        FBX_drawcount.push_back((GLuint)totalGeoms[0].mMeshes[i]._indices.size());
         GeneralModel model;
         model.fbx_VAO = VAO;
         model.fbx_VBO = VBO;
@@ -917,7 +917,7 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
         glm::value_ptr(SRT));
 
     glBindVertexArray(vaoidAABB);
-    glDrawElements(GL_LINES, 2 * idxAABB.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINES, (GLsizei)(2 * idxAABB.size()), GL_UNSIGNED_INT, 0);
 
     // unbind and free stuff
     glBindVertexArray(0);

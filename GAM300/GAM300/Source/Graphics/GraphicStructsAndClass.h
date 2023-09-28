@@ -10,7 +10,7 @@
 	This file contains structs and classes the graphics needs
 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
 #include "glm/mat4x4.hpp"

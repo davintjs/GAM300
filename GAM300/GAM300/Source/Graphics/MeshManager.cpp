@@ -88,7 +88,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     }
 
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
     glm::vec3 min(FLT_MAX);
     glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
@@ -161,7 +161,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
-        tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
+        tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
         tempProp.drawType = GL_TRIANGLES;
         std::string newName = fileName;
         std::map<std::string, InstanceProperties>::iterator it;
@@ -175,7 +175,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
-        newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
+        newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties[newName]));
     }
@@ -552,12 +552,12 @@ void MESH_Manager::CreateInstanceSphere()
     InstanceProperties tempProp;
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
-    tempProp.drawCount = indices.size() ;
+    tempProp.drawCount = (unsigned int)(indices.size()) ;
     properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLE_STRIP;
-    newMesh.Drawcounts.push_back(indices.size());
+    newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Sphere"]));
 
     newMesh.vertices_min = min;
@@ -805,7 +805,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 void MESH_Manager::CreateInstanceLine()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)(mContainer.size());
 
     GLfloat vertices[] = {
         -1.f, 0.f, 0.f,   
