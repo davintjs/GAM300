@@ -167,7 +167,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         std::map<std::string, InstanceProperties>::iterator it;
         it = properties.find(newName);
         while (it != properties.end()) {
-            newName += ('0' + i);
+            newName += char('0' + i);
             it = properties.find(newName);
         }
         properties.emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
