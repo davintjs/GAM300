@@ -93,6 +93,8 @@ public:
 		{
 		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::STATIC:	return "NON_MOVING";
 		case (JPH::BroadPhaseLayer::Type)EngineBroadPhaseLayers::DYNAMIC:		return "MOVING";
+		default:
+			return "NON_MOVING";
 		}
 	}
 	#endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
