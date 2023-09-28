@@ -311,6 +311,15 @@ void AssetManager::FileAddProtocol(const std::string& filePath, const std::strin
 
 	CreateMetaFile(fileName, filePathMeta, fileExtension);
 
+	// Mark meta files as hidden files
+	std::wstring wideStr = std::wstring(filePathMeta.begin(), filePathMeta.end());
+	const wchar_t* fileLPCWSTR = wideStr.c_str();
+	int attribute = GetFileAttributes(fileLPCWSTR);
+	if ((attribute & FILE_ATTRIBUTE_HIDDEN) == 0)
+	{
+		SetFileAttributes(fileLPCWSTR, attribute | FILE_ATTRIBUTE_HIDDEN);
+	}
+
 	mTotalAssets.mExtensionFiles["meta"].push_back(fileName); // Meta file
 	mTotalAssets.mExtensionFiles[fileExtensionEdited].push_back(fileName); // File name
 
@@ -321,67 +330,6 @@ void AssetManager::FileAddProtocol(const std::string& filePath, const std::strin
 
 	// Deserialize from meta file and load the asset asynchronously
 	this->AsyncLoadAsset(filePathMeta, fileName);
-
-	//std::string subFilePath{};
-	//ACQUIRE_SCOPED_LOCK(Assets);
-	//for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
-	//{
-	//	subFilePath = dir.path().generic_string();
-	//	std::string subFilePathMeta = subFilePath;
-	//	std::string fileType{};
-	//	std::string fileName{};
-
-	//	if (!dir.is_directory())
-	//	{
-	//		// Check if is file with no extension
-	//		auto check = subFilePath.find_last_of('.');
-	//		E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
-
-	//		for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
-	//		{
-	//			fileType += subFilePath[i];
-	//		}
-	//	}
-
-	//	if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
-	//	{
-	//		continue;
-	//	}
-
-	//	// Removing extension to add .meta extension
-	//	if (dir.is_directory())
-	//	{
-	//		subFilePathMeta += ".meta";
-	//	}
-	//	else
-	//	{
-	//		subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-	//		subFilePathMeta += ".meta";
-	//	}
-
-	//	// Check if this file is new by searching for its meta file
-	//	if (!std::filesystem::exists(subFilePathMeta))
-	//	{
-	//		if (dir.is_directory())
-	//		{
-	//			fileName = std::filesystem::path(dir).filename().generic_string();
-	//		}
-	//		else
-	//		{
-	//			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
-	//			{
-	//				fileName += subFilePath[j];
-	//			}
-	//		}
-	//		CreateMetaFile(fileName, subFilePathMeta, fileType);
-
-	//		mTotalAssets.mExtensionFiles["meta"].push_back(fileName); // Meta file
-	//		mTotalAssets.mExtensionFiles[fileType].push_back(fileName); // File name
-
-	//		// Deserialize from meta file and load the asset asynchronously
-	//		this->AsyncLoadAsset(subFilePathMeta, fileName);
-	//	}
-	//}
 }
 
 void AssetManager::FileRemoveProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension)
@@ -411,57 +359,6 @@ void AssetManager::FileRemoveProtocol(const std::string& filePath, const std::st
 	mTotalAssets.mExtensionFiles[assetType].erase(std::remove(mTotalAssets.mExtensionFiles[assetType].begin(), mTotalAssets.mExtensionFiles[assetType].end(), fileName), mTotalAssets.mExtensionFiles[assetType].end()); // File name removal
 
 	this->AsyncUnloadAsset(tempGUID); // Unload asset from memory
-
-	//for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
-	//{
-	//	subFilePath = dir.path().generic_string();
-	//	std::string fileType{};
-
-	//	if (!dir.is_directory())
-	//	{
-	//		// Check if is file with no extension
-	//		auto check = subFilePath.find_last_of('.');
-	//		E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
-
-	//		for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
-	//		{
-	//			fileType += subFilePath[i];
-	//		}
-	//	}
-
-	//	if (!strcmp(fileType.c_str(), "meta"))
-	//	{
-	//		// Check if the asset associated with this meta file still exists in the asset folder
-	//		std::ifstream ifs(subFilePath);
-	//		std::stringstream buffer;
-	//		buffer << ifs.rdbuf();
-	//		ifs.close();
-
-	//		rapidjson::Document doc;
-	//		const std::string data(buffer.str());
-	//		doc.Parse(data.c_str());
-
-	//		std::string assetPath = doc["FileAssetPath"].GetString();
-	//		std::string assetType = doc["FileType"].GetString();
-	//		std::string tempGUID = doc["GUID"].GetString();
-
-	//		if (!std::filesystem::exists(assetPath)) // If no longer in folder, delete the meta file and also remove from memory
-	//		{
-	//			std::filesystem::remove(subFilePath); // Delete meta file
-	//			
-	//			// Remove the file name in the extension map
-	//			std::string fileName{};
-	//			for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
-	//			{
-	//				fileName += subFilePath[j];
-	//			}
-	//			mTotalAssets.mExtensionFiles[fileType].erase(std::remove(mTotalAssets.mExtensionFiles[fileType].begin(), mTotalAssets.mExtensionFiles[fileType].end(), fileName), mTotalAssets.mExtensionFiles[fileType].end()); // Meta file removal
-	//			mTotalAssets.mExtensionFiles[assetType].erase(std::remove(mTotalAssets.mExtensionFiles[assetType].begin(), mTotalAssets.mExtensionFiles[assetType].end(), fileName), mTotalAssets.mExtensionFiles[assetType].end()); // File name removal
-
-	//			this->AsyncUnloadAsset(tempGUID); // Unload asset from memory
-	//		}
-	//	}
-	//}
 }
 
 // Change meta file name (And path to the updated name)
@@ -492,48 +389,6 @@ void AssetManager::FileUpdateProtocol(const std::string& filePath, const std::st
 		mTotalAssets.mFilesData[tempGUID].mData.clear(); // Remove the data in memory
 		this->AsyncUpdateAsset(assetPath, tempGUID); // Add the new data into memory
 	}
-
-	//std::string subFilePath{};
-	//for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
-	//{
-	//	subFilePath = dir.path().generic_string();
-	//	std::string fileType{};
-
-	//	if (!dir.is_directory())
-	//	{
-	//		// Check if is file with no extension
-	//		auto check = subFilePath.find_last_of('.');
-	//		E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
-
-	//		for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
-	//		{
-	//			fileType += subFilePath[i];
-	//		}
-	//	}
-
-	//	// Find the last write time of this file corresponding to it in memory
-	//	if (!strcmp(fileType.c_str(), "meta"))
-	//	{
-	//		// Get the asset file path and GUID from meta file of the asset
-	//		std::ifstream ifs(subFilePath);
-	//		std::stringstream buffer;
-	//		buffer << ifs.rdbuf();
-	//		ifs.close();
-
-	//		rapidjson::Document doc;
-	//		const std::string data(buffer.str());
-	//		doc.Parse(data.c_str());
-	//		
-	//		std::string assetPath = doc["FileAssetPath"].GetString();
-	//		const std::string tempGUID = doc["GUID"].GetString();
-	//		if (!std::filesystem::is_directory(assetPath) && mTotalAssets.mFilesData[tempGUID].mFileTime != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
-	//		{
-	//			// The asset file associated with this meta file was updated
-	//			mTotalAssets.mFilesData[tempGUID].mData.clear(); // Remove the data in memory
-	//			this->AsyncUpdateAsset(assetPath, tempGUID); // Add the new data into memory
-	//		}
-	//	}
-	//}
 }
 
 

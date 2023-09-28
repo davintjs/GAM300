@@ -1,6 +1,19 @@
+/*!***************************************************************************************
+\file			Precompiled.h
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the list of included libraries commonly used in our engine for
+	precompilation
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #pragma once
-
-
 
 #include "Debugging/Debugger.h"
 #include "Core/Debug.h"

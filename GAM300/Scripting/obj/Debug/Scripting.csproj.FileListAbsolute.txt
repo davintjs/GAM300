@@ -1,2 +1,0 @@
-C:\Users\prawn\Documents\GitHub\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.AssemblyReference.cache
-C:\Users\prawn\Documents\GitHub\GAM300\GAM300\Scripting\obj\Debug\Scripting.csproj.CoreCompileInputs.cache
