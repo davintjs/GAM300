@@ -56,7 +56,6 @@ glm::vec3 Polygon3D::GetMinPoint()
 	return minPoint;
 }
 
-// Need to take into consideration player radius here
 void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points) 
 {
 	// If already only 3 points given, return them based on front faced or back faced
@@ -89,7 +88,7 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 	int index = 0;
 	for (int i = 1; i < points.size(); ++i)
 	{
-		if (points[i].x < position.x || (points[i].x == position.x && points[i].y < position.y))
+		if (points[i].x < position.x || (points[i].x == position.x && points[i].z < position.z))
 		{
 			position = points[i];
 			index = i;
@@ -159,9 +158,9 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 			colinearPoints.push_back(nextPosition);
 
 			// Sort the container in ascending order based on x coordinate
-			std::sort(colinearPoints.begin(), colinearPoints.end(), [currentPosition](const glm::vec3& x, const glm::vec3& y) mutable
+			std::sort(colinearPoints.begin(), colinearPoints.end(), [currentPosition](const glm::vec3& x, const glm::vec3& z) mutable
 				{
-					return glm::dot(x - currentPosition, x - currentPosition) < glm::dot(y - currentPosition, y - currentPosition);
+					return glm::dot(x - currentPosition, x - currentPosition) < glm::dot(z - currentPosition, z - currentPosition);
 				});
 
 			for (int i = 0; i < colinearPoints.size(); ++i)
@@ -209,6 +208,7 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 		}
 		++counter;
 	}
+
 }
 
 void Polygon3D::CalculateNormal(const std::vector<glm::vec3>& vertices)
@@ -294,7 +294,7 @@ void Polygon3D::JoinPolygon(Polygon3D& polygon)
 	glm::vec3 aSide = { intersectionPoint.x - rightVertex.x, intersectionPoint.y - rightVertex.y, intersectionPoint.z - rightVertex.z };
 	float a = CalculateSquaredDistance(aSide);
 
-	glm::vec3 candidate; // This will store the point that has the lowest theta value in the triangle formed
+	glm::vec3 candidate{}; // This will store the point that has the lowest theta value in the triangle formed
 	bool hasCandidateInTri = false;
 
 	// Check if the triangle contains any of the vertices of the polygon
@@ -440,7 +440,7 @@ void Polygon3D::SwitchOrientation()
 
 float Polygon3D::PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p)
 {
-	return (l1.x - p.x) * (l2.y - p.y) - (l1.y - p.y) * (l2.x - p.x);
+	return (l1.x - p.x) * (l2.z - p.z) - (l1.z - p.z) * (l2.x - p.x);
 }
 
 bool Polygon3D::Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt)
