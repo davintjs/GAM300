@@ -28,6 +28,7 @@ out vec4 FragColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
+uniform bool hdr;
 
 layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
@@ -301,5 +302,10 @@ void main()
 //    color = color / (color + vec3(1.0));
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
+
+
+if(hdr)
+    color = color / (color + vec3(1.0));
+
     FragColor = vec4(color, 1.0);
 }

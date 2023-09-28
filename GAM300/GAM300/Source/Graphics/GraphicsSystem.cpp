@@ -67,7 +67,7 @@ Model SkyBox_Model;
 
 GLSLShader HDR_Shader;
 bool hdr = false;
-float exposure = 0.1f;
+float exposure = 1.0;
 
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
@@ -328,6 +328,7 @@ void GraphicsSystem::Update(float dt)
 
 			mesh_component.mr_metallic = -1.f;
 			mesh_component.mr_roughness = -1.f;
+			mesh_component.ao = -1.f;
 			mesh_component.ao = -1.f;
 
 		}
@@ -633,34 +634,40 @@ void GraphicsSystem::Update(float dt)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	if (hdr)
+	{
+		std::cout << "HDR is up\n";
+	}
 
 
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
+	{
+		hdr = !hdr;
+	}
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
+	{
+		if (exposure == 1.0)
+		{
+			exposure = 5.0;
+		}
+		else
+		{
+			exposure =  1.0;
+		}
+	}
+	if (exposure == 5.0)
+	{
+		std::cout << "exposure is diff\n";
+	}
+	GLint uniform1 =
+		glGetUniformLocation(HDR_Shader.GetHandle(), "hdr");
 
-	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
-	//{
-	//	hdr = !hdr;
-	//}
-	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
-	//{
-	//	if (exposure == 0.1)
-	//	{
-	//		exposure = 5.0;
-	//	}
-	//	else
-	//	{
-	//		exposure =  0.1;
-	//	}
-	//}
+	glUniform1i(uniform1, hdr);
 
-	//GLint uniform1 =
-	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+	GLint uniform2 =
+		glGetUniformLocation(HDR_Shader.GetHandle(), "exposure");
 
-	//glUniform1i(uniform1, hdr);
-
-	//GLint uniform2 =
-	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "exposure");
-
-	//glUniform1f(uniform2, exposure);
+	glUniform1f(uniform2, exposure);
 
 	renderQuad();
 	EditorCam.getFramebuffer().unbind();
@@ -716,6 +723,10 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "camPos");
 
 
+	GLint uniform6 =
+		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+
+	glUniform1i(uniform6, hdr);
 
 
 
