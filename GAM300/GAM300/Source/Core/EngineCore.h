@@ -45,7 +45,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/DemoSystem.h"
 
 #define MyEngineCore EngineCore::Instance()
-#define UPDATE_TIME 2.f;
+#define UPDATE_TIME 1.f;
 
 #if defined(_BUILD)
 #else
@@ -84,11 +84,13 @@ public:
 		AUDIOMANAGER.InitAudioManager();
 		AllSystems::Init();
 
+
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
+		app_time = 0.f;
 
 		// NavMesh testing
 		std::vector<glm::vec3> GroundVertices{
@@ -117,7 +119,6 @@ public:
 	/**************************************************************************/
 	void Update(float dt)
 	{
-
 		//Start ImGui Frames
 		#if defined(_BUILD)
 			AllSystems::Update(dt);
@@ -131,7 +132,7 @@ public:
 			float elapsedtime = 0;
 			bool update = false;
 
-			//performance viewer update timer (2s)
+			//performance viewer update timer (1s)
 			if (update_timer > 0.f) {
 				update_timer -= dt;
 			}
@@ -167,6 +168,7 @@ public:
 			ImGui::EndFrame();
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			app_time += dt;
 		#endif
 
 		//End ImGui Frames
@@ -202,6 +204,7 @@ public:
 
 	std::map<std::string, float>system_times;
 	float systemtotaltime;
+	float app_time;
 
 private:
 	float update_timer;
