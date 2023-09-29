@@ -706,8 +706,11 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 {
-	ACQUIRE_SCOPED_LOCK(ScriptQueue);
-	reflectionQueue.push_back(*pEvent->pObject);
+	{
+		ACQUIRE_SCOPED_LOCK(ScriptQueue);
+		reflectionQueue.push_back(*pEvent->pObject);
+	}
+	while (!reflectionQueue.empty());
 }
 
 

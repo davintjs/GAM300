@@ -40,7 +40,6 @@ Script:
   UUID: 17218963974942543520
   Name: Player
   gameObj: {fileID: 22203055554271501}  # GameObject
-  player2: {fileID: 6}  # Component
   speed: 10
 ---
 GameObject:

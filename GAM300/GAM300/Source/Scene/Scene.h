@@ -59,6 +59,19 @@ struct SingleHandlesTable
 	}
 
 	template <typename T1>
+	constexpr T1& GetByUUID(Engine::UUID uuid)
+	{
+		auto& entries = std::get<Table<T1>>(tables);
+		for (auto& pair : entries)
+		{
+			if (pair.second->UUID() == uuid)
+			{
+				return *pair.second;
+			}
+		}
+	}
+
+	template <typename T1>
 	constexpr void Remove(Engine::UUID euid)
 	{
 		auto& entries = std::get<Table<T1>>(tables);
@@ -107,6 +120,23 @@ struct MultiHandlesTable
 	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid)
 	{
 		return *std::get<MultiTable<T1>>(tables)[euid][uuid];
+	}
+
+
+	template <typename T1>
+	constexpr T1& GetByUUID(Engine::UUID uuid)
+	{
+		auto& entries = std::get<MultiTable<T1>>(tables);
+		for (auto& entryPair : entries)
+		{
+			for (auto& pair : entryPair.second)
+			{
+				if (pair.first == uuid)
+				{
+					return *pair.second;
+				}
+			}
+		}
 	}
 
 	template <typename T1>
@@ -283,6 +313,19 @@ public:
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
 	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
+
+	template<typename T>
+	T& GetByUUID(Engine::UUID uuid)
+	{
+		if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return multiHandles.GetByUUID<T>(uuid);
+		}
+		else
+		{
+			return singleHandles.GetByUUID<T>(uuid);
+		}
+	}
 
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)
