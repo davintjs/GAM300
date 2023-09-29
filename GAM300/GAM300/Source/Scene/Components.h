@@ -346,7 +346,11 @@ struct MeshRenderer : Object
 	std::string RoughnessTexture = "";
 	std::string AoTexture= "";
 
-
+	GLuint textureID = 0;
+	GLuint normalMapID = 0;
+	GLuint RoughnessID = 0;
+	GLuint MetallicID = 0;
+	GLuint AoID = 0;
 
 	property_vtable();
 };

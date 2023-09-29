@@ -68,7 +68,7 @@ struct Material
         this->textures = rhs.textures;
     }
 
-    Material(Material&& rhs)
+    Material(Material&& rhs) noexcept
     {
         this->Specular = std::move(rhs.Specular);
         this->Diffuse = std::move(rhs.Diffuse);
@@ -86,7 +86,7 @@ struct Material
         this->textures = rhs.textures;
 
     }
-    Material& operator=(Material&& rhs)
+    Material& operator=(Material&& rhs) noexcept
     {
         this->Specular = std::move(rhs.Specular);
         this->Diffuse = std::move(rhs.Diffuse);

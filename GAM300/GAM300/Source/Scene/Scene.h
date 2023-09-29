@@ -480,19 +480,12 @@ public:
 		{
 			return singleHandles.Has<T>(handle.euid);
 		}
-		else
-		{
-			return false;
-		}
 		
 		if constexpr (MultiComponentTypes::Has<T>())
 		{
 			return multiHandles.Has<T>(handle.euid,handle.uuid);
 		}
-		else
-		{
-			return false;
-		}
+
 	}
 
 	template <typename T>

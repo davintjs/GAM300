@@ -65,7 +65,7 @@ struct Field
 		fType = rhs.fType;
 		typeName = rhs.typeName;
 	}
-	Field(Field&& rhs)
+	Field(Field&& rhs) noexcept
 	{
 		data = rhs.data;
 		fType = rhs.fType;
