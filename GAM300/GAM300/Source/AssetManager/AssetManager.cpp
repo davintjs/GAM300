@@ -268,7 +268,7 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 	return;
 }
 
-void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool isDDS)
+void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool /*isDDS*/)
 {
 	std::ifstream ifs(filePath);
 	std::stringstream buffer;
@@ -428,7 +428,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		fileExtension == ".desc" ||
 		fileExtension == "")
 	{
-		PRINT("IGNORED: ", filePath, '\n');
+		PRINT("IGNORED: ", filePath.string(), "\n");
 		return;
 	}
 
@@ -475,5 +475,5 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
 		EVENTS.Publish(&scriptModifiedEvent);
 	}
-	PRINT(filePath,'\n');
+	PRINT(filePath.string(), "\n");
 }

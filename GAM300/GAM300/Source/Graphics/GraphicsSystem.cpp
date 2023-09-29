@@ -280,7 +280,7 @@ void GraphicsSystem::Update(float dt)
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
-		std::fill_n(prop.texture, 32, 0.f);
+		std::fill_n(prop.texture, 32, 0);
 	}
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
