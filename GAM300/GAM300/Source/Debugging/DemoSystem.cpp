@@ -8,9 +8,9 @@
 
 \brief
     This file contains the definitions of the following:
-    1.
+    1. Demo system for debugging and testing purposes
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 

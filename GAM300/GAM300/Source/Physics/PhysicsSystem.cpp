@@ -199,7 +199,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	// check entity for collider and then check what kind of fucking collider he want
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
 	auto& rbArray = scene.GetArray<Rigidbody>();
-	auto& bcArray = scene.GetArray<BoxCollider>();
+	//auto& bcArray = scene.GetArray<BoxCollider>();
 	std::cout << "Number of rigidbodies:" << rbArray.size();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 			

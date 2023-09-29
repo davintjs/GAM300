@@ -9,7 +9,7 @@
 \brief
     This file contains the Texture Manager and the definitions of its related functions. 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -219,7 +219,7 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
         gli::texture Texture = gli::load(faces[i]);
 
         glCompressedTexImage2D(
-            GL_TEXTURE_CUBE_MAP_POSITIVE_X + (GLenum)i,
+            (GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i),
             0,
             GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
             Texture.extent().x,
