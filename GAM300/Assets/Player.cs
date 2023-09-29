@@ -6,7 +6,7 @@ public class Player : Script
 {
     //Rigidbody rb;
     public GameObject gameObj = null;
-    //public float yes;
+    public float sad;
 
 
     void Start()
@@ -16,7 +16,7 @@ public class Player : Script
 
     void Update()
     {
-/*        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             gameObj.transform.localRotation.y += sad / 360f;
             //rb.mass -= speed;
@@ -46,7 +46,7 @@ public class Player : Script
         {
             gameObj.transform.localPosition += gameObj.transform.right * sad;
             //rb.mass += speed;
-        }*/
+        }
         //Destroy(this);
         //transform.localPosition = newPos;
     }
