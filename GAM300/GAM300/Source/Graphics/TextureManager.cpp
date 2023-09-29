@@ -207,7 +207,7 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
         gli::texture Texture = gli::load(faces[i]);
 
         glCompressedTexImage2D(
-            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            (GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i),
             0,
             GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
             Texture.extent().x,

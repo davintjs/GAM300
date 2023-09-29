@@ -581,7 +581,7 @@ void Display_Property(T& comp) {
             }
         }
         ImGui::PushItemWidth(-1);
-        ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
+        ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5);
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
     }
@@ -887,7 +887,7 @@ void DisplayComponentHelper(T& component)
 
     const char* popup = GetType::Name<T>();
 
-    ImGui::PushID(GetType::E<T>());
+    ImGui::PushID((int)GetType::E<T>());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);

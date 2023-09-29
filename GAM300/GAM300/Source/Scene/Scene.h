@@ -1,28 +1,17 @@
 ﻿/*!***************************************************************************************
-\file			scene.h
+\file			Scene.h
 \project
-\author			Matthew Lau
+\author         
 
-\par			Course: GAM200
-\par			Section:
-\date			28/07/2022
+\par			Course: GAM300
+\date           07/09/2023
 
 \brief
-	Contains declarations for the Scene class.
-	The Scene contains:
-		1. load, init, update, draw, free, unload function
-		2. string containing the filename of the file in which the scene data is stored on
-		3. Data pertaining to the game objects in the scene
+	This file contains the declarations of the following:
+	1. Scene
 
-	Note: load, init, free and unload functions MUST be defined by scene sub-classes
-
-	Contains definitions for NormalScene class which is a derived class from Scene class.
-	Note: this is the latest version of our scene class, use this
-
-
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
 
 #ifndef SCENE_H
 #define SCENE_H
