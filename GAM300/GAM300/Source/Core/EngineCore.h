@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
+#include "Audio/AudioSystem.h"
 //#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
@@ -57,7 +58,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		ScriptingSystem, // AFTER DEMO
 		SceneManager,
 		DemoSystem,//RUN AFTER EDITOR
-		//PhysicsSystem, //AFTER SCRIPTING
+		AudioSystem,
+		PhysicsSystem, //AFTER SCRIPTING
 		GraphicsSystem,
 		Blackboard
 	>;
@@ -79,9 +81,11 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
+		AUDIOMANAGER.InitAudioManager();
 		AllSystems::Init();
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
@@ -145,7 +149,7 @@ public:
 					//Update performance viewer every 2s
 					sys->Update(dt);
 					if (update) {
-						float timetaken = glfwGetTime() - starttime;
+						float timetaken = (float)(glfwGetTime() - starttime);
 						elapsedtime += timetaken;
 						system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
 					}	
@@ -187,8 +191,13 @@ public:
 
 	void CallbackSceneStart(SceneStartEvent* pEvent)
 	{
-		PRINT("ENGINE CORE!\n");
+		(void)pEvent;
 		mode = ENUM_SYSTEM_RUNTIME;
+	}
+	void CallbackSceneStop(SceneStopEvent* pEvent) 
+	{
+		(void)pEvent;
+		mode = ENUM_SYSTEM_EDITOR;
 	}
 
 	std::map<std::string, float>system_times;

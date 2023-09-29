@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			Framebuffer.cpp
+\project
+\author         Sean Ngo
+
+\par			Course: GAM300
+\date           10/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. Framebuffer class which contains the basic two functions, init and exit
+		a. Bind and Unbinding of the framebuffer
+		b. Resizing the framebuffer viewport
+		c. Getters and Setters for private data members
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Framebuffer.h"
@@ -55,11 +72,12 @@ void Framebuffer::init()
 
 	// Attaching depth and stencil attachment onto framebuffer
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Checking Completeness
-	int errorId = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	/*int errorId = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	/*if (errorId == GL_FRAMEBUFFER_UNDEFINED)
+	if (errorId == GL_FRAMEBUFFER_UNDEFINED)
 		PRINT("Specified framebuffer is the default read or draw framebuffer, but the default framebuffer does not exist.");
 	else if (errorId == GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT)
 		PRINT("Any of the framebuffer attachment points are framebuffer incomplete");
@@ -78,16 +96,7 @@ void Framebuffer::init()
 
 	COPIUM_ASSERT(errorId != GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");*/
 
-
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-
-	
-
-
-
+	// Creating a HDR framebuffer object
 	glGenFramebuffers(1, &hdrFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 

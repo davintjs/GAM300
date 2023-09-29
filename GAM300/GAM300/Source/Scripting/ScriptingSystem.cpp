@@ -200,11 +200,13 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackGetScriptNames);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
 }
 
 void ScriptingSystem::Update(float dt)
 {
+	UNREFERENCED_PARAMETER(dt);
 	if (logicState != LogicState::NONE)
 	{
 		//Sync logic thread with main thread
@@ -363,7 +365,6 @@ void ScriptingSystem::ThreadWork()
 		{
 			Sleep(1000);
 			ACQUIRE_SCOPED_LOCK(Mono);
-			ACQUIRE_SCOPED_LOCK(Assets);
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
 			{
@@ -462,6 +463,12 @@ void ScriptingSystem::SwapDll()
 	mAppDomain = CreateAppDomain();
 	mono_domain_set(mAppDomain, false);
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
+	if (mCoreAssembly == nullptr)
+	{
+		PRINT("Failed to load scripts, fix all errors\n");
+		compilingState = CompilingState::Wait;
+		return;
+	}
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
 	RegisterScriptWrappers();
 	RegisterComponents();
@@ -578,6 +585,7 @@ void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
+	(void)pEvent;
 	ACQUIRE_SCOPED_LOCK(Mono);
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
@@ -682,6 +690,7 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 }
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
+	(void)pEvent;
 	logicState = LogicState::EXIT;
 	ran = false;
 	while (ran == false);

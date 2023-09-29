@@ -83,7 +83,7 @@ T& OBJECTSLIST::emplace_back(Args&&... args)
 		start = start->next;
 	}
 	++size_;
-	return start->sparseSet.emplace_back(args...);
+	return start->sparseSet.emplace_back(std::forward<Args>(args)...);
 }
 
 template <typename T, ObjectIndex N>

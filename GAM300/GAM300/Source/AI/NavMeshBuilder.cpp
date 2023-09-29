@@ -123,11 +123,6 @@ std::vector<Triangle3D> NavMeshBuilder::GetGroundTriangles(const std::vector<glm
 	return resTri;
 }
 
-void NavMeshBuilder::SetBoundary(Polygon3D* boundary)
-{
-	mBoundary = boundary;
-}
-
 void NavMeshBuilder::AddHole(Polygon3D* hole)
 {
 	mHoles.push_back(*hole);

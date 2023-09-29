@@ -1,28 +1,17 @@
 ﻿/*!***************************************************************************************
-\file			scene.h
+\file			Scene.h
 \project
-\author			Matthew Lau
+\author         
 
-\par			Course: GAM200
-\par			Section:
-\date			28/07/2022
+\par			Course: GAM300
+\date           07/09/2023
 
 \brief
-	Contains declarations for the Scene class.
-	The Scene contains:
-		1. load, init, update, draw, free, unload function
-		2. string containing the filename of the file in which the scene data is stored on
-		3. Data pertaining to the game objects in the scene
+	This file contains the declarations of the following:
+	1. Scene
 
-	Note: load, init, free and unload functions MUST be defined by scene sub-classes
-
-	Contains definitions for NormalScene class which is a derived class from Scene class.
-	Note: this is the latest version of our scene class, use this
-
-
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
 
 #ifndef SCENE_H
 #define SCENE_H
@@ -50,6 +39,7 @@ struct SingleHandlesTable
 	template <typename T1>
 	bool Has(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
+		(void)uuid;
 		auto& entries = std::get<Table<T1>>(tables);
 		if (entries.find(euid) == entries.end())
 			return false;
@@ -134,6 +124,7 @@ struct MultiHandlesTable
 	template <typename T1>
 	constexpr void Remove(Engine::UUID euid, Engine::UUID uuid)
 	{
+		(void)uuid;
 		auto& entries = std::get<MultiTable<T1>>(tables);
 		entries[euid].erase(euid);
 		if (entries[euid].size() == 0)
@@ -253,6 +244,7 @@ public:
 	template<typename T>
 	T& Get(Engine::UUID euid, Engine::UUID uuid = 0)
 	{
+		(void)uuid;
 		//E_ASSERT
 		//(
 		//	handles.Has<T>(euid),
@@ -265,7 +257,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return multiHandles.Get<T>(euid,uuid);
+			return *GetMulti<T>(euid).front();
 		}
 	}
 
@@ -278,7 +270,14 @@ public:
 	template<typename T, typename Owner>
 	T& Get(Owner& object)
 	{
-		return Get<T>(object.euid,object.uuid);
+		if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return *GetMulti<T>(object.euid).front();
+		}
+		else
+		{
+			return Get<T>(object.euid);
+		}
 	}
 
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
@@ -343,7 +342,7 @@ public:
 		if constexpr (std::is_same<T, Entity>())
 		{
 			entitiesDeletionBuffer.push_back(&object);
-			entities.SetActive(object.uuid,false);
+			entities.SetActive((ObjectIndex)object.uuid,false);
 			layer.erase(std::find(layer.begin(), layer.end(), object.euid));
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
@@ -468,7 +467,10 @@ public:
 		{
 			return entity.hasComponentsBitset.test(GetType::E<Component>());
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 
 	template <typename T>
@@ -478,11 +480,19 @@ public:
 		{
 			return singleHandles.Has<T>(handle.euid);
 		}
-		else if constexpr (MultiComponentTypes::Has<T>())
+		else
+		{
+			return false;
+		}
+		
+		if constexpr (MultiComponentTypes::Has<T>())
 		{
 			return multiHandles.Has<T>(handle.euid,handle.uuid);
 		}
-		return false;
+		else
+		{
+			return false;
+		}
 	}
 
 	template <typename T>
@@ -527,7 +537,7 @@ public:
 			object = &arr.emplace_back(args...);
 			object->euid = euid;
 			object->uuid = arr.GetDenseIndex(*object);
-			arr.SetActive(object->uuid);
+			arr.SetActive((ObjectIndex)object->uuid);
 			singleHandles.emplace(object, object->euid);
 			Add<Transform>(*object);
 			Tag* tag = Add<Tag>(*object);
@@ -540,7 +550,7 @@ public:
 		else if constexpr (AllComponentTypes::Has<T>())
 		{
 			Entity& entity{ Get<Entity>(euid) };
-			object = &arr.emplace(entity.uuid,args...);
+			object = &arr.emplace((ObjectIndex)entity.uuid,args...);
 			object->euid = euid;
 			object->uuid = uuid;
 			if constexpr (SingleComponentTypes::Has<T>())

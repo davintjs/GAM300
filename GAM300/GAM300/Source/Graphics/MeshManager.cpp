@@ -1,8 +1,21 @@
+/*!***************************************************************************************
+\file			MeshManager.cpp
+\project
+\author         Euan Lim, Davin Tan,Jake Lian, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the Mesh Manager and it's related Functionalities's definitions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 
-extern trans_mats SRT_Buffers[50];
 extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
 //extern std::vector <Materials> temp_MaterialContainer;
@@ -19,11 +32,14 @@ void MESH_Manager::Init()
 {
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
 	CreateInstanceCube();
+    CreateInstanceSphere();
     
+    CreateInstanceLine();
 }
 
 void MESH_Manager::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
 	// Empty by design
 }
 
@@ -75,6 +91,11 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         //temp_MaterialContainer.push_back(temporary);
 
+
+
+
+
+        // Pushing into the buffers
         temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
         temp_DiffuseContainer.push_back(glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
             newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a));
@@ -86,7 +107,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     }
 
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
     glm::vec3 min(FLT_MAX);
     glm::vec3 max(FLT_MIN);
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
@@ -159,12 +180,13 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
-        tempProp.drawCount = newGeom.mMeshes[i]._indices.size();
+        tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
+        tempProp.drawType = GL_TRIANGLES;
         std::string newName = fileName;
         std::map<std::string, InstanceProperties>::iterator it;
         it = properties.find(newName);
         while (it != properties.end()) {
-            newName += ('0' + i);
+            newName += char('0' + i);
             it = properties.find(newName);
         }
         properties.emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
@@ -172,10 +194,11 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
-        newMesh.Drawcounts.push_back(newGeom.mMeshes[i]._indices.size());
+        newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties[newName]));
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties[newName]));
     }
+
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties[fileName]);
@@ -184,9 +207,6 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 }
 
 //Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid
-
-
-
 
 
 // PRIVATE FUNCTIONS
@@ -298,7 +318,7 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 void MESH_Manager::CreateInstanceCube()
 {
     Mesh newMesh;
-    newMesh.index = mContainer.size();
+    newMesh.index = (unsigned int)mContainer.size();
 
     // positions            // Normals              // Tangents             // Texture Coords   // Colors
     //float vertices[] = {
@@ -387,6 +407,7 @@ void MESH_Manager::CreateInstanceCube()
         20, 21, 22,
         22, 23, 20
     };
+
     newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
     newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
 
@@ -431,17 +452,144 @@ void MESH_Manager::CreateInstanceCube()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
+    tempProp.drawType = GL_TRIANGLES;
+
     properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup(properties["Cube"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Cube"]));
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Cube"]);
 
     mContainer.emplace(std::string("Cube"), newMesh);
 }
 
+
+void MESH_Manager::CreateInstanceSphere()
+{
+    Mesh newMesh;
+    newMesh.index = (unsigned int)mContainer.size();
+
+    GLuint vaoid;
+    GLuint vboid;
+    GLuint ebo;
+
+
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
+
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec2> uv;
+    std::vector<glm::vec3> normals;
+    std::vector<unsigned int> indices;
+
+    const unsigned int X_SEGMENTS = 64;
+    const unsigned int Y_SEGMENTS = 64;
+    const float PI = 3.14159265359f;
+
+    glm::vec3 min(FLT_MAX);
+    glm::vec3 max(FLT_MIN);
+
+    for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+    {
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            float xSegment = (float)x / (float)X_SEGMENTS;
+            float ySegment = (float)y / (float)Y_SEGMENTS;
+            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
+            float yPos = std::cos(ySegment * PI) * 15.f;
+            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
+
+            positions.push_back(glm::vec3(xPos, yPos, zPos));
+            uv.push_back(glm::vec2(xSegment, ySegment));
+            normals.push_back(glm::vec3(xPos, yPos, zPos));
+            min.x = std::min(xPos, min.x);
+            min.y = std::min(yPos, min.y);
+            min.z = std::min(zPos, min.z);
+
+            max.x = std::max(xPos, max.x);
+            max.y = std::max(yPos, max.y);
+            max.z = std::max(zPos, max.z);
+
+        }
+    }
+    bool oddRow = false;
+    for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
+    {
+        if (!oddRow) // even rows: y == 0, y == 2; and so on
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                indices.push_back(y * (X_SEGMENTS + 1) + x);
+                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+            }
+        }
+        else
+        {
+            for (int x = X_SEGMENTS; x >= 0; --x)
+            {
+                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                indices.push_back(y * (X_SEGMENTS + 1) + x);
+            }
+        }
+        oddRow = !oddRow;
+    }
+
+    std::vector<float> data;
+    for (unsigned int i = 0; i < positions.size(); ++i)
+    {
+        data.push_back(positions[i].x);
+        data.push_back(positions[i].y);
+        data.push_back(positions[i].z);
+        if (normals.size() > 0)
+        {
+            data.push_back(normals[i].x);
+            data.push_back(normals[i].y);
+            data.push_back(normals[i].z);
+        }
+        if (uv.size() > 0)
+        {
+            data.push_back(uv[i].x);
+            data.push_back(uv[i].y);
+        }
+    }
+    glBindVertexArray(vaoid);
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    unsigned int stride = (3 + 2 + 3) * sizeof(float);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+
+    InstanceProperties tempProp;
+    tempProp.drawType = GL_TRIANGLE_STRIP;
+    tempProp.VAO = vaoid;
+    tempProp.drawCount = (unsigned int)(indices.size()) ;
+    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
+    newMesh.Vaoids.push_back(vaoid);
+    newMesh.Vboids.push_back(vboid);
+    newMesh.prim = GL_TRIANGLE_STRIP;
+    newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Sphere"]));
+
+    newMesh.vertices_min = min;
+    newMesh.vertices_max = max;
+
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Sphere"]);
+    mContainer.emplace(std::string("Sphere"), newMesh);
+
+
+}
+
+
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
 unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 
 
@@ -588,7 +736,147 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
+unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
+
+    // SRT Buffer set up
+    prop.entitySRTbuffer;
+    glGenBuffers(1, &prop.entitySRTbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(prop.entitySRT[0]), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //entitySRTBuffer
+    glBindVertexArray(prop.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+    glEnableVertexAttribArray(8);
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(9);
+    glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
+    glVertexAttribDivisor(9, 1);
+    glBindVertexArray(0);
+
+
+    // Albedo Buffer Setup
+    prop.AlbedoBuffer;
+    glGenBuffers(1, &prop.AlbedoBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Albedo[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(10);
+    glVertexAttribPointer(10, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(10, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Metal_Rough_AO_Texture_Buffer Buffer Setup
+    prop.Metal_Rough_AO_Texture_Buffer;
+    glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(11);
+    glVertexAttribPointer(11, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribDivisor(11, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Diffuse Buffer Setup
+    prop.Metal_Rough_AO_Texture_Constant;
+    glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Constant);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(12);
+    glVertexAttribPointer(12, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribDivisor(12, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+    prop.textureIndexBuffer;
+    glGenBuffers(1, &prop.textureIndexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(15);
+    glVertexAttribPointer(15, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribDivisor(15, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return prop.entitySRTbuffer;
+}
+
+void MESH_Manager::CreateInstanceLine()
+{
+    Mesh newMesh;
+    newMesh.index = (unsigned int)(mContainer.size());
+
+    GLfloat vertices[] = {
+        -1.f, 0.f, 0.f,   
+        1.0f, 0.f, 0.f
+    };
+
+    GLuint indices[] = {
+        0, 1
+    };
+    newMesh.vertices_min = glm::vec3(-1.f, 0.f, 0.f);
+    newMesh.vertices_max = glm::vec3(-1.f, 0.f, 0.f);
+
+    // first, configure the cube's VAO (and VBO)
+    //unsigned int VBO, cubeVAO;
+
+    GLuint vaoid;
+    GLuint vboid;
+    GLuint ebo;
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(vaoid);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+    InstanceProperties tempProp;
+    tempProp.VAO = vaoid;
+    tempProp.drawCount = 2;
+    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
+    newMesh.Vaoids.push_back(vaoid);
+    newMesh.Vboids.push_back(vboid);
+    newMesh.prim = GL_LINES;
+    newMesh.Drawcounts.push_back(2);
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Line"]));
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
+
+    mContainer.emplace(std::string("Line"), newMesh);
+
+}
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
 {
@@ -661,15 +949,6 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     glBindVertexArray(0); // unbind vao
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
-
-
-
-    //entitySRTBuffer
-    glBindVertexArray(prop.debugVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-    glBindVertexArray(0);
 
     //entitySRTBuffer
     glBindVertexArray(prop.debugVAO);

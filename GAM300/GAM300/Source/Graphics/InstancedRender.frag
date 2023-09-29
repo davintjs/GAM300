@@ -1,53 +1,52 @@
+/*!***************************************************************************************
+\file			InstancedRender.vert
+\project
+\author         Euan Lim , Jake Lian
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	Fragment Shader for a Instanced Rendering ( Blinn-Phong ) - NOT IN USE CURRENTLY
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #version 450 core
 
-// IN
-// layout (location = 0) in vec4 vColor;
+//-------------------------
+//          COMING IN
+//-------------------------
 layout (location = 0) in vec2 frag_texture_index;
 layout (location = 1) in vec3 FragmentPos;
 layout (location = 2) in vec3 Normal;
-//layout (location = 3) in vec2 frag_TexCoord;
 
 layout (location = 4) in vec2 Tex_Coord;
-
+layout (location = 5) in vec3 TangentLightPos;
 
 layout (location = 10) in vec4 frag_albedo;
 layout (location = 11) in vec4 frag_specular;
 layout (location = 12) in vec4 frag_diffuse;
 layout (location = 13) in vec4 frag_ambient;
 layout (location = 14) in float frag_shininess;
-//layout (location = 0) in vec2 texture_index;
 
-layout (location = 5) in vec3 TangentLightPos;
 layout (location = 15) in vec3 TangentViewPos;
 layout (location = 16) in vec3 TangentFragPos;
 
 
-
-//    vec3 TangentLightPos;
-//    vec3 TangentViewPos;
-//    vec3 TangentFragPos;
-
-//layout (location = 15) in VS_OUT {
-//    vec3 TangentLightPos;
-//    vec3 TangentViewPos;
-//    vec3 TangentFragPos;
-//} fs_in;
-
-// OUT
-
+//-------------------------
+//          GOING OUT
+//-------------------------
 
 
 out vec4 FragColor;
 
+//-------------------------
+//          UNIFORMS
+//-------------------------
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
-
-
-//layout(binding=0) uniform sampler2D myTextureSampler;
-
-//layout(binding=1) uniform sampler2D normalSampler;
 
 
 layout (binding = 0) uniform sampler2D myTextureSampler[32];
@@ -101,7 +100,7 @@ void main()
 
 
 
-
+    // IF THERE IS A TEXTURE
 if(Tex_index<32)
 {
 
@@ -150,7 +149,7 @@ if(Tex_index<32)
 
 //
 
-
+// IF THERE IS A NORMAL MAP
 if(NM_index < 32)
 {
 

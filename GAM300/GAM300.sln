@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Compiler", "Compiler\Compil
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2836EE83-F281-4C41-9D93-4A7A3FE7F68C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripting", "Scripting\Scripting.csproj", "{47222B3F-A48C-43FD-81B1-D5A2D982E576}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureCompiler", "TextureCompiler\TextureCompiler.vcxproj", "{34DD9413-1C22-42BE-8F02-16EF0250D6C0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "External\DirectXTex-main\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj", "{371B9FA9-4C90-4AC6-A123-ACED756D6C77}"
@@ -29,10 +27,6 @@ Global
 		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Debug|x64.Build.0 = Debug|x64
 		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Release|x64.ActiveCfg = Release|x64
 		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Release|x64.Build.0 = Release|x64
-		{47222B3F-A48C-43FD-81B1-D5A2D982E576}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{47222B3F-A48C-43FD-81B1-D5A2D982E576}.Debug|x64.Build.0 = Debug|Any CPU
-		{47222B3F-A48C-43FD-81B1-D5A2D982E576}.Release|x64.ActiveCfg = Release|Any CPU
-		{47222B3F-A48C-43FD-81B1-D5A2D982E576}.Release|x64.Build.0 = Release|Any CPU
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Debug|x64.ActiveCfg = Debug|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Debug|x64.Build.0 = Debug|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Release|x64.ActiveCfg = Release|x64

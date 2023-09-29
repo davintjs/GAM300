@@ -30,14 +30,14 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
-using Vector2 = glm::vec2;
+using vec2 = glm::vec2;
 using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 using Quaternion = glm::quat;
 
 struct Entity;
 
-static std::map<std::string, size_t> ComponentTypes{};
+extern std::map<std::string, size_t> ComponentTypes;
 
 template<typename T,typename... Ts>
 struct GetTypeGroup
@@ -178,21 +178,33 @@ struct Transform : Object
 
 property_begin_name(Transform, "Transform") 
 {
-	property_var(translation),
-	property_var(rotation),
-	property_var(scale),
+	property_var(translation).Name("Translation"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
 } property_vend_h(Transform)
 
 struct AudioSource : Object
 {
+	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
+	std::vector<std::string> ChannelName =
+	{
+		"Music",
+		"SFX",
+		"Looping SFX"
+	};
 	bool loop = false;
+	bool play = false;
 	float volume = 1.0f;
+	std::string currentSound = "";
 	property_vtable();
 };
 
 property_begin_name(AudioSource, "Audio Source") {
-	property_var(loop),
-		property_var(volume)
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		//property_var(ChannelName).Name("channel"),
+		property_var(loop).Name("Loop"),
+		property_var(volume).Name("Volume"),
+		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
 
 struct BoxCollider : Object
@@ -205,9 +217,9 @@ struct BoxCollider : Object
 
 property_begin_name(BoxCollider, "BoxCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(x),
-		property_var(y),
-		property_var(z),
+		property_var(x).Name("X"),
+		property_var(y).Name("Y"),
+		property_var(z).Name("Z"),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
@@ -218,7 +230,7 @@ struct SphereCollider : Object
 
 property_begin_name(SphereCollider, "SphereCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(radius)
+		property_var(radius).Name("Radius")
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
@@ -230,8 +242,8 @@ struct CapsuleCollider : Object
 
 property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(height),
-		property_var(radius)
+		property_var(height).Name("Height"),
+		property_var(radius).Name("Radius")
 } property_vend_h(CapsuleCollider)
 
 struct Animator : Object
@@ -253,21 +265,24 @@ struct Rigidbody : Object
 	bool isKinematic{ true };			//is object simulated?
 	bool useGravity{ true };			//is object affected by gravity?
 	bool is_trigger = false;
+
 	property_vtable();
+	UINT32 bid{0};
+
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(linearVelocity),
-		property_var(angularVelocity),
-		property_var(force),
-		property_var(friction),
-		property_var(mass),
-		property_var(isStatic),
-		property_var(isKinematic),
-		property_var(useGravity),
-		property_var(is_trigger)
+		property_var(linearVelocity).Name("LinearVelocity"),
+		property_var(angularVelocity).Name("AngularVelocity"),
+		property_var(force).Name("Force"),
+		property_var(friction).Name("Friction"),
+		property_var(mass).Name("Mass"),
+		property_var(isStatic).Name("IsStatic"),
+		property_var(isKinematic).Name("IsKinematic"),
+		property_var(useGravity).Name("UseGravity"),
+		property_var(is_trigger).Name("Is_trigger")
 } property_vend_h(Rigidbody)
 
 struct CharacterController : Object
@@ -279,17 +294,18 @@ struct CharacterController : Object
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	property_vtable();
+	UINT32 bid{0};
 	//JPH::BodyID CharacterBodyID;
 };
 
 property_begin_name(CharacterController, "CharacterController") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(velocity),
-		property_var(force),
-		property_var(friction),
-		property_var(mass),
-		property_var(gravityFactor),
-		property_var(slopeLimit)
+		property_var(velocity).Name("Velocity"),
+		property_var(force).Name("Force"),
+		property_var(friction).Name("Friction"),
+		property_var(mass).Name("Mass"),
+		property_var(gravityFactor).Name("GravityFactor"),
+		property_var(slopeLimit).Name("SlopeLimit")
 } property_vend_h(CharacterController)
 
 struct Script : Object
@@ -302,8 +318,8 @@ struct Script : Object
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(name),
-		//, property_var(fields)
+		property_var(name).Name("Name"),
+		//property_var(fields)
 } property_vend_h(Script)
 
 struct MeshRenderer : Object
@@ -322,9 +338,9 @@ struct MeshRenderer : Object
 	float mr_Shininess;
 
 
-	float mr_metallic;
-	float mr_roughness;
-	float ao;
+	float mr_metallic = 0.5f;
+	float mr_roughness = 0.5f;
+	float ao = 0.5f;
 
 	std::string MetallicTexture = "";
 	std::string RoughnessTexture = "";
@@ -337,11 +353,22 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(MeshName).Flags(property::flags::DONTSHOW),
 		property_var(mr_Albedo),
-		property_var(mr_Specular),
+		property_var(AlbedoTexture),
+		property_var(NormalMap),		
+		/*property_var(mr_Specular),
 		property_var(mr_Diffuse),
 		property_var(mr_Ambient),
-		property_var(mr_Shininess)
+		property_var(mr_Shininess),*/
+		property_var(mr_metallic),
+		property_var(MetallicTexture),
+
+		property_var(mr_roughness),
+		property_var(RoughnessTexture),
+
+		property_var(ao),
+		property_var(AoTexture),
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
@@ -352,7 +379,7 @@ struct LightSource : Object
 
 property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(lightingColor)
+		property_var(lightingColor).Name("LightingColor")
 } property_vend_h(LightSource)
 
 #pragma endregion

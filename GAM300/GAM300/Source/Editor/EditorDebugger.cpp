@@ -26,6 +26,7 @@ void EditorDebugger::Init()
 
 void EditorDebugger::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::Begin("Logger");
     if (ImGui::SmallButton("[Debug] Test Debug Output"))

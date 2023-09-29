@@ -1,3 +1,22 @@
+/*!***************************************************************************************
+\file			Mesh.h
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the declarations of the following:
+    1. Vertex class for storing position, normal, tangent, texture, and color of mesh
+    2. Texture class storing the filepath of the texture
+    3. Material class storing specular, diffuse and ambient values of the mesh
+    4. Geom_mesh class storing the properties of the FBX file after assimp loading
+       to be serialized into custom binary format
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #ifndef MESH_H
 #define MESH_H
 
@@ -25,12 +44,6 @@ struct Vertex
     std::int8_t colorG;
     std::int8_t colorB;
     std::int8_t colorA;
-
-    //glm::vec3 pos;
-    //glm::vec3 normal;
-    //glm::vec3 tangent;
-    //glm::vec2 tex;
-    //glm::ivec4 color;
 };
 
 struct Texture
@@ -96,10 +109,6 @@ struct Material
     aiColor4D Ambient; // Color the surface has when not exposed directly to light from object
 
     std::vector<Texture> textures;
-
-    //std::size_t GUID;
-    //std::string matName;
-    //std::vector<SampleHolder> _samples;
 };
 
 class Geom_Mesh {
@@ -107,11 +116,11 @@ public:
     std::vector<Vertex> _vertices; // This individual mesh vertices
     std::vector<unsigned int> _indices; // This individual mesh indices
 
-    glm::vec3 mPosCompressionScale; // Scale value according to the bounding box of the vertices positions of this sub mesh
-    glm::vec2 mTexCompressionScale; // Scale value according to the bounding box of the texture coordinates of this sub mesh
+    glm::vec3 mPosCompressionScale{}; // Scale value according to the bounding box of the vertices positions of this sub mesh
+    glm::vec2 mTexCompressionScale{}; // Scale value according to the bounding box of the texture coordinates of this sub mesh
 
-    glm::vec3 mPosCompressionOffset; // This individual mesh vertices' positions' center offset from original
-    glm::vec2 mTexCompressionOffset; // This individual mesh textures' coordinates' center offset from original
+    glm::vec3 mPosCompressionOffset{}; // This individual mesh vertices' positions' center offset from original
+    glm::vec2 mTexCompressionOffset{}; // This individual mesh textures' coordinates' center offset from original
 
     int materialIndex = 0; // Material index
 

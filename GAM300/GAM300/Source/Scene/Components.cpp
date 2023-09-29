@@ -8,6 +8,8 @@
 //
 //template <>
 //const char* GetTypeGroup<>::name = "";
+std::map<std::string, size_t> ComponentTypes{};
+
 bool Transform::isLeaf() {
 	return (child.size()) ? false : true;
 }
@@ -47,7 +49,7 @@ bool Transform::isEntityChild(Transform& ent) {
 
 void Transform::SetParent(Transform* newParent)
 {
-	if (newParent->EUID() == parent)
+	if (newParent && newParent->EUID() == parent)
 		return;
 	glm::quat rot;
 	glm::vec3 skew;
@@ -65,7 +67,10 @@ void Transform::SetParent(Transform* newParent)
 		rotation = glm::eulerAngles(rot);
 	}
 
-	parent = newParent->EUID();
+	if (!newParent)
+		parent = 0;
+	else
+		parent = newParent->EUID();
 
 	if (parent) {
 		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);

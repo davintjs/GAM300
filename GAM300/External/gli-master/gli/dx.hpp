@@ -461,10 +461,10 @@ namespace gli
 
 		struct format
 		{
-			ddpf DDPixelFormat;
-			d3dfmt D3DFormat;
+			ddpf DDPixelFormat{};
+			d3dfmt D3DFormat{};
 			dxgiFormat DXGIFormat;
-			glm::u32vec4 Mask;
+			glm::u32vec4 Mask{};
 		};
 
 	public:

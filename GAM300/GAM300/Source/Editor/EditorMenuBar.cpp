@@ -1,11 +1,29 @@
+/*!***************************************************************************************
+\file			EditorMenuBar.cpp
+\project
+\author         Sean Ngo
+\co-author      Joseph Ho
+
+\par			Course: GAM300
+\date           04/09/2023
+
+\brief
+    This file contains the definitions of the following:
+    1. Editor Menubar which is mainly for engine utility 
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
+#include "Graphics/GraphicsSystem.h"
 
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
+
+static bool graphics_settings = false;
 
 void EditorMenuBar::Init()
 {
@@ -14,6 +32,7 @@ void EditorMenuBar::Init()
 
 void EditorMenuBar::Update(float dt)
 {
+    UNREFERENCED_PARAMETER(dt);
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
     {
         if (ImGui::IsKeyPressed(ImGuiKey_N))
@@ -117,8 +136,39 @@ void EditorMenuBar::Update(float dt)
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Preferences"))
+        {
+            if (ImGui::MenuItem("Graphics"))
+                graphics_settings = true;
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
+
+    if (graphics_settings) {
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(300.f, 450.f));
+
+        auto hdr = &GraphicsSystem::Instance().hdr;
+        ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Checkbox("Enable HDR lighting", hdr);
+
+        ImGui::Text("Light Exposure"); ImGui::SameLine();
+        if (ImGui::IsItemHovered()) ImGui::SetTooltip("Light exposure available only when HDR enabled");
+        if(*hdr)
+            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+        else {
+            //only allow when HDR is enabled
+            ImGui::BeginDisabled();
+            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+            ImGui::EndDisabled();
+        }      
+        ImGui::End();
+    }
+    
+
+    
 }
 
 void EditorMenuBar::NewScene()
@@ -159,7 +209,9 @@ void EditorMenuBar::SaveScene()
 
 void EditorMenuBar::OpenFile()
 {
-    std::string Filename = FileDialogs::OpenFile("All Files (*.*)\0*.*\0");
+    // Bean: open specific file types, for now this function only open scene files
+    //std::string Filename = FileDialogs::OpenFile("All Files (*.*)\0*.*\0");
+    std::string Filename = FileDialogs::OpenFile("Scene (*.scene)\0*.scene\0");
     if (!Filename.empty())
     {
         //Open File

@@ -43,8 +43,8 @@ protected:
 
 
 property_begin_name(Object, "Object") {
-	property_var(euid).Name("EUID"),
-		property_var(uuid).Name("UUID"),
+	property_var(euid).Name("EUID").Flags(property::flags::DONTSHOW),
+		property_var(uuid).Name("UUID").Flags(property::flags::DONTSHOW),
 }property_vend_h(Object)
 
 #endif // !OBJECT_H

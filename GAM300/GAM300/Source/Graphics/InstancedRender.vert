@@ -1,12 +1,26 @@
+/*!***************************************************************************************
+\file			InstancedRender.vert
+\project
+\author         Euan Lim , Jake Lian
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	Vertex Shader for a Instanced Rendering ( Blinn Phong ) - NOT IN USE CURRENTLY
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #version 450 core
 
+//-------------------------
+//          COMING IN
+//-------------------------
 layout (location = 0) in vec3 aVertexPosition;
 layout (location = 1) in vec3 aVertexNormal;
-
 layout (location = 2) in vec3 aVertexTangent;
 layout (location = 3) in vec2 aVertexTexCoord; //UVs info
 layout (location = 4) in vec4 aVertexColor; // This can throw
-
 layout (location = 6) in mat4 SRT;
 
 
@@ -16,7 +30,11 @@ layout (location = 12) in vec4 Diffuse;
 layout (location = 13) in vec4 Ambient;
 layout (location = 14) in float Shininess;
 layout (location = 15) in vec2 texture_index;
-// Out
+
+//-------------------------
+//          GOING OUT
+//-------------------------
+
 //layout (location = 0) out vec4 vColor;
 layout (location = 0) out vec2 frag_texture_index;
 layout (location = 1) out vec3 FragmentPos;
@@ -36,12 +54,9 @@ layout (location = 15) out vec3 TangentViewPos;
 layout (location = 16) out vec3 TangentFragPos;
 
 
-//layout (location = 15 ) out VS_OUT {
-//    vec3 TangentLightPos;
-//    vec3 TangentViewPos;
-//    vec3 TangentFragPos;
-//} vs_out;
-
+//-------------------------
+//          UNIFORMS
+//-------------------------
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;

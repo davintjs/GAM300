@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			MeshManager.h
+\project
+\author         Euan Lim, Davin Tan,Jake Lian, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the Mesh Manager and it's related structs:
+	1. Loads Geoms
+	2. Creates our own meshes - Cube,Sphere,Line
+	3. Sets up all the VAOs, VBOs and set up for instancing
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #pragma once
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
@@ -11,6 +28,7 @@
 #include "Model3d.h"
 
 struct InstanceProperties;
+
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -29,6 +47,7 @@ struct Mesh
 
 };
 
+// While Porting into the game
 struct gVertex
 {
 	glm::vec3 pos;
@@ -78,7 +97,7 @@ SINGLETON(MESH_Manager)
 {
 
 public:
-
+	
 	void Init();
 	void Update(float dt);
 	void Exit();
@@ -95,8 +114,6 @@ public:
 		}
 		return &mContainer.find(mesh_Name)->second; 
 	
-	
-	
 	}// Either Geom or Vaoid
 
 
@@ -111,6 +128,7 @@ public:
 private:
 	// To load Geoms from FBXs
 	GeomImported DeserializeGeoms(const std::string filePath);
+	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,
 		const glm::vec3& mPosCompressScale,
@@ -118,10 +136,16 @@ private:
 		const glm::vec3& mPosOffset,
 		const glm::vec2& mTexOffset);
 
-	void CreateInstanceCube();
 
-	unsigned int InstanceSetup
-	(InstanceProperties& prop);
+	void CreateInstanceCube();
+	void CreateInstanceSphere();
+	void CreateInstanceLine();
+
+	// Creates all the related buffers - Blinn Phong
+	unsigned int InstanceSetup(InstanceProperties& prop);
+
+	// Creates all the related buffers - PBR
+	unsigned int InstanceSetup_PBR(InstanceProperties& prop);
 
 	// Did not make this version because i realized that its all within instance properties
 	//unsigned int InstanceSetup_MAT(InstanceProperties& prop);

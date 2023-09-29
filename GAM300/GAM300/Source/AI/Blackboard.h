@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			Blackboard.h
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the declarations of the following:
+    1. Blackboard class
+        a. For sharing of information between AI agents, or any system if required
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include <unordered_map>
 
 template <typename K>
@@ -11,12 +27,14 @@ ENGINE_SYSTEM(Blackboard)
 {
 public:
 
+    // Setter function to write to blackboard
     template <typename T>
     void setValue(const char* key, const T& value)
     {
         getMap<T>().mMap[key] = value;
     }
 
+    // Getter function to get the message from blackboard
     template <typename T>
     T getValue(const char* key) const
     {
@@ -26,12 +44,19 @@ public:
 
         return res->second;
     }
+    
+    // Blackboard initialization
     void Init() {};
-    void Update(float dt) {};
+
+    // Blackboard update loop
+    void Update(float) {};
+
+    // Blackboard exit
     void Exit() {};
 
 private:
 
+    // Returns a static instance of the templated map that stores any types of value
     template <typename T>
     static my_unordered_map<T>& getMap()
     {
