@@ -194,9 +194,8 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
         Field field{ AllComponentTypes::Size(),buffer };
         const char* name{ fieldNamesEvent.pStart[i] };
         ScriptGetFieldEvent getFieldEvent{_component,name,field};
-        EVENTS.Publish(&fieldNamesEvent);
+        EVENTS.Publish(&getFieldEvent);
         out << YAML::Key << name;
-        PRINT("SERIALIZING: ",name,'\n');
         SerializeScriptHelper(field, out, AllFieldTypes());
     }
 }
@@ -387,6 +386,8 @@ void DeserializeComponent(const DeComHelper& _helper)
                 Field field{ AllComponentTypes::Size(),buffer };
                 const char* name{ fieldNamesEvent.pStart[i] };
                 YAML::Node varNode = node[name];
+                if (!varNode)
+                    continue;
                 ScriptGetFieldEvent getFieldEvent{ script,name,field };
                 EVENTS.Publish(&getFieldEvent);
                 DeserializeScriptHelper(field, varNode, AllFieldTypes());
@@ -433,17 +434,24 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
             out << YAML::Key << "fileID";
             // Storing EUID and UUID of Objects (Gameobject, Components etc)
             T*& object = *reinterpret_cast<T**>(rhs.data);
-            if constexpr (std::is_same<T, Entity>())
-                out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("GameObject");
+            if (!object)
+            {
+                out << YAML::Value << 0 << YAML::EndMap;
+                
+            }
             else
-                out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+            {
+                if constexpr (std::is_same<T, Entity>())
+                    out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("GameObject");
+                else
+                    out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+            }
         }
         else
         {
             // Store Basic Types
             T& value = rhs.Get<T>();
-            if constexpr (!std::is_same<T, None>())
-                out << YAML::Value << value;
+            out << YAML::Value << value;
         }
 
         return;
@@ -483,8 +491,7 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
         {
             // Store Basic Types
             T& value = rhs.Get<T>();
-            if constexpr (!std::is_same<T, None>())
-                value = node.as<T>();
+            value = node.as<T>();
         }
         return;
     }

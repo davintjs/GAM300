@@ -457,7 +457,7 @@ struct GenericRecursiveStruct
 
 using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3, None>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
 
 using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
