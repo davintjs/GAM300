@@ -13,7 +13,7 @@
 		b. Getters for checking loadedScenes
 		c. Event callbacks from other systems
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Core/SystemInterface.h"
 #include "Core/Events.h"
@@ -47,6 +47,9 @@ public:
 
 	// Check if there are scenes loaded
 	bool HasScene() { return !loadedScenes.empty(); }
+
+	// Get the previous scene, usually used to reflect objects when starting preview
+	Scene& GetPreviousScene() { return *std::next(loadedScenes.begin()); }
 
 	// Get the front of the list as the current scene
 	Scene& GetCurrentScene() { return loadedScenes.front(); }

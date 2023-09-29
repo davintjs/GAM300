@@ -187,19 +187,20 @@ void ScriptingSystem::Init()
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 		THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 	#endif
-	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetField);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetFieldNames);
+
+
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackGetScriptNames);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackStopPreview);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
 }
 
 void ScriptingSystem::Update(float dt)
@@ -222,7 +223,6 @@ MonoObject* ScriptingSystem::InstantiateClass(MonoClass* mClass, Args&&... args)
 	E_ASSERT(mAppDomain, "MONO APP DOMAIN NOT LOADED");
 	E_ASSERT(mClass, "MONO CLASS NOT LOADED");
 	MonoObject* tmp = mono_object_new(mAppDomain, mClass);
-	gcHandles.push_back(mono_gchandle_new(tmp,true));
 	mono_runtime_object_init(tmp);
 	return tmp;
 }
@@ -232,7 +232,6 @@ void ScriptingSystem::UpdateScriptClasses()
 	scriptClassMap.clear();
 	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
 	int rows = mono_table_info_get_rows(table_info);
-	/* For each row, get some of its values */
 	for (int i = 0; i < rows; i++)
 	{
 		MonoClass* _class = nullptr;
@@ -243,16 +242,33 @@ void ScriptingSystem::UpdateScriptClasses()
 		_class = mono_class_from_name(mAssemblyImage, name_space, name);
 		if (!_class)
 			continue;
+		MonoVTable* vTable = nullptr;
 		if (mono_class_get_parent(_class) == mScript)
 		{
+			//mono_class_v
+			//vTable = mono_class_vtable(mAppDomain, _class);
 			scriptClassMap[name] = ScriptClass{ name,_class };
 		}
-		else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
-		{
-			if (_class == mScript)
-				continue;
-			scriptClassMap[name] = ScriptClass{ name,_class };
-		}
+		//else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
+		//{
+		//	if (_class == mScript)
+		//		continue;
+		//	vTable = mono_class_vtable(mAppDomain, _class);
+		//	scriptClassMap[name] = ScriptClass{ name,_class };
+		//}
+
+		//if (!vTable)
+		//	continue;
+
+		//void* fieldIterator = nullptr;
+		//while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+		//{
+		//	uint32_t flags = mono_field_get_flags(field);
+		//	if (flags & FIELD_ATTRIBUTE_STATIC)
+		//	{
+		//		mono_field_static_set_value(vTable, field, nullptr);
+		//	}
+		//}
 	}
 }
 
@@ -268,78 +284,30 @@ void ScriptingSystem::ShutdownMono()
 	mRootDomain = nullptr;
 }
 
-void ScriptingSystem::CreateAppDomain()
+MonoDomain* ScriptingSystem::CreateAppDomain()
 {
-	static char appName[] = "AppDomain";
-	mAppDomain = mono_domain_create_appdomain(appName, nullptr);
-	mono_domain_set(mAppDomain, false);
+	std::string name{ "AppDomain" };
+	return mono_domain_create_appdomain(name.data(), nullptr);
 }
 
-void ScriptingSystem::UnloadAppDomain()
+
+
+void ScriptingSystem::ReflectFromOther(Scene& other)
 {
-	if (mAppDomain)
+	Scene& currScene{ MySceneManager.GetCurrentScene() };
+	MonoScripts& otherScripts{ mSceneScripts[other.uuid] };
+	for (auto& component : currScene.GetArray<Script>())
 	{
-		const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
-		int rows = mono_table_info_get_rows(table_info);
-		for (int i = 0; i < rows; i++)
+		if (otherScripts.find(component) != otherScripts.end())
 		{
-			MonoClass* _class = nullptr;
-			uint32_t cols[MONO_TYPEDEF_SIZE];
-			mono_metadata_decode_row(table_info, i, cols, MONO_TYPEDEF_SIZE);
-			const char* name = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAME]);
-			const char* name_space = mono_metadata_string_heap(mAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
-			_class = mono_class_from_name(mAssemblyImage, name_space, name);
-			if (!_class)
-				continue;
-			MonoVTable* vTable = nullptr;
-			if (mono_class_get_parent(_class) == mScript)
-			{
-				vTable = mono_class_vtable(mAppDomain, _class);
-				scriptClassMap[name] = ScriptClass{ name,_class };
-
-			}
-			else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
-			{
-				if (_class == mScript)
-					continue;
-				vTable = mono_class_vtable(mAppDomain, _class);
-				scriptClassMap[name] = ScriptClass{ name,_class };
-			}
-
-			if (!vTable)
-				continue;
-
-			void* fieldIterator = nullptr;
-			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
-			{
-				uint32_t flags = mono_field_get_flags(field);
-				if (flags & FIELD_ATTRIBUTE_STATIC)
-				{
-					mono_field_static_set_value(vTable, field, nullptr);
-				}
-			}
+			ReflectScript(component,otherScripts[component]);
 		}
-		mono_domain_set(mRootDomain, false);
-		mono_domain_unload(mAppDomain);
-		mAppDomain = nullptr;
+		else
+		{
+			ReflectScript(component);
+		}
 	}
 }
-
-template <typename T, typename... Ts>
-struct ReflectExistingStruct
-{
-	ReflectExistingStruct(TemplatePack<T,Ts...> pack) {};
-	ReflectExistingStruct() 
-	{
-		Scene& scene{ MySceneManager.GetCurrentScene()};
-		for (auto& component : scene.GetArray<Script>())
-		{
-			SCRIPTING.ReflectScript(component);
-		}
-	}
-};
-
-using ReflectAll = decltype(ReflectExistingStruct(AllComponentTypes()));
 
 void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 {
@@ -347,24 +315,9 @@ void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 	auto& scriptsArray = scene.GetArray<Script>();
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
-		Script& script = *it;
-		for (auto& field : script.fields)
-		{
-			if (field.second.fType >= AllObjectTypes::Size())
-				continue;
-			Entity& entity = scene.Get<Entity>(script);
-			//Reference got deleted
-			Handle* pHandle = (Handle*)field.second.data;
-			if (!scene.HasHandle(field.second.fType, pHandle))
-			{
-				memset(field.second.data, 0, field.second.GetSize());
-				ScriptSetFieldEvent e{ script,field.first.c_str()};
-				CallbackScriptSetField(&e);
-			}
-		}
-
 		if (!it.IsActive())
 			continue;
+		Script& script = *it;
 		if (!scene.IsActive(scene.Get<Entity>(script)))
 			continue;
 		InvokeMethod(script, funcName);
@@ -376,23 +329,22 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{
-		if (mCoreAssembly) {
-			ACQUIRE_SCOPED_LOCK(Mono);
-			if (MySceneManager.HasScene())
+		if (mAppDomain && MySceneManager.HasScene())
+		{
+			Scene& scene = MySceneManager.GetCurrentScene();
+			ACQUIRE_SCOPED_LOCK(ScriptQueue);
+			for (Handle& handle : reflectionQueue)
 			{
-				Scene& scene{ MySceneManager.GetCurrentScene() };
-				for (Handle& handle : reflectionQueue)
-				{
-					ReflectScript(scene.Get<Script>(handle.euid, handle.uuid));
-				}
-				reflectionQueue.clear();
+				ReflectScript(scene.Get<Script>(handle));
 			}
+			reflectionQueue.clear();
 		}
 
-		if (mCoreAssembly && logicState != LogicState::NONE)
+		if (logicState != LogicState::NONE)
 		{
 			if (ran)
 				continue;
+			ACQUIRE_SCOPED_LOCK(Mono);
 			if (logicState == LogicState::UPDATE)
 			{
 				InvokeAllScripts("Update");
@@ -400,15 +352,8 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
-				ACQUIRE_SCOPED_LOCK(Mono);
-				for (uint32_t hand : gcHandles)
-				{
-					mono_gchandle_free(hand);
-				}
-				gcHandles.clear();
-				mComponents.clear();
-				reflectionQueue.clear();
-				ReflectAll();
+				PRINT("STARTED\n");
+				ReflectFromOther(MySceneManager.GetPreviousScene());
 				InvokeAllScripts("Awake");
 				InvokeAllScripts("Start");
 				logicState = LogicState::UPDATE;
@@ -416,21 +361,9 @@ void ScriptingSystem::ThreadWork()
 			else if (logicState == LogicState::EXIT)
 			{
 				InvokeAllScripts("Exit");
-				logicState = LogicState::CLEANUP;
-			}
-			else
-			{
-				ACQUIRE_SCOPED_LOCK(Mono);
-				for (uint32_t hand : gcHandles)
-				{
-					mono_gchandle_free(hand);
-				}
-				reflectionQueue.clear();
-				gcHandles.clear();
-				mComponents.clear();
-				ReflectAll();
-				PRINT("CLEARED ALL\n");
+				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
 				logicState = LogicState::NONE;
+				reflectionQueue.clear();
 			}
 			//FINISHED RUNNING
 			ran = true;
@@ -451,33 +384,95 @@ void ScriptingSystem::ThreadWork()
 		}
 		else if (compilingState == CompilingState::SwapAssembly)
 		{
+			ACQUIRE_SCOPED_LOCK(Mono);
+			CacheScripts();
 			SwapDll();
+			LoadCacheScripts();
+			compilingState = CompilingState::Wait;
 		}
 		#endif
 	}
-	for (uint32_t hand : gcHandles)
-	{
-		mono_gchandle_free(hand);
-	}
-	gcHandles.clear();
-	UnloadAppDomain();
-	
+	mono_domain_set(mRootDomain,false);
+	if (mAppDomain)
+		mono_domain_unload(mAppDomain);
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
+}
+
+
+void ScriptingSystem::CacheScripts()
+{
+	Scene& currScene{ MySceneManager.GetCurrentScene() };
+	MonoScripts& mScripts = mSceneScripts[currScene.uuid];
+	for (auto& scriptPair : mScripts)
+	{
+		Script& script{ currScene.Get<Script>(scriptPair.first) };
+		ScriptClass& scriptClass{ scriptClassMap[script.name] };
+		//Reset fieldtype and buffer if the type was different
+		for (auto& pair : scriptClass.mFields)
+		{
+			int alignment{};
+			MonoType* mType = mono_field_get_type(pair.second);
+			size_t fType = Utils::monoTypeToFieldType(mType);
+			int fieldSize = mono_type_size(mType, &alignment);
+			//POINTER
+			if (fType < AllObjectTypes::Size())
+			{
+				fieldSize = sizeof(uint64_t);
+			}
+			else if (fType == GetFieldType::E<std::string>())
+			{
+				fieldSize = TEXT_BUFFER_SIZE;
+			}
+			FieldMap& fMap = cacheFields[script];
+			fMap.emplace(pair.first, Field{ AllFieldTypes::Size(), new char[fieldSize] });
+			GetFieldValue(scriptPair.second, pair.second, fMap[pair.first]);
+		}
+	}
+}
+
+void ScriptingSystem::LoadCacheScripts()
+{
+	Scene& currScene{ MySceneManager.GetCurrentScene() };
+	for (auto& script : currScene.GetArray<Script>())
+	{
+		MonoObject* mS = ReflectScript(script);
+		ScriptClass& scriptClass{ scriptClassMap[script.name] };
+		//Reset fieldtype and buffer if the type was different
+		if (cacheFields.find(script) == cacheFields.end())
+			continue;
+		FieldMap& fMap = cacheFields[script];
+		for (auto& pair : scriptClass.mFields)
+		{
+			MonoType* mType = mono_field_get_type(pair.second);
+			size_t fType = Utils::monoTypeToFieldType(mType);
+			if (fMap.find(pair.first) == fMap.end())
+				continue;
+			//POINTER
+			SetFieldValue(mS, pair.second, fMap[pair.first]);
+		}
+		for (auto& pair : fMap)
+		{
+			delete pair.second.data;
+		}
+	}
+	cacheFields.clear();
+	PRINT("LOADED CACHE\n");
 }
 
 void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	ACQUIRE_SCOPED_LOCK(Assets);
-	//ACQUIRE_SCOPED_LOCK(Mono);
-	for (uint32_t hand : gcHandles)
+	Scene& currScene{ MySceneManager.GetCurrentScene() };
+	mSceneScripts[currScene.uuid].clear();
+	if (mAppDomain)
 	{
-		mono_gchandle_free(hand);
+		mono_domain_set(mRootDomain, false);
+		mono_domain_unload(mAppDomain);
 	}
-	gcHandles.clear();
-	mComponents.clear();
+	mAppDomain = CreateAppDomain();
+	mono_domain_set(mAppDomain, false);
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
 	if (mCoreAssembly == nullptr)
 	{
@@ -485,15 +480,11 @@ void ScriptingSystem::SwapDll()
 		compilingState = CompilingState::Wait;
 		return;
 	}
-	UnloadAppDomain();
-	CreateAppDomain();
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
-	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
 	RegisterScriptWrappers();
 	RegisterComponents();
+	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
 	UpdateScriptClasses();
-	ReflectAll();
-	compilingState = CompilingState::Wait;
 }
 
 MonoObject* ScriptingSystem::invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
@@ -543,17 +534,20 @@ MonoString* ScriptingSystem::CreateMonoString(const char* str)
 	return mono_string_new(mAppDomain, str);
 }
 
-void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend ,Field& field, void* container)
+void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassField ,Field& field)
 {
+	field.fType = Utils::monoTypeToFieldType(mono_field_get_type(mClassField));
 	if (field.fType == GetFieldType::E<std::string>())
 	{
 		MonoString* mono_string = CreateMonoString("");
-		mono_field_get_value(instance, mClassFiend, &mono_string);
+		mono_field_get_value(instance, mClassField, &mono_string);
 		char* str = mono_string_to_utf8(mono_string);
-		strcpy_s((char*)container, strlen(str)+1, str);
+		strcpy_s((char*)field.data, strlen(str)+1, str);
+		mono_free(mono_string);
 		return;
 	}
-	mono_field_get_value(instance, mClassFiend, container);
+	//If mono object, it contains reference to type
+	mono_field_get_value(instance, mClassField, field.data);
 	return;
 }
 
@@ -569,25 +563,17 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Handle handle = *(Handle*)field.data;
+		Object* pObject = *(Object**)field.data;
 		Scene& scene = MySceneManager.GetCurrentScene();
-		if (handle.euid == 0)
-		{
+		if (pObject == nullptr)
 			mono_field_set_value(instance, mClassField, nullptr);
-			return;
-		}
-		void* obj = scene.GetByUUID(field.fType, &handle);
-		if (field.fType == GetType::E<Script>())
-		{
-			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)obj));
-		}
+		else if (field.fType == GetType::E<Script>())
+			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
-		{
-			mono_field_set_value(instance, mClassField, obj);
-		}
+			mono_field_set_value(instance, mClassField, pObject);
 		return;
 	}
-	mono_field_set_value(instance, mClassField, (void*)field.data);
+	mono_field_set_value(instance, mClassField, field.data);
 }
 
 
@@ -623,101 +609,54 @@ bool ScriptingSystem::IsScript(MonoClass* monoClass)
 }
 //
 
-MonoObject* ScriptingSystem::ReflectScript(Script& script)
+MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 {
-	auto pairIt = mComponents.find(&script);
-	if (pairIt == mComponents.end())
+	Scene& scene = MySceneManager.GetCurrentScene();
+	MonoScripts& mScripts = mSceneScripts[scene.uuid];
+	auto pairIt = mScripts.find(script);
+	if (pairIt == mScripts.end())
 	{
 		if (scriptClassMap.find(script.name) == scriptClassMap.end())
 			return nullptr;
 		ScriptClass& scriptClass = scriptClassMap[script.name];
-		Scene& scene = MySceneManager.Instance().GetCurrentScene();
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		void* param = &scene.Get<Entity>(script);
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
 		invoke(instance, reflectComponent, &param);
-		mComponents.emplace(&script, instance);
-		//Check fields, dont remove fields, but change them if their type is different
-
-		std::list<std::string> validFieldNames{};
-
-		for (auto& pair : script.fields)
+		mScripts.emplace(script, instance);
+		//Check fields, dont remove fields
+		if (ref)
 		{
-			validFieldNames.push_back(pair.first);
-		}
-		for (auto& pair : scriptClass.mFields)
-		{
-			MonoClassField* mField = pair.second;
-			MonoType* type = mono_field_get_type(mField);
-			size_t fieldType = Utils::monoTypeToFieldType(type);
-			const char* fieldName = pair.first.c_str();
-			std::string typeName = mono_type_get_name(type);
-			auto nameField{ script.fields.find(fieldName) };
-			int alignment{};
-			int fieldSize = mono_type_size(type, &alignment);
-			if (fieldType < AllObjectTypes::Size())
+			for (auto& pair : scriptClass.mFields)
 			{
-				fieldSize = sizeof(Object);
-			}
-			else if (fieldType == GetFieldType::E<std::string>())
-			{
-				fieldSize = TEXT_BUFFER_SIZE;
-			}
-			//Field has not been created onto script yet
-			if (nameField == script.fields.end())
-			{
-				Field newField = Field((size_t)fieldType, fieldSize, nullptr);
-				size_t offset = typeName.find_last_of(".");
-				if (offset != std::string::npos)
-					newField.typeName = typeName.substr(offset + 1);
-				else
-					newField.typeName = typeName;
-				mono_field_get_value(instance, mField, newField.data);
-				script.fields[fieldName] = std::move(newField);
-			}
-			//Field exists
-			else
-			{
-				validFieldNames.remove(fieldName);
-				Field& field = nameField->second;
-				//If the field type is not the same
-				if (field.fType != (size_t)fieldType)
+				static char buffer[2048];
+				Field field{ AllFieldTypes::Size() ,buffer };
+				GetFieldValue(ref, pair.second, field);
+				if (field.fType == AllFieldTypes::Size())
 				{
-					field.Resize(fieldSize);
-					mono_field_get_value(instance, mField, field.data);
+					continue;
 				}
-				//Field exists, setback the values first
-				else
-				{
-					//Look at this again
-					SetFieldValue(instance, mField, field);
-				}
+				SetFieldValue(instance, pair.second, field);
 			}
 		}
-		for (auto& name : validFieldNames)
-		{
-			script.fields.erase(name);
-		}
+		//Set back fields from previous scene
 		return instance;
 	}
 	/*return (*pairIt).second;*/
 	return pairIt->second;
 }
 
-//
-//
-//
-//void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
-//{
-//	MonoObject* mScript = ReflectComponent(pEvent->script);
-//	COPIUM_ASSERT(!mScript, std::string("MONO OBJECT OF ") + pEvent->script.name + std::string(" NOT LOADED"));
-//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-//	//Reset fieldtype and buffer if the type was different
-//	MonoClassField* mClassField{scriptClass.mFields[pEvent->fieldName]};
-//	COPIUM_ASSERT(!mClassField, std::string("FIELD ") + pEvent->fieldName + "COULD NOT BE FOUND IN SCRIPT " + pEvent->script.name);
-//	GetFieldValue(mScript,mClassField,pEvent->script.fieldDataReferences[pEvent->fieldName],pEvent->container);
-//}
-//
+void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
+{
+	MonoObject* mScript = ReflectScript(pEvent->script);
+	E_ASSERT(mScript, "MONO OBJECT OF ", pEvent->script.name," NOT LOADED");
+	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
+	//Reset fieldtype and buffer if the type was different
+	MonoClassField* mClassField{scriptClass.mFields[pEvent->fieldName]};
+	E_ASSERT(mClassField, "FIELD ", pEvent->fieldName, "COULD NOT BE FOUND IN SCRIPT ", pEvent->script.name);
+	GetFieldValue(mScript,mClassField,pEvent->field);
+}
+
 void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 {
 	MonoObject* mScript = ReflectScript(pEvent->script);
@@ -725,38 +664,56 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
 	MonoClassField* mClassField{ scriptClass.mFields[pEvent->fieldName] };
 	E_ASSERT(mClassField, "FIELD ",pEvent->fieldName,"COULD NOT BE FOUND IN SCRIPT ",pEvent->script.name);
-	Field& field = pEvent->script.fields[pEvent->fieldName];
-	SetFieldValue(mScript, mClassField, field);
+	SetFieldValue(mScript, mClassField, pEvent->field);
 }
-//
-//
-//void ScriptingSystem::CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent)
-//{
-//	static std::vector<const char*> functionNames{};
-//	functionNames.clear();
-//	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-//	for (auto& pair : scriptClass.mFields)
-//	{
-//		functionNames.push_back(pair.first.c_str());
-//	}
-//	pEvent->arraySize = functionNames.size();
-//	pEvent->namesArray = functionNames.data();
-//}
-//
-//void ScriptingSystem::CallbackReflectGameObject(ReflectGameObjectEvent* pEvent)
-//{
-//	ReflectGameObject(pEvent->gameObject);
-//}
-//
+
+
+void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent)
+{
+	static std::vector<const char*> fieldNames;
+	pEvent->pStart = nullptr;
+	pEvent->count = 0;
+	fieldNames.clear();
+	if (mAppDomain == nullptr || mCoreAssembly == nullptr || mAssemblyImage == nullptr)
+		return;
+	Scene& scene = MySceneManager.GetCurrentScene();
+	if (mSceneScripts.find(scene.uuid) == mSceneScripts.end())
+		return;
+	MonoScripts& mScripts = mSceneScripts[scene.uuid];
+	if (mScripts.find(pEvent->script) == mScripts.end())
+		return;
+	MonoObject* mScript = ReflectScript(pEvent->script);
+	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
+	for (auto& pair : scriptClass.mFields)
+	{
+		fieldNames.emplace_back(pair.first.c_str());
+	}
+	pEvent->pStart = fieldNames.data();
+	pEvent->count = fieldNames.size();
+}
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	(void)pEvent;
-	ACQUIRE_UNIQUE_LOCK(Mono, [this] {return mAppDomain != nullptr; });
-	reflectionQueue.clear();
+	while (mAppDomain == nullptr || compilingState != CompilingState::Wait);
 	logicState = LogicState::START;
 	ran = true;
 }
+
+void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
+{
+	while (compilingState != CompilingState::Wait);
+}
+
+void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
+{
+	{
+		ACQUIRE_SCOPED_LOCK(ScriptQueue);
+		reflectionQueue.push_back(*pEvent->pObject);
+	}
+	while (!reflectionQueue.empty());
+}
+
+
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
 	(void)pEvent;
@@ -764,24 +721,6 @@ void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 	ran = false;
 	while (ran == false);
 }
-
-void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
-{
-	(void)pEvent;
-	logicState = LogicState::CLEANUP;
-	ran = false;
-	while (ran == false);
-}
-
-void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
-{
-	(void)pEvent;
-	logicState = LogicState::CLEANUP;
-	ran = false;
-	while (ran == false);
-}
-
-
 
 void ScriptingSystem::CallbackGetScriptNames(GetScriptNamesEvent* pEvent)
 {
@@ -795,17 +734,3 @@ void ScriptingSystem::CallbackGetScriptNames(GetScriptNamesEvent* pEvent)
 	pEvent->arr = names.data();
 	pEvent->count = names.size();
 }
-
-void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
-{
-	ACQUIRE_SCOPED_LOCK(Mono);
-	reflectionQueue.emplace_back(pEvent->pObject->EUID(), pEvent->pObject->UUID());
-}
-
-//
-//
-//void ScriptingSystem::CallbackScriptNew(ScriptNewEvent* pEvent)
-//{
-//	std::string filePath = addEmptyScript(pEvent->name);
-//	MyEventSystem->publish(new FileAccessEvent(filePath.c_str()));
-//}

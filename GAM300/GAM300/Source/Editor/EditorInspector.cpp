@@ -23,6 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Graphics/MeshManager.h"
 #include <variant>
 #include "PropertyConfig.h"
+#include "Utilities./ThreadPool.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -235,10 +236,9 @@ void DisplayType(const char* name, Vector2& val)
 }
 
 template <typename T>
-void AddReferencePanel(T* container)
+void AddReferencePanel(T*& container)
 {
     //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference || (T*)pEditedContainer != container)
     if (!isAddingReference || (T*)pEditedContainer != container)
     {
         return;
@@ -266,8 +266,7 @@ void AddReferencePanel(T* container)
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
                 isAddingReference = false;
-                Handle* value = (Handle*)container;
-                *value = Handle(object.EUID(),object.UUID());
+                container = &object;
                 break;
             }
         }
@@ -281,15 +280,14 @@ void AddReferencePanel(T* container)
 }
 
 template <typename T>
-void DisplayType(const char* name, T* container, const char* altName = nullptr)
+void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 {
     if constexpr (AllObjectTypes::Has<T>())
     {
         static std::string btnName;
-        Handle* value = (Handle*)container;
-        if (value->euid != 0)
+        if (container)
         {
-            btnName = MySceneManager.GetCurrentScene().Get<Tag>(value->euid).name;
+            btnName = MySceneManager.GetCurrentScene().Get<Tag>(container->EUID()).name;
         }
         else
         {
@@ -323,7 +321,8 @@ void DisplayType(const char* name, T* container, const char* altName = nullptr)
             const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(GetType::Name<T>());
             if (payload)
             {
-                *value = *(Handle*)payload->Data;
+                Handle handle = *(Handle*)payload->Data;
+                container = &MySceneManager.GetCurrentScene().Get<T>(handle);
             }
             ImGui::EndDragDropTarget();
         }
@@ -338,7 +337,7 @@ void DisplayField(const char* name, Field& field)
     {
         if (field.fType < AllObjectTypes::Size())
         {
-            T* value = reinterpret_cast<T*>(field.data);
+            T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
                 DisplayType(name, value,field.typeName.c_str());
@@ -395,15 +394,6 @@ void Display(const char* name, T& val)
     ImGui::Text(name);
     ImGui::TableNextColumn();
     DisplayType(name, val);
-}
-
-void Display(const char* name, Script*& val, const char* scriptName)
-{
-    ImGui::AlignTextToFramePadding();
-    ImGui::TableNextColumn();
-    ImGui::Text(name);
-    ImGui::TableNextColumn();
-    //DisplayType(name, val, scriptName);
 }
 
 void Display(const char* string)
@@ -707,13 +697,6 @@ void Display_Property(T& comp) {
 //        property::set(comp, Name.c_str(), Data);
 //    }
 //}
-//template<>
-//void DisplayComponent<AudioSource>(AudioSource& as) {
-//
-//    Display_Property(as);
-//
-//  
-//}
 //
 //template <>
 //void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
@@ -804,13 +787,23 @@ void Display_Property(T& comp) {
 
 void DisplayComponent(Script& script)
 {
-    for (auto& pair : script.fields)
+    ACQUIRE_SCOPED_LOCK(Mono);
+    static char buffer[2048];
+    ScriptGetFieldNamesEvent getFieldNamesEvent{script};
+    EVENTS.Publish(&getFieldNamesEvent);
+    for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
-        const char* name = pair.first.c_str();
-        Field& field{ pair.second };
-        Display(name, field);
-        ScriptSetFieldEvent e{ script,name };
-        EVENTS.Publish(&e);
+        const char* fieldName = getFieldNamesEvent.pStart[i];
+        Field field{ AllFieldTypes::Size(),buffer };
+        ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
+        EVENTS.Publish(&getFieldEvent);
+        if (field.fType < AllFieldTypes::Size())
+        {
+            Display(fieldName, field);
+            ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
+            EVENTS.Publish(&setFieldEvent);
+        }
+
     }
 }
 //template <>

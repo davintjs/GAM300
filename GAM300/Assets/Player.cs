@@ -4,46 +4,49 @@ using System.Collections.Generic;
 
 public class Player : Script
 {
-    Rigidbody rb;
-    public float speed = 10f;
-    public GameObject gameObj;
-    public Player player2;
+    //Rigidbody rb;
+    public GameObject gameObj = null;
+    public float sad;
+
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if (gameObj == null)
-            return;
         if (Input.GetKey(KeyCode.Q))
         {
-            gameObj.transform.localRotation.y += speed/360f;
+            gameObj.transform.localRotation.y += sad / 360f;
+            //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.E))
         {
-            gameObj.transform.localRotation.y -= speed/360f;
+            gameObj.transform.localRotation.y -= sad / 360f;
+            //rb.mass -= speed;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            gameObj.transform.localPosition += gameObj.transform.forward * speed;
+            gameObj.transform.localPosition += gameObj.transform.forward * sad;
+            //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            gameObj.transform.localPosition += gameObj.transform.back * speed;
+            gameObj.transform.localPosition += gameObj.transform.back * sad;
+            //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            gameObj.transform.localPosition += gameObj.transform.left * speed;
+            gameObj.transform.localPosition += gameObj.transform.left * sad;
+            //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            gameObj.transform.localPosition += gameObj.transform.right * speed;
+            gameObj.transform.localPosition += gameObj.transform.right * sad;
+            //rb.mass += speed;
         }
-        //Console.WriteLine("Sup");
         //Destroy(this);
         //transform.localPosition = newPos;
     }

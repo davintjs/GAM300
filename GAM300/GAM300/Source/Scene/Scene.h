@@ -26,13 +26,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
 
-
-struct Handle
-{
-	Engine::UUID euid;
-	Engine::UUID uuid;
-};
-
 using SingleObjectTypes = decltype(TemplatePack<Entity>::Concatenate(SingleComponentTypes()));
 
 template <typename T>
@@ -63,6 +56,19 @@ struct SingleHandlesTable
 	constexpr T1& Get(Engine::UUID euid)
 	{
 		return *std::get<Table<T1>>(tables)[euid];
+	}
+
+	template <typename T1>
+	constexpr T1& GetByUUID(Engine::UUID uuid)
+	{
+		auto& entries = std::get<Table<T1>>(tables);
+		for (auto& pair : entries)
+		{
+			if (pair.second->UUID() == uuid)
+			{
+				return *pair.second;
+			}
+		}
 	}
 
 	template <typename T1>
@@ -114,6 +120,23 @@ struct MultiHandlesTable
 	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid)
 	{
 		return *std::get<MultiTable<T1>>(tables)[euid][uuid];
+	}
+
+
+	template <typename T1>
+	constexpr T1& GetByUUID(Engine::UUID uuid)
+	{
+		auto& entries = std::get<MultiTable<T1>>(tables);
+		for (auto& entryPair : entries)
+		{
+			for (auto& pair : entryPair.second)
+			{
+				if (pair.first == uuid)
+				{
+					return *pair.second;
+				}
+			}
+		}
 	}
 
 	template <typename T1>
@@ -200,6 +223,7 @@ public:
 
 	std::filesystem::path filePath;
 	using Layer = std::list<Engine::UUID>;
+	const Engine::UUID uuid = Engine::CreateUUID();
 
 	Layer layer;
 
@@ -240,7 +264,6 @@ public:
 	}
 
 
-
 	Scene(Scene& rhs) : sceneName{rhs.sceneName}
 	{
 		CloneHelper(rhs, AllObjectTypes());
@@ -264,7 +287,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return *GetMulti<T>(euid).front();
+			return multiHandles.Get<T>(euid,uuid);
 		}
 	}
 
@@ -290,6 +313,19 @@ public:
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
 
 	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
+
+	template<typename T>
+	T& GetByUUID(Engine::UUID uuid)
+	{
+		if constexpr (MultiComponentTypes::Has<T>())
+		{
+			return multiHandles.GetByUUID<T>(uuid);
+		}
+		else
+		{
+			return singleHandles.GetByUUID<T>(uuid);
+		}
+	}
 
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)
