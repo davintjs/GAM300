@@ -1,14 +1,14 @@
 Serializer Version 1.1
 ---
 Scene Settings:
-  Name: Test 1
+  Name: Script Test
   m_OcclusionCullingSettings: None
   m_RenderSettings: None
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
 GameObject:
-  m_EUID: 3617398286580236905
+  m_EUID: 5302684753975432589
   m_IsActive: true
   m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
@@ -18,12 +18,4 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 16239228584053852041}  # Script
----
-Script:
-  EUID: 3617398286580236905
-  UUID: 16239228584053852041
-  Name: Player
-  gameObj: {fileID: 3617398286580236905}  # GameObject
-  player2: {fileID: 16239228584053852041}  # Component
-  speed: 16.2999992
+    []

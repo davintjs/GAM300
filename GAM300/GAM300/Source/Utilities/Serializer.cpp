@@ -352,6 +352,7 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
             Script& temp = component;
             Script& script = *_scene.Add<T>(entity, temp.name.c_str());
             
+            // Assigning script values from the loaded scene
             for (auto& item : script.fields)
             {
                 YAML::Node varNode = node[item.first];
