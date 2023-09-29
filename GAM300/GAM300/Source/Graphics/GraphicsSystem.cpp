@@ -360,48 +360,42 @@ void GraphicsSystem::Update(float dt)
 		Transform& transform = currentScene.Get<Transform>(entity);
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
-		GLuint textureID = 0;
-		GLuint normalMapID = 0;
-		GLuint RoughnessID = 0;
-		GLuint MetallicID = 0;
-		GLuint AoID = 0;
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
-		if (renderer.AlbedoTexture != "") {
-			textureID =
+
+		// Bean: Should be a callback event(from editor inspector) when the user update the texture for the mesh
+		if (renderer.AlbedoTexture != "" && renderer.textureID) {
+			renderer.textureID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
 		}
-		if (renderer.NormalMap != "") {
+		if (renderer.NormalMap != "" && renderer.normalMapID) {
 
-			normalMapID =
+			renderer.normalMapID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
 		}
 
+		if (renderer.MetallicTexture != "" && renderer.MetallicID) {
 
-		if (renderer.MetallicTexture != "") {
-
-			MetallicID =
+			renderer.MetallicID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
 		}
-		if (renderer.RoughnessTexture != "") {
-			RoughnessID =
+		if (renderer.RoughnessTexture != "" && renderer.RoughnessID) {
+			renderer.RoughnessID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
 		}
 
-		if (renderer.AoTexture != "") {
-			AoID =
+		if (renderer.AoTexture != "" && renderer.AoID) {
+			renderer.AoID =
 				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
 		}
 
+		float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
+		float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));
 
 
-		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
-		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
-
-
-		float metalidx = float(ReturnTextureIdx(renderer.MeshName, MetallicID));
-		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
-		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
+		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
+		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
+		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
 
 
 		float metal_constant = renderer.mr_metallic;
