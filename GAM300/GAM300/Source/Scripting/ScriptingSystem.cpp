@@ -200,6 +200,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
 }
 
 void ScriptingSystem::Update(float dt)
@@ -328,6 +329,17 @@ void ScriptingSystem::ThreadWork()
 	InitMono();
 	while (!THREADS.HasStopped())
 	{
+		if (mAppDomain && MySceneManager.HasScene())
+		{
+			Scene& scene = MySceneManager.GetCurrentScene();
+			ACQUIRE_SCOPED_LOCK(ScriptQueue);
+			for (Handle& handle : reflectionQueue)
+			{
+				ReflectScript(scene.Get<Script>(handle));
+			}
+			reflectionQueue.clear();
+		}
+
 		if (logicState != LogicState::NONE)
 		{
 			if (ran)
@@ -351,6 +363,7 @@ void ScriptingSystem::ThreadWork()
 				InvokeAllScripts("Exit");
 				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
 				logicState = LogicState::NONE;
+				reflectionQueue.clear();
 			}
 			//FINISHED RUNNING
 			ran = true;
@@ -700,6 +713,14 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 		ReflectScript(script);
 	}
 }
+
+void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
+{
+	ACQUIRE_SCOPED_LOCK(ScriptQueue);
+	PRINT("ADDED SCRIPT\n");
+	reflectionQueue.push_back(*pEvent->pObject);
+}
+
 
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {

@@ -257,7 +257,7 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return *GetMulti<T>(euid).front();
+			return multiHandles.Get<T>(euid,uuid);
 		}
 	}
 

@@ -360,6 +360,9 @@ public:
 	/*******************************************************************************/
 	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
 
+
+	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
+
 	MonoObject* ReflectScript(Script& component, MonoObject* ref = nullptr);
 
 	void ReflectFromOther(Scene& other);
@@ -380,6 +383,8 @@ public:
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
 	float timeUntilRecompile{0};
 	CompilingState compilingState{ CompilingState::Wait };
+
+	std::vector<Handle> reflectionQueue;
 
 
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
