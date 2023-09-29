@@ -187,7 +187,6 @@ void ScriptingSystem::Init()
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 		THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 	#endif
-	//MyEventSystem->subscribe(this,&ScriptingSystem::CallbackSceneChanging);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
 	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
@@ -200,8 +199,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackGetScriptNames);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStop);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 }
 
 void ScriptingSystem::Update(float dt)
@@ -683,11 +681,26 @@ void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEve
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	PRINT("SCRIPTING SYSTEM!\n");
 	while (mAppDomain == nullptr || compilingState != CompilingState::Wait);
 	logicState = LogicState::START;
 	ran = true;
 }
+
+void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	{
+		ACQUIRE_SCOPED_LOCK(Mono);
+		while (compilingState == CompilingState::Compiling);
+		compilingState = CompilingState::SwapAssembly;
+	}
+	while (compilingState == CompilingState::SwapAssembly);
+	for (Script& script : scene.GetArray<Script>())
+	{
+		ReflectScript(script);
+	}
+}
+
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
 	(void)pEvent;

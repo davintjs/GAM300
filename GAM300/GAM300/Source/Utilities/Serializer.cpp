@@ -184,10 +184,17 @@ bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
 
 void SerializeScript(YAML::Emitter& out, Script& _component)
 {
-    for (auto& field : _component.fields)
+    ScriptGetFieldNamesEvent fieldNamesEvent{_component};
+    EVENTS.Publish(&fieldNamesEvent);
+    for (size_t i = 0; i < fieldNamesEvent.count; ++i)
     {
-        out << YAML::Key << field.first;
-        CloneHelper(field.second, out, AllFieldTypes());
+        static char buffer[2048];
+        Field field{ AllComponentTypes::Size(),buffer };
+        const char* name{ fieldNamesEvent.pStart[i] };
+        ScriptGetFieldEvent getFieldEvent{_component,name,field};
+        EVENTS.Publish(&fieldNamesEvent);
+        out << YAML::Key << name;
+        CloneHelper(field, out, AllFieldTypes());
     }
 }
 
@@ -349,13 +356,22 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
         // Check for Scripts
         if constexpr (std::is_same<T, Script>())
         {
-            Script& temp = component;
-            Script& script = *_scene.Add<T>(entity, temp.name.c_str());
+            //Script& temp = component;
+            Script& script = *_scene.Add<T>(entity, component.name.c_str());
             
-            for (auto& item : script.fields)
+            ScriptGetFieldNamesEvent fieldNamesEvent{ script };
+            EVENTS.Publish(&fieldNamesEvent);
+            for (size_t i = 0; i < fieldNamesEvent.count; ++i)
             {
-                YAML::Node varNode = node[item.first];
-                CloneHelper(item.second, varNode, AllFieldTypes());
+                static char buffer[2048];
+                Field field{ AllComponentTypes::Size(),buffer };
+                const char* name{ fieldNamesEvent.pStart[i] };
+                YAML::Node varNode = node[name];
+                ScriptGetFieldEvent getFieldEvent{ script,name,field };
+                EVENTS.Publish(&fieldNamesEvent);
+                CloneHelper(field, varNode, AllFieldTypes());
+                ScriptSetFieldEvent setFieldEvent{ script,name,field };
+                EVENTS.Publish(&setFieldEvent);
             }
         }
         else
