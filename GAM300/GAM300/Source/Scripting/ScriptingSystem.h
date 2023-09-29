@@ -39,6 +39,7 @@ extern "C"
 	typedef struct _MonoType MonoType;
 	typedef struct _MonoString MonoString;
 	typedef struct _MonoAssembly MonoAssembly;
+	typedef struct _MonoDomain MonoDomain;
 	typedef struct _MonoImage MonoImage;
 }
 
@@ -245,14 +246,7 @@ public:
 			Creates an appDomain so that a new assembly can be loaded
 	*/
 	/**************************************************************************/
-	void CreateAppDomain();
-	/**************************************************************************/
-	/*!
-		\brief
-			Deletes an appDomain and any assemblies loaded in it
-	*/
-	/**************************************************************************/
-	void UnloadAppDomain();
+	MonoDomain* CreateAppDomain();
 	/**************************************************************************/
 	/*!
 		\brief
@@ -351,7 +345,6 @@ public:
 	*/
 	/*******************************************************************************/
 	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
-	void CallbackSceneStop(SceneStopEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -375,12 +368,17 @@ public:
 
 	void InvokeAllScripts(const std::string& funcName);
 
+
+	using FieldMap = std::unordered_map<std::string, Field>;
+	void CacheScripts();
+	std::unordered_map<Handle, FieldMap> cacheFields;
+	void LoadCacheScripts();
+
 	//Mapping script to mono script
 	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
 
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
 	float timeUntilRecompile{0};
-	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
 
 

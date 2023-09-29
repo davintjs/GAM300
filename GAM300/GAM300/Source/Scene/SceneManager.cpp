@@ -147,6 +147,7 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 
 void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
+	PRINT("SCENE MANAGER!\n");
 	//Publish scene change
 	loadedScenes.emplace_front(GetCurrentScene());
 	GetCurrentScene().sceneName += " [PREVIEW]";

@@ -990,8 +990,8 @@ void EditorInspector::Update(float dt)
     if (curr_index != NON_VALID_ENTITY) {
         ImGui::Spacing();
         Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
-        std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
-        ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
+        //std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
+        //ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
         DisplayEntity(curr_entity);
     }
 

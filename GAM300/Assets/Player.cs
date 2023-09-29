@@ -6,6 +6,8 @@ public class Player : Script
 {
     //Rigidbody rb;
     public GameObject gameObj = null;
+    //public float yes;
+
 
     void Start()
     {

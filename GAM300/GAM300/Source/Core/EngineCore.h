@@ -54,9 +54,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		AssetManager,
 		InputSystem,
 		EditorSystem,
+		ScriptingSystem, // AFTER DEMO
 		SceneManager,
 		DemoSystem,//RUN AFTER EDITOR
-		ScriptingSystem, // AFTER DEMO
 		//PhysicsSystem, //AFTER SCRIPTING
 		GraphicsSystem,
 		Blackboard
@@ -187,6 +187,7 @@ public:
 
 	void CallbackSceneStart(SceneStartEvent* pEvent)
 	{
+		PRINT("ENGINE CORE!\n");
 		mode = ENUM_SYSTEM_RUNTIME;
 	}
 
