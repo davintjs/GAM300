@@ -8,7 +8,7 @@ Scene Settings:
   m_NavMeshSettings: None  # All settings above are just examples
 ---
 GameObject:
-  m_EUID: 3617398286580236905
+  m_EUID: 12233947094511288644
   m_IsActive: true
   m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
@@ -18,12 +18,63 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 16239228584053852041}  # Script
+    - component: {fileID: 6239776999500157430}  # LightSource
+    - component: {fileID: 12772701066981377723}  # CapsuleCollider
+---
+LightSource:
+  EUID: 12233947094511288644
+  UUID: 6239776999500157430
+  LightingColor: [1, 1, 1]
+---
+CapsuleCollider:
+  EUID: 12233947094511288644
+  UUID: 12772701066981377723
+  Height: 1
+  Radius: 1
+---
+GameObject:
+  m_EUID: 13148294722580006365
+  m_IsActive: true
+  m_Name: New GameObject(2)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 11964022069775765968}
+  m_Parent: 0
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 11964022069775765968
+  m_IsActive: true
+  m_Name: New GameObject(3)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 13647096454967037793}
+  m_Parent: 13148294722580006365
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 13647096454967037793
+  m_IsActive: true
+  m_Name: New GameObject(4)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 11964022069775765968
+  m_Components:
+    - component: {fileID: 762517225207987594}  # Script
 ---
 Script:
-  EUID: 3617398286580236905
-  UUID: 16239228584053852041
+  EUID: 13647096454967037793
+  UUID: 762517225207987594
   Name: Player
-  gameObj: {fileID: 3617398286580236905}  # GameObject
-  player2: {fileID: 16239228584053852041}  # Component
-  speed: 16.2999992
+  gameObj: {fileID: 12233947094511288644}  # GameObject
+  player2: {fileID: 762517225207987594}  # Component
+  speed: 12.8500004

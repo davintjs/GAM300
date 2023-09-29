@@ -53,7 +53,7 @@ void DemoSystem::Init()
 	scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
 
 	// test instance rendering
-	for (int i = 0; i < 500; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		Entity& tempent = *scene.Add<Entity>();
 		MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);

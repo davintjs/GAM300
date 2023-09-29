@@ -58,11 +58,6 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	Scene& scene = GetCurrentScene();
 
 	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
-	/*if (!DeserializeScene(scene))
-	{
-		std::cout << "Error loading scene!\n";
-		return;
-	}*/
 
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
