@@ -52,16 +52,20 @@ void DemoSystem::Init()
 	scene.Get<Transform>(testEntity).translation = Vector3(-150.f, 100.f, 0.f);
 	scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
 
-	//// test instance rendering
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	Entity& tempent = *scene.Add<Entity>();
-	//	MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);
-	//	renderer.MeshName = "Cube";
-	//	scene.Get<Transform>(tempent).translation = Vector3((rand() % 1000) - 500.f, (rand() % 1000) - 500.f, (rand() % 1000) - 500.f);
-	//	scene.Get<Transform>(tempent).scale = Vector3((rand() % 50), (rand() % 50), (rand() % 50));
-	//	scene.Add<MeshRenderer>(tempent);
-	//}
+	// test instance rendering
+	for (int i = 0; i < 500; ++i)
+	{
+		Entity& tempent = *scene.Add<Entity>();
+		MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);
+		renderer.MeshName = "DamagedHelmet";
+		renderer.AlbedoTexture = "Default_albedo";
+		renderer.NormalMap = "Default_normal";
+		renderer.RoughnessTexture = "Default_metalRoughness";
+		renderer.MetallicTexture = "Default_metalRoughness";
+		renderer.AoTexture = "Default_AO";
+		scene.Get<Transform>(tempent).translation = Vector3((rand() % 5000) - 2500.f, (rand() % 5000) - 2500.f, (rand() % 5000) - 2500.f);
+		scene.Add<MeshRenderer>(tempent);
+	}
 	//scene.Add<Script>(scene.GetArray<Entity>()[0])->name = "Player";
 	////scene.Add<Rigidbody>(scene.GetArray<Entity>()[0]);
 	
@@ -99,11 +103,9 @@ void DemoSystem::Init()
 	// scene.Get<Transform>(character).translation = Vector3(50.f, 200.0f, 0.f);
 	// scene.Get<Transform>(character).scale = Vector3(25.f, 25.f, 25.f);
 
-	//Entity& lightsource = *scene.Add<Entity>();
-	////scene.Add<LightSource>(lightsource);
-	//LightSource& lightsourcetemp = *scene.Add<LightSource>(lightsource);
-
-	//lightsourcetemp.lightingColor = Vector3(150.f, 150.f, 150.f);
+	Entity& lightsource = *scene.Add<Entity>();
+	LightSource& lightsourcetemp = *scene.Add<LightSource>(lightsource);
+	lightsourcetemp.lightingColor = Vector3(100000.f, 100000.f, 100000.f);
 }
 
 void DemoSystem::Update(float dt)
