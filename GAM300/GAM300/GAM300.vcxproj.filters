@@ -85,6 +85,9 @@
     <ClCompile Include="Source\AI\Geometry.cpp" />
     <ClCompile Include="Source\Audio\AudioManager.cpp" />
     <ClCompile Include="Source\Audio\AudioSystem.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\implot.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\implot_demo.cpp" />
+    <ClCompile Include="Source\Editor\ImGui\implot_items.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
