@@ -1,0 +1,21 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: Script Test
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 5302684753975432589
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    []

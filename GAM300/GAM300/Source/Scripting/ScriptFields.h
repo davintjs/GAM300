@@ -90,7 +90,7 @@ struct Field
 		typeName = rhs.typeName;
 		memcpy(data, rhs.data, size);
 	}
-	Field(Field&& rhs)
+	Field(Field&& rhs) noexcept
 	{
 		size = rhs.size;
 		data = rhs.data;
@@ -98,7 +98,7 @@ struct Field
 		typeName = std::move(rhs.typeName);
 		rhs.data = nullptr;
 	}
-	Field& operator=(Field&& rhs)
+	Field& operator=(Field&& rhs) noexcept
 	{
 		size = rhs.size;
 		data = rhs.data;
