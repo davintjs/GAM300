@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			MeshManager.cpp
+\project
+\author         Euan Lim, Davin Tan,Jake Lian, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the Mesh Manager and it's related Functionalities's definitions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
@@ -77,6 +91,11 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
         //temp_MaterialContainer.push_back(temporary);
 
+
+
+
+
+        // Pushing into the buffers
         temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
         temp_DiffuseContainer.push_back(glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
             newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a));
@@ -717,7 +736,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
-// THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
+// THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
 unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
 

@@ -66,7 +66,7 @@ bool OBL_ITER::operator!=(const Iterator& other) const
 template <typename T, ObjectIndex N>
 bool OBL_ITER::IsActive()
 {
-	return pNode->objectList.IsActive(index);
+	return pNode->objectList.IsActive((ObjectIndex)index);
 }
 
 template <typename T, ObjectIndex N>

@@ -71,8 +71,8 @@ Model SkyBox_Model;
 
 GLSLShader HDR_Shader;
 
-bool hdr = false;
-float exposure = 1.0;
+//bool hdr = false;
+//float exposure = 1.0;
 
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
@@ -169,7 +169,8 @@ unsigned int ReturnTextureIdx(std::string MeshName, GLuint id);
 
 void GraphicsSystem::Init()
 {
-
+	hdr = false;
+	exposure = 1.f;
 	//glGenFramebuffers(1, &hdrFBO);
 	//// create floating point color buffer
 	//unsigned int colorBuffer;
@@ -279,7 +280,7 @@ void GraphicsSystem::Update(float dt)
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
-		std::fill_n(prop.texture, 32, 0.f);
+		std::fill_n(prop.texture, 32, 0);
 	}
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -585,26 +586,6 @@ void GraphicsSystem::Update(float dt)
 		//std::cout << "HDR is up\n";
 	}
 
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
-	{
-		hdr = !hdr;
-	}
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
-	{
-		if (exposure == 1.0)
-		{
-			exposure = 5.0;
-		}
-		else
-		{
-			exposure =  1.0;
-		}
-	}
-	if (exposure == 5.0)
-	{
-		//std::cout << "exposure is diff\n";
-	}
 	GLint uniform1 =
 		glGetUniformLocation(HDR_Shader.GetHandle(), "hdr");
 

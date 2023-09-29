@@ -84,24 +84,24 @@ public:
 	float RandFloat(float min, float max);
 private:
 
-	FMOD::System* system;
-	FMOD::ChannelGroup* master;
-	FMOD::ChannelGroup* groups[CATEGORY_COUNT];
-	FMOD_MODE modes[CATEGORY_COUNT];
-	FMOD::Channel* currentMusic;
-	FMOD::Channel* currentFX;
-	FMOD::Channel* currentFootSteps;
+	FMOD::System* system{};
+	FMOD::ChannelGroup* master{};
+	FMOD::ChannelGroup* groups[CATEGORY_COUNT]{};
+	FMOD_MODE modes[CATEGORY_COUNT]{};
+	FMOD::Channel* currentMusic{};
+	FMOD::Channel* currentFX{};
+	FMOD::Channel* currentFootSteps{};
 	SoundMap sounds[CATEGORY_COUNT];
 
-	std::string currentMusicPath;
-	std::string currentFXPath;
-	std::string stepPath;
+	std::string currentMusicPath{};
+	std::string currentFXPath{};
+	std::string stepPath{};
 
-	std::string nextMusicPath;
-	std::string nextStepPath;
+	std::string nextMusicPath{};
+	std::string nextStepPath{};
 
 
-	FadeState fade;
+	FadeState fade{ FADE_NONE };
 
 	float musicVolume{ 1.f };
 	float loopfxVolume{ 1.f };

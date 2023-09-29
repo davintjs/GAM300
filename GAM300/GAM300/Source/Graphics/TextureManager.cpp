@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			TextureManager.cpp
+\project
+\author         Euphrasia Theophelia Tan Ee Mun, Euan Lim Yiren
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the Texture Manager and the definitions of its related functions. 
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "TextureManager.h"
 
@@ -22,28 +36,34 @@ void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
     const char* found = strstr(Filename, searchWord.c_str());
 
     if (found != nullptr) {
-        //std::cout << "skybox" << std::endl;
+        // if skybox
         
         // if filename_top, we create skybox texture as the other .dds should have been loaded in
         searchWord = "_top";
-        const char* found = strstr(Filename, searchWord.c_str());
+        found = strstr(Filename, searchWord.c_str());
+
         if (found != nullptr) {
         
             size_t length = found - Filename;
             char* subString = new char[length + 1];
 
-            strncpy(subString, Filename, length);
+            //strncpy(subString, Filename, length);
+            //subString[length] = '\0';
+            strncpy_s(subString, length + 1, Filename, length);
             subString[length] = '\0';
 
             temp = CreateSkyboxTexture(subString);
+            E_ASSERT(temp, "Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.");
+
             delete[] subString;
 
             mTextureContainer.emplace(GUID, std::pair(Filename, temp));
         }
     }
     else {
-        //std::cout << "not skybox" << std::endl;
+        // if not skybox
         temp = CreateTexture(Filename);
+        E_ASSERT(temp, "Texture creation failed.");
         mTextureContainer.emplace(GUID, std::pair(Filename, temp));
     }
 
@@ -70,17 +90,9 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     glTexParameteri(Target, GL_TEXTURE_SWIZZLE_B, Format.Swizzles[2]);
     glTexParameteri(Target, GL_TEXTURE_SWIZZLE_A, Format.Swizzles[3]);
 
-    glm::tvec3<GLsizei> const Extent(Texture.extent());
+    glm::tvec3<GLsizei> /*const*/ Extent(Texture.extent());
     GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-    //if ( gli::is_srgb(Texture.format()) )
-    //{
-    //    std::cout << " SRGB\n";
-    //}
-    //else
-    //{
-    //    std::cout << " RGB\n";
 
-    //}
     switch (Texture.target())
     {
     case gli::TARGET_1D:
@@ -112,7 +124,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
             for (std::size_t Level = 0; Level < Texture.levels(); ++Level)
             {
                 GLsizei const LayerGL = static_cast<GLsizei>(Layer);
-                glm::tvec3<GLsizei> Extent(Texture.extent(Level));
+                /*glm::tvec3<GLsizei>*/ Extent = Texture.extent(Level);
                 Target = gli::is_target_cube(Texture.target())
                     ? static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Face)
                     : Target;
@@ -199,15 +211,15 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     glGenTextures(1, &Skybox_Tex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_Tex);
 
-    int width, height, nrChannels;
-    unsigned int err = 0;
+    //int width{}, height{}, nrChannels{};
+    //unsigned int err = 0;
 
     for (size_t i = 0; i < faces.size(); i++)
     {
         gli::texture Texture = gli::load(faces[i]);
 
         glCompressedTexImage2D(
-            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            (GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i),
             0,
             GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
             Texture.extent().x,
@@ -231,6 +243,7 @@ GLuint Texture_Manager::GetTexture(std::string GUID)
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
         return mTextureContainer.find(GUID)->second.second;
     }
+
     return UINT_MAX;
 }
 

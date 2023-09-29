@@ -8,7 +8,7 @@
 
 \brief
     This file contains the declarations of the following:
-    1.
+    1. Demo system for debugging and testing purposes
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -23,8 +23,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ENGINE_SYSTEM(DemoSystem) // For debugging and demoing purposes
 {
 public:
+	// Initialize the system
 	void Init();
+
+	// Update the system
 	void Update(float dt);
+
+	// Exit the system
 	void Exit();
 
 private:

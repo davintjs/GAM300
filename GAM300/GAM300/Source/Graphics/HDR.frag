@@ -1,3 +1,16 @@
+/*!***************************************************************************************
+\file			HDR.frag
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	Does Gamma Correction, and implements HDR if it's enabled
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #version 450 core
 out vec4 FragColor;
 

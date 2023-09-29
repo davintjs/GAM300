@@ -54,5 +54,8 @@ public:
 
 	// function for raycasting
 	bool Raycasting(Ray3D& _ray);
+
+	bool hdr;
+	float exposure;
 };
 #endif // !GRAPHICS_SYSTEM_H

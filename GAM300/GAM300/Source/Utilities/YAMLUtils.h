@@ -28,10 +28,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define YAMLUTILS_H
 
 #include "yaml-cpp/yaml.h"
+
 #include "Properties.h"
 #include "UUID.h"
 
-class Scene;
+struct Scene;
 struct Transform;
 struct Field;
 

@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			SceneManager.cpp
+\project
+\author         Sean Ngo
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. Scene Manager System
+		a. For loading, saving and creating new scene
+		b. Getters for checking loadedScenes
+		c. Event callbacks from other systems
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "SceneManager.h"
 #include "Utilities/Serializer.h"
@@ -24,12 +41,12 @@ void SceneManager::CreateScene()
 	const std::string filePath(defaultPath + defaultName);
 
 	// Check Duplicate Scene
-	if (DuplicateScene())
-	{
-		// bean: Should create another new scene with different name
-		std::cout << "Warning Duplicate Scene!\n";
-		return;
-	}
+	//if (DuplicateScene())
+	//{
+	//	// bean: Should create another new scene with different name
+	//	std::cout << "Warning Duplicate Scene!\n";
+	//	return;
+	//}
 
 	loadedScenes.emplace_front(filePath);
 }
@@ -49,6 +66,7 @@ void SceneManager::LoadScene(const std::string& _filePath)
 
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
+
 	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }
 
@@ -92,20 +110,6 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 	return true;
 }
 
-void SceneManager::ChangeScene(Scene& _newScene)
-{
-	// Bean: Prompt to save current scene (save for now)
-	//SaveScene(GetCurrentScene().filePath.string());
-	LoadScene(_newScene.filePath.string().c_str());
-}
-
-bool SceneManager::HasScene() { return !loadedScenes.empty(); }
-
-bool SceneManager::DuplicateScene()
-{
-	return false;
-}
-
 void SceneManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
@@ -147,19 +151,21 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 
 void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	(void)pEvent;
-	//Publish scene change
+	UNREFERENCED_PARAMETER(pEvent);
+
+	// Publish scene change
 	loadedScenes.emplace_front(GetCurrentScene());
 	GetCurrentScene().sceneName += " [PREVIEW]";
 }
 
 void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 {
-	(void)pEvent;
+	UNREFERENCED_PARAMETER(pEvent);
+
+	// Publish scene change
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
 	loadedScenes.pop_front();
-	//Publish scene change
 }
 
 void SceneManager::Exit()

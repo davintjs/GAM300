@@ -283,12 +283,12 @@ namespace gli
 				return ((Layer * this->Faces) + Face) * this->Levels + Level;
 			}
 
-			size_type Faces;
-			size_type Levels;
+			size_type Faces{};
+			size_type Levels{};
 			std::vector<data_type*> BaseAddresses;
-			std::array<extent_type, 16> ImageExtent;
-			std::array<size_type, 16> ImageMemorySize;
-			size_type GlobalMemorySize;
+			std::array<extent_type, 16> ImageExtent{};
+			std::array<size_type, 16> ImageMemorySize{};
+			size_type GlobalMemorySize{};
 		} Cache;
 	};
 }//namespace gli

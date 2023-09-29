@@ -84,7 +84,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 						//if current entity has a different previous parent, remove it.
 						else
 						{
-							auto& children = currParent.child;
+							//auto& children = currParent.child;
 							currTransform.SetParent(&targetParent);
 
 							auto& arr = targetParent.child;

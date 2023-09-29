@@ -523,7 +523,7 @@ void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[may
   
 #endif
 
-    InputHandler::setMouseScroll(y);
+    InputHandler::setMouseScroll((int)y);
     //if (y > 0 && Mouse.within_window)
     //{
     //    Cam.Move_Front();
