@@ -701,23 +701,12 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
-	Scene& scene = MySceneManager.GetCurrentScene();
-	{
-		ACQUIRE_SCOPED_LOCK(Mono);
-		while (compilingState == CompilingState::Compiling);
-		compilingState = CompilingState::SwapAssembly;
-	}
-	while (compilingState == CompilingState::SwapAssembly);
-	for (Script& script : scene.GetArray<Script>())
-	{
-		ReflectScript(script);
-	}
+	while (compilingState != CompilingState::Wait);
 }
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 {
 	ACQUIRE_SCOPED_LOCK(ScriptQueue);
-	PRINT("ADDED SCRIPT\n");
 	reflectionQueue.push_back(*pEvent->pObject);
 }
 
