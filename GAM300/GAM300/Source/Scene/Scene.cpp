@@ -12,6 +12,7 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
+
 #include "Precompiled.h"
 #include "Scene/Scene.h"
 
@@ -28,3 +29,23 @@ Scene::Scene(const std::string& _filepath)
 		//Deserialize
 	}
 }
+
+Scene::Scene(Scene& rhs) : sceneName{ rhs.sceneName }
+{
+	CloneHelper(rhs, AllObjectTypes());
+}
+
+
+void Scene::ClearBuffer()
+{
+	for (Entity* pEntity : entitiesDeletionBuffer)
+	{
+		layer.erase(std::find(layer.begin(), layer.end(), pEntity->euid));
+		entities.erase(*pEntity);
+	}
+	entitiesDeletionBuffer.clear();
+	//Destroy components
+	ClearBufferHelper(*this);
+}
+
+

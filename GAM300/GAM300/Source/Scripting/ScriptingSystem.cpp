@@ -208,7 +208,7 @@ void ScriptingSystem::Update(float dt)
 		//Sync logic thread with main thread
 		ran = false;
 		//Logic thread running because ran is set to false
-		while (ran == false);
+		while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
 	}
 }
 
@@ -370,9 +370,9 @@ void ScriptingSystem::ThreadWork()
 	{
 		if (mAppDomain && MySceneManager.HasScene())
 		{
-			Scene& scene = MySceneManager.GetCurrentScene();
 			{
 				ACQUIRE_SCOPED_LOCK(ScriptQueue);
+				Scene& scene = MySceneManager.GetCurrentScene();
 				for (Handle& handle : reflectionQueue)
 				{
 					ReflectScript(scene.Get<Script>(handle));
@@ -401,7 +401,6 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
-				PRINT("STARTED\n");
 				ReflectFromOther(MySceneManager.GetPreviousScene());
 				InvokeAllScripts("Awake");
 				InvokeAllScripts("Start");
@@ -441,9 +440,8 @@ void ScriptingSystem::ThreadWork()
 		}
 		#endif
 	}
-	mono_domain_set(mRootDomain,false);
-	if (mAppDomain)
-		mono_domain_unload(mAppDomain);
+	reflectionQueue.clear();
+	mSceneScripts.clear();
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
 }
@@ -756,14 +754,13 @@ void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEve
 	pEvent->count = 0;
 	fieldNames.clear();
 	if (mAppDomain == nullptr || mCoreAssembly == nullptr || mAssemblyImage == nullptr)
+	{
 		return;
+	}
 	Scene& scene = MySceneManager.GetCurrentScene();
 	if (mSceneScripts.find(scene.uuid) == mSceneScripts.end())
 		return;
 	MonoScripts& mScripts = mSceneScripts[scene.uuid];
-	if (mScripts.find(pEvent->script) == mScripts.end())
-		return;
-	//MonoObject* mScript = ReflectScript(pEvent->script);
 	ScriptClass& scriptClass = scriptClassMap[pEvent->script.name];
 	for (auto& pair : scriptClass.mFields)
 	{
@@ -776,15 +773,18 @@ void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEve
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
-	while (mAppDomain == nullptr || compilingState != CompilingState::Wait);
-	logicState = LogicState::START;
-	ran = true;
+	while (mAppDomain == nullptr || compilingState != CompilingState::Wait){ ACQUIRE_SCOPED_LOCK(Mono); };
+	{
+		ACQUIRE_SCOPED_LOCK(Mono);
+		logicState = LogicState::START;
+		ran = true;
+	}
 }
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
-	while (compilingState != CompilingState::Wait);
+	while (compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
 }
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
@@ -793,7 +793,7 @@ void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 		ACQUIRE_SCOPED_LOCK(ScriptQueue);
 		reflectionQueue.push_back(*pEvent->pObject);
 	}
-	while (!reflectionQueue.empty());
+	while (!reflectionQueue.empty()){ACQUIRE_SCOPED_LOCK(ScriptQueue)};
 }
 
 
@@ -802,7 +802,7 @@ void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 	(void)pEvent;
 	logicState = LogicState::EXIT;
 	ran = false;
-	while (ran == false);
+	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
 }
 
 void ScriptingSystem::CallbackGetScriptNames(GetScriptNamesEvent* pEvent)

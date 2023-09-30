@@ -225,10 +225,13 @@ public:
 	std::filesystem::path filePath;
 	using Layer = std::list<Engine::UUID>;
 	const Engine::UUID uuid = Engine::CreateUUID();
-
 	Layer layer;
 
 	Scene(const std::string& _filepath);
+	Scene& operator=(Scene&) = delete;
+	Scene(Scene& rhs);
+	void ClearBuffer();
+
 
 	template <typename T,typename... Ts>
 	void CloneHelper(Scene& rhs)
@@ -264,12 +267,6 @@ public:
 	}
 
 
-	Scene(Scene& rhs) : sceneName{rhs.sceneName}
-	{
-		CloneHelper(rhs, AllObjectTypes());
-	} 
-
-	Scene& operator=(Scene&) = delete;
 
 	template<typename T>
 	T& Get(Engine::UUID euid, Engine::UUID uuid = 0)
@@ -315,17 +312,7 @@ public:
 	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
 
 	template<typename T>
-	T& GetByUUID(Engine::UUID uuid)
-	{
-		if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return multiHandles.GetByUUID<T>(uuid);
-		}
-		else
-		{
-			return singleHandles.GetByUUID<T>(uuid);
-		}
-	}
+	T& GetByUUID(Engine::UUID uuid);
 
 	template<typename T>
 	std::vector<T*> GetMulti(Engine::UUID euid)
@@ -449,18 +436,6 @@ public:
 
 	using ClearBufferHelper = decltype(ClearBufferStruct(AllComponentTypes()));
 
-	void ClearBuffer()
-	{
-		for (Entity* pEntity : entitiesDeletionBuffer)
-		{
-			PRINT("ERASING: ", pEntity->euid, '\n');
-			layer.erase(std::find(layer.begin(), layer.end(), pEntity->euid));
-			entities.erase(*pEntity);
-		}
-		entitiesDeletionBuffer.clear();
-		//Destroy components
-		ClearBufferHelper(*this);
-	}
 
 	template <typename T>
 	auto& GetArray()
@@ -615,4 +590,7 @@ public:
 		return object;
 	}
 };
+
+#include "SceneTemplates.cpp"
+
 #endif SCENE_H

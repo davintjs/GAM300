@@ -182,7 +182,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())
 		{
-			PRINT("CANT FIND LAH CHIBAI\n");
+			//Cant find
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
 		addr += 8;

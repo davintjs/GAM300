@@ -8,7 +8,7 @@ public class Player : Script
     public GameObject gameObj = null;
     public float sad;
     public Player player;
-
+    public float yes;
 
     void Start()
     {
