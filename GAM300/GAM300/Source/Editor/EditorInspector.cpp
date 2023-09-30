@@ -36,7 +36,7 @@ ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
 bool isAddingReference = false;
-void* pEditedContainer{ nullptr };
+size_t editedContainer{};
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -235,14 +235,10 @@ void DisplayType(const char* name, Vector2& val)
     }
 }
 
+
 template <typename T>
 void AddReferencePanel(T*& container)
 {
-    //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference || (T*)pEditedContainer != container)
-    {
-        return;
-    }
     Scene& scene = MySceneManager.GetCurrentScene();
     static ImGuiTextFilter filter;
     static std::string windowName;
@@ -251,33 +247,52 @@ void AddReferencePanel(T*& container)
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
     windowName += " Reference";
-    if (ImGui::Begin(windowName.c_str(), &isAddingReference))
+    bool open = true;
+    if (ImGui::Begin(windowName.c_str(), &open))
     {
         ImGui::PushItemWidth(-1);
         filter.Draw("##References");
         ImGui::PopItemWidth();
         static std::string buttonName{};
+        ImVec2 buttonSize = ImGui::GetWindowSize();
+        buttonSize.y *= (float)BUTTON_HEIGHT;
+        if (ImGui::Button("None", buttonSize))
+        {
+            editedContainer = 0;
+            container = nullptr;
+        }
         for (T& object : scene.GetArray<T>())
         {
-            ImVec2 buttonSize = ImGui::GetWindowSize();
-            buttonSize.y *= (float)BUTTON_HEIGHT;
             Tag& tag = scene.Get<Tag>(object);
             buttonName = tag.name;
+            if constexpr (std::is_same_v<T, Entity>)
+            {
+                ImGui::PushID(object.EUID());
+            }
+            else
+            {
+                ImGui::PushID(object.UUID());
+            }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
-                isAddingReference = false;
+                editedContainer = 0;
                 container = &object;
-                break;
             }
+            ImGui::PopID();
         }
         ImGui::End();
     }
-    //Reset the edited container back to false
-    if (isAddingReference == false)
-    {
-        pEditedContainer = nullptr;
-    }
+    if (!open)
+        editedContainer = 0;
 }
+
+
+GENERIC_RECURSIVE
+(
+    void, 
+    AddReferencePanel, 
+    AddReferencePanel(((Field*)pObject)->Get<T*>())
+)
 
 template <typename T>
 void DisplayType(const char* name, T*& container, const char* altName = nullptr)
@@ -314,7 +329,6 @@ void DisplayType(const char* name, T*& container, const char* altName = nullptr)
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             isAddingReference = true;
-            pEditedContainer = reinterpret_cast<void*>(container);
         }
         if (ImGui::BeginDragDropTarget())
         {
@@ -326,7 +340,6 @@ void DisplayType(const char* name, T*& container, const char* altName = nullptr)
             }
             ImGui::EndDragDropTarget();
         }
-        AddReferencePanel(container);
     }
 }
 
@@ -800,10 +813,20 @@ void DisplayComponent(Script& script)
         if (field.fType < AllFieldTypes::Size())
         {
             Display(fieldName, field);
+            if (isAddingReference)
+            {
+                //Hash
+                editedContainer = script.UUID() ^ i;
+                isAddingReference = false;
+            }
+            if (editedContainer == (script.UUID() ^ i))
+            {
+                AddReferencePanel(field.fType, &field);
+            }
             ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
             EVENTS.Publish(&setFieldEvent);
         }
-
+        
     }
 }
 //template <>
@@ -890,7 +913,7 @@ void DisplayComponentHelper(T& component)
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
 
-                curr_scene.Destroy(curr_scene.Get<T>(EditorHierarchy::Instance().selectedEntity));
+                curr_scene.Destroy(component);
             }
         }
         else {
@@ -996,11 +1019,14 @@ private:
         else if constexpr (MultiComponentTypes::Has<T1>()) {
 
             auto components = curr_scene.GetMulti<T1>(entity);
-            for (T1* component : components)
+            if (curr_scene.Has<T1>(entity)) 
             {
-                //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-                //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
-                DisplayComponentHelper(*component);
+                for (T1* component : components)
+                {
+                    //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+                    //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
+                    DisplayComponentHelper(*component);
+                }
             }
         }
 

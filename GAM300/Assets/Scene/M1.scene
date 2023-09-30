@@ -41,6 +41,7 @@ Script:
   Name: Player
   gameObj: {fileID: 8552727112136102457}  # GameObject
   sad: 21.2999992
+  player: {fileID: 10379670187260712593}  # Component
 ---
 GameObject:
   m_EUID: 16942626329878887566

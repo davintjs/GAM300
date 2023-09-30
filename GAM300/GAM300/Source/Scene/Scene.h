@@ -154,9 +154,8 @@ struct MultiHandlesTable
 	template <typename T1>
 	constexpr void Remove(Engine::UUID euid, Engine::UUID uuid)
 	{
-		(void)uuid;
 		auto& entries = std::get<MultiTable<T1>>(tables);
-		entries[euid].erase(euid);
+		entries[euid].erase(uuid);
 		if (entries[euid].size() == 0)
 			entries.erase(euid);
 	}
@@ -260,7 +259,6 @@ public:
 	void CloneHelper(Scene& rhs,TemplatePack<T,Ts...>)
 	{
 		CloneHelper<T,Ts...>(rhs);
-		//CloneLinkHelper<Ts...>(rhs);
 	}
 
 
@@ -386,7 +384,7 @@ public:
 		{
 			entitiesDeletionBuffer.push_back(&object);
 			entities.SetActive((ObjectIndex)object.uuid,false);
-			layer.erase(std::find(layer.begin(), layer.end(), object.euid));
+			DestroyEntityComponents(*this, object);
 		}
 		else if constexpr (SingleComponentTypes::Has<T>())
 		{
@@ -400,15 +398,16 @@ public:
 		{
 			componentsDeletionBuffer.GetArray<T>().push_back(&object);
 			auto& arr = multiComponentsArrays.GetArray<T>();
-			ObjectIndex index = arr.GetDenseIndex(object);
 			arr.SetActive(object, false);
-			if (arr.DenseSubscript(index).size() == 1)
-				entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
+			if (multiHandles.Get<T>(object.euid).size() == 1)
+				Get<Entity>(object).hasComponentsBitset.set(GetType::E<T>(), false);
 		}
 		else
 		{
 			static_assert(true, "Not a valid type of object to destroy");
 		}
+		ObjectDestroyedEvent e(&object);
+		EVENTS.Publish(&e);
 		EraseHandle(object);
 	}
 
@@ -452,7 +451,8 @@ public:
 	{
 		for (Entity* pEntity : entitiesDeletionBuffer)
 		{
-			DestroyEntityComponents(*this,*pEntity);
+			PRINT("ERASING: ", pEntity->euid, '\n');
+			layer.erase(std::find(layer.begin(), layer.end(), pEntity->euid));
 			entities.erase(*pEntity);
 		}
 		entitiesDeletionBuffer.clear();
@@ -492,8 +492,14 @@ public:
 		}
 		else if constexpr (MultiComponentTypes::Has<T>())
 		{
-			return true;
+			for (auto it = arr.begin(); it != arr.end(); ++it)
+			{
+				if (&(*it) == &object)
+					return it.IsActive();
+			}
+			E_ASSERT(false, "Multicomponent cannot be found");
 		}
+		return false;
 	}
 
 	template <typename T>
