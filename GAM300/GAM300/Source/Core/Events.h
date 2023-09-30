@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 struct Entity;
 struct Scene;
 struct Script;
+struct Field;
 
 struct IEvent
 {
@@ -106,9 +107,33 @@ struct ObjectCreatedEvent : IEvent
 
 struct ScriptSetFieldEvent : IEvent
 {
-	ScriptSetFieldEvent(Script& _script, const char* _fieldName) : script{ _script }, fieldName{ _fieldName } {}
+	ScriptSetFieldEvent(Script& _script, const char* _fieldName, Field& _field) : script{ _script }, fieldName{ _fieldName }, field{ _field }{}
 	Script& script;
 	const char* fieldName;
+	Field& field;
+};
+
+struct ScriptGetFieldEvent : IEvent
+{
+	ScriptGetFieldEvent(Script& _script, const char* _fieldName, Field& _field) : script{ _script }, fieldName{ _fieldName }, field{ _field }{}
+	Script& script;
+	const char* fieldName;
+	Field& field;
+};
+
+struct ScriptGetFieldNamesEvent : IEvent
+{
+	ScriptGetFieldNamesEvent(Script& _script) : script{ _script } {}
+	Script& script;
+	const char** pStart{nullptr};
+	size_t count{0};
+};
+
+struct GetAssetEvent: IEvent
+{
+	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
+	const std::string& fileName;
+	std::string guid;
 };
 
 

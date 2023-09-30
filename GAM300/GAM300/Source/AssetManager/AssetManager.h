@@ -108,5 +108,8 @@ private:
 	void FileUpdateProtocol(const std::string& filePath, const std::string& fileExtension);
 
 	// FileWatching system using event callbacks
-	void CallbackFileModified(FileModifiedEvent * pEvent);
+	void CallbackFileModified(FileModifiedEvent* pEvent);
+
+	// Get the GUID of the asset using event callbacks
+	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
 };

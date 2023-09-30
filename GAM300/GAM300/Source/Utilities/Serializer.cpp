@@ -24,13 +24,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Serializer.h"
 #include "Editor/EditorHeaders.h"
+#include "Scene/SceneManager.h"
+#include "Utilities/ThreadPool.h"
 
 namespace
 {
     const std::string versionID = "1.1";
 }
 
-GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((std::pair<YAML::Node*, Scene*>*)pObject)));
+GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((DeComHelper*)pObject)));
 
 
 void Serialize(const std::string& _filepath)
@@ -156,22 +158,25 @@ bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
     out << YAML::BeginMap;
     out << YAML::Key << componentName << YAML::Value << YAML::BeginMap;
 
-    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
+    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            auto entry = property::entry { PropertyName, Data };
-            std::visit([&](auto& Value)
-                {
-                    using T = std::decay_t<decltype(Value)>;
+            if (!Flags.m_isDontSave)
+            {
+                auto entry = property::entry { PropertyName, Data };
+                std::visit([&](auto& Value)
+                    {
+                        using T = std::decay_t<decltype(Value)>;
 
-                    // Edit name
-                    std::string Name = entry.first;
-                    auto it = Name.begin() + Name.find_last_of("/");
-                    Name.erase(Name.begin(), ++it);
+                        // Edit name
+                        std::string Name = entry.first;
+                        auto it = Name.begin() + Name.find_last_of("/");
+                        Name.erase(Name.begin(), ++it);
 
-                    // Store Component value
-                    out << YAML::Key << Name << YAML::Value << Value;
-                }
-            , entry.second);
+                        // Store Component value
+                        out << YAML::Key << Name << YAML::Value << Value;
+                    }
+                , entry.second);
+            }
         });
 
     if constexpr (std::is_same<T, Script>())
@@ -184,10 +189,17 @@ bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
 
 void SerializeScript(YAML::Emitter& out, Script& _component)
 {
-    for (auto& field : _component.fields)
+    ScriptGetFieldNamesEvent fieldNamesEvent{_component};
+    EVENTS.Publish(&fieldNamesEvent);
+    for (size_t i = 0; i < fieldNamesEvent.count; ++i)
     {
-        out << YAML::Key << field.first;
-        CloneHelper(field.second, out, AllFieldTypes());
+        static char buffer[2048];
+        Field field{ AllComponentTypes::Size(),buffer };
+        const char* name{ fieldNamesEvent.pStart[i] };
+        ScriptGetFieldEvent getFieldEvent{_component,name,field};
+        EVENTS.Publish(&getFieldEvent);
+        out << YAML::Key << name;
+        SerializeScriptHelper(field, out, AllFieldTypes());
     }
 }
 
@@ -205,6 +217,7 @@ bool DeserializeScene(Scene& _scene)
 {
     std::vector<YAML::Node> data;
 
+    // Load the scene again for linkages
     try
     {
         data = YAML::LoadAllFromFile(_scene.filePath.string());
@@ -231,9 +244,6 @@ bool DeserializeScene(Scene& _scene)
 
     E_ASSERT(DeserializeSettings(data[1], _scene), "Error Deserializing scene!\n");
 
-    // For parenting of child entities after all entities have been added
-    std::map<Entity*, Engine::UUID> childEntities;
-
     // Start from 1 since 0 is the versioning and 1 is for scene settings
     for (size_t i = 2; i < data.size(); i++)
     {
@@ -241,7 +251,7 @@ bool DeserializeScene(Scene& _scene)
 
         if (node["GameObject"]) // Deserialize Gameobject
         {
-            DeserializeEntity(node, _scene, childEntities);
+            DeserializeEntity(node, _scene);
         }
         else // Deserialize component
         {
@@ -251,18 +261,12 @@ bool DeserializeScene(Scene& _scene)
             //PRINT("Loading " + name + " component... \n");
 
             YAML::Node component = node[name];
-            auto pair = std::make_pair(&component, &_scene);
-            DeserializeComponent(ComponentTypes[name], &pair);
+            DeComHelper helper{ &component, &_scene, false };
+            DeserializeComponent(ComponentTypes[name], &helper);
         }
     }
 
-    // Link all children with parents
-    for (auto& pair : childEntities)
-    {
-        Transform& transform = _scene.Get<Transform>(*pair.first);
-        transform.SetParent(&_scene.Get<Transform>(_scene.Get<Entity>(pair.second)));
-    }
-
+    DeserializeLinker(_scene, data);
     return true;
 }
 
@@ -280,38 +284,47 @@ bool DeserializeSettings(YAML::Node& _node, Scene& _scene)
     return true;
 }
 
-void DeserializeEntity(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities)
+void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking)
 {
     YAML::Node object = _node["GameObject"];
 
-    Entity& refEntity = *_scene.Add<Entity>(object["m_EUID"].as<Engine::UUID>());
-
-    _scene.SetActive(refEntity, object["m_IsActive"].as<bool>());
-        
-    // Create a constructor for entity with transform and tag
-    Transform& transform = _scene.Get<Transform>(refEntity); // Transform
-    transform.translation = object["m_Position"].as<Vector3>();
-    transform.rotation = object["m_Rotation"].as<Vector3>();
-    transform.scale = object["m_Scale"].as<Vector3>();
-    _scene.Get<Tag>(refEntity).name = object["m_Name"].as<std::string>(); // Tag
-        
-    auto parent = object["m_Parent"];
-    if (parent)
+    if (!_linking)
     {
-        Engine::UUID parentUUID = parent.as<Engine::UUID>();
-        if (parentUUID != 0)
-            _childEntities[&refEntity] = parentUUID;
+        Entity& refEntity = *_scene.Add<Entity>(object["m_EUID"].as<Engine::UUID>());
+
+        _scene.SetActive(refEntity, object["m_IsActive"].as<bool>());
+
+        // Create a constructor for entity with transform and tag
+        Transform& transform = _scene.Get<Transform>(refEntity); // Transform
+        transform.translation = object["m_Position"].as<Vector3>();
+        transform.rotation = object["m_Rotation"].as<Vector3>();
+        transform.scale = object["m_Scale"].as<Vector3>();
+        _scene.Get<Tag>(refEntity).name = object["m_Name"].as<std::string>(); // Tag
     }
-    else
-        E_ASSERT(false, "No parent node found in gameobject!\n");
+    else // Linking parent and child gameobjects
+    {
+        Entity& refEntity = _scene.Get<Entity>(object["m_EUID"].as<Engine::UUID>());
+        YAML::Node parent = object["m_Parent"];
+        if (parent)
+        {
+            Engine::UUID parentUUID = parent.as<Engine::UUID>();
+            if (parentUUID != 0)
+            {
+                Transform& transform = _scene.Get<Transform>(refEntity); // Transform
+                transform.SetParent(&_scene.Get<Transform>(parentUUID));
+            }
+        }
+        else
+            E_ASSERT(false, "No parent node found in gameobject!\n");
+    }
 }
 
 template <typename T>
-void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
+void DeserializeComponent(const DeComHelper& _helper)
 {
     T component;
-    YAML::Node& node = *pair.first;
-    Scene& _scene = *pair.second;
+    YAML::Node& node = *_helper.node;
+    Scene& _scene = *_helper.scene;
 
     // Assign to the component
     property::SerializeEnum(component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
@@ -322,7 +335,7 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
             std::visit([&](auto& Value)
                 {
                     using T1 = std::decay_t<decltype(Value)>;
-                    
+
                     // Edit name
                     auto it = name.begin() + name.find_last_of("/");
                     name.erase(name.begin(), ++it);
@@ -340,37 +353,81 @@ void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair)
             , entry.second);
         });
 
-    // Store in entity
-    auto id = component.EUID();
-    Entity& entity = _scene.Get<Entity>(id);
-    
-    if (&entity)
+    if (!_helper.linker)
     {
-        // Check for Scripts
-        if constexpr (std::is_same<T, Script>())
+        // Store in entity
+        auto id = component.EUID();
+        Entity& entity = _scene.Get<Entity>(id);
+
+        if (&entity)
         {
-            Script& temp = component;
-            Script& script = *_scene.Add<T>(entity, temp.name.c_str());
-            
-            // Assigning script values from the loaded scene
-            for (auto& item : script.fields)
+            // Check for Scripts
+            if constexpr (std::is_same<T, Script>())
             {
-                YAML::Node varNode = node[item.first];
-                CloneHelper(item.second, varNode, AllFieldTypes());
+                _scene.Add<T>(component.EUID(),component.UUID(), component.name.c_str());
+            }
+            else
+            {
+                T& tempComponent = *_scene.Add<T>(entity);
+                tempComponent = component;
             }
         }
         else
-        {
-            T& tempComponent = *_scene.Add<T>(entity);
-            tempComponent = component;
-        }
+            E_ASSERT(false, "Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
     }
     else
-        E_ASSERT(false, "Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
+    {
+        if constexpr (std::is_same<T, Script>())
+        {
+            T& script = _scene.Get<T>(component.EUID(), component.UUID());
+            ScriptGetFieldNamesEvent fieldNamesEvent{ script };
+            EVENTS.Publish(&fieldNamesEvent);
+            // Assigning script values from the loaded scene
+            for (size_t i = 0; i < fieldNamesEvent.count; ++i)
+            {
+                static char buffer[2048];
+                Field field{ AllComponentTypes::Size(),buffer };
+                const char* name{ fieldNamesEvent.pStart[i] };
+                YAML::Node varNode = node[name];
+                if (!varNode)
+                    continue;
+                ScriptGetFieldEvent getFieldEvent{ script,name,field };
+                EVENTS.Publish(&getFieldEvent);
+                DeserializeScriptHelper(field, varNode, AllFieldTypes());
+                ScriptSetFieldEvent setFieldEvent{ script,name,field };
+                EVENTS.Publish(&setFieldEvent);
+            }
+        }
+        //E_ASSERT(false, "Component does not exist in this scene! Either the EUID/UUID provided or the scene is invalid!");
+    }
+}
+
+void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data)
+{
+    // Start from 1 since 0 is the versioning and 1 is for scene settings
+    for (size_t i = 2; i < _data.size(); i++)
+    {
+        YAML::Node node = _data[i];
+
+        if (node["GameObject"]) // Deserialize Gameobject
+        {
+            DeserializeEntity(node, _scene, true);
+        }
+        else // Deserialize component
+        {
+            // Check which component this node is
+            YAML::detail::iterator_value kv = *node.begin();
+            std::string name = kv.first.as<std::string>();
+
+            YAML::Node component = node[name];
+            DeComHelper helper{ &component, &_scene, true };
+            DeserializeComponent(ComponentTypes[name], &helper);
+        }
+    }
 }
 
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out)
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
 {
     if (rhs.fType == GetFieldType::E<T>())
     {
@@ -379,18 +436,25 @@ void CloneHelper(Field& rhs, YAML::Emitter& out)
             out << YAML::Flow << YAML::BeginMap;
             out << YAML::Key << "fileID";
             // Storing EUID and UUID of Objects (Gameobject, Components etc)
-            Handle handle = rhs.Get<Handle>();
-            if constexpr (std::is_same<T, Entity>())
-                out << YAML::Value << handle.euid << YAML::EndMap << YAML::Comment("GameObject");
+            T*& object = *reinterpret_cast<T**>(rhs.data);
+            if (!object)
+            {
+                out << YAML::Value << 0 << YAML::EndMap;
+                
+            }
             else
-                out << YAML::Value << handle.uuid << YAML::EndMap << YAML::Comment("Component");
+            {
+                if constexpr (std::is_same<T, Entity>())
+                    out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("GameObject");
+                else
+                    out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+            }
         }
         else
         {
             // Store Basic Types
             T& value = rhs.Get<T>();
-            if constexpr (!std::is_same<T, None>())
-                out << YAML::Value << value;
+            out << YAML::Value << value;
         }
 
         return;
@@ -398,51 +462,51 @@ void CloneHelper(Field& rhs, YAML::Emitter& out)
 
     if constexpr (sizeof...(Ts) != 0)
     {
-        CloneHelper<Ts...>(rhs, out);
+        SerializeScriptHelper<Ts...>(rhs, out);
     }
 }
 
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>)
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>)
 {
-    CloneHelper<T, Ts...>(rhs, out);
+    SerializeScriptHelper<T, Ts...>(rhs, out);
 }
 
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node)
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
 {
-    YAML::Emitter out;
-    out << node;
-    PRINT(out.c_str(), '\n');
+    //YAML::Emitter out;
+    //out << node;
+    //PRINT(out.c_str(), '\n');
     if (rhs.fType == GetFieldType::E<T>())
     {
         if constexpr (AllObjectTypes::Has<T>())
         {
             // Storing EUID and UUID of Objects (Gameobject, Components etc)
-            Handle& handle = rhs.Get<Handle>();
+            Scene& scene{ MySceneManager.GetCurrentScene() };
+            T*& object = *reinterpret_cast<T**>(rhs.data);
             if constexpr (std::is_same<T, Entity>())
-                handle.euid = node["fileID"].as<Engine::UUID>();
+                object = &scene.Get<T>(node["fileID"].as<Engine::UUID>());
             else
-                handle.uuid = node["fileID"].as<Engine::UUID>();
+                object = &scene.GetByUUID<T>(node["fileID"].as<Engine::UUID>());
         }
         else
         {
             // Store Basic Types
             T& value = rhs.Get<T>();
-            if constexpr (!std::is_same<T, None>())
-                value = node.as<T>();
+            value = node.as<T>();
         }
         return;
     }
 
     if constexpr (sizeof...(Ts) != 0)
     {
-        CloneHelper<Ts...>(rhs, node);
+        DeserializeScriptHelper<Ts...>(rhs, node);
     }
 }
 
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>)
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>)
 {
-    CloneHelper<T, Ts...>(rhs, node);
+    DeserializeScriptHelper<T, Ts...>(rhs, node);
 }

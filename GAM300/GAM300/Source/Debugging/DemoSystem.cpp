@@ -18,12 +18,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
+#include "Graphics/TextureManager.h"
+#include "AssetManager/AssetManager.h"
+
+#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 
 void DemoSystem::Init()
 {
 	CreateSceneEvent createScene(nullptr);
 	EVENTS.Publish(&createScene);
-
 	Scene& scene = *createScene.scene;
 	Entity& testEntity = *scene.Add<Entity>();
 	MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
@@ -33,10 +36,19 @@ void DemoSystem::Init()
 	entityAudio.currentSound = "LoLnvDie";
 	entityRender.MeshName = "DamagedHelmet";
 	entityRender.AlbedoTexture = "Default_albedo";
+	entityRender.textureID = GET_TEXTURE_ID(entityRender.AlbedoTexture);
+
 	entityRender.NormalMap = "Default_normal";
+	entityRender.normalMapID = GET_TEXTURE_ID(entityRender.NormalMap);
+
 	entityRender.RoughnessTexture = "Default_metalRoughness";
+	entityRender.RoughnessID = GET_TEXTURE_ID(entityRender.RoughnessTexture);
+
 	entityRender.MetallicTexture = "Default_metalRoughness";
+	entityRender.MetallicID = GET_TEXTURE_ID(entityRender.MetallicTexture);
+
 	entityRender.AoTexture = "Default_AO";
+	entityRender.AoID = GET_TEXTURE_ID(entityRender.AoTexture);
 
 	Entity& testEntity2 = *scene.Add<Entity>();
 	MeshRenderer& entityRender2 = *scene.Add<MeshRenderer>(testEntity2);
@@ -46,23 +58,36 @@ void DemoSystem::Init()
 	entityAudio2.currentSound = "Lan_YAY";
 	entityRender2.MeshName = "Skull_textured";
 	entityRender2.AlbedoTexture = "TD_Checker_Base_Color";
+	entityRender2.textureID = GET_TEXTURE_ID(entityRender2.AlbedoTexture);
+
 	entityRender2.NormalMap = "TD_Checker_Base_Color";
+	entityRender2.normalMapID = GET_TEXTURE_ID(entityRender2.NormalMap);
+
 	entityRender2.RoughnessTexture = "TD_Checker_Roughness";
+	entityRender2.RoughnessID = GET_TEXTURE_ID(entityRender2.RoughnessTexture);
+
 	entityRender2.AoTexture = "TD_Checker_Mixed_AO";
+	entityRender2.AoID = GET_TEXTURE_ID(entityRender2.AoTexture);
+
 	scene.Get<Transform>(testEntity).translation = Vector3(-150.f, 100.f, 0.f);
 	scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
 
 	// test instance rendering
-	for (int i = 0; i < 500; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		Entity& tempent = *scene.Add<Entity>();
 		MeshRenderer& renderer = *scene.Add<MeshRenderer>(tempent);
 		renderer.MeshName = "DamagedHelmet";
 		renderer.AlbedoTexture = "Default_albedo";
+		renderer.textureID = GET_TEXTURE_ID(renderer.AlbedoTexture);
 		renderer.NormalMap = "Default_normal";
+		renderer.normalMapID = GET_TEXTURE_ID(renderer.NormalMap);
 		renderer.RoughnessTexture = "Default_metalRoughness";
+		renderer.RoughnessID = GET_TEXTURE_ID(renderer.RoughnessTexture);
 		renderer.MetallicTexture = "Default_metalRoughness";
+		renderer.MetallicID = GET_TEXTURE_ID(renderer.MetallicTexture);
 		renderer.AoTexture = "Default_AO";
+		renderer.AoID = GET_TEXTURE_ID(renderer.AoTexture);
 		scene.Get<Transform>(tempent).translation = Vector3((rand() % 5000) - 2500.f, (rand() % 5000) - 2500.f, (rand() % 5000) - 2500.f);
 		scene.Add<MeshRenderer>(tempent);
 	}
