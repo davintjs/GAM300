@@ -879,7 +879,8 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
-        name = (component.name + " [Script]");
+        if(&component)
+            name = (component.name + " [Script]");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
