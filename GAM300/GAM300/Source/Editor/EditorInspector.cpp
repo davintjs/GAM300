@@ -931,7 +931,7 @@ void DisplayComponentHelper(T& component)
 
     const char* popup = GetType::Name<T>();
 
-    ImGui::PushID((int)GetType::E<T>());
+    ImGui::PushID(component.UUID());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);
