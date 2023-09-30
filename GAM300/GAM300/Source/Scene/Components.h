@@ -162,6 +162,7 @@ struct Transform : Object
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
+	~Transform();
 	
 	Engine::UUID parent=0;
 	std::vector<Engine::UUID> child;
@@ -186,7 +187,7 @@ property_begin_name(Transform, "Transform")
 struct AudioSource : Object
 {
 	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
-	std::vector<std::string> ChannelName =
+	std::vector<const char*> ChannelName =
 	{
 		"Music",
 		"SFX",
@@ -313,7 +314,6 @@ struct Script : Object
 	std::string name;
 	Script() {}
 	Script(const char* _name):name{_name}{}
-	std::map<std::string, Field> fields;
 	property_vtable();
 };
 
@@ -347,7 +347,11 @@ struct MeshRenderer : Object
 	std::string RoughnessTexture = "";
 	std::string AoTexture= "";
 
-
+	GLuint textureID = 0;
+	GLuint normalMapID = 0;
+	GLuint RoughnessID = 0;
+	GLuint MetallicID = 0;
+	GLuint AoID = 0;
 
 	property_vtable();
 };
@@ -419,6 +423,10 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
 		}\
+		else\
+		{\
+			E_ASSERT(false, "Could not match type: ", objType); \
+		}\
 	}\
 	template<typename T, typename... Ts>\
 	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
@@ -454,7 +462,7 @@ struct GenericRecursiveStruct
 
 using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3, None>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
 
 using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));

@@ -24,7 +24,7 @@ struct SystemsGroup
 	}
 
 	template<typename... T1s>
-	constexpr static void ExitHelper(TemplatePack<T1s...> pack)
+	constexpr static void ExitHelper(TemplatePack<T1s...>)
 	{
 		(T1s::Instance().Exit(), ...);
 	}

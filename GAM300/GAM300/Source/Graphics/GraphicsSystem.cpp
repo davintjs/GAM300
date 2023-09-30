@@ -71,8 +71,8 @@ Model SkyBox_Model;
 
 GLSLShader HDR_Shader;
 
-bool hdr = false;
-float exposure = 1.0;
+//bool hdr = false;
+//float exposure = 1.0;
 
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
@@ -169,7 +169,8 @@ unsigned int ReturnTextureIdx(std::string MeshName, GLuint id);
 
 void GraphicsSystem::Init()
 {
-
+	hdr = false;
+	exposure = 1.f;
 	//glGenFramebuffers(1, &hdrFBO);
 	//// create floating point color buffer
 	//unsigned int colorBuffer;
@@ -279,7 +280,7 @@ void GraphicsSystem::Update(float dt)
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
-		std::fill_n(prop.texture, 32, 0.f);
+		std::fill_n(prop.texture, 32, 0);
 	}
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -346,6 +347,7 @@ void GraphicsSystem::Update(float dt)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
+
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
 
 		if (t_Mesh == nullptr)
@@ -359,48 +361,16 @@ void GraphicsSystem::Update(float dt)
 		Transform& transform = currentScene.Get<Transform>(entity);
 		//InstanceProperties* currentProp = &properties[renderer.MeshName];
 
-		GLuint textureID = 0;
-		GLuint normalMapID = 0;
-		GLuint RoughnessID = 0;
-		GLuint MetallicID = 0;
-		GLuint AoID = 0;
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
-		if (renderer.AlbedoTexture != "") {
-			textureID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
-		}
-		if (renderer.NormalMap != "") {
 
-			normalMapID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
-		}
+		float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
+		float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));
 
 
-		if (renderer.MetallicTexture != "") {
-
-			MetallicID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
-		}
-		if (renderer.RoughnessTexture != "") {
-			RoughnessID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
-		}
-
-		if (renderer.AoTexture != "") {
-			AoID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
-		}
-
-
-
-		float texidx = float(ReturnTextureIdx(renderer.MeshName, textureID));
-		float normidx = float(ReturnTextureIdx(renderer.MeshName, normalMapID));
-
-
-		float metalidx = float(ReturnTextureIdx(renderer.MeshName, MetallicID));
-		float roughidx = float(ReturnTextureIdx(renderer.MeshName, RoughnessID));
-		float aoidx = float(ReturnTextureIdx(renderer.MeshName, AoID));
+		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
+		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
+		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
 
 
 		float metal_constant = renderer.mr_metallic;
@@ -585,26 +555,6 @@ void GraphicsSystem::Update(float dt)
 		//std::cout << "HDR is up\n";
 	}
 
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_1))
-	{
-		hdr = !hdr;
-	}
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_9))
-	{
-		if (exposure == 1.0)
-		{
-			exposure = 5.0;
-		}
-		else
-		{
-			exposure =  1.0;
-		}
-	}
-	if (exposure == 5.0)
-	{
-		//std::cout << "exposure is diff\n";
-	}
 	GLint uniform1 =
 		glGetUniformLocation(HDR_Shader.GetHandle(), "hdr");
 

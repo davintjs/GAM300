@@ -1,5 +1,5 @@
-[2023-09-28 02:05:57.911] [Error] [critical] 
+[2023-09-30 22:07:18.417] [Error] [critical] 
 Caused By:	false
-Info:		FAILED TO ERASE
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\SparseSet.cpp (Line: 128)
+Info:		Multicomponent cannot be found
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 502)
 

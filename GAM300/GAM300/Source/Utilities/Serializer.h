@@ -36,14 +36,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //    COMPONENT
 //};
 
-// Bean: May be added in the future when deserializing components
-//struct DeComponent
-//{
-//    YAML::Node* node;
-//    Scene* scene;
-//    std::map<Entity*, Engine::UUID>* entityRef;
-//    std::map<Entity*, Engine::UUID>* componentRef;
-//};
+// Deserializing components helper
+struct DeComHelper
+{
+    YAML::Node* node;
+    Scene* scene;
+    bool linker;
+};
 
 // Encapsulation for all different types of serializing like Scene, Prefab, NavMesh Data etc
 void Serialize(const std::string& _filepath);
@@ -81,28 +80,31 @@ bool DeserializeScene(Scene& _scene);
 bool DeserializeSettings(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the entities in the specific scene
-void DeserializeEntity(YAML::Node& _node, Scene& _scene, std::map<Entity*, Engine::UUID>& _childEntities);
+void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking = false);
 
 // Deserialize the components in the specific scene, the id parameter checks for deserialization of components
 // for the GameObject or for mainly the Component
 template <typename T>
-void DeserializeComponent(std::pair<YAML::Node*, Scene*> pair);
+void DeserializeComponent(const DeComHelper& _helper);
+
+// After deserializing the scene, perform this function for linkage
+void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data);
 
 // Helper function for serializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out);
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out);
 
 // Helper function for serializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
 
 // Helper function for deserializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node);
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node);
 
 // Helper function for deserializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>);
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>);
 
 // This struct contains functions which serializes components without using a switch case
 template<typename T, typename... Ts>
@@ -128,11 +130,7 @@ private:
             if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
-                if constexpr (std::is_same<T1, Tag>() || std::is_same<T1, Transform>())
-                {
-                    return true;
-                }
-                else
+                if constexpr (!std::is_same<T1, Tag>() && !std::is_same<T1, Transform>())
                 {
                     if (!SerializeComponent(out, component, _id))
                         return false;

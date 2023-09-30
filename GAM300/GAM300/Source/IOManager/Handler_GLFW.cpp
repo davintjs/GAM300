@@ -11,9 +11,6 @@ pointers to OpenGL implementations.
 
 *//*__________________________________________________________________________*/
 
-
-
-
 /*                                                                   includes
 ----------------------------------------------------------------------------- */
 #include "Precompiled.h"
@@ -523,7 +520,7 @@ void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[may
   
 #endif
 
-    InputHandler::setMouseScroll(y);
+    InputHandler::setMouseScroll((int)y);
     //if (y > 0 && Mouse.within_window)
     //{
     //    Cam.Move_Front();
@@ -575,7 +572,9 @@ This function is called when the window is resized - it receives the new size
 of the window in pixels.
 */
 void GLFW_Handler::fbsize_cb( [[maybe_unused]] GLFWwindow *pwin, int w, int h) {
-    //UNREFERENCED_PARAMETER(pwin);
+    UNREFERENCED_PARAMETER(pwin);
+    UNREFERENCED_PARAMETER(w);
+    UNREFERENCED_PARAMETER(h);
 #ifdef _DEBUG
   std::cout << "fbsize_cb getting called!!!" << std::endl;
 #endif

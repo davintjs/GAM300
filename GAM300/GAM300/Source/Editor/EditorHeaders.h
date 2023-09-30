@@ -13,8 +13,8 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#ifndef EDITORTOOLBAR_H
-#define EDITORTOOLBAR_H
+#ifndef EDITORHEADERS_H
+#define EDITORHEADERS_H
 
 #include <glm/vec2.hpp>
 #include <unordered_map>
@@ -24,6 +24,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "imgui_impl_opengl3.h"
 #include "imgui_stdlib.h"
 #include "imgui_internal.h"
+#include <implot.h>
+#include <implot_internal.h>
 
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"
@@ -33,6 +35,32 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define NON_VALID_ENTITY 0
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 #define FIND_TEXTURE(filepath) TextureManager.FindTexture()
+
+// utility structure for realtime plot
+struct ScrollingBuffer {
+    int MaxSize;
+    int Offset;
+    ImVector<ImVec2> Data;
+    ScrollingBuffer(int max_size = 2000) {
+        MaxSize = max_size;
+        Offset = 0;
+        Data.reserve(MaxSize);
+    }
+    void AddPoint(float x, float y) {
+        if (Data.size() < MaxSize)
+            Data.push_back(ImVec2(x, y));
+        else {
+            Data[Offset] = ImVec2(x, y);
+            Offset = (Offset + 1) % MaxSize;
+        }
+    }
+    void Erase() {
+        if (Data.size() > 0) {
+            Data.shrink(0);
+            Offset = 0;
+        }
+    }
+};
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
@@ -197,8 +225,7 @@ public:
     // Exit the system
     void Exit();
 
-    float update_time;
-    std::vector<float>times;
+    std::map<std::string, ScrollingBuffer>system_plots;
 };
 
-#endif // !EDITORTOOLBAR_H
+#endif // !EDITORHEADERS_H

@@ -24,6 +24,9 @@
 // SOFTWARE.
 //
 
+#pragma warning( disable : 4189)
+#pragma warning( disable : 4245)
+
 #include "imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
@@ -366,8 +369,8 @@ static bool HandleConnections(ImDrawList* drawList,
 
     size_t InputsCount = nodeTemplate.mInputCount;
     size_t OutputsCount = nodeTemplate.mOutputCount;
-    inputSlotOver = -1;
-    outputSlotOver = -1;
+    inputSlotOver = (GraphEditor::SlotIndex) -1;
+    outputSlotOver = (GraphEditor::SlotIndex) -1;
 
     // draw/use inputs/outputs
     bool hoverSlot = false;
@@ -896,7 +899,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
 
         // Display nodes
         drawList->PushClipRect(regionRect.Min, regionRect.Max, true);
-        hoveredNode = -1;
+        hoveredNode = (GraphEditor::NodeIndex) -1;
         
         SlotIndex inputSlotOver = -1;
         SlotIndex outputSlotOver = -1;

@@ -66,7 +66,7 @@ bool OBL_ITER::operator!=(const Iterator& other) const
 template <typename T, ObjectIndex N>
 bool OBL_ITER::IsActive()
 {
-	return pNode->objectList.IsActive(index);
+	return pNode->objectList.IsActive((ObjectIndex)index);
 }
 
 template <typename T, ObjectIndex N>
@@ -139,10 +139,13 @@ void OBJECTSBLIST::erase(T& val)
 	while (start)
 	{
 		if (start->objectList.TryErase(val))
+		{
+			--size_;
 			return;
+		}
 		start = start->next;
 	}
-	E_ASSERT(start != nullptr, "Failed to erase value");
+	E_ASSERT(false, "Failed to erase value");
 }
 
 template <typename T, ObjectIndex N>

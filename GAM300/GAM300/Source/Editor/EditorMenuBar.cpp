@@ -18,9 +18,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
+#include "Graphics/GraphicsSystem.h"
 
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
+
+static bool graphics_settings = false;
 
 void EditorMenuBar::Init()
 {
@@ -125,16 +128,50 @@ void EditorMenuBar::Update(float dt)
             // Undo Functionality using Editor_Undo()
             if (ImGui::MenuItem("Undo", "Ctrl+Z"))
             {
-            }
-
+            }// Undo Functionality using Editor_Undo()           
             // Do not allow the user to undo when history buffer is empty or when file is not loaded
-            ImGui::TextDisabled("Undo");
+            //ImGui::TextDisabled("Undo");
+            if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+            {
+            }
+            //ImGui::TextDisabled("Redo");
 
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Preferences"))
+        {
+            if (ImGui::MenuItem("Graphics"))
+                graphics_settings = true;
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
+
+    if (graphics_settings) {
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(300.f, 450.f));
+
+        auto hdr = &GraphicsSystem::Instance().hdr;
+        ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Checkbox("Enable HDR lighting", hdr);
+
+        ImGui::Text("Light Exposure"); ImGui::SameLine();
+        if (ImGui::IsItemHovered()) ImGui::SetTooltip("Light exposure available only when HDR enabled");
+        if(*hdr)
+            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+        else {
+            //only allow when HDR is enabled
+            ImGui::BeginDisabled();
+            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+            ImGui::EndDisabled();
+        }      
+        ImGui::End();
+    }
+    
+
+    
 }
 
 void EditorMenuBar::NewScene()

@@ -1,3 +1,16 @@
+/*!***************************************************************************************
+\file			PBR.vert
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	Vertex Shader for PBR
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #version 450 core
 //-------------------------
 //          COMING IN

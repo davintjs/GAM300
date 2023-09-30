@@ -8,9 +8,9 @@ Scene Settings:
   m_NavMeshSettings: None  # All settings above are just examples
 ---
 GameObject:
-  m_EUID: 9676812423302306959
+  m_EUID: 7558136198186090139
   m_IsActive: true
-  m_Name: Obj 1
+  m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
   m_Rotation: [0, 0, 0]
   m_Scale: [1, 1, 1]
@@ -18,11 +18,21 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 12973005303737397547}  # BoxCollider
+    - component: {fileID: 9576007940919613807}  # Script
+    - component: {fileID: 13992341002858887538}  # Script
 ---
-BoxCollider:
-  EUID: 9676812423302306959
-  UUID: 12973005303737397547
-  X: 1
-  Y: 1
-  Z: 1
+Script:
+  EUID: 7558136198186090139
+  UUID: 9576007940919613807
+  Name: Player
+  gameObj: {fileID: 0}
+  sad: 0
+  player: {fileID: 0}
+---
+Script:
+  EUID: 7558136198186090139
+  UUID: 13992341002858887538
+  Name: Player
+  gameObj: {fileID: 0}
+  sad: 0
+  player: {fileID: 9576007940919613807}  # Component

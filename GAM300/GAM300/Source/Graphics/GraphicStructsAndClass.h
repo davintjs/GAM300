@@ -10,14 +10,14 @@
 	This file contains structs and classes the graphics needs
 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
 
-#define EntityRenderLimit 200
-#define EnitityInstanceLimit 200
+#define EntityRenderLimit 1000
+#define EnitityInstanceLimit 1000
 
 struct LightProperties
 {

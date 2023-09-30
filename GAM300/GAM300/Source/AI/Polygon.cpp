@@ -294,7 +294,7 @@ void Polygon3D::JoinPolygon(Polygon3D& polygon)
 	glm::vec3 aSide = { intersectionPoint.x - rightVertex.x, intersectionPoint.y - rightVertex.y, intersectionPoint.z - rightVertex.z };
 	float a = CalculateSquaredDistance(aSide);
 
-	glm::vec3 candidate; // This will store the point that has the lowest theta value in the triangle formed
+	glm::vec3 candidate{}; // This will store the point that has the lowest theta value in the triangle formed
 	bool hasCandidateInTri = false;
 
 	// Check if the triangle contains any of the vertices of the polygon

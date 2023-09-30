@@ -43,6 +43,7 @@ void EditorSystem::Init()
     //Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
     //io.FontDefault = io.Fonts->Fonts[0];
@@ -70,8 +71,11 @@ void EditorSystem::Update(float dt)
     //}
     EditorSystems::Update(dt);
 
+    //demo
     /*bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
+    ImGui::ShowDemoWindow(&demo);
+    ImPlot::ShowDemoWindow(&demo);*/
+
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -90,6 +94,7 @@ void EditorSystem::Exit()
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
+    ImPlot::DestroyContext();
 }
 
 

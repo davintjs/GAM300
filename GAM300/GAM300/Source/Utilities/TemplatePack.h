@@ -10,8 +10,6 @@ static constexpr bool contains()
 	return std::disjunction_v<std::is_same<T, Ts>...>;
 }
 
-struct None{};
-
 template <auto N>
 struct TemplateContainer
 {};

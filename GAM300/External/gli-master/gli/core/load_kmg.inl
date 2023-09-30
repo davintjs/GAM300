@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cassert>
 
+#pragma warning( disable : 26451)
 namespace gli{
 namespace detail
 {
@@ -29,6 +30,7 @@ namespace detail
 
 	inline texture load_kmg100(char const * Data, std::size_t Size)
 	{
+		GLI_UNUSED(Size);
 		detail::kmgHeader10 const & Header(*reinterpret_cast<detail::kmgHeader10 const *>(Data));
 
 		size_t Offset = sizeof(detail::kmgHeader10);

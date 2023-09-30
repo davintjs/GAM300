@@ -17,6 +17,8 @@ void Editor_Camera::Init()
 
 	framebuffer.set_size((unsigned int) 1600, (unsigned int) 900);
 	framebuffer.init();
+	//bool pass = false;
+	//E_ASSERT(pass, "Ccoord" , 15 ,"hehe");
 }
 
 
@@ -26,6 +28,7 @@ void Editor_Camera::Update(float dt)
 	// To Move / Adjust the editor camera
 	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
+
 		isMoving = true;
 		//--------------------------------------------------------------
 		// Rotating / Panning / Zooming
