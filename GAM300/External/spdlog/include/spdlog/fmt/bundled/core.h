@@ -16,6 +16,8 @@
 #include <string>
 #include <type_traits>
 
+#pragma warning( disable : 26437)
+#pragma warning( disable : 6285)
 // The fmt library version in the form major * 10000 + minor * 100 + patch.
 #define FMT_VERSION 90100
 

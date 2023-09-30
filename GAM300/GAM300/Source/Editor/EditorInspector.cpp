@@ -47,7 +47,11 @@ void Display(const char* name, T& val);
 
 // DisplayType contains overloads that display the respective fields based on the type passed into the function
 template <typename T>
-void DisplayType(const char* name, T& val){}
+void DisplayType(const char* name, T& val)
+{
+    UNREFERENCED_PARAMETER(name);
+    UNREFERENCED_PARAMETER(val);
+}
 
 void DisplayType(const char* name, bool& val)
 {
@@ -243,6 +247,7 @@ GENERIC_RECURSIVE
 template <typename T>
 void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 {
+    UNREFERENCED_PARAMETER(name);
     if constexpr (AllObjectTypes::Has<T>())
     {
         static std::string btnName;
@@ -523,7 +528,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), comp.ChannelName.size(), 4)) {
+        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
             std::cout << number << std::endl;
         }
         ImGui::PopItemWidth();
@@ -641,7 +646,8 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
-        name = (component.name + " [Script]");
+        if(&component)
+            name = (component.name + " [Script]");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {

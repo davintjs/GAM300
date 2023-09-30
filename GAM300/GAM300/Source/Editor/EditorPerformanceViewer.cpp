@@ -17,6 +17,9 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 #include "EditorHeaders.h"
 #include "Core/EngineCore.h"
 
+
+#pragma warning( disable : 4996)
+
 ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable |
 ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | 
 ImGuiTableFlags_NoHostExtendX;
@@ -81,10 +84,10 @@ void EditorPerformanceViewer::Update(float dt)
 
                 ImGui::TableSetupColumn("System");
                 ImGui::TableSetupColumn("Usage");
-                char time[100];
-                sprintf(time, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime * 1000.f);
+                char times[100];
+                sprintf(times, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime * 1000.f);
 
-                ImGui::TableSetupColumn(time);
+                ImGui::TableSetupColumn(times);
                 ImGui::TableHeadersRow();
                 for (auto system : EngineCore::Instance().system_times) {
                     ImGui::TableNextRow();

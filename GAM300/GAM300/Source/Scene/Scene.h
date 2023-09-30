@@ -69,6 +69,7 @@ struct SingleHandlesTable
 				return *pair.second;
 			}
 		}
+		E_ASSERT(false, "Could not find handle!");
 	}
 
 	template <typename T1>
@@ -137,6 +138,7 @@ struct MultiHandlesTable
 				}
 			}
 		}
+		E_ASSERT(false, "Could not find handle!");
 	}
 
 	template <typename T1>
@@ -499,7 +501,6 @@ public:
 			}
 			E_ASSERT(false, "Multicomponent cannot be found");
 		}
-		return false;
 	}
 
 	template <typename T>

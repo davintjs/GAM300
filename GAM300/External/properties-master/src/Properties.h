@@ -75,6 +75,7 @@
 #elif defined(_MSC_VER)
     #pragma warning( push )
     #pragma warning( disable : 4201)                        // warning C4201: nonstandard extension used: nameless struct/union
+    #pragma warning( disable : 4189)                        // warning C4189: Unreferenced...
 
     #if _MSC_VER >= 1920                                    // If visual studio 2019 then...
         #define vs2017_hack_inline          constexpr

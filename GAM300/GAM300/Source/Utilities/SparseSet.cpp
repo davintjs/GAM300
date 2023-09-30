@@ -16,6 +16,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "SparseSet.h"
 #include "Debugging/Debugger.h"
 
+
+#pragma warning( disable : 26495) // Data is supposed to be uninitialized;
+
 #define SPARSESET SparseSet<T, N>
 #define ITERATOR SPARSESET::Iterator
 
@@ -160,7 +163,7 @@ T& SPARSESET::DenseSubscript(ObjectIndex index)
 template <typename T, ObjectIndex N>
 ObjectIndex SPARSESET::GetDenseIndex(T& object)
 {
-    return &object - reinterpret_cast<T*>(data);
+    return (ObjectIndex)(&object - reinterpret_cast<T*>(data));
 }
 
 template <typename T, ObjectIndex N>

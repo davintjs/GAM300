@@ -1,3 +1,6 @@
+
+#pragma warning( disable : 26451)
+
 namespace gli{
 namespace detail
 {

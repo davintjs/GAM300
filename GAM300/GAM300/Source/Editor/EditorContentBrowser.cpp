@@ -135,7 +135,7 @@ void EditorContentBrowser::Update(float dt)
             if ((path.string().find(".cs") != std::string::npos)) {
                 std::string command = "code " + path.string();
 
-                int result = std::system(command.c_str());
+                //int result = std::system(command.c_str());
 
                 //E_ASSERT(result, path.string(), " script file cannot be opened!");  
             }
