@@ -269,8 +269,6 @@ void EditorHierarchy::Update(float dt)
 						curr_scene.Destroy(child);
 					}
 					curr_scene.Destroy(ent);
-					auto it = std::find(layer.begin(), layer.end(), ent.EUID());
-					layer.erase(it);
 					SelectedEntityEvent selectedEvent{0};
 					EVENTS.Publish(&selectedEvent);
 				}

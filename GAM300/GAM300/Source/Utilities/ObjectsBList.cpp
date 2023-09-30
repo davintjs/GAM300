@@ -139,10 +139,13 @@ void OBJECTSBLIST::erase(T& val)
 	while (start)
 	{
 		if (start->objectList.TryErase(val))
+		{
+			--size_;
 			return;
+		}
 		start = start->next;
 	}
-	E_ASSERT(start != nullptr, "Failed to erase value");
+	E_ASSERT(false, "Failed to erase value");
 }
 
 template <typename T, ObjectIndex N>

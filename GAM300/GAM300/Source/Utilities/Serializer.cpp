@@ -486,9 +486,17 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
             Scene& scene{ MySceneManager.GetCurrentScene() };
             T*& object = *reinterpret_cast<T**>(rhs.data);
             if constexpr (std::is_same<T, Entity>())
-                object = &scene.Get<T>(node["fileID"].as<Engine::UUID>());
+            {
+                Engine::UUID euid = node["fileID"].as<Engine::UUID>();
+                if (euid)
+                    object = &scene.Get<T>(euid);
+            }
             else
-                object = &scene.GetByUUID<T>(node["fileID"].as<Engine::UUID>());
+            {
+                Engine::UUID uuid = node["fileID"].as<Engine::UUID>();
+                if (uuid)
+                    object = &scene.GetByUUID<T>(uuid);
+            }
         }
         else
         {

@@ -187,10 +187,6 @@ void ScriptingSystem::Init()
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 		THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 	#endif
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptInvokeMethod);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetMethodNames);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptGetField);
-	//MyEventSystem->subscribe(this, &ScriptingSystem::CallbackScriptNew);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetFieldNames);
@@ -201,6 +197,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
+	SubscribeObjectDestroyed(AllObjectTypes());
 }
 
 void ScriptingSystem::Update(float dt)
@@ -324,6 +321,45 @@ void ScriptingSystem::InvokeAllScripts(const std::string& funcName)
 	}
 }
 
+void ScriptingSystem::UpdateReferences()
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	for (auto& script : scene.GetArray<Script>())
+	{
+		MonoObject* mScript = ReflectScript(script);
+		ScriptClass& scriptClass = scriptClassMap[script.name];
+		for (auto& pair : scriptClass.mFields)
+		{
+			size_t fType = Utils::monoTypeToFieldType(mono_field_get_type(pair.second));
+			if (fType < AllObjectTypes::Size())
+			{
+				Object* pObject;
+				Field field{ fType,&pObject };
+				GetFieldValue(mScript, pair.second, field);
+				if (!pObject || scene.HasHandle(fType, pObject))
+					continue;
+				PRINT("CLEARED: ", pair.first, '\n');
+				mono_field_set_value(mScript, pair.second, nullptr);
+
+			}
+		}
+	}
+}
+
+
+template <typename... Ts>
+void ScriptingSystem::SubscribeObjectDestroyed(TemplatePack<Ts...>)
+{
+	(EVENTS.Subscribe(this, &ScriptingSystem::CallbackObjectDestroyed<Ts>), ...);
+}
+
+template<typename T>
+void ScriptingSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent)
+{
+	ACQUIRE_SCOPED_LOCK(UpdateRef);
+	objectDestroyed = true;
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	InitMono();
@@ -332,12 +368,22 @@ void ScriptingSystem::ThreadWork()
 		if (mAppDomain && MySceneManager.HasScene())
 		{
 			Scene& scene = MySceneManager.GetCurrentScene();
-			ACQUIRE_SCOPED_LOCK(ScriptQueue);
-			for (Handle& handle : reflectionQueue)
 			{
-				ReflectScript(scene.Get<Script>(handle));
+				ACQUIRE_SCOPED_LOCK(ScriptQueue);
+				for (Handle& handle : reflectionQueue)
+				{
+					ReflectScript(scene.Get<Script>(handle));
+				}
+				reflectionQueue.clear();
 			}
-			reflectionQueue.clear();
+			{
+				ACQUIRE_SCOPED_LOCK(UpdateRef);
+				if (objectDestroyed)
+				{
+					UpdateReferences();
+					objectDestroyed = false;
+				}
+			}
 		}
 
 		if (logicState != LogicState::NONE)
@@ -537,6 +583,7 @@ MonoString* ScriptingSystem::CreateMonoString(const char* str)
 void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClassField ,Field& field)
 {
 	field.fType = Utils::monoTypeToFieldType(mono_field_get_type(mClassField));
+
 	if (field.fType == GetFieldType::E<std::string>())
 	{
 		MonoString* mono_string = CreateMonoString("");
@@ -546,9 +593,39 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 		mono_free(mono_string);
 		return;
 	}
+	else if (field.fType == GetFieldType::E<Script>())
+	{
+		field.typeName = mono_type_get_name(mono_field_get_type(mClassField));
+		size_t offset = field.typeName.find_last_of(".");
+		if (offset != std::string::npos)
+			field.typeName = field.typeName.substr(offset + 1);
+		Scene& scene = MySceneManager.GetCurrentScene();
+		mono_field_get_value(instance, mClassField, field.data);
+		MonoObject* scriptRef = field.Get<MonoObject*>();
+		if (!scriptRef)
+		{
+			field.Get<Script*>() = nullptr;
+			return;
+		}
+		Engine::UUID euid;
+		Engine::UUID uuid;
+		mono_field_get_value
+		(
+			scriptRef,
+			mono_class_get_field_from_name(mScript, "euid"),
+			&euid
+		);
+		mono_field_get_value
+		(
+			scriptRef,
+			mono_class_get_field_from_name(mScript, "uuid"),
+			&uuid
+		);
+		field.Get<Script*>() = &scene.Get<Script>(euid,uuid);
+		return;
+	}
 	//If mono object, it contains reference to type
 	mono_field_get_value(instance, mClassField, field.data);
-	return;
 }
 
 void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClassField, Field& field)
@@ -620,9 +697,11 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 			return nullptr;
 		ScriptClass& scriptClass = scriptClassMap[script.name];
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
-		void* param = &scene.Get<Entity>(script);
-		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 1);
-		invoke(instance, reflectComponent, &param);
+		Engine::UUID euid = script.EUID();
+		Engine::UUID uuid = script.UUID();
+		void* param[] = {&scene.Get<Entity>(script),&euid,&uuid };
+		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 3);
+		invoke(instance, reflectComponent, param);
 		mScripts.emplace(script, instance);
 		//Check fields, dont remove fields
 		if (ref)

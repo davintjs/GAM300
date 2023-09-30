@@ -8,9 +8,9 @@ Scene Settings:
   m_NavMeshSettings: None  # All settings above are just examples
 ---
 GameObject:
-  m_EUID: 2074077347013621399
+  m_EUID: 7734725922229625985
   m_IsActive: true
-  m_Name: New GameObject(1)
+  m_Name: New GameObject(2)
   m_Position: [0, 0, 0]
   m_Rotation: [0, 0, 0]
   m_Scale: [1, 1, 1]
@@ -18,11 +18,41 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 443622756116431092}  # Script
+    - component: {fileID: 6801941503039524396}  # LightSource
+    - component: {fileID: 8136014163953568016}  # SphereCollider
+    - component: {fileID: 1746619549348025399}  # AudioSource
+    - component: {fileID: 5890096980016926999}  # Script
+    - component: {fileID: 418866798004768987}  # Script
+---
+LightSource:
+  EUID: 7734725922229625985
+  UUID: 6801941503039524396
+  LightingColor: [1, 1, 1]
+---
+SphereCollider:
+  EUID: 7734725922229625985
+  UUID: 8136014163953568016
+  Radius: 1
+---
+AudioSource:
+  EUID: 7734725922229625985
+  UUID: 1746619549348025399
+  Loop: false
+  Volume: 1
+  Play: false
 ---
 Script:
-  EUID: 2074077347013621399
-  UUID: 443622756116431092
+  EUID: 7734725922229625985
+  UUID: 5890096980016926999
   Name: Player
-  gameObj: {fileID: 2074077347013621399}  # GameObject
-  sad: 16.3500004
+  gameObj: {fileID: 0}
+  sad: 0
+  player: {fileID: 5890096980016926999}  # Component
+---
+Script:
+  EUID: 7734725922229625985
+  UUID: 418866798004768987
+  Name: Player
+  gameObj: {fileID: 7734725922229625985}  # GameObject
+  sad: 0
+  player: {fileID: 5890096980016926999}  # Component

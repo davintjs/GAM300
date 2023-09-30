@@ -363,6 +363,12 @@ public:
 
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
+	template <typename... Ts>
+	void SubscribeObjectDestroyed(TemplatePack<Ts...>);
+
+	template<typename T>
+	void CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent);
+
 	MonoObject* ReflectScript(Script& component, MonoObject* ref = nullptr);
 
 	void ReflectFromOther(Scene& other);
@@ -370,6 +376,8 @@ public:
 	MonoImage* GetAssemblyImage();
 
 	void InvokeAllScripts(const std::string& funcName);
+
+	void UpdateReferences();
 
 
 	using FieldMap = std::unordered_map<std::string, Field>;
@@ -386,9 +394,9 @@ public:
 
 	std::vector<Handle> reflectionQueue;
 
-
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 
+	bool objectDestroyed = false;
 
 	enum class LogicState
 	{
