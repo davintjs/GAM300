@@ -13,8 +13,8 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#ifndef EDITORTOOLBAR_H
-#define EDITORTOOLBAR_H
+#ifndef EDITORHEADERS_H
+#define EDITORHEADERS_H
 
 #include <glm/vec2.hpp>
 #include <unordered_map>
@@ -228,4 +228,4 @@ public:
     std::map<std::string, ScrollingBuffer>system_plots;
 };
 
-#endif // !EDITORTOOLBAR_H
+#endif // !EDITORHEADERS_H

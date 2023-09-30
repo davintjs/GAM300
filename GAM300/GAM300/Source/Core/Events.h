@@ -111,6 +111,13 @@ struct ScriptSetFieldEvent : IEvent
 	const char* fieldName;
 };
 
+struct GetAssetEvent: IEvent
+{
+	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
+	const std::string& fileName;
+	std::string guid;
+};
+
 
 //
 //template <typename T>

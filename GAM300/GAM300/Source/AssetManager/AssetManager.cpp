@@ -10,6 +10,7 @@ void AssetManager::Init()
 
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
+	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
 	
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
@@ -476,4 +477,9 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		EVENTS.Publish(&scriptModifiedEvent);
 	}
 	PRINT(filePath.string(), "\n");
+}
+
+void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
+{
+	pEvent->guid = GetAssetGUID(pEvent->fileName);
 }

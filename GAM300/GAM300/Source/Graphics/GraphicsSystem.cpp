@@ -347,6 +347,7 @@ void GraphicsSystem::Update(float dt)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
+
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
 
 		if (t_Mesh == nullptr)
@@ -362,32 +363,6 @@ void GraphicsSystem::Update(float dt)
 
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
-
-		// Bean: Should be a callback event(from editor inspector) when the user update the texture for the mesh
-		if (renderer.AlbedoTexture != "" && renderer.textureID) {
-			renderer.textureID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture));
-		}
-		if (renderer.NormalMap != "" && renderer.normalMapID) {
-
-			renderer.normalMapID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.NormalMap));
-		}
-
-		if (renderer.MetallicTexture != "" && renderer.MetallicID) {
-
-			renderer.MetallicID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.MetallicTexture));
-		}
-		if (renderer.RoughnessTexture != "" && renderer.RoughnessID) {
-			renderer.RoughnessID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.RoughnessTexture));
-		}
-
-		if (renderer.AoTexture != "" && renderer.AoID) {
-			renderer.AoID =
-				TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(renderer.AoTexture));
-		}
 
 		float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
 		float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));

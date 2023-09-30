@@ -82,7 +82,7 @@ void EditorPerformanceViewer::Update(float dt)
                 ImGui::TableSetupColumn("System");
                 ImGui::TableSetupColumn("Usage");
                 char time[100];
-                sprintf(time, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime);
+                sprintf(time, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime * 1000.f);
 
                 ImGui::TableSetupColumn(time);
                 ImGui::TableHeadersRow();
@@ -104,7 +104,7 @@ void EditorPerformanceViewer::Update(float dt)
 
                     ImGui::TableNextColumn();
                     char systime[100];
-                    sprintf(systime, "%f ms", system.second);
+                    sprintf(systime, "%f ms", system.second * 1000.f);
                     ImGui::Text(systime);
                     //ImGui::PopID();
                     //ImGui::Text(": %.1f%%", time);

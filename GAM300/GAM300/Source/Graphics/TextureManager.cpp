@@ -18,7 +18,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 void Texture_Manager::Init()
 {
     std::cout << "TEXTURE MANAGER INIT\n";
-	;
 }
 
 

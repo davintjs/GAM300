@@ -619,7 +619,8 @@ void Display_Property(T& comp) {
 
                     //temporary implementation for texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") {
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") 
+                    {
                         DisplayTexturePicker(Value);
                     }
 
@@ -634,6 +635,41 @@ void Display_Property(T& comp) {
             }
            
         });
+
+    if constexpr (std::is_same<T, MeshRenderer>())
+    {
+        // Bean: Change this after M1, this is not suppose to be here
+        if (comp.AlbedoTexture != "")
+        {
+            comp.textureID = GET_TEXTURE_ID(comp.AlbedoTexture)
+        }
+        else
+            comp.textureID = UINT_MAX;
+        if (comp.NormalMap != "")
+        {
+            comp.normalMapID = GET_TEXTURE_ID(comp.NormalMap);
+        }
+        else
+            comp.normalMapID = UINT_MAX;
+        if (comp.MetallicTexture != "")
+        {
+            comp.MetallicID = GET_TEXTURE_ID(comp.MetallicTexture);
+        }
+        else
+            comp.MetallicID = UINT_MAX;
+        if (comp.RoughnessTexture != "")
+        {
+            comp.RoughnessID = GET_TEXTURE_ID(comp.RoughnessTexture);
+        }
+        else
+            comp.RoughnessID = UINT_MAX;
+        if (comp.AoTexture != "")
+        {
+            comp.AoID = GET_TEXTURE_ID(comp.AoTexture);
+        }
+        else
+            comp.AoID = UINT_MAX;
+    }
 }
 
 //template <typename T>

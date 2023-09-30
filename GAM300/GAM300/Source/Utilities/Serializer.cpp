@@ -156,22 +156,25 @@ bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
     out << YAML::BeginMap;
     out << YAML::Key << componentName << YAML::Value << YAML::BeginMap;
 
-    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
+    property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            auto entry = property::entry { PropertyName, Data };
-            std::visit([&](auto& Value)
-                {
-                    using T = std::decay_t<decltype(Value)>;
+            if (!Flags.m_isDontSave)
+            {
+                auto entry = property::entry { PropertyName, Data };
+                std::visit([&](auto& Value)
+                    {
+                        using T = std::decay_t<decltype(Value)>;
 
-                    // Edit name
-                    std::string Name = entry.first;
-                    auto it = Name.begin() + Name.find_last_of("/");
-                    Name.erase(Name.begin(), ++it);
+                        // Edit name
+                        std::string Name = entry.first;
+                        auto it = Name.begin() + Name.find_last_of("/");
+                        Name.erase(Name.begin(), ++it);
 
-                    // Store Component value
-                    out << YAML::Key << Name << YAML::Value << Value;
-                }
-            , entry.second);
+                        // Store Component value
+                        out << YAML::Key << Name << YAML::Value << Value;
+                    }
+                , entry.second);
+            }
         });
 
     if constexpr (std::is_same<T, Script>())
