@@ -46,7 +46,7 @@ float FrameRateController::End()
 {
 	steps = 0;
 	frameEnd = glfwGetTime();
-	float deltaTime = frameEnd - frameStart;
+	double deltaTime = frameEnd - frameStart;
 	//if (deltaTime > 1 / 15.0f) deltaTime = 1 / 15.0f;
 	accumulatedTime += deltaTime;
 	while (accumulatedTime >= fixedDeltaTime)
@@ -54,5 +54,5 @@ float FrameRateController::End()
 		accumulatedTime -= fixedDeltaTime;
 		++steps;
 	}
-	return deltaTime;
+	return (float)deltaTime;
 }

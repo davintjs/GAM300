@@ -1,5 +1,6 @@
 #include "Compiler.h"
 
+#pragma warning( disable : 4100)
 ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath)
 {
 	_descriptor = new Descriptor;

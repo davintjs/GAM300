@@ -72,16 +72,5 @@ struct Field
 		typeName = std::move(rhs.typeName);
 		rhs.data = nullptr;
 	}
-
-	Field& operator=(Field&& rhs)
-	{
-		data = rhs.data;
-		fType = rhs.fType;
-		typeName = std::move(rhs.typeName);
-		rhs.data = nullptr;
-		return *this;
-	}
-private:
-	size_t size{ 0 };
 };
 #endif // ! SCRIPT_FIELDS_H

@@ -31,6 +31,8 @@
 
 #pragma once
 
+#pragma warning( disable : 26495)
+
 #include <time.h>
 #include "imgui_internal.h"
 

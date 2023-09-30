@@ -11,6 +11,7 @@
 		((std::cout << std::forward<Args>(args)), ...);
 	}
 #else
+	#pragma warning( disable : 4002)
 	#define PRINT(ARGS) 
 
 #endif

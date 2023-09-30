@@ -83,7 +83,7 @@ struct ScriptClass
 			Class to load functions from
 	*/
 	/**************************************************************************/
-	ScriptClass(const std::string& _name, MonoClass* _mClass);
+	ScriptClass(MonoClass* _mClass);
 	MonoClass* mClass{};
 	std::unordered_map<std::string, MonoMethod*> mMethods;
 	std::unordered_map<std::string, MonoClassField*> mFields;

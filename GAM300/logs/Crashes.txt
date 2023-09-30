@@ -1,5 +1,5 @@
-[2023-09-30 11:27:09.800] [Error] [critical] 
-Caused By:	false
-Info:		FAILED TO ERASE
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\SparseSet.cpp (Line: 128)
+[2023-09-30 18:03:39.696] [Error] [critical] 
+Caused By:	(id < 0 && id > 2)
+Info:		Vector3 Subscript operator out of range!
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\External\properties-master\src\Examples\PropertyConfig.h (Line: 93)
 

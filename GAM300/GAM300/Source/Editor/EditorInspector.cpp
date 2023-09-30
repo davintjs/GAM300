@@ -44,6 +44,8 @@ void Display(const char* name, T& val);
 template <typename T>
 void DisplayType(const char* name, T& val)
 {
+    UNREFERENCED_PARAMETER(name);
+    UNREFERENCED_PARAMETER(val);
     //PRINT(name," ", typeid(T).name(), '\n');
 }
 
@@ -297,6 +299,7 @@ GENERIC_RECURSIVE
 template <typename T>
 void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 {
+    UNREFERENCED_PARAMETER(name);
     if constexpr (AllObjectTypes::Has<T>())
     {
         static std::string btnName;
@@ -425,6 +428,7 @@ template<typename T>
 void ChangeTexture(T& texture, std::string& newTex) {
     ChangeTexture(texture, newTex);
 }
+
 template <typename T> 
 void DisplayTexturePicker(T& Value) {
 
@@ -469,7 +473,8 @@ void DisplayTexturePicker(T& Value) {
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         auto id = GET_TEXTURE_ID("Cancel_Icon");
-        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
+        ImTextureID textureID = (ImTextureID)id;
+        if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
             std::string empty = "";
             ChangeTexture<T1>(Value, empty);
             
@@ -597,7 +602,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), comp.ChannelName.size(), 4)) {
+        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
             std::cout << number << std::endl;
         }
         ImGui::PopItemWidth();
@@ -865,30 +870,6 @@ void DisplayComponent(Script& script)
         
     }
 }
-//template <>
-//void DisplayComponent<Image>(Image& image)
-//{
-//    Display("Image", image.sprite.refTexture);
-//    DisplayColor("Color", image.sprite.color);
-//
-//    ImGui::TableNextColumn();
-//    ImGui::Text("Flip");
-//    ImGui::TableNextColumn();
-//    ImGui::Checkbox("X", &image.sprite.flip.x);
-//    ImGui::SameLine(0.f, 16.f);
-//    ImGui::Checkbox("Y", &image.sprite.flip.y);
-//
-//    //Update sprite data
-//    if (image.sprite.refTexture)
-//    {
-//        std::string filePath = image.sprite.refTexture->get_file_path();
-//        uint64_t pathID = std::hash<std::string>{}(filePath);
-//        MetaID metaID = MyAssetSystem.GetMetaID(pathID);
-//        image.sprite.spriteID = metaID.uuid;
-//        size_t pos = filePath.find_last_of('\\');
-//        image.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
-//    }
-//}
 
 template <typename T>
 void DisplayComponentHelper(T& component)

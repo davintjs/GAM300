@@ -51,11 +51,8 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 			if (childId != euid)
 			{
-				Entity& currEntity = curr_scene.Get<Entity>(childId);
-				Entity& targetEntity = curr_scene.Get<Entity>(euid);
-
-				Transform& currTransform = curr_scene.Get<Transform>(currEntity);
-				Transform& targetTransform = curr_scene.Get<Transform>(targetEntity);
+				Transform& currTransform = curr_scene.Get<Transform>(childId);
+				Transform& targetTransform = curr_scene.Get<Transform>(euid);
 
 				Transform& currParent = curr_scene.Get<Transform>(currTransform.parent);
 				Transform& targetParent = curr_scene.Get<Transform>(targetTransform.parent);
@@ -79,7 +76,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 							arr.erase(prev_it);
 							//reorder (reinsert) the current entity into new layer position
 							auto it = std::find(arr.begin(), arr.end(), targetTransform.EUID());
-							arr.insert(it, currEntity.EUID());
+							arr.insert(it, childId);
 						}
 						//if current entity has a different previous parent, remove it.
 						else
@@ -124,12 +121,12 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 						currTransform.SetParent(nullptr);
 					}
 					//delete instance of entity in container
-					auto prev_it = std::find(layer.begin(), layer.end(), currEntity.EUID());
+					auto prev_it = std::find(layer.begin(), layer.end(), childId);
 					layer.erase(prev_it);
 
 					//reorder (reinsert) the current entity into new layer position
-					auto it = std::find(layer.begin(), layer.end(), targetEntity.EUID());
-					layer.insert(it, currEntity.EUID());
+					auto it = std::find(layer.begin(), layer.end(), euid);
+					layer.insert(it, childId);
 				}
 
 			}
@@ -161,21 +158,21 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		{
 			Engine::UUID childId = *static_cast<Engine::UUID*>(payload->Data);
 
-			Transform& currEntity = curr_scene.Get<Transform>(childId);
+			Transform& currT = curr_scene.Get<Transform>(childId);
 			Transform& targetEntity = curr_scene.Get<Transform>(euid);
 
-			if (currEntity.isLeaf())
+			if (currT.isLeaf())
 			{
 				if (childId != euid)
 				{
-					currEntity.SetParent(&targetEntity);
+					currT.SetParent(&targetEntity);
 				}
 			}
 			else
 			{
-				if (!currEntity.isEntityChild(targetEntity))
+				if (!currT.isEntityChild(targetEntity))
 				{
-					currEntity.SetParent(&targetEntity);
+					currT.SetParent(&targetEntity);
 				}
 			}
 		}

@@ -12,6 +12,8 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
+#pragma warning (disable:6011)
+
 #include "ObjectsList.h"
 
 #define OBJECTSLIST ObjectsList<T, N>
@@ -230,6 +232,7 @@ bool OBJECTSLIST::IsActive(ObjectIndex sparseIndex)
 		sparseIndex -= start->sparseSet.size();
 		start = start->next;
 	}
+	E_ASSERT(start, "Couldn't find index");
 	return start->activeObjectsBitset.test(start->sparseSet.GetDenseIndex(sparseIndex));
 }
 
@@ -242,6 +245,7 @@ bool OBJECTSLIST::IsActiveDense(ObjectIndex denseIndex)
 		denseIndex -= N;
 		start = start->next;
 	}
+	E_ASSERT(start, "Couldn't find index");
 	return start->activeObjectsBitset.test(denseIndex);
 }
 
@@ -254,6 +258,7 @@ void OBJECTSLIST::SetActive(ObjectIndex index, bool val)
 		index -= N;
 		start = start->next;
 	}
+	E_ASSERT(start, "Couldn't find index");
 	start->activeObjectsBitset.set(index, val);
 }
 

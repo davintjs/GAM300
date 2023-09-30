@@ -4,6 +4,7 @@
 
 #pragma once
 
+#pragma warning( disable : 26110)
 #include <Jolt/Core/Mutex.h>
 
 JPH_NAMESPACE_BEGIN
