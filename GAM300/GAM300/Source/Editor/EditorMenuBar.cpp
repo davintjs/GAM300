@@ -128,10 +128,13 @@ void EditorMenuBar::Update(float dt)
             // Undo Functionality using Editor_Undo()
             if (ImGui::MenuItem("Undo", "Ctrl+Z"))
             {
-            }
-
+            }// Undo Functionality using Editor_Undo()           
             // Do not allow the user to undo when history buffer is empty or when file is not loaded
-            ImGui::TextDisabled("Undo");
+            //ImGui::TextDisabled("Undo");
+            if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+            {
+            }
+            //ImGui::TextDisabled("Redo");
 
             ImGui::EndMenu();
         }
