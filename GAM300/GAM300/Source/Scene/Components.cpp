@@ -91,3 +91,8 @@ void Transform::RemoveChild(Transform* t)
 	// Erase the found element
 	child.erase(it);
 }
+
+Transform::~Transform()
+{
+	SetParent(nullptr);
+}
