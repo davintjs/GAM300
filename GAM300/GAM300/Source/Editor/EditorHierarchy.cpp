@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			EditorHierarchy.cpp
+\project
+\author         Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the definitions of the functions that renders the Hierarchy window in
+	Editor. These functionalities include:
+	1. Displaying entities in a scene in a hierarchial tree format
+	2. Parenting and reordering of entities in the tree
+	3. Adding/removing of entities from the hierarchy window
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "EditorHeaders.h"
 #include "Editor.h"

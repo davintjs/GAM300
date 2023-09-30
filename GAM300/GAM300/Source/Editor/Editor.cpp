@@ -1,13 +1,12 @@
 /**************************************************************************************/
 /*!
-//    \file			Editor.cpp
-//    \author(s) 	Joseph Ho Jun Jie
+//    \file			Editor.h
+//    \author(s) 	Joseph Ho
 //
-//    \date   	    9th May 2023
-//    \brief		This file contains the prototypes for all the functions that are used
-//					to create the Level Editor interface for the program.
-//
-//    \Percentage   Joseph 100%
+//    \date   	    07/09/2023
+//    \brief
+        This file contains the declarations of the following:
+        1. Contains the definitions of functions in the editor system.
 //
 //    Copyright (C) 2022 DigiPen Institute of Technology.
 //    Reproduction or disclosure of this file or its contents without the
@@ -16,7 +15,6 @@
  /**************************************************************************************/
 
 #include "Precompiled.h"
-
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -62,20 +60,12 @@ void EditorSystem::Update(float dt)
 {
     //Editor Functions
     Editor_Dockspace();
-
-    
-
-    //for (ISystem* pSystem : editorSystems)
-    //{   
-    //    pSystem->Update(dt);
-    //}
     EditorSystems::Update(dt);
 
     //demo
     /*bool demo = true;
     ImGui::ShowDemoWindow(&demo);
     ImPlot::ShowDemoWindow(&demo);*/
-
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -85,10 +75,6 @@ void EditorSystem::Update(float dt)
 
 void EditorSystem::Exit()
 {
-    //for (auto iter = editorSystems.rbegin(); iter != editorSystems.rend(); ++iter)
-    //{
-    //    (*iter)->Exit();
-    //}
     EditorSystems::Exit();
 
     ImGui_ImplGlfw_Shutdown();

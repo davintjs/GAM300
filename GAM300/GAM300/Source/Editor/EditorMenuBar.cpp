@@ -13,13 +13,12 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#include "Precompiled.h"
 
+#include "Precompiled.h"
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
 #include "Graphics/GraphicsSystem.h"
-
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
 
