@@ -647,31 +647,31 @@ void Display_Property(T& comp) {
             comp.textureID = GET_TEXTURE_ID(comp.AlbedoTexture)
         }
         else
-            comp.textureID = UINT_MAX;
+            comp.textureID = 0;
         if (comp.NormalMap != "")
         {
             comp.normalMapID = GET_TEXTURE_ID(comp.NormalMap);
         }
         else
-            comp.normalMapID = UINT_MAX;
+            comp.normalMapID = 0;
         if (comp.MetallicTexture != "")
         {
             comp.MetallicID = GET_TEXTURE_ID(comp.MetallicTexture);
         }
         else
-            comp.MetallicID = UINT_MAX;
+            comp.MetallicID = 0;
         if (comp.RoughnessTexture != "")
         {
             comp.RoughnessID = GET_TEXTURE_ID(comp.RoughnessTexture);
         }
         else
-            comp.RoughnessID = UINT_MAX;
+            comp.RoughnessID = 0;
         if (comp.AoTexture != "")
         {
             comp.AoID = GET_TEXTURE_ID(comp.AoTexture);
         }
         else
-            comp.AoID = UINT_MAX;
+            comp.AoID = 0;
     }
 }
 
