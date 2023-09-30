@@ -1,5 +1,6 @@
 /// @ref gtx_matrix_decompose
 
+#pragma warning( disable : 6001)
 #include "../gtc/constants.hpp"
 #include "../gtc/epsilon.hpp"
 

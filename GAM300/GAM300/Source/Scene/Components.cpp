@@ -40,10 +40,8 @@ bool Transform::isEntityChild(Transform& ent) {
 	if (std::find(child.begin(), child.end(), ent.EUID()) != child.end()) {
 		return true;
 	}
-	for (int i = 0; i < child.size(); i++) 
-	{
-		return MySceneManager.GetCurrentScene().Get<Transform>(child[i]).isEntityChild(ent);
-	}
+	if (!child.empty())
+		return MySceneManager.GetCurrentScene().Get<Transform>(child.front()).isEntityChild(ent);
 	return false;
 }
 

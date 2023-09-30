@@ -84,6 +84,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	/*******************************************************************************/
 	static bool GetMouseDown(int mouseCode)
 	{
+		UNREFERENCED_PARAMETER(mouseCode);
 		return InputHandler::isMouseButtonPressed_L();
 	}
 
@@ -589,12 +590,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
 	}
 
-	GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
-	static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
-	{
-		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		DestroyRecursive(monoComponentToType[managedType],pComponent);
-	}
+	//GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
+	//static void DestroyComponent(void* pComponent, MonoReflectionType* componentType)
+	//{
+	//	MonoType* managedType = mono_reflection_type_get_type(componentType);
+	//	DestroyRecursive(monoComponentToType[managedType],pComponent);
+	//}
 
 	///*******************************************************************************
 	///*!

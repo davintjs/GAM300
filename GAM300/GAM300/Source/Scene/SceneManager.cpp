@@ -63,6 +63,9 @@ void SceneManager::LoadScene(const std::string& _filePath)
 
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
+	SelectedEntityEvent sE{ nullptr };
+	EVENTS.Publish(&sE);
+
 
 	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }

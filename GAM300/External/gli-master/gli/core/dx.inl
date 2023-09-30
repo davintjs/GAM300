@@ -1,5 +1,6 @@
 #include <functional>
 
+#pragma warning( disable : 26451)
 namespace gli
 {
 	inline dx::dx()

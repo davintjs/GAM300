@@ -422,6 +422,10 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
 		}\
+		else\
+		{\
+			E_ASSERT(false, "Could not match type: ", objType); \
+		}\
 	}\
 	template<typename T, typename... Ts>\
 	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\

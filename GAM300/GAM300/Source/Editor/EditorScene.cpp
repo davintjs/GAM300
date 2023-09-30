@@ -189,10 +189,9 @@ void EditorScene::Update(float dt)
         //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-        Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
-        // if (EDITOR.GetSelectedEntity() != 0)
-        if (&entity)
+        if (EDITOR.GetSelectedEntity() != 0)
         {
+            Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
             Transform& trans = currentScene.Get<Transform>(entity);
             for (int i = 0; i < 3; ++i)
             {
