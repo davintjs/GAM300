@@ -10,8 +10,7 @@
     This file contains the definitions of the functions that renders the inspector window in
     Editor. These functionalities include:
     1. Displaying Components of the selected entity
-    2. Display the individual types and fields
-    3. Clone Helper for De/Serialization which copies fields for the script component
+    2. Display the individual types and fields in the editor
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -217,11 +216,11 @@ void AddReferencePanel(T*& container)
             buttonName = tag.name;
             if constexpr (std::is_same_v<T, Entity>)
             {
-                ImGui::PushID(object.EUID());
+                ImGui::PushID((int)object.EUID());
             }
             else
             {
-                ImGui::PushID(object.UUID());
+                ImGui::PushID((int)object.UUID());
             }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
@@ -394,7 +393,7 @@ void DisplayTexturePicker(T& Value) {
 
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        auto id = GET_TEXTURE_ID("Cancel_Icon");
+        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
         if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
 
             if constexpr (std::is_same<T, std::string>()) {
@@ -679,7 +678,7 @@ void DisplayComponentHelper(T& component)
 
     const char* popup = GetType::Name<T>();
 
-    ImGui::PushID(component.UUID());
+    ImGui::PushID((int)component.UUID());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);

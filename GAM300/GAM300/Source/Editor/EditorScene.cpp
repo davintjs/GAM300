@@ -2,6 +2,7 @@
 \file			EditorScene.cpp
 \project		
 \author			Sean Ngo
+\Coauthor       Joseph Ho
 
 \par			Course : GAM300
 \date           04/09/2023
@@ -178,15 +179,6 @@ void EditorScene::Update(float dt)
 
         // Might be wrong -> i think here is the one that need to offset the tab header if there is
         ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y+22.f, windowWidth, windowHeight-22.f);
-        //
-        //std::cout << "SetRect x :" << (float)ImGui::GetWindowPos().x << "\n";
-        //std::cout << "SetRect y :" << (float)ImGui::GetWindowPos().y << "\n";
-
-        //
-        //ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-        //ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-        //std::cout << "min :" << vMin.x << " , " << vMin.y << "\n";
-        //std::cout << "max :" << vMax.x << " , " << vMax.y << "\n";
 
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
         if (EDITOR.GetSelectedEntity() != 0)
