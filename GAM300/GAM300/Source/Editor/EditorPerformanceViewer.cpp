@@ -69,7 +69,7 @@ void EditorPerformanceViewer::Update(float dt)
             static ScrollingBuffer fpsbuf;
             fpsbuf.AddPoint(time, fps);
             if (ImPlot::BeginPlot("FPS", ImVec2(-1, 180), plotflags)) {
-                ImPlot::SetupAxes(nullptr, nullptr, axisflags, axisflags);
+                ImPlot::SetupAxes("Time (s)", "FPS", axisflags, axisflags);
                 ImPlot::SetupAxisLimits(ImAxis_X1, time - history, time, ImGuiCond_Always);
                 ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 200.f);
                 //ImPlot::DragLineY(0, &highestfps, ImVec4(0.1, 0.1, 0.1, 0.1), 1.f, ImPlotDragToolFlags_NoInputs);
