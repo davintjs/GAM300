@@ -39,6 +39,7 @@ extern "C"
 	typedef struct _MonoType MonoType;
 	typedef struct _MonoString MonoString;
 	typedef struct _MonoAssembly MonoAssembly;
+	typedef struct _MonoDomain MonoDomain;
 	typedef struct _MonoImage MonoImage;
 }
 
@@ -245,14 +246,7 @@ public:
 			Creates an appDomain so that a new assembly can be loaded
 	*/
 	/**************************************************************************/
-	void CreateAppDomain();
-	/**************************************************************************/
-	/*!
-		\brief
-			Deletes an appDomain and any assemblies loaded in it
-	*/
-	/**************************************************************************/
-	void UnloadAppDomain();
+	MonoDomain* CreateAppDomain();
 	/**************************************************************************/
 	/*!
 		\brief
@@ -280,7 +274,7 @@ public:
 		False if operation failed, true if it was successful
 	*/
 	/*******************************************************************************/
-	void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field, void* container);
+	void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field);
 	/*******************************************************************************
 	/*!
 	*
@@ -304,6 +298,10 @@ public:
 
 	//Updates by setting field values back into C#
 	void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
+
+	void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
+
+	void CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -318,32 +316,7 @@ public:
 	*/
 	/*******************************************************************************/
 	void CallbackSceneChanging(SceneChangingEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback when adding a new blank script to the project
 
-	\param pEvent
-		Pointer to event with script name
-	*/
-	/*******************************************************************************/
-	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
-
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when method name is accessed
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
-	//void CallbackScriptGetMethodNames(ScriptGetMethodNamesEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -372,7 +345,6 @@ public:
 	*/
 	/*******************************************************************************/
 	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
-	void CallbackSceneStop(SceneStopEvent* pEvent);
 	/*******************************************************************************
 	/*!
 	*
@@ -388,20 +360,35 @@ public:
 	/*******************************************************************************/
 	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
 
-	MonoObject* ReflectScript(Script& component);
+
+	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
+
+	MonoObject* ReflectScript(Script& component, MonoObject* ref = nullptr);
+
+	void ReflectFromOther(Scene& other);
 
 	MonoImage* GetAssemblyImage();
 
 	void InvokeAllScripts(const std::string& funcName);
 
-	using MonoComponents = std::unordered_map<void*, MonoObject*>;
+
+	using FieldMap = std::unordered_map<std::string, Field>;
+	void CacheScripts();
+	std::unordered_map<Handle, FieldMap> cacheFields;
+	void LoadCacheScripts();
+
+	//Mapping script to mono script
+	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
 
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
-	MonoComponents mComponents;
 	float timeUntilRecompile{0};
-	std::vector<uint32_t> gcHandles;
 	CompilingState compilingState{ CompilingState::Wait };
+
 	std::vector<Handle> reflectionQueue;
+
+
+	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
+
 
 	enum class LogicState
 	{

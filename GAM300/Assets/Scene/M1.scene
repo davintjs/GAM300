@@ -19,7 +19,7 @@ GameObject:
   m_Parent: 0
   m_Components:
     - component: {fileID: 10413881243206984898}  # MeshRenderer
-    - component: {fileID: 17218963974942543520}  # Script
+    - component: {fileID: 10379670187260712593}  # Script
 ---
 MeshRenderer:
   EUID: 22203055554271501
@@ -37,11 +37,10 @@ MeshRenderer:
 ---
 Script:
   EUID: 22203055554271501
-  UUID: 17218963974942543520
+  UUID: 10379670187260712593
   Name: Player
-  gameObj: {fileID: 0}  # GameObject
-  player2: {fileID: 6}  # Component
-  speed: 10
+  gameObj: {fileID: 8552727112136102457}  # GameObject
+  sad: 21.2999992
 ---
 GameObject:
   m_EUID: 16942626329878887566

@@ -92,19 +92,19 @@ void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data);
 
 // Helper function for serializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out);
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out);
 
 // Helper function for serializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
+void SerializeScriptHelper(Field& rhs, YAML::Emitter& out, TemplatePack<T, Ts...>);
 
 // Helper function for deserializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node);
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node);
 
 // Helper function for deserializing the script component
 template <typename T, typename... Ts>
-void CloneHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>);
+void DeserializeScriptHelper(Field& rhs, YAML::Node& node, TemplatePack<T, Ts...>);
 
 // This struct contains functions which serializes components without using a switch case
 template<typename T, typename... Ts>

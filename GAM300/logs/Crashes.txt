@@ -1,5 +1,5 @@
-[2023-09-30 07:46:03.691] [Error] [critical] 
-Caused By:	inputFile
-Info:		Error opening file to load asset into memory!
-Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 286)
+[2023-09-30 02:12:24.068] [Error] [critical] 
+Caused By:	false
+Info:		FAILED TO SET ACTIVE
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\ObjectsBList.cpp (Line: 209)
 
