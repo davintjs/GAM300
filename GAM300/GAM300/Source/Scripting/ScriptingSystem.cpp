@@ -356,8 +356,11 @@ template<typename T>
 void ScriptingSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
-	ACQUIRE_SCOPED_LOCK(UpdateRef);
-	objectDestroyed = true;
+	{
+		ACQUIRE_SCOPED_LOCK(UpdateRef);
+		objectDestroyed = true;
+	}
+	while (objectDestroyed);
 }
 
 void ScriptingSystem::ThreadWork()
