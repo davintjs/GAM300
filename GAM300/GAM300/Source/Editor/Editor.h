@@ -1,18 +1,17 @@
-/**************************************************************************************/
-/*!
-//    \file			Editor.h
-//    \author(s) 	Joseph Ho
-//
-//    \date   	    07/09/2023
-//    \brief
-        This file contains the declarations of the following:
-        1. Contains the declaration of the Editor system in the architecture.
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+/*!***************************************************************************************
+\file			Editor.h
+\project		GAM300
+\author			Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the declarations of the following:
+    1. Contains the declaration of the Editor system in the architecture.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"

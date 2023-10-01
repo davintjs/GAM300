@@ -11,7 +11,7 @@
 	NOTE: DO NOT INCLUDE IN ANY OTHER PLACE OTHER THAN MAIN
 	This file manages all the systems as a super system itself to call them in sequence
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef ENGINE_CORE_H
 #define ENGINE_CORE_H

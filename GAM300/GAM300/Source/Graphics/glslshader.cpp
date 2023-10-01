@@ -1,17 +1,19 @@
 ﻿/*!***************************************************************************************
-\file           glslshader.cpp
+\file			glslshader.h
 \project
-\author         Euan Lim (50%) Jake Lian (50%)
+\author         Euan Lim, Jake Lian, Theophelia Tan
 
-\par			Course: GAM300
-\date           09/28/2023
+\par			Course : GAM300
+\date           28 / 09 / 2023
 
 \brief
-    This file contains definitions of member functions of class GLShader.
+This file contains the definition of the class GLSLShader which does
+1. Link Shaders into a program
+2. validate, log messages from compiling / linking / validiation
+(Taken from Year 1 Professor Prasanna's Graphics Class)
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
-******************************************************************************************/
-#include "Precompiled.h"
+    All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+    * *****************************************************************************************/ #include "Precompiled.h"
 #include "glslshader.h"
 
 /*!***********************************************************************
