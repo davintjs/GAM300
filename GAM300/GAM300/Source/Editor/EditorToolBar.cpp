@@ -1,14 +1,14 @@
 /*!***************************************************************************************
 \file			EditorToolBar.cpp
 \project		
-\author         Sean Ngo
+\author         Joseph Ho
+\Coauthor       Sean Ngo
 
 \par			Course: GAM300
 \date           07/09/2023
 
 \brief
-    This file contains the definitions of the following:
-    1. Editor ToolBar
+    This file contains the definitions of the functions used for the Editor's Toolbar.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -49,9 +49,6 @@ void EditorToolBar::Update(float dt)
 
     ImGui::Begin("Toolbar", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
     //Play, Pause, Step(Optional)
-    // 
-    
-    //To do: change button to image button with play/pause icons
 
 
 

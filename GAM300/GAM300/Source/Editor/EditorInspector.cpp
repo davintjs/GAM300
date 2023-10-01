@@ -2,6 +2,7 @@
 \file			EditorInspector.cpp
 \project
 \author         Joseph Ho
+\coauthor       Zachary Hong
 
 \par			Course: GAM300
 \date           07/09/2023
@@ -32,6 +33,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
 
+//Flags for inspector headers/windows
 static ImGuiTableFlags windowFlags =
 ImGuiTableFlags_Resizable |
 ImGuiTableFlags_NoBordersInBody |
@@ -350,6 +352,7 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
+//Function to display and edit textures of a given property.
 template <typename T> 
 void DisplayTexturePicker(T& Value) {
 
@@ -491,7 +494,7 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
-
+//Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
@@ -637,6 +640,7 @@ void DisplayComponent(Script& script)
     }
 }
 
+//Helper function that displays all relevant fields and types in a component
 template <typename T>
 void DisplayComponentHelper(T& component)
 {
@@ -714,8 +718,6 @@ void DisplayComponentHelper(T& component)
 
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
     
-    
-
     if (windowopen)
     {
 
@@ -762,7 +764,7 @@ void DisplayComponentHelper(T& component)
 
 }
 
-
+//Template recursive function to display the components in an entity
 template<typename T, typename... Ts>
 struct DisplayComponentsStruct
 {
@@ -808,6 +810,7 @@ using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponent
 
 void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
 
+//Lists out all available components to add in the add component panel
 template<typename T, typename... Ts>
 struct AddsStruct
 {
@@ -865,6 +868,7 @@ private:
 };
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
+//Implementation for the panel to add a component to the current entity
 void AddPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -882,6 +886,7 @@ void AddPanel(Entity& entity) {
     }
 }
 
+//Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();

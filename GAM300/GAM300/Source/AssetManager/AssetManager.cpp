@@ -1,3 +1,22 @@
+/*!***************************************************************************************
+\file			AssetManager.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. AssetManager Initialization
+		a. Loading assets into memory with multi-threading
+	2. AssetManager FileWatching Protocols
+		a. Asynchronously load, unload or update assets in memory with multi-threading
+	3. Getter and helper functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/ThreadPool.h"
