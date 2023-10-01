@@ -1,3 +1,23 @@
+/*!***************************************************************************************
+\file			Polygon.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. Polygon3D class
+		a. A polygon of a custom shape for navmesh generation (Can also be a hole)
+		b. Addition of holes into the polygon
+		c. Joining of polygon with holes
+		d. Generation of convex hull points for triangulation
+		e. Helper functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 
 #include "Polygon.h"

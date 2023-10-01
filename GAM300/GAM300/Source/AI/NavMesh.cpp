@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			NavMesh.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. NavMesh class
+		a. Linking of triangles by initializing the neighbours
+		b. Getter functions
+		c. Run time update of the navmesh
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 
 #include "NavMesh.h"
