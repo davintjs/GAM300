@@ -219,7 +219,7 @@ public:
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
-	
+
 	CompilingState compilingState{ CompilingState::Wait };
 	std::vector<Handle> reflectionQueue;
 	LogicState logicState;

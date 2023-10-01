@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			ThreadPool.cpp
+\project
+\author			Zacharie Hong, Davin Tan
+
+\par			Course: GAM300
+\par			Section:
+\date			02/09/2023
+
+\brief
+    This file contains a threadpool that has threads waiting for work
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "Precompiled.h"
 #include "ThreadPool.h"
 #include <Windows.h>

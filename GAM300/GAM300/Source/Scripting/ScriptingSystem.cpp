@@ -590,6 +590,15 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 		field.Get<Script*>() = &scene.Get<Script>(euid,uuid);
 		return;
 	}
+	else if (field.fType < AllObjectTypes::Size())
+	{
+		mono_field_get_value(instance, mClassField, field.data);
+		Object*& pObject = *(Object**)field.data;
+		if (!pObject)
+			return;
+		pObject = (Object*)((size_t)pObject - 8);
+		return;
+	}
 	//If mono object, it contains reference to type
 	mono_field_get_value(instance, mClassField, field.data);
 }
@@ -606,14 +615,17 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Object* pObject = *(Object**)field.data;
+		Object*& pObject = *(Object**)field.data;
 		//Scene& scene = MySceneManager.GetCurrentScene();
 		if (pObject == nullptr)
 			mono_field_set_value(instance, mClassField, nullptr);
 		else if (field.fType == GetType::E<Script>())
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
+		{
+			pObject = (Object*)(size_t(pObject) + 8);
 			mono_field_set_value(instance, mClassField, pObject);
+		}
 		return;
 	}
 	mono_field_set_value(instance, mClassField, field.data);
@@ -677,7 +689,17 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				static char buffer[2048]{};
 				Field field{ AllFieldTypes::Size() ,buffer };
 				GetFieldValue(ref, pair.second, field);
-				if (field.fType == AllFieldTypes::Size())
+				if (field.fType < AllObjectTypes::Size())
+				{
+					Object*& f = field.Get<Object*>();
+					if (f)
+					{
+						Handle handle = { f->EUID(),f->UUID() };
+						void* pObject = scene.GetByHandle(field.fType, &handle);
+						field.data = &pObject;
+					}
+				}
+				else if (field.fType == AllFieldTypes::Size())
 				{
 					continue;
 				}
@@ -695,7 +717,17 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 			static char buffer[2048]{};
 			Field field{ AllFieldTypes::Size() ,buffer };
 			GetFieldValue(ref, pair.second, field);
-			if (field.fType == AllFieldTypes::Size())
+			if (field.fType < AllObjectTypes::Size())
+			{
+				Object*& f = field.Get<Object*>();
+				if (f)
+				{
+					Handle handle = { f->EUID(),f->UUID() };
+					void* pObject = scene.GetByHandle(field.fType, &handle);
+					field.data = &pObject;
+				}
+			}
+			else if (field.fType == AllFieldTypes::Size())
 			{
 				continue;
 			}
