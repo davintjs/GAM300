@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Model3d.h
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the definitions of
+    1. temporary stucts and classes used for testing
+    2. Model class to create a model by abstacting openGL functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "Model3d.h"
 #include "Editor_Camera.h"
