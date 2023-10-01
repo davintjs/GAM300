@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			InputHandler.cpp
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the declarations of the Input Handler
+	1. Checks for keyboard inputs ( Press / Hold )
+	2. Check for Mouse inputs ( Press / Hold / Double Click )
+	3. Toggling on and off Fullscreen
+
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 
 #include "InputHandler.h"

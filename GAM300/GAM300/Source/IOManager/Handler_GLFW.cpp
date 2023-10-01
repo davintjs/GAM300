@@ -1,68 +1,41 @@
-/*!
-/file    GLFW_Handler.cpp
-/primary author Euan Lim (60%)
-/secondary author Jake Lian (40%)
-/date    17/09/2022
+/*!***************************************************************************************
+\file			Handler_GLFW.cpp
+\project
+\author         Euan Lim
 
-This file implements functionality useful and necessary to build OpenGL
-applications including use of external APIs such as GLFW to create a
-window and start up an OpenGL context and use GLEW to extract function 
-pointers to OpenGL implementations.
+\par			Course: GAM300
+\date           28/09/2023
 
-*//*__________________________________________________________________________*/
+\brief
+    This file contains the definition of the GLFW Handler
+    1. Handler for error, keyboard , mouse , window resize
+    (Taken from Year 1 Professor Prasanna's Graphics Class)
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 /*                                                                   includes
 ----------------------------------------------------------------------------- */
 #include "Precompiled.h"
 #include "Handler_GLFW.h"
-//#include "InputHandler.h"
-//#include "Orion/Core/Log.h"
-//#include "Orion/Renderer/Model.h"
-//#include "Orion/IOManager/MouseHandler.h"
-//#include "Orion/Events/Messaging.h"
-//#include "Orion/Events/Events.h"
-//#include <Orion/Events/KeyEvent.h>
-//#include "Orion/Renderer/Camera.h"
-//#include "Orion/Scene/SceneManager.h"
-//#include "Orion/ECS/Systems/AudioSystem.h"
 
-//extern bool fullscreen;
-//extern bool function_mode;
 bool gamescene_alt_tabbed = false;
 
 //#include <glapp.h>
 /*                                                   objects with file scope
 ----------------------------------------------------------------------------- */
 // static data members declared in GLFW_Handler
-//bool GLFW_Handler::keyHeld[Orion::Key::MaxKey]{};
-//bool GLFW_Handler::keyPressed[Orion::Key::MaxKey]{};
 GLint GLFW_Handler::width;
 GLint GLFW_Handler::height;
 GLdouble GLFW_Handler::fps;
 GLdouble GLFW_Handler::delta_time;
 std::string GLFW_Handler::title;
 GLFWwindow* GLFW_Handler::ptr_window;
-//Orion::Events::Observable crashTestObsevable;
-//extern Orion::MouseHandler Mouse;
-//extern Orion::CameraSystem::Camera Cam;
-//extern Orion::Renderer::FrameBuffer ImguiWindow;
+
 static bool audioRunState{};
 GLboolean GLFW_Handler::keystateG = GL_FALSE;
 GLboolean GLFW_Handler::keystateA = GL_FALSE;
 
-
-/*!*****************************************************************************
-\author
-    Euan Lim
-\brief
-    Handler for Alt Tab
-param [in] window
-    GLFW window
-param [in] focused
-    alt tab or not
-\return
-    void
-*******************************************************************************/
 
 /*
 void alt_tabby_magician(GLFWwindow* window, int focused)
@@ -106,6 +79,7 @@ void alt_tabby_magician(GLFWwindow* window, int focused)
     }
 }
 */
+
 /*  _________________________________________________________________________ */
 /*! init
 
@@ -239,51 +213,13 @@ bool GLFW_Handler::init(GLint w, GLint h, std::string t) {
 }
 
 
-/*  _________________________________________________________________________ */
-/*! cleanup
 
-@param none
-
-@return none
-
-For now, there are no resources allocated by the application program.
-The only task is to have GLFW return resources back to the system and
-gracefully terminate.
-*/
 void GLFW_Handler::cleanup() {
   // Part 1
   glfwTerminate();
 }
 
-/*  _________________________________________________________________________*/
-/*! key_cb
 
-@param GLFWwindow*
-Handle to window that is receiving event
-
-@param int
-the keyboard key that was pressed or released
-
-@parm int
-Platform-specific scancode of the key
-
-@parm int
-GLFW_PRESS, GLFW_REPEAT or GLFW_RELEASE
-action will be GLFW_KEY_UNKNOWN if GLFW lacks a key token for it,
-for example E-mail and Play keys.
-
-@parm int
-bit-field describing which modifier keys (shift, alt, control)
-were held down
-
-@return none
-
-This function is called when keyboard buttons are pressed.
-This function is called when keyboard buttons are pressed.
-When the ESC key is pressed, the close flag of the window is set.
-
-if button T M A are pressed, will trigger specific flags relating to tutorial 5 
-*/
 
 void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int action, int ) {
     // key state changes from released to pressed
@@ -319,28 +255,6 @@ void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int
     }
 }
 
-/*  _________________________________________________________________________*/
-/*! mousebutton_cb
-
-@param GLFWwindow*
-Handle to window that is receiving event
-
-@param int
-the mouse button that was pressed or released
-GLFW_MOUSE_BUTTON_LEFT and GLFW_MOUSE_BUTTON_RIGHT specifying left and right
-mouse buttons are most useful
-
-@parm int
-action is either GLFW_PRESS or GLFW_RELEASE
-
-@parm int
-bit-field describing which modifier keys (shift, alt, control)
-were held down
-
-@return none
-
-This function is called when mouse buttons are pressed.
-*/
 
 void GLFW_Handler::mousebutton_cb(GLFWwindow*, int button, int action, int ) {
   switch (button) {
@@ -372,81 +286,9 @@ void GLFW_Handler::mousebutton_cb(GLFWwindow*, int button, int action, int ) {
     break;
   }
  
-  /*
-      if (button == GLFW_MOUSE_BUTTON_LEFT)
-      {
-        switch (action) {
-
-        case GLFW_PRESS:
-            Mouse.now = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(Mouse.now - Mouse.last);
-            //std::cout << "Time between click is : " << time_span.count() << "\n";
-            if (time_span.count() <= 0.5)
-            {
-                Mouse.double_click = true;
-                
-            }
-            Mouse.last = std::chrono::high_resolution_clock::now();
-            
-
-            Orion::Lclick = GL_TRUE;
-           
-            Mouse.l_click = true;
-            break;
-
-        case GLFW_RELEASE:
-
-            Orion::Lclick = GL_FALSE;
-            Mouse.l_click = false;
-
-            break;
-
-        }
-
-      }
-
-      if (button == GLFW_MOUSE_BUTTON_RIGHT)
-      {
-          switch (action) {
-          case GLFW_PRESS:
-              Orion::Rclick = GL_TRUE;
-              Mouse.r_click = true;
-              // Cam.Init();
-              break;
-
-          case GLFW_RELEASE:
-              Orion::Rclick = GL_FALSE;
-              Mouse.r_click = false;
-              break;
-
-          }
-      }
- 
-      */
-      /* }
-  else
-  {
-      std::cout << "out\n";
-  }*/
 }
 
-/*  _________________________________________________________________________*/
-/*! mousepos_cb
 
-@param GLFWwindow*
-Handle to window that is receiving event
-
-@param double
-new cursor x-coordinate, relative to the left edge of the client area
-
-@param double
-new cursor y-coordinate, relative to the top edge of the client area
-
-@return none
-
-This functions receives the cursor position, measured in screen coordinates but
-relative to the top-left corner of the window client area.
-*/
 void GLFW_Handler::mousepos_cb(GLFWwindow*, [[maybe_unused]] double xpos, [[maybe_unused]] double ypos) {
 #ifdef _DEBUG
     //std::cout << "from CALLBACK\n";
@@ -496,24 +338,6 @@ bool GLFW_Handler::IsKeyRelease(Orion::Key::KeyCode keycode)
 */
 
 
-/*  _________________________________________________________________________*/
-/*! mousescroll_cb
-
-@param GLFWwindow*
-Handle to window that is receiving event
-
-@param double
-Scroll offset along X-axis
-
-@param double
-Scroll offset along Y-axis
-
-@return none
-
-This function is called when the user scrolls, whether with a mouse wheel or
-touchpad gesture. Although the function receives 2D scroll offsets, a simple
-mouse scroll wheel, being vertical, provides offsets only along the Y-axis.
-*/
 void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[maybe_unused]] double y) {
     //UNREFERENCED_PARAMETER(x);
 #ifdef _DEBUG
@@ -531,20 +355,7 @@ void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[may
     //}
 }
 
-/*  _________________________________________________________________________ */
-/*! error_cb
 
-@param int
-GLFW error code
-
-@parm char const*
-Human-readable description of the code
-
-@return none
-
-The error callback receives a human-readable description of the error and
-(when possible) its cause.
-*/
 void GLFW_Handler::error_cb(int , [[maybe_unused]]  char const* description) {
     //UNREFERENCED_PARAMETER(description);
 #ifdef _DEBUG
@@ -585,18 +396,6 @@ void GLFW_Handler::fbsize_cb( [[maybe_unused]] GLFWwindow *pwin, int w, int h) {
   // later, if working in 3D, we'll have to set the projection matrix here ...
 }
 
-/*  _________________________________________________________________________*/
-/*! update_time
-
-@param double
-fps_calc_interval: the interval (in seconds) at which fps is to be
-calculated
-
-This function must be called once per game loop. It uses GLFW's time functions
-to compute:
-1. the interval in seconds between each frame
-2. the frames per second every "fps_calc_interval" seconds
-*/
 void GLFW_Handler::update_time(double fps_calc_interval) {
   // get elapsed time (in seconds) between previous and current frames
   static double prev_time = glfwGetTime();
