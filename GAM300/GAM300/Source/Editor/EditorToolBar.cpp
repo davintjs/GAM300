@@ -66,6 +66,9 @@ void EditorToolBar::Update(float dt)
         if (!scene_playing)
         {
             PRINT("SCENE START\n");
+            //Engine::UUID euid = EDITOR.GetSelectedEntity();
+            SelectedEntityEvent selected{nullptr};
+            EVENTS.Publish(&selected);
             SceneStartEvent startEvent{};
             EVENTS.Publish(&startEvent);
         }

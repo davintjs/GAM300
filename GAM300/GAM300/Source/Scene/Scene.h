@@ -35,11 +35,8 @@ struct Scene
 	//Creates empty scene
 	Scene(const std::string& _filepath);
 
-	//No copy assignment
-	Scene& operator=(Scene&) = delete;
-
-	//Copy constructor
-	Scene(Scene& rhs);
+	//Copy assignment
+	Scene& operator=(Scene& rhs);
 
 	//Reads deletion buffer and deletes them from their arrays
 	void ClearBuffer();

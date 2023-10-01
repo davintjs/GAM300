@@ -29,10 +29,10 @@ Scene::Scene(const std::string& _filepath)
 	}
 }
 
-Scene::Scene(Scene& rhs) : sceneName{ rhs.sceneName }
+Scene& Scene::operator=(Scene& rhs)
 {
 	CloneHelper(rhs, AllObjectTypes());
-	PRINT("SCENE CLONED");
+	return *this;
 }
 
 

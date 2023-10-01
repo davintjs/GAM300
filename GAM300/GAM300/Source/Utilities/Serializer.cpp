@@ -447,7 +447,16 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
                 if constexpr (std::is_same<T, Entity>())
                     out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("GameObject");
                 else
-                    out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+                {
+                    if constexpr (std::is_same_v<T, Transform> || std::is_same_v<T, Tag>)
+                    {
+                        out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("Component");
+                    }
+                    else
+                    {
+                        out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+                    }
+                }
             }
         }
         else
@@ -495,7 +504,16 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
             {
                 Engine::UUID uuid = node["fileID"].as<Engine::UUID>();
                 if (uuid)
-                    object = &scene.GetByUUID<T>(uuid);
+                {
+                    if constexpr (std::is_same_v<T, Transform> || std::is_same_v<T, Tag>)
+                    {
+                        object = &scene.Get<T>(uuid);
+                    }
+                    else
+                    {
+                        object = &scene.GetByUUID<T>(uuid);
+                    }
+                }
             }
         }
         else

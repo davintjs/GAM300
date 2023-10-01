@@ -1,11 +1,16 @@
-/* !
-/file    glslshader.h
-/primary author Euan Lim (50%)
-/secondary author Jake Lian (50%)
-@date    09/28/2023
+﻿/*!***************************************************************************************
+\file           glslshader.cpp
+\project
+\author         Euan Lim (50%) Jake Lian (50%)
 
-This file contains definitions of member functions of class GLShader.
-*//*__________________________________________________________________________*/
+\par			Course: GAM300
+\date           09/28/2023
+
+\brief
+    This file contains definitions of member functions of class GLShader.
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "glslshader.h"
 

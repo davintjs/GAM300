@@ -41,7 +41,7 @@ Script:
   Name: Player
   gameObj: {fileID: 0}
   sad: 21.2999992
-  otherT: {fileID: 15956247552107978323}  # Component
+  otherT: {fileID: 22203055554271501}  # Component
 ---
 GameObject:
   m_EUID: 16942626329878887566
