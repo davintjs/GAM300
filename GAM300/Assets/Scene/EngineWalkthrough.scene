@@ -1,0 +1,35 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: EngineWalkthrough
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 8951990661756049824
+  m_IsActive: true
+  m_Name: Child
+  m_Position: [-87.3445053, 0, 305.673553]
+  m_Rotation: [0, -0.548433006, 0]
+  m_Scale: [0.819965363, 0.819999993, 0.819965899]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 9840292911498087756}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 8951990661756049824
+  UUID: 9840292911498087756
+  MeshName: Skull_textured
+  mr_Albedo: [0, 0, 0, 0]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: 0.5
+  MetallicTexture: ""
+  mr_roughness: 0.5
+  RoughnessTexture: ""
+  ao: 0.5
+  AoTexture: ""

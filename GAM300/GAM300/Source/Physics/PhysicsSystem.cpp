@@ -28,10 +28,13 @@ JPH::BodyID testBallID2;
 Entity* ball = nullptr;
 Entity* ball2 = nullptr;
 
-
+// Convert glm::Vec3 to JPH::Vec3
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3);
+// Convert glm::Vec3 to JPH::Quat
 void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat);
+// Convert JPH::Vec3 to glm::Vec3 
 void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3);
+// Convert JPH::Quat to glm::Vec3 
 void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3);
 
 
