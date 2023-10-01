@@ -1,3 +1,6 @@
+
+#pragma warning( disable : 26451)
+
 namespace gli
 {
 	inline storage_linear::storage_linear()

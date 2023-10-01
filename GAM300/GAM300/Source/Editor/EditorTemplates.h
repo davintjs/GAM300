@@ -21,7 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorHeaders.h"
 
 // Includes all imgui templates to be used in developing the editor, the purpose of this
-// file is to modulate the components of the editor to allow for easy-er development of the 
+// file is to modulate the components of the editor to allow for easyer development of the 
 // editor
 
 //FormatMiddleWrapper and FormatButtonMiddle formats a button to render in the middle of the current window
@@ -62,71 +62,6 @@ private:
 };
 
 #define CENTERED_CONTROL(control) FormatButtonMiddle{ImGui::GetWindowSize()}([&]() { control; })
-
-//void DisplayType(const char* name, bool& val);
-//
-//void DisplayType(const char* name, int& val);
-//
-//template <size_t SZ>
-//void DisplayType(const char* name, char(&val)[SZ]);
-//
-//void DisplayType(const char* name, char*& val);
-//
-//void DisplayType(const char* name, float& val);
-//
-//void DisplayType(const char* name, double& val);
-//
-//void DisplayType(const char* name, Vector3& val);
-//
-//void DisplayType(const char* name, Vector2& val);
-
-//void DisplayType(const char* name, AABB& val);
-
-//template <typename T>
-//void Display(const char* name, T& val);
-
-//template <typename T>
-//void DisplayComponent(T& component);
-
-//template <>
-//void DisplayComponent<Transform>(Transform& transform);
-//
-//template <>
-//void DisplayComponent<BoxCollider>(BoxCollider& boxCollider2D);
-
-//template <>
-//void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer);
-
-//template <>
-//void DisplayComponent<Rigidbody>(Rigidbody& rb);
-
-//template <>
-//void DisplayComponent<Script>(Script& script);
-
-
-
-//void Display(const char* name, Script*& val, const char* scriptName);
-//
-//void Display(const char* string);
-
-//void Display(const char* name, Field& field);
-
-//template <typename T>
-//void DisplayColor(const char* name, T& val);
-
-//template <>
-//void DisplayComponent<Button>(Button& btn);
-
-//template <>
-//void DisplayComponent<Animator>(Animator& animator);
-
-
-//template <>
-//void DisplayComponent<AudioSource>(AudioSource& audioSource);
-
-//template <>
-//void DisplayComponent<Camera>(Camera& camera);
-
 
 #endif // !EDITORTEMPLATES_H
 

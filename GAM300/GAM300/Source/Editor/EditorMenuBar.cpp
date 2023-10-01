@@ -13,13 +13,12 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#include "Precompiled.h"
 
+#include "Precompiled.h"
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
 #include "Graphics/GraphicsSystem.h"
-
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
 
@@ -128,10 +127,13 @@ void EditorMenuBar::Update(float dt)
             // Undo Functionality using Editor_Undo()
             if (ImGui::MenuItem("Undo", "Ctrl+Z"))
             {
-            }
-
+            }// Undo Functionality using Editor_Undo()           
             // Do not allow the user to undo when history buffer is empty or when file is not loaded
-            ImGui::TextDisabled("Undo");
+            //ImGui::TextDisabled("Undo");
+            if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+            {
+            }
+            //ImGui::TextDisabled("Redo");
 
             ImGui::EndMenu();
         }

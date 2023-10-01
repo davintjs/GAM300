@@ -105,6 +105,13 @@ struct ObjectCreatedEvent : IEvent
 	T* pObject;
 };
 
+template <typename T>
+struct ObjectDestroyedEvent : IEvent
+{
+	ObjectDestroyedEvent(T* _pObject) : pObject{ _pObject } {}
+	T* pObject;
+};
+
 struct ScriptSetFieldEvent : IEvent
 {
 	ScriptSetFieldEvent(Script& _script, const char* _fieldName, Field& _field) : script{ _script }, fieldName{ _fieldName }, field{ _field }{}

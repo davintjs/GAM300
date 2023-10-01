@@ -3,6 +3,9 @@
 
 #pragma once
 
+
+#pragma warning( disable : 26800)
+
 #ifndef SPDLOG_HEADER_ONLY
 #    include <spdlog/pattern_formatter.h>
 #endif

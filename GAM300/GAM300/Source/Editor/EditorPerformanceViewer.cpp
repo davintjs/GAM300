@@ -8,14 +8,17 @@
 
 \brief
     This file contains the definitions of the following :
-        1. Performance Viewer Window
+        1. Performance Viewer Window that shows the performances of the different systems in
+           the architecture
 
 All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
-#include "Precompiled.h"
 
+#include "Precompiled.h"
 #include "EditorHeaders.h"
 #include "Core/EngineCore.h"
+
+#pragma warning( disable : 4996)
 
 ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable |
 ImGuiTableFlags_Hideable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | 
@@ -24,7 +27,6 @@ ImGuiTableFlags_NoHostExtendX;
 void EditorPerformanceViewer::Init() {
 
 }
-
 
 void EditorPerformanceViewer::Update(float dt)
 {
@@ -66,7 +68,7 @@ void EditorPerformanceViewer::Update(float dt)
             static ScrollingBuffer fpsbuf;
             fpsbuf.AddPoint(time, fps);
             if (ImPlot::BeginPlot("FPS", ImVec2(-1, 180), plotflags)) {
-                ImPlot::SetupAxes(nullptr, nullptr, axisflags, axisflags);
+                ImPlot::SetupAxes("Time (s)", "FPS", axisflags, axisflags);
                 ImPlot::SetupAxisLimits(ImAxis_X1, time - history, time, ImGuiCond_Always);
                 ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 200.f);
                 //ImPlot::DragLineY(0, &highestfps, ImVec4(0.1, 0.1, 0.1, 0.1), 1.f, ImPlotDragToolFlags_NoInputs);
@@ -81,10 +83,10 @@ void EditorPerformanceViewer::Update(float dt)
 
                 ImGui::TableSetupColumn("System");
                 ImGui::TableSetupColumn("Usage");
-                char time[100];
-                sprintf(time, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime * 1000.f);
+                char times[100];
+                sprintf(times, "Elasped Time (Total: %f ms)", EngineCore::Instance().systemtotaltime * 1000.f);
 
-                ImGui::TableSetupColumn(time);
+                ImGui::TableSetupColumn(times);
                 ImGui::TableHeadersRow();
                 for (auto system : EngineCore::Instance().system_times) {
                     ImGui::TableNextRow();

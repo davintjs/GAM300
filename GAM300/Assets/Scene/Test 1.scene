@@ -8,7 +8,7 @@ Scene Settings:
   m_NavMeshSettings: None  # All settings above are just examples
 ---
 GameObject:
-  m_EUID: 2074077347013621399
+  m_EUID: 7558136198186090139
   m_IsActive: true
   m_Name: New GameObject(1)
   m_Position: [0, 0, 0]
@@ -18,11 +18,21 @@ GameObject:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 443622756116431092}  # Script
+    - component: {fileID: 9576007940919613807}  # Script
+    - component: {fileID: 13992341002858887538}  # Script
 ---
 Script:
-  EUID: 2074077347013621399
-  UUID: 443622756116431092
+  EUID: 7558136198186090139
+  UUID: 9576007940919613807
   Name: Player
-  gameObj: {fileID: 2074077347013621399}  # GameObject
-  sad: 16.3500004
+  gameObj: {fileID: 0}
+  sad: 0
+  player: {fileID: 0}
+---
+Script:
+  EUID: 7558136198186090139
+  UUID: 13992341002858887538
+  Name: Player
+  gameObj: {fileID: 0}
+  sad: 0
+  player: {fileID: 9576007940919613807}  # Component

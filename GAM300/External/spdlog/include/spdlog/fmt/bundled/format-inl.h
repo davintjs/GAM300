@@ -18,6 +18,7 @@
 #include <cwchar>
 #include <exception>
 
+#pragma warning( disable : 26450)
 #ifndef FMT_STATIC_THOUSANDS_SEPARATOR
 #  include <locale>
 #endif

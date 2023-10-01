@@ -90,7 +90,7 @@ public:
 
     float& operator[](int id) {
 
-        //E_ASSERT((id < 0 || id > 2),  "Vector3 Subscript operator out of range!");
+        E_ASSERT((id >= 0 && id <= 2),  "Vector3 Subscript operator out of range!");
 
         if (id == 0) return x;
         if (id == 1) return y;
@@ -146,7 +146,7 @@ public:
 
     float& operator[](int id) {
 
-        //E_ASSERT((id < 0 || id > 2),  "Vector3 Subscript operator out of range!");
+        E_ASSERT((id < 0 || id > 3),  "Vector4 Subscript operator out of range!");
 
         if (id == 0) return w;
         if (id == 1) return x;

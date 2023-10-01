@@ -1,5 +1,5 @@
-[2023-09-30 02:12:24.068] [Error] [critical] 
+[2023-09-30 21:59:56.017] [Error] [critical] 
 Caused By:	false
-Info:		FAILED TO SET ACTIVE
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\ObjectsBList.cpp (Line: 209)
+Info:		Multicomponent cannot be found
+Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Scene\Scene.h (Line: 502)
 

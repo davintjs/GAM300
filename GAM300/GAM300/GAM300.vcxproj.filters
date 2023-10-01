@@ -36,7 +36,6 @@
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
-    <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Utilities\SparseSet.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsList.cpp" />
@@ -88,6 +87,7 @@
     <ClCompile Include="Source\Editor\ImGui\implot.cpp" />
     <ClCompile Include="Source\Editor\ImGui\implot_demo.cpp" />
     <ClCompile Include="Source\Editor\ImGui\implot_items.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -162,6 +162,7 @@
     <ClInclude Include="Source\AI\Geometry.h" />
     <ClInclude Include="Source\Audio\AudioManager.h" />
     <ClInclude Include="Source\Audio\AudioSystem.h" />
+    <ClInclude Include="Source\Scene\SceneTemplates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Graphics\BasicLighting.vert" />

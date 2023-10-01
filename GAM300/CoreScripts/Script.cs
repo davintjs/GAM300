@@ -21,9 +21,13 @@ namespace BeanFactory
 {
     public class Script : Component
     {
-        private void Initialize(GameObject gameObj)
+        UInt64 euid;
+        UInt64 uuid;
+        private void Initialize(GameObject gameObj,UInt64 _euid, UInt64 _uuid)
         {
             _gameObject = gameObj;
+            euid = _euid;
+            uuid = _uuid;
             _transform = InternalCalls.Get<Transform>(gameObject);
         }
         public static T Instantiate<T>(T original, vec3 pos, vec3 rotation)

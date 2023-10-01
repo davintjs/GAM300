@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2021 Jorrit Rouwe
 // SPDX-License-Identifier: MIT
 
+#pragma warning( disable : 6011)
 #pragma once
 
 #include <Jolt/Core/NonCopyable.h>

@@ -1,17 +1,20 @@
 ﻿/*!***************************************************************************************
 \file			EditorInspector.cpp
-\project		GAM300
-\author
+\project
+\author         Joseph Ho
 
 \par			Course: GAM300
-\date           00/00/2023
+\date           07/09/2023
 
 \brief
-    This file contains the definitions of the following:
-    1.
+    This file contains the definitions of the functions that renders the inspector window in
+    Editor. These functionalities include:
+    1. Displaying Components of the selected entity
+    2. Display the individual types and fields in the editor
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
+
 #include "Precompiled.h"
 
 #include "Editor.h"
@@ -36,15 +39,17 @@ ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
 bool isAddingReference = false;
-void* pEditedContainer{ nullptr };
+size_t editedContainer{};
 
 template <typename T>
 void Display(const char* name, T& val);
 
+// DisplayType contains overloads that display the respective fields based on the type passed into the function
 template <typename T>
 void DisplayType(const char* name, T& val)
 {
-    //PRINT(name," ", typeid(T).name(), '\n');
+    UNREFERENCED_PARAMETER(name);
+    UNREFERENCED_PARAMETER(val);
 }
 
 void DisplayType(const char* name, bool& val)
@@ -82,7 +87,6 @@ void DisplayType(const char* name, char(&val)[SZ])
     ImGui::InputTextMultiline(idName.c_str(), val, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
 
-
 void DisplayType(const char* name, char*& val)
 {
     static std::string idName{};
@@ -90,7 +94,6 @@ void DisplayType(const char* name, char*& val)
     idName += name;
     ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
 }
-
 
 void DisplayType(const char* name, float& val)
 {
@@ -127,66 +130,11 @@ void DisplayType(const char* name, Vector3& val)
     idName = "##";
     idName += name;
 
-    /*if (name == "LightingColor") {
-
-    }
-    else*/
-        if (ImGui::BeginTable("Vector3", 3, windowFlags))
-        {
-            ImGui::TableNextColumn();
-            ImGui::AlignTextToFramePadding();
-            idName += 'X';
-            ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            DisplayType(idName.c_str(), val.x);
-
-            ImGui::TableNextColumn();
-            idName.back() = 'Y';
-            ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            DisplayType(idName.c_str(), val.y);
-
-            ImGui::TableNextColumn();
-            idName.back() = 'Z';
-            ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-            DisplayType(idName.c_str(), val.z);
-            ImGui::EndTable();
-        }
-}
-
-void DisplayType(const char* name, Vector4& val)
-{
-    //static_assert(sizeof(T) == sizeof(float) * 4);
-    static float temp{};
-    static std::string idName{};
-    idName = "##";
-    idName += name;
-
-    //std::string var = name;
-    //if (var.find("Albedo") != std::string::npos) {}
-    //static ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
-    //ImVec4(val.x / 255.0f, val.y / 255.0f, val.z / 255.0f, val.w / 255.0f);
-    
-    if (ImGui::ColorEdit4("MyColor##4", (float*)&val), ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV) {
-        //val = ImVec4(color.w, color.z, color.x, color.y);
-    }
-
-    
-
-    // ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel
-    /*ImGui::TableNextColumn();
-    ImGui::Text(name);
-    ImGui::TableNextColumn();*/
-    //static ImGuiColorEditFlags miscFlags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview;
-
-    /*if (ImGui::BeginTable("Color4", 4, windowFlags))
+    if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
         ImGui::TableNextColumn();
         ImGui::AlignTextToFramePadding();
-        idName += 'W';
-        ImGui::Text("w"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.w);
-
-        ImGui::TableNextColumn();
-        idName.back() = 'X';
+        idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
         DisplayType(idName.c_str(), val.x);
 
@@ -200,16 +148,17 @@ void DisplayType(const char* name, Vector4& val)
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
         DisplayType(idName.c_str(), val.z);
         ImGui::EndTable();
-    }*/
+    }
+}
 
-    //ImVec4 color = ImVec4(val.w, val.x, val.y, val.z);
-
-
-     //if (ImGui::ColorEdit4("MyColor##2", (float*)&color, miscFlags))
-     //{
-     //    //editedColor = reinterpret_cast<float*>(&val);
-     //    val = color;
-     //}
+void DisplayType(const char* name, Vector4& val)
+{
+    static float temp{};
+    static std::string idName{};
+    idName = "##";
+    idName += name;
+    
+    ImGui::ColorEdit4("MyColor##4", (float*)&val, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV);
 }
 
 void DisplayType(const char* name, Vector2& val)
@@ -235,14 +184,10 @@ void DisplayType(const char* name, Vector2& val)
     }
 }
 
+
 template <typename T>
 void AddReferencePanel(T*& container)
 {
-    //ZACH: If no one is adding reference or the container does not match
-    if (!isAddingReference || (T*)pEditedContainer != container)
-    {
-        return;
-    }
     Scene& scene = MySceneManager.GetCurrentScene();
     static ImGuiTextFilter filter;
     static std::string windowName;
@@ -251,37 +196,57 @@ void AddReferencePanel(T*& container)
     ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowPos(ImVec2(100.f, 100.f), ImGuiCond_FirstUseEver);
     windowName += " Reference";
-    if (ImGui::Begin(windowName.c_str(), &isAddingReference))
+    bool open = true;
+    if (ImGui::Begin(windowName.c_str(), &open))
     {
         ImGui::PushItemWidth(-1);
         filter.Draw("##References");
         ImGui::PopItemWidth();
         static std::string buttonName{};
+        ImVec2 buttonSize = ImGui::GetWindowSize();
+        buttonSize.y *= (float)BUTTON_HEIGHT;
+        if (ImGui::Button("None", buttonSize))
+        {
+            editedContainer = 0;
+            container = nullptr;
+        }
         for (T& object : scene.GetArray<T>())
         {
-            ImVec2 buttonSize = ImGui::GetWindowSize();
-            buttonSize.y *= (float)BUTTON_HEIGHT;
             Tag& tag = scene.Get<Tag>(object);
             buttonName = tag.name;
+            if constexpr (std::is_same_v<T, Entity>)
+            {
+                ImGui::PushID((int)object.EUID());
+            }
+            else
+            {
+                ImGui::PushID((int)object.UUID());
+            }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
-                isAddingReference = false;
+                editedContainer = 0;
                 container = &object;
-                break;
             }
+            ImGui::PopID();
         }
         ImGui::End();
     }
-    //Reset the edited container back to false
-    if (isAddingReference == false)
-    {
-        pEditedContainer = nullptr;
-    }
+    if (!open)
+        editedContainer = 0;
 }
+
+
+GENERIC_RECURSIVE
+(
+    void, 
+    AddReferencePanel, 
+    AddReferencePanel(((Field*)pObject)->Get<T*>())
+)
 
 template <typename T>
 void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 {
+    UNREFERENCED_PARAMETER(name);
     if constexpr (AllObjectTypes::Has<T>())
     {
         static std::string btnName;
@@ -314,7 +279,6 @@ void DisplayType(const char* name, T*& container, const char* altName = nullptr)
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             isAddingReference = true;
-            pEditedContainer = reinterpret_cast<void*>(container);
         }
         if (ImGui::BeginDragDropTarget())
         {
@@ -326,7 +290,6 @@ void DisplayType(const char* name, T*& container, const char* altName = nullptr)
             }
             ImGui::EndDragDropTarget();
         }
-        AddReferencePanel(container);
     }
 }
 
@@ -370,22 +333,6 @@ void DisplayType(const char* name, Field& val)
     DisplayField(name, val, AllFieldTypes());
 }
 
-//void DisplayType(const char* name, AABB& val)
-//{
-//    static std::string idName{};
-//    idName = "##";
-//    idName += name;
-//
-//    if (ImGui::BeginTable("AABB", 2, windowFlags))
-//    {
-//        ImGui::AlignTextToFramePadding();
-//        Display("Max", val.max);
-//        Display("Min", val.min);
-//        ImGui::EndTable();
-//    }
-//}
-
-
 template <typename T>
 void Display(const char* name, T& val)
 {
@@ -403,15 +350,6 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
-
-void ChangeTexture(std::string& texture, std::string& newTex) {
-    texture = newTex;
-}
-
-template<typename T>
-void ChangeTexture(T& texture, std::string& newTex) {
-    ChangeTexture(texture, newTex);
-}
 template <typename T> 
 void DisplayTexturePicker(T& Value) {
 
@@ -455,10 +393,12 @@ void DisplayTexturePicker(T& Value) {
 
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        auto id = GET_TEXTURE_ID("Cancel_Icon");
+        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
         if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
-            std::string empty = "";
-            ChangeTexture<T1>(Value, empty);
+
+            if constexpr (std::is_same<T, std::string>()) {
+                Value = "";
+            }
             
             ImGui::PopStyleColor();
             ImGui::EndPopup(); 
@@ -535,7 +475,10 @@ void DisplayTexturePicker(T& Value) {
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
                 //update texture
-                ChangeTexture<T1>(Value, icon);
+                if constexpr (std::is_same<T, std::string>()) {
+                    Value = icon;
+                }
+                
             }
 
             //render file name below icon
@@ -584,7 +527,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), comp.ChannelName.size(), 4)) {
+        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
             std::cout << number << std::endl;
         }
         ImGui::PopItemWidth();
@@ -634,192 +577,33 @@ void Display_Property(T& comp) {
             comp.textureID = GET_TEXTURE_ID(comp.AlbedoTexture)
         }
         else
-            comp.textureID = UINT_MAX;
+            comp.textureID = 0;
         if (comp.NormalMap != "")
         {
             comp.normalMapID = GET_TEXTURE_ID(comp.NormalMap);
         }
         else
-            comp.normalMapID = UINT_MAX;
+            comp.normalMapID = 0;
         if (comp.MetallicTexture != "")
         {
             comp.MetallicID = GET_TEXTURE_ID(comp.MetallicTexture);
         }
         else
-            comp.MetallicID = UINT_MAX;
+            comp.MetallicID = 0;
         if (comp.RoughnessTexture != "")
         {
             comp.RoughnessID = GET_TEXTURE_ID(comp.RoughnessTexture);
         }
         else
-            comp.RoughnessID = UINT_MAX;
+            comp.RoughnessID = 0;
         if (comp.AoTexture != "")
         {
             comp.AoID = GET_TEXTURE_ID(comp.AoTexture);
         }
         else
-            comp.AoID = UINT_MAX;
+            comp.AoID = 0;
     }
 }
-
-//template <typename T>
-//void DisplayComponent(T& component)
-//{
-    //PRINT("Component of type: " << typeid(component).name() << " does not exist yet! ");
-    //DisplayProperties(component);
-//}
-////Cant use reflection system due to glm::vec3
-//template <>
-//void DisplayComponent<Transform>(Transform& transform)
-//{
-    //DisplayProperties(transform);
-    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-    //ImGui::Text("Active");
-//}
-//
-//template <>
-//void DisplayComponent<BoxCollider>(BoxCollider& boxCollider2D)
-//{
-//    //Display("Bounds", boxCollider2D.bounds);
-//}
-//template <>
-//void DisplayComponent<Rigidbody>(Rigidbody& rb)
-//{
-//
-//    //DisplayDragDrop();
-//    //spriteRenderer.sprite.set_name()
-//    //ImGui::Checkbox("##Active", &rb.is_enabled);
-//    ImGui::SameLine();
-//    ImGui::Text("Active");
-//    Display("Mass", rb.mass);
-//    Display("Linear Velocity", rb.linearVelocity);
-//    Display("Angular Velocity", rb.angularVelocity);
-//    Display("Force", rb.force);
-//    Display("Use Gravity", rb.useGravity);
-//    Display("Is Kinematic", rb.isKinematic);
-//}
-//template <>
-//void DisplayComponent<Tag>(Tag& tag)
-//{
-//    //DisplayDragDrop();
-//    //spriteRenderer.sprite.set_name()
-//    Display("Entity Name", tag.name);
-//}
-//
-//
-//
-//template <typename T>
-//void Display_Property(T& comp) {
-//
-//    std::vector<property::entry> List;
-//    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-//        {
-//            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-//            assert(Flags.m_isScope == false || PropertyName.back() == ']');
-//            List.push_back(property::entry { PropertyName, Data });
-//        });
-//
-//    for (auto& [Name, Data] : List)
-//    {
-//        std::visit([&](auto& Value) {
-//
-//            using T1 = std::decay_t<decltype(Value)>;
-//
-//            //PRINT(typeid(T).name(),'\n');
-//            Display<T1>(Name.c_str(), Value);
-//            //ReflectedTypes::DisplayHelper(Name,Value);
-//            }
-//        , Data);
-//        property::set(comp, Name.c_str(), Data);
-//    }
-//}
-//
-//template <>
-//void DisplayComponent<MeshRenderer>(MeshRenderer& meshyRendy)
-//{
-//    //ImGui::Checkbox("##Active", &transform.is_enabled); ImGui::SameLine();
-//    //ImGui::Text("Active");
-//    Display("Mesh Name", meshyRendy.MeshName);
-//    ImGui::AlignTextToFramePadding();
-//    ImGui::TableNextColumn();
-//    ImGui::Text("MeshName");
-//    ImGui::TableNextColumn();
-//    std::vector<const char*> meshNames;
-//    int number = 0;
-//    bool found = false;
-//    for (auto& pair : MeshManager.mContainer)
-//    {
-//        if (pair.first == meshyRendy.MeshName)
-//            found = true;
-//        meshNames.push_back(pair.first.c_str());
-//        if (!found)
-//        {
-//            ++number;
-//        }
-//    }
-//    ImGui::PushItemWidth(-1);
-//    ImGui::Combo("Mesh Name", &number, meshNames.data(), meshNames.size(), 5);
-//    ImGui::PopItemWidth();
-//    meshyRendy.MeshName = meshNames[number];
-//}
-//template <>
-//void DisplayComponent<SpriteRenderer>(SpriteRenderer& spriteRenderer)
-//{
-//
-//    //DisplayDragDrop();
-//    //spriteRenderer.sprite.set_name()
-//    Display("Sprite", spriteRenderer.sprite.refTexture);
-//    DisplayColor("Color", spriteRenderer.sprite.color);
-//
-//    ImGui::TableNextColumn();
-//    ImGui::Text("Flip");
-//    ImGui::TableNextColumn();
-//    ImGui::Checkbox("X", &spriteRenderer.sprite.flip.x);
-//    ImGui::SameLine(0.f, 16.f);
-//    ImGui::Checkbox("Y", &spriteRenderer.sprite.flip.y);
-//
-//    if (spriteRenderer.sprite.refTexture)
-//    {
-//        std::string filePath = spriteRenderer.sprite.refTexture->get_file_path();
-//        uint64_t pathID = std::hash<std::string>{}(filePath);
-//        MetaID metaID = MyAssetSystem.GetMetaID(pathID);
-//        spriteRenderer.sprite.spriteID = metaID.uuid;
-//        size_t pos = filePath.find_last_of('\\');
-//        spriteRenderer.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
-//    }
-//}
-//template <>
-//void DisplayComponent<Text>(Text& text)
-//{
-//    Display("Font", text.font);
-//    text.fontName = text.font->GetName();
-//
-//    Display("Font Size", text.fSize);
-//    Display("Content", text.content);
-//    Display("Wrapping", text.wrapper);
-//
-//    ImGui::TableNextColumn();
-//    ImGui::AlignTextToFramePadding();
-//    ImGui::Text("Horizontal Alignment");
-//    ImGui::TableNextColumn();
-//    static const char* const horizontal[] = { "Left", "Center", "Right" };
-//    ImGui::PushItemWidth(-1);
-//    ImGui::Combo("hAlign", reinterpret_cast<int*>(&text.hAlignment), horizontal, 3);
-//    ImGui::PopItemWidth();
-//
-//    ImGui::TableNextColumn();
-//    ImGui::AlignTextToFramePadding();
-//    ImGui::Text("Vertical Alignment");
-//    ImGui::TableNextColumn();
-//    static const char* const vertical[] = { "Top", "Center", "Bottom" };
-//    ImGui::PushItemWidth(-1);
-//    ImGui::Combo("vAlign", reinterpret_cast<int*>(&text.vAlignment), vertical, 3);
-//    ImGui::PopItemWidth();
-//
-//    DisplayColor("Color", text.color);
-//    //DisplayDragDrop();
-//    //spriteRenderer.sprite.set_name()
-//}
 
 void DisplayComponent(Script& script)
 {
@@ -836,36 +620,22 @@ void DisplayComponent(Script& script)
         if (field.fType < AllFieldTypes::Size())
         {
             Display(fieldName, field);
+            if (isAddingReference)
+            {
+                //Hash
+                editedContainer = script.UUID() ^ i;
+                isAddingReference = false;
+            }
+            if (editedContainer == (script.UUID() ^ i))
+            {
+                AddReferencePanel(field.fType, &field);
+            }
             ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
             EVENTS.Publish(&setFieldEvent);
         }
-
+        
     }
 }
-//template <>
-//void DisplayComponent<Image>(Image& image)
-//{
-//    Display("Image", image.sprite.refTexture);
-//    DisplayColor("Color", image.sprite.color);
-//
-//    ImGui::TableNextColumn();
-//    ImGui::Text("Flip");
-//    ImGui::TableNextColumn();
-//    ImGui::Checkbox("X", &image.sprite.flip.x);
-//    ImGui::SameLine(0.f, 16.f);
-//    ImGui::Checkbox("Y", &image.sprite.flip.y);
-//
-//    //Update sprite data
-//    if (image.sprite.refTexture)
-//    {
-//        std::string filePath = image.sprite.refTexture->get_file_path();
-//        uint64_t pathID = std::hash<std::string>{}(filePath);
-//        MetaID metaID = MyAssetSystem.GetMetaID(pathID);
-//        image.sprite.spriteID = metaID.uuid;
-//        size_t pos = filePath.find_last_of('\\');
-//        image.sprite.sprite_name = filePath.substr(pos + 1, filePath.length() - pos);
-//    }
-//}
 
 template <typename T>
 void DisplayComponentHelper(T& component)
@@ -875,7 +645,8 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
-        name = (component.name + " [Script]");
+        if(&component)
+            name = (component.name + " [Script]");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
@@ -890,7 +661,6 @@ void DisplayComponentHelper(T& component)
     ImVec4 check_color = ImGui::GetStyleColorVec4(ImGuiCol_FrameBg);
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
-    //For Zac to change to component is_enabled
     bool checkbox = curr_scene.IsActive(component);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
@@ -908,7 +678,7 @@ void DisplayComponentHelper(T& component)
 
     const char* popup = GetType::Name<T>();
 
-    ImGui::PushID((int)GetType::E<T>());
+    ImGui::PushID((int)component.UUID());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);
@@ -926,7 +696,7 @@ void DisplayComponentHelper(T& component)
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
 
-                curr_scene.Destroy(curr_scene.Get<T>(EditorHierarchy::Instance().selectedEntity));
+                curr_scene.Destroy(component);
             }
         }
         else {
@@ -968,12 +738,6 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
-           
-
-            //ImGui::PushID(component.UUID);
-           
-            //ImGui::SameLine();
-
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
@@ -1007,10 +771,7 @@ public:
     DisplayComponentsStruct() = delete;
     DisplayComponentsStruct(Entity& entity)
     {
-        //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         ImGui::TableNextColumn();
-        //DisplayComponentHelper(curr_scene.Get<Transform>(entity));
-
         DisplayNext<T, Ts...>(entity);
     }
 private:
@@ -1032,10 +793,7 @@ private:
         else if constexpr (MultiComponentTypes::Has<T1>()) {
 
             auto components = curr_scene.GetMulti<T1>(entity);
-            for (T1* component : components)
-            {
-                //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-                //DisplayType("Enabled", component->is_enabled); ImGui::SameLine();
+            for (T1* component : components){
                 DisplayComponentHelper(*component);
             }
         }
@@ -1108,7 +866,6 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void AddPanel(Entity& entity) {
-    //Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
@@ -1163,15 +920,6 @@ void DisplayEntity(Entity& entity)
         
     }
     ImGui::PopStyleVar();
-
-    /*static const float buttonSizeY = ImGui::CalcTextSize("Add Component").y;
-    ImVec2 buttonSize(ImGui::GetWindowSize().x, buttonSizeY * 2);;
-    ImGui::SetCursorPosY(ImGui::GetWindowSize().y - buttonSize.y);*/
-
-    /*if (ImGui::Button("Add Component", buttonSize)) {
-        isAddingComponent = true;
-    }
-    AddPanel(gameObject, isAddingComponent);*/
 }
 
 void EditorInspector::Init()

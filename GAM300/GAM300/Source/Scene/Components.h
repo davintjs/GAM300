@@ -162,6 +162,7 @@ struct Transform : Object
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
+	~Transform();
 	
 	Engine::UUID parent=0;
 	std::vector<Engine::UUID> child;
@@ -421,6 +422,10 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 		if constexpr (sizeof...(Ts) != 0)\
 		{\
 			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+		}\
+		else\
+		{\
+			E_ASSERT(false, "Could not match type: ", objType); \
 		}\
 	}\
 	template<typename T, typename... Ts>\

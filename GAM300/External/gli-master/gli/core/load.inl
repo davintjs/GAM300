@@ -3,6 +3,7 @@
 #include "../load_ktx.hpp"
 #include "file.hpp"
 
+#pragma warning( disable : 26451)
 namespace gli
 {
 	/// Load a texture (DDS, KTX or KMG) from memory
