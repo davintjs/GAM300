@@ -611,7 +611,7 @@ void Display_Property(T& comp) {
 void DisplayComponent(Script& script)
 {
     ACQUIRE_SCOPED_LOCK(Mono);
-    static char buffer[2048];
+    static char buffer[2048]{};
     ScriptGetFieldNamesEvent getFieldNamesEvent{script};
     EVENTS.Publish(&getFieldNamesEvent);
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)

@@ -108,6 +108,7 @@ struct Scene
 	//Get component of another object as a void pointer(Mono does type casting)
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
 
+	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle *)pObject));
 	//Check whether handle exists in scene
 	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
 #pragma endregion

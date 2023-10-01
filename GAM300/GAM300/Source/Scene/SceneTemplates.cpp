@@ -148,9 +148,9 @@ void Scene::CloneHelper(Scene& rhs)
 		else
 		{
 			T& obj = Get<T>(object.euid);
-			Engine::UUID uuid = obj.UUID();
+			Engine::UUID id = obj.UUID();
 			obj = object;
-			obj.uuid = uuid;
+			obj.uuid = id;
 		}
 
 	}
