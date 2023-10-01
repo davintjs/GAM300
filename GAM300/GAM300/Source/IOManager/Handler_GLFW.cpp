@@ -37,71 +37,8 @@ GLboolean GLFW_Handler::keystateG = GL_FALSE;
 GLboolean GLFW_Handler::keystateA = GL_FALSE;
 
 
-/*
-void alt_tabby_magician(GLFWwindow* window, int focused)
-{
-	if (!focused) // alt tabbed out
-	{
-        audioRunState = Orion::Audio::audioRun;
-		if (SCENEMANAGER->GetSceneName() == "Level1_Alpha" || SCENEMANAGER->GetSceneName() == "Level1_Alphatemp"
-            || SCENEMANAGER->GetSceneName() == "Level2" || SCENEMANAGER->GetSceneName() == "Level2temp"
-            || SCENEMANAGER->GetSceneName() == "Checkpoint" || SCENEMANAGER->GetSceneName() == "Checkpointtemp")
-		{
-            gamescene_alt_tabbed = true;
-			//std::cout << "alt tabbed INSIDE THE GAME SCENE\n";
-			////paused_toggle = true;
-			//pause_state = true;
-			//auto& gameobjects = SCENEMANAGER->GetGameObjectManager().GetGameObjects();
-			//for (auto& g_Object : gameobjects)
-			//{
-			//	if (g_Object->GetTag() == "Pause" || g_Object->GetTag() == "Pause_Extra")
-			//	{
-			//		std::cout << "ininin\n";
-			//		g_Object->isActive() = true;
-			//	}
-			//}
-		}
-		else
-		{
 
-            gamescene_alt_tabbed = false;
 
-		}
-		// The window gained input focus
-        // kk code here
-        // ORIONAUDIOMANAGER->PauseMusic();
-        Orion::Audio::audioRun = false;
-	}
-	else // alt tabbed back in
-	{
-        Orion::Audio::audioRun = audioRunState;
-        gamescene_alt_tabbed = false;
-    }
-}
-*/
-
-/*  _________________________________________________________________________ */
-/*! init
-
-@param GLint width
-@param GLint height
-Dimensions of window requested by program
-
-@param std::string title_str
-String printed to window's title bar
-
-@return bool
-true if OpenGL context and GLEW were successfully initialized.
-false otherwise.
-
-Uses GLFW to create OpenGL context. GLFW's initialization follows from here:
-http://www.glfw.org/docs/latest/quick.html
-a window of size width x height pixels
-and its associated OpenGL context that matches a core profile that is
-compatible with OpenGL 4.5 and doesn't support "old" OpenGL, has 32-bit RGBA,
-double-buffered color buffer, 24-bit depth buffer and 8-bit stencil buffer
-with each buffer of size width x height pixels
-*/
 bool GLFW_Handler::init(GLint w, GLint h, std::string t) {
   GLFW_Handler::width = w;
   GLFW_Handler::height = h;
@@ -206,7 +143,6 @@ bool GLFW_Handler::init(GLint w, GLint h, std::string t) {
 
 
   if (!GLEW_VERSION_4_5) {
-      //ORION_ENGINE_ERROR("Driver doesn't support OpenGL 4.5 - abort program");
       return true;
   }
   return true;
@@ -226,31 +162,17 @@ void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int
 
     //InputHandler::copyingCurrStatetoLast();
     if (GLFW_PRESS == action) {
-        //std::cout << "GLFW HANDLER : PRESS\n";
         InputHandler::setKeystate_Press(key);
-        //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), false);
-        //crashTestObsevable.ProcessEvent(event);
        
     }
     else if (GLFW_REPEAT == action) {
-        //std::cout << "GLFW HANDLER : REPEAT / HOLDING\n";
-
-        //Orion::Events::KeyPressedEvent event = Orion::Events::KeyPressedEvent(static_cast<Orion::Key::KeyCode>(key), true);
-        //crashTestObsevable.ProcessEvent(event);
         InputHandler::setKeystate_Hold(key);
         
     }
 
     else if (GLFW_RELEASE == action) {
         
-        //std::cout << "GLFW HANDLER : RELEASE\n";
-
         InputHandler::setKeystate_Release(key);
-
-        //Orion::Events::KeyReleasedEvent event = Orion::Events::KeyReleasedEvent(static_cast<Orion::Key::KeyCode>(key));
-        //crashTestObsevable.ProcessEvent(event);
-
-       
 
     }
 }
@@ -295,47 +217,10 @@ void GLFW_Handler::mousepos_cb(GLFWwindow*, [[maybe_unused]] double xpos, [[mayb
 
     //std::cout << "Mouse cursor position: (" << xpos << ", " << ypos << ")" << std::endl;
 #endif
-    /*double x, y;
-    x = (xpos - (GLFW_Handler::width / 2.0));
-    y = 900 - ypos;
-
-    y -= (GLFW_Handler::height / 2.0);
-    	Mouse.set_window_pos(x, y);*/
-    /* std::cout << "GLFW_Handler x : " << xpos << "\n";
-    std::cout << "GLFW_Handler y : " << ypos << "\n";*/
-
-    //Mouse.set_true_pos((float)xpos, (float)ypos);
-    //Orion::mousePos_Y = ypos;
     
 
 }
 
-/*
-void GLFW_Handler::SetKeyPressed(Orion::Key::KeyCode keycode, bool pressed)
-{
-    keyPressed[static_cast<int32_t>(keycode)] = pressed;
-}
-
-void GLFW_Handler::SetKeyHeld(Orion::Key::KeyCode keycode, bool held)
-{
-    keyHeld[static_cast<int32_t>(keycode)] = held;
-}
-
-bool GLFW_Handler::IsKeyPressed(Orion::Key::KeyCode keycode)
-{
-    return keyPressed[static_cast<int32_t>(keycode)];
-}
-
-bool GLFW_Handler::IsKeyDown(Orion::Key::KeyCode keycode)
-{
-    return keyHeld[static_cast<int32_t>(keycode)];
-}
-bool GLFW_Handler::IsKeyRelease(Orion::Key::KeyCode keycode)
-{
-    auto state = glfwGetKey(ptr_window, static_cast<int32_t>(keycode));
-    return state == GLFW_RELEASE;
-}
-*/
 
 
 void GLFW_Handler::mousescroll_cb(GLFWwindow *, [[maybe_unused]] double x, [[maybe_unused]] double y) {
@@ -361,27 +246,9 @@ void GLFW_Handler::error_cb(int , [[maybe_unused]]  char const* description) {
 #ifdef _DEBUG
   std::stringstream sstr;
   sstr << "GLFW error: " << description << std::endl;
-  //ORION_ENGINE_ERROR(sstr.str());
 #endif
 }
 
-/*  _________________________________________________________________________ */
-/*! fbsize_cb
-
-@param GLFWwindow*
-Handle to window that is being resized
-
-@parm int
-Width in pixels of new window size
-
-@parm int
-Height in pixels of new window size
-
-@return none
-
-This function is called when the window is resized - it receives the new size
-of the window in pixels.
-*/
 void GLFW_Handler::fbsize_cb( [[maybe_unused]] GLFWwindow *pwin, int w, int h) {
     UNREFERENCED_PARAMETER(pwin);
     UNREFERENCED_PARAMETER(w);
