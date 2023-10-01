@@ -94,10 +94,10 @@ public:
 
 		// NavMesh testing
 		std::vector<glm::vec3> GroundVertices{
-				glm::vec3(-0.5f, -0.5f, -0.5f),
-				glm::vec3(0.5f, -0.5f, -0.5f),
-				glm::vec3(0.5f, 0.5f, -0.5f),
 				glm::vec3(-0.5f, 0.5f, -0.5f),
+				glm::vec3(0.5f, 0.5f, -0.5f),
+				glm::vec3(0.5f, 0.5f, 0.5f),
+				glm::vec3(-0.5f, 0.5f, 0.5f),
 		};
 
 		std::vector<glm::ivec3> GroundIndices{

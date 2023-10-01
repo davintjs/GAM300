@@ -1,3 +1,23 @@
+/*!***************************************************************************************
+\file			Compiler.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. Loading of FBX files with assimp loader
+		a. Creation of descriptor file for the mesh
+		b. Deserialization of FBX file
+		b. Reading and storing of meshes
+		c. Compression of vertices
+	2. Serialization of meshes into custom binary format
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Compiler.h"
 
 #pragma warning( disable : 4100)
