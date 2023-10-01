@@ -1,19 +1,20 @@
-/* !
-@file    glslshader.h
-/primary author Euan Lim (50%)
-/secondary author Jake Lian (50%)
-@date    06/11/2016
+/*!***************************************************************************************
+\file			glslshader.h
+\project
+\author         Euan Lim, Jake Lian, Theophelia Tan
 
-For this project, authors have removed unnecessary functions..
+\par			Course: GAM300
+\date           28/09/2023
 
-This file contains the declaration of class GLSLShader that encapsulates the
-functionality required to load shader source; compile shader source; link
-shader objects into a program object, validate program object; log msesages
-from compiling linking, and validation steps; install program object in
-appropriate shaders; and pass uniform variables from the client to the
-program object.
+\brief
+    This file contains the declaration of the class GLSLShader which does
+    1. Link Shaders into a program
+    2. validate , log messages from compiling / linking / validiation
+    (Taken from Year 1 Professor Prasanna's Graphics Class)
 
-*//*__________________________________________________________________________*/
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 
 /*                                                                      guard
 ----------------------------------------------------------------------------- */

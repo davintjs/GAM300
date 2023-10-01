@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			InstancedRender.vert
+\file			InstancedRender.frag
 \project
 \author         Euan Lim , Jake Lian
 

@@ -1,54 +1,35 @@
-/* !
-/file    glslshader.h
-/primary author Euan Lim (50%)
-/secondary author Jake Lian (50%)
-/date    06/11/2016
+/*!***************************************************************************************
+\file			glslshader.h
+\project
+\author         Euan Lim, Jake Lian, Theophelia Tan
 
-This file contains definitions of member functions of class GLShader.
-*//*__________________________________________________________________________*/
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the definition of the class GLSLShader which does
+    1. Link Shaders into a program
+    2. validate , log messages from compiling / linking / validiation
+    (Taken from Year 1 Professor Prasanna's Graphics Class)
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "glslshader.h"
 
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    Checks if file exist
-\param[in] file_name
-    name of the file to be checked
-\return
-    returns true if file exist, otherwise false
-*************************************************************************/
+
 GLboolean
 GLSLShader::FileExists(std::string const& file_name) {
     std::ifstream infile(file_name); return infile.good();
 }
 
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    deletes shader program
-\param[in] NA
-\return NA
-*************************************************************************/
 void
 GLSLShader::DeleteShaderProgram() {
     if (pgm_handle > 0) {
         glDeleteProgram(pgm_handle);
     }
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    Compiles the shader programs indicated in parameter
-\param[in] vec
-    vector of GLenum and string.
-    GLenum indicates the shader to be used.
-    string contains the path to the shader programs
-\return NA
-*************************************************************************/
+
 GLboolean
 GLSLShader::CompileLinkValidate(std::vector<std::pair<GLenum, std::string>> vec) {
     for (auto& elem : vec) {
@@ -67,18 +48,6 @@ GLSLShader::CompileLinkValidate(std::vector<std::pair<GLenum, std::string>> vec)
 
     return GL_TRUE;
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    compile shader program from file
-\param[in] shader_type
-    fragment or vertex shader
-\param[in] file_name
-    name of the file
-\return GLboolean
-    returns true if program compiles succssfully, otherwise false
-*************************************************************************/
 GLboolean
 GLSLShader::CompileShaderFromFile(GLenum shader_type, const std::string& file_name) {
     // returns false if file dont exist, for better performance
@@ -106,18 +75,7 @@ GLSLShader::CompileShaderFromFile(GLenum shader_type, const std::string& file_na
     shader_file.close();
     return CompileShaderFromString(shader_type, buffer.str());
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    compile shader program using strings, without a shader file
-\param[in] shader_type
-    fragment or vertex shader
-\param[in] file_name
-    string of agorithms
-\return GLboolean
-    returns true if program compiles succssfully, otherwise false
-*************************************************************************/
+
 GLboolean
 GLSLShader::CompileShaderFromString(GLenum shader_type,
     const std::string& shader_src) {
@@ -170,15 +128,7 @@ GLSLShader::CompileShaderFromString(GLenum shader_type,
         return GL_TRUE;
     }
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    compile shader program from file
-\param[in] NA
-\return GLboolean
-    returns true if program links succssfully, otherwise false
-*************************************************************************/
+
 GLboolean GLSLShader::Link() {
     if (GL_TRUE == is_linked) {
         return GL_TRUE;
@@ -207,36 +157,17 @@ GLboolean GLSLShader::Link() {
     }
     return is_linked = GL_TRUE;
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief 
-    starts running the shader
-\return NA
-*************************************************************************/
+
 void GLSLShader::Use() {
     if (pgm_handle > 0 && is_linked == GL_TRUE) {
         glUseProgram(pgm_handle);
     }
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    stops running the shader
-\return NA
-*************************************************************************/
+
 void GLSLShader::UnUse() {
     glUseProgram(0);
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    stops running the shader
-\return GLboolean
-    returns true if program validates, otherwise false
-*************************************************************************/
+
 GLboolean GLSLShader::Validate() {
     //returns false if any of these are false
     if (pgm_handle <= 0 || is_linked == GL_FALSE) {
@@ -264,46 +195,19 @@ GLboolean GLSLShader::Validate() {
       return GL_TRUE;
 
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    gets value of pgm_handle
-\return GLboolean
-    returns true if program validates, otherwise false
-*************************************************************************/
+
 GLuint GLSLShader::GetHandle() const {
     return pgm_handle;
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    check if shader is linked
-\return GLboolean
-    returns true if program is linked, otherwise false
-*************************************************************************/
+
 GLboolean GLSLShader::IsLinked() const {
     return is_linked;
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    gets logging status of shader
-\return std::string
-    logger information
-*************************************************************************/
+
 std::string GLSLShader::GetLog() const {
     return log_string;
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    prints out active attribute of shaders with orion logging system
-\return NA
-*************************************************************************/
+
 void GLSLShader::PrintActiveAttribs() const {
 #if 1
     GLint max_length, num_attribs;
@@ -345,13 +249,7 @@ void GLSLShader::PrintActiveAttribs() const {
     }
 #endif
 }
-/*!***********************************************************************
-\author
-    Euan Lim & Jake Lian
-\brief
-    prints out active Uniforms of shaders with orion logging system
-\return NA
-*************************************************************************/
+
 void GLSLShader::PrintActiveUniforms() const {
     GLint max_length;
     glGetProgramiv(pgm_handle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_length);

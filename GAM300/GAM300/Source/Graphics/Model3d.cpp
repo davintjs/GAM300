@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			Model3d.h
+\file			Model3d.cpp
 \project
 \author         Lian Khai Kiat, Euan Lim, Theophelia Tan
 
