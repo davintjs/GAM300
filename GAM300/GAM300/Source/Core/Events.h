@@ -11,7 +11,7 @@
 \brief
 	This file contains the declarations of all event structures in the engine.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef EVENTS_H
 #define EVENTS_H
