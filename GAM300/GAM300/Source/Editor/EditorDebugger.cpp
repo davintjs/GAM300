@@ -1,19 +1,16 @@
-/**************************************************************************************/
-/*!
-//    \file			Debugger.h
-//    \author(s) 	Joseph Ho Jun Jie
-//
-//    \date   	    23rd September 2022
-//    \brief		This file contains the definitions of the Debugger object that is
-                    used for the debugger/logger.
-//
-//    \Percentage   Joseph 100%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+/*!***************************************************************************************
+\file			EditorDebugger.cpp
+\project
+\author         Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+    This file contains the definitions of the functions used for the Editor debugger window.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #include "Precompiled.h"
 #include "EditorHeaders.h"
@@ -38,6 +35,7 @@ void EditorDebugger::Update(float dt)
     ImGui::End();
 }
 
+//Definition of the editor debugger window
 void EditorDebugger::Draw()
 {
     // Options menu
@@ -116,6 +114,7 @@ void EditorDebugger::AddLog(const char* fmt, ...) IM_FMTARGS(2)
             LineOffsets.push_back(old_size + 1);
 }
 
+//Clears the buffer of debug messages
 void EditorDebugger::Clear()
 {
     Buffer.clear();
