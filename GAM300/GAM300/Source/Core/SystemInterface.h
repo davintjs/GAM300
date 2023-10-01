@@ -6,13 +6,13 @@
 
 \par			Course: GAM300
 \par			Section:
-\date			18/09/2022
+\date			26/08/2023
 
 \brief
     Contains declarations for ISystem and Singleton<T> for other systems to inherit
     off to have single instanced systems and overridden member functions
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef SYSTEM_INTERFACE_H

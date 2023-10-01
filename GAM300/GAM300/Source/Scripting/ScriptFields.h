@@ -1,15 +1,14 @@
 ﻿/*!***************************************************************************************
-\file			script-fields.h
+\file			ScriptFields.h
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			10/03/2023
+\date			01/09/2023
 
 \brief
-	This file holds the definition of script fields, mainly allocated memory for
-	storing any type of field
+	This file holds the definition of script fields
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

@@ -3,12 +3,12 @@
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
 \date			10/03/2023
 
 \brief
-	This file declares all types of components
+	This file declares all types of components and template packs to be used by ECS
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -39,149 +39,57 @@ struct Entity;
 
 extern std::map<std::string, size_t> ComponentTypes;
 
-template<typename T,typename... Ts>
-struct GetTypeGroup
-{
-	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
-	constexpr GetTypeGroup() = default;
-
-	template <typename T1>
-	static constexpr size_t E()
-	{
-		if constexpr (std::is_same<T, T1>())
-		{
-			return sizeof...(Ts);
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template E<T1>();
-		}
-	}
-
-	template <typename T1>
-	static constexpr const char* Name()
-	{
-		if constexpr (std::is_same<T, T1>())
-		{
-			static const char* name = typeid(T).name() + strlen("struct ");
-			return name;
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template Name<T1>();
-		}
-	}
-};
-
-
-template<typename... Ts>
-struct SingleComponentsGroup
-{
-	constexpr SingleComponentsGroup(TemplatePack<Ts...>) {}
-	SingleComponentsGroup() = default;
-
-	template <typename T1>
-	constexpr ObjectsList<T1, MAX_ENTITIES>& GetArray()
-	{
-		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
-		return std::get<ObjectsList<T1, MAX_ENTITIES>>(arrays);
-	}
-private:
-	std::tuple<ObjectsList<Ts, MAX_ENTITIES>...> arrays;
-};
-
-template<typename... Ts>
-struct ComponentsBuffer
-{
-	constexpr ComponentsBuffer(TemplatePack<Ts...>) {}
-	ComponentsBuffer() = default;
-
-	template <typename T1>
-	constexpr std::vector<T1*>& GetArray()
-	{
-		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
-		return std::get<std::vector<T1*>>(arrays);
-	}
-private:
-	std::tuple<std::vector<Ts*>...> arrays;
-};
-
-template <typename Component>
-using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES>;
-
-
-template<typename... Ts>
-struct MultiComponentsGroup
-{
-	constexpr MultiComponentsGroup(TemplatePack<Ts...>) {}
-	MultiComponentsGroup() = default;
-
-	template <typename T1>
-	constexpr MultiComponentsArray<T1>& GetArray()
-	{
-		static_assert((std::is_same_v<T1, Ts> || ...), "TESTES");
-		return std::get<MultiComponentsArray<T1>>(arrays);
-	}
-private:
-	std::tuple<MultiComponentsArray<Ts>...> arrays;
-};
-
 #pragma region COMPONENTS
 
+//To store id information like name
 struct Tag : Object
 {
 	std::string name;
 };
 
-
-//example of LIONant reflection
-
-//struct test1 : property::base
-//{
-//	int             m_Int{ 0 };
-//	float           m_Float{ 0 };
-//	bool            m_Bool{ 0 };
-//	std::string     m_String{};
-//	oobb            m_OOBB{ 0 };
-//
-//	property_vtable()           // Allows the base class to get these properties  
-//};
-//
-//property_begin(test1)
-//{
-//	property_var(m_Int)
-//		, property_var(m_Float)
-//		, property_var(m_String)
-//		, property_var(m_Bool)
-//		, property_var(m_OOBB)
-//} property_vend_h(test1)
-
-
+//To store transform of entity
 struct Transform : Object
 {
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
+	//Destructor, unparents object
 	~Transform();
-	
-	Engine::UUID parent=0;
+
+	//Parent's euid
+	Engine::UUID parent = 0;
+
+	//Childrens' euids
 	std::vector<Engine::UUID> child;
+
+	//Check whether this is a leaf node
 	bool isLeaf();
+
+	//Check whether this is a child
 	bool isChild();
+
+	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
-	glm::mat4 GetInvertedWorldMatrix() const;
+
+	//Get the SRT matrix in local space
 	glm::mat4 GetLocalMatrix() const;
+
+	//Checks if this transform is a child of another
 	bool isEntityChild(Transform& ent);
+
+	//Sets the parent of the transform
 	void SetParent(Transform* newParent);
+
+	//Removes a child from child vector
 	void RemoveChild(Transform* t);
 	property_vtable();
 };
 
-property_begin_name(Transform, "Transform") 
+property_begin_name(Transform, "Transform")
 {
 	property_var(translation).Name("Translation"),
-	property_var(rotation).Name("Rotation"),
-	property_var(scale).Name("Scale"),
+		property_var(rotation).Name("Rotation"),
+		property_var(scale).Name("Scale"),
 } property_vend_h(Transform)
 
 struct AudioSource : Object
@@ -211,40 +119,40 @@ property_begin_name(AudioSource, "Audio Source") {
 struct BoxCollider : Object
 {
 	float x = 1.0f;
-	float y = 1.0f; 
-	float z = 1.0f; 
+	float y = 1.0f;
+	float z = 1.0f;
 	property_vtable();
 };
 
 property_begin_name(BoxCollider, "BoxCollider") {
-	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(x).Name("X"),
-		property_var(y).Name("Y"),
-		property_var(z).Name("Z"),
+property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(x).Name("X"),
+	property_var(y).Name("Y"),
+	property_var(z).Name("Z"),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
 {
-	float radius = 1.0f; 
+	float radius = 1.0f;
 	property_vtable();
 };
 
 property_begin_name(SphereCollider, "SphereCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(radius).Name("Radius")
+	property_var(radius).Name("Radius")
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
 {
-	float height = 1.0f; 
-	float radius = 1.0f; 
+	float height = 1.0f;
+	float radius = 1.0f;
 	property_vtable();
 };
 
 property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(height).Name("Height"),
-		property_var(radius).Name("Radius")
+	property_var(height).Name("Height"),
+	property_var(radius).Name("Radius")
 } property_vend_h(CapsuleCollider)
 
 struct Animator : Object
@@ -268,22 +176,21 @@ struct Rigidbody : Object
 	bool is_trigger = false;
 
 	property_vtable();
-	UINT32 bid{0};
-
+	UINT32 bid{ 0 };
 	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(linearVelocity).Name("LinearVelocity"),
-		property_var(angularVelocity).Name("AngularVelocity"),
-		property_var(force).Name("Force"),
-		property_var(friction).Name("Friction"),
-		property_var(mass).Name("Mass"),
-		property_var(isStatic).Name("IsStatic"),
-		property_var(isKinematic).Name("IsKinematic"),
-		property_var(useGravity).Name("UseGravity"),
-		property_var(is_trigger).Name("Is_trigger")
+	property_var(linearVelocity).Name("LinearVelocity"),
+	property_var(angularVelocity).Name("AngularVelocity"),
+	property_var(force).Name("Force"),
+	property_var(friction).Name("Friction"),
+	property_var(mass).Name("Mass"),
+	property_var(isStatic).Name("IsStatic"),
+	property_var(isKinematic).Name("IsKinematic"),
+	property_var(useGravity).Name("UseGravity"),
+	property_var(is_trigger).Name("Is_trigger")
 } property_vend_h(Rigidbody)
 
 struct CharacterController : Object
@@ -295,32 +202,32 @@ struct CharacterController : Object
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	property_vtable();
-	UINT32 bid{0};
-	//JPH::BodyID CharacterBodyID;
+	UINT32 bid{ 0 };
+//JPH::BodyID CharacterBodyID;
 };
 
 property_begin_name(CharacterController, "CharacterController") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(velocity).Name("Velocity"),
-		property_var(force).Name("Force"),
-		property_var(friction).Name("Friction"),
-		property_var(mass).Name("Mass"),
-		property_var(gravityFactor).Name("GravityFactor"),
-		property_var(slopeLimit).Name("SlopeLimit")
+	property_var(velocity).Name("Velocity"),
+	property_var(force).Name("Force"),
+	property_var(friction).Name("Friction"),
+	property_var(mass).Name("Mass"),
+	property_var(gravityFactor).Name("GravityFactor"),
+	property_var(slopeLimit).Name("SlopeLimit")
 } property_vend_h(CharacterController)
 
 struct Script : Object
 {
 	std::string name;
 	Script() {}
-	Script(const char* _name):name{_name}{}
+	Script(const char* _name) :name{ _name } {}
 	property_vtable();
 };
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(name).Name("Name"),
-		//property_var(fields)
+	property_var(name).Name("Name"),
+	//property_var(fields)
 } property_vend_h(Script)
 
 struct MeshRenderer : Object
@@ -345,127 +252,234 @@ struct MeshRenderer : Object
 
 	std::string MetallicTexture = "";
 	std::string RoughnessTexture = "";
-	std::string AoTexture= "";
+	std::string AoTexture = "";
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;
 	GLuint RoughnessID = 0;
 	GLuint MetallicID = 0;
 	GLuint AoID = 0;
-
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(MeshName).Flags(property::flags::DONTSHOW),
-		property_var(mr_Albedo),
-		property_var(AlbedoTexture),
-		property_var(NormalMap),		
-		/*property_var(mr_Specular),
-		property_var(mr_Diffuse),
-		property_var(mr_Ambient),
-		property_var(mr_Shininess),*/
-		property_var(mr_metallic),
-		property_var(MetallicTexture),
+	property_var(MeshName).Flags(property::flags::DONTSHOW),
+	property_var(mr_Albedo),
+	property_var(AlbedoTexture),
+	property_var(NormalMap),
+	/*property_var(mr_Specular),
+	property_var(mr_Diffuse),
+	property_var(mr_Ambient),
+	property_var(mr_Shininess),*/
+	property_var(mr_metallic),
+	property_var(MetallicTexture),
 
-		property_var(mr_roughness),
-		property_var(RoughnessTexture),
+	property_var(mr_roughness),
+	property_var(RoughnessTexture),
 
-		property_var(ao),
-		property_var(AoTexture),
+	property_var(ao),
+	property_var(AoTexture),
 } property_vend_h(MeshRenderer)
 
 struct LightSource : Object
 {
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 	property_vtable()
-};
+	};
 
-property_begin_name(LightSource, "LightSource") {
+	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(lightingColor).Name("LightingColor")
+	property_var(lightingColor).Name("LightingColor")
 } property_vend_h(LightSource)
 
 #pragma endregion
 
-
-
-//Append here if you defined a new component and each entity should only ever have one of it
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
-
-//Append here if entity can have multiple of this
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
-
-using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
-using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
-using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
-using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
-using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
-
-#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
-	template<typename T, typename... Ts>\
-	TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
-	{\
-		if (GetType::E<T>() == objType)\
-		{\
-			if constexpr (std::is_same<TYPE,void>())\
-			{\
-				FUNC;\
-				return;\
-			}\
-			else\
-			{\
-				return FUNC;\
-			}\
-		}\
-		if constexpr (sizeof...(Ts) != 0)\
-		{\
-			return FUNC_NAME##Iter<Ts...>(objType,pObject); \
-		}\
-		else\
-		{\
-			E_ASSERT(false, "Could not match type: ", objType); \
-		}\
-	}\
-	template<typename T, typename... Ts>\
-	TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
-	{return FUNC_NAME##Iter<T,Ts...>(objType,pObject);}\
-	TYPE FUNC_NAME(size_t objType, void* pObject)\
-	{return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
-
-template <typename T, typename... Ts>
-struct GenericRecursiveStruct
+//Template pack way to store enums instead of traditional enums
+template<typename T,typename... Ts>
+struct GetTypeGroup
 {
-	constexpr GenericRecursiveStruct(TemplatePack<T,Ts...>) {}
-	GenericRecursiveStruct() = default;
+	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
+	constexpr GetTypeGroup() = default;
 
-	template <typename RET, typename... ARGS>
-	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	template <typename T1>
+	//Gets the enum value of type T
+	static constexpr size_t E()
 	{
-		return Invoke<T, Ts...>(func,args);
+		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
+		if constexpr (std::is_same<T, T1>())
+		{
+			return sizeof...(Ts);
+		}
+		else
+		{
+			return GetTypeGroup<Ts...>::template E<T1>();
+		}
 	}
 
-	template<typename T1,typename T1s ,typename RET ,typename... ARGS>
-	auto Invoke(std::function<RET(ARGS...)> func, ARGS... args)
+	template <typename T1>
+	//Gets the name of type T
+	static constexpr const char* Name()
 	{
-		if constexpr (std::is_same<RET, T1>())
+		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
+		if constexpr (std::is_same<T, T1>())
 		{
-			return func(std::forward(func));
+			static const char* name = typeid(T).name() + strlen("struct ");
+			return name;
 		}
-		if constexpr (sizeof...(Ts) != 0)\
+		else
 		{
-			return Invoke<T1s...>(func, args);
+			return GetTypeGroup<Ts...>::template Name<T1>();
 		}
 	}
 };
 
-using GenericRecursive = decltype(GenericRecursiveStruct(AllComponentTypes()));
 
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
+//Group to store all single component arrays together and accessed easily without
+//declaring multiple variable names
+template<typename... Ts>
+struct SingleComponentsGroup
+{
+	constexpr SingleComponentsGroup(TemplatePack<Ts...>) {}
+	SingleComponentsGroup() = default;
 
+	//Get the array with a given type if it is in the template pack
+	template <typename T1>
+	constexpr ObjectsList<T1, MAX_ENTITIES>& GetArray()
+	{
+		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		return std::get<ObjectsList<T1, MAX_ENTITIES>>(arrays);
+	}
+private:
+	std::tuple<ObjectsList<Ts, MAX_ENTITIES>...> arrays;
+};
+
+
+template <typename Component>
+using MultiComponentsArray = ObjectsBList<Component, MAX_ENTITIES>;
+
+//Group to store all multi component arrays together and accessed easily without
+//declaring multiple variable names
+template<typename... Ts>
+struct MultiComponentsGroup
+{
+	constexpr MultiComponentsGroup(TemplatePack<Ts...>) {}
+	MultiComponentsGroup() = default;
+
+	//Get the array with a given type if it is in the template pack
+	template <typename T1>
+	constexpr MultiComponentsArray<T1>& GetArray()
+	{
+		static_assert((std::is_same_v<T1, Ts> || ...), "TESTES");
+		return std::get<MultiComponentsArray<T1>>(arrays);
+	}
+private:
+	std::tuple<MultiComponentsArray<Ts>...> arrays;
+};
+
+//Component buffer to help with deletion of objections
+template<typename... Ts>
+struct ComponentsBuffer
+{
+	constexpr ComponentsBuffer(TemplatePack<Ts...>) {}
+	ComponentsBuffer() = default;
+
+	//Get the array with a given type if it is in the template pack
+	template <typename T1>
+	constexpr std::vector<T1*>& GetArray()
+	{
+		static_assert((std::is_same_v<T1, Ts> || ...), "Type not found in ArrayGroup");
+		return std::get<std::vector<T1*>>(arrays);
+	}
+private:
+	std::tuple<std::vector<Ts*>...> arrays;
+};
+
+
+
+//Template pack of components that entities can only have one of each
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
+
+//Template pack of components that entities can only have multiple of each
+using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+
+//SingleComponentsGroup initialized with template pack to know the component types
+using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
+//MultiComponentsGroup initialized with template pack to know the component types
+using MultiComponentsArrays = decltype(MultiComponentsGroup(MultiComponentTypes()));
+
+//Template pack of all types of components
+using AllComponentTypes = decltype(SingleComponentTypes().Concatenate(MultiComponentTypes()));
+
+//Component types that can be displayed in the editor with default behaviour
+using DisplayableComponentTypes = decltype(AllComponentTypes().Pop().Pop());
+
+//All object types meaning entity + all component types
 using AllObjectTypes = decltype(TemplatePack<Entity>::Concatenate(AllComponentTypes()));
+
+//Get type for object types
+using GetType = decltype(GetTypeGroup(AllObjectTypes()));
+
+//Register components to Components type for easier lookup
+template<typename T, typename... Ts>
+static void RegisterComponentsHelper()
+{
+	ComponentTypes.emplace(GetType::Name<T>(), GetType::E<T>());
+	if constexpr (sizeof...(Ts) != 0)
+	{
+		RegisterComponentsHelper<Ts...>();
+	}
+}
+
+//Register components to Components type for easier lookup
+template<typename... Ts>
+static void RegisterComponents(TemplatePack<Ts...>)
+{
+	RegisterComponentsHelper<Ts...>();
+}
+
+//ComponentsBuffer initialized with template pack to know the component types 
+using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
+
+//Use for script fields when type is ambiguous but we have the type enum
+//to check through every type T in an template pack to compare with its type enum
+#define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
+template<typename T, typename... Ts>\
+TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
+{\
+	if (GetType::E<T>() == objType)\
+	{\
+		if constexpr (std::is_same<TYPE,void>())\
+		{\
+			FUNC;\
+			return;\
+		}\
+		else\
+		{\
+			return FUNC;\
+		}\
+	}\
+	if constexpr (sizeof...(Ts) != 0)\
+	{\
+		return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+	}\
+	else\
+	{\
+		E_ASSERT(false, "Could not match type: ", objType); \
+	}\
+}\
+template<typename T, typename... Ts>\
+TYPE FUNC_NAME##Start( TemplatePack<T,Ts...>,size_t objType, void* pObject)\
+{return FUNC_NAME##Iter<T,Ts...>(objType,pObject);}\
+TYPE FUNC_NAME(size_t objType, void* pObject)\
+{return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
+
+//Field types template pack
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
+//All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
+
+//Get enum and name for fields
 using GetFieldType = decltype(GetTypeGroup(AllFieldTypes()));
 
 #endif // !COMPONENTS_H

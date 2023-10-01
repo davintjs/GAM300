@@ -52,3 +52,57 @@ void ThreadPool::Exit()
         delete pair.second;
     }
 }
+
+bool ThreadPool::HasStopped() const
+{
+    return stop;
+}
+
+ThreadPool::ScopedLock::ScopedLock(Mutex& _mutex) : mutex{ _mutex },
+std::scoped_lock<std::mutex>::scoped_lock(_mutex.m)
+{
+}
+
+ThreadPool::ScopedLock::~ScopedLock()
+{
+    mutex.condition.notify_all();
+}
+
+
+ThreadPool::UniqueLock::UniqueLock(ThreadPool::Mutex& _mutex) : mutex{ _mutex },
+std::unique_lock<std::mutex>::unique_lock(_mutex.m)
+{
+}
+
+
+
+ThreadPool::UniqueLock ThreadPool::AcquireUniqueLock(std::string mutexName)
+{
+    if (mutexes.find(mutexName) == mutexes.end())
+    {
+        // Mutex doesn't exist, so create it and add it to the map
+        mutexes.emplace(mutexName, new Mutex());
+    }
+    Mutex* mutex = mutexes[mutexName];
+    return UniqueLock(*mutex);
+}
+
+
+
+void ThreadPool::Wait(ThreadPool::UniqueLock& lock, std::function<bool()> pFunc)
+{
+    lock.mutex.condition.wait(lock, pFunc);
+}
+
+
+
+ThreadPool::ScopedLock ThreadPool::AcquireScopedLock(std::string mutexName)
+{
+    if (mutexes.find(mutexName) == mutexes.end())
+    {
+        // Mutex doesn't exist, so create it and add it to the map
+        mutexes.emplace(mutexName, new Mutex());
+    }
+    Mutex* mutex = mutexes[mutexName];
+    return ScopedLock(*mutex);
+}

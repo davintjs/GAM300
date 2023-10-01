@@ -1,13 +1,14 @@
 /*!***************************************************************************************
-\file			ObjectsList.h
+\file			ObjectsList.cpp
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			27/06/2023
+\date			02/09/2023
 
 \brief
+	This file defines a Object List which manages sparse sets
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -227,7 +228,7 @@ template <typename T, ObjectIndex N>
 bool OBJECTSLIST::IsActive(ObjectIndex sparseIndex)
 {
 	Node* start = head;
-	while (start && sparseIndex >= N)
+	while (start && sparseIndex >= start->sparseSet.size())
 	{
 		sparseIndex -= start->sparseSet.size();
 		start = start->next;

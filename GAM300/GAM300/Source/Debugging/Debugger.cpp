@@ -1,14 +1,14 @@
 /*!***************************************************************************************
-\file			logging.cpp
+\file			Debugger.cpp
 \project
-\author			Shawn Tanary
+\author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			16/09/2022
+\date			25/09/2023
 
 \brief
-    This file contins functions that logger messages to either console or to a file.
+    This file contains a the definitions for a debugger using SpeedLogger
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

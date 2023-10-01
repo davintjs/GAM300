@@ -1,12 +1,12 @@
 /*!***************************************************************************************
-\file			events.h
+\file			Events.h
 \project
 \author			Zacharie Hong
 				Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section:
-\date			15/02/2023
+\date			30/09/2023
 
 \brief
 	This file contains the declarations of all event structures in the engine.

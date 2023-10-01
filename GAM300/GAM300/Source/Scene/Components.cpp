@@ -1,13 +1,25 @@
+﻿/*!***************************************************************************************
+\file			Components.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM300
+\par			Section:
+\date			10/03/2023
+
+\brief
+	This file defines all types of components to be used by ECS
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "Precompiled.h"
 #include "Components.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Scene/SceneManager.h"
-//
-//
-//template <>
-//const char* GetTypeGroup<>::name = "";
+
 std::map<std::string, size_t> ComponentTypes{};
 
 bool Transform::isLeaf() {

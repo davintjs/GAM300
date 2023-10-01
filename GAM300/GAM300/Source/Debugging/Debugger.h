@@ -1,26 +1,45 @@
 /*!***************************************************************************************
-\file			logging.h
+\file			Debugger.h
 \project
-\author			Shawn Tanary
+\author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			16/09/2022
+\date			25/09/2023
 
 \brief
-	This file contins functions that logger messages to either console or to a file.
+	This file contains a the declarations for a debugger using SpeedLogger
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+
 #pragma once
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include <spdlog/spdlog.h>
 
 #include <memory>
-//#include "Editor/editor-consolelog.h"
+#include <iostream>
 #include "Core/SystemInterface.h"
 
+#ifndef  DEBUG_H
+#define DEBUG_H
+
+//Variadic template printing
+#if defined(DEBUG) | defined(_DEBUG)
+template <typename... Args>
+inline void PRINT(Args&&... args)
+{
+	((std::cout << std::forward<Args>(args)), ...);
+}
+#else
+#pragma warning( disable : 4002)
+#define PRINT(ARGS) 
+
+#endif
+#endif // ! DEBUG_H
+
+//Easy access for debugger
 #define DEBUGGER Debugger::Instance()
 
 SINGLETON(Debugger)
@@ -129,6 +148,7 @@ void appendCustomAssertMessage(std::ostringstream& stream, const T& arg) {
 	stream << arg;
 }
 
+// Helper function to append custom messages
 template <typename T, typename... Args>
 void appendCustomAssertMessage(std::ostringstream& stream, const T& arg, const Args&... args) {
 	stream << arg << " ";

@@ -1,24 +1,21 @@
 /*!***************************************************************************************
 \file			FramerateController.cpp
 \project
-\author			Matthew Lau
+\author			Zacharie Hong
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section:
-\date			05/09/2022
+\date			05/09/2023
 
 \brief
-	Contains the definitions for FrameRateController class, its constructor and
-	member functions.
+	Contains definitions for FrameRateController class, its constructor and member functions.
 
-All content � 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "FramerateController.h"
 #include <GLFW/glfw3.h>
-#include "Core/Debug.h"
-
 
 void FrameRateController::Init(float _fixedDt)
 {
@@ -26,17 +23,6 @@ void FrameRateController::Init(float _fixedDt)
 	accumulatedTime = 0.0f;
 }
 
-/*******************************************************************************
-/*!
-*
-\brief
-	sets the time that the frame started at.
-	Note: this function should be called at the beginning of each game loop
-
-\return
-	void
-*/
-/*******************************************************************************/
 void FrameRateController::Start()
 {
 	frameStart = glfwGetTime();

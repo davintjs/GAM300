@@ -1,3 +1,18 @@
+﻿/*!***************************************************************************************
+\file			UUID.cpp
+\project
+\author			Matthew Lau
+
+\par			Course: GAM300
+\par			Section:
+\date			26/08/2023
+
+\brief
+	The definition of UUID help functions
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
+
 #include "UUID.h"
 #include <random>
 

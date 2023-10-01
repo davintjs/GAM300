@@ -2,7 +2,7 @@
 /file    glslshader.h
 /primary author Euan Lim (50%)
 /secondary author Jake Lian (50%)
-/date    06/11/2016
+@date    09/28/2023
 
 This file contains definitions of member functions of class GLShader.
 *//*__________________________________________________________________________*/

@@ -105,8 +105,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
-    <ClCompile Include="Source\Scene\Object.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Scene\HandlesTable.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
     <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
@@ -158,7 +161,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Precompiled.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Source\Scene\Components.cpp" />
-    <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -221,6 +223,7 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Scene\SceneTemplates.cpp">
       <SubType>
@@ -233,7 +236,6 @@
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
     <ClInclude Include="Source\Utilities\ThreadPool.h" />
-    <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\Events.h" />
     <ClInclude Include="Source\Core\EventsManager.h" />
@@ -256,7 +258,6 @@
     <ClInclude Include="Source\Precompiled.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Scene\Entity.h" />
-    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
@@ -351,14 +352,15 @@
       <DiagnosticsFormat>Classic</DiagnosticsFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <DisableSpecificWarnings>4275;4251</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4275;4251;4189;4100;4390;4715</DisableSpecificWarnings>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono\mono\Debug;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Debug;$(SolutionDir)External\spdlog\lib\Debug;$(SolutionDir)External\rttr\lib\Debug;$(SolutionDir)External\imgui\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mtd.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.lib;spdlogd.lib;Jolt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;mono-2.0-sgen.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>-IGNORE:4098 -IGNORE:4006 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-IGNORE:4098 -IGNORE:4006 /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mtd.dll" "$(TargetDir)assimp-vc142-mtd.dll" /Y
@@ -390,8 +392,8 @@ copy "$(SolutionDir)External\Mono\mono\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <DisableSpecificWarnings>4275;4251;4189;4100</DisableSpecificWarnings>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <DisableSpecificWarnings>4275;4251;4189;4100;4390;4715</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
