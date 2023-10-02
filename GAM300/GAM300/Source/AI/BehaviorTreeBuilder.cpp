@@ -31,21 +31,18 @@ void BehaviorTreeBuilder::Update(float dt)
 
 void BehaviorTreeBuilder::Exit()
 {
-	for (auto& tree : mBehaviorTrees)
+	for (auto& [key, data] : mBehaviorTrees)
 	{
-		delete tree;
+		delete data;
 	}
 	mBehaviorTrees.clear();
 }
 
 BehaviorTree* BehaviorTreeBuilder::GetBehaviorTree(std::string treeName)
 {
-	for (const auto& tree : mBehaviorTrees)
+	if (mBehaviorTrees.find(treeName) != mBehaviorTrees.end())
 	{
-		if (tree->GetTreeName() == treeName)
-		{
-			return tree;
-		}
+		return mBehaviorTrees[treeName];
 	}
 
 	E_ASSERT(false, "Nullptr returned while trying to find behavior tree...");
@@ -100,7 +97,7 @@ void BehaviorTreeBuilder::BuildTrees()
 
 		BehaviorTree* tempTree = new BehaviorTree(fileName, rootNode);
 
-		mBehaviorTrees.push_back(tempTree); // Add this tree to our behavior tree vector
+		mBehaviorTrees[fileName] = std::move(tempTree);
 	}
 }
 
