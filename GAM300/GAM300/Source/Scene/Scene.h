@@ -1,16 +1,15 @@
 ﻿/*!***************************************************************************************
 \file			Scene.h
 \project
-\author         
+\author			Zacharie Hong
 
 \par			Course: GAM300
-\date           07/09/2023
+\date			10/08/2023
 
 \brief
-	This file contains the declarations of the following:
-	1. Scene
+	This file declares all the functions used by Scene which functions as a ECS
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef SCENE_H
@@ -18,201 +17,104 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <filesystem>
 #include <string>
-#include <bitset>
-#include "Core/Debug.h"
 #include "Entity.h"
 #include "Components.h"
-#include <unordered_map>
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
+#include "HandlesTable.h"
 
-using SingleObjectTypes = decltype(TemplatePack<Entity>::Concatenate(SingleComponentTypes()));
-
-template <typename T>
-using Table = std::unordered_map<Engine::UUID,T*>;
-
-template<typename... Ts>
-struct SingleHandlesTable
-{
-	constexpr SingleHandlesTable(TemplatePack<Ts...>) {}
-	SingleHandlesTable() = default;
-	template <typename T1>
-	bool Has(Engine::UUID euid, Engine::UUID uuid = 0)
-	{
-		(void)uuid;
-		auto& entries = std::get<Table<T1>>(tables);
-		if (entries.find(euid) == entries.end())
-			return false;
-		return true;
-	}
-
-	template <typename T1>
-	bool Has(T1& object)
-	{
-		return Has<T1>(object.EUID());
-	}
-
-	template <typename T1>
-	constexpr T1& Get(Engine::UUID euid)
-	{
-		return *std::get<Table<T1>>(tables)[euid];
-	}
-
-	template <typename T1>
-	constexpr T1& GetByUUID(Engine::UUID uuid)
-	{
-		auto& entries = std::get<Table<T1>>(tables);
-		for (auto& pair : entries)
-		{
-			if (pair.second->UUID() == uuid)
-			{
-				return *pair.second;
-			}
-		}
-		E_ASSERT(false, "Could not find handle!");
-	}
-
-	template <typename T1>
-	constexpr void Remove(Engine::UUID euid)
-	{
-		auto& entries = std::get<Table<T1>>(tables);
-		entries.erase(euid);
-	}
-
-	template <typename T1,typename... Args>
-	constexpr T1* emplace(T1* object, Engine::UUID euid)
-	{
-		auto& table = std::get<Table<T1>>(tables);
-		auto pair = table.emplace(std::make_pair(euid, object));
-		return pair.first->second;
-	}
-private:
-	std::tuple<Table<Ts>...> tables;
-};
-
-template <typename T>
-using MultiTable = std::unordered_map<Engine::UUID,Table<T>>;
-
-template<typename... Ts>
-struct MultiHandlesTable
-{
-	constexpr MultiHandlesTable(TemplatePack<Ts...>) {}
-	MultiHandlesTable() = default;
-	template <typename T1>
-	bool Has(Engine::UUID euid, Engine::UUID uuid)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		auto entIt = entries.find(euid);
-		if (entIt == entries.end())
-			return false;
-		Table<T1>& subEntries = entIt->second;
-		if (subEntries.find(uuid) == subEntries.end())
-			return false;
-		return true;
-	}
-
-	template <typename T1>
-	bool Has(T1& object)
-	{
-		return Has<T1>(object.EUID(),object.UUID());
-	}
-
-	template <typename T1>
-	constexpr T1& Get(Engine::UUID euid, Engine::UUID uuid)
-	{
-		return *std::get<MultiTable<T1>>(tables)[euid][uuid];
-	}
-
-
-	template <typename T1>
-	constexpr T1& GetByUUID(Engine::UUID uuid)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		for (auto& entryPair : entries)
-		{
-			for (auto& pair : entryPair.second)
-			{
-				if (pair.first == uuid)
-				{
-					return *pair.second;
-				}
-			}
-		}
-		E_ASSERT(false, "Could not find handle!");
-	}
-
-	template <typename T1>
-	constexpr std::vector<T1*> Get(Engine::UUID euid)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		std::vector<T1*> arr;
-		for (auto& pair : entries[euid])
-		{
-			arr.push_back(pair.second);
-		}
-		return arr;
-	}
-
-	template <typename T1>
-	constexpr void Remove(Engine::UUID euid, Engine::UUID uuid)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		entries[euid].erase(uuid);
-		if (entries[euid].size() == 0)
-			entries.erase(euid);
-	}
-
-	template <typename T1, typename... Args>
-	constexpr T1* emplace(T1* object)
-	{
-		auto& entries = std::get<MultiTable<T1>>(tables);
-		auto& subTable = entries[object->EUID()];
-		auto pair = subTable.emplace(std::make_pair(object->UUID(),object));
-		return pair.first->second;
-	}
-private:
-	std::tuple<MultiTable<Ts>...> tables;
-};
-
-using SingleHandles = decltype(SingleHandlesTable(SingleObjectTypes()));
-using MultiHandles = decltype(MultiHandlesTable(MultiComponentTypes()));
-
-
-
-using GetType = decltype(GetTypeGroup(AllObjectTypes()));
-
-template<typename T, typename... Ts>
-static void RegisterComponentsHelper()
-{
-	ComponentTypes.emplace(GetType::Name<T>(), GetType::E<T>());
-	if constexpr (sizeof...(Ts) != 0)
-	{
-		RegisterComponentsHelper<Ts...>();
-	}
-}
-
-template<typename... Ts>
-static void RegisterComponents(TemplatePack<Ts...>)
-{
-	RegisterComponentsHelper<Ts...>();
-}
-
-using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
-
-using EntitiesPtrArray = std::vector<Entity*>;
 
 struct Scene
 {
-	enum class State : char 
-	{
-		Edit = 0,
-		Play,
-		Paused
-	};
-
+	std::filesystem::path filePath;
+	using Layer = std::list<Engine::UUID>;
+	const Engine::UUID uuid = Engine::CreateUUID();
+	Layer layer;
 	std::string sceneName;
 
+	//Creates empty scene
+	Scene(const std::string& _filepath);
+
+	//Copy assignment
+	Scene& operator=(Scene& rhs);
+
+	//Reads deletion buffer and deletes them from their arrays
+	void ClearBuffer();
+
+	//Get an object by euid and uuid(Multi components only)
+	template<typename T>
+	T& Get(Engine::UUID euid, Engine::UUID uuid = 0);
+
+	//Get an object by handle
+	template<typename T>
+	T& Get(Handle& handle);
+
+	//Get an object by passing in their owner(Entity/Component)
+	template<typename T, typename Owner>
+	T& Get(Owner& object);
+
+	//Find an object solely by UUID(Slow)
+	template<typename T>
+	T& GetByUUID(Engine::UUID uuid);
+
+	//Gets an array of component pointers that belongs to given EUID
+	template<typename T>
+	std::vector<T*> GetMulti(Engine::UUID euid);
+
+	//Gets an array of component pointers that belongs to given object
+	template<typename T, typename Owner>
+	std::vector<T*> GetMulti(Owner& object);
+
+	//Destroy an object
+	template<typename T>
+	void Destroy(T& object);
+
+	//Gets an array of objects(Entity/Components)
+	template <typename T>
+	auto& GetArray();
+
+	//Checks if an object is active
+	template <typename T>
+	bool IsActive(T& object);
+
+	//Sets active for an object
+	template <typename T>
+	void SetActive(T& object, bool val = true);
+
+	//Checks if an entity has a component
+	template <typename Component>
+	bool Has(const Entity& entity);
+
+	//Checks if scene has a handle
+	template <typename T>
+	bool HasHandle(const Handle& handle);
+
+	//Adds an object by giving a owner to it, sharing its euid
+	template <typename T, typename Owner, typename... Args>
+	T* Add(const Owner& owner, Args&&... args);
+
+	//Adds an object creating an entirely new one, EUID should be specified if 
+	//they are components as they should belong to an entity
+	template <typename T, typename... Args>
+	T* Add
+	(
+		Engine::UUID euid = Engine::CreateUUID(),
+		Engine::UUID uuid = Engine::CreateUUID(),
+		Args&&... args
+	);
+
+
+#pragma region SCRIPTING/DESERIALIZATION HELPERS
+	//Get component of another object as a void pointer(Mono does type casting)
+	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
+
+	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle *)pObject));
+	//Check whether handle exists in scene
+	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
+#pragma endregion
 private:
+	using EntitiesList = ObjectsList<Entity, MAX_ENTITIES>;
+	using EntitiesPtrArray = std::vector<Entity*>;
 	EntitiesList entities;	//Vector should be in order
 	SingleComponentsArrays singleComponentsArrays;
 	MultiComponentsArrays multiComponentsArrays;
@@ -220,375 +122,53 @@ private:
 	ComponentsBufferArray componentsDeletionBuffer;
 	SingleHandles singleHandles;
 	MultiHandles multiHandles;
-public:
 
-	std::filesystem::path filePath;
-	using Layer = std::list<Engine::UUID>;
-	const Engine::UUID uuid = Engine::CreateUUID();
-	Layer layer;
-
-	Scene(const std::string& _filepath);
-	Scene& operator=(Scene&) = delete;
-	Scene(Scene& rhs);
-	void ClearBuffer();
-
-
-	template <typename T,typename... Ts>
-	void CloneHelper(Scene& rhs)
-	{
-		for (T& object : rhs.GetArray<T>())
-		{
-			if constexpr (!std::is_same_v<T, Transform> && !std::is_same_v<T, Tag>)
-			{
-				T* pObject = Add<T>(object.euid, object.uuid);
-				*pObject = object;
-				if (!rhs.IsActive(object))
-				{
-					SetActive(*pObject, false);
-				}
-			}
-			else
-			{
-				T& obj = Get<T>(object.euid);
-				obj = object;
-			}
-		
-		}
-		if constexpr (sizeof...(Ts) != 0)
-		{
-			CloneHelper<Ts...>(rhs);
-		}
-	}
-
-	template <typename T, typename... Ts>
-	void CloneHelper(Scene& rhs,TemplatePack<T,Ts...>)
-	{
-		CloneHelper<T,Ts...>(rhs);
-	}
-
-
-
-	template<typename T>
-	T& Get(Engine::UUID euid, Engine::UUID uuid = 0)
-	{
-		(void)uuid;
-		//E_ASSERT
-		//(
-		//	handles.Has<T>(euid),
-		//	"Entity euid: ", euid, " of ", typeid(T).name() + strlen("struct "), " doesn't exist in this scene"
-		//);
-
-		if constexpr (SingleObjectTypes::Has<T>())
-		{
-			return singleHandles.Get<T>(euid);
-		}
-		else if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return multiHandles.Get<T>(euid,uuid);
-		}
-	}
-
-	template<typename T>
-	T& Get(Handle& handle)
-	{
-		return Get<T>(handle.euid, handle.uuid);
-	}
-
-	template<typename T, typename Owner>
-	T& Get(Owner& object)
-	{
-		if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return *GetMulti<T>(object.euid).front();
-		}
-		else
-		{
-			return Get<T>(object.euid);
-		}
-	}
-
-	GENERIC_RECURSIVE(void*, Get, &Get<T>(((Object*)pObject)->EUID()));
-
-	GENERIC_RECURSIVE(void*, GetByUUID, &Get<T>(*(Handle*)pObject));
-
-	template<typename T>
-	T& GetByUUID(Engine::UUID uuid);
-
-	template<typename T>
-	std::vector<T*> GetMulti(Engine::UUID euid)
-	{
-		static_assert(MultiComponentTypes::Has<T>(), "Type is not a multi component");
-		return multiHandles.Get<T>(euid);
-	}
-
-	template<typename T, typename Owner>
-	std::vector<T*> GetMulti(Owner& object)
-	{
-		static_assert(MultiComponentTypes::Has<T>(), "Type is not a multi component");
-		return GetMulti<T>(object.euid);
-	}
-
-
-	template<typename T, typename... Ts>
-	struct DestroyComponentsGroup
-	{
-		Scene& scene;
-		Entity& entity;
-		DestroyComponentsGroup(TemplatePack<T, Ts...> pack) {}
-		DestroyComponentsGroup(Scene& _scene, Entity& _entity) : scene{ _scene }, entity{_entity}
-		{
-			DestroyComponents<T, Ts...>();
-		}
-
-		template <typename T1, typename... T1s>
-		void DestroyComponents()
-		{
-			if (scene.Has<T1>(entity))
-			{
-				if constexpr (SingleComponentTypes::Has<T1>())
-				{
-					scene.Destroy(scene.Get<T1>(entity));
-				}
-				else if constexpr (MultiComponentTypes::Has<T1>())
-				{
-					for (T1* pComponent : scene.GetMulti<T1>(entity.euid))
-					{
-						scene.Destroy(*pComponent);
-					}
-				}
-			}
-			if constexpr (sizeof...(T1s) != 0)
-			{
-				DestroyComponents<T1s...>();
-			}
-		}
-	};
-
-	using DestroyEntityComponents = decltype(DestroyComponentsGroup((AllComponentTypes())));
-
-	template<typename T>
-	void Destroy(T& object)
-	{
-		if constexpr (std::is_same<T, Entity>())
-		{
-			entitiesDeletionBuffer.push_back(&object);
-			entities.SetActive((ObjectIndex)object.uuid,false);
-			DestroyEntityComponents(*this, object);
-		}
-		else if constexpr (SingleComponentTypes::Has<T>())
-		{
-			componentsDeletionBuffer.GetArray<T>().push_back(&object);
-			auto& arr = singleComponentsArrays.GetArray<T>();
-			ObjectIndex index = arr.GetDenseIndex(object);
-			arr.SetActive(index,false);
-			entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
-		}
-		else if constexpr (MultiComponentTypes::Has<T>())
-		{
-			componentsDeletionBuffer.GetArray<T>().push_back(&object);
-			auto& arr = multiComponentsArrays.GetArray<T>();
-			arr.SetActive(object, false);
-			if (multiHandles.Get<T>(object.euid).size() == 1)
-				Get<Entity>(object).hasComponentsBitset.set(GetType::E<T>(), false);
-		}
-		else
-		{
-			static_assert(true, "Not a valid type of object to destroy");
-		}
-		ObjectDestroyedEvent e(&object);
-		EVENTS.Publish(&e);
-		EraseHandle(object);
-	}
-
-
+	//Helper to iterate through all types in buffer to delete components
 	template <typename T, typename... Ts>
 	struct ClearBufferStruct
 	{
-		ClearBufferStruct(TemplatePack<T, Ts...> pack) {}
-		ClearBufferStruct(Scene& _scene) : scene{ _scene }
-		{
-			CleanComponents<T, Ts...>();
-		}
-		Scene& scene;
+		//Template pack initialization
+		constexpr ClearBufferStruct(TemplatePack<T, Ts...> pack) {}
+		//Constructor, calls CleanComponents
+		ClearBufferStruct(Scene& _scene);
+
+		//Deletes components by reading buffer and erasing from respective component arrays
 		template <typename T1, typename... T1s>
-		void CleanComponents()
-		{
-			auto& arr = scene.componentsDeletionBuffer.GetArray<T1>();
-			if constexpr (SingleComponentTypes::Has<T1>())
-			{
-				auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
-				for (T1* pComponent : arr)
-					compArray.erase(*pComponent);
-			}
-			else if constexpr (MultiComponentTypes::Has<T1>())
-			{
-				auto& compArray = scene.multiComponentsArrays.GetArray<T1>();
-				for (T1* pComponent : arr)
-					compArray.erase(*pComponent);
-			}
-			arr.clear();
-			if constexpr (sizeof...(T1s) != 0)
-			{
-				CleanComponents<T1s...>();
-			}
-		}
+		void CleanComponents();
+
+		Scene& scene;
 	};
 
-	using ClearBufferHelper = decltype(ClearBufferStruct(AllComponentTypes()));
-
-
-	template <typename T>
-	auto& GetArray()
+	//Helper to iterate through all types and add to buffer when entity is deleted
+	template<typename T, typename... Ts>
+	struct DestroyComponentsGroup
 	{
-		if constexpr (std::is_same_v<T, Entity>)
-		{
-			return entities;
-		}
-		else if constexpr (SingleComponentTypes::Has<T>())
-		{
-			return singleComponentsArrays.GetArray<T>();
-		}
-		else if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return multiComponentsArrays.GetArray<T>();
-		}
-	}
+		//Template pack initialization
+		constexpr DestroyComponentsGroup(TemplatePack<T, Ts...> pack) {}
+		DestroyComponentsGroup(Scene& _scene, Entity& _entity);
 
-	template <typename T>
-	bool IsActive(T& object)
-	{
-		static_assert(AllObjectTypes::Has<T>(), "Type is not a valid scene object");
-		auto& arr = GetArray<T>();
-		if constexpr (std::is_same_v<T, Entity>)
-		{
-			return arr.IsActiveDense(arr.GetDenseIndex(object));
-		}
-		else if constexpr (SingleComponentTypes::Has<T>())
-		{
-			return arr.IsActiveDense(arr.GetDenseIndex(object));
-		}
-		else if constexpr (MultiComponentTypes::Has<T>())
-		{
-			for (auto it = arr.begin(); it != arr.end(); ++it)
-			{
-				if (&(*it) == &object)
-					return it.IsActive();
-			}
-			E_ASSERT(false, "Multicomponent cannot be found");
-		}
-	}
-
-	template <typename T>
-	void SetActive(T& object, bool val = true)
-	{
-		GetArray<T>().SetActive(object, val);
-	}
-
-
-	template <typename Component>
-	bool Has(const Entity& entity)
-	{
-		if constexpr (AllComponentTypes::Has<Component>())
-		{
-			return entity.hasComponentsBitset.test(GetType::E<Component>());
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	template <typename T>
-	bool HasHandle(const Handle& handle)
-	{
-		if constexpr (SingleObjectTypes::Has<T>())
-		{
-			return singleHandles.Has<T>(handle.euid);
-		}
+		//Adds to components buffer for deletion
+		template <typename T1, typename... T1s>
+		void DestroyComponents();
 		
-		if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return multiHandles.Has<T>(handle.euid,handle.uuid);
-		}
+		Scene& scene;
+		Entity& entity;
+	};
 
-	}
+	//Helps copy paste all components over to copy construction
+	template <typename T, typename... Ts>
+	void CloneHelper(Scene& rhs);
 
+	//Helps copy paste all components over to copy construction
+	template <typename T, typename... Ts>
+	void CloneHelper(Scene& rhs, TemplatePack<T, Ts...>);
+
+	//Erases the handle from a table when an object is destroyed
 	template <typename T>
-	void EraseHandle(T& object)
-	{
-		if constexpr (SingleObjectTypes::Has<T>())
-		{
-			return singleHandles.Remove<T>(object.euid);
-		}
-		else if constexpr (MultiComponentTypes::Has<T>())
-		{
-			return multiHandles.Remove<T>(object.euid, object.uuid);
-		}
-	}
+	void EraseHandle(T& object);
 
-	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
-
-	template <typename T, typename Owner, typename... Args>
-	T* Add(const Owner& owner,Args&&... args)
-	{
-		return Add<T>(owner.EUID(), Engine::CreateUUID(), args...);
-	}
-
-	template <typename T, typename... Args>
-	T* Add
-	(
-		Engine::UUID euid = Engine::CreateUUID(), 
-		Engine::UUID uuid = Engine::CreateUUID(),
-		Args&&... args
-	)
-	{
-		static_assert(AllObjectTypes::Has<T>(),"Type is not a valid scene object");
-		auto& arr = GetArray<T>();
-		T* object{ nullptr };
-		//TRY CATCH HERE IN CASE WE CANT ADD
-		if constexpr (std::is_same_v<T, Entity>)
-		{
-			//while (singleHandles.Has<Entity>(euid) || euid == 0)
-			//{
-			//	euid = Engine::CreateUUID();
-			//}
-			object = &arr.emplace_back(args...);
-			object->euid = euid;
-			object->uuid = arr.GetDenseIndex(*object);
-			arr.SetActive((ObjectIndex)object->uuid);
-			singleHandles.emplace(object, object->euid);
-			Add<Transform>(*object);
-			Tag* tag = Add<Tag>(*object);
-			tag->name = "New GameObject(";
-			tag->name += std::to_string(arr.size());
-			tag->name += ")";
-			layer.push_back(euid);
-			// Add the entity to the inspector
-		}
-		else if constexpr (AllComponentTypes::Has<T>())
-		{
-			Entity& entity{ Get<Entity>(euid) };
-			object = &arr.emplace((ObjectIndex)entity.uuid,args...);
-			object->euid = euid;
-			object->uuid = uuid;
-			if constexpr (SingleComponentTypes::Has<T>())
-			{
-				singleHandles.emplace(object, object->euid);
-			}
-			else
-			{
-				multiHandles.emplace(object);
-			}
-			entity.hasComponentsBitset.set(GetType::E<T>(), true);
-			arr.SetActive(*object);
-		}
-		if (object)
-		{
-			ObjectCreatedEvent e = {object};
-			EVENTS.Publish(&e);
-		}
-		return object;
-	}
+	using ClearBufferHelper = decltype(ClearBufferStruct(AllComponentTypes()));
+	using DestroyEntityComponents = decltype(DestroyComponentsGroup((AllComponentTypes())));
 };
 
 #include "SceneTemplates.cpp"

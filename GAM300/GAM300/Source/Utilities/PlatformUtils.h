@@ -1,21 +1,19 @@
-#pragma once
+/*!***************************************************************************************
+\file			Platform_Utils.h
+\project
+\author         Joseph Ho
 
-/**************************************************************************************/
-/*!
-//    \file			Platform_Utils.h
-//    \author(s) 	Joseph Ho Jun Jie
-//
-//    \date   	    26 October 2022
-//    \brief		This file contains the declaration of class type FileDialogs for the
-//					loading/saving of data from the engine into data files.
-//
-//    \Percentage   Joseph 100%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+    This file contains the declarations for FileDialogs for the loading/saving of data
+	from the engine into data files.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
+#pragma once
 
 #ifndef PLATFORM_UTILS_H
 #define PLATFORM_UTILS_H

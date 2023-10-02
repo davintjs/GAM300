@@ -471,7 +471,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		fileExtension == ".desc" ||
 		fileExtension == "")
 	{
-		PRINT("IGNORED: ", filePath.string(), "\n");
 		return;
 	}
 

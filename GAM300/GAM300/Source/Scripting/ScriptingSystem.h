@@ -1,14 +1,13 @@
 /*!***************************************************************************************
-\file			scripting-system.h
+\file			ScriptingSystem.h
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
-\par			Section:
+\par			Course: GAM300
 \date			10/03/2023
 
 \brief
-	This file holds the declaration of functions for scripting-system.cpp
+	This file holds the declaration of functions for the scripting system using Mono C#
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -71,6 +70,15 @@ enum class CompilingState
 	Wait,
 };
 
+enum class LogicState
+{
+	START,
+	UPDATE,
+	EXIT,
+	CLEANUP,
+	NONE
+};
+
 struct ScriptClass
 {
 	ScriptClass() = default;
@@ -93,324 +101,131 @@ struct ScriptClass
 ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
-	/**************************************************************************/
-	/*!
-		\brief
-			Called at the start of engine runtime, starts a thread to 
-			start compilation and track change of files
-	*/
-	/**************************************************************************/
+	//Starts another thread to invoke scripting behaviour
 	void Init();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Called every frame
-	*/
-	/**************************************************************************/
+	//Synchronises with the the other thread to ensure it only runs onces per frame
 	void Update(float dt);
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Called at the engine exit
-	*/
-	/**************************************************************************/
+	//Does nothing
 	void Exit();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Creates an instance of a monoClass
-		\param mClass
-			Class to create instance or clone from
-		\return
-			Pointer to the clone
-	*/
-	/**************************************************************************/
-
+	//Creates an instance of a monoClass
 	template <typename... Args>
 	MonoObject* InstantiateClass(MonoClass * mClass, Args&&... args);
-	/**************************************************************************/
-	/*!
-		\brief
-			Initializes mono by creating a root domain
-	*/
-	/**************************************************************************/
+
+	//Initializes mono by creating a root domain
 	void InitMono();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Cleans up mono and its domains
-	*/
-	/**************************************************************************/
+	//Cleans up mono and its domains
 	void ShutdownMono();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Cleans up mono and its domains
-		\param mObj
-			Instance to invoke from
-		\param mMethod
-			Method to invoke
-		\param params
-			Parameters to pass into mono function
-	*/
-	/**************************************************************************/
-	MonoObject* invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
+	//Invokes a mono method on an instance
+	MonoObject* Invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
+	//Invokes a mono method on a script
 	void InvokeMethod(Script & script,const std::string& method);
 
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Reflects a gameObject of ID into C#
-		\param _ID
-			ID of gameObject to be reflected
-	*/
-	/**************************************************************************/
-	MonoObject* CloneInstance(MonoObject* _instance);
-
-	/*******************************************************************************
-	/*!
-	\brief
-		Creates an instance of a given class
-	\param _mClass
-		Class to make object from
-	\return
-		MonoObject of a class
-	*/
-	/*******************************************************************************/
-	MonoObject* CreateInstance(MonoClass* _mClass);
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Creates a new file
-		\param _name
-			Name of the new script
-	*/
-	/**************************************************************************/
-	std::string AddEmptyScript(const std::string& _name);
-
-	/*******************************************************************************
-	/*!
-	\brief
-		Finds a type in C# mono using a string and returns the monoType
-	\param name
-		Name of type to find
-	\return
-		MonoType found
-	*/
-	/*******************************************************************************/
-	MonoType* GetMonoTypeFromName(std::string& name);
-
-	/*******************************************************************************
-	/*!
-	\brief
-		Converts a C string into a mono string
-	\param str
-		Str to convert into mono string
-	\return
-		Mono version of given string
-	*/
-	/*******************************************************************************/
-	MonoString* CreateMonoString(const char* str);
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Creates a collision data for scripts
-		\param collided
-			Rhs gameobject
-		\param collidee
-			Lhs gameObject
-	*/
-	/**************************************************************************/
-	MonoObject* GetFieldMonoObject(MonoClassField* mField, MonoObject* mObject);
-
-	/**************************************************************************/
-	/*!
-		\brief
-			Reloads and updates script classes
-	*/
-	/**************************************************************************/
+	//Updates all script classes after reloading dll
 	void UpdateScriptClasses();
 
-	/**************************************************************************/
-	/*!
-		\brief
-			Creates an appDomain so that a new assembly can be loaded
-	*/
-	/**************************************************************************/
+	//Creates a new app domain
 	MonoDomain* CreateAppDomain();
-	/**************************************************************************/
-	/*!
-		\brief
-			Reloads an assembly by creating a new domain
-	*/
-	/**************************************************************************/
+
+	//Reloads an assembly by creating a new domain
 	void SwapDll();
-	/**************************************************************************/
-	/*!
-		\brief
-			Work for thread to check for script files and recompile if needed
-	*/
-	/**************************************************************************/
+
+	//Recompiles assembly
 	void RecompileThreadWork();
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Gets a field from a C# field using its name
-	\param name
-		Name of the field
-	\param buffer
-		Buffer to store the values, needs to be type casted
-	\return
-		False if operation failed, true if it was successful
-	*/
-	/*******************************************************************************/
+
+	//Gets data from C# field into given field
 	void GetFieldValue(MonoObject* instance, MonoClassField* mClassFiend,  Field& field);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Sets a field from a C# field using its name
-	\param name
-		Name of the field
-	\param value
-		Value to write into C# memory space
-	\return
-		False if operation failed, true if it was successful
-	*/
-	/*******************************************************************************/
+
+	//Sets data from field into C# field
 	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field);
 
-	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent);
-
+	//Checks whether a mono class is script
 	bool IsScript(MonoClass* monoClass);
 
+	//Thread work to run update loop of logic in play mode
+	//recompile/swap assembly while in editor mode
 	void ThreadWork();
 
-	//Updates by setting field values back into C#
+	//Callback when a script file is modified to start recompilation
+	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>*pEvent);
+
+	//Callback when a script file is modified to start recompilation
 	void CallbackScriptSetField(ScriptSetFieldEvent* pEvent);
 
+	//Callback when a script file is modified to start recompilation
 	void CallbackScriptGetField(ScriptGetFieldEvent* pEvent);
-
+	
+	//Callback to get all script fields
 	void CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when a scene is opened
-
-	\param pEvent
-		pointer to the relevant event 
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
+		
+	//Callback function when a scene is loaded
 	void CallbackSceneChanging(SceneChangingEvent* pEvent);
 
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when preview is started
-
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
+	//Callback function when a scene has just started
 	void CallbackSceneStart(SceneStartEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when preview is started
 
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
+	//Callback function when a scene is about to end
 	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
-	/*******************************************************************************
-	/*!
-	*
-	\brief
-		Callback function when preview is started
 
-	\param pEvent
-		pointer to the relevant event
-
-	\return
-		void
-	*/
-	/*******************************************************************************/
+	//Callback function to get all the script names
 	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
 
-
+	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
+	//Helper to subscribe to all objects deletion
 	template <typename... Ts>
 	void SubscribeObjectDestroyed(TemplatePack<Ts...>);
 
+	//Callback function to when a object is deleted
 	template<typename T>
 	void CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent);
 
+	//Get the script if it is reflected already, 
+	//else instantiate a MonoObject and store it
 	MonoObject* ReflectScript(Script& component, MonoObject* ref = nullptr);
 
+	//Reflect from another scene, copy construction of Sceene
 	void ReflectFromOther(Scene& other);
 
+	//Gets the assembly image
 	MonoImage* GetAssemblyImage();
 
+	//Tell all scripts to invoke a function if they are active
 	void InvokeAllScripts(const std::string& funcName);
 
+	//Updates all the references in the scripts when an object is deleted
 	void UpdateReferences();
 
-
-	using FieldMap = std::unordered_map<std::string, Field>;
+	//Cache scripts to prepare for DLL reloading
 	void CacheScripts();
-	std::unordered_map<Handle, FieldMap> cacheFields;
+	
+	//Load cache back into scripts after dll is reloaded
 	void LoadCacheScripts();
 
 	//Mapping script to mono script
 	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
+	//Field name to field
+	using FieldMap = std::unordered_map<std::string, Field>;
 
+	//Script name to script class
 	std::unordered_map<std::string, ScriptClass> scriptClassMap;
-	float timeUntilRecompile{0};
-	CompilingState compilingState{ CompilingState::Wait };
-
-	std::vector<Handle> reflectionQueue;
-
+	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
+	//Cached fields
+	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	bool objectDestroyed = false;
-
-	enum class LogicState
-	{
-		START,
-		UPDATE,
-		EXIT,
-		CLEANUP,
-		NONE
-	};
-
-	static std::unordered_map<LogicState, std::string> logicStateNames;
-
+	CompilingState compilingState{ CompilingState::Wait };
+	std::vector<Handle> reflectionQueue;
 	LogicState logicState;
 
+	float timeUntilRecompile{ 0 };
+	std::atomic_bool objectDestroyed = false;
 	std::atomic_bool ran;
 };
 #endif // !SCRIPTING_SYSTEM_H

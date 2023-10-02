@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Model3d.cpp
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the definitions of
+    1. temporary stucts and classes used for testing
+    2. Model class to create a model by abstacting openGL functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "Model3d.h"
 #include "Editor_Camera.h"
@@ -105,12 +120,12 @@ void Model::setup_instanced_shader() {
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/InstancedRender.vert"));
+        "Shaders/InstancedRender.vert"));
 
     // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/InstancedRender.frag"));
+        "Shaders/InstancedRender.frag"));
 
     std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
@@ -131,13 +146,13 @@ void Model::setup_shader() {
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.vert"));
+        "Shaders/abnb2.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
     // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.frag"));
+        "Shaders/abnb2.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "abnb2 SHADER\n";
@@ -523,13 +538,13 @@ void Model::setup_lightshader()
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/BasicLighting.vert"));
+        "Shaders/BasicLighting.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
 // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/BasicLighting.frag"));
+        "Shaders/BasicLighting.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "BasicLighting SHADER\n";
@@ -553,13 +568,13 @@ void Model::setup_affectedShader()
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/LightAffected.vert"));
+        "Shaders/LightAffected.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
 // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/LightAffected.frag"));
+        "Shaders/LightAffected.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "LightAffected SHADER\n";
@@ -872,12 +887,12 @@ void Model::debugAABB_init() // vao & shader
     //// Vertex Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //    "Shaders/abnb2.vert"));
 
     //// Fragment Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //    "Shaders/debugAABB.frag"));
 
     //std::cout << "DEBUG AABB SHADER\n";
     //shaderAABB.CompileLinkValidate(shdr_files);
@@ -964,12 +979,12 @@ void Model::lineinit()
     //// Vertex Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //    "Shaders/abnb2.vert"));
 
     //// Fragment Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //    "Shaders/debugAABB.frag"));
 
     //std::cout << "DEBUG AABB SHADER\n";
     //shaderAABB.CompileLinkValidate(shdr_files);
@@ -1197,13 +1212,13 @@ void Model::setup_skybox_shader()
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/Skybox.vert"));
+        "Shaders/Skybox.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
 // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/Skybox.frag"));
+        "Shaders/Skybox.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "SKYBOX SHADER\n";

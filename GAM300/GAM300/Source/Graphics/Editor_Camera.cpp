@@ -1,3 +1,19 @@
+/*!***************************************************************************************
+\file			Editor_Camera.cpp
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the editor camera and it's related functionalities
+	that includes:
+	1. Ray3D Class for ray casting ( Mouse Picking) and collision with OBB
+	2. Editor Camera and it's functionalities
+
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Editor/EditorHeaders.h"

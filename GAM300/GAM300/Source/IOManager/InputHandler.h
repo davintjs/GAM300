@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			InputHandler.h
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the declarations of the Input Handler
+	1. Checks for keyboard inputs ( Press / Hold )
+	2. Check for Mouse inputs ( Press / Hold / Double Click )
+	3. Toggling on and off Fullscreen
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #pragma once
 
 #include "IOManager/Handler_GLFW.h"
@@ -27,48 +44,74 @@ public:
 		GLFW_PRESS -> if pressed
 		GLFW_RELEASE -> if released / not pressed
 	*******************************************************************************/
-	static bool isKeyButtonHolding(int key);// I guess u can use this for things like moving around
 
+	// Getter for Keyboard Button Holding
+	static bool isKeyButtonHolding(int key);// I guess u can use this for things like moving around
+	
+	// Getter for Keyboard Button Pressed
 	static bool isKeyButtonPressed(int key);// UNIQUE 1 Time Press -> Pressing Tab or something like that
-											// I am sure u know what i mean big boi
+											
+	// Getter for Mouse left button Pressed
 	static bool isMouseButtonPressed_L();
+	
+	// Getter for Mouse right button Pressed
 	static bool isMouseButtonPressed_R();
 
+	// Getter for Mouse left button holding
 	static bool isMouseButtonHolding_L();
+
+	// Getter for Mouse right button Pressed
 	static bool isMouseButtonHolding_R();
 
 
+	// Getter for Mouse coordinate (screen space)
 	static glm::vec2 getMousePos(); // < X , Y >
 
+	// Setter for isFullscreen
 	static void setFullscreen(bool);
 
+	// Getter for isFullscreen
 	static bool isFullscreen();
 
-	//static void resizeViewport(int width, int height);
-	static double getMouseX(); 
+	// Getter for mouse x coordinate
+	static double getMouseX();
+
+	// Getter for mouse y coordinate
 	static double getMouseY();
 
+	// Setter for mouse scroll wheel
 	static void setMouseScroll(int);
 
+	// Getter for mouse scroll wheel
 	static int getMouseScrollState();// 1 -> scroll up / -1 -> scroll down, 0 -> nothing
 
+	// Setter for Keyboard button state - Press
 	static void setKeystate_Press(int key);
 
+	// Setter for Keyboard button state - Hold
 	static void setKeystate_Hold(int key);
 
+	// Setter for Keyboard button state - Release
 	static void setKeystate_Release(int key);
 
+	
 	static void copyingCurrStatetoLast();
 
 	static void mouseReset();
 
+	// Getter for mouse left button double click
 	static bool isMouse_L_DoubleClick();
 
+	// Getter for mouse left button double click & Hold
 	static bool isMouse_L_DoubleClickandHold();
 
+	// Setter for mouse button states
 	static void setMouseButtonState(int index, int state);
 
+	// Getter for current mouse button states
 	static int getMouseButtonState(int index); // change to button state
+	
+	// Getter for previous mouse button states
 	static int get_Prev_MouseButtonState(int index); // change to button state
 	// [0] is left click, [1] is right click
 	

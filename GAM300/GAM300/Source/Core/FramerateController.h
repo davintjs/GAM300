@@ -1,17 +1,17 @@
 /*!***************************************************************************************
 \file			FramerateController.h
 \project
-\author			Matthew Lau
+\author			Zacharie Hong
 \co-authors
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section:
-\date			05/09/2022
+\date			05/09/2023
 
 \brief
 	Contains declarations for FrameRateController class, its constructor and member functions.
 
-All content © 2022 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #define MyFrameRateController FrameRateController::Instance()
@@ -25,6 +25,13 @@ All content © 2022 DigiPen Institute of Technology Singapore. All rights reserve
 
 class FrameRateController : public Singleton<FrameRateController> {
 public:
+	/*******************************************************************************
+	/*!
+	*
+	\brief
+		Init FrameRate controller with a fixed delta time
+	*/
+	/*******************************************************************************/
 	void Init(float _fixedDt);
 	/*******************************************************************************
 	/*!
@@ -32,9 +39,6 @@ public:
 	\brief
 		Start the frame rate controller
 		Note: this function should be called at the start of each game loop
-
-	\return
-		void
 	*/
 	/*******************************************************************************/
 	void Start();
@@ -45,9 +49,6 @@ public:
 		End the frame rate controller for the frame.
 		Sets the frameEnd time and increments the frame count.
 		Note: this function should be called at the end of each game loop
-
-	\return
-		void
 	*/
 	/*******************************************************************************/
 	float End();
@@ -57,7 +58,10 @@ private:
 	double accumulatedTime{ 0 };
 	size_t steps{ 0 };
 public:
+	//Get fixed delta time
 	double GetFixedDt() const { return fixedDeltaTime; }
+
+	//Get steps after running fixed delta time
 	size_t GetSteps() const { return steps; }
 };
 

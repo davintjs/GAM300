@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			sparse-set.h
+\file			SparseSet.h
 \project
 \author			Zacharie Hong
 
@@ -20,7 +20,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <initializer_list>
 #include <array>
 #include <iostream>
-#include "Core/Debug.h"
 
 using ObjectIndex = uint32_t;
 
@@ -47,202 +46,84 @@ public:
     public:
 
 
-        /***************************************************************************/
-        /*!
-            \brief
-                Constructor for iterator
-            \param _sparseIndex
-                Index of element
-            \param _arr
-                Referenced sparse set
-        */
-        /**************************************************************************/
+        //Constructor for iterator
         Iterator(uint32_t _sparseIndex, SparseSet<T, N>& _arr);
 
-        /***************************************************************************/
-        /*!
-            \brief
-                Dereferencing operator to get value in it
-            \return
-                Reference to object stored
-        */
-        /**************************************************************************/
+        //Dereferencing operator to get value in it
         T& operator*() const;
 
-        /***************************************************************************/
-         /*!
-            \brief
-                Gets the next iterator
-            \return
-                Next iterator
-        */
-        /**************************************************************************/
+        //Gets the next iterator
         Iterator operator++();
 
-        /***************************************************************************/
-        /*!
-            \brief
-                Increments this iterator and but returns the current iteration
-            \return
-                this iterator
-        */
-        /**************************************************************************/
+        //Increment operator
         Iterator operator++(int);
 
-        /***************************************************************************/
-        /*!
-            \brief
-                Checks if two iterators are the same
-            \param other
-                Other iterator to compare with
-            \return
-                True if both iterators are of the same sparse index
-        */
-        /**************************************************************************/
+        //Compares two iterators
         bool operator==(const Iterator& other) const;
 
-        /***************************************************************************/
-        /*!
-            \brief
-                Checks if two iterators are NOT the same
-            \param other
-                Other iterator to compare with
-            \return
-                True if both iterators are NOT of the same sparse index
-        */
-        /**************************************************************************/
+        //Compares checks if two iterators are not the same
         bool operator!=(const Iterator& other) const;
     };
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the starting iterator to this sparse set
-        \return
-            Starting iterator to this sparse set
-    */
-    /**************************************************************************/
+    //Get the starting iterator
     Iterator begin();
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the ending iterator to this sparse set
-        \return
-            Starting iterator to this sparse set
-    */
-    /**************************************************************************/
+    //Get the end iterator
     Iterator end();
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Default constructor, initializes all indexes in sequence.
-    */
-    /**************************************************************************/
+    //Constructor
     SparseSet();
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Destructs all elements in the sparse set
-    */
-    /**************************************************************************/
+    //Destructor
     ~SparseSet();
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Constructs a instance of the type by trying to call a constructor
-            that takes in the same types of args
-        \param args
-            Args to be used to construct the object
-        \return
-            Constructed object
-    */
-    /**************************************************************************/
+    //Adds to sparseset by constructing object
     template <typename... Args>
     T& emplace_back(Args&&... args);
 
+    //Adds to sparseset by constructing object at given position
     template <typename... Args>
     T& emplace(ObjectIndex index ,Args&&... args);
-    /***************************************************************************/
-    /*!
-        \brief
-            Erases from the sparse set by comparing memory addresses
-        \param val
-            Reference of value that would be used for memory address
-    */
-    /**************************************************************************/
 
+    //Erases element that matches denseIndex
     void erase(uint32_t denseIndex);
 
-
+    //Erases element that matches val memory address
     void erase(T& val);
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the amount of objects in use
-        \return
-            Amount of objects in use
-    */
-    /**************************************************************************/
+    //Amount of objects in the sparseSet
     uint32_t size() const;
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Gets the amount of objects in use
-        \param i
-            Index of array
-        \return
-            Reference to object that was gotten through subscript
-    */
-    /**************************************************************************/
+    //Subscript operator
     T& operator[] (size_t i);
 
+    //Dense subscript operator
     T& DenseSubscript (ObjectIndex val);
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Checks if object is part of this sparse set
-        \param pValue
-            Object to check
-        \return
-            True if the object is part of this sparse set
-    */
-    /**************************************************************************/
+    //Check if object is within memory address of this array
     bool contains(T& pValue);
 
+    //Get denseIndex of object
     uint32_t GetDenseIndex(T& object);
 
+    //Get denseIndex of sparseIndex
     uint32_t GetDenseIndex(uint32_t sparseIndex);
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Resets sparse set to size 0
-    */
-    /**************************************************************************/
+    //Resets size to 0
     void clear();
 
-    /***************************************************************************/
-    /*!
-        \brief
-            Check if sparse set is empty
-        \return
-            True if no objects
-    */
-    /**************************************************************************/
+    //Checks if sparseSet is empty
     bool empty() const;
 
+    //Checks if sparseSet has hit its max capacity
     bool full() const;
 
+    //Try to get a object by dense index
     T* TryGetDense(ObjectIndex denseIndex);
 
+    //Try to erase a object by matching pointers
     bool TryErase(T& object);
 
+    //Try to erase a object by dense index
     bool TryErase(ObjectIndex denseIndex);
 };
 #include "SparseSet.cpp"

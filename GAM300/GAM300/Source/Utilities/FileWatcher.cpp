@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			FileWatcher.cpp
+\project
+\author			Zacharie Hong
+
+\par			Course: GAM300
+\par			Section:
+\date			10/09/2023
+
+\brief
+    This file defines a file watcher than runs on another thread
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+*****************************************************************************************/
 
 #include "FileWatcher.h"
 #include <Utilities/ThreadPool.h>
@@ -5,7 +19,6 @@
 #include <Core/EventsManager.h>
 #include <unordered_set>
 #include <string>
-#include "Core/Debug.h"
 
 FileWatcher::FileWatcher()
 {
@@ -96,7 +109,6 @@ void FileWatcher::ThreadWork()
         }
         events.clear();
     }
-    PRINT("File watcher exited safely\n");
 }
 
     

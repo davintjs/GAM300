@@ -1,11 +1,11 @@
 /*!***************************************************************************************
-\file			compiler.h
+\file			Compiler.h
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			27/09/2022
+\date			01/09/2023
 
 \brief
 	This file holds the definition of functions for compiler
@@ -15,19 +15,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma once
 
-#include <filesystem>
-
-
 namespace Utils
 {
-	namespace fs = std::filesystem;
-
-	/**************************************************************************/
-	/*!
-	  \brief
-		Compiles all CS scripts in project path using Roslyn Compiler
-	*/
-	/**************************************************************************/
+	//Compiles all CS scripts in project path using Roslyn Compiler
 	static void CompileDll()
 	{
 		const char* command {"Tools\\Roslyn\\csc.exe -r:System.Numerics.dll -recurse:*.cs -platform:x64 -t:library -out:scripts.dll -unsafe"};

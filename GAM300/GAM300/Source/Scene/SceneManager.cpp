@@ -57,6 +57,7 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	// Bean: Next time check if the scene has already been loaded
 
 	loadedScenes.emplace_front(_filePath);
+	
 	Scene& scene = GetCurrentScene();
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
@@ -152,8 +153,10 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
 
+	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
 	// Publish scene change
-	loadedScenes.emplace_front(GetCurrentScene());
+	// 
+	GetCurrentScene() = GetPreviousScene();
 	//Herr
 	GetCurrentScene().sceneName += " [PREVIEW]";
 }

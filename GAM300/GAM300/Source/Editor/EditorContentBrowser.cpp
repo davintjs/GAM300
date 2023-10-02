@@ -7,8 +7,7 @@
 \date           04/09/2023
 
 \brief
-    This file contains the definitions of the following:
-    1. Content Browser
+    This file contains the definitions of the functions for the Editor's Content Browser.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/

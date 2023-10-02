@@ -7,8 +7,7 @@ public class Player : Script
     //Rigidbody rb;
     public GameObject gameObj = null;
     public float sad;
-    public Player player;
-    public float yes;
+    public Transform otherT;
 
     void Start()
     {
@@ -17,35 +16,37 @@ public class Player : Script
 
     void Update()
     {
+        if (otherT == null)
+            return;
         if (Input.GetKey(KeyCode.Q))
         {
-            gameObj.transform.localRotation.y += sad / 360f;
+            otherT.localRotation.y += sad / 360f;
             //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.E))
         {
-            gameObj.transform.localRotation.y -= sad / 360f;
+            otherT.localRotation.y -= sad / 360f;
             //rb.mass -= speed;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            gameObj.transform.localPosition += gameObj.transform.forward * sad;
+            otherT.localPosition += otherT.forward * sad;
             //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            gameObj.transform.localPosition += gameObj.transform.back * sad;
+            otherT.localPosition += otherT.back * sad;
             //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            gameObj.transform.localPosition += gameObj.transform.left * sad;
+            otherT.localPosition += otherT.left * sad;
             //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            gameObj.transform.localPosition += gameObj.transform.right * sad;
+            otherT.localPosition += otherT.right * sad;
             //rb.mass += speed;
         }
         //Destroy(this);

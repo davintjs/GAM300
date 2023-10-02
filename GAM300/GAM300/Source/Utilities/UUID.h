@@ -1,15 +1,14 @@
 ﻿/*!***************************************************************************************
-\file			uuid.h
+\file			UUID.h
 \project
 \author			Matthew Lau
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section:
-\date			06/01/2023
+\date			26/08/2023
 
 \brief
-	The declaration of UUID struct is contained in this file.
-	The UUID struct's purpose is to generate unique universal ids for general use across Copium Engine.
+	The declaration of UUID type
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
@@ -21,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 namespace Engine
 {
 	using UUID = size_t;
+	//Generates a random UUID
 	UUID CreateUUID();
 }
 

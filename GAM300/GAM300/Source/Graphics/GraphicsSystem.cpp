@@ -112,12 +112,12 @@ void HDR_Shader_init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"GAM300/Source/Graphics/HDR.vert"));
+		"Shaders/HDR.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"GAM300/Source/Graphics/HDR.frag"));
+		"Shaders/HDR.frag"));
 
 	PRINT("HDR SHADER");
 	HDR_Shader.CompileLinkValidate(shdr_files);
@@ -141,12 +141,12 @@ void PBR_Shader_init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"GAM300/Source/Graphics/PBR.vert"));
+		"Shaders/PBR.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"GAM300/Source/Graphics/PBR.frag"));
+		"Shaders/PBR.frag"));
 
 	PRINT("PBR SHADER\n");
 	temp_PBR_shader.CompileLinkValidate(shdr_files);
@@ -208,12 +208,12 @@ void GraphicsSystem::Init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"GAM300/Source/Graphics/InstancedRender.vert"));
+		"Shaders/InstancedRender.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"GAM300/Source/Graphics/InstancedRender.frag"));
+		"Shaders/InstancedRender.frag"));
 
 	PRINT("TEMP Instanced Render SHADER\n");
 	temp_instance_shader.CompileLinkValidate(shdr_files);
@@ -233,12 +233,12 @@ void GraphicsSystem::Init()
 	// Vertex Shader
 	debugshdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"GAM300/Source/Graphics/InstancedDebugRender.vert"));
+		"Shaders/InstancedDebugRender.vert"));
 
 	// Fragment Shader
 	debugshdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"GAM300/Source/Graphics/InstancedDebugRender.frag"));
+		"Shaders/InstancedDebugRender.frag"));
 
 	PRINT("TEMP debug Render SHADER\n");
 	temp_debug_shader.CompileLinkValidate(debugshdr_files);

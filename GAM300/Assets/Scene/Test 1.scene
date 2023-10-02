@@ -27,7 +27,7 @@ Script:
   Name: Player
   gameObj: {fileID: 0}
   sad: 0
-  player: {fileID: 0}
+  otherPlayer: {fileID: 0}
 ---
 Script:
   EUID: 7558136198186090139
@@ -35,4 +35,4 @@ Script:
   Name: Player
   gameObj: {fileID: 0}
   sad: 0
-  player: {fileID: 9576007940919613807}  # Component
+  otherPlayer: {fileID: 13992341002858887538}  # Component
