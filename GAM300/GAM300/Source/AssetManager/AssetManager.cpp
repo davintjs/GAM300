@@ -190,7 +190,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 }
 
 // Get a loaded asset
-const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
+const std::vector<char>& AssetManager::GetAssetWithFileName(const std::string& fileName)
 {
 	std::string data{};
 	auto func =
@@ -214,7 +214,30 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 	return mTotalAssets.mFilesData[data].mData;
 }
 
-//// Get a loaded asset GUID
+// Get a loaded asset
+const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
+{
+	auto func =
+	[this, &GUID] // Wait if the asset is not loaded yet
+	{
+		if (mTotalAssets.mFilesData.find(GUID) != mTotalAssets.mFilesData.end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	};
+	ACQUIRE_UNIQUE_LOCK
+	(
+		Assets, func
+	);
+
+	return mTotalAssets.mFilesData[GUID].mData;
+}
+
+// Get a loaded asset GUID
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
 	std::string data{};
