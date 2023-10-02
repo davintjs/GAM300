@@ -79,6 +79,7 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
+		BEHAVIORTREEBUILDER.Init();
 		AUDIOMANAGER.InitAudioManager();
 		AllSystems::Init();
 
