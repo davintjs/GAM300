@@ -56,7 +56,8 @@ ENGINE_SYSTEM(AssetManager)
 {
 public:
 	// Returns the asset data with the given fileName
-	const std::vector<char>& GetAsset(const std::string& fileName);
+	const std::vector<char>& GetAssetWithFileName(const std::string& fileName);
+	const std::vector<char>& GetAssetWithGUID(const std::string& GUID);
 
 	// Returns the GUID of the given fileName
 	std::string GetAssetGUID(const std::string& fileName);
