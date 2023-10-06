@@ -1,5 +1,5 @@
-[2023-09-30 23:21:47.514] [Error] [critical] 
-Caused By:	mNewScript
-Info:		MONO OBJECT OF Player NOT LOADED
-Source:		C:\Users\matth\Desktop\BleepBloop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 663)
+[2023-10-05 14:58:26.824] [Error] [critical] 
+Caused By:	inputFile
+Info:		Error opening file to load asset into memory!
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 329)
 

@@ -37,7 +37,7 @@ void AssetManager::Init()
 	{
 		subFilePath = dir.path().generic_string();
 		std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
-		std::string fileType{};
+		std::string fileType = ".";
 		std::string fileName{};
 		
 		if (!dir.is_directory())
@@ -67,7 +67,7 @@ void AssetManager::Init()
 		// Add into file extensions list
 		mTotalAssets.mExtensionFiles[fileType].push_back(fileName);
 
-		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
+		if (!strcmp(fileType.c_str(), ".meta") || !strcmp(fileType.c_str(), ".fbx") || !strcmp(fileType.c_str(), ".desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
@@ -97,7 +97,7 @@ void AssetManager::Init()
 		}
 
 		// We still want to create the meta files for these that's why we skip here instead of above
-		if (!strcmp(fileType.c_str(), "jpg") || !strcmp(fileType.c_str(), "png"))
+		if (!strcmp(fileType.c_str(), ".jpg") || !strcmp(fileType.c_str(), ".png"))
 		{
 			continue;
 		}
@@ -107,18 +107,18 @@ void AssetManager::Init()
 		{
 			this->AsyncLoadAsset(subFilePathMeta, fileName);
 
-			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
+			if (!strcmp(fileType.c_str(), ".dds")) // if dds ...
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
 			}
-			else if (!strcmp(fileType.c_str(), "geom"))
+			else if (!strcmp(fileType.c_str(), ".geom"))
 			{
 				MeshManager.GetGeomFromFiles(subFilePath, fileName);
 			}
-			else if (!strcmp(fileType.c_str(), "mp3") || !strcmp(fileType.c_str(), "wav")) {
+			else if (!strcmp(fileType.c_str(), ".mp3") || !strcmp(fileType.c_str(), ".wav")) {
 				AUDIOMANAGER.AddMusic(subFilePath.c_str(), fileName);
 				AUDIOMANAGER.AddSFX(subFilePath.c_str(), fileName);
 				//AUDIOMANAGER.AddMusic(assetPath.c_str(), fileName);
