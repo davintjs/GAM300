@@ -162,4 +162,20 @@
     <ClInclude Include="Source\Scene\SceneTemplates.cpp" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\BasicLighting.frag" />
+    <None Include="Shaders\BasicLighting.vert" />
+    <None Include="Shaders\HDR.frag" />
+    <None Include="Shaders\HDR.vert" />
+    <None Include="Shaders\InstancedDebugRender.frag" />
+    <None Include="Shaders\InstancedDebugRender.vert" />
+    <None Include="Shaders\InstancedRender.frag" />
+    <None Include="Shaders\InstancedRender.vert" />
+    <None Include="Shaders\LightAffected.frag" />
+    <None Include="Shaders\LightAffected.vert" />
+    <None Include="Shaders\PBR.frag" />
+    <None Include="Shaders\PBR.vert" />
+    <None Include="Shaders\Skybox.frag" />
+    <None Include="Shaders\Skybox.vert" />
+  </ItemGroup>
 </Project>

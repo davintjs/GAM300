@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 
 #include <algorithm>
+#include "GraphicsSystem.h"
 
 //extern Editor_Camera E_Camera;
 
@@ -120,12 +121,12 @@ void Model::setup_instanced_shader() {
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "Shaders/InstancedRender.vert"));
+        shaderPath+"/InstancedRender.vert"));
 
     // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "Shaders/InstancedRender.frag"));
+        shaderPath + "/InstancedRender.frag"));
 
     std::cout << "Instanced Render SHADER\n";
     shader.CompileLinkValidate(shdr_files);
@@ -146,13 +147,13 @@ void Model::setup_shader() {
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "Shaders/abnb2.vert"));
+        shaderPath + "/abnb2.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
     // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "Shaders/abnb2.frag"));
+        shaderPath + "/abnb2.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "abnb2 SHADER\n";
@@ -1212,13 +1213,13 @@ void Model::setup_skybox_shader()
     // Vertex Shader
     shdr_files.emplace_back(std::make_pair(
         GL_VERTEX_SHADER,
-        "Shaders/Skybox.vert"));
+        shaderPath+"/Skybox.vert"));
     //"Assets/Shaders/OrionVertShader.vert"));
 
 // Fragment Shader
     shdr_files.emplace_back(std::make_pair(
         GL_FRAGMENT_SHADER,
-        "Shaders/Skybox.frag"));
+        shaderPath + "/Skybox.frag"));
     //"Assets/Shaders/OrionFragShader.frag"));
 
     std::cout << "SKYBOX SHADER\n";

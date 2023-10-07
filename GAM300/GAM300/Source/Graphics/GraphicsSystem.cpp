@@ -112,12 +112,12 @@ void HDR_Shader_init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"Shaders/HDR.vert"));
+		shaderPath+"/HDR.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"Shaders/HDR.frag"));
+		shaderPath+"/HDR.frag"));
 
 	PRINT("HDR SHADER");
 	HDR_Shader.CompileLinkValidate(shdr_files);
@@ -141,12 +141,12 @@ void PBR_Shader_init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"Shaders/PBR.vert"));
+		shaderPath + "/PBR.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"Shaders/PBR.frag"));
+		shaderPath+"/PBR.frag"));
 
 	PRINT("PBR SHADER\n");
 	temp_PBR_shader.CompileLinkValidate(shdr_files);
@@ -208,12 +208,12 @@ void GraphicsSystem::Init()
 	// Vertex Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"Shaders/InstancedRender.vert"));
+		shaderPath+ "/InstancedRender.vert"));
 
 	// Fragment Shader
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"Shaders/InstancedRender.frag"));
+		shaderPath+"/InstancedRender.frag"));
 
 	PRINT("TEMP Instanced Render SHADER\n");
 	temp_instance_shader.CompileLinkValidate(shdr_files);
@@ -233,12 +233,12 @@ void GraphicsSystem::Init()
 	// Vertex Shader
 	debugshdr_files.emplace_back(std::make_pair(
 		GL_VERTEX_SHADER,
-		"Shaders/InstancedDebugRender.vert"));
+		shaderPath+"/InstancedDebugRender.vert"));
 
 	// Fragment Shader
 	debugshdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
-		"Shaders/InstancedDebugRender.frag"));
+		shaderPath+"/InstancedDebugRender.frag"));
 
 	PRINT("TEMP debug Render SHADER\n");
 	temp_debug_shader.CompileLinkValidate(debugshdr_files);

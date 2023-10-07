@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicStructsAndClass.h"
 
 class Ray3D;
+const std::string shaderPath = "GAM300/Shaders";
 
 ENGINE_SYSTEM(GraphicsSystem)
 {
