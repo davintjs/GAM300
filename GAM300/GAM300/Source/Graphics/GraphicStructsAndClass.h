@@ -89,7 +89,7 @@ struct InstanceProperties
 	//glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
 
 	unsigned int Metal_Rough_AO_Texture_Buffer;
-	glm::vec3 M_R_A_Texture[EnitityInstanceLimit];
+	glm::vec4 M_R_A_Texture[EnitityInstanceLimit];
 
 	unsigned int Metal_Rough_AO_Texture_Constant;
 	glm::vec3 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec3(1.f,1.f,1.f) };

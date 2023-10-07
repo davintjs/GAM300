@@ -21,7 +21,7 @@ layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
 
 layout (location = 3) in vec4 frag_Albedo;
-layout (location = 4) in vec3 frag_Metal_Rough_AO_index;
+layout (location = 4) in vec4 frag_Metal_Rough_AO_index;
 layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
@@ -150,12 +150,14 @@ void main()
     int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.01f); // .x is metallic texture
     int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.01f);    // .y is roughness texture
     int AO_index = int(frag_Metal_Rough_AO_index.z + 0.01f);    // .z is ao texture
+    int Emission_index = int(frag_Metal_Rough_AO_index.w + 0.01f);    // .w is emission texture
 
 
     vec3 albedo;
     float metallic;
     float roughness;
     float ao;
+    vec3 emission ={0.f,0.f,0.f};
     bool Am_Light = false;// this whole thing is temp
     // ALBEDO
     if (Tex_index < 32)
@@ -231,6 +233,14 @@ void main()
         else
              Am_Light = false;
     }
+
+
+    if (Emission_index < 32)
+    {
+        emission  = texture(myTextureSampler[Emission_index], TexCoords).xyz; 
+    }
+
+
     
     if(Am_Light)
     {
@@ -303,7 +313,7 @@ void main()
     }   
    
 
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    vec3 ambient = vec3(0.03) * albedo * ao + emission;
     
     vec3 color = ambient + Lo;
 

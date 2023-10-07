@@ -783,11 +783,11 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Buffer;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(11);
-    glVertexAttribPointer(11, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribPointer(11, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
     glVertexAttribDivisor(11, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

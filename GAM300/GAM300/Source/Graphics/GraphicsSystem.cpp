@@ -279,7 +279,7 @@ void GraphicsSystem::Update(float dt)
 {
 	for (auto& [name, prop] : properties) {
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
-		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
+		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 		std::fill_n(prop.texture, 32, 0);
 	}
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -371,13 +371,17 @@ void GraphicsSystem::Update(float dt)
 		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
 		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
 		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
+		float emissionidx = float(ReturnTextureIdx(renderer.MeshName, renderer.EmissionID));
 
-
+		//std::cout << "metal index is : " << metalidx << "\n";
+		//std::cout << "rough index is : " << roughidx << "\n";
+		//std::cout << "ao index is : " << aoidx << "\n";
+		//std::cout << "emission index is : " << emissionidx << "\n";
 		float metal_constant = renderer.mr_metallic;
 		float rough_constant = renderer.mr_roughness;
 		float ao_constant = renderer.ao;
 		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-
+			
 
 		//// button here change norm idx to 33
 		//if (test_button_1)
@@ -391,7 +395,7 @@ void GraphicsSystem::Update(float dt)
 		//}
 
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
@@ -424,7 +428,7 @@ void GraphicsSystem::Update(float dt)
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
 
-			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
@@ -706,7 +710,7 @@ void GraphicsSystem::Draw() {
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
+		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.M_R_A_Texture[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);

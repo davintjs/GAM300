@@ -253,12 +253,15 @@ struct MeshRenderer : Object
 	std::string MetallicTexture = "";
 	std::string RoughnessTexture = "";
 	std::string AoTexture = "";
+	std::string EmissionTexture = "";
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;
 	GLuint RoughnessID = 0;
 	GLuint MetallicID = 0;
 	GLuint AoID = 0;
+	GLuint EmissionID = 0;
+
 	property_vtable();
 };
 
@@ -277,6 +280,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 	property_var(mr_roughness),
 	property_var(RoughnessTexture),
+	property_var(EmissionTexture),
 
 	property_var(ao),
 	property_var(AoTexture),
