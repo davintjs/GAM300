@@ -347,7 +347,9 @@ void DeserializeComponent(const DeComHelper& _helper)
                     }
                     else
                     {
-                        E_ASSERT(false, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
+                        // Bean: Rework this into something usable, right now if the property is not in the scene file,
+                        //      it will assert, instead it should be ignored
+                        //E_ASSERT(false, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
                     }
                 }
             , entry.second);
