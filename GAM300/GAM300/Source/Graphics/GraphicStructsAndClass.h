@@ -27,6 +27,10 @@ struct LightProperties
 	// Used in directional & spot
 	glm::vec3 direction;
 
+	// Used only in Spot
+
+	float inner_CutOff ;
+	float outer_CutOff ;
 
 	// Used for all
 	glm::vec3 lightColor;

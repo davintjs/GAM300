@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+
 #include "Editor/Editor.h"
 #include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -341,16 +342,20 @@ void GraphicsSystem::Update(float dt)
 		{
 			PointLight_Sources.push_back(Temporary);
 		}
-		else if (lightSource.type == 1)// Directional Light
+		else if (lightSource.type == 1)// Directional Light - WIP
 		{
 			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
 
 			DirectionLight_Sources.push_back(Temporary);
 		}
-		else if (lightSource.type == 2)// SpotLight -WIP
+		else if (lightSource.type == 2)// SpotLight - WIP
 		{
-			//Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
-			DirectionLight_Sources.push_back(Temporary);
+			Temporary.direction = EditorCam.getForwardVec(); // CHANGE
+			//Temporary.inner_CutOff = glm::cos(glm::radians(12.5f));
+			//Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
+			Temporary.inner_CutOff = glm::cos(glm::radians(1.5f));
+			Temporary.outer_CutOff = glm::cos(glm::radians(3.5f));
+			SpotLight_Sources.push_back(Temporary);
 		}
 
 
@@ -728,6 +733,34 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	GLint uniform8 =
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "DirectionalLight_Count");
 	glUniform1i(uniform8, (int)DirectionLight_Sources.size());
+
+	for (int i = 0; i < SpotLight_Sources.size(); ++i)
+	{
+		std::string spot_color;
+		spot_color = "spotLights[" + std::to_string(i) + "].colour";
+
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), spot_color.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
+
+		std::string spot_direction;
+		spot_direction = "spotLights[" + std::to_string(i) + "].direction";
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), spot_direction.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].direction));
+
+		std::string spot_cutoff_inner;
+		spot_cutoff_inner = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		glUniform1fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), spot_cutoff_inner.c_str())
+			, 1, &SpotLight_Sources[i].inner_CutOff);
+
+		std::string spot_cutoff_outer;
+		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		glUniform1fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), spot_cutoff_outer.c_str())
+			, 1, &SpotLight_Sources[i].outer_CutOff);
+	}
+	GLint uniform9 =
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "SpotLight_Count");
+	glUniform1i(uniform9, (int)SpotLight_Sources.size());
+
 
 
 	//glUniform3fv(uniform3, 1,
