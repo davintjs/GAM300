@@ -98,31 +98,11 @@ private:
 };
 
 //User Macros
-#define CONSOLE_CRITICAL(...)															\
-							{															\
-								loggingSystem.getConsoleLogger()->critical(__VA_ARGS__); \
-								Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);		\
-							}
-#define CONSOLE_ERROR(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->error(__VA_ARGS__);\
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_WARN(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->warn(__VA_ARGS__); \
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_INFO(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->info(__VA_ARGS__); \
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_TRACE(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->trace(__VA_ARGS__);\
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
+#define CONSOLE_CRITICAL(...){DEBUGGER.getConsoleLogger()->critical(__VA_ARGS__);}
+#define CONSOLE_ERROR(...){DEBUGGER.getConsoleLogger()->error(__VA_ARGS__);}
+#define CONSOLE_WARN(...){DEBUGGER.getConsoleLogger()->warn(__VA_ARGS__);}
+#define CONSOLE_INFO(...){DEBUGGER.getConsoleLogger()->info(__VA_ARGS__);}
+#define CONSOLE_TRACE(...){DEBUGGER.getConsoleLogger()->trace(__VA_ARGS__);}
 
 #define FILE_CRITICAL(...)		::spdlog::critical(__VA_ARGS__);
 #define FILE_ERROR(...)			::spdlog::error(__VA_ARGS__)
@@ -140,7 +120,7 @@ private:
 			FILE_CRITICAL(assertMessageStream.str());\
 			spdlog::drop("Error");\
 			abort();\
-        }                              \
+        }
 
 // Helper function to append custom messages
 template <typename T>

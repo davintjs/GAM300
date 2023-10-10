@@ -45,6 +45,8 @@ extern std::map<std::string, size_t> ComponentTypes;
 struct Tag : Object
 {
 	std::string name;
+	Engine::UUID tagName;
+	size_t physicsLayerIndex;
 };
 
 //To store transform of entity

@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "IOManager/InputHandler.h"
 #include "Scene/SceneManager.h"
 #include "ScriptingSystem.h"
+#include "Scene/Identifiers.h"
 
 
 #ifndef SCRIPT_WRAPPERS_H
@@ -89,6 +90,33 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//	DestroyRecursive(monoComponentToType[managedType],pComponent);
 	//}
 
+	static MonoString* GetLayerName(int layer)
+	{
+		E_ASSERT(layer < MAX_PHYSICS_LAYERS, "Exceeded max physics layers");
+		std::string& name = IDENTIFIERS.physicsLayers[layer].name;
+		if (name.size() == 0)
+		{
+			CONSOLE_WARN("Physics Layer name is unassigned and is being used");
+		}
+		return SCRIPTING.CreateMonoString(name);
+	}
+
+	static int GetLayer(MonoString* mString)
+	{
+		std::string name = mono_string_to_utf8(mString);
+		int i = 0;
+		for (Layer& layer  : IDENTIFIERS.physicsLayers)
+		{
+			if (name == layer.name)
+			{
+				return i;
+			}
+			++i;
+		}
+		CONSOLE_WARN("Physics Layer ", name ,"does not exist");
+		return -1;
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -137,5 +165,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(DestroyGameObject);
 		Register(HasComponent);
 		Register(Get);
+		Register(GetLayer);
+		Register(GetLayerName);
 	}
 #endif // !SCRIPT_WRAPPERS_H

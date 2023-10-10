@@ -54,22 +54,16 @@ namespace BeanFactory
 
         #region COMPONENT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetEnabled(ulong compId);
+        internal extern static bool GetActive(Object obj, Type cType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetComponentEnabled(ulong compId, bool enabled);
+        internal extern static void SetActive(Object obj, Type cType, bool val);
 
         #endregion
 
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool HasComponent(GameObject gameObject, Type componentType);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetActive(GameObject gameObject, bool _active);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool GetActive(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong CloneGameObject(ulong ID);
@@ -153,6 +147,14 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTextColor(ulong ID, ref Color color);
+        #endregion
+
+        #region IDENTIFIERS
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetLayer(string layerName);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetLayerName(int layer);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

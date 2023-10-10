@@ -302,4 +302,9 @@ namespace BeanFactory
             InternalCalls.StopAnimation(ID);
         }
     }*/
+
+    public class Collider : Component
+    {
+        Rigidbody rigidbody;
+    }
 }

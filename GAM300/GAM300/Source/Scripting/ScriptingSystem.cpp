@@ -203,6 +203,16 @@ MonoObject* ScriptingSystem::InstantiateClass(MonoClass* mClass, Args&&... args)
 	return tmp;
 }
 
+
+MonoString* ScriptingSystem::CreateMonoString(const std::string& str)
+{
+	if (!mAppDomain)
+	{
+		E_ASSERT(mAppDomain,"APP DOMAIN NOT LOADED");
+	}
+	return mono_string_new(mAppDomain, str.c_str());
+}
+
 void ScriptingSystem::UpdateScriptClasses()
 {
 	scriptClassMap.clear();

@@ -1,5 +1,6 @@
-[2023-10-05 14:58:26.824] [Error] [critical] 
-Caused By:	inputFile
-Info:		Error opening file to load asset into memory!
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 329)
+[2023-10-10 22:45:45.833] [Error] [critical] 
+Caused By:	false
+Info:		Failed to load .scene file "Assets/Scenes/M1.scene" due to: bad file: Assets/Scenes/M1.scene
+
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 233)
 

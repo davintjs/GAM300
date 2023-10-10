@@ -132,6 +132,9 @@ public:
 	//Creates a new app domain
 	MonoDomain* CreateAppDomain();
 
+	//Mono String from string
+	MonoString* CreateMonoString(const std::string&);
+
 	//Reloads an assembly by creating a new domain
 	void SwapDll();
 

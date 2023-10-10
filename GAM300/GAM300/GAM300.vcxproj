@@ -105,6 +105,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Scene\Identifiers.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\HandlesTable.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -226,6 +227,7 @@
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
+    <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Scene\Object.h" />
     <ClInclude Include="Source\Scene\SceneTemplates.cpp">
       <SubType>

@@ -278,7 +278,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)
 				boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
-
 			// Set all necessary settings for the body
 			// Friction
 			boxCreationSettings.mFriction = rb.friction;
@@ -300,7 +299,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-
 			if (rb.isStatic)
 				sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
