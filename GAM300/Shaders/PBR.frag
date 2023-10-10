@@ -14,6 +14,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #version 450 core
 
 //-------------------------
+//          DECLARATIONS
+//-------------------------
+#define MAX_POINT_LIGHT 20
+#define MAX_SPOT_LIGHT 20
+#define MAX_DIRECTION_LIGHT 20
+#define MAX_TOTAL_LIGHT 60
+#define NR_POINT_LIGHTS 4
+struct PointLight
+{
+    vec3 position;
+    vec3 colour;
+};
+
+
+
+//-------------------------
 //          COMING IN
 //-------------------------
 layout (location = 0) in vec2 TexCoords;
@@ -37,28 +53,17 @@ out vec4 FragColor;
 //          UNIFORMS
 //-------------------------
 
-
-uniform vec3 lightColor;
-uniform vec3 lightPos;
+layout (binding = 0) uniform sampler2D myTextureSampler[32];
+//layout(std140, binding = 1) uniform PointLightBuffer {
+//    PointLight pointLights[NR_POINT_LIGHTS];
+//};
+//uniform vec3 lightColor;
+//uniform vec3 lightPos;
 uniform vec3 camPos;
 uniform bool hdr;
 
-layout (binding = 0) uniform sampler2D myTextureSampler[32];
-
-
-
-//// material parameters
-//uniform sampler2D albedoMap;
-//uniform sampler2D normalMap;
-//uniform sampler2D metallicMap;
-//uniform sampler2D roughnessMap;
-//uniform sampler2D aoMap;
-//
-//// lights
-//uniform vec3 lightPositions[4];
-//uniform vec3 lightColors[4];
-//uniform vec3 camPos;
-
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform int PointLight_Count;
 
 
 const float PI = 3.14159265359;
@@ -86,6 +91,8 @@ vec3 getNormalFromMap(int NM_index)
 
     return normalize(TBN * tangentNormal);
 }
+
+
 // ----------------------------------------------------------------------------
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -244,7 +251,7 @@ void main()
     
     if(Am_Light)
     {
-        FragColor = vec4(lightColor,1.f);
+        FragColor = vec4(pointLights[0].colour,1.f);// CHANGE
         return;
     }
 
@@ -270,19 +277,19 @@ void main()
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
-    for(int i = 0; i < 1; ++i) 
+    for(int i = 0; i < PointLight_Count; ++i) // CHANGE
     {
         
 //        return;
         // calculate per-light radiance
 //        vec3 L = normalize(lightpos_test[i] - WorldPos);
-        vec3 L = normalize(lightPos - WorldPos);
+        vec3 L = normalize(pointLights[i].position - WorldPos);
         vec3 H = normalize(V + L);
 //        float distance = length(lightpos_test[i] - WorldPos);
-        float distance = length(lightPos - WorldPos);
+        float distance = length(pointLights[i].position - WorldPos);
         float attenuation = 1.0 / (distance * distance);
 //        vec3 radiance = lightstrength * attenuation;
-        vec3 radiance = lightColor * attenuation;
+        vec3 radiance = pointLights[i].colour * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
@@ -307,8 +314,7 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-//        radiance = vec3(1.f,1.f,1.f);
-        // add to outgoing radiance Lo
+//        radiance = vec3(1.f,1.f,1.f);        // add to outgoing radiance Lo
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
    

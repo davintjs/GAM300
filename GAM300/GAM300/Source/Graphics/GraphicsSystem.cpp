@@ -51,7 +51,17 @@ std::vector <float> temp_ShininessContainer;
 GLSLShader temp_instance_shader;
 GLSLShader temp_PBR_shader;
 GLSLShader temp_debug_shader;
+
+
 LightProperties Lighting_Source;
+
+std::vector <LightProperties> PointLight_Sources;
+std::vector <LightProperties> DirectionLight_Sources;
+std::vector <LightProperties> SpotLight_Sources;
+
+
+
+
 //bool isThereLight = false;
 
 //void InstanceSetup(GLuint vaoid);
@@ -307,15 +317,24 @@ void GraphicsSystem::Update(float dt)
 
 	// Temporary Light stuff
 	bool haveLight = false;
+
+	// Just resetting the light stuffs here
+	PointLight_Sources.clear();
+	DirectionLight_Sources.clear();
+	SpotLight_Sources.clear();
+
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-		Lighting_Source.lightpos = transform.translation;
-		Lighting_Source.lightColor = lightSource.lightingColor;
+		LightProperties Temporary;
 
+		Temporary.lightpos = transform.translation;
+		Temporary.lightColor = lightSource.lightingColor;
+
+		PointLight_Sources.push_back(Temporary);
 		if (currentScene.Has<MeshRenderer>(entity))
 		{
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
@@ -595,7 +614,6 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	temp_PBR_shader.Use();
 
 
-
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
 	//GLint uniform1 =
@@ -608,20 +626,34 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "lightPos");
 	//GLint uniform5 =
 	//	glGetUniformLocation(temp_instance_shader.GetHandle(), "camPos");
+	
 	GLint uniform1 =
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "persp_projection");
+
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getPerspMatrix()));
+
+
 	GLint uniform2 =
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightColor");
-	GLint uniform4 =
-		glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightPos");
+
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.getViewMatrix()));
+
+
+	//GLint uniform3 =
+	//	glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightColor");
+	//GLint uniform4 =
+	//	glGetUniformLocation(temp_PBR_shader.GetHandle(), "lightPos");
 	GLint uniform5 =
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "camPos");
 
+	glUniform3fv(uniform5, 1,
+		glm::value_ptr(EditorCam.GetCameraPosition()));
+
 
 	GLint uniform6 =
-		glGetUniformLocation(temp_instance_shader.GetHandle(), "hdr");
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "hdr");
 
 	glUniform1i(uniform6, hdr);
 
@@ -634,17 +666,61 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	/*GLint uniform3 =
 		glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
 
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getPerspMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getViewMatrix()));
-	glUniform3fv(uniform3, 1,
-		glm::value_ptr(LightSource.lightColor));
-	glUniform3fv(uniform4, 1,
-		glm::value_ptr(LightSource.lightpos));
-	glUniform3fv(uniform5, 1,
-		glm::value_ptr(EditorCam.GetCameraPosition()));
 
+
+	// POINT LIGHT STUFFS
+	for (int i = 0; i < PointLight_Sources.size(); ++i)
+	{
+		
+
+
+		//pointLights.colour
+		std::string point_color;
+		point_color = "pointLights[" + std::to_string(i) + "].colour";
+
+
+
+		//glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), "pointLights[1].colour")
+		//	, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), point_color.c_str())
+			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
+		
+		
+
+
+
+
+
+		//pointLights.position
+		std::string point_pos;
+		point_pos = "pointLights[" + std::to_string(i) + "].position";
+		
+	
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), point_pos.c_str())
+			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
+
+
+
+
+		//std::cout << glGetUniformLocation(temp_PBR_shader.GetHandle(), point_pos.c_str()) << "\n";
+
+
+
+
+	}
+	
+	GLint uniform7 =
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "PointLight_Count");
+
+	glUniform1i(uniform7, (int)PointLight_Sources.size());
+
+
+
+
+	//glUniform3fv(uniform3, 1,
+	//	glm::value_ptr(LightSource.lightColor));
+	//glUniform3fv(uniform4, 1,
+	//	glm::value_ptr(LightSource.lightpos));
 
 
 
@@ -705,8 +781,6 @@ void GraphicsSystem::Draw() {
 		//glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
 		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
 		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);

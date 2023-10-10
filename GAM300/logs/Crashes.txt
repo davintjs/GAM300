@@ -1,4 +1,4 @@
-[2023-10-07 15:39:04.507] [Error] [critical] 
+[2023-10-09 12:34:01.928] [Error] [critical] 
 Caused By:	false
 Info:		Key:  EmissionTexture  of type  class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >  does not exist within this component!
 Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 350)
