@@ -21,7 +21,14 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 struct LightProperties
 {
+	// Used in point & Spot
 	glm::vec3 lightpos;
+
+	// Used in directional & spot
+	glm::vec3 direction;
+
+
+	// Used for all
 	glm::vec3 lightColor;
 };
 

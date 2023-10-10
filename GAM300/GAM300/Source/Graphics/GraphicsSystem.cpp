@@ -325,29 +325,48 @@ void GraphicsSystem::Update(float dt)
 
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
+		
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		LightProperties Temporary;
 
+		
+
 		Temporary.lightpos = transform.translation;
 		Temporary.lightColor = lightSource.lightingColor;
 
-		PointLight_Sources.push_back(Temporary);
+		if (lightSource.type == 0)// Point Light
+		{
+			PointLight_Sources.push_back(Temporary);
+		}
+		else if (lightSource.type == 1)// Directional Light
+		{
+			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
+
+			DirectionLight_Sources.push_back(Temporary);
+		}
+		else if (lightSource.type == 2)// SpotLight -WIP
+		{
+			//Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
+			DirectionLight_Sources.push_back(Temporary);
+		}
+
+
 		if (currentScene.Has<MeshRenderer>(entity))
 		{
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
-			mesh_component.mr_Albedo = glm::vec4(Lighting_Source.lightColor,1.f);
+			mesh_component.mr_Albedo = glm::vec4(Temporary.lightColor,1.f);
 
 			mesh_component.mr_metallic = -1.f;
 			mesh_component.mr_roughness = -1.f;
 			mesh_component.ao = -1.f;
 			mesh_component.ao = -1.f;
-
 		}
-
 	}
+
+
 	if (!haveLight)
 	{
 		Lighting_Source.lightColor = glm::vec3(0.f, 0.f, 0.f);
@@ -671,50 +690,44 @@ void GraphicsSystem::Draw_Meshes(GLuint vaoid, unsigned int instance_count,
 	// POINT LIGHT STUFFS
 	for (int i = 0; i < PointLight_Sources.size(); ++i)
 	{
-		
-
-
 		//pointLights.colour
 		std::string point_color;
 		point_color = "pointLights[" + std::to_string(i) + "].colour";
 
-
-
-		//glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), "pointLights[1].colour")
-		//	, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), point_color.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 		
 		
-
-
-
-
-
+		
 		//pointLights.position
 		std::string point_pos;
 		point_pos = "pointLights[" + std::to_string(i) + "].position";
-		
-	
 		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), point_pos.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
-
-
-
-
-		//std::cout << glGetUniformLocation(temp_PBR_shader.GetHandle(), point_pos.c_str()) << "\n";
-
-
-
-
 	}
-	
+
 	GLint uniform7 =
 		glGetUniformLocation(temp_PBR_shader.GetHandle(), "PointLight_Count");
-
 	glUniform1i(uniform7, (int)PointLight_Sources.size());
 
+	// DIRECTIONAL LIGHT STUFFS
+	for (int i = 0; i < DirectionLight_Sources.size(); ++i)
+	{
+		//directionalLights.colour
+		std::string directional_color;
+		directional_color = "directionalLights[" + std::to_string(i) + "].colour";
 
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), directional_color.c_str())
+			, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
+
+		std::string directional_direction;
+		directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
+		glUniform3fv(glGetUniformLocation(temp_PBR_shader.GetHandle(), directional_direction.c_str())
+			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
+	}
+	GLint uniform8 =
+		glGetUniformLocation(temp_PBR_shader.GetHandle(), "DirectionalLight_Count");
+	glUniform1i(uniform8, (int)DirectionLight_Sources.size());
 
 
 	//glUniform3fv(uniform3, 1,
