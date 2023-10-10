@@ -40,6 +40,7 @@
     <Compile Include="CoreScripts\Debug.cs" />
     <Compile Include="CoreScripts\GameObject.cs" />
     <Compile Include="CoreScripts\Graphics.cs" />
+    <Compile Include="CoreScripts\Identifiers.cs" />
     <Compile Include="CoreScripts\Input.cs" />
     <Compile Include="CoreScripts\InternalCalls.cs" />
     <Compile Include="CoreScripts\KeyCode.cs" />

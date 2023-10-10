@@ -20,6 +20,5 @@ namespace BeanFactory
     {
 
         Rigidbody rigidbody;
-        Collider collider
     }
 }
