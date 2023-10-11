@@ -15,7 +15,8 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
-#pragma once
+#ifndef EDITOR_CAMERA_H
+#define EDITOR_CAMERA_H
 
 #include "glslshader.h"
 #include "IOManager/Handler_GLFW.h"
@@ -161,3 +162,4 @@ private:
 	Framebuffer framebuffer;
 };
 
+#endif // !EDITOR_CAMERA_H

@@ -25,7 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
 
-
+const std::string shaderPath = "GAM300/Shaders";
 
 // should move somewhere else...
 void Model::init() {
@@ -107,68 +107,10 @@ void Model::init() {
         _mGeneral_model.emplace_back(model);
     }
 
-    setup_shader();
-
     // load default texture, todo
     //texturebuffer = TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
     
     // debugAABB_init();
-}
-
-
-void Model::setup_instanced_shader() {
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        shaderPath+"/InstancedRender.vert"));
-
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        shaderPath + "/InstancedRender.frag"));
-
-    std::cout << "Instanced Render SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::setup_shader() {
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        shaderPath + "/abnb2.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        shaderPath + "/abnb2.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "abnb2 SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
 }
 
 void Model::draw() {
@@ -533,66 +475,6 @@ void Model::cubeinit()
     //glEnableVertexAttribArray(0);
 }
 
-void Model::setup_lightshader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "Shaders/BasicLighting.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "Shaders/BasicLighting.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "BasicLighting SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::setup_affectedShader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "Shaders/LightAffected.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "Shaders/LightAffected.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "LightAffected SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
 void Model::lightSource_draw()
 {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
@@ -940,7 +822,7 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
     shaderAABB.UnUse();
 }
 
-void Model::lineinit()
+void RaycastLine::lineinit()
 {
     GLfloat vertices[] =
     {
@@ -1002,7 +884,7 @@ void Model::lineinit()
 
 }
 
-void Model::debugline_draw(glm::mat4& SRT)
+void RaycastLine::debugline_draw(glm::mat4& SRT)
 {
     shaderAABB.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -1032,6 +914,7 @@ void Model::debugline_draw(glm::mat4& SRT)
     glBindVertexArray(0);
     shaderAABB.UnUse();
 }
+
 void Model::DeserializeGeoms(const std::string filePath)
 {
     troll_Geom tempGeom;
@@ -1145,7 +1028,7 @@ void Model::DeserializeGeoms(const std::string filePath)
 }
 
 
-void Model::SkyBoxinit()
+void SkyBox::SkyBoxinit()
 {
     float skyboxVertices[] = {
         // positions          
@@ -1207,37 +1090,7 @@ void Model::SkyBoxinit()
 
 }
 
-void Model::setup_skybox_shader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        shaderPath+"/Skybox.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        shaderPath + "/Skybox.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "SKYBOX SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::SkyBoxDraw(GLuint skyboxtex)
+void SkyBox::SkyBoxDraw(GLuint skyboxtex)
 {
     shader.Use();
     GLint uniform_var_loc1 =

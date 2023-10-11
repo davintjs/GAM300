@@ -70,8 +70,7 @@ public:
 	
 	// make vao vbo
 	void init(); 
-	// set up shaders
-	void setup_shader();
+
 	// display the models created
 	void draw();
 
@@ -82,15 +81,6 @@ public:
 	// initialize cube model for instance rendering
 	void instance_cubeinit();
 
-	// set up shader for instance rendering
-	void setup_instanced_shader();
-	
-	// The Light
-	void setup_lightshader();
-
-	// Impacted by Light
-	void setup_affectedShader();
-
 	// display light source
 	void lightSource_draw();
 
@@ -99,15 +89,6 @@ public:
 
 	// draw using instance rendering
 	void instanceDraw(int entitycount);
-
-	// initialize skybox vao/vbo
-	void SkyBoxinit();
-
-	// set up shader for skybox
-	void setup_skybox_shader();
-
-	// draw sky box
-	void SkyBoxDraw(GLuint skyboxtex);
 
 	glm::vec3 position;
 	
@@ -139,14 +120,6 @@ public:
 	// draw debug lines
 	void debugAABB_draw(glm::mat4& SRT);
 
-	// initializer lines
-	void lineinit();
-	
-	// draw debug lines
-	void debugline_draw(glm::mat4& SRT);
-
-
-
 	//AssimpLoader* _geom;
 
 
@@ -154,7 +127,27 @@ public:
 
 	std::vector<troll_Geom> totalGeoms; // Contains all geom of the project
 
-private:
+protected:
 	// deserializing
 	void DeserializeGeoms(const std::string filePath);
+};
+
+class SkyBox: public Model
+{
+public:
+	// initialize skybox vao/vbo
+	void SkyBoxinit();
+
+	// draw sky box
+	void SkyBoxDraw(GLuint skyboxtex);
+};
+
+class RaycastLine: public Model
+{
+public:
+	// initializer lines
+	void lineinit();
+
+	// draw debug lines
+	void debugline_draw(glm::mat4& SRT);
 };
