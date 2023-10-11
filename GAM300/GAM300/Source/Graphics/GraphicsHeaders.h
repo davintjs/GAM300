@@ -35,8 +35,8 @@ enum SHADERTYPE
 {
 	HDR,
 	PBR,
-	TIR,
-	TDR,
+	TIR,// Temporary Instance Render
+	TDR,// Temporary Debug Instance Render
 	SKYBOX,
 	BASICLIGHT,
 	AFFECTEDLIGHT
