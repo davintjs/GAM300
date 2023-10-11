@@ -29,7 +29,6 @@ enum LIGHT_TYPE
 
 struct SpotLight
 {
-	glm::vec3 position;
 	glm::vec3 direction;
 	float inner_CutOff;
 	float outer_CutOff;
@@ -40,8 +39,6 @@ struct SpotLight
 
 struct PointLight
 {
-	glm::vec3 position;
-
 	glm::vec3 lightColor;
 	float intensity;
 };
@@ -59,7 +56,6 @@ union Light_Type
 	SpotLight spotlight;
 	PointLight pointlight;
 	DirectionalLight directionallight;
-
 };
 
 

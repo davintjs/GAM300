@@ -291,11 +291,12 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-
 	LIGHT_TYPE lightType = POINT_LIGHT;
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+
+	
 	property_vtable()
-	};
+};
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),

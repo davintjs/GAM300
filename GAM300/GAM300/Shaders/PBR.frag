@@ -382,7 +382,7 @@ void main()
     float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
-        float theta = dot(camPos - WorldPos, normalize(-spotLights[i].direction)); 
+        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
     
         if(theta > spotLights[i].innerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
         {  
@@ -401,7 +401,7 @@ void main()
 
 
 //        float distance = length(pointLights[i].position - WorldPos);
-        float distance = length(camPos - WorldPos);
+        float distance = length(spotLights[i].position - WorldPos);
 
 
 //        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
