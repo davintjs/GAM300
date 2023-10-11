@@ -31,11 +31,11 @@ void ShaderManager::Init()
 
 	vertexPath = shaderPath + "/InstancedRender.vert";
 	fragmentPath = shaderPath + "/InstancedRender.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "TIR SHADER");
+	ShaderCompiler(vertexPath, fragmentPath, "Temp Instance SHADER");
 
 	vertexPath = shaderPath + "/InstancedDebugRender.vert";
 	fragmentPath = shaderPath + "/InstancedDebugRender.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "TBR SHADER");
+	ShaderCompiler(vertexPath, fragmentPath, "Temp Debug Instance SHADER");
 
 	vertexPath = shaderPath + "/Skybox.vert";
 	fragmentPath = shaderPath + "/Skybox.frag";
