@@ -59,8 +59,8 @@ void Lighting::Update(float)
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
 			Temporary.direction = glm::vec3(0.f,-1.f,0.f); // CHANGE
-			Temporary.inner_CutOff = glm::cos(glm::radians(1.5f));
-			Temporary.outer_CutOff = glm::cos(glm::radians(3.5f));
+			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
+			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
 			spotLightSources.push_back(Temporary);
 		}
 

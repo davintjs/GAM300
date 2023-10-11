@@ -394,6 +394,15 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
 	for (int i = 0; i < SpotLight_Sources.size(); ++i)
 	{
+
+		//pointLights.position
+		std::string spot_pos;
+		spot_pos = "spotLights[" + std::to_string(i) + "].position";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
+
+
+
 		std::string spot_color;
 		spot_color = "spotLights[" + std::to_string(i) + "].colour";
 
@@ -411,7 +420,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 			, 1, &SpotLight_Sources[i].inner_CutOff);
 
 		std::string spot_cutoff_outer;
-		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].outer_CutOff";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
 			, 1, &SpotLight_Sources[i].outer_CutOff);
 
