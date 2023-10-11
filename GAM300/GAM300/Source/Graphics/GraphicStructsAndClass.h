@@ -27,21 +27,40 @@ enum LIGHT_TYPE
 	DIRECTIONAL_LIGHT
 };
 
-//union
-//{
-//	// 3 different light types
-//
-// // Spotlight
-// 
-// 
-// 
-// // POint Light
-// 
-// 
-// // Directional light
-//
-//
-//};
+struct SpotLight
+{
+	glm::vec3 position;
+	glm::vec3 direction;
+	float inner_CutOff;
+	float outer_CutOff;
+
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+struct PointLight
+{
+	glm::vec3 position;
+
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+struct DirectionalLight
+{
+	glm::vec3 direction;
+
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+union Light_Type
+{
+	SpotLight spotlight;
+	PointLight pointlight;
+	DirectionalLight directionallight;
+
+};
 
 
 struct LightProperties
@@ -55,8 +74,10 @@ struct LightProperties
 	// Used only in Spot
 	float inner_CutOff ;
 	float outer_CutOff ;
+
 	// Used for all
 	glm::vec3 lightColor;
+	float intensity;
 };
 
 

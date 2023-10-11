@@ -45,7 +45,7 @@ void Lighting::Update(float)
 
 		Temporary.lightpos = transform.translation;
 		Temporary.lightColor = lightSource.lightingColor;
-
+		Temporary.intensity = 1.f;
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
@@ -58,9 +58,7 @@ void Lighting::Update(float)
 		}
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
-			Temporary.direction = EditorCam.getForwardVec(); // CHANGE
-			//Temporary.inner_CutOff = glm::cos(glm::radians(12.5f));
-			//Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
+			Temporary.direction = glm::vec3(0.f,-1.f,0.f); // CHANGE
 			Temporary.inner_CutOff = glm::cos(glm::radians(1.5f));
 			Temporary.outer_CutOff = glm::cos(glm::radians(3.5f));
 			spotLightSources.push_back(Temporary);

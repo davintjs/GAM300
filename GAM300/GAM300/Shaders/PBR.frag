@@ -24,12 +24,14 @@ struct PointLight
 {
     vec3 position;
     vec3 colour;
+    float intensity;
 };
 
 struct DirectionalLight
 {
     vec3 direction;
     vec3 colour;
+    float intensity;
 };
 
 struct SpotLight
@@ -39,6 +41,7 @@ struct SpotLight
     vec3 colour;
     float innerCutOff;
     float outerCutOff;
+    float intensity;
 };
 
 //-------------------------
@@ -289,12 +292,14 @@ void main()
     float totalPointCount = PointLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < PointLight_Count; ++i)
     {
+        vec3 lightColourStrength =  pointLights[i].colour * pointLights[i].intensity;
         // calculate per-light radiance
         vec3 L = normalize(pointLights[i].position - WorldPos);
         vec3 H = normalize(V + L);
         float distance = length(pointLights[i].position - WorldPos);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = pointLights[i].colour * attenuation;
+//        vec3 radiance = pointLights[i].colour * attenuation;
+        vec3 radiance = lightColourStrength * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
@@ -327,6 +332,9 @@ void main()
     float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < DirectionalLight_Count; ++i)
     {
+
+        vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
+
         // calculate per-light radiance
         
 //        vec3 L = normalize(pointLights[i].position - WorldPos);
@@ -342,7 +350,8 @@ void main()
         
         
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = directionalLights[i].colour * attenuation;
+//        vec3 radiance = directionalLights[i].colour * attenuation;
+        vec3 radiance = lightColourStrength * attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
@@ -378,6 +387,9 @@ void main()
         if(theta > spotLights[i].innerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
         {  
 
+         vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+
+
         // calculate per-light radiance
         
 //        vec3 L = normalize(spotLights[i].position - WorldPos);
@@ -407,7 +419,8 @@ void main()
 
         float attenuation = 1.0 / (distance * distance);
 
-        vec3 radiance = spotLights[i].colour * attenuation;
+//        vec3 radiance = spotLights[i].colour * attenuation;
+        vec3 radiance = lightColourStrength * attenuation;
         
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(N, H, roughness);   
