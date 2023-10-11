@@ -49,6 +49,8 @@ public class Player : Script
             otherT.localPosition += otherT.right * sad;
             //rb.mass += speed;
         }
+        Console.WriteLine("Hello");
+        enabled = false;
         //Destroy(this);
         //transform.localPosition = newPos;
     }

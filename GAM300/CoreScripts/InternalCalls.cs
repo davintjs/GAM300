@@ -53,11 +53,11 @@ namespace BeanFactory
         #endregion
 
         #region COMPONENT
-/*        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool GetActive(Object obj, Type cType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetActive(Object obj, Type cType, bool val);*/
+        internal extern static void SetActive(Object obj, Type cType, bool val);
 
         #endregion
 

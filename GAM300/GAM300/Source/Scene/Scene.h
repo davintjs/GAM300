@@ -77,9 +77,17 @@ struct Scene
 	template <typename T>
 	bool IsActive(T& object);
 
+	//Checks if an object is active
+	template <typename T>
+	bool IsActive(const Handle& handle);
+
 	//Sets active for an object
 	template <typename T>
 	void SetActive(T& object, bool val = true);
+
+	//Sets active for an object
+	template <typename T>
+	void SetActive(const Handle& handle, bool val = true);
 
 	//Checks if an entity has a component
 	template <typename Component>
@@ -107,6 +115,17 @@ struct Scene
 #pragma region SCRIPTING/DESERIALIZATION HELPERS
 	//Get component of another object as a void pointer(Mono does type casting)
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
+
+	//Get active from scripts
+	GENERIC_RECURSIVE(bool, GetActive, IsActive(*(T*)pObject));
+
+	struct SetActiveHelper
+	{
+		void* object;
+		bool val;
+	};
+	//Set active from scripts
+	GENERIC_RECURSIVE(void, SetActive,SetActive(*(T*)reinterpret_cast<SetActiveHelper*>(pObject)->object, reinterpret_cast<SetActiveHelper*>(pObject)->val));
 
 	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle *)pObject));
 	//Check whether handle exists in scene

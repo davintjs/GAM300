@@ -352,6 +352,25 @@ void ScriptingSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent)
 	while (objectDestroyed);
 }
 
+Handle ScriptingSystem::GetScriptHandle(MonoObject* script)
+{
+	E_ASSERT(mScript, "Mono script is nullptr!");
+	Handle handle{};
+	mono_field_get_value
+	(
+		script,
+		mono_class_get_field_from_name(mScript, "euid"),
+		&handle.euid
+	);
+	mono_field_get_value
+	(
+		script,
+		mono_class_get_field_from_name(mScript, "uuid"),
+		&handle.uuid
+	);
+	return handle;
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	InitMono();
@@ -583,21 +602,8 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 			field.Get<Script*>() = nullptr;
 			return;
 		}
-		Engine::UUID euid;
-		Engine::UUID uuid;
-		mono_field_get_value
-		(
-			scriptRef,
-			mono_class_get_field_from_name(mScript, "euid"),
-			&euid
-		);
-		mono_field_get_value
-		(
-			scriptRef,
-			mono_class_get_field_from_name(mScript, "uuid"),
-			&uuid
-		);
-		field.Get<Script*>() = &scene.Get<Script>(euid,uuid);
+		Handle handle = GetScriptHandle(scriptRef);
+		field.Get<Script*>() = &scene.Get<Script>(handle);
 		return;
 	}
 	else if (field.fType < AllObjectTypes::Size())

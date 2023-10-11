@@ -23,6 +23,18 @@ namespace BeanFactory
     {
         UInt64 euid;
         UInt64 uuid;
+
+        public virtual bool enabled
+        {
+            get
+            {
+                return InternalCalls.GetActive(this, GetType());
+            }
+            set
+            {
+                InternalCalls.SetActive(this, GetType(), value);
+            }
+        }
         private void Initialize(GameObject gameObj,UInt64 _euid, UInt64 _uuid)
         {
             _gameObject = gameObj;

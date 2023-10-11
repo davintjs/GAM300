@@ -135,6 +135,8 @@ public:
 	//Mono String from string
 	MonoString* CreateMonoString(const std::string&);
 
+	Handle GetScriptHandle(MonoObject * script);
+
 	//Reloads an assembly by creating a new domain
 	void SwapDll();
 

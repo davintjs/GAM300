@@ -22,13 +22,13 @@ namespace BeanFactory
     public class GameObject
     {
 
-/*        public bool activeSelf
+        public bool activeSelf
         {
             get
             {
-                return InternalCalls.GetActive(this);
+                return InternalCalls.GetActive(this,typeof(GameObject));
             }
-        }*/
+        }
 
         public string name
         {
@@ -61,10 +61,10 @@ namespace BeanFactory
             return component;
         }*/
 
-/*        public void SetActive(bool _active)
+        public void SetActive(bool _active)
         {
-            InternalCalls.SetActive(this, _active);
-        }*/
+            InternalCalls.SetActive(this, typeof(GameObject), _active);
+        }
 
         public Transform transform
         {
