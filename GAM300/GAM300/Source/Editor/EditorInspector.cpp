@@ -555,7 +555,7 @@ void Display_Property(T& comp) {
 
                     //temporary implementation for texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") 
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture")
                     {
                         DisplayTexturePicker(Value);
                     }
@@ -605,6 +605,14 @@ void Display_Property(T& comp) {
         }
         else
             comp.AoID = 0;
+
+        if (comp.EmissionTexture != "")
+        {
+            comp.EmissionID = GET_TEXTURE_ID(comp.EmissionTexture);
+        }
+        else
+            comp.EmissionID = 0;
+
     }
 }
 

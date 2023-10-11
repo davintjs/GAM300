@@ -26,7 +26,7 @@ layout (location = 4) in vec2 aColor;
 layout (location = 6) in mat4 SRT;
 
 layout (location = 10) in vec4 Albedo;
-layout (location = 11) in vec3 Metal_Rough_AO_index; // Texture Index
+layout (location = 11) in vec4 Metal_Rough_AO_index; // Texture Index
 layout (location = 12) in vec3 Metal_Rough_AO_constant; // Material Instance Constants
 layout (location = 15) in vec2 texture_index;
 
@@ -44,7 +44,7 @@ layout (location = 1) out vec3 WorldPos;
 layout (location = 2) out vec3 Normal;
 
 layout (location = 3) out vec4 frag_Albedo;
-layout (location = 4) out vec3 frag_Metal_Rough_AO_index; // Texture Index
+layout (location = 4) out vec4 frag_Metal_Rough_AO_index; // Texture Index
 layout (location = 5) out vec3 frag_Metal_Rough_AO_constant; // Material Instance Constants
 
 layout (location = 6) out vec2 frag_texture_index;
