@@ -32,7 +32,7 @@ void Renderer::Update(float)
 	for (auto& [name, prop] : properties)
 	{
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
-		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec3(33.f));
+		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 		std::fill_n(prop.texture, 32, 0);
 	}
 
@@ -66,8 +66,12 @@ void Renderer::Update(float)
 		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
 		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
 		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
+		float emissionidx = float(ReturnTextureIdx(renderer.MeshName, renderer.EmissionID));
 
-
+		//std::cout << "metal index is : " << metalidx << "\n";
+		//std::cout << "rough index is : " << roughidx << "\n";
+		//std::cout << "ao index is : " << aoidx << "\n";
+		//std::cout << "emission index is : " << emissionidx << "\n";
 		float metal_constant = renderer.mr_metallic;
 		float rough_constant = renderer.mr_roughness;
 		float ao_constant = renderer.ao;
@@ -86,7 +90,7 @@ void Renderer::Update(float)
 		//}
 
 		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 
 		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
 		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
@@ -121,7 +125,7 @@ void Renderer::Update(float)
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
 
-			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec3(metalidx, roughidx, aoidx);
+			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
 			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
@@ -164,7 +168,6 @@ void Renderer::Update(float)
 				}
 			}
 		}
-
 	}
 
 	SetupGrid(100);
@@ -330,6 +333,79 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glm::value_ptr(_lightSource.lightpos));
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(EditorCam.GetCameraPosition()));
+
+	// POINT LIGHT STUFFS
+	auto PointLight_Sources = LIGHTING.GetPointLights();
+	for (int i = 0; i < PointLight_Sources.size(); ++i)
+	{
+		//pointLights.colour
+		std::string point_color;
+		point_color = "pointLights[" + std::to_string(i) + "].colour";
+
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
+			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
+
+
+
+		//pointLights.position
+		std::string point_pos;
+		point_pos = "pointLights[" + std::to_string(i) + "].position";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
+			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
+	}
+
+	GLint uniform7 =
+		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
+	glUniform1i(uniform7, (int) PointLight_Sources.size());
+
+	// DIRECTIONAL LIGHT STUFFS
+	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
+	for (int i = 0; i < DirectionLight_Sources.size(); ++i)
+	{
+		//directionalLights.colour
+		std::string directional_color;
+		directional_color = "directionalLights[" + std::to_string(i) + "].colour";
+
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_color.c_str())
+			, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
+
+		std::string directional_direction;
+		directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
+			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
+	}
+	GLint uniform8 =
+		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
+	glUniform1i(uniform8, (int) DirectionLight_Sources.size());
+
+	// SPOTLIGHT STUFFS
+	auto SpotLight_Sources = LIGHTING.GetSpotLights();
+	for (int i = 0; i < SpotLight_Sources.size(); ++i)
+	{
+		std::string spot_color;
+		spot_color = "spotLights[" + std::to_string(i) + "].colour";
+
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
+
+		std::string spot_direction;
+		spot_direction = "spotLights[" + std::to_string(i) + "].direction";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].direction));
+
+		std::string spot_cutoff_inner;
+		spot_cutoff_inner = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_inner.c_str())
+			, 1, &SpotLight_Sources[i].inner_CutOff);
+
+		std::string spot_cutoff_outer;
+		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
+			, 1, &SpotLight_Sources[i].outer_CutOff);
+	}
+	GLint uniform9 =
+		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
+	glUniform1i(uniform9, (int) SpotLight_Sources.size());
 
 	glBindVertexArray(_vaoid);
 	glDrawElementsInstanced(_primType, _primCount, GL_UNSIGNED_INT, 0, _instanceCount);

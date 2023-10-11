@@ -110,8 +110,15 @@ public:
 
 	LightProperties& GetLight() { return lightingSource; }
 
+	std::vector<LightProperties>& GetPointLights() { return pointLightSources; }
+	std::vector<LightProperties>& GetDirectionLights() { return directionLightSources; }
+	std::vector<LightProperties>& GetSpotLights() { return spotLightSources; }
+
 private:
 	LightProperties lightingSource;
+	std::vector<LightProperties> pointLightSources;
+	std::vector<LightProperties> directionLightSources;
+	std::vector<LightProperties> spotLightSources;
 };
 
 ENGINE_SYSTEM(Renderer)

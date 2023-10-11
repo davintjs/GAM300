@@ -37,13 +37,6 @@ std::vector <glm::vec4> temp_DiffuseContainer;
 std::vector <glm::vec4> temp_AmbientContainer;
 std::vector <float> temp_ShininessContainer;
 
-std::vector <LightProperties> PointLight_Sources;
-std::vector <LightProperties> DirectionLight_Sources;
-std::vector <LightProperties> SpotLight_Sources;
-
-
-
-
 //bool isThereLight = false;
 
 //void InstanceSetup(GLuint vaoid);
