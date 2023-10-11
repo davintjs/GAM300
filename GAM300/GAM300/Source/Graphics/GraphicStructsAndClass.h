@@ -19,6 +19,46 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 1000
 
+
+enum LIGHT_TYPE
+{
+	SPOT_LIGHT,
+	POINT_LIGHT,
+	DIRECTIONAL_LIGHT
+};
+
+struct SpotLight
+{
+	glm::vec3 direction;
+	float inner_CutOff;
+	float outer_CutOff;
+
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+struct PointLight
+{
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+struct DirectionalLight
+{
+	glm::vec3 direction;
+
+	glm::vec3 lightColor;
+	float intensity;
+};
+
+union Light_Type
+{
+	SpotLight spotlight;
+	PointLight pointlight;
+	DirectionalLight directionallight;
+};
+
+
 struct LightProperties
 {
 	// Used in point & Spot
@@ -28,12 +68,12 @@ struct LightProperties
 	glm::vec3 direction;
 
 	// Used only in Spot
-
 	float inner_CutOff ;
 	float outer_CutOff ;
 
 	// Used for all
 	glm::vec3 lightColor;
+	float intensity;
 };
 
 

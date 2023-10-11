@@ -345,13 +345,19 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 
-
-
 		//pointLights.position
 		std::string point_pos;
 		point_pos = "pointLights[" + std::to_string(i) + "].position";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
+
+		//pointLights.intensity
+		std::string point_intensity;
+		point_intensity = "pointLights[" + std::to_string(i) + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
+			, 1, &PointLight_Sources[i].intensity);
+
+
 	}
 
 	GLint uniform7 =
@@ -373,7 +379,13 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
 			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
+
+		std::string directional_intensity;
+		directional_intensity = "directionalLights[" + std::to_string(i) + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
+			, 1, &DirectionLight_Sources[i].intensity);
 	}
+
 	GLint uniform8 =
 		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
 	glUniform1i(uniform8, (int) DirectionLight_Sources.size());
@@ -382,6 +394,15 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
 	for (int i = 0; i < SpotLight_Sources.size(); ++i)
 	{
+
+		//pointLights.position
+		std::string spot_pos;
+		spot_pos = "spotLights[" + std::to_string(i) + "].position";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
+
+
+
 		std::string spot_color;
 		spot_color = "spotLights[" + std::to_string(i) + "].colour";
 
@@ -399,9 +420,16 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 			, 1, &SpotLight_Sources[i].inner_CutOff);
 
 		std::string spot_cutoff_outer;
-		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].outerCutOff";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
 			, 1, &SpotLight_Sources[i].outer_CutOff);
+
+
+		std::string spot_intensity;
+		spot_intensity = "spotLights[" + std::to_string(i) + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
+			, 1, &SpotLight_Sources[i].intensity);
+
 	}
 	GLint uniform9 =
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
