@@ -31,6 +31,8 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
 	
+	MeshManager.Init();
+
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
@@ -125,8 +127,6 @@ void AssetManager::Init()
 			}
 		}
 	}
-
-	MeshManager.Init();
 }
 
 // For run time update of files

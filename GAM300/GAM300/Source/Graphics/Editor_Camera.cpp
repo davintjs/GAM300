@@ -19,9 +19,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorHeaders.h"
 #include "Editor_Camera.h"
 
-extern std::vector<Ray3D> Ray_Container;
-
-
 void Editor_Camera::Init()
 {
 	setDistanceToFocalPoint(1000.f);
@@ -105,8 +102,9 @@ void Editor_Camera::Update(float dt)
 			
 			// No Editor Version
 			//Ray3D temp = Raycasting(InputHandler::getMouseX(), InputHandler::getMouseY(), getPerspMatrix(), getViewMatrix(), GetCameraPosition());
-				
-			Ray_Container.push_back(temp);
+			
+			// Bean: Temporary commented the ray container
+			//Ray_Container.push_back(temp);
 
 
 		}

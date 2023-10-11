@@ -15,8 +15,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
+#include "GraphicsHeaders.h"
 
-extern std::map<std::string, InstanceProperties> properties;
 // extern InstanceProperties properties[EntityRenderLimit];
 //extern std::vector <Materials> temp_MaterialContainer;
 
@@ -27,9 +27,10 @@ extern std::vector <glm::vec4> temp_DiffuseContainer;
 extern std::vector <glm::vec4> temp_AmbientContainer;
 extern std::vector <float> temp_ShininessContainer;
 
-
 void MESH_Manager::Init()
 {
+    properties = &RENDERER.GetProperties();
+
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
 	CreateInstanceCube();
     CreateInstanceSphere();
@@ -184,24 +185,24 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         tempProp.drawType = GL_TRIANGLES;
         std::string newName = fileName;
         std::map<std::string, InstanceProperties>::iterator it;
-        it = properties.find(newName);
-        while (it != properties.end()) {
+        it = properties->find(newName);
+        while (it != properties->end()) {
             newName += char('0' + i);
-            it = properties.find(newName);
+            it = properties->find(newName);
         }
-        properties.emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
+        properties->emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
 
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties[newName]));
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[newName]));
     }
 
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties[fileName]);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[fileName]);
 
     mContainer.emplace(fileName, newMesh);
 }
@@ -454,13 +455,13 @@ void MESH_Manager::CreateInstanceCube()
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
 
-    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
+    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Cube"]));
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Cube"]);
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Cube"]));
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)["Cube"]);
 
     mContainer.emplace(std::string("Cube"), newMesh);
 }
@@ -572,17 +573,17 @@ void MESH_Manager::CreateInstanceSphere()
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
-    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
+    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLE_STRIP;
     newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Sphere"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Sphere"]));
 
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Sphere"]);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)["Sphere"]);
     mContainer.emplace(std::string("Sphere"), newMesh);
 
 
@@ -866,12 +867,12 @@ void MESH_Manager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    properties.emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
+    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(properties["Line"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
     mContainer.emplace(std::string("Line"), newMesh);

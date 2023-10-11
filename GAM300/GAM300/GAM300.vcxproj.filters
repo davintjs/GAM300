@@ -87,6 +87,11 @@
     <ClCompile Include="Source\Editor\ImGui\implot_items.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\HandlesTable.cpp" />
+    <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
+    <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
+    <ClCompile Include="Source\Graphics\Lighting.cpp" />
+    <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -161,6 +166,7 @@
     <ClInclude Include="Source\Audio\AudioSystem.h" />
     <ClInclude Include="Source\Scene\SceneTemplates.cpp" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
+    <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
