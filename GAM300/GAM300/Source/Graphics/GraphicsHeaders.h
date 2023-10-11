@@ -158,7 +158,7 @@ public:
 private:
 	std::map<std::string, InstanceProperties> properties;
 	float exposure = 1.f;
-	bool hdr = false;
+	bool hdr = true;
 };
 
 #endif // !GRAPHICSHEADERS_H

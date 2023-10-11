@@ -345,8 +345,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 
-
-
 		//pointLights.position
 		std::string point_pos;
 		point_pos = "pointLights[" + std::to_string(i) + "].position";

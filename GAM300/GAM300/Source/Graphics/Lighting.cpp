@@ -46,17 +46,17 @@ void Lighting::Update(float)
 		Temporary.lightpos = transform.translation;
 		Temporary.lightColor = lightSource.lightingColor;
 
-		if (lightSource.type == 0)// Point Light
+		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
 		}
-		else if (lightSource.type == 1)// Directional Light - WIP
+		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
 			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
 
 			directionLightSources.push_back(Temporary);
 		}
-		else if (lightSource.type == 2)// SpotLight - WIP
+		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
 			Temporary.direction = EditorCam.getForwardVec(); // CHANGE
 			//Temporary.inner_CutOff = glm::cos(glm::radians(12.5f));
