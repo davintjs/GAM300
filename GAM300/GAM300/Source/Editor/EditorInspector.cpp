@@ -530,9 +530,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
-            std::cout << number << std::endl;
-        }
+        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
         comp.channel = static_cast<AudioSource::Channel>(number);
     }
@@ -894,10 +892,46 @@ void AddPanel(Entity& entity) {
     }
 }
 
+void DisplayLayers() {
+    
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Layers)
+        layers.push_back(it.name.c_str());
+    static int index = curr_entity.current_layer;
+    ImGui::Text("Layer"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.current_layer = index;
+}
+
+void DisplayTags() {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Tags)
+        layers.push_back(it.c_str());
+    static int index = curr_entity.tag;
+    ImGui::Text("Tags"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.tag = index;
+}
+
 //Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
@@ -912,6 +946,11 @@ void DisplayEntity(Entity& entity)
 
     ImGui::PopItemWidth();
     curr_scene.Get<Tag>(entity).name = buffer;
+  
+    //display tags
+    DisplayTags(); ImGui::SameLine();
+    //display layer
+    DisplayLayers();
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -938,6 +977,13 @@ void DisplayEntity(Entity& entity)
 void EditorInspector::Init()
 {
     isAddPanel = false;
+    //default layers (same as unity)
+    Layers.push_back(layer("Default"));
+    Layers.push_back(layer("TransparentFX"));
+    Layers.push_back(layer("Ignore Physics"));
+    Layers.push_back(layer("UI"));
+    Layers.push_back(layer("Water"));
+    Tags.push_back("Untagged");   
 }
 
 void EditorInspector::Update(float dt)
