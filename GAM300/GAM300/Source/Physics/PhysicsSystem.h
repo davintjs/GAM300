@@ -151,8 +151,6 @@ private:
 	
 	Rigidbody* rb1 = nullptr;
 	Rigidbody* rb2 = nullptr;
-	JPH::ContactManifold contactData;
-
 	//Vector3 body1CollisionPos;
 	//Vector3 body2CollisionPos;
 

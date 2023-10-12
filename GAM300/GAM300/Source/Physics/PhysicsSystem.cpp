@@ -147,7 +147,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 
 void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) 
 {
-	(void)pEvent;
+	UNREFERENCED_PARAMETER(pEvent);
 	// Create the JPH physics world and INIT it
 	physicsSystem = new JPH::PhysicsSystem();
 
@@ -172,7 +172,7 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 }
 void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
 {
-	(void)pEvent;
+	UNREFERENCED_PARAMETER(pEvent);
 	std::cout << "Physics System scene stop test\n";
 
 	// Delete the current physics system, must set to nullptr
@@ -514,6 +514,27 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	else {
 
 	}*/	
+
+	ContactAddedEvent cae;
+	// Find rigidbody components of the two bodies
+	bool found = false;
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& rbArray = scene.GetArray<Rigidbody>();
+	for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
+		
+		Rigidbody& rb = *it;
+		if (rb.bid == body1.GetID().GetIndexAndSequenceNumber()) {
+			cae.rb1 = &rb;
+		}
+		else if (rb.bid == body2.GetID().GetIndexAndSequenceNumber()) {
+			cae.rb2 = &rb;
+		}
+
+		if (cae.rb1 && cae.rb2)
+			found = true;
+	}
+	EVENTS.Publish(&cae);
+
 	std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
@@ -531,6 +552,25 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID()))
 		std::cout << "Contact Removed\n";
 
+	ContactRemovedEvent cre;
+	// Find rigidbody components of the two bodies
+	bool found = false;
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& rbArray = scene.GetArray<Rigidbody>();
+	for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
+
+		Rigidbody& rb = *it;
+		if (rb.bid == subShapePair.GetBody1ID().GetIndexAndSequenceNumber()) {
+			cre.rb1 = &rb;
+		}
+		else if (rb.bid == subShapePair.GetBody2ID().GetIndexAndSequenceNumber()) {
+			cre.rb2 = &rb;
+		}
+
+		if (cre.rb1 && cre.rb2)
+			found = true;
+	}
+	EVENTS.Publish(&cre);
 	
 }
 #pragma endregion

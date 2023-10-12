@@ -21,6 +21,7 @@ struct Entity;
 struct Scene;
 struct Script;
 struct Field;
+struct Rigidbody;
 
 struct IEvent
 {
@@ -141,6 +142,20 @@ struct GetAssetEvent: IEvent
 	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
 	const std::string& fileName;
 	std::string guid;
+};
+
+struct ContactAddedEvent : IEvent
+{
+	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+
+};
+struct ContactRemovedEvent : IEvent
+{
+	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
 };
 
 
