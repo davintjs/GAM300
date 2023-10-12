@@ -79,6 +79,36 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return reinterpret_cast<void*>(addr);
 	}
 
+	//Gets object that entity has
+	static void* AddComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+
+		if (pair == monoComponentToType.end())
+		{
+			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
+			{
+				//Script
+				std::string scriptName = mono_type_get_name(mType);
+				size_t offset = scriptName.find_last_of(".");
+				if (offset != std::string::npos)
+					scriptName = scriptName.substr(offset + 1);
+				//Get Mono Script instead
+				return MySceneManager.GetCurrentScene().Add<Script>(*pEntity,scriptName.c_str());
+			}
+			else
+			{
+				//Cant find
+				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
+				return nullptr;
+			}
+		}
+		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
+		addr += 8;
+		return reinterpret_cast<void*>(addr);
+	}
+
 
 	//Checks if entity has a component
 	static bool HasComponent(Entity* pEntity, MonoReflectionType* componentType)
@@ -229,5 +259,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetLayerName);
 		Register(GetActive);
 		Register(SetActive);
+		Register(AddComponent);
 	}
 #endif // !SCRIPT_WRAPPERS_H

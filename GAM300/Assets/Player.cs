@@ -23,6 +23,7 @@ public class Player : Script
     {
         Console.WriteLine("STARTED");
         StartCoroutine(DoSomething());
+        AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 

@@ -116,6 +116,8 @@ struct Scene
 	//Get component of another object as a void pointer(Mono does type casting)
 	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
 
+	GENERIC_RECURSIVE(void*, Add, Add<T>(*(Entity*)pObject));
+
 	//Get active from scripts
 	GENERIC_RECURSIVE(bool, GetActive, IsActive(*(T*)pObject));
 
