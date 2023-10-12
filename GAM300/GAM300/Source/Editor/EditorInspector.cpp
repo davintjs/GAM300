@@ -494,6 +494,28 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
+template <typename T>
+void DisplayLightProperties(T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Type");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Spot"); layers.push_back("Directional"); layers.push_back("Point");
+        static int index = value;
+        ImGui::PushItemWidth(100.f);
+        ImGui::Combo("##LightType", &index, layers.data(), (int)layers.size(), 5);
+        ImGui::PopItemWidth();
+        value = index;
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
@@ -549,7 +571,11 @@ void Display_Property(T& comp) {
                     DisplayName.erase(DisplayName.begin(), ++it);
 
                     ImGui::PushID(entry.first.c_str());
-                    Display<T1>(DisplayName.c_str(), Value);
+
+                    if (DisplayName == "Light Type")
+                        DisplayLightProperties(Value);
+                    else
+                        Display<T1>(DisplayName.c_str(), Value);
 
                     //temporary implementation for texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
@@ -892,8 +918,7 @@ void AddPanel(Entity& entity) {
     }
 }
 
-void DisplayLayers() {
-    
+void DisplayLayers() { 
     Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
