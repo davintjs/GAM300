@@ -145,7 +145,6 @@
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AI\NavMesh.h" />
-    <ClInclude Include="Source\Physics\PhysicsObject.h" />
     <ClInclude Include="Source\Utilities\Serializer.h" />
     <ClInclude Include="Source\Utilities\YAMLUtils.h" />
     <ClInclude Include="Source\Utilities\ThreadPool.h" />

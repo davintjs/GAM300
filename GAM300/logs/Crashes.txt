@@ -1,4 +1,4 @@
-[2023-09-30 23:21:47.514] [Error] [critical] 
+[2023-10-12 14:29:38.422] [Error] [critical] 
 Caused By:	mNewScript
 Info:		MONO OBJECT OF Player NOT LOADED
 Source:		C:\Users\matth\Desktop\BleepBloop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 663)

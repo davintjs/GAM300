@@ -56,7 +56,7 @@ void PhysicsSystem::Init()
 	
 	jobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, JPH::thread::hardware_concurrency()-1);
 	
-	engineContactListener = new EngineContactListener;
+	engineContactListener = new EngineContactListener();
 
 }
 void PhysicsSystem::Update(float dt) {
@@ -101,48 +101,13 @@ void PhysicsSystem::Update(float dt) {
 	}
 	//step++;
 	if (physicsSystem) {
-		physicsSystem->Update(dt*9, 1, tempAllocator, jobSystem);
+		physicsSystem->Update(dt*10, 1, tempAllocator, jobSystem);
 	}
+	//std::cout << "DT: " << dt << std::endl;
+	//std::cout << "Physics update!\n";	
 
-	//std::cout << "Physics update!\n";
-	/*
-	JPH::RVec3 ballPos = bodyInterface->GetCenterOfMassPosition(testBallID);
-	Vector3 gBallPos;
-	JoltVec3ToGlmVec3(ballPos, gBallPos);
-	//std::cout << gBallPos.x << ',' << gBallPos.y << ',' << gBallPos.z << std::endl;
-
-	Scene& scene = MySceneManager.GetCurrentScene();
-	if (ball) 
-	{
-		Transform& t = scene.Get<Transform>(*ball);
-		t.translation = gBallPos;
-
-
-		Vector3 ballRotEuler;
-		JPH::Quat ballQuat = bodyInterface->GetRotation(testBallID);
-		JoltQuatToGlmVec3(ballQuat, ballRotEuler);
-		t.rotation = ballRotEuler;
-
-	}
-
-	JPH::RVec3 ballPos2 = bodyInterface->GetCenterOfMassPosition(testBallID2);
-	Vector3 gBallPos2;
-	JoltVec3ToGlmVec3(ballPos2, gBallPos2);
-	if (ball2) 
-	{
-		Transform& t = scene.Get<Transform>(*ball2);
-		t.translation = gBallPos2;
-
-
-
-		Vector3 ballRotEuler;
-		JPH::Quat ballQuat = bodyInterface->GetRotation(testBallID2);
-		JoltQuatToGlmVec3(ballQuat, ballRotEuler);
-		t.rotation = ballRotEuler;
-	}
-	*/	
-
-	UpdateGameObjects();
+	PostPhysicsUpdate();
+	//UpdateGameObjects();
 
 }
 void PhysicsSystem::Exit() {
@@ -176,6 +141,10 @@ void PhysicsSystem::Exit() {
 
 }
 
+void PhysicsSystem::PostPhysicsUpdate() {
+	UpdateGameObjects();
+}
+
 void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) 
 {
 	(void)pEvent;
@@ -189,6 +158,9 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
 		bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
 
+	engineContactListener->pSystem = physicsSystem;
+
+	physicsSystem->SetContactListener(engineContactListener);
 	// Optimise broad phase only if there is an excess amount of bodies
 	//physicsSystem->OptimizeBroadPhase();
 
@@ -208,6 +180,8 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 		delete physicsSystem;
 		physicsSystem = nullptr;
 	}
+
+	engineContactListener->pSystem = nullptr;
 }
 
 
@@ -502,6 +476,9 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem) {
 	return;
 }
 
+
+
+#pragma region EngineContactListener
 // Contact Listeners
 JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) {
 	
@@ -514,12 +491,30 @@ JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& bo
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
-	(void)body1;
-	(void)body2;
 	(void)manifold;
 	(void)ioSettings;
+	if (!pSystem)
+		return;
+	// If bodies already have contact, do not register another OnCollisionEnter/OnTriggerEnter
+	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
+		return;
 	
-	//std::cout << "Contact was added!\n";
+
+	//if (body1.IsSensor() && body2.IsSensor())
+	//	return;
+
+	/*
+	bool isTrigger = false;
+	if (body1.IsSensor() || body2.IsSensor())
+		isTrigger = true;
+
+	if (isTrigger) {
+		
+	}
+	else {
+
+	}*/	
+	std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
 	(void)body1;
@@ -530,10 +525,15 @@ void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH
 	//std::cout << "Contact persisting!\n";
 }
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
-	(void)subShapePair;
+	if (!pSystem)
+		return;
+	// If the bodies are still touching, do not register OnCollisionExit/OnTriggerExit
+	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID()))
+		std::cout << "Contact Removed\n";
+
 	
-	//std::cout << "Contact removed!\n";
 }
+#pragma endregion
 
 // Math conversion helpers
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) {

@@ -129,7 +129,7 @@ public:
 // Contact Listener (collision)
 class EngineContactListener : public JPH::ContactListener {
 public:
-
+	EngineContactListener() : pSystem{nullptr}{}
 	// Callback to validate a collision (contact)
 	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
 	// Callback when new collision is registered
@@ -138,20 +138,25 @@ public:
 	virtual void OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) override;
 	// Callback for when a collision is removed
 	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
+
+	JPH::PhysicsSystem* pSystem;
 };
+
 #pragma region In Progress
-//class EngineCollisionData {
-//public:
-//	EngineCollisionData() = default;
-//
-//private:
-//	JPH::BodyID& body1;
-//	JPH::BodyID& body2;
-//
-//	Vector3 body1CollisionPos;
-//	Vector3 body2CollisionPos;
-//
-//};
+class EngineCollisionData {
+public:
+	EngineCollisionData() = default;
+
+private:
+	
+	Rigidbody* rb1 = nullptr;
+	Rigidbody* rb2 = nullptr;
+	JPH::ContactManifold contactData;
+
+	//Vector3 body1CollisionPos;
+	//Vector3 body2CollisionPos;
+
+};
 #pragma endregion
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
@@ -171,6 +176,8 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
+	void PostPhysicsUpdate();
+
 	// A testing function
 	void TestRun();
 
@@ -180,25 +187,25 @@ public:
 	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
 
-	const unsigned int maxObjects =					 1024;
-	const unsigned int maxObjectMutexes =				0;
-	const unsigned int maxObjectPairs =				 1024;
-	const unsigned int maxContactConstraints =		 1024;
+	const unsigned int maxObjects =						1024;
+	const unsigned int maxObjectMutexes =				   0;
+	const unsigned int maxObjectPairs =					1024;
+	const unsigned int maxContactConstraints =			1024;
 
 
 	unsigned int step = 0;
 
-	JPH::TempAllocatorImpl* tempAllocator =		  nullptr;
-	JPH::JobSystemThreadPool* jobSystem =		  nullptr;
-	EngineContactListener* engineContactListener;
+	JPH::TempAllocatorImpl* tempAllocator =			nullptr;
+	JPH::JobSystemThreadPool* jobSystem =			nullptr;
+	EngineContactListener* engineContactListener =	nullptr;
 
-	JPH::PhysicsSystem* physicsSystem =			  nullptr;
-	JPH::BodyInterface* bodyInterface =			  nullptr;
+	JPH::PhysicsSystem* physicsSystem =				nullptr;
+	JPH::BodyInterface* bodyInterface =				nullptr;
 
-	JPH::BoxShapeSettings* floorShapeSettings =   nullptr;
-	JPH::ShapeRefC* floorShape =				  nullptr;
-	JPH::SphereShape* sphereShape =				  nullptr;
-	JPH::CapsuleShape* capsuleShape =			  nullptr;
+	JPH::BoxShapeSettings* floorShapeSettings =		nullptr;
+	JPH::ShapeRefC* floorShape =					nullptr;
+	JPH::SphereShape* sphereShape =					nullptr;
+	JPH::CapsuleShape* capsuleShape =				nullptr;
 
 
 	BroadPhaseLayerInterface bpLayerInterface;
