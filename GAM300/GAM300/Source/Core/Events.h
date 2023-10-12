@@ -143,6 +143,12 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+struct EditorWindowEvent : IEvent
+{
+	EditorWindowEvent() {};
+	bool isHovered = false;
+	bool isFocused = false;
+};
 
 //
 //template <typename T>

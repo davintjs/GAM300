@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 // Bean: Need this to reference the editor camera's framebuffer
 #include "../Graphics/Editor_Camera.h"
 #include "Editor.h"
+#include "Core/EventsManager.h"
 
 namespace
 {
@@ -36,6 +37,8 @@ void EditorScene::Init()
 {
     sceneDimension = glm::vec2(1600.f, 900.f);
     scenePosition = glm::vec2(0.f, 0.f);
+
+    EVENTS.Subscribe(this, &EditorScene::CallbackEditorWindow);
 }
 
 void EditorScene::Update(float dt)
@@ -142,7 +145,7 @@ void EditorScene::Update(float dt)
 
         //		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
 
-        //		EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+        //		EditorCam.GetFramebuffer().resize(sceneDimension.x, sceneDimension.y);
         //	}
         //}
 
@@ -156,8 +159,9 @@ void EditorScene::Update(float dt)
     if (ImGui::Begin("Scene"))
     {
         windowHovered = ImGui::IsWindowHovered();
+        windowFocused = ImGui::IsWindowFocused();
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-        unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
+        unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
         ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -165,9 +169,9 @@ void EditorScene::Update(float dt)
         if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
         {
             sceneDimension = { _newDimension.x, _newDimension.y };
-            EditorCam.onResize(sceneDimension.x, sceneDimension.y);
+            EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
 
-            EditorCam.getFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
+            EditorCam.GetFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -193,7 +197,7 @@ void EditorScene::Update(float dt)
 
             glm::mat4 transform_1 = trans.GetWorldMatrix();
 
-            ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
+            ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
                 (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
             if (ImGuizmo::IsUsing())
@@ -229,4 +233,10 @@ void EditorScene::Update(float dt)
 void EditorScene::Exit()
 {
 
+}
+
+void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
+{
+    pEvent->isHovered = WindowHovered();
+    pEvent->isFocused = WindowFocused();
 }

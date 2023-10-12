@@ -156,14 +156,18 @@ public:
     glm::vec2 const GetDimension() { return sceneDimension; }
     glm::vec2 const GetPosition() { return scenePosition; }
     bool const WindowHovered() { return windowHovered; }
+    bool const WindowFocused() { return windowFocused; }
     bool const UsingGizmos() { return inOperation; }
     bool const DebugDraw() { return debug_draw; }
+
+    void CallbackEditorWindow(EditorWindowEvent* pEvent);
 
 private:
     glm::vec2 sceneDimension{};   // Dimensions of the viewport
     glm::vec2 scenePosition{};    // Position of the viewport relative to the engine
-    glm::vec2 min{}, max{};         // Minimum and maximum position of the viewport
+    glm::vec2 min{}, max{};       // Minimum and maximum position of the viewport
     bool windowHovered = false;
+    bool windowFocused = false;
     bool inOperation = false;
     bool debug_draw = false;
 };

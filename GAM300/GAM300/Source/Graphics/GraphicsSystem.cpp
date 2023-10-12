@@ -153,14 +153,14 @@ void GraphicsSystem::Update(float dt)
 	*/
 
 	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
 
-	EditorCam.getFramebuffer().unbind();
+	EditorCam.GetFramebuffer().unbind();
 
-	EditorCam.getFramebuffer().bind();
+	EditorCam.GetFramebuffer().bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -172,7 +172,7 @@ void GraphicsSystem::Update(float dt)
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -187,7 +187,7 @@ void GraphicsSystem::Update(float dt)
 	renderQuad();
 	shader.UnUse();
 
-	EditorCam.getFramebuffer().unbind();
+	EditorCam.GetFramebuffer().unbind();
 }
 
 void GraphicsSystem::Draw() {
