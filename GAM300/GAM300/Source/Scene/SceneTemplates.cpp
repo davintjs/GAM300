@@ -197,6 +197,22 @@ void Scene::SetActive(T& object, bool val)
 }
 
 
+//Checks if an object is active
+template <typename T>
+bool Scene::IsActive(const Handle& handle)
+{
+	return IsActive(Get<T>(handle));
+}
+
+
+//Sets active for an object
+template <typename T>
+void Scene::SetActive(const Handle& handle, bool val)
+{
+	SetActive(Get<T>(handle), val);
+}
+
+
 template <typename Component>
 bool Scene::Has(const Entity& entity)
 {

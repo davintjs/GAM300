@@ -1,6 +1,7 @@
 using BeanFactory;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Player : Script
 {
@@ -9,8 +10,20 @@ public class Player : Script
     public float sad;
     public Transform otherT;
 
+    IEnumerator DoSomething()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+            Console.WriteLine("DoSomething2");
+        }
+    }
+
     void Start()
     {
+        Console.WriteLine("STARTED");
+        StartCoroutine(DoSomething());
+        AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -49,6 +62,8 @@ public class Player : Script
             otherT.localPosition += otherT.right * sad;
             //rb.mass += speed;
         }
+        //Console.WriteLine("Hello");
+        //enabled = false;
         //Destroy(this);
         //transform.localPosition = newPos;
     }

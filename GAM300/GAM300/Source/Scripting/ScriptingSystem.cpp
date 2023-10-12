@@ -44,6 +44,8 @@ namespace
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mScript{ nullptr };
+	MonoVTable* mTimeVtable{ nullptr };
+	MonoClassField* mTimeDtField{ nullptr };
 }
 
 namespace Utils
@@ -181,9 +183,10 @@ void ScriptingSystem::Init()
 
 void ScriptingSystem::Update(float dt)
 {
-	UNREFERENCED_PARAMETER(dt);
 	if (logicState != LogicState::NONE)
 	{
+		mono_field_static_set_value(mTimeVtable,mTimeDtField,&dt);
+
 		//Sync logic thread with main thread
 		ran = false;
 		//Logic thread running because ran is set to false
@@ -352,6 +355,25 @@ void ScriptingSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent)
 	while (objectDestroyed);
 }
 
+Handle ScriptingSystem::GetScriptHandle(MonoObject* script)
+{
+	E_ASSERT(mScript, "Mono script is nullptr!");
+	Handle handle{};
+	mono_field_get_value
+	(
+		script,
+		mono_class_get_field_from_name(mScript, "euid"),
+		&handle.euid
+	);
+	mono_field_get_value
+	(
+		script,
+		mono_class_get_field_from_name(mScript, "uuid"),
+		&handle.uuid
+	);
+	return handle;
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	InitMono();
@@ -391,6 +413,7 @@ void ScriptingSystem::ThreadWork()
 			{
 				InvokeAllScripts("Update");
 				InvokeAllScripts("LateUpdate");
+				InvokeAllScripts("ExecuteCoroutines");
 			}
 			else if (logicState == LogicState::START)
 			{
@@ -527,6 +550,9 @@ void ScriptingSystem::SwapDll()
 	RegisterScriptWrappers();
 	RegisterComponents();
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
+	MonoClass* mTime = mono_class_from_name(mAssemblyImage, "BeanFactory", "Time");
+	mTimeVtable = mono_class_vtable(mAppDomain,mTime);
+	mTimeDtField = mono_class_get_field_from_name(mTime,"deltaTime_");
 	UpdateScriptClasses();
 }
 
@@ -583,21 +609,8 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 			field.Get<Script*>() = nullptr;
 			return;
 		}
-		Engine::UUID euid;
-		Engine::UUID uuid;
-		mono_field_get_value
-		(
-			scriptRef,
-			mono_class_get_field_from_name(mScript, "euid"),
-			&euid
-		);
-		mono_field_get_value
-		(
-			scriptRef,
-			mono_class_get_field_from_name(mScript, "uuid"),
-			&uuid
-		);
-		field.Get<Script*>() = &scene.Get<Script>(euid,uuid);
+		Handle handle = GetScriptHandle(scriptRef);
+		field.Get<Script*>() = &scene.Get<Script>(handle);
 		return;
 	}
 	else if (field.fType < AllObjectTypes::Size())
