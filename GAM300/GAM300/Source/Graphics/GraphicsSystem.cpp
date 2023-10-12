@@ -176,8 +176,8 @@ void GraphicsSystem::Update(float dt)
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -195,12 +195,12 @@ void GraphicsSystem::Update(float dt)
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "near_plane");
 
-	glUniform1f(uniform3, 1.0f);
+	glUniform1f(uniform3, 0.00001f);
 
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "far_plane");
 
-	glUniform1f(uniform3, 10000.f);
+	glUniform1f(uniform4, 10000.f);
 
 
 

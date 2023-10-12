@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 unsigned int depthMapFBO; 
 unsigned int depthMap; // Shadow Texture
+glm::mat4 lightSpaceMatrix;
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
@@ -282,6 +283,8 @@ void Renderer::Draw()
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
+		glActiveTexture(GL_TEXTURE0 + 31);
+		glBindTexture(GL_TEXTURE_2D,depthMap);
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
@@ -462,6 +465,23 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
 	glUniform1i(uniform9, (int) SpotLight_Sources.size());
 
+
+
+
+
+	GLint uniform10 =
+		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+
+	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
+		glm::value_ptr(lightSpaceMatrix));
+
+
+
+
+
+
+
+
 	glBindVertexArray(_vaoid);
 	glDrawElementsInstanced(_primType, _primCount, GL_UNSIGNED_INT, 0, _instanceCount);
 	glBindVertexArray(0);
@@ -529,12 +549,14 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 
 void Renderer::DrawDepth()
 {
-	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
-
+	glEnable(GL_DEPTH_TEST);
+	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
+	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
+	lightPos = -lightPos;
 	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
-	float near_plane = 1.0f, far_plane = 10000.f;
-	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	float near_plane = 0.00001f, far_plane = 10000.f;
+	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	lightProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, near_plane, far_plane);
 	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	lightSpaceMatrix = lightProjection * lightView;
 

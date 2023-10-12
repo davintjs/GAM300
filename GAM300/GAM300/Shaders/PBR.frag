@@ -57,6 +57,9 @@ layout (location = 4) in vec4 frag_Metal_Rough_AO_index;
 layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
+layout (location = 7) in vec4 frag_pos_lightspace;
+
+
 //-------------------------
 //          GOING OUT
 //-------------------------
@@ -155,7 +158,21 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(myTextureSampler[31], projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
 
+    return shadow;
+}
 void main()
 {		
 
@@ -375,8 +392,9 @@ void main()
         kD *= 1.0 - metallic;	  
 
         // scale light by NdotL
-        float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        float NdotL = max(dot(N, L), 0.0);   
+        float shadow = ShadowCalculation(frag_pos_lightspace); 
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * shadow;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
 
     float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats

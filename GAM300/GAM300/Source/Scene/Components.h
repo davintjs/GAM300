@@ -291,7 +291,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-	LIGHT_TYPE lightType = SPOT_LIGHT;
+	LIGHT_TYPE lightType = DIRECTIONAL_LIGHT;
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
 	
