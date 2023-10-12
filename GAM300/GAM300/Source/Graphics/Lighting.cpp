@@ -16,7 +16,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicsHeaders.h"
 
 #include "Scene/SceneManager.h"
-#include "Editor_Camera.h"
 
 void Lighting::Init()
 {
