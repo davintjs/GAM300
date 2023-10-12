@@ -196,6 +196,8 @@ void Renderer::Update(float)
 	}
 
 	SetupGrid(100);
+
+	DrawDepth();
 }
 
 void Renderer::SetupGrid(const int& _num)
@@ -523,6 +525,52 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	// unbind and free stuff
 	glBindVertexArray(0);
 	shader.UnUse();
+}
+
+void Renderer::DrawDepth()
+{
+	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
+
+	glm::mat4 lightProjection, lightView;
+	glm::mat4 lightSpaceMatrix;
+	float near_plane = 1.0f, far_plane = 10000.f;
+	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	lightSpaceMatrix = lightProjection * lightView;
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	for (auto& [name, prop] : properties)
+	{
+		std::cout << "in here\n";
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		GLSLShader& shader = SHADER.GetShader(SHADOW);
+		shader.Use();
+
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+		
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix));
+
+		glBindVertexArray(prop.VAO);
+		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+		glBindVertexArray(0);
+
+		shader.UnUse();
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// reset viewport
+	glViewport(0, 0, 1600, 900);// screen width and screen height
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 bool Renderer::Culling()

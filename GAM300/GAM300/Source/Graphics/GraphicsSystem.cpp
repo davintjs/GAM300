@@ -57,6 +57,9 @@ std::vector <float> temp_ShininessContainer;
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
 
+
+extern unsigned int depthMap;
+
 void renderQuad()
 {
 	if (quadVAO == 0)
@@ -96,6 +99,7 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
 	temp_DiffuseContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
@@ -172,7 +176,8 @@ void GraphicsSystem::Update(float dt)
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -183,6 +188,22 @@ void GraphicsSystem::Update(float dt)
 		glGetUniformLocation(shader.GetHandle(), "exposure");
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
+
+
+
+
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "near_plane");
+
+	glUniform1f(uniform3, 1.0f);
+
+	GLint uniform4 =
+		glGetUniformLocation(shader.GetHandle(), "far_plane");
+
+	glUniform1f(uniform3, 10000.f);
+
+
+
 
 	renderQuad();
 	shader.UnUse();

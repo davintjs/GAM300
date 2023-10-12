@@ -39,7 +39,8 @@ enum SHADERTYPE
 	TDR,// Temporary Debug Instance Render
 	SKYBOX,
 	BASICLIGHT,
-	AFFECTEDLIGHT
+	AFFECTEDLIGHT,
+	SHADOW
 };
 
 ENGINE_SYSTEM(ShaderManager)
@@ -140,6 +141,8 @@ public:
 	void DrawGrid(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
+
+	void DrawDepth();
 
 	bool Culling();
 
