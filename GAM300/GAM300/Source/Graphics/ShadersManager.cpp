@@ -48,6 +48,11 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/LightAffected.vert";
 	fragmentPath = shaderPath + "/LightAffected.frag";
 	ShaderCompiler(vertexPath, fragmentPath, "LightAffected SHADER");
+
+	//vertexPath = shaderPath + "/Shadow.vert";
+	//fragmentPath = shaderPath + "/Shadow.frag";
+	//ShaderCompiler(vertexPath, fragmentPath, "Shadow SHADER");
+
 }
 
 void ShaderManager::Update(float)

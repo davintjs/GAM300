@@ -185,5 +185,7 @@
     <None Include="Shaders\PBR.vert" />
     <None Include="Shaders\Skybox.frag" />
     <None Include="Shaders\Skybox.vert" />
+    <None Include="Shaders\Shadow.vert" />
+    <None Include="Shaders\Shadow.frag" />
   </ItemGroup>
 </Project>
