@@ -21,8 +21,6 @@ namespace BeanFactory
 {
     public static class InternalCalls
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static float GetDeltaTime();
 
         #region ANIMATION
         [MethodImpl(MethodImplOptions.InternalCall)]

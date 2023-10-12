@@ -44,6 +44,8 @@ namespace
 	MonoAssembly* mCoreAssembly{ nullptr };	//ASSEMBLY OF SCRIPTS.DLL
 	MonoImage* mAssemblyImage{ nullptr };	//LOADED IMAGE OF SCRIPTS.DLL
 	MonoClass* mScript{ nullptr };
+	MonoVTable* mTimeVtable{ nullptr };
+	MonoClassField* mTimeDtField{ nullptr };
 }
 
 namespace Utils
@@ -181,9 +183,10 @@ void ScriptingSystem::Init()
 
 void ScriptingSystem::Update(float dt)
 {
-	UNREFERENCED_PARAMETER(dt);
 	if (logicState != LogicState::NONE)
 	{
+		mono_field_static_set_value(mTimeVtable,mTimeDtField,&dt);
+
 		//Sync logic thread with main thread
 		ran = false;
 		//Logic thread running because ran is set to false
@@ -410,6 +413,7 @@ void ScriptingSystem::ThreadWork()
 			{
 				InvokeAllScripts("Update");
 				InvokeAllScripts("LateUpdate");
+				InvokeAllScripts("ExecuteCoroutines");
 			}
 			else if (logicState == LogicState::START)
 			{
@@ -546,6 +550,9 @@ void ScriptingSystem::SwapDll()
 	RegisterScriptWrappers();
 	RegisterComponents();
 	mScript = mono_class_from_name(mAssemblyImage, "BeanFactory", "Script");
+	MonoClass* mTime = mono_class_from_name(mAssemblyImage, "BeanFactory", "Time");
+	mTimeVtable = mono_class_vtable(mAppDomain,mTime);
+	mTimeDtField = mono_class_get_field_from_name(mTime,"deltaTime_");
 	UpdateScriptClasses();
 }
 
