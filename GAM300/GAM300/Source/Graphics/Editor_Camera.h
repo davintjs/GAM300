@@ -24,7 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Framebuffer.h"
 #include "Scene/Entity.h"
 
-#define EditorCam Editor_Camera::Instance()
+#define EditorCam EditorCamera::Instance()
 
 class Ray3D
 {
@@ -57,7 +57,7 @@ bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 
 enum CAMERATYPE
 {
-	EDITOR,
+	SCENE,
 	GAME,
 	PREVIEW
 };
@@ -65,16 +65,27 @@ enum CAMERATYPE
 struct Camera
 {
 public:
+	 
+	void Init();
 
+	void UpdateViewMatrix();
 
-	glm::vec3 GetCameraPosition() { return focalPoint - (GetForwardVec() * GetFocalLength()); }
+	void UpdateProjection();
+
+	void UpdateFrustum();
+
+	bool WithinFrustum();
+
+	glm::vec3 GetCameraPosition();
+
+	glm::vec3 GetFocalPoint();
 
 	// Getting Things relative to Cameras
 	float& GetFocalLength() { return focalLength; }
 	void SetFocalLength(const float& _length) { focalLength = _length; }
 
 	glm::quat GetOrientation() { return glm::quat(glm::vec3(-yaw, -pitch, 0.0f)); }
-	glm::vec3 GetRightVec() { glm::vec3(glm::mat4(GetOrientation())[0]); }
+	glm::vec3 GetRightVec() { return glm::vec3(glm::mat4(GetOrientation())[0]); }
 	glm::vec3 GetUpVec() { return glm::vec3(glm::mat4(GetOrientation())[1]); }
 	glm::vec3 GetForwardVec() { return -glm::vec3(glm::mat4(GetOrientation())[2]); }
 
@@ -107,12 +118,12 @@ protected:
 	float nearClip = 0.f;				// Distance of near clipping plane from the camera
 	float farClip = 0.f;				// Distance of far clipping plane from the camera
 	float fieldOfView = 0.f;			// The vertical field of view in degrees
-	float orthographicSize = 0.f;		// Half-size of camera in orthographic mode
-	float focalLength = 0.f;			// Distance to focal point
+	float focalLength = 0.f;			// How close is the camera to the focal point
 	
 	char cullingMask = 0;				// A culling mask to prevent rendering of specific layers, to be implemented in the future
 	bool orthographic = true;			// Orthographic by default until perspective camera has been implemented
 	bool useOcclusionCulling = false;	// Bean: A feature to be implemented in the future
+	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
 	bool enableHDR = true;				// High dynamic range rendering
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
@@ -121,53 +132,36 @@ protected:
 	Framebuffer framebuffer;
 };
 
-SINGLETON(Editor_Camera), public Camera
+SINGLETON(EditorCamera), public Camera
 {
 public:
-	/*!*****************************************************************************
-	\author
-		Euan Lim
-	\brief
-		Initalize camera
-	\return
-		void
-	*******************************************************************************/
-	void Init();
-	/*!*****************************************************************************
-	\author
-		Euan Lim
-	\brief
-		Update Loop
-	param [in] dt
-		delta time
-	\return
-		void
-	*******************************************************************************/
-	void Update(float dt);
-	//void Update();
 	
-	// update cam_mat
-	void updateView();
+	// Initialize the basic editor camera parameters
+	void Init();
+	
+	// Update the editor camera, input controls
+	void Update(float dt);
+
+	// Mouse and Keyboard controls for the camera, zoom is separated in Update function
+	void InputControls();
 
 	// Adjust Prespective projection based off viewport
-	void onResize(float _width, float _height);
+	void OnResize(const float& _width, const float& _height);
 
 	// Get mouse coord in NDC
 	glm::vec2 GetMouseInNDC();
 	
-	// rotate camera
-	void rotateCamera(glm::vec2 delta);
+	// Rotate camera while in FlyMode
+	void RotateCamera(const glm::vec2& _delta);
+
+	// Orbit camera around focal point
+	void OrbitCamera(const glm::vec2& _delta);
 	
 	// pan camera
-	void panCamera(glm::vec2 delta);
+	void PanCamera(const glm::vec2& _delta);
 	
 	// zoom camera
-	void zoomCamera();
-
-	// Set rotation speed
-	float& GetRotationSpeed() { return rotationSpeed; }
-	void SetRotationSpeed(const float& _speed) { rotationSpeed = _speed; }
-
+	void ZoomCamera();
 
 	float GetZoomSpeed();
 
@@ -176,16 +170,15 @@ public:
 	// Shoots a Ray from camera
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
+	// Getter and setter for rotation speed
+	float GetRotationSpeed() { return rotationSpeed * speedModifier; }
+	void SetRotationSpeed(const float& _speed) { rotationSpeed = _speed; }
 
 	bool canMove = true;
 	bool isMoving = false;
 private:
-
-	bool lock = false;
-	bool showcase = false;
-
 	float rotationSpeed = 0.f;			// How fast the camera rotates
-
+	float speedModifier = 1.f;			// How fast all the cameras movements are
 	glm::vec2 prevMousePos;
 };
 

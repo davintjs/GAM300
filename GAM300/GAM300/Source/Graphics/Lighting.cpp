@@ -58,7 +58,7 @@ void Lighting::Update(float)
 		}
 		else if (lightSource.type == 2)// SpotLight - WIP
 		{
-			Temporary.direction = EditorCam.getForwardVec(); // CHANGE
+			Temporary.direction = EditorCam.GetForwardVec(); // CHANGE
 			//Temporary.inner_CutOff = glm::cos(glm::radians(12.5f));
 			//Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
 			Temporary.inner_CutOff = glm::cos(glm::radians(1.5f));

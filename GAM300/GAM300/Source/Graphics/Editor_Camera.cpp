@@ -12,140 +12,157 @@
 	1. Ray3D Class for ray casting ( Mouse Picking) and collision with OBB
 	2. Editor Camera and it's functionalities
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
 #include "Editor/EditorHeaders.h"
 #include "Editor_Camera.h"
+#include "Core/EventsManager.h"
 
-void Editor_Camera::Init()
+void Camera::Init()
 {
-	SetFocalLength(1000.f);
-	SetRotationSpeed(2.f);
-	updateView();
-
 	aspect = 16.f / 9.f;
 	fieldOfView = 45.0f;
 	nearClip = 0.1f;
-	farClip = 1000000.f;
-	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
+	farClip = 100000.f;
+
+	UpdateViewMatrix();
+	UpdateProjection();
 
 	framebuffer.set_size((unsigned int) 1600, (unsigned int) 900);
 	framebuffer.init();
-	//bool pass = false;
-	//E_ASSERT(pass, "Ccoord" , 15 ,"hehe");
 }
 
-
-void Editor_Camera::Update(float dt)
-{
-	UNREFERENCED_PARAMETER(dt);
-	// To Move / Adjust the editor camera
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
-	{
-
-		isMoving = true;
-		//--------------------------------------------------------------
-		// Rotating / Panning / Zooming
-		//--------------------------------------------------------------
-
-		glm::vec2 delta = (InputHandler::getMousePos() - prevMousePos) * 0.003f;
-
-		prevMousePos = InputHandler::getMousePos();
-
-		if (InputHandler::isMouseButtonHolding_L()) // Rotating
-		{
-			if (canMove)
-				rotateCamera(delta);
-		}
-		else if (InputHandler::isMouseButtonHolding_R()) // Panning
-		{
-			panCamera(delta);
-		}
-		else if (InputHandler::getMouseScrollState() != 0) // Panning
-		{
-			zoomCamera();
-		}
-
-		//--------------------------------------------------------------
-		// Moving the Editor Camera
-		//--------------------------------------------------------------
-
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_W))
-		{
-			focalPoint += GetForwardVec() * 10.f;
-		}
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_A))
-		{
-			focalPoint += -GetRightVec() * 10.f;
-		}
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_S))
-		{
-			focalPoint += -GetForwardVec() * 10.f;
-		}
-		if (InputHandler::isKeyButtonHolding(GLFW_KEY_D))
-		{
-			focalPoint += GetRightVec() * 10.f;
-		}
-
-		//std::cout << "Cam : " << cam_pos.x << " , " << cam_pos.y << " , " << cam_pos.z << "\n";
-		//std::cout << "Focal Point : " << focalPoint.x << " , " << focalPoint.y << " , " << focalPoint.z << "\n";
-
-		updateView();
-	}
-	else
-		isMoving = false;
-
-	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_CONTROL))
-	{
-		if (InputHandler::isMouseButtonPressed_L())
-		{
-			Ray3D temp = Raycasting(GetMouseInNDC().x, GetMouseInNDC().y, GetProjMatrix(), GetViewMatrix(), GetCameraPosition());
-			
-			// No Editor Version
-			//Ray3D temp = Raycasting(InputHandler::getMouseX(), InputHandler::getMouseY(), getPerspMatrix(), getViewMatrix(), GetCameraPosition());
-			
-			// Bean: Temporary commented the ray container
-			//Ray_Container.push_back(temp);
-
-
-		}
-	}
-
-	
-
-	if (InputHandler::isMouseButtonHolding_L())
-	{
-		glm::vec2 position = GetMouseInNDC();
-		//EditorDebugger::Instance().AddLog("Position: %f %f\n", position.x, position.y);
-	}
-
-
-	canMove = true;// The false check happens in editorscene, incase guizmo is being used
-}
-
-void Editor_Camera::updateView()
+void Camera::UpdateViewMatrix()
 {
 	cameraPosition = GetCameraPosition();
 
 	glm::quat Orientation = GetOrientation();
 	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
 	viewMatrix = glm::inverse(viewMatrix);
+}
+
+void Camera::UpdateProjection()
+{
+	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
+}
+
+void Camera::UpdateFrustum()
+{
 
 }
 
+bool Camera::WithinFrustum()
+{
+	return false;
+}
+
+glm::vec3 Camera::GetCameraPosition() 
+{ 
+	return focalPoint - (GetForwardVec() * GetFocalLength()); 
+}
+
+glm::vec3 Camera::GetFocalPoint()
+{
+	return cameraPosition + (GetForwardVec() * GetFocalLength());
+}
+
+void EditorCamera::Init()
+{
+	Camera::Init();
+
+	SetFocalLength(1000.f);
+
+	rotationSpeed = 2.f;
+
+	UpdateViewMatrix();
+}
+
+void EditorCamera::Update(float dt)
+{
+	if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_CONTROL))
+	{
+		if (InputHandler::isMouseButtonPressed_L())
+		{
+			Ray3D temp = Raycasting(GetMouseInNDC().x, GetMouseInNDC().y, GetProjMatrix(), GetViewMatrix(), GetCameraPosition());
+		}
+	}
+
+	EditorWindowEvent e;
+	EVENTS.Publish(&e);
+
+	if(e.isHovered || isMoving)
+		InputControls();
+
+	if (e.isHovered && InputHandler::getMouseScrollState() != 0) // Zooming
+		ZoomCamera();
+
+	UpdateViewMatrix();
+
+	canMove = true;// The false check happens in editorscene, incase guizmo is being used
+}
+
+void EditorCamera::InputControls()
+{
+	glm::vec2 delta = (InputHandler::getMousePos() - prevMousePos) * 0.003f;
+	prevMousePos = InputHandler::getMousePos();
+
+	// To Move and Adjust the editor camera
+	if (InputHandler::isMouseButtonHolding_R())
+	{
+		float speedModifer = 5.f;
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_SHIFT))
+			speedModifer = 20.f;
+
+		isMoving = true;
+		//--------------------------------------------------------------
+		// Rotating / Panning / Zooming
+		//--------------------------------------------------------------
+
+		if (canMove)
+			RotateCamera(delta);
+
+		// Bean: Should be the panning tool in Editor using Key Q
+		// PanCamera(delta);
+
+		//--------------------------------------------------------------
+		// Moving the Editor Camera
+		//--------------------------------------------------------------
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_W))
+		{
+			focalPoint += GetForwardVec() * speedModifer;
+		}
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_A))
+		{
+			focalPoint += -GetRightVec() * speedModifer;
+		}
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_S))
+		{
+			focalPoint += -GetForwardVec() * speedModifer;
+		}
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_D))
+		{
+			focalPoint += GetRightVec() * speedModifer;
+		}
+	}
+	else
+	{
+		isMoving = false;
+	}
+}
+
 // Bean: Temporary resize needed for resizing the scene viewport
-void Editor_Camera::onResize(float _width, float _height)
+void EditorCamera::OnResize(const float& _width, const float& _height)
 {
 	dimension.x = _width;
 	dimension.y = _height;
 	aspect = dimension.x / dimension.y;
 
-	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
+	UpdateProjection();
 }
 
-glm::vec2 Editor_Camera::GetMouseInNDC()
+glm::vec2 EditorCamera::GetMouseInNDC()
 {
 	glm::vec2 scenePosition = EditorScene::Instance().GetPosition();
 	glm::vec2 sceneDimension = EditorScene::Instance().GetDimension();
@@ -159,53 +176,56 @@ glm::vec2 Editor_Camera::GetMouseInNDC()
 	return mouseTo1600By900;
 }
 
-float Editor_Camera::GetZoomSpeed()
+void EditorCamera::RotateCamera(const glm::vec2& _delta)
+{
+	OrbitCamera(_delta);
+	focalPoint = GetFocalPoint();
+}
+
+void EditorCamera::OrbitCamera(const glm::vec2& _delta)
+{
+	pitch += _delta.x * GetRotationSpeed();
+	yaw -= _delta.y * GetRotationSpeed();
+}
+
+void EditorCamera::PanCamera(const glm::vec2& _delta)
+{
+	//std::cout << "Panning\n";
+	glm::vec2 panSpeed = GetPanSpeed();
+	focalPoint += -GetRightVec() * _delta.x * panSpeed.x * GetFocalLength();
+	focalPoint += -GetUpVec() * _delta.y * panSpeed.y * GetFocalLength();
+}
+
+void EditorCamera::ZoomCamera()
+{
+	focalLength += -InputHandler::getMouseScrollState() * GetZoomSpeed();
+	if (focalLength < 1.f)
+	{
+		focalLength = 1.1f;
+	}
+}
+
+float EditorCamera::GetZoomSpeed()
 {
 	float distance = focalLength * 0.2f;
 	distance = std::max(distance, 0.0f);
 	float speed = distance * distance;
 	speed = std::min(speed, 100.0f); // max speed = 100
-	return speed;
+	return speed * speedModifier;
 }
 
-void Editor_Camera::rotateCamera(glm::vec2 delta)
-{
-	//std::cout << "Rotate Camera\n";
-	pitch += delta.x * GetRotationSpeed();
-	yaw -= delta.y * GetRotationSpeed();
-}
-
-void Editor_Camera::panCamera(glm::vec2 delta)
-{
-	//std::cout << "Panning\n";
-	glm::vec2 panSpeed = GetPanSpeed();
-	focalPoint += -GetRightVec() * delta.x * panSpeed.x * GetFocalLength();
-	focalPoint += GetUpVec() * delta.y * panSpeed.y * GetFocalLength();
-}
-
-void Editor_Camera::zoomCamera()
-{
-	focalLength += -InputHandler::getMouseScrollState() * GetZoomSpeed();
-	if (focalLength < 1.f)
-	{
-		//std::cout << "we hitting here ouchy\n";
-		//focalPoint += getForwardVec();
-		focalLength = 1.1f;
-	}
-}
-
-glm::vec2 Editor_Camera::GetPanSpeed() //  Copied from Cherno no cappo
+glm::vec2 EditorCamera::GetPanSpeed() //  Copied from Cherno no cappo
 {
 	float x = std::min(dimension.x / 1000.0f, 2.4f); // max = 2.4f
-	float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
+	float xFactor = 0.04f * (x * x) - 0.1778f * x + 0.3f;
 
 	float y = std::min(dimension.y / 1000.0f, 2.4f); // max = 2.4f
-	float yFactor = 0.0366f * (y * y) - 0.1778f * y + 0.3021f;
+	float yFactor = 0.04f * (y * y) - 0.1778f * y + 0.3f;
 
-	return { xFactor, yFactor };
+	return { xFactor * speedModifier, yFactor * speedModifier };
 }
 
-Ray3D Editor_Camera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye)
+Ray3D EditorCamera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye)
 {
 	EditorDebugger::Instance().AddLog("Dimension: %f %f\n", EditorScene::Instance().GetDimension().x, EditorScene::Instance().GetDimension().y);
 

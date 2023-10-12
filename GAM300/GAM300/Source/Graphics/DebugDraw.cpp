@@ -83,7 +83,7 @@ bool DebugDraw::Raycasting(Ray3D& _ray)
 			return false;
 
 		_ray = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y,
-			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
+			EditorCam.GetProjMatrix(), EditorCam.GetViewMatrix(), EditorCam.GetCameraPosition());
 		rayContainer.push_back(_ray);
 		return true;
 	}
