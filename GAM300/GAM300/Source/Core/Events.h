@@ -21,6 +21,7 @@ struct Entity;
 struct Scene;
 struct Script;
 struct Field;
+struct Rigidbody;
 
 struct IEvent
 {
@@ -149,6 +150,20 @@ struct EditorWindowEvent : IEvent
 	bool isHovered = false;
 	bool isFocused = false;
 };
+struct ContactAddedEvent : IEvent
+{
+	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+
+};
+struct ContactRemovedEvent : IEvent
+{
+	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
+
 
 //
 //template <typename T>
