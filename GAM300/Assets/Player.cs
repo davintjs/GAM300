@@ -15,15 +15,14 @@ public class Player : Script
         while (true)
         {
             yield return new WaitForSeconds(5f);
-            Console.WriteLine("DoSomething2");
+            Console.WriteLine("Coroutine Every 5 seconds");
         }
     }
 
     void Start()
     {
-        Console.WriteLine("STARTED");
         StartCoroutine(DoSomething());
-        AddComponent<Rigidbody>();
+        //AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -70,5 +69,10 @@ public class Player : Script
 
     void Exit()
     {
+    }
+
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        Console.WriteLine("COLLISION ENTER FROM SCRIPTING!");
     }
 }
