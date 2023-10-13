@@ -24,7 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Framebuffer.h"
 #include "Scene/Entity.h"
 
-#define EditorCam Editor_Camera::Instance()
+#define EditorCam EditorCamera::Instance()
 
 class Ray3D
 {
@@ -55,111 +55,131 @@ bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
 	float& intersection_distance // Output : distance between ray_origin and the intersection with the OBB)
 );
 
-SINGLETON(Editor_Camera)
+enum CAMERATYPE
+{
+	SCENE,
+	GAME,
+	PREVIEW
+};
+
+struct Camera
 {
 public:
-	/*!*****************************************************************************
-	\author
-		Euan Lim
-	\brief
-		Initalize camera
-	\return
-		void
-	*******************************************************************************/
+	 
 	void Init();
-	/*!*****************************************************************************
-	\author
-		Euan Lim
-	\brief
-		Update Loop
-	param [in] dt
-		delta time
-	\return
-		void
-	*******************************************************************************/
-	void Update(float dt);
-	//void Update();
+
+	void UpdateViewMatrix();
+
+	void UpdateProjection();
+
+	void UpdateFrustum();
+
+	bool WithinFrustum();
+
+	glm::vec3 GetCameraPosition();
+
+	glm::vec3 GetFocalPoint();
+
+	// Getting Things relative to Cameras
+	float& GetFocalLength() { return focalLength; }
+	void SetFocalLength(const float& _length) { focalLength = _length; }
+
+	glm::quat GetOrientation() { return glm::quat(glm::vec3(-yaw, -pitch, 0.0f)); }
+	glm::vec3 GetRightVec() { return glm::vec3(glm::mat4(GetOrientation())[0]); }
+	glm::vec3 GetUpVec() { return glm::vec3(glm::mat4(GetOrientation())[1]); }
+	glm::vec3 GetForwardVec() { return -glm::vec3(glm::mat4(GetOrientation())[2]); }
+
+	glm::mat4& GetProjMatrix() { return projMatrix; }
+	glm::mat4& GetViewMatrix() { return viewMatrix; }
+
+	glm::vec2& GetViewportSize() { return dimension; }
+	void SetViewportSize(const float& _width, const float& _height) { dimension = glm::vec2(_width, _height); }
+	void SetViewportSize(const glm::vec2& _dimension) { dimension = _dimension; }
+
+	Framebuffer& GetFramebuffer() { return framebuffer; }
+
+protected:
+	glm::vec4 backgroundColor;			// Default solid color when rendering
+	glm::vec3 cameraPosition;			// The location of the viewer / eye (Center of the screen, 10 units away)
+	glm::vec3 focalPoint;				// The look-at point / target point where the viewer is looking (Center of screen)
+	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
+	glm::vec2 frustumBottom;			// The bottom left position of the frustum, for frustum culling
+	glm::vec2 frustumTop;				// The top right position of the frustum, for frustum culling
+
+	CAMERATYPE cameraType;				// Type of camera
+
+	float width = 0.f;					// Pixel width of the camera
+	float height = 0.f;					// Pixel height of the camera
+	float pitch = 0.f;					// For rotating up and down
+	float yaw = 0.f;					// For rotating left and right
+	float frustumMargin = 5.f;			// The margin in which the camera will still render objects that are outside the camera's dimension
+
+	float aspect = 0.f;					// The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)
+	float nearClip = 0.f;				// Distance of near clipping plane from the camera
+	float farClip = 0.f;				// Distance of far clipping plane from the camera
+	float fieldOfView = 0.f;			// The vertical field of view in degrees
+	float focalLength = 0.f;			// How close is the camera to the focal point
 	
-	// update cam_mat
-	void updateView();
+	char cullingMask = 0;				// A culling mask to prevent rendering of specific layers, to be implemented in the future
+	bool orthographic = true;			// Orthographic by default until perspective camera has been implemented
+	bool useOcclusionCulling = false;	// Bean: A feature to be implemented in the future
+	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
+	bool enableHDR = true;				// High dynamic range rendering
+
+	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
+	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
+
+	Framebuffer framebuffer;
+};
+
+SINGLETON(EditorCamera), public Camera
+{
+public:
+	
+	// Initialize the basic editor camera parameters
+	void Init();
+	
+	// Update the editor camera, input controls
+	void Update(float dt);
+
+	// Mouse and Keyboard controls for the camera, zoom is separated in Update function
+	void InputControls();
 
 	// Adjust Prespective projection based off viewport
-	void onResize(float _width, float _height);
+	void OnResize(const float& _width, const float& _height);
 
 	// Get mouse coord in NDC
 	glm::vec2 GetMouseInNDC();
-
-	// set distanceto distanceToFP
-	void setDistanceToFocalPoint(float distance);
 	
-	// rotate camera
-	void rotateCamera(glm::vec2 delta);
+	// Rotate camera while in FlyMode
+	void RotateCamera(const glm::vec2& _delta);
+
+	// Orbit camera around focal point
+	void OrbitCamera(const glm::vec2& _delta);
 	
 	// pan camera
-	void panCamera(glm::vec2 delta);
+	void PanCamera(const glm::vec2& _delta);
 	
 	// zoom camera
-	void zoomCamera();
+	void ZoomCamera();
 
-	// Change viewport size
-	void setViewportSize(float width , float height);
+	float GetZoomSpeed();
 
-	// Set rotation speed
-	void setRotationSpeed(float speed);
-
-	// Getting Things relative to Cameras
-	float getDistanceToFocalPoint();
-
-	glm::vec3 GetCameraPosition();
-	
-	glm::quat getOrientation();
-	glm::vec3 getRightVec();
-	glm::vec3 getUpVec();
-	glm::vec3 getForwardVec();
-
-	glm::mat4 getViewMatrix();
-	glm::mat4 getPerspMatrix();
-
-	float getZoomSpeed();
-	glm::vec2 getPanSpeed();
-
-	glm::vec2 getViewportSize();
-
-	float getRotationSpeed();
-
-	Framebuffer& getFramebuffer() { return framebuffer; }
+	glm::vec2 GetPanSpeed();
 
 	// Shoots a Ray from camera
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
+	// Getter and setter for rotation speed
+	float GetRotationSpeed() { return rotationSpeed * speedModifier; }
+	void SetRotationSpeed(const float& _speed) { rotationSpeed = _speed; }
 
 	bool canMove = true;
 	bool isMoving = false;
 private:
-
-	glm::vec2 viewport{ 1600.f,900.f };
-
-	glm::vec3 cam_pos{}; // Location of Camera
-
-	glm::mat4 cam_mat;
-	glm::mat4 persp_projection;
-	glm::mat4 ortho_projection; // Don't think its needed
-
-	glm::vec3 focalPoint{};
-
-	float distanceToFP;
-	float aspect;
-	float rotationSpeed;
-
-	float spin = 0.f;
-	float tilt = 0.f;
-
-	bool lock = false;
-	bool showcase = false;
-
+	float rotationSpeed = 0.f;			// How fast the camera rotates
+	float speedModifier = 1.f;			// How fast all the cameras movements are
 	glm::vec2 prevMousePos;
-
-	Framebuffer framebuffer;
 };
 
 #endif // !EDITOR_CAMERA_H
