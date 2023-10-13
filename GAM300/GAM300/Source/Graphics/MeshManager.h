@@ -125,6 +125,8 @@ public:
 	//GLuint CreateTexture(char const* Filename);
 	std::unordered_map<std::string, Mesh> mContainer;
 	std::map<std::string, InstanceProperties>* properties;
+	//std::map<std::string, InstanceProperties>* properties;
+
 private:
 	// To load Geoms from FBXs
 	GeomImported DeserializeGeoms(const std::string filePath);

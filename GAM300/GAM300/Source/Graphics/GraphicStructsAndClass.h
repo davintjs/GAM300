@@ -159,3 +159,30 @@ struct InstanceProperties
 	
 	void BatchTexture(std::string texture);
 };
+
+struct DefaultRenderProperties {
+	GLenum drawType;
+
+	unsigned int VAO;
+	unsigned int debugVAO{};
+	glm::mat4 entitySRT;
+
+	// material instance
+	// this one need to optimize, not everytime need these
+	glm::vec4 Albedo; // This means colour for now
+	glm::vec4 Specular;
+	glm::vec4 Diffuse;
+	glm::vec4 Ambient;
+	float Shininess;
+
+	// textures
+	glm::vec4 M_R_A_Texture;
+	glm::vec3 M_R_A_Constant{ glm::vec3(1.f,1.f,1.f) };
+	glm::vec2 textureIndex; // (texture index, normal map index)
+
+	unsigned int drawCount = 0;
+	unsigned int iter = 0;
+	unsigned int texture[32];// max 32 dds only
+	unsigned int textureCount = 0;
+
+};

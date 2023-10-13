@@ -40,6 +40,7 @@ void Renderer::Update(float)
 
 	int i = 0;
 
+	// loop through mesh renderer
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 
@@ -49,6 +50,9 @@ void Renderer::Update(float)
 		{
 			continue;
 		}
+		
+
+		
 
 		//int index = t_Mesh->index;
 
@@ -75,64 +79,68 @@ void Renderer::Update(float)
 		float metal_constant = renderer.mr_metallic;
 		float rough_constant = renderer.mr_roughness;
 		float ao_constant = renderer.ao;
-		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+
+		// Loop through camera (@euan)
+
+		// for each cam
+
+		// if instance rendering put into container for instance rendering
+		if (renderer.isInstance) {
+			// use the properties container coz its made for instance rendering already
+			properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+			properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+			properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
+
+			properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
+			properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
+			properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
+			properties[renderer.MeshName].Specular[properties[renderer.MeshName].iter] = renderer.mr_Specular;
+			properties[renderer.MeshName].Shininess[properties[renderer.MeshName].iter] = renderer.mr_Shininess;
+			properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
 
 
-		//// button here change norm idx to 33
-		//if (test_button_1)
-		//{
-		//	normidx = 33;
-		//	
-		//}
-		//if (test_button_2)
-		//{
-		//	roughidx = 33;
-		//}
-
-		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-
-		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
-		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
-		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
-		properties[renderer.MeshName].Specular[properties[renderer.MeshName].iter] = renderer.mr_Specular;
-		properties[renderer.MeshName].Shininess[properties[renderer.MeshName].iter] = renderer.mr_Shininess;
-		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
-
-
-		++(properties[renderer.MeshName].iter);
-		char maxcount = 32;
-		// newstring
-		for (char namecount = 0; namecount < maxcount; ++namecount)
-		{
-			std::string newName = renderer.MeshName;
-
-			newName += ('1' + namecount);
-
-			if (properties.find(newName) == properties.end())
+			++(properties[renderer.MeshName].iter);
+			
+			// sub meshes into instance properties
+			char maxcount = 32;
+			for (char namecount = 0; namecount < maxcount; ++namecount)
 			{
-				break;
+				std::string newName = renderer.MeshName;
+
+				newName += ('1' + namecount);
+
+				if (properties.find(newName) == properties.end())
+				{
+					break;
+				}
+				//InstanceProperties* currentProp = &properties[renderer.MeshName];
+
+				/*GLuint textureID = 0;
+				GLuint normalMapID = 0;*/
+
+				properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
+				properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
+				properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
+				properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
+				properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
+				properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+				properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+				properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+				properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
+				properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+
+
+				++(properties[newName].iter);
 			}
-			//InstanceProperties* currentProp = &properties[renderer.MeshName];
-
-			/*GLuint textureID = 0;
-			GLuint normalMapID = 0;*/
-
-			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
-			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
-			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
-			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
-
-			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
-
-
-			++(properties[newName].iter);
 		}
+		else /*if default rendering*/{
+			// if not instance put into container for default rendering
+
+
+		}
+
+		
 		++i;
 
 		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
@@ -194,6 +202,7 @@ void Renderer::SetupGrid(const int& _num)
 
 void Renderer::Draw()
 {
+	
 	// Looping Properties
 	for (auto& [name, prop] : properties)
 	{
