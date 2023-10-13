@@ -495,7 +495,7 @@ void DisplayTexturePicker(T& Value) {
 }
 
 template <typename T>
-void DisplayLightProperties(T& value) {
+void DisplayLightTypes(T& value) {
     if constexpr (std::is_same<T, int>()) {
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -520,6 +520,7 @@ void DisplayLightProperties(T& value) {
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
+
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -570,12 +571,9 @@ void Display_Property(T& comp) {
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());
-
-                    if (DisplayName == "Light Type")
-                        DisplayLightProperties(Value);
-                    else
-                        Display<T1>(DisplayName.c_str(), Value);
+                    ImGui::PushID(entry.first.c_str());                   
+       
+                    Display<T1>(DisplayName.c_str(), Value);
 
                     //temporary implementation for texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
@@ -591,7 +589,6 @@ void Display_Property(T& comp) {
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
                 assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                //List.push_back(property::entry { PropertyName, Data });
             }
            
         });
@@ -669,6 +666,27 @@ void DisplayComponent(Script& script)
             EVENTS.Publish(&setFieldEvent);
         }
         
+    }
+}
+
+void DisplayLightProperties(LightSource& source) {
+
+    DisplayLightTypes(source.lightType);
+    
+    Display<float>("Intensity", source.intensity);
+    Display<Vector3>("Color", source.lightingColor);
+
+    if (source.lightType == (int)SPOT_LIGHT) {
+        Display<Vector3>("Light Position", source.lightpos);
+        Display<Vector3>("Direction", source.direction);
+        Display<float>("Inner Cutoff", source.inner_CutOff);
+        Display<float>("Outer Cutoff", source.outer_CutOff);
+    }
+    else if(source.lightType == (int)DIRECTIONAL_LIGHT){
+        Display<Vector3>("Direction", source.direction);
+    }
+    else { //POINT LIGHT
+        Display<Vector3>("Light Position", source.lightpos);
     }
 }
 
@@ -752,8 +770,6 @@ void DisplayComponentHelper(T& component)
     
     if (windowopen)
     {
-
-
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -775,6 +791,9 @@ void DisplayComponentHelper(T& component)
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
+            }
+            if constexpr (std::is_same_v<T, LightSource>) {
+                DisplayLightProperties(component);
             }
             else
             {

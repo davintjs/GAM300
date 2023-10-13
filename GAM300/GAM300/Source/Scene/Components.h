@@ -305,9 +305,8 @@ struct LightSource : Object
 	float outer_CutOff;
 
 	// Used for all
-	//Vector3 lightColor;
 	float intensity;
-	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
 
 	
 	property_vtable()
@@ -317,6 +316,7 @@ struct LightSource : Object
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(lightType).Name("Light Type"),
 	property_var(lightpos).Name("Position"),
+	property_var(intensity).Name("Intensity"),
 	property_var(direction).Name("Direction"),
 	property_var(inner_CutOff).Name("Inner Cutoff"),
 	property_var(outer_CutOff).Name("Outer Cutoff"),
