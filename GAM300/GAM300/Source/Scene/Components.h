@@ -300,7 +300,7 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightingColor).Name("LightingColor")
+	property_var(lightingColor).Name("LightingColor") 
 } property_vend_h(LightSource)
 
 #pragma endregion

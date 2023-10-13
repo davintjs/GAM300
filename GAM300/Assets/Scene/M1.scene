@@ -11,9 +11,9 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
-  m_Position: [9.62417603, 147.76944, 345.305298]
-  m_Rotation: [-1.03687429, -1.43237066, 1.03265131]
-  m_Scale: [0.999988139, 0.999988496, 0.999988198]
+  m_Position: [9.62417603, 124.183029, 345.305298]
+  m_Rotation: [-1.03687167, -1.43237114, 1.03264809]
+  m_Scale: [0.999988496, 0.999987364, 0.999988079]
   m_Children:
     []
   m_Parent: 0
@@ -48,7 +48,7 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [-3.05175781e-05, 61.6971054, -23.4976406]
+  m_Position: [-3.05175781e-05, 186.035995, -23.4976406]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -98,7 +98,7 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [228.016296, 57.2826424, 121.589989]
+  m_Position: [228.016296, 56.5950127, 121.589989]
   m_Rotation: [1.23910356, -0, 0]
   m_Scale: [100, 99.9999542, 99.9999542]
   m_Children:
@@ -198,7 +198,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-259.751099, 112.862083, 323.042511]
+  m_Position: [0, 414.434937, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:

@@ -194,7 +194,8 @@ void GraphicsSystem::Update(float dt)
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "near_plane");
 
-	glUniform1f(uniform3, -10000.f);
+	//glUniform1f(uniform3, -10000.f);
+	glUniform1f(uniform3, 10000.f);
 
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "far_plane");

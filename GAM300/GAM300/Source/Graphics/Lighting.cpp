@@ -18,6 +18,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/SceneManager.h"
 #include "Editor_Camera.h"
 
+extern LightProperties spot_light_stuffs;
+
+
 void Lighting::Init()
 {
 
@@ -62,6 +65,7 @@ void Lighting::Update(float)
 			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
 			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
 			spotLightSources.push_back(Temporary);
+			spot_light_stuffs = Temporary;
 		}
 
 

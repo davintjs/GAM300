@@ -170,7 +170,6 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow
 
-
     // Max is 0.05 , Min is 0.005
     float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
 
@@ -179,6 +178,9 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 
     return shadow;
 }
+
+
+
 void main()
 {		
 
@@ -475,7 +477,14 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        
+        
+        
+        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+        
+        
+        
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
         }    
     }   
 
