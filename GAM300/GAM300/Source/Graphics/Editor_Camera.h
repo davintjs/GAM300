@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../Core/SystemInterface.h"
 #include "Framebuffer.h"
 #include "Scene/Entity.h"
+#include "Core/Events.h"
 
 #define EditorCam EditorCamera::Instance()
 
@@ -168,18 +169,27 @@ public:
 	glm::vec2 GetPanSpeed();
 
 	// Shoots a Ray from camera
+	Ray3D Raycasting();
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
 	// Getter and setter for rotation speed
 	float GetRotationSpeed() { return rotationSpeed * speedModifier; }
 	void SetRotationSpeed(const float& _speed) { rotationSpeed = _speed; }
 
+	bool IsPanning() const { return isPanning; }
+
+	Ray3D& GetRay() { return ray; }
+
+	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
+
 	bool canMove = true;
 	bool isMoving = false;
 private:
-	float rotationSpeed = 0.f;			// How fast the camera rotates
-	float speedModifier = 1.f;			// How fast all the cameras movements are
 	glm::vec2 prevMousePos;
+	float rotationSpeed = 1.f;			// How fast the camera rotates
+	float speedModifier = 1.f;			// How fast all the cameras movements are
+	bool isPanning = false;
+	Ray3D ray;
 };
 
 #endif // !EDITOR_CAMERA_H

@@ -149,6 +149,14 @@ public:
     // Updating and displaying of the Scene & Game
     void Update(float dt);
 
+    void SelectEntity();
+
+    void ToolBar();
+    
+    void GameView();
+    
+    void SceneView();
+
     // Exit the system
     void Exit();
 
@@ -163,9 +171,9 @@ public:
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
 
 private:
-    glm::vec2 sceneDimension{};   // Dimensions of the viewport
-    glm::vec2 scenePosition{};    // Position of the viewport relative to the engine
-    glm::vec2 min{}, max{};       // Minimum and maximum position of the viewport
+    glm::vec2 sceneDimension{}; // Dimensions of the viewport
+    glm::vec2 scenePosition{};  // Position of the viewport relative to the engine
+    glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
     bool windowHovered = false;
     bool windowFocused = false;
     bool inOperation = false;

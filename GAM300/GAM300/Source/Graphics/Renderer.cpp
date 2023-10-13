@@ -156,8 +156,8 @@ void Renderer::Update(float)
 
 			float& intersect = DEBUGDRAW.GetIntersect();
 			float& tempIntersect = DEBUGDRAW.GetTempIntersect();
-			Ray3D* temp = DEBUGDRAW.GetRay();
-			if (testRayOBB(temp->origin, temp->direction, mins, maxs,
+			Ray3D temp = EditorCam.GetRay();
+			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
 				glm::translate(glm::mat4(1.0f), translation) * rotMat, tempIntersect))
 			{
 				if (tempIntersect < intersect)
