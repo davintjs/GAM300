@@ -157,7 +157,18 @@ struct ContactRemovedEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
-
+struct TriggerEnterEvent : IEvent
+{
+	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
+struct TriggerRemoveEvent : IEvent
+{
+	TriggerRemoveEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
 
 //
 //template <typename T>

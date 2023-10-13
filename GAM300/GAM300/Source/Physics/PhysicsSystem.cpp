@@ -498,42 +498,39 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	// If bodies already have contact, do not register another OnCollisionEnter/OnTriggerEnter
 	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
 		return;
-	
 
-	//if (body1.IsSensor() && body2.IsSensor())
-	//	return;
-
-	/*
-	bool isTrigger = false;
-	if (body1.IsSensor() || body2.IsSensor())
-		isTrigger = true;
-
-	if (isTrigger) {
-		
-	}
-	else {
-
-	}*/	
-
-	ContactAddedEvent cae;
 	// Find rigidbody components of the two bodies
+	Rigidbody* rb1 = nullptr;
+	Rigidbody* rb2 = nullptr;
 	bool found = false;
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
-		
+
 		Rigidbody& rb = *it;
 		if (rb.bid == body1.GetID().GetIndexAndSequenceNumber()) {
-			cae.rb1 = &rb;
+			rb1 = &rb;
 		}
 		else if (rb.bid == body2.GetID().GetIndexAndSequenceNumber()) {
-			cae.rb2 = &rb;
+			rb2 = &rb;
 		}
 
-		if (cae.rb1 && cae.rb2)
+		if (rb1 && rb2)
 			found = true;
 	}
-	EVENTS.Publish(&cae);
+	
+	if (body1.IsSensor() || body2.IsSensor()) {
+		TriggerEnterEvent tee;
+		tee.rb1 = rb1;
+		tee.rb2 = rb2;
+		EVENTS.Publish(&tee);
+	}
+	else {
+		ContactAddedEvent cae;
+		cae.rb1 = rb1;
+		cae.rb2 = rb2;
+		EVENTS.Publish(&cae);
+	}
 
 	std::cout << "Contact Added\n";
 }
@@ -548,12 +545,14 @@ void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
 	if (!pSystem)
 		return;
+
 	// If the bodies are still touching, do not register OnCollisionExit/OnTriggerExit
 	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID()))
 		std::cout << "Contact Removed\n";
 
-	ContactRemovedEvent cre;
 	// Find rigidbody components of the two bodies
+	Rigidbody* rb1 = nullptr;
+	Rigidbody* rb2 = nullptr;
 	bool found = false;
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
@@ -561,17 +560,53 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 
 		Rigidbody& rb = *it;
 		if (rb.bid == subShapePair.GetBody1ID().GetIndexAndSequenceNumber()) {
-			cre.rb1 = &rb;
+			rb1 = &rb;
 		}
 		else if (rb.bid == subShapePair.GetBody2ID().GetIndexAndSequenceNumber()) {
-			cre.rb2 = &rb;
+			rb2 = &rb;
 		}
 
-		if (cre.rb1 && cre.rb2)
+		if (rb1 && rb2)
 			found = true;
 	}
-	EVENTS.Publish(&cre);
+
+	// Scoped lock
+	bool trigger = false;
+	{
+		JPH::BodyLockRead lock(pSystem->GetBodyLockInterface(), subShapePair.GetBody1ID());
+		if (lock.Succeeded()) // body_id may no longer be valid
+		{
+			const JPH::Body& body1 = lock.GetBody();
+
+			// Do something with body
+			trigger = body1.IsSensor();
+		
+		}
+	}
+	if (!trigger) {
+		JPH::BodyLockRead lock(pSystem->GetBodyLockInterface(), subShapePair.GetBody2ID());
+		if (lock.Succeeded()) // body_id may no longer be valid
+		{
+			const JPH::Body& body2 = lock.GetBody();
+
+			// Do something with body
+			trigger = body2.IsSensor();
+
+		}
+	}
 	
+	if (trigger) {
+		TriggerEnterEvent tee;
+		tee.rb1 = rb1;
+		tee.rb2 = rb2;
+		EVENTS.Publish(&tee);
+	}
+	else {
+		ContactAddedEvent cae;
+		cae.rb1 = rb1;
+		cae.rb2 = rb2;
+		EVENTS.Publish(&cae);
+	}
 }
 #pragma endregion
 

@@ -174,6 +174,9 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
+	// Resolve any updates before Physics Simulation
+	void PrePhysicsUpdate();
+	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
 
 	// A testing function
