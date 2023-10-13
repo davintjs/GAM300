@@ -11,9 +11,9 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
-  m_Position: [156.493225, 116.136734, 360.909332]
-  m_Rotation: [8.45425205e-08, -1.50000012, 0]
-  m_Scale: [0.999995291, 1, 0.999995291]
+  m_Position: [9.62417603, 147.76944, 345.305298]
+  m_Rotation: [-1.03687429, -1.43237066, 1.03265131]
+  m_Scale: [0.999988139, 0.999988496, 0.999988198]
   m_Children:
     []
   m_Parent: 0
@@ -24,7 +24,7 @@ GameObject:
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
-  MeshName: Sphere
+  MeshName: DamagedHelmet
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: Default_normal
@@ -40,6 +40,9 @@ Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
   Name: Player
+  gameObj: {fileID: 0}
+  sad: 0
+  otherT: {fileID: 0}
 ---
 GameObject:
   m_EUID: 16942626329878887566
