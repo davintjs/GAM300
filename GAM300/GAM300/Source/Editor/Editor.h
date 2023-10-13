@@ -37,6 +37,7 @@ public:
 
 
 	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
+
 private:
 	std::vector<ISystem*> editorSystems;
 	Engine::UUID selectedEntity{0};

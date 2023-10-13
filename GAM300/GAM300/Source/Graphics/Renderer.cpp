@@ -186,8 +186,8 @@ void Renderer::Update(float)
 
 			float& intersect = DEBUGDRAW.GetIntersect();
 			float& tempIntersect = DEBUGDRAW.GetTempIntersect();
-			Ray3D* temp = DEBUGDRAW.GetRay();
-			if (testRayOBB(temp->origin, temp->direction, mins, maxs,
+			Ray3D temp = EditorCam.GetRay();
+			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
 				glm::translate(glm::mat4(1.0f), translation) * rotMat, tempIntersect))
 			{
 				if (tempIntersect < intersect)
@@ -358,9 +358,9 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
 
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getPerspMatrix()));
+		glm::value_ptr(EditorCam.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getViewMatrix()));
+		glm::value_ptr(EditorCam.GetViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(_lightSource.lightColor));
 	glUniform3fv(uniform4, 1,
@@ -508,9 +508,9 @@ void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "uColor");
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getPerspMatrix()));
+		glm::value_ptr(EditorCam.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getViewMatrix()));
+		glm::value_ptr(EditorCam.GetViewMatrix()));
 	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(_vaoid);
@@ -537,9 +537,9 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "uColor");
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getPerspMatrix()));
+		glm::value_ptr(EditorCam.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.getViewMatrix()));
+		glm::value_ptr(EditorCam.GetViewMatrix()));
 	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(_vaoid);

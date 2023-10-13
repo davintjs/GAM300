@@ -184,7 +184,7 @@ void InputHandler::setFullscreen(bool state)
 		std::cout << "going into fullscreen mode\n";
 		glfwSetWindowMonitor(GLFW_Handler::ptr_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 		glViewport(0, 0, mode->width, mode->height);
-		EditorCam.setViewportSize((float)mode->width, (float) mode->height);
+		EditorCam.SetViewportSize((float)mode->width, (float) mode->height);
 
 	}
 	else
@@ -195,7 +195,7 @@ void InputHandler::setFullscreen(bool state)
 			mode->refreshRate);
 		glfwSetWindowAttrib(GLFW_Handler::ptr_window, GLFW_DECORATED, GLFW_TRUE);
 		glViewport(0, 0, GLFW_Handler::width, GLFW_Handler::height);
-		EditorCam.setViewportSize((float)GLFW_Handler::width, (float) GLFW_Handler::height);
+		EditorCam.SetViewportSize((float)GLFW_Handler::width, (float) GLFW_Handler::height);
 
 	}
 

@@ -16,6 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System;
 using GlmSharp;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace BeanFactory
 {
@@ -23,6 +25,18 @@ namespace BeanFactory
     {
         UInt64 euid;
         UInt64 uuid;
+
+        public virtual bool enabled
+        {
+            get
+            {
+                return InternalCalls.GetActive(this, GetType());
+            }
+            set
+            {
+                InternalCalls.SetActive(this, GetType(), value);
+            }
+        }
         private void Initialize(GameObject gameObj,UInt64 _euid, UInt64 _uuid)
         {
             _gameObject = gameObj;
@@ -55,5 +69,41 @@ namespace BeanFactory
         {
             return InternalCalls.Get<T>(gameObject);
         }
+
+        public Coroutine StartCoroutine(IEnumerator enumerator)
+        {
+            Coroutine coroutine = new Coroutine(enumerator);
+            coroutines.Add(coroutine);
+            return coroutine;
+        }
+
+        void StopCoroutine(Coroutine coroutine)
+        {
+            //WARN IF coroutine is null
+            coroutines.Remove(coroutine);
+            //ERROR IF not found
+        }
+
+        void ExecuteCoroutines()
+        {
+            foreach (Coroutine coroutine in coroutines)
+            {
+                //Finished operation
+                if (coroutine.MoveNext() == false)
+                {
+                    //Remove from list
+                    endedCoroutines.Add(coroutine);
+                }
+            }
+            foreach (Coroutine coroutine in endedCoroutines)
+            {
+                //Remove from list
+                coroutines.Remove(coroutine);
+            }
+            endedCoroutines.Clear();
+        }
+
+        static List<Coroutine> endedCoroutines = new List<Coroutine>();
+        List<Coroutine> coroutines = new List<Coroutine>();
     }
 }

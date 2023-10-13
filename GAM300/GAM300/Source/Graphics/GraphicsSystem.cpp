@@ -9,7 +9,7 @@
 \brief
 	This file contains the definations of Graphics System
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -156,14 +156,14 @@ void GraphicsSystem::Update(float dt)
 	*/
 
 	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.getFramebuffer().hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
 
-	EditorCam.getFramebuffer().unbind();
+	EditorCam.GetFramebuffer().unbind();
 
-	EditorCam.getFramebuffer().bind();
+	EditorCam.GetFramebuffer().bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -208,7 +208,7 @@ void GraphicsSystem::Update(float dt)
 	renderQuad();
 	shader.UnUse();
 
-	EditorCam.getFramebuffer().unbind();
+	EditorCam.GetFramebuffer().unbind();
 }
 
 void GraphicsSystem::Draw() {

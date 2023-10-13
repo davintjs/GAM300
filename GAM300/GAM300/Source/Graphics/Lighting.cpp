@@ -16,7 +16,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicsHeaders.h"
 
 #include "Scene/SceneManager.h"
-#include "Editor_Camera.h"
 
 extern LightProperties spot_light_stuffs;
 
@@ -55,7 +54,7 @@ void Lighting::Update(float)
 		}
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
-			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
+			Temporary.direction = lightSource.direction; // CHANGE
 
 			directionLightSources.push_back(Temporary);
 		}

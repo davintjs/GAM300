@@ -494,10 +494,33 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
+template <typename T>
+void DisplayLightTypes(T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Type");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Spot"); layers.push_back("Directional"); layers.push_back("Point");
+        static int index = value;
+        ImGui::PushItemWidth(100.f);
+        ImGui::Combo("##LightType", &index, layers.data(), (int)layers.size(), 5);
+        ImGui::PopItemWidth();
+        value = index;
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
+
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -530,9 +553,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
-            std::cout << number << std::endl;
-        }
+        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
         comp.channel = static_cast<AudioSource::Channel>(number);
     }
@@ -550,7 +571,8 @@ void Display_Property(T& comp) {
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());
+                    ImGui::PushID(entry.first.c_str());                   
+       
                     Display<T1>(DisplayName.c_str(), Value);
 
                     //temporary implementation for texture picker
@@ -567,7 +589,6 @@ void Display_Property(T& comp) {
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
                 assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                //List.push_back(property::entry { PropertyName, Data });
             }
            
         });
@@ -645,6 +666,27 @@ void DisplayComponent(Script& script)
             EVENTS.Publish(&setFieldEvent);
         }
         
+    }
+}
+
+void DisplayLightProperties(LightSource& source) {
+
+    DisplayLightTypes(source.lightType);
+    
+    Display<float>("Intensity", source.intensity);
+    Display<Vector3>("Color", source.lightingColor);
+
+    if (source.lightType == (int)SPOT_LIGHT) {
+        Display<Vector3>("Light Position", source.lightpos);
+        Display<Vector3>("Direction", source.direction);
+        Display<float>("Inner Cutoff", source.inner_CutOff);
+        Display<float>("Outer Cutoff", source.outer_CutOff);
+    }
+    else if(source.lightType == (int)DIRECTIONAL_LIGHT){
+        Display<Vector3>("Direction", source.direction);
+    }
+    else { //POINT LIGHT
+        Display<Vector3>("Light Position", source.lightpos);
     }
 }
 
@@ -728,8 +770,6 @@ void DisplayComponentHelper(T& component)
     
     if (windowopen)
     {
-
-
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -751,6 +791,9 @@ void DisplayComponentHelper(T& component)
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
+            }
+            if constexpr (std::is_same_v<T, LightSource>) {
+                DisplayLightProperties(component);
             }
             else
             {
@@ -894,10 +937,45 @@ void AddPanel(Entity& entity) {
     }
 }
 
+void DisplayLayers() { 
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Layers)
+        layers.push_back(it.name.c_str());
+    static int index = curr_entity.current_layer;
+    ImGui::Text("Layer"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.current_layer = index;
+}
+
+void DisplayTags() {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Tags)
+        layers.push_back(it.c_str());
+    static int index = curr_entity.tag;
+    ImGui::Text("Tags"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.tag = index;
+}
+
 //Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
@@ -912,6 +990,11 @@ void DisplayEntity(Entity& entity)
 
     ImGui::PopItemWidth();
     curr_scene.Get<Tag>(entity).name = buffer;
+  
+    //display tags
+    DisplayTags(); ImGui::SameLine();
+    //display layer
+    DisplayLayers();
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -938,6 +1021,13 @@ void DisplayEntity(Entity& entity)
 void EditorInspector::Init()
 {
     isAddPanel = false;
+    //default layers (same as unity)
+    Layers.push_back(layer("Default"));
+    Layers.push_back(layer("TransparentFX"));
+    Layers.push_back(layer("Ignore Physics"));
+    Layers.push_back(layer("UI"));
+    Layers.push_back(layer("Water"));
+    Tags.push_back("Untagged");   
 }
 
 void EditorInspector::Update(float dt)

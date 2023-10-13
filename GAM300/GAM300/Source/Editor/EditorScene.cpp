@@ -22,8 +22,10 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include <glm/gtx/matrix_decompose.hpp>
 
 // Bean: Need this to reference the editor camera's framebuffer
-#include "../Graphics/Editor_Camera.h"
+#include "Graphics/Editor_Camera.h"
 #include "Editor.h"
+#include "Core/EventsManager.h"
+#include "Graphics/GraphicsHeaders.h"
 
 namespace
 {
@@ -36,25 +38,63 @@ void EditorScene::Init()
 {
     sceneDimension = glm::vec2(1600.f, 900.f);
     scenePosition = glm::vec2(0.f, 0.f);
+
+    EVENTS.Subscribe(this, &EditorScene::CallbackEditorWindow);
 }
 
-void EditorScene::Update(float dt)
+void EditorScene::Update(float)
 {
-    UNREFERENCED_PARAMETER(dt);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
+    SelectEntity();
+
+    ToolBar();
+
+    GameView();
+
+    SceneView();
+
+    ImGui::PopStyleVar();
+
+    inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
+}
+
+void EditorScene::SelectEntity()
+{
+    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    {
+        // Bean: Click within the scene imgui window
+        if (!windowHovered)
+        {
+            DEBUGDRAW.HasSelection() = false;
+            return;
+        }
+
+        EditorCam.GetRay() = EditorCam.Raycasting();
+        DEBUGDRAW.HasSelection() = true;
+        if (DEBUGDRAW.GetIntersect() == FLT_MAX)
+        {
+            // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
+            SelectedEntityEvent selectedEvent{ 0 };
+            EVENTS.Publish(&selectedEvent);
+        }
+    }
+}
+
+void EditorScene::ToolBar()
+{
     ImGuiWindowClass window_class;
     window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
 
     ImGui::SetNextWindowClass(&window_class);
 
     //Scene toolbar
-    if (ImGui::Begin("Scene Toolbar")) 
+    if (ImGui::Begin("Scene Toolbar"))
     {
         ImGui::Dummy(ImVec2(0.0f, 3.f));
         ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
-        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);  
+        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);
         ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
 
         float buttonSize = 20.f;
@@ -65,18 +105,24 @@ void EditorScene::Update(float dt)
         ImVec4 toggledColor = ImVec4(0.0f, 0.447f, 0.898f, 1.0f);
         ImVec4 buttonColor = untoggledColor;
 
-        buttonColor = (toggled == 1) ? toggledColor : untoggledColor;          
+        bool shouldPan = false; // Bean: This is for panning the camera using the Q key
+        buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
         {
-            GizmoType = ImGuizmo::UNIVERSAL;
             toggled = 1;
         }
+
+        // Pan the editor camera
+        shouldPan = (toggled == 1) ? true : false;
+        EditorPanCameraEvent e(shouldPan);
+        EVENTS.Publish(&e);
+
         ImGui::PopStyleColor();
 
         buttonColor = (toggled == 2) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("W", btn) 
+        ImGui::SameLine(); if (ImGui::Button("W", btn)
             || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
@@ -96,10 +142,10 @@ void EditorScene::Update(float dt)
 
         buttonColor = (toggled == 4) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("R", btn) 
+        ImGui::SameLine(); if (ImGui::Button("R", btn)
             || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
-            GizmoType = (coord_selection) ? ImGuizmo::SCALEU : ImGuizmo::SCALE;
+            GizmoType = ImGuizmo::SCALE;
             toggled = 4;
         }
         ImGui::PopStyleColor();
@@ -110,8 +156,11 @@ void EditorScene::Update(float dt)
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
     }
     ImGui::End();
+}
 
-    if (ImGui::Begin("Game")) 
+void EditorScene::GameView()
+{
+    if (ImGui::Begin("Game"))
     {
         // Bean: For Game Window
         //float padding = 16.f;
@@ -142,7 +191,7 @@ void EditorScene::Update(float dt)
 
         //		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
 
-        //		EditorCam.getFramebuffer().resize(sceneDimension.x, sceneDimension.y);
+        //		EditorCam.GetFramebuffer().resize(sceneDimension.x, sceneDimension.y);
         //	}
         //}
 
@@ -151,13 +200,17 @@ void EditorScene::Update(float dt)
             ImGui::Indent(indent);*/
     }
     ImGui::End();
+}
 
+void EditorScene::SceneView()
+{
     //Editor scene viewport
     if (ImGui::Begin("Scene"))
     {
         windowHovered = ImGui::IsWindowHovered();
+        windowFocused = ImGui::IsWindowFocused();
         scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-        unsigned int textureID = EditorCam.getFramebuffer().get_color_attachment_id();
+        unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
         ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -165,20 +218,20 @@ void EditorScene::Update(float dt)
         if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
         {
             sceneDimension = { _newDimension.x, _newDimension.y };
-            EditorCam.onResize(sceneDimension.x, sceneDimension.y);
+            EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
 
-            EditorCam.getFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
+            EditorCam.GetFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
         ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();	
+        ImGuizmo::SetDrawlist();
         float windowWidth = (float)ImGui::GetWindowWidth();
         float windowHeight = (float)ImGui::GetWindowHeight();
 
         // Might be wrong -> i think here is the one that need to offset the tab header if there is
-        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y+22.f, windowWidth, windowHeight-22.f);
+        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y + 22.f, windowWidth, windowHeight - 22.f);
 
         Scene& currentScene = SceneManager::Instance().GetCurrentScene();
         if (EDITOR.GetSelectedEntity() != 0)
@@ -193,7 +246,7 @@ void EditorScene::Update(float dt)
 
             glm::mat4 transform_1 = trans.GetWorldMatrix();
 
-            ImGuizmo::Manipulate(glm::value_ptr(EditorCam.getViewMatrix()), glm::value_ptr(EditorCam.getPerspMatrix()),
+            ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
                 (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
             if (ImGuizmo::IsUsing())
@@ -215,18 +268,20 @@ void EditorScene::Update(float dt)
                 trans.translation = a_translation;
                 trans.rotation = glm::eulerAngles(a_rot);
                 trans.scale = a_scale;
-             
+
             }
         }
     }
     ImGui::End();
-
-    ImGui::PopStyleVar();
-
-    inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
 }
 
 void EditorScene::Exit()
 {
 
+}
+
+void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
+{
+    pEvent->isHovered = WindowHovered();
+    pEvent->isFocused = WindowFocused();
 }
