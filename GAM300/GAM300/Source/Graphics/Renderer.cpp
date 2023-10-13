@@ -26,7 +26,7 @@ unsigned int depthMapFBO;
 unsigned int depthMap; // Shadow Texture
 glm::mat4 lightSpaceMatrix;
 
-const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 
 void Renderer::Init()
@@ -554,9 +554,9 @@ void Renderer::DrawDepth()
 	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 	lightPos = -lightPos;
 	glm::mat4 lightProjection, lightView;
-	float near_plane = 0.00001f, far_plane = 10000.f;
+	float near_plane = -10000.f, far_plane = 10000.f;
 	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	lightProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, near_plane, far_plane);
+	lightProjection = glm::ortho(-10000.f, 10000.f, -10000.f, 10000.f, near_plane, far_plane);
 	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	lightSpaceMatrix = lightProjection * lightView;
 
@@ -566,7 +566,6 @@ void Renderer::DrawDepth()
 
 	for (auto& [name, prop] : properties)
 	{
-		std::cout << "in here\n";
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

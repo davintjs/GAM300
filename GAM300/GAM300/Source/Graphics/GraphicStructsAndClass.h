@@ -58,7 +58,6 @@ union Light_Type
 	DirectionalLight directionallight;
 };
 
-
 struct LightProperties
 {
 	// Used in point & Spot
