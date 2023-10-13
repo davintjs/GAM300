@@ -51,7 +51,7 @@ void Lighting::Update(float)
 		}
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
-			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
+			Temporary.direction = lightSource.direction; // CHANGE
 
 			directionLightSources.push_back(Temporary);
 		}

@@ -62,6 +62,12 @@ struct ScrollingBuffer {
     }
 };
 
+struct layer {
+    layer(std::string _name) : name(_name) {}
+    std::string name;
+
+};
+
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
 public:
@@ -193,6 +199,10 @@ public:
     void Exit();
 
     bool isAddPanel;
+
+    std::vector<layer> Layers;
+    std::vector<std::string> Tags;
+
 private:
 };
 
