@@ -184,6 +184,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackCollisionEnter);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackCollisionExit);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackApplicationExit);
 }
 
 void ScriptingSystem::Update(float dt)
@@ -416,36 +417,9 @@ void ScriptingSystem::ThreadWork()
 			ACQUIRE_SCOPED_LOCK(Mono);
 			if (logicState == LogicState::UPDATE)
 			{
-				Scene& scene = MySceneManager.GetCurrentScene();
 				ACQUIRE_SCOPED_LOCK(ScriptingCollision);
-				for (auto& colEnter : collisionEnter)
-				{
-					for (Script* script : scene.GetMulti<Script>(colEnter.entity))
-					{
-						ScriptClass& scriptClass = scriptClassMap[script->name];
-						auto methodIt = scriptClass.mMethods.find("OnCollisionEnter");
-						if (methodIt != scriptClass.mMethods.end())
-						{
-							void* param = &colEnter.rb;
-							Invoke(mSceneScripts[scene.uuid][*script], methodIt->second, &param);
-						}
-					}
-				}
-				for (auto& colExit : collisionExit)
-				{
-					for (Script* script : scene.GetMulti<Script>(colExit.entity))
-					{
-						ScriptClass& scriptClass = scriptClassMap[script->name];
-						auto methodIt = scriptClass.mMethods.find("OnCollisionExit");
-						if (methodIt != scriptClass.mMethods.end())
-						{
-							void* param = &colExit.rb;
-							Invoke(mSceneScripts[scene.uuid][*script], methodIt->second, &param);
-						}
-					}
-				}
-				collisionEnter.clear();
-				collisionExit.clear();
+				InvokePhysicsEvents(collisionEnter, "OnCollisionEnter");
+				InvokePhysicsEvents(collisionExit, "OnCollisionExit");
 				InvokeAllScripts("Update");
 				InvokeAllScripts("LateUpdate");
 				InvokeAllScripts("ExecuteCoroutines");
@@ -459,7 +433,6 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::EXIT)
 			{
-				InvokeAllScripts("Exit");
 				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
 				logicState = LogicState::NONE;
 				reflectionQueue.clear();
@@ -491,16 +464,32 @@ void ScriptingSystem::ThreadWork()
 		}
 		#endif
 	}
-#ifdef _DEBUG
 	mono_domain_set(mRootDomain, false);
 	if (mAppDomain)
 		mono_domain_unload(mAppDomain);
 	mAppDomain = nullptr;
-#endif
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
 }
 
+void ScriptingSystem::InvokePhysicsEvents(std::vector<PhysicsStruct>& physicsArray, std::string name)
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	for (auto& e : physicsArray)
+	{
+		for (Script* script : scene.GetMulti<Script>(e.entity))
+		{
+			ScriptClass& scriptClass = scriptClassMap[script->name];
+			auto methodIt = scriptClass.mMethods.find(name);
+			if (methodIt != scriptClass.mMethods.end())
+			{
+				void* param = &e.rb;
+				Invoke(mSceneScripts[scene.uuid][*script], methodIt->second, &param);
+			}
+		}
+	}
+	physicsArray.clear();
+}
 
 void ScriptingSystem::CacheScripts()
 {
@@ -911,4 +900,13 @@ void ScriptingSystem::CallbackGetScriptNames(GetScriptNamesEvent* pEvent)
 	}
 	pEvent->arr = names.data();
 	pEvent->count = names.size();
+}
+
+
+void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)
+{
+	(void)pEvent;
+	logicState = LogicState::EXIT;
+	ran = false;
+	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
 }

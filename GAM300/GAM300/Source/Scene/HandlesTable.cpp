@@ -26,9 +26,7 @@ bool SINGLE_HANDLE::Has(Engine::UUID euid, Engine::UUID uuid)
 {
 	(void)uuid;
 	auto& entries = std::get<Table<T1>>(tables);
-	if (entries.find(euid) == entries.end())
-		return false;
-	return true;
+	return (entries.find(euid) != entries.end());
 }
 
 template<typename... Ts>

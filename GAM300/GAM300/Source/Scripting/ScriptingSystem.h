@@ -195,6 +195,9 @@ public:
 	template<typename T>
 	void CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent);
 
+
+	void CallbackApplicationExit(ApplicationExitEvent*pEvent);
+
 	//Get the script if it is reflected already, 
 	//else instantiate a MonoObject and store it
 	MonoObject* ReflectScript(Script& component, MonoObject* ref = nullptr);
@@ -229,13 +232,15 @@ public:
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	struct CollisionStruct
+	struct PhysicsStruct
 	{
 		Entity& entity;
 		Rigidbody& rb;
 	};
-	std::vector<CollisionStruct> collisionEnter;
-	std::vector<CollisionStruct> collisionExit;
+
+	void InvokePhysicsEvents(std::vector<PhysicsStruct>& physicsArray, std::string name);
+	std::vector<PhysicsStruct> collisionEnter;
+	std::vector<PhysicsStruct> collisionExit;
 
 	CompilingState compilingState{ CompilingState::Wait };
 	std::vector<Handle> reflectionQueue;

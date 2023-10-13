@@ -29,9 +29,9 @@ protected:
 	virtual ~IEvent() {};
 };
 
-struct QuitEngineEvent : IEvent
+struct ApplicationExitEvent : IEvent
 {
-	QuitEngineEvent() {};
+	ApplicationExitEvent() {};
 };
 
 struct CreateSceneEvent : IEvent
