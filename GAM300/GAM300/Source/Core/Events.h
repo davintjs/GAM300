@@ -144,6 +144,9 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+
+#pragma region EDITOR STUFF
+
 struct EditorWindowEvent : IEvent
 {
 	EditorWindowEvent() {};
@@ -164,6 +167,14 @@ struct ContactRemovedEvent : IEvent
 	Rigidbody* rb2;
 };
 
+
+struct EditorPanCameraEvent : IEvent
+{
+	EditorPanCameraEvent(const bool& _pan) : isPanning{ _pan } {}
+	bool isPanning = false;
+};
+
+#pragma endregion
 
 //
 //template <typename T>

@@ -84,9 +84,6 @@ public:
 	
 	void DrawRay();
 	
-	bool Raycasting(Ray3D& _ray);
-	
-	Ray3D* GetRay() { return ray; }
 	bool& HasSelection() { return checkForSelection; }
 	float& GetIntersect() { return intersected; }
 	float& GetTempIntersect() { return tempIntersect; }
@@ -94,7 +91,6 @@ public:
 private:
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
-	Ray3D* ray;
 	float intersected;
 	float tempIntersect;
 	bool enableRay = true;
