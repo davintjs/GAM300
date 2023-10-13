@@ -55,8 +55,6 @@ struct Transform : Object
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
-	//Destructor, unparents object
-	~Transform();
 
 	//Parent's euid
 	Engine::UUID parent = 0;
