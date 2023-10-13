@@ -32,6 +32,7 @@ MeshRenderer:
   MetallicTexture: Default_metalRoughness
   mr_roughness: 0.5
   RoughnessTexture: Default_metalRoughness
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: Default_AO
 ---
@@ -39,15 +40,12 @@ Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
   Name: Player
-  gameObj: {fileID: 0}
-  sad: 21.2999992
-  otherT: {fileID: 22203055554271501}  # Component
 ---
 GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [-3.05175781e-05, 358.816711, -23.4976406]
+  m_Position: [-3.05175781e-05, 61.6971054, -23.4976406]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -82,6 +80,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -96,9 +95,9 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [-39.6391068, 132.64801, -28.8153381]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [100, 100, 100]
+  m_Position: [228.016296, 57.2826424, 121.589989]
+  m_Rotation: [1.23910356, -0, 0]
+  m_Scale: [100, 99.9999542, 99.9999542]
   m_Children:
     []
   m_Parent: 0
@@ -131,6 +130,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -145,7 +145,7 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
-  m_Position: [0, 1, 35]
+  m_Position: [-90.0478439, -22.0439301, -11.1562319]
   m_Rotation: [0, -0, 0]
   m_Scale: [1000, 1, 1000]
   m_Children:
@@ -180,6 +180,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -215,6 +216,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: -1
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: -1
   AoTexture: ""
 ---

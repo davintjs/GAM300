@@ -93,7 +93,6 @@ void GraphicsSystem::Init()
 	GraphicsSubSystems::Init();
 
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
-
 	EditorCam.Init();
 }
 
@@ -195,7 +194,7 @@ void GraphicsSystem::Update(float dt)
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "near_plane");
 
-	glUniform1f(uniform3, 0.00001f);
+	glUniform1f(uniform3, -10000.f);
 
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "far_plane");

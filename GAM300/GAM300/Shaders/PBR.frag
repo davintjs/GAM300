@@ -172,7 +172,7 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 
 
     // Max is 0.05 , Min is 0.005
-    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.005);
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
 
     float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
 //    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
@@ -409,7 +409,7 @@ void main()
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
 
-    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats
+    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
     for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
         float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 

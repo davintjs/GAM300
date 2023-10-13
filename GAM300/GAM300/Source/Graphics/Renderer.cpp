@@ -556,13 +556,16 @@ void Renderer::DrawDepth()
 	glm::mat4 lightProjection, lightView;
 	float near_plane = -10000.f, far_plane = 10000.f;
 	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	lightProjection = glm::ortho(-10000.f, 10000.f, -10000.f, 10000.f, near_plane, far_plane);
+	lightProjection = glm::ortho(-5000.f, 5000.f, -5000.f, 5000.f, near_plane, far_plane);
 	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	lightSpaceMatrix = lightProjection * lightView;
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
 
 	for (auto& [name, prop] : properties)
 	{
@@ -586,7 +589,7 @@ void Renderer::DrawDepth()
 
 		shader.UnUse();
 	}
-
+	//glDisable(GL_CULL_FACE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// reset viewport
