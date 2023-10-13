@@ -179,6 +179,11 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
 	SubscribeObjectDestroyed(AllObjectTypes());
+
+
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackCollisionEnter);
+	EVENTS.Subscribe(this, &ScriptingSystem::CallbackCollisionExit);
 }
 
 void ScriptingSystem::Update(float dt)
@@ -411,6 +416,36 @@ void ScriptingSystem::ThreadWork()
 			ACQUIRE_SCOPED_LOCK(Mono);
 			if (logicState == LogicState::UPDATE)
 			{
+				Scene& scene = MySceneManager.GetCurrentScene();
+				ACQUIRE_SCOPED_LOCK(ScriptingCollision);
+				for (auto& colEnter : collisionEnter)
+				{
+					for (Script* script : scene.GetMulti<Script>(colEnter.entity))
+					{
+						ScriptClass& scriptClass = scriptClassMap[script->name];
+						auto methodIt = scriptClass.mMethods.find("OnCollisionEnter");
+						if (methodIt != scriptClass.mMethods.end())
+						{
+							void* param = &colEnter.rb;
+							Invoke(mSceneScripts[scene.uuid][*script], methodIt->second, &param);
+						}
+					}
+				}
+				for (auto& colExit : collisionExit)
+				{
+					for (Script* script : scene.GetMulti<Script>(colExit.entity))
+					{
+						ScriptClass& scriptClass = scriptClassMap[script->name];
+						auto methodIt = scriptClass.mMethods.find("OnCollisionExit");
+						if (methodIt != scriptClass.mMethods.end())
+						{
+							void* param = &colExit.rb;
+							Invoke(mSceneScripts[scene.uuid][*script], methodIt->second, &param);
+						}
+					}
+				}
+				collisionEnter.clear();
+				collisionExit.clear();
 				InvokeAllScripts("Update");
 				InvokeAllScripts("LateUpdate");
 				InvokeAllScripts("ExecuteCoroutines");
@@ -654,6 +689,30 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	mono_field_set_value(instance, mClassField, field.data);
 }
 
+
+void ScriptingSystem::CallbackCollisionEnter(ContactAddedEvent* pEvent)
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	Entity& e1 = scene.Get<Entity>(pEvent->rb1->EUID());
+	Entity& e2 = scene.Get<Entity>(pEvent->rb2->EUID());
+	ACQUIRE_SCOPED_LOCK(ScriptingCollision);
+	if (scene.Has<Script>(e1))
+		collisionEnter.push_back({e1,*pEvent->rb2});
+	if (scene.Has<Script>(e2))
+		collisionEnter.push_back({ e2,*pEvent->rb1 });
+}
+
+void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	Entity& e1 = scene.Get<Entity>(pEvent->rb1->EUID());
+	Entity& e2 = scene.Get<Entity>(pEvent->rb2->EUID());
+	ACQUIRE_SCOPED_LOCK(ScriptingCollision);
+	if (scene.Has<Script>(e1))
+		collisionExit.push_back({ e1,*pEvent->rb2 });
+	if (scene.Has<Script>(e2))
+		collisionExit.push_back({ e2,*pEvent->rb1 });
+}
 
 void ScriptingSystem::InvokeMethod(Script& script, const std::string& method)
 {

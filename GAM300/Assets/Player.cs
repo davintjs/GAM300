@@ -23,7 +23,7 @@ public class Player : Script
     {
         Console.WriteLine("STARTED");
         StartCoroutine(DoSomething());
-        AddComponent<Rigidbody>();
+        //AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -70,5 +70,10 @@ public class Player : Script
 
     void Exit()
     {
+    }
+
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        Console.WriteLine("COLLISION ENTER FROM SCRIPTING!");
     }
 }
