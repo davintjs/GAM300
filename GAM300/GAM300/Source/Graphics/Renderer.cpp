@@ -286,9 +286,9 @@ void Renderer::Draw()
 			glGetUniformLocation(shader.GetHandle(), "SRT");
 
 		glUniformMatrix4fv(uProj, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.getPerspMatrix()));
+			glm::value_ptr(EditorCam.GetProjMatrix()));
 		glUniformMatrix4fv(uView, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.getViewMatrix()));
+			glm::value_ptr(EditorCam.GetViewMatrix()));
 		glUniformMatrix4fv(SRT, 1, GL_FALSE,
 			glm::value_ptr(prop.entitySRT));
 
