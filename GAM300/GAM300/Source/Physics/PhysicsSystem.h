@@ -125,11 +125,33 @@ public:
 	}
 };
 
+#pragma region In Progress
+struct EngineCollisionData {
+public:
+
+	enum collisionOperation : char {
+		added = 0,
+		persisted,
+		removed
+	};
+
+	EngineCollisionData(EngineCollisionData::collisionOperation cop) : op{ cop } {}
+
+	UINT32 bid1;
+	UINT32 bid2;
+
+
+	collisionOperation op;
+	//Vector3 body1CollisionPos;
+	//Vector3 body2CollisionPos;
+
+};
+#pragma endregion
 
 // Contact Listener (collision)
 class EngineContactListener : public JPH::ContactListener {
 public:
-	EngineContactListener() : pSystem{nullptr}{}
+	EngineContactListener() : pSystem{ nullptr } {}
 	// Callback to validate a collision (contact)
 	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
 	// Callback when new collision is registered
@@ -140,22 +162,10 @@ public:
 	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
 
 	JPH::PhysicsSystem* pSystem;
+	std::vector<EngineCollisionData> collisionResolution;
 };
 
-#pragma region In Progress
-class EngineCollisionData {
-public:
-	EngineCollisionData() = default;
 
-private:
-	
-	Rigidbody* rb1 = nullptr;
-	Rigidbody* rb2 = nullptr;
-	//Vector3 body1CollisionPos;
-	//Vector3 body2CollisionPos;
-
-};
-#pragma endregion
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
