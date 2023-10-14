@@ -24,6 +24,8 @@ GameObject:
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
+  Layer: 0
+  Tag: 0
   MeshName: DamagedHelmet
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
@@ -39,6 +41,8 @@ MeshRenderer:
 Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
+  Layer: 0
+  Tag: 0
   Name: Player
   gameObj: {fileID: 0}
   sad: 0
@@ -48,7 +52,7 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [-3.05175781e-05, 186.035995, -23.4976406]
+  m_Position: [-0.883805752, 391.841309, -92.9429855]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -62,6 +66,8 @@ GameObject:
 Rigidbody:
   EUID: 16942626329878887566
   UUID: 9923304188943745678
+  Layer: 0
+  Tag: 0
   LinearVelocity: [0, 0, 0]
   AngularVelocity: [0, 0, 0]
   Force: [0, 0, 0]
@@ -75,6 +81,8 @@ Rigidbody:
 MeshRenderer:
   EUID: 16942626329878887566
   UUID: 1245608959500342360
+  Layer: 0
+  Tag: 0
   MeshName: Cube
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
@@ -90,6 +98,8 @@ MeshRenderer:
 BoxCollider:
   EUID: 16942626329878887566
   UUID: 9199614747982128663
+  Layer: 0
+  Tag: 0
   X: 1
   Y: 1
   Z: 1
@@ -112,6 +122,8 @@ GameObject:
 Rigidbody:
   EUID: 10548661867949210258
   UUID: 6571208101418498788
+  Layer: 0
+  Tag: 0
   LinearVelocity: [0, 0, 0]
   AngularVelocity: [0, 0, 0]
   Force: [0, 0, 0]
@@ -125,6 +137,8 @@ Rigidbody:
 MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
+  Layer: 0
+  Tag: 0
   MeshName: Cube
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
@@ -140,6 +154,8 @@ MeshRenderer:
 BoxCollider:
   EUID: 10548661867949210258
   UUID: 6281041356284068935
+  Layer: 0
+  Tag: 0
   X: 1
   Y: 1
   Z: 1
@@ -148,7 +164,7 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
-  m_Position: [-90.0478439, -22.0439301, -11.1562319]
+  m_Position: [-83.4631729, 351.78006, -11.1562319]
   m_Rotation: [0, -0, 0]
   m_Scale: [1000, 1, 1000]
   m_Children:
@@ -162,6 +178,8 @@ GameObject:
 Rigidbody:
   EUID: 8552727112136102457
   UUID: 13671943860368736027
+  Layer: 0
+  Tag: 0
   LinearVelocity: [0, 0, 0]
   AngularVelocity: [0, 0, 0]
   Force: [0, 0, 0]
@@ -175,6 +193,8 @@ Rigidbody:
 MeshRenderer:
   EUID: 8552727112136102457
   UUID: 15321682287644036185
+  Layer: 0
+  Tag: 0
   MeshName: Cube
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
@@ -190,6 +210,8 @@ MeshRenderer:
 BoxCollider:
   EUID: 8552727112136102457
   UUID: 16306965832790122227
+  Layer: 0
+  Tag: 0
   X: 1
   Y: 1
   Z: 1
@@ -198,7 +220,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [0, 414.434937, 0]
+  m_Position: [9.53674316e-07, 414.434937, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
@@ -211,8 +233,10 @@ GameObject:
 MeshRenderer:
   EUID: 6606253624498158492
   UUID: 2676873232007418467
+  Layer: 0
+  Tag: 0
   MeshName: Sphere
-  mr_Albedo: [1, 500000, 500000, 500000]
+  mr_Albedo: [1, 50000, 50000, 50000]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: -1
@@ -226,4 +250,12 @@ MeshRenderer:
 LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
-  LightingColor: [500000, 500000, 500000]
+  Layer: 0
+  Tag: 0
+  Light Type: 0
+  Position: [0, 0, 0]
+  Intensity: 0
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [50000, 50000, 50000]

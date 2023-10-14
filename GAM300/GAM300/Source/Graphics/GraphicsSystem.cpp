@@ -156,7 +156,7 @@ void GraphicsSystem::Update(float dt)
 	*/
 
 	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);	
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(); // call draw after update
@@ -175,7 +175,7 @@ void GraphicsSystem::Update(float dt)
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.getFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
 	//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
@@ -195,12 +195,12 @@ void GraphicsSystem::Update(float dt)
 		glGetUniformLocation(shader.GetHandle(), "near_plane");
 
 	//glUniform1f(uniform3, -10000.f);
-	glUniform1f(uniform3, 10000.f);
+	glUniform1f(uniform3, 0.00001f);
 
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "far_plane");
 
-	glUniform1f(uniform4, 10000.f);
+	glUniform1f(uniform4, 1000.f);
 
 
 

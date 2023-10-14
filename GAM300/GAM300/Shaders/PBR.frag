@@ -173,8 +173,8 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
     // Max is 0.05 , Min is 0.005
     float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
 
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
-//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+//    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
 
     return shadow;
 }
