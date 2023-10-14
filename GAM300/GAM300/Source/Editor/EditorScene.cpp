@@ -78,7 +78,10 @@ void EditorScene::SelectEntity()
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
         }
+        return;
     }
+
+    DEBUGDRAW.HasSelection() = false;
 }
 
 void EditorScene::ToolBar()
