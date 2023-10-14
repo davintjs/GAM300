@@ -153,7 +153,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 }
 // ----------------------------------------------------------------------------
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
-{
+{   
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 // ----------------------------------------------------------------------------
@@ -171,10 +171,33 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
     // check whether current frag pos is in shadow
 
     // Max is 0.05 , Min is 0.005
-    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.005);
 
-//    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
-    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+
+
+//    int sampleRadius = 2;
+//	    float offset = 0.02f;
+//	    for(int z = -sampleRadius; z <= sampleRadius; z++)
+//	    {
+//		    for(int y = -sampleRadius; y <= sampleRadius; y++)
+//		    {
+//		        for(int x = -sampleRadius; x <= sampleRadius; x++)
+//		        {
+//		            float closestDepth = texture(myTextureSampler[31], fragToLight + vec3(x, y, z) * offset).r;
+//				    // Remember that we divided by the farPlane?
+//				    // Also notice how the currentDepth is not in the range [0, 1]
+//				    closestDepth *= farPlane;
+//				    if (currentDepth > closestDepth + bias)
+//					    shadow += 1.0f;     
+//		        }    
+//		    }
+//	    }
+//	// Average shadow
+//	shadow /= pow((sampleRadius * 2 + 1), 3);
+//
 
     return shadow;
 }
@@ -403,7 +426,6 @@ void main()
         float NdotL = max(dot(N, L), 0.0);   
 
 
-
         float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
         
         
@@ -480,7 +502,7 @@ void main()
         
         
         
-        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+        float shadow = ShadowCalculation(frag_pos_lightspace,N, WorldPos - spotLights[i].position); 
         
         
         

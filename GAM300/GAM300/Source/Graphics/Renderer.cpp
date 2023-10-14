@@ -26,9 +26,10 @@ unsigned int depthMapFBO;
 unsigned int depthMap; // Shadow Texture
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = SPOT_LIGHT;
+LIGHT_TYPE temporary_test = DIRECTIONAL_LIGHT;
 
 LightProperties spot_light_stuffs;
+LightProperties directional_light_stuffs;
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024	;
 
@@ -530,7 +531,7 @@ void Renderer::DrawDepth()
 	if (temporary_test == DIRECTIONAL_LIGHT)
 	{
 		lightProjection = glm::ortho(-5000.f, 5000.f, -5000.f, 5000.f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	}
 	else if (temporary_test == SPOT_LIGHT)	
 	{
@@ -552,7 +553,7 @@ void Renderer::DrawDepth()
 
 		lightProjection = glm::perspective<float>(glm::radians(60.f), 16.f/9.f, 0.00001f, 1000.f);
 		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
-		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + spot_light_stuffs.direction , glm::vec3(0.0, 0.0, 1.0));
+		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 1000.f) , glm::vec3(0.0, 0.0, 1.0));
 		//lightView = glm::lookAt(-spot_light_stuffs.lightpos , glm::vec3(0.f,0.f,0.f), glm::vec3(0.0, 0.0, 1.0));
 		//lightView = glm::lookAt(spot_light_stuffs.lightpos, glm::vec3(0.f,0.f,0.f), glm::vec3(0.0, 1.0, 0.0));
 		//std::cout << "lightpos Contents: (" << spot_light_stuffs.lightpos.x << ", " << spot_light_stuffs.lightpos.y << ", " << spot_light_stuffs.lightpos.z << ")" << std::endl;
@@ -586,7 +587,7 @@ void Renderer::DrawDepth()
 	//}
 
 	//
-	//lightSpaceMatrix = lightProjection * lightView;
+	lightSpaceMatrix = lightProjection * lightView;
 	//std::cout << "lightspace martix\n";
 	//for (int i = 0; i < 4; ++i) {
 	//	for (int j = 0; j < 4; ++j) {

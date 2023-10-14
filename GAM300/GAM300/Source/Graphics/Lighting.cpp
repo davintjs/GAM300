@@ -18,6 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/SceneManager.h"
 
 extern LightProperties spot_light_stuffs;
+extern LightProperties directional_light_stuffs;
 
 
 void Lighting::Init()
@@ -57,6 +58,7 @@ void Lighting::Update(float)
 			Temporary.direction = lightSource.direction; // CHANGE
 
 			directionLightSources.push_back(Temporary);
+			directional_light_stuffs = Temporary;
 		}
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
