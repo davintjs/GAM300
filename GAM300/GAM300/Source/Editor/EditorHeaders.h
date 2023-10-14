@@ -155,13 +155,15 @@ public:
     // Updating and displaying of the Scene & Game
     void Update(float dt);
 
-    void SelectEntity();
+    bool SelectEntity();
 
     void ToolBar();
-    
+
     void GameView();
     
     void SceneView();
+    
+    void DisplayGizmos();
 
     // Exit the system
     void Exit();
@@ -224,6 +226,9 @@ public:
     void AddLog(const char* fmt, ...) IM_FMTARGS(2);
 
     void Draw();
+
+    ImGuiTextBuffer& GetBuffer() { return Buffer; }
+    ImVector<int>& GetLineOffset() { return LineOffsets; }
 
     int debugcounter;
 

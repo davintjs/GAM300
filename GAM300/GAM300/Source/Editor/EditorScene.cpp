@@ -17,15 +17,14 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Precompiled.h"
 
 #include "EditorHeaders.h"
+#include "Editor.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
-#include <glm/gtx/matrix_decompose.hpp>
-
-// Bean: Need this to reference the editor camera's framebuffer
-#include "Graphics/Editor_Camera.h"
-#include "Editor.h"
 #include "Core/EventsManager.h"
-#include "Graphics/GraphicsHeaders.h"
+#include "Graphics/Editor_Camera.h"
+#include "Graphics/MeshManager.h"
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 namespace
 {
@@ -46,8 +45,6 @@ void EditorScene::Update(float)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
-    SelectEntity();
-
     ToolBar();
 
     GameView();
@@ -57,31 +54,6 @@ void EditorScene::Update(float)
     ImGui::PopStyleVar();
 
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
-}
-
-void EditorScene::SelectEntity()
-{
-    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
-    {
-        // Bean: Click within the scene imgui window
-        if (!windowHovered)
-        {
-            DEBUGDRAW.HasSelection() = false;
-            return;
-        }
-
-        EditorCam.GetRay() = EditorCam.Raycasting();
-        DEBUGDRAW.HasSelection() = true;
-        if (DEBUGDRAW.GetIntersect() == FLT_MAX)
-        {
-            // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-            SelectedEntityEvent selectedEvent{ 0 };
-            EVENTS.Publish(&selectedEvent);
-        }
-        return;
-    }
-
-    DEBUGDRAW.HasSelection() = false;
 }
 
 void EditorScene::ToolBar()
@@ -212,15 +184,18 @@ void EditorScene::SceneView()
     {
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
-        scenePosition = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+        ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
+        scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
         unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
-        ImVec2 viewportEditorSize = ImGui::GetContentRegionAvail();
+        ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
         // Only if the current scene dimension is not the same as new dimension
         if (sceneDimension != _newDimension && _newDimension.x != 0 && _newDimension.y != 0)
         {
             sceneDimension = { _newDimension.x, _newDimension.y };
+            EditorUpdateSceneGeometryEvent e(scenePosition, sceneDimension);
+            EVENTS.Publish(&e);
             EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
 
             EditorCam.GetFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
@@ -236,46 +211,108 @@ void EditorScene::SceneView()
         // Might be wrong -> i think here is the one that need to offset the tab header if there is
         ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y + 22.f, windowWidth, windowHeight - 22.f);
 
-        Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-        if (EDITOR.GetSelectedEntity() != 0)
+        // Display the gizmos for the selected entity
+        DisplayGizmos();
+    }
+    ImGui::End();
+}
+
+bool EditorScene::SelectEntity()
+{
+    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    {
+        // Bean: Click within the scene imgui window
+        if (!windowHovered)
+            return false;
+
+        EditorCam.GetRay() = EditorCam.Raycasting();
+        if (EditorCam.GetIntersect() == FLT_MAX)
         {
-            Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
-            Transform& trans = currentScene.Get<Transform>(entity);
-            for (int i = 0; i < 3; ++i)
+            // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
+            SelectedEntityEvent selectedEvent{ 0 };
+            EVENTS.Publish(&selectedEvent);
+        }
+        return true;
+    }
+
+    return false;
+}
+
+void EditorScene::DisplayGizmos()
+{
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    if (SelectEntity())
+    {
+        for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
+        {
+            Entity& entity = currentScene.Get<Entity>(renderer);
+            Transform& transform = currentScene.Get<Transform>(entity);
+
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::quat rot;
+            glm::vec3 skew;
+            glm::vec4 perspective;
+            glm::vec3 scale;
+            glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
+
+            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
+            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            glm::mat4 rotMat = glm::toMat4(rot);
+
+            float& intersect = EditorCam.GetIntersect();
+            float& tempIntersect = EditorCam.GetTempIntersect();
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
-                if (fabs(trans.scale[i]) < 0.001f)
-                    trans.scale[i] = 0.001f;
-            }
-
-            glm::mat4 transform_1 = trans.GetWorldMatrix();
-
-            ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
-                (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
-
-            if (ImGuizmo::IsUsing())
-            {
-                EditorCam.canMove = false;
-                if (trans.parent)
+                if (tempIntersect < intersect)
                 {
-                    Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
-                    glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
-                    transform_1 = glm::inverse(parentTransform) * transform_1;
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
                 }
-                glm::vec3 a_translation;
-                glm::quat a_rot;
-                glm::vec3 a_scale;
-                glm::vec3 a_skew;
-                glm::vec4 a_perspective;
-                glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
-
-                trans.translation = a_translation;
-                trans.rotation = glm::eulerAngles(a_rot);
-                trans.scale = a_scale;
-
             }
         }
     }
-    ImGui::End();
+
+    if (EDITOR.GetSelectedEntity() != 0)
+    {
+        Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+        Transform& trans = currentScene.Get<Transform>(entity);
+        for (int i = 0; i < 3; ++i)
+        {
+            if (fabs(trans.scale[i]) < 0.001f)
+                trans.scale[i] = 0.001f;
+        }
+
+        glm::mat4 transform_1 = trans.GetWorldMatrix();
+
+        ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
+            (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
+
+        if (ImGuizmo::IsUsing())
+        {
+            EditorCam.canMove = false;
+            if (trans.parent)
+            {
+                Transform& parentTrans = currentScene.Get<Transform>(trans.parent);
+                glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
+                transform_1 = glm::inverse(parentTransform) * transform_1;
+            }
+            glm::vec3 a_translation;
+            glm::quat a_rot;
+            glm::vec3 a_scale;
+            glm::vec3 a_skew;
+            glm::vec4 a_perspective;
+            glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
+
+            trans.translation = a_translation;
+            trans.rotation = glm::eulerAngles(a_rot);
+            trans.scale = a_scale;
+        }
+    }
 }
 
 void EditorScene::Exit()
