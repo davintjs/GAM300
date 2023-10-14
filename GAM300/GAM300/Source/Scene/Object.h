@@ -54,8 +54,11 @@ struct Object : property::base
 	Engine::UUID UUID () const { return uuid; }
 	//Get euid and uuid as a handle
 	operator Handle() const { return{ euid, uuid }; }
-	property_vtable();
 
+	int current_layer = 0; //id of the current layer (default = 0)
+	int tag = 0;  //id tag of the current object (default = 0)
+
+	property_vtable();
 protected:
 	//Allows only scene to change ids (DANGEROUS)
 	Engine::UUID uuid;
@@ -66,6 +69,8 @@ protected:
 property_begin_name(Object, "Object") {
 	property_var(euid).Name("EUID").Flags(property::flags::DONTSHOW),
 		property_var(uuid).Name("UUID").Flags(property::flags::DONTSHOW),
+		property_var(current_layer).Name("Layer").Flags(property::flags::DONTSHOW),
+		property_var(tag).Name("Tag").Flags(property::flags::DONTSHOW),
 }property_vend_h(Object)
 
 #endif // !OBJECT_H

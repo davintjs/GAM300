@@ -164,12 +164,12 @@ void Model::draw() {
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -246,9 +246,9 @@ void Model::instanceDraw(int entitycount) {
         glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
 
     glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     glBindVertexArray(vaoid);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
@@ -510,12 +510,12 @@ void Model::lightSource_draw()
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
 
@@ -576,12 +576,12 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -800,12 +800,12 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -893,12 +893,12 @@ void RaycastLine::debugline_draw(glm::mat4& SRT)
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -1098,7 +1098,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "projection");
 
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     
     
     GLint uniform_var_loc2 =
@@ -1106,7 +1106,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "view");
 
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.getViewMatrix()))));
+        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.GetViewMatrix()))));
 
     glBindVertexArray(vaoid);
 

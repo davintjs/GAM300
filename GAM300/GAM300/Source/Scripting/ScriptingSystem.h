@@ -183,6 +183,10 @@ public:
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
+	void CallbackCollisionEnter(ContactAddedEvent* pEvent);
+
+	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
+
 	//Helper to subscribe to all objects deletion
 	template <typename... Ts>
 	void SubscribeObjectDestroyed(TemplatePack<Ts...>);
@@ -190,6 +194,9 @@ public:
 	//Callback function to when a object is deleted
 	template<typename T>
 	void CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent);
+
+
+	void CallbackApplicationExit(ApplicationExitEvent*pEvent);
 
 	//Get the script if it is reflected already, 
 	//else instantiate a MonoObject and store it
@@ -224,6 +231,16 @@ public:
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
+
+	struct PhysicsStruct
+	{
+		Entity& entity;
+		Rigidbody& rb;
+	};
+
+	void InvokePhysicsEvents(std::vector<PhysicsStruct>& physicsArray, std::string name);
+	std::vector<PhysicsStruct> collisionEnter;
+	std::vector<PhysicsStruct> collisionExit;
 
 	CompilingState compilingState{ CompilingState::Wait };
 	std::vector<Handle> reflectionQueue;

@@ -23,8 +23,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 enum LIGHT_TYPE
 {
 	SPOT_LIGHT,
-	POINT_LIGHT,
-	DIRECTIONAL_LIGHT
+	DIRECTIONAL_LIGHT,
+	POINT_LIGHT
 };
 
 struct SpotLight

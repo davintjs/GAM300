@@ -25,7 +25,6 @@ void DebugDraw::Init()
 {
 	// Euan RayCasting Testing
 	raycastLine = new RaycastLine;
-	ray = new Ray3D;
 	raycastLine->lineinit();
 }
 
@@ -36,15 +35,6 @@ void DebugDraw::Update(float)
 
 	if (enableRay)
 		DrawRay();
-
-	checkForSelection = DEBUGDRAW.Raycasting(*ray);
-
-	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-	if (intersected == FLT_MAX && checkForSelection)
-	{// This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
-		SelectedEntityEvent selectedEvent{ 0 };
-		EVENTS.Publish(&selectedEvent);
-	}
 }
 
 void DebugDraw::DrawRay()
@@ -72,27 +62,7 @@ void DebugDraw::DrawRay()
 	}
 }
 
-bool DebugDraw::Raycasting(Ray3D& _ray)
-{
-	// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-
-	if (!EditorScene::Instance().UsingGizmos() && !EditorCam.isMoving && InputHandler::isMouseButtonPressed_L())
-	{
-		// Bean: Click within the scene imgui window
-		if (!EditorScene::Instance().WindowHovered())
-			return false;
-
-		_ray = EditorCam.Raycasting(EditorCam.GetMouseInNDC().x, EditorCam.GetMouseInNDC().y,
-			EditorCam.getPerspMatrix(), EditorCam.getViewMatrix(), EditorCam.GetCameraPosition());
-		rayContainer.push_back(_ray);
-		return true;
-	}
-
-	return false;
-}
-
 void DebugDraw::Exit()
 {
 	delete raycastLine;
-	delete ray;
 }

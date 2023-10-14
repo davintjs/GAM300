@@ -55,8 +55,6 @@ struct Transform : Object
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
-	//Destructor, unparents object
-	~Transform();
 
 	//Parent's euid
 	Engine::UUID parent = 0;
@@ -293,8 +291,22 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-	LIGHT_TYPE lightType = SPOT_LIGHT;
-	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	//index for light type for serializing and de-serializing
+	int lightType = (int)SPOT_LIGHT;	
+
+	// Used in point & Spot
+	Vector3 lightpos;
+
+	// Used in directional & spot
+	Vector3 direction;
+
+	// Used only in Spot
+	float inner_CutOff;
+	float outer_CutOff;
+
+	// Used for all
+	float intensity;
+	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
 
 	
 	property_vtable()
@@ -302,7 +314,13 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightingColor).Name("LightingColor")
+	property_var(lightType).Name("Light Type"),
+	property_var(lightpos).Name("Position"),
+	property_var(intensity).Name("Intensity"),
+	property_var(direction).Name("Direction"),
+	property_var(inner_CutOff).Name("Inner Cutoff"),
+	property_var(outer_CutOff).Name("Outer Cutoff"),
+	property_var(lightingColor).Name("Color")
 } property_vend_h(LightSource)
 
 #pragma endregion

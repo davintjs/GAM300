@@ -62,6 +62,12 @@ struct ScrollingBuffer {
     }
 };
 
+struct layer {
+    layer(std::string _name) : name(_name) {}
+    std::string name;
+
+};
+
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
 {
 public:
@@ -149,6 +155,14 @@ public:
     // Updating and displaying of the Scene & Game
     void Update(float dt);
 
+    void SelectEntity();
+
+    void ToolBar();
+    
+    void GameView();
+    
+    void SceneView();
+
     // Exit the system
     void Exit();
 
@@ -156,14 +170,18 @@ public:
     glm::vec2 const GetDimension() { return sceneDimension; }
     glm::vec2 const GetPosition() { return scenePosition; }
     bool const WindowHovered() { return windowHovered; }
+    bool const WindowFocused() { return windowFocused; }
     bool const UsingGizmos() { return inOperation; }
     bool const DebugDraw() { return debug_draw; }
 
+    void CallbackEditorWindow(EditorWindowEvent* pEvent);
+
 private:
-    glm::vec2 sceneDimension{};   // Dimensions of the viewport
-    glm::vec2 scenePosition{};    // Position of the viewport relative to the engine
-    glm::vec2 min{}, max{};         // Minimum and maximum position of the viewport
+    glm::vec2 sceneDimension{}; // Dimensions of the viewport
+    glm::vec2 scenePosition{};  // Position of the viewport relative to the engine
+    glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
     bool windowHovered = false;
+    bool windowFocused = false;
     bool inOperation = false;
     bool debug_draw = false;
 };
@@ -181,6 +199,10 @@ public:
     void Exit();
 
     bool isAddPanel;
+
+    std::vector<layer> Layers;
+    std::vector<std::string> Tags;
+
 private:
 };
 
