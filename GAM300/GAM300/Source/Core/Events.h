@@ -17,11 +17,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define EVENTS_H
 
 #include "Utilities/UUID.h"
+#include <glm/vec2.hpp>
+
 struct Entity;
 struct Scene;
 struct Script;
 struct Field;
 struct Rigidbody;
+struct ImGuiTextBuffer;
 
 struct IEvent
 {
@@ -144,6 +147,19 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+struct ContactAddedEvent : IEvent
+{
+	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+
+};
+struct ContactRemovedEvent : IEvent
+{
+	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
 
 #pragma region EDITOR STUFF
 
@@ -153,25 +169,18 @@ struct EditorWindowEvent : IEvent
 	bool isHovered = false;
 	bool isFocused = false;
 };
-struct ContactAddedEvent : IEvent
-{
-	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
-
-};
-struct ContactRemovedEvent : IEvent
-{
-	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
-};
-
 
 struct EditorPanCameraEvent : IEvent
 {
 	EditorPanCameraEvent(const bool& _pan) : isPanning{ _pan } {}
 	bool isPanning = false;
+};
+
+struct EditorUpdateSceneGeometryEvent : IEvent
+{
+	EditorUpdateSceneGeometryEvent(const glm::vec2& _position, const glm::vec2& _dimension) : position{ _position }, dimension{ _dimension } {}
+	glm::vec2 position;
+	glm::vec2 dimension;
 };
 
 #pragma endregion
