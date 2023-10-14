@@ -290,7 +290,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 struct LightSource : Object
 {
 	//index for light type for serializing and de-serializing
-	int lightType = (int)DIRECTIONAL_LIGHT;	
+	int lightType = (int)SPOT_LIGHT;	
 
 	// Used in point & Spot
 	Vector3 lightpos;

@@ -175,7 +175,7 @@ void GraphicsSystem::Update(float dt)
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
 	//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
