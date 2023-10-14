@@ -1,26 +1,45 @@
 /*!***************************************************************************************
-\file			logging.h
+\file			Debugger.h
 \project
-\author			Shawn Tanary
+\author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			16/09/2022
+\date			25/09/2023
 
 \brief
-	This file contins functions that logger messages to either console or to a file.
+	This file contains a the declarations for a debugger using SpeedLogger
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+
 #pragma once
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include <spdlog/spdlog.h>
 
 #include <memory>
-//#include "Editor/editor-consolelog.h"
+#include <iostream>
 #include "Core/SystemInterface.h"
 
+#ifndef  DEBUG_H
+#define DEBUG_H
+
+//Variadic template printing
+#if defined(DEBUG) | defined(_DEBUG)
+template <typename... Args>
+inline void PRINT(Args&&... args)
+{
+	((std::cout << std::forward<Args>(args)), ...);
+}
+#else
+#pragma warning( disable : 4002)
+#define PRINT(ARGS) 
+
+#endif
+#endif // ! DEBUG_H
+
+//Easy access for debugger
 #define DEBUGGER Debugger::Instance()
 
 SINGLETON(Debugger)
@@ -79,31 +98,11 @@ private:
 };
 
 //User Macros
-#define CONSOLE_CRITICAL(...)															\
-							{															\
-								loggingSystem.getConsoleLogger()->critical(__VA_ARGS__); \
-								Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);		\
-							}
-#define CONSOLE_ERROR(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->error(__VA_ARGS__);\
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_WARN(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->warn(__VA_ARGS__); \
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_INFO(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->info(__VA_ARGS__); \
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
-#define CONSOLE_TRACE(...)																\
-							{															\
-									loggingSystem.getConsoleLogger()->trace(__VA_ARGS__);\
-									Window::EditorConsole::editorLog.add_logEntry(__VA_ARGS__);	\
-							}
+#define CONSOLE_CRITICAL(...){DEBUGGER.getConsoleLogger()->critical(__VA_ARGS__);}
+#define CONSOLE_ERROR(...){DEBUGGER.getConsoleLogger()->error(__VA_ARGS__);}
+#define CONSOLE_WARN(...){DEBUGGER.getConsoleLogger()->warn(__VA_ARGS__);}
+#define CONSOLE_INFO(...){DEBUGGER.getConsoleLogger()->info(__VA_ARGS__);}
+#define CONSOLE_TRACE(...){DEBUGGER.getConsoleLogger()->trace(__VA_ARGS__);}
 
 #define FILE_CRITICAL(...)		::spdlog::critical(__VA_ARGS__);
 #define FILE_ERROR(...)			::spdlog::error(__VA_ARGS__)
@@ -121,7 +120,7 @@ private:
 			FILE_CRITICAL(assertMessageStream.str());\
 			spdlog::drop("Error");\
 			abort();\
-        }                              \
+        }
 
 // Helper function to append custom messages
 template <typename T>
@@ -129,6 +128,7 @@ void appendCustomAssertMessage(std::ostringstream& stream, const T& arg) {
 	stream << arg;
 }
 
+// Helper function to append custom messages
 template <typename T, typename... Args>
 void appendCustomAssertMessage(std::ostringstream& stream, const T& arg, const Args&... args) {
 	stream << arg << " ";

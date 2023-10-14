@@ -39,9 +39,9 @@ Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
   Name: Player
-  gameObj: {fileID: 8552727112136102457}  # GameObject
+  gameObj: {fileID: 0}
   sad: 21.2999992
-  player: {fileID: 10379670187260712593}  # Component
+  otherT: {fileID: 22203055554271501}  # Component
 ---
 GameObject:
   m_EUID: 16942626329878887566

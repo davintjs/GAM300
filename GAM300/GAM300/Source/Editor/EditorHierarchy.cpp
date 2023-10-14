@@ -1,3 +1,21 @@
+/*!***************************************************************************************
+\file			EditorHierarchy.cpp
+\project
+\author         Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the definitions of the functions that renders the Hierarchy window in
+	Editor. These functionalities include:
+	1. Displaying entities in a scene in a hierarchial tree format
+	2. Parenting and reordering of entities in the tree
+	3. Adding/removing of entities from the hierarchy window
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "EditorHeaders.h"
 #include "Editor.h"
@@ -12,6 +30,7 @@ void EditorHierarchy::Init()
     EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
 }
 
+//Display the entity in the hierarchy tree
 void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 {
 
@@ -27,8 +46,6 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	}
 
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-
-
 
 	Scene::Layer& layer = curr_scene.layer;
 	Transform& currEntity = curr_scene.Get<Transform>(euid);
@@ -128,9 +145,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					auto it = std::find(layer.begin(), layer.end(), euid);
 					layer.insert(it, childId);
 				}
-
 			}
-
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -178,8 +193,6 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		}
 		ImGui::EndDragDropTarget();
 	}
-
-
 
 	if (open)
 	{
@@ -281,8 +294,6 @@ void EditorHierarchy::Update(float dt)
 		ImGui::TreePop();
 	}
 	ImGui::End();
-
-	
 }
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)

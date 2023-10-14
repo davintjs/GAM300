@@ -8,15 +8,15 @@
 
 \brief
     This file contains the definitions of the following :
-        1. Performance Viewer Window
+        1. Performance Viewer Window that shows the performances of the different systems in
+           the architecture
 
 All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
-#include "Precompiled.h"
 
+#include "Precompiled.h"
 #include "EditorHeaders.h"
 #include "Core/EngineCore.h"
-
 
 #pragma warning( disable : 4996)
 
@@ -27,7 +27,6 @@ ImGuiTableFlags_NoHostExtendX;
 void EditorPerformanceViewer::Init() {
 
 }
-
 
 void EditorPerformanceViewer::Update(float dt)
 {

@@ -125,7 +125,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::Key << "m_Components" << YAML::Value;
     out << YAML::BeginSeq;
 
-    SerializeAllComponentsStruct componentSerializer;
+    SerializeAllComponentsStruct componentSerializer{};
     // Serialize the id of the component
     bool hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene);
 
@@ -193,7 +193,7 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     EVENTS.Publish(&fieldNamesEvent);
     for (size_t i = 0; i < fieldNamesEvent.count; ++i)
     {
-        static char buffer[2048];
+        static char buffer[2048]{};
         Field field{ AllComponentTypes::Size(),buffer };
         const char* name{ fieldNamesEvent.pStart[i] };
         ScriptGetFieldEvent getFieldEvent{_component,name,field};
@@ -322,7 +322,7 @@ void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking)
 template <typename T>
 void DeserializeComponent(const DeComHelper& _helper)
 {
-    T component;
+    T component{};
     YAML::Node& node = *_helper.node;
     Scene& _scene = *_helper.scene;
 
@@ -347,7 +347,9 @@ void DeserializeComponent(const DeComHelper& _helper)
                     }
                     else
                     {
-                        E_ASSERT(false, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
+                        // Bean: Rework this into something usable, right now if the property is not in the scene file,
+                        //      it will assert, instead it should be ignored
+                        //E_ASSERT(false, "Key: ", name, " of type ", typeid(T1).name(), " does not exist within this component!");
                     }
                 }
             , entry.second);
@@ -385,7 +387,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             // Assigning script values from the loaded scene
             for (size_t i = 0; i < fieldNamesEvent.count; ++i)
             {
-                static char buffer[2048];
+                static char buffer[2048]{};
                 Field field{ AllComponentTypes::Size(),buffer };
                 const char* name{ fieldNamesEvent.pStart[i] };
                 YAML::Node varNode = node[name];
@@ -447,7 +449,16 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
                 if constexpr (std::is_same<T, Entity>())
                     out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("GameObject");
                 else
-                    out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+                {
+                    if constexpr (std::is_same_v<T, Transform> || std::is_same_v<T, Tag>)
+                    {
+                        out << YAML::Value << object->EUID() << YAML::EndMap << YAML::Comment("Component");
+                    }
+                    else
+                    {
+                        out << YAML::Value << object->UUID() << YAML::EndMap << YAML::Comment("Component");
+                    }
+                }
             }
         }
         else
@@ -495,7 +506,16 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
             {
                 Engine::UUID uuid = node["fileID"].as<Engine::UUID>();
                 if (uuid)
-                    object = &scene.GetByUUID<T>(uuid);
+                {
+                    if constexpr (std::is_same_v<T, Transform> || std::is_same_v<T, Tag>)
+                    {
+                        object = &scene.Get<T>(uuid);
+                    }
+                    else
+                    {
+                        object = &scene.GetByUUID<T>(uuid);
+                    }
+                }
             }
         }
         else

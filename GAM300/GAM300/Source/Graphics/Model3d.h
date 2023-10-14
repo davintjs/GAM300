@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Model3d.h
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the declaration of 
+	1. temporary stucts and classes used for testing
+	2. Model class to create a model by abstacting openGL functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #pragma once
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
@@ -52,23 +67,28 @@ public:
 
 	// This 3D Model version
 	//void init(AssimpLoader* geom); // make vao vbo
-	void init(); // make vao vbo
-	void setup_shader();
+	
+	// make vao vbo
+	void init(); 
+
+	// display the models created
 	void draw();
 
 	// This below are all the things i use to testing with light stuffs
+	// initialize cube model
 	void cubeinit();
-	void instance_cubeinit();
-	void setup_instanced_shader();
-	void setup_lightshader();// The Light
-	void setup_affectedShader();// Impacted by Light
-	void lightSource_draw();
-	void affectedByLight_draw(glm::vec3 lightPos);
-	void instanceDraw(int entitycount);
 
-	void SkyBoxinit();
-	void setup_skybox_shader();
-	void SkyBoxDraw(GLuint skyboxtex);
+	// initialize cube model for instance rendering
+	void instance_cubeinit();
+
+	// display light source
+	void lightSource_draw();
+
+	// draw model that is affected by light (temporary)
+	void affectedByLight_draw(glm::vec3 lightPos);
+
+	// draw using instance rendering
+	void instanceDraw(int entitycount);
 
 	glm::vec3 position;
 	
@@ -94,13 +114,11 @@ public:
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
+	// initialize vao for debug lines
 	void debugAABB_init(); // vao & shader
+
+	// draw debug lines
 	void debugAABB_draw(glm::mat4& SRT);
-
-	void lineinit();
-	void debugline_draw(glm::mat4& SRT);
-
-
 
 	//AssimpLoader* _geom;
 
@@ -109,6 +127,27 @@ public:
 
 	std::vector<troll_Geom> totalGeoms; // Contains all geom of the project
 
-private:
+protected:
+	// deserializing
 	void DeserializeGeoms(const std::string filePath);
+};
+
+class SkyBox: public Model
+{
+public:
+	// initialize skybox vao/vbo
+	void SkyBoxinit();
+
+	// draw sky box
+	void SkyBoxDraw(GLuint skyboxtex);
+};
+
+class RaycastLine: public Model
+{
+public:
+	// initializer lines
+	void lineinit();
+
+	// draw debug lines
+	void debugline_draw(glm::mat4& SRT);
 };

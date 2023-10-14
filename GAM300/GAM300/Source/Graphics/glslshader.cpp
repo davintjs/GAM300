@@ -1,12 +1,19 @@
-/* !
-/file    glslshader.h
-/primary author Euan Lim (50%)
-/secondary author Jake Lian (50%)
-/date    06/11/2016
+﻿/*!***************************************************************************************
+\file			glslshader.h
+\project
+\author         Euan Lim, Jake Lian, Theophelia Tan
 
-This file contains definitions of member functions of class GLShader.
-*//*__________________________________________________________________________*/
-#include "Precompiled.h"
+\par			Course : GAM300
+\date           28 / 09 / 2023
+
+\brief
+This file contains the definition of the class GLSLShader which does
+1. Link Shaders into a program
+2. validate, log messages from compiling / linking / validiation
+(Taken from Year 1 Professor Prasanna's Graphics Class)
+
+    All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+    * *****************************************************************************************/ #include "Precompiled.h"
 #include "glslshader.h"
 
 /*!***********************************************************************

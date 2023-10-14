@@ -1,17 +1,17 @@
-/*!***************************************************************************************
-\file			Scene.cpp
+ï»¿/*!***************************************************************************************
+\file			Scene.h
 \project
-\author
+\author			Zacharie Hong
 
 \par			Course: GAM300
-\date           07/09/2023
+\date			10/08/2023
 
 \brief
-	This file contains the definitions of the following:
-	1. Scene
+	This file defines non template functions used by Scene which functions as a ECS
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
+
 #include "Precompiled.h"
 #include "Scene/Scene.h"
 
@@ -28,3 +28,24 @@ Scene::Scene(const std::string& _filepath)
 		//Deserialize
 	}
 }
+
+Scene& Scene::operator=(Scene& rhs)
+{
+	CloneHelper(rhs, AllObjectTypes());
+	return *this;
+}
+
+
+void Scene::ClearBuffer()
+{
+	for (Entity* pEntity : entitiesDeletionBuffer)
+	{
+		layer.erase(std::find(layer.begin(), layer.end(), pEntity->euid));
+		entities.erase(*pEntity);
+	}
+	entitiesDeletionBuffer.clear();
+	//Destroy components
+	ClearBufferHelper(*this);
+}
+
+

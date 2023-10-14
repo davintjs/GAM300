@@ -1,9 +1,9 @@
 ﻿/*!***************************************************************************************
-\file			events-system.h
-\project		GAM200
+\file			EventsManager.h
+\project		GAM300
 \author			Zacharie Hong
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section: A
 \date
 
@@ -66,13 +66,9 @@ private:
     std::map<std::type_index, HandlerList> subscribers;
 public:
     /*******************************************************************************
-    /*!
     *
     \brief
         Cleanup the IEventHandler
-
-    \return
-        void
     */
     /*******************************************************************************/
     ~EventsManager()

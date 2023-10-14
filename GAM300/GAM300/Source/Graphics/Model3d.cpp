@@ -1,15 +1,31 @@
+/*!***************************************************************************************
+\file			Model3d.cpp
+\project
+\author         Lian Khai Kiat, Euan Lim, Theophelia Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+    This file contains the definitions of
+    1. temporary stucts and classes used for testing
+    2. Model class to create a model by abstacting openGL functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 #include "Precompiled.h"
 #include "Model3d.h"
 #include "Editor_Camera.h"
 
 
 #include <algorithm>
+#include "GraphicsSystem.h"
 
 //extern Editor_Camera E_Camera;
 
 bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
 
-
+const std::string shaderPath = "GAM300/Shaders";
 
 // should move somewhere else...
 void Model::init() {
@@ -91,68 +107,10 @@ void Model::init() {
         _mGeneral_model.emplace_back(model);
     }
 
-    setup_shader();
-
     // load default texture, todo
     //texturebuffer = TextureManager.CreateTexture("Assets/Models/Skull_textured/TD_Checker_Base_Color.dds");
     
     // debugAABB_init();
-}
-
-
-void Model::setup_instanced_shader() {
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/InstancedRender.vert"));
-
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/InstancedRender.frag"));
-
-    std::cout << "Instanced Render SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::setup_shader() {
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-    // Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/LapSupGraphics/abnb2.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "abnb2 SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
 }
 
 void Model::draw() {
@@ -206,12 +164,12 @@ void Model::draw() {
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -288,9 +246,9 @@ void Model::instanceDraw(int entitycount) {
         glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
 
     glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     glBindVertexArray(vaoid);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 36, entitycount);
@@ -517,66 +475,6 @@ void Model::cubeinit()
     //glEnableVertexAttribArray(0);
 }
 
-void Model::setup_lightshader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/BasicLighting.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/BasicLighting.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "BasicLighting SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::setup_affectedShader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/LightAffected.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/LightAffected.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "LightAffected SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
 void Model::lightSource_draw()
 {
     glEnable(GL_DEPTH_TEST); // might be sus to place this here
@@ -612,12 +510,12 @@ void Model::lightSource_draw()
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
 
@@ -678,12 +576,12 @@ void Model::affectedByLight_draw(glm::vec3 lightPos)
         glGetUniformLocation(this->shader.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shader.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -872,12 +770,12 @@ void Model::debugAABB_init() // vao & shader
     //// Vertex Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //    "Shaders/abnb2.vert"));
 
     //// Fragment Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //    "Shaders/debugAABB.frag"));
 
     //std::cout << "DEBUG AABB SHADER\n";
     //shaderAABB.CompileLinkValidate(shdr_files);
@@ -902,12 +800,12 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -924,7 +822,7 @@ void Model::debugAABB_draw(glm::mat4 & SRT)
     shaderAABB.UnUse();
 }
 
-void Model::lineinit()
+void RaycastLine::lineinit()
 {
     GLfloat vertices[] =
     {
@@ -964,12 +862,12 @@ void Model::lineinit()
     //// Vertex Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_VERTEX_SHADER,
-    //    "GAM300/Source/LapSupGraphics/abnb2.vert"));
+    //    "Shaders/abnb2.vert"));
 
     //// Fragment Shader
     //shdr_files.emplace_back(std::make_pair(
     //    GL_FRAGMENT_SHADER,
-    //    "GAM300/Source/LapSupGraphics/debugAABB.frag"));
+    //    "Shaders/debugAABB.frag"));
 
     //std::cout << "DEBUG AABB SHADER\n";
     //shaderAABB.CompileLinkValidate(shdr_files);
@@ -986,7 +884,7 @@ void Model::lineinit()
 
 }
 
-void Model::debugline_draw(glm::mat4& SRT)
+void RaycastLine::debugline_draw(glm::mat4& SRT)
 {
     shaderAABB.Use();
     // UNIFORM VARIABLES ----------------------------------------
@@ -995,12 +893,12 @@ void Model::debugline_draw(glm::mat4& SRT)
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "persp_projection");
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     GLint uniform_var_loc2 =
         glGetUniformLocation(this->shaderAABB.GetHandle(),
             "View");
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getViewMatrix()));
+        glm::value_ptr(EditorCam.GetViewMatrix()));
 
     // Scuffed SRT
     GLint uniform_var_loc3 =
@@ -1016,6 +914,7 @@ void Model::debugline_draw(glm::mat4& SRT)
     glBindVertexArray(0);
     shaderAABB.UnUse();
 }
+
 void Model::DeserializeGeoms(const std::string filePath)
 {
     troll_Geom tempGeom;
@@ -1129,7 +1028,7 @@ void Model::DeserializeGeoms(const std::string filePath)
 }
 
 
-void Model::SkyBoxinit()
+void SkyBox::SkyBoxinit()
 {
     float skyboxVertices[] = {
         // positions          
@@ -1191,37 +1090,7 @@ void Model::SkyBoxinit()
 
 }
 
-void Model::setup_skybox_shader()
-{
-    std::vector<std::pair<GLenum, std::string>> shdr_files;
-    // Vertex Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_VERTEX_SHADER,
-        "GAM300/Source/Graphics/Skybox.vert"));
-    //"Assets/Shaders/OrionVertShader.vert"));
-
-// Fragment Shader
-    shdr_files.emplace_back(std::make_pair(
-        GL_FRAGMENT_SHADER,
-        "GAM300/Source/Graphics/Skybox.frag"));
-    //"Assets/Shaders/OrionFragShader.frag"));
-
-    std::cout << "SKYBOX SHADER\n";
-    shader.CompileLinkValidate(shdr_files);
-    std::cout << "\n\n";
-
-    // if linking failed
-    if (GL_FALSE == shader.IsLinked()) {
-        std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
-        sstr << shader.GetLog() << "\n";
-        //ORION_ENGINE_ERROR(sstr.str());
-        std::cout << sstr.str();
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-void Model::SkyBoxDraw(GLuint skyboxtex)
+void SkyBox::SkyBoxDraw(GLuint skyboxtex)
 {
     shader.Use();
     GLint uniform_var_loc1 =
@@ -1229,7 +1098,7 @@ void Model::SkyBoxDraw(GLuint skyboxtex)
             "projection");
 
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.getPerspMatrix()));
+        glm::value_ptr(EditorCam.GetProjMatrix()));
     
     
     GLint uniform_var_loc2 =
@@ -1237,7 +1106,7 @@ void Model::SkyBoxDraw(GLuint skyboxtex)
             "view");
 
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.getViewMatrix()))));
+        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.GetViewMatrix()))));
 
     glBindVertexArray(vaoid);
 

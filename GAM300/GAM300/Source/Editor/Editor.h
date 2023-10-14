@@ -1,19 +1,17 @@
-/**************************************************************************************/
-/*!
-//    \file			Editor.h
-//    \author(s) 	Joseph Ho Jun Jie
-//
-//    \date   	    9th May 2023
-//    \brief		This file contains the prototypes for all the functions that are used
-//					to create the Level Editor interface for the program.
-//
-//    \Percentage   Joseph 100%
-//
-//    Copyright (C) 2022 DigiPen Institute of Technology.
-//    Reproduction or disclosure of this file or its contents without the
-//    prior written consent of DigiPen Institute of Technology is prohibited.
- */
- /**************************************************************************************/
+/*!***************************************************************************************
+\file			Editor.h
+\project		GAM300
+\author			Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the declarations of the following:
+    1. Contains the declaration of the Editor system in the architecture.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 
 #include "Precompiled.h"
 #include "IOManager/Handler_GLFW.h"
@@ -39,6 +37,7 @@ public:
 
 
 	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
+
 private:
 	std::vector<ISystem*> editorSystems;
 	Engine::UUID selectedEntity{0};

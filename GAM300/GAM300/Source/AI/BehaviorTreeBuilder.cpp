@@ -1,3 +1,20 @@
+/*!***************************************************************************************
+\file			BehaviorTreeBuilder.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. BehaviorTreeBuilder singleton class
+		a. Builds the behavior trees in the Trees folder to store into memory
+		b. Helper functions for deserialization of RapidJSON format
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "BehaviorTreeBuilder.h"
 #include "NodeIncludes.h"
@@ -14,21 +31,18 @@ void BehaviorTreeBuilder::Update(float dt)
 
 void BehaviorTreeBuilder::Exit()
 {
-	for (auto& tree : mBehaviorTrees)
+	for (auto& [key, data] : mBehaviorTrees)
 	{
-		delete tree;
+		delete data;
 	}
 	mBehaviorTrees.clear();
 }
 
 BehaviorTree* BehaviorTreeBuilder::GetBehaviorTree(std::string treeName)
 {
-	for (const auto& tree : mBehaviorTrees)
+	if (mBehaviorTrees.find(treeName) != mBehaviorTrees.end())
 	{
-		if (tree->GetTreeName() == treeName)
-		{
-			return tree;
-		}
+		return mBehaviorTrees[treeName];
 	}
 
 	E_ASSERT(false, "Nullptr returned while trying to find behavior tree...");
@@ -83,7 +97,7 @@ void BehaviorTreeBuilder::BuildTrees()
 
 		BehaviorTree* tempTree = new BehaviorTree(fileName, rootNode);
 
-		mBehaviorTrees.push_back(tempTree); // Add this tree to our behavior tree vector
+		mBehaviorTrees[fileName] = std::move(tempTree);
 	}
 }
 

@@ -1,14 +1,13 @@
 /*!***************************************************************************************
 \file			EditorContentBrowser.cpp
 \project		
-\author         Sean Ngo
+\author         Joseph Ho
 
 \par			Course: GAM300
 \date           04/09/2023
 
 \brief
-    This file contains the definitions of the following:
-    1. Content Browser
+    This file contains the definitions of the functions for the Editor's Content Browser.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -34,12 +33,6 @@ void EditorContentBrowser::Update(float dt)
     UNREFERENCED_PARAMETER(dt);
     ImGui::Begin("Content Browser");
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
-    //ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    /*ImGui::PushFont(io.Fonts->Fonts[1]);
-    ImGui::Text(currentFolder.c_str());
-    ImGui::PopFont();
-    ImGui::Separator();*/
 
     // Back button to return to parent directory
     if (CurrentDirectory != std::filesystem::path(AssetDirectory))
@@ -77,39 +70,27 @@ void EditorContentBrowser::Update(float dt)
         //Draw the file / folder icon based on whether it is a directory or not
         std::string icon = it.is_directory() ? "foldericon" : "fileicon";
 
-
-
         size_t icon_id = 0;
-
-        //Get file extension
-        /*std::string ext = relativepath.string();
-        auto it2 = ext.begin() + ext.find_last_of(".");
-        ext.erase(ext.begin(), it2);*/
-
         std::string parentpath = relativepath.parent_path().string();
 
         std::string filename = relativepath.string();
         
         if (!it.is_directory()) {
-            
+
             auto it2 = filename.begin();
 
-            //if (filename.find("Resources") == std::string::npos) {
 
-                if (filename.find_last_of("\\") != std::string::npos) {
-                    it2 = filename.begin() + filename.find_last_of("\\") + 1;
-                    filename.erase(filename.begin(), it2);
-                }
-                it2 = filename.begin() + filename.find_first_of(".");
-                filename.erase(it2, filename.end());
+            if (filename.find_last_of("\\") != std::string::npos) {
+                it2 = filename.begin() + filename.find_last_of("\\") + 1;
+                filename.erase(filename.begin(), it2);
+            }
+            it2 = filename.begin() + filename.find_first_of(".");
+            filename.erase(it2, filename.end());
 
-                //PRINT(filename);
-
-                GLint tex = GET_TEXTURE_ID(filename);
-                if (tex != UINT_MAX) {
-                    icon = filename;
-                }
-            //}              
+            GLint tex = GET_TEXTURE_ID(filename);
+            if (tex != UINT_MAX) {
+                icon = filename;
+            }
         }
        
         //render respective file icon textures
@@ -134,10 +115,6 @@ void EditorContentBrowser::Update(float dt)
             //Open script file in VSCode
             if ((path.string().find(".cs") != std::string::npos)) {
                 std::string command = "code " + path.string();
-
-                //int result = std::system(command.c_str());
-
-                //E_ASSERT(result, path.string(), " script file cannot be opened!");  
             }
 
             //Open Scene file

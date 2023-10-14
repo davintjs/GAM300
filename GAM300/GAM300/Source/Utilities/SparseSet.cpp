@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			sparse-set.cpp
+\file			SparseSet.cpp
 \project
 \author			Zacharie Hong
 

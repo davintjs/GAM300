@@ -1,3 +1,18 @@
+/*!***************************************************************************************
+\file			Platform_Utils.cpp
+\project
+\author         Joseph Ho
+
+\par			Course: GAM300
+\date           07/09/2023
+
+\brief
+	This file contains the defintions for FileDialogs functions for the loading/saving of data
+	from the engine into data files.
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "PlatformUtils.h"
 #include "../IOManager/Handler_GLFW.h"

@@ -24,7 +24,6 @@
     <ClCompile Include="Source\Core\FramerateController.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
-    <ClCompile Include="Source\Scene\Entity.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
@@ -36,7 +35,6 @@
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\Enemy.cpp" />
     <ClCompile Include="Source\Utilities\PlatformUtils.cpp" />
-    <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Utilities\SparseSet.cpp" />
     <ClCompile Include="Source\Utilities\ObjectsList.cpp" />
@@ -80,7 +78,6 @@
     <ClCompile Include="Source\Editor\ImGui\ImSequencer.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
-    <ClCompile Include="Source\Scene\Object.cpp" />
     <ClCompile Include="Source\Debugging\DemoSystem.cpp" />
     <ClCompile Include="Source\AI\Geometry.cpp" />
     <ClCompile Include="Source\Audio\AudioManager.cpp" />
@@ -88,6 +85,14 @@
     <ClCompile Include="Source\Editor\ImGui\implot.cpp" />
     <ClCompile Include="Source\Editor\ImGui\implot_demo.cpp" />
     <ClCompile Include="Source\Editor\ImGui\implot_items.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Scene\HandlesTable.cpp" />
+    <ClCompile Include="Source\Scene\Identifiers.cpp" />
+    <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
+    <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
+    <ClCompile Include="Source\Graphics\Lighting.cpp" />
+    <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -109,7 +114,6 @@
     <ClInclude Include="Source\Graphics\Editor_Camera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
-    <ClInclude Include="Source\Core\Debug.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
     <ClInclude Include="Source\Utilities\TemplatePack.h" />
     <ClInclude Include="Source\Scene\Entity.h" />
@@ -141,7 +145,6 @@
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
     <ClInclude Include="Source\Graphics\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
-    <ClInclude Include="Source\Scene\EXAMPLE_ECS_USAGE.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AI\NavMesh.h" />
@@ -161,17 +164,25 @@
     <ClInclude Include="Source\AI\Geometry.h" />
     <ClInclude Include="Source\Audio\AudioManager.h" />
     <ClInclude Include="Source\Audio\AudioSystem.h" />
+    <ClInclude Include="Source\Scene\SceneTemplates.cpp" />
+    <ClInclude Include="Source\Scene\HandlesTable.h" />
+    <ClInclude Include="Source\Scene\Identifiers.h" />
+    <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Graphics\BasicLighting.vert" />
-    <None Include="Source\Graphics\BasicLighting.frag" />
-    <None Include="Source\Graphics\LightAffected.vert" />
-    <None Include="Source\Graphics\LightAffected.frag" />
-    <None Include="Source\Graphics\Skybox.vert" />
-    <None Include="Source\Graphics\Skybox.frag" />
-    <None Include="Source\Graphics\HDR.vert" />
-    <None Include="Source\Graphics\HDR.frag" />
-    <None Include="Source\Graphics\PBR.frag" />
-    <None Include="Source\Graphics\PBR.vert" />
+    <None Include="Shaders\BasicLighting.frag" />
+    <None Include="Shaders\BasicLighting.vert" />
+    <None Include="Shaders\HDR.frag" />
+    <None Include="Shaders\HDR.vert" />
+    <None Include="Shaders\InstancedDebugRender.frag" />
+    <None Include="Shaders\InstancedDebugRender.vert" />
+    <None Include="Shaders\InstancedRender.frag" />
+    <None Include="Shaders\InstancedRender.vert" />
+    <None Include="Shaders\LightAffected.frag" />
+    <None Include="Shaders\LightAffected.vert" />
+    <None Include="Shaders\PBR.frag" />
+    <None Include="Shaders\PBR.vert" />
+    <None Include="Shaders\Skybox.frag" />
+    <None Include="Shaders\Skybox.vert" />
   </ItemGroup>
 </Project>

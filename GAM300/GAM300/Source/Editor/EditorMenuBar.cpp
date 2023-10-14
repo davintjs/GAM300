@@ -13,13 +13,12 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#include "Precompiled.h"
 
+#include "Precompiled.h"
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
-#include "Graphics/GraphicsSystem.h"
-
+#include "Graphics/GraphicsHeaders.h"
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
 
@@ -153,18 +152,18 @@ void EditorMenuBar::Update(float dt)
         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         ImGui::SetNextWindowSize(ImVec2(300.f, 450.f));
 
-        auto hdr = &GraphicsSystem::Instance().hdr;
+        auto hdr = &RENDERER.IsHDR();
         ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
         ImGui::Checkbox("Enable HDR lighting", hdr);
 
         ImGui::Text("Light Exposure"); ImGui::SameLine();
         if (ImGui::IsItemHovered()) ImGui::SetTooltip("Light exposure available only when HDR enabled");
         if(*hdr)
-            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+            ImGui::SliderFloat("##", &RENDERER.GetExposure(), 0.f, 10.f);
         else {
             //only allow when HDR is enabled
             ImGui::BeginDisabled();
-            ImGui::SliderFloat("##", &GraphicsSystem::Instance().exposure, 0.f, 10.f);
+            ImGui::SliderFloat("##", &RENDERER.GetExposure(), 0.f, 10.f);
             ImGui::EndDisabled();
         }      
         ImGui::End();

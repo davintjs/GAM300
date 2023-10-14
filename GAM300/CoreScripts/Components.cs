@@ -43,6 +43,11 @@ namespace BeanFactory
         {
             return InternalCalls.Get<T>(this);
         }
+
+        virtual public T AddComponent<T>() where T : Component
+        {
+            return InternalCalls.AddComponent<T>(gameObject);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -302,4 +307,9 @@ namespace BeanFactory
             InternalCalls.StopAnimation(ID);
         }
     }*/
+
+    public class Collider : Component
+    {
+        Rigidbody rigidbody;
+    }
 }

@@ -45,7 +45,7 @@ public:
     void Exit();
 private:
     const std::string BHTFiles = "GAM300/Source/AI/Trees";
-    std::vector<BehaviorTree*> mBehaviorTrees;
+    std::unordered_map<std::string, BehaviorTree*> mBehaviorTrees;
 
     // Builds a node of the tree
     BehaviorNode* BuildNode(std::string nodeType, std::string nodeName);

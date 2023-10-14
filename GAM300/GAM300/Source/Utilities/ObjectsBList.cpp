@@ -1,13 +1,14 @@
 /*!***************************************************************************************
-\file			ObjectsList.h
+\file			ObjectsBList.cpp
 \project
 \author			Zacharie Hong
 
-\par			Course: GAM250
+\par			Course: GAM300
 \par			Section:
-\date			27/06/2023
+\date			02/09/2023
 
 \brief
+	This file defines a Object Bucket List manages a list of Objects Lists
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/

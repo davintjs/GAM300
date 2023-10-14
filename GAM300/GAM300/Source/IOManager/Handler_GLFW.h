@@ -1,17 +1,18 @@
-/* !
-/file    glhelper.h
-/primary author Euan Lim (50%)
-/secondary author Jake Lian (50%)
-/date    16/06/2022
+/*!***************************************************************************************
+\file			Handler_GLFW.h
+\project
+\author         Euan Lim
 
-This file contains the declaration of namespace Helper that encapsulates the
-functionality required to create an OpenGL context using GLFW; use GLEW
-to load OpenGL extensions; initialize OpenGL state; and finally initialize
-the OpenGL application by calling initalization functions associated with
-objects participating in the application.
+\par			Course: GAM300
+\date           28/09/2023
 
-*//*__________________________________________________________________________*/
+\brief
+	This file contains the declarations of the GLFW Handler
+	1. Handler for error, keyboard , mouse , window resize
+	(Taken from Year 1 Professor Prasanna's Graphics Class)
 
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
 /*                                                                      guard
 ----------------------------------------------------------------------------- */
 #ifndef GLHELPER_H
@@ -43,25 +44,23 @@ struct GLFW_Handler
   static void cleanup();
 
   // callbacks ...
+  // error callback
   static void error_cb(int error, char const* description);
+  // framebuffer callback
   static void fbsize_cb(GLFWwindow *ptr_win, int width, int height);
   // I/O callbacks ...
+  //keyboard callback
   static void key_cb(GLFWwindow *pwin, int key, int scancode, int action, int mod);
+  //mouse button callback
   static void mousebutton_cb(GLFWwindow *pwin, int button, int action, int mod);
+  //mouse scroll callback
   static void mousescroll_cb(GLFWwindow *pwin, double xoffset, double yoffset);
+  //mouse pos callback
   static void mousepos_cb(GLFWwindow *pwin, double xpos, double ypos);
-  //static void SetKeyPressed(Orion::Key::KeyCode keycode, bool pressed);
-  //static void SetKeyHeld(Orion::Key::KeyCode keycode, bool held);
-  //static bool IsKeyPressed(Orion::Key::KeyCode keycode);
-  //static bool IsKeyDown(Orion::Key::KeyCode keycode);
-  //static bool IsKeyRelease(Orion::Key::KeyCode keycode);
   static void update_time(double fpsCalcInt = 1.0);
 
 
   
-  //static bool keyPressed[Orion::Key::MaxKey];
-  //static bool keyHeld[Orion::Key::MaxKey];
-
   //variables
   static GLint width, height;
   static GLdouble fps;

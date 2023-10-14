@@ -2,6 +2,7 @@
 \file			EditorInspector.cpp
 \project
 \author         Joseph Ho
+\coauthor       Zachary Hong
 
 \par			Course: GAM300
 \date           07/09/2023
@@ -10,8 +11,7 @@
     This file contains the definitions of the functions that renders the inspector window in
     Editor. These functionalities include:
     1. Displaying Components of the selected entity
-    2. Display the individual types and fields
-    3. Clone Helper for De/Serialization which copies fields for the script component
+    2. Display the individual types and fields in the editor
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -33,6 +33,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
 
+//Flags for inspector headers/windows
 static ImGuiTableFlags windowFlags =
 ImGuiTableFlags_Resizable |
 ImGuiTableFlags_NoBordersInBody |
@@ -217,11 +218,11 @@ void AddReferencePanel(T*& container)
             buttonName = tag.name;
             if constexpr (std::is_same_v<T, Entity>)
             {
-                ImGui::PushID(object.EUID());
+                ImGui::PushID((int)object.EUID());
             }
             else
             {
-                ImGui::PushID(object.UUID());
+                ImGui::PushID((int)object.UUID());
             }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
@@ -351,6 +352,7 @@ void Display(const char* string)
     ImGui::Text(string);
 }
 
+//Function to display and edit textures of a given property.
 template <typename T> 
 void DisplayTexturePicker(T& Value) {
 
@@ -394,7 +396,7 @@ void DisplayTexturePicker(T& Value) {
 
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        auto id = GET_TEXTURE_ID("Cancel_Icon");
+        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
         if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
 
             if constexpr (std::is_same<T, std::string>()) {
@@ -492,10 +494,33 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
+template <typename T>
+void DisplayLightTypes(T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Type");
+        ImGui::TableNextColumn();
 
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Spot"); layers.push_back("Directional"); layers.push_back("Point");
+        static int index = value;
+        ImGui::PushItemWidth(100.f);
+        ImGui::Combo("##LightType", &index, layers.data(), (int)layers.size(), 5);
+        ImGui::PopItemWidth();
+        value = index;
+    }
+}
+
+//Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
+
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -528,9 +553,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         static int number = 0;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
-            std::cout << number << std::endl;
-        }
+        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
         comp.channel = static_cast<AudioSource::Channel>(number);
     }
@@ -548,12 +571,13 @@ void Display_Property(T& comp) {
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());
+                    ImGui::PushID(entry.first.c_str());                   
+       
                     Display<T1>(DisplayName.c_str(), Value);
 
                     //temporary implementation for texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture") 
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture")
                     {
                         DisplayTexturePicker(Value);
                     }
@@ -565,7 +589,6 @@ void Display_Property(T& comp) {
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
                 assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                //List.push_back(property::entry { PropertyName, Data });
             }
            
         });
@@ -603,13 +626,21 @@ void Display_Property(T& comp) {
         }
         else
             comp.AoID = 0;
+
+        if (comp.EmissionTexture != "")
+        {
+            comp.EmissionID = GET_TEXTURE_ID(comp.EmissionTexture);
+        }
+        else
+            comp.EmissionID = 0;
+
     }
 }
 
 void DisplayComponent(Script& script)
 {
     ACQUIRE_SCOPED_LOCK(Mono);
-    static char buffer[2048];
+    static char buffer[2048]{};
     ScriptGetFieldNamesEvent getFieldNamesEvent{script};
     EVENTS.Publish(&getFieldNamesEvent);
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
@@ -638,6 +669,28 @@ void DisplayComponent(Script& script)
     }
 }
 
+void DisplayLightProperties(LightSource& source) {
+
+    DisplayLightTypes(source.lightType);
+    
+    Display<float>("Intensity", source.intensity);
+    Display<Vector3>("Color", source.lightingColor);
+
+    if (source.lightType == (int)SPOT_LIGHT) {
+        Display<Vector3>("Light Position", source.lightpos);
+        Display<Vector3>("Direction", source.direction);
+        Display<float>("Inner Cutoff", source.inner_CutOff);
+        Display<float>("Outer Cutoff", source.outer_CutOff);
+    }
+    else if(source.lightType == (int)DIRECTIONAL_LIGHT){
+        Display<Vector3>("Direction", source.direction);
+    }
+    else { //POINT LIGHT
+        Display<Vector3>("Light Position", source.lightpos);
+    }
+}
+
+//Helper function that displays all relevant fields and types in a component
 template <typename T>
 void DisplayComponentHelper(T& component)
 {
@@ -679,7 +732,7 @@ void DisplayComponentHelper(T& component)
 
     const char* popup = GetType::Name<T>();
 
-    ImGui::PushID(component.UUID());
+    ImGui::PushID((int)component.UUID());
 
     if (ImGui::Button("...")) {
         ImGui::OpenPopup(popup);
@@ -715,12 +768,8 @@ void DisplayComponentHelper(T& component)
 
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("Component Settings");
     
-    
-
     if (windowopen)
     {
-
-
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -743,6 +792,9 @@ void DisplayComponentHelper(T& component)
             {
                 DisplayComponent(component);
             }
+            if constexpr (std::is_same_v<T, LightSource>) {
+                DisplayLightProperties(component);
+            }
             else
             {
                 Display_Property(component);
@@ -763,7 +815,7 @@ void DisplayComponentHelper(T& component)
 
 }
 
-
+//Template recursive function to display the components in an entity
 template<typename T, typename... Ts>
 struct DisplayComponentsStruct
 {
@@ -809,6 +861,7 @@ using DisplayAllComponentsStruct = decltype(DisplayComponentsStruct(AllComponent
 
 void DisplayComponents(Entity& entity) { DisplayAllComponentsStruct obj{ entity }; }
 
+//Lists out all available components to add in the add component panel
 template<typename T, typename... Ts>
 struct AddsStruct
 {
@@ -866,6 +919,7 @@ private:
 };
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
+//Implementation for the panel to add a component to the current entity
 void AddPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -883,9 +937,45 @@ void AddPanel(Entity& entity) {
     }
 }
 
+void DisplayLayers() { 
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Layers)
+        layers.push_back(it.name.c_str());
+    static int index = curr_entity.current_layer;
+    ImGui::Text("Layer"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.current_layer = index;
+}
+
+void DisplayTags() {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+    std::vector<const char*> layers;
+    for (auto& it : EditorInspector::Instance().Tags)
+        layers.push_back(it.c_str());
+    static int index = curr_entity.tag;
+    ImGui::Text("Tags"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5);
+    ImGui::PopItemWidth();
+    curr_entity.tag = index;
+}
+
+//Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
+    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
@@ -900,6 +990,11 @@ void DisplayEntity(Entity& entity)
 
     ImGui::PopItemWidth();
     curr_scene.Get<Tag>(entity).name = buffer;
+  
+    //display tags
+    DisplayTags(); ImGui::SameLine();
+    //display layer
+    DisplayLayers();
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -926,6 +1021,13 @@ void DisplayEntity(Entity& entity)
 void EditorInspector::Init()
 {
     isAddPanel = false;
+    //default layers (same as unity)
+    Layers.push_back(layer("Default"));
+    Layers.push_back(layer("TransparentFX"));
+    Layers.push_back(layer("Ignore Physics"));
+    Layers.push_back(layer("UI"));
+    Layers.push_back(layer("Water"));
+    Tags.push_back("Untagged");   
 }
 
 void EditorInspector::Update(float dt)

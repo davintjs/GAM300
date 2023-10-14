@@ -56,13 +56,13 @@ void SceneManager::LoadScene(const std::string& _filePath)
 {
 	// Bean: Next time check if the scene has already been loaded
 
-	ACQUIRE_SCOPED_LOCK(SceneChange);
 	loadedScenes.emplace_front(_filePath);
+	
 	Scene& scene = GetCurrentScene();
-	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
-
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
+	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
+
 	SelectedEntityEvent sE{ nullptr };
 	EVENTS.Publish(&sE);
 
@@ -153,8 +153,11 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
 
+	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
 	// Publish scene change
-	loadedScenes.emplace_front(GetCurrentScene());
+	// 
+	GetCurrentScene() = GetPreviousScene();
+	//Herr
 	GetCurrentScene().sceneName += " [PREVIEW]";
 }
 

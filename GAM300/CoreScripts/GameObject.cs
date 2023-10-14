@@ -26,7 +26,7 @@ namespace BeanFactory
         {
             get
             {
-                return InternalCalls.GetActive(this);
+                return InternalCalls.GetActive(this,typeof(GameObject));
             }
         }
 
@@ -54,23 +54,21 @@ namespace BeanFactory
             return InternalCalls.Get<T>(this);
         }
 
-        /*public T Add<T>() where T : Component, new()
+        public T AddComponent<T>() where T : Component, new()
         {
-            T component = new T() { gameObject = this };
-            component.ID = InternalCalls.Add(this, typeof(T));
-            return component;
-        }*/
+            
+            return InternalCalls.AddComponent<T>(this);
+        }
 
         public void SetActive(bool _active)
         {
-            InternalCalls.SetActive(this, _active);
+            InternalCalls.SetActive(this, typeof(GameObject), _active);
         }
 
         public Transform transform
         {
             get
             {
-                
                 return InternalCalls.Get<Transform>(this);
             }
         }

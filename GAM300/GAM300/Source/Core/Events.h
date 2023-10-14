@@ -1,17 +1,17 @@
 /*!***************************************************************************************
-\file			events.h
+\file			Events.h
 \project
 \author			Zacharie Hong
 				Sean Ngo
 
-\par			Course: GAM200
+\par			Course: GAM300
 \par			Section:
-\date			15/02/2023
+\date			30/09/2023
 
 \brief
 	This file contains the declarations of all event structures in the engine.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef EVENTS_H
 #define EVENTS_H
@@ -29,9 +29,9 @@ protected:
 	virtual ~IEvent() {};
 };
 
-struct QuitEngineEvent : IEvent
+struct ApplicationExitEvent : IEvent
 {
-	QuitEngineEvent() {};
+	ApplicationExitEvent() {};
 };
 
 struct CreateSceneEvent : IEvent
@@ -144,6 +144,15 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+
+#pragma region EDITOR STUFF
+
+struct EditorWindowEvent : IEvent
+{
+	EditorWindowEvent() {};
+	bool isHovered = false;
+	bool isFocused = false;
+};
 struct ContactAddedEvent : IEvent
 {
 	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
@@ -169,6 +178,14 @@ struct TriggerRemoveEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
+
+struct EditorPanCameraEvent : IEvent
+{
+	EditorPanCameraEvent(const bool& _pan) : isPanning{ _pan } {}
+	bool isPanning = false;
+};
+
+#pragma endregion
 
 //
 //template <typename T>

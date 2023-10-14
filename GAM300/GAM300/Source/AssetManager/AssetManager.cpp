@@ -1,3 +1,22 @@
+/*!***************************************************************************************
+\file			AssetManager.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           28/09/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. AssetManager Initialization
+		a. Loading assets into memory with multi-threading
+	2. AssetManager FileWatching Protocols
+		a. Asynchronously load, unload or update assets in memory with multi-threading
+	3. Getter and helper functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/ThreadPool.h"
@@ -12,13 +31,15 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
 	
+	MeshManager.Init();
+
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		subFilePath = dir.path().generic_string();
 		std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
-		std::string fileType{};
+		std::string fileType = ".";
 		std::string fileName{};
 		
 		if (!dir.is_directory())
@@ -48,7 +69,7 @@ void AssetManager::Init()
 		// Add into file extensions list
 		mTotalAssets.mExtensionFiles[fileType].push_back(fileName);
 
-		if (!strcmp(fileType.c_str(), "meta") || !strcmp(fileType.c_str(), "fbx") || !strcmp(fileType.c_str(), "desc")) // Skip if meta / fbx / desc file
+		if (!strcmp(fileType.c_str(), ".meta") || !strcmp(fileType.c_str(), ".fbx") || !strcmp(fileType.c_str(), ".desc")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
@@ -78,7 +99,7 @@ void AssetManager::Init()
 		}
 
 		// We still want to create the meta files for these that's why we skip here instead of above
-		if (!strcmp(fileType.c_str(), "jpg") || !strcmp(fileType.c_str(), "png"))
+		if (!strcmp(fileType.c_str(), ".jpg") || !strcmp(fileType.c_str(), ".png"))
 		{
 			continue;
 		}
@@ -88,26 +109,24 @@ void AssetManager::Init()
 		{
 			this->AsyncLoadAsset(subFilePathMeta, fileName);
 
-			if (!strcmp(fileType.c_str(), "dds")) // if dds ...
+			if (!strcmp(fileType.c_str(), ".dds")) // if dds ...
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
 			}
-			else if (!strcmp(fileType.c_str(), "geom"))
+			else if (!strcmp(fileType.c_str(), ".geom"))
 			{
 				MeshManager.GetGeomFromFiles(subFilePath, fileName);
 			}
-			else if (!strcmp(fileType.c_str(), "mp3") || !strcmp(fileType.c_str(), "wav")) {
+			else if (!strcmp(fileType.c_str(), ".mp3") || !strcmp(fileType.c_str(), ".wav")) {
 				AUDIOMANAGER.AddMusic(subFilePath.c_str(), fileName);
 				AUDIOMANAGER.AddSFX(subFilePath.c_str(), fileName);
 				//AUDIOMANAGER.AddMusic(assetPath.c_str(), fileName);
 			}
 		}
 	}
-
-	MeshManager.Init();
 }
 
 // For run time update of files
@@ -171,7 +190,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 }
 
 // Get a loaded asset
-const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
+const std::vector<char>& AssetManager::GetAssetWithFileName(const std::string& fileName)
 {
 	std::string data{};
 	auto func =
@@ -195,7 +214,30 @@ const std::vector<char>& AssetManager::GetAsset(const std::string& fileName)
 	return mTotalAssets.mFilesData[data].mData;
 }
 
-//// Get a loaded asset GUID
+// Get a loaded asset
+const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
+{
+	auto func =
+	[this, &GUID] // Wait if the asset is not loaded yet
+	{
+		if (mTotalAssets.mFilesData.find(GUID) != mTotalAssets.mFilesData.end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	};
+	ACQUIRE_UNIQUE_LOCK
+	(
+		Assets, func
+	);
+
+	return mTotalAssets.mFilesData[GUID].mData;
+}
+
+// Get a loaded asset GUID
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
 	std::string data{};
@@ -429,7 +471,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		fileExtension == ".desc" ||
 		fileExtension == "")
 	{
-		PRINT("IGNORED: ", filePath.string(), "\n");
 		return;
 	}
 

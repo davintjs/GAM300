@@ -5,13 +5,13 @@
 
 \par			Course: GAM300
 \par			Section:
-\date			27/09/2022
+\date			01/08/2023
 
 \brief
 	NOTE: DO NOT INCLUDE IN ANY OTHER PLACE OTHER THAN MAIN
-	This file manages all the systems as a super system itself. 
+	This file manages all the systems as a super system itself to call them in sequence
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 #ifndef ENGINE_CORE_H
 #define ENGINE_CORE_H
@@ -26,10 +26,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/Components.h"
 #include "Graphics/GraphicsSystem.h"
 #include "Audio/AudioSystem.h"
-//#include "IOManager/Handler_GLFW.h"
 #include "AI/Blackboard.h"
 #include "AI/BehaviorTreeBuilder.h"
-//#include "AI/Enemy.h"
 #include "AI/NavMeshBuilder.h"
 #include "IOManager/InputSystem.h"
 #include "IOManager/Handler_GLFW.h"
@@ -55,8 +53,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 		AssetManager,
 		InputSystem,
 		EditorSystem,
-		ScriptingSystem, // AFTER DEMO
 		SceneManager,
+		ScriptingSystem,
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
@@ -81,6 +79,7 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
+		BEHAVIORTREEBUILDER.Init();
 		AUDIOMANAGER.InitAudioManager();
 		AllSystems::Init();
 
@@ -94,10 +93,10 @@ public:
 
 		// NavMesh testing
 		std::vector<glm::vec3> GroundVertices{
-				glm::vec3(-0.5f, -0.5f, -0.5f),
-				glm::vec3(0.5f, -0.5f, -0.5f),
-				glm::vec3(0.5f, 0.5f, -0.5f),
 				glm::vec3(-0.5f, 0.5f, -0.5f),
+				glm::vec3(0.5f, 0.5f, -0.5f),
+				glm::vec3(0.5f, 0.5f, 0.5f),
+				glm::vec3(-0.5f, 0.5f, 0.5f),
 		};
 
 		std::vector<glm::ivec3> GroundIndices{
