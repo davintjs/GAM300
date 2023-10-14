@@ -39,7 +39,8 @@ enum SHADERTYPE
 	TDR,// Temporary Debug Instance Render
 	SKYBOX,
 	BASICLIGHT,
-	AFFECTEDLIGHT
+	AFFECTEDLIGHT,
+	DEFAULT
 };
 
 ENGINE_SYSTEM(ShaderManager)
@@ -149,14 +150,16 @@ public:
 	
 	unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
 
-	std::map<std::string, InstanceProperties>& GetProperties() { return properties; }
+	std::map<std::string, InstanceProperties>& GetInstanceProperties() { return instanceProperties; }
+	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }
 
 private:
-	std::map<std::string, InstanceProperties> properties;
+	std::map<std::string, InstanceProperties> instanceProperties;
+	std::vector<DefaultRenderProperties> defaultProperties;
 	float exposure = 1.f;
 	bool hdr = true;
 };

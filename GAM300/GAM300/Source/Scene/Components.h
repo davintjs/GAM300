@@ -264,7 +264,7 @@ struct MeshRenderer : Object
 	GLuint AoID = 0;
 	GLuint EmissionID = 0;
 
-	bool isInstance = true;
+	bool isInstance = false;
 
 	property_vtable();
 };

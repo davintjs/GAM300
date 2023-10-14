@@ -185,5 +185,9 @@
     <None Include="Shaders\PBR.vert" />
     <None Include="Shaders\Skybox.frag" />
     <None Include="Shaders\Skybox.vert" />
+    <None Include="Shaders\DefaultShader.vert" />
+    <None Include="Shaders\DefaultShader.frag" />
+    <None Include="Shaders\DefaultGBuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.vert" />
   </ItemGroup>
 </Project>

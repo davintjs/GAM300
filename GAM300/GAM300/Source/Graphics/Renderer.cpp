@@ -29,13 +29,13 @@ void Renderer::Init()
 
 void Renderer::Update(float)
 {
-	for (auto& [name, prop] : properties)
+	for (auto& [name, prop] : instanceProperties)
 	{
 		std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 		std::fill_n(prop.texture, 32, 0);
 	}
-
+	defaultProperties.clear();
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -52,33 +52,16 @@ void Renderer::Update(float)
 		}
 		
 
-		
-
 		//int index = t_Mesh->index;
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
-		//InstanceProperties* currentProp = &properties[renderer.MeshName];
+		//InstanceProperties* currentProp = &instanceProperties[renderer.MeshName];
 
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 
-		float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
-		float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));
-
-
-		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
-		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
-		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
-		float emissionidx = float(ReturnTextureIdx(renderer.MeshName, renderer.EmissionID));
-
-		//std::cout << "metal index is : " << metalidx << "\n";
-		//std::cout << "rough index is : " << roughidx << "\n";
-		//std::cout << "ao index is : " << aoidx << "\n";
-		//std::cout << "emission index is : " << emissionidx << "\n";
-		float metal_constant = renderer.mr_metallic;
-		float rough_constant = renderer.mr_roughness;
-		float ao_constant = renderer.ao;
+		
 
 		// Loop through camera (@euan)
 
@@ -87,19 +70,32 @@ void Renderer::Update(float)
 		// if instance rendering put into container for instance rendering
 		if (renderer.isInstance) {
 			// use the properties container coz its made for instance rendering already
-			properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-			properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-
-			properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
-			properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
-			properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
-			properties[renderer.MeshName].Specular[properties[renderer.MeshName].iter] = renderer.mr_Specular;
-			properties[renderer.MeshName].Shininess[properties[renderer.MeshName].iter] = renderer.mr_Shininess;
-			properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
+			float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
+			float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));
 
 
-			++(properties[renderer.MeshName].iter);
+			float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
+			float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
+			float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
+			float emissionidx = float(ReturnTextureIdx(renderer.MeshName, renderer.EmissionID));
+
+			float metal_constant = renderer.mr_metallic;
+			float rough_constant = renderer.mr_roughness;
+			float ao_constant = renderer.ao;
+
+			instanceProperties[renderer.MeshName].M_R_A_Constant[instanceProperties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+			instanceProperties[renderer.MeshName].M_R_A_Texture[instanceProperties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+			instanceProperties[renderer.MeshName].textureIndex[instanceProperties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
+
+			instanceProperties[renderer.MeshName].Albedo[instanceProperties[renderer.MeshName].iter] = renderer.mr_Albedo;
+			instanceProperties[renderer.MeshName].Ambient[instanceProperties[renderer.MeshName].iter] = renderer.mr_Ambient;
+			instanceProperties[renderer.MeshName].Diffuse[instanceProperties[renderer.MeshName].iter] = renderer.mr_Diffuse;
+			instanceProperties[renderer.MeshName].Specular[instanceProperties[renderer.MeshName].iter] = renderer.mr_Specular;
+			instanceProperties[renderer.MeshName].Shininess[instanceProperties[renderer.MeshName].iter] = renderer.mr_Shininess;
+			instanceProperties[renderer.MeshName].entitySRT[instanceProperties[renderer.MeshName].iter] = transform.GetWorldMatrix();
+
+
+			++(instanceProperties[renderer.MeshName].iter);
 			
 			// sub meshes into instance properties
 			char maxcount = 32;
@@ -109,37 +105,47 @@ void Renderer::Update(float)
 
 				newName += ('1' + namecount);
 
-				if (properties.find(newName) == properties.end())
+				if (instanceProperties.find(newName) == instanceProperties.end())
 				{
 					break;
 				}
-				//InstanceProperties* currentProp = &properties[renderer.MeshName];
+				//InstanceinstanceProperties* currentProp = &instanceProperties[renderer.MeshName];
 
 				/*GLuint textureID = 0;
 				GLuint normalMapID = 0;*/
 
-				properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-				properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
-				properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
-				properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
-				properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-				properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+				instanceProperties[newName].entitySRT[instanceProperties[newName].iter] = transform.GetWorldMatrix();
+				instanceProperties[newName].Albedo[instanceProperties[newName].iter] = renderer.mr_Albedo;
+				instanceProperties[newName].Ambient[instanceProperties[newName].iter] = renderer.mr_Ambient;
+				instanceProperties[newName].Diffuse[instanceProperties[newName].iter] = renderer.mr_Diffuse;
+				instanceProperties[newName].Specular[instanceProperties[newName].iter] = renderer.mr_Specular;
+				instanceProperties[newName].Shininess[instanceProperties[newName].iter] = renderer.mr_Shininess;
 
-				properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-				properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-				properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-				properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+				instanceProperties[newName].M_R_A_Texture[instanceProperties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+				instanceProperties[newName].M_R_A_Constant[instanceProperties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 
-
-				++(properties[newName].iter);
+				++(instanceProperties[newName].iter);
 			}
 		}
 		else /*if default rendering*/{
 			// if not instance put into container for default rendering
-
-
+			unsigned int iter = 0;
+			for (unsigned int vao : t_Mesh->Vaoids) {
+				DefaultRenderProperties renderProperties;
+				renderProperties.VAO = vao;
+				renderProperties.drawType = t_Mesh->prim;
+				renderProperties.drawCount = t_Mesh->Drawcounts[iter++];
+				renderProperties.entitySRT = transform.GetWorldMatrix();
+				renderProperties.Albedo = renderer.mr_Albedo;
+				renderProperties.Ambient = renderer.mr_Ambient;
+				renderProperties.Diffuse = renderer.mr_Diffuse;
+				renderProperties.Specular = renderer.mr_Specular;
+				renderProperties.Shininess = renderer.mr_Shininess;
+				renderProperties.textureID = renderer.textureID;
+				renderProperties.NormalID = renderer.normalMapID;
+				defaultProperties.emplace_back(renderProperties);
+			}
 		}
-
 		
 		++i;
 
@@ -186,7 +192,7 @@ void Renderer::SetupGrid(const int& _num)
 	float spacing = 100.f;
 	float length = _num * spacing * 0.5f;
 
-	properties["Line"].iter = _num * 2;
+	instanceProperties["Line"].iter = _num * 2;
 
 	for (int i = 0; i < _num; i++)
 	{
@@ -195,16 +201,16 @@ void Renderer::SetupGrid(const int& _num)
 		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
 		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
 
-		properties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
-		properties["Line"].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
+		instanceProperties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
+		instanceProperties["Line"].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
 	}
 }
 
 void Renderer::Draw()
 {
 	
-	// Looping Properties
-	for (auto& [name, prop] : properties)
+	// Looping Properties for instancing
+	for (auto& [name, prop] : instanceProperties)
 	{
 		/*for (size_t i = 0; i < 32; i++)
 		{
@@ -215,32 +221,9 @@ void Renderer::Draw()
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-
 
 		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
@@ -253,19 +236,13 @@ void Renderer::Draw()
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
-		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
-		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
-		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 
-		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 		for (int i = 0; i < 32; ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
-		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
 		if (EditorScene::Instance().DebugDraw())
@@ -287,6 +264,39 @@ void Renderer::Draw()
 		}
 
 		prop.iter = 0;
+	}
+
+	// for default render
+	for (DefaultRenderProperties& prop : defaultProperties) {
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+
+
+		GLSLShader& shader =  SHADER.GetShader(DEFAULT);
+		shader.Use();
+
+		GLint uProj =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uView =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		GLint SRT =
+			glGetUniformLocation(shader.GetHandle(), "SRT");
+
+		glUniformMatrix4fv(uProj, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.getPerspMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.getViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE,
+			glm::value_ptr(prop.entitySRT));
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();
 	}
 }
 
@@ -530,17 +540,17 @@ unsigned int Renderer::ReturnTextureIdx(const std::string& _meshName, const GLui
 	{
 		return 33;
 	}
-	for (unsigned int iter = 0; iter < properties[_meshName].textureCount + 1; ++iter)
+	for (unsigned int iter = 0; iter < instanceProperties[_meshName].textureCount + 1; ++iter)
 	{
-		if (properties[_meshName].texture[iter] == 0)
+		if (instanceProperties[_meshName].texture[iter] == 0)
 		{
-			properties[_meshName].texture[iter] = _id;
-			properties[_meshName].textureCount++;
+			instanceProperties[_meshName].texture[iter] = _id;
+			instanceProperties[_meshName].textureCount++;
 			return iter;
 		}
-		if (properties[_meshName].texture[iter] == _id)
+		if (instanceProperties[_meshName].texture[iter] == _id)
 		{
-			properties[_meshName].textureCount++;
+			instanceProperties[_meshName].textureCount++;
 			return iter;
 		}
 	}

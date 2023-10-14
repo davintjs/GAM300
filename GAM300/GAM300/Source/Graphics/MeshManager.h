@@ -28,6 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Model3d.h"
 
 struct InstanceProperties;
+struct DefaultRenderProperties;
 
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
@@ -43,7 +44,7 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-	unsigned int index;
+	unsigned int index{};
 
 };
 
@@ -124,8 +125,8 @@ public:
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
 	std::unordered_map<std::string, Mesh> mContainer;
-	std::map<std::string, InstanceProperties>* properties;
-	//std::map<std::string, InstanceProperties>* properties;
+	std::map<std::string, InstanceProperties>* instanceProperties;
+	std::vector<DefaultRenderProperties>* defaultProperties;
 
 private:
 	// To load Geoms from FBXs
