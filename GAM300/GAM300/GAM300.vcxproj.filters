@@ -186,5 +186,8 @@
     <None Include="Shaders\Skybox.vert" />
     <None Include="Shaders\Shadow.vert" />
     <None Include="Shaders\Shadow.frag" />
+    <None Include="Shaders\PointShadow.frag" />
+    <None Include="Shaders\PointShadow.geom" />
+    <None Include="Shaders\PointShadow.vert" />
   </ItemGroup>
 </Project>

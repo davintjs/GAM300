@@ -220,7 +220,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-0.8125, 382.382782, -1.36328125]
+  m_Position: [1.56600189, 343.60202, -1.36333656]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
@@ -252,7 +252,7 @@ LightSource:
   UUID: 2383003823628521294
   Layer: 0
   Tag: 0
-  Light Type: 0
+  Light Type: 2
   Position: [0, 0, 0]
   Intensity: 0
   Direction: [0, -1, 0]

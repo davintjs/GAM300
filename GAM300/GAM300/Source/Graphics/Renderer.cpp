@@ -24,15 +24,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 unsigned int depthMapFBO; 
 unsigned int depthMap; // Shadow Texture
+
+//
+unsigned int depthCubemapFBO;
+unsigned int depthCubemap;
+
 glm::mat4 lightSpaceMatrix;
 
 LIGHT_TYPE temporary_test = SPOT_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
-
-const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024	;
-
+	
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 void Renderer::Init()
 {
@@ -53,9 +57,9 @@ void Renderer::Init()
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "exploded\n";
+		std::cout << "depth framebuffer exploded\n";
 	else
-		std::cout << "framebuffer created successfully\n";
+		std::cout << "depth framebuffer created successfully\n";
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
@@ -537,22 +541,6 @@ void Renderer::DrawDepth()
 	}
 	else if (temporary_test == SPOT_LIGHT)	
 	{
-		float test_value = 45.f;
-		if (InputHandler::isKeyButtonPressed(GLFW_KEY_0))
-		{
-			if (test_value == 45.f)
-			{
-				test_value = 90.f;
-			}
-			else test_value = 45.f;
-		}
-		if (test_value == 90.f)
-		{
-			std::cout << "edited\n";
-		}
-		else
-			std::cout << "original\n";
-
 		lightProjection = glm::perspective<float>(glm::radians(60.f), 1.f, 50.f, 1000.f);
 		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 1000.f),

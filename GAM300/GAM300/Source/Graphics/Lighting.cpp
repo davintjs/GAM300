@@ -66,7 +66,6 @@ void Lighting::Update(float)
 			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
 			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
 			spotLightSources.push_back(Temporary);
-			std::cout << "POSITION Contents: (" << Temporary.lightpos.x << ", " << Temporary.lightpos.y << ", " << Temporary.lightpos.z << ")" << std::endl;
 			spot_light_stuffs = Temporary;
 		}
 

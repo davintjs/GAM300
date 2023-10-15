@@ -323,6 +323,9 @@
     <None Include="Shaders\PBR.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\PointShadow.frag" />
+    <None Include="Shaders\PointShadow.geom" />
+    <None Include="Shaders\PointShadow.vert" />
     <None Include="Shaders\Shadow.frag" />
     <None Include="Shaders\Shadow.vert" />
     <None Include="Shaders\Skybox.frag">

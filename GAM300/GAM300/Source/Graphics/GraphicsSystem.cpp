@@ -188,9 +188,6 @@ void GraphicsSystem::Update(float dt)
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
-
-
-
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "near_plane");
 

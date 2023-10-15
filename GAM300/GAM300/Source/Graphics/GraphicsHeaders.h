@@ -51,7 +51,8 @@ public:
 	void Exit();
 
 	// All shaders will be loaded using this function and passed into shaders container
-	void ShaderCompiler(const std::string& _vertPath, const std::string& _fragPath, const std::string& _name);
+	void ShaderCompiler(const std::string & _name, const std::string& _vertPath, 
+		const std::string& _fragPath, const std::string & _geometryPath = "");
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[_type]; }
 
