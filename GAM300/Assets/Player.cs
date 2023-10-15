@@ -28,7 +28,7 @@ public class Player : Script
 
     void Update()
     {
-        Console.WriteLine(onamae);
+        //Console.WriteLine(onamae);
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))
