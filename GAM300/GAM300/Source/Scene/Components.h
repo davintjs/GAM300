@@ -46,7 +46,7 @@ struct Tag : Object
 {
 	std::string name;
 	Engine::UUID tagName;
-	size_t physicsLayerIndex;
+	size_t physicsLayerIndex = 0;
 };
 
 //To store transform of entity

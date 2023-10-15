@@ -30,6 +30,7 @@ struct Scene
 	using Layer = std::list<Engine::UUID>;
 	const Engine::UUID uuid = Engine::CreateUUID();
 	Layer layer;
+	std::vector<tag>Tags;
 	std::string sceneName;
 
 	//Creates empty scene

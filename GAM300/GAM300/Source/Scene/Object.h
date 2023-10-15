@@ -56,7 +56,7 @@ struct Object : property::base
 	operator Handle() const { return{ euid, uuid }; }
 
 	int current_layer = 0; //id of the current layer (default = 0)
-	int tag = 0;  //id tag of the current object (default = 0)
+	Engine::UUID tag;  //id tag of the current object (default = 0)
 
 	property_vtable();
 protected:
