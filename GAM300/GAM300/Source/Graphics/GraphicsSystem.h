@@ -21,6 +21,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
 
+// Bean: Should not be here and instead be in the rendering system
+#include "BaseCamera.h"
+
 #define GRAPHICS GraphicsSystem::Instance()
 
 ENGINE_SYSTEM(GraphicsSystem)
@@ -33,7 +36,7 @@ public:
 	void Update(float dt);
 
 	// General draw call
-	void Draw();
+	void Draw(BaseCamera& _camera);
 
 	void Exit();
 

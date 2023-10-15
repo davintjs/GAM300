@@ -1090,7 +1090,7 @@ void SkyBox::SkyBoxinit()
 
 }
 
-void SkyBox::SkyBoxDraw(GLuint skyboxtex)
+void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
 {
     shader.Use();
     GLint uniform_var_loc1 =
@@ -1098,7 +1098,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "projection");
 
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.GetProjMatrix()));
+        glm::value_ptr(_camera.GetProjMatrix()));
     
     
     GLint uniform_var_loc2 =
@@ -1106,7 +1106,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "view");
 
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.GetViewMatrix()))));
+        glm::value_ptr(glm::mat4(glm::mat3(_camera.GetViewMatrix()))));
 
     glBindVertexArray(vaoid);
 

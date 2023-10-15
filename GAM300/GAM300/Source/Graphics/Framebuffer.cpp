@@ -129,6 +129,14 @@ void Framebuffer::bind()
 	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
 }
 
+// Binds the framebuffer
+void Framebuffer::Bind(const unsigned int& _objectID)
+{
+	glViewport(0, 0, width, height);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, _objectID);
+}
+
 void Framebuffer::unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

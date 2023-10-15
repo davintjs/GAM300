@@ -19,7 +19,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "InputHandler.h"
-#include "../Graphics/EditorCamera.h"
+#include "Editor/EditorCamera.h"
 
 
 // ---------------------------------------------------------------------------------------

@@ -25,6 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "../../Compiler/Mesh.h"
 
+// Bean: Should not be here and instead be in renderer system
+#include "Graphics/BaseCamera.h"
+
 // Just a wrapper class to hold all these values
 class troll_Geom
 {
@@ -139,7 +142,7 @@ public:
 	void SkyBoxinit();
 
 	// draw sky box
-	void SkyBoxDraw(GLuint skyboxtex);
+	void SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera);
 };
 
 class RaycastLine: public Model

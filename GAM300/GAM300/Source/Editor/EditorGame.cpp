@@ -24,7 +24,6 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved
 namespace
 {
     BaseCamera* camera = nullptr;
-    Transform* transform = nullptr;
 
     struct DisplayTarget
     {
@@ -49,13 +48,25 @@ void EditorGame::Init()
     EVENTS.Subscribe(this, &EditorGame::CallbackEditorWindow);
 }
 
-void EditorGame::Update(float)
+void EditorGame::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     ToolBar();
 
     GameView();
+
+    if (camera)
+    {
+        static float timer = 0.f;
+        if (timer > 0.5f)
+        {
+            PRINT("Camera Position: ", camera->GetCameraPosition().x, ' ', camera->GetCameraPosition().y, ' ', camera->GetCameraPosition().z, '\n');
+            timer = 0.f;
+        }
+
+        timer += dt;
+    }
 
     ImGui::PopStyleVar();
 }
@@ -70,7 +81,8 @@ void EditorGame::ToolBar()
     //Scene toolbar
     if (ImGui::Begin("Game Toolbar"))
     {
-        if (ImGui::BeginCombo("##Target Display", displayTargets[0].name.c_str()))
+        static std::string display = displayTargets[0].name.c_str();
+        if (ImGui::BeginCombo("##Target Display", display.c_str()))
         {
             for (int n = 0; n < IM_ARRAYSIZE(displayTargets); n++)
             {
@@ -78,6 +90,7 @@ void EditorGame::ToolBar()
                 if (ImGui::Selectable(displayTargets[n].name.c_str(), is_selected))
                 {
                     targetDisplay = n;
+                    display = displayTargets[n].name.c_str();
                     UpdateTargetDisplay();
                 }
 
@@ -99,12 +112,12 @@ void EditorGame::UpdateTargetDisplay()
         if (cameraComponent.GetTargetDisplay() == targetDisplay)
         {
             camera = &cameraComponent;
-
-            transform = &currentScene.Get<Transform>(cameraComponent.EUID());
-
-            break;
+            return;
         }
     }
+
+    // No camera match the display target
+    camera = nullptr;
 }
 
 void EditorGame::GameView()
@@ -122,9 +135,6 @@ void EditorGame::GameView()
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         position = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
         ImVec2 viewportEditorSize = sceneRect.GetSize();
-
-        // Update camera view 
-        camera->UpdateCamera(transform->translation, transform->rotation);
 
         // Check if it needs to resize the game view
         ResizeGameView(*((glm::vec2*)&viewportEditorSize));

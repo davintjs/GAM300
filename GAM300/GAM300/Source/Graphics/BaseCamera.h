@@ -62,6 +62,9 @@ public:
 
 	unsigned int& GetTargetDisplay() { return targetDisplay; }
 
+	float& GetPitch() { return pitch; }
+	float& GetYaw() { return yaw; }
+
 	glm::quat GetOrientation() { return glm::quat(glm::vec3(-yaw, -pitch, 0.0f)); }
 	glm::vec3 GetRightVec() { return glm::vec3(glm::mat4(GetOrientation())[0]); }
 	glm::vec3 GetUpVec() { return glm::vec3(glm::mat4(GetOrientation())[1]); }
@@ -90,8 +93,8 @@ protected:
 
 	float width = 0.f;					// Pixel width of the camera
 	float height = 0.f;					// Pixel height of the camera
-	float pitch = 0.f;					// For rotating up and down
-	float yaw = 0.f;					// For rotating left and right
+	float pitch = 0.f;					// For rotating left and right
+	float yaw = 0.f;					// For rotating up and down
 	float frustumMargin = 5.f;			// The margin in which the camera will still render objects that are outside the camera's dimension
 
 	float aspect = 0.f;					// The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)

@@ -24,10 +24,6 @@ void EditorCamera::Init()
 {
 	BaseCamera::Init();
 
-	SetFocalLength(1000.f);
-
-	UpdateViewMatrix();
-
 	EVENTS.Subscribe(this, &EditorCamera::CallbackPanCamera);
 	EVENTS.Subscribe(this, &EditorCamera::CallbackUpdateSceneGeometry);
 }

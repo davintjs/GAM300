@@ -22,6 +22,7 @@ void BaseCamera::Init()
 	fieldOfView = 45.0f;
 	nearClip = 0.1f;
 	farClip = 100000.f;
+	focalLength = 1000.f;
 
 	UpdateViewMatrix();
 	UpdateProjection();
@@ -83,7 +84,8 @@ bool BaseCamera::WithinFrustum() const
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
-
+	pitch = -_rotation.y;
+	yaw = -_rotation.x;
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

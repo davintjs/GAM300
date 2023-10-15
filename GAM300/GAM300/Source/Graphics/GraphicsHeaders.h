@@ -69,7 +69,7 @@ public:
 	// Initialize the skybox of the engine
 	void CreateSkybox(const std::string& _name);
 
-	void Draw();
+	void Draw(BaseCamera& _camera);
 
 private:
 	SkyBox* skyBoxModel;
@@ -120,10 +120,10 @@ public:
 
 	void SetupGrid(const int& _num);
 
-	void Draw();
+	void Draw(BaseCamera& _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource);
+		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera);
 	//glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin);
 	//Materials Mat);
 
