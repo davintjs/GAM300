@@ -65,7 +65,13 @@ struct ScrollingBuffer {
 struct layer {
     layer(std::string _name) : name(_name) {}
     std::string name;
+};
 
+struct tag {
+    //create new tag
+    tag(std::string _name) : name(_name) { uuid = Engine::CreateUUID(); }
+    std::string name;
+    Engine::UUID uuid;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
@@ -200,10 +206,12 @@ public:
     // Exit the system
     void Exit();
 
-    bool isAddPanel;
+    bool isAddComponentPanel;
+    bool isAddTagPanel;
+    bool isAddLayerPanel;
 
-    std::vector<layer> Layers;
-    std::vector<std::string> Tags;
+    //std::vector<layer> Layers;
+    //std::vector<std::string> Tags;
 
 private:
 };
