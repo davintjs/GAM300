@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			Editor_Camera.cpp
+\file			EditorCamera.cpp
 \project
 \author         Euan Lim
 
@@ -16,132 +16,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 #include "Precompiled.h"
 
-#include "Editor_Camera.h"
+#include "EditorCamera.h"
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
 
-Ray3D::Ray3D() : origin{}, direction{} {}
-
-Ray3D::Ray3D(const glm::vec3& _origin, const glm::vec3& _direction) : origin{ _origin }, direction{ _direction } {}
-
-bool Ray3D::TestRayOBB(const glm::mat4& _modelMatrix, const glm::vec3& _min, const glm::vec3& _max, float& _intDistance)
-{
-	// Intersection method from Real-Time Rendering and Essential Mathematics for Games
-
-	direction = glm::normalize(direction);
-
-	float tMin = 0.0f;
-	float tMax = 100000.0f;
-
-	glm::vec3 oBBPositionWorldSpace(_modelMatrix[3].x, _modelMatrix[3].y, _modelMatrix[3].z);
-
-	glm::vec3 delta = oBBPositionWorldSpace - origin;
-
-	PlaneParams plane{ delta, _min, _max, tMin, tMax };
-
-	// Test intersection with the 2 planes perpendicular to the OBB's X axis
-	if (!IBPlanes(_modelMatrix, plane, 0))
-		return false;
-	
-	// Test intersection with the 2 planes perpendicular to the OBB's Y axis
-	if (!IBPlanes(_modelMatrix, plane, 1))
-		return false;
-
-	// Test intersection with the 2 planes perpendicular to the OBB's Z axis
-	if (!IBPlanes(_modelMatrix, plane, 2))
-		return false;
-
-	_intDistance = tMin;
-	return true;
-}
-
-bool Ray3D::IBPlanes(const glm::mat4& _modelMatrix, PlaneParams& _plane, const int& _i)
-{
-	glm::vec3 zaxis(_modelMatrix[_i].x, _modelMatrix[_i].y, _modelMatrix[_i].z);
-	float e = glm::dot(zaxis, _plane.delta);
-	float f = glm::dot(direction, zaxis);
-
-	if (fabs(f) > 0.001f) {
-
-		float t1 = (e + _plane.min[_i]) / f; // Intersection with the "left" plane
-		float t2 = (e + _plane.max[_i]) / f; // Intersection with the "right" plane
-		// t1 and t2 now contain distances betwen ray origin and ray-plane intersections
-
-		// We want t1 to represent the nearest intersection, 
-		// so if it's not the case, invert t1 and t2
-		if (t1 > t2) { float w = t1; t1 = t2; t2 = w; }
-
-		if (t2 < _plane.tMax) // tMax is the nearest "far" intersection (amongst the X,Y and Z planes pairs)
-			_plane.tMax = t2;
-		if (t1 > _plane.tMin) // tMin is the farthest "near" intersection (amongst the X,Y and Z planes pairs)
-			_plane.tMin = t1;
-
-		// And here's the trick :
-		// If "far" is closer than "near", then there is NO intersection.
-		// See the images in the tutorials for the visual explanation.
-		if (_plane.tMin > _plane.tMax)
-			return false;
-
-	}
-	else { // Rare case : the ray is almost parallel to the planes, so they don't have any "intersection"
-		if (-e + _plane.min[_i] > 0.0f || -e + _plane.max[_i] < 0.0f)
-			return false;
-	}
-
-	return true;
-}
-
-void Camera::Init()
-{
-	aspect = 16.f / 9.f;
-	fieldOfView = 45.0f;
-	nearClip = 0.1f;
-	farClip = 100000.f;
-
-	UpdateViewMatrix();
-	UpdateProjection();
-
-	framebuffer.set_size((unsigned int) 1600, (unsigned int) 900);
-	framebuffer.init();
-}
-
-void Camera::UpdateViewMatrix()
-{
-	cameraPosition = GetCameraPosition();
-
-	glm::quat Orientation = GetOrientation();
-	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
-	viewMatrix = glm::inverse(viewMatrix);
-}
-
-void Camera::UpdateProjection()
-{
-	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
-}
-
-void Camera::UpdateFrustum()
-{
-
-}
-
-bool Camera::WithinFrustum()
-{
-	return false;
-}
-
-glm::vec3 Camera::GetCameraPosition() 
-{ 
-	return focalPoint - (GetForwardVec() * GetFocalLength()); 
-}
-
-glm::vec3 Camera::GetFocalPoint()
-{
-	return cameraPosition + (GetForwardVec() * GetFocalLength());
-}
-
 void EditorCamera::Init()
 {
-	Camera::Init();
+	BaseCamera::Init();
 
 	SetFocalLength(1000.f);
 
@@ -156,7 +37,7 @@ void EditorCamera::Update(float dt)
 	intersected = FLT_MAX;
 	tempIntersect = 0.f;
 
-	EditorWindowEvent e;
+	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
 
 	if(e.isHovered || isMoving)	// Rotating and Flying
@@ -165,7 +46,7 @@ void EditorCamera::Update(float dt)
 	if (e.isHovered && InputHandler::getMouseScrollState() != 0) // Zooming
 		ZoomCamera();
 
-	UpdateViewMatrix();
+	BaseCamera::Update();
 
 	canMove = true;// The false check happens in editorscene, incase guizmo is being used
 }
@@ -223,16 +104,6 @@ void EditorCamera::InputControls()
 	{
 		isMoving = false;
 	}
-}
-
-// Bean: Temporary resize needed for resizing the scene viewport
-void EditorCamera::OnResize(const float& _width, const float& _height)
-{
-	dimension.x = _width;
-	dimension.y = _height;
-	aspect = dimension.x / dimension.y;
-
-	UpdateProjection();
 }
 
 glm::vec2 EditorCamera::GetMouseInNDC()

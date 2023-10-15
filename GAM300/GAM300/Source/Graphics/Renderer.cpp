@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Scene/SceneManager.h"
 #include "MeshManager.h"
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 
 void Renderer::Init()
 {
@@ -39,6 +39,11 @@ void Renderer::Update(float)
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
+
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+
+	}
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{

@@ -105,8 +105,6 @@ public:
 		};
 
 		NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
-
-		// Bean: Serialization Tests
 	}
 
 	/**************************************************************************/

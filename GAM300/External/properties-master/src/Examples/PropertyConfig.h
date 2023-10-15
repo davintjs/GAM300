@@ -282,7 +282,8 @@ namespace property
         //--------------------------------------------------------------------------------------------
         using data_variant = std::variant
             <
-            int
+            char
+            , int
             , bool
             , float
             , string_t

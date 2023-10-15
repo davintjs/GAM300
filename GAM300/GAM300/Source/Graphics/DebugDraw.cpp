@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Core/EventsManager.h"
 #include "Editor/EditorHeaders.h"
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 #include "Model3d.h"
 
 void DebugDraw::Init()

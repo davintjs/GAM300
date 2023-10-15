@@ -21,8 +21,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
 
-class Ray3D;
-
 #define GRAPHICS GraphicsSystem::Instance()
 
 ENGINE_SYSTEM(GraphicsSystem)

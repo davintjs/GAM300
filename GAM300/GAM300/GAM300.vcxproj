@@ -39,6 +39,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorGame.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -104,6 +105,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\BaseCamera.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
@@ -149,7 +154,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorHierarchy.cpp" />
-    <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
+    <ClCompile Include="Source\Editor\EditorCamera.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
@@ -229,9 +234,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\BaseCamera.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Graphics\Ray3D.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Scene\Object.h" />
@@ -254,7 +264,7 @@
     <ClInclude Include="Source\Editor\Editor.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\Editor\EditorTemplates.h" />
-    <ClInclude Include="Source\Graphics\Editor_Camera.h" />
+    <ClInclude Include="Source\Editor\EditorCamera.h" />
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Graphics\GraphicsSystem.h" />

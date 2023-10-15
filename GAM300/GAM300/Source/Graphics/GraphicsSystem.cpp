@@ -16,7 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 #include "Core/SystemsGroup.h"
 
 using GraphicsSystemsPack =
