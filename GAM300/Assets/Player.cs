@@ -9,7 +9,7 @@ public class Player : Script
     public GameObject gameObj = null;
     public float sad;
     public Transform otherT;
-
+    public string onamae = "HERRO";
     IEnumerator DoSomething()
     {
         while (true)
@@ -28,6 +28,7 @@ public class Player : Script
 
     void Update()
     {
+        Console.WriteLine(onamae);
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))

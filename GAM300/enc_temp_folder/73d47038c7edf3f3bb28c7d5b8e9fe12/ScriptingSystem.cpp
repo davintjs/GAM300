@@ -657,7 +657,8 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
 	if (field.fType == GetFieldType::E<std::string>())
 	{
-		//MonoString* mString = mono_string_new_wrapper(field.Get<std::string>().c_str());
+		
+		MonoString* mString = mono_string_new_wrapper(field.Get<std::string>().c_str());
 		//mono_field_set_value(instance, mClassField, &mString);
 		return;
 	}

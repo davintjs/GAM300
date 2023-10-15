@@ -102,7 +102,6 @@ ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
 	//Starts another thread to invoke scripting behaviour
-	
 	void Init();
 
 	//Synchronises with the the other thread to ensure it only runs onces per frame

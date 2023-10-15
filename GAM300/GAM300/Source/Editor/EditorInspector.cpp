@@ -70,6 +70,7 @@ void DisplayType(const char* name, std::string& val)
     static char buffer[2048];
     strcpy_s(buffer, val.c_str());
     ImGui::InputText(idName.c_str(), buffer,2048);
+    val = buffer;
 }
 
 void DisplayType(const char* name, int& val)

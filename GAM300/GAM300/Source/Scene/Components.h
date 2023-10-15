@@ -226,7 +226,7 @@ struct Script : Object
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name"),
+	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
