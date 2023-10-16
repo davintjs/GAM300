@@ -78,6 +78,8 @@ void InputHandler::copyingCurrStatetoLast()
 
 	prev_mouse_Button_states[0] = mouse_Button_states[0];
 	prev_mouse_Button_states[1] = mouse_Button_states[1];
+	prev_mouse_Button_states[2] = mouse_Button_states[2];
+	//std::cout << "PREV STATE VAL : " << prev_mouse_Button_states[1] << "\n";
 }
 
 
@@ -102,13 +104,31 @@ bool InputHandler::isMouseButtonPressed_L()
 
 bool InputHandler::isMouseButtonPressed_R()
 {
-
+	//std::cout << "entered\n";
 	if (InputHandler::isMouseButtonHolding_R())
 	{
+		InputHandler::setMouseButtonState(1, 1);
 		if (InputHandler::get_Prev_MouseButtonState(1) == 0)
 		{
 			return true;
 		}
+		
+		//std::cout << "here\n";
+
+	}
+	return false;
+}
+
+bool InputHandler::isMouseButtonPressed_M()
+{
+	if (InputHandler::isMouseButtonHolding_M())
+	{
+		InputHandler::setMouseButtonState(2, 1);
+		if (InputHandler::get_Prev_MouseButtonState(2) == 0)
+		{
+			return true;
+		}
+	
 	}
 
 	return false;
@@ -125,6 +145,10 @@ bool InputHandler::isMouseButtonHolding_R()
 	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
 }
 
+bool InputHandler::isMouseButtonHolding_M()
+{
+	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_MIDDLE);
+}
 
 glm::vec2 InputHandler::getMousePos()
 {
@@ -165,6 +189,7 @@ void InputHandler::mouseReset()
 
 	mouse_Button_states[0] = 0;
 	mouse_Button_states[1] = 0;
+	mouse_Button_states[2] = 0;
 }
 
 

@@ -46,7 +46,7 @@ struct Tag : Object
 {
 	std::string name;
 	Engine::UUID tagName;
-	size_t physicsLayerIndex;
+	size_t physicsLayerIndex = 0;
 };
 
 //To store transform of entity
@@ -235,7 +235,7 @@ struct Script : Object
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name"),
+	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
