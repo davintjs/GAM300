@@ -30,31 +30,37 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 class Ray3D
 {
 public:
+
+	struct PlaneParams 
+	{
+		const glm::vec3& delta;
+		const glm::vec3& min;
+		const glm::vec3& max;
+		float& tMin;
+		float& tMax;
+	};
+
 	// Constructor
-	Ray3D() : origin(), direction() { return; }
-	Ray3D(const glm::vec3& o, const glm::vec3& d)
-		: origin(o), direction(d) {
-		return;
-	}
-	glm::vec3 lerp(const float t) const { return(origin + t * direction); }
+	Ray3D();
+	Ray3D(const glm::vec3& _origin, const glm::vec3& _direction);
 
+	glm::vec3 Lerp(const float& t) const { return(origin + t * direction); }
 
-	// Containment method
-	bool contains(const glm::vec3& point, float* t = NULL) const;
-	// Returns paramter of intersection if containment is true and t != NULL
+	// Checks if ray intersects object
+	bool TestRayOBB(
+		const glm::mat4& _modelMatrix, // Transformation applied to the mesh (which will thus be also applied to its bounding box)
+		const glm::vec3& _min,	// Minimum X,Y,Z coords of the mesh when not transformed at all.
+		const glm::vec3& _max,	// Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh is centered, but it's not always the case.
+		float& _intDistance);	// Output : distance between ray_origin and the intersection with the OBB)
 
 	glm::vec3 origin;
 	glm::vec3 direction;
-};
 
-// Ray to Obb Test
-bool testRayOBB(glm::vec3 ray_origin,        // Ray origin, in world space
-	glm::vec3 ray_direction,     // Ray direction (NOT target position!), in world space. Must be normalize()'d.
-	glm::vec3 aabb_min,          // Minimum X,Y,Z coords of the mesh when not transformed at all.
-	glm::vec3 aabb_max,          // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh is centered, but it's not always the case.
-	glm::mat4 ModelMatrix,       // Transformation applied to the mesh (which will thus be also applied to its bounding box)
-	float& intersection_distance // Output : distance between ray_origin and the intersection with the OBB)
-);
+private:
+	// Intersection between planes based on objects axis
+	bool IBPlanes(const glm::mat4& _modelMatrix, const glm::vec3& _delta, const float& _min, const float& _max, float& _tMin, float& _tMax, const int& _i);
+	bool IBPlanes(const glm::mat4& _modelMatrix, PlaneParams& _plane, const int& _i);
+};
 
 enum CAMERATYPE
 {
@@ -172,24 +178,32 @@ public:
 	Ray3D Raycasting();
 	Ray3D Raycasting(double xpos, double ypos, glm::mat4 proj, glm::mat4 view, glm::vec3 eye);
 
+	Ray3D& GetRay() { return ray; }
+
 	// Getter and setter for rotation speed
 	float GetRotationSpeed() { return rotationSpeed * speedModifier; }
 	void SetRotationSpeed(const float& _speed) { rotationSpeed = _speed; }
 
+	float& GetIntersect() { return intersected; }
+	float& GetTempIntersect() { return tempIntersect; }
+
 	bool IsPanning() const { return isPanning; }
 
-	Ray3D& GetRay() { return ray; }
-
 	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
+
+	void CallbackUpdateSceneGeometry(EditorUpdateSceneGeometryEvent* pEvent);
 
 	bool canMove = true;
 	bool isMoving = false;
 private:
+	Ray3D ray;
 	glm::vec2 prevMousePos;
+	glm::vec2 scenePosition;
 	float rotationSpeed = 1.f;			// How fast the camera rotates
 	float speedModifier = 1.f;			// How fast all the cameras movements are
+	float intersected = 0.f;			// Current ray intersect
+	float tempIntersect = 0.f;	
 	bool isPanning = false;
-	Ray3D ray;
 };
 
 #endif // !EDITOR_CAMERA_H

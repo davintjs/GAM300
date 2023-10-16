@@ -191,6 +191,11 @@ void GLFW_Handler::mousebutton_cb(GLFWwindow*, int button, int action, int ) {
 //    std::cout << "Right mouse button ";
 //#endif
     break;
+  case GLFW_MOUSE_BUTTON_MIDDLE:
+      //#ifdef _DEBUG
+      //    std::cout << "Right mouse button ";
+      //#endif
+      break;
   }
   switch (action) {
   case GLFW_PRESS:
