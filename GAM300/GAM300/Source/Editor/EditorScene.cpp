@@ -246,11 +246,18 @@ void EditorScene::SceneView()
 
             glm::mat4 transform_1 = trans.GetWorldMatrix();
 
+            static bool firstmove = true;
+            static Transform origTransform;
+
             ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
                 (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
             if (ImGuizmo::IsUsing())
             {
+                if (firstmove) {
+                    origTransform = trans;
+                    firstmove = false;
+                }
                 EditorCam.canMove = false;
                 if (trans.parent)
                 {
@@ -268,7 +275,22 @@ void EditorScene::SceneView()
                 trans.translation = a_translation;
                 trans.rotation = glm::eulerAngles(a_rot);
                 trans.scale = a_scale;
-
+            }
+            else if (!firstmove) {
+                if (trans.translation != origTransform.translation) {
+                    Change translate(&trans, "Transform/Translation");
+                    EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+                }
+                if (trans.rotation != origTransform.rotation) {
+                    Change rotate(&trans, "Transform/Rotation");
+                    EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+                }
+                if (trans.scale != origTransform.scale) {
+                    Change scale(&trans, "Transform/Scale");
+                    EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+                }
+                std::cout << "setting undo\n";
+                firstmove = true;
             }
         }
     }

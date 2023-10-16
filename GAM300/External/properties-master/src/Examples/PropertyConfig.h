@@ -97,6 +97,10 @@ public:
         if (id == 2) return z;
     }
 
+    bool operator != (const Vector3& other) const {
+        return x != other.x || y != other.y || z != other.z;
+    }
+
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec3() const {
         return glm::vec3(x, y, z);

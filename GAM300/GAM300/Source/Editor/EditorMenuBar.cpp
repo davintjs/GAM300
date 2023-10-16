@@ -124,17 +124,22 @@ void EditorMenuBar::Update(float dt)
             }
 
 
-            // Undo Functionality using Editor_Undo()
-            if (ImGui::MenuItem("Undo", "Ctrl+Z"))
-            {
-            }// Undo Functionality using Editor_Undo()           
-            // Do not allow the user to undo when history buffer is empty or when file is not loaded
-            //ImGui::TextDisabled("Undo");
-            if (ImGui::MenuItem("Redo", "Ctrl+Y"))
-            {
+            // Undo Functionality
+            if(EDITOR.History.UndoStackEmpty())
+                ImGui::TextDisabled("Undo");
+            else {
+                if (ImGui::MenuItem("Undo", "Ctrl+Z"))
+                    EDITOR.History.UndoChange();
             }
-            //ImGui::TextDisabled("Redo");
-
+               
+            // Redo Functionality
+            if(EDITOR.History.RedoStackEmpty())
+                ImGui::TextDisabled("Redo");
+            else {
+                if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+                    EDITOR.History.RedoChange();         
+            }
+            
             ImGui::EndMenu();
         }
 

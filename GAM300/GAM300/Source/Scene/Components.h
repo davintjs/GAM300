@@ -47,7 +47,15 @@ struct Tag : Object
 	std::string name;
 	Engine::UUID tagName;
 	size_t physicsLayerIndex = 0;
+	property_vtable();
 };
+
+property_begin_name(Tag, "Tag")
+{
+	property_var(name),
+		property_var(tagName).Name("Tag Name"),
+		property_var(physicsLayerIndex).Name("Layer Index"),
+} property_vend_h(Tag)
 
 //To store transform of entity
 struct Transform : Object
@@ -312,8 +320,8 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightType).Name("Light Type"),
-	property_var(lightpos).Name("Position"),
+	property_var(lightType).Name("lightType"),
+	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
 	property_var(direction).Name("Direction"),
 	property_var(inner_CutOff).Name("Inner Cutoff"),
