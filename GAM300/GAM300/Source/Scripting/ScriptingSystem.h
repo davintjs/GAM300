@@ -273,5 +273,9 @@ public:
 	float timeUntilRecompile{ 0 };
 	std::atomic_bool objectDestroyed = false;
 	std::atomic_bool ran;
+
+	IEventHandler*
+
+	using ScriptThreadEvents = TemplatePack<,,,,>;
 };
 #endif // !SCRIPTING_SYSTEM_H

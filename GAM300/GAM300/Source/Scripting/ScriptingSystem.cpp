@@ -411,6 +411,7 @@ void ScriptingSystem::ThreadWork()
 
 		if (scriptingEvent)
 		{
+			scriptingEvent;
 			EVENTS.Publish(scriptingEvent);
 			scriptingEvent = nullptr;
 		}
