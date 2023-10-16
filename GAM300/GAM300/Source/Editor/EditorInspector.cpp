@@ -530,6 +530,7 @@ void Display_Property(T& comp) {
         std::vector<const char*> meshNames;
         int number = 0;
         bool found = false;
+
         for (auto& pair : MeshManager.mContainer)
         {
             if (pair.first == comp.MeshName)
@@ -540,6 +541,7 @@ void Display_Property(T& comp) {
                 ++number;
             }
         }
+
         ImGui::PushItemWidth(-1);
         ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5);
         ImGui::PopItemWidth();
@@ -552,7 +554,7 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         ImGui::Text("Channel");
         ImGui::TableNextColumn();
-        static int number = 0;
+        int number = (int)comp.channel;
         ImGui::PushItemWidth(-1);
         ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
@@ -801,8 +803,6 @@ void DisplayComponentHelper(T& component)
                 Display_Property(component);
             }
 
-            //ImGui::PopID();
-
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -953,7 +953,7 @@ void AddTagPanel() {
         std::string newname;
         ImGui::Text("New Tag Name"); ImGui::SameLine();
         ImGui::InputText("##tag", &newname);
-        if( CENTERED_CONTROL(ImGui::Button("Add"))) {
+        if (CENTERED_CONTROL(ImGui::Button("Add"))) {
             IDENTIFIERS.CreateTag(newname);
             EditorInspector::Instance().isAddTagPanel = false;
         };
@@ -983,72 +983,63 @@ void AddLayerPanel() {
     }
 }
 
-void DisplayLayers() { 
-    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+void DisplayLayers(Entity& entity) {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
 
     //Entity current tag
-    auto tag = curr_scene.Get<Tag>(curr_index);
+    auto& tag = curr_scene.Get<Tag>(entity);
 
     std::vector<const char*> layers;
     for (auto& it : IDENTIFIERS.physicsLayers) {
         if (it.name.empty()) break;
-        layers.push_back(it.name.c_str());     
+        layers.push_back(it.name.c_str());
     }
-       
-    ImGui::PushID((int)curr_entity.UUID());
-    static int index = (int)tag.physicsLayerIndex;
+
+    int index = (int)tag.physicsLayerIndex;
     ImGui::Text("Layer"); ImGui::SameLine();
     ImGui::PushItemWidth(100.f);
-    if (ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5)) {
+    if (ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5))
         tag.physicsLayerIndex = index;
-    }
     ImGui::PopItemWidth();
-    ImGui::PopID();
-    
 }
 
-void DisplayTags() {
-    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+void DisplayTags(Entity& entity) {
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
 
     //Entity current tag
-    auto tag = curr_scene.Get<Tag>(curr_index);
+    auto& tag = curr_scene.Get<Tag>(entity);
 
     //tags in the project
     auto& Tags = IDENTIFIERS.GetTags();
 
     std::vector<const char*> layers;
     int i = 0;
-    static int index = 0; //default
+    int index = 0; //default
+    bool found = false;
+
     for (auto& it : Tags) {
-        layers.push_back(it.first.c_str());
         if (it.second == tag.tagName) {
             index = i;
         }
+        layers.push_back(it.first.c_str());
         i++;
     }
-        
+
     ImGui::Text("Tags"); ImGui::SameLine();
-    ImGui::PushID((int)curr_entity.UUID());
     ImGui::PushItemWidth(100.f);
-    if (ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5)) {
+    if(ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5)){
         tag.tagName = Tags[layers[index]];
     }
+
     ImGui::PopItemWidth();
-    ImGui::PopID();
-    
 }
 
 //Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
-    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
-    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+    ImGui::PushID((int)entity.EUID());
 
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
@@ -1065,22 +1056,16 @@ void DisplayEntity(Entity& entity)
     curr_scene.Get<Tag>(entity).name = buffer;
   
     //display tags
-    ImGui::PushID((int)entity.EUID());
-
-    DisplayTags(); ImGui::SameLine();
+    DisplayTags(entity);
+    ImGui::SameLine();
     ImGui::PushID(1);
     if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
     ImGui::PopID();
     ImGui::SameLine(); ImGui::Dummy(ImVec2(32.f, 0.f)); ImGui::SameLine();
     
-
-    //display layer
-    DisplayLayers(); ImGui::SameLine();
-    ImGui::PushID(2);
+    //display layers
+    DisplayLayers(entity); ImGui::SameLine();
     if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
-    ImGui::PopID();
-
-    ImGui::PopID();
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -1090,9 +1075,9 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.EUID());
+        
         DisplayComponents(entity);
-        ImGui::PopID();
+        
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
             EditorInspector::Instance().isAddComponentPanel = true;
@@ -1101,6 +1086,7 @@ void DisplayEntity(Entity& entity)
         ImGui::EndTable();
         
     }
+    ImGui::PopID();
     ImGui::PopStyleVar();
 }
 
@@ -1116,6 +1102,8 @@ void EditorInspector::Init()
 
     //create default tag
     IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
 }
 
 void EditorInspector::Update(float dt)
