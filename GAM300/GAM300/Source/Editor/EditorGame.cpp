@@ -56,18 +56,6 @@ void EditorGame::Update(float dt)
 
     GameView();
 
-    if (camera)
-    {
-        static float timer = 0.f;
-        if (timer > 0.5f)
-        {
-            PRINT("Camera Position: ", camera->GetCameraPosition().x, ' ', camera->GetCameraPosition().y, ' ', camera->GetCameraPosition().z, '\n');
-            timer = 0.f;
-        }
-
-        timer += dt;
-    }
-
     ImGui::PopStyleVar();
 }
 
@@ -143,7 +131,7 @@ void EditorGame::GameView()
         if (indent > 0)
             ImGui::Indent(indent);
 
-        unsigned int textureID = camera->GetFramebuffer().get_color_attachment_id();
+        unsigned int textureID = camera->GetFramebuffer().colorBuffer;
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)dimension.x, (float)dimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
     }
     ImGui::End();

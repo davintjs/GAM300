@@ -196,7 +196,6 @@ void GraphicsSystem::Update(float dt)
 
 	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
-		camera.Update();
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 		// Update camera view 
@@ -206,6 +205,7 @@ void GraphicsSystem::Update(float dt)
 		glBindFramebuffer(GL_FRAMEBUFFER, camera.GetFramebuffer().hdrFBO);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
+		RENDERER.Update(dt);
 		Draw(camera); // call draw after update
 
 		camera.GetFramebuffer().unbind();

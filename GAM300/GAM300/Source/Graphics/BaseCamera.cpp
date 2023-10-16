@@ -36,6 +36,8 @@ void BaseCamera::Update()
 	UpdateFrustum();
 
 	UpdateViewMatrix();
+
+	UpdateProjection();
 }
 
 void BaseCamera::UpdateViewMatrix()

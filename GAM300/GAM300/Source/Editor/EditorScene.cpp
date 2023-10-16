@@ -48,20 +48,6 @@ void EditorScene::Update(float dt)
 
     SceneView();
 
-    if (InputHandler::isKeyButtonPressed(GLFW_KEY_F))
-    {
-        EditorCam.SetCameraPosition({ 0.f, 0.f, 1000.f });
-    }
-
-    static float timer = 0.f;
-    if (timer > 0.5f)
-    {
-        PRINT("Editor Stats: ", EditorCam.GetPitch(), ' ', EditorCam.GetYaw(), '\n');
-        timer = 0.f;
-    }
-
-    timer += dt;
-
     ImGui::PopStyleVar();
 
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;

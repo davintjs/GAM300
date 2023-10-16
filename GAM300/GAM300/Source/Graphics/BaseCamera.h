@@ -60,6 +60,7 @@ public:
 	void SetViewportSize(const float& _width, const float& _height) { dimension = glm::vec2(_width, _height); }
 	void SetViewportSize(const glm::vec2& _dimension) { dimension = _dimension; }
 
+	CAMERATYPE GetCameraType() const { return cameraType; }
 	unsigned int& GetTargetDisplay() { return targetDisplay; }
 
 	float& GetPitch() { return pitch; }

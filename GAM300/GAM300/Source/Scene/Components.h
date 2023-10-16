@@ -161,11 +161,7 @@ struct Animator : Object
 
 struct Camera : Object, BaseCamera
 {
-	Camera() : backgroundColor{ BaseCamera::backgroundColor } 
-	{
-		BaseCamera::Init();
-		cameraType = CAMERATYPE::GAME;
-	}
+	Camera();
 	Vector4 backgroundColor{};
 	property_vtable();
 };
