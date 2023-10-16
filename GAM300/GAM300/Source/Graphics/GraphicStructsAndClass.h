@@ -12,13 +12,15 @@
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#pragma once
+#ifndef GRAPHICSTRUCTANDCLASS_H
+#define GRAPHICSTRUCTANDCLASS_H
+
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
+#include "AI/Geometry.h"	// Bean: For Lines, Segments, Planes and Triangles
 
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 1000
-
 
 enum LIGHT_TYPE
 {
@@ -68,8 +70,8 @@ struct LightProperties
 	glm::vec3 direction;
 
 	// Used only in Spot
-	float inner_CutOff ;
-	float outer_CutOff ;
+	float inner_CutOff;
+	float outer_CutOff;
 
 	// Used for all
 	glm::vec3 lightColor;
@@ -114,7 +116,7 @@ struct InstanceProperties
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
-	
+
 	// -------------- BLINN PHONG --------------------------
 	// make into individual buffers
 	unsigned int AlbedoBuffer;
@@ -156,6 +158,8 @@ struct InstanceProperties
 	unsigned int iter = 0;
 	unsigned int texture[32];// max 32 dds only
 	unsigned int textureCount = 0;
-	
+
 	void BatchTexture(std::string texture);
 };
+
+#endif // !GRAPHICSTRUCTANDCLASS_H

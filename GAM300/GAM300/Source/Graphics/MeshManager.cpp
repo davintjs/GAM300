@@ -36,6 +36,7 @@ void MESH_Manager::Init()
     CreateInstanceSphere();
     
     CreateInstanceLine();
+    CreateInstanceSegment3D();
 }
 
 void MESH_Manager::Update(float dt)
@@ -877,6 +878,62 @@ void MESH_Manager::CreateInstanceLine()
 
     mContainer.emplace(std::string("Line"), newMesh);
 
+}
+
+void MESH_Manager::CreateInstanceSegment3D()
+{
+    Mesh newMesh;
+    newMesh.index = (unsigned int)(mContainer.size());
+
+    GLfloat vertices[] = {
+        -1.f, 0.f, 0.f,
+        1.0f, 0.f, 0.f
+    };
+
+    GLuint indices[] = {
+        0, 1
+    };
+    newMesh.vertices_min = glm::vec3(-1.f, 0.f, 0.f);
+    newMesh.vertices_max = glm::vec3(-1.f, 0.f, 0.f);
+
+    // first, configure the cube's VAO (and VBO)
+    //unsigned int VBO, cubeVAO;
+
+    GLuint vaoid;
+    GLuint vboid;
+    GLuint ebo;
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(vaoid);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+    InstanceProperties tempProp;
+    tempProp.VAO = vaoid;
+    tempProp.drawCount = 2;
+    tempProp.drawType = GL_LINES;
+    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
+    newMesh.Vaoids.push_back(vaoid);
+    newMesh.Vboids.push_back(vboid);
+    newMesh.prim = GL_LINES;
+    newMesh.Drawcounts.push_back(2);
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Segment3D"]));
+
+    mContainer.emplace(std::string("Segment3D"), newMesh);
 }
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao

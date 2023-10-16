@@ -216,18 +216,18 @@ void GraphicsSystem::Update(float dt)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-		GLSLShader& shader = SHADER.GetShader(HDR);
+		shader = SHADER.GetShader(HDR);
 		shader.Use();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, camera.GetFramebuffer().colorBuffer);
 
-		GLint uniform1 =
+		uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "hdr");
 
 		glUniform1i(uniform1, RENDERER.IsHDR());
 
-		GLint uniform2 =
+		uniform2 =
 			glGetUniformLocation(shader.GetHandle(), "exposure");
 
 		glUniform1f(uniform2, RENDERER.GetExposure());

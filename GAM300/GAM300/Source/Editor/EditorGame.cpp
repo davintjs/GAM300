@@ -74,7 +74,7 @@ void EditorGame::ToolBar()
         {
             for (int n = 0; n < IM_ARRAYSIZE(displayTargets); n++)
             {
-                const bool is_selected = (targetDisplay == n);
+                const bool is_selected = (targetDisplay == (unsigned int)n);
                 if (ImGui::Selectable(displayTargets[n].name.c_str(), is_selected))
                 {
                     targetDisplay = n;

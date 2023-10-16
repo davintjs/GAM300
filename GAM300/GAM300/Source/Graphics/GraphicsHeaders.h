@@ -82,10 +82,18 @@ public:
 	void Init();
 	void Update(float dt);
 	void Exit();
+
+	void SetupSegment3D();
 	
+	void Draw();
+
+	void DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color);
+	void DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+
 	void DrawRay();
 
 private:
+	std::map<std::string, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;

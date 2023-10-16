@@ -140,6 +140,7 @@ private:
 	void CreateInstanceCube();
 	void CreateInstanceSphere();
 	void CreateInstanceLine();
+	void CreateInstanceSegment3D();
 
 	// Creates all the related buffers - Blinn Phong
 	unsigned int InstanceSetup(InstanceProperties& prop);
