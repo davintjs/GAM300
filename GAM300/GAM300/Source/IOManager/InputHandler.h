@@ -56,13 +56,18 @@ public:
 	
 	// Getter for Mouse right button Pressed
 	static bool isMouseButtonPressed_R();
+	
+	// Getter for Mouse middle button Pressed
+	static bool isMouseButtonPressed_M();
 
 	// Getter for Mouse left button holding
 	static bool isMouseButtonHolding_L();
 
-	// Getter for Mouse right button Pressed
+	// Getter for Mouse right button Holding
 	static bool isMouseButtonHolding_R();
 
+	// Getter for Mouse middle button Holding
+	static bool isMouseButtonHolding_M();
 
 	// Getter for Mouse coordinate (screen space)
 	static glm::vec2 getMousePos(); // < X , Y >
@@ -127,8 +132,8 @@ private:
 	
 	
 	inline static int mouseScrollState = 0;
-	inline static int mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
-	inline static int prev_mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int mouse_Button_states[3]{ 0 };// 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int prev_mouse_Button_states[3]{ 0 };// 0 (Release) , 1 (Pressed), 2 Hold
 
 
 
