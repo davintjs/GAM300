@@ -46,6 +46,7 @@ namespace
 	MonoClass* mScript{ nullptr };
 	MonoVTable* mTimeVtable{ nullptr };
 	MonoClassField* mTimeDtField{ nullptr };
+	MonoString* mStringBuffer{ nullptr };
 }
 
 namespace Utils
@@ -577,6 +578,8 @@ void ScriptingSystem::SwapDll()
 	MonoClass* mTime = mono_class_from_name(mAssemblyImage, "BeanFactory", "Time");
 	mTimeVtable = mono_class_vtable(mAppDomain,mTime);
 	mTimeDtField = mono_class_get_field_from_name(mTime,"deltaTime_");
+	mStringBuffer = CreateMonoString("");
+	PRINT("CREATED SCRIPTING STRING BUFFER\n");
 	UpdateScriptClasses();
 }
 
@@ -612,12 +615,10 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 
 	if (field.fType == GetFieldType::E<std::string>())
 	{
-		//MonoString* mono_string = CreateMonoString("");
-		//mono_field_get_value(instance, mClassField, &mono_string);
-		//char* str = mono_string_to_utf8(mono_string);
-		//strcpy_s((char*)field.data, strlen(str)+1, str);
-		//mono_free(mono_string);
-		//return;
+		mono_field_get_value(instance, mClassField, &mStringBuffer);
+		static std::string str = mono_string_to_utf8(mStringBuffer);
+		field.Get<std::string>() = str;
+		return;
 	}
 	else if (field.fType == GetFieldType::E<Script>())
 	{
@@ -654,12 +655,12 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 {
 	//If its a string, its a C# string so create one
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
-	//if (field.fType == GetFieldType::E<std::string>())
-	//{
-	//	MonoString* mono_string = CreateMonoString(reinterpret_cast<const char*>(value));
-	//	mono_field_set_value(instance, mClassField, mono_string);
-	//	return;
-	//}
+	if (field.fType == GetFieldType::E<std::string>())
+	{
+		//MonoString* mString = mono_string_new_wrapper(field.Get<std::string>().c_str());
+		//mono_field_set_value(instance, mClassField, &mString);
+		return;
+	}
 	if (field.fType < AllObjectTypes::Size())
 	{
 		Object*& pObject = *(Object**)field.data;

@@ -30,9 +30,6 @@ void DebugDraw::Init()
 
 void DebugDraw::Update(float)
 {
-	intersected = FLT_MAX;
-	tempIntersect = 0.f;
-
 	if (enableRay)
 		DrawRay();
 }

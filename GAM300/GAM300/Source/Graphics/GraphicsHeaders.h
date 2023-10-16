@@ -83,18 +83,11 @@ public:
 	void Exit();
 	
 	void DrawRay();
-	
-	bool& HasSelection() { return checkForSelection; }
-	float& GetIntersect() { return intersected; }
-	float& GetTempIntersect() { return tempIntersect; }
 
 private:
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
-	float intersected;
-	float tempIntersect;
 	bool enableRay = true;
-	bool checkForSelection = false;
 };
 
 ENGINE_SYSTEM(Lighting)

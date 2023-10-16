@@ -65,7 +65,13 @@ struct ScrollingBuffer {
 struct layer {
     layer(std::string _name) : name(_name) {}
     std::string name;
+};
 
+struct tag {
+    //create new tag
+    tag(std::string _name) : name(_name) { uuid = Engine::CreateUUID(); }
+    std::string name;
+    Engine::UUID uuid;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorMenuBar)
@@ -155,13 +161,15 @@ public:
     // Updating and displaying of the Scene & Game
     void Update(float dt);
 
-    void SelectEntity();
+    bool SelectEntity();
 
     void ToolBar();
-    
+
     void GameView();
     
     void SceneView();
+    
+    void DisplayGizmos();
 
     // Exit the system
     void Exit();
@@ -198,10 +206,12 @@ public:
     // Exit the system
     void Exit();
 
-    bool isAddPanel;
+    bool isAddComponentPanel;
+    bool isAddTagPanel;
+    bool isAddLayerPanel;
 
-    std::vector<layer> Layers;
-    std::vector<std::string> Tags;
+    //std::vector<layer> Layers;
+    //std::vector<std::string> Tags;
 
 private:
 };
@@ -224,6 +234,9 @@ public:
     void AddLog(const char* fmt, ...) IM_FMTARGS(2);
 
     void Draw();
+
+    ImGuiTextBuffer& GetBuffer() { return Buffer; }
+    ImVector<int>& GetLineOffset() { return LineOffsets; }
 
     int debugcounter;
 
