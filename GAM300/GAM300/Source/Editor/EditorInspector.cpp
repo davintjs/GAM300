@@ -28,6 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <variant>
 #include "PropertyConfig.h"
 #include "Utilities./ThreadPool.h"
+#include "Scene/Identifiers.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -70,6 +71,7 @@ void DisplayType(const char* name, std::string& val)
     static char buffer[2048];
     strcpy_s(buffer, val.c_str());
     ImGui::InputText(idName.c_str(), buffer,2048);
+    val = buffer;
 }
 
 void DisplayType(const char* name, int& val)
@@ -494,10 +496,33 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
+template <typename T>
+void DisplayLightTypes(T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Type");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Spot"); layers.push_back("Directional"); layers.push_back("Point");
+        static int index = value;
+        ImGui::PushItemWidth(100.f);
+        ImGui::Combo("##LightType", &index, layers.data(), (int)layers.size(), 5);
+        ImGui::PopItemWidth();
+        value = index;
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
+
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -506,6 +531,7 @@ void Display_Property(T& comp) {
         std::vector<const char*> meshNames;
         int number = 0;
         bool found = false;
+
         for (auto& pair : MeshManager.mContainer)
         {
             if (pair.first == comp.MeshName)
@@ -516,6 +542,7 @@ void Display_Property(T& comp) {
                 ++number;
             }
         }
+
         ImGui::PushItemWidth(-1);
         ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5);
         ImGui::PopItemWidth();
@@ -528,11 +555,9 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         ImGui::Text("Channel");
         ImGui::TableNextColumn();
-        static int number = 0;
+        int number = (int)comp.channel;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
-            std::cout << number << std::endl;
-        }
+        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
         comp.channel = static_cast<AudioSource::Channel>(number);
     }
@@ -550,7 +575,8 @@ void Display_Property(T& comp) {
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());
+                    ImGui::PushID(entry.first.c_str());                   
+       
                     Display<T1>(DisplayName.c_str(), Value);
 
                     //temporary implementation for texture picker
@@ -567,7 +593,6 @@ void Display_Property(T& comp) {
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
                 assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                //List.push_back(property::entry { PropertyName, Data });
             }
            
         });
@@ -625,7 +650,7 @@ void DisplayComponent(Script& script)
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
         const char* fieldName = getFieldNamesEvent.pStart[i];
-        Field field{ AllFieldTypes::Size(),buffer };
+        Field field{ AllFieldTypes::Size(),2048,buffer };
         ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
         EVENTS.Publish(&getFieldEvent);
         if (field.fType < AllFieldTypes::Size())
@@ -645,6 +670,27 @@ void DisplayComponent(Script& script)
             EVENTS.Publish(&setFieldEvent);
         }
         
+    }
+}
+
+void DisplayLightProperties(LightSource& source) {
+
+    DisplayLightTypes(source.lightType);
+    
+    Display<float>("Intensity", source.intensity);
+    Display<Vector3>("Color", source.lightingColor);
+
+    if (source.lightType == (int)SPOT_LIGHT) {
+        Display<Vector3>("Light Position", source.lightpos);
+        Display<Vector3>("Direction", source.direction);
+        Display<float>("Inner Cutoff", source.inner_CutOff);
+        Display<float>("Outer Cutoff", source.outer_CutOff);
+    }
+    else if(source.lightType == (int)DIRECTIONAL_LIGHT){
+        Display<Vector3>("Direction", source.direction);
+    }
+    else { //POINT LIGHT
+        Display<Vector3>("Light Position", source.lightpos);
     }
 }
 
@@ -728,8 +774,6 @@ void DisplayComponentHelper(T& component)
     
     if (windowopen)
     {
-
-
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -752,12 +796,13 @@ void DisplayComponentHelper(T& component)
             {
                 DisplayComponent(component);
             }
+            if constexpr (std::is_same_v<T, LightSource>) {
+                DisplayLightProperties(component);
+            }
             else
             {
                 Display_Property(component);
             }
-
-            //ImGui::PopID();
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -838,7 +883,7 @@ private:
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
                     scene.Add<T1>(entity);
-                    EditorInspector::Instance().isAddPanel = false;
+                    EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }
         }
@@ -854,7 +899,7 @@ private:
                     if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
                         scene.Add<T1>(entity, nameEvent.arr[i]);
-                        EditorInspector::Instance().isAddPanel = false;
+                        EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }
             }
@@ -863,7 +908,7 @@ private:
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
                     scene.Add<T1>(entity);
-                    EditorInspector::Instance().isAddPanel = false;
+                    EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }
         }
@@ -877,26 +922,124 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 //Implementation for the panel to add a component to the current entity
-void AddPanel(Entity& entity) {
+void AddComponentPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-        EditorInspector::Instance().isAddPanel = false;
+        EditorInspector::Instance().isAddComponentPanel = false;
     }
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
         (void)AddsDisplay(entity);
         ImGui::EndPopup();
     }
 }
 
+void AddTagPanel() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(300, 140));
+
+    //press esc to exit add component window
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+        EditorInspector::Instance().isAddTagPanel = false;
+    }
+    ImGui::OpenPopup("Add Tag");
+    if (ImGui::BeginPopupModal("Add Tag", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+
+        std::string newname;
+        ImGui::Text("New Tag Name"); ImGui::SameLine();
+        ImGui::InputText("##tag", &newname);
+        if (CENTERED_CONTROL(ImGui::Button("Add"))) {
+            IDENTIFIERS.CreateTag(newname);
+            EditorInspector::Instance().isAddTagPanel = false;
+        };
+        ImGui::EndPopup();
+    }
+}
+
+void AddLayerPanel() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(300, 140));
+
+    //press esc to exit add component window
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+        EditorInspector::Instance().isAddLayerPanel = false;
+    }
+    ImGui::OpenPopup("Add Layer");
+    if (ImGui::BeginPopupModal("Add Layer", &EditorInspector::Instance().isAddLayerPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+        std::string newname;
+        ImGui::Text("New Layer Name"); ImGui::SameLine();
+        ImGui::InputText("##layer", &newname);
+        if (CENTERED_CONTROL(ImGui::Button("Add"))) {
+            IDENTIFIERS.CreateLayer(newname);
+            EditorInspector::Instance().isAddLayerPanel = false;
+        };
+        ImGui::EndPopup();
+    }
+}
+
+void DisplayLayers(Entity& entity) {
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
+    //Entity current tag
+    auto& tag = curr_scene.Get<Tag>(entity);
+
+    std::vector<const char*> layers;
+    for (auto& it : IDENTIFIERS.physicsLayers) {
+        if (it.name.empty()) break;
+        layers.push_back(it.name.c_str());
+    }
+
+    int index = (int)tag.physicsLayerIndex;
+    ImGui::Text("Layer"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    if (ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5))
+        tag.physicsLayerIndex = index;
+    ImGui::PopItemWidth();
+}
+
+void DisplayTags(Entity& entity) {
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
+    //Entity current tag
+    auto& tag = curr_scene.Get<Tag>(entity);
+
+    //tags in the project
+    auto& Tags = IDENTIFIERS.GetTags();
+
+    std::vector<const char*> layers;
+    int i = 0;
+    int index = 0; //default
+    bool found = false;
+
+    for (auto& it : Tags) {
+        if (it.second == tag.tagName) {
+            index = i;
+        }
+        layers.push_back(it.first.c_str());
+        i++;
+    }
+
+    ImGui::Text("Tags"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    if(ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5)){
+        tag.tagName = Tags[layers[index]];
+    }
+
+    ImGui::PopItemWidth();
+}
+
 //Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
+    ImGui::PushID((int)entity.EUID());
+
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
@@ -912,6 +1055,18 @@ void DisplayEntity(Entity& entity)
 
     ImGui::PopItemWidth();
     curr_scene.Get<Tag>(entity).name = buffer;
+  
+    //display tags
+    DisplayTags(entity);
+    ImGui::SameLine();
+    ImGui::PushID(1);
+    if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
+    ImGui::PopID();
+    ImGui::SameLine(); ImGui::Dummy(ImVec2(32.f, 0.f)); ImGui::SameLine();
+    
+    //display layers
+    DisplayLayers(entity); ImGui::SameLine();
+    if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
 
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
         | ImGuiTableFlags_ScrollY;
@@ -921,23 +1076,35 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.EUID());
+        
         DisplayComponents(entity);
-        ImGui::PopID();
+        
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddPanel = true;
+            EditorInspector::Instance().isAddComponentPanel = true;
         }
 
         ImGui::EndTable();
         
     }
+    ImGui::PopID();
     ImGui::PopStyleVar();
 }
 
 void EditorInspector::Init()
 {
-    isAddPanel = false;
+    isAddComponentPanel = false;
+    //default layers (same as unity)
+    IDENTIFIERS.physicsLayers[0] = Layer("Default");
+    IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
+    IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
+    IDENTIFIERS.physicsLayers[3] = Layer("UI");
+    IDENTIFIERS.physicsLayers[4] = Layer("Water");
+
+    //create default tag
+    IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
 }
 
 void EditorInspector::Update(float dt)
@@ -964,8 +1131,16 @@ void EditorInspector::Update(float dt)
         DisplayEntity(curr_entity);
     }
 
-    if (isAddPanel) {
-        AddPanel(curr_scene.Get<Entity>(curr_index));
+    if (isAddComponentPanel) {
+        AddComponentPanel(curr_scene.Get<Entity>(curr_index));
+    }
+
+    if (isAddTagPanel) {
+        AddTagPanel();
+    }
+
+    if (isAddLayerPanel) {
+        AddLayerPanel();
     }
 
     ImGui::PopStyleVar();

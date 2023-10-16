@@ -134,40 +134,6 @@ void Renderer::Update(float)
 			++(properties[newName].iter);
 		}
 		++i;
-
-		// I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-		if (DEBUGDRAW.HasSelection())
-		{
-
-			glm::mat4 transMatrix = transform.GetWorldMatrix();
-
-			//glm::mat4 noscale = translation_mat * rotation_mat;
-
-			glm::vec3 translation;
-			glm::quat rot;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-			glm::vec3 scale;
-			glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
-
-			glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
-			glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
-			glm::mat4 rotMat = glm::toMat4(rot);
-
-			float& intersect = DEBUGDRAW.GetIntersect();
-			float& tempIntersect = DEBUGDRAW.GetTempIntersect();
-			Ray3D temp = EditorCam.GetRay();
-			if (testRayOBB(temp.origin, temp.direction, mins, maxs,
-				glm::translate(glm::mat4(1.0f), translation) * rotMat, tempIntersect))
-			{
-				if (tempIntersect < intersect)
-				{
-					SelectedEntityEvent SelectingEntity(&entity);
-					EVENTS.Publish(&SelectingEntity);
-					intersect = tempIntersect;
-				}
-			}
-		}
 	}
 
 	SetupGrid(100);
