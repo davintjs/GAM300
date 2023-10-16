@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 extern LightProperties spot_light_stuffs;
 extern LightProperties directional_light_stuffs;
+extern LightProperties point_light_stuffs;
 
 
 void Lighting::Init()
@@ -52,6 +53,7 @@ void Lighting::Update(float)
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
+			point_light_stuffs = Temporary;
 		}
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{

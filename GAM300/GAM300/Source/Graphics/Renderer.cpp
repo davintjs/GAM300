@@ -31,15 +31,17 @@ unsigned int depthCubemap;
 
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = SPOT_LIGHT;
+LIGHT_TYPE temporary_test = POINT_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
+LightProperties point_light_stuffs;
 	
 const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 void Renderer::Init()
 {
+	// This Framebuffer is used for both directional and spotlight
 	glGenFramebuffers(1, &depthMapFBO);
 	// create depth texture
 	glGenTextures(1, &depthMap);
@@ -60,6 +62,27 @@ void Renderer::Init()
 		std::cout << "depth framebuffer exploded\n";
 	else
 		std::cout << "depth framebuffer created successfully\n";
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	// This Framebuffer is used for pointlight
+	glGenFramebuffers(1, &depthCubemapFBO);
+	// create depth cubemap texture
+	unsigned int depthCubemap;
+	glGenTextures(1, &depthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }
@@ -532,10 +555,16 @@ void Renderer::DrawDepth()
 	lightPos = -lightPos;
 	glm::mat4 lightProjection, lightView;
 	float near_plane = -10000.f, far_plane = 10000.f;
-	//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+
+	// Above is directional light and spot light related stuffs
+	// this vector is for point light
+	std::vector<glm::mat4> shadowTransforms;
+
 
 	if (temporary_test == DIRECTIONAL_LIGHT)
 	{
+		// Good Light pos {-0.2f, -1.0f, -0.3f}
+		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 		lightProjection = glm::ortho(-5000.f, 5000.f, -5000.f, 5000.f, near_plane, far_plane);
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	}
@@ -545,51 +574,22 @@ void Renderer::DrawDepth()
 		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 1000.f),
 			glm::vec3(0.0, 0.0, 1.0));
-
-		//lightView = glm::lookAt(spot_light_stuffs.lightpos , glm::vec3(0.f,0.f,0.f), glm::vec3(0.0, 0.0, 1.0));
-		
-		//std::cout << "lightpos Contents: (" << spot_light_stuffs.lightpos.x << ", " << spot_light_stuffs.lightpos.y << ", " << spot_light_stuffs.lightpos.z << ")" << std::endl;
-		//std::cout << "direction Contents: (" << spot_light_stuffs.direction.x << ", " << spot_light_stuffs.direction.y << ", " << spot_light_stuffs.direction.z << ")" << std::endl;
-
-		//std::cout << "lightView BEFORE\n";
-		//for (int i = 0; i < 4; ++i) {
-		//	for (int j = 0; j < 4; ++j) {
-		//		std::cout << lightView[i][j] << " ";
-		//	}
-		//	std::cout << std::endl;
-		//}
-
+	}
+	else if (temporary_test == POINT_LIGHT)
+	{
+		near_plane = 1.0f;
+		far_plane = 1000.f;
+		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	}
 
-	
-	//std::cout << "lightProjection\n";
-	//for (int i = 0; i < 4; ++i) {
-	//	for (int j = 0; j < 4; ++j) {
-	//		std::cout << lightProjection[i][j] << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
-
-	//std::cout << "lightView\n";
-	//for (int i = 0; i < 4; ++i) {
-	//	for (int j = 0; j < 4; ++j) {
-	//		std::cout << lightView[i][j] << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
-
-	//
 	lightSpaceMatrix = lightProjection * lightView;
-	//std::cout << "lightspace martix\n";
-	//for (int i = 0; i < 4; ++i) {
-	//	for (int j = 0; j < 4; ++j) {
-	//		std::cout << lightSpaceMatrix[i][j] << " ";
-	//	}
-	//	std::cout << std::endl;
-	//}
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	
 
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
@@ -600,24 +600,71 @@ void Renderer::DrawDepth()
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		GLSLShader& shader = SHADER.GetShader(SHADOW);
-		shader.Use();
+		if (temporary_test == POINT_LIGHT)
+		{
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
 
 
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
+			shader.Use();
+			for (int i = 0; i < 6; ++i)
+			{
+				std::string spot_pos;
+				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
+				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+
+			}
+
+			GLint uniform1 =
+				glGetUniformLocation(shader.GetHandle(), "lightPos");
+			glUniform3fv(uniform1, 1,
+				glm::value_ptr(point_light_stuffs.lightpos));
+
+			GLint uniform2 =
+				glGetUniformLocation(shader.GetHandle(), "far_plane");
+			std::cout << "far plane is " << far_plane << "\n";
+			glUniform1f(uniform2, far_plane);
+
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+
+			shader.UnUse();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		}
+		else
+		{
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			GLSLShader& shader = SHADER.GetShader(SHADOW);
+			shader.Use();
+
+
+			GLint uniform1 =
+				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
 		
-		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-			glm::value_ptr(lightSpaceMatrix));
+			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+				glm::value_ptr(lightSpaceMatrix));
 
-		glBindVertexArray(prop.VAO);
-		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-		glBindVertexArray(0);
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
 
-		shader.UnUse();
+			shader.UnUse();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		}
+
 	}
 	//glDisable(GL_CULL_FACE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// reset viewport
 	glViewport(0, 0, 1600, 900);// screen width and screen height

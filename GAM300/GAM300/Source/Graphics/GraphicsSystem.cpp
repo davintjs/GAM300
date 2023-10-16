@@ -59,6 +59,7 @@ unsigned int quadVBO;
 
 
 extern unsigned int depthMap;
+extern unsigned int depthCubemap;
 
 void renderQuad()
 {
@@ -176,6 +177,7 @@ void GraphicsSystem::Update(float dt)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
 	//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
