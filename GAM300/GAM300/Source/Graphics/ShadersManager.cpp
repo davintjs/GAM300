@@ -49,6 +49,10 @@ void ShaderManager::Init()
 	fragmentPath = shaderPath + "/LightAffected.frag";
 	ShaderCompiler(vertexPath, fragmentPath, "LightAffected SHADER");
 
+	vertexPath = shaderPath + "/DefaultGbuffer.vert";
+	fragmentPath = shaderPath + "/DefaultGbuffer.frag";
+	ShaderCompiler(vertexPath, fragmentPath, "GBUFFER SHADER");
+
 	vertexPath = shaderPath + "/DefaultShader.vert";
 	fragmentPath = shaderPath + "/DefaultShader.frag";
 	ShaderCompiler(vertexPath, fragmentPath, "Default SHADER");

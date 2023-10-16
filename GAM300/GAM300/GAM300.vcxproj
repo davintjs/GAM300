@@ -105,6 +105,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
+    <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
@@ -229,6 +230,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
@@ -293,7 +295,7 @@
     <None Include="Shaders\BasicLighting.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="Shaders\DefaultGBuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.frag" />
     <None Include="Shaders\DefaultGbuffer.vert" />
     <None Include="Shaders\DefaultShader.frag" />
     <None Include="Shaders\DefaultShader.vert" />

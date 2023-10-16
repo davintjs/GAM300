@@ -154,14 +154,14 @@ void GraphicsSystem::Update(float dt)
 
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
-	glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	glDrawBuffer(GL_COLOR_ATTACHMENT1); // color buffer for hdr
 
-	Draw(); // call draw after update
+	Draw(); // Draw everything else
 
 	EditorCam.GetFramebuffer().unbind();
 
 	EditorCam.GetFramebuffer().bind();
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0); // sean's color attatchment
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
@@ -169,10 +169,10 @@ void GraphicsSystem::Update(float dt)
 	// Bean: For unbinding framebuffer
 
 	GLSLShader& shader = SHADER.GetShader(HDR);
-	shader.Use();
+	shader.Use();  
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer); // HDR buffer
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");

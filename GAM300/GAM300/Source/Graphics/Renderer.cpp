@@ -22,9 +22,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "MeshManager.h"
 #include "Editor_Camera.h"
 
+#include "GBuffer.h"
+
 void Renderer::Init()
 {
-
+	m_gBuffer.Init(1600, 900);
 }
 
 void Renderer::Update(float)
@@ -267,15 +269,88 @@ void Renderer::Draw()
 	}
 
 	// for default render
+
+	// deferred rendering
+	// geometry pass
+	
+
 	for (DefaultRenderProperties& prop : defaultProperties) {
+
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer.gFBO);
+		unsigned int attachments[3] =
+		{ GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 }; // position, normal, albedospec
+		glDrawBuffers(3, attachments);
+		
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 
+		GLSLShader& geomPass = SHADER.GetShader(GBUFFER);
+		geomPass.Use();
+		GLint uProj =
+			glGetUniformLocation(geomPass.GetHandle(), "persp_projection");
+		GLint uView =
+			glGetUniformLocation(geomPass.GetHandle(), "View");
+		GLint SRT =
+			glGetUniformLocation(geomPass.GetHandle(), "SRT");
+		
+		glUniformMatrix4fv(uProj, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE,
+			glm::value_ptr(prop.entitySRT));
+		//m_gBuffer.BindForWriting();
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+		geomPass.UnUse();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		// lighting pass
+		// render
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_gBuffer.gPosition);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, m_gBuffer.gNormal);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, m_gBuffer.gAlbedoSpec);
 
 		GLSLShader& shader =  SHADER.GetShader(DEFAULT);
+		shader.Use();
+
+		uProj =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		uView =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		SRT =
+			glGetUniformLocation(shader.GetHandle(), "SRT");
+
+		glUniformMatrix4fv(uProj, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE,
+			glm::value_ptr(prop.entitySRT));
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();/**/
+
+		// forward render
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, prop.NormalID);*/
+
+
+		/*GLSLShader& shader =  SHADER.GetShader(DEFAULT);
 		shader.Use();
 
 		GLint uProj =
@@ -296,8 +371,11 @@ void Renderer::Draw()
 		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		shader.UnUse();
+		shader.UnUse();*/
+		
 	}
+	
+	
 }
 
 void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,

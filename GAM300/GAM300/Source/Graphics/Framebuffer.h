@@ -49,9 +49,14 @@ public:
 	// Get the framebuffer id as reference
 	GLuint& get_buffer_object_id() { return frameBufferObjectID; }
 
-	unsigned int hdrFBO;
-	unsigned int rboDepth;
-	unsigned int colorBuffer;
+	unsigned int hdrFBO{};
+	unsigned int rboDepth{};
+	unsigned int colorBuffer{};
+
+	unsigned int gBuffer{};
+	unsigned int gPosition{};
+	unsigned int gNormal{};
+	unsigned int gAlbedoSpec{};
 
 private:
 	GLuint frameBufferObjectID = 0;

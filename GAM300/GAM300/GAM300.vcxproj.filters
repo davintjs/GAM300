@@ -93,6 +93,7 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\GBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -168,6 +169,7 @@
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
@@ -186,7 +188,7 @@
     <None Include="Shaders\Skybox.vert" />
     <None Include="Shaders\DefaultShader.vert" />
     <None Include="Shaders\DefaultShader.frag" />
-    <None Include="Shaders\DefaultGBuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.frag" />
     <None Include="Shaders\DefaultGbuffer.vert" />
   </ItemGroup>
 </Project>

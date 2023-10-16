@@ -18,7 +18,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
 
-#include "glslshader.h"
+//#include "glslshader.h"
+#include "GBuffer.h"
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -40,6 +41,7 @@ enum SHADERTYPE
 	SKYBOX,
 	BASICLIGHT,
 	AFFECTEDLIGHT,
+	GBUFFER,
 	DEFAULT
 };
 
@@ -153,11 +155,12 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
+	gBuffer m_gBuffer;
 private:
 	std::map<std::string, InstanceProperties> instanceProperties;
 	std::vector<DefaultRenderProperties> defaultProperties;
 	float exposure = 1.f;
 	bool hdr = true;
 };
-
+void renderQuad();
 #endif // !GRAPHICSHEADERS_H
