@@ -72,6 +72,7 @@ struct Field
 		E_ASSERT(sizeof(T) < size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
 		return *static_cast<T*>(data);
 	}
+
 	void Resize(size_t _size)
 	{
 		if (data && dynamic)
