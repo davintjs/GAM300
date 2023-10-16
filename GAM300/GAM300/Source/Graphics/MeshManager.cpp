@@ -886,15 +886,15 @@ void MESH_Manager::CreateInstanceSegment3D()
     newMesh.index = (unsigned int)(mContainer.size());
 
     GLfloat vertices[] = {
-        -1.f, 0.f, 0.f,
-        1.0f, 0.f, 0.f
+        0.f,0.f,0.f,
+        1.f,1.f,1.f
     };
 
     GLuint indices[] = {
         0, 1
     };
-    newMesh.vertices_min = glm::vec3(-1.f, 0.f, 0.f);
-    newMesh.vertices_max = glm::vec3(-1.f, 0.f, 0.f);
+    newMesh.vertices_min = glm::vec3(0.f, 0.f, 0.f);
+    newMesh.vertices_max = glm::vec3(1.f, 1.f, 1.f);
 
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;

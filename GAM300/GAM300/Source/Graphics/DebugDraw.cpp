@@ -20,6 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/EditorHeaders.h"
 #include "Editor/EditorCamera.h"
 #include "MeshManager.h"
+#include "AI/NavMeshBuilder.h"
+#include "AI/NavMesh.h"
 
 void DebugDraw::Init()
 {
@@ -32,48 +34,63 @@ void DebugDraw::Init()
 
 void DebugDraw::Update(float)
 {
-	DrawSegment3D(glm::vec3(0.f, 0.f, 0.f), glm::vec3(100.f, 100.f, 100.f), glm::vec4(1.f, 1.f, 1.f, 1.f));
 
 	if (enableRay)
 		DrawRay();
-
-	Draw();
 }
 
 void DebugDraw::Draw()
 {
+	auto navMesh = NAVMESHBUILDER.GetNavMesh();
+
+	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+	for (Triangle3D tri : navMesh->GetNavMeshTriangles())
+	{
+		DrawSegment3D(tri[0], tri[1], color);
+		DrawSegment3D(tri[1], tri[2], color);
+		DrawSegment3D(tri[0], tri[2], color);
+	}
+
 	auto& prop = (*properties)["Segment3D"];
-	glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glLineWidth(2.f);
+	glPointSize(10.f);
 
-	glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	for (size_t i = 0; i < prop.iter; i++)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::mat4), &(prop.entitySRT[i]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	GLSLShader& shader = SHADER.GetShader(TDR);
-	shader.Use();
-	// UNIFORM VARIABLES ----------------------------------------
-	// Persp Projection
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(shader.GetHandle(), "uColor");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetViewMatrix()));
-	glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(prop.Albedo[0]))); // Bean: This should be something that iterates
+		//glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindVertexArray(prop.VAO);
-	glLineWidth(10.f);
-	glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+		GLSLShader& shader = SHADER.GetShader(TDR);
+		shader.Use();
+		// UNIFORM VARIABLES ----------------------------------------
+		// Persp Projection
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uniform2 =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		GLint uniform3 =
+			glGetUniformLocation(shader.GetHandle(), "uColor");
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(prop.Albedo[i])));
 
-	// unbind and free stuff
-	glBindVertexArray(0);
-	shader.UnUse();
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		
+		glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 0.f, 0.f)));
+		glDrawElements(GL_POINTS, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();
+	}
+
 	glLineWidth(1.f);
 	prop.iter = 0;
 }
@@ -85,14 +102,19 @@ void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _col
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
 
-	prop.entitySRT[i] = glm::mat4(glm::translate(glm::mat4(1.f), _segment3D.point1));
-	prop.entitySRT[i + 1] = glm::mat4(glm::translate(glm::mat4(1.f), _segment3D.point2));
+	glm::vec3 direction = _segment3D.point2 - _segment3D.point1;
+	prop.entitySRT[i] = glm::mat4
+	{
+		glm::vec4(direction.x, 0.f, 0.f, 0.f),
+		glm::vec4(0.f, direction.y, 0.f, 0.f),
+		glm::vec4(0.f, 0.f, direction.z, 0.f),
+		glm::vec4(_segment3D.point1.x, _segment3D.point1.y, _segment3D.point1.z, 1.f)
+	};
 
 	// Set color of segment
 	prop.Albedo[i] = _color;
-	prop.Albedo[i + 1] = _color;
-	
-	i += 2; // Increment by 2 because a line has 2 vertices
+
+	i++; // Increase instance count
 }
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
@@ -102,14 +124,19 @@ void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
 
-	prop.entitySRT[i] = glm::mat4(glm::translate(glm::mat4(1.f), _point1));
-	prop.entitySRT[i + 1] = glm::mat4(glm::translate(glm::mat4(1.f), _point2));
+	glm::vec3 direction = _point2 - _point1;
+	prop.entitySRT[i] = glm::mat4
+	{
+		glm::vec4(direction.x, 0.f, 0.f, 0.f),
+		glm::vec4(0.f, direction.y, 0.f, 0.f),
+		glm::vec4(0.f, 0.f, direction.z, 0.f),
+		glm::vec4(_point1.x, _point1.y, _point1.z, 1.f)
+	};
 
 	// Set color of segment
 	prop.Albedo[i] = _color;
-	prop.Albedo[i + 1] = _color;
 
-	i += 2; // Increment by 2 because a line has 2 vertices
+	i++; // Increase instance count
 }
 
 void DebugDraw::DrawRay()

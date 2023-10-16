@@ -247,6 +247,9 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	RENDERER.Draw(_camera);
 
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+		DEBUGDRAW.Draw();
+
 	MYSKYBOX.Draw(_camera);
 }
 

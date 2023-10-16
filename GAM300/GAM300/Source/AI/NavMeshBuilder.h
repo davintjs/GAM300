@@ -47,6 +47,8 @@ public:
 	// Returns the holes in this navmesh
 	std::vector<Polygon3D>& GetHoles();
 
+	NavMesh* GetNavMesh() { return mNavMesh; }
+
 private:
 	// Compute the individual regions of the navmesh
 	std::vector<Polygon3D> ComputeRegions(const std::vector<Triangle3D>& GroundTriangles);
