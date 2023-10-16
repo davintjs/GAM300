@@ -84,6 +84,22 @@ void InputSystem::Update(float dt)
 		InputHandler::doubleclickAndHold = false;
 	}
 	
+	/*if (InputHandler::isMouseButtonPressed_M())
+	{
+		std::cout << "middle mouse clicked\n";
+	}
+	if (InputHandler::isMouseButtonHolding_M())
+	{
+		std::cout << "middle mouse Holding\n";
+	}
+	if (InputHandler::isMouseButtonPressed_R())
+	{
+		std::cout << "right mouse clicked\n";
+	}
+	if (InputHandler::isMouseButtonHolding_R())
+	{
+		std::cout << "right mouse Holding\n";
+	}*/
 	/*if (InputHandler::isMouse_L_DoubleClick())
 	{
 		std::cout << "doubleclick ONLY\n";
