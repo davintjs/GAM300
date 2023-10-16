@@ -648,7 +648,7 @@ void DisplayComponent(Script& script)
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
         const char* fieldName = getFieldNamesEvent.pStart[i];
-        Field field{ AllFieldTypes::Size(),buffer };
+        Field field{ AllFieldTypes::Size(),2048,buffer };
         ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
         EVENTS.Publish(&getFieldEvent);
         if (field.fType < AllFieldTypes::Size())

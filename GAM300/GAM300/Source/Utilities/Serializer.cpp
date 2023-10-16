@@ -194,7 +194,7 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     for (size_t i = 0; i < fieldNamesEvent.count; ++i)
     {
         static char buffer[2048]{};
-        Field field{ AllComponentTypes::Size(),buffer };
+        Field field{ AllComponentTypes::Size(),2048,buffer};
         const char* name{ fieldNamesEvent.pStart[i] };
         ScriptGetFieldEvent getFieldEvent{_component,name,field};
         EVENTS.Publish(&getFieldEvent);
@@ -388,7 +388,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             for (size_t i = 0; i < fieldNamesEvent.count; ++i)
             {
                 static char buffer[2048]{};
-                Field field{ AllComponentTypes::Size(),buffer };
+                Field field{ AllComponentTypes::Size(),2048,buffer };
                 const char* name{ fieldNamesEvent.pStart[i] };
                 YAML::Node varNode = node[name];
                 if (!varNode)
