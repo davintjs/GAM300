@@ -54,7 +54,7 @@ void MESH_Manager::Exit()
 
 void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::string& fileName)
 {
-    GeomImported newGeom(std::move(DeserializeGeoms(filePath)));
+    GeomImported newGeom(std::move(DeserializeGeoms(filePath, fileName)));
 
     /*std::cout << "I have Materials : " << newGeom._materials.size() << 
         "from " << filePath << "\n";*/
@@ -212,7 +212,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
 // PRIVATE FUNCTIONS
 
-GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
+GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const std::string& fileName)
 {
     GeomImported tempGeom;
     std::ifstream ifs(filePath, std::ios::binary);
@@ -248,6 +248,13 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string filePath)
         tempMesh._vertices.resize(vertSize); // Resize our vertices vector
         DecompressVertices(tempMesh._vertices, tempVerts, tempMesh.mPosCompressionScale, tempMesh.mTexCompressionScale, tempMesh.mPosCompressionOffset, tempMesh.mTexCompressionOffset); // Converts Vertex to gVertex
 
+        // Store the geom vertices position and indices in asset manager
+        for (int v = 0; v < tempMesh._vertices.size(); ++v)
+        {
+            ASSETMANAGER.StoreMesh(fileName, tempMesh._vertices[v].pos, tempMesh._indices[v]);
+        }
+
+        // Add this tempMesh into our tempGeom
         tempGeom.mMeshes.push_back(tempMesh);
     }
 
