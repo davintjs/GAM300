@@ -15,6 +15,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #pragma once
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
+#include "AnimationTemp.h"
 
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 1000

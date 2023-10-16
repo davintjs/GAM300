@@ -24,6 +24,7 @@ TemplatePack
 <
 	ShaderManager,
 	SkyboxManager,
+	AnimationManager,
 	DebugDraw,
 	Lighting,
 	Renderer
@@ -217,6 +218,7 @@ void GraphicsSystem::Draw() {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw();
+	ANIM.Draw();
 
 	MYSKYBOX.Draw();
 }

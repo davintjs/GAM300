@@ -93,6 +93,8 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
+    <ClCompile Include="Source\Graphics\AnimationTemp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -169,6 +171,7 @@
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
+    <ClInclude Include="Source\Graphics\AnimationTemp.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

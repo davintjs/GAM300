@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
+#define ANIM AnimationManager::Instance()
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
@@ -29,6 +30,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+
+class AnimationModel;
+class Animation;
+class AnimationAnimator;
 
 // Bean: A temp solution to access the shader
 enum SHADERTYPE
@@ -74,6 +79,24 @@ public:
 private:
 	SkyBox* skyBoxModel;
 	GLuint skyboxTex;
+};
+
+ENGINE_SYSTEM(AnimationManager)
+{
+public:
+	void Init();
+	void Update(float dt);
+	void Draw();
+	void Exit();
+
+private:
+	GLSLShader ourShader{};
+	//std::vector<AnimationModel> allModels;
+	//std::vector<Animation> allAnimations;
+	//std::vector<AnimationAnimator> allAnimators;
+	AnimationModel allModels;
+	Animation allAnimations;
+	AnimationAnimator allAnimators;
 };
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)

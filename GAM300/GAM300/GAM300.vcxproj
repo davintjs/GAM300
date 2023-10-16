@@ -104,6 +104,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
+    <ClCompile Include="Source\Graphics\AnimationTemp.cpp" />
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
@@ -229,6 +231,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\AnimationTemp.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
