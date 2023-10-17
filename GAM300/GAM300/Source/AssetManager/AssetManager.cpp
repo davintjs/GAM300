@@ -525,7 +525,7 @@ void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
 }
 
-const std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
+std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
 {
 	return mTotalAssets.mMeshesAsset;
 }

@@ -33,7 +33,7 @@ void NavMeshBuilder::GetAllGrounds()
 		}
 
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
-
+		const MeshFilter& mesh = MySceneManager.GetCurrentScene().Get<MeshFilter>(entity);
 	}
 }
 

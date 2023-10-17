@@ -19,6 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Scene/SceneManager.h"
+#include "AssetManager/AssetManager.h"
 
 std::map<std::string, size_t> ComponentTypes{};
 
@@ -110,11 +111,8 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 	cameraType = CAMERATYPE::GAME;
 }
 
-MeshRenderer::MeshRenderer()
+MeshFilter::MeshFilter()
 {
-	// Bean: Is this correct?
-	Scene& currentScene = MySceneManager.GetCurrentScene();
-	currentScene.Add<MeshFilter>(euid);
-
-	currentScene.Get<MeshFilter>(euid).MeshName = MeshName;
+	vertices = &ASSETMANAGER.GetMeshAsset()[MeshName].mVertices;
+	indices = &ASSETMANAGER.GetMeshAsset()[MeshName].mIndices;
 }

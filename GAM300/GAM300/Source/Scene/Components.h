@@ -242,15 +242,21 @@ property_begin_name(Script, "Script") {
 
 struct MeshFilter : Object
 {
-	std::string MeshName;
+	MeshFilter();
+
+	std::string MeshName = "Cube";
 	std::vector<glm::vec3>* vertices;	// Position
-	std::vector<glm::vec3>* indices;	// Index
+	std::vector<unsigned int>* indices;	// Index
+	property_vtable();
 };
+
+property_begin_name(MeshFilter, "MeshFilter"){
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(MeshName).Flags(property::flags::DONTSHOW)
+} property_vend_h(MeshFilter)
 
 struct MeshRenderer : Object
 {
-	MeshRenderer();
-
 	std::string MeshName = "Cube";
 	std::string AlbedoTexture = "";
 	std::string NormalMap = "";
