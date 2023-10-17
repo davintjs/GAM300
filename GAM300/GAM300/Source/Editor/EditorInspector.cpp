@@ -392,7 +392,7 @@ void DisplayField(Change& change, const char* name, Field& field)
             {
                 char* str = (char*)field.data;
                 std::string val = str;
-                DisplayType(change,name, val);
+                DisplayType(change, name, val);
                 if (val.size() >= TEXT_BUFFER_SIZE - 1)
                 {
                     memcpy(str, val.data(), TEXT_BUFFER_SIZE - 1);
@@ -771,6 +771,9 @@ void DisplayComponent(Script& script)
         EVENTS.Publish(&getFieldEvent);
         if (field.fType < AllFieldTypes::Size())
         {
+            std::string fieldproperty = "Script/" + std::string(fieldName);
+            Change change(&script, fieldproperty);
+            Display(change, fieldName, field);
             if (isAddingReference)
             {
                 //Hash
@@ -1264,7 +1267,7 @@ void DisplayEntity(Entity& entity)
     ImGui::PushID(1);
     if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
     ImGui::PopID();
-    ImGui::SameLine(); ImGui::Dummy(ImVec2(32.f, 0.f)); ImGui::SameLine();
+    ImGui::SameLine(); ImGui::Dummy(ImVec2(22.f, 0.f)); ImGui::SameLine();
     
     //display layers
     DisplayLayers(entity); ImGui::SameLine();
