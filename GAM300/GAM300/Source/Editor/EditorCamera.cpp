@@ -29,36 +29,19 @@ void EditorCamera::Init()
 	focalPoint = { 0.f, 2.f, 3.f };
 	pitch = 0.7f;
 
+	timer = duration;
+
 	EVENTS.Subscribe(this, &EditorCamera::CallbackPanCamera);
 	EVENTS.Subscribe(this, &EditorCamera::CallbackUpdateSceneGeometry);
 }
 
 void EditorCamera::Update(float dt)
 {
-	const float duration = 1.f;
-	static float timer = duration;
-
 	intersected = FLT_MAX;
 	tempIntersect = 0.f;
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_F))
-	{
-		GetSelectedEntityEvent e;
-		EVENTS.Publish(&e);
-		if (e.pEntity)
-		{
-			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
-			targetFP = t.translation;
-			initialFP = focalPoint;
-			timer = 0.f;
-		}
-	}
-	
-	if (timer < duration)
-	{
-		focalPoint = Linear(initialFP, targetFP, timer, duration);
-		timer += dt;
-	}
+	// Focus on object using F key
+	FocusOnObject(dt);
 
 	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
@@ -85,6 +68,9 @@ void EditorCamera::InputControls()
 	isMoving = true;
 	if (InputHandler::isMouseButtonHolding_R())
 	{
+		isFlying = true;
+		isFocusing = false;
+
 		float speedModifer = 0.1f;
 		if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_SHIFT))
 			speedModifer = 1.f;
@@ -115,19 +101,56 @@ void EditorCamera::InputControls()
 		{
 			focalPoint += GetRightVec() * speedModifer;
 		}
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_Q))
+		{
+			focalPoint.y += speedModifer;
+		}
+		if (InputHandler::isKeyButtonHolding(GLFW_KEY_E))
+		{
+			focalPoint.y -= speedModifer;
+		}
 	}
-	else if (InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
+	else if (!isFlying && InputHandler::isKeyButtonHolding(GLFW_KEY_LEFT_ALT))
 	{
 		if (InputHandler::isMouseButtonHolding_L())
 			OrbitCamera(delta);
+
+		isFocusing = false;
 	}
 	else if ((isPanning && InputHandler::isMouseButtonHolding_L()) || InputHandler::isMouseButtonHolding_M())
 	{
 		PanCamera(delta);
+		isFocusing = false;
 	}
 	else
 	{
+		isFlying = false;
 		isMoving = false;
+	}
+}
+
+void EditorCamera::FocusOnObject(float dt)
+{
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_F))
+	{
+		GetSelectedEntityEvent e;
+		EVENTS.Publish(&e);
+		if (e.pEntity)
+		{
+			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
+			targetFP = t.translation;
+			initialFP = focalPoint;
+			initialFL = focalLength;
+			timer = 0.f;
+			isFocusing = true;
+		}
+	}
+
+	if (timer < duration && isFocusing)
+	{
+		focalPoint = Interpolate(initialFP, targetFP, timer, duration, EASINGTYPE::BEZIER);
+		focalLength = Interpolate(initialFL, 10.f, timer, duration, EASINGTYPE::BEZIER);
+		timer += dt;
 	}
 }
 

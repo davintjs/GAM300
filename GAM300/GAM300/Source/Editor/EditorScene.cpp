@@ -80,7 +80,8 @@ void EditorScene::ToolBar()
         bool shouldPan = false; // Bean: This is for panning the camera using the Q key
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
+        bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -104,8 +105,8 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("E", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;

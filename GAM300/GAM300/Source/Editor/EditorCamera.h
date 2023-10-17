@@ -27,32 +27,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define EditorCam EditorCamera::Instance()
 
-static float ParametricBlend(float t)
-{
-	float sqt = t * t;
-	return (sqt / (2.0f * (sqt - t) + 1.0f));
-}
-
-template <typename T, size_t SZ = sizeof(T) / sizeof(float)>
-static T Linear(T start, T end, float value, float duration)
-{
-	value /= duration;
-	value = ParametricBlend(value);
-	float* fStart = reinterpret_cast<float*>(&start);
-	float* fEnd = reinterpret_cast<float*>(&end);
-	T container{};
-	float* fContainer = reinterpret_cast<float*>(&container);
-	for (size_t i = 0; i < SZ; ++i)
-	{
-		*fContainer = (1.f - value) * (*fStart) + value * (*fEnd);
-		++fContainer;
-		++fStart;
-		++fEnd;
-	}
-
-	return container;
-}
-
 SINGLETON(EditorCamera), public BaseCamera
 {
 public:
@@ -65,6 +39,9 @@ public:
 
 	// Mouse and Keyboard controls for the camera, zoom is separated in Update function
 	void InputControls();
+
+	// Move to focused object
+	void FocusOnObject(float dt);
 
 	// Get mouse coord in NDC
 	glm::vec2 GetMouseInNDC();
@@ -99,6 +76,7 @@ public:
 	float& GetTempIntersect() { return tempIntersect; }
 
 	bool IsPanning() const { return isPanning; }
+	bool IsFlying() const { return isFlying; }
 
 	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
 
@@ -116,7 +94,12 @@ private:
 	float speedModifier = 1.f;			// How fast all the cameras movements are
 	float intersected = 0.f;			// Current ray intersect
 	float tempIntersect = 0.f;	
+	float initialFL = 0.f;				// Initial Focal Point when focusing on object
+	float timer = 0.f;
+	const float duration = 1.f;
 	bool isPanning = false;
+	bool isFlying = false;				// Hold down right click for fly mode
+	bool isFocusing = false;			// Moving to focused object
 };
 
 #endif // !EDITOR_CAMERA_H
