@@ -28,11 +28,12 @@ public class Player : Script
 
     void Update()
     {
-        //Console.WriteLine(onamae);
+        //
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))
         {
+            Console.WriteLine("Q");
             otherT.localRotation.y += sad / 360f;
             //rb.mass -= speed;
         }

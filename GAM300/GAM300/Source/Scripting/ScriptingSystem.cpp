@@ -37,7 +37,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent); return;}};
+#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono);}; return;}};
 
 #define SCRIPT_METHOD(mClass ,methodName, paramCount) DefaultMethods[DefaultMethodTypes::methodName] = mono_class_get_method_from_name(mClass, #methodName, paramCount);
 
@@ -185,7 +185,7 @@ void ScriptingSystem::Init()
 		THREADS.EnqueueTask([this] {ThreadWork(); });
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	#endif
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptSetField);
+	Subscribe(&ScriptingSystem::CallbackScriptSetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetField);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetFieldNames);
 
@@ -194,7 +194,7 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptCreated);
+	Subscribe(&ScriptingSystem::CallbackScriptCreated);
 	SubscribeObjectDestroyed(AllObjectTypes());
 
 
@@ -364,10 +364,10 @@ void ScriptingSystem::UpdateReferences()
 				Object* pObject{};
 				Field field{ fType,sizeof(void*),&pObject};
 				GetFieldValue(mS, pair.second, field);
-				if (!pObject || scene.HasHandle(fType, pObject))
+				if (!pObject)
 					continue;
-				mono_field_set_value(mS, pair.second, nullptr);
-
+				if (scene.HasHandle(fType, pObject))
+					continue;
 			}
 		}
 	}
@@ -377,18 +377,15 @@ void ScriptingSystem::UpdateReferences()
 template <typename... Ts>
 void ScriptingSystem::SubscribeObjectDestroyed(TemplatePack<Ts...>)
 {
-	(EVENTS.Subscribe(this, &ScriptingSystem::CallbackObjectDestroyed<Ts>), ...);
+	(Subscribe(&ScriptingSystem::CallbackObjectDestroyed<Ts>), ...);
 }
 
 template<typename T>
 void ScriptingSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent)
 {
-	UNREFERENCED_PARAMETER(pEvent);
-	{
-		ACQUIRE_SCOPED_LOCK(UpdateRef);
-		objectDestroyed = true;
-	}
-	while (objectDestroyed);
+	SCRIPT_THREAD_EVENT(pEvent);
+	if (mAppDomain)
+		UpdateReferences();
 }
 
 Handle ScriptingSystem::GetScriptHandle(MonoObject* script)
@@ -427,31 +424,6 @@ void ScriptingSystem::ThreadWork()
 			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
 			scriptingEvent = nullptr;
 		}
-		if (mAppDomain)
-		{
-			
-			ACQUIRE_SCOPED_LOCK(Mono);
-			{
-				ACQUIRE_SCOPED_LOCK(ScriptQueue);
-				if (MySceneManager.HasScene())
-				{
-					Scene& scene = MySceneManager.GetCurrentScene();
-					for (Handle& handle : reflectionQueue)
-					{
-						ReflectScript(scene.Get<Script>(handle));
-					}
-					reflectionQueue.clear();
-				}
-			}
-			{
-				ACQUIRE_SCOPED_LOCK(UpdateRef);
-				if (objectDestroyed)
-				{
-					UpdateReferences();
-					objectDestroyed = false;
-				}
-			}
-		}
 
 		if (logicState != LogicState::NONE)
 		{
@@ -476,7 +448,6 @@ void ScriptingSystem::ThreadWork()
 			{
 				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
 				logicState = LogicState::NONE;
-				reflectionQueue.clear();
 			}
 			//FINISHED RUNNING
 			ran = true;
@@ -497,27 +468,18 @@ void ScriptingSystem::ThreadWork()
 		}
 		else if (compilingState == CompilingState::SwapAssembly)
 		{
-			ACQUIRE_SCOPED_LOCK(Mono);
 			CacheScripts();
 			if (MySceneManager.HasScene())
 			{
 				Scene& currScene{ MySceneManager.GetCurrentScene() };
 				mSceneScripts[currScene.uuid].clear();
 			}
-			mono_free(mStringBuffer);
-			mStringBuffer = nullptr;
 			SwapDll();
 			LoadCacheScripts();
 			compilingState = CompilingState::Wait;
 		}
 		#endif
 	}
-	if (mStringBuffer)
-	{
-		//mono_free(mStringBuffer);
-		mStringBuffer = nullptr;
-	}
-	
 	mono_domain_set(mRootDomain, false);
 	if (mAppDomain)
 		mono_domain_unload(mAppDomain);
@@ -546,12 +508,12 @@ void ScriptingSystem::CacheScripts()
 			{
 				fieldSize = sizeof(uint64_t);
 			}
-			else if (fType == GetFieldType::E<std::string>())
+			else if (fType == GetFieldType::E<char*>())
 			{
 				fieldSize = TEXT_BUFFER_SIZE;
 			}
 			FieldMap& fMap = cacheFields[script];
-			fMap.emplace(pair.first, Field{ AllFieldTypes::Size(), (size_t)fieldSize ,new char[fieldSize] });
+			fMap.emplace(pair.first, Field{ AllFieldTypes::Size(), (size_t)fieldSize});
 			GetFieldValue(scriptPair.second, pair.second, fMap[pair.first]);
 		}
 	}
@@ -575,10 +537,6 @@ void ScriptingSystem::LoadCacheScripts()
 				continue;
 			//POINTER
 			SetFieldValue(mS, pair.second, fMap[pair.first]);
-		}
-		for (auto& pair : fMap)
-		{
-			delete pair.second.data;
 		}
 	}
 	cacheFields.clear();
@@ -647,11 +605,10 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 {
 	field.fType = Utils::monoTypeToFieldType(mono_field_get_type(mClassField));
 
-	if (field.fType == GetFieldType::E<std::string>())
+	if (field.fType == GetFieldType::E<char*>())
 	{
 		mono_field_get_value(instance, mClassField, &mStringBuffer);
-		static std::string str = mono_string_to_utf8(mStringBuffer);
-		field.Get<std::string>() = str;
+		strcpy((char*)field.data, mono_string_to_utf8(mStringBuffer));
 		return;
 	}
 	else if (field.fType == GetFieldType::E<Script>())
@@ -727,21 +684,13 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 {
 	//If its a string, its a C# string so create one
 	//PRINT("Set field value: " << mono_field_get_name(mClassFiend));
-	if (field.fType == GetFieldType::E<std::string>())
+	if (field.fType == GetFieldType::E<char*>())
 	{
-		//if (SCRIPTING_THREAD_ID == std::this_thread::get_id())
-		//{
-		//	MonoString* mString = mono_string_new(field.Get<std::string>().c_str());
-		//	mono_field_set_value(instance, mClassField, &mString);
-		//	mono_free(mString);
-		//}
-		////Running from another thread
-		//else
-		//{
-		//	updateStringBuffer = true;
-		//	while (updateStringBuffer);
-		//	return;
-		//}
+		char* data = (char*)field.data;
+		MonoString* mString = mono_string_new(mAppDomain,data);
+		mono_field_set_value(instance, mClassField, mString);
+		//mono_free(mString);
+		return;
 	}
 	if (field.fType < AllObjectTypes::Size())
 	{
@@ -832,8 +781,7 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
 	(void)pEvent;
-	ACQUIRE_SCOPED_LOCK(Mono);
-	timeUntilRecompile = SECONDS_TO_RECOMPILE;
+	//timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
 
 bool ScriptingSystem::IsScript(MonoClass* monoClass)
@@ -931,6 +879,7 @@ void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 {
+	SCRIPT_THREAD_EVENT(pEvent);
 	SetFieldValue(pEvent->script, pEvent->fieldName, pEvent->field);
 }
 
@@ -977,13 +926,14 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 {
+	SCRIPT_THREAD_EVENT(pEvent);
+	if (MySceneManager.HasScene())
 	{
-		ACQUIRE_SCOPED_LOCK(ScriptQueue);
-		reflectionQueue.push_back(*pEvent->pObject);
+		ACQUIRE_SCOPED_LOCK(Mono);
+		Scene& scene = MySceneManager.GetCurrentScene();
+		ReflectScript(*pEvent->pObject);
 	}
-	while (!reflectionQueue.empty()){ACQUIRE_SCOPED_LOCK(ScriptQueue)};
 }
-
 
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {

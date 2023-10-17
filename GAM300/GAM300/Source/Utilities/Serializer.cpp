@@ -463,9 +463,17 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            out << YAML::Value << value;
+            if constexpr (std::is_same_v<char*,T>)
+            {
+                std::string str = (char*)rhs.data;
+                out << YAML::Value << str;
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                out << YAML::Value << value;
+            }
         }
 
         return;
@@ -520,9 +528,18 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            value = node.as<T>();
+            if constexpr (std::is_same_v<char*, T>)
+            {
+                std::string value = (char*)rhs.data;
+                value = node.as<std::string>();
+                strcpy((char*)rhs.data,value.data());
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                value = node.as<T>();
+            }
         }
         return;
     }

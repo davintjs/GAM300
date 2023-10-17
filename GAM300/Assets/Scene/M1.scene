@@ -32,6 +32,7 @@ MeshRenderer:
   MetallicTexture: Default_metalRoughness
   mr_roughness: 0.5
   RoughnessTexture: Default_metalRoughness
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: Default_AO
 ---
@@ -39,6 +40,7 @@ Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
   Name: Player
+  onamae: HERROdsadasda
   gameObj: {fileID: 0}
   sad: 21.2999992
   otherT: {fileID: 22203055554271501}  # Component
@@ -82,6 +84,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -131,6 +134,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -180,6 +184,7 @@ MeshRenderer:
   MetallicTexture: ""
   mr_roughness: 0.5
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: 0.5
   AoTexture: ""
 ---
@@ -208,17 +213,24 @@ MeshRenderer:
   EUID: 6606253624498158492
   UUID: 2676873232007418467
   MeshName: Sphere
-  mr_Albedo: [1, 500000, 500000, 500000]
+  mr_Albedo: [1, 50000, 50000, 50000]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: -1
   MetallicTexture: ""
   mr_roughness: -1
   RoughnessTexture: ""
+  EmissionTexture: ""
   ao: -1
   AoTexture: ""
 ---
 LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
-  LightingColor: [500000, 500000, 500000]
+  Light Type: 0
+  Position: [0, 0, 0]
+  Intensity: 0
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [50000, 50000, 50000]
