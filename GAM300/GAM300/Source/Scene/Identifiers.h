@@ -27,6 +27,8 @@ public:
 	void CreateTag(const std::string& tagName);
 	void CreateLayer(const std::string & layerName);
 
+	void DeleteTag(std::string key);
+
 	Tags& GetTags();
 
 	void CreateSortingLayer(const std::string & layerName,size_t index);

@@ -40,6 +40,7 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
+
 bool isAddingReference = false;
 size_t editedContainer{};
 
@@ -225,7 +226,7 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     idName += name;
     Vector4 buf = val;
     if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV)) {
-        //EDITOR.History.SetPropertyValue(change, val, buf);
+        EDITOR.History.SetPropertyValue(change, val, buf);
     }
 }
 
@@ -235,18 +236,25 @@ void DisplayType(Change& change, const char* name, Vector2& val)
     static std::string idName{};
     idName = "##";
     idName += name;
+    bool changed = false;
+    Vector2 buf = val;
     if (ImGui::BeginTable("Vector2", 2, windowFlags))
     {
         ImGui::TableNextColumn();
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(change, idName.c_str(), val.x);
+        changed = DisplayType(idName.c_str(), buf.x);
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(change, idName.c_str(), val.y);
+
+        if (!changed && DisplayType(idName.c_str(), buf.y))
+            changed = true;
+
+        if (changed)
+            //EDITOR.History.SetPropertyValue(change, val, buf);
 
         ImGui::EndTable();
     }
@@ -1041,21 +1049,56 @@ void AddComponentPanel(Entity& entity) {
 void AddTagPanel() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(ImVec2(300, 140));
+    ImGui::SetNextWindowSize(ImVec2(400, 500));
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddTagPanel = false;
     }
-    ImGui::OpenPopup("Add Tag");
-    if (ImGui::BeginPopupModal("Add Tag", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+    ImGui::OpenPopup("Tags");
+    if (ImGui::BeginPopupModal("Tags", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 
+
+        Tags& tags = IDENTIFIERS.GetTags();
+
+        if (ImGui::BeginTable("Tags", 3)) {
+            ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+            ImGui::TableSetupColumn("2", ImGuiTableColumnFlags_WidthFixed, 250.0f);
+            float cellpadding = 15.f;
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(cellpadding, cellpadding));
+            int i = 0;
+            for (auto& tag : tags) {
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string tag_id = "Tag " + std::to_string(i++);
+                ImGui::Text(tag_id.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                if (tag.second == -1) //deleted tag
+                    ImGui::Text("(Removed)");
+                else
+                    ImGui::Text(tag.first.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string tag_name = tag.first;
+                if (tag_name != "Untagged") {
+                    ImGui::PushID(i);
+                    if (ImGui::Button("-")) {
+                        IDENTIFIERS.DeleteTag(tag.first);
+                    }
+                    ImGui::PopID();
+                }
+            }
+            ImGui::PopStyleVar();
+            ImGui::EndTable();
+        }
         std::string newname;
         ImGui::Text("New Tag Name"); ImGui::SameLine();
         ImGui::InputText("##tag", &newname);
         if (CENTERED_CONTROL(ImGui::Button("Add"))) {
             IDENTIFIERS.CreateTag(newname);
-            EditorInspector::Instance().isAddTagPanel = false;
         };
         ImGui::EndPopup();
     }
@@ -1064,21 +1107,48 @@ void AddTagPanel() {
 void AddLayerPanel() {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    ImGui::SetNextWindowSize(ImVec2(300, 140));
+    ImGui::SetNextWindowSize(ImVec2(480, 680));
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddLayerPanel = false;
     }
-    ImGui::OpenPopup("Add Layer");
-    if (ImGui::BeginPopupModal("Add Layer", &EditorInspector::Instance().isAddLayerPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+    ImGui::OpenPopup("Layers");
+    if (ImGui::BeginPopupModal("Layers", &EditorInspector::Instance().isAddLayerPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
         std::string newname;
-        ImGui::Text("New Layer Name"); ImGui::SameLine();
-        ImGui::InputText("##layer", &newname);
-        if (CENTERED_CONTROL(ImGui::Button("Add"))) {
+        /*ImGui::Text("New Layer Name"); ImGui::SameLine();
+        ImGui::InputText("##layer", &newname);*/
+        if (ImGui::BeginTable("Layers", 2)) {
+            ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+            float cellpadding = 15.f;
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(cellpadding, cellpadding));
+            for (int i = 0; i < MAX_PHYSICS_LAYERS; i++) {
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string layer = "Layer " + std::to_string(i);      
+                if (i <= 4)//default layers
+                    layer += " (Default)";
+                ImGui::Text(layer.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string label = "##" + layer;
+                std::string& layername = IDENTIFIERS.physicsLayers[i].name;
+                ImGui::SetNextItemWidth(-FLT_MIN);
+                if(i <= 4)
+                    ImGui::InputText(label.c_str(), &layername, ImGuiInputTextFlags_ReadOnly);
+                else
+                    ImGui::InputText(label.c_str(), &layername);
+                ImGui::TableNextRow();
+            }
+            ImGui::PopStyleVar();
+            ImGui::EndTable();
+        }
+        
+        /*if (CENTERED_CONTROL(ImGui::Button("Add"))) {
             IDENTIFIERS.CreateLayer(newname);
             EditorInspector::Instance().isAddLayerPanel = false;
-        };
+        };*/
         ImGui::EndPopup();
     }
 }
@@ -1090,8 +1160,12 @@ void DisplayLayers(Entity& entity) {
     auto& tag = curr_scene.Get<Tag>(entity);
 
     std::vector<const char*> layers;
+    int i = 0;
     for (auto& it : IDENTIFIERS.physicsLayers) {
-        if (it.name.empty()) break;
+        if (it.name.empty()) {
+            i++;
+            continue;
+        }        
         layers.push_back(it.name.c_str());
     }
 
@@ -1179,9 +1253,8 @@ void DisplayEntity(Entity& entity)
     DisplayLayers(entity); ImGui::SameLine();
     if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
 
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
-        | ImGuiTableFlags_ScrollY;
-
+   
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_ScrollY;
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
 
