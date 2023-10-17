@@ -31,6 +31,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/MeshManager.h"
 #include "Audio/AudioManager.h"
 
+#define ASSETMANAGER AssetManager::Instance()
+
 // GUID, last file update time, file name, data
 struct FileInfo
 {
@@ -46,10 +48,17 @@ struct FileInfo
 	std::vector<char> mData;
 };
 
+struct MeshAsset
+{
+	std::vector<glm::vec3> mVertices;
+	std::vector<unsigned int> mIndices;
+};
+
 struct Asset
 {
 	std::unordered_map<std::string, FileInfo> mFilesData;
 	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
+	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 };
 
 ENGINE_SYSTEM(AssetManager)
@@ -61,6 +70,9 @@ public:
 
 	// Returns the GUID of the given fileName
 	std::string GetAssetGUID(const std::string& fileName);
+
+	// Adds mesh asset for storing
+	void StoreMesh(const std::string& mKey, const glm::vec3& mVertex, const unsigned int& mIndex);
 
 	// AssetManager initialization to load assets into memory
 	void Init();
