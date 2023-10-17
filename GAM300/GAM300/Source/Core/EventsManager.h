@@ -127,7 +127,8 @@ public:
     */
     /*******************************************************************************/
     template<class T, class EventType>
-    void Subscribe(T * instance, void (T:: * memberFunction)(EventType*)) {
+    void Subscribe(T * instance, void (T:: * memberFunction)(EventType*)) 
+    {
         HandlerList& handlers = subscribers[typeid(EventType)];
         handlers.push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
     }

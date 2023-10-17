@@ -16,7 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define SCRIPTING_SYSTEM_H
 
 #include "Core\SystemInterface.h"
-#include <Core/events.h>
+#include <Core/EventsManager.h>
 #include <Scene/Components.h>
 
 #include <string>
@@ -89,6 +89,7 @@ namespace DefaultMethodTypes
 		Start,
 		Update,
 		LateUpdate,
+		ExecuteCoroutines,
 		OnCollisionEnter = 0,
 		OnCollisionStay,
 		OnCollisionExit,
@@ -147,7 +148,7 @@ public:
 	MonoObject* Invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 	//Invokes a mono method on a script
-	void InvokeMethod(Script & script,const std::string& method);
+	void InvokeMethod(Script & script, size_t methodType);
 
 	//Updates all script classes after reloading dll
 	void UpdateScriptClasses();
@@ -239,7 +240,7 @@ public:
 	MonoImage* GetAssemblyImage();
 
 	//Tell all scripts to invoke a function if they are active
-	void InvokeAllScripts(const std::string& funcName);
+	void InvokeAllScripts(size_t methodType);
 
 	//Updates all the references in the scripts when an object is deleted
 	void UpdateReferences();
@@ -269,9 +270,14 @@ public:
 	CompilingState compilingState{ CompilingState::Wait };
 	std::vector<Handle> reflectionQueue;
 	LogicState logicState;
-	const std::thread::id SCRIPTING_THREAD_ID = std::this_thread::get_id();
+	std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
 	std::atomic_bool objectDestroyed = false;
 	std::atomic_bool ran;
+
+	std::map<std::type_index, IEventHandler*> events;
+	template<class EventType>
+	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
+
 };
 #endif // !SCRIPTING_SYSTEM_H

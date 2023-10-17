@@ -103,3 +103,9 @@ void Transform::RemoveChild(Transform* t)
 	// Erase the found element
 	child.erase(it);
 }
+
+Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
+{
+	BaseCamera::Init();
+	cameraType = CAMERATYPE::GAME;
+}

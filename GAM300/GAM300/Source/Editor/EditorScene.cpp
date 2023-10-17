@@ -18,13 +18,12 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 
 #include "EditorHeaders.h"
 #include "Editor.h"
+#include "Editor/EditorCamera.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "Graphics/Editor_Camera.h"
 #include "Graphics/MeshManager.h"
 #include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 namespace
 {
@@ -41,13 +40,11 @@ void EditorScene::Init()
     EVENTS.Subscribe(this, &EditorScene::CallbackEditorWindow);
 }
 
-void EditorScene::Update(float)
+void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     ToolBar();
-
-    GameView();
 
     SceneView();
 
@@ -133,50 +130,6 @@ void EditorScene::ToolBar()
     ImGui::End();
 }
 
-void EditorScene::GameView()
-{
-    if (ImGui::Begin("Game"))
-    {
-        // Bean: For Game Window
-        //float padding = 16.f;
-        //float AspectRatio = 16.f / 9.f;
-
-        //if (_newDimension.x != 0 && _newDimension.y != 0)
-        //{
-        //	bool modified = false;
-        //	_newDimension = glm::floor(_newDimension);
-
-        //	glm::vec2 adjusted = sceneDimension;
-        //	if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
-        //	{
-        //		modified = true;
-        //		adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
-        //	}
-
-        //	if (adjusted.x > _newDimension.x - padding)
-        //	{
-        //		modified = true;
-        //		adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
-        //	}
-
-        //	// If there is any changes to the dimension and modifications, return
-        //	if (adjusted != sceneDimension && modified)
-        //	{
-        //		sceneDimension = adjusted;
-
-        //		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
-
-        //		EditorCam.GetFramebuffer().resize(sceneDimension.x, sceneDimension.y);
-        //	}
-        //}
-
-        /*float indent = (viewportEditorSize.x - sceneDimension.x) * 0.5f;
-        if (indent > 0)
-            ImGui::Indent(indent);*/
-    }
-    ImGui::End();
-}
-
 void EditorScene::SceneView()
 {
     //Editor scene viewport
@@ -197,8 +150,6 @@ void EditorScene::SceneView()
             EditorUpdateSceneGeometryEvent e(scenePosition, sceneDimension);
             EVENTS.Publish(&e);
             EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
-
-            EditorCam.GetFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -277,6 +228,7 @@ void EditorScene::DisplayGizmos()
         }
     }
 
+    // Display gizmos for selected entity
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
@@ -322,6 +274,10 @@ void EditorScene::Exit()
 
 void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
 {
+    // If not scene window
+    if (pEvent->name.compare("Scene"))
+        return;
+
     pEvent->isHovered = WindowHovered();
     pEvent->isFocused = WindowFocused();
 }
