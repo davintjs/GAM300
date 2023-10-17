@@ -22,6 +22,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "NavMesh.h"
 #include "Scene/SceneManager.h"
 
+void NavMeshBuilder::BuildNavMesh()
+{
+	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> mResPair = GetAllGrounds();
+	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(mResPair.first, mResPair.second);
+	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
+	OffsetRadius(2.f); // Offset to account for the agent radius
+
+	mNavMesh = CreateNavMesh(); // Create the navmesh
+	mNavMesh->LinkAllTriangles();
+}
+
 std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAllGrounds()
 {
 	std::vector<glm::vec3> mGroundVertices;
@@ -50,17 +61,6 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);
-}
-
-void NavMeshBuilder::BuildNavMesh()
-{
-	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> mResPair = GetAllGrounds();
-	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(mResPair.first, mResPair.second);
-	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
-	OffsetRadius(2.f); // Offset to account for the agent radius
-
-	mNavMesh = CreateNavMesh(); // Create the navmesh
-	mNavMesh->LinkAllTriangles();
 }
 
 NavMesh* NavMeshBuilder::CreateNavMesh()

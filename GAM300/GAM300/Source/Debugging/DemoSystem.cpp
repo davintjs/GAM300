@@ -141,9 +141,14 @@ void DemoSystem::Update(float dt)
 	UNREFERENCED_PARAMETER(dt);
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
 	{
-		if (!NAVMESHBUILDER.GetNavMesh()) // Temp no rebaking
+		if (!NAVMESHBUILDER.GetNavMesh()) // First build
 		{
-			NAVMESHBUILDER.BuildNavMesh(); // Build the navmesh
+			NAVMESHBUILDER.BuildNavMesh(); // Build the NavMesh
+		}
+		else // Rebaking
+		{
+			NAVMESHBUILDER.Exit(); // Clear current NavMesh
+			NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
 		}
 	}
 }
