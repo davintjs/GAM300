@@ -239,8 +239,18 @@ property_begin_name(Script, "Script") {
 	//property_var(fields)
 } property_vend_h(Script)
 
+
+struct MeshFilter : Object
+{
+	std::string MeshName;
+	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<glm::vec3>* indices;	// Index
+};
+
 struct MeshRenderer : Object
 {
+	MeshRenderer();
+
 	std::string MeshName = "Cube";
 	std::string AlbedoTexture = "";
 	std::string NormalMap = "";
@@ -435,7 +445,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

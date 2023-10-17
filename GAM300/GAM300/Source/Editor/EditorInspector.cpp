@@ -547,6 +547,11 @@ void Display_Property(T& comp) {
         ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5);
         ImGui::PopItemWidth();
         comp.MeshName = meshNames[number];
+
+        // Bean: Temporary get mesh filter
+        MeshFilter& m = MySceneManager.GetCurrentScene().Get<MeshFilter>(comp.EUID());
+        m.MeshName = comp.MeshName;
+
     }
     // @joe do the drop down hahaha, idk how to do it
     if constexpr (std::is_same<T, AudioSource>()) {

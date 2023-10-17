@@ -109,3 +109,12 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 	BaseCamera::Init();
 	cameraType = CAMERATYPE::GAME;
 }
+
+MeshRenderer::MeshRenderer()
+{
+	// Bean: Is this correct?
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	currentScene.Add<MeshFilter>(euid);
+
+	currentScene.Get<MeshFilter>(euid).MeshName = MeshName;
+}

@@ -112,7 +112,7 @@ public:
 		{
 			return nullptr;
 		}
-		return &mContainer.find(mesh_Name)->second; 
+		return &(mContainer.find(mesh_Name)->second); 
 	
 	}// Either Geom or Vaoid
 
