@@ -71,6 +71,9 @@ public:
 	// Returns the GUID of the given fileName
 	std::string GetAssetGUID(const std::string& fileName);
 
+	// Get the mesh asset
+	const std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
+
 	// Adds mesh asset for storing
 	void StoreMesh(const std::string& mKey, const glm::vec3& mVertex, const unsigned int& mIndex);
 
