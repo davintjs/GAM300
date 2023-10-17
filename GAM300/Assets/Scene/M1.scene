@@ -48,9 +48,9 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [0, 0, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [10, 10, 10]
+  m_Position: [0, 0.5, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
   m_Children:
     []
   m_Parent: 0
@@ -98,9 +98,9 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [100, 100, 100]
+  m_Position: [1, 0.5, 0]
   m_Rotation: [0, -0, 0]
-  m_Scale: [10, 10, 10]
+  m_Scale: [1, 1, 1]
   m_Children:
     []
   m_Parent: 0
@@ -125,7 +125,7 @@ Rigidbody:
 MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
-  MeshName: Cube
+  MeshName: DamagedHelmet
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: ""
@@ -148,9 +148,9 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
-  m_Position: [0, -19.0966854, 35]
+  m_Position: [0, 0, 0]
   m_Rotation: [0, -0, 0]
-  m_Scale: [1000, 1, 1000]
+  m_Scale: [10, 0.100000001, 10]
   m_Children:
     []
   m_Parent: 0
@@ -198,9 +198,9 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-259.751099, 112.862083, 323.042511]
+  m_Position: [0, 3.4000001, 0]
   m_Rotation: [0, -0, 0]
-  m_Scale: [2, 2, 2]
+  m_Scale: [1, 1, 1]
   m_Children:
     []
   m_Parent: 0
@@ -212,7 +212,7 @@ MeshRenderer:
   EUID: 6606253624498158492
   UUID: 2676873232007418467
   MeshName: Sphere
-  mr_Albedo: [1, 50000, 50000, 50000]
+  mr_Albedo: [1, 100, 100, 100]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: -1
@@ -232,4 +232,33 @@ LightSource:
   Direction: [0, 0, 0]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [50000, 50000, 50000]
+  Color: [100, 100, 100]
+---
+GameObject:
+  m_EUID: 3741745616850505635
+  m_IsActive: true
+  m_Name: Camera
+  m_Position: [0.228027344, 2.9000001, 5.94999981]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [0.999996662, 1, 0.999996722]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 8581604554917408359}  # Camera
+---
+Camera:
+  EUID: 3741745616850505635
+  UUID: 8581604554917408359
+  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 1000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true

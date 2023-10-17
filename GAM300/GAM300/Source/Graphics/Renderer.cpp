@@ -211,7 +211,7 @@ void Renderer::Update(float)
 
 void Renderer::SetupGrid(const int& _num)
 {
-	float spacing = 100.f;
+	float spacing = 1.f;
 	float length = _num * spacing * 0.5f;
 
 	properties["Line"].iter = _num * 2;

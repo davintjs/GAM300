@@ -25,8 +25,8 @@ TemplatePack
 <
     EditorMenuBar,
     EditorContentBrowser,
-    EditorScene,
     EditorGame,
+    EditorScene,
     EditorInspector,
     EditorDebugger,
     EditorHierarchy,
@@ -52,6 +52,7 @@ void EditorSystem::Init()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
+    EVENTS.Subscribe(this, &EditorSystem::CallbackGetSelectedEntity);
 
     EditorSystems::Init();
 }
@@ -162,4 +163,12 @@ void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
         selectedEntity = pEvent->pEntity->EUID();
     else
         selectedEntity = 0;
+}
+
+void EditorSystem::CallbackGetSelectedEntity(GetSelectedEntityEvent* pEvent)
+{
+    if (selectedEntity != 0)
+        pEvent->pEntity = &MySceneManager.GetCurrentScene().Get<Entity>(selectedEntity);
+    else
+        pEvent->pEntity = nullptr;
 }

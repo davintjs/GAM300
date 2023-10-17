@@ -117,7 +117,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         //std::cout << "ouchie\n";
         for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
         {
-            glm::vec3 pos = newGeom.mMeshes[i]._vertices[k].pos;
+            glm::vec3& pos = newGeom.mMeshes[i]._vertices[k].pos;
+            pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters
 
             min.x = std::min(pos.x, min.x);
             min.y = std::min(pos.y, min.y);
@@ -579,9 +580,9 @@ void MESH_Manager::CreateInstanceSphere()
         {
             float xSegment = (float)x / (float)X_SEGMENTS;
             float ySegment = (float)y / (float)Y_SEGMENTS;
-            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
-            float yPos = std::cos(ySegment * PI) * 15.f;
-            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 15.f;
+            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 0.5f;
+            float yPos = std::cos(ySegment * PI) * 0.5f;
+            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI) * 0.5f;
 
             positions.push_back(glm::vec3(xPos, yPos, zPos));
             uv.push_back(glm::vec2(xSegment, ySegment));

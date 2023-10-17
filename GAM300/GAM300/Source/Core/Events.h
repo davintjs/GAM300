@@ -95,6 +95,12 @@ struct SelectedEntityEvent : IEvent
 	Entity* pEntity;
 };
 
+struct GetSelectedEntityEvent : IEvent
+{
+	GetSelectedEntityEvent() {}
+	Entity* pEntity;
+};
+
 struct GetScriptNamesEvent : IEvent
 {
 	GetScriptNamesEvent() {};

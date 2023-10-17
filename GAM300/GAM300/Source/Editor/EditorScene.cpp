@@ -154,14 +154,6 @@ void EditorScene::SceneView()
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-        float windowWidth = (float)ImGui::GetWindowWidth();
-        float windowHeight = (float)ImGui::GetWindowHeight();
-
-        // Might be wrong -> i think here is the one that need to offset the tab header if there is
-        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y + 22.f, windowWidth, windowHeight - 22.f);
-
         // Display the gizmos for the selected entity
         DisplayGizmos();
     }
@@ -241,6 +233,9 @@ void EditorScene::DisplayGizmos()
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();
 
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(scenePosition.x, scenePosition.y, sceneDimension.x, sceneDimension.y);
         ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
             (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 

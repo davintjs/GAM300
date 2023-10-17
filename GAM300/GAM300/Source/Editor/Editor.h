@@ -38,6 +38,8 @@ public:
 
 	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 
+	void CallbackGetSelectedEntity(GetSelectedEntityEvent* pEvent);
+
 	HistoryManager History;
 
 private:

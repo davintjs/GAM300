@@ -31,6 +31,21 @@ void BaseCamera::Init()
 	framebuffer.init();
 }
 
+void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
+{
+	aspect = 16.f / 9.f;
+	fieldOfView = _fov;
+	nearClip = _nearClip;
+	farClip = _farClip;
+	focalLength = _focalLength;
+
+	UpdateViewMatrix();
+	UpdateProjection();
+
+	framebuffer.set_size((unsigned int)_dimension.x, (unsigned int)_dimension.y);
+	framebuffer.init();
+}
+
 void BaseCamera::Update()
 {
 	UpdateFrustum();

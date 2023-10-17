@@ -27,6 +27,32 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define EditorCam EditorCamera::Instance()
 
+static float ParametricBlend(float t)
+{
+	float sqt = t * t;
+	return (sqt / (2.0f * (sqt - t) + 1.0f));
+}
+
+template <typename T, size_t SZ = sizeof(T) / sizeof(float)>
+static T Linear(T start, T end, float value, float duration)
+{
+	value /= duration;
+	value = ParametricBlend(value);
+	float* fStart = reinterpret_cast<float*>(&start);
+	float* fEnd = reinterpret_cast<float*>(&end);
+	T container{};
+	float* fContainer = reinterpret_cast<float*>(&container);
+	for (size_t i = 0; i < SZ; ++i)
+	{
+		*fContainer = (1.f - value) * (*fStart) + value * (*fEnd);
+		++fContainer;
+		++fStart;
+		++fEnd;
+	}
+
+	return container;
+}
+
 SINGLETON(EditorCamera), public BaseCamera
 {
 public:
@@ -82,6 +108,8 @@ public:
 	bool isMoving = false;
 private:
 	Ray3D ray;
+	glm::vec3 targetFP;
+	glm::vec3 initialFP;
 	glm::vec2 prevMousePos;
 	glm::vec2 scenePosition;
 	float rotationSpeed = 1.f;			// How fast the camera rotates
