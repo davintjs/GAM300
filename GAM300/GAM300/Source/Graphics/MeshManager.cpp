@@ -17,16 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 
-// extern InstanceProperties properties[EntityRenderLimit];
-//extern std::vector <Materials> temp_MaterialContainer;
-
-// v scuffed ik i am sorry ;v;
-extern std::vector <glm::vec4> temp_AlbedoContainer;
-extern std::vector <glm::vec4> temp_SpecularContainer;
-extern std::vector <glm::vec4> temp_DiffuseContainer;
-extern std::vector <glm::vec4> temp_AmbientContainer;
-extern std::vector <float> temp_ShininessContainer;
-
 void MESH_Manager::Init()
 {
     properties = &RENDERER.GetProperties();
@@ -79,33 +69,16 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         std::cout << "Specular : " << newGeom._materials[i].Specular.a << "\n";
         std::cout << "\n\n";*/
 
-        //Materials temporary;
-        //temporary.Albedo = glm::vec4(1.f, 1.f, 1.f, 1.f);
-
-        //temporary.Diffuse = glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
-        //    newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a);
-        //
-        //temporary.Specular = glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
-        //    newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a);
-
-        //temporary.Ambient = glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
-        //    newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a);
-
-        //temp_MaterialContainer.push_back(temporary);
-
-
-
-
 
         // Pushing into the buffers
-        temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
+        /*temp_AlbedoContainer.push_back(glm::vec4(1.f, 1.f, 1.f, 1.f));
         temp_DiffuseContainer.push_back(glm::vec4(newGeom._materials[i].Diffuse.r, newGeom._materials[i].Diffuse.g,
             newGeom._materials[i].Diffuse.b, newGeom._materials[i].Diffuse.a));
         temp_SpecularContainer.push_back(glm::vec4(newGeom._materials[i].Specular.r, newGeom._materials[i].Specular.g,
             newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a));
         temp_AmbientContainer.push_back(glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
             newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a));
-        temp_ShininessContainer.push_back(0.f);
+        temp_ShininessContainer.push_back(0.f);*/
     }
 
     Mesh newMesh;

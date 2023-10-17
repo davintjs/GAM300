@@ -134,13 +134,13 @@ void EditorScene::ToolBar()
 void EditorScene::SceneView()
 {
     //Editor scene viewport
-    if (ImGui::Begin("Scene"))
+    if (windowOpened = ImGui::Begin("Scene"))
     {
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
-        unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
+        unsigned int textureID = EditorCam.GetFramebuffer().GetColorAttachmentId();
         ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -163,7 +163,7 @@ void EditorScene::SceneView()
 
 bool EditorScene::SelectEntity()
 {
-    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    if (!inOperation && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
     {
         // Bean: Click within the scene imgui window
         if (!windowHovered)
@@ -249,7 +249,7 @@ void EditorScene::DisplayGizmos()
                 origTransform = trans;
                 firstmove = false;
             }
-            EditorCam.canMove = false;
+
             if (trans.parent)
             {
                 Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
@@ -296,6 +296,7 @@ void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
     if (pEvent->name.compare("Scene"))
         return;
 
+    pEvent->isOpened = WindowOpened();
     pEvent->isHovered = WindowHovered();
     pEvent->isFocused = WindowFocused();
 }

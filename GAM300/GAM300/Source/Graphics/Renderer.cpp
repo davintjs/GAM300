@@ -285,7 +285,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 
-		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 		for (int i = 0; i < 32; ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
@@ -293,11 +292,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		}
 		glActiveTexture(GL_TEXTURE0 + 31);
 		glBindTexture(GL_TEXTURE_2D,depthMap);
-		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
-
-		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
 		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)

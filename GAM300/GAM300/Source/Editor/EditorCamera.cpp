@@ -46,15 +46,13 @@ void EditorCamera::Update(float dt)
 	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
 
-	if(e.isHovered || isMoving)	// Rotating and Flying
+	if(e.isHovered || isFlying)	// Rotating and Flying
 		InputControls();
 
 	if (e.isHovered && InputHandler::getMouseScrollState() != 0) // Zooming
 		ZoomCamera();
 
 	BaseCamera::Update();
-
-	canMove = true;// The false check happens in editorscene, incase guizmo is being used
 }
 
 void EditorCamera::InputControls()
@@ -65,7 +63,6 @@ void EditorCamera::InputControls()
 	prevMousePos = mousePos;
 
 	// To Move and rotate the editor camera
-	isMoving = true;
 	if (InputHandler::isMouseButtonHolding_R())
 	{
 		isFlying = true;
@@ -79,8 +76,7 @@ void EditorCamera::InputControls()
 		// Rotating / Panning / Zooming
 		//--------------------------------------------------------------
 
-		if (canMove)
-			RotateCamera(delta);
+		RotateCamera(delta);
 
 		//--------------------------------------------------------------
 		// Moving the Editor Camera
@@ -125,7 +121,6 @@ void EditorCamera::InputControls()
 	else
 	{
 		isFlying = false;
-		isMoving = false;
 	}
 }
 

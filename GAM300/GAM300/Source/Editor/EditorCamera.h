@@ -82,8 +82,6 @@ public:
 
 	void CallbackUpdateSceneGeometry(EditorUpdateSceneGeometryEvent* pEvent);
 
-	bool canMove = true;
-	bool isMoving = false;
 private:
 	Ray3D ray;
 	glm::vec3 targetFP;
