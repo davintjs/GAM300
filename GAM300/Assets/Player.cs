@@ -10,6 +10,7 @@ public class Player : Script
     public float sad;
     public Transform otherT;
     public string onamae = "HERRO";
+    public float ching;
     IEnumerator DoSomething()
     {
         while (true)

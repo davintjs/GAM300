@@ -37,7 +37,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono);}; return;}};
+#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}};
 
 #define SCRIPT_METHOD(mClass ,methodName, paramCount) DefaultMethods[DefaultMethodTypes::methodName] = mono_class_get_method_from_name(mClass, #methodName, paramCount);
 
@@ -169,7 +169,6 @@ MonoImage* ScriptingSystem::GetAssemblyImage()
 
 void ScriptingSystem::RecompileThreadWork()
 {
-	//ACQUIRE_SCOPED_LOCK(Assets);
 	compilingState = CompilingState::Compiling;
 	Utils::CompileDll();
 	compilingState = CompilingState::SwapAssembly;
@@ -419,20 +418,21 @@ void ScriptingSystem::ThreadWork()
 	}
 	while (!THREADS.HasStopped())
 	{
-		if (scriptingEvent)
+		ACQUIRE_SCOPED_LOCK(Mono);
 		{
-			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
-			scriptingEvent = nullptr;
+			if (scriptingEvent)
+			{
+				events[typeid(*scriptingEvent)]->exec(scriptingEvent);
+				scriptingEvent = nullptr;
+			}
 		}
 
 		if (logicState != LogicState::NONE)
 		{
 			if (ran)
 				continue;
-			ACQUIRE_SCOPED_LOCK(Mono);
 			if (logicState == LogicState::UPDATE)
 			{
-				ACQUIRE_SCOPED_LOCK(ScriptingCollision);
 				InvokeAllScripts(DefaultMethodTypes::Update);
 				InvokeAllScripts(DefaultMethodTypes::LateUpdate);
 				InvokeAllScripts(DefaultMethodTypes::ExecuteCoroutines);
@@ -459,7 +459,6 @@ void ScriptingSystem::ThreadWork()
 		if (timeUntilRecompile > 0)
 		{
 			Sleep(1000);
-			ACQUIRE_SCOPED_LOCK(Mono);
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
 			{
@@ -558,7 +557,6 @@ void ScriptingSystem::SwapDll()
 	if (mCoreAssembly == nullptr)
 	{
 		PRINT("Failed to load scripts, fix all errors\n");
-		compilingState = CompilingState::Wait;
 		return;
 	}
 	mAssemblyImage = mono_assembly_get_image(mCoreAssembly);
@@ -569,9 +567,6 @@ void ScriptingSystem::SwapDll()
 	mTimeVtable = mono_class_vtable(mAppDomain,mTime);
 	mTimeDtField = mono_class_get_field_from_name(mTime,"deltaTime_");
 	mStringBuffer = CreateMonoString("");
-
-
-	PRINT("CREATED SCRIPTING STRING BUFFER\n");
 	UpdateScriptClasses();
 }
 
@@ -781,7 +776,7 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
 	(void)pEvent;
-	//timeUntilRecompile = SECONDS_TO_RECOMPILE;
+	timeUntilRecompile = SECONDS_TO_RECOMPILE;
 }
 
 bool ScriptingSystem::IsScript(MonoClass* monoClass)
@@ -868,13 +863,8 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 
 void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 {
-	MonoObject* script = ReflectScript(pEvent->script);
-	E_ASSERT(script, "MONO OBJECT OF ", pEvent->script.name," NOT LOADED");
-	ScriptClass& scriptClass{ scriptClassMap[pEvent->script.name] };
-	//Reset fieldtype and buffer if the type was different
-	MonoClassField* mClassField{scriptClass.mFields[pEvent->fieldName]};
-	E_ASSERT(mClassField, "FIELD ", pEvent->fieldName, "COULD NOT BE FOUND IN SCRIPT ", pEvent->script.name);
-	GetFieldValue(script,mClassField,pEvent->field);
+	ACQUIRE_SCOPED_LOCK(Mono);
+	GetFieldValue(pEvent->script,pEvent->fieldName,pEvent->field);
 }
 
 void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
@@ -886,6 +876,7 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent)
 {
+	ACQUIRE_SCOPED_LOCK(Mono);
 	static std::vector<const char*> fieldNames;
 	pEvent->pStart = nullptr;
 	pEvent->count = 0;
@@ -929,8 +920,6 @@ void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 	SCRIPT_THREAD_EVENT(pEvent);
 	if (MySceneManager.HasScene())
 	{
-		ACQUIRE_SCOPED_LOCK(Mono);
-		Scene& scene = MySceneManager.GetCurrentScene();
 		ReflectScript(*pEvent->pObject);
 	}
 }

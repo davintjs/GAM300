@@ -113,6 +113,9 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
+				std::string guid = GetAssetGUID(fileName);
+				while (guid == "")
+					guid = GetAssetGUID(fileName);
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
 			}
@@ -240,26 +243,15 @@ const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
 // Get a loaded asset GUID
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
-	std::string data{};
-	auto func =
-		[this, &fileName, &data] // wait if the asset is not loaded yet
+	ACQUIRE_SCOPED_LOCK(Assets);
+	for (const auto& [key, val] : mTotalAssets.mFilesData)
 	{
-		for (const auto& [key, val] : mTotalAssets.mFilesData)
+		if (val.mFileName == fileName)
 		{
-			if (val.mFileName == fileName)
-			{
-				data = key;
-				return true;
-			}
+			return key;
 		}
-		return false;
-	};
-	ACQUIRE_UNIQUE_LOCK
-	(
-		Assets, func
-	);
-
-	return data;
+	}
+	return "";
 }
 
 std::string AssetManager::GenerateGUID(const std::string& fileName)
