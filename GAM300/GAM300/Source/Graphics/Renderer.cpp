@@ -22,16 +22,16 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "MeshManager.h"
 #include "Editor/EditorCamera.h"
 
-unsigned int depthMapFBO; 
+unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
 
 //
-unsigned int depthCubemapFBO;
+unsigned int depthCubemapFBO =0;
 unsigned int depthCubemap;
 
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = POINT_LIGHT;
+LIGHT_TYPE temporary_test = DIRECTIONAL_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
@@ -45,6 +45,7 @@ void Renderer::Init()
 	glGenFramebuffers(1, &depthMapFBO);
 	// create depth texture
 	glGenTextures(1, &depthMap);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -54,7 +55,6 @@ void Renderer::Init()
 	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	// attach depth texture as FBO's depth buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -68,8 +68,8 @@ void Renderer::Init()
 	// This Framebuffer is used for pointlight
 	glGenFramebuffers(1, &depthCubemapFBO);
 	// create depth cubemap texture
-	unsigned int depthCubemap;
 	glGenTextures(1, &depthCubemap);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 	for (unsigned int i = 0; i < 6; ++i)
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -79,12 +79,13 @@ void Renderer::Init()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	// attach depth texture as FBO's depth buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	
+	std::cout << "depth cube FBO" << depthCubemapFBO << "\n";
+	std::cout << "depth FBO" << depthMapFBO << "\n";
 }
 
 void Renderer::Update(float)
@@ -676,7 +677,7 @@ void Renderer::DrawDepth()
 	//glDisable(GL_CULL_FACE);
 
 	// reset viewport
-	glViewport(0, 0, 1600, 900);// screen width and screen height
+	//glViewport(0, 0, 1600, 900);// screen width and screen height
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

@@ -31,7 +31,6 @@ void Framebuffer::init()
 
 	glCreateFramebuffers(1, &get_buffer_object_id());
 	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
-
 	// Creating the color attachment
 	glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 	glBindTexture(GL_TEXTURE_2D, colorAttachment);

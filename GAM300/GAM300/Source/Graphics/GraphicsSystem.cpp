@@ -162,6 +162,8 @@ void GraphicsSystem::Update(float dt)
 
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);	
+	std::cout << "mamamia: " << EditorCam.GetFramebuffer().hdrFBO << "\n";
+
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(EditorCam); // call draw after update
@@ -222,12 +224,13 @@ void GraphicsSystem::Update(float dt)
 
 		// Update camera view 
 		camera.UpdateCamera(transform->translation, transform->rotation);
-
+		RENDERER.Update(dt);
 		glViewport(0, 0, 1600, 900);
 		glBindFramebuffer(GL_FRAMEBUFFER, camera.GetFramebuffer().hdrFBO);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+		std::cout << "this special one : " << camera.GetFramebuffer().hdrFBO << "\n";
 
-		RENDERER.Update(dt);
+		
 		Draw(camera); // call draw after update
 
 		camera.GetFramebuffer().unbind();
