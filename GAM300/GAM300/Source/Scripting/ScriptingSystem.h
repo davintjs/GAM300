@@ -85,12 +85,12 @@ namespace DefaultMethodTypes
 {
 	enum
 	{
-		Awake,
+		Awake = 0,
 		Start,
 		Update,
 		LateUpdate,
 		ExecuteCoroutines,
-		OnCollisionEnter = 0,
+		OnCollisionEnter,
 		OnCollisionStay,
 		OnCollisionExit,
 		OnTriggerEnter,
