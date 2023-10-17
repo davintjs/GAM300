@@ -70,7 +70,10 @@ out vec4 FragColor;
 //          UNIFORMS
 //-------------------------
 
-layout (binding = 0) uniform sampler2D myTextureSampler[32];
+layout (binding = 0) uniform sampler2D myTextureSampler[31];
+
+layout (binding = 31) uniform samplerCube PointShadowBox;
+
 //layout(std140, binding = 1) uniform PointLightBuffer {
 //    PointLight pointLights[NR_POINT_LIGHTS];
 //};
@@ -160,12 +163,13 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 
 float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 {
+    vec4 troll = texture(PointShadowBox, vec3(0,0,0));
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(myTextureSampler[31], projCoords.xy).r; 
+    float closestDepth = texture(myTextureSampler[30], projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow

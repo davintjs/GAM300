@@ -286,15 +286,18 @@ void Renderer::Draw(BaseCamera& _camera)
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 
 		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
-		for (int i = 0; i < 32; ++i)
+		for (int i = 0; i < 31; ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		glActiveTexture(GL_TEXTURE0 + 31);
+		glActiveTexture(GL_TEXTURE0 + 30);
 		
-		//glBindTexture(GL_TEXTURE_2D,depthMap);
-		glBindTexture(GL_TEXTURE_2D,depthCubemap);
+		glBindTexture(GL_TEXTURE_2D,depthMap);
+		//glBindTexture(GL_TEXTURE_2D,depthCubemap);
+
+		glActiveTexture(GL_TEXTURE0 + 31);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
 		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 
@@ -609,10 +612,19 @@ void Renderer::DrawDepth()
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
 
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
+	if (temporary_test == POINT_LIGHT)
+	{
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+	else
+	{
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
 	for (auto& [name, prop] : properties)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -655,9 +667,7 @@ void Renderer::DrawDepth()
 		}
 		else
 		{
-			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			
 
 			GLSLShader& shader = SHADER.GetShader(SHADOW);
 			shader.Use();
@@ -674,7 +684,6 @@ void Renderer::DrawDepth()
 			glBindVertexArray(0);
 
 			shader.UnUse();
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		}
 
