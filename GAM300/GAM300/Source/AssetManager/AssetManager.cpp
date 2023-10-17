@@ -254,6 +254,21 @@ std::string AssetManager::GetAssetGUID(const std::string& fileName)
 	return "";
 }
 
+std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
+{
+	return mTotalAssets.mMeshesAsset;
+}
+
+void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
+}
+
+void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
+}
+
 std::string AssetManager::GenerateGUID(const std::string& fileName)
 {
 	std::stringstream stream{};
@@ -515,19 +530,4 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
-}
-
-std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
-{
-	return mTotalAssets.mMeshesAsset;
-}
-
-void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
-{
-	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
-}
-
-void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
-{
-	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }

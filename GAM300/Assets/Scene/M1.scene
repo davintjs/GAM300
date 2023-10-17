@@ -25,16 +25,22 @@ MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
   MeshName: Sphere
-  mr_Albedo: [1, 1, 1, 1]
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
   AlbedoTexture: ""
   NormalMap: Default_normal
-  mr_metallic: 0.5
   MetallicTexture: Default_metalRoughness
-  mr_roughness: 0.5
   RoughnessTexture: Default_metalRoughness
-  EmissionTexture: ""
-  ao: 0.5
   AoTexture: Default_AO
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
 ---
 Script:
   EUID: 22203055554271501
@@ -49,7 +55,7 @@ GameObject:
   m_IsActive: true
   m_Name: Falling Cube 1
   m_Position: [0, 0.5, 0]
-  m_Rotation: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -76,16 +82,22 @@ MeshRenderer:
   EUID: 16942626329878887566
   UUID: 1245608959500342360
   MeshName: Cube
-  mr_Albedo: [1, 1, 1, 1]
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
   AlbedoTexture: ""
   NormalMap: ""
-  mr_metallic: 0.5
   MetallicTexture: ""
-  mr_roughness: 0.5
   RoughnessTexture: ""
-  EmissionTexture: ""
-  ao: 0.5
   AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
 ---
 BoxCollider:
   EUID: 16942626329878887566
@@ -98,7 +110,7 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [1, 0.5, 0]
+  m_Position: [1.77567589, 2.43183064, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -126,16 +138,22 @@ MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
   MeshName: DamagedHelmet
-  mr_Albedo: [1, 1, 1, 1]
-  AlbedoTexture: ""
-  NormalMap: ""
-  mr_metallic: 0.5
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: Default_albedo
+  NormalMap: Default_normal
   MetallicTexture: ""
-  mr_roughness: 0.5
   RoughnessTexture: ""
-  EmissionTexture: ""
-  ao: 0.5
-  AoTexture: ""
+  AoTexture: Default_AO
+  EmissionTexture: Default_emissive
+  TextureID: 8
+  NormalMapID: 12
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 9
+  EmissionID: 10
 ---
 BoxCollider:
   EUID: 10548661867949210258
@@ -176,16 +194,22 @@ MeshRenderer:
   EUID: 8552727112136102457
   UUID: 15321682287644036185
   MeshName: Cube
-  mr_Albedo: [1, 1, 1, 1]
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
   AlbedoTexture: ""
   NormalMap: ""
-  mr_metallic: 0.5
   MetallicTexture: ""
-  mr_roughness: 0.5
   RoughnessTexture: ""
-  EmissionTexture: ""
-  ao: 0.5
   AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
 ---
 BoxCollider:
   EUID: 8552727112136102457
@@ -198,7 +222,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [0, 3.4000001, 0]
+  m_Position: [0, 4.75, 1.86264515e-09]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -212,22 +236,28 @@ MeshRenderer:
   EUID: 6606253624498158492
   UUID: 2676873232007418467
   MeshName: Sphere
-  mr_Albedo: [1, 100, 100, 100]
+  Albedo: [1, 100, 100, 100]
+  Metallic: -1
+  Roughness: -1
+  AmbientOcclusion: -1
   AlbedoTexture: ""
   NormalMap: ""
-  mr_metallic: -1
   MetallicTexture: ""
-  mr_roughness: -1
   RoughnessTexture: ""
-  EmissionTexture: ""
-  ao: -1
   AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
 ---
 LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
-  Light Type: 0
-  Position: [0, 0, 0]
+  lightType: 0
+  lightpos: [0, 0, 0]
   Intensity: 0
   Direction: [0, 0, 0]
   Inner Cutoff: 0
@@ -239,7 +269,7 @@ GameObject:
   m_IsActive: true
   m_Name: Camera
   m_Position: [0.228027344, 2.9000001, 5.94999981]
-  m_Rotation: [0, 0, 0]
+  m_Rotation: [0, -0.150000006, 0]
   m_Scale: [0.999996662, 1, 0.999996722]
   m_Children:
     []

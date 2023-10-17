@@ -27,8 +27,8 @@ void BaseCamera::Init()
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.set_size((unsigned int)1600, (unsigned int)900);
-	framebuffer.init();
+	framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
+	framebuffer.Init();
 }
 
 void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
@@ -42,8 +42,8 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.set_size((unsigned int)_dimension.x, (unsigned int)_dimension.y);
-	framebuffer.init();
+	framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
+	framebuffer.Init();
 }
 
 void BaseCamera::Update()
@@ -91,7 +91,7 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 
 	UpdateProjection();
 
-	framebuffer.resize((GLuint)dimension.x, (GLuint)dimension.y);
+	framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
 }
 
 bool BaseCamera::WithinFrustum() const

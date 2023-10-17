@@ -268,11 +268,14 @@ struct MeshRenderer : Object
 	std::string MeshName = "Cube";
 	std::string AlbedoTexture = "";
 	std::string NormalMap = "";
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture = "";
+	std::string EmissionTexture = "";
 	//Materials mr_Material;
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
-
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
@@ -282,11 +285,6 @@ struct MeshRenderer : Object
 	float mr_metallic = 0.5f;
 	float mr_roughness = 0.5f;
 	float ao = 0.5f;
-
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;
@@ -301,22 +299,22 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(MeshName).Flags(property::flags::DONTSHOW),
-	property_var(mr_Albedo),
-	property_var(AlbedoTexture),
-	property_var(NormalMap),
-	/*property_var(mr_Specular),
-	property_var(mr_Diffuse),
-	property_var(mr_Ambient),
-	property_var(mr_Shininess),*/
-	property_var(mr_metallic),
-	property_var(MetallicTexture),
-
-	property_var(mr_roughness),
-	property_var(RoughnessTexture),
-	property_var(EmissionTexture),
-
-	property_var(ao),
-	property_var(AoTexture),
+	property_var(mr_Albedo).Name("Albedo"),
+	property_var(mr_metallic).Name("Metallic"),
+	property_var(mr_roughness).Name("Roughness"),
+	property_var(ao).Name("AmbientOcclusion"),
+	property_var(AlbedoTexture).Name("AlbedoTexture"),
+	property_var(NormalMap).Name("NormalMap"),
+	property_var(MetallicTexture).Name("MetallicTexture"),
+	property_var(RoughnessTexture).Name("RoughnessTexture"),
+	property_var(AoTexture).Name("AoTexture"),
+	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(textureID).Name("TextureID").Flags(property::flags::DONTSHOW),
+	property_var(normalMapID).Name("NormalMapID").Flags(property::flags::DONTSHOW),
+	property_var(RoughnessID).Name("RoughnessID").Flags(property::flags::DONTSHOW),
+	property_var(MetallicID).Name("MetallicID").Flags(property::flags::DONTSHOW),
+	property_var(AoID).Name("AoID").Flags(property::flags::DONTSHOW),
+	property_var(EmissionID).Name("EmissionID").Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshRenderer)
 
 
