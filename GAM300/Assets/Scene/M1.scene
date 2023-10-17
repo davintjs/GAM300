@@ -11,9 +11,9 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
-  m_Position: [156.493225, 116.136734, 360.909332]
-  m_Rotation: [8.45425205e-08, -1.50000012, 0]
-  m_Scale: [0.999995291, 1, 0.999995291]
+  m_Position: [-190.766846, 116.136734, 154.836227]
+  m_Rotation: [-3.1415925, -0.176808432, -3.1415925]
+  m_Scale: [0.999994218, 1, 0.999994218]
   m_Children:
     []
   m_Parent: 0
@@ -24,7 +24,7 @@ GameObject:
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
-  MeshName: Sphere
+  MeshName: DamagedHelmet
   mr_Albedo: [1, 1, 1, 1]
   AlbedoTexture: ""
   NormalMap: Default_normal
@@ -48,9 +48,9 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [0, 0, 0]
+  m_Position: [-364.108887, 100.57901, 0]
   m_Rotation: [0, -0, 0]
-  m_Scale: [10, 10, 10]
+  m_Scale: [100, 100, 100]
   m_Children:
     []
   m_Parent: 0
@@ -100,7 +100,7 @@ GameObject:
   m_Name: Falling Cube 2
   m_Position: [100, 100, 100]
   m_Rotation: [0, -0, 0]
-  m_Scale: [10, 10, 10]
+  m_Scale: [100, 100, 100]
   m_Children:
     []
   m_Parent: 0
@@ -198,7 +198,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-259.751099, 112.862083, 323.042511]
+  m_Position: [-119.252213, 154.9711, 33.9777412]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
@@ -226,7 +226,7 @@ MeshRenderer:
 LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
-  Light Type: 0
+  Light Type: 2
   Position: [0, 0, 0]
   Intensity: 0
   Direction: [0, 0, 0]

@@ -227,7 +227,6 @@ void GraphicsSystem::Update(float dt)
 		glViewport(0, 0, 1600, 900);
 		glBindFramebuffer(GL_FRAMEBUFFER, camera.GetFramebuffer().hdrFBO);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
-		std::cout << "this special one : " << camera.GetFramebuffer().hdrFBO << "\n";
 
 		
 		Draw(camera); // call draw after update

@@ -26,12 +26,12 @@ unsigned int depthMapFBO=0;
 unsigned int depthMap; // Shadow Texture
 
 //
-unsigned int depthCubemapFBO =0;
+unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
 
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = DIRECTIONAL_LIGHT;
+LIGHT_TYPE temporary_test = POINT_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
@@ -292,7 +292,10 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
 		glActiveTexture(GL_TEXTURE0 + 31);
-		glBindTexture(GL_TEXTURE_2D,depthMap);
+		
+		//glBindTexture(GL_TEXTURE_2D,depthMap);
+		glBindTexture(GL_TEXTURE_2D,depthCubemap);
+
 		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
@@ -606,6 +609,10 @@ void Renderer::DrawDepth()
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
 
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
 	for (auto& [name, prop] : properties)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -614,9 +621,7 @@ void Renderer::DrawDepth()
 
 		if (temporary_test == POINT_LIGHT)
 		{
-			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-			glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			//glClear(GL_DEPTH_BUFFER_BIT);
 
 
 			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
@@ -646,7 +651,6 @@ void Renderer::DrawDepth()
 
 			shader.UnUse();
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		}
 		else
@@ -675,6 +679,8 @@ void Renderer::DrawDepth()
 		}
 
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	//glDisable(GL_CULL_FACE);
 
 	// reset viewport
