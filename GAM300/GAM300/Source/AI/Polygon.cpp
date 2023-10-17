@@ -25,8 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
-	GenerateConvexHull(positions);
-	CalculateNormal(mPoints);
+	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
+	GenerateConvexHull(mTrimmedPos);
+	CalculateNormalBarycenter(mPoints);
 
 	minPoint = { FLT_MAX, FLT_MAX, FLT_MAX };
 	maxPoint = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
@@ -59,6 +60,11 @@ glm::vec3 Polygon3D::GetNormal() const
 Polygon3D::Orientation Polygon3D::GetOrientation() const
 {
 	return mOrientation;
+}
+
+const glm::vec3& Polygon3D::GetBarycenter() const
+{
+	return mBarycenterPoint;
 }
 
 std::vector<glm::vec3>& Polygon3D::GetPoints()
@@ -228,12 +234,97 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 		}
 		++counter;
 	}
-
 }
 
-void Polygon3D::CalculateNormal(const std::vector<glm::vec3>& vertices)
+std::vector<glm::vec3> Polygon3D::TrimPositions(const std::vector<glm::vec3>& positions)
+{
+	std::vector<glm::vec3> mResVec = positions; // Our returning vector
+
+	// Filter the convex hull to only give us the edges of the polygon
+
+	// Sort according to same z value but different x value
+	std::sort(mResVec.begin(), mResVec.end(), [](glm::vec3& p1, glm::vec3& p2)
+		{
+			return std::tie(p1.z, p1.x) < std::tie(p2.z, p2.x);
+		});
+
+	// Find the smallest x value and largest x value with the same z value
+	float mCurrZValue = mResVec[0].z;
+	bool done = false;
+
+	for (int i = 1; i < mResVec.size(); ++i)
+	{
+		while (mResVec[i].z == mCurrZValue)
+		{
+			if ((i + 1) >= mResVec.size())
+			{
+				done = true;
+				break;
+			}
+			else if (mResVec[i + 1].z != mCurrZValue) // Reached the end for this z value
+			{
+				break;
+			}
+
+			mResVec.erase(mResVec.begin() + i);
+		}
+
+		if (!done)
+		{
+			++i;
+			mCurrZValue = mResVec[i].z;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	// Sort according to same x value but different z value
+	std::sort(mResVec.begin(), mResVec.end(), [](glm::vec3& p1, glm::vec3& p2)
+		{
+			return p1.x < p2.x; // Descending order
+		});
+
+	// Find smallest z value and largest z value with the same x value
+	float mCurrXValue = mResVec[0].x;
+	bool mDone = false;
+
+	for (int i = 1; i < mResVec.size(); ++i)
+	{
+		while (mResVec[i].x == mCurrXValue)
+		{
+			if ((i + 1) >= mResVec.size())
+			{
+				mDone = true;
+				break;
+			}
+			else if (mResVec[i + 1].x != mCurrXValue) // Reached the end for this x value
+			{
+				break;
+			}
+
+			mResVec.erase(mResVec.begin() + i);
+		}
+
+		if (!mDone)
+		{
+			++i;
+			mCurrXValue = mResVec[i].x;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return mResVec;
+}
+
+void Polygon3D::CalculateNormalBarycenter(const std::vector<glm::vec3>& vertices)
 {
 	glm::vec3 normal{0.f, 0.f, 0.f};
+	glm::vec3 barycenter{ 0.f, 0.f, 0.f };
 
 	for (int i = 0; i < vertices.size(); i++)
 	{
@@ -241,9 +332,12 @@ void Polygon3D::CalculateNormal(const std::vector<glm::vec3>& vertices)
 		normal.x += (vertices[i].y - vertices[j].y) * (vertices[i].z + vertices[j].z);
 		normal.y += (vertices[i].z - vertices[j].z) * (vertices[i].x + vertices[j].x);
 		normal.z += (vertices[i].x - vertices[j].x) * (vertices[i].y + vertices[j].y);
+
+		barycenter += vertices[i];
 	}
 
 	mNormal = glm::normalize(normal);
+	mBarycenterPoint = barycenter / static_cast<float>(vertices.size());
 }
 
 // Joins this polygon with the hole polygon (Argument)
@@ -435,7 +529,7 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 		}
 	}
 
-	mHole.CalculateNormal(mHole.GetPoints());
+	mHole.CalculateNormalBarycenter(mHole.GetPoints());
 
 	return true;
 }

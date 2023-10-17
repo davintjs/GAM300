@@ -127,7 +127,7 @@ public:
 	std::map<std::string, InstanceProperties>* properties;
 private:
 	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string filePath);
+	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,
