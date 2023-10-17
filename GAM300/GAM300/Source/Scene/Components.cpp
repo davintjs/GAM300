@@ -19,6 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Scene/SceneManager.h"
+#include "AssetManager/AssetManager.h"
 
 std::map<std::string, size_t> ComponentTypes{};
 
@@ -102,4 +103,16 @@ void Transform::RemoveChild(Transform* t)
 	E_ASSERT(it != child.end(), "FAILED TO REMOVE CHILD");
 	// Erase the found element
 	child.erase(it);
+}
+
+Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
+{
+	BaseCamera::Init();
+	cameraType = CAMERATYPE::GAME;
+}
+
+MeshFilter::MeshFilter()
+{
+	vertices = &ASSETMANAGER.GetMeshAsset()[MeshName].mVertices;
+	indices = &ASSETMANAGER.GetMeshAsset()[MeshName].mIndices;
 }

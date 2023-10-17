@@ -165,9 +165,10 @@ struct ContactRemovedEvent : IEvent
 
 struct EditorWindowEvent : IEvent
 {
-	EditorWindowEvent() {};
+	EditorWindowEvent(const std::string& _name) : name{ _name } {};
 	bool isHovered = false;
 	bool isFocused = false;
+	std::string name;
 };
 
 struct EditorPanCameraEvent : IEvent

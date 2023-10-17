@@ -1100,6 +1100,7 @@ void EditorInspector::Init()
     IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
     IDENTIFIERS.physicsLayers[3] = Layer("UI");
     IDENTIFIERS.physicsLayers[4] = Layer("Water");
+    IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
 
     //create default tag
     IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();

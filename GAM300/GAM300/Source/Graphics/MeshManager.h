@@ -112,7 +112,7 @@ public:
 		{
 			return nullptr;
 		}
-		return &mContainer.find(mesh_Name)->second; 
+		return &(mContainer.find(mesh_Name)->second); 
 	
 	}// Either Geom or Vaoid
 
@@ -127,7 +127,7 @@ public:
 	std::map<std::string, InstanceProperties>* properties;
 private:
 	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string filePath);
+	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,
@@ -140,6 +140,7 @@ private:
 	void CreateInstanceCube();
 	void CreateInstanceSphere();
 	void CreateInstanceLine();
+	void CreateInstanceSegment3D();
 
 	// Creates all the related buffers - Blinn Phong
 	unsigned int InstanceSetup(InstanceProperties& prop);

@@ -33,6 +33,9 @@ public:
 	// Binds the framebuffer
 	void bind();
 
+	// Binds the framebuffer
+	void Bind(const unsigned int& _objectID);
+
 	// Unbinds the framebuffer
 	void unbind();
 

@@ -524,3 +524,14 @@ void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
 }
+
+std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
+{
+	return mTotalAssets.mMeshesAsset;
+}
+
+void AssetManager::StoreMesh(const std::string& mKey, const glm::vec3& mVertex, const unsigned int& mIndex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
+	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
+}

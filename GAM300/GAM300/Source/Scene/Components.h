@@ -16,12 +16,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
@@ -159,9 +159,18 @@ struct Animator : Object
 {
 };
 
-//struct Camera
-//{
-//};
+struct Camera : Object, BaseCamera
+{
+	Camera();
+	Vector4 backgroundColor{};
+	property_vtable();
+};
+
+property_begin_name(Camera, "Camera") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(backgroundColor).Name("BackgroundColor"),
+	property_parent(BaseCamera)
+} property_vend_h(Camera)
 
 struct Rigidbody : Object
 {
@@ -229,6 +238,22 @@ property_begin_name(Script, "Script") {
 	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
+
+
+struct MeshFilter : Object
+{
+	MeshFilter();
+
+	std::string MeshName = "Cube";
+	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<unsigned int>* indices;	// Index
+	property_vtable();
+};
+
+property_begin_name(MeshFilter, "MeshFilter"){
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(MeshName).Flags(property::flags::DONTSHOW)
+} property_vend_h(MeshFilter)
 
 struct MeshRenderer : Object
 {
@@ -426,7 +451,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

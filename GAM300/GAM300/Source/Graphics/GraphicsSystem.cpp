@@ -16,8 +16,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 #include "Core/SystemsGroup.h"
+#include "Scene/SceneManager.h"
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -56,14 +57,17 @@ std::vector <float> temp_ShininessContainer;
 // -----------------------------------------
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
+unsigned int cameraQuadVAO = 0;
+unsigned int cameraQuadVBO;
 
 
 extern unsigned int depthMap;
 extern unsigned int depthCubemap;
 
-void renderQuad()
+// void renderQuad()
+void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
-	if (quadVAO == 0)
+	if (_quadVAO == 0)
 	{
 		float quadVertices[] = {
 			// positions        // texture Coords
@@ -73,17 +77,17 @@ void renderQuad()
 			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		};
 		// setup plane VAO
-		glGenVertexArrays(1, &quadVAO);
-		glGenBuffers(1, &quadVBO);
-		glBindVertexArray(quadVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glGenVertexArrays(1, &_quadVAO);
+		glGenBuffers(1, &_quadVBO);
+		glBindVertexArray(_quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	}
-	glBindVertexArray(quadVAO);
+	glBindVertexArray(_quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
 }
@@ -160,7 +164,7 @@ void GraphicsSystem::Update(float dt)
 	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);	
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
-	Draw(); // call draw after update
+	Draw(EditorCam); // call draw after update
 
 	EditorCam.GetFramebuffer().unbind();
 
@@ -204,21 +208,71 @@ void GraphicsSystem::Update(float dt)
 
 
 
-	renderQuad();
+	// renderQuad();
+	renderQuad(quadVAO,quadVBO);
 	shader.UnUse();
 
 	EditorCam.GetFramebuffer().unbind();
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+
+		// Update camera view 
+		camera.UpdateCamera(transform->translation, transform->rotation);
+
+		glViewport(0, 0, 1600, 900);
+		glBindFramebuffer(GL_FRAMEBUFFER, camera.GetFramebuffer().hdrFBO);
+		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+
+		RENDERER.Update(dt);
+		Draw(camera); // call draw after update
+
+		camera.GetFramebuffer().unbind();
+
+		camera.GetFramebuffer().bind();
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.f, 0.5f, 0.5f, 1.f);
+
+		shader = SHADER.GetShader(HDR);
+		shader.Use();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, camera.GetFramebuffer().colorBuffer);
+
+		uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "hdr");
+
+		glUniform1i(uniform1, RENDERER.IsHDR());
+
+		uniform2 =
+			glGetUniformLocation(shader.GetHandle(), "exposure");
+
+		glUniform1f(uniform2, RENDERER.GetExposure());
+
+		renderQuad(cameraQuadVAO, cameraQuadVBO);
+		shader.UnUse();
+
+		camera.GetFramebuffer().unbind();
+	}
 }
 
-void GraphicsSystem::Draw() {
+void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 	glEnable(GL_DEPTH_BUFFER);
 
-	RENDERER.Draw();
+	RENDERER.Draw(_camera);
 
-	MYSKYBOX.Draw();
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+		DEBUGDRAW.Draw();
+
+	MYSKYBOX.Draw(_camera);
 }
 
 void GraphicsSystem::Exit()

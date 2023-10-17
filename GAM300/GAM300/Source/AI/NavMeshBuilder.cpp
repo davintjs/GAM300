@@ -20,18 +20,37 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "NavMeshBuilder.h"
 #include "NavMesh.h"
+#include "Scene/SceneManager.h"
+
+void NavMeshBuilder::GetAllGrounds()
+{
+	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
+	{
+		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
+		if (mTag.physicsLayerIndex != 5)
+		{
+			continue;
+		}
+
+		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
+		const MeshFilter& mesh = MySceneManager.GetCurrentScene().Get<MeshFilter>(entity);
+	}
+}
 
 void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
 {
 	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(GroundVertices, GroundIndices);
 	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
+	OffsetRadius(2.f); // Offset to account for the agent radius
+
 	mNavMesh = CreateNavMesh(); // Create the navmesh
 	mNavMesh->LinkAllTriangles();
 }
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	RemoveHoles(); // Remove holes in the boundary
+	ObstacleOffset(2.f); // Offset the diameter first before removing
+	RemoveObstaclesFromMesh(); // Remove holes in the boundary
 	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
 	return _NavMesh;
@@ -42,9 +61,14 @@ std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
 	return mRegion;
 }
 
-std::vector<Polygon3D>& NavMeshBuilder::GetHoles()
+//std::vector<Polygon3D>& NavMeshBuilder::GetHoles()
+//{
+//	return mHoles;
+//}
+
+std::vector<Polygon3D>& NavMeshBuilder::GetObstacles()
 {
-	return mHoles;
+	return mObstacles;
 }
 
 std::vector<Polygon3D> NavMeshBuilder::ComputeRegions(const std::vector<Triangle3D>& GroundTriangles)
@@ -141,31 +165,210 @@ std::vector<Triangle3D> NavMeshBuilder::GetGroundTriangles(const std::vector<glm
 	return resTri;
 }
 
-void NavMeshBuilder::AddHole(Polygon3D* hole)
+void NavMeshBuilder::OffsetRadius(const float& mRadius)
 {
-	mHoles.push_back(*hole);
+	int i = 0;
+	int regionTracker = 0;
+	while (regionTracker < mRegion.size())
+	{
+		float zValue = mRegion[regionTracker].GetBarycenter().z; // Finding the barycenter of connected regions by checking their z value matches
+		glm::vec3 baryCenter(0.f, 0.f, 0.f);
+		baryCenter += mRegion[regionTracker].GetBarycenter();
+
+		++regionTracker;
+		for (; regionTracker < mRegion.size(); ++regionTracker)
+		{
+			if (mRegion[regionTracker].GetBarycenter().z == zValue)
+			{
+				baryCenter += mRegion[regionTracker].GetBarycenter();
+			}
+			else // Different region z value, different barycenter
+			{
+				break;
+			}
+		}
+
+		// Reaching here, we have found the barycenter of connected regions
+		std::vector<glm::vec3> mVertsOffsetted;
+
+		for (; i < regionTracker - 1; ++i)
+		{
+			Polygon3D& mCurrentRegion = mRegion[i];
+			Polygon3D& mNextRegion = mRegion[i + 1];
+
+			// Find current region and next region's shared points
+			std::vector<int> mSharedPointsCurrent;
+			std::vector<int> mSharedPointsNext;
+			for (int j = 0; j < mCurrentRegion.GetPoints().size(); ++j)
+			{
+				glm::vec3 mCurrentPoint = mCurrentRegion.GetPoints()[j];
+
+				// If already offsetted, skip this point
+				if (std::find(mVertsOffsetted.begin(), mVertsOffsetted.end(), mCurrentPoint) != mVertsOffsetted.end())
+				{
+					continue;
+				}
+
+				for (int k = 0; k < mNextRegion.GetPoints().size(); ++k)
+				{
+					glm::vec3 mNextPoint = mNextRegion.GetPoints()[k];
+					if (mCurrentPoint == mNextPoint)
+					{
+						// Found a shared point
+						mSharedPointsCurrent.push_back(j); // Store this shared point of the current region
+						mSharedPointsNext.push_back(k); // Store this shared point of the next region
+
+						break; // Go to next mCurrentPoint
+					}
+				}
+			}
+
+			// Move non-shared points to offset diameter with the region's barycenter
+			for (int m = 0; m < mCurrentRegion.GetPoints().size(); ++m)
+			{
+				glm::vec3& _point = mCurrentRegion.GetPoints()[m];
+				if (std::find(mSharedPointsCurrent.begin(), mSharedPointsCurrent.end(), m) == mSharedPointsCurrent.end() // Means this point is not shared
+					&& std::find(mVertsOffsetted.begin(), mVertsOffsetted.end(), _point) == mVertsOffsetted.end()) // Means this point is not offsetted yet 
+				{
+					// Find length of v from barycenter to this point
+					glm::vec3 v = _point - baryCenter;
+					float vLength = glm::length(v);
+
+					// Subtract the diameter from vLength
+					float mDiameterLength = sqrt(mRadius * mRadius + mRadius * mRadius);
+					float newLength = vLength - mDiameterLength;
+
+					// Normalize v
+					glm::vec3 vNormalized = glm::normalize(v);
+
+					// newPoint = barycenter + newLength * vNormalized (Parametric equation)
+					_point = baryCenter + newLength * vNormalized;
+
+					mVertsOffsetted.push_back(_point);
+				}
+			}
+
+			// Move shared points to offset diameter (Move first to last and last to first)
+
+			// Current region
+			// First shared point
+			glm::vec3& _firstSharedPoint = mCurrentRegion.GetPoints()[mSharedPointsCurrent[0]];
+			const glm::vec3& _firstSharedPointNext = mCurrentRegion.GetPoints()[mSharedPointsCurrent[1]];
+
+			glm::vec3 _vFirstShared = _firstSharedPoint - _firstSharedPointNext;
+			float _vFirstSharedLength = glm::length(_vFirstShared);
+			float _vNewFirstSharedLength = _vFirstSharedLength - mRadius;
+			glm::vec3 _vFirstSharedNormalized = glm::normalize(_vFirstShared);
+			_firstSharedPoint = _firstSharedPointNext + _vNewFirstSharedLength * _vFirstSharedNormalized;
+
+			// Last shared point
+			glm::vec3& _lastSharedPoint = mCurrentRegion.GetPoints()[mSharedPointsCurrent[mSharedPointsCurrent.size() - 1]];
+			const glm::vec3& _lastSharedPointPrev = mCurrentRegion.GetPoints()[mSharedPointsCurrent[mSharedPointsCurrent.size() - 2]];
+
+			glm::vec3 _vLastShared = _lastSharedPoint - _lastSharedPointPrev;
+			float _vLastSharedLength = glm::length(_vLastShared);
+			float _vNewLastSharedLength = _vLastSharedLength - mRadius;
+			glm::vec3 _vLastSharedNormalized = glm::normalize(_vLastShared);
+			_lastSharedPoint = _lastSharedPointPrev + _vNewLastSharedLength * _vLastSharedNormalized;
+
+			// Next region just need to set first and last to already calculated values from current
+			mNextRegion.GetPoints()[mSharedPointsNext[0]] = _firstSharedPoint;
+			mNextRegion.GetPoints()[mSharedPointsNext[mSharedPointsNext.size() - 1]] = _lastSharedPoint;
+
+			for (int n = 0; n < mSharedPointsNext.size(); ++n) // Add the rest of the shared point to offsetted
+			{
+				mVertsOffsetted.push_back(mNextRegion.GetPoints()[mSharedPointsNext[n]]);
+			}
+		}
+
+		// Account for the last region
+		Polygon3D& mLastRegion = mRegion[mRegion.size() - 1];
+
+		for (int a = 0; a < mLastRegion.GetPoints().size(); ++a)
+		{
+			glm::vec3& _point = mLastRegion.GetPoints()[a];
+			if (std::find(mVertsOffsetted.begin(), mVertsOffsetted.end(), _point) == mVertsOffsetted.end())
+			{
+				// Find length of v from barycenter to this point
+				glm::vec3 v = _point - baryCenter;
+				float vLength = glm::length(v);
+
+				// Subtract the diameter from vLength
+				float mDiameterLength = sqrt(mRadius * mRadius + mRadius * mRadius);
+				float newLength = vLength - mDiameterLength;
+
+				// Normalize v
+				glm::vec3 vNormalized = glm::normalize(v);
+
+				// newPoint = barycenter + newLength * vNormalized (Parametric equation)
+				_point = baryCenter + newLength * vNormalized;
+
+				mVertsOffsetted.push_back(_point); // Add this offsetted vertex to the vertex for checking
+			}
+		}
+	}
 }
 
-void NavMeshBuilder::RemoveHoles()
+void NavMeshBuilder::ObstacleOffset(const float& mRadius)
 {
-	std::sort(mHoles.begin(), mHoles.end(), [](Polygon3D& p1, Polygon3D& p2)
+	for (auto& obstacle : mObstacles)
+	{
+		std::vector<glm::vec3> mHoldVec;
+		for (int i = 0; i < obstacle.GetPoints().size(); ++i)
+		{
+			// Get our 3 points for a triangle
+			glm::vec3 firstPoint = obstacle.GetPoints()[i - 1 < 0 ? obstacle.GetPoints().size() - 1 : i - 1];
+			glm::vec3 secondPoint = obstacle.GetPoints()[i];
+			glm::vec3 thirdPoint = obstacle.GetPoints()[i + 1 == obstacle.GetPoints().size() ? 0 : i + 1];
+
+			// Find the midpoint of triangle's opposite side of second point
+			glm::vec3 midPoint = (firstPoint + thirdPoint) / 2.f;
+
+			// Get the vector from the midpoint to our second point
+			glm::vec3 mVector = secondPoint - midPoint;
+
+			// Extrapolate with the agent radius
+			float mRadiusLength = sqrt(mRadius * mRadius + mRadius * mRadius);
+			float mVectorCurrLength = glm::length(mVector);
+			float mVectorNewLength = mVectorCurrLength + mRadiusLength;
+
+			// Set new point of this corner of hole with parametric equation
+			glm::vec3 mNormalizedVec = glm::normalize(mVector);
+			mHoldVec.push_back(midPoint + mVectorNewLength * mNormalizedVec);
+		}
+
+		for (int j = 0; j < obstacle.GetPoints().size(); ++j)
+		{
+			obstacle.GetPoints()[j] = mHoldVec[j];
+		}
+	}
+}
+
+void NavMeshBuilder::AddObstacle(Polygon3D* mObstacle)
+{
+	mObstacles.push_back(*mObstacle);
+}
+
+void NavMeshBuilder::RemoveObstaclesFromMesh()
+{
+	std::sort(mObstacles.begin(), mObstacles.end(), [](Polygon3D& p1, Polygon3D& p2)
 		{
 			return p1.GetMaxPoint().y > p2.GetMaxPoint().y;
 		});
 
 	for (auto& polygon : mRegion)
 	{
-		for (auto& hole : mHoles)
+		for (auto& obstacle : mObstacles)
 		{
-			if (polygon.HoleInPolygon(hole)) // Check if hole intersects this polygon
+			if (polygon.HoleInPolygon(obstacle)) // Check if obstacle is in this polygon
 			{
-				// Switch the orientation of the hole
-				if (polygon.GetOrientation() == hole.GetOrientation())
+				// Switch the orientation of the obstacle
+				if (polygon.GetOrientation() == obstacle.GetOrientation())
 				{
-					hole.SwitchOrientation();
+					obstacle.SwitchOrientation();
 				}
 				
-				polygon.JoinPolygon(hole); // Add the hole into the polygon
+				polygon.JoinPolygon(obstacle); // Add the obstacle into the polygon
 			}
 		}
 	}
@@ -187,7 +390,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 			continue;
 		}
 
-		polygon.CalculateNormal(vertices);
+		polygon.CalculateNormalBarycenter(vertices);
 
 		// Step 2: Find reflex and convex vertices, and ear vertices
 		std::vector<glm::vec3> nonConvexPoints;
@@ -420,7 +623,7 @@ bool NavMeshBuilder::Parallel(const glm::vec3& v1, const glm::vec3& v2)
 
 void NavMeshBuilder::Exit()
 {
-	mHoles.clear();
+	//mHoles.clear();
 	mObstacles.clear();
 	mRegion.clear();
 

@@ -23,7 +23,7 @@
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
+    <ClCompile Include="Source\Editor\EditorCamera.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
@@ -93,6 +93,8 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\BaseCamera.cpp" />
+    <ClCompile Include="Source\Editor\EditorGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -111,7 +113,7 @@
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Graphics\Editor_Camera.h" />
+    <ClInclude Include="Source\Editor\EditorCamera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
@@ -168,6 +170,8 @@
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
+    <ClInclude Include="Source\Graphics\BaseCamera.h" />
+    <ClInclude Include="Source\Graphics\Ray3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

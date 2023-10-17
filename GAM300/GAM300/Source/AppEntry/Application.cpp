@@ -27,7 +27,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/gtc/type_ptr.hpp> // for glm functions
 
 #include "../Source/Graphics/Model3d.h"
-#include "Graphics/Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 
 ////Temporary Stuffs
 //Model testmodel;

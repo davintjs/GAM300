@@ -33,6 +33,9 @@ public:
 	NavMeshBuilder() {};
 	~NavMeshBuilder() {};
 
+	// Get all grounds of the current scene
+	void GetAllGrounds();
+
 	// NavMeshBuilder exit
 	void Exit();
 
@@ -45,7 +48,12 @@ public:
 	std::vector<Polygon3D>& GetRegion();
 
 	// Returns the holes in this navmesh
-	std::vector<Polygon3D>& GetHoles();
+	//std::vector<Polygon3D>& GetHoles();
+
+	// Returns the obstacles in this navmesh
+	std::vector<Polygon3D>& GetObstacles();
+
+	NavMesh* GetNavMesh() { return mNavMesh; }
 
 private:
 	// Compute the individual regions of the navmesh
@@ -54,9 +62,12 @@ private:
 	// Returns the ground triangles of the navmesh
 	std::vector<Triangle3D> GetGroundTriangles(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices);
 
+	void OffsetRadius(const float& mRadius);
+	void ObstacleOffset(const float& mRadius);
+
 	// Add hole to the navmesh and editing the navmesh to accomodate the holes
-	void AddHole(Polygon3D* hole);
-	void RemoveHoles();
+	void AddObstacle(Polygon3D* mObstacle);
+	void RemoveObstaclesFromMesh();
 
 	// Triangulation of the navmesh with ear clipping method
 	std::vector<Triangle3D> Triangulate();
@@ -84,7 +95,7 @@ private:
 	int mTriCount = 0;
 	Polygon3D* mBoundary;
 	NavMesh* mNavMesh;
-	std::vector<Polygon3D> mHoles;
+	//std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
 	std::vector<Polygon3D> mRegion;
 };

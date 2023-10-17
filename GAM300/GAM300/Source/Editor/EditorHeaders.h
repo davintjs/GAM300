@@ -155,17 +155,15 @@ private:
 ENGINE_EDITOR_SYSTEM(EditorScene)
 {
 public:
-    // Initializing the Scene & Game
+    // Initializing the Scene View
     void Init();
 
-    // Updating and displaying of the Scene & Game
+    // Updating and displaying of the Scene View
     void Update(float dt);
 
     bool SelectEntity();
 
     void ToolBar();
-
-    void GameView();
     
     void SceneView();
     
@@ -191,6 +189,47 @@ private:
     bool windowHovered = false;
     bool windowFocused = false;
     bool inOperation = false;
+    bool debug_draw = false;
+};
+
+ENGINE_EDITOR_SYSTEM(EditorGame)
+{
+public:
+    // Initializing the Game View
+    void Init();
+
+    // Updating and displaying of the Game View
+    void Update(float dt);
+
+    void ToolBar();
+
+    void UpdateTargetDisplay();
+
+    void GameView();
+
+    void ResizeGameView(glm::vec2 _newDimension);
+
+    // Exit the system
+    void Exit();
+
+    // Getters for the data members
+    glm::vec2 const GetDimension() { return dimension; }
+    glm::vec2 const GetPosition() { return position; }
+    bool const WindowHovered() { return windowHovered; }
+    bool const WindowFocused() { return windowFocused; }
+    bool const DebugDraw() { return debug_draw; }
+
+    void CallbackEditorWindow(EditorWindowEvent * pEvent);
+
+private:
+    glm::vec2 dimension{}; // Dimensions of the viewport
+    glm::vec2 position{};  // Position of the viewport relative to the engine
+    glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
+    unsigned int targetDisplay = 0;
+    float padding = 16.f;
+    float AspectRatio = 16.f / 9.f;
+    bool windowHovered = false;
+    bool windowFocused = false;
     bool debug_draw = false;
 };
 

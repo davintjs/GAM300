@@ -10,7 +10,7 @@
 	This file contains the definitions of Graphics Renderer that includes:
 	1.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Scene/SceneManager.h"
 #include "MeshManager.h"
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 
 unsigned int depthMapFBO; 
 unsigned int depthMap; // Shadow Texture
@@ -99,6 +99,11 @@ void Renderer::Update(float)
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
+
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		
+	}
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
@@ -220,7 +225,7 @@ void Renderer::SetupGrid(const int& _num)
 	}
 }
 
-void Renderer::Draw()
+void Renderer::Draw(BaseCamera& _camera)
 {
 	// Looping Properties
 	for (auto& [name, prop] : properties)
@@ -285,11 +290,14 @@ void Renderer::Draw()
 		}
 		glActiveTexture(GL_TEXTURE0 + 31);
 		glBindTexture(GL_TEXTURE_2D,depthMap);
-		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
+		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
+
+		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
+
 		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
-		if (EditorScene::Instance().DebugDraw())
+		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -298,7 +306,7 @@ void Renderer::Draw()
 				DrawDebug(prop.debugVAO, prop.iter);
 		}
 
-		if (name == "Line")
+		if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -312,7 +320,7 @@ void Renderer::Draw()
 }
 
 void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-	const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource)
+	const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera& _camera)
 {
 	//testBox.instanceDraw(EntityRenderLimit);
 
@@ -354,15 +362,15 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(this->shader.GetHandle(), "SRT");*/
 
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetProjMatrix()));
+		glm::value_ptr(_camera.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetViewMatrix()));
+		glm::value_ptr(_camera.GetViewMatrix()));
 	glUniform3fv(uniform3, 1,
 		glm::value_ptr(_lightSource.lightColor));
 	glUniform3fv(uniform4, 1,
 		glm::value_ptr(_lightSource.lightpos));
 	glUniform3fv(uniform5, 1,
-		glm::value_ptr(EditorCam.GetCameraPosition()));
+		glm::value_ptr(_camera.GetCameraPosition()));
 
 	// POINT LIGHT STUFFS
 	auto PointLight_Sources = LIGHTING.GetPointLights();
@@ -392,7 +400,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	GLint uniform7 =
 		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
-	glUniform1i(uniform7, (int) PointLight_Sources.size());
+	glUniform1i(uniform7, (int)PointLight_Sources.size());
 
 	// DIRECTIONAL LIGHT STUFFS
 	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
@@ -418,7 +426,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	GLint uniform8 =
 		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
-	glUniform1i(uniform8, (int) DirectionLight_Sources.size());
+	glUniform1i(uniform8, (int)DirectionLight_Sources.size());
 
 	// SPOTLIGHT STUFFS
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
@@ -463,7 +471,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	}
 	GLint uniform9 =
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
-	glUniform1i(uniform9, (int) SpotLight_Sources.size());
+	glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
 
 
@@ -488,6 +496,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	shader.UnUse();
 }
+
 
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {

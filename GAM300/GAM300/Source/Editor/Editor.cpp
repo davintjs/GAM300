@@ -26,6 +26,7 @@ TemplatePack
     EditorMenuBar,
     EditorContentBrowser,
     EditorScene,
+    EditorGame,
     EditorInspector,
     EditorDebugger,
     EditorHierarchy,
