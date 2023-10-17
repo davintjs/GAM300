@@ -114,6 +114,7 @@ void EditorContentBrowser::Update(float dt)
             //Open script file in VSCode
             if ((path.string().find(".cs") != std::string::npos)) {
                 std::string command = "code " + path.string();
+                system(command.c_str());
             }
 
             //Open Scene file

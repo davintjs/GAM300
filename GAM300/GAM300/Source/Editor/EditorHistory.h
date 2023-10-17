@@ -3,6 +3,8 @@
 
 #include "Precompiled.h"
 #include "Scene/Object.h"
+#include "Core/EventsManager.h"
+#include "Scene/Components.h"
 
 using Component = Object*;
 
@@ -41,6 +43,8 @@ class HistoryManager {
 			change.previousValue = var;
 			var = value;
 			change.newValue = var;
+
+			std::cout << "added " << change.property << " into the undo stack.\n";
 			//push this change onto the undo stack
 			UndoStack.push(change);
 

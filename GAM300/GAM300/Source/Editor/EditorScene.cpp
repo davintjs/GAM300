@@ -280,7 +280,6 @@ void EditorScene::DisplayGizmos()
                 Change scale(&trans, "Transform/Scale");
                 EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
             }
-            std::cout << "setting undo\n";
             firstmove = true;
         }
     }
