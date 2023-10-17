@@ -11,7 +11,7 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
-  m_Position: [-190.766846, 116.136734, 154.836227]
+  m_Position: [-462.701233, 438.840179, -509.975616]
   m_Rotation: [-3.1415925, -0.176808432, -3.1415925]
   m_Scale: [0.999994218, 1, 0.999994218]
   m_Children:
@@ -48,7 +48,7 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [-364.108887, 100.57901, 0]
+  m_Position: [-252.710007, 394.150391, -551.416809]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -98,7 +98,7 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [100, 100, 100]
+  m_Position: [-578.179138, 457.026978, -699.637756]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -148,7 +148,7 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
-  m_Position: [0, -19.0966854, 35]
+  m_Position: [-103.465775, -119.467133, -480.341644]
   m_Rotation: [0, -0, 0]
   m_Scale: [1000, 1, 1000]
   m_Children:
@@ -198,7 +198,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-119.252213, 154.9711, 33.9777412]
+  m_Position: [-231.539871, 45.8914871, -663.410339]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
@@ -233,3 +233,31 @@ LightSource:
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [50000, 50000, 50000]
+---
+GameObject:
+  m_EUID: 14766540740807996429
+  m_IsActive: true
+  m_Name: New GameObject(6)
+  m_Position: [-288.612762, 933.021729, -782.66864]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [10000, 1, 10000]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 10430379416351484868}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 14766540740807996429
+  UUID: 10430379416351484868
+  MeshName: Cube
+  mr_Albedo: [1, 1, 1, 1]
+  AlbedoTexture: ""
+  NormalMap: ""
+  mr_metallic: 0.5
+  MetallicTexture: ""
+  mr_roughness: 0.5
+  RoughnessTexture: ""
+  EmissionTexture: ""
+  ao: 0.5
+  AoTexture: ""

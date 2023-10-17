@@ -296,9 +296,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		glBindTexture(GL_TEXTURE_2D,depthMap);
 		//glBindTexture(GL_TEXTURE_2D,depthCubemap);
 
-		glActiveTexture(GL_TEXTURE0 + 31);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-
 		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
@@ -337,6 +334,16 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	GLSLShader& shader = SHADER.GetShader(PBR);
 	shader.Use();
+
+	glActiveTexture(GL_TEXTURE0 + 31);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	glUniform1i(glGetUniformLocation(shader.GetHandle(), "PointShadowBox"), 31); // Associate samplerCube with texture unit 2
+	
+	
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
+
+
+
 
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
@@ -595,7 +602,7 @@ void Renderer::DrawDepth()
 	}
 	else if (temporary_test == POINT_LIGHT)
 	{
-		near_plane = 1.0f;
+		near_plane = 0.001f;
 		far_plane = 1000.f;
 		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
