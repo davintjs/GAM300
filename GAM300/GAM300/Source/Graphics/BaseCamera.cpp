@@ -21,7 +21,7 @@ void BaseCamera::Init()
 	aspect = 16.f / 9.f;
 	fieldOfView = 45.0f;
 	nearClip = 0.1f;
-	farClip = 1000.f;
+	farClip = 10000.f;
 	focalLength = 10.f;
 
 	UpdateViewMatrix();

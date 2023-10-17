@@ -22,8 +22,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "NavMesh.h"
 #include "Scene/SceneManager.h"
 
-void NavMeshBuilder::GetAllGrounds()
+std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAllGrounds()
 {
+	std::vector<glm::vec3> mGroundVertices;
+	std::vector<glm::ivec3> mGroundIndices;
+
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
@@ -34,12 +37,25 @@ void NavMeshBuilder::GetAllGrounds()
 
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
 		const MeshFilter& mesh = MySceneManager.GetCurrentScene().Get<MeshFilter>(entity);
+
+		for (int i = 0; i < mesh.vertices->size(); ++i)
+		{
+			glm::vec4 temp = glm::vec4((*mesh.vertices)[i], 1.f);
+			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
+		}
+		for (int j = 0; j < mesh.indices->size(); j += 3)
+		{
+			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j], (*mesh.indices)[j + 1], (*mesh.indices)[j + 2]));
+		}
 	}
+
+	return std::make_pair(mGroundVertices, mGroundIndices);
 }
 
-void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
+void NavMeshBuilder::BuildNavMesh()
 {
-	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(GroundVertices, GroundIndices);
+	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> mResPair = GetAllGrounds();
+	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(mResPair.first, mResPair.second);
 	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
 	OffsetRadius(2.f); // Offset to account for the agent radius
 
@@ -148,6 +164,7 @@ std::vector<Triangle3D> NavMeshBuilder::GetGroundTriangles(const std::vector<glm
 {
 	std::vector<Triangle3D> resTri;
 
+	// {0, 1, 2} and {2, 3, 0}
 	for (int i = 0; i < GroundIndices.size(); ++i)
 	{
 		glm::vec3 firstPoint = GroundVertices[GroundIndices[i].x];

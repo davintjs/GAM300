@@ -75,7 +75,8 @@ public:
 	std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
 
 	// Adds mesh asset for storing
-	void StoreMesh(const std::string& mKey, const glm::vec3& mVertex, const unsigned int& mIndex);
+	void StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex);
+	void StoreMeshIndex(const std::string& mKey, const int& mIndex);
 
 	// AssetManager initialization to load assets into memory
 	void Init();

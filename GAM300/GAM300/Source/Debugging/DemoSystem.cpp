@@ -143,20 +143,7 @@ void DemoSystem::Update(float dt)
 	{
 		if (!NAVMESHBUILDER.GetNavMesh()) // Temp no rebaking
 		{
-			// NavMesh testing
-			std::vector<glm::vec3> GroundVertices{
-					glm::vec3(-500.f, 0.5f, -500.f),
-					glm::vec3(500.f, 0.5f, -500.f),
-					glm::vec3(500.f, 0.5f, 500.f),
-					glm::vec3(-500.f, 0.5f, 500.f),
-			};
-
-			std::vector<glm::ivec3> GroundIndices{
-					glm::ivec3(0, 1, 2),
-					glm::ivec3(2, 3, 0),
-			};
-
-			NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
+			NAVMESHBUILDER.BuildNavMesh(); // Build the navmesh
 		}
 	}
 }
