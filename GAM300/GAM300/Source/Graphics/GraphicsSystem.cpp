@@ -9,7 +9,7 @@
 \brief
 	This file contains the definations of Graphics System
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -60,6 +60,11 @@ unsigned int quadVBO;
 unsigned int cameraQuadVAO = 0;
 unsigned int cameraQuadVBO;
 
+
+extern unsigned int depthMap;
+extern unsigned int depthCubemap;
+
+// void renderQuad()
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
@@ -93,12 +98,12 @@ void GraphicsSystem::Init()
 	GraphicsSubSystems::Init();
 
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
-
 	EditorCam.Init();
 }
 
 void GraphicsSystem::Update(float dt)
 {
+
 	// Temporary Material thing
 	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
 	temp_DiffuseContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
@@ -156,7 +161,9 @@ void GraphicsSystem::Update(float dt)
 	*/
 
 	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);	
+	std::cout << "mamamia: " << EditorCam.GetFramebuffer().hdrFBO << "\n";
+
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(EditorCam); // call draw after update
@@ -176,6 +183,8 @@ void GraphicsSystem::Update(float dt)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -187,6 +196,21 @@ void GraphicsSystem::Update(float dt)
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "near_plane");
+
+	//glUniform1f(uniform3, -10000.f);
+	glUniform1f(uniform3, 50.f);
+
+	GLint uniform4 =
+		glGetUniformLocation(shader.GetHandle(), "far_plane");
+
+	glUniform1f(uniform4, 1000.f);
+
+
+
+
+	// renderQuad();
 	renderQuad(quadVAO,quadVBO);
 	shader.UnUse();
 
@@ -200,12 +224,13 @@ void GraphicsSystem::Update(float dt)
 
 		// Update camera view 
 		camera.UpdateCamera(transform->translation, transform->rotation);
-
+		RENDERER.Update(dt);
 		glViewport(0, 0, 1600, 900);
 		glBindFramebuffer(GL_FRAMEBUFFER, camera.GetFramebuffer().hdrFBO);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+		std::cout << "this special one : " << camera.GetFramebuffer().hdrFBO << "\n";
 
-		RENDERER.Update(dt);
+		
 		Draw(camera); // call draw after update
 
 		camera.GetFramebuffer().unbind();
