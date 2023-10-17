@@ -62,6 +62,17 @@ void EditorSystem::Update(float dt)
     Editor_Dockspace();
     EditorSystems::Update(dt);
 
+    //macros for undo and redo functionality
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyPressed(ImGuiKey_Z, false))
+            History.UndoChange();    
+    }
+
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyPressed(ImGuiKey_Y, false))
+            History.RedoChange();
+    }
+
     //demo
     /*bool demo = true;
     ImGui::ShowDemoWindow(&demo);

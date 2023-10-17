@@ -40,6 +40,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
+    <ClCompile Include="Source\Editor\EditorHistory.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -238,6 +239,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Editor\EditorHistory.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />

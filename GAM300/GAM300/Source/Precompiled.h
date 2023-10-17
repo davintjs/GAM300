@@ -38,3 +38,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <string>
 #include <utility>
 #include <vector>
+#include <stack>
+#include <unordered_map>
+#include <any>
