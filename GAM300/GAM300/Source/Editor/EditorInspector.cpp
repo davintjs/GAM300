@@ -388,7 +388,25 @@ void DisplayField(Change& change, const char* name, Field& field)
         }
         else
         {
-            DisplayType(change, name, field.Get<T>());
+            if constexpr (std::is_same_v<T, char*>)
+            {
+                char* str = (char*)field.data;
+                std::string val = str;
+                DisplayType(change,name, val);
+                if (val.size() >= TEXT_BUFFER_SIZE - 1)
+                {
+                    memcpy(str, val.data(), TEXT_BUFFER_SIZE - 1);
+                    str[TEXT_BUFFER_SIZE - 1] = 0;
+                }
+                else
+                {
+                    strcpy(str, val.data());
+                }
+            }
+            else
+            {
+                DisplayType(change,name, field.Get<T>());
+            }
         }
         return;
     }
@@ -742,7 +760,6 @@ void Display_Property(T& comp) {
 
 void DisplayComponent(Script& script)
 {
-    ACQUIRE_SCOPED_LOCK(Mono);
     static char buffer[2048]{};
     ScriptGetFieldNamesEvent getFieldNamesEvent{script};
     EVENTS.Publish(&getFieldNamesEvent);
