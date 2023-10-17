@@ -82,10 +82,12 @@ void Renderer::Init()
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "depth Cube framebuffer exploded\n";
+	else
+		std::cout << "depth Cube framebuffer created successfully\n";
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
-	std::cout << "depth cube FBO" << depthCubemapFBO << "\n";
-	std::cout << "depth FBO" << depthMapFBO << "\n";
 }
 
 void Renderer::Update(float)
@@ -635,7 +637,6 @@ void Renderer::DrawDepth()
 
 			GLint uniform2 =
 				glGetUniformLocation(shader.GetHandle(), "far_plane");
-			std::cout << "far plane is " << far_plane << "\n";
 			glUniform1f(uniform2, far_plane);
 
 
