@@ -252,7 +252,11 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const s
         // Store the geom vertices position and indices in asset manager
         for (int v = 0; v < tempMesh._vertices.size(); ++v)
         {
-            ASSETMANAGER.StoreMesh(fileName, tempMesh._vertices[v].pos, tempMesh._indices[v]);
+            ASSETMANAGER.StoreMeshVertex(fileName, tempMesh._vertices[v].pos);
+        }
+        for (int k = 0; k < tempMesh._indices.size(); ++k)
+        {
+            ASSETMANAGER.StoreMeshIndex(fileName, tempMesh._indices[k]);
         }
 
         // Add this tempMesh into our tempGeom
@@ -417,53 +421,73 @@ void MESH_Manager::CreateInstanceCube()
         22, 23, 20
     };
 
-    // Front Face
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 1);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, -0.5f }, 3);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
+    ASSETMANAGER.StoreMeshVertex("Cube", { -0.5f, 0.5f, -0.5f });
+    ASSETMANAGER.StoreMeshVertex("Cube", { 0.5f, 0.5f, -0.5f });
+    ASSETMANAGER.StoreMeshVertex("Cube", { 0.5f, 0.5f, 0.5f });
+    ASSETMANAGER.StoreMeshVertex("Cube", { -0.5f, 0.5f, 0.5f });
+    
+    ASSETMANAGER.StoreMeshIndex("Cube", 0);
+    ASSETMANAGER.StoreMeshIndex("Cube", 1);
+    ASSETMANAGER.StoreMeshIndex("Cube", 2);
+    ASSETMANAGER.StoreMeshIndex("Cube", 2);
+    ASSETMANAGER.StoreMeshIndex("Cube", 3);
+    ASSETMANAGER.StoreMeshIndex("Cube", 0);
 
-    // Back Face
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 5);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, 0.5f }, 7);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
+    //// Top Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 1);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 2);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 2);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 3);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
 
-    // Left Face
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 9);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 11);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
+    //// Front Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 1);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, -0.5f }, 3);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
 
-    // Right Face
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 13);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 15);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
+    //// Back Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 5);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, 0.5f }, 7);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
 
-    // Top Face
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 17);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 19);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
+    //// Left Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 9);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 11);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
 
-    // Bottom Face
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 21);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
-    ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 23);
-    ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
+    //// Right Face
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 13);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 15);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
+
+    //// Top Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 17);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 19);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
+
+    //// Bottom Face
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 21);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
+    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 23);
+    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
     
     newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
     newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);

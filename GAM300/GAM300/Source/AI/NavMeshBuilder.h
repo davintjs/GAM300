@@ -34,13 +34,13 @@ public:
 	~NavMeshBuilder() {};
 
 	// Get all grounds of the current scene
-	void GetAllGrounds();
+	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> GetAllGrounds();
 
 	// NavMeshBuilder exit
 	void Exit();
 
 	// Builds the navmesh from the given vertices and indices
-	void BuildNavMesh(const std::vector<glm::vec3>&GroundVertices, const std::vector<glm::ivec3>&GroundIndices);
+	void BuildNavMesh();
 	NavMesh* CreateNavMesh();
 
 	// Getter functions

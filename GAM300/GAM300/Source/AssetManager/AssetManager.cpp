@@ -530,8 +530,12 @@ std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
 	return mTotalAssets.mMeshesAsset;
 }
 
-void AssetManager::StoreMesh(const std::string& mKey, const glm::vec3& mVertex, const unsigned int& mIndex)
+void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
 {
 	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
+}
+
+void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
+{
 	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }
