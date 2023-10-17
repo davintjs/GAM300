@@ -1136,7 +1136,7 @@ void AddLayerPanel() {
                 std::string& layername = IDENTIFIERS.physicsLayers[i].name;
                 ImGui::SetNextItemWidth(-FLT_MIN);
                 if(i <= 4)
-                    ImGui::InputText(label.c_str(), &layername, ImGuiInputTextFlags_ReadOnly);
+                    ImGui::Text(layername.c_str());
                 else
                     ImGui::InputText(label.c_str(), &layername);
                 ImGui::TableNextRow();
