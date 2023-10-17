@@ -20,6 +20,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "NavMeshBuilder.h"
 #include "NavMesh.h"
+#include "Scene/SceneManager.h"
+
+void NavMeshBuilder::GetAllGrounds()
+{
+	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
+	{
+		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
+		if (mTag.physicsLayerIndex != 5)
+		{
+			continue;
+		}
+
+		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
+
+	}
+}
 
 void NavMeshBuilder::BuildNavMesh(const std::vector<glm::vec3>& GroundVertices, const std::vector<glm::ivec3>& GroundIndices)
 {

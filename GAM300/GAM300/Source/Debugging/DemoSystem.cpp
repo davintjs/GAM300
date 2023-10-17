@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Scene/SceneManager.h"
+#include "AI/NavMeshBuilder.h"
 
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 
@@ -138,6 +139,26 @@ void DemoSystem::Init()
 void DemoSystem::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
+	{
+		if (!NAVMESHBUILDER.GetNavMesh()) // Temp no rebaking
+		{
+			// NavMesh testing
+			std::vector<glm::vec3> GroundVertices{
+					glm::vec3(-500.f, 0.5f, -500.f),
+					glm::vec3(500.f, 0.5f, -500.f),
+					glm::vec3(500.f, 0.5f, 500.f),
+					glm::vec3(-500.f, 0.5f, 500.f),
+			};
+
+			std::vector<glm::ivec3> GroundIndices{
+					glm::ivec3(0, 1, 2),
+					glm::ivec3(2, 3, 0),
+			};
+
+			NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
+		}
+	}
 }
 
 void DemoSystem::Exit()

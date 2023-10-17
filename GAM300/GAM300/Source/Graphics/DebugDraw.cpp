@@ -41,14 +41,17 @@ void DebugDraw::Update(float)
 
 void DebugDraw::Draw()
 {
-	auto navMesh = NAVMESHBUILDER.GetNavMesh();
+	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
 
 	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
-	for (Triangle3D tri : navMesh->GetNavMeshTriangles())
+	if (navMesh)
 	{
-		DrawSegment3D(tri[0], tri[1], color);
-		DrawSegment3D(tri[1], tri[2], color);
-		DrawSegment3D(tri[0], tri[2], color);
+		for (Triangle3D tri : navMesh->GetNavMeshTriangles())
+		{
+			DrawSegment3D(tri[0], tri[1], color);
+			DrawSegment3D(tri[1], tri[2], color);
+			DrawSegment3D(tri[0], tri[2], color);
+		}
 	}
 
 	auto& prop = (*properties)["Segment3D"];

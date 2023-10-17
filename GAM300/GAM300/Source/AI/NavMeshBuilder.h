@@ -33,6 +33,9 @@ public:
 	NavMeshBuilder() {};
 	~NavMeshBuilder() {};
 
+	// Get all grounds of the current scene
+	void GetAllGrounds();
+
 	// NavMeshBuilder exit
 	void Exit();
 
