@@ -72,6 +72,12 @@ NavMesh* NavMeshBuilder::CreateNavMesh()
 	return _NavMesh;
 }
 
+void NavMeshBuilder::Rebake()
+{
+	NAVMESHBUILDER.Exit(); // Clear current NavMesh
+	NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
+}
+
 std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
 {
 	return mRegion;
@@ -368,6 +374,9 @@ void NavMeshBuilder::AddObstacle(Polygon3D* mObstacle)
 
 void NavMeshBuilder::RemoveObstaclesFromMesh()
 {
+	// Collect all obstacles in the current scene here first
+
+
 	std::sort(mObstacles.begin(), mObstacles.end(), [](Polygon3D& p1, Polygon3D& p2)
 		{
 			return p1.GetMaxPoint().y > p2.GetMaxPoint().y;

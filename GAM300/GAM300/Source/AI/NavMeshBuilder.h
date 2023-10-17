@@ -43,6 +43,9 @@ public:
 	void BuildNavMesh();
 	NavMesh* CreateNavMesh();
 
+	// Rebake the navmesh
+	void Rebake();
+
 	// Getter functions
 	// Returns the region of the navmesh
 	std::vector<Polygon3D>& GetRegion();
