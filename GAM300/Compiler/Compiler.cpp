@@ -42,20 +42,9 @@ void ModelLoader::LoadModel()
 {
 	Assimp::Importer assimpImporter;
 	uint32_t ImportOptions{};
-	ImportOptions =
-		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
-		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
-		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
-		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
-		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
-		aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
-		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
-		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
-		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
-		aiPostProcessSteps::aiProcess_FindInvalidData 			// remove or fix invalid data
-	
-	| aiPostProcessSteps::aiProcess_PreTransformVertices;
+	ImportOptions = aiProcess_Triangulate | aiProcess_GenSmoothNormals
+		| aiProcess_CalcTangentSpace | aiProcess_FlipWindingOrder
+		| aiProcess_TransformUVCoords | aiProcess_FlipUVs;
 
 	// Import fbx
 	const aiScene* scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
@@ -65,8 +54,40 @@ void ModelLoader::LoadModel()
 		exit(EXIT_FAILURE);
 	}
 
+	if (!scene->HasAnimations())
+	{
+		ImportOptions =
+			aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
+			aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
+			aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+			aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
+			aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
+			aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
+			aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
+			aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
+			aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
+			aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced material
+			aiPostProcessSteps::aiProcess_FindInvalidData 			// remove or fix invalid data
+
+			| aiPostProcessSteps::aiProcess_PreTransformVertices;
+
+		scene = assimpImporter.ReadFile(_descriptor->filePath, ImportOptions);
+	}
 	//ProcessBones(*scene->mRootNode, *scene); // WIP
 	ProcessGeom(*scene->mRootNode, *scene);
+	if(scene->HasAnimations())
+	{
+		AnimationData tempdata;
+		scene = assimpImporter.ReadFile(_descriptor->filePath, aiProcess_Triangulate);
+		assert(scene && scene->mRootNode);
+		auto animation = scene->mAnimations[0];
+		tempdata.m_Duration = animation->mDuration;
+		tempdata.m_TicksPerSecond = animation->mTicksPerSecond;
+		aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+		globalTransformation = globalTransformation.Inverse();
+		tempdata.ReadHierarchyData(tempdata.m_RootNode, scene->mRootNode);
+		tempdata.ReadMissingBones(animation, tempdata);
+	}
 }
 
 void ModelLoader::ProcessBones(const aiNode& node, const aiScene& scene)
@@ -200,6 +221,7 @@ Geom_Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	for (unsigned int i = 0; i < mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
 		TempVertex temp;
+		SetVertexBoneDataToDefault(temp);
 
 		// Vertex position
 		temp.pos = glm::vec3(static_cast<float>(mesh.mVertices[i].x),
@@ -264,6 +286,9 @@ Geom_Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 
 	// Calculate the material index of this mesh
 	int materialIndex = static_cast<int>(_materials.size() - 1);
+
+	ExtractBoneWeightForVertices(tempVertex, mesh, scene);
+
 
 	return Geom_Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
 }
@@ -725,6 +750,77 @@ void ModelLoader::DeserializeDescriptor(const std::string filepath)
 	_descriptor->translate.z = values[2];
 }
 
+void ModelLoader::SetVertexBoneDataToDefault(TempVertex& vertex)
+{
+	for (int i = 0; i < 4/*MAX_BONE_INFLUENCE*/; i++)
+	{
+		vertex.m_BoneIDs[i] = -1;
+		vertex.m_Weights[i] = 0.0f;
+	}
+}
+
+void ModelLoader::SetVertexBoneData(TempVertex& vertex, int boneID, float weight)
+{
+	// idk if i am doing this right i went to add my own thing
+	if (weight == 0.0f) // skip if bone weight 0
+	{
+		return;
+	}
+
+	for (int i = 0; i < 4/*MAX_BONE_INFLUENCE*/; ++i)
+	{
+		if (vertex.m_BoneIDs[i] == boneID) { // skip if bone existd alr
+			return;
+		}
+
+		if (vertex.m_BoneIDs[i] < 0)
+		{
+			vertex.m_Weights[i] = weight;
+			vertex.m_BoneIDs[i] = boneID;
+			break;
+		}
+	}
+}
+
+void ModelLoader::ExtractBoneWeightForVertices(std::vector<TempVertex>& vertices, const aiMesh& mesh, const aiScene& scene)
+{
+	//auto& boneInfoMap = m_BoneInfoMap;
+	//int& boneCount = m_BoneCounter;
+	
+	auto& boneInfoMap = AllBoneInfoMaps[mesh.mName.C_Str()];
+	int& boneCount = AllBoneCount[mesh.mName.C_Str()];
+
+	for (int boneIndex = 0; boneIndex < mesh.mNumBones; ++boneIndex)
+	{
+		int boneID = -1;
+		std::string boneName = mesh.mBones[boneIndex]->mName.C_Str();
+		if (boneInfoMap.find(boneName) == boneInfoMap.end())
+		{
+			BoneInfo newBoneInfo;
+			newBoneInfo.id = boneCount;
+			newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh.mBones[boneIndex]->mOffsetMatrix);
+			boneInfoMap[boneName] = newBoneInfo;
+			boneID = boneCount;
+			boneCount++;
+		}
+		else
+		{
+			boneID = boneInfoMap[boneName].id;
+		}
+		assert(boneID != -1);
+		auto weights = mesh.mBones[boneIndex]->mWeights;
+		int numWeights = mesh.mBones[boneIndex]->mNumWeights;
+
+		for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+		{
+			int vertexId = weights[weightIndex].mVertexId;
+			float weight = weights[weightIndex].mWeight;
+			assert(vertexId <= vertices.size());
+			SetVertexBoneData(vertices[vertexId], boneID, weight);
+		}
+	}
+}
+
 void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFilePath, const std::string meshFileName)
 {
 	rapidjson::StringBuffer buffer;
@@ -837,4 +933,50 @@ int main() {
 	std::cout << "Finished compiling all models!" << std::endl;
 
 	return 0;
+}
+// FIX THIS
+//void AnimationData::ReadMissingBones(const aiAnimation* animation, AnimationData& animationData)
+//{
+//	int size = animation->mNumChannels;
+//
+//	//auto& boneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
+//	//int& boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Model class
+//
+//	std::string meshName = std::string(animationData.modelName.data());
+//
+//	auto& boneInfoMap = AllBoneInfoMaps[meshName];
+//	int& boneCount = AllBoneCount[meshName];
+//
+//	//reading channels(bones engaged in an animation and their keyframes)
+//	for (int i = 0; i < size; i++)
+//	{
+//		auto channel = animation->mChannels[i];
+//		std::string boneName = channel->mNodeName.data;
+//
+//		if (boneInfoMap.find(boneName) == boneInfoMap.end())
+//		{
+//			boneInfoMap[boneName].id = boneCount;
+//			boneCount++;
+//		}
+//		m_Bones.push_back(Bone(channel->mNodeName.data,
+//			boneInfoMap[channel->mNodeName.data].id, channel));
+//	}
+//
+//	m_BoneInfoMap = boneInfoMap;
+//}
+
+void AnimationData::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
+{
+	assert(src);
+
+	dest.name = src->mName.data;
+	dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
+	dest.childrenCount = src->mNumChildren;
+
+	for (int i = 0; i < src->mNumChildren; i++)
+	{
+		AssimpNodeData newData;
+		ReadHierarchyData(newData, src->mChildren[i]);
+		dest.children.push_back(newData);
+	}
 }
