@@ -162,20 +162,26 @@ struct InstanceProperties
 
 struct DefaultRenderProperties {
 	unsigned int VAO{};
-	unsigned int debugVAO{};
 
-	float Shininess{};
+	float shininess{};
+	float metallic{};
+	float roughness{};
+	float ao{};
 
 	glm::mat4 entitySRT;
 	glm::vec4 Albedo;
 	glm::vec4 Specular;
 	glm::vec4 Diffuse;
 	glm::vec4 Ambient;
-	unsigned int textureID{};
-	unsigned int NormalID{};
+
+	GLuint textureID{};
+	GLuint NormalID{};
+	GLuint RoughnessID{};
+	GLuint MetallicID{};
+	GLuint AoID{};
+	GLuint EmissionID{};
 
 	unsigned int drawCount{};
-	unsigned int iter{};
 
 	GLenum drawType;
 };
