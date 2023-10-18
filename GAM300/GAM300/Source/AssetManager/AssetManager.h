@@ -55,13 +55,6 @@ struct MeshAsset
 	std::vector<unsigned int> mIndices;
 };
 
-struct Asset
-{
-	std::unordered_map<std::string, FileInfo> mFilesData;
-	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
-	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
-};
-
 ENGINE_SYSTEM(AssetManager)
 {
 public:
@@ -91,8 +84,6 @@ public:
 private:
 	const std::string AssetPath = "Assets";
 
-	// Asset stuff
-	Asset mTotalAssets;
 
 	// Helper functions
 	// Asynchronously load asset into memory
@@ -130,4 +121,9 @@ private:
 
 	// Get the GUID of the asset using event callbacks
 	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
+
+
+	std::unordered_map<std::string, FileInfo> mFilesData;
+	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
+	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 };
