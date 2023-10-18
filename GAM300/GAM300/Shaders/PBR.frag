@@ -203,7 +203,7 @@ float ShadowCalculation_Point(vec3 lightpos)
 //    if(projCoords.z > 1.0)
 //        shadow = 0.0;
 //
-  float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
 float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
     return shadow;
 }
@@ -378,8 +378,24 @@ void main()
         float NdotL = max(dot(N, L), 0.0);        
 //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
         float shadow = ShadowCalculation_Point(pointLights[i].position); 
-        
+//        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position) : 0.0; // add a shadows bool
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+
+
+        // test to render the depth map
+
+//        vec3 fragToLight = WorldPos - pointLights[i].position;
+//
+//        // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+//        float closestDepth = texture(PointShadowBox,fragToLight).r; 
+//        // get depth of current fragment from light's perspective
+//        closestDepth *= farplane;  
+//        // check whether current frag pos is in shadow
+//        float currentDepth = length(fragToLight);
+//        FragColor = vec4(vec3(closestDepth / farplane), 1.0);
+//        return;
+
+
 
     }   
    

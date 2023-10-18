@@ -11,7 +11,7 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
-  m_Position: [-462.701233, 438.840179, -509.975616]
+  m_Position: [-96.1003876, 104.110336, -174.75528]
   m_Rotation: [-3.1415925, -0.176808432, -3.1415925]
   m_Scale: [0.999994218, 1, 0.999994218]
   m_Children:
@@ -42,13 +42,13 @@ Script:
   Name: Player
   gameObj: {fileID: 0}
   sad: 21.2999992
-  otherT: {fileID: 22203055554271501}  # Component
+  otherT: {fileID: 0}
 ---
 GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
-  m_Position: [-252.710007, 394.150391, -551.416809]
+  m_Position: [-301.774017, 204.966309, -420.280457]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -98,7 +98,7 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
-  m_Position: [-578.179138, 457.026978, -699.637756]
+  m_Position: [-180.219009, 362.413666, -428.299377]
   m_Rotation: [0, -0, 0]
   m_Scale: [100, 100, 100]
   m_Children:
@@ -198,30 +198,14 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
-  m_Position: [-231.539871, 45.8914871, -663.410339]
+  m_Position: [-231.539871, 317.079224, -646.945557]
   m_Rotation: [0, -0, 0]
   m_Scale: [2, 2, 2]
   m_Children:
     []
   m_Parent: 0
   m_Components:
-    - component: {fileID: 2676873232007418467}  # MeshRenderer
     - component: {fileID: 2383003823628521294}  # LightSource
----
-MeshRenderer:
-  EUID: 6606253624498158492
-  UUID: 2676873232007418467
-  MeshName: Sphere
-  mr_Albedo: [1, 50000, 50000, 50000]
-  AlbedoTexture: ""
-  NormalMap: ""
-  mr_metallic: -1
-  MetallicTexture: ""
-  mr_roughness: -1
-  RoughnessTexture: ""
-  EmissionTexture: ""
-  ao: -1
-  AoTexture: ""
 ---
 LightSource:
   EUID: 6606253624498158492
@@ -238,9 +222,9 @@ GameObject:
   m_EUID: 14766540740807996429
   m_IsActive: true
   m_Name: New GameObject(6)
-  m_Position: [-288.612762, 933.021729, -782.66864]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [10000, 1, 10000]
+  m_Position: [-104.96106, 220.483948, 163.684708]
+  m_Rotation: [1.71592689, -0, 0]
+  m_Scale: [1000, 0.999997139, 999.999634]
   m_Children:
     []
   m_Parent: 0
