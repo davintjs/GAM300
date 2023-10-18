@@ -160,28 +160,6 @@ struct ContactRemovedEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
-
-#pragma region EDITOR STUFF
-
-struct EditorWindowEvent : IEvent
-{
-	EditorWindowEvent() {};
-	bool isHovered = false;
-	bool isFocused = false;
-};
-struct ContactAddedEvent : IEvent
-{
-	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
-
-};
-struct ContactRemovedEvent : IEvent
-{
-	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
-};
 struct TriggerEnterEvent : IEvent
 {
 	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
@@ -194,6 +172,17 @@ struct TriggerRemoveEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
+
+#pragma region EDITOR STUFF
+
+struct EditorWindowEvent : IEvent
+{
+	EditorWindowEvent() {};
+	bool isHovered = false;
+	bool isFocused = false;
+};
+
+
 
 struct EditorPanCameraEvent : IEvent
 {

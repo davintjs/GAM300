@@ -205,6 +205,7 @@ public:
 
 
 	unsigned int step = 0;
+	//float accumulatedTime = 0.f;
 
 	JPH::TempAllocatorImpl* tempAllocator =			nullptr;
 	JPH::JobSystemThreadPool* jobSystem =			nullptr;

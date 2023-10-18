@@ -101,14 +101,13 @@ void PhysicsSystem::Update(float dt) {
 	//std::cout << "pre update\n";
 	//step++;
 	if (physicsSystem) {
-		physicsSystem->Update(dt*10, 1, tempAllocator, jobSystem);
+		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
 	}
 	//std::cout << "after physics update but before post update\n";
 	//std::cout << "DT: " << dt << std::endl;
 	//std::cout << "Physics update!\n";	
 
 	PostPhysicsUpdate();
-	//UpdateGameObjects();
 
 }
 void PhysicsSystem::Exit() {
@@ -142,6 +141,9 @@ void PhysicsSystem::Exit() {
 
 }
 
+void PhysicsSystem::PrePhysicsUpdate() {
+
+}
 void PhysicsSystem::PostPhysicsUpdate() {
 	//std::cout << "Post physics update\n";
 	//std::cout << engineContactListener->collisionResolution.size() << std::endl;
@@ -168,31 +170,39 @@ void PhysicsSystem::PostPhysicsUpdate() {
 
 		// Publish the right event
 		if (e.op == EngineCollisionData::collisionOperation::added) {
+
+			// Trigger or Collision
 			if (rb1->is_trigger || rb2->is_trigger) {
 				TriggerEnterEvent tee;
 				tee.rb1 = rb1;
 				tee.rb2 = rb2;
 				EVENTS.Publish(&tee);
+				std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.rb1 = rb1;
 				cae.rb2 = rb2;
 				EVENTS.Publish(&cae);
+				std::cout << "Collision Enter!\n";
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::removed) {
+
+			// Trigger or Collision
 			if (rb1->is_trigger || rb2->is_trigger) {
 				TriggerRemoveEvent tre;
 				tre.rb1 = rb1;
 				tre.rb2 = rb2;
 				EVENTS.Publish(&tre);
+				std::cout << "Trigger Remove!\n";
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.rb1 = rb1;
 				cre.rb2 = rb2;
 				EVENTS.Publish(&cre);
+				std::cout << "Collision Remove!\n";
 			}
 		}
 		/*
@@ -328,9 +338,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			boxCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
 			boxCreationSettings.mAngularVelocity = angularVel;
-
-			//Sensor settings 
-			boxCreationSettings.mIsSensor = false;
+			// Sensor settings 
+			boxCreationSettings.mIsSensor = rb.is_trigger;
 
 			// Create the actual jolt body
 			JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
@@ -352,6 +361,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			sphereCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
 			sphereCreationSettings.mAngularVelocity = angularVel;
+			// Sensor settings
+			sphereCreationSettings.mIsSensor = rb.is_trigger;
 
 			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
 			bodyInterface->AddBody(sphere->GetID(),enabledStatus);
@@ -373,6 +384,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			capsuleCreationSettings.mLinearVelocity = linearVel;
 			// Angular Velocity
 			capsuleCreationSettings.mAngularVelocity = angularVel;
+			// Sensor settings
+			capsuleCreationSettings.mIsSensor = rb.is_trigger;
 
 			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
 			bodyInterface->AddBody(capsule->GetID(), enabledStatus);
@@ -571,7 +584,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
 
 
-	std::cout << "Contact Added\n";
+	//std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
 	(void)body1;
@@ -586,8 +599,10 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 		return;
 
 	// If the bodies are still touching, do not register OnCollisionExit/OnTriggerExit
-	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID()))
-		std::cout << "Contact Removed\n";
+	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID())) {
+
+	}
+		//std::cout << "Contact Removed\n";
 
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::removed));
 	collisionResolution.back().bid1 = subShapePair.GetBody1ID().GetIndexAndSequenceNumber();
