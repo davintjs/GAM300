@@ -344,6 +344,8 @@
     <None Include="Shaders\Skybox.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\UIScreenSpace.frag" />
+    <None Include="Shaders\UIScreenSpace.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

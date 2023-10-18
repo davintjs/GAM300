@@ -231,6 +231,8 @@ void GraphicsSystem::Update(float dt)
 		
 		Draw(camera); // call draw after update
 
+		Draw_Screen(camera); // 2D UI
+
 		camera.GetFramebuffer().unbind();
 
 		camera.GetFramebuffer().bind();
@@ -241,7 +243,7 @@ void GraphicsSystem::Update(float dt)
 
 		shader = SHADER.GetShader(HDR);
 		shader.Use();
-
+			
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, camera.GetFramebuffer().colorBuffer);
 
@@ -274,6 +276,13 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 		DEBUGDRAW.Draw();
 
 	MYSKYBOX.Draw(_camera);
+}
+
+void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
+{
+	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
+	RENDERER.UIDraw_2D(_camera);
+
 }
 
 void GraphicsSystem::Exit()

@@ -193,5 +193,7 @@
     <None Include="Shaders\PointShadow.frag" />
     <None Include="Shaders\PointShadow.geom" />
     <None Include="Shaders\PointShadow.vert" />
+    <None Include="Shaders\UIScreenSpace.frag" />
+    <None Include="Shaders\UIScreenSpace.vert" />
   </ItemGroup>
 </Project>

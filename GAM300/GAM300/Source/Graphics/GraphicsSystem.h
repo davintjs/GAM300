@@ -37,6 +37,9 @@ public:
 
 	// General draw call
 	void Draw(BaseCamera& _camera);
+	
+	// 2D UI draw call
+	void Draw_Screen(BaseCamera& _camera);
 
 	void Exit();
 

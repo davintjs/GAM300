@@ -59,6 +59,10 @@ void ShaderManager::Init()
 	geometryPath = shaderPath + "/PointShadow.geom";
 	ShaderCompiler("Point SHADER", vertexPath, fragmentPath, geometryPath);
 
+	vertexPath = shaderPath + "/UIScreenSpace.vert";
+	fragmentPath = shaderPath + "/UIScreenSpace.frag";
+	ShaderCompiler("UI SCREEN SHADER", vertexPath, fragmentPath);
+
 }
 
 void ShaderManager::Update(float)

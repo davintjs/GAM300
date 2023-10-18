@@ -42,7 +42,8 @@ enum SHADERTYPE
 	BASICLIGHT,
 	AFFECTEDLIGHT,
 	SHADOW,
-	POINTSHADOW
+	POINTSHADOW,
+	UI_SCREEN
 };
 
 ENGINE_SYSTEM(ShaderManager)
@@ -132,6 +133,8 @@ public:
 	void SetupGrid(const int& _num);
 
 	void Draw(BaseCamera& _camera);
+
+	void UIDraw_2D(BaseCamera& _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera);

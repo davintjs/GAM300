@@ -1,5 +1,5 @@
-[2023-10-16 16:09:41.968] [Error] [critical] 
-Caused By:	sizeof(T) > size
-Info:		FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptFields.h (Line: 72)
+[2023-10-18 20:21:27.458] [Error] [critical] 
+Caused By:	inputFile
+Info:		Error opening file to load asset into memory!
+Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 329)
 
