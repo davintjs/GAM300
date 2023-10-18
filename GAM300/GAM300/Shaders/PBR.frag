@@ -226,6 +226,11 @@ void main()
     // ALBEDO
     if (Tex_index < 32)
     {
+    if(texture(myTextureSampler[Tex_index], TexCoords).a < 0.7)
+    {
+        discard;
+        return;
+    }
         albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
     }
     else

@@ -22,6 +22,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "MeshManager.h"
 #include "Editor/EditorCamera.h"
 
+// ALL THIS ARE HOPEFULLY TEMPORARY
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
 
@@ -98,7 +99,6 @@ void Renderer::Update(float)
 		std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 		std::fill_n(prop.texture, 32, 0);
 	}
-
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -559,35 +559,113 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 		
-		if (_quadVAO == 0)
-		{
-			float quadVertices[] = {
-				// positions        // texture Coords
-				-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-				 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-				 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-			};
-			// setup plane VAO
-			glGenVertexArrays(1, &_quadVAO);
-			glGenBuffers(1, &_quadVBO);
-			glBindVertexArray(_quadVAO);
-			glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		}
-		glBindVertexArray(_quadVAO);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glBindVertexArray(0);
+
+		renderQuad(_quadVAO, _quadVBO);
+
 	}
 	shader.UnUse();
 
 }
 
+void Renderer::UIDraw_3D(BaseCamera& _camera)
+{
+	// Setups required for all UI
+	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
+	//glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
 
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
+	shader.Use();
+
+	// Setting the projection here since all of them use the same projection
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+
+	unsigned int _quadVAO = 0;
+	unsigned int _quadVBO = 0;
+
+	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	{
+		//// This means it's 3D space
+		//if (Sprite.WorldSpace)
+		//{
+		//	continue;
+		//}
+
+		// Declarations for the things we need - SRT
+		Entity& entity = currentScene.Get<Entity>(Sprite);
+		Transform& transform = currentScene.Get<Transform>(entity);
+
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+		// Setting bool to see if there is a sprite to render
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+		if (Sprite.spriteTextureID == 0)
+		{
+			glUniform1f(uniform1, false);
+		}
+		else
+		{
+			glUniform1f(uniform1, true);
+		}
+
+		// Binding Texture - might be empty , above uniform will sort it
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+
+
+		glBindVertexArray(properties["Cube"].VAO);
+
+		glDrawElements(properties["Cube"].drawType, properties["Cube"].drawCount, GL_UNSIGNED_INT, 0 );
+			glBindVertexArray(0);
+
+		//	if (_quadVAO == 0)
+		//	{
+		//		float quadVertices[] = {
+		//			// positions        // texture Coords
+		//			-1.0f,  1.0f, 0.1f, 0.0f, 1.0f,
+		//			-1.0f, -1.0f, 0.1f, 0.0f, 0.0f,
+		//			 1.0f,  1.0f, 0.1f, 1.0f, 1.0f,
+		//			 1.0f, -1.0f, 0.1f, 1.0f, 0.0f,
+		//		};
+
+		//		//	float quadVertices[] = {
+		////		// pos	           // tex
+		////		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+		////		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		////		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+		////		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		////		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+		////		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+		////	};
+
+		//		// setup plane VAO
+		//		glGenVertexArrays(1, &_quadVAO);
+		//		glGenBuffers(1, &_quadVBO);
+		//		glBindVertexArray(_quadVAO);
+		//		glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
+		//		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		//		glEnableVertexAttribArray(0);
+		//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		//		glEnableVertexAttribArray(1);
+		//		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		//	}
+		//	glBindVertexArray(_quadVAO);
+		//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		//	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//	glBindVertexArray(0);
+		
+
+	}
+	shader.UnUse();
+
+}
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {
 	glm::vec3 color{ 1.f, 1.f, 1.f };

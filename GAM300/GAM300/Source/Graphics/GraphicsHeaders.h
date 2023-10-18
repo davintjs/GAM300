@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 
 // Bean: A temp solution to access the shader
 enum SHADERTYPE
@@ -43,7 +44,8 @@ enum SHADERTYPE
 	AFFECTEDLIGHT,
 	SHADOW,
 	POINTSHADOW,
-	UI_SCREEN
+	UI_SCREEN,
+	UI_WORLD
 };
 
 ENGINE_SYSTEM(ShaderManager)
@@ -135,6 +137,8 @@ public:
 	void Draw(BaseCamera& _camera);
 
 	void UIDraw_2D(BaseCamera& _camera);
+
+	void UIDraw_3D(BaseCamera& _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera);

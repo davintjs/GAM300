@@ -62,6 +62,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/UIScreenSpace.vert";
 	fragmentPath = shaderPath + "/UIScreenSpace.frag";
 	ShaderCompiler("UI SCREEN SHADER", vertexPath, fragmentPath);
+	
+	vertexPath = shaderPath + "/UIWorldSpace.vert";
+	fragmentPath = shaderPath + "/UIWorldSpace.frag";
+	ShaderCompiler("UI WORLD SHADER", vertexPath, fragmentPath);
 
 }
 

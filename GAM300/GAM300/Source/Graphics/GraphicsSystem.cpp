@@ -76,6 +76,18 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
 			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		};
+
+		//	float quadVertices[] = {
+//		// pos	           // tex
+//		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+//		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+//		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+//		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+//	};
+
 		// setup plane VAO
 		glGenVertexArrays(1, &_quadVAO);
 		glGenBuffers(1, &_quadVBO);
@@ -89,6 +101,8 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 	}
 	glBindVertexArray(_quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
 	glBindVertexArray(0);
 }
 
@@ -166,6 +180,7 @@ void GraphicsSystem::Update(float dt)
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(EditorCam); // call draw after update
+	RENDERER.UIDraw_3D(EditorCam); // call draw after update
 
 	EditorCam.GetFramebuffer().unbind();
 

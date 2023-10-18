@@ -195,5 +195,7 @@
     <None Include="Shaders\PointShadow.vert" />
     <None Include="Shaders\UIScreenSpace.frag" />
     <None Include="Shaders\UIScreenSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.frag" />
   </ItemGroup>
 </Project>

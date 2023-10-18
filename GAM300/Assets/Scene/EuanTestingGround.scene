@@ -222,9 +222,9 @@ GameObject:
   m_EUID: 14766540740807996429
   m_IsActive: true
   m_Name: WALL
-  m_Position: [0, 220.483994, 163.684708]
-  m_Rotation: [1.71592689, -0, 0]
-  m_Scale: [1000, 0.999997139, 999.999634]
+  m_Position: [268.251038, 495.196381, 167.884995]
+  m_Rotation: [1.71781802, -0, 0]
+  m_Scale: [1000, 0.999997139, 999.99939]
   m_Children:
     []
   m_Parent: 0
@@ -236,7 +236,7 @@ MeshRenderer:
   UUID: 10430379416351484868
   MeshName: Cube
   mr_Albedo: [0, 0, 1, 1]
-  AlbedoTexture: ""
+  AlbedoTexture: BestTeam
   NormalMap: ""
   mr_metallic: 0.5
   MetallicTexture: ""
@@ -280,7 +280,7 @@ GameObject:
   m_IsActive: true
   m_Name: SPRITE TEST
   m_Position: [1350, 650, 1.70000005]
-  m_Rotation: [0, 0, 3.1500001]
+  m_Rotation: [0, 3.1500001, 3.1500001]
   m_Scale: [200, 200, 100]
   m_Children:
     []
@@ -293,3 +293,22 @@ SpriteRenderer:
   UUID: 4630521617852347639
   World Space: false
   SpriteTexture: BestTeam
+---
+GameObject:
+  m_EUID: 6611553889785082003
+  m_IsActive: true
+  m_Name: New GameObject(9)
+  m_Position: [245.686646, -376.417603, -928.716003]
+  m_Rotation: [3.13318515, -0, 0]
+  m_Scale: [1000.00018, 100.000092, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 12057566482064419493}  # SpriteRenderer
+---
+SpriteRenderer:
+  EUID: 6611553889785082003
+  UUID: 12057566482064419493
+  World Space: false
+  SpriteTexture: ZacharieDaughter

@@ -346,6 +346,8 @@
     </None>
     <None Include="Shaders\UIScreenSpace.frag" />
     <None Include="Shaders\UIScreenSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.frag" />
+    <None Include="Shaders\UIWorldSpace.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
