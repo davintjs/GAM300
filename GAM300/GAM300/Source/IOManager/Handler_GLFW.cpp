@@ -132,14 +132,6 @@ bool GLFW_Handler::init(GLint w, GLint h, std::string t) {
       << glewGetErrorString(err) << " abort program" << std::endl;*/
     return false;
   }
-  /*if (GLEW_VERSION_4_5) {
-    std::cout << "Using glew version: " << glewGetString(GLEW_VERSION) << std::endl;
-    std::cout << "Driver supports OpenGL 4.5\n" << std::endl;
-  } else {
-    std::cerr << "Driver doesn't support OpenGL 4.5 - abort program" << std::endl;
-    return false;
-  }*/
-
 
 
   if (!GLEW_VERSION_4_5) {
@@ -292,68 +284,3 @@ void GLFW_Handler::update_time(double fps_calc_interval) {
     count = 0.0;
   }
 }
-
-
-/*  _________________________________________________________________________*/
-/*! GLFW_Handler::print_specs()
-
-@return void
-
-This functions prints out information to the console, related to the GPU informations
-and OpenGL context
-
-*/
-//void GLFW_Handler::print_specs() {
-//    // GPU Vendor
-//    GLubyte const* str_vendor = glGetString(GL_VENDOR);
-//    std::cout << "GPU Vendor: " << str_vendor<< std::endl;
-//
-//    // GL Renderer
-//    GLubyte const* str_render = glGetString(GL_RENDERER);
-//    std::cout << "GL Renderer: " << str_render << std::endl;
-//
-//    // GL Version
-//    GLubyte const* str_version = glGetString(GL_VERSION);
-//    std::cout << "GL Version: " << str_version << std::endl;
-//
-//    // GL Shader Version
-//    GLubyte const* shader_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-//    std::cout << "GL Shader Version: " << shader_version << std::endl; 
-//    // GL Major Version
-//    GLint major_version;
-//    glGetIntegerv(GL_MAJOR_VERSION, &major_version);
-//    std::cout << "GL Major Version: " << major_version << std::endl;
-//
-//    // GL Minor Version
-//    GLint minor_version;
-//    glGetIntegerv(GL_MINOR_VERSION, &minor_version);
-//    std::cout << "GL Minor Version: " << minor_version << std::endl;
-//
-//    // Current OpenGL Context -> double buffered?
-//    GLint buffer_type;
-//    glGetIntegerv(GL_DOUBLEBUFFER, &buffer_type);
-//    if (buffer_type) {
-//        std::cout << "Current OpenGL Context is double buffered" << std::endl;
-//    }
-//
-//    // Maximum Vertex Count
-//    GLint vertex_count;
-//    glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &vertex_count);
-//    std::cout << "GL Maximum Vertex Count: " << vertex_count << std::endl;
-//
-//    // Maximum Indices Count
-//    GLint indices_count;
-//    glGetIntegerv(GL_MAX_ELEMENTS_INDICES, &indices_count);
-//    std::cout << "GL Maximum Indices Count: " << indices_count << std::endl;\
-//
-//    // GL Maximum texture size
-//    GLint tex_size;
-//    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &tex_size);
-//    std::cout << "GL Maximum texture size: " << tex_size << std::endl;
-//
-//    // Maximum Viewport Dimensions
-//    GLint viewport_dimensions[2];
-//    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, viewport_dimensions);
-//    std::cout << "Maximum Viewport Dimensions: " <<viewport_dimensions[0] << " x " << viewport_dimensions[1] << std::endl;
-//
-//}

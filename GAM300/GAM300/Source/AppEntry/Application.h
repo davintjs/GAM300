@@ -19,14 +19,11 @@ class Application
 {
 public:
 	// Constructor and destructor for the application
-	Application();
-	~Application();
+	Application() {}
+	~Application() {}
 
 	// Initializing the application
 	void Init();
-
-	// The update loop of the application
-	void Run();
 
 	// Exit the application
 	void Exit();

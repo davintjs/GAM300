@@ -17,8 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Core/EngineCore.h"
 #include "Core/EventsManager.h"
-//#include "GL/glew.h"
-//#include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 
 #include "Application.h"
 
@@ -28,13 +26,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "../Source/Graphics/Model3d.h"
 #include "Editor/EditorCamera.h"
-
-////Temporary Stuffs
-//Model testmodel;
-//Camera testCam;
-
-Application::Application() {}
-Application::~Application() {}
 
 void Application::Init()
 {
@@ -49,31 +40,6 @@ void Application::Init()
 		std::cout << "Unable to create OpenGL context" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-
-
-	//// Temporary Stuffs
-	//AssimpLoader assimp("Assets/Models/Skull_textured/Skull_textured.geom.desc", "Assets/Models/Skull_textured/Skull_textured.geom");
-	//testmodel.init(&assimp);
-	//testCam.Init();
-}
-
-void Application::Run()
-{
-	// Game Loop, MOVE TO ENGINE CORE
-	//while (!glfwWindowShouldClose(GLFW_Handler::ptr_window)) 
-	//{
-	//	//MOVE TO INPUT/WINDOW SYSTEM
-	//	glfwPollEvents(); // This at the start
-
-	//	//IMGUI LOGIC - DO NOT PUT IMGUI INTO PCH
-
-	//	//GAME LOGIC
-
-	//	//MOVE TO GRAPHICS SYSTEM UPDATE
-	//	//GRAPHICS SYSTEM END
-	//	//IMGUI RENDER
-	//}
-
 
 }
 

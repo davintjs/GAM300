@@ -43,7 +43,7 @@ int main(int, char**) {
 		MyEngineCore.Update(dt);
 		dt = MyFrameRateController.End();
 	}
-	//app->Run();
+
 	MyEngineCore.Exit();
 	app->Exit();
 
