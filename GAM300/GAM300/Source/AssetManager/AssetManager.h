@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/TextureManager.h"
 #include "Graphics/MeshManager.h"
 #include "Audio/AudioManager.h"
+#include "Utilities/GUID.h"
 
 #define ASSETMANAGER AssetManager::Instance()
 
