@@ -343,7 +343,13 @@ void DeserializeComponent(const DeComHelper& _helper)
                     // Extract Component value
                     if (node[name])
                     {
-                        property::set(component, entry.first.c_str(), node[name].as<T1>());
+                        if constexpr (std::is_same<char*, T1>()) {
+                            std::string buf = node[name].as<std::string>();
+                            property::set(component, entry.first.c_str(), buf);
+
+                        }
+                        else
+                            property::set(component, entry.first.c_str(), node[name].as<T1>());
                     }
                     else
                     {

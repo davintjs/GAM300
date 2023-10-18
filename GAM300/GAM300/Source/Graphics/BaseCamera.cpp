@@ -101,8 +101,8 @@ bool BaseCamera::WithinFrustum() const
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
-	pitch = -_rotation.y;
-	yaw = -_rotation.x;
+	pitch = -_rotation.x;
+	yaw = -_rotation.y;
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

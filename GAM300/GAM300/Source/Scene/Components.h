@@ -504,7 +504,7 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 //to check through every type T in an template pack to compare with its type enum
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 template<typename T, typename... Ts>\
-TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
+TYPE FUNC_NAME##Iter(size_t objType, void* pObject)\
 {\
 	if (GetType::E<T>() == objType)\
 	{\
@@ -520,7 +520,7 @@ TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	}\
 	if constexpr (sizeof...(Ts) != 0)\
 	{\
-		return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+		return FUNC_NAME##Iter<Ts...>(objType, pObject); \
 	}\
 	else\
 	{\
@@ -534,7 +534,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 
