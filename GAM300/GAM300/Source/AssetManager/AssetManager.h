@@ -37,22 +37,27 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 // GUID, last file update time, file name, data
 struct FileInfo
 {
-	FileInfo() {};
-	FileInfo(std::filesystem::file_time_type ft, std::string fn, std::vector<char> data) : mFileTime(ft), mFileName(fn), mData(data) {}
-	~FileInfo()
-	{
-		mData.clear();
-	}
-
-	std::filesystem::file_time_type mFileTime;
+	FileInfo(){};
+	FileInfo(std::string fn) : mFileName(fn) {}
+	std::filesystem::path mFilePath;
 	std::string mFileName;
-	std::vector<char> mData;
+	Engine::GUID guid;
+};
+
+struct Folder : FileInfo
+{
+	std::list<FileInfo*> folderMembers;
 };
 
 struct MeshAsset
 {
 	std::vector<glm::vec3> mVertices;
 	std::vector<unsigned int> mIndices;
+};
+
+struct Asset : FileInfo
+{
+	std::vector<char> mData;
 };
 
 ENGINE_SYSTEM(AssetManager)
@@ -123,7 +128,7 @@ private:
 	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
 
 
-	std::unordered_map<std::string, FileInfo> mFilesData;
+	std::unordered_map<std::string, Asset> mFilesData;
 	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
 	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 };

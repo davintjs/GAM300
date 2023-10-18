@@ -179,8 +179,6 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
 
-	mFilesData[assetGUID].mFileTime = std::filesystem::last_write_time(std::filesystem::directory_entry(assetPath)); // Update the last write time
-
 	std::ifstream inputFile(assetPath.c_str());
 	E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 
@@ -340,7 +338,8 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
 
-	FileInfo tempFI(pathTime, fileName, buff);
+	Asset tempFI(fileName);
+	tempFI.mData = buff;
 	this->mFilesData.insert(std::make_pair(GUIDofAsset, tempFI));
 
 	inputFile.close();
@@ -433,7 +432,7 @@ void AssetManager::FileUpdateProtocol(const std::string& filePath, const std::st
 
 	std::string assetPath = doc["FileAssetPath"].GetString();
 	const std::string tempGUID = doc["GUID"].GetString();
-	if (!std::filesystem::is_directory(assetPath) && mFilesData[tempGUID].mFileTime != std::filesystem::last_write_time(std::filesystem::path(assetPath)))
+	if (!std::filesystem::is_directory(assetPath))
 	{
 		// The asset file associated with this meta file was updated
 		mFilesData[tempGUID].mData.clear(); // Remove the data in memory
