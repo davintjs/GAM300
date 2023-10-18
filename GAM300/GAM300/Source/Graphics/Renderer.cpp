@@ -342,9 +342,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
-
-
-
 	// UNIFORM VARIABLES ----------------------------------------
 	// Persp Projection
 	//GLint uniform1 =
