@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#pragma once
+
 namespace Engine
 {
 	struct GUID
@@ -46,10 +48,7 @@ namespace std
 {
 	template <>
 	struct hash<Engine::GUID> {
-		std::size_t operator()(const Engine::GUID& obj) const
-		{
-			return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
-		}
+		std::size_t operator()(const Engine::GUID& obj) const;
 	};
 }
 

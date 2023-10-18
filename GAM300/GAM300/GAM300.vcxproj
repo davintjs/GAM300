@@ -29,6 +29,7 @@
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\AssetManager\Assets.cpp" />
     <ClCompile Include="Source\Audio\AudioManager.cpp" />
     <ClCompile Include="Source\Audio\AudioSystem.cpp" />
     <ClCompile Include="Source\Debugging\Debugger.cpp">
@@ -229,6 +230,7 @@
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\AssetManager\Assets.h" />
     <ClInclude Include="Source\Audio\AudioManager.h" />
     <ClInclude Include="Source\Audio\AudioSystem.h" />
     <ClInclude Include="Source\Core\SystemsGroup.h" />

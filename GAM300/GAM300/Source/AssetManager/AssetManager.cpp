@@ -67,7 +67,6 @@ void AssetManager::Init()
 		}
 
 		// Add into file extensions list
-		mExtensionFiles[fileType].push_back(fileName);
 
 		if (!strcmp(fileType.c_str(), ".meta") || !strcmp(fileType.c_str(), ".fbx") || !strcmp(fileType.c_str(), ".desc")) // Skip if meta / fbx / desc file
 		{
@@ -86,7 +85,6 @@ void AssetManager::Init()
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
-			mExtensionFiles["meta"].push_back(fileName);
 		}
 
 		// Mark meta files as hidden files
@@ -330,6 +328,8 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	const std::string assetPath = doc["FileAssetPath"].GetString();
 	const std::string GUIDofAsset = doc["GUID"].GetString();
 
+	std::filesystem::path fPath{ assetPath };
+
 	std::ifstream inputFile(assetPath.c_str());
 	E_ASSERT(inputFile, "Error opening file to load asset into memory!");
 
@@ -337,11 +337,10 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 
 	std::filesystem::directory_entry path(assetPath);
 	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
-
-	Asset tempFI(fileName);
+	Asset tempFI{ fPath };
 	tempFI.mData = buff;
 	this->mFilesData.insert(std::make_pair(GUIDofAsset, tempFI));
-
+	assets.AddAsset(fPath);
 	inputFile.close();
 }
 
@@ -368,9 +367,6 @@ void AssetManager::FileAddProtocol(const std::string& filePath, const std::strin
 	{
 		SetFileAttributes(fileLPCWSTR, attribute | FILE_ATTRIBUTE_HIDDEN);
 	}
-
-	mExtensionFiles["meta"].push_back(fileName); // Meta file
-	mExtensionFiles[fileExtensionEdited].push_back(fileName); // File name
 
 	if (fileExtension == ".jpg" || fileExtension == ".png")
 	{
@@ -403,9 +399,6 @@ void AssetManager::FileRemoveProtocol(const std::string& filePath, const std::st
 	std::string tempGUID = doc["GUID"].GetString();
 
 	std::filesystem::remove(filePathMeta); // Delete meta file
-
-	mExtensionFiles["meta"].erase(std::remove(mExtensionFiles["meta"].begin(), mExtensionFiles["meta"].end(), fileName), mExtensionFiles["meta"].end()); // Meta file removal
-	mExtensionFiles[assetType].erase(std::remove(mExtensionFiles[assetType].begin(), mExtensionFiles[assetType].end(), fileName), mExtensionFiles[assetType].end()); // File name removal
 
 	this->AsyncUnloadAsset(tempGUID); // Unload asset from memory
 }

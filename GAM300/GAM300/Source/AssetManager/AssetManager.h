@@ -20,6 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma once
 
 #include <unordered_map>
+#include <string>
 #include "Core/SystemInterface.h"
 
 #include "rapidjson/rapidjson.h"
@@ -32,33 +33,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Audio/AudioManager.h"
 #include "Utilities/GUID.h"
 
+#include "Assets.h"
+
 #define ASSETMANAGER AssetManager::Instance()
-
-// GUID, last file update time, file name, data
-struct FileInfo
-{
-	FileInfo(){};
-	FileInfo(std::string fn) : mFileName(fn) {}
-	std::filesystem::path mFilePath;
-	std::string mFileName;
-	Engine::GUID guid;
-};
-
-struct Folder : FileInfo
-{
-	std::list<FileInfo*> folderMembers;
-};
-
-struct MeshAsset
-{
-	std::vector<glm::vec3> mVertices;
-	std::vector<unsigned int> mIndices;
-};
-
-struct Asset : FileInfo
-{
-	std::vector<char> mData;
-};
 
 ENGINE_SYSTEM(AssetManager)
 {
@@ -88,7 +65,6 @@ public:
 
 private:
 	const std::string AssetPath = "Assets";
-
 
 	// Helper functions
 	// Asynchronously load asset into memory
@@ -126,9 +102,9 @@ private:
 
 	// Get the GUID of the asset using event callbacks
 	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
-
+	
+	AllAssets assets{};
 
 	std::unordered_map<std::string, Asset> mFilesData;
-	std::unordered_map<std::string, std::vector<std::string>> mExtensionFiles; // File extension, file names (For Zac)
 	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 };

@@ -34,4 +34,14 @@ namespace Engine
 		longInt[0] = std::stoull(first.c_str(), 0, 16);
 		longInt[1] = std::stoull(second.c_str(), 0, 16);
 	}
+
+
+}
+
+namespace std
+{
+	std::size_t hash<Engine::GUID>::operator()(const Engine::GUID& obj) const
+	{
+		return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
+	}
 }
