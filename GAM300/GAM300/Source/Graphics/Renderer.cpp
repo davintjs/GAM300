@@ -410,8 +410,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		point_intensity = "pointLights[" + std::to_string(i) + "].intensity";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
 			, 1, &PointLight_Sources[i].intensity);
-
-
 	}
 
 	GLint uniform7 =

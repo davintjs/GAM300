@@ -163,17 +163,12 @@ void GLFW_Handler::key_cb( [[maybe_unused]] GLFWwindow* pwin, int key, int , int
     //InputHandler::copyingCurrStatetoLast();
     if (GLFW_PRESS == action) {
         InputHandler::setKeystate_Press(key);
-       
     }
     else if (GLFW_REPEAT == action) {
-        InputHandler::setKeystate_Hold(key);
-        
+        InputHandler::setKeystate_Hold(key);   
     }
-
     else if (GLFW_RELEASE == action) {
-        
         InputHandler::setKeystate_Release(key);
-
     }
 }
 

@@ -235,7 +235,7 @@ MeshRenderer:
   EUID: 14766540740807996429
   UUID: 10430379416351484868
   MeshName: Cube
-  mr_Albedo: [1, 1, 1, 1]
+  mr_Albedo: [1, 0, 0, 1]
   AlbedoTexture: ""
   NormalMap: ""
   mr_metallic: 0.5

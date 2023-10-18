@@ -70,16 +70,12 @@ out vec4 FragColor;
 //          UNIFORMS
 //-------------------------
 
+// The last slot is used for shadows from Directional / SpotLight currently
 layout (binding = 0) uniform sampler2D myTextureSampler[31];
 
 layout (binding = 31) uniform samplerCube PointShadowBox;
 uniform float farplane;
 
-//layout(std140, binding = 1) uniform PointLightBuffer {
-//    PointLight pointLights[NR_POINT_LIGHTS];
-//};
-//uniform vec3 lightColor;
-//uniform vec3 lightPos;
 uniform vec3 camPos;
 uniform bool hdr;
 
@@ -539,7 +535,7 @@ void main()
 
 
 
-    vec3 ambient = vec3(0.03) * albedo * ao + emission;
+    vec3 ambient = vec3(0.1) * albedo * ao + emission;
     
     vec3 color = ambient + Lo;
 
