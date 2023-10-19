@@ -28,23 +28,22 @@ void main()
     if(RenderSprite)
     {
         vec4  colour = texture(Sprite, TexCoords);
-        if(colour.a <0.7)
-        {
-            discard;
-        }
-        else
-        {
+//        if(colour.a <0.7)
+//        {
+//            discard;
+//        }
+//        else
+//        {
             FragColor = colour;
-
-        }
+//        }
 
 
     }
     else
     {
 
-    FragColor = vec4(1.f,1.f,1.f,1.f);
+        FragColor = vec4(1.f,1.f,1.f,1.f);
 
     }
 
-}  
+}   

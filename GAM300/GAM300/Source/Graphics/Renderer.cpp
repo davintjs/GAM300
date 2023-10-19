@@ -572,7 +572,8 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	// Setups required for all UI
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
 	//glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
-
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
 	shader.Use();
@@ -581,6 +582,9 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
 	unsigned int _quadVAO = 0;
 	unsigned int _quadVBO = 0;
@@ -620,50 +624,52 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 		glBindVertexArray(properties["Cube"].VAO);
 
-		glDrawElements(properties["Cube"].drawType, properties["Cube"].drawCount, GL_UNSIGNED_INT, 0 );
+		//glDrawElements(properties["Cube"].drawType, properties["Cube"].drawCount, GL_UNSIGNED_INT, 0 );
+		
+		//glBindVertexArray(0);
+
+			if (_quadVAO == 0)
+			{
+				float quadVertices[] = {
+					// positions        // texture Coords
+					-1.0f,  1.0f, 0.f, 0.0f, 1.0f,
+					-1.0f, -1.0f, 0.f, 0.0f, 0.0f,
+					 1.0f,  1.0f, 0.f, 1.0f, 1.0f,
+					 1.0f, -1.0f, 0.f, 1.0f, 0.0f,
+				};
+
+				//	float quadVertices[] = {
+		//		// pos	           // tex
+		//		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+		//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		//		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+		//		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		//		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+		//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+		//	};
+
+				// setup plane VAO
+				glGenVertexArrays(1, &_quadVAO);
+				glGenBuffers(1, &_quadVBO);
+				glBindVertexArray(_quadVAO);
+				glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+			}
+			glBindVertexArray(_quadVAO);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			//glDrawArrays(GL_TRIANGLES, 0, 6);
+
 			glBindVertexArray(0);
-
-		//	if (_quadVAO == 0)
-		//	{
-		//		float quadVertices[] = {
-		//			// positions        // texture Coords
-		//			-1.0f,  1.0f, 0.1f, 0.0f, 1.0f,
-		//			-1.0f, -1.0f, 0.1f, 0.0f, 0.0f,
-		//			 1.0f,  1.0f, 0.1f, 1.0f, 1.0f,
-		//			 1.0f, -1.0f, 0.1f, 1.0f, 0.0f,
-		//		};
-
-		//		//	float quadVertices[] = {
-		////		// pos	           // tex
-		////		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-		////		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		////		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
-
-		////		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		////		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
-		////		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
-		////	};
-
-		//		// setup plane VAO
-		//		glGenVertexArrays(1, &_quadVAO);
-		//		glGenBuffers(1, &_quadVBO);
-		//		glBindVertexArray(_quadVAO);
-		//		glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
-		//		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-		//		glEnableVertexAttribArray(0);
-		//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		//		glEnableVertexAttribArray(1);
-		//		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		//	}
-		//	glBindVertexArray(_quadVAO);
-		//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		//	//glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		//	glBindVertexArray(0);
 		
 
 	}
 	shader.UnUse();
+	glDisable(GL_BLEND);
 
 }
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
