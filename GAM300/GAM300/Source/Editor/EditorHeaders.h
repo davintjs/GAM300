@@ -150,7 +150,9 @@ public:
     // Exit the system
     void Exit();
 
+    void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
 private:
+    std::filesystem::path currentDirectory;
 };
 
 

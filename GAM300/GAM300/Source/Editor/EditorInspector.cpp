@@ -40,7 +40,10 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
-
+bool referenceChanged = false;
+Object* previousReference = nullptr;
+Object* newReference = nullptr;
+std::string refFieldName{};
 bool isAddingReference = false;
 size_t editedContainer{};
 
@@ -90,7 +93,8 @@ void DisplayType(Change& change, const char* name, std::string& val)
     idName = "##";
     idName += name;
     std::string buffer = val;
-    if(ImGui::InputText(idName.c_str(), &buffer)){
+    if(ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)){
+        std::cout << val << std::endl;
         EDITOR.History.SetPropertyValue(change, val, buffer);
     }
 }
@@ -299,6 +303,12 @@ void AddReferencePanel(T*& container)
             }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
+                //if reference is changed, add it to reference buffer
+                if (container != &object) {
+                    previousReference = container;
+                    newReference = &object;
+                    referenceChanged = true;
+                }
                 editedContainer = 0;
                 container = &object;
             }
@@ -315,7 +325,7 @@ GENERIC_RECURSIVE
 (
     void, 
     AddReferencePanel, 
-    AddReferencePanel(((Field*)pObject)->Get<T*>())
+    AddReferencePanel(((Field*)pObject )->Get<T*>())
 )
 
 template <typename T>
@@ -625,8 +635,6 @@ template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
 
-
-
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
@@ -694,7 +702,8 @@ void Display_Property(T& comp) {
 
                     //Properties with Texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture")
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
+                        || DisplayName == "SpriteTexture")
                     {
                         Display<T1>(DisplayName.c_str(), Value);
                         DisplayTexturePicker(newchange, Value);
@@ -756,6 +765,18 @@ void Display_Property(T& comp) {
             comp.EmissionID = 0;
 
     }
+
+
+    if constexpr (std::is_same<T, SpriteRenderer>())
+    {
+        // Bean: Change this after M1, this is not suppose to be here
+        if (comp.SpriteTexture != "")
+        {
+            comp.spriteTextureID = GET_TEXTURE_ID(comp.SpriteTexture);
+        }
+        else
+            comp.spriteTextureID = 0;
+    }
 }
 
 void DisplayComponent(Script& script)
@@ -766,7 +787,7 @@ void DisplayComponent(Script& script)
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
         const char* fieldName = getFieldNamesEvent.pStart[i];
-        Field field{ AllFieldTypes::Size(),2048,buffer };
+        Field field{ AllFieldTypes::Size(),2048, buffer};
         ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
         EVENTS.Publish(&getFieldEvent);
         if (field.fType < AllFieldTypes::Size())
@@ -783,6 +804,12 @@ void DisplayComponent(Script& script)
             if (editedContainer == (script.UUID() ^ i))
             {
                 AddReferencePanel(field.fType, &field);
+                //add reference change to undo stack
+                if (referenceChanged) {
+                    Change change(&script, fieldName);
+                    EDITOR.History.AddReferenceChange(change, previousReference, newReference);
+                    referenceChanged = false;
+                }
             }
             ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
             EVENTS.Publish(&setFieldEvent);
@@ -878,7 +905,6 @@ void DisplayComponentHelper(T& component)
         if constexpr (!std::is_same<T, Transform>()) {
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
-
                 curr_scene.Destroy(component);
             }
         }

@@ -34,7 +34,6 @@ void DebugDraw::Init()
 
 void DebugDraw::Update(float)
 {
-
 	if (enableRay)
 		DrawRay();
 }
@@ -46,8 +45,12 @@ void DebugDraw::Draw()
 	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
 	if (navMesh)
 	{
-		for (Triangle3D tri : navMesh->GetNavMeshTriangles())
+		for (Triangle3D triangle : navMesh->GetNavMeshTriangles())
 		{
+			auto tri = triangle;
+			tri[0].y += 0.1f;
+			tri[1].y += 0.1f;
+			tri[2].y += 0.1f;
 			DrawSegment3D(tri[0], tri[1], color);
 			DrawSegment3D(tri[1], tri[2], color);
 			DrawSegment3D(tri[0], tri[2], color);
@@ -55,7 +58,7 @@ void DebugDraw::Draw()
 	}
 
 	auto& prop = (*properties)["Segment3D"];
-	glLineWidth(2.f);
+	glLineWidth(4.f);
 	glPointSize(10.f);
 
 	for (size_t i = 0; i < prop.iter; i++)

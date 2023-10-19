@@ -16,9 +16,6 @@
       <Filter>AppEntry</Filter>
     </ClCompile>
     <ClCompile Include="Source\Precompiled.cpp" />
-    <ClCompile Include="Source\IOManager\Handler_GLFW.cpp">
-      <Filter>IOManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
@@ -107,9 +104,6 @@
       <Filter>AppEntry</Filter>
     </ClInclude>
     <ClInclude Include="Source\Precompiled.h" />
-    <ClInclude Include="Source\IOManager\Handler_GLFW.h">
-      <Filter>IOManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
@@ -200,5 +194,9 @@
     <None Include="Shaders\PointShadow.frag" />
     <None Include="Shaders\PointShadow.geom" />
     <None Include="Shaders\PointShadow.vert" />
+    <None Include="Shaders\UIScreenSpace.frag" />
+    <None Include="Shaders\UIScreenSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.frag" />
   </ItemGroup>
 </Project>

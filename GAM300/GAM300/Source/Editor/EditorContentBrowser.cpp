@@ -20,12 +20,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/EventsManager.h"
 
 static const std::string AssetDirectory = "Assets";
-static std::filesystem::path CurrentDirectory = AssetDirectory;
 static std::string currentFolder = "Assets";
 
 void EditorContentBrowser::Init()
 {
-
+    currentDirectory = AssetDirectory;
+    EVENTS.Subscribe(this, &EditorContentBrowser::CallbackGetCurrentDirectory);
 }
 
 void EditorContentBrowser::Update(float dt)
@@ -35,12 +35,12 @@ void EditorContentBrowser::Update(float dt)
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
 
     // Back button to return to parent directory
-    if (CurrentDirectory != std::filesystem::path(AssetDirectory))
+    if (currentDirectory != std::filesystem::path(AssetDirectory))
     {
         if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
         {
-            CurrentDirectory = CurrentDirectory.parent_path();
-            currentFolder = CurrentDirectory.string();
+            currentDirectory = currentDirectory.parent_path();
+            currentFolder = currentDirectory.string();
         }
     }
 
@@ -57,7 +57,7 @@ void EditorContentBrowser::Update(float dt)
 
     int i = 0;
     //using filesystem to iterate through all folders/files inside the "/Data" directory
-    for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
+    for (auto& it : std::filesystem::directory_iterator{ currentDirectory })
     {
         const auto& path = it.path();
         if (path.string().find("meta") != std::string::npos) continue;
@@ -104,7 +104,7 @@ void EditorContentBrowser::Update(float dt)
             if (it.is_directory())
             {
                 currentFolder = pathStr;
-                CurrentDirectory /= path.filename();
+                currentDirectory /= path.filename();
             }
         }
 
@@ -139,4 +139,9 @@ void EditorContentBrowser::Update(float dt)
 void EditorContentBrowser::Exit()
 {
 
+}
+
+void EditorContentBrowser::CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent)
+{
+    pEvent->path = currentDirectory.string();
 }

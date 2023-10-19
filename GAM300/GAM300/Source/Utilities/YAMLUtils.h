@@ -54,6 +54,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector3& v);
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
 
+// Overload for output for the Emitter specifically for Vector4
+YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
+
 namespace YAML
 {
 
@@ -140,6 +143,26 @@ namespace YAML
             return true;
         }
     };
+
+    //template <>
+    //struct convert<char*>
+    //{
+    //    // Encoding for Vector4 during deserialization
+    //    /*static Node encode(const char* rhs)
+    //    {
+    //        Node node;
+    //        node.push_back(std::string(rhs));
+    //        return node;
+    //    }*/
+
+    //    // Decoding for Vector4 during deserialization
+    //    static bool decode(const Node& node, char* rhs)
+    //    {
+    //        static std::string buf = node[0].as<std::string>();
+    //        rhs = buf.data();
+    //        return true;
+    //    }
+    //};
 }
 
 #endif // !YAMLUTILS_H
