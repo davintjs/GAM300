@@ -38,10 +38,10 @@ ENGINE_SYSTEM(AssetManager)
 public:
 	// Returns the asset data with the given fileName
 	const std::vector<char>& GetAssetWithFileName(const std::string& fileName);
-	const std::vector<char>& GetAssetWithGUID(const std::string& GUID);
+	const std::vector<char>& GetAssetWithGUID(const Engine::GUID& GUID);
 
 	// Returns the GUID of the given fileName
-	std::string GetAssetGUID(const std::string& fileName);
+	Engine::GUID GetAssetGUID(const std::string& fileName);
 
 	// Get the mesh asset
 	std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
@@ -68,21 +68,18 @@ private:
 	void LoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS = false);
 
 	// Asynchronously unload asset from memory
-	void AsyncUnloadAsset(const std::string& assetGUID);
-	void UnloadAsset(const std::string& assetGUID);
+	void AsyncUnloadAsset(const Engine::GUID & assetGUID);
+	void UnloadAsset(const Engine::GUID & assetGUID);
 
 	// Asynchronously update asset in memory
-	void AsyncUpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
-	void UpdateAsset(const std::string& metaFilePath, const std::string& assetGUID);
-
-	// Generate GUID for meta files
-	std::string GenerateGUID(const std::string& fileName);
+	void AsyncUpdateAsset(const std::string& metaFilePath, const Engine::GUID & assetGUID);
+	void UpdateAsset(const std::string& metaFilePath, const Engine::GUID & assetGUID);
 
 	// Create meta file for the asset file
 	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
 
 	// Deserialize from the meta file to retrieve asset data
-	void DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool isDDS = false);
+	void DeserializeAssetMeta(const std::filesystem::path& filePath, const std::string& fileName, bool isDDS = false);
 
 	// Addition of files during engine runtime
 	void FileAddProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension);
@@ -101,6 +98,7 @@ private:
 	
 	AllAssets assets{};
 
+	std::unordered_map<Engine::GUID, Asset> mAssets;
 	std::unordered_map<std::string, Asset> mFilesData;
 	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 };

@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../Core/SystemInterface.h"
 #include "../gli-master/gli/gli.hpp"
 #include "glslshader.h"
+#include "Utilities/GUID.h"
 
 #define TextureManager Texture_Manager::Instance()
 
@@ -28,10 +29,10 @@ public:
 	void Exit();
 
 	// used in asset manager to add dds textures to the texture container
-	void AddTexture(char const* Filename, std::string GUID);
+	void AddTexture(char const* Filename, const Engine::GUID& GUID);
 
 	// uses GUID to retrieve a texture from the texture container
-	GLuint GetTexture(std::string GUID);
+	GLuint GetTexture(const Engine::GUID & GUID);
 
 	// creates a texture and returns it to be stored in the texture container
 	GLuint CreateTexture(char const* Filename);
@@ -41,7 +42,7 @@ public:
 
 private:
 
-	std::unordered_map<std::string, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>
+	std::unordered_map<Engine::GUID, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>
 	
 };
 

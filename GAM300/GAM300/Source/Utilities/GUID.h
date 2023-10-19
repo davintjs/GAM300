@@ -28,6 +28,12 @@ namespace Engine
 			return true;
 		}
 
+		GUID& operator=(const GUID& rhs)
+		{
+			memcpy(longInt, rhs.longInt, sizeof(longInt));
+			return *this;
+		}
+
 		std::string ToHexString()
 		{
 			std::stringstream hex;
@@ -37,7 +43,6 @@ namespace Engine
 				hex << std::setw(16) << i;
 			return hex.str();
 		}
-
 	private:
 		size_t longInt[2];
 		friend std::hash<Engine::GUID>;

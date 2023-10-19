@@ -32,75 +32,9 @@ void AssetManager::Init()
 	//EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	//EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
 	//
-	//MeshManager.Init();
+	MeshManager.Init();
 
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
-
-	//std::unordered_map<std::string, YAML::Emitter*> bufData;
-
-	//for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
-	//{
-	//	subFilePath = dir.path().generic_string();
-	//	std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
-	//	std::string fileType = ".";
-	//	std::string fileName{};
-
-	//	if (!dir.is_directory())
-	//	{
-	//		 Check if is file with no extension
-	//		auto check = subFilePath.find_last_of('.');
-	//		E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
-
-	//		for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
-	//		{
-	//			fileType += subFilePath[i];
-	//		}
-
-	//		 Add into file extensions list
-
-	//		if (strcmp(fileType.c_str(), ".meta") != 0) // Skip if meta / fbx / desc file
-	//		{
-	//			continue;
-	//		}
-
-	//		std::ifstream ifs(dir.path());
-	//		std::stringstream buffer;
-	//		buffer << ifs.rdbuf();
-	//		ifs.clear();
-	//		ifs.close();
-
-	//		rapidjson::Document doc;
-	//		const std::string data(buffer.str());
-	//		doc.Parse(data.c_str());
-
-	//		const std::string GUIDofAsset = doc["GUID"].GetString();
-
-	//		YAML::Emitter& out = *bufData.emplace(dir.path().string(), new YAML::Emitter()).first->second;
-
-	//		 Serialize Entities & Components
-	//		if (!out.good())
-	//			PRINT("Emitter error: ", out.GetLastError(), "\n");
-
-	//		out << YAML::BeginMap;
-	//		out << YAML::Key << "guid" << YAML::Value << GUIDofAsset;
-
-
-	//	}
-	//}
-
-	//for (auto& pair : bufData)
-	//{
-	//	std::filesystem::remove(pair.first);
-	//	std::ofstream fout;
-	//	fout.open(pair.first);
-	//	if (fout.fail())
-	//	{
-	//		PRINT("FAILED\n");
-	//	}
-	//	fout << pair.second->c_str();
-
-	//	fout.close();
-	//}
 
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
@@ -137,20 +71,12 @@ void AssetManager::Init()
 
 		// Add into file extensions list
 
-		if (!strcmp(fileType.c_str(), ".meta") || !strcmp(fileType.c_str(), ".fbx") || !strcmp(fileType.c_str(), ".desc")) // Skip if meta / fbx / desc file
+		if (!strcmp(fileType.c_str(), ".meta")) // Skip if meta / fbx / desc file
 		{
 			continue;
 		}
-		// Removing extension to add .meta extension
-		if (dir.is_directory())
-		{
-			subFilePathMeta += ".meta";
-		}
-		else
-		{
-			subFilePathMeta.erase(subFilePathMeta.find_last_of('.'), strlen(fileType.c_str()) + 1);
-			subFilePathMeta += ".meta";
-		}
+
+		subFilePathMeta += ".meta";
 		if (!std::filesystem::exists(subFilePathMeta))
 		{
 			CreateMetaFile(fileName, subFilePathMeta, fileType);
@@ -180,8 +106,8 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
-				std::string guid = GetAssetGUID(fileName);
-				while (guid == "")
+				Engine::GUID guid = GetAssetGUID(fileName);
+				while (guid == Engine::GUID(""))
 					guid = GetAssetGUID(fileName);
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
@@ -223,26 +149,26 @@ void AssetManager::LoadAsset(const std::string& metaFilePath, const std::string&
 }
 
 // Multi-threaded unloading of assets
-void AssetManager::AsyncUnloadAsset(const std::string& assetGUID)
+void AssetManager::AsyncUnloadAsset(const Engine::GUID& assetGUID)
 {
 	THREADS.EnqueueTask([this, assetGUID] { UnloadAsset(assetGUID); });
 }
 
-void AssetManager::UnloadAsset(const std::string& assetGUID)
+void AssetManager::UnloadAsset(const Engine::GUID& assetGUID)
 {
 	//May need to unique lock this
 	ACQUIRE_SCOPED_LOCK(Assets);
-	mFilesData.erase(assetGUID);
+	mAssets.erase(assetGUID);
 	std::cout << "Done removing file from memory!" << std::endl;
 }
 
 // Multi-threaded unloading of assets
-void AssetManager::AsyncUpdateAsset(const std::string& assetPath, const std::string& assetGUID)
+void AssetManager::AsyncUpdateAsset(const std::string& assetPath, const Engine::GUID& assetGUID)
 {
 	THREADS.EnqueueTask([this, assetPath, assetGUID] { UpdateAsset(assetPath, assetGUID); });
 }
 
-void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& assetGUID)
+void AssetManager::UpdateAsset(const std::string& assetPath, const Engine::GUID& assetGUID)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
 
@@ -250,7 +176,7 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 	E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
-	mFilesData[assetGUID].mData = std::move(buff); // Update the data in memory
+	mAssets[assetGUID].mData = std::move(buff); // Update the data in memory
 
 	std::cout << "Done updating file in memory!" << assetPath << std::endl;
 
@@ -260,11 +186,11 @@ void AssetManager::UpdateAsset(const std::string& assetPath, const std::string& 
 // Get a loaded asset
 const std::vector<char>& AssetManager::GetAssetWithFileName(const std::string& fileName)
 {
-	std::string data{};
+	Engine::GUID data{};
 	auto func =
 	[this, &fileName, &data] // Wait if the asset is not loaded yet
 	{
-		for (const auto& [Key, Val] : mFilesData)
+		for (const auto& [Key, Val] : mAssets)
 		{
 			if (Val.mFileName == fileName)
 			{
@@ -279,16 +205,16 @@ const std::vector<char>& AssetManager::GetAssetWithFileName(const std::string& f
 		Assets, func
 	);
 
-	return mFilesData[data].mData;
+	return mAssets[data].mData;
 }
 
 // Get a loaded asset
-const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
+const std::vector<char>& AssetManager::GetAssetWithGUID(const Engine::GUID& GUID)
 {
 	auto func =
 	[this, &GUID] // Wait if the asset is not loaded yet
 	{
-		if (mFilesData.find(GUID) != mFilesData.end())
+		if (mAssets.find(GUID) != mAssets.end())
 		{
 			return true;
 		}
@@ -302,21 +228,21 @@ const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
 		Assets, func
 	);
 
-	return mFilesData[GUID].mData;
+	return mAssets[GUID].mData;
 }
 
 // Get a loaded asset GUID
-std::string AssetManager::GetAssetGUID(const std::string& fileName)
+Engine::GUID AssetManager::GetAssetGUID(const std::string& fileName)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
-	for (const auto& [key, val] : mFilesData)
+	for (const auto& [key, val] : mAssets)
 	{
 		if (val.mFileName == fileName)
 		{
 			return key;
 		}
 	}
-	return "";
+	return Engine::GUID("");
 }
 
 std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
@@ -334,28 +260,9 @@ void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
 	mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }
 
-std::string AssetManager::GenerateGUID(const std::string& fileName)
-{
-	std::stringstream stream{};
-	for (size_t i = 0; i < fileName.length(); ++i)
-	{
-		int asc = static_cast<int>(fileName[i]); // Convert from char to int first
-		stream << std::hex << asc; // Convert to hexadecimal
-	}
-
-	std::uniform_real_distribution<double> distribution(1, 1000);
-	std::random_device rd;
-	std::default_random_engine generator(rd());
-	int number = static_cast<int>(distribution(generator));
-	stream << std::hex << number;
-
-	std::string GUID(stream.str()); // Concat the string of hex
-	return GUID;
-}
-
 void AssetManager::CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType)
 {
-	std::string fileNameNum = GenerateGUID(fileName);
+	Engine::GUID guid;
 	std::string fileAssetPath = filePath;
 	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen(".meta") + 1);
 	if (strcmp(fileType.c_str(), ""))
@@ -367,7 +274,7 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 
 
 	out << YAML::BeginMap;
-	out << YAML::Key << "guid" << YAML::Value << fileNameNum;
+	out << YAML::Key << "guid" << YAML::Value << guid.ToHexString();
 
 	std::ofstream ofs(filePath);
 	ofs << out.c_str();
@@ -377,9 +284,10 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 	return;
 }
 
-void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::string& fileName, bool /*isDDS*/)
+void AssetManager::DeserializeAssetMeta(const std::filesystem::path& filePath, const std::string& fileName, bool /*isDDS*/)
 {
 	std::ifstream ifs(filePath);
+	PRINT(filePath,'\n');
 	std::stringstream buffer;
 	buffer << ifs.rdbuf();
 	ifs.close();
@@ -387,19 +295,23 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	std::vector<YAML::Node> data;
 
 	// Load the scene again for linkages
-	data = YAML::LoadAllFromFile(filePath);
+	data = YAML::LoadAllFromFile(filePath.string());
 
 	std::string GUIDofAsset;
 
 	for (YAML::Node& node : data)
 	{
+		YAML::detail::iterator_value kv = *node.begin();
 		if (node["guid"]) // Deserialize Gameobject
 		{
-			GUIDofAsset = node.as<std::string>();
+			GUIDofAsset = kv.second.as<std::string>();
 		}
 	}
-	std::string assetPath{filePath.begin(),filePath.begin() + filePath.find_first_of(".")};
-	filePath;
+	if (GUIDofAsset.size() < 16)
+		PRINT("Less than 16 GUID ", filePath, '\n');
+
+	std::filesystem::path assetPath = filePath;
+	assetPath.replace_extension("");
 	std::ifstream inputFile(assetPath.c_str());
 	E_ASSERT(inputFile, "Error opening file to load asset into memory!");
 
@@ -409,7 +321,7 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	std::filesystem::path fPath{ assetPath };
 	Asset tempFI{ fPath };
 	tempFI.mData = buff;
-	this->mFilesData.insert(std::make_pair(GUIDofAsset, tempFI));
+	this->mAssets.insert(std::make_pair(GUIDofAsset, tempFI));
 	assets.AddAsset(fPath);
 	inputFile.close();
 }
@@ -420,7 +332,6 @@ void AssetManager::FileAddProtocol(const std::string& filePath, const std::strin
 
 	// Remove extension in filePath and add .meta
 	std::string filePathMeta = "Assets/" + filePath;
-	filePathMeta.erase(filePathMeta.find_last_of('.'), strlen(fileExtension.c_str()) + 1);
 	filePathMeta += ".meta";
 
 	// Remove the . in fileExtension
@@ -511,12 +422,11 @@ void AssetManager::FileUpdateProtocol(const std::string& filePath, const std::st
 		}
 	}
 
-
 	std::string assetPath{ filePath.begin(),filePath.begin() + filePath.find_first_of(".") };
 	if (!std::filesystem::is_directory(assetPath))
 	{
 		// The asset file associated with this meta file was updated
-		mFilesData[GUIDofAsset].mData.clear(); // Remove the data in memory
+		mAssets[GUIDofAsset].mData.clear(); // Remove the data in memory
 		this->AsyncUpdateAsset(assetPath, GUIDofAsset); // Add the new data into memory
 	}
 }
@@ -554,8 +464,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	}
 
 	if (fileExtension == ".meta" || 
-		filePath.string().find("~") != std::string::npos || 
-		fileExtension == ".desc" ||
+		filePath.string().find("~") != std::string::npos ||
 		fileExtension == "")
 	{
 		return;

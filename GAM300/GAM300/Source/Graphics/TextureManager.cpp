@@ -15,6 +15,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "TextureManager.h"
 
+
 void Texture_Manager::Init()
 {
     std::cout << "TEXTURE MANAGER INIT\n";
@@ -26,7 +27,7 @@ void Texture_Manager::Update(float dt)
     UNREFERENCED_PARAMETER(dt);
 }
 
-void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
+void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID& GUID)
 {
     GLuint temp{};
 
@@ -237,7 +238,7 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     return Skybox_Tex;
 }
 
-GLuint Texture_Manager::GetTexture(std::string GUID)
+GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
 {
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
         return mTextureContainer.find(GUID)->second.second;

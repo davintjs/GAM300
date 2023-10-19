@@ -97,7 +97,7 @@ struct AllAssetsGroup
 		}
 	}
 private:
-	std::tuple<AssetsList<Ts>...> assets;
+	std::tuple<AssetsTable<Ts>...> assets;
 };
 
 using AllAssets = decltype(AllAssetsGroup(AssetTypes()));

@@ -18,6 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Utilities/UUID.h"
 #include <glm/vec2.hpp>
+#include <Utilities/GUID.h>
 
 struct Entity;
 struct Scene;
@@ -152,7 +153,7 @@ struct GetAssetEvent: IEvent
 {
 	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
 	const std::string& fileName;
-	std::string guid;
+	Engine::GUID guid;
 };
 
 struct ContactAddedEvent : IEvent
