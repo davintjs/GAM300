@@ -15,13 +15,11 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "InputSystem.h"
 #include "InputHandler.h"
-#include "Handler_GLFW.h"
 
 
 void InputSystem::Init()
 {
-	InputHandler::setFullscreen(false);
-	//InputHandler:: = new int[55];
+	
 }
 
 void InputSystem::Update(float dt)
@@ -33,12 +31,6 @@ void InputSystem::Update(float dt)
 
 
 	glfwPollEvents();
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_F11))
-	{
-		std::cout << "toggling between fullscreen and non fullscreen\n";
-		InputHandler::setFullscreen(!InputHandler::isFullscreen());
-	}
 
 	if (InputHandler::isMouseButtonHolding_L())
 	{

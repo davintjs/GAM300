@@ -15,7 +15,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #pragma once
 #include "Precompiled.h"
-#include "IOManager/Handler_GLFW.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 // #include "LapSupGraphics/Compiler.h"

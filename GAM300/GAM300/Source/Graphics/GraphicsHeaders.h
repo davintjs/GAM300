@@ -15,6 +15,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
 #include "BaseCamera.h"

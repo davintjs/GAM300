@@ -37,10 +37,11 @@ int main(int, char**) {
 	MyFrameRateController.Init(1/60.f);
 
 	float dt = 0;
-	while (!glfwWindowShouldClose(GLFW_Handler::ptr_window))
+	while (!glfwWindowShouldClose(Application::GetWindow()))
 	{
 		MyFrameRateController.Start();
 		MyEngineCore.Update(dt);
+		app->Update(dt);
 		dt = MyFrameRateController.End();
 	}
 

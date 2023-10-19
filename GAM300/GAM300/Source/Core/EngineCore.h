@@ -30,7 +30,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/BehaviorTreeBuilder.h"
 #include "AI/NavMeshBuilder.h"
 #include "IOManager/InputSystem.h"
-#include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
 #include "ImGuizmo.h"
@@ -154,8 +153,6 @@ public:
 		#endif
 
 		//End ImGui Frames
-
-		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 	}
 
 	/**************************************************************************/

@@ -15,15 +15,18 @@
 All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
-
 #include "EditorHeaders.h"
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
+#include "IOManager/InputHandler.h"
 #include "Editor.h"
 #include "Editor/EditorCamera.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 #include "Graphics/MeshManager.h"
-#include <glm/gtx/matrix_decompose.hpp>
 
 namespace
 {

@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 
 #include "EditorCamera.h"
+#include "IOManager/InputHandler.h"
 #include "Editor/EditorHeaders.h"
 #include "Core/EventsManager.h"
 #include "Scene/SceneManager.h"
@@ -58,7 +59,7 @@ void EditorCamera::Update(float dt)
 void EditorCamera::InputControls()
 {
 	glm::vec2 mousePos = InputHandler::getMousePos();
-	mousePos.y = GLFW_Handler::height - mousePos.y;
+	mousePos.y = Application::GetHeight() - mousePos.y;
 	glm::vec2 delta = (mousePos - prevMousePos) * 0.003f;
 	prevMousePos = mousePos;
 
@@ -134,6 +135,7 @@ void EditorCamera::FocusOnObject(float dt)
 		{
 			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
 			targetFP = t.translation;
+			targetFL = std::max(1.f, 10.f * cbrt((t.scale.x * t.scale.y * t.scale.z) * 0.5f));
 			initialFP = focalPoint;
 			initialFL = focalLength;
 			timer = 0.f;
@@ -144,7 +146,7 @@ void EditorCamera::FocusOnObject(float dt)
 	if (timer < duration && isFocusing)
 	{
 		focalPoint = Interpolate(initialFP, targetFP, timer, duration, EASINGTYPE::BEZIER);
-		focalLength = Interpolate(initialFL, 10.f, timer, duration, EASINGTYPE::BEZIER);
+		focalLength = Interpolate(initialFL, targetFL, timer, duration, EASINGTYPE::BEZIER);
 		timer += dt;
 	}
 }
@@ -152,11 +154,10 @@ void EditorCamera::FocusOnObject(float dt)
 glm::vec2 EditorCamera::GetMouseInNDC()
 {
 	glm::vec2 mousePosition = InputHandler::getMousePos();
-	mousePosition.y -= GLFW_Handler::height - scenePosition.y - dimension.y;
+	mousePosition.y -= Application::GetHeight() - scenePosition.y - dimension.y;
 	glm::vec2 mouseScenePosition = { mousePosition.x - scenePosition.x, mousePosition.y};
 	glm::vec2 mouseToNDC = mouseScenePosition / dimension;
-
-	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(GLFW_Handler::width, GLFW_Handler::height);
+	glm::vec2 mouseTo1600By900 = mouseToNDC * glm::vec2(Application::GetWidth(), Application::GetHeight());
 	//mouseTo1600By900.y = GLFW_Handler::height - mouseTo1600By900.y;
 	return mouseTo1600By900;
 }
@@ -194,7 +195,7 @@ void EditorCamera::ZoomCamera()
 float EditorCamera::GetZoomSpeed()
 {
 	float distance = focalLength * 0.2f;
-	distance = std::max(distance, 0.0f);
+	distance = std::max(distance, 0.f);
 	float speed = distance * distance;
 	speed = std::min(speed, 100.0f); // max speed = 100
 	return speed * speedModifier * 0.1f;
@@ -216,8 +217,8 @@ Ray3D EditorCamera::Raycasting()
 	glm::vec2 mousePos = GetMouseInNDC();
 	EditorDebugger::Instance().AddLog("Mouse Position: %f %f\n", mousePos.x, mousePos.y);
 
-	float x = (2.0f * (float)mousePos.x) / 1600.f - 1.0f;
-	float y = (2.0f * (float)mousePos.y) / 900.f - 1.0f;
+	float x = (2.0f * (float)mousePos.x) / Application::GetWidth() - 1.0f;
+	float y = (2.0f * (float)mousePos.y) / Application::GetHeight() - 1.0f;
 
 	glm::vec4 rayClip(x, y, -1.0f, 1.0f);
 	glm::vec4 rayEye = glm::inverse(projMatrix) * rayClip;
@@ -238,8 +239,8 @@ Ray3D EditorCamera::Raycasting(double xpos, double ypos, glm::mat4 proj, glm::ma
 {
 	EditorDebugger::Instance().AddLog("Mouse Position: %f %f\n", xpos, ypos);
 	
-	float x = (2.0f * (float)xpos) / 1600.f - 1.0f;
-	float y = (2.0f * (float)ypos) / 900.f - 1.0f;
+	float x = (2.0f * (float)xpos) / Application::GetWidth() - 1.0f;
+	float y = (2.0f * (float)ypos) / Application::GetHeight() - 1.0f;
 
 	glm::vec4 rayClip(x, y, -1.0f, 1.0f);
 	glm::vec4 rayEye = glm::inverse(proj) * rayClip;
