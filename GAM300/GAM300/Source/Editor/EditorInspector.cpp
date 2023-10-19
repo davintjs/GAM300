@@ -33,6 +33,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
 
+enum ComponentType {
+    AUDIO, MESHRENDERER, SPRITERENDERER
+};
+
 //Flags for inspector headers/windows
 static ImGuiTableFlags windowFlags =
 ImGuiTableFlags_Resizable |
@@ -466,7 +470,7 @@ void Display(const char* string)
 
 //Function to display and edit textures of a given property.
 template <typename T> 
-void DisplayTexturePicker(Change& change, T& Value) {
+void DisplayFilePicker(Change& change, T& Value, ComponentType type) {
 
     using T1 = std::decay_t<decltype(Value)>;
 
@@ -520,19 +524,43 @@ void DisplayTexturePicker(Change& change, T& Value) {
             ImGui::EndPopup(); 
             ImGui::CloseCurrentPopup();
             return;
+
         };
         ImGui::PopStyleColor();
         //render file name below icon
-        ImGui::TextWrapped("Remove Texture");
+        ImGui::TextWrapped("Remove File");
         ImGui::NextColumn();
 
         int i = 0;
+
         //using filesystem to iterate through all folders/files inside the "/Data" directory
         for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
         {
             const auto& path = it.path();
+
             //if not png or dds file, dont show
             if ((path.string().find("meta") != std::string::npos)) continue;
+
+            if (type == AUDIO) {
+                //don't show if file is not wav file
+                if ((path.string().find("wav") == std::string::npos) ||
+                    (path.string().find("mp3") == std::string::npos)) {
+                    if (CurrentDirectory != std::filesystem::path(AssetDirectory)) {
+                        continue;
+                    }
+                }
+            }
+            else if (type == MESHRENDERER) {
+
+            }
+            else if (type == SPRITERENDERER) {
+                /*if ((path.string().find("png") == std::string::npos) ||
+                    (path.string().find("jpg") == std::string::npos)) {
+                    if (CurrentDirectory != std::filesystem::path(AssetDirectory)) {
+                        continue;
+                    }
+                }*/
+            }
 
             ImGui::PushID(i++);
 
@@ -543,9 +571,6 @@ void DisplayTexturePicker(Change& change, T& Value) {
             std::string icon = it.is_directory() ? "foldericon" : "fileicon";
 
             size_t icon_id = 0;
-
-            /*auto it2 = filename.begin() + filename.find_first_of(".");
-            filename.erase(it2, filename.end());*/
 
             std::string filename = "";
 
@@ -563,17 +588,26 @@ void DisplayTexturePicker(Change& change, T& Value) {
                     it2 = filename.begin() + filename.find_first_of(".");
                     filename.erase(it2, filename.end());
                 }
-                //PRINT(filename);
-                auto tex = GET_TEXTURE_ID(filename);
 
-                if (tex != UINT_MAX) {
+                auto tex = GET_TEXTURE_ID(filename);
+                if (tex != UINT_MAX || type == AUDIO) {
                     icon = filename;
                 }
+
             }
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            icon_id = GET_TEXTURE_ID(icon);
+            if (type == AUDIO) {
+                //Draw the file / folder icon based on whether it is a directory or not
+                std::string icon_name = it.is_directory() ? "foldericon" : "fileicon";
+                icon_id = GET_TEXTURE_ID(icon_name);
+            }    
+            else {
+                icon_id = GET_TEXTURE_ID(icon);
+            }
+               
+            
             ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
             ImGui::PopStyleColor();
@@ -632,7 +666,7 @@ void DisplayLightTypes(Change& change, T& value) {
 
 //Displays all the properties of an given entity
 template <typename T>
-void Display_Property(T& comp) {
+void Display_Property(T& comp){
     if constexpr (std::is_same<T, MeshRenderer>()) {
 
         //Combo field for mesh renderer
@@ -643,7 +677,7 @@ void Display_Property(T& comp) {
         /*std::string meshname = comp.MeshName;
         std::string buffer;
         ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
-        DisplayTexturePicker(newchange, Value);*/
+        DisplayFilePicker(newchange, Value);*/
 
         std::vector<const char*> meshNames;
         int number = 0;
@@ -699,14 +733,26 @@ void Display_Property(T& comp) {
                     ImGui::PushID(entry.first.c_str());   
                     
                     Change newchange(&comp, entry.first); 
-
-                    //Properties with Texture picker
+                 
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
                         || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
-                        || DisplayName == "SpriteTexture")
+                        || DisplayName == "SpriteTexture" || DisplayName == "Sound File")
                     {
                         Display<T1>(DisplayName.c_str(), Value);
-                        DisplayTexturePicker(newchange, Value);
+
+                        //Properties with Texture picker
+                        if constexpr (std::is_same < T, AudioSource>()) {
+                            DisplayFilePicker(newchange, Value, AUDIO);
+                        }
+                        else if constexpr (std::is_same<T, MeshRenderer>()) {
+                            DisplayFilePicker(newchange, Value, MESHRENDERER);
+                        }
+                        else if constexpr (std::is_same<T, SpriteRenderer>()) {
+                            DisplayFilePicker(newchange, Value, SPRITERENDERER);
+                        }
+                        
+                        
+                       
                     }
                     else { //Normal Properties (int, float, vec3 etc.)
                         Display<T1>(newchange, DisplayName.c_str(), Value);
