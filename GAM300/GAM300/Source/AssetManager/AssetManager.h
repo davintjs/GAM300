@@ -129,4 +129,7 @@ private:
 
 	// Get the GUID of the asset using event callbacks
 	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
+
+	// Get the dropped files using event callbacks
+	void CallbackDroppedAsset(DropAssetsEvent* pEvent);
 };

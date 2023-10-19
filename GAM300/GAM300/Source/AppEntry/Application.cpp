@@ -62,8 +62,8 @@ void Application::InitApp(const int& _width, const int& _height, const std::stri
     glfwWindowHint(GLFW_BLUE_BITS, 8); glfwWindowHint(GLFW_ALPHA_BITS, 8);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // window dimensions are NOT static
 
-    //GLFWwindow * ptr_window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
     window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
+    glfwSetWindowMonitor(window, NULL, 100, 100, _width, _height, 0);
 
     if (!window)
     {
@@ -203,8 +203,8 @@ void Application::CallbackWindowDrop(GLFWwindow*, int _pathCount, const char* _p
 {
     PRINT("Application Getting Files...\n");
 
-    // Bean: To be implemented
-    //ASSETMANAGER.AcceptDroppedFiles(_pathCount, _paths);
+    DropAssetsEvent e(_pathCount, _paths);
+    EVENTS.Publish(&e);
 }
 
 void Application::CallbackKeyState(GLFWwindow*, int _key, int, int _action, int)

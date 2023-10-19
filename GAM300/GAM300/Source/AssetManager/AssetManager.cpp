@@ -30,6 +30,7 @@ void AssetManager::Init()
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
+	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
 	
 	MeshManager.Init();
 
@@ -530,4 +531,39 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
+}
+
+void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
+{
+	std::list<std::filesystem::path> paths;
+	for (int i = 0; i < pEvent->pathCount; i++)
+		paths.push_back(pEvent->paths[i]);
+
+	EditorGetCurrentDirectory e;
+	EVENTS.Publish(&e);
+
+	// Create directories / folders / files in the directory
+	for (auto path : paths)
+	{
+		std::filesystem::path pathName = e.path + "\\" + path.filename().string();
+		std::filesystem::copy(path, pathName);
+
+		std::string::size_type i = e.path.find("Assets");
+		if (i != std::string::npos)
+			e.path.erase(i, 7);
+		
+		if(e.path.empty())
+			pathName = path.filename().string();
+		else
+			pathName = e.path + "\\" + path.filename().string();
+
+		if (std::filesystem::is_directory(path))
+		{
+			FileAddProtocol(pathName.string(), path.filename().string(), "");
+		}
+		else
+		{
+			FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
+		}
+	}
 }
