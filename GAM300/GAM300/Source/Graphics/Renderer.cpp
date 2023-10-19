@@ -23,6 +23,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
+bool RenderShadow = true;
+
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
 
@@ -205,8 +207,11 @@ void Renderer::Update(float)
 	}
 
 	SetupGrid(100);
-
-	DrawDepth();
+	
+	if (RenderShadow)
+	{
+		DrawDepth();
+	}
 }
 
 void Renderer::SetupGrid(const int& _num)
@@ -490,8 +495,10 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glm::value_ptr(lightSpaceMatrix));
 
 
+	GLint uniform11 =
+		glGetUniformLocation(shader.GetHandle(), "renderShadow");
 
-
+	glUniform1f(uniform11, RenderShadow);
 
 
 
@@ -625,6 +632,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	glDisable(GL_BLEND);
 
 }
+
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {
 	glm::vec3 color{ 1.f, 1.f, 1.f };
@@ -696,11 +704,9 @@ void Renderer::DrawDepth()
 	// this vector is for point light
 	std::vector<glm::mat4> shadowTransforms;
 
-
 	if (temporary_test == DIRECTIONAL_LIGHT)
 	{
 		// Good Light pos {-0.2f, -1.0f, -0.3f}
-		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -709,9 +715,8 @@ void Renderer::DrawDepth()
 	else if (temporary_test == SPOT_LIGHT)	
 	{
 		lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
-		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
-		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 100.f),
-			glm::vec3(0.0, 0.0, 1.0));
+		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + 
+			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
 	}
 	else if (temporary_test == POINT_LIGHT)
 	{
@@ -724,12 +729,6 @@ void Renderer::DrawDepth()
 		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		//shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	}
 
 	lightSpaceMatrix = lightProjection * lightView;
@@ -761,7 +760,6 @@ void Renderer::DrawDepth()
 		{
 			//glClear(GL_DEPTH_BUFFER_BIT);
 
-
 			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
 			shader.Use();
 			for (int i = 0; i < 6; ++i)
@@ -770,7 +768,6 @@ void Renderer::DrawDepth()
 				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
 				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-
 			}
 
 			GLint uniform1 =
@@ -794,7 +791,6 @@ void Renderer::DrawDepth()
 		{
 			GLSLShader& shader = SHADER.GetShader(SHADOW);
 			shader.Use();
-
 
 			GLint uniform1 =
 				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");

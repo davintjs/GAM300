@@ -74,6 +74,7 @@ out vec4 FragColor;
 layout (binding = 0) uniform sampler2D myTextureSampler[31];
 
 layout (binding = 31) uniform samplerCube PointShadowBox;
+uniform bool renderShadow;
 uniform float farplane;
 
 uniform vec3 camPos;
@@ -373,8 +374,8 @@ void main()
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
 //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-        float shadow = ShadowCalculation_Point(pointLights[i].position); 
-//        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position) : 0.0; // add a shadows bool
+//        float shadow = ShadowCalculation_Point(pointLights[i].position); 
+        float shadow = renderShadow ? ShadowCalculation_Point(pointLights[i].position) : 0.0; // add a shadows bool
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 
 
@@ -447,8 +448,9 @@ void main()
 
 
 
-        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        
+//        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+
         
         
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
@@ -523,8 +525,9 @@ void main()
         
         
         
-        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-        
+//        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
+        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+
         
         
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again

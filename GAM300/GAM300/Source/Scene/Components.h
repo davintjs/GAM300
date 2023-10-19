@@ -354,7 +354,7 @@ struct LightSource : Object
 
 struct SpriteRenderer : Object
 	{
-		bool WorldSpace = false;
+		bool WorldSpace = true;
 
 		std::string SpriteTexture = "";
 		GLuint spriteTextureID = 0;
