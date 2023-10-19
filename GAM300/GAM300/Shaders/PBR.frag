@@ -414,7 +414,7 @@ void main()
 
 
 //        float distance = length(pointLights[i].position - WorldPos);
-        float distance = 1000.f;
+        float distance = 10.f;
         
         
         float attenuation = 1.0 / (distance * distance);

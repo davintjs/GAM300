@@ -690,7 +690,7 @@ void Renderer::DrawDepth()
 	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 	lightPos = -lightPos;
 	glm::mat4 lightProjection, lightView;
-	float near_plane = -10000.f, far_plane = 10000.f;
+	float near_plane = -100.f, far_plane = 100.f;
 
 	// Above is directional light and spot light related stuffs
 	// this vector is for point light
@@ -701,14 +701,16 @@ void Renderer::DrawDepth()
 	{
 		// Good Light pos {-0.2f, -1.0f, -0.3f}
 		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		lightProjection = glm::ortho(-5000.f, 5000.f, -5000.f, 5000.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
+		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+
 	}
 	else if (temporary_test == SPOT_LIGHT)	
 	{
-		lightProjection = glm::perspective<float>(glm::radians(60.f), 1.f, 50.f, 1000.f);
+		lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
 		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
-		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 1000.f),
+		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 100.f),
 			glm::vec3(0.0, 0.0, 1.0));
 	}
 	else if (temporary_test == POINT_LIGHT)
