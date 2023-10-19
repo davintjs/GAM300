@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 
 #include "DemoSystem.h"
+#include "IOManager/InputHandler.h"
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
