@@ -512,6 +512,9 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 void Renderer::UIDraw_2D(BaseCamera& _camera)
 {
 	// Setups required for all UI
+ 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
 	glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
 
@@ -564,14 +567,13 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 
 	}
 	shader.UnUse();
+	glDisable(GL_BLEND);
 
 }
 
 void Renderer::UIDraw_3D(BaseCamera& _camera)
 {
 	// Setups required for all UI
-	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
-	//glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -591,11 +593,11 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
-		//// This means it's 3D space
-		//if (Sprite.WorldSpace)
-		//{
-		//	continue;
-		//}
+		// This means it's 2D space
+		if (!Sprite.WorldSpace)
+		{
+			continue;
+		}
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
@@ -621,15 +623,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 
-
-		glBindVertexArray(properties["Cube"].VAO);
-
-		//glDrawElements(properties["Cube"].drawType, properties["Cube"].drawCount, GL_UNSIGNED_INT, 0 );
-		
-		//glBindVertexArray(0);
-
 		renderQuad(_quadVAO, _quadVBO);
-		
 
 	}
 	shader.UnUse();
