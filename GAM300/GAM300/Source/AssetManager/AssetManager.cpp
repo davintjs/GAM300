@@ -22,16 +22,85 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Utilities/ThreadPool.h"
 #include "Core/EventsManager.h"
 #include "Core/FileTypes.h"
+#include "yaml-cpp/yaml.h"
 
 void AssetManager::Init()
 {
 	E_ASSERT(std::filesystem::exists(AssetPath), "Check if proper assets filepath exists!");
 
 	//EVENT SUBSCRIPTIONS
-	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
-	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
-	
-	MeshManager.Init();
+	//EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
+	//EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
+	//
+	//MeshManager.Init();
+
+	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
+
+	//std::unordered_map<std::string, YAML::Emitter*> bufData;
+
+	//for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
+	//{
+	//	subFilePath = dir.path().generic_string();
+	//	std::string subFilePathMeta = subFilePath, assetPath = subFilePath;
+	//	std::string fileType = ".";
+	//	std::string fileName{};
+
+	//	if (!dir.is_directory())
+	//	{
+	//		 Check if is file with no extension
+	//		auto check = subFilePath.find_last_of('.');
+	//		E_ASSERT(check != std::string::npos, "File with no extension found! Remove it from the assets folder.");
+
+	//		for (size_t i = check + 1; i != strlen(subFilePath.c_str()); ++i)
+	//		{
+	//			fileType += subFilePath[i];
+	//		}
+
+	//		 Add into file extensions list
+
+	//		if (strcmp(fileType.c_str(), ".meta") != 0) // Skip if meta / fbx / desc file
+	//		{
+	//			continue;
+	//		}
+
+	//		std::ifstream ifs(dir.path());
+	//		std::stringstream buffer;
+	//		buffer << ifs.rdbuf();
+	//		ifs.clear();
+	//		ifs.close();
+
+	//		rapidjson::Document doc;
+	//		const std::string data(buffer.str());
+	//		doc.Parse(data.c_str());
+
+	//		const std::string GUIDofAsset = doc["GUID"].GetString();
+
+	//		YAML::Emitter& out = *bufData.emplace(dir.path().string(), new YAML::Emitter()).first->second;
+
+	//		 Serialize Entities & Components
+	//		if (!out.good())
+	//			PRINT("Emitter error: ", out.GetLastError(), "\n");
+
+	//		out << YAML::BeginMap;
+	//		out << YAML::Key << "guid" << YAML::Value << GUIDofAsset;
+
+
+	//	}
+	//}
+
+	//for (auto& pair : bufData)
+	//{
+	//	std::filesystem::remove(pair.first);
+	//	std::ofstream fout;
+	//	fout.open(pair.first);
+	//	if (fout.fail())
+	//	{
+	//		PRINT("FAILED\n");
+	//	}
+	//	fout << pair.second->c_str();
+
+	//	fout.close();
+	//}
 
 	std::string subFilePath{};
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
@@ -288,26 +357,20 @@ void AssetManager::CreateMetaFile(const std::string& fileName, const std::string
 {
 	std::string fileNameNum = GenerateGUID(fileName);
 	std::string fileAssetPath = filePath;
-	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen("meta") + 1);
+	fileAssetPath.erase(fileAssetPath.find_last_of('.'), strlen(".meta") + 1);
 	if (strcmp(fileType.c_str(), ""))
 	{
 		fileAssetPath += fileType;
 	}
 	
-	rapidjson::StringBuffer sb;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(sb);
+	YAML::Emitter out;
 
-	writer.StartObject();
-	writer.String("GUID");
-	writer.String(fileNameNum.c_str());
-	writer.String("FileType");
-	writer.String(fileType.c_str());
-	writer.String("FileAssetPath");
-	writer.String(fileAssetPath.c_str());
-	writer.EndObject();
+
+	out << YAML::BeginMap;
+	out << YAML::Key << "guid" << YAML::Value << fileNameNum;
 
 	std::ofstream ofs(filePath);
-	ofs << sb.GetString();
+	ofs << out.c_str();
 	ofs.flush();
 	ofs.close();
 
@@ -321,22 +384,29 @@ void AssetManager::DeserializeAssetMeta(const std::string& filePath, const std::
 	buffer << ifs.rdbuf();
 	ifs.close();
 
-	rapidjson::Document doc;
-	const std::string data(buffer.str());
-	doc.Parse(data.c_str());
+	std::vector<YAML::Node> data;
 
-	const std::string assetPath = doc["FileAssetPath"].GetString();
-	const std::string GUIDofAsset = doc["GUID"].GetString();
+	// Load the scene again for linkages
+	data = YAML::LoadAllFromFile(filePath);
 
-	std::filesystem::path fPath{ assetPath };
+	std::string GUIDofAsset;
 
+	for (YAML::Node& node : data)
+	{
+		if (node["guid"]) // Deserialize Gameobject
+		{
+			GUIDofAsset = node.as<std::string>();
+		}
+	}
+	std::string assetPath{filePath.begin(),filePath.begin() + filePath.find_first_of(".")};
+	filePath;
 	std::ifstream inputFile(assetPath.c_str());
 	E_ASSERT(inputFile, "Error opening file to load asset into memory!");
 
 	std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
 
 	std::filesystem::directory_entry path(assetPath);
-	std::filesystem::file_time_type pathTime = std::filesystem::last_write_time(path);
+	std::filesystem::path fPath{ assetPath };
 	Asset tempFI{ fPath };
 	tempFI.mData = buff;
 	this->mFilesData.insert(std::make_pair(GUIDofAsset, tempFI));
@@ -390,17 +460,24 @@ void AssetManager::FileRemoveProtocol(const std::string& filePath, const std::st
 	buffer << ifs.rdbuf();
 	ifs.close();
 
-	rapidjson::Document doc;
-	const std::string data(buffer.str());
-	doc.Parse(data.c_str());
+	std::vector<YAML::Node> data;
 
-	std::string assetPath = doc["FileAssetPath"].GetString();
-	std::string assetType = doc["FileType"].GetString();
-	std::string tempGUID = doc["GUID"].GetString();
+	// Load the scene again for linkages
+	data = YAML::LoadAllFromFile(filePath);
+
+	std::string GUIDofAsset;
+
+	for (YAML::Node& node : data)
+	{
+		if (node["guid"]) // Deserialize Gameobject
+		{
+			GUIDofAsset = node.as<std::string>();
+		}
+	}
 
 	std::filesystem::remove(filePathMeta); // Delete meta file
 
-	this->AsyncUnloadAsset(tempGUID); // Unload asset from memory
+	this->AsyncUnloadAsset(GUIDofAsset); // Unload asset from memory
 }
 
 // Change meta file name (And path to the updated name)
@@ -419,17 +496,28 @@ void AssetManager::FileUpdateProtocol(const std::string& filePath, const std::st
 	buffer << ifs.rdbuf();
 	ifs.close();
 
-	rapidjson::Document doc;
-	const std::string data(buffer.str());
-	doc.Parse(data.c_str());
+	std::string GUIDofAsset;
 
-	std::string assetPath = doc["FileAssetPath"].GetString();
-	const std::string tempGUID = doc["GUID"].GetString();
+	std::vector<YAML::Node> data;
+
+	// Load the scene again for linkages
+	data = YAML::LoadAllFromFile(filePath);
+
+	for (YAML::Node& node : data)
+	{
+		if (node["guid"]) // Deserialize Gameobject
+		{
+			GUIDofAsset = node.as<std::string>();
+		}
+	}
+
+
+	std::string assetPath{ filePath.begin(),filePath.begin() + filePath.find_first_of(".") };
 	if (!std::filesystem::is_directory(assetPath))
 	{
 		// The asset file associated with this meta file was updated
-		mFilesData[tempGUID].mData.clear(); // Remove the data in memory
-		this->AsyncUpdateAsset(assetPath, tempGUID); // Add the new data into memory
+		mFilesData[GUIDofAsset].mData.clear(); // Remove the data in memory
+		this->AsyncUpdateAsset(assetPath, GUIDofAsset); // Add the new data into memory
 	}
 }
 
