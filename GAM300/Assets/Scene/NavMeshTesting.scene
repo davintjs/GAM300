@@ -1,0 +1,126 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: NavMeshTesting
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 2508335683683228376
+  m_IsActive: true
+  m_Name: Floor
+  m_Position: [0, -0.349999994, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [20, 1, 20]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 5062268925278052045}  # Rigidbody
+    - component: {fileID: 18366606890204431064}  # MeshFilter
+    - component: {fileID: 4270502760448712130}  # MeshRenderer
+    - component: {fileID: 15591883172395388695}  # BoxCollider
+---
+Rigidbody:
+  EUID: 2508335683683228376
+  UUID: 5062268925278052045
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+MeshFilter:
+  EUID: 2508335683683228376
+  UUID: 18366606890204431064
+  MeshName: Cube
+---
+MeshRenderer:
+  EUID: 2508335683683228376
+  UUID: 4270502760448712130
+  MeshName: Cube
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: ""
+  NormalMap: ""
+  MetallicTexture: ""
+  RoughnessTexture: ""
+  AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
+---
+BoxCollider:
+  EUID: 2508335683683228376
+  UUID: 15591883172395388695
+  X: 1
+  Y: 1
+  Z: 1
+---
+GameObject:
+  m_EUID: 5550770482419583040
+  m_IsActive: true
+  m_Name: Falling Cube
+  m_Position: [4.82626724, 2.84137297, -0.506836236]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 7095445641440625316}  # Rigidbody
+    - component: {fileID: 5539027295287339116}  # MeshRenderer
+    - component: {fileID: 6098074139608943075}  # BoxCollider
+---
+Rigidbody:
+  EUID: 5550770482419583040
+  UUID: 7095445641440625316
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+MeshRenderer:
+  EUID: 5550770482419583040
+  UUID: 5539027295287339116
+  MeshName: Cube
+  Albedo: [0, 0, 0, 0.384955764]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: ""
+  NormalMap: ""
+  MetallicTexture: ""
+  RoughnessTexture: ""
+  AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
+---
+BoxCollider:
+  EUID: 5550770482419583040
+  UUID: 6098074139608943075
+  X: 1
+  Y: 1
+  Z: 1
