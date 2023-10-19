@@ -18,7 +18,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "EditorHeaders.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "IOManager/InputHandler.h"
 #include "Editor.h"
@@ -166,7 +166,7 @@ void EditorScene::SceneView()
 
 bool EditorScene::SelectEntity()
 {
-    if (!inOperation && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    if (!inOperation && !EditorCam.IsMoving() && InputHandler::isMouseButtonPressed_L())
     {
         // Bean: Click within the scene imgui window
         if (!windowHovered)
@@ -199,15 +199,14 @@ void EditorScene::DisplayGizmos()
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
-            glm::quat rot;
-            glm::vec3 skew;
-            glm::vec4 perspective;
+            glm::vec3 rot;
             glm::vec3 scale;
-            glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
 
             glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
             glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
-            glm::mat4 rotMat = glm::toMat4(rot);
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
             float& intersect = EditorCam.GetIntersect();
             float& tempIntersect = EditorCam.GetTempIntersect();
@@ -260,14 +259,11 @@ void EditorScene::DisplayGizmos()
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
             glm::vec3 a_translation;
-            glm::quat a_rot;
+            glm::vec3 a_rot;
             glm::vec3 a_scale;
-            glm::vec3 a_skew;
-            glm::vec4 a_perspective;
-            glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
-
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
             trans.translation = a_translation;
-            trans.rotation = glm::eulerAngles(a_rot);
+            trans.rotation = glm::radians(a_rot);
             trans.scale = a_scale;
         }
         else if (!firstmove) {

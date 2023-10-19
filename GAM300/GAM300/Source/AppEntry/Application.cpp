@@ -111,7 +111,7 @@ void Application::InitApp(const int& _width, const int& _height, const std::stri
 
 void Application::Update(float dt)
 {
-    if (InputHandler::isKeyButtonPressed(GLFW_KEY_F10))
+    if (InputHandler::isKeyButtonPressed(GLFW_KEY_F11))
     {
         fullscreen = !fullscreen;
         Fullscreen(fullscreen, 1600, 900);

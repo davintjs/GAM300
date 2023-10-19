@@ -76,6 +76,7 @@ public:
 
 	bool IsPanning() const { return isPanning; }
 	bool IsFlying() const { return isFlying; }
+	bool IsMoving() const { return isMoving; }
 
 	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
 
@@ -98,6 +99,7 @@ private:
 	bool isPanning = false;
 	bool isFlying = false;				// Hold down right click for fly mode
 	bool isFocusing = false;			// Moving to focused object
+	bool isMoving = false;				// Moving editor camera
 };
 
 #endif // !EDITOR_CAMERA_H

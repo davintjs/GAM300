@@ -168,6 +168,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLSLShader& shader = SHADER.GetShader(HDR);
 	shader.Use();
 
+	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer);
 

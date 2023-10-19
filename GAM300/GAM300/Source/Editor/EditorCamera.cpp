@@ -63,6 +63,8 @@ void EditorCamera::InputControls()
 	glm::vec2 delta = (mousePos - prevMousePos) * 0.003f;
 	prevMousePos = mousePos;
 
+	isMoving = true;
+
 	// To Move and rotate the editor camera
 	if (InputHandler::isMouseButtonHolding_R())
 	{
@@ -122,6 +124,7 @@ void EditorCamera::InputControls()
 	else
 	{
 		isFlying = false;
+		isMoving = false;
 	}
 }
 
