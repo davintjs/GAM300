@@ -3,6 +3,7 @@
 #include "Utilities/TemplatePack.h"
 #include "glm/vec3.hpp"
 #include <list>
+#include <yaml-cpp/yaml.h>
 
 #pragma once
 // GUID, last file update time, file name, data
@@ -52,7 +53,7 @@ struct Asset : FileInfo
 
 //Hash table that maps an ID to a pointer
 template <typename T>
-using AssetsList = std::list<T>;
+using AssetsTable = std::unordered_map<Engine::GUID,T>;
 
 using AssetTypes = TemplatePack<MeshAsset, TextureAsset, Folder, ScriptAsset, MetaAsset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
@@ -61,8 +62,8 @@ static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
-	{".fbx",	GetAssetType::E<MeshAsset>()},
-	{".meta",	GetAssetType::E<MetaAsset>()},
+	//{".fbx",	GetAssetType::E<MeshAsset>()},
+	//{".meta",	GetAssetType::E<MetaAsset>()},
 	{"",		GetAssetType::E<Folder>()},
 };
 
@@ -75,7 +76,7 @@ struct AllAssetsGroup
 	template<typename T>
 	auto& GetAssets()
 	{
-		return std::get<AssetsList<T>>(assets);
+		return std::get<AssetsTable<T>>(assets);
 	}
 
 	void AddAsset(const std::filesystem::path& filePath)
@@ -86,7 +87,8 @@ struct AllAssetsGroup
 			using T = decltype(type);
 			if (GetAssetType::E<T>() == assetType)
 			{
-				std::get<AssetsList<T>>(assets).emplace_back();
+				Engine::GUID guid = CreateMeta(filePath);
+				std::get<AssetsTable<T>>(assets)[guid] = {};
 				return true;
 			}
 			return false;
@@ -95,6 +97,20 @@ struct AllAssetsGroup
 		{
 			return;
 		}
+	}
+
+	Engine::GUID CreateMeta(const std::filesystem::path& filePath)
+	{
+		std::filesystem::path metaPath = filePath;
+		metaPath += ".meta";
+		Engine::GUID guid;
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		out << YAML::Key << "guid" << YAML::Value << guid.ToHexString();
+		std::ofstream ofs(metaPath);
+		ofs << out.c_str();
+		ofs.close();
+		return guid;
 	}
 private:
 	std::tuple<AssetsTable<Ts>...> assets;

@@ -36,20 +36,10 @@ namespace Engine
 			return;
 		}
 
-	    if (hexString.size() < 32)
-		{
-		    std::string first{ hexString.begin(),hexString.begin() + 16 };
-		    std::string second{ hexString.begin() + 16,hexString.end() };
-    		longInt[0] = std::stoull(first.c_str(), 0, 16);
-    		longInt[1] = std::stoull(second.c_str(), 0, 16);
-		}
-		else
-		{
-		    std::string first{ hexString.begin(),hexString.begin() + 16 };
-		    std::string second{ hexString.begin() + 16,hexString.begin()+32 };
-    		longInt[0] = std::stoull(first.c_str(), 0, 16);
-    		longInt[1] = std::stoull(second.c_str(), 0, 16);
-		}
+		std::string first{ hexString.begin(),hexString.begin() + 16 };
+		std::string second{ hexString.begin() + 16,hexString.end() };
+    	longInt[0] = std::stoull(first.c_str(), 0, 16);
+    	longInt[1] = std::stoull(second.c_str(), 0, 16);
 	}
 
 

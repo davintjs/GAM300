@@ -1,5 +1,5 @@
-[2023-10-19 14:08:29.902] [Error] [critical] 
+[2023-10-19 18:34:37.688] [Error] [critical] 
 Caused By:	inputFile
 Info:		Error opening file to load asset into memory!
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 395)
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 310)
 
