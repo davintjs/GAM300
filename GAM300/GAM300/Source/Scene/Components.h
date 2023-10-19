@@ -47,7 +47,15 @@ struct Tag : Object
 	std::string name;
 	Engine::UUID tagName;
 	size_t physicsLayerIndex = 0;
+	property_vtable();
 };
+
+property_begin_name(Tag, "Tag")
+{
+	property_var(name),
+		property_var(tagName).Name("Tag Name"),
+		property_var(physicsLayerIndex).Name("Layer Index"),
+} property_vend_h(Tag)
 
 //To store transform of entity
 struct Transform : Object
@@ -260,11 +268,14 @@ struct MeshRenderer : Object
 	std::string MeshName = "Cube";
 	std::string AlbedoTexture = "";
 	std::string NormalMap = "";
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture = "";
+	std::string EmissionTexture = "";
 	//Materials mr_Material;
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
-
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
@@ -274,11 +285,6 @@ struct MeshRenderer : Object
 	float mr_metallic = 0.5f;
 	float mr_roughness = 0.5f;
 	float ao = 0.5f;
-
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;
@@ -293,22 +299,22 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(MeshName).Flags(property::flags::DONTSHOW),
-	property_var(mr_Albedo),
-	property_var(AlbedoTexture),
-	property_var(NormalMap),
-	/*property_var(mr_Specular),
-	property_var(mr_Diffuse),
-	property_var(mr_Ambient),
-	property_var(mr_Shininess),*/
-	property_var(mr_metallic),
-	property_var(MetallicTexture),
-
-	property_var(mr_roughness),
-	property_var(RoughnessTexture),
-	property_var(EmissionTexture),
-
-	property_var(ao),
-	property_var(AoTexture),
+	property_var(mr_Albedo).Name("Albedo"),
+	property_var(mr_metallic).Name("Metallic"),
+	property_var(mr_roughness).Name("Roughness"),
+	property_var(ao).Name("AmbientOcclusion"),
+	property_var(AlbedoTexture).Name("AlbedoTexture"),
+	property_var(NormalMap).Name("NormalMap"),
+	property_var(MetallicTexture).Name("MetallicTexture"),
+	property_var(RoughnessTexture).Name("RoughnessTexture"),
+	property_var(AoTexture).Name("AoTexture"),
+	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(textureID).Name("TextureID").Flags(property::flags::DONTSHOW),
+	property_var(normalMapID).Name("NormalMapID").Flags(property::flags::DONTSHOW),
+	property_var(RoughnessID).Name("RoughnessID").Flags(property::flags::DONTSHOW),
+	property_var(MetallicID).Name("MetallicID").Flags(property::flags::DONTSHOW),
+	property_var(AoID).Name("AoID").Flags(property::flags::DONTSHOW),
+	property_var(EmissionID).Name("EmissionID").Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshRenderer)
 
 
@@ -337,8 +343,8 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightType).Name("Light Type"),
-	property_var(lightpos).Name("Position"),
+	property_var(lightType).Name("lightType"),
+	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
 	property_var(direction).Name("Direction"),
 	property_var(inner_CutOff).Name("Inner Cutoff"),
@@ -515,7 +521,7 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 //to check through every type T in an template pack to compare with its type enum
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 template<typename T, typename... Ts>\
-TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
+TYPE FUNC_NAME##Iter(size_t objType, void* pObject)\
 {\
 	if (GetType::E<T>() == objType)\
 	{\
@@ -531,7 +537,7 @@ TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	}\
 	if constexpr (sizeof...(Ts) != 0)\
 	{\
-		return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+		return FUNC_NAME##Iter<Ts...>(objType, pObject); \
 	}\
 	else\
 	{\
@@ -545,7 +551,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

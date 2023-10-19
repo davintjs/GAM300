@@ -27,8 +27,23 @@ void BaseCamera::Init()
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.set_size((unsigned int)1600, (unsigned int)900);
-	framebuffer.init();
+	framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
+	framebuffer.Init();
+}
+
+void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
+{
+	aspect = 16.f / 9.f;
+	fieldOfView = _fov;
+	nearClip = _nearClip;
+	farClip = _farClip;
+	focalLength = _focalLength;
+
+	UpdateViewMatrix();
+	UpdateProjection();
+
+	framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
+	framebuffer.Init();
 }
 
 void BaseCamera::Update()
@@ -76,7 +91,7 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 
 	UpdateProjection();
 
-	framebuffer.resize((GLuint)dimension.x, (GLuint)dimension.y);
+	framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
 }
 
 bool BaseCamera::WithinFrustum() const
@@ -86,8 +101,8 @@ bool BaseCamera::WithinFrustum() const
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
-	pitch = -_rotation.y;
-	yaw = -_rotation.x;
+	pitch = -_rotation.x;
+	yaw = -_rotation.y;
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

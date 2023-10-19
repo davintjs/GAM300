@@ -36,6 +36,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 #define FIND_TEXTURE(filepath) TextureManager.FindTexture()
 
+struct BaseCamera;
+
 // utility structure for realtime plot
 struct ScrollingBuffer {
     int MaxSize;
@@ -175,6 +177,7 @@ public:
     // Getters for the data members
     glm::vec2 const GetDimension() { return sceneDimension; }
     glm::vec2 const GetPosition() { return scenePosition; }
+    bool const WindowOpened() { return windowOpened; }
     bool const WindowHovered() { return windowHovered; }
     bool const WindowFocused() { return windowFocused; }
     bool const UsingGizmos() { return inOperation; }
@@ -186,6 +189,7 @@ private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
     glm::vec2 scenePosition{};  // Position of the viewport relative to the engine
     glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
+    bool windowOpened = false;
     bool windowHovered = false;
     bool windowFocused = false;
     bool inOperation = false;
@@ -215,19 +219,33 @@ public:
     // Getters for the data members
     glm::vec2 const GetDimension() { return dimension; }
     glm::vec2 const GetPosition() { return position; }
+    bool const WindowOpened() { return windowOpened; }
     bool const WindowHovered() { return windowHovered; }
     bool const WindowFocused() { return windowFocused; }
     bool const DebugDraw() { return debug_draw; }
 
-    void CallbackEditorWindow(EditorWindowEvent * pEvent);
+    void CallbackEditorWindow(EditorWindowEvent* pEvent);
+    void CallbackSetCamera(ObjectCreatedEvent<Camera>* pEvent);
+    void CallbackDeleteCamera(ObjectDestroyedEvent<Camera>* pEvent);
+    void CallbackSceneStop(ScenePostCleanupEvent* pEvent);
 
 private:
+
+    struct DisplayTarget
+    {
+        unsigned int targetDisplay = 0;
+        std::string name;
+    };
+
+    BaseCamera* camera = nullptr;
+    DisplayTarget displayTargets[8];
     glm::vec2 dimension{}; // Dimensions of the viewport
     glm::vec2 position{};  // Position of the viewport relative to the engine
     glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
     unsigned int targetDisplay = 0;
-    float padding = 16.f;
+    float padding = 4.f;
     float AspectRatio = 16.f / 9.f;
+    bool windowOpened = false;
     bool windowHovered = false;
     bool windowFocused = false;
     bool debug_draw = false;

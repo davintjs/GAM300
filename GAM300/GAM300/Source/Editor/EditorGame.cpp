@@ -21,19 +21,6 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
-namespace
-{
-    BaseCamera* camera = nullptr;
-
-    struct DisplayTarget
-    {
-        unsigned int targetDisplay = 0;
-        std::string name;
-    };
-
-    DisplayTarget displayTargets[8];
-}
-
 void EditorGame::Init()
 {
     dimension = glm::vec2(1600.f, 900.f);
@@ -46,6 +33,9 @@ void EditorGame::Init()
     }
 
     EVENTS.Subscribe(this, &EditorGame::CallbackEditorWindow);
+    EVENTS.Subscribe(this, &EditorGame::CallbackSetCamera);
+    EVENTS.Subscribe(this, &EditorGame::CallbackDeleteCamera);
+    EVENTS.Subscribe(this, &EditorGame::CallbackSceneStop);
 }
 
 void EditorGame::Update(float dt)
@@ -110,7 +100,8 @@ void EditorGame::UpdateTargetDisplay()
 
 void EditorGame::GameView()
 {
-    if (ImGui::Begin("Game"))
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
+    if (windowOpened = ImGui::Begin("Game", nullptr, flags))
     {
         if (!camera) // If the camera does not exist
         {
@@ -127,9 +118,14 @@ void EditorGame::GameView()
         // Check if it needs to resize the game view
         ResizeGameView(*((glm::vec2*)&viewportEditorSize));
 
+        // Indentation for the game view to be in the center of the game window
         float indent = (viewportEditorSize.x - dimension.x) * 0.5f;
-        if (indent > 0)
+        if (indent > 0.f)
             ImGui::Indent(indent);
+            
+        indent = (viewportEditorSize.y - dimension.y) * 0.5f;
+        if(indent > 1.f)
+            ImGui::Dummy({ 0.f, indent });
 
         unsigned int textureID = camera->GetFramebuffer().colorBuffer;
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)dimension.x, (float)dimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -148,7 +144,7 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
         {
             modified = true;
-            adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
+            adjusted = { (_newDimension.y) * AspectRatio, _newDimension.y};
         }
 
         if (adjusted.x > _newDimension.x - padding)
@@ -158,7 +154,7 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         }
 
         // If there is any changes to the dimension and modifications, return
-        if (adjusted != dimension && modified)
+        if (dimension != adjusted && modified)
         {
             dimension = adjusted;
 
@@ -178,6 +174,25 @@ void EditorGame::CallbackEditorWindow(EditorWindowEvent* pEvent)
     if (pEvent->name.compare("Game"))
         return;
 
+    pEvent->isOpened = WindowOpened();
     pEvent->isHovered = WindowHovered();
     pEvent->isFocused = WindowFocused();
+}
+
+void EditorGame::CallbackSetCamera(ObjectCreatedEvent<Camera>* pEvent)
+{
+    if (pEvent->pObject->GetTargetDisplay() == targetDisplay)
+        UpdateTargetDisplay();
+
+}
+
+void EditorGame::CallbackDeleteCamera(ObjectDestroyedEvent<Camera>* pEvent)
+{
+    if (pEvent->pObject->GetTargetDisplay() == targetDisplay)
+        camera = nullptr;
+}
+
+void EditorGame::CallbackSceneStop(ScenePostCleanupEvent* pEvent)
+{
+    UpdateTargetDisplay();
 }

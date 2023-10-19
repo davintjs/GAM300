@@ -95,6 +95,7 @@
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp" />
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
+    <ClCompile Include="Source\Editor\EditorHistory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -172,6 +173,8 @@
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
+    <ClInclude Include="Source\Editor\EditorHistory.h" />
+    <ClInclude Include="Source\Utilities\Interpolation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

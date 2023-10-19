@@ -1,5 +1,5 @@
-[2023-10-18 20:21:27.458] [Error] [critical] 
-Caused By:	inputFile
-Info:		Error opening file to load asset into memory!
-Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 329)
+[2023-10-17 17:47:59.458] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  ออออออออออออออออออออออออออออออออออออออออýýýýÝÝÝÝe–ÝV COULD NOT BE FOUND IN SCRIPT  Player
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 652)
 

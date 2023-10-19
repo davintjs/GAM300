@@ -211,7 +211,7 @@ void Renderer::Update(float)
 
 void Renderer::SetupGrid(const int& _num)
 {
-	float spacing = 100.f;
+	float spacing = 1.f;
 	float length = _num * spacing * 0.5f;
 
 	properties["Line"].iter = _num * 2;
@@ -294,13 +294,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE0 + 30);
 		
 		glBindTexture(GL_TEXTURE_2D,depthMap);
-		//glBindTexture(GL_TEXTURE_2D,depthCubemap);
-
-		// DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight());
 
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
-
-		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
 		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)

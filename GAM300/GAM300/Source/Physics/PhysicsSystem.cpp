@@ -101,7 +101,7 @@ void PhysicsSystem::Update(float dt) {
 	}
 	//step++;
 	if (physicsSystem) {
-		physicsSystem->Update(dt*10, 1, tempAllocator, jobSystem);
+		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
 	}
 	//std::cout << "DT: " << dt << std::endl;
 	//std::cout << "Physics update!\n";	

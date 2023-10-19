@@ -40,6 +40,9 @@ public:
 	// Mouse and Keyboard controls for the camera, zoom is separated in Update function
 	void InputControls();
 
+	// Move to focused object
+	void FocusOnObject(float dt);
+
 	// Get mouse coord in NDC
 	glm::vec2 GetMouseInNDC();
 	
@@ -73,22 +76,28 @@ public:
 	float& GetTempIntersect() { return tempIntersect; }
 
 	bool IsPanning() const { return isPanning; }
+	bool IsFlying() const { return isFlying; }
 
 	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
 
 	void CallbackUpdateSceneGeometry(EditorUpdateSceneGeometryEvent* pEvent);
 
-	bool canMove = true;
-	bool isMoving = false;
 private:
 	Ray3D ray;
+	glm::vec3 targetFP;
+	glm::vec3 initialFP;
 	glm::vec2 prevMousePos;
 	glm::vec2 scenePosition;
 	float rotationSpeed = 1.f;			// How fast the camera rotates
 	float speedModifier = 1.f;			// How fast all the cameras movements are
 	float intersected = 0.f;			// Current ray intersect
 	float tempIntersect = 0.f;	
+	float initialFL = 0.f;				// Initial Focal Point when focusing on object
+	float timer = 0.f;
+	const float duration = 1.f;
 	bool isPanning = false;
+	bool isFlying = false;				// Hold down right click for fly mode
+	bool isFocusing = false;			// Moving to focused object
 };
 
 #endif // !EDITOR_CAMERA_H

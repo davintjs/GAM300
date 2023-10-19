@@ -166,7 +166,11 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 	// Publish scene change
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
+
 	loadedScenes.pop_front();
+
+	ScenePostCleanupEvent e1;
+	EVENTS.Publish(&e1);
 }
 
 void SceneManager::Exit()
