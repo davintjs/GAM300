@@ -95,7 +95,7 @@ private:
 	//std::vector<Animation> allAnimations;
 	//std::vector<AnimationAnimator> allAnimators;
 	AnimationModel allModels;
-	Animation allAnimations;
+	//Animation allAnimations;
 	AnimationAnimator allAnimators;
 };
 

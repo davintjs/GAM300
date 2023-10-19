@@ -59,8 +59,8 @@ void AnimationManager::Init()
 
 
 	allModels.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-	allAnimations.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", &allModels);
-	allAnimators.init(&allAnimations);
+	//allAnimations.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", &allModels);
+	allAnimators.init(&allModels.GetAnimations());
 
 }
 

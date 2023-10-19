@@ -38,6 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 
 #define MAX_BONE_INFLUENCE 4
+class AnimationModel;
 
 struct AnimationVertex {
     // position
@@ -193,6 +194,42 @@ struct AssimpNodeData
 };
 
 
+class Animation
+{
+public:
+    //Animation() = default;
+
+    //Animation(const std::string& animationPath, AnimationModel* model);
+    void init(const std::string& animationPath, AnimationModel* model);
+
+
+    //~Animation();
+
+    Bone* FindBone(const std::string& name);
+
+
+    inline int& GetTicksPerSecond() { return m_TicksPerSecond; }
+    inline float& GetDuration() { return m_Duration; }
+    inline AssimpNodeData& GetRootNode() { return m_RootNode; }
+    inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
+    {
+        return m_BoneInfoMap;
+    }
+
+    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model);
+
+    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
+
+private:
+
+    float m_Duration;
+    int m_TicksPerSecond;
+    std::vector<Bone> m_Bones;
+    AssimpNodeData m_RootNode;
+    std::map<std::string, BoneInfo> m_BoneInfoMap;
+};
+
+
 class AnimationModel
 {
 public:
@@ -214,10 +251,11 @@ public:
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
     int& GetBoneCount() { return m_BoneCounter; }
+    Animation& GetAnimations() { return allAnimations; } // also temp
 
 
 private:
-
+    Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
     std::map<std::string, BoneInfo> m_BoneInfoMap;
     int m_BoneCounter = 0;
 
@@ -240,41 +278,6 @@ private:
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
     std::vector<AnimationTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-};
-
-
-class Animation
-{
-public:
-    //Animation() = default;
-
-    //Animation(const std::string& animationPath, AnimationModel* model);
-    void init(const std::string& animationPath, AnimationModel* model);
-
-
-    //~Animation();
-
-    Bone* FindBone(const std::string& name);
-
-
-    inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-    inline float GetDuration() { return m_Duration; }
-    inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-    inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
-    {
-        return m_BoneInfoMap;
-    }
-
-private:
-    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model);
-
-    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
-
-    float m_Duration;
-    int m_TicksPerSecond;
-    std::vector<Bone> m_Bones;
-    AssimpNodeData m_RootNode;
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
 };
 
 

@@ -437,6 +437,18 @@ void AnimationModel::loadModel(std::string const& path)
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
+
+    // Animation init
+    //Assimp::Importer importer;
+    /*const aiScene* */scene = importer.ReadFile(path, aiProcess_Triangulate);
+    assert(scene && scene->mRootNode);
+    auto animation = scene->mAnimations[0];
+    allAnimations.GetDuration() = animation->mDuration;
+    allAnimations.GetTicksPerSecond() = animation->mTicksPerSecond;
+    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+    globalTransformation = globalTransformation.Inverse();
+    allAnimations.ReadHierarchyData(allAnimations.GetRootNode(), scene->mRootNode);
+    allAnimations.ReadMissingBones(animation, *this);
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
