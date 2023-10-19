@@ -165,6 +165,13 @@ public:
 	std::vector<EngineCollisionData> collisionResolution;
 };
 
+class CharacterControllerTest {
+public:
+	JPH::Ref<JPH::Character> mCharacter;
+	~CharacterControllerTest() {
+		mCharacter->RemoveFromPhysicsSystem();
+	}
+};
 
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
@@ -185,13 +192,12 @@ public:
 	void UpdateGameObjects();
 
 	// Resolve any updates before Physics Simulation
-	void PrePhysicsUpdate();
+	void PrePhysicsUpdate(float dt);
 	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
 
 	// A testing function
 	void TestRun();
-
 
 	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
@@ -225,6 +231,11 @@ public:
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
 
+#pragma region Character Controller Testing
+	float mTime = 0.f;
+	CharacterControllerTest* ccTest =				nullptr;
+	//JPH::BodyID characterID;
+#pragma endregion
 
 };
 

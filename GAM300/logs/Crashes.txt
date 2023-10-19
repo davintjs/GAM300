@@ -1,5 +1,5 @@
-[2023-10-11 14:25:12.162] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 200)
+[2023-10-19 15:21:38.840] [Error] [critical] 
+Caused By:	false
+Info:		Multicomponent cannot be found
+Source:		C:\Users\matth\Desktop\BleepBloop\GAM300\GAM300\GAM300\Source\Scene\SceneTemplates.cpp (Line: 189)
 
