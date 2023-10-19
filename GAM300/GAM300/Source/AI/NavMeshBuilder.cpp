@@ -22,12 +22,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "NavMesh.h"
 #include "Scene/SceneManager.h"
 
+void NavMeshBuilder::Init()
+{
+	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactAdd); // For obstacle contact with floor
+	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactRemove); // For obstacle removed from floor
+}
+
 void NavMeshBuilder::BuildNavMesh()
 {
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> mResPair = GetAllGrounds();
 	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(mResPair.first, mResPair.second);
 	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
-	OffsetRadius(2.f); // Offset to account for the agent radius
+	OffsetRadius(0.2f); // Offset to account for the agent radius
 
 	mNavMesh = CreateNavMesh(); // Create the navmesh
 	mNavMesh->LinkAllTriangles();
@@ -65,7 +71,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	ObstacleOffset(2.f); // Offset the diameter first before removing
+	ObstacleOffset(0.2f); // Offset the diameter first before removing
 	RemoveObstaclesFromMesh(); // Remove holes in the boundary
 	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
@@ -654,4 +660,65 @@ void NavMeshBuilder::Exit()
 	mRegion.clear();
 
 	delete mNavMesh;
+}
+
+void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
+{
+	Tag mTagRb1 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->rb1->EUID());
+	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->rb2->EUID());
+
+	Tag* fNavMesh;
+	Tag* fObstacle;
+
+	if (mTagRb1.physicsLayerIndex == 5 && mTagRb2.physicsLayerIndex == 6)  // Navmesh, obstacle
+	{
+		fNavMesh = &mTagRb1;
+		fObstacle = &mTagRb2;
+	}
+	else if (mTagRb1.physicsLayerIndex == 6 && mTagRb2.physicsLayerIndex == 5) // Obstacle, navmesh
+	{
+		fObstacle = &mTagRb1;
+		fNavMesh = &mTagRb2;
+	}
+	else
+	{
+		return;
+	}
+
+	glm::vec3 obstacleMidPoint = MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).translation;
+
+	glm::vec3 obstacleBottomFace = obstacleMidPoint;
+	glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).x,
+							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).y,
+							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).z };
+	scaledVec.x *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.x;
+	scaledVec.y *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.y;
+	scaledVec.z *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.z;
+
+	obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(*fNavMesh).y * MySceneManager.GetCurrentScene().Get<Transform>(*fNavMesh).scale.y / 2.f;
+
+	glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
+	glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
+	glm::vec3 obstacleMaxPoint = { obstacleBottomFace.x + (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
+	glm::vec3 obstacleMaxPointBottom = { obstacleBottomFace.x + (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
+
+	// Counter-clockwise
+	std::vector<glm::vec3> obstaclePosition;
+	obstaclePosition.push_back(obstacleMinPoint);
+	obstaclePosition.push_back(obstacleMaxPointBottom);
+	obstaclePosition.push_back(obstacleMaxPoint);
+	obstaclePosition.push_back(obstacleMinPointTop);
+
+	std::vector<Polygon3D> obstacleHolder = mObstacles;
+	Exit();
+	obstacleHolder.push_back(Polygon3D(obstaclePosition));
+	mObstacles = obstacleHolder;
+	BuildNavMesh();
+}
+
+void NavMeshBuilder::CallbackContactRemove(ContactRemovedEvent* pEvent)
+{
+
+
+
 }

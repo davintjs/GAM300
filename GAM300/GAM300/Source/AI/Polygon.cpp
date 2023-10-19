@@ -49,7 +49,7 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 
 Polygon3D::~Polygon3D()
 {
-
+	
 }
 
 glm::vec3 Polygon3D::GetNormal() const
@@ -477,31 +477,40 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 	for (int i = 0; i < mHole.GetPoints().size(); ++i)
 	{
 		int counter = 0;
-		glm::vec2 pt = glm::vec2(mHole.GetPoints()[i]);
+		glm::vec2 pt = glm::vec2(mHole.GetPoints()[i].x, mHole.GetPoints()[i].z);
 		glm::vec2 dir = glm::vec2(1000.f, 0.f); // Infinite horizontal line
 		Segment2D line(pt, pt + dir);
 
 		for (int j = 0; j < mPoints.size(); ++j)
 		{
-			glm::vec2 m1 = glm::vec2(mPoints[j]);
-			glm::vec2 m2 = glm::vec2(mPoints[(j != mPoints.size() - 1) ? j + 1 : 0]);
+			glm::vec2 m1 = glm::vec2(mPoints[j].x, mPoints[j].z);
+			glm::vec2 m2 = glm::vec2(mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].x, mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].z);
 			Segment2D polyLine(m1, m2);
 
-			if ((polyLine.point1.y < pt.y) && (polyLine.point2.y < pt.y))
+			//int yDifference1 = pt.y - polyLine.point1.y;
+			//int yDifference2 = pt.y - polyLine.point2.y;
+
+			//if ((yDifference1 > 0.1f) && (yDifference2 > 0.1f))
+			//{
+			//	continue;
+			//}
+
+			
+			//pt.y = polyLine.point1.y;
+			
+
+			/*if ((polyLine.point1.y < pt.y) && (polyLine.point2.y < pt.y))
 			{
 				continue;
 			}
 			else if ((polyLine.point1.y >= pt.y) && (polyLine.point2.y >= pt.y))
 			{
 				continue;
-			}
-			else
+			}*/
+			float intersectionTime;
+			if (Intersects(polyLine, line, &intersectionTime))
 			{
-				float intersectionTime;
-				if (Intersects(polyLine, line, &intersectionTime))
-				{
-					++counter;
-				}
+				++counter;
 			}
 		}
 
@@ -536,7 +545,7 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 
 void Polygon3D::SwitchOrientation()
 {
-	mOrientation == Orientation::CLOCKWISE ? Orientation::COUNTERCLOCKWISE : Orientation::CLOCKWISE; // Change the orientation
+	mOrientation = (mOrientation == Orientation::COUNTERCLOCKWISE) ? Orientation::CLOCKWISE : Orientation::COUNTERCLOCKWISE; // Change the orientation
 
 	int leftTracker = 1; // Start from 2nd index as 1st index no change
 	int rightTracker = static_cast<int>(mPoints.size()) - 1; // Start from last index
@@ -593,9 +602,9 @@ bool Polygon3D::Intersects(const Segment3D& seg1, const Segment3D& seg2, float* 
 	float B = seg2.point1.x - seg2.point2.x;
 	float C = seg2.point1.x - seg1.point1.x;
 
-	float D = seg1.point2.y - seg1.point1.y;
-	float E = seg2.point1.y - seg2.point2.y;
-	float F = seg2.point1.y - seg1.point1.y;
+	float D = seg1.point2.z - seg1.point1.z;
+	float E = seg2.point1.z - seg2.point2.z;
+	float F = seg2.point1.z - seg1.point1.z;
 
 	float t = (C * E - F * B) / (E * A - B * D);
 	float s = (D * C - A * F) / (D * B - A * E);

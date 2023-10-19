@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "glm/glm.hpp"
 
 #include "Polygon.h"
+#include "Core/Events.h"
 
 #define NAVMESHBUILDER NavMeshBuilder::Instance()
 
@@ -32,6 +33,8 @@ SINGLETON(NavMeshBuilder)
 public:
 	NavMeshBuilder() {};
 	~NavMeshBuilder() {};
+
+	void Init();
 
 	// Get all grounds of the current scene
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> GetAllGrounds();
@@ -53,6 +56,9 @@ public:
 	// Returns the holes in this navmesh
 	//std::vector<Polygon3D>& GetHoles();
 
+	// Add obstacle to this navmesh
+	void AddObstacle(Polygon3D* mObstacle);
+
 	// Returns the obstacles in this navmesh
 	std::vector<Polygon3D>& GetObstacles();
 
@@ -68,8 +74,7 @@ private:
 	void OffsetRadius(const float& mRadius);
 	void ObstacleOffset(const float& mRadius);
 
-	// Add hole to the navmesh and editing the navmesh to accomodate the holes
-	void AddObstacle(Polygon3D* mObstacle);
+	// Add obstacle to the navmesh and editing the navmesh to accomodate the holes
 	void RemoveObstaclesFromMesh();
 
 	// Triangulation of the navmesh with ear clipping method
@@ -94,6 +99,9 @@ private:
 
 	// Parallel check of the two vectors
 	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
+
+	void CallbackContactAdd(ContactAddedEvent* pEvent);
+	void CallbackContactRemove(ContactRemovedEvent* pEvent);
 
 	int mTriCount = 0;
 	Polygon3D* mBoundary;
