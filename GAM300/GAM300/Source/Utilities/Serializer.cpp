@@ -105,6 +105,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     {
         auto& component = _scene.Get<Tag>(_entity);
         out << YAML::Key << "m_Name" << YAML::Value << component.name;
+        out << YAML::Key << "m_Layer" << YAML::Value << component.physicsLayerIndex;
     }
 
     if (_scene.Has<Transform>(_entity))
@@ -300,6 +301,7 @@ void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking)
         transform.rotation = object["m_Rotation"].as<Vector3>();
         transform.scale = object["m_Scale"].as<Vector3>();
         _scene.Get<Tag>(refEntity).name = object["m_Name"].as<std::string>(); // Tag
+        _scene.Get<Tag>(refEntity).physicsLayerIndex = object["m_Layer"].as<size_t>(); // Tag
     }
     else // Linking parent and child gameobjects
     {
