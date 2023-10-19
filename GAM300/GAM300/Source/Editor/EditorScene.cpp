@@ -80,7 +80,8 @@ void EditorScene::ToolBar()
         bool shouldPan = false; // Bean: This is for panning the camera using the Q key
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
+        bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -104,8 +105,8 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("E", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;
@@ -133,13 +134,13 @@ void EditorScene::ToolBar()
 void EditorScene::SceneView()
 {
     //Editor scene viewport
-    if (ImGui::Begin("Scene"))
+    if (windowOpened = ImGui::Begin("Scene"))
     {
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
-        unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
+        unsigned int textureID = EditorCam.GetFramebuffer().GetColorAttachmentId();
         ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -154,14 +155,6 @@ void EditorScene::SceneView()
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
 
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-        float windowWidth = (float)ImGui::GetWindowWidth();
-        float windowHeight = (float)ImGui::GetWindowHeight();
-
-        // Might be wrong -> i think here is the one that need to offset the tab header if there is
-        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y + 22.f, windowWidth, windowHeight - 22.f);
-
         // Display the gizmos for the selected entity
         DisplayGizmos();
     }
@@ -170,7 +163,7 @@ void EditorScene::SceneView()
 
 bool EditorScene::SelectEntity()
 {
-    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    if (!inOperation && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
     {
         // Bean: Click within the scene imgui window
         if (!windowHovered)
@@ -241,15 +234,25 @@ void EditorScene::DisplayGizmos()
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();
 
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(scenePosition.x, scenePosition.y, sceneDimension.x, sceneDimension.y);
         ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
             (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
+        static bool firstmove = true;
+        static Transform origTransform;
+
         if (ImGuizmo::IsUsing())
         {
-            EditorCam.canMove = false;
+            if (firstmove) {
+                origTransform = trans;
+                firstmove = false;
+            }
+
             if (trans.parent)
             {
-                Transform& parentTrans = currentScene.Get<Transform>(trans.parent);
+                Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
                 glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
@@ -263,6 +266,21 @@ void EditorScene::DisplayGizmos()
             trans.translation = a_translation;
             trans.rotation = glm::eulerAngles(a_rot);
             trans.scale = a_scale;
+        }
+        else if (!firstmove) {
+            if (trans.translation != origTransform.translation) {
+                Change translate(&trans, "Transform/Translation");
+                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+            }
+            if (trans.rotation != origTransform.rotation) {
+                Change rotate(&trans, "Transform/Rotation");
+                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+            }
+            if (trans.scale != origTransform.scale) {
+                Change scale(&trans, "Transform/Scale");
+                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+            }
+            firstmove = true;
         }
     }
 }
@@ -278,6 +296,7 @@ void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
     if (pEvent->name.compare("Scene"))
         return;
 
+    pEvent->isOpened = WindowOpened();
     pEvent->isHovered = WindowHovered();
     pEvent->isFocused = WindowFocused();
 }

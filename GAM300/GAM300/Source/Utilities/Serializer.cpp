@@ -343,7 +343,13 @@ void DeserializeComponent(const DeComHelper& _helper)
                     // Extract Component value
                     if (node[name])
                     {
-                        property::set(component, entry.first.c_str(), node[name].as<T1>());
+                        if constexpr (std::is_same<char*, T1>()) {
+                            std::string buf = node[name].as<std::string>();
+                            property::set(component, entry.first.c_str(), buf);
+
+                        }
+                        else
+                            property::set(component, entry.first.c_str(), node[name].as<T1>());
                     }
                     else
                     {
@@ -463,9 +469,17 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            out << YAML::Value << value;
+            if constexpr (std::is_same_v<char*,T>)
+            {
+                std::string str = (char*)rhs.data;
+                out << YAML::Value << str;
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                out << YAML::Value << value;
+            }
         }
 
         return;
@@ -520,9 +534,18 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            value = node.as<T>();
+            if constexpr (std::is_same_v<char*, T>)
+            {
+                std::string value = (char*)rhs.data;
+                value = node.as<std::string>();
+                strcpy((char*)rhs.data,value.data());
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                value = node.as<T>();
+            }
         }
         return;
     }

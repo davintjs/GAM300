@@ -89,9 +89,17 @@ struct SceneStopEvent : IEvent {};
 
 struct SceneCleanupEvent : IEvent {};
 
+struct ScenePostCleanupEvent : IEvent {};
+
 struct SelectedEntityEvent : IEvent
 {
 	SelectedEntityEvent(Entity* _pEntity) : pEntity{ _pEntity }{}
+	Entity* pEntity;
+};
+
+struct GetSelectedEntityEvent : IEvent
+{
+	GetSelectedEntityEvent() {}
 	Entity* pEntity;
 };
 
@@ -166,6 +174,7 @@ struct ContactRemovedEvent : IEvent
 struct EditorWindowEvent : IEvent
 {
 	EditorWindowEvent(const std::string& _name) : name{ _name } {};
+	bool isOpened = false;
 	bool isHovered = false;
 	bool isFocused = false;
 	std::string name;
@@ -182,6 +191,12 @@ struct EditorUpdateSceneGeometryEvent : IEvent
 	EditorUpdateSceneGeometryEvent(const glm::vec2& _position, const glm::vec2& _dimension) : position{ _position }, dimension{ _dimension } {}
 	glm::vec2 position;
 	glm::vec2 dimension;
+};
+
+struct EditorSetGameCameraEvent : IEvent
+{
+	EditorSetGameCameraEvent(const unsigned int& _targetDisplay) : targetDisplay{ _targetDisplay } {}
+	unsigned int targetDisplay;
 };
 
 #pragma endregion

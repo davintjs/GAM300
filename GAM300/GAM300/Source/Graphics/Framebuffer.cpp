@@ -20,18 +20,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Framebuffer.h"
 #include <GL/glew.h>
 
-void Framebuffer::init()
+void Framebuffer::Init()
 {
-	if (get_buffer_object_id())
-	{
-		glDeleteFramebuffers(1, &get_buffer_object_id());
-		glDeleteTextures(1, &colorAttachment);
-		glDeleteTextures(1, &depthAttachment);
-	}
-
-	glCreateFramebuffers(1, &get_buffer_object_id());
-	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
-
+	glCreateFramebuffers(1, &frameBufferObjectID);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObjectID);
 	// Creating the color attachment
 	glCreateTextures(GL_TEXTURE_2D, 1, &colorAttachment);
 	glBindTexture(GL_TEXTURE_2D, colorAttachment);
@@ -75,7 +67,57 @@ void Framebuffer::init()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Checking Completeness
-	/*int errorId = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	//Completeness();
+
+	// Creating a HDR framebuffer object
+	glCreateFramebuffers(1, &hdrFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+
+	// create floating point color buffer
+	glCreateTextures(GL_TEXTURE_2D, 1, &colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorBuffer, 0);
+
+	// create depth buffer (renderbuffer)
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
+
+	// attach buffers
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Checking Completeness
+	//Completeness();
+}
+
+void Framebuffer::ReInit()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObjectID);
+
+	// Rebind color attachment
+	glBindTexture(GL_TEXTURE_2D, colorAttachment);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, // Sean
+		height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
+
+	// Rebind depth attachment
+	glBindTexture(GL_TEXTURE_2D, depthAttachment);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width,
+		height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+
+	// Attaching depth and stencil attachment onto framebuffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAttachment, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::Completeness()
+{
+	int errorId = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	if (errorId == GL_FRAMEBUFFER_UNDEFINED)
 		PRINT("Specified framebuffer is the default read or draw framebuffer, but the default framebuffer does not exist.");
@@ -94,39 +136,14 @@ void Framebuffer::init()
 	else if (errorId == GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS)
 		PRINT("Any framebuffer attachment is layered, and any populated attachment is not layered, or if all populated color attachments are not from textures of the same target");
 
-	COPIUM_ASSERT(errorId != GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");*/
-
-	// Creating a HDR framebuffer object
-	glGenFramebuffers(1, &hdrFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-
-	// create floating point color buffer
-	glGenTextures(1, &colorBuffer);
-	glBindTexture(GL_TEXTURE_2D, colorBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorBuffer, 0);
-
-	// create depth buffer (renderbuffer)
-	glGenRenderbuffers(1, &rboDepth);
-	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1600, 900);
-	// attach buffers
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "Framebuffer not complete!" << std::endl;
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
+	E_ASSERT(errorId != GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!!");
 }
 
-void Framebuffer::bind()
+void Framebuffer::Bind()
 {
 	glViewport(0, 0, width, height);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, get_buffer_object_id());
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObjectID);
 }
 
 // Binds the framebuffer
@@ -137,31 +154,31 @@ void Framebuffer::Bind(const unsigned int& _objectID)
 	glBindFramebuffer(GL_FRAMEBUFFER, _objectID);
 }
 
-void Framebuffer::unbind()
+void Framebuffer::Unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 // Bean: update via messaging
-void Framebuffer::resize(GLuint _width, GLuint _height)
+void Framebuffer::Resize(GLuint _width, GLuint _height)
 {
 	//COPIUM_ASSERT(_width == 0 || _height == 0, "Resize of Framebuffer Invalid!!");
 	width = _width;
 	height = _height;
 
 	//PRINT("  Resize framebuffer " << width << " " << height);
-	init();
+	ReInit();
 }
 
-void Framebuffer::set_size(GLuint _width, GLuint _height)
+void Framebuffer::SetSize(GLuint _width, GLuint _height)
 {
 	width = _width;
 	height = _height;
 }
 
-void Framebuffer::exit()
+void Framebuffer::Exit()
 {
-	glDeleteFramebuffers(1, &get_buffer_object_id());
+	glDeleteFramebuffers(1, &frameBufferObjectID);
 	glDeleteTextures(1, &colorAttachment);
 	glDeleteTextures(1, &depthAttachment);
 }

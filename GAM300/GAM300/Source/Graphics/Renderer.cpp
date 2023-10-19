@@ -10,7 +10,7 @@
 	This file contains the definitions of Graphics Renderer that includes:
 	1.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
@@ -22,9 +22,72 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "MeshManager.h"
 #include "Editor/EditorCamera.h"
 
+unsigned int depthMapFBO=0; 
+unsigned int depthMap; // Shadow Texture
+
+//
+unsigned int depthCubemapFBO =0;
+unsigned int depthCubemap;
+
+glm::mat4 lightSpaceMatrix;
+
+LIGHT_TYPE temporary_test = DIRECTIONAL_LIGHT;
+
+LightProperties spot_light_stuffs;
+LightProperties directional_light_stuffs;
+LightProperties point_light_stuffs;
+	
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
+
 void Renderer::Init()
 {
+	// This Framebuffer is used for both directional and spotlight
+	glGenFramebuffers(1, &depthMapFBO);
+	// create depth texture
+	glGenTextures(1, &depthMap);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "depth framebuffer exploded\n";
+	else
+		std::cout << "depth framebuffer created successfully\n";
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+
+	// This Framebuffer is used for pointlight
+	glGenFramebuffers(1, &depthCubemapFBO);
+	// create depth cubemap texture
+	glGenTextures(1, &depthCubemap);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	// attach depth texture as FBO's depth buffer
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "depth Cube framebuffer exploded\n";
+	else
+		std::cout << "depth Cube framebuffer created successfully\n";
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::Update(float)
@@ -142,11 +205,13 @@ void Renderer::Update(float)
 	}
 
 	SetupGrid(100);
+
+	DrawDepth();
 }
 
 void Renderer::SetupGrid(const int& _num)
 {
-	float spacing = 100.f;
+	float spacing = 1.f;
 	float length = _num * spacing * 0.5f;
 
 	properties["Line"].iter = _num * 2;
@@ -220,16 +285,15 @@ void Renderer::Draw(BaseCamera& _camera)
 		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
 		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
 
-		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
 		for (int i = 0; i < 32; ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
+		glActiveTexture(GL_TEXTURE0 + 31);
+		glBindTexture(GL_TEXTURE_2D,depthMap);
 
 		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
-
-		//temp_AlbedoContainer[3], temp_SpecularContainer[3], temp_DiffuseContainer[3], temp_AmbientContainer[3], temp_ShininessContainer[3]);
 
 		// FOR DEBUG DRAW
 		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
@@ -408,6 +472,23 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
 	glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
+
+
+
+
+	GLint uniform10 =
+		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+
+	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
+		glm::value_ptr(lightSpaceMatrix));
+
+
+
+
+
+
+
+
 	glBindVertexArray(_vaoid);
 	glDrawElementsInstanced(_primType, _primCount, GL_UNSIGNED_INT, 0, _instanceCount);
 	glBindVertexArray(0);
@@ -472,6 +553,129 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	// unbind and free stuff
 	glBindVertexArray(0);
 	shader.UnUse();
+}
+
+void Renderer::DrawDepth()
+{
+	glEnable(GL_DEPTH_TEST);
+	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
+	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
+	lightPos = -lightPos;
+	glm::mat4 lightProjection, lightView;
+	float near_plane = -10000.f, far_plane = 10000.f;
+
+	// Above is directional light and spot light related stuffs
+	// this vector is for point light
+	std::vector<glm::mat4> shadowTransforms;
+
+
+	if (temporary_test == DIRECTIONAL_LIGHT)
+	{
+		// Good Light pos {-0.2f, -1.0f, -0.3f}
+		//lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightProjection = glm::ortho(-5000.f, 5000.f, -5000.f, 5000.f, near_plane, far_plane);
+		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	}
+	else if (temporary_test == SPOT_LIGHT)	
+	{
+		lightProjection = glm::perspective<float>(glm::radians(60.f), 1.f, 50.f, 1000.f);
+		//lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos - spot_light_stuffs.direction, glm::vec3(0.0, 1.0, 0.0));
+		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + (spot_light_stuffs.direction * 1000.f),
+			glm::vec3(0.0, 0.0, 1.0));
+	}
+	else if (temporary_test == POINT_LIGHT)
+	{
+		near_plane = 1.0f;
+		far_plane = 1000.f;
+		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	}
+
+	lightSpaceMatrix = lightProjection * lightView;
+	
+
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
+
+	for (auto& [name, prop] : properties)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		if (temporary_test == POINT_LIGHT)
+		{
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+
+			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
+			shader.Use();
+			for (int i = 0; i < 6; ++i)
+			{
+				std::string spot_pos;
+				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
+				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+
+			}
+
+			GLint uniform1 =
+				glGetUniformLocation(shader.GetHandle(), "lightPos");
+			glUniform3fv(uniform1, 1,
+				glm::value_ptr(point_light_stuffs.lightpos));
+
+			GLint uniform2 =
+				glGetUniformLocation(shader.GetHandle(), "far_plane");
+			glUniform1f(uniform2, far_plane);
+
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+
+			shader.UnUse();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		}
+		else
+		{
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			GLSLShader& shader = SHADER.GetShader(SHADOW);
+			shader.Use();
+
+
+			GLint uniform1 =
+				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+		
+			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+				glm::value_ptr(lightSpaceMatrix));
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+
+			shader.UnUse();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		}
+
+	}
+	//glDisable(GL_CULL_FACE);
+
+	// reset viewport
+	//glViewport(0, 0, 1600, 900);// screen width and screen height
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 bool Renderer::Culling()

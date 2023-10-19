@@ -57,6 +57,9 @@ layout (location = 4) in vec4 frag_Metal_Rough_AO_index;
 layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
+layout (location = 7) in vec4 frag_pos_lightspace;
+
+
 //-------------------------
 //          GOING OUT
 //-------------------------
@@ -154,6 +157,29 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 // ----------------------------------------------------------------------------
+
+float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(myTextureSampler[31], projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;  
+    // check whether current frag pos is in shadow
+
+    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    return shadow;
+}
+
 
 
 void main()
@@ -375,11 +401,18 @@ void main()
         kD *= 1.0 - metallic;	  
 
         // scale light by NdotL
-        float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        float NdotL = max(dot(N, L), 0.0);   
+
+
+
+        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+        
+        
+        
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
 
-    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats
+    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
     for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
         float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
@@ -445,7 +478,14 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        
+        
+        
+        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
+        
+        
+        
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
         }    
     }   
 

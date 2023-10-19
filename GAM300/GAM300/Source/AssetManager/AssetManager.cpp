@@ -113,6 +113,9 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
+				std::string guid = GetAssetGUID(fileName);
+				while (guid == "")
+					guid = GetAssetGUID(fileName);
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
 			}
@@ -240,26 +243,30 @@ const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
 // Get a loaded asset GUID
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
-	std::string data{};
-	auto func =
-		[this, &fileName, &data] // wait if the asset is not loaded yet
+	ACQUIRE_SCOPED_LOCK(Assets);
+	for (const auto& [key, val] : mTotalAssets.mFilesData)
 	{
-		for (const auto& [key, val] : mTotalAssets.mFilesData)
+		if (val.mFileName == fileName)
 		{
-			if (val.mFileName == fileName)
-			{
-				data = key;
-				return true;
-			}
+			return key;
 		}
-		return false;
-	};
-	ACQUIRE_UNIQUE_LOCK
-	(
-		Assets, func
-	);
+	}
+	return "";
+}
 
-	return data;
+std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
+{
+	return mTotalAssets.mMeshesAsset;
+}
+
+void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
+}
+
+void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }
 
 std::string AssetManager::GenerateGUID(const std::string& fileName)
@@ -523,19 +530,4 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
-}
-
-std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
-{
-	return mTotalAssets.mMeshesAsset;
-}
-
-void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
-{
-	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
-}
-
-void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
-{
-	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }

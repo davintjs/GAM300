@@ -58,7 +58,7 @@ static std::unordered_map<std::string, size_t> fieldTypeMap =
 	{ "System.UInt16",				GetFieldType::E<uint16_t>()},
 	{ "System.UInt32",				GetFieldType::E<uint32_t>()},
 	{ "System.UInt64",				GetFieldType::E<uint64_t>()},
-	{ "System.String",				GetFieldType::E<std::string>()},
+	{ "System.String",				GetFieldType::E<char*>()},
 	{ "GlmSharp.vec2",				GetFieldType::E<Vector2>()},
 	{ "GlmSharp.vec3",				GetFieldType::E<Vector3>()}
 };
@@ -85,12 +85,12 @@ namespace DefaultMethodTypes
 {
 	enum
 	{
-		Awake,
+		Awake = 0,
 		Start,
 		Update,
 		LateUpdate,
 		ExecuteCoroutines,
-		OnCollisionEnter = 0,
+		OnCollisionEnter,
 		OnCollisionStay,
 		OnCollisionExit,
 		OnTriggerEnter,
@@ -268,11 +268,9 @@ public:
 	IEvent* scriptingEvent;
 
 	CompilingState compilingState{ CompilingState::Wait };
-	std::vector<Handle> reflectionQueue;
 	LogicState logicState;
 	std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
-	std::atomic_bool objectDestroyed = false;
 	std::atomic_bool ran;
 
 	std::map<std::type_index, IEventHandler*> events;
