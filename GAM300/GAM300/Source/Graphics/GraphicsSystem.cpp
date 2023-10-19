@@ -66,6 +66,18 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
 			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		};
+
+		//	float quadVertices[] = {
+//		// pos	           // tex
+//		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+//		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+//		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+//		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+//	};
+
 		// setup plane VAO
 		glGenVertexArrays(1, &_quadVAO);
 		glGenBuffers(1, &_quadVBO);
@@ -79,6 +91,8 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 	}
 	glBindVertexArray(_quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
 	glBindVertexArray(0);
 }
 
@@ -138,6 +152,10 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 
 	Draw(_camera); // call draw after update
+	RENDERER.UIDraw_3D(_camera); // call draw after update
+
+	if (_camera.GetCameraType() == CAMERATYPE::GAME)
+		Draw_Screen(_camera);
 
 	_camera.GetFramebuffer().Unbind();
 
@@ -150,6 +168,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLSLShader& shader = SHADER.GetShader(HDR);
 	shader.Use();
 
+	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer);
 
@@ -181,6 +200,13 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 		DEBUGDRAW.Draw();
 
 	MYSKYBOX.Draw(_camera);
+}
+
+void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
+{
+	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
+	RENDERER.UIDraw_2D(_camera);
+
 }
 
 void GraphicsSystem::Exit()

@@ -103,6 +103,7 @@ void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
 	pitch = -_rotation.x;
 	yaw = -_rotation.y;
+	roll = _rotation.z;
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

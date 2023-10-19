@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #include "Precompiled.h"
+#include "AppEntry/Application.h"
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -48,7 +49,7 @@ void EditorSystem::Init()
 
     // Enable this for dockspace capabilities in dockspace mode		
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
+    ImGui_ImplGlfw_InitForOpenGL(Application::GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);

@@ -14,11 +14,12 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
+
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Model3d.h"
 #include "Editor/EditorCamera.h"
 
-
-#include <algorithm>
 #include "GraphicsSystem.h"
 
 //extern EditorCamera E_Camera;

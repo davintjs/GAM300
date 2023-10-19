@@ -20,7 +20,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/Ray3D.h"
 #include "Graphics/BaseCamera.h"
-#include "IOManager/Handler_GLFW.h"
 #include "../Core/SystemInterface.h"
 #include "Scene/Entity.h"
 #include "Core/Events.h"
@@ -77,6 +76,7 @@ public:
 
 	bool IsPanning() const { return isPanning; }
 	bool IsFlying() const { return isFlying; }
+	bool IsMoving() const { return isMoving; }
 
 	void CallbackPanCamera(EditorPanCameraEvent* pEvent);
 
@@ -93,11 +93,13 @@ private:
 	float intersected = 0.f;			// Current ray intersect
 	float tempIntersect = 0.f;	
 	float initialFL = 0.f;				// Initial Focal Point when focusing on object
+	float targetFL = 0.f;				// Target Focal Length when focusing on object
 	float timer = 0.f;
 	const float duration = 1.f;
 	bool isPanning = false;
 	bool isFlying = false;				// Hold down right click for fly mode
 	bool isFocusing = false;			// Moving to focused object
+	bool isMoving = false;				// Moving editor camera
 };
 
 #endif // !EDITOR_CAMERA_H

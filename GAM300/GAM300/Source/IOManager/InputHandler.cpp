@@ -28,7 +28,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 bool InputHandler::isKeyButtonHolding(int key)
 {
-	//return glfwGetKey(GLFW_Handler::ptr_window, key);
+	//return glfwGetKey(Application::GetWindow(), key);
 	if ( (InputHandler::curr_Key_states[key] == 2) || (InputHandler::curr_Key_states[key] == 1))
 	{
 		return true;
@@ -136,25 +136,25 @@ bool InputHandler::isMouseButtonPressed_M()
 
 bool InputHandler::isMouseButtonHolding_L()
 {
-	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_LEFT);
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 }
 
 
 bool InputHandler::isMouseButtonHolding_R()
 {
-	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
 }
 
 bool InputHandler::isMouseButtonHolding_M()
 {
-	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_MIDDLE);
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE);
 }
 
 glm::vec2 InputHandler::getMousePos()
 {
 	double x, y;
-	glfwGetCursorPos(GLFW_Handler::ptr_window, &x, &y);
-	y = GLFW_Handler::height - y;
+	glfwGetCursorPos(Application::GetWindow(), &x, &y);
+	y = Application::GetHeight() - y;
 
 	glm::vec2 X_Y(x, y);
 	return X_Y;
@@ -198,35 +198,6 @@ int InputHandler::getMouseScrollState()
 	return mouseScrollState;
 }
 
-void InputHandler::setFullscreen(bool state)
-{
-	fullscreen = state;
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-	if (fullscreen)// going into fullscreen mode
-	{
-
-		std::cout << "going into fullscreen mode\n";
-		glfwSetWindowMonitor(GLFW_Handler::ptr_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-		glViewport(0, 0, mode->width, mode->height);
-		EditorCam.SetViewportSize((float)mode->width, (float) mode->height);
-
-	}
-	else
-	{
-
-		std::cout << "going into windowed mode\n";
-		glfwSetWindowMonitor(GLFW_Handler::ptr_window, nullptr, 0, 30, GLFW_Handler::width, GLFW_Handler::height,
-			mode->refreshRate);
-		glfwSetWindowAttrib(GLFW_Handler::ptr_window, GLFW_DECORATED, GLFW_TRUE);
-		glViewport(0, 0, GLFW_Handler::width, GLFW_Handler::height);
-		EditorCam.SetViewportSize((float)GLFW_Handler::width, (float) GLFW_Handler::height);
-
-	}
-
-
-}
-
 bool InputHandler::isMouse_L_DoubleClick()
 {
 	if (InputHandler::doubleclick)
@@ -262,20 +233,3 @@ int InputHandler::get_Prev_MouseButtonState(int index)
 	return InputHandler::prev_mouse_Button_states[index];
 
 }
-
-
-
-bool InputHandler::isFullscreen()
-{
-	return fullscreen;
-}
-
-
-
-
-
-//void InputHandler::resizeViewport(int width, int height)
-//{
-//	glViewport(0, 0, width, height);
-//
-//}

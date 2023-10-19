@@ -702,7 +702,8 @@ void Display_Property(T& comp) {
 
                     //Properties with Texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture")
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
+                        || DisplayName == "SpriteTexture")
                     {
                         Display<T1>(DisplayName.c_str(), Value);
                         DisplayTexturePicker(newchange, Value);
@@ -763,6 +764,18 @@ void Display_Property(T& comp) {
         else
             comp.EmissionID = 0;
 
+    }
+
+
+    if constexpr (std::is_same<T, SpriteRenderer>())
+    {
+        // Bean: Change this after M1, this is not suppose to be here
+        if (comp.SpriteTexture != "")
+        {
+            comp.spriteTextureID = GET_TEXTURE_ID(comp.SpriteTexture);
+        }
+        else
+            comp.spriteTextureID = 0;
     }
 }
 

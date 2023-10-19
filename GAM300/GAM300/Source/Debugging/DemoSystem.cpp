@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 
 #include "DemoSystem.h"
+#include "IOManager/InputHandler.h"
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
@@ -30,7 +31,7 @@ void DemoSystem::Init()
 	//CreateSceneEvent createScene(nullptr);
 	//EVENTS.Publish(&createScene);
 	//Scene& scene = *createScene.scene;
-	MySceneManager.LoadScene("Assets/Scene/M1.scene");
+	MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
 	//Entity& testEntity = *scene.Add<Entity>();
 	//MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
 	//AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
