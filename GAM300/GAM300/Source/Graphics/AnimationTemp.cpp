@@ -67,6 +67,9 @@ void AnimationMesh::Draw(GLSLShader& shader)
 // initializes all the buffer objects/arrays
 void AnimationMesh::setupMesh()
 {
+    if (glewInit() != GLEW_OK) {
+        std::cout << "omg help";
+    }
     GLuint VAO, VBO, EBO;
     // create buffers/arrays
     glGenVertexArrays(1, &VAO);
@@ -479,7 +482,12 @@ AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
         vertex.Normal = AssimpGLMHelpers::GetGLMVec(mesh->mNormals[i]);
 
         if (mesh->mTextureCoords[0])
-            vertex.TexCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+        {
+            glm::vec2 vec;
+            vec.x = mesh->mTextureCoords[0][i].x;
+            vec.y = mesh->mTextureCoords[0][i].y;
+            vertex.TexCoords = vec;
+        }
         else
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 
