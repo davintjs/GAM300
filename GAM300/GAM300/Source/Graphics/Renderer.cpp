@@ -23,7 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
-bool RenderShadow = true;
+bool RenderShadow = false;
 
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
@@ -40,7 +40,7 @@ LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
 LightProperties point_light_stuffs;
 	
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
+const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 void Renderer::Init()
 {
