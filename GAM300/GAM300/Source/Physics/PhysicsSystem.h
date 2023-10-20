@@ -125,7 +125,6 @@ public:
 	}
 };
 
-#pragma region In Progress
 struct EngineCollisionData {
 public:
 
@@ -146,7 +145,6 @@ public:
 	//Vector3 body2CollisionPos;
 
 };
-#pragma endregion
 
 // Contact Listener (collision)
 class EngineContactListener : public JPH::ContactListener {
@@ -165,6 +163,8 @@ public:
 	std::vector<EngineCollisionData> collisionResolution;
 };
 
+#pragma region In Progress
+
 class CharacterControllerTest {
 public:
 	JPH::Ref<JPH::Character> mCharacter;
@@ -173,6 +173,7 @@ public:
 	}
 };
 
+#pragma endregion
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
 {
@@ -231,11 +232,11 @@ public:
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
 
-#pragma region Character Controller Testing
+	#pragma region Character Controller Testing
 	float mTime = 0.f;
 	CharacterControllerTest* ccTest =				nullptr;
 	//JPH::BodyID characterID;
-#pragma endregion
+	#pragma endregion
 
 };
 

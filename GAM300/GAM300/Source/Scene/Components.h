@@ -195,12 +195,14 @@ property_begin_name(Rigidbody, "Rigidbody") {
 
 struct CharacterController : Object
 {
+
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	bool isGrounded = false;
 	property_vtable();
 	UINT32 bid{ 0 };
 //JPH::BodyID CharacterBodyID;
@@ -213,7 +215,8 @@ property_begin_name(CharacterController, "CharacterController") {
 	property_var(friction).Name("Friction"),
 	property_var(mass).Name("Mass"),
 	property_var(gravityFactor).Name("GravityFactor"),
-	property_var(slopeLimit).Name("SlopeLimit")
+	property_var(slopeLimit).Name("SlopeLimit"),
+	property_var(isGrounded).Name("IsGrounded")
 } property_vend_h(CharacterController)
 
 struct Script : Object
