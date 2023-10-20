@@ -99,7 +99,6 @@ private:
 	AllAssets assets{};
 
 	std::unordered_map<Engine::GUID, Asset> mAssets;
-	std::unordered_map<std::string, Asset> mFilesData;
 	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 
 	// Get the dropped files using event callbacks
