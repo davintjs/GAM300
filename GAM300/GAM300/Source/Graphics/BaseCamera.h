@@ -80,6 +80,9 @@ public:
 	glm::mat4& GetViewMatrix() { return viewMatrix; }
 
 	Framebuffer& GetFramebuffer() { return framebuffer; }
+	unsigned int& GetFramebufferID() { return framebufferID; }
+	unsigned int& GetAttachment() { return colorAttachment; }
+	unsigned int& GetHDRAttachment() { return hdrColorAttachment; }
 
 	property_vtable();
 protected:
@@ -118,6 +121,9 @@ protected:
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
 
 	Framebuffer framebuffer;
+	unsigned int framebufferID;			// The framebuffer used for this camera
+	unsigned int colorAttachment;		// The color attachment used for this camera
+	unsigned int hdrColorAttachment;	// The hdr color attachment used for this camera
 };
 
 property_begin_name(BaseCamera, "BaseCamera") {

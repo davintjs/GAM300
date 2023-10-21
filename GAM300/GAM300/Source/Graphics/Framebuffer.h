@@ -22,6 +22,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <glm/vec2.hpp>
 #include "Core/SystemInterface.h"
 
+#define FRAMEBUFFER FramebufferManager::Instance()
+
 class Framebuffer
 {
 public:
@@ -73,43 +75,91 @@ private:
 	GLuint width = 0, height = 0;
 };
 
-//struct Attachment
-//{
-//
-//};
-//
-//struct TextureAttachment : public Attachment
-//{
-//	GLuint textureID;
-//	GLenum textureTarget;
-//	GLuint mipLevel;
-//	GLuint layer;
-//};
-//
-//struct RenderbufferAttachment : public Attachment
-//{
-//	GLuint renderbufferID;
-//	GLenum renderbufferTarget;
-//};
-//
-//class GLContext
-//{
-//	GLuint readFramebufferBinding;
-//	GLuint drawFramebufferBinding;
-//};
-//
-//struct Framebuffer2
-//{
-//	std::map<GLenum, Attachment> attachments;
-//	GLenum drawBuffers[16] = { GL_COLOR_ATTACHMENT0, GL_NONE };
-//	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
-//};
-//
-//ENGINE_SYSTEM(FramebufferManager)
-//{
-//public:
-//	Framebuffer2 GetFramebufferByTarget(const GLenum& _target);
-//	
-//};
+enum class RenderTexture
+{
+	DEFAULT,
+	MIPMAPS,
+	CUBEMAPS,
+	DEPTH,
+	DEPTHSTENCIL
+};
+
+struct Attachment
+{
+	GLuint index;		// The texture object or renderbuffer object
+	GLenum target;
+	GLuint width = 0;
+	GLuint height = 0;
+};
+
+struct TextureAttachment : public Attachment
+{
+	GLuint mipLevel;
+	GLuint layer;
+	GLuint depthID;
+};
+
+struct RenderbufferAttachment : public Attachment
+{
+	GLuint depthID;
+};
+
+struct Framebuffer2
+{
+	std::map<GLenum, Attachment> attachments;
+	GLuint attachment = 0;						// Number of attachments
+	GLuint frameBufferObjectID = 0;
+	GLenum drawBuffers[16] = { GL_NONE };
+	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
+};
+
+ENGINE_SYSTEM(FramebufferManager)
+{
+public:
+	void Init();
+
+	void Update(float dt);
+
+	void Exit();
+
+	Framebuffer2& CreateFramebuffer(const GLenum& _textureType, const GLsizei& _width, const GLsizei& _height);
+
+	Framebuffer2* GetFramebufferByID(const GLuint& _framebufferId);
+
+	GLenum GetCurrentAttachment(Framebuffer2& _framebuffer) const;
+
+	GLenum GetCurrentAttachment(const GLuint& _framebufferId);
+
+	GLuint GetTextureID(Framebuffer2& _framebuffer, const GLenum& _attachment);
+
+	GLuint GetTextureID(const GLuint& _framebufferId, const GLenum& _attachment);
+
+	void RenderToTexture(const GLuint& _framebufferId, const GLenum& _textureType, const GLsizei& _width, const GLsizei& _height);
+	
+	void RenderToTexture(Framebuffer2& _framebuffer, const GLenum& _textureType, const GLsizei& _width, const GLsizei& _height);
+
+	TextureAttachment CreateTextureAttachment(const GLenum& _textureType, const GLsizei& _width, const GLsizei& _height);
+
+	void RenderToBuffer(const GLuint& _framebufferId, const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height);
+
+	void RenderToBuffer(Framebuffer2& _framebuffer, const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height);
+
+	RenderbufferAttachment CreateRenderBufferAttachment(const GLsizei& _width, const GLsizei& _height);
+
+	void ChangeTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const GLenum& _attachment);
+
+	void Completeness();
+
+	void Bind(Framebuffer2& _framebuffer) const;
+
+	void Bind(const GLuint& _framebufferId);
+
+	void Bind(const GLuint& _framebufferId, const GLenum& _attachment);
+
+	void Unbind();
+
+private:
+	std::vector<Framebuffer2> framebuffers;
+};
 
 #endif // !FRAMEBUFFER_H

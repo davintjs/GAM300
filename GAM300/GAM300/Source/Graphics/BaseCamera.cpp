@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "BaseCamera.h"
+#include "Framebuffer.h"
 
 void BaseCamera::Init()
 {
@@ -27,8 +28,15 @@ void BaseCamera::Init()
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
-	framebuffer.Init();
+	/*framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
+	framebuffer.Init();*/
+
+	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer(GL_TEXTURE_2D, 1600, 900);
+	framebufferID = framebuffer.frameBufferObjectID;
+	FRAMEBUFFER.RenderToTexture(framebuffer, GL_TEXTURE_2D, 1600, 900);
+	colorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
+	FRAMEBUFFER.RenderToBuffer(framebuffer, GL_DEPTH_ATTACHMENT, 1600, 900);
+	hdrColorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
 }
 
 void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
@@ -42,8 +50,8 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
-	framebuffer.Init();
+	/*framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
+	framebuffer.Init();*/
 }
 
 void BaseCamera::Update()
@@ -91,7 +99,8 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 
 	UpdateProjection();
 
-	framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
+	//framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
+	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, colorAttachment);
 }
 
 bool BaseCamera::WithinFrustum() const

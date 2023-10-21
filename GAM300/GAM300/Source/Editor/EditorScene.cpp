@@ -143,7 +143,7 @@ void EditorScene::SceneView()
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
-        unsigned int textureID = EditorCam.GetFramebuffer().GetColorAttachmentId();
+        unsigned int textureID = FRAMEBUFFER.GetTextureID(EditorCam.GetFramebufferID(), EditorCam.GetAttachment());
         ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 

@@ -25,6 +25,7 @@ using GraphicsSystemsPack =
 TemplatePack
 <
 	ShaderManager,
+	FramebufferManager,
 	SkyboxManager,
 	DebugDraw,
 	Lighting,
@@ -134,9 +135,9 @@ void GraphicsSystem::Update(float dt)
 void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
 {
 	
-	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, _camera.GetFramebuffer().hdrFBO);
-	glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+
+	glDrawBuffer(_camera.GetHDRAttachment());
 
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
@@ -144,10 +145,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);
 
-	_camera.GetFramebuffer().Unbind();
-
-	_camera.GetFramebuffer().Bind();
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	glDrawBuffer(_camera.GetAttachment());
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
@@ -157,7 +155,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -169,10 +167,10 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
-	renderQuad(_vao, _vbo);
+	renderQuad(quadVAO, quadVBO);
 	shader.UnUse();
 
-	_camera.GetFramebuffer().Unbind();
+	FRAMEBUFFER.Unbind();
 }
 
 void GraphicsSystem::Draw(BaseCamera& _camera) {
