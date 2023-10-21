@@ -11,6 +11,7 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
+  m_Layer: 0
   m_Position: [156.493225, 116.136734, 360.909332]
   m_Rotation: [8.45425205e-08, -1.50000012, 0]
   m_Scale: [0.999995291, 1, 0.999995291]
@@ -56,6 +57,7 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
+  m_Layer: 0
   m_Position: [-0.446017146, 2.19421697, 0.701099932]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
@@ -112,6 +114,7 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
+  m_Layer: 0
   m_Position: [2.57571006, 4.59031582, 1.05738711]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
@@ -168,6 +171,7 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
+  m_Layer: 0
   m_Position: [0, -0.350186825, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [10, 1, 10]
@@ -224,6 +228,7 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
+  m_Layer: 0
   m_Position: [0.0770136714, 4.2396946, 1.5261389]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
@@ -238,7 +243,7 @@ LightSource:
   UUID: 2383003823628521294
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 0
+  Intensity: 1
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -248,8 +253,9 @@ GameObject:
   m_EUID: 3741745616850505635
   m_IsActive: true
   m_Name: Camera
-  m_Position: [0.228027344, 2.71247363, 5.94999981]
-  m_Rotation: [0, -0.149999633, 0]
+  m_Layer: 0
+  m_Position: [2.78049541, 5.60001326, 5.94999981]
+  m_Rotation: [0, -0.149999604, 0]
   m_Scale: [0.99999702, 1, 0.99999702]
   m_Children:
     []
@@ -276,9 +282,10 @@ Camera:
 GameObject:
   m_EUID: 3250402029849808772
   m_IsActive: true
-  m_Name: New GameObject(7)
-  m_Position: [0, 3.75119877, 0]
-  m_Rotation: [3.1415925, -0.00840744097, 0.00840738881]
+  m_Name: 3D SPACE UI
+  m_Layer: 0
+  m_Position: [1.01424623, 5.66990662, 0]
+  m_Rotation: [3.14159083, -0.00840737391, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -296,6 +303,7 @@ GameObject:
   m_EUID: 15963777357859177452
   m_IsActive: true
   m_Name: WALL
+  m_Layer: 0
   m_Position: [5.32447052, 4.02244663, 0]
   m_Rotation: [0, -0, 1.64999998]
   m_Scale: [10.000001, 0.999997497, 9.99999619]
@@ -309,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
+  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -325,3 +333,23 @@ MeshRenderer:
   MetallicID: 0
   AoID: 0
   EmissionID: 0
+---
+GameObject:
+  m_EUID: 10808569125327567584
+  m_IsActive: true
+  m_Name: 2D SPACE UI
+  m_Layer: 0
+  m_Position: [0, 6.51778793, 3.5999999]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [5.80000019, 6.0999999, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 2142793048574192356}  # SpriteRenderer
+---
+SpriteRenderer:
+  EUID: 10808569125327567584
+  UUID: 2142793048574192356
+  World Space: false
+  SpriteTexture: BestTeam

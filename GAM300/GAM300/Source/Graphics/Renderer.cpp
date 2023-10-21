@@ -34,7 +34,7 @@ unsigned int depthCubemap;
 
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = POINT_LIGHT;
+LIGHT_TYPE temporary_test4 = POINT_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
@@ -210,7 +210,7 @@ void Renderer::Update(float)
 	
 	if (RenderShadow)
 	{
-		DrawDepth();
+		DrawDepth(temporary_test4);
 	}
 }
 
@@ -449,7 +449,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		spot_pos = "spotLights[" + std::to_string(i) + "].position";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
-
 
 
 		std::string spot_color;
@@ -691,7 +690,7 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	shader.UnUse();
 }
 
-void Renderer::DrawDepth()
+void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 {
 	glEnable(GL_DEPTH_TEST);
 	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
@@ -703,7 +702,7 @@ void Renderer::DrawDepth()
 	// Above is directional light and spot light related stuffs
 	// this vector is for point light
 	std::vector<glm::mat4> shadowTransforms;
-
+	
 	if (temporary_test == DIRECTIONAL_LIGHT)
 	{
 		// Good Light pos {-0.2f, -1.0f, -0.3f}

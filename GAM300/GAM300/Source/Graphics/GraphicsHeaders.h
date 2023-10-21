@@ -151,7 +151,7 @@ public:
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
-	void DrawDepth();
+	void DrawDepth(LIGHT_TYPE temporary_test);
 
 	bool Culling();
 
