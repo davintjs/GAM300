@@ -33,17 +33,6 @@ TemplatePack
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
 
-using GraphicsSystemsPackU =
-TemplatePack
-<
-	ShaderManager,
-	SkyboxManager,
-	DebugDraw,
-	Lighting
->;
-
-using GraphicsSubSystemsU = decltype(SystemsGroup(GraphicsSystemsPackU()));
-
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
 unsigned int quadVAO = 0;
@@ -108,7 +97,7 @@ void GraphicsSystem::Init()
 void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
-	GraphicsSubSystemsU::Update(dt);
+	GraphicsSubSystems::Update(dt);
 
 	// Editor Camera
 	EditorWindowEvent e("Scene");
@@ -117,8 +106,6 @@ void GraphicsSystem::Update(float dt)
 	if (e.isOpened)
 	{
 		EditorCam.Update(dt);
-
-		RENDERER.Update(dt);
 
 		PreDraw(EditorCam, quadVAO, quadVBO);
 	}
@@ -137,11 +124,11 @@ void GraphicsSystem::Update(float dt)
 			// Update camera view 
 			camera.UpdateCamera(transform->translation, transform->rotation);
 
-			RENDERER.Update(dt);
-
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
 	}
+
+	PostDraw();
 }
 
 void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
@@ -207,6 +194,14 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
 	RENDERER.UIDraw_2D(_camera);
 
+}
+
+void GraphicsSystem::PostDraw()
+{
+	for (auto& [name, prop] : RENDERER.GetProperties())
+	{
+		prop.iter = 0;
+	}
 }
 
 void GraphicsSystem::Exit()

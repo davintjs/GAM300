@@ -23,7 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
-bool RenderShadow = false;
+bool RenderShadow = true;
 
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
@@ -91,6 +91,8 @@ void Renderer::Init()
 		std::cout << "depth Cube framebuffer created successfully\n";
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	SetupGrid(100);
 }
 
 void Renderer::Update(float)
@@ -206,7 +208,7 @@ void Renderer::Update(float)
 		++i;
 	}
 
-	SetupGrid(100);
+	properties["Line"].iter = 200;
 	
 	if (RenderShadow)
 	{
@@ -320,8 +322,6 @@ void Renderer::Draw(BaseCamera& _camera)
 			if (prop.VAO)
 				DrawGrid(prop.VAO, prop.iter);
 		}
-
-		prop.iter = 0;
 	}
 }
 
@@ -761,13 +761,16 @@ void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 
 			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
 			shader.Use();
-			for (int i = 0; i < 6; ++i)
+			/*for (int i = 0; i < 6; ++i)
 			{
 				std::string spot_pos;
 				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
 				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-			}
+			}*/
+
+			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+				, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
 
 			GLint uniform1 =
 				glGetUniformLocation(shader.GetHandle(), "lightPos");
@@ -775,7 +778,7 @@ void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 				glm::value_ptr(point_light_stuffs.lightpos));
 
 			GLint uniform2 =
-				glGetUniformLocation(shader.GetHandle(), "far_plane");
+				glGetUniformLocation(shader.GetHandle(), "far_plane"); 
 			glUniform1f(uniform2, far_plane);
 
 
