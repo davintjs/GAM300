@@ -136,7 +136,10 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, _camera.GetFramebuffer().hdrFBO);
-	glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	//glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(2, attachments);
+
 
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
@@ -157,7 +160,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[1]);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");

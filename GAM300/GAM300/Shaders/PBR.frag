@@ -64,7 +64,8 @@ layout (location = 7) in vec4 frag_pos_lightspace;
 //          GOING OUT
 //-------------------------
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 Blooming;
 
 //-------------------------
 //          UNIFORMS
@@ -538,7 +539,8 @@ void main()
 
 
 
-    vec3 ambient = vec3(0.1) * albedo * ao + emission;
+//    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
+    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 10.f);
     
     vec3 color = ambient + Lo;
 
@@ -548,9 +550,21 @@ void main()
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
 
+    float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0)
+        Blooming = vec4(color.rgb, 1.0);
+    else
+        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
+
 
 if(hdr)
     color = color / (color + vec3(1.0));
 
     FragColor = vec4(color, 1.0);
+
+//    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+//    if(brightness > 1.0)
+//        Blooming = vec4(FragColor.rgb, 1.0);
+//    else
+//        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
 }

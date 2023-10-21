@@ -25,10 +25,11 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 // ALL THIS ARE HOPEFULLY TEMPORARY
 bool RenderShadow = true;
 
+// Shadow Mapping
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
 
-//
+// Shadow Cube Mapping
 unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
 
@@ -41,6 +42,13 @@ LightProperties directional_light_stuffs;
 LightProperties point_light_stuffs;
 	
 const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
+
+// Bloom
+unsigned int pingpongFBO[2];
+unsigned int pingpongColorbuffers[2];
+
+
+
 
 void Renderer::Init()
 {
@@ -91,6 +99,25 @@ void Renderer::Init()
 		std::cout << "depth Cube framebuffer created successfully\n";
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	// ping-pong-framebuffer for blurring
+	glGenFramebuffers(2, pingpongFBO);
+	glGenTextures(2, pingpongColorbuffers);
+	for (unsigned int i = 0; i < 2; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
+		// also check if framebuffers are complete (no need for depth buffer)
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "Framebuffer not complete!" << std::endl;
+	}
 
 	SetupGrid(100);
 }
