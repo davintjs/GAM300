@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <imgui.h>
+#include <Utilities/GUID.h>
 
 using string_t = std::string;
 
@@ -296,6 +297,7 @@ namespace property
             , Vector3
             , Vector4
             , char*
+            , Engine::GUID
         >;
     
         //--------------------------------------------------------------------------------------------

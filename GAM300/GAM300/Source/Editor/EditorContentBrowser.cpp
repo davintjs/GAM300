@@ -68,27 +68,17 @@ void EditorContentBrowser::Update(float dt)
         std::string pathStr = relativepath.filename().string();
 
         //Draw the file / folder icon based on whether it is a directory or not
-        std::string icon = it.is_directory() ? "foldericon" : "fileicon";
+        fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
 
         size_t icon_id = 0;
         std::string parentpath = relativepath.parent_path().string();
 
-        std::string filename = relativepath.string();
         
         if (!it.is_directory()) {
 
-            auto it2 = filename.begin();
-
-
-            if (filename.find_last_of("\\") != std::string::npos) {
-                it2 = filename.begin() + filename.find_last_of("\\") + 1;
-                filename.erase(filename.begin(), it2);
-            }
-            it2 = filename.begin() + filename.find_first_of(".");
-            filename.erase(it2, filename.end());
-            GLint tex = GET_TEXTURE_ID(filename);
+            GLint tex = GET_TEXTURE_ID(path);
             if (tex != UINT_MAX) {
-                icon = filename;
+                icon = path;
             }
         }
        

@@ -25,6 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
+#include <Utilities/GUID.h>
 
 #include <Properties.h>
 
@@ -252,7 +253,7 @@ struct MeshFilter : Object
 {
 	MeshFilter();
 
-	std::string MeshName = "Cube";
+	Engine::GUID meshId;
 	std::vector<glm::vec3>* vertices;	// Position
 	std::vector<unsigned int>* indices;	// Index
 	property_vtable();
@@ -260,18 +261,17 @@ struct MeshFilter : Object
 
 property_begin_name(MeshFilter, "MeshFilter"){
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(MeshName).Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshFilter)
 
 struct MeshRenderer : Object
 {
-	std::string MeshName = "Cube";
-	std::string AlbedoTexture = "";
-	std::string NormalMap = "";
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
+	Engine::GUID meshID;
+	Engine::GUID AlbedoTexture;
+	Engine::GUID NormalMap;
+	Engine::GUID MetallicTexture;
+	Engine::GUID RoughnessTexture;
+	Engine::GUID AoTexture;
+	Engine::GUID EmissionTexture;
 	//Materials mr_Material;
 
 	// Materials stuff below here
@@ -298,7 +298,7 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(MeshName).Flags(property::flags::DONTSHOW),
+	property_var(meshID).Name("Mesh"),
 	property_var(mr_Albedo).Name("Albedo"),
 	property_var(mr_metallic).Name("Metallic"),
 	property_var(mr_roughness).Name("Roughness"),
@@ -356,7 +356,7 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 
-		std::string SpriteTexture = "";
+		Engine::GUID SpriteTexture;
 		GLuint spriteTextureID = 0;
 
 		property_vtable()

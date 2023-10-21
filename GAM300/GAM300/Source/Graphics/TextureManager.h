@@ -18,6 +18,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../gli-master/gli/gli.hpp"
 #include "glslshader.h"
 #include "Utilities/GUID.h"
+#include <Core/Events.h>
+#include <AssetManager/AssetTypes.h>
 
 #define TextureManager Texture_Manager::Instance()
 
@@ -25,8 +27,6 @@ SINGLETON(Texture_Manager)
 {
 public:
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	// used in asset manager to add dds textures to the texture container
 	void AddTexture(char const* Filename, const Engine::GUID& GUID);
@@ -34,12 +34,20 @@ public:
 	// uses GUID to retrieve a texture from the texture container
 	GLuint GetTexture(const Engine::GUID & GUID);
 
+	GLuint GetTexture(const fs::path& filePath);
+
 	// creates a texture and returns it to be stored in the texture container
 	GLuint CreateTexture(char const* Filename);
 
 	// creates a skybox texture and returns it to be stored in the texture container
 	GLuint CreateSkyboxTexture(char const* Filename);
 
+
+	//Handle mesh adding here
+	void CallbackTextureAssetLoaded(AssetLoadedEvent<TextureAsset>*pEvent);
+
+	//Handle mesh removal here
+	void CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>*pEvent);
 private:
 
 	std::unordered_map<Engine::GUID, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>

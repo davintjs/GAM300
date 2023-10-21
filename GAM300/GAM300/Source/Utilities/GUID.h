@@ -14,7 +14,11 @@ namespace Engine
 	{
 		GUID();
 		GUID(const GUID& rhs);
-		GUID(const std::string& hexString);
+		GUID(const size_t val)
+		{
+			longInt[1] = val;
+		}
+		explicit GUID(const std::string& hexString);
 
 		bool operator==(const GUID& rhs) const
 		{
@@ -56,4 +60,3 @@ namespace std
 		std::size_t operator()(const Engine::GUID& obj) const;
 	};
 }
-

@@ -14,17 +14,14 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Precompiled.h"
 #include "TextureManager.h"
+#include "Core/EventsManager.h"
 
 
 void Texture_Manager::Init()
 {
+    EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetLoaded);
+    EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetUnloaded);
     std::cout << "TEXTURE MANAGER INIT\n";
-}
-
-
-void Texture_Manager::Update(float dt)
-{
-    UNREFERENCED_PARAMETER(dt);
 }
 
 void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID& GUID)
@@ -247,7 +244,19 @@ GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
     return UINT_MAX;
 }
 
-void Texture_Manager::Exit()
+GLuint Texture_Manager::GetTexture(const fs::path& filePath)
 {
-	mTextureContainer.clear();
+    GetAssetEvent e{filePath};
+    EVENTS.Publish(&e);
+    return GetTexture(e.guid);
+}
+
+void Texture_Manager::CallbackTextureAssetLoaded(AssetLoadedEvent<TextureAsset>* pEvent)
+{
+      AddTexture(pEvent->assetPath.stem().string().c_str(), pEvent->guid);
+}
+
+void Texture_Manager::CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>* pEvent)
+{
+
 }

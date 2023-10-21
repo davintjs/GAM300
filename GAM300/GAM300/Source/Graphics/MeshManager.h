@@ -20,12 +20,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
 
 #include "Model3d.h"
-
 struct InstanceProperties;
 
 // ACTUAL MESH USED IN GAME ENGINE
@@ -101,17 +99,19 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void GetGeomFromFiles(const std::string& filePath, const std::string& fileName);
+	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
+
+	MeshAsset& GetMeshAsset(const Engine::GUID& meshID);
 
 
 	// This is used when we are going to draw, u need to take the geom then render it
-	Mesh* DereferencingMesh(std::string mesh_Name) 
+	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
 	{ 
-		if (mContainer.find(mesh_Name) == mContainer.end())
+		if (mContainer.find(meshID) == mContainer.end())
 		{
 			return nullptr;
 		}
-		return &(mContainer.find(mesh_Name)->second); 
+		return &(mContainer.find(meshID)->second);
 	
 	}// Either Geom or Vaoid
 
@@ -122,11 +122,23 @@ public:
 	//void AddTexture(char const* Filename, std::string GUID);
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
-	std::unordered_map<std::string, Mesh> mContainer;
-	std::map<std::string, InstanceProperties>* properties;
+	std::unordered_map<Engine::GUID, Mesh> mContainer;
+	std::map<Engine::GUID, InstanceProperties>* properties;
+
+	//Handle mesh adding here
+	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);
+	// Adds mesh asset for storing
+	void StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex);
+	void StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex);
+
+	//Handle mesh removal here
+	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
 private:
+
+	std::unordered_map<Engine::GUID, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
+
 	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);
+	GeomImported DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid);
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,

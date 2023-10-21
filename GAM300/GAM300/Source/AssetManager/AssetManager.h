@@ -24,71 +24,42 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Core/SystemInterface.h"
 
 #include "Core/Events.h"
-#include "Graphics/TextureManager.h"
-#include "Graphics/MeshManager.h"
-#include "Audio/AudioManager.h"
 #include "Utilities/GUID.h"
+#include <filesystem>
+#include "AssetManagerTemplates.h"
 
-#include "Assets.h"
+#define ASSET AssetManager::Instance()
 
-#define ASSETMANAGER AssetManager::Instance()
-
-ENGINE_SYSTEM(AssetManager)
+namespace fs = std::filesystem;
+SINGLETON(AssetManager)
 {
 public:
 	// Returns the asset data with the given fileName
 	const std::vector<char>& GetAssetWithFileName(const std::string& fileName);
-	const std::vector<char>& GetAssetWithGUID(const Engine::GUID& GUID);
 
 	// Returns the GUID of the given fileName
-	Engine::GUID GetAssetGUID(const std::string& fileName);
+	Engine::GUID GetAssetGUID(const fs::path& filePath);
 
 	// Get the mesh asset
 	std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
 
-	// Adds mesh asset for storing
-	void StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex);
-	void StoreMeshIndex(const std::string& mKey, const int& mIndex);
-
 	// AssetManager initialization to load assets into memory
 	void Init();
-
-	// Update loop
-	void Update(float dt);
-
-	// Exit
-	void Exit();
-
 private:
 	const std::string AssetPath = "Assets";
 
 	// Helper functions
 	// Asynchronously load asset into memory
-	void AsyncLoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS = false);
-	void LoadAsset(const std::string& metaFilePath, const std::string& fileName, bool isDDS = false);
+	void AsyncLoadAsset(const fs::path& filePath);
+	void LoadAsset(const fs::path& filePath);
 
 	// Asynchronously unload asset from memory
-	void AsyncUnloadAsset(const Engine::GUID & assetGUID);
-	void UnloadAsset(const Engine::GUID & assetGUID);
+	void AsyncUnloadAsset(const fs::path& filePath);
+	void UnloadAsset(const fs::path& filePath);
 
 	// Asynchronously update asset in memory
-	void AsyncUpdateAsset(const std::string& metaFilePath, const Engine::GUID & assetGUID);
-	void UpdateAsset(const std::string& metaFilePath, const Engine::GUID & assetGUID);
-
-	// Create meta file for the asset file
-	void CreateMetaFile(const std::string& fileName, const std::string& filePath, const std::string& fileType);
-
-	// Deserialize from the meta file to retrieve asset data
-	void DeserializeAssetMeta(const std::filesystem::path& filePath, const std::string& fileName, bool isDDS = false);
-
-	// Addition of files during engine runtime
-	void FileAddProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension);
-
-	// Removing of files during engine runtime
-	void FileRemoveProtocol(const std::string& filePath, const std::string& fileName, const std::string& fileExtension);
-
-	// Updating of files during runtime
-	void FileUpdateProtocol(const std::string& filePath, const std::string& fileExtension);
+	void AsyncUpdateAsset(const fs::path& filePath);
+	void UpdateAsset(const fs::path& filePath);
 
 	// FileWatching system using event callbacks
 	void CallbackFileModified(FileModifiedEvent* pEvent);
@@ -98,9 +69,7 @@ private:
 	
 	AllAssets assets{};
 
-	std::unordered_map<Engine::GUID, Asset> mAssets;
-	std::unordered_map<std::string, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
-
 	// Get the dropped files using event callbacks
 	void CallbackDroppedAsset(DropAssetsEvent* pEvent);
+
 };

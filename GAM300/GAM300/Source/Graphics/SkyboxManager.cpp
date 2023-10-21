@@ -15,7 +15,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
-#include "AssetManager/AssetManager.h"
+#include "Graphics/TextureManager.h"
+#include "Graphics/MeshManager.h"
 
 void SkyboxManager::Init()
 {
@@ -23,14 +24,9 @@ void SkyboxManager::Init()
 	CreateSkybox("skybox_default_top");
 }
 
-void SkyboxManager::Update(float)
+void SkyboxManager::CreateSkybox(const fs::path& _name)
 {
-	
-}
-
-void SkyboxManager::CreateSkybox(const std::string& _name)
-{
-	skyboxTex = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(_name));
+	skyboxTex = TextureManager.GetTexture(_name);
 	skyBoxModel->SkyBoxinit();
 	skyBoxModel->shader = SHADER.GetShader(SKYBOX);
 }

@@ -22,6 +22,20 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "BaseCamera.h"
 
 #include "glslshader.h"
+#include <filesystem>
+
+#include "Utilities/GUID.h"
+
+
+std::unordered_map<std::string, Engine::GUID> PRIMITIVES
+{
+	{"Cube", Engine::GUID(0)},
+	{"Sphere", Engine::GUID(1)},
+	{"Capsule", Engine::GUID(2)},
+	{"Line", Engine::GUID(3)},
+	{"Plane", Engine::GUID(4)},
+	{"Segment3D", Engine::GUID(4)},
+};
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -75,7 +89,7 @@ public:
 	void Exit();
 
 	// Initialize the skybox of the engine
-	void CreateSkybox(const std::string& _name);
+	void CreateSkybox(const std::filesystem::path& _name);
 
 	void Draw(BaseCamera& _camera);
 
@@ -101,7 +115,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<std::string, InstanceProperties>* properties;
+	std::map<Engine::GUID, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -159,16 +173,16 @@ public:
 
 	void Deferred();
 	
-	unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
+	unsigned int ReturnTextureIdx(const Engine::GUID& _meshID, const GLuint & _id);
 
-	std::map<std::string, InstanceProperties>& GetProperties() { return properties; }
+	auto& GetProperties() { return properties; }
 
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }
 
 private:
-	std::map<std::string, InstanceProperties> properties;
+	std::map<Engine::GUID, InstanceProperties> properties;
 	float exposure = 1.f;
 	bool hdr = true;
 };

@@ -16,9 +16,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include "EventInterface.h"
+
 #include "Utilities/UUID.h"
 #include <glm/vec2.hpp>
 #include <Utilities/GUID.h>
+#include <filesystem>
 
 struct Entity;
 struct Scene;
@@ -27,11 +30,7 @@ struct Field;
 struct Rigidbody;
 struct ImGuiTextBuffer;
 
-struct IEvent
-{
-protected:
-	virtual ~IEvent() {};
-};
+namespace fs = std::filesystem;
 
 struct ApplicationExitEvent : IEvent
 {
@@ -149,11 +148,39 @@ struct ScriptGetFieldNamesEvent : IEvent
 	size_t count{0};
 };
 
+#pragma region Asset Manager
+
 struct GetAssetEvent: IEvent
 {
-	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
-	const std::string& fileName;
+	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
+	const fs::path& filePath;
 	Engine::GUID guid;
+};
+
+struct GetFilePathEvent : IEvent
+{
+	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
+	const Engine::GUID& guid;
+	fs::path filePath;
+};
+
+template <typename AssetType>
+struct AssetLoadedEvent : IEvent
+{
+	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset) 
+		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
+	const AssetType& asset;
+};
+
+template <typename AssetType>
+struct AssetUnloadedEvent : IEvent
+{
+	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid) :
+		assetPath{ _assetPath }, guid{ _guid } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
 };
 
 struct DropAssetsEvent : IEvent
@@ -163,8 +190,11 @@ struct DropAssetsEvent : IEvent
 	const char** paths;
 };
 
+#pragma endregion
+
 struct ContactAddedEvent : IEvent
 {
+
 	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
 	Rigidbody* rb1;
 	Rigidbody* rb2;

@@ -29,6 +29,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
 
+#include "PropertyConfig.h"
+
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
@@ -132,6 +134,151 @@ void DisplayType(Change& change, const char* name, char*& val)
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
 }
+
+template <typename T>
+void DisplayTexturePicker(Change& change, T& Value) {
+
+    using T1 = std::decay_t<decltype(Value)>;
+
+    ImGui::SameLine();
+    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    static const std::string AssetDirectory = "Assets";
+    static std::filesystem::path CurrentDirectory = AssetDirectory;
+    static std::string currentFolder = "Assets";
+
+
+    if (ImGui::Button("Edit")) {
+        ImGui::OpenPopup("Texture");
+    }
+
+    //Component Settings window
+    ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+
+    if (ImGui::BeginPopup("Texture", win_flags)) {
+        ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
+        // Back button to return to parent directory
+        if (CurrentDirectory != std::filesystem::path(AssetDirectory))
+        {
+            if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
+            {
+                CurrentDirectory = CurrentDirectory.parent_path();
+                currentFolder = CurrentDirectory.string();
+            }
+        }
+
+        static float padding = 15.f;
+        static float iconsize = 50.f;
+        float cellsize = iconsize + padding;
+
+        float window_width = ImGui::GetContentRegionAvail().x;
+        int columncount = (int)(window_width / cellsize);
+        if (columncount < 1) { columncount = 1; }
+
+        ImGui::Columns(columncount, 0, false);
+
+        //remove texture icon
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
+        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
+
+            if constexpr (std::is_same<T, std::string>()) {
+                std::string buf = "";
+                EDITOR.History.SetPropertyValue(change, Value, buf);
+            }
+
+            ImGui::PopStyleColor();
+            ImGui::EndPopup();
+            ImGui::CloseCurrentPopup();
+            return;
+        };
+        ImGui::PopStyleColor();
+        //render file name below icon
+        ImGui::TextWrapped("Remove Texture");
+        ImGui::NextColumn();
+
+        int i = 0;
+        //using filesystem to iterate through all folders/files inside the "/Data" directory
+        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
+        {
+            const auto& path = it.path();
+            //if not png or dds file, dont show
+            if ((path.string().find("meta") != std::string::npos)) continue;
+
+            ImGui::PushID(i++);
+
+            auto relativepath = std::filesystem::relative(path, AssetDirectory);
+            std::string pathStr = relativepath.filename().string();
+
+            //Draw the file / folder icon based on whether it is a directory or not
+            fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
+
+            size_t icon_id = 0;
+
+            /*auto it2 = filename.begin() + filename.find_first_of(".");
+            filename.erase(it2, filename.end());*/
+
+            std::string filename = "";
+
+            if (!it.is_directory()) {
+
+                //PRINT(filename);
+                auto tex = GET_TEXTURE_ID(path);
+
+                if (tex != UINT_MAX) {
+                    icon = filename;
+                }
+            }
+
+            //render respective file icon textures
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+            icon_id = GET_TEXTURE_ID(icon);
+            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
+
+            ImGui::PopStyleColor();
+
+            //Change directory into the folder clicked
+            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+            {
+                if (it.is_directory())
+                {
+                    currentFolder = pathStr;
+                    CurrentDirectory /= path.filename();
+                }
+            }
+
+            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                //update texture
+                if constexpr (std::is_same<T, std::string>()) {
+                    EDITOR.History.SetPropertyValue(change, Value, icon);
+                }
+
+            }
+
+            //render file name below icon
+            ImGui::TextWrapped(pathStr.c_str());
+            ImGui::NextColumn();
+            ImGui::PopID();
+        }
+        ImGui::Columns(1);
+        ImGui::EndPopup();
+    }
+}
+
+void DisplayType(Change& change, const char* name, Engine::GUID& val)
+{
+    static std::string idName{};
+    idName = "##";
+    idName += name;
+    //Get file name
+    GetFilePathEvent e{ val };
+    EVENTS.Publish(&e);
+    const std::string& fp = e.filePath.string();
+    DisplayTexturePicker(change, val);
+    ImGui::InputText(idName.c_str(), (char*)fp.c_str(), fp.size(), ImGuiInputTextFlags_ReadOnly);
+}
+
+
 
 bool DisplayType(const char* name, float& val)
 {
@@ -465,147 +612,7 @@ void Display(const char* string)
 }
 
 //Function to display and edit textures of a given property.
-template <typename T> 
-void DisplayTexturePicker(Change& change, T& Value) {
 
-    using T1 = std::decay_t<decltype(Value)>;
-
-    ImGui::SameLine();
-    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-    static const std::string AssetDirectory = "Assets";
-    static std::filesystem::path CurrentDirectory = AssetDirectory;
-    static std::string currentFolder = "Assets";
-
-
-    if (ImGui::Button("Edit")) {
-        ImGui::OpenPopup("Texture");
-    }
-
-    //Component Settings window
-    ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
-
-    if (ImGui::BeginPopup("Texture", win_flags)) {
-        ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
-        // Back button to return to parent directory
-        if (CurrentDirectory != std::filesystem::path(AssetDirectory))
-        {
-            if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
-            {
-                CurrentDirectory = CurrentDirectory.parent_path();
-                currentFolder = CurrentDirectory.string();
-            }
-        }
-
-        static float padding = 15.f;
-        static float iconsize = 50.f;
-        float cellsize = iconsize + padding;
-
-        float window_width = ImGui::GetContentRegionAvail().x;
-        int columncount = (int)(window_width / cellsize);
-        if (columncount < 1) { columncount = 1; }
-
-        ImGui::Columns(columncount, 0, false);
-
-        //remove texture icon
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
-        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
-
-            if constexpr (std::is_same<T, std::string>()) {
-                std::string buf = "";
-                EDITOR.History.SetPropertyValue(change, Value, buf);
-            }
-            
-            ImGui::PopStyleColor();
-            ImGui::EndPopup(); 
-            ImGui::CloseCurrentPopup();
-            return;
-        };
-        ImGui::PopStyleColor();
-        //render file name below icon
-        ImGui::TextWrapped("Remove Texture");
-        ImGui::NextColumn();
-
-        int i = 0;
-        //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
-        {
-            const auto& path = it.path();
-            //if not png or dds file, dont show
-            if ((path.string().find("meta") != std::string::npos)) continue;
-
-            ImGui::PushID(i++);
-
-            auto relativepath = std::filesystem::relative(path, AssetDirectory);
-            std::string pathStr = relativepath.filename().string();
-
-            //Draw the file / folder icon based on whether it is a directory or not
-            std::string icon = it.is_directory() ? "foldericon" : "fileicon";
-
-            size_t icon_id = 0;
-
-            /*auto it2 = filename.begin() + filename.find_first_of(".");
-            filename.erase(it2, filename.end());*/
-
-            std::string filename = "";
-
-            if (!it.is_directory()) {
-
-                filename = relativepath.string();
-
-                auto it2 = filename.begin();
-
-                if (filename.find_last_of("\\") != std::string::npos) {
-                    it2 = filename.begin() + filename.find_last_of("\\") + 1;
-                    filename.erase(filename.begin(), it2);
-                }
-                if (filename.find_first_of(".") != std::string::npos) {
-                    it2 = filename.begin() + filename.find_first_of(".");
-                    filename.erase(it2, filename.end());
-                }
-                //PRINT(filename);
-                auto tex = GET_TEXTURE_ID(filename);
-
-                if (tex != UINT_MAX) {
-                    icon = filename;
-                }
-            }
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            icon_id = GET_TEXTURE_ID(icon);
-            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
-
-            ImGui::PopStyleColor();
-
-            //Change directory into the folder clicked
-            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-            {
-                if (it.is_directory())
-                {
-                    currentFolder = pathStr;
-                    CurrentDirectory /= path.filename();
-                }
-            }
-
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-            {
-                //update texture
-                if constexpr (std::is_same<T, std::string>()) {
-                    EDITOR.History.SetPropertyValue(change, Value, icon);
-                }
-                
-            }
-
-            //render file name below icon
-            ImGui::TextWrapped(pathStr.c_str());
-            ImGui::NextColumn();
-            ImGui::PopID();
-        }
-        ImGui::Columns(1);
-        ImGui::EndPopup();
-    }
-}
 
 template <typename T>
 void DisplayLightTypes(Change& change, T& value) {
@@ -705,7 +712,7 @@ void Display_Property(T& comp) {
                         || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
                         || DisplayName == "SpriteTexture")
                     {
-                        Display<T1>(DisplayName.c_str(), Value);
+                        //Display<T1>(DisplayName.c_str(), Value);
                         DisplayTexturePicker(newchange, Value);
                     }
                     else { //Normal Properties (int, float, vec3 etc.)

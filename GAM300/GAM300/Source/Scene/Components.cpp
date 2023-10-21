@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/gtx/quaternion.hpp>
 #include "Scene/SceneManager.h"
 #include "AssetManager/AssetManager.h"
+#include "Graphics/MeshManager.h"
 
 std::map<std::string, size_t> ComponentTypes{};
 
@@ -113,6 +114,6 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 
 MeshFilter::MeshFilter()
 {
-	vertices = &ASSETMANAGER.GetMeshAsset()[MeshName].mVertices;
-	indices = &ASSETMANAGER.GetMeshAsset()[MeshName].mIndices;
+	vertices = &MeshManager.GetMeshAsset(meshId).mVertices;
+	indices = &MeshManager.GetMeshAsset(meshId).mIndices;
 }

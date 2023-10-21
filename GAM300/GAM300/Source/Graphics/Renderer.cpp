@@ -42,6 +42,8 @@ LightProperties point_light_stuffs;
 	
 const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
+//ZACH: Assigning GUID to primitives
+
 void Renderer::Init()
 {
 	// This Framebuffer is used for both directional and spotlight
@@ -113,7 +115,7 @@ void Renderer::Update(float)
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 
-		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.MeshName);
+		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 
 		if (t_Mesh == nullptr)
 		{
@@ -129,14 +131,14 @@ void Renderer::Update(float)
 		//std::string textureGUID = AssetManager::Instance().GetAssetGUID(renderer.AlbedoTexture); // problem eh
 		// use bool to see if texture exist instead...
 
-		float texidx = float(ReturnTextureIdx(renderer.MeshName, renderer.textureID));
-		float normidx = float(ReturnTextureIdx(renderer.MeshName, renderer.normalMapID));
+		float texidx = float(ReturnTextureIdx(renderer.meshID, renderer.textureID));
+		float normidx = float(ReturnTextureIdx(renderer.meshID, renderer.normalMapID));
 
 
-		float metalidx = float(ReturnTextureIdx(renderer.MeshName, renderer.MetallicID));
-		float roughidx = float(ReturnTextureIdx(renderer.MeshName, renderer.RoughnessID));
-		float aoidx = float(ReturnTextureIdx(renderer.MeshName, renderer.AoID));
-		float emissionidx = float(ReturnTextureIdx(renderer.MeshName, renderer.EmissionID));
+		float metalidx = float(ReturnTextureIdx(renderer.meshID, renderer.MetallicID));
+		float roughidx = float(ReturnTextureIdx(renderer.meshID, renderer.RoughnessID));
+		float aoidx = float(ReturnTextureIdx(renderer.meshID, renderer.AoID));
+		float emissionidx = float(ReturnTextureIdx(renderer.meshID, renderer.EmissionID));
 
 		//std::cout << "metal index is : " << metalidx << "\n";
 		//std::cout << "rough index is : " << roughidx << "\n";
@@ -145,7 +147,7 @@ void Renderer::Update(float)
 		float metal_constant = renderer.mr_metallic;
 		float rough_constant = renderer.mr_roughness;
 		float ao_constant = renderer.ao;
-		properties[renderer.MeshName].M_R_A_Constant[properties[renderer.MeshName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+		properties[renderer.meshID].M_R_A_Constant[properties[renderer.meshID].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 
 
 		//// button here change norm idx to 33
@@ -159,50 +161,47 @@ void Renderer::Update(float)
 		//	roughidx = 33;
 		//}
 
-		properties[renderer.MeshName].textureIndex[properties[renderer.MeshName].iter] = glm::vec2(texidx, normidx);
-		properties[renderer.MeshName].M_R_A_Texture[properties[renderer.MeshName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+		properties[renderer.meshID].textureIndex[properties[renderer.meshID].iter] = glm::vec2(texidx, normidx);
+		properties[renderer.meshID].M_R_A_Texture[properties[renderer.meshID].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 
-		properties[renderer.MeshName].Albedo[properties[renderer.MeshName].iter] = renderer.mr_Albedo;
-		properties[renderer.MeshName].Ambient[properties[renderer.MeshName].iter] = renderer.mr_Ambient;
-		properties[renderer.MeshName].Diffuse[properties[renderer.MeshName].iter] = renderer.mr_Diffuse;
-		properties[renderer.MeshName].Specular[properties[renderer.MeshName].iter] = renderer.mr_Specular;
-		properties[renderer.MeshName].Shininess[properties[renderer.MeshName].iter] = renderer.mr_Shininess;
-		properties[renderer.MeshName].entitySRT[properties[renderer.MeshName].iter] = transform.GetWorldMatrix();
-
-
-		++(properties[renderer.MeshName].iter);
-		char maxcount = 32;
-		// newstring
-		for (char namecount = 0; namecount < maxcount; ++namecount)
-		{
-			std::string newName = renderer.MeshName;
-
-			newName += ('1' + namecount);
-
-			if (properties.find(newName) == properties.end())
-			{
-				break;
-			}
-			//InstanceProperties* currentProp = &properties[renderer.MeshName];
-
-			/*GLuint textureID = 0;
-			GLuint normalMapID = 0;*/
-
-			properties[newName].entitySRT[properties[newName].iter] = transform.GetWorldMatrix();
-			properties[newName].Albedo[properties[newName].iter] = renderer.mr_Albedo;
-			properties[newName].Ambient[properties[newName].iter] = renderer.mr_Ambient;
-			properties[newName].Diffuse[properties[newName].iter] = renderer.mr_Diffuse;
-			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
-
-			properties[newName].M_R_A_Texture[properties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			properties[newName].M_R_A_Constant[properties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-			properties[newName].Specular[properties[newName].iter] = renderer.mr_Specular;
-			properties[newName].Shininess[properties[newName].iter] = renderer.mr_Shininess;
+		properties[renderer.meshID].Albedo[properties[renderer.meshID].iter] = renderer.mr_Albedo;
+		properties[renderer.meshID].Ambient[properties[renderer.meshID].iter] = renderer.mr_Ambient;
+		properties[renderer.meshID].Diffuse[properties[renderer.meshID].iter] = renderer.mr_Diffuse;
+		properties[renderer.meshID].Specular[properties[renderer.meshID].iter] = renderer.mr_Specular;
+		properties[renderer.meshID].Shininess[properties[renderer.meshID].iter] = renderer.mr_Shininess;
+		properties[renderer.meshID].entitySRT[properties[renderer.meshID].iter] = transform.GetWorldMatrix();
 
 
-			++(properties[newName].iter);
-		}
+		++(properties[renderer.meshID].iter);
+		//char maxcount = 32;
+		//for (char namecount = 0; namecount < maxcount; ++namecount)
+		//{
+		//	Engine::GUID newID = renderer.meshID;
+
+		//	newName += ('1' + namecount);
+
+		//	if (properties.find(newID) == properties.end())
+		//	{
+		//		break;
+		//	}
+		//	//InstanceProperties* currentProp = &properties[renderer.MeshName];
+
+		//	/*GLuint textureID = 0;
+		//	GLuint normalMapID = 0;*/
+
+		//	properties[newID].entitySRT[properties[newID].iter] = transform.GetWorldMatrix();
+		//	properties[newID].Albedo[properties[newID].iter] = renderer.mr_Albedo;
+		//	properties[newID].Ambient[properties[newID].iter] = renderer.mr_Ambient;
+		//	properties[newID].Diffuse[properties[newID].iter] = renderer.mr_Diffuse;
+		//	properties[newID].Specular[properties[newID].iter] = renderer.mr_Specular;
+		//	properties[newID].Shininess[properties[newID].iter] = renderer.mr_Shininess;
+
+		//	properties[newID].M_R_A_Texture[properties[newID].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+		//	properties[newID].M_R_A_Constant[properties[newID].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+		//	properties[newID].Specular[properties[newID].iter] = renderer.mr_Specular;
+		//	properties[newID].Shininess[properties[newID].iter] = renderer.mr_Shininess;
+		//	++(properties[newID].iter);
+		//}
 		++i;
 	}
 
@@ -219,7 +218,7 @@ void Renderer::SetupGrid(const int& _num)
 	float spacing = 1.f;
 	float length = _num * spacing * 0.5f;
 
-	properties["Line"].iter = _num * 2;
+	properties[PRIMITIVES["Line"]].iter = _num * 2;
 
 	for (int i = 0; i < _num; i++)
 	{
@@ -228,15 +227,15 @@ void Renderer::SetupGrid(const int& _num)
 		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
 		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
 
-		properties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
-		properties["Line"].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
+		properties[PRIMITIVES["Line"]].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
+		properties[PRIMITIVES["Line"]].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
 	}
 }
 
 void Renderer::Draw(BaseCamera& _camera)
 {
 	// Looping Properties
-	for (auto& [name, prop] : properties)
+	for (auto& [guid, prop] : properties)
 	{
 		/*for (size_t i = 0; i < 32; i++)
 		{
@@ -312,7 +311,7 @@ void Renderer::Draw(BaseCamera& _camera)
 				DrawDebug(prop.debugVAO, prop.iter);
 		}
 
-		if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
+		if (guid == PRIMITIVES["Line"] && _camera.GetCameraType() == CAMERATYPE::SCENE)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -831,23 +830,23 @@ void Renderer::Deferred()
 
 }
 
-unsigned int Renderer::ReturnTextureIdx(const std::string& _meshName, const GLuint& _id)
+unsigned int Renderer::ReturnTextureIdx(const Engine::GUID& _meshID, const GLuint& _id)
 {
 	if (!_id)
 	{
 		return 33;
 	}
-	for (unsigned int iter = 0; iter < properties[_meshName].textureCount + 1; ++iter)
+	for (unsigned int iter = 0; iter < properties[_meshID].textureCount + 1; ++iter)
 	{
-		if (properties[_meshName].texture[iter] == 0)
+		if (properties[_meshID].texture[iter] == 0)
 		{
-			properties[_meshName].texture[iter] = _id;
-			properties[_meshName].textureCount++;
+			properties[_meshID].texture[iter] = _id;
+			properties[_meshID].textureCount++;
 			return iter;
 		}
-		if (properties[_meshName].texture[iter] == _id)
+		if (properties[_meshID].texture[iter] == _id)
 		{
-			properties[_meshName].textureCount++;
+			properties[_meshID].textureCount++;
 			return iter;
 		}
 	}
