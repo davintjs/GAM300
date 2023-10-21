@@ -16,8 +16,8 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D hdrBuffer;
-uniform sampler2D bloomBlur;
+layout (binding = 0)uniform sampler2D hdrBuffer;
+layout (binding = 1)uniform sampler2D bloomBlur;
 uniform bool hdr;
 uniform float exposure;
 
