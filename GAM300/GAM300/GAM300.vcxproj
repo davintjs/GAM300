@@ -304,6 +304,8 @@
     <None Include="Shaders\BasicLighting.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\BloomBlur.frag" />
+    <None Include="Shaders\BloomBlur.vert" />
     <None Include="Shaders\HDR.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>

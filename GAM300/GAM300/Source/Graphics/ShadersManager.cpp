@@ -66,6 +66,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/UIWorldSpace.vert";
 	fragmentPath = shaderPath + "/UIWorldSpace.frag";
 	ShaderCompiler("UI WORLD SHADER", vertexPath, fragmentPath);
+	
+	vertexPath = shaderPath + "/BloomBlur.vert";
+	fragmentPath = shaderPath + "/BloomBlur.frag";
+	ShaderCompiler("BLOOM BLUR SHADER", vertexPath, fragmentPath);
 
 }
 

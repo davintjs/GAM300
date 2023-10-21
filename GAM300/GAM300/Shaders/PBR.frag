@@ -540,7 +540,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 10.f);
+    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * 10.f);
     
     vec3 color = ambient + Lo;
 

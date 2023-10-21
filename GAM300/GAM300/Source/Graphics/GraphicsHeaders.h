@@ -32,7 +32,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+
+// Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
+bool bloom(unsigned int amount);
 
 // Bean: A temp solution to access the shader
 enum SHADERTYPE
@@ -47,7 +50,8 @@ enum SHADERTYPE
 	SHADOW,
 	POINTSHADOW,
 	UI_SCREEN,
-	UI_WORLD
+	UI_WORLD,
+	BLUR
 };
 
 ENGINE_SYSTEM(ShaderManager)
