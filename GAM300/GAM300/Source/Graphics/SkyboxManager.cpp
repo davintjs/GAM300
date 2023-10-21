@@ -20,25 +20,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void SkyboxManager::Init()
 {
-	skyBoxModel = new SkyBox;
 	CreateSkybox("skybox_default_top");
 }
 
 void SkyboxManager::CreateSkybox(const fs::path& _name)
 {
 	skyboxTex = TextureManager.GetTexture(_name);
-	skyBoxModel->SkyBoxinit();
-	skyBoxModel->shader = SHADER.GetShader(SKYBOX);
+	skyBoxModel.SkyBoxinit();
+	skyBoxModel.shader = SHADER.GetShader(SKYBOX);
 }
 
 void SkyboxManager::Draw(BaseCamera& _camera)
 {
 	glDepthFunc(GL_LEQUAL);
-	skyBoxModel->SkyBoxDraw(skyboxTex, _camera);
+	skyBoxModel.SkyBoxDraw(skyboxTex, _camera);
 	glDepthFunc(GL_LESS);
-}
-
-void SkyboxManager::Exit()
-{
-	delete skyBoxModel;
 }

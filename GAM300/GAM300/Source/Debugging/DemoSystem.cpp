@@ -28,10 +28,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 void DemoSystem::Init()
 {
-	//CreateSceneEvent createScene(nullptr);
-	//EVENTS.Publish(&createScene);
-	//Scene& scene = *createScene.scene;
-	MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
+	CreateSceneEvent createScene(nullptr);
+	EVENTS.Publish(&createScene);
+	Scene& scene = *createScene.scene;
+	//MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
 	//Entity& testEntity = *scene.Add<Entity>();
 	//MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
 	//AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);

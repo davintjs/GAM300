@@ -35,7 +35,7 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
 
 	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
-	const static std::unordered_set<const fs::path> IGNORED_EXTENSIONS
+	static std::unordered_set<fs::path> IGNORED_EXTENSIONS
 	{
 		".meta",
 		".jpg",
@@ -105,124 +105,124 @@ Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 
 void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 {
-	namespace fs = std::filesystem;
-	fs::path filePath{ pEvent->filePath};
+	//namespace fs = std::filesystem;
+	//fs::path filePath{ pEvent->filePath};
 
-	if (filePath.empty())
-	{
-		PRINT("EMPTY!\n");
-	}
+	//if (filePath.empty())
+	//{
+	//	PRINT("EMPTY!\n");
+	//}
 
-	std::string fileName = filePath.filename().generic_string();
-	std::string fileExtension = filePath.extension().generic_string();
-	std::string filePathEdited = filePath.generic_string();
-	std::replace(filePathEdited.begin(), filePathEdited.end(), '\\', '/');
+	//std::string fileName = filePath.filename().generic_string();
+	//std::string fileExtension = filePath.extension().generic_string();
+	//std::string filePathEdited = filePath.generic_string();
+	//std::replace(filePathEdited.begin(), filePathEdited.end(), '\\', '/');
 
 
-	if (fileExtension == ".fbx") // Call the fbx compiler
-	{
-		const char* command{ "Compiler.exe" };
+	//if (fileExtension == ".fbx") // Call the fbx compiler
+	//{
+	//	const char* command{ "Compiler.exe" };
 
-		system(command);
+	//	system(command);
 
-		return; // Return as file watcher will detect an addition of geom file and desc
-	}
-	else if (fileExtension == ".png" || fileExtension == ".jpg") // Call the texture compiler
-	{
-		const char* command{ "TextureCompiler.exe" };
+	//	return; // Return as file watcher will detect an addition of geom file and desc
+	//}
+	//else if (fileExtension == ".png" || fileExtension == ".jpg") // Call the texture compiler
+	//{
+	//	const char* command{ "TextureCompiler.exe" };
 
-		system(command);
-	}
+	//	system(command);
+	//}
 
-	if (fileExtension == ".meta" || 
-		filePath.string().find("~") != std::string::npos ||
-		fileExtension == "")
-	{
-		return;
-	}
+	//if (fileExtension == ".meta" || 
+	//	filePath.string().find("~") != std::string::npos ||
+	//	fileExtension == "")
+	//{
+	//	return;
+	//}
 
-	fileName.erase(fileName.find_last_of('.'), strlen(fileExtension.c_str()) + 1);
+	//fileName.erase(fileName.find_last_of('.'), strlen(fileExtension.c_str()) + 1);
 	
-	switch (pEvent->fileState)
-	{
-		case FileState::CREATED:
-		{
-			PRINT("CREATED ");
-			LoadAsset(filePathEdited);
-			break;
-		}
-		case FileState::DELETED:
-		{
-			PRINT("DELETED ");
-			UnloadAsset(filePathEdited);
-			break;
-		}
-		case FileState::MODIFIED:
-		{
-			UpdateAsset(filePathEdited);
-			PRINT("MODIFIED ");
-			break;
-		}
-		case FileState::RENAMED_OLD:
-		{
-			PRINT("RENAMED_OLD ");
-			break;
-		}
-		case FileState::RENAMED_NEW:
-		{
-			PRINT("RENAMED_NEW ");
-			break;
-		}
-		default:
-		{
-			break;
-		}
+	//switch (pEvent->fileState)
+	//{
+	//	case FileState::CREATED:
+	//	{
+	//		PRINT("CREATED ");
+	//		LoadAsset(filePathEdited);
+	//		break;
+	//	}
+	//	case FileState::DELETED:
+	//	{
+	//		PRINT("DELETED ");
+	//		UnloadAsset(filePathEdited);
+	//		break;
+	//	}
+	//	case FileState::MODIFIED:
+	//	{
+	//		UpdateAsset(filePathEdited);
+	//		PRINT("MODIFIED ");
+	//		break;
+	//	}
+	//	case FileState::RENAMED_OLD:
+	//	{
+	//		PRINT("RENAMED_OLD ");
+	//		break;
+	//	}
+	//	case FileState::RENAMED_NEW:
+	//	{
+	//		PRINT("RENAMED_NEW ");
+	//		break;
+	//	}
+	//	default:
+	//	{
+	//		break;
+	//	}
 
-	}
-	if (filePath.extension() == ".cs")
-	{
-		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
-		EVENTS.Publish(&scriptModifiedEvent);
-	}
-	PRINT(filePath.string(), "\n");
+	//}
+	//if (filePath.extension() == ".cs")
+	//{
+	//	FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
+	//	EVENTS.Publish(&scriptModifiedEvent);
+	//}
+	//PRINT(filePath.string(), "\n");
 }
 
 void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
-	pEvent->guid = GetAssetGUID(pEvent->filePath);
+	//pEvent->guid = GetAssetGUID(pEvent->filePath);
 }
 
 void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 {
-	std::list<std::filesystem::path> paths;
-	for (int i = 0; i < pEvent->pathCount; i++)
-		paths.push_back(pEvent->paths[i]);
+	//std::list<std::filesystem::path> paths;
+	//for (int i = 0; i < pEvent->pathCount; i++)
+	//	paths.push_back(pEvent->paths[i]);
 
-	EditorGetCurrentDirectory e;
-	EVENTS.Publish(&e);
+	//EditorGetCurrentDirectory e;
+	//EVENTS.Publish(&e);
 
-	// Create directories / folders / files in the directory
-	for (auto path : paths)
-	{
-		std::filesystem::path pathName = e.path + "\\" + path.filename().string();
-		std::filesystem::copy(path, pathName);
+	//// Create directories / folders / files in the directory
+	//for (auto path : paths)
+	//{
+	//	std::filesystem::path pathName = e.path + "\\" + path.filename().string();
+	//	std::filesystem::copy(path, pathName);
 
-		std::string::size_type i = e.path.find("Assets");
-		if (i != std::string::npos)
-			e.path.erase(i, 7);
-		
-		if(e.path.empty())
-			pathName = path.filename().string();
-		else
-			pathName = e.path + "\\" + path.filename().string();
+	//	std::string::size_type i = e.path.find("Assets");
+	//	if (i != std::string::npos)
+	//		e.path.erase(i, 7);
+	//	
+	//	if(e.path.empty())
+	//		pathName = path.filename().string();
+	//	else
+	//		pathName = e.path + "\\" + path.filename().string();
 
-		if (std::filesystem::is_directory(path))
-		{
-			//FileAddProtocol(pathName.string(), path.filename().string(), "");
-		}
-		else
-		{
-			//FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
-		}
-	}
+	//	if (std::filesystem::is_directory(path))
+	//	{
+	//		//FileAddProtocol(pathName.string(), path.filename().string(), "");
+	//	}
+	//	else
+	//	{
+	//		//FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
+	//	}
+	//}
 }

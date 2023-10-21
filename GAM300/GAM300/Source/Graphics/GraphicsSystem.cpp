@@ -21,11 +21,20 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
+extern std::unordered_map<std::string, Engine::GUID> PRIMITIVES
+{
+	{"Cube", Engine::GUID(0)},
+	{"Sphere", Engine::GUID(1)},
+	{"Capsule", Engine::GUID(2)},
+	{"Line", Engine::GUID(3)},
+	{"Plane", Engine::GUID(4)},
+	{"Segment3D", Engine::GUID(4)},
+};
+
 using GraphicsSystemsPack =
 TemplatePack
 <
 	ShaderManager,
-	SkyboxManager,
 	DebugDraw,
 	Lighting,
 	Renderer
@@ -37,7 +46,6 @@ using GraphicsSystemsPackU =
 TemplatePack
 <
 	ShaderManager,
-	SkyboxManager,
 	DebugDraw,
 	Lighting
 >;
@@ -100,7 +108,7 @@ void GraphicsSystem::Init()
 {
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
-
+	SkyboxManager::Instance().Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 }

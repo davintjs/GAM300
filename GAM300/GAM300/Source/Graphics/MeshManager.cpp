@@ -519,14 +519,14 @@ void MESH_Manager::CreateInstanceCube()
     tempProp.drawType = GL_TRIANGLES;
 
     properties->emplace(std::make_pair(PRIMITIVES["Cube"],tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
-    newMesh.prim = GL_TRIANGLES;
-    newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Cube"]]));
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[PRIMITIVES["Cube"]]);
+    //newMesh.Vaoids.push_back(vaoid);
+    //newMesh.Vboids.push_back(vboid);
+    //newMesh.prim = GL_TRIANGLES;
+    //newMesh.Drawcounts.push_back(36);
+    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Cube"]]));
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[PRIMITIVES["Cube"]]);
 
-    mContainer.emplace(PRIMITIVES["Cube"], newMesh);
+    //mContainer.emplace(PRIMITIVES["Cube"], newMesh);
 }
 
 
@@ -938,7 +938,7 @@ void MESH_Manager::CreateInstanceLine()
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Line"]]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
-    mContainer.emplace(std::string("Line"), newMesh);
+    mContainer.emplace(PRIMITIVES["Line"], newMesh);
 
 }
 

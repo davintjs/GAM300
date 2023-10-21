@@ -123,7 +123,7 @@ public:
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
 	std::unordered_map<Engine::GUID, Mesh> mContainer;
-	std::map<Engine::GUID, InstanceProperties>* properties;
+	std::unordered_map<Engine::GUID, InstanceProperties>* properties;
 
 	//Handle mesh adding here
 	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);

@@ -253,7 +253,8 @@ GLuint Texture_Manager::GetTexture(const fs::path& filePath)
 
 void Texture_Manager::CallbackTextureAssetLoaded(AssetLoadedEvent<TextureAsset>* pEvent)
 {
-      AddTexture(pEvent->assetPath.stem().string().c_str(), pEvent->guid);
+     AddTexture(pEvent->assetPath.string().c_str(), pEvent->guid);
+     PRINT("ADDED TEXTURE\n");
 }
 
 void Texture_Manager::CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>* pEvent)

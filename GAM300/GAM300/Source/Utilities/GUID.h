@@ -38,7 +38,7 @@ namespace Engine
 			return *this;
 		}
 
-		std::string ToHexString()
+		std::string ToHexString() const
 		{
 			std::stringstream hex;
 			hex << std::hex;

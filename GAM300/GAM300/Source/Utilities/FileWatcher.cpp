@@ -20,6 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <unordered_set>
 #include <string>
 
+#include <Core/Events.h>
+
 FileWatcher::FileWatcher()
 {
     THREADS.EnqueueTask([this] {ThreadWork(); });

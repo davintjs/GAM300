@@ -26,16 +26,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Utilities/GUID.h"
 
+#include "Model3d.h"
 
-std::unordered_map<std::string, Engine::GUID> PRIMITIVES
-{
-	{"Cube", Engine::GUID(0)},
-	{"Sphere", Engine::GUID(1)},
-	{"Capsule", Engine::GUID(2)},
-	{"Line", Engine::GUID(3)},
-	{"Plane", Engine::GUID(4)},
-	{"Segment3D", Engine::GUID(4)},
-};
+
+extern std::unordered_map<std::string, Engine::GUID> PRIMITIVES;
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -81,12 +75,10 @@ private:
 	std::vector<GLSLShader> shaders;
 };
 
-ENGINE_SYSTEM(SkyboxManager)
+SINGLETON(SkyboxManager)
 {
 public:
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	// Initialize the skybox of the engine
 	void CreateSkybox(const std::filesystem::path& _name);
@@ -94,7 +86,7 @@ public:
 	void Draw(BaseCamera& _camera);
 
 private:
-	SkyBox* skyBoxModel;
+	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
 
@@ -115,7 +107,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<Engine::GUID, InstanceProperties>* properties;
+	std::unordered_map<Engine::GUID, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -182,7 +174,7 @@ public:
 	bool& IsHDR() { return hdr; }
 
 private:
-	std::map<Engine::GUID, InstanceProperties> properties;
+	std::unordered_map<Engine::GUID, InstanceProperties> properties;
 	float exposure = 1.f;
 	bool hdr = true;
 };

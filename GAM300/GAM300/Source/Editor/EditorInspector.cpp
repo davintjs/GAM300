@@ -96,7 +96,6 @@ void DisplayType(Change& change, const char* name, std::string& val)
     idName += name;
     std::string buffer = val;
     if(ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)){
-        std::cout << val << std::endl;
         EDITOR.History.SetPropertyValue(change, val, buffer);
     }
 }
@@ -138,131 +137,135 @@ void DisplayType(Change& change, const char* name, char*& val)
 template <typename T>
 void DisplayTexturePicker(Change& change, T& Value) {
 
-    using T1 = std::decay_t<decltype(Value)>;
+    //using T1 = std::decay_t<decltype(Value)>;
 
-    ImGui::SameLine();
-    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-    static const std::string AssetDirectory = "Assets";
-    static std::filesystem::path CurrentDirectory = AssetDirectory;
-    static std::string currentFolder = "Assets";
+    //ImGui::SameLine();
+    //ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    //static const std::string AssetDirectory = "Assets";
+    //static std::filesystem::path CurrentDirectory = AssetDirectory;
+    //static std::string currentFolder = "Assets";
 
 
-    if (ImGui::Button("Edit")) {
-        ImGui::OpenPopup("Texture");
-    }
+    //if (ImGui::Button("Edit")) {
+    //    ImGui::OpenPopup("Texture");
+    //}
 
-    //Component Settings window
-    ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+    ////Component Settings window
+    //ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
 
-    if (ImGui::BeginPopup("Texture", win_flags)) {
-        ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
-        // Back button to return to parent directory
-        if (CurrentDirectory != std::filesystem::path(AssetDirectory))
-        {
-            if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
-            {
-                CurrentDirectory = CurrentDirectory.parent_path();
-                currentFolder = CurrentDirectory.string();
-            }
-        }
+    //if (ImGui::BeginPopup("Texture", win_flags)) {
+    //    ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
+    //    // Back button to return to parent directory
+    //    if (CurrentDirectory != std::filesystem::path(AssetDirectory))
+    //    {
+    //        if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
+    //        {
+    //            CurrentDirectory = CurrentDirectory.parent_path();
+    //            currentFolder = CurrentDirectory.string();
+    //        }
+    //    }
 
-        static float padding = 15.f;
-        static float iconsize = 50.f;
-        float cellsize = iconsize + padding;
+    //    static float padding = 15.f;
+    //    static float iconsize = 50.f;
+    //    float cellsize = iconsize + padding;
 
-        float window_width = ImGui::GetContentRegionAvail().x;
-        int columncount = (int)(window_width / cellsize);
-        if (columncount < 1) { columncount = 1; }
+    //    float window_width = ImGui::GetContentRegionAvail().x;
+    //    int columncount = (int)(window_width / cellsize);
+    //    if (columncount < 1) { columncount = 1; }
 
-        ImGui::Columns(columncount, 0, false);
+    //    ImGui::Columns(columncount, 0, false);
 
-        //remove texture icon
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
-        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
+    //    //remove texture icon
+    //    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+    //    size_t id = (size_t)GET_TEXTURE_ID("Cancel_Icon");
+    //    if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
 
-            if constexpr (std::is_same<T, std::string>()) {
-                std::string buf = "";
-                EDITOR.History.SetPropertyValue(change, Value, buf);
-            }
+    //        if constexpr (std::is_same<T, std::string>()) {
+    //            std::string buf = "";
+    //            EDITOR.History.SetPropertyValue(change, Value, buf);
+    //        }
 
-            ImGui::PopStyleColor();
-            ImGui::EndPopup();
-            ImGui::CloseCurrentPopup();
-            return;
-        };
-        ImGui::PopStyleColor();
-        //render file name below icon
-        ImGui::TextWrapped("Remove Texture");
-        ImGui::NextColumn();
+    //        ImGui::PopStyleColor();
+    //        ImGui::EndPopup();
+    //        ImGui::CloseCurrentPopup();
+    //        return;
+    //    };
+    //    ImGui::PopStyleColor();
+    //    //render file name below icon
+    //    ImGui::TextWrapped("Remove Texture");
+    //    ImGui::NextColumn();
 
-        int i = 0;
-        //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
-        {
-            const auto& path = it.path();
-            //if not png or dds file, dont show
-            if ((path.string().find("meta") != std::string::npos)) continue;
+    //    int i = 0;
+    //    //using filesystem to iterate through all folders/files inside the "/Data" directory
+    //    for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
+    //    {
+    //        const auto& path = it.path();
+    //        //if not png or dds file, dont show
+    //        if ((path.extension() == ".meta")) continue;
 
-            ImGui::PushID(i++);
+    //        ImGui::PushID(i++);
 
-            auto relativepath = std::filesystem::relative(path, AssetDirectory);
-            std::string pathStr = relativepath.filename().string();
+    //        auto relativepath = std::filesystem::relative(path, AssetDirectory);
+    //        std::string pathStr = relativepath.filename().string();
 
-            //Draw the file / folder icon based on whether it is a directory or not
-            fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
+    //        //Draw the file / folder icon based on whether it is a directory or not
+    //        Engine::GUID iconID;
+    //        if (it.is_directory())
+    //        {
+    //            GetAssetEvent e{ "Assets/Icons/foldericon.dds" };
+    //            EVENTS.Publish(&e);
+    //            iconID = e.guid;
+    //        }
+    //        else
+    //        {
+    //            auto tex = GET_TEXTURE_ID(path);
+    //            if (tex != UINT_MAX) {
+    //                GetAssetEvent e{ path };
+    //                EVENTS.Publish(&e);
+    //                iconID = e.guid;
+    //            }
+    //            else
+    //            {
+    //                GetAssetEvent e{ "Assets/Icons/fileicon.dds" };
+    //                EVENTS.Publish(&e);
+    //                iconID = e.guid;
+    //            }
+    //        }
 
-            size_t icon_id = 0;
+    //        //render respective file icon textures
+    //        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+    //        GLuint icon_id = TextureManager.GetTexture(iconID);
+    //        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
-            /*auto it2 = filename.begin() + filename.find_first_of(".");
-            filename.erase(it2, filename.end());*/
+    //        ImGui::PopStyleColor();
 
-            std::string filename = "";
+    //        //Change directory into the folder clicked
+    //        if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    //        {
+    //            if (it.is_directory())
+    //            {
+    //                currentFolder = pathStr;
+    //                CurrentDirectory /= path.filename();
+    //            }
+    //        }
 
-            if (!it.is_directory()) {
+    //        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+    //        {
+    //            //update texture
+    //            if constexpr (std::is_same<T, Engine::GUID>()) {
+    //                EDITOR.History.SetPropertyValue(change, Value, iconID);
+    //            }
 
-                //PRINT(filename);
-                auto tex = GET_TEXTURE_ID(path);
+    //        }
 
-                if (tex != UINT_MAX) {
-                    icon = filename;
-                }
-            }
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            icon_id = GET_TEXTURE_ID(icon);
-            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
-
-            ImGui::PopStyleColor();
-
-            //Change directory into the folder clicked
-            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-            {
-                if (it.is_directory())
-                {
-                    currentFolder = pathStr;
-                    CurrentDirectory /= path.filename();
-                }
-            }
-
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-            {
-                //update texture
-                if constexpr (std::is_same<T, std::string>()) {
-                    EDITOR.History.SetPropertyValue(change, Value, icon);
-                }
-
-            }
-
-            //render file name below icon
-            ImGui::TextWrapped(pathStr.c_str());
-            ImGui::NextColumn();
-            ImGui::PopID();
-        }
-        ImGui::Columns(1);
-        ImGui::EndPopup();
-    }
+    //        //render file name below icon
+    //        ImGui::TextWrapped(pathStr.c_str());
+    //        ImGui::NextColumn();
+    //        ImGui::PopID();
+    //    }
+    //    ImGui::Columns(1);
+    //    ImGui::EndPopup();
+    //}
 }
 
 void DisplayType(Change& change, const char* name, Engine::GUID& val)
@@ -273,9 +276,9 @@ void DisplayType(Change& change, const char* name, Engine::GUID& val)
     //Get file name
     GetFilePathEvent e{ val };
     EVENTS.Publish(&e);
-    const std::string& fp = e.filePath.string();
-    DisplayTexturePicker(change, val);
-    ImGui::InputText(idName.c_str(), (char*)fp.c_str(), fp.size(), ImGuiInputTextFlags_ReadOnly);
+    //const std::string& fp = e.filePath.string();
+    //DisplayTexturePicker(change, val);
+    //ImGui::InputText(idName.c_str(), (char*)fp.c_str(), fp.size(), ImGuiInputTextFlags_ReadOnly);
 }
 
 
@@ -652,138 +655,74 @@ void Display_Property(T& comp) {
         ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
         DisplayTexturePicker(newchange, Value);*/
 
-        std::vector<const char*> meshNames;
-        int number = 0;
-        bool found = false;
+        //std::vector<const char*> meshNames;
+        //int number = 0;
+        //bool found = false;
 
-        for (auto& pair : MeshManager.mContainer)
-        {
-            if (pair.first == comp.MeshName)
-                found = true;
-            meshNames.push_back(pair.first.c_str());
-            if (!found)
-            {
-                ++number;
-            }
-        }
+        //for (auto& pair : MeshManager.mContainer)
+        //{
+        //    if (pair.first == comp.meshID)
+        //        found = true;
+        //    meshNames.push_back(pair.first);
+        //    if (!found)
+        //    {
+        //        ++number;
+        //    }
+        //}
 
-        ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5)) {
-            Change change(&comp, "MeshRenderer/MeshName");
-            std::string buf = meshNames[number];
-            EDITOR.History.SetPropertyValue(change, comp.MeshName, buf);
-        }
-        ImGui::PopItemWidth();    
+        //ImGui::PushItemWidth(-1);
+        //if (ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5)) {
+        //    Change change(&comp, "MeshRenderer/MeshName");
+        //    std::string buf = meshNames[number];
+        //    EDITOR.History.SetPropertyValue(change, comp.meshID, buf);
+        //}
+        //ImGui::PopItemWidth();    
         //comp.MeshName = meshNames[number];
     }
     // @joe do the drop down hahaha, idk how to do it
-    if constexpr (std::is_same<T, AudioSource>()) {
-        //Combo field for mesh renderer
-        ImGui::AlignTextToFramePadding();
-        ImGui::TableNextColumn();
-        ImGui::Text("Channel");
-        ImGui::TableNextColumn();
-        int number = (int)comp.channel;
-        ImGui::PushItemWidth(-1);
-        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
-        ImGui::PopItemWidth();
-        comp.channel = static_cast<AudioSource::Channel>(number);
-    }
+    //if constexpr (std::is_same<T, AudioSource>()) {
+    //    //Combo field for mesh renderer
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TableNextColumn();
+    //    ImGui::Text("Channel");
+    //    ImGui::TableNextColumn();
+    //    int number = (int)comp.channel;
+    //    ImGui::PushItemWidth(-1);
+    //    ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
+    //    ImGui::PopItemWidth();
+    //    comp.channel = static_cast<AudioSource::Channel>(number);
+    //}
 
     //std::vector<property::entry> List;
-    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-        {
-            if (!Flags.m_isDontShow){
-                auto entry = property::entry { PropertyName, Data };
-                std::visit([&](auto& Value) {
-                    using T1 = std::decay_t<decltype(Value)>;
+    //property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    //    {
+    //        if (!Flags.m_isDontShow){
+    //            auto entry = property::entry { PropertyName, Data };
+    //            std::visit([&](auto& Value) {
+    //                using T1 = std::decay_t<decltype(Value)>;
 
-                    //Edit name
-                    std::string DisplayName = entry.first;
-                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                    DisplayName.erase(DisplayName.begin(), ++it);
+    //                //Edit name
+    //                std::string DisplayName = entry.first;
+    //                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+    //                DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());   
-                    
-                    Change newchange(&comp, entry.first); 
+    //                ImGui::PushID(entry.first.c_str());   
+    //                
+    //                Change newchange(&comp, entry.first); 
 
-                    //Properties with Texture picker
-                    if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
-                        || DisplayName == "SpriteTexture")
-                    {
-                        //Display<T1>(DisplayName.c_str(), Value);
-                        DisplayTexturePicker(newchange, Value);
-                    }
-                    else { //Normal Properties (int, float, vec3 etc.)
-                        Display<T1>(newchange, DisplayName.c_str(), Value);
-                    }
+    //                //Properties with Texture picker
+    //                Display<T1>(newchange, DisplayName.c_str(), Value);
 
-                    ImGui::PopID();
-                    }
-                , Data);
-                property::set(comp, entry.first.c_str(), Data);
+    //                ImGui::PopID();
+    //                }
+    //            , Data);
+    //            property::set(comp, entry.first.c_str(), Data);
 
-                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            }
-           
-        });
-
-    if constexpr (std::is_same<T, MeshRenderer>())
-    {
-        // Bean: Change this after M1, this is not suppose to be here
-        if (comp.AlbedoTexture != "")
-        {
-            comp.textureID = GET_TEXTURE_ID(comp.AlbedoTexture)
-        }
-        else
-            comp.textureID = 0;
-        if (comp.NormalMap != "")
-        {
-            comp.normalMapID = GET_TEXTURE_ID(comp.NormalMap);
-        }
-        else
-            comp.normalMapID = 0;
-        if (comp.MetallicTexture != "")
-        {
-            comp.MetallicID = GET_TEXTURE_ID(comp.MetallicTexture);
-        }
-        else
-            comp.MetallicID = 0;
-        if (comp.RoughnessTexture != "")
-        {
-            comp.RoughnessID = GET_TEXTURE_ID(comp.RoughnessTexture);
-        }
-        else
-            comp.RoughnessID = 0;
-        if (comp.AoTexture != "")
-        {
-            comp.AoID = GET_TEXTURE_ID(comp.AoTexture);
-        }
-        else
-            comp.AoID = 0;
-
-        if (comp.EmissionTexture != "")
-        {
-            comp.EmissionID = GET_TEXTURE_ID(comp.EmissionTexture);
-        }
-        else
-            comp.EmissionID = 0;
-
-    }
-
-
-    if constexpr (std::is_same<T, SpriteRenderer>())
-    {
-        // Bean: Change this after M1, this is not suppose to be here
-        if (comp.SpriteTexture != "")
-        {
-            comp.spriteTextureID = GET_TEXTURE_ID(comp.SpriteTexture);
-        }
-        else
-            comp.spriteTextureID = 0;
-    }
+    //            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+    //            assert(Flags.m_isScope == false || PropertyName.back() == ']');
+    //        }
+    //       
+    //    });
 }
 
 void DisplayComponent(Script& script)

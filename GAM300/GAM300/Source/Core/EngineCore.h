@@ -82,6 +82,7 @@ public:
 		BEHAVIORTREEBUILDER.Init();
 		AUDIOMANAGER.InitAudioManager();
 		MeshManager.Init();
+		TextureManager.Init();
 		ASSET.Init();
 		AllSystems::Init();
 

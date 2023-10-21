@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AssetTypes.h"
+#include "Core/EventsManager.h"
 
 //Hash table of single component types
 template<typename... Ts>
@@ -23,19 +24,22 @@ struct AllAssetsGroup
 				if (GetAssetType::E<T>() == assetType)
 				{
 					Engine::GUID guid = GetGUID(filePath);
-					if constexpr (std::is_base_of<Asset, T>)
+					if constexpr (std::is_base_of<Asset, T>())
 					{
 						//load data
 						std::ifstream inputFile(filePath.c_str());
 						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
-						std::vector<char> buff(std::istreambuf_iterator<char>(inputFile), {});
+						T& asset{ std::get<AssetsTable<T>>(assets)[guid]};
+						asset.mData.assign(
+							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
 						std::cout << "Done updating file in memory!" << filePath << std::endl;
+						AssetLoadedEvent<T> e{ filePath,guid,asset };
+						EVENTS.Publish(&e);
 						inputFile.close();
-						std::get<AssetsTable<T>>(assets)[guid] = { buff };
 					}
 					else
 					{
-						std::get<AssetsTable<T>>(assets)[guid] = {};
+						std::get<AssetsTable<T>>(assets)[guid];
 					}
 					return true;
 				}
@@ -76,16 +80,16 @@ struct AllAssetsGroup
 				if (GetAssetType::E<T>() == assetType)
 				{
 					Engine::GUID guid = GetGUID(filePath);
-					if constexpr (std::is_base_of<Asset, T>)
+					if constexpr (std::is_base_of<Asset, T>())
 					{
 						T& asset = std::get<AssetsTable<T>>(assets)[guid];
 						//load data
-						std::ifstream inputFile(filePath.c_str());
-						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
-						asset.buff.clear();
-						asset.assign(std::istreambuf_iterator<char>(inputFile));
-						std::cout << "Done updating file in memory!" << filePath << std::endl;
-						inputFile.close();
+						//std::ifstream inputFile(filePath.c_str());
+						//E_ASSERT(inputFile, "Error opening file to update asset in memory!");
+						//asset.mData.clear();
+						//asset.mData.assign({ std::istreambuf_iterator<char>(inputFile) });
+						//std::cout << "Done updating file in memory!" << filePath << std::endl;
+						//inputFile.close();
 					}
 					else
 					{
@@ -106,33 +110,30 @@ struct AllAssetsGroup
 		E_ASSERT(std::filesystem::exists(filePath), "File does not exist, ", filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		std::fstream fs(metaPath);
 		Engine::GUID guid;
-		std::vector<YAML::Node> data;
-		// Load the scene again for linkages
-		data = YAML::LoadAllFromFile(metaPath.string());
-		//Try and see if theres a guid, else assign a guid
-		for (YAML::Node& node : data)
+		if (std::filesystem::exists(metaPath))
 		{
-			YAML::detail::iterator_value kv = *node.begin();
-			if (node["guid"]) // Deserialize guid
+			std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
+			for (YAML::Node& node : data)
 			{
-				guid = kv.second.as<std::string>();
-				fs.close();
-				return guid;
+				YAML::detail::iterator_value kv = *node.begin();
+				if (node["guid"]) // Deserialize guid
+				{
+					guid = Engine::GUID(kv.second.as<std::string>());
+					return guid;
+				}
 			}
 		}
-
 		//Store newly generated guid since it couldnt be found
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "guid" << YAML::Value << guid.ToHexString();
+		std::ofstream fs(metaPath);
 		fs << out.c_str();
 		fs.close();
 
-		// Mark meta files as hidden files
-		std::wstring wideStr = std::wstring(metaPath.begin(), metaPath.end());
-		const wchar_t* fileLPCWSTR = wideStr.c_str();
+		//// Mark meta files as hidden files
+		const wchar_t* fileLPCWSTR = metaPath.wstring().c_str();
 		int attribute = GetFileAttributes(fileLPCWSTR);
 		if ((attribute & FILE_ATTRIBUTE_HIDDEN) == 0)
 		{

@@ -31,6 +31,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Properties.h"
 #include "UUID.h"
+#include "GUID.h"
 
 struct Scene;
 struct Transform;
@@ -53,6 +54,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector3& v);
 
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
+
+// Overload for output for the Emitter specifically for GUID
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v);
 
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
@@ -140,6 +144,25 @@ namespace YAML
             rhs.y = node[1].as<float>();
             rhs.z = node[2].as<float>();
             rhs.w = node[3].as<float>();
+            return true;
+        }
+    };
+
+    template<>
+    struct convert<Engine::GUID>
+    {
+        // Encoding for Vector4 during deserialization
+        static Node encode(const Engine::GUID& rhs)
+        {
+            Node node;
+            node.push_back(rhs.ToHexString());
+            return node;
+        }
+
+        // Decoding for Vector4 during deserialization
+        static bool decode(const Node& node, Engine::GUID& rhs)
+        {
+            rhs = Engine::GUID(node[0].as<std::string>());
             return true;
         }
     };
