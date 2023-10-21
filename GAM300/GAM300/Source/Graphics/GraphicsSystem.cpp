@@ -204,17 +204,16 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	_camera.GetFramebuffer().Unbind();
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_0))
+	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
 	{
 		blooming = !blooming;
 	}
 	bool index = false;
 	if (blooming)
-	{
-		std::cout << "bloomin\n";
-		index = bloom(10, _vao, _vbo, _camera);
+	{*/
+	bool index = bloom(10, _vao, _vbo, _camera);
 
-	}
+	//}
 
 	_camera.GetFramebuffer().Bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
