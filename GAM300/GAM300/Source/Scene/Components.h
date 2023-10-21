@@ -36,6 +36,7 @@ using vec4 = glm::vec4;
 using Quaternion = glm::quat;
 
 struct Entity;
+enum class SHADERTYPE;
 
 extern std::map<std::string, size_t> ComponentTypes;
 
@@ -262,7 +263,11 @@ struct MeshRenderer : Object
 	GLuint AoID = 0;
 	GLuint EmissionID = 0;
 
+	GLuint VAO;
+	GLuint debugVAO;
+
 	bool isInstance = false;
+	SHADERTYPE shaderType = SHADERTYPE::DEFAULT;
 
 	property_vtable();
 };

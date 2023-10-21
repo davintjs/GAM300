@@ -31,19 +31,8 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+using InstanceContainer = std::map<GLuint, InstanceProperties>;
 // Bean: A temp solution to access the shader
-enum SHADERTYPE
-{
-	HDR,
-	PBR,
-	TIR,// Temporary Instance Render
-	TDR,// Temporary Debug Instance Render
-	SKYBOX,
-	BASICLIGHT,
-	AFFECTEDLIGHT,
-	GBUFFER,
-	DEFAULT
-};
 
 ENGINE_SYSTEM(ShaderManager)
 {
@@ -55,7 +44,7 @@ public:
 	// All shaders will be loaded using this function and passed into shaders container
 	void ShaderCompiler(const std::string& _vertPath, const std::string& _fragPath, const std::string& _name);
 
-	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[_type]; }
+	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
 private:
 	std::vector<GLSLShader> shaders;
@@ -132,7 +121,7 @@ public:
 	void Draw();
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource);
+		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
 	//glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin);
 	//Materials Mat);
 
@@ -146,9 +135,10 @@ public:
 
 	void Deferred();
 	
-	unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
+	unsigned int ReturnTextureIdx(InstanceProperties& prop, const GLuint & _id);
+	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
 
-	std::map<std::string, InstanceProperties>& GetInstanceProperties() { return instanceProperties; }
+	InstanceContainer& GetInstanceProperties() { return instanceProperties; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 
 	float& GetExposure() { return exposure; }
@@ -157,7 +147,9 @@ public:
 
 	gBuffer m_gBuffer;
 private:
-	std::map<std::string, InstanceProperties> instanceProperties;
+	InstanceContainer instanceProperties; // <vao, properties>
+	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
+	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
 	float exposure = 1.f;
 	bool hdr = true;

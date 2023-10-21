@@ -43,6 +43,7 @@ void DemoSystem::Init()
 	for (int i = 0; i < 5; ++i) {
 		Entity& instanceEntity = *scene.Add<Entity>();
 		MeshRenderer& instanceRender = *scene.Add<MeshRenderer>(instanceEntity);
+		instanceRender.shaderType = SHADERTYPE::PBR;
 		instanceRender.MeshName = "DamagedHelmet";
 		instanceRender.AlbedoTexture = "Default_albedo";
 		instanceRender.textureID = GET_TEXTURE_ID(instanceRender.AlbedoTexture);
@@ -51,11 +52,10 @@ void DemoSystem::Init()
 		instanceRender.isInstance = true;
 	}
 
-	//entityRender.NormalMap = "Default_normal";
-	//entityRender.normalMapID = GET_TEXTURE_ID(entityRender.NormalMap);
+	for (int i = 0; i < 5; ++i) {
+		Entity& instancedEntity = *scene.Add<Entity>();
 
-	//entityRender.RoughnessTexture = "Default_metalRoughness";
-	//entityRender.RoughnessID = GET_TEXTURE_ID(entityRender.RoughnessTexture);
+	}
 
 	//entityRender.MetallicTexture = "Default_metalRoughness";
 	//entityRender.MetallicID = GET_TEXTURE_ID(entityRender.MetallicTexture);

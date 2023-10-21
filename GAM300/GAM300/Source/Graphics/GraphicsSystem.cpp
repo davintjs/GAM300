@@ -168,7 +168,7 @@ void GraphicsSystem::Update(float dt)
 
 	// Bean: For unbinding framebuffer
 
-	GLSLShader& shader = SHADER.GetShader(HDR);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::HDR);
 	shader.Use();  
 
 	glActiveTexture(GL_TEXTURE0);

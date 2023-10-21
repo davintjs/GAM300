@@ -32,7 +32,7 @@ void SkyboxManager::CreateSkybox(const std::string& _name)
 {
 	skyboxTex = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(_name));
 	skyBoxModel->SkyBoxinit();
-	skyBoxModel->shader = SHADER.GetShader(SKYBOX);
+	skyBoxModel->shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
 }
 
 void SkyboxManager::Draw()
