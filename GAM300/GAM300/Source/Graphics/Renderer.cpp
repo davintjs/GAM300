@@ -207,7 +207,7 @@ void Renderer::Update(float)
 		++i;
 	}
 
-	properties["Line"].iter = 200;
+	properties[PRIMITIVES["Line"]].iter = 200;
 	
 	if (RenderShadow)
 	{

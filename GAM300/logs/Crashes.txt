@@ -1,5 +1,5 @@
-[2023-10-22 11:32:31.606] [Error] [critical] 
+[2023-10-22 11:41:10.581] [Error] [critical] 
 Caused By:	temp
-Info:		Texture creation failed.
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\TextureManager.cpp (Line: 63)
+Info:		Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\TextureManager.cpp (Line: 53)
 
