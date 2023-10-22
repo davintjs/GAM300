@@ -8,6 +8,19 @@
 #include <Properties.h>
 
 #pragma once
+
+static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
+{
+	{"None.geom", Engine::GUID(0)},
+	{"Cube.geom", Engine::GUID(1)},
+	{"Sphere.geom", Engine::GUID(2)},
+	{"Capsule.geom", Engine::GUID(3)},
+	{"Line.geom", Engine::GUID(4)},
+	{"Plane.geom", Engine::GUID(5)},
+	{"Segment3D.geom", Engine::GUID(6)},
+	{"None.dds", Engine::GUID(7)},
+};
+
 // GUID, last file update time, file name, data
 struct FileInfo
 {

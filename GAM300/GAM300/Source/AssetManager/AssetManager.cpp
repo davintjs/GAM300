@@ -33,6 +33,7 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset);
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
+	EVENTS.Subscribe(this, &AssetManager::CallbackGetFilePath);
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
@@ -225,4 +226,10 @@ void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 	//		//FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
 	//	}
 	//}
+}
+
+
+void AssetManager::CallbackGetFilePath(GetFilePathEvent* pEvent)
+{
+	pEvent->filePath = assets.GetFilePath(pEvent->guid);
 }

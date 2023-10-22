@@ -26,8 +26,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Scripting/ScriptFields.h>
 #include <map>
 #include <Utilities/GUID.h>
+#include <AssetManager/AssetTypes.h>
 
 #include <Properties.h>
+
+#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
+#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -265,13 +269,13 @@ property_begin_name(MeshFilter, "MeshFilter"){
 
 struct MeshRenderer : Object
 {
-	Engine::GUID meshID;
-	Engine::GUID AlbedoTexture;
-	Engine::GUID NormalMap;
-	Engine::GUID MetallicTexture;
-	Engine::GUID RoughnessTexture;
-	Engine::GUID AoTexture;
-	Engine::GUID EmissionTexture;
+	Engine::GUID meshID{ DEFAULT_MESH };
+	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
+	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
+	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
+	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
+	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
+	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
 	//Materials mr_Material;
 
 	// Materials stuff below here

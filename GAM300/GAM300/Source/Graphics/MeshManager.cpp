@@ -405,16 +405,16 @@ void MESH_Manager::CreateInstanceCube()
         22, 23, 20
     };
 
-    StoreMeshVertex(PRIMITIVES["Cube"], { -0.5f, 0.5f, -0.5f });
-    StoreMeshVertex(PRIMITIVES["Cube"], { 0.5f, 0.5f, -0.5f });
-    StoreMeshVertex(PRIMITIVES["Cube"], { 0.5f, 0.5f, 0.5f });
-    StoreMeshVertex(PRIMITIVES["Cube"], { -0.5f, 0.5f, 0.5f });
-    StoreMeshIndex (PRIMITIVES["Cube"], 0);
-    StoreMeshIndex (PRIMITIVES["Cube"], 1);
-    StoreMeshIndex (PRIMITIVES["Cube"], 2);
-    StoreMeshIndex (PRIMITIVES["Cube"], 2);
-    StoreMeshIndex (PRIMITIVES["Cube"], 3);
-    StoreMeshIndex (PRIMITIVES["Cube"], 0);
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, -0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, -0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, 0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, 0.5f });
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 1);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 3);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
 
     //// Top Face
     //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
@@ -518,7 +518,7 @@ void MESH_Manager::CreateInstanceCube()
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
 
-    properties->emplace(std::make_pair(PRIMITIVES["Cube"],tempProp));
+    properties->emplace(std::make_pair(DEFAULT_ASSETS["Cube.geom"],tempProp));
     //newMesh.Vaoids.push_back(vaoid);
     //newMesh.Vboids.push_back(vboid);
     //newMesh.prim = GL_TRIANGLES;
@@ -636,18 +636,18 @@ void MESH_Manager::CreateInstanceSphere()
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
-    properties->emplace(std::make_pair(PRIMITIVES["Sphere"], tempProp));
+    properties->emplace(std::make_pair(DEFAULT_ASSETS["Sphere.geom"], tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLE_STRIP;
     newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Sphere"]]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[DEFAULT_ASSETS["Sphere.geom"]]));
 
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[PRIMITIVES["Sphere"]]);
-    mContainer.emplace(PRIMITIVES["Sphere"], newMesh);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[DEFAULT_ASSETS["Sphere.geom"]]);
+    mContainer.emplace(DEFAULT_ASSETS["Sphere.geom"], newMesh);
 
 
 }
@@ -930,15 +930,15 @@ void MESH_Manager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    properties->emplace(std::make_pair(PRIMITIVES["Line"], tempProp));
+    properties->emplace(std::make_pair(DEFAULT_ASSETS["Line.geom"], tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Line"]]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[DEFAULT_ASSETS["Line.geom"]]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
-    mContainer.emplace(PRIMITIVES["Line"], newMesh);
+    mContainer.emplace(DEFAULT_ASSETS["Line.geom"], newMesh);
 
 }
 
@@ -988,14 +988,14 @@ void MESH_Manager::CreateInstanceSegment3D()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
-    properties->emplace(std::make_pair(PRIMITIVES["Segment3D"], tempProp));
+    properties->emplace(std::make_pair(DEFAULT_ASSETS["Segment3D.geom"], tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[PRIMITIVES["Segment3D"]]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[DEFAULT_ASSETS["Segment3D.geom"]]));
 
-    mContainer.emplace(PRIMITIVES["Segment3D"], newMesh);
+    mContainer.emplace(DEFAULT_ASSETS["Segment3D.geom"], newMesh);
 }
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao

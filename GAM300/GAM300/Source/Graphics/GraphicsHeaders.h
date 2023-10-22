@@ -28,9 +28,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Model3d.h"
 
-
-extern std::unordered_map<std::string, Engine::GUID> PRIMITIVES;
-
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define DEBUGDRAW DebugDraw::Instance()

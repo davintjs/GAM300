@@ -67,6 +67,10 @@ private:
 
 	// Get the GUID of the asset using event callbacks
 	void CallbackGetAsset(GetAssetEvent* pEvent);
+
+
+	// Get the Filepath of the asset using event callbacks
+	void CallbackGetFilePath(GetFilePathEvent * pEvent);
 	
 	AllAssets assets{};
 

@@ -17,6 +17,7 @@ namespace Engine
 		GUID(const size_t val)
 		{
 			longInt[1] = val;
+			longInt[0] = 0;
 		}
 		explicit GUID(const std::string& hexString);
 

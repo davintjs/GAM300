@@ -1,5 +1,5 @@
-[2023-10-22 21:48:18.719] [Error] [critical] 
+[2023-10-22 22:32:45.657] [Error] [critical] 
 Caused By:	std::filesystem::exists(filePath)
-Info:		File does not exist,  "Asset//Textures//SkyBox//skybox_default_top.dds"
+Info:		File does not exist,  "Cancel_Icon"
 Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 186)
 

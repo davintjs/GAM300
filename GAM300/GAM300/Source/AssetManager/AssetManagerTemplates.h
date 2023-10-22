@@ -195,13 +195,11 @@ struct AllAssetsGroup
 				YAML::detail::iterator_value kv = *node.begin();
 				if (node["guid"]) // Deserialize guid
 				{
-					PRINT("Found GUID for: ", filePath);
 					guid = Engine::GUID(kv.second.as<std::string>());
 					return guid;
 				}
 			}
 		}
-		PRINT("Generate new GUID for: ", filePath);
 		//Store newly generated guid since it couldnt be found
 		YAML::Emitter out;
 		out << YAML::BeginMap;
@@ -218,6 +216,19 @@ struct AllAssetsGroup
 			SetFileAttributes(fileLPCWSTR, attribute | FILE_ATTRIBUTE_HIDDEN);
 		}
 		return guid;
+	}
+
+	fs::path GetFilePath(const Engine::GUID& guid)
+	{
+		fs::path path;
+		(([&](auto type)
+			{
+				using T = decltype(type);
+				auto& table = std::get<AssetsTable<T>>(assets);
+				if (table.find(guid) != table.end())
+					return table[guid];
+			})(Ts{}), ...);
+		return path;
 	}
 private:
 	std::tuple<AssetsTable<Ts>...> assets;

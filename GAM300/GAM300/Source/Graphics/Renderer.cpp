@@ -207,7 +207,7 @@ void Renderer::Update(float)
 		++i;
 	}
 
-	properties[PRIMITIVES["Line"]].iter = 200;
+	properties[DEFAULT_ASSETS["Line.geom"]].iter = 200;
 	
 	if (RenderShadow)
 	{
@@ -220,7 +220,7 @@ void Renderer::SetupGrid(const int& _num)
 	float spacing = 1.f;
 	float length = _num * spacing * 0.5f;
 
-	properties[PRIMITIVES["Line"]].iter = _num * 2;
+	properties[DEFAULT_ASSETS["Line.geom"]].iter = _num * 2;
 
 	for (int i = 0; i < _num; i++)
 	{
@@ -229,8 +229,8 @@ void Renderer::SetupGrid(const int& _num)
 		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
 		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
 
-		properties[PRIMITIVES["Line"]].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
-		properties[PRIMITIVES["Line"]].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
+		properties[DEFAULT_ASSETS["Line.geom"]].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
+		properties[DEFAULT_ASSETS["Line.geom"]].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
 	}
 }
 
@@ -313,7 +313,7 @@ void Renderer::Draw(BaseCamera& _camera)
 				DrawDebug(prop.debugVAO, prop.iter);
 		}
 
-		if (guid == PRIMITIVES["Line"] && _camera.GetCameraType() == CAMERATYPE::SCENE)
+		if (guid == DEFAULT_ASSETS["Line.geom"] && _camera.GetCameraType() == CAMERATYPE::SCENE)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
