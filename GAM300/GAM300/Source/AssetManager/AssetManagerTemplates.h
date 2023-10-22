@@ -2,6 +2,21 @@
 
 #include "AssetTypes.h"
 #include "Core/EventsManager.h"
+#include <vector>
+
+//Hash table that maps an ID to a pointer
+template <typename T>
+using AssetsTable = std::unordered_map<Engine::GUID, T>;
+
+enum AssetState
+{
+	ASSET_LOADED,
+	ASSET_UPDATED,
+	ASSET_UNLOADED
+};
+
+template <typename T>
+using AssetsBuffer = std::vector<std::pair<AssetState,T*>>;
 
 //Hash table of single component types
 template<typename... Ts>
@@ -30,12 +45,12 @@ struct AllAssetsGroup
 						std::ifstream inputFile(filePath.c_str());
 						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid]};
+						asset.mFilePath = filePath;
 						asset.mData.assign(
 							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
 						std::cout << "Done updating file in memory!" << filePath << std::endl;
 						inputFile.close();
-						AssetLoadedEvent<T> e{ filePath,guid,asset };
-						EVENTS.Publish(&e);
+						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED,&asset));
 					}
 					else
 					{
@@ -105,6 +120,42 @@ struct AllAssetsGroup
 		}
 	}
 
+	void ProcessBuffer()
+	{
+		(([&](auto type) 
+		{
+			using T = decltype(type);
+			auto& buffer{std::get<AssetsBuffer<T>>(assetsBuffer)};
+			for (auto& pair : buffer)
+			{
+				fs::path path{pair.second->mFilePath };
+				switch (pair.first)
+				{
+					case ASSET_LOADED:
+					{
+						AssetLoadedEvent<T> e{ path,GetGUID(path),*pair.second };
+						EVENTS.Publish(&e);
+						break;
+					}
+					case ASSET_UPDATED:
+					{
+						break;
+					}
+					case ASSET_UNLOADED:
+					{
+						break;
+					}
+					default:
+					{
+						E_ASSERT(false, "Invalid asset state");
+						break;
+					}
+				}
+			}
+			buffer.clear();
+		})(Ts{}), ...);
+	}
+
 	Engine::GUID GetGUID(const std::filesystem::path& filePath)
 	{
 		E_ASSERT(std::filesystem::exists(filePath), "File does not exist, ", filePath);
@@ -143,6 +194,7 @@ struct AllAssetsGroup
 	}
 private:
 	std::tuple<AssetsTable<Ts>...> assets;
+	std::tuple<AssetsBuffer<Ts>...> assetsBuffer;
 };
 
 using AllAssets = decltype(AllAssetsGroup(AssetTypes()));

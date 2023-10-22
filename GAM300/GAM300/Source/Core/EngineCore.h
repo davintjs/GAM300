@@ -51,6 +51,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	using AllSystemsPack =
 	TemplatePack
 	<
+		AssetManager,
 		InputSystem,
 		EditorSystem,
 		SceneManager,
@@ -83,7 +84,6 @@ public:
 		AUDIOMANAGER.InitAudioManager();
 		MeshManager.Init();
 		TextureManager.Init();
-		ASSET.Init();
 		AllSystems::Init();
 
 

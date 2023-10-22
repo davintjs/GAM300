@@ -1,5 +1,5 @@
-[2023-10-22 11:41:10.581] [Error] [critical] 
-Caused By:	temp
-Info:		Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\TextureManager.cpp (Line: 53)
+[2023-10-22 20:23:59.679] [Error] [critical] 
+Caused By:	std::filesystem::exists(filePath)
+Info:		File does not exist,  ""
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 160)
 

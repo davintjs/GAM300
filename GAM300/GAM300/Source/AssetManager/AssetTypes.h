@@ -54,15 +54,11 @@ struct Folder : FileInfo
 };
 
 
-struct MeshAsset
+struct MeshAsset : Asset
 {
 	std::vector<glm::vec3> mVertices;
 	std::vector<unsigned int> mIndices;
 };
-
-//Hash table that maps an ID to a pointer
-template <typename T>
-using AssetsTable = std::unordered_map<Engine::GUID,T>;
 
 using AssetTypes = TemplatePack<MeshAsset, TextureAsset, Folder, ScriptAsset, MetaAsset, AudioAsset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));

@@ -30,7 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define ASSET AssetManager::Instance()
 
 namespace fs = std::filesystem;
-SINGLETON(AssetManager)
+ENGINE_SYSTEM(AssetManager)
 {
 public:
 	// Returns the asset data with the given fileName
@@ -44,6 +44,8 @@ public:
 
 	// AssetManager initialization to load assets into memory
 	void Init();
+	void Update(float dt);
+	void Exit();
 private:
 	const std::string AssetPath = "Assets";
 

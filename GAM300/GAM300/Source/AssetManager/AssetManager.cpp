@@ -69,6 +69,19 @@ void AssetManager::LoadAsset(const fs::path& filePath)
 	assets.AddAsset(filePath);
 }
 
+
+void AssetManager::Update(float dt)
+{
+	ACQUIRE_SCOPED_LOCK(Assets);
+	UNREFERENCED_PARAMETER(dt);
+	assets.ProcessBuffer();
+}
+
+void AssetManager::Exit()
+{
+
+}
+
 // Multi-threaded unloading of assets
 void AssetManager::AsyncUnloadAsset(const fs::path& filePath)
 {
