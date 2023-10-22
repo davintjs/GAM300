@@ -54,8 +54,8 @@ struct Object : property::base
 	Engine::UUID UUID () const { return uuid; }
 	//Get euid and uuid as a handle
 	operator Handle() const { return{ euid, uuid }; }
-	property_vtable();
 
+	property_vtable();
 protected:
 	//Allows only scene to change ids (DANGEROUS)
 	Engine::UUID uuid;

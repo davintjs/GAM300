@@ -20,8 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
-
-class Ray3D;
+// Bean: Should not be here and instead be in the rendering system
+#include "BaseCamera.h"
 
 #define GRAPHICS GraphicsSystem::Instance()
 
@@ -31,11 +31,23 @@ public:
 	// Initialize graphics system
 	void Init();
 
-	// update values that is needed to draw
+	// Update values that is needed to draw
 	void Update(float dt);
 
+	// Bunch of comment code in the update loop
+	void OldUpdate();
+
+	// Bind buffers, textures and use shaders
+	void PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo);
+
 	// General draw call
-	void Draw();
+	void Draw(BaseCamera& _camera);
+	
+	// 2D UI draw call
+	void Draw_Screen(BaseCamera& _camera);
+
+	// Reset buffers and instance properities
+	void PostDraw();
 
 	void Exit();
 

@@ -21,8 +21,6 @@ namespace BeanFactory
 {
     public static class InternalCalls
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static float GetDeltaTime();
 
         #region ANIMATION
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -53,11 +51,11 @@ namespace BeanFactory
         #endregion
 
         #region COMPONENT
-/*        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static bool GetActive(Object obj, Type cType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetActive(Object obj, Type cType, bool val);*/
+        internal extern static void SetActive(Object obj, Type cType, bool val);
 
         #endregion
 
@@ -78,7 +76,8 @@ namespace BeanFactory
         internal extern static void DestroyComponent(Component component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong AddComponent(GameObject gameObject, Type componentType);
+        internal extern static T AddComponent<T>(GameObject gameObject, Type componentType);
+        internal static T AddComponent<T>(GameObject gameObject) { return AddComponent<T>(gameObject, typeof(T));}
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static T Get<T>(Object owner, Type objType);

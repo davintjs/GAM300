@@ -19,7 +19,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "InputHandler.h"
-#include "../Graphics/Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 
 
 // ---------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 bool InputHandler::isKeyButtonHolding(int key)
 {
-	//return glfwGetKey(GLFW_Handler::ptr_window, key);
+	//return glfwGetKey(Application::GetWindow(), key);
 	if ( (InputHandler::curr_Key_states[key] == 2) || (InputHandler::curr_Key_states[key] == 1))
 	{
 		return true;
@@ -78,6 +78,8 @@ void InputHandler::copyingCurrStatetoLast()
 
 	prev_mouse_Button_states[0] = mouse_Button_states[0];
 	prev_mouse_Button_states[1] = mouse_Button_states[1];
+	prev_mouse_Button_states[2] = mouse_Button_states[2];
+	//std::cout << "PREV STATE VAL : " << prev_mouse_Button_states[1] << "\n";
 }
 
 
@@ -102,13 +104,31 @@ bool InputHandler::isMouseButtonPressed_L()
 
 bool InputHandler::isMouseButtonPressed_R()
 {
-
+	//std::cout << "entered\n";
 	if (InputHandler::isMouseButtonHolding_R())
 	{
+		InputHandler::setMouseButtonState(1, 1);
 		if (InputHandler::get_Prev_MouseButtonState(1) == 0)
 		{
 			return true;
 		}
+		
+		//std::cout << "here\n";
+
+	}
+	return false;
+}
+
+bool InputHandler::isMouseButtonPressed_M()
+{
+	if (InputHandler::isMouseButtonHolding_M())
+	{
+		InputHandler::setMouseButtonState(2, 1);
+		if (InputHandler::get_Prev_MouseButtonState(2) == 0)
+		{
+			return true;
+		}
+	
 	}
 
 	return false;
@@ -116,21 +136,25 @@ bool InputHandler::isMouseButtonPressed_R()
 
 bool InputHandler::isMouseButtonHolding_L()
 {
-	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_LEFT);
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_LEFT);
 }
 
 
 bool InputHandler::isMouseButtonHolding_R()
 {
-	return glfwGetMouseButton(GLFW_Handler::ptr_window, GLFW_MOUSE_BUTTON_RIGHT);
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT);
 }
 
+bool InputHandler::isMouseButtonHolding_M()
+{
+	return glfwGetMouseButton(Application::GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE);
+}
 
 glm::vec2 InputHandler::getMousePos()
 {
 	double x, y;
-	glfwGetCursorPos(GLFW_Handler::ptr_window, &x, &y);
-	y = GLFW_Handler::height - y;
+	glfwGetCursorPos(Application::GetWindow(), &x, &y);
+	y = Application::GetHeight() - y;
 
 	glm::vec2 X_Y(x, y);
 	return X_Y;
@@ -165,41 +189,13 @@ void InputHandler::mouseReset()
 
 	mouse_Button_states[0] = 0;
 	mouse_Button_states[1] = 0;
+	mouse_Button_states[2] = 0;
 }
 
 
 int InputHandler::getMouseScrollState()
 {
 	return mouseScrollState;
-}
-
-void InputHandler::setFullscreen(bool state)
-{
-	fullscreen = state;
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-	if (fullscreen)// going into fullscreen mode
-	{
-
-		std::cout << "going into fullscreen mode\n";
-		glfwSetWindowMonitor(GLFW_Handler::ptr_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-		glViewport(0, 0, mode->width, mode->height);
-		EditorCam.setViewportSize((float)mode->width, (float) mode->height);
-
-	}
-	else
-	{
-
-		std::cout << "going into windowed mode\n";
-		glfwSetWindowMonitor(GLFW_Handler::ptr_window, nullptr, 0, 30, GLFW_Handler::width, GLFW_Handler::height,
-			mode->refreshRate);
-		glfwSetWindowAttrib(GLFW_Handler::ptr_window, GLFW_DECORATED, GLFW_TRUE);
-		glViewport(0, 0, GLFW_Handler::width, GLFW_Handler::height);
-		EditorCam.setViewportSize((float)GLFW_Handler::width, (float) GLFW_Handler::height);
-
-	}
-
-
 }
 
 bool InputHandler::isMouse_L_DoubleClick()
@@ -237,20 +233,3 @@ int InputHandler::get_Prev_MouseButtonState(int index)
 	return InputHandler::prev_mouse_Button_states[index];
 
 }
-
-
-
-bool InputHandler::isFullscreen()
-{
-	return fullscreen;
-}
-
-
-
-
-
-//void InputHandler::resizeViewport(int width, int height)
-//{
-//	glViewport(0, 0, width, height);
-//
-//}

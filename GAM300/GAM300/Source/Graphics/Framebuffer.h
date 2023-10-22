@@ -18,36 +18,46 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "glslshader.h"
+#include <GL/glew.h>
+#include <glm/vec2.hpp>
+#include "Core/SystemInterface.h"
 
 class Framebuffer
 {
 public:
 
 	// Initialises the framebuffer by creating a frame buffer and binding it to a texture
-	void init();
+	void Init();
+
+	// Reinitialise the framebuffer without deleting
+	void ReInit();
+
+	void Completeness();
 
 	// Deletes the framebuffer and its textures
-	void exit();
+	void Exit();
 
 	// Binds the framebuffer
-	void bind();
+	void Bind();
+
+	// Binds the framebuffer
+	void Bind(const unsigned int& _objectID);
 
 	// Unbinds the framebuffer
-	void unbind();
+	void Unbind();
 
 	// Resizes the framebuffer viewport
-	void resize(GLuint _width, GLuint _height);
+	void Resize(GLuint _width, GLuint _height);
 
 	// Getter and setter for framebuffer size/dimension
-	void set_size(GLuint _width, GLuint _height);
-	glm::vec2 get_size() { return glm::vec2(width, height); }
+	void SetSize(GLuint _width, GLuint _height);
+	glm::vec2 GetSize() { return glm::vec2(width, height); }
 
 	// Getter for color attachment id, used in the editor scene
-	GLuint get_color_attachment_id() const { return colorAttachment; }
+	GLuint GetColorAttachmentId() const { return colorAttachment; }
 
 	// Get the framebuffer id as reference
-	GLuint& get_buffer_object_id() { return frameBufferObjectID; }
+	GLuint& GetBufferObjectId() { return frameBufferObjectID; }
 
 	unsigned int hdrFBO;
 	unsigned int rboDepth;
@@ -62,5 +72,44 @@ private:
 
 	GLuint width = 0, height = 0;
 };
+
+//struct Attachment
+//{
+//
+//};
+//
+//struct TextureAttachment : public Attachment
+//{
+//	GLuint textureID;
+//	GLenum textureTarget;
+//	GLuint mipLevel;
+//	GLuint layer;
+//};
+//
+//struct RenderbufferAttachment : public Attachment
+//{
+//	GLuint renderbufferID;
+//	GLenum renderbufferTarget;
+//};
+//
+//class GLContext
+//{
+//	GLuint readFramebufferBinding;
+//	GLuint drawFramebufferBinding;
+//};
+//
+//struct Framebuffer2
+//{
+//	std::map<GLenum, Attachment> attachments;
+//	GLenum drawBuffers[16] = { GL_COLOR_ATTACHMENT0, GL_NONE };
+//	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
+//};
+//
+//ENGINE_SYSTEM(FramebufferManager)
+//{
+//public:
+//	Framebuffer2 GetFramebufferByTarget(const GLenum& _target);
+//	
+//};
 
 #endif // !FRAMEBUFFER_H

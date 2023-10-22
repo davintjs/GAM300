@@ -15,12 +15,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 
 #include "DemoSystem.h"
+#include "IOManager/InputHandler.h"
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Scene/SceneManager.h"
+#include "AI/NavMeshBuilder.h"
 
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 
@@ -29,7 +31,7 @@ void DemoSystem::Init()
 	//CreateSceneEvent createScene(nullptr);
 	//EVENTS.Publish(&createScene);
 	//Scene& scene = *createScene.scene;
-	MySceneManager.LoadScene("Assets/Scene/M1.scene");
+	MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");	
 	//Entity& testEntity = *scene.Add<Entity>();
 	//MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
 	//AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
@@ -138,6 +140,18 @@ void DemoSystem::Init()
 void DemoSystem::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
+	{
+		if (!NAVMESHBUILDER.GetNavMesh()) // First build
+		{
+			NAVMESHBUILDER.BuildNavMesh(); // Build the NavMesh
+		}
+		else // Rebaking
+		{
+			NAVMESHBUILDER.Exit(); // Clear current NavMesh
+			NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
+		}
+	}
 }
 
 void DemoSystem::Exit()

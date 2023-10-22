@@ -16,7 +16,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "GraphicsHeaders.h"
 
 #include "Scene/SceneManager.h"
-#include "Editor_Camera.h"
+
+extern LightProperties spot_light_stuffs;
+extern LightProperties directional_light_stuffs;
+extern LightProperties point_light_stuffs;
+
 
 void Lighting::Init()
 {
@@ -49,12 +53,14 @@ void Lighting::Update(float)
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
+			point_light_stuffs = Temporary;
 		}
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
-			Temporary.direction = { -0.2f, -1.0f, -0.3f }; // CHANGE
+			Temporary.direction = lightSource.direction; // CHANGE
 
 			directionLightSources.push_back(Temporary);
+			directional_light_stuffs = Temporary;
 		}
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
@@ -62,6 +68,7 @@ void Lighting::Update(float)
 			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
 			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
 			spotLightSources.push_back(Temporary);
+			spot_light_stuffs = Temporary;
 		}
 
 

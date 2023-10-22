@@ -30,6 +30,7 @@ void AssetManager::Init()
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
+	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
 	
 	MeshManager.Init();
 
@@ -113,6 +114,9 @@ void AssetManager::Init()
 			{
 				//this->AsyncLoadAsset(subFilePathMeta, fileName, true);
 				std::string filetype = assetPath/* + ".dds"*/;
+				std::string guid = GetAssetGUID(fileName);
+				while (guid == "")
+					guid = GetAssetGUID(fileName);
 				TextureManager.AddTexture(assetPath.c_str(), GetAssetGUID(fileName));
 
 			}
@@ -240,26 +244,30 @@ const std::vector<char>& AssetManager::GetAssetWithGUID(const std::string& GUID)
 // Get a loaded asset GUID
 std::string AssetManager::GetAssetGUID(const std::string& fileName)
 {
-	std::string data{};
-	auto func =
-		[this, &fileName, &data] // wait if the asset is not loaded yet
+	ACQUIRE_SCOPED_LOCK(Assets);
+	for (const auto& [key, val] : mTotalAssets.mFilesData)
 	{
-		for (const auto& [key, val] : mTotalAssets.mFilesData)
+		if (val.mFileName == fileName)
 		{
-			if (val.mFileName == fileName)
-			{
-				data = key;
-				return true;
-			}
+			return key;
 		}
-		return false;
-	};
-	ACQUIRE_UNIQUE_LOCK
-	(
-		Assets, func
-	);
+	}
+	return "";
+}
 
-	return data;
+std::unordered_map<std::string, MeshAsset>& AssetManager::GetMeshAsset()
+{
+	return mTotalAssets.mMeshesAsset;
+}
+
+void AssetManager::StoreMeshVertex(const std::string& mKey, const glm::vec3& mVertex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mVertices.push_back(mVertex);
+}
+
+void AssetManager::StoreMeshIndex(const std::string& mKey, const int& mIndex)
+{
+	mTotalAssets.mMeshesAsset[mKey].mIndices.push_back(mIndex);
 }
 
 std::string AssetManager::GenerateGUID(const std::string& fileName)
@@ -523,4 +531,39 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
 {
 	pEvent->guid = GetAssetGUID(pEvent->fileName);
+}
+
+void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
+{
+	std::list<std::filesystem::path> paths;
+	for (int i = 0; i < pEvent->pathCount; i++)
+		paths.push_back(pEvent->paths[i]);
+
+	EditorGetCurrentDirectory e;
+	EVENTS.Publish(&e);
+
+	// Create directories / folders / files in the directory
+	for (auto path : paths)
+	{
+		std::filesystem::path pathName = e.path + "\\" + path.filename().string();
+		std::filesystem::copy(path, pathName);
+
+		std::string::size_type i = e.path.find("Assets");
+		if (i != std::string::npos)
+			e.path.erase(i, 7);
+		
+		if(e.path.empty())
+			pathName = path.filename().string();
+		else
+			pathName = e.path + "\\" + path.filename().string();
+
+		if (std::filesystem::is_directory(path))
+		{
+			FileAddProtocol(pathName.string(), path.filename().string(), "");
+		}
+		else
+		{
+			FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
+		}
+	}
 }

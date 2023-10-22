@@ -61,9 +61,50 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())
 		{
-			//Cant find
+			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
+			{
+				//Script
+				E_ASSERT(false,"Getting scripts not implemented yet!");
+				return nullptr;
+			}
+			else
+			{
+				//Cant find
+				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
+				return nullptr;
+			}
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
+		addr += 8;
+		return reinterpret_cast<void*>(addr);
+	}
+
+	//Gets object that entity has
+	static void* AddComponent(Entity* pEntity, MonoReflectionType* componentType)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+
+		if (pair == monoComponentToType.end())
+		{
+			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
+			{
+				//Script
+				std::string scriptName = mono_type_get_name(mType);
+				size_t offset = scriptName.find_last_of(".");
+				if (offset != std::string::npos)
+					scriptName = scriptName.substr(offset + 1);
+				//Get Mono Script instead
+				return MySceneManager.GetCurrentScene().Add<Script>(*pEntity,scriptName.c_str());
+			}
+			else
+			{
+				//Cant find
+				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
+				return nullptr;
+			}
+		}
+		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
 		addr += 8;
 		return reinterpret_cast<void*>(addr);
 	}
@@ -117,6 +158,55 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return -1;
 	}
 
+	static bool GetActive(void* pObject, MonoReflectionType* componentType)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+		Scene& scene = MySceneManager.GetCurrentScene();
+		if (pair == monoComponentToType.end())
+		{
+			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
+			{
+				Handle handle = SCRIPTING.GetScriptHandle((MonoObject*)pObject);
+				return scene.IsActive<Script>(handle);
+			}
+			else
+			{
+				//std::string name = mono_type_get_name(mType);
+				//CONSOLE_ERROR(name, "is not a valid component!");
+				return false;
+			}
+		}
+		size_t addr = reinterpret_cast<size_t>(pObject);
+		addr -= 8;
+		return scene.GetActive(pair->second,reinterpret_cast<void*>(addr));
+	}
+
+	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
+	{
+		MonoType* mType = mono_reflection_type_get_type(componentType);
+		auto pair = monoComponentToType.find(mType);
+		Scene& scene = MySceneManager.GetCurrentScene();
+		if (pair == monoComponentToType.end())
+		{
+			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
+			{
+				Handle handle = SCRIPTING.GetScriptHandle((MonoObject*)pObject);
+				scene.SetActive<Script>(handle, val);
+				return;
+			}
+			else
+			{
+				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
+				return;
+			}
+		}
+		size_t addr = reinterpret_cast<size_t>(pObject);
+		addr -= 8;
+		Scene::SetActiveHelper helper{ reinterpret_cast<void*>(addr),val };
+		return scene.SetActive(pair->second, &helper);
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -167,5 +257,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(Get);
 		Register(GetLayer);
 		Register(GetLayerName);
+		Register(GetActive);
+		Register(SetActive);
+		Register(AddComponent);
 	}
 #endif // !SCRIPT_WRAPPERS_H

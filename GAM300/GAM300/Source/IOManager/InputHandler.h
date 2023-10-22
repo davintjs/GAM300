@@ -17,8 +17,8 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma once
 
-#include "IOManager/Handler_GLFW.h"
-
+#include "AppEntry/Application.h"
+#include <glm/vec2.hpp>
 
 #define MAX_KEY_COUNT 348
 
@@ -56,22 +56,21 @@ public:
 	
 	// Getter for Mouse right button Pressed
 	static bool isMouseButtonPressed_R();
+	
+	// Getter for Mouse middle button Pressed
+	static bool isMouseButtonPressed_M();
 
 	// Getter for Mouse left button holding
 	static bool isMouseButtonHolding_L();
 
-	// Getter for Mouse right button Pressed
+	// Getter for Mouse right button Holding
 	static bool isMouseButtonHolding_R();
 
+	// Getter for Mouse middle button Holding
+	static bool isMouseButtonHolding_M();
 
 	// Getter for Mouse coordinate (screen space)
 	static glm::vec2 getMousePos(); // < X , Y >
-
-	// Setter for isFullscreen
-	static void setFullscreen(bool);
-
-	// Getter for isFullscreen
-	static bool isFullscreen();
 
 	// Getter for mouse x coordinate
 	static double getMouseX();
@@ -127,13 +126,6 @@ private:
 	
 	
 	inline static int mouseScrollState = 0;
-	inline static int mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
-	inline static int prev_mouse_Button_states[2];// 0 (Release) , 1 (Pressed), 2 Hold
-
-
-
-
-	inline static bool fullscreen;
-
-	
+	inline static int mouse_Button_states[3]{ 0 };// 0 (Release) , 1 (Pressed), 2 Hold
+	inline static int prev_mouse_Button_states[3]{ 0 };// 0 (Release) , 1 (Pressed), 2 Hold
 };

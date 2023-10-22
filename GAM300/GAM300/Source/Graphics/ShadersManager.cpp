@@ -23,35 +23,49 @@ void ShaderManager::Init()
 	// Bean: A temporary solution for now
 	std::string vertexPath = shaderPath + "/HDR.vert";
 	std::string fragmentPath = shaderPath + "/HDR.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "HDR SHADER");
+	std::string geometryPath;
+	ShaderCompiler("HDR SHADER", vertexPath, fragmentPath );
 
 	vertexPath = shaderPath + "/PBR.vert";
 	fragmentPath = shaderPath + "/PBR.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "PBR SHADER");
+	ShaderCompiler("PBR SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/InstancedRender.vert";
 	fragmentPath = shaderPath + "/InstancedRender.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "Temp Instance SHADER");
+	ShaderCompiler("Temp Instance SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/InstancedDebugRender.vert";
 	fragmentPath = shaderPath + "/InstancedDebugRender.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "Temp Debug Instance SHADER");
+	ShaderCompiler("Temp Debug Instance SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/Skybox.vert";
 	fragmentPath = shaderPath + "/Skybox.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "Skybox SHADER");
+	ShaderCompiler("Skybox SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/BasicLighting.vert";
 	fragmentPath = shaderPath + "/BasicLighting.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "BasicLighting SHADER");
+	ShaderCompiler("BasicLighting SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/LightAffected.vert";
 	fragmentPath = shaderPath + "/LightAffected.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "LightAffected SHADER");
+	ShaderCompiler("LightAffected SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/Shadow.vert";
 	fragmentPath = shaderPath + "/Shadow.frag";
-	ShaderCompiler(vertexPath, fragmentPath, "Shadow SHADER");
+	ShaderCompiler("Shadow SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/PointShadow.vert";
+	fragmentPath = shaderPath + "/PointShadow.frag";
+	geometryPath = shaderPath + "/PointShadow.geom";
+	ShaderCompiler("Point SHADER", vertexPath, fragmentPath, geometryPath);
+
+	vertexPath = shaderPath + "/UIScreenSpace.vert";
+	fragmentPath = shaderPath + "/UIScreenSpace.frag";
+	ShaderCompiler("UI SCREEN SHADER", vertexPath, fragmentPath);
+	
+	vertexPath = shaderPath + "/UIWorldSpace.vert";
+	fragmentPath = shaderPath + "/UIWorldSpace.frag";
+	ShaderCompiler("UI WORLD SHADER", vertexPath, fragmentPath);
 
 }
 
@@ -65,7 +79,8 @@ void ShaderManager::Exit()
 
 }
 
-void ShaderManager::ShaderCompiler(const std::string& _vertPath, const std::string& _fragPath, const std::string& _name)
+void ShaderManager::ShaderCompiler(const std::string& _name, const std::string& _vertPath, 
+	const std::string& _fragPath, const std::string& _geometryPath)
 {
 	GLSLShader shader;
 	std::vector<std::pair<GLenum, std::string>> shdr_files;
@@ -78,6 +93,15 @@ void ShaderManager::ShaderCompiler(const std::string& _vertPath, const std::stri
 	shdr_files.emplace_back(std::make_pair(
 		GL_FRAGMENT_SHADER,
 		_fragPath));
+
+	if (_geometryPath != "")
+	{
+		shdr_files.emplace_back(std::make_pair(
+			GL_GEOMETRY_SHADER,
+			_geometryPath));
+	}
+	else
+
 
 	PRINT(_name, '\n');
 	shader.CompileLinkValidate(shdr_files);

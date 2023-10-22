@@ -17,10 +17,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define EVENTS_H
 
 #include "Utilities/UUID.h"
+#include <glm/vec2.hpp>
+
 struct Entity;
 struct Scene;
 struct Script;
 struct Field;
+struct Rigidbody;
+struct ImGuiTextBuffer;
 
 struct IEvent
 {
@@ -28,9 +32,9 @@ protected:
 	virtual ~IEvent() {};
 };
 
-struct QuitEngineEvent : IEvent
+struct ApplicationExitEvent : IEvent
 {
-	QuitEngineEvent() {};
+	ApplicationExitEvent() {};
 };
 
 struct CreateSceneEvent : IEvent
@@ -85,9 +89,17 @@ struct SceneStopEvent : IEvent {};
 
 struct SceneCleanupEvent : IEvent {};
 
+struct ScenePostCleanupEvent : IEvent {};
+
 struct SelectedEntityEvent : IEvent
 {
 	SelectedEntityEvent(Entity* _pEntity) : pEntity{ _pEntity }{}
+	Entity* pEntity;
+};
+
+struct GetSelectedEntityEvent : IEvent
+{
+	GetSelectedEntityEvent() {}
 	Entity* pEntity;
 };
 
@@ -143,6 +155,64 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+struct DropAssetsEvent : IEvent
+{
+	DropAssetsEvent(const int& _pathCount, const char* _paths[]) : pathCount{ _pathCount }, paths{ _paths } {}
+	int pathCount;
+	const char** paths;
+};
+
+struct ContactAddedEvent : IEvent
+{
+	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+
+};
+struct ContactRemovedEvent : IEvent
+{
+	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
+
+#pragma region EDITOR STUFF
+
+struct EditorWindowEvent : IEvent
+{
+	EditorWindowEvent(const std::string& _name) : name{ _name } {};
+	bool isOpened = false;
+	bool isHovered = false;
+	bool isFocused = false;
+	std::string name;
+};
+
+struct EditorPanCameraEvent : IEvent
+{
+	EditorPanCameraEvent(const bool& _pan) : isPanning{ _pan } {}
+	bool isPanning = false;
+};
+
+struct EditorUpdateSceneGeometryEvent : IEvent
+{
+	EditorUpdateSceneGeometryEvent(const glm::vec2& _position, const glm::vec2& _dimension) : position{ _position }, dimension{ _dimension } {}
+	glm::vec2 position;
+	glm::vec2 dimension;
+};
+
+struct EditorSetGameCameraEvent : IEvent
+{
+	EditorSetGameCameraEvent(const unsigned int& _targetDisplay) : targetDisplay{ _targetDisplay } {}
+	unsigned int targetDisplay;
+};
+
+struct EditorGetCurrentDirectory : IEvent
+{
+	EditorGetCurrentDirectory() {}
+	std::string path;
+};
+
+#pragma endregion
 
 //
 //template <typename T>

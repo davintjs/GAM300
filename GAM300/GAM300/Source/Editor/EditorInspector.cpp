@@ -17,7 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 
 #include "Precompiled.h"
-
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/Scene.h"
@@ -27,7 +26,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/MeshManager.h"
 #include <variant>
 #include "PropertyConfig.h"
-#include "Utilities./ThreadPool.h"
+#include "Utilities/ThreadPool.h"
+#include "Scene/Identifiers.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -40,6 +40,10 @@ ImGuiTableFlags_NoBordersInBody |
 ImGuiTableFlags_NoSavedSettings |
 ImGuiTableFlags_SizingStretchProp;
 
+bool referenceChanged = false;
+Object* previousReference = nullptr;
+Object* newReference = nullptr;
+std::string refFieldName{};
 bool isAddingReference = false;
 size_t editedContainer{};
 
@@ -48,56 +52,88 @@ void Display(const char* name, T& val);
 
 // DisplayType contains overloads that display the respective fields based on the type passed into the function
 template <typename T>
+void DisplayType(Change& change, const char* name, T& val)
+{
+    UNREFERENCED_PARAMETER(change);
+    UNREFERENCED_PARAMETER(name);
+    UNREFERENCED_PARAMETER(val);
+}
+
+template <typename T>
 void DisplayType(const char* name, T& val)
 {
     UNREFERENCED_PARAMETER(name);
     UNREFERENCED_PARAMETER(val);
 }
 
-void DisplayType(const char* name, bool& val)
+void DisplayType(Change& change, const char* name, bool& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
-    ImGui::Checkbox(idName.c_str(), &val);
+    bool buf = val;
+    if (ImGui::Checkbox(idName.c_str(), &buf)) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
+//for texture picker strings (read-only)
 void DisplayType(const char* name, std::string& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
-    static char buffer[2048];
-    strcpy_s(buffer, val.c_str());
-    ImGui::InputText(idName.c_str(), buffer,2048);
+    std::string buffer = val;
+    ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
 }
 
-void DisplayType(const char* name, int& val)
+void DisplayType(Change& change, const char* name, std::string& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
-    ImGui::DragInt(idName.c_str(), &val);
+    std::string buffer = val;
+    if(ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)){
+        std::cout << val << std::endl;
+        EDITOR.History.SetPropertyValue(change, val, buffer);
+    }
+}
+
+void DisplayType(Change& change, const char* name, int& val)
+{
+    static std::string idName{};
+    idName = "##";
+    idName += name;
+    int buf = val;
+    if (ImGui::DragInt(idName.c_str(), &buf)) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
 template <size_t SZ>
-void DisplayType(const char* name, char(&val)[SZ])
+void DisplayType(Change& change, const char* name, char(&val)[SZ])
 {
     static std::string idName{};
     idName = "##";
     idName += name;
-    ImGui::InputTextMultiline(idName.c_str(), val, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
+    char buf[SZ] = val;
+    if (ImGui::InputTextMultiline(idName.c_str(), buf, SZ, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16))) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
-void DisplayType(const char* name, char*& val)
+void DisplayType(Change& change, const char* name, char*& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
-    ImGui::InputTextMultiline(idName.c_str(), val, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16));
+    char* buf = val; 
+    if (ImGui::InputTextMultiline(idName.c_str(), buf, TEXT_BUFFER_SIZE, ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16))) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
-void DisplayType(const char* name, float& val)
+bool DisplayType(const char* name, float& val)
 {
     static float temp{};
     static std::string idName{};
@@ -112,80 +148,121 @@ void DisplayType(const char* name, float& val)
         idName += name;
         cIdName = idName.c_str();
     }
-    ImGui::DragFloat(cIdName, &val, 0.15f);
+    return ImGui::DragFloat(cIdName, &val, 0.15f);
 }
 
-void DisplayType(const char* name, double& val)
+void DisplayType(Change& change, const char* name, float& val)
 {
+    static float temp{};
     static std::string idName{};
-    idName = "##";
-    idName += name;
-    float temp{ (float)val };
-    ImGui::DragFloat(idName.c_str(), &temp, 0.15f);
-    val = temp;
+    const char* cIdName{};
+    if (name[0] == '#' && name[1] == '#')
+    {
+        cIdName = name;
+    }
+    else
+    {
+        idName = "##";
+        idName += name;
+        cIdName = idName.c_str();
+    }
+    //ImGui::DragFloat(cIdName, &val, 0.15f);
+
+    float buf = val;
+    if (ImGui::DragFloat(cIdName, &buf)) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
-void DisplayType(const char* name, Vector3& val)
+//void DisplayType(Change& change, const char* name, double& val)
+//{
+//    static std::string idName{};
+//    idName = "##";
+//    idName += name;
+//    float buf{ (float)val };
+//    if (ImGui::DragFloat(idName.c_str(), &buf, 0.15f)) {
+//        double temp = buf;
+//        /EDITOR.History.SetPropertyValue(change, val, temp);
+//    }
+//}
+
+void DisplayType(Change& change, const char* name, Vector3& val)
 {
     static float temp{};
     static std::string idName{};
     idName = "##";
     idName += name;
 
+    Vector3 buf = val;
+    bool changed = false;
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
         ImGui::TableNextColumn();
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.x);
+        changed = DisplayType(idName.c_str(), buf.x);
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.y);
+        if(!changed && DisplayType(idName.c_str(), buf.y))
+            changed = true;
 
         ImGui::TableNextColumn();
         idName.back() = 'Z';
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.z);
+        if(!changed && DisplayType(idName.c_str(), buf.z))
+            changed = true;
+
         ImGui::EndTable();
+    }
+    if (changed) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
     }
 }
 
-void DisplayType(const char* name, Vector4& val)
+void DisplayType(Change& change, const char* name, Vector4& val)
 {
     static float temp{};
     static std::string idName{};
     idName = "##";
     idName += name;
-    
-    ImGui::ColorEdit4("MyColor##4", (float*)&val, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV);
+    Vector4 buf = val;
+    if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV)) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }
 }
 
-void DisplayType(const char* name, Vector2& val)
+void DisplayType(Change& change, const char* name, Vector2& val)
 {
     static float temp{};
     static std::string idName{};
     idName = "##";
     idName += name;
+    bool changed = false;
+    Vector2 buf = val;
     if (ImGui::BeginTable("Vector2", 2, windowFlags))
     {
         ImGui::TableNextColumn();
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.x);
+        changed = DisplayType(idName.c_str(), buf.x);
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        DisplayType(idName.c_str(), val.y);
+
+        if (!changed && DisplayType(idName.c_str(), buf.y))
+            changed = true;
+
+        if (changed)
+            //EDITOR.History.SetPropertyValue(change, val, buf);
 
         ImGui::EndTable();
     }
 }
-
 
 template <typename T>
 void AddReferencePanel(T*& container)
@@ -226,6 +303,12 @@ void AddReferencePanel(T*& container)
             }
             if (filter.PassFilter(tag.name.c_str()) && ImGui::Button(buttonName.c_str(), buttonSize))
             {
+                //if reference is changed, add it to reference buffer
+                if (container != &object) {
+                    previousReference = container;
+                    newReference = &object;
+                    referenceChanged = true;
+                }
                 editedContainer = 0;
                 container = &object;
             }
@@ -242,11 +325,11 @@ GENERIC_RECURSIVE
 (
     void, 
     AddReferencePanel, 
-    AddReferencePanel(((Field*)pObject)->Get<T*>())
+    AddReferencePanel(((Field*)pObject )->Get<T*>())
 )
 
 template <typename T>
-void DisplayType(const char* name, T*& container, const char* altName = nullptr)
+void DisplayType(Change& change, const char* name, T*& container, const char* altName = nullptr)
 {
     UNREFERENCED_PARAMETER(name);
     if constexpr (AllObjectTypes::Has<T>())
@@ -296,7 +379,7 @@ void DisplayType(const char* name, T*& container, const char* altName = nullptr)
 }
 
 template <typename T, typename... Ts>
-void DisplayField(const char* name, Field& field)
+void DisplayField(Change& change, const char* name, Field& field)
 {
     if (GetFieldType::E<T>() == field.fType)
     {
@@ -305,34 +388,53 @@ void DisplayField(const char* name, Field& field)
             T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
-                DisplayType(name, value,field.typeName.c_str());
+                DisplayType(change, name, value, field.typeName.c_str());
             }
             else
             {
-                DisplayType(name, value);
+
+                DisplayType(change, name, value);
             }
         }
         else
         {
-            DisplayType(name, field.Get<T>());
+            if constexpr (std::is_same_v<T, char*>)
+            {
+                char* str = (char*)field.data;
+                std::string val = str;
+                DisplayType(change, name, val);
+                if (val.size() >= TEXT_BUFFER_SIZE - 1)
+                {
+                    memcpy(str, val.data(), TEXT_BUFFER_SIZE - 1);
+                    str[TEXT_BUFFER_SIZE - 1] = 0;
+                }
+                else
+                {
+                    strcpy(str, val.data());
+                }
+            }
+            else
+            {
+                DisplayType(change,name, field.Get<T>());
+            }
         }
         return;
     }
     if constexpr (sizeof...(Ts) != 0)
     {
-        DisplayField<Ts...>(name, field);
+        DisplayField<Ts...>(change, name, field);
     }
 }
 
 template <typename T, typename... Ts>
-void DisplayField(const char* name, Field& field, TemplatePack<T,Ts...>)
+void DisplayField(Change& change, const char* name, Field& field, TemplatePack<T,Ts...>)
 {
-    DisplayField<T,Ts...>(name,field);
+    DisplayField<T,Ts...>(change, name,field);
 }
 
-void DisplayType(const char* name, Field& val)
+void DisplayType(Change& change, const char* name, Field& val)
 {
-    DisplayField(name, val, AllFieldTypes());
+    DisplayField(change, name, val, AllFieldTypes());
 }
 
 template <typename T>
@@ -345,6 +447,16 @@ void Display(const char* name, T& val)
     DisplayType(name, val);
 }
 
+template <typename T>
+void Display(Change& change, const char* name, T& val)
+{
+    ImGui::AlignTextToFramePadding();
+    ImGui::TableNextColumn();
+    ImGui::Text(name);
+    ImGui::TableNextColumn();
+    DisplayType(change, name, val);
+}
+
 void Display(const char* string)
 {
     ImGui::TableNextColumn();
@@ -354,7 +466,7 @@ void Display(const char* string)
 
 //Function to display and edit textures of a given property.
 template <typename T> 
-void DisplayTexturePicker(T& Value) {
+void DisplayTexturePicker(Change& change, T& Value) {
 
     using T1 = std::decay_t<decltype(Value)>;
 
@@ -400,7 +512,8 @@ void DisplayTexturePicker(T& Value) {
         if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
 
             if constexpr (std::is_same<T, std::string>()) {
-                Value = "";
+                std::string buf = "";
+                EDITOR.History.SetPropertyValue(change, Value, buf);
             }
             
             ImGui::PopStyleColor();
@@ -479,7 +592,7 @@ void DisplayTexturePicker(T& Value) {
             {
                 //update texture
                 if constexpr (std::is_same<T, std::string>()) {
-                    Value = icon;
+                    EDITOR.History.SetPropertyValue(change, Value, icon);
                 }
                 
             }
@@ -494,18 +607,48 @@ void DisplayTexturePicker(T& Value) {
     }
 }
 
+template <typename T>
+void DisplayLightTypes(Change& change, T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Type");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Spot"); layers.push_back("Directional"); layers.push_back("Point");
+        int index = value;
+        ImGui::PushItemWidth(100.f);
+        if (ImGui::Combo("##LightType", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
     if constexpr (std::is_same<T, MeshRenderer>()) {
+
         //Combo field for mesh renderer
         ImGui::AlignTextToFramePadding();
         ImGui::TableNextColumn();
         ImGui::Text("MeshName");
         ImGui::TableNextColumn();
+        /*std::string meshname = comp.MeshName;
+        std::string buffer;
+        ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
+        DisplayTexturePicker(newchange, Value);*/
+
         std::vector<const char*> meshNames;
         int number = 0;
         bool found = false;
+
         for (auto& pair : MeshManager.mContainer)
         {
             if (pair.first == comp.MeshName)
@@ -516,10 +659,15 @@ void Display_Property(T& comp) {
                 ++number;
             }
         }
+
         ImGui::PushItemWidth(-1);
-        ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5);
-        ImGui::PopItemWidth();
-        comp.MeshName = meshNames[number];
+        if (ImGui::Combo("Mesh Name", &number, meshNames.data(), (int)meshNames.size(), 5)) {
+            Change change(&comp, "MeshRenderer/MeshName");
+            std::string buf = meshNames[number];
+            EDITOR.History.SetPropertyValue(change, comp.MeshName, buf);
+        }
+        ImGui::PopItemWidth();    
+        //comp.MeshName = meshNames[number];
     }
     // @joe do the drop down hahaha, idk how to do it
     if constexpr (std::is_same<T, AudioSource>()) {
@@ -528,11 +676,9 @@ void Display_Property(T& comp) {
         ImGui::TableNextColumn();
         ImGui::Text("Channel");
         ImGui::TableNextColumn();
-        static int number = 0;
+        int number = (int)comp.channel;
         ImGui::PushItemWidth(-1);
-        if (ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4)) {
-            std::cout << number << std::endl;
-        }
+        ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
         ImGui::PopItemWidth();
         comp.channel = static_cast<AudioSource::Channel>(number);
     }
@@ -550,14 +696,20 @@ void Display_Property(T& comp) {
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());
-                    Display<T1>(DisplayName.c_str(), Value);
+                    ImGui::PushID(entry.first.c_str());   
+                    
+                    Change newchange(&comp, entry.first); 
 
-                    //temporary implementation for texture picker
+                    //Properties with Texture picker
                     if (DisplayName == "AlbedoTexture" || DisplayName == "NormalMap" || DisplayName == "MetallicTexture"
-                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture")
+                        || DisplayName == "RoughnessTexture" || DisplayName == "AoTexture"|| DisplayName == "EmissionTexture"
+                        || DisplayName == "SpriteTexture")
                     {
-                        DisplayTexturePicker(Value);
+                        Display<T1>(DisplayName.c_str(), Value);
+                        DisplayTexturePicker(newchange, Value);
+                    }
+                    else { //Normal Properties (int, float, vec3 etc.)
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
                     }
 
                     ImGui::PopID();
@@ -567,7 +719,6 @@ void Display_Property(T& comp) {
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
                 assert(Flags.m_isScope == false || PropertyName.back() == ']');
-                //List.push_back(property::entry { PropertyName, Data });
             }
            
         });
@@ -614,23 +765,36 @@ void Display_Property(T& comp) {
             comp.EmissionID = 0;
 
     }
+
+
+    if constexpr (std::is_same<T, SpriteRenderer>())
+    {
+        // Bean: Change this after M1, this is not suppose to be here
+        if (comp.SpriteTexture != "")
+        {
+            comp.spriteTextureID = GET_TEXTURE_ID(comp.SpriteTexture);
+        }
+        else
+            comp.spriteTextureID = 0;
+    }
 }
 
 void DisplayComponent(Script& script)
 {
-    ACQUIRE_SCOPED_LOCK(Mono);
     static char buffer[2048]{};
     ScriptGetFieldNamesEvent getFieldNamesEvent{script};
     EVENTS.Publish(&getFieldNamesEvent);
     for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
     {
         const char* fieldName = getFieldNamesEvent.pStart[i];
-        Field field{ AllFieldTypes::Size(),buffer };
+        Field field{ AllFieldTypes::Size(),2048, buffer};
         ScriptGetFieldEvent getFieldEvent{script,fieldName,field};
         EVENTS.Publish(&getFieldEvent);
         if (field.fType < AllFieldTypes::Size())
         {
-            Display(fieldName, field);
+            std::string fieldproperty = "Script/" + std::string(fieldName);
+            Change change(&script, fieldproperty);
+            Display(change, fieldName, field);
             if (isAddingReference)
             {
                 //Hash
@@ -640,11 +804,45 @@ void DisplayComponent(Script& script)
             if (editedContainer == (script.UUID() ^ i))
             {
                 AddReferencePanel(field.fType, &field);
+                //add reference change to undo stack
+                if (referenceChanged) {
+                    Change change(&script, fieldName);
+                    EDITOR.History.AddReferenceChange(change, previousReference, newReference);
+                    referenceChanged = false;
+                }
             }
             ScriptSetFieldEvent setFieldEvent{ script,fieldName,field};
             EVENTS.Publish(&setFieldEvent);
         }
         
+    }
+}
+
+void DisplayLightProperties(LightSource& source) {
+    Change lighttypes(&source, "LightSource/lightType");
+    DisplayLightTypes(lighttypes, source.lightType);
+    
+    Change intensity(&source, "LightSource/Intensity");
+    Display<float>(intensity, "Intensity", source.intensity);
+
+    Change color(&source, "LightSource/Color");
+    Display<Vector3>(color, "Color", source.lightingColor);
+
+    Change lightpos(&source, "LightSource/lightpos");
+    Change lightdir(&source, "LightSource/Direction");
+    Change innercutoff(&source, "LightSource/Inner Cutoff");
+    Change outercutoff(&source, "LightSource/Outer Cutoff");
+    if (source.lightType == (int)SPOT_LIGHT) {
+        Display<Vector3>(lightpos, "Light Position", source.lightpos);
+        Display<Vector3>(lightdir, "Direction", source.direction);
+        Display<float>(innercutoff, "Inner Cutoff", source.inner_CutOff);
+        Display<float>(outercutoff, "Outer Cutoff", source.outer_CutOff);
+    }
+    else if(source.lightType == (int)DIRECTIONAL_LIGHT){
+        Display<Vector3>(lightdir, "Direction", source.direction);
+    }
+    else { //POINT LIGHT
+        Display<Vector3>(lightpos, "Light Position", source.lightpos);
     }
 }
 
@@ -707,7 +905,6 @@ void DisplayComponentHelper(T& component)
         if constexpr (!std::is_same<T, Transform>()) {
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
-
                 curr_scene.Destroy(component);
             }
         }
@@ -728,8 +925,6 @@ void DisplayComponentHelper(T& component)
     
     if (windowopen)
     {
-
-
         ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -748,16 +943,19 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
+            
+
             if constexpr (std::is_same_v<T,Script>)
             {
                 DisplayComponent(component);
+            }
+            if constexpr (std::is_same_v<T, LightSource>) {
+                DisplayLightProperties(component);
             }
             else
             {
                 Display_Property(component);
             }
-
-            //ImGui::PopID();
 
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
@@ -838,7 +1036,7 @@ private:
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
                     scene.Add<T1>(entity);
-                    EditorInspector::Instance().isAddPanel = false;
+                    EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }
         }
@@ -854,7 +1052,7 @@ private:
                     if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
                         scene.Add<T1>(entity, nameEvent.arr[i]);
-                        EditorInspector::Instance().isAddPanel = false;
+                        EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }
             }
@@ -863,7 +1061,7 @@ private:
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
                     scene.Add<T1>(entity);
-                    EditorInspector::Instance().isAddPanel = false;
+                    EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }
         }
@@ -877,67 +1075,267 @@ private:
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 //Implementation for the panel to add a component to the current entity
-void AddPanel(Entity& entity) {
+void AddComponentPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(300, 500));
 
     //press esc to exit add component window
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-        EditorInspector::Instance().isAddPanel = false;
+        EditorInspector::Instance().isAddComponentPanel = false;
     }
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 
         (void)AddsDisplay(entity);
         ImGui::EndPopup();
     }
 }
 
+void AddTagPanel() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(400, 500));
+
+    //press esc to exit add component window
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+        EditorInspector::Instance().isAddTagPanel = false;
+    }
+    ImGui::OpenPopup("Tags");
+    if (ImGui::BeginPopupModal("Tags", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+
+
+        Tags& tags = IDENTIFIERS.GetTags();
+
+        if (ImGui::BeginTable("Tags", 3)) {
+            ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+            ImGui::TableSetupColumn("2", ImGuiTableColumnFlags_WidthFixed, 250.0f);
+            float cellpadding = 15.f;
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(cellpadding, cellpadding));
+            int i = 0;
+            for (auto& tag : tags) {
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string tag_id = "Tag " + std::to_string(i++);
+                ImGui::Text(tag_id.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                if (tag.second == -1) //deleted tag
+                    ImGui::Text("(Removed)");
+                else
+                    ImGui::Text(tag.first.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string tag_name = tag.first;
+                if (tag_name != "Untagged") {
+                    ImGui::PushID(i);
+                    if (ImGui::Button("-")) {
+                        IDENTIFIERS.DeleteTag(tag.first);
+                    }
+                    ImGui::PopID();
+                }
+            }
+            ImGui::PopStyleVar();
+            ImGui::EndTable();
+        }
+        std::string newname;
+        ImGui::Text("New Tag Name"); ImGui::SameLine();
+        ImGui::InputText("##tag", &newname);
+        if (CENTERED_CONTROL(ImGui::Button("Add"))) {
+            IDENTIFIERS.CreateTag(newname);
+        };
+        ImGui::EndPopup();
+    }
+}
+
+void AddLayerPanel() {
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(480, 680));
+
+    //press esc to exit add component window
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+        EditorInspector::Instance().isAddLayerPanel = false;
+    }
+    ImGui::OpenPopup("Layers");
+    if (ImGui::BeginPopupModal("Layers", &EditorInspector::Instance().isAddLayerPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+        std::string newname;
+        /*ImGui::Text("New Layer Name"); ImGui::SameLine();
+        ImGui::InputText("##layer", &newname);*/
+        if (ImGui::BeginTable("Layers", 2)) {
+            ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+            float cellpadding = 15.f;
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(cellpadding, cellpadding));
+            for (int i = 0; i < MAX_PHYSICS_LAYERS; i++) {
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string layer = "Layer " + std::to_string(i);      
+                if (i <= 4)//default layers
+                    layer += " (Default)";
+                ImGui::Text(layer.c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                std::string label = "##" + layer;
+                std::string& layername = IDENTIFIERS.physicsLayers[i].name;
+                ImGui::SetNextItemWidth(-FLT_MIN);
+                if(i <= 4)
+                    ImGui::Text(layername.c_str());
+                else
+                    ImGui::InputText(label.c_str(), &layername);
+                ImGui::TableNextRow();
+            }
+            ImGui::PopStyleVar();
+            ImGui::EndTable();
+        }
+        
+        /*if (CENTERED_CONTROL(ImGui::Button("Add"))) {
+            IDENTIFIERS.CreateLayer(newname);
+            EditorInspector::Instance().isAddLayerPanel = false;
+        };*/
+        ImGui::EndPopup();
+    }
+}
+
+void DisplayLayers(Entity& entity) {
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
+    //Entity current tag
+    auto& tag = curr_scene.Get<Tag>(entity);
+
+    std::vector<const char*> layers;
+    int i = 0;
+    for (auto& it : IDENTIFIERS.physicsLayers) {
+        if (it.name.empty()) {
+            i++;
+            continue;
+        }        
+        layers.push_back(it.name.c_str());
+    }
+
+    int index = (int)tag.physicsLayerIndex;
+    ImGui::Text("Layer"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    Change change(&tag, "Tag/Layer Index");
+    if (ImGui::Combo("##Layer", &index, layers.data(), (int)layers.size(), 5))
+    {
+        size_t buf = (size_t)index;
+        EDITOR.History.SetPropertyValue(change, tag.physicsLayerIndex, buf);
+    }
+        //tag.physicsLayerIndex = index;
+    ImGui::PopItemWidth();
+}
+
+void DisplayTags(Entity& entity) {
+    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
+    //Entity current tag
+    auto& tag = curr_scene.Get<Tag>(entity);
+
+    //tags in the project
+    auto& Tags = IDENTIFIERS.GetTags();
+
+    std::vector<const char*> layers;
+    int i = 0;
+    int index = 0; //default
+    bool found = false;
+
+    for (auto& it : Tags) {
+        if (it.second == tag.tagName) {
+            index = i;
+        }
+        layers.push_back(it.first.c_str());
+        i++;
+    }
+
+    ImGui::Text("Tags"); ImGui::SameLine();
+    ImGui::PushItemWidth(100.f);
+    Change change(&tag, "Tag/Tag Name");
+    if(ImGui::Combo("##Tags", &index, layers.data(), (int)layers.size(), 5)){
+
+        Engine::UUID buf = Tags[layers[index]];
+        EDITOR.History.SetPropertyValue(change, tag.tagName, buf);
+        //tag.tagName = Tags[layers[index]];
+    }
+
+    ImGui::PopItemWidth();
+}
+
 //Display all the components as well as the name and whether the entity is enabled in the scene.
 void DisplayEntity(Entity& entity)
 {
+    ImGui::PushID((int)entity.EUID());
+
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
     bool enabled = curr_scene.IsActive(entity);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
-    std::string entity_name = curr_scene.Get<Tag>(entity).name;
-    strcpy_s(buffer, entity_name.c_str());
+
+    auto& tag = curr_scene.Get<Tag>(entity);
+    Change change (&tag, "Tag/name");
+
+    strcpy_s(buffer, tag.name.c_str());
     ImGui::PushItemWidth(-1);
     if (ImGui::InputText("##gameObjName", buffer, 256, ImGuiInputTextFlags_EnterReturnsTrue)) {
-        curr_scene.Get<Tag>(entity).name = buffer;
+        std::string buf = buffer;
+        EDITOR.History.SetPropertyValue(change, tag.name, buf);
     }
 
     ImGui::PopItemWidth();
-    curr_scene.Get<Tag>(entity).name = buffer;
+  
+    //display tags
+    DisplayTags(entity);
+    ImGui::SameLine();
+    ImGui::PushID(1);
+    if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
+    ImGui::PopID();
+    ImGui::SameLine(); ImGui::Dummy(ImVec2(22.f, 0.f)); ImGui::SameLine();
+    
+    //display layers
+    DisplayLayers(entity); ImGui::SameLine();
+    if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
 
-    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH
-        | ImGuiTableFlags_ScrollY;
-
+   
+    ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_ScrollY;
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        ImGui::PushID((int)entity.EUID());
+        
         DisplayComponents(entity);
-        ImGui::PopID();
+        
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddPanel = true;
+            EditorInspector::Instance().isAddComponentPanel = true;
         }
 
         ImGui::EndTable();
         
     }
+    ImGui::PopID();
     ImGui::PopStyleVar();
 }
 
 void EditorInspector::Init()
 {
-    isAddPanel = false;
+    isAddComponentPanel = false;
+    //default layers (same as unity)
+    IDENTIFIERS.physicsLayers[0] = Layer("Default");
+    IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
+    IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
+    IDENTIFIERS.physicsLayers[3] = Layer("UI");
+    IDENTIFIERS.physicsLayers[4] = Layer("Water");
+    IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
+
+    //create default tag
+    IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
 }
 
 void EditorInspector::Update(float dt)
@@ -964,8 +1362,16 @@ void EditorInspector::Update(float dt)
         DisplayEntity(curr_entity);
     }
 
-    if (isAddPanel) {
-        AddPanel(curr_scene.Get<Entity>(curr_index));
+    if (isAddComponentPanel) {
+        AddComponentPanel(curr_scene.Get<Entity>(curr_index));
+    }
+
+    if (isAddTagPanel) {
+        AddTagPanel();
+    }
+
+    if (isAddLayerPanel) {
+        AddLayerPanel();
     }
 
     ImGui::PopStyleVar();

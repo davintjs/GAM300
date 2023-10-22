@@ -6,12 +6,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9819EB6E-19E8-4C95-8BD2-8B7BF7E42CED}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ScriptCore</RootNamespace>
+    <RootNamespace>BeanFactory</RootNamespace>
     <AssemblyName>ScriptCore</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,6 +42,7 @@
     <Compile Include="CoreScripts\GameObject.cs" />
     <Compile Include="CoreScripts\Graphics.cs" />
     <Compile Include="CoreScripts\Identifiers.cs" />
+    <Compile Include="CoreScripts\Coroutine.cs" />
     <Compile Include="CoreScripts\Input.cs" />
     <Compile Include="CoreScripts\InternalCalls.cs" />
     <Compile Include="CoreScripts\KeyCode.cs" />
@@ -426,6 +428,7 @@
     <Content Include="External\GlmSharp\bin\GlmSharp.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Assets\Models\DamagedHelmet\DamagedHelmet.fbx" />
     <None Include="Assets\Models\DamagedHelmet\DamagedHelmet.geom" />
     <None Include="Assets\Models\DamagedHelmet\DamagedHelmet.geom.desc" />

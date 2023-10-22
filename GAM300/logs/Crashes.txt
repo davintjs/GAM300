@@ -1,6 +1,5 @@
-[2023-10-10 22:45:45.833] [Error] [critical] 
-Caused By:	false
-Info:		Failed to load .scene file "Assets/Scenes/M1.scene" due to: bad file: Assets/Scenes/M1.scene
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 233)
+[2023-10-17 17:47:59.458] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  ออออออออออออออออออออออออออออออออออออออออýýýýÝÝÝÝe–ÝV COULD NOT BE FOUND IN SCRIPT  Player
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 652)
 

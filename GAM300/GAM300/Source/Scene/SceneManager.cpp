@@ -62,10 +62,8 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
 	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
-
 	SelectedEntityEvent sE{ nullptr };
 	EVENTS.Publish(&sE);
-
 
 	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }
@@ -168,7 +166,11 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 	// Publish scene change
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
+
 	loadedScenes.pop_front();
+
+	ScenePostCleanupEvent e1;
+	EVENTS.Publish(&e1);
 }
 
 void SceneManager::Exit()
