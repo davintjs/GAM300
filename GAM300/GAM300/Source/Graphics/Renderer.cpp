@@ -40,7 +40,7 @@ LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
 LightProperties point_light_stuffs;
 	
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
+const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 void Renderer::Init()
 {
@@ -92,6 +92,8 @@ void Renderer::Init()
 		std::cout << "depth Cube framebuffer created successfully\n";
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	SetupGrid(100);
 }
 
 void Renderer::Update(float)
@@ -207,7 +209,7 @@ void Renderer::Update(float)
 		++i;
 	}
 
-	SetupGrid(100);
+	properties["Line"].iter = 200;
 	
 	if (RenderShadow)
 	{
@@ -321,8 +323,6 @@ void Renderer::Draw(BaseCamera& _camera)
 			if (prop.VAO)
 				DrawGrid(prop.VAO, prop.iter);
 		}
-
-		prop.iter = 0;
 	}
 }
 
@@ -763,13 +763,16 @@ void Renderer::DrawDepth()
 
 			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
 			shader.Use();
-			for (int i = 0; i < 6; ++i)
+			/*for (int i = 0; i < 6; ++i)
 			{
 				std::string spot_pos;
 				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
 				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-			}
+			}*/
+
+			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+				, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
 
 			GLint uniform1 =
 				glGetUniformLocation(shader.GetHandle(), "lightPos");
@@ -777,7 +780,7 @@ void Renderer::DrawDepth()
 				glm::value_ptr(point_light_stuffs.lightpos));
 
 			GLint uniform2 =
-				glGetUniformLocation(shader.GetHandle(), "far_plane");
+				glGetUniformLocation(shader.GetHandle(), "far_plane"); 
 			glUniform1f(uniform2, far_plane);
 
 

@@ -155,6 +155,13 @@ struct GetAssetEvent: IEvent
 	std::string guid;
 };
 
+struct DropAssetsEvent : IEvent
+{
+	DropAssetsEvent(const int& _pathCount, const char* _paths[]) : pathCount{ _pathCount }, paths{ _paths } {}
+	int pathCount;
+	const char** paths;
+};
+
 struct ContactAddedEvent : IEvent
 {
 	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
@@ -197,6 +204,12 @@ struct EditorSetGameCameraEvent : IEvent
 {
 	EditorSetGameCameraEvent(const unsigned int& _targetDisplay) : targetDisplay{ _targetDisplay } {}
 	unsigned int targetDisplay;
+};
+
+struct EditorGetCurrentDirectory : IEvent
+{
+	EditorGetCurrentDirectory() {}
+	std::string path;
 };
 
 #pragma endregion
