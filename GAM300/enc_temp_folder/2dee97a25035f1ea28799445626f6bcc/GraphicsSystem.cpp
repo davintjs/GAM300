@@ -199,8 +199,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
 
-	if (_camera.GetCameraType() == CAMERATYPE::GAME)
-		Draw_Screen(_camera);
+	/*if (_camera.GetCameraType() == CAMERATYPE::GAME)
+		Draw_Screen(_camera);*/
 
 	_camera.GetFramebuffer().Unbind();
 

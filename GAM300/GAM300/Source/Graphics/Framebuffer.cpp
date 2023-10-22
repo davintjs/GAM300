@@ -125,6 +125,19 @@ void Framebuffer::ReInit()
 		height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment, 0);
 
+	//for (unsigned int i = 0; i < 2; i++)
+	//{
+	//	glBindTexture(GL_TEXTURE_2D, colorBuffer[i]);
+	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//	// attach texture to framebuffer
+	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1 + i, GL_TEXTURE_2D, colorBuffer[i], 0);
+	//}
+
+
 	// Rebind depth attachment
 	glBindTexture(GL_TEXTURE_2D, depthAttachment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width,
@@ -183,6 +196,8 @@ void Framebuffer::Unbind()
 // Bean: update via messaging
 void Framebuffer::Resize(GLuint _width, GLuint _height)
 {
+	std::cout << "we were here\n";
+
 	//COPIUM_ASSERT(_width == 0 || _height == 0, "Resize of Framebuffer Invalid!!");
 	width = _width;
 	height = _height;
