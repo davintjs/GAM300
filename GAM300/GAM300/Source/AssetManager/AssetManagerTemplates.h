@@ -33,9 +33,9 @@ struct AllAssetsGroup
 						asset.mData.assign(
 							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
 						std::cout << "Done updating file in memory!" << filePath << std::endl;
+						inputFile.close();
 						AssetLoadedEvent<T> e{ filePath,guid,asset };
 						EVENTS.Publish(&e);
-						inputFile.close();
 					}
 					else
 					{

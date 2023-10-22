@@ -1,4 +1,4 @@
-[2023-10-22 00:04:38.176] [Error] [critical] 
+[2023-10-22 11:32:31.606] [Error] [critical] 
 Caused By:	temp
 Info:		Texture creation failed.
 Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\TextureManager.cpp (Line: 63)
