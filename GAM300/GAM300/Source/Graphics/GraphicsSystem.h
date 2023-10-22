@@ -46,6 +46,9 @@ public:
 	// 2D UI draw call
 	void Draw_Screen(BaseCamera& _camera);
 
+	// Reset buffers and instance properities
+	void PostDraw();
+
 	void Exit();
 
 private:

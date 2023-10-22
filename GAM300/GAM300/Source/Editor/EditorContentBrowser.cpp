@@ -31,7 +31,13 @@ void EditorContentBrowser::Init()
 void EditorContentBrowser::Update(float dt)
 {
     UNREFERENCED_PARAMETER(dt);
-    ImGui::Begin("Content Browser");
+    bool isOpened = ImGui::Begin("Content Browser");
+    if (!isOpened)
+    {
+        ImGui::End();
+        return;
+    }
+
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
 
     // Back button to return to parent directory
