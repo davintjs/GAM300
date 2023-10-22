@@ -23,7 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
-bool RenderShadow = true;
+//bool RenderShadow = true;
 
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
@@ -44,6 +44,7 @@ const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 
 void Renderer::Init()
 {
+	RenderShadow = true;
 	// This Framebuffer is used for both directional and spotlight
 	glGenFramebuffers(1, &depthMapFBO);
 	// create depth texture

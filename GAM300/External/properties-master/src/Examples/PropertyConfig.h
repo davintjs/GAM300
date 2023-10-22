@@ -101,6 +101,13 @@ public:
         return x != other.x || y != other.y || z != other.z;
     }
 
+    Vector3& operator *=(float value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        return *this;
+    }
+
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec3() const {
         return glm::vec3(x, y, z);

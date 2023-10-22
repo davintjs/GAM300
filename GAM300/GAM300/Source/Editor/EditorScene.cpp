@@ -27,6 +27,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 #include "Graphics/MeshManager.h"
+#include "Graphics/GraphicsHeaders.h"
 
 namespace
 {
@@ -126,10 +127,11 @@ void EditorScene::ToolBar()
         }
         ImGui::PopStyleColor();
 
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(30.0f, 0.f));
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(20.0f, 0.f));
 
         //For thoe to change to toggle debug drawing
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &Renderer::Instance().RenderShadow)) {}
     }
     ImGui::End();
 }

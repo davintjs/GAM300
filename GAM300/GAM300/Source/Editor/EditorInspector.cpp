@@ -198,6 +198,9 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName += name;
 
     Vector3 buf = val;
+    if (!std::strcmp(name, "Rotation")) {
+        buf *= (180.f / 3.14159f);
+    }
     bool changed = false;
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
@@ -222,6 +225,9 @@ void DisplayType(Change& change, const char* name, Vector3& val)
         ImGui::EndTable();
     }
     if (changed) {
+        if (!std::strcmp(name, "Rotation")) {
+            buf *= (3.14159f / 180.f);
+        }
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
 }

@@ -167,6 +167,8 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
+	bool RenderShadow;
+
 private:
 	std::map<std::string, InstanceProperties> properties;
 	float exposure = 1.f;
