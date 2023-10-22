@@ -252,20 +252,20 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
     return glm::scale(glm::mat4(1.0f), finalScale);
 }
 
-
-void Animation::init(const std::string& animationPath, AnimationModel* model)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
-    assert(scene && scene->mRootNode);
-    auto animation = scene->mAnimations[0];
-    m_Duration = animation->mDuration;
-    m_TicksPerSecond = animation->mTicksPerSecond;
-    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-    globalTransformation = globalTransformation.Inverse();
-    ReadHierarchyData(m_RootNode, scene->mRootNode);
-    ReadMissingBones(animation, *model);
-}
+//
+//void Animation::init(const std::string& animationPath, AnimationModel* model)
+//{
+//    Assimp::Importer importer;
+//    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
+//    assert(scene && scene->mRootNode);
+//    auto animation = scene->mAnimations[0];
+//    m_Duration = animation->mDuration;
+//    m_TicksPerSecond = animation->mTicksPerSecond;
+//    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+//    globalTransformation = globalTransformation.Inverse();
+//    ReadHierarchyData(m_RootNode, scene->mRootNode);
+//    ReadMissingBones(animation, *model);
+//}
 //
 //Animation::~Animation()
 //{
@@ -438,17 +438,20 @@ void AnimationModel::loadModel(std::string const& path)
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 
-    // Animation init
-    //Assimp::Importer importer;
-    /*const aiScene* */scene = importer.ReadFile(path, aiProcess_Triangulate);
-    assert(scene && scene->mRootNode);
-    auto animation = scene->mAnimations[0];
-    allAnimations.GetDuration() = animation->mDuration;
-    allAnimations.GetTicksPerSecond() = animation->mTicksPerSecond;
-    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-    globalTransformation = globalTransformation.Inverse();
-    allAnimations.ReadHierarchyData(allAnimations.GetRootNode(), scene->mRootNode);
-    allAnimations.ReadMissingBones(animation, *this);
+    if (scene->HasAnimations())
+    {
+        // Animation init
+        //Assimp::Importer importer;
+        /*const aiScene* */scene = importer.ReadFile(path, aiProcess_Triangulate);
+        assert(scene && scene->mRootNode);
+        auto animation = scene->mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
+        allAnimations.GetDuration() = animation->mDuration;
+        allAnimations.GetTicksPerSecond() = animation->mTicksPerSecond;
+        aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+        globalTransformation = globalTransformation.Inverse();
+        allAnimations.ReadHierarchyData(allAnimations.GetRootNode(), scene->mRootNode);
+        allAnimations.ReadMissingBones(animation, *this);
+    }
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
@@ -470,14 +473,14 @@ void AnimationModel::processNode(aiNode* node, const aiScene* scene)
 
 }
 
-void AnimationModel::SetVertexBoneDataToDefault(AnimationVertex& vertex)
-{
-    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-    {
-        vertex.m_BoneIDs[i] = -1;
-        vertex.m_Weights[i] = 0.0f;
-    }
-}
+//void AnimationModel::SetVertexBoneDataToDefault(AnimationVertex& vertex)
+//{
+//    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+//    {
+//        vertex.m_BoneIDs[i] = -1;
+//        vertex.m_Weights[i] = 0.0f;
+//    }
+//}
 
 
 AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
@@ -489,7 +492,14 @@ AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         AnimationVertex vertex;
-        SetVertexBoneDataToDefault(vertex);
+
+        //SetVertexBoneDataToDefault(vertex);
+        for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+        {
+            vertex.m_BoneIDs[i] = -1;
+            vertex.m_Weights[i] = 0.0f;
+        }
+
         vertex.Position = AssimpGLMHelpers::GetGLMVec(mesh->mVertices[i]);
         vertex.Normal = AssimpGLMHelpers::GetGLMVec(mesh->mNormals[i]);
 
@@ -526,30 +536,30 @@ AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
 
     return AnimationMesh(vertices, indices, textures);
 }
-
-void AnimationModel::SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight)
-{
-    // idk if i am doing this right i went to add my own thing
-    if (weight == 0.0f) // skip if bone weight 0
-    {
-        return;
-    }
-
-    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
-    {
-        if (vertex.m_BoneIDs[i] == boneID) { // skip if bone existd alr
-            return;
-        }
-
-        if (vertex.m_BoneIDs[i] < 0)
-        {
-            vertex.m_Weights[i] = weight;
-            vertex.m_BoneIDs[i] = boneID;
-            break;
-        }
-    }
-
-}
+//
+//void AnimationModel::SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight)
+//{
+//    // idk if i am doing this right i went to add my own thing
+//    if (weight == 0.0f) // skip if bone weight 0
+//    {
+//        return;
+//    }
+//
+//    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+//    {
+//        if (vertex.m_BoneIDs[i] == boneID) { // skip if bone existd alr
+//            return;
+//        }
+//
+//        if (vertex.m_BoneIDs[i] < 0)
+//        {
+//            vertex.m_Weights[i] = weight;
+//            vertex.m_BoneIDs[i] = boneID;
+//            break;
+//        }
+//    }
+//
+//}
 
 
 void AnimationModel::ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene)
@@ -583,7 +593,27 @@ void AnimationModel::ExtractBoneWeightForVertices(std::vector<AnimationVertex>& 
             int vertexId = weights[weightIndex].mVertexId;
             float weight = weights[weightIndex].mWeight;
             assert(vertexId <= vertices.size());
-            SetVertexBoneData(vertices[vertexId], boneID, weight);
+
+            //SetVertexBoneData(vertices[vertexId], boneID, weight); 
+            // idk if i am doing this right i went to add my own thing
+            if (weight == 0.0f) // skip if bone weight 0
+            {
+                return;
+            }
+
+            for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+            {
+                if (vertices[vertexId].m_BoneIDs[i] == boneID) { // skip if bone existd alr
+                    return;
+                }
+
+                if (vertices[vertexId].m_BoneIDs[i] < 0)
+                {
+                    vertices[vertexId].m_Weights[i] = weight;
+                    vertices[vertexId].m_BoneIDs[i] = boneID;
+                    break;
+                }
+            }
         }
     }
 }

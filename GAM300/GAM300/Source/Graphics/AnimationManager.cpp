@@ -57,9 +57,9 @@ void AnimationManager::Init()
 	//Animation ourAnimation("Assets/Models/AnimatedSkeleton/AnimatedSkeleton.fbx", &ourModel);
 	//AnimationAnimator animator(&ourAnimation);
 
-
+	// we want compiler to serialise model info including the animations
 	allModels.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-	//allAnimations.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", &allModels);
+	// called to animate animaation
 	allAnimators.init(&allModels.GetAnimations());
 
 }

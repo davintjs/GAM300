@@ -200,7 +200,7 @@ public:
     //Animation() = default;
 
     //Animation(const std::string& animationPath, AnimationModel* model);
-    void init(const std::string& animationPath, AnimationModel* model);
+    //void init(const std::string& animationPath, AnimationModel* model);
 
 
     //~Animation();
@@ -253,7 +253,7 @@ public:
     int& GetBoneCount() { return m_BoneCounter; }
     Animation& GetAnimations() { return allAnimations; } // also temp
 
-
+    
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
     std::map<std::string, BoneInfo> m_BoneInfoMap;
@@ -263,14 +263,14 @@ private:
     void loadModel(std::string const& path);
 
     // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene);
+    void processNode(aiNode* node, const aiScene* scene); //process geom equivalent
 
-    void SetVertexBoneDataToDefault(AnimationVertex& vertex);
+    //void SetVertexBoneDataToDefault(AnimationVertex& vertex);
 
 
     AnimationMesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-    void SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight);
+    //void SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight);
 
 
     void ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene);
