@@ -3,6 +3,7 @@
 #include "AssetTypes.h"
 #include "Core/EventsManager.h"
 #include <vector>
+#include <unordered_set>
 
 //Hash table that maps an ID to a pointer
 template <typename T>
@@ -32,6 +33,30 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath)
 	{
+
+		static std::unordered_set<fs::path> IGNORED_EXTENSIONS
+		{
+			".meta",
+			".jpg",
+			".png",
+			".fbx",
+		};
+
+		if (IGNORED_EXTENSIONS.contains(filePath.extension())) // Skip if meta / fbx / desc file
+		{
+			if (filePath.extension() == ".png" || filePath.extension() == ".jpg")
+			{
+				fs::path ddsPath = filePath;
+				ddsPath.replace_extension(".dds");
+				if (fs::exists(ddsPath))
+					return;
+				std::string command{ "TextureCompiler.exe " };
+				command += filePath.string();
+				system(command.c_str());
+			}
+			return;
+		}
+
 		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		if (([&](auto type)
 			{
@@ -170,11 +195,13 @@ struct AllAssetsGroup
 				YAML::detail::iterator_value kv = *node.begin();
 				if (node["guid"]) // Deserialize guid
 				{
+					PRINT("Found GUID for: ", filePath);
 					guid = Engine::GUID(kv.second.as<std::string>());
 					return guid;
 				}
 			}
 		}
+		PRINT("Generate new GUID for: ", filePath);
 		//Store newly generated guid since it couldnt be found
 		YAML::Emitter out;
 		out << YAML::BeginMap;

@@ -66,7 +66,7 @@ private:
 	void CallbackFileModified(FileModifiedEvent* pEvent);
 
 	// Get the GUID of the asset using event callbacks
-	void CallbackGetAssetGUID(GetAssetEvent* pEvent);
+	void CallbackGetAsset(GetAssetEvent* pEvent);
 	
 	AllAssets assets{};
 

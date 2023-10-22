@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void SkyboxManager::Init()
 {
-	CreateSkybox("skybox_default_top");
+	CreateSkybox("Assets//Textures//SkyBox//skybox_default_top.dds");
 }
 
 void SkyboxManager::CreateSkybox(const fs::path& _name)

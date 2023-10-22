@@ -31,28 +31,15 @@ void AssetManager::Init()
 
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
-	EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetGUID);
+	EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset);
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
 
-	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
-	static std::unordered_set<fs::path> IGNORED_EXTENSIONS
-	{
-		".meta",
-		".jpg",
-		".png",
-		".fbx",
-	};
-	// Models will have more folders, the others will be categorized based on the asset type (Character, environment, background)
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		fs::path path = dir.path();
-		if (IGNORED_EXTENSIONS.contains(path.extension())) // Skip if meta / fbx / desc file
-		{
-			continue;
-		}
 
 		// Deserialize from meta file and load the asset asynchronously
-		this->AsyncLoadAsset(path);
+		this->AsyncLoadAsset(dir.path());
 
 	}
 }
@@ -200,9 +187,9 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	//PRINT(filePath.string(), "\n");
 }
 
-void AssetManager::CallbackGetAssetGUID(GetAssetEvent* pEvent)
+void AssetManager::CallbackGetAsset(GetAssetEvent* pEvent)
 {
-	//pEvent->guid = GetAssetGUID(pEvent->filePath);
+	pEvent->guid = GetAssetGUID(pEvent->filePath);
 }
 
 void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)

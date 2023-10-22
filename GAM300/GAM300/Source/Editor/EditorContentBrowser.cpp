@@ -77,8 +77,6 @@ void EditorContentBrowser::Update(float dt)
         fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
 
         size_t icon_id = 0;
-        std::string parentpath = relativepath.parent_path().string();
-
         
         if (!it.is_directory()) {
 
