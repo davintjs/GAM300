@@ -121,13 +121,14 @@ public:
 	
 	}// Either Geom or Vaoid
 
-
+	//GLuint GetVAOfromGUID(std::string GUID);
 
 	// FUnction to load model
 
 	//void AddTexture(char const* Filename, std::string GUID);
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
+	std::unordered_map<std::string, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
 	std::unordered_map<std::string, Mesh> mContainer;
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype

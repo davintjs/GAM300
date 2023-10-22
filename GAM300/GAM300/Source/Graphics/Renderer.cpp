@@ -26,23 +26,23 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void Renderer::Init()
 {
-	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
+	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
 }
 
 void Renderer::Update(float)
 {
 	// maybe no need clear every time?
-	for (InstanceContainer& instanceProperties : instanceContainers) {
-		for (auto& [vao, prop] : instanceProperties)
+	for (InstanceContainer& container : instanceContainers) {
+		for (auto& [vao, prop] : container)
 		{
 			std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 			std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 			std::fill_n(prop.texture, 32, 0);
 		}
 	}
-	//instanceContainers.clear(); // dun clear coz inside got map containing keys of vao
-	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT)); // need this meh? alr reserve tho
+	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
+	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT)); // need this meh? alr reserve tho
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -63,8 +63,6 @@ void Renderer::Update(float)
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-
-
 		// Loop through camera (@euan)
 
 		// for each cam
@@ -81,11 +79,16 @@ void Renderer::Update(float)
 			}*/
 
 			size_t s = static_cast<size_t>(renderer.shaderType);
-			GLuint vao = renderer.VAO;
+			GLuint vao = MeshManager.vaoMap[renderer.MeshName]; // pls ask someone how to use GUID instead because deadlock
+			//GLuint vao = renderer.VAO;
 
 			//instanceProperties[vao];
 			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
 
+			// slot in the InstanceProperties into this vector if it doesnt alr exist
+			if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) {
+				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
+			}
 
 			// use the properties container coz its made for instance rendering already
 			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.textureID));
@@ -101,7 +104,6 @@ void Renderer::Update(float)
 			float ao_constant = renderer.ao;
 
 			unsigned int& iter = instanceContainers[s][vao].iter;
-			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
 			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);

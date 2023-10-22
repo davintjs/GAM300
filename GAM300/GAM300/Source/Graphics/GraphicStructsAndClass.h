@@ -135,7 +135,7 @@ struct InstanceProperties
 
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
-	unsigned int texture[32];// max 32 dds only
+	unsigned int texture[32]{};// max 32 dds only
 	unsigned int textureCount = 0;
 	
 	void BatchTexture(std::string texture);
@@ -149,11 +149,11 @@ struct DefaultRenderProperties {
 	float roughness{};
 	float ao{};
 
-	glm::mat4 entitySRT;
-	glm::vec4 Albedo;
-	glm::vec4 Specular;
-	glm::vec4 Diffuse;
-	glm::vec4 Ambient;
+	glm::mat4 entitySRT{};
+	glm::vec4 Albedo{};
+	glm::vec4 Specular{};
+	glm::vec4 Diffuse{};
+	glm::vec4 Ambient{};
 
 	GLuint textureID{};
 	GLuint NormalID{};

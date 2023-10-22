@@ -186,7 +186,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
         tempProp.drawType = GL_TRIANGLES;
 
-        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(VAO, tempProp));
+        //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
+        vaoMap.emplace(std::pair<std::string, GLuint>(fileName, VAO)); // rmb change to guid after u ask someone @kk
 
         // no need this, maybe can sort by VAO
         /*std::string newName = fileName;
@@ -205,6 +206,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(VAO, tempProp));
+
     }
 
     newMesh.vertices_min = min;
@@ -461,9 +464,8 @@ void MESH_Manager::CreateInstanceCube()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
-
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
-
+    vaoMap.emplace(std::pair<std::string, GLuint>("Cube", vaoid));
+    //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Cube"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
@@ -475,6 +477,8 @@ void MESH_Manager::CreateInstanceCube()
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
 
     mContainer.emplace(std::string("Cube"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+
 }
 
 
@@ -584,8 +588,9 @@ void MESH_Manager::CreateInstanceSphere()
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Sphere", vaoid));
 
+    //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
@@ -600,6 +605,7 @@ void MESH_Manager::CreateInstanceSphere()
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
     mContainer.emplace(std::string("Sphere"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
 
 
 }
@@ -882,7 +888,7 @@ void MESH_Manager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Line", vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
@@ -893,6 +899,8 @@ void MESH_Manager::CreateInstanceLine()
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
     mContainer.emplace(std::string("Line"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+
 }
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
@@ -987,3 +995,9 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     //return DebugVaoid;
 }
 
+//GLuint GetVAOfromGUID(std::string GUID) {
+//    if (MeshManager.vaoMap.find(GUID) != MeshManager.vaoMap.end()) {
+//        return MeshManager.vaoMap.find(GUID)->second;
+//    }
+//    return UINT_MAX;
+//}
