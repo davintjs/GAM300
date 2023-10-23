@@ -107,7 +107,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
-    <ClCompile Include="Source\Graphics\AnimationTemp.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp">
       <SubType>
       </SubType>
@@ -236,7 +235,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\AnimationTemp.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h">
       <SubType>
       </SubType>

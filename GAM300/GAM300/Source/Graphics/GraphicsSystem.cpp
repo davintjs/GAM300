@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
+#include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
 
 using GraphicsSystemsPack =
@@ -27,7 +28,6 @@ TemplatePack
 <
 	ShaderManager,
 	SkyboxManager,
-	AnimationManager,
 	DebugDraw,
 	Lighting,
 	Renderer
@@ -173,7 +173,7 @@ void GraphicsSystem::Init()
 
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
-
+	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 
@@ -202,6 +202,7 @@ void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
+	AnimationManager.Update(dt);
 
 	// Editor Camera
 	EditorWindowEvent e("Scene");
@@ -304,8 +305,8 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-	ANIM.Draw(); // temp
-
+	AnimationManager.Draw(_camera); // temp
+	
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
 

@@ -17,7 +17,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
-#include "AnimationTemp.h"
 #include "AI/Geometry.h"	// Bean: For Lines, Segments, Planes and Triangles
 
 #define EntityRenderLimit 1000
