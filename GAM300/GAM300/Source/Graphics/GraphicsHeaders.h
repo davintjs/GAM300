@@ -37,20 +37,20 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 
 using InstanceContainer = std::map<GLuint, InstanceProperties>;
 // Bean: A temp solution to access the shader
-enum SHADERTYPE
-{
-	HDR,
-	PBR,
-	TIR,// Temporary Instance Render
-	TDR,// Temporary Debug Instance Render
-	SKYBOX,
-	BASICLIGHT,
-	AFFECTEDLIGHT,
-	SHADOW,
-	POINTSHADOW,
-	UI_SCREEN,
-	UI_WORLD
-};
+//enum SHADERTYPE
+//{
+//	HDR,
+//	PBR,
+//	TIR,// Temporary Instance Render
+//	TDR,// Temporary Debug Instance Render
+//	SKYBOX,
+//	BASICLIGHT,
+//	AFFECTEDLIGHT,
+//	SHADOW,
+//	POINTSHADOW,
+//	UI_SCREEN,
+//	UI_WORLD
+//};
 
 ENGINE_SYSTEM(ShaderManager)
 {
@@ -103,7 +103,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<std::string, InstanceProperties>* properties;
+	std::map<GLuint, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -166,6 +166,7 @@ public:
 	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
 
 	InstanceContainer& GetInstanceProperties() { return instanceProperties; }
+	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 
 	float& GetExposure() { return exposure; }

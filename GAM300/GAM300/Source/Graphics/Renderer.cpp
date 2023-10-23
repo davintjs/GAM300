@@ -260,7 +260,7 @@ void Renderer::Update(float)
 		++i;
 	}
 
-	properties["Line"].iter = 200;
+	//properties[MeshManager.vaoMap["Line"]].iter = 200;
 	
 	if (RenderShadow)
 	{
@@ -313,99 +313,37 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			for (int i = 0; i < 32; ++i)
+			for (int i = 0; i < 31; ++i)
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 			}
-			DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), static_cast<SHADERTYPE>(s));
-			prop.iter = 0;
+			glActiveTexture(GL_TEXTURE0 + 30);
+			glBindTexture(GL_TEXTURE_2D, depthMap);
+			DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, static_cast<SHADERTYPE>(s));
+
+			// FOR DEBUG DRAW
+			if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				if (prop.debugVAO)
+					DrawDebug(prop.debugVAO, prop.iter);
+			}
+
+			// @kk this one need uncomment, check vao instead of name
+			/*if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				if (prop.VAO)
+					DrawGrid(prop.VAO, prop.iter);
+			}*/
 		}
+
 		
-		// FOR DEBUG DRAW
-		/*if (EditorScene::Instance().DebugDraw())
-		for (size_t i = 0; i < 32; i++)
-		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texIndex[i]);
-		}*/
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.entityMATbuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(Materials), &(prop.entityMAT[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.SpecularBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Specular[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.DiffuseBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Diffuse[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.AmbientBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Ambient[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
-		//glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-		//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(float), &(prop.Shininess[0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-
-
-		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//std::cout <<  " r" << prop.entityMAT[0].Albedo.r << "\n";
-		//std::cout <<  " g" << prop.entityMAT[0].Albedo.g << "\n";
-		//std::cout <<  " b" << prop.entityMAT[0].Albedo.b << "\n";
-		//std::cout <<  " a" << prop.entityMAT[0].Albedo.a << "\n";
-
-		//std::cout <<  " a" << temp_AlbedoContainer[3].r << "\n";
-		for (int i = 0; i < 31; ++i)
-		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
-		}
-		glActiveTexture(GL_TEXTURE0 + 30);
-		
-		glBindTexture(GL_TEXTURE_2D,depthMap);
-
-		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera);
-
-		// FOR DEBUG DRAW
-		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			if (prop.debugVAO)
-				DrawDebug(prop.debugVAO, prop.iter);
-		}
-
-		if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			if (prop.VAO)
-				DrawGrid(prop.VAO, prop.iter);
-		}
 
 	}
 
@@ -830,7 +768,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	GLSLShader& shader = SHADER.GetShader(UI_SCREEN);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_SCREEN);
 	shader.Use();
 
 	// Setting the projection here since all of them use the same projection
@@ -888,7 +826,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_WORLD);
 	shader.Use();
 
 	// Setting the projection here since all of them use the same projection
@@ -1059,63 +997,73 @@ void Renderer::DrawDepth()
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
-	for (auto& [name, prop] : properties)
+
+	/*for (auto& [str, vao] : MeshManager.vaoMap) {
+		std::cout << "NAME: " << str << " vao: " << vao << "\n";
+	}*/
+	//std::cout << std::endl;
+	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		for (auto& [vao, prop] : instanceContainers[s]) {
+			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
+			//{
+			
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		if (temporary_test == POINT_LIGHT)
-		{
-			//glClear(GL_DEPTH_BUFFER_BIT);
-
-			GLSLShader& shader = SHADER.GetShader(POINTSHADOW);
-			shader.Use();
-			/*for (int i = 0; i < 6; ++i)
+			if (temporary_test == POINT_LIGHT)
 			{
-				std::string spot_pos;
-				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
-				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
-					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-			}*/
+				//glClear(GL_DEPTH_BUFFER_BIT);
 
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
-				, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
+				shader.Use();
+				/*for (int i = 0; i < 6; ++i)
+				{
+					std::string spot_pos;
+					spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
+					glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+						, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+				}*/
 
-			GLint uniform1 =
-				glGetUniformLocation(shader.GetHandle(), "lightPos");
-			glUniform3fv(uniform1, 1,
-				glm::value_ptr(point_light_stuffs.lightpos));
+				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+					, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
 
-			GLint uniform2 =
-				glGetUniformLocation(shader.GetHandle(), "far_plane"); 
-			glUniform1f(uniform2, far_plane);
+				GLint uniform1 =
+					glGetUniformLocation(shader.GetHandle(), "lightPos");
+				glUniform3fv(uniform1, 1,
+					glm::value_ptr(point_light_stuffs.lightpos));
+
+				GLint uniform2 =
+					glGetUniformLocation(shader.GetHandle(), "far_plane");
+				glUniform1f(uniform2, far_plane);
 
 
-			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-			glBindVertexArray(0);
+				glBindVertexArray(prop.VAO);
+				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+				glBindVertexArray(0);
 
-			shader.UnUse();
+				shader.UnUse();
 
-		}
-		else
-		{
-			GLSLShader& shader = SHADER.GetShader(SHADOW);
-			shader.Use();
+			}
+			else
+			{
+				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
+				shader.Use();
 
-			GLint uniform1 =
-				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
-		
-			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-				glm::value_ptr(lightSpaceMatrix));
+				GLint uniform1 =
+					glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
 
-			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-			glBindVertexArray(0);
+				glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+					glm::value_ptr(lightSpaceMatrix));
 
-			shader.UnUse();
+				glBindVertexArray(prop.VAO);
+				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+				glBindVertexArray(0);
 
+				shader.UnUse();
+
+			}
 		}
 	}
 

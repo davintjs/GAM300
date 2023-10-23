@@ -28,36 +28,34 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 void DemoSystem::Init()
 {
-	CreateSceneEvent createScene(nullptr);
-	EVENTS.Publish(&createScene);
-	Scene& scene = *createScene.scene;
-	//MySceneManager.LoadScene("Assets/Scene/M1.scene");
-	Entity& testEntity = *scene.Add<Entity>();
-	MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
+	//CreateSceneEvent createScene(nullptr);
+	//EVENTS.Publish(&createScene);
+	//Scene& scene = *createScene.scene;
+	MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
+	//Entity& testEntity = *scene.Add<Entity>();
+	//scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
+	//scene.Get<Transform>(testEntity).translation = Vector3(0);
+	//MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
+	//entityRender.shaderType = SHADERTYPE::DEFAULT;
+	//entityRender.MeshName = "DamagedHelmet";
+	//entityRender.AlbedoTexture = "Default_albedo";
+	//entityRender.textureID = GET_TEXTURE_ID(entityRender.AlbedoTexture);
 	/*AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
 	entityAudio.channel = AudioSource::Channel::MUSIC;
 	//entityAudio.play = true;
 	entityAudio.currentSound = "LoLnvDie";*/
-	entityRender.MeshName = "DamagedHelmet";
-	entityRender.AlbedoTexture = "Default_albedo";
-	entityRender.textureID = GET_TEXTURE_ID(entityRender.AlbedoTexture);
 
-	for (int i = 0; i < 5; ++i) {
+	/*for (int i = 0; i < 5; ++i) {
 		Entity& instanceEntity = *scene.Add<Entity>();
 		MeshRenderer& instanceRender = *scene.Add<MeshRenderer>(instanceEntity);
 		instanceRender.shaderType = SHADERTYPE::PBR;
 		instanceRender.MeshName = "DamagedHelmet";
 		instanceRender.AlbedoTexture = "Default_albedo";
 		instanceRender.textureID = GET_TEXTURE_ID(instanceRender.AlbedoTexture);
-		scene.Get<Transform>(instanceEntity).translation = Vector3((rand() % 500) - 250.f, (rand() % 500) - 250.f, (rand() % 500) - 250.f);
+		scene.Get<Transform>(instanceEntity).translation = Vector3((rand() % 20) - 10.f, (rand() % 20) - 10.f, (rand() % 20) - 10.f);
 		scene.Get<Transform>(instanceEntity).scale = Vector3(1.f, 1.f, 1.f);
 		instanceRender.isInstance = true;
-	}
-
-	for (int i = 0; i < 5; ++i) {
-		Entity& instancedEntity = *scene.Add<Entity>();
-
-	}
+	}*/
 
 	//entityRender.MetallicTexture = "Default_metalRoughness";
 	//entityRender.MetallicID = GET_TEXTURE_ID(entityRender.MetallicTexture);

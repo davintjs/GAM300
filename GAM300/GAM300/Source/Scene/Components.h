@@ -297,8 +297,8 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
-	bool isInstance = false;
-	SHADERTYPE shaderType = SHADERTYPE::DEFAULT;
+	bool isInstance = true;
+	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
 	property_vtable();
 };

@@ -50,15 +50,6 @@ void ShaderManager::Init()
 	fragmentPath = shaderPath + "/LightAffected.frag";
 	ShaderCompiler("LightAffected SHADER", vertexPath, fragmentPath);
 
-	vertexPath = shaderPath + "/DefaultGbuffer.vert";
-	fragmentPath = shaderPath + "/DefaultGbuffer.frag";
-	ShaderCompiler("GBUFFER SHADER", vertexPath, fragmentPath);
-
-
-	vertexPath = shaderPath + "/DefaultShader.vert";
-	fragmentPath = shaderPath + "/DefaultShader.frag";
-	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
-
 	vertexPath = shaderPath + "/Shadow.vert";
 	fragmentPath = shaderPath + "/Shadow.frag";
 	ShaderCompiler("Shadow SHADER", vertexPath, fragmentPath);
@@ -76,6 +67,13 @@ void ShaderManager::Init()
 	fragmentPath = shaderPath + "/UIWorldSpace.frag";
 	ShaderCompiler("UI WORLD SHADER", vertexPath, fragmentPath);
 
+	vertexPath = shaderPath + "/DefaultGbuffer.vert";
+	fragmentPath = shaderPath + "/DefaultGbuffer.frag";
+	ShaderCompiler("GBUFFER SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/DefaultShader.vert";
+	fragmentPath = shaderPath + "/DefaultShader.frag";
+	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

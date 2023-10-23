@@ -1003,14 +1003,18 @@ void MESH_Manager::CreateInstanceSegment3D()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
-    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Segment3D", vaoid));
+
+    //properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Segment3D"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
 
     mContainer.emplace(std::string("Segment3D"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+
 }
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
