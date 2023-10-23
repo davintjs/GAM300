@@ -172,7 +172,7 @@ GameObject:
   m_IsActive: true
   m_Name: Floor
   m_Layer: 0
-  m_Position: [0, -0.350186825, 0]
+  m_Position: [0, -3.09993005, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [10, 1, 10]
   m_Children:
@@ -254,7 +254,7 @@ GameObject:
   m_IsActive: true
   m_Name: Camera
   m_Layer: 0
-  m_Position: [2.78049541, 5.60001326, 5.94999981]
+  m_Position: [1.45914495, 5.72823143, 5.94999981]
   m_Rotation: [0, -0.149999604, 0]
   m_Scale: [0.99999702, 1, 0.99999702]
   m_Children:
@@ -284,8 +284,8 @@ GameObject:
   m_IsActive: true
   m_Name: 3D SPACE UI
   m_Layer: 0
-  m_Position: [1.01424623, 5.66990662, 0]
-  m_Rotation: [3.14159083, -0.00840737391, 0.00840738136]
+  m_Position: [0.440229654, 5.66990662, -0.0251158178]
+  m_Rotation: [3.14159083, -0.00840729661, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
+  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -359,9 +359,9 @@ GameObject:
   m_IsActive: true
   m_Name: Canvas
   m_Layer: 0
-  m_Position: [0, 0, 0]
-  m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
+  m_Position: [0, 138.102646, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [160, 90, 1]
   m_Children:
     []
   m_Parent: 0
