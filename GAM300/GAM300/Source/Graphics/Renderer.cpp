@@ -43,6 +43,11 @@ LightProperties point_light_stuffs;
 	
 const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
+unsigned int Renderer_quadVAO = 0;
+unsigned int Renderer_quadVBO = 0;
+
+unsigned int Renderer_quadVAO_WM = 0;
+unsigned int Renderer_quadVBO_WM = 0;
 
 
 
@@ -536,8 +541,6 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
-	unsigned int _quadVAO = 0;
-	unsigned int _quadVBO = 0;
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -572,7 +575,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 		
 
-		renderQuad(_quadVAO, _quadVBO);
+		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 
 	}
 	shader.UnUse();
@@ -597,8 +600,6 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-	unsigned int _quadVAO = 0;
-	unsigned int _quadVBO = 0;
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -632,15 +633,89 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 
-		renderQuad(_quadVAO, _quadVBO);
+		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 
-		//renderQuadWireMesh(_quadVAO, _quadVBO);
 
 	}
 	shader.UnUse();
 	glDisable(GL_BLEND);
 
 }
+
+void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
+{
+	// Setups required for all UI
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
+	shader.Use();
+
+	// Setting the projection here since all of them use the same projection
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		Transform& transform = currentScene.Get<Transform>(entity);
+
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+		glLineWidth(20.f);
+		renderQuadWireMesh(Renderer_quadVAO_WM, Renderer_quadVBO_WM);
+	}
+	glLineWidth(1.f);
+
+	//for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	//{
+	//	// This means it's 2D space
+	//	if (!Sprite.WorldSpace)
+	//	{
+	//		continue;
+	//	}
+
+	//	// Declarations for the things we need - SRT
+	//	Entity& entity = currentScene.Get<Entity>(Sprite);
+	//	Transform& transform = currentScene.Get<Transform>(entity);
+
+	//	// SRT uniform
+	//	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+	//		1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+	//	// Setting bool to see if there is a sprite to render
+	//	GLint uniform1 =
+	//		glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+	//	if (Sprite.spriteTextureID == 0)
+	//	{
+	//		glUniform1f(uniform1, false);
+	//	}
+	//	else
+	//	{
+	//		glUniform1f(uniform1, true);
+	//	}
+
+	//	// Binding Texture - might be empty , above uniform will sort it
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+
+	//	renderQuad(_quadVAO, _quadVBO);
+
+	//	//renderQuadWireMesh(_quadVAO, _quadVBO);
+
+	//}
+	shader.UnUse();
+	glDisable(GL_BLEND);
+
+}
+
+
 
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {

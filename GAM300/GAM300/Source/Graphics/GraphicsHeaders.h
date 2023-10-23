@@ -143,9 +143,15 @@ public:
 
 	void Draw(BaseCamera& _camera);
 
+	// Drawing UI onto screenspace
 	void UIDraw_2D(BaseCamera& _camera);
 
+	// Drawing UI onto worldspace
 	void UIDraw_3D(BaseCamera& _camera);
+
+	// Drawing Screenspace UI onto worldspace
+	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera);

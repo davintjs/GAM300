@@ -91,6 +91,7 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 
 	glBindVertexArray(0);
 }
+
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
@@ -246,6 +247,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);
+	else
+		RENDERER.UIDraw_2DWorldSpace(_camera);
 
 	_camera.GetFramebuffer().Unbind();
 
