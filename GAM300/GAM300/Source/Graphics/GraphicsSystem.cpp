@@ -20,6 +20,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
+#include "AnimationManager.h"
+#include "IOManager/InputHandler.h"
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -45,10 +47,17 @@ unsigned int cameraQuadVBO;
 extern unsigned int depthMap;
 extern unsigned int depthCubemap;
 
+// Bloom
+unsigned int pingpongFBO[2];
+unsigned int pingpongColorbuffers[2];
+bool blooming = false;
+
+
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
 	{
+
 		float quadVertices[] = {
 			// positions        // texture Coords
 			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -86,19 +95,117 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 	glBindVertexArray(0);
 }
 
+void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
+{
+	if (_quadVAO == 0)
+	{
+		float quadVertices[] = {
+			// positions        // texture Coords
+			-1.0f,  1.0f, 0.0f, 
+			-1.0f, -1.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f, 
+			 1.0f, -1.0f, 0.0f, 
+
+			 1.0f, -1.0f, 0.0f, 
+			 -1.0f, -1.0f, 0.0f, 
+			 1.0f, 1.0f, 0.0f, 
+			 -1.0f, 1.0f, 0.0f, 
+		};
+
+		//	float quadVertices[] = {
+//		// pos	           // tex
+//		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+//		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+//		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+//		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+//	};
+
+		// setup plane VAO
+		glGenVertexArrays(1, &_quadVAO);
+		glGenBuffers(1, &_quadVBO);
+		glBindVertexArray(_quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		//glEnableVertexAttribArray(1);
+		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	}
+	glBindVertexArray(_quadVAO);
+	glDrawArrays(GL_LINES, 0, 8);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindVertexArray(0);
+}
+
+
+bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& _camera)
+{
+	
+	bool horizontal = true, first_iteration = true;
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::BLUR);
+	shader.Use();
+	
+	for (unsigned int i = 0; i < amount; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "horizontal"), horizontal);
+
+		glBindTexture(
+			GL_TEXTURE_2D, first_iteration ? _camera.GetFramebuffer().colorBuffer[1] : pingpongColorbuffers[!horizontal]
+		);
+
+		renderQuad(VAO, VBO);
+		horizontal = !horizontal;
+		if (first_iteration)
+			first_iteration = false;
+	}
+	shader.UnUse();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return !horizontal;
+
+}
+
 void GraphicsSystem::Init()
 {
+
+
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
-
+	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
+
+
+	glGenFramebuffers(2, pingpongFBO);
+	glGenTextures(2, pingpongColorbuffers);
+	for (unsigned int i = 0; i < 2; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
+		// also check if framebuffers are complete (no need for depth buffer)
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			std::cout << "Framebuffer not complete!" << std::endl;
+	}
+
+
 }
 
 void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
+	AnimationManager.Update(dt);
 
 	// Editor Camera
 	EditorWindowEvent e("Scene");
@@ -135,27 +242,52 @@ void GraphicsSystem::Update(float dt)
 void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
 {
 	
-	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+	glViewport(0, 0, 1600, 900);
+	glBindFramebuffer(GL_FRAMEBUFFER, _camera.GetFramebuffer().hdrFBO);
+	//glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(2, attachments);
+	
+	/*FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
 
-	glDrawBuffer(_camera.GetHDRAttachment());
+	glDrawBuffer(_camera.GetHDRAttachment());*/
 
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);
+	else
+		RENDERER.UIDraw_2DWorldSpace(_camera);
 
-	glDrawBuffer(_camera.GetAttachment());
+	//glDrawBuffer(_camera.GetAttachment());
+
+	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
+	{
+		blooming = !blooming;
+	}
+	bool index = false;
+	if (blooming)
+	{*/
+	bool index = bloom(5, _vao, _vbo, _camera);
+
+	//}
+
+	_camera.GetFramebuffer().Bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-	GLSLShader& shader = SHADER.GetShader(HDR);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::HDR);
 	shader.Use();
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
+	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+	//glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -180,7 +312,8 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-
+	AnimationManager.Draw(_camera); // temp
+	
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
 
@@ -196,10 +329,14 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 
 void GraphicsSystem::PostDraw()
 {
-	for (auto& [name, prop] : RENDERER.GetProperties())
-	{
-		prop.iter = 0;
+	//@kk clear the one with shader instead
+	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
+		{
+			prop.iter = 0;
+		}
 	}
+	
 }
 
 void GraphicsSystem::Exit()
