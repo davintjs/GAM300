@@ -91,6 +91,7 @@
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp" />
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
     <ClCompile Include="Source\Editor\EditorHistory.cpp" />

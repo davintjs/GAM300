@@ -106,6 +106,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp">
       <SubType>
       </SubType>
