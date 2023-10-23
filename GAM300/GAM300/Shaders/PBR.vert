@@ -49,6 +49,7 @@ layout (location = 5) out vec3 frag_Metal_Rough_AO_constant; // Material Instanc
 
 layout (location = 6) out vec2 frag_texture_index;
 
+layout (location = 7) out vec4 frag_pos_lightspace;
 
 
 
@@ -59,6 +60,7 @@ layout (location = 6) out vec2 frag_texture_index;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
+uniform mat4 lightSpaceMatrix;
 
 void main()
 {
@@ -73,10 +75,10 @@ void main()
     
     Normal = mat3(transpose(inverse(SRT))) * aNormal;
 
-
+    frag_pos_lightspace = lightSpaceMatrix * vec4(WorldPos, 1.0);
+    
+    
+    
+    
     gl_Position =  persp_projection * View * vec4(WorldPos, 1.0);
-
-
-
-
 }

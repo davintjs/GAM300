@@ -35,10 +35,10 @@ void SkyboxManager::CreateSkybox(const std::string& _name)
 	skyBoxModel->shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
 }
 
-void SkyboxManager::Draw()
+void SkyboxManager::Draw(BaseCamera& _camera)
 {
 	glDepthFunc(GL_LEQUAL);
-	skyBoxModel->SkyBoxDraw(skyboxTex);
+	skyBoxModel->SkyBoxDraw(skyboxTex, _camera);
 	glDepthFunc(GL_LESS);
 }
 

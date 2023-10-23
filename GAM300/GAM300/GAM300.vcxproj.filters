@@ -16,14 +16,11 @@
       <Filter>AppEntry</Filter>
     </ClCompile>
     <ClCompile Include="Source\Precompiled.cpp" />
-    <ClCompile Include="Source\IOManager\Handler_GLFW.cpp">
-      <Filter>IOManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Model3d.cpp" />
     <ClCompile Include="Source\Graphics\glslshader.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\Graphics\Editor_Camera.cpp" />
+    <ClCompile Include="Source\Editor\EditorCamera.cpp" />
     <ClCompile Include="Source\Utilities\UUID.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
@@ -94,6 +91,9 @@
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\BaseCamera.cpp" />
+    <ClCompile Include="Source\Editor\EditorGame.cpp" />
+    <ClCompile Include="Source\Editor\EditorHistory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -103,16 +103,13 @@
       <Filter>AppEntry</Filter>
     </ClInclude>
     <ClInclude Include="Source\Precompiled.h" />
-    <ClInclude Include="Source\IOManager\Handler_GLFW.h">
-      <Filter>IOManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\Model3d.h" />
     <ClInclude Include="Source\Graphics\glslshader.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />
     <ClInclude Include="Source\Core\FramerateController.h" />
     <ClInclude Include="Source\Core\SystemInterface.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
-    <ClInclude Include="Source\Graphics\Editor_Camera.h" />
+    <ClInclude Include="Source\Editor\EditorCamera.h" />
     <ClInclude Include="Source\Scene\Components.h" />
     <ClInclude Include="Source\Utilities\SparseSet.h" />
     <ClInclude Include="Source\Utilities\UUID.h" />
@@ -170,6 +167,10 @@
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GBuffer.h" />
+    <ClInclude Include="Source\Graphics\BaseCamera.h" />
+    <ClInclude Include="Source\Graphics\Ray3D.h" />
+    <ClInclude Include="Source\Editor\EditorHistory.h" />
+    <ClInclude Include="Source\Utilities\Interpolation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
@@ -190,5 +191,14 @@
     <None Include="Shaders\DefaultShader.frag" />
     <None Include="Shaders\DefaultGbuffer.frag" />
     <None Include="Shaders\DefaultGbuffer.vert" />
+    <None Include="Shaders\Shadow.vert" />
+    <None Include="Shaders\Shadow.frag" />
+    <None Include="Shaders\PointShadow.frag" />
+    <None Include="Shaders\PointShadow.geom" />
+    <None Include="Shaders\PointShadow.vert" />
+    <None Include="Shaders\UIScreenSpace.frag" />
+    <None Include="Shaders\UIScreenSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.vert" />
+    <None Include="Shaders\UIWorldSpace.frag" />
   </ItemGroup>
 </Project>

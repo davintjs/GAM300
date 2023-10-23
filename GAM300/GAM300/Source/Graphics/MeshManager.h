@@ -17,7 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma once
 #include "Precompiled.h"
-#include "IOManager/Handler_GLFW.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include "TextureManager.h"
@@ -117,7 +116,7 @@ public:
 		{
 			return nullptr;
 		}
-		return &mContainer.find(mesh_Name)->second; 
+		return &(mContainer.find(mesh_Name)->second); 
 	
 	}// Either Geom or Vaoid
 
@@ -136,7 +135,7 @@ public:
 
 private:
 	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string filePath);
+	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,
@@ -149,6 +148,7 @@ private:
 	void CreateInstanceCube();
 	void CreateInstanceSphere();
 	void CreateInstanceLine();
+	void CreateInstanceSegment3D();
 
 	// Creates all the related buffers - Blinn Phong
 	unsigned int InstanceSetup(InstanceProperties& prop);

@@ -16,18 +16,26 @@ struct Layer
 	std::string name;
 };
 
+using Tags = std::map<std::string, Engine::UUID>;
+using Layers = std::vector<Layer>;
+
 SINGLETON(IdentifiersManager)
 {
 public:
 	//Const size because bitwise
 	Layer physicsLayers[MAX_PHYSICS_LAYERS];
 	void CreateTag(const std::string& tagName);
+	void CreateLayer(const std::string & layerName);
+
+	void DeleteTag(std::string key);
+
+	Tags& GetTags();
 
 	void CreateSortingLayer(const std::string & layerName,size_t index);
 	void RenameSortingLayer(const std::string & layerName, size_t index);
 	void SwapSortingLayers(size_t rhs, size_t lhs);
 	void DeleteSortingLayer(size_t index);
 private:
-	std::map<std::string, Engine::UUID> tags;
-	std::vector<Layer> sortingLayers;
+	Tags tags;
+	Layers sortingLayers;
 };

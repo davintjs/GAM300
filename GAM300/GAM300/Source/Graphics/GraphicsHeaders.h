@@ -10,13 +10,16 @@
 	This file contains the declaration of Graphics System that includes:
 	1. 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Core/SystemInterface.h"
 #include "GraphicStructsAndClass.h"
+#include "BaseCamera.h"
 
 //#include "glslshader.h"
 #include "GBuffer.h"
@@ -30,9 +33,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 
 using InstanceContainer = std::map<GLuint, InstanceProperties>;
 // Bean: A temp solution to access the shader
+enum SHADERTYPE
+{
+	HDR,
+	PBR,
+	TIR,// Temporary Instance Render
+	TDR,// Temporary Debug Instance Render
+	SKYBOX,
+	BASICLIGHT,
+	AFFECTEDLIGHT,
+	SHADOW,
+	POINTSHADOW,
+	UI_SCREEN,
+	UI_WORLD
+};
 
 ENGINE_SYSTEM(ShaderManager)
 {
@@ -42,7 +60,8 @@ public:
 	void Exit();
 
 	// All shaders will be loaded using this function and passed into shaders container
-	void ShaderCompiler(const std::string& _vertPath, const std::string& _fragPath, const std::string& _name);
+	void ShaderCompiler(const std::string & _name, const std::string& _vertPath, 
+		const std::string& _fragPath, const std::string & _geometryPath = "");
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
@@ -60,7 +79,7 @@ public:
 	// Initialize the skybox of the engine
 	void CreateSkybox(const std::string& _name);
 
-	void Draw();
+	void Draw(BaseCamera& _camera);
 
 private:
 	SkyBox* skyBoxModel;
@@ -73,20 +92,21 @@ public:
 	void Init();
 	void Update(float dt);
 	void Exit();
+
+	void SetupSegment3D();
 	
+	void Draw();
+
+	void DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color);
+	void DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+
 	void DrawRay();
-	
-	bool& HasSelection() { return checkForSelection; }
-	float& GetIntersect() { return intersected; }
-	float& GetTempIntersect() { return tempIntersect; }
 
 private:
+	std::map<std::string, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
-	float intersected;
-	float tempIntersect;
 	bool enableRay = true;
-	bool checkForSelection = false;
 };
 
 ENGINE_SYSTEM(Lighting)
@@ -118,16 +138,23 @@ public:
 
 	void SetupGrid(const int& _num);
 
-	void Draw();
+	void Draw(BaseCamera& _camera);
+
+	void UIDraw_2D(BaseCamera& _camera);
+
+	void UIDraw_3D(BaseCamera& _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
+		//const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
+		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera, SHADERTYPE shaderType);
 	//glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin);
 	//Materials Mat);
 
 	void DrawGrid(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
+
+	void DrawDepth();
 
 	bool Culling();
 

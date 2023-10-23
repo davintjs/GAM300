@@ -16,12 +16,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
@@ -47,8 +47,16 @@ struct Tag : Object
 {
 	std::string name;
 	Engine::UUID tagName;
-	size_t physicsLayerIndex;
+	size_t physicsLayerIndex = 0;
+	property_vtable();
 };
+
+property_begin_name(Tag, "Tag")
+{
+	property_var(name),
+		property_var(tagName).Name("Tag Name"),
+		property_var(physicsLayerIndex).Name("Layer Index"),
+} property_vend_h(Tag)
 
 //To store transform of entity
 struct Transform : Object
@@ -160,9 +168,18 @@ struct Animator : Object
 {
 };
 
-//struct Camera
-//{
-//};
+struct Camera : Object, BaseCamera
+{
+	Camera();
+	Vector4 backgroundColor{};
+	property_vtable();
+};
+
+property_begin_name(Camera, "Camera") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(backgroundColor).Name("BackgroundColor"),
+	property_parent(BaseCamera)
+} property_vend_h(Camera)
 
 struct Rigidbody : Object
 {
@@ -227,20 +244,39 @@ struct Script : Object
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name"),
+	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
+
+
+struct MeshFilter : Object
+{
+	MeshFilter();
+
+	std::string MeshName = "Cube";
+	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<unsigned int>* indices;	// Index
+	property_vtable();
+};
+
+property_begin_name(MeshFilter, "MeshFilter"){
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(MeshName).Flags(property::flags::DONTSHOW)
+} property_vend_h(MeshFilter)
 
 struct MeshRenderer : Object
 {
 	std::string MeshName = "Cube";
 	std::string AlbedoTexture = "";
 	std::string NormalMap = "";
+	std::string MetallicTexture = "";
+	std::string RoughnessTexture = "";
+	std::string AoTexture = "";
+	std::string EmissionTexture = "";
 	//Materials mr_Material;
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
-
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
@@ -250,11 +286,6 @@ struct MeshRenderer : Object
 	float mr_metallic = 0.5f;
 	float mr_roughness = 0.5f;
 	float ao = 0.5f;
-
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;
@@ -275,22 +306,22 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(MeshName).Flags(property::flags::DONTSHOW),
-	property_var(mr_Albedo),
-	property_var(AlbedoTexture),
-	property_var(NormalMap),
-	/*property_var(mr_Specular),
-	property_var(mr_Diffuse),
-	property_var(mr_Ambient),
-	property_var(mr_Shininess),*/
-	property_var(mr_metallic),
-	property_var(MetallicTexture),
-
-	property_var(mr_roughness),
-	property_var(RoughnessTexture),
-	property_var(EmissionTexture),
-
-	property_var(ao),
-	property_var(AoTexture),
+	property_var(mr_Albedo).Name("Albedo"),
+	property_var(mr_metallic).Name("Metallic"),
+	property_var(mr_roughness).Name("Roughness"),
+	property_var(ao).Name("AmbientOcclusion"),
+	property_var(AlbedoTexture).Name("AlbedoTexture"),
+	property_var(NormalMap).Name("NormalMap"),
+	property_var(MetallicTexture).Name("MetallicTexture"),
+	property_var(RoughnessTexture).Name("RoughnessTexture"),
+	property_var(AoTexture).Name("AoTexture"),
+	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(textureID).Name("TextureID").Flags(property::flags::DONTSHOW),
+	property_var(normalMapID).Name("NormalMapID").Flags(property::flags::DONTSHOW),
+	property_var(RoughnessID).Name("RoughnessID").Flags(property::flags::DONTSHOW),
+	property_var(MetallicID).Name("MetallicID").Flags(property::flags::DONTSHOW),
+	property_var(AoID).Name("AoID").Flags(property::flags::DONTSHOW),
+	property_var(EmissionID).Name("EmissionID").Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshRenderer)
 
 
@@ -319,14 +350,31 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightType).Name("Light Type"),
-	property_var(lightpos).Name("Position"),
+	property_var(lightType).Name("lightType"),
+	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
 	property_var(direction).Name("Direction"),
 	property_var(inner_CutOff).Name("Inner Cutoff"),
 	property_var(outer_CutOff).Name("Outer Cutoff"),
 	property_var(lightingColor).Name("Color")
 } property_vend_h(LightSource)
+
+struct SpriteRenderer : Object
+	{
+		bool WorldSpace = true;
+
+		std::string SpriteTexture = "";
+		GLuint spriteTextureID = 0;
+
+		property_vtable()
+	};
+
+property_begin_name(SpriteRenderer, "SpriteRenderer")
+{
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(WorldSpace).Name("World Space"),
+		property_var(SpriteTexture).Name("SpriteTexture"),
+} property_vend_h(SpriteRenderer)
 
 #pragma endregion
 
@@ -433,7 +481,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -480,7 +528,7 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 //to check through every type T in an template pack to compare with its type enum
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 template<typename T, typename... Ts>\
-TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
+TYPE FUNC_NAME##Iter(size_t objType, void* pObject)\
 {\
 	if (GetType::E<T>() == objType)\
 	{\
@@ -496,7 +544,7 @@ TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	}\
 	if constexpr (sizeof...(Ts) != 0)\
 	{\
-		return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+		return FUNC_NAME##Iter<Ts...>(objType, pObject); \
 	}\
 	else\
 	{\
@@ -510,7 +558,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

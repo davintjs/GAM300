@@ -30,7 +30,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/BehaviorTreeBuilder.h"
 #include "AI/NavMeshBuilder.h"
 #include "IOManager/InputSystem.h"
-#include "IOManager/Handler_GLFW.h"
 #include "AssetManager/AssetManager.h"
 #include "Utilities/FileWatcher.h"
 #include "ImGuizmo.h"
@@ -90,23 +89,6 @@ public:
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
 		app_time = 0.f;
-
-		// NavMesh testing
-		std::vector<glm::vec3> GroundVertices{
-				glm::vec3(-0.5f, 0.5f, -0.5f),
-				glm::vec3(0.5f, 0.5f, -0.5f),
-				glm::vec3(0.5f, 0.5f, 0.5f),
-				glm::vec3(-0.5f, 0.5f, 0.5f),
-		};
-
-		std::vector<glm::ivec3> GroundIndices{
-				glm::ivec3(0, 1, 2),
-				glm::ivec3(2, 3, 0),
-		};
-
-		NAVMESHBUILDER.BuildNavMesh(GroundVertices, GroundIndices); // Build the navmesh
-
-		// Bean: Serialization Tests
 	}
 
 	/**************************************************************************/
@@ -171,8 +153,6 @@ public:
 		#endif
 
 		//End ImGui Frames
-
-		glfwSwapBuffers(GLFW_Handler::ptr_window); // This at the end	
 	}
 
 	/**************************************************************************/

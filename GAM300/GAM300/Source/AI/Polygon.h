@@ -41,6 +41,8 @@ public:
 	// Returns the normal of the polygon
 	glm::vec3 GetNormal() const;
 
+	const glm::vec3& GetBarycenter() const;
+
 	// Returns the orientation of the polygon
 	Orientation GetOrientation() const;
 
@@ -63,11 +65,13 @@ public:
 	void JoinPolygon(Polygon3D& polygon);
 
 	// Calculate the normal of the given vertices
-	void CalculateNormal(const std::vector<glm::vec3>& vertices);
+	void CalculateNormalBarycenter(const std::vector<glm::vec3>& vertices);
 
 private:
 	// Generate the convex hull given the ground vertices
 	void GenerateConvexHull(const std::vector<glm::vec3>& points);
+
+	std::vector<glm::vec3> TrimPositions(const std::vector<glm::vec3>& positions);
 
 	// Helper functions
 	// Determines if the point is on the left or on the vector
@@ -86,6 +90,7 @@ private:
 
 	glm::vec3 minPoint;
 	glm::vec3 maxPoint;
+	glm::vec3 mBarycenterPoint;
 	int mNumberOfPoints = 0;
 	std::vector<glm::vec3> mPoints;
 	Orientation mOrientation;

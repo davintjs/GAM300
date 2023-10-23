@@ -9,15 +9,17 @@
 \brief
 	This file contains the definations of Graphics System
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 #include "Core/SystemsGroup.h"
+#include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -31,35 +33,20 @@ TemplatePack
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
 
-std::vector <glm::vec4> temp_AlbedoContainer;
-std::vector <glm::vec4> temp_SpecularContainer;
-std::vector <glm::vec4> temp_DiffuseContainer;
-std::vector <glm::vec4> temp_AmbientContainer;
-std::vector <float> temp_ShininessContainer;
-
-//bool isThereLight = false;
-
-//void InstanceSetup(GLuint vaoid);
-//void InstancePropertySetup(InstanceProperties& prop);
-
-//std::vector<std::string> faces
-//{
-//	FileSystem::getPath("resources/textures/skybox/right.jpg"),
-//	FileSystem::getPath("resources/textures/skybox/left.jpg"),
-//	FileSystem::getPath("resources/textures/skybox/top.jpg"),
-//	FileSystem::getPath("resources/textures/skybox/bottom.jpg"),
-//	FileSystem::getPath("resources/textures/skybox/front.jpg"),
-//	FileSystem::getPath("resources/textures/skybox/back.jpg")
-//};
-
 // renderQuad() renders a 1x1 XY quad in NDC
 // -----------------------------------------
 unsigned int quadVAO = 0;
 unsigned int quadVBO;
+unsigned int cameraQuadVAO = 0;
+unsigned int cameraQuadVBO;
 
-void renderQuad()
+
+extern unsigned int depthMap;
+extern unsigned int depthCubemap;
+
+void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
-	if (quadVAO == 0)
+	if (_quadVAO == 0)
 	{
 		float quadVertices[] = {
 			// positions        // texture Coords
@@ -68,19 +55,33 @@ void renderQuad()
 			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
 			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		};
+
+		//	float quadVertices[] = {
+//		// pos	           // tex
+//		-1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+//		-1.0f, -1.0f,0.0f, 0.0f, 0.0f,
+
+//		-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+//		1.0f, 1.0f,  0.0f, 1.0f, 1.0f,
+//		1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+//	};
+
 		// setup plane VAO
-		glGenVertexArrays(1, &quadVAO);
-		glGenBuffers(1, &quadVBO);
-		glBindVertexArray(quadVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glGenVertexArrays(1, &_quadVAO);
+		glGenBuffers(1, &_quadVBO);
+		glBindVertexArray(_quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, _quadVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	}
-	glBindVertexArray(quadVAO);
+	glBindVertexArray(_quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
 	glBindVertexArray(0);
 }
 
@@ -90,29 +91,129 @@ void GraphicsSystem::Init()
 	GraphicsSubSystems::Init();
 
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
-
 	EditorCam.Init();
 }
 
 void GraphicsSystem::Update(float dt)
 {
-	// Temporary Material thing
-	//temp_MaterialContainer[3].Albedo = glm::vec4{ 1.f,1.f,1.f,1.f };
-	temp_DiffuseContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
-	temp_SpecularContainer[3] = glm::vec4{ 0.5f, 0.5f, 0.5f,1.f };
-	temp_AmbientContainer[3] = glm::vec4{ 1.0f, 0.5f, 0.31f,1.f };
-	temp_ShininessContainer[3] = 32.f;
-
-	temp_AlbedoContainer[3].r = static_cast<float>(sin(glfwGetTime() * 2.0));
-	temp_AlbedoContainer[3].g = static_cast<float>(sin(glfwGetTime() * 0.7));
-	temp_AlbedoContainer[3].b = static_cast<float>(sin(glfwGetTime() * 1.3));
-
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
 
-	//Currently Putting in Camera Update loop here
-	EditorCam.Update(dt);
+	// Editor Camera
+	EditorWindowEvent e("Scene");
+	EVENTS.Publish(&e);
 
+	if (e.isOpened)
+	{
+		EditorCam.Update(dt);
+
+		PreDraw(EditorCam, quadVAO, quadVBO);
+	}
+
+	// Game Cameras
+	EditorWindowEvent e1("Game");
+	EVENTS.Publish(&e1);
+
+	if (e1.isOpened)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (Camera& camera : currentScene.GetArray<Camera>())
+		{
+			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+
+			// Update camera view 
+			camera.UpdateCamera(transform->translation, transform->rotation);
+
+			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
+		}
+	}
+
+	PostDraw();
+}
+
+void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
+{
+	
+	glViewport(0, 0, 1600, 900);
+	glBindFramebuffer(GL_FRAMEBUFFER, _camera.GetFramebuffer().hdrFBO);
+	glDrawBuffer(GL_COLOR_ATTACHMENT1);
+
+	Draw(_camera); // call draw after update
+	RENDERER.UIDraw_3D(_camera); // call draw after update
+
+	if (_camera.GetCameraType() == CAMERATYPE::GAME)
+		Draw_Screen(_camera);
+
+	_camera.GetFramebuffer().Unbind();
+
+	_camera.GetFramebuffer().Bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+
+	GLSLShader& shader = SHADER.GetShader(HDR);
+	shader.Use();
+
+	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer);
+
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "hdr");
+
+	glUniform1i(uniform1, RENDERER.IsHDR());
+
+	GLint uniform2 =
+		glGetUniformLocation(shader.GetHandle(), "exposure");
+
+	glUniform1f(uniform2, RENDERER.GetExposure());
+
+	renderQuad(_vao, _vbo);
+	shader.UnUse();
+
+	_camera.GetFramebuffer().Unbind();
+}
+
+void GraphicsSystem::Draw(BaseCamera& _camera) {
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+	glEnable(GL_DEPTH_BUFFER);
+
+	RENDERER.Draw(_camera);
+
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+		DEBUGDRAW.Draw();
+
+	MYSKYBOX.Draw(_camera);
+}
+
+void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
+{
+	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
+	RENDERER.UIDraw_2D(_camera);
+
+}
+
+void GraphicsSystem::PostDraw()
+{
+	for (auto& [name, prop] : RENDERER.GetProperties())
+	{
+		prop.iter = 0;
+	}
+}
+
+void GraphicsSystem::Exit()
+{
+	//CLEANUP GRAPHICS HERE
+	
+	// All subsystem exit
+	GraphicsSubSystems::Exit();
+}
+
+void GraphicsSystem::OldUpdate()
+{
 	// Dont delete this -> To run on lab computers
 	/*GLint maxVertexAttribs;
 	glGetProgramiv(temp_instance_shader.GetHandle(), GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxVertexAttribs);
@@ -151,62 +252,4 @@ void GraphicsSystem::Update(float dt)
 		SRT_Buffers[mesh->second.index].index = 0;
 	}
 	*/
-
-	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorCam.GetFramebuffer().hdrFBO);
-	glDrawBuffer(GL_COLOR_ATTACHMENT1); // color buffer for hdr
-
-	Draw(); // Draw everything else
-
-	EditorCam.GetFramebuffer().unbind();
-
-	EditorCam.GetFramebuffer().bind();
-	glDrawBuffer(GL_COLOR_ATTACHMENT0); // sean's color attatchment
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.f, 0.5f, 0.5f, 1.f);
-
-	// Bean: For unbinding framebuffer
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::HDR);
-	shader.Use();  
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, EditorCam.GetFramebuffer().colorBuffer); // HDR buffer
-
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "hdr");
-
-	glUniform1i(uniform1, RENDERER.IsHDR());
-
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "exposure");
-
-	glUniform1f(uniform2, RENDERER.GetExposure());
-
-	renderQuad();
-	shader.UnUse();
-
-	EditorCam.GetFramebuffer().unbind();
-}
-
-void GraphicsSystem::Draw() {
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.f, 0.5f, 0.5f, 1.f);
-	glEnable(GL_DEPTH_BUFFER);
-
-	RENDERER.Draw();
-
-	MYSKYBOX.Draw();
-}
-
-void GraphicsSystem::Exit()
-{
-	//std::cout << "-- Graphics Exit -- " << std::endl;
-
-	//CLEANUP GRAPHICS HERE
-	
-	// All subsystem exit
-	GraphicsSubSystems::Exit();
 }

@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #include "Precompiled.h"
+#include "AppEntry/Application.h"
 #include "Editor.h"
 #include "EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -25,6 +26,7 @@ TemplatePack
 <
     EditorMenuBar,
     EditorContentBrowser,
+    EditorGame,
     EditorScene,
     EditorInspector,
     EditorDebugger,
@@ -47,10 +49,11 @@ void EditorSystem::Init()
 
     // Enable this for dockspace capabilities in dockspace mode		
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    ImGui_ImplGlfw_InitForOpenGL(GLFW_Handler::ptr_window, true);
+    ImGui_ImplGlfw_InitForOpenGL(Application::GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
     EVENTS.Subscribe(this, &EditorSystem::CallbackSelectedEntity);
+    EVENTS.Subscribe(this, &EditorSystem::CallbackGetSelectedEntity);
 
     EditorSystems::Init();
 }
@@ -60,6 +63,17 @@ void EditorSystem::Update(float dt)
     //Editor Functions
     Editor_Dockspace();
     EditorSystems::Update(dt);
+
+    //macros for undo and redo functionality
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyPressed(ImGuiKey_Z, false))
+            History.UndoChange();    
+    }
+
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyPressed(ImGuiKey_Y, false))
+            History.RedoChange();
+    }
 
     //demo
     /*bool demo = true;
@@ -150,4 +164,12 @@ void EditorSystem::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
         selectedEntity = pEvent->pEntity->EUID();
     else
         selectedEntity = 0;
+}
+
+void EditorSystem::CallbackGetSelectedEntity(GetSelectedEntityEvent* pEvent)
+{
+    if (selectedEntity != 0)
+        pEvent->pEntity = &MySceneManager.GetCurrentScene().Get<Entity>(selectedEntity);
+    else
+        pEvent->pEntity = nullptr;
 }

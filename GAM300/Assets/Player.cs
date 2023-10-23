@@ -9,7 +9,9 @@ public class Player : Script
     public GameObject gameObj = null;
     public float sad;
     public Transform otherT;
-
+    public string onamae = "HERRO";
+    public float ching;
+    
     IEnumerator DoSomething()
     {
         while (true)
@@ -22,16 +24,19 @@ public class Player : Script
     void Start()
     {
         StartCoroutine(DoSomething());
+        Console.WriteLine("START");
         //AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
+        //
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))
         {
+            Console.WriteLine("Q");
             otherT.localRotation.y += sad / 360f;
             //rb.mass -= speed;
         }

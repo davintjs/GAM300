@@ -14,11 +14,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #include "Precompiled.h"
-#include "IOManager/Handler_GLFW.h"
 #include "Core/SystemInterface.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "Core/Events.h"
+#include "Editor/EditorHistory.h"
 
 #define EDITOR EditorSystem::Instance()
 
@@ -35,10 +35,15 @@ public:
 	Engine::UUID GetSelectedEntity();
 	void SetSelectedEntity(Entity*);
 
-
 	void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
+
+	void CallbackGetSelectedEntity(GetSelectedEntityEvent* pEvent);
+
+	HistoryManager History;
 
 private:
 	std::vector<ISystem*> editorSystems;
 	Engine::UUID selectedEntity{0};
+
+	
 };
