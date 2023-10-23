@@ -78,7 +78,8 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
     GLenum Target = GL.translate(Texture.target());
-
+    //Texture = gli::flip<gli::texture>(Texture);
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     GLuint TextureName = 0; 
     glGenTextures(1, &TextureName);
     glBindTexture(Target, TextureName);

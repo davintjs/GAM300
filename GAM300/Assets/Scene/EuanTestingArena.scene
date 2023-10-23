@@ -335,26 +335,6 @@ MeshRenderer:
   EmissionID: 0
 ---
 GameObject:
-  m_EUID: 10808569125327567584
-  m_IsActive: true
-  m_Name: 2D SPACE UI
-  m_Layer: 0
-  m_Position: [7.6500001, 4.5, 0]
-  m_Rotation: [0, 0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    []
-  m_Parent: 4212138099454399691
-  m_Components:
-    - component: {fileID: 2142793048574192356}  # SpriteRenderer
----
-SpriteRenderer:
-  EUID: 10808569125327567584
-  UUID: 2142793048574192356
-  World Space: false
-  SpriteTexture: BestTeam
----
-GameObject:
   m_EUID: 4212138099454399691
   m_IsActive: true
   m_Name: Canvas
@@ -363,7 +343,7 @@ GameObject:
   m_Rotation: [0, -0, 0]
   m_Scale: [160, 90, 1]
   m_Children:
-    - {fileID: 10808569125327567584}
+    []
   m_Parent: 0
   m_Components:
     - component: {fileID: 13547543225942679706}  # Canvas
@@ -371,3 +351,23 @@ GameObject:
 Canvas:
   EUID: 4212138099454399691
   UUID: 13547543225942679706
+---
+GameObject:
+  m_EUID: 2866402867161245437
+  m_IsActive: true
+  m_Name: Child this to canvas
+  m_Layer: 0
+  m_Position: [1.52902234, 138.102646, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [16, 9, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 8812244467539034998}  # SpriteRenderer
+---
+SpriteRenderer:
+  EUID: 2866402867161245437
+  UUID: 8812244467539034998
+  World Space: false
+  SpriteTexture: BestTeam

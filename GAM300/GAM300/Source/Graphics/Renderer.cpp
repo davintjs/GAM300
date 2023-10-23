@@ -531,7 +531,9 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
-	glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
+	//glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
+	//glm::mat4 OrthoProjection = glm::ortho(-8.f, 8.f, -4.5f, 4.5f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& shader = SHADER.GetShader(UI_SCREEN);
@@ -657,6 +659,8 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
+	
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), false);
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
 	{
@@ -671,43 +675,50 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 	}
 	glLineWidth(1.f);
 
-	//for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
-	//{
-	//	// This means it's 2D space
-	//	if (!Sprite.WorldSpace)
-	//	{
-	//		continue;
-	//	}
 
-	//	// Declarations for the things we need - SRT
-	//	Entity& entity = currentScene.Get<Entity>(Sprite);
-	//	Transform& transform = currentScene.Get<Transform>(entity);
 
-	//	// SRT uniform
-	//	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-	//		1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+	// Setting the projection here since all of them use the same projection
 
-	//	// Setting bool to see if there is a sprite to render
-	//	GLint uniform1 =
-	//		glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-	//	if (Sprite.spriteTextureID == 0)
-	//	{
-	//		glUniform1f(uniform1, false);
-	//	}
-	//	else
-	//	{
-	//		glUniform1f(uniform1, true);
-	//	}
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
 
-	//	// Binding Texture - might be empty , above uniform will sort it
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-	//	renderQuad(_quadVAO, _quadVBO);
+	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	{
+		// This means it's 2D space
+		if (Sprite.WorldSpace)
+		{
+			continue;
+		}
 
-	//	//renderQuadWireMesh(_quadVAO, _quadVBO);
+		// Declarations for the things we need - SRT
+		Entity& entity = currentScene.Get<Entity>(Sprite);
+		Transform& transform = currentScene.Get<Transform>(entity);
 
-	//}
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+		// Setting bool to see if there is a sprite to render
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+		if (Sprite.spriteTextureID == 0)
+		{
+			glUniform1f(uniform1, false);
+		}
+		else
+		{
+			glUniform1f(uniform1, true);
+		}
+
+		// Binding Texture - might be empty , above uniform will sort it
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+
+		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
+	}
 	shader.UnUse();
 	glDisable(GL_BLEND);
 
