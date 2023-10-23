@@ -221,6 +221,43 @@ void EditorScene::DisplayGizmos()
                 }
             }
         }
+
+        for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+        {
+            Entity& entity = currentScene.Get<Entity>(Sprite);
+            Transform& transform = currentScene.Get<Transform>(entity);
+
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::vec3 rot;
+            glm::vec3 scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
+
+            //glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
+            //glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            glm::vec3 mins = -scale;
+            glm::vec3 maxs = scale;
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
+
+            float& intersect = EditorCam.GetIntersect();
+            float& tempIntersect = EditorCam.GetTempIntersect();
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
+            {
+                if (tempIntersect < intersect)
+                {
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
+                }
+            }
+
+
+
+        }
     }
 
     // Display gizmos for selected entity

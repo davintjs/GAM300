@@ -106,11 +106,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
+    <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
@@ -241,6 +243,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h">
       <SubType>
       </SubType>
@@ -312,6 +315,12 @@
     <None Include="Shaders\BasicLighting.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\DefaultGbuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.vert" />
+    <None Include="Shaders\DefaultShader.frag" />
+    <None Include="Shaders\DefaultShader.vert" />
+    <None Include="Shaders\BloomBlur.frag" />
+    <None Include="Shaders\BloomBlur.vert" />
     <None Include="Shaders\HDR.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
@@ -464,6 +473,7 @@ copy "$(SolutionDir)External\Mono\mono\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <DisableSpecificWarnings>4275;4251;4189;4100;4390;4715</DisableSpecificWarnings>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
