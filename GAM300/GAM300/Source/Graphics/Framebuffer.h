@@ -13,7 +13,7 @@
 		b. Resizing the framebuffer viewport
 		c. Getters and Setters for private data members
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
@@ -59,6 +59,11 @@ public:
 	// Get the framebuffer id as reference
 	GLuint& GetBufferObjectId() { return frameBufferObjectID; }
 
+	
+	unsigned int gBuffer{};
+	unsigned int gPosition{};
+	unsigned int gNormal{};
+	unsigned int gAlbedoSpec{};
 	unsigned int hdrFBO;
 	unsigned int rboDepth;
 	//unsigned int colorBuffer;
