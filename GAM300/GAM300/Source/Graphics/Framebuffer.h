@@ -18,7 +18,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "glslshader.h"
+#include <GL/glew.h>
+#include <glm/vec2.hpp>
+#include "Core/SystemInterface.h"
 
 class Framebuffer
 {
@@ -70,5 +72,44 @@ private:
 
 	GLuint width = 0, height = 0;
 };
+
+//struct Attachment
+//{
+//
+//};
+//
+//struct TextureAttachment : public Attachment
+//{
+//	GLuint textureID;
+//	GLenum textureTarget;
+//	GLuint mipLevel;
+//	GLuint layer;
+//};
+//
+//struct RenderbufferAttachment : public Attachment
+//{
+//	GLuint renderbufferID;
+//	GLenum renderbufferTarget;
+//};
+//
+//class GLContext
+//{
+//	GLuint readFramebufferBinding;
+//	GLuint drawFramebufferBinding;
+//};
+//
+//struct Framebuffer2
+//{
+//	std::map<GLenum, Attachment> attachments;
+//	GLenum drawBuffers[16] = { GL_COLOR_ATTACHMENT0, GL_NONE };
+//	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
+//};
+//
+//ENGINE_SYSTEM(FramebufferManager)
+//{
+//public:
+//	Framebuffer2 GetFramebufferByTarget(const GLenum& _target);
+//	
+//};
 
 #endif // !FRAMEBUFFER_H
