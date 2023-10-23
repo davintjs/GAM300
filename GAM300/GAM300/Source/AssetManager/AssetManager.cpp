@@ -117,10 +117,13 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 	//One does not simply delete a meta file while the engine is running >:C
 	if (filePath.extension() == ".meta")
 	{
-		PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
 		fs::path nonMeta = filePath;
 		nonMeta.replace_extension("");
-		assets.CreateMeta(nonMeta);
+		if (fs::exists(nonMeta))
+		{
+			PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
+			assets.CreateMeta(nonMeta);
+		}
 		return;
 	}
 	assets.RemoveAsset(filePath);

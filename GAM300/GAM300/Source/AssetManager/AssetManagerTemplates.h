@@ -81,8 +81,8 @@ struct AllAssetsGroup
 				{
 					Engine::GUID guid = GetGUID(filePath);
 					T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
-					std::get<AssetsTable<T>>(assets).erase(guid);
-					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, nullptr));
+					//std::get<AssetsTable<T>>(assets).erase(guid);
+					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, &asset));
 					return true;
 				}
 				return false;
@@ -289,7 +289,10 @@ struct AllAssetsGroup
 			if (node["lastModified"]) // Deserialize guid
 			{
 				if (node["lastModified"].as<size_t>() == seconds)
+				{
 					return false;
+				}
+				UpdateModifiedTime(metaPath,seconds);
 				return true;
 			}
 		}
@@ -298,9 +301,22 @@ struct AllAssetsGroup
 		return true;
 	}
 
-	void UpdateModifiedTime()
+	void UpdateModifiedTime(const fs::path& metaPath,size_t seconds)
 	{
 		//File last modified
+		YAML::Emitter out;
+		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
+		for (YAML::Node& node : data)
+		{
+			if (node["lastModified"]) // Deserialize guid
+			{
+				node["lastModified"] = seconds;
+			}
+			out << node;
+		}
+		std::ofstream fs(metaPath);
+		fs << out.c_str();
+		fs.close();
 	}
 
 	//Only use this to update metafiles
@@ -310,7 +326,7 @@ struct AllAssetsGroup
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << key << YAML::Value << val;
-		std::ofstream fs(metaPath);
+		std::ofstream fs(metaPath, std::ios::app);
 		fs << out.c_str();
 		fs.close();
 	}
