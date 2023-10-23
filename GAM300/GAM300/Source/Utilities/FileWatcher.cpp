@@ -59,6 +59,11 @@ struct PairEqual {
     }
 };
 
+void FileWatcher::StopAndRerun()
+{
+
+}
+
 void FileWatcher::ThreadWork()
 {
     BYTE  fni[32 * 1024];

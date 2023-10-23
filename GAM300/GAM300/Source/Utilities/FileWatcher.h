@@ -16,6 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef FILEWATCHER_H
 #define FILEWATCHER_H
 
+#include <thread>
+
 class FileWatcher
 {
 public:
@@ -25,10 +27,13 @@ public:
     //Thread that uses WIN API to check for file updates
     void ThreadWork();
 
+    void ReadDir();
+
     //Constructor, closes file handle
     ~FileWatcher();
 
     void* hDir;
+    std::thread th;
 };
 
 #endif

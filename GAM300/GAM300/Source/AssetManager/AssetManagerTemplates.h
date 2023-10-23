@@ -81,8 +81,10 @@ struct AllAssetsGroup
 				{
 					Engine::GUID guid = GetGUID(filePath);
 					T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
-					//std::get<AssetsTable<T>>(assets).erase(guid);
-					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, &asset));
+					T* tempAsset = new T;
+					tempAsset->mFilePath = filePath;
+					std::get<AssetsTable<T>>(assets).erase(guid);
+					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, tempAsset));
 					return true;
 				}
 				return false;
