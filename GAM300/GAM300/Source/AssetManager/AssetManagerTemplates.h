@@ -196,6 +196,7 @@ struct AllAssetsGroup
 						if (std::filesystem::exists(metaPath))
 						{
 							std::filesystem::remove(metaPath);
+							delete pair.second;
 						}
 						break;
 					}

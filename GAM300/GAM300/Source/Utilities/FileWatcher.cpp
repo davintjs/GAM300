@@ -28,7 +28,7 @@ FileWatcher::FileWatcher()
     hDir = CreateFile(
         std::wstring(L"ASSETS").c_str(),
         FILE_LIST_DIRECTORY,
-        FILE_SHARE_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
         nullptr,
         OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS,
@@ -59,10 +59,6 @@ struct PairEqual {
     }
 };
 
-void FileWatcher::StopAndRerun()
-{
-
-}
 
 void FileWatcher::ThreadWork()
 {
