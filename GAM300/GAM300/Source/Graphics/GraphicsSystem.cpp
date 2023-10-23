@@ -142,9 +142,11 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
 
 bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& _camera)
 {
+	
 	bool horizontal = true, first_iteration = true;
 	GLSLShader& shader = SHADER.GetShader(BLUR);
 	shader.Use();
+	
 	for (unsigned int i = 0; i < amount; i++)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
