@@ -32,6 +32,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
+#define PI 3.1415927
+#define EPSILON 0.01f
 
 enum ComponentType {
     AUDIO, MESHRENDERER, SPRITERENDERER
@@ -50,6 +52,12 @@ Object* newReference = nullptr;
 std::string refFieldName{};
 bool isAddingReference = false;
 size_t editedContainer{};
+
+//for checking of drag fields
+bool valueChanged = false;
+float initialvalue = 0.f;
+float changedvalue = 0.f;
+Vector3 initialVector;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -137,6 +145,10 @@ void DisplayType(Change& change, const char* name, char*& val)
     }
 }
 
+
+bool vectorchanged = false;
+
+//Display type for vector floats
 bool DisplayType(const char* name, float& val)
 {
     static float temp{};
@@ -152,8 +164,25 @@ bool DisplayType(const char* name, float& val)
         idName += name;
         cIdName = idName.c_str();
     }
-    return ImGui::DragFloat(cIdName, &val, 0.15f);
+    bool ischanged = false;
+    float buf = val;
+
+    if (ImGui::DragFloat(cIdName, &buf, 0.15f)) {
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        ischanged = true;
+        valueChanged = false;
+    }
+
+    return ischanged;
 }
+
 
 void DisplayType(Change& change, const char* name, float& val)
 {
@@ -173,8 +202,20 @@ void DisplayType(Change& change, const char* name, float& val)
     //ImGui::DragFloat(cIdName, &val, 0.15f);
 
     float buf = val;
+   
     if (ImGui::DragFloat(cIdName, &buf)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+        changedvalue = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        valueChanged = false;
+        val = initialvalue;
+        EDITOR.History.SetPropertyValue(change, val, changedvalue);
     }
 }
 
@@ -199,7 +240,7 @@ void DisplayType(Change& change, const char* name, Vector3& val)
 
     Vector3 buf = val;
     if (!std::strcmp(name, "Rotation")) {
-        buf *= (180.f / 3.14159f);
+        buf *= (180.f / PI);
     }
     bool changed = false;
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
@@ -208,26 +249,57 @@ void DisplayType(Change& change, const char* name, Vector3& val)
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+
         changed = DisplayType(idName.c_str(), buf.x);
+        if (changed) {
+            initialVector = val;
+
+            initialVector.x = initialvalue;
+            val = initialVector;
+        }
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.y))
+        if (!changed && DisplayType(idName.c_str(), buf.y)) {
             changed = true;
+            initialVector = val;
+            initialVector.y = initialvalue;
+            val = initialVector;
+        }
+           
+
 
         ImGui::TableNextColumn();
         idName.back() = 'Z';
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.z))
+        if (!changed && DisplayType(idName.c_str(), buf.z)) {
             changed = true;
+            initialVector = val;
+            initialVector.z = initialvalue;
+            val = initialVector;
+        }
+
+       
+
+        //convert rotation from degree back to radians
+        if (!std::strcmp(name, "Rotation")) {
+            buf *= (PI / 180.f);
+            val *= (PI / 180.f);
+            //Check whether value is within epsilon range (to avoid negative 0)
+            for (int i = 0; i < 3; ++i) {
+                if (std::fabs(buf[i] - 0.f) < EPSILON)
+                    buf[i] = 0;
+            }
+        }
+
+        if (!changed)
+            val = buf;
 
         ImGui::EndTable();
     }
+
     if (changed) {
-        if (!std::strcmp(name, "Rotation")) {
-            buf *= (3.14159f / 180.f);
-        }
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
 }
