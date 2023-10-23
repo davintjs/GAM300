@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
+  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -339,9 +339,9 @@ GameObject:
   m_IsActive: true
   m_Name: 2D SPACE UI
   m_Layer: 0
-  m_Position: [0, 6.51778793, 3.5999999]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [5.80000019, 6.0999999, 1]
+  m_Position: [4.19871521, 6.51778793, 3.5999999]
+  m_Rotation: [-0.141592368, 3.1500001, 3.1500001]
+  m_Scale: [2, 2, 0.999999881]
   m_Children:
     []
   m_Parent: 0

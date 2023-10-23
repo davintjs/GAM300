@@ -530,7 +530,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
-	glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& shader = SHADER.GetShader(UI_SCREEN);
@@ -600,7 +600,6 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		// This means it's 2D space
@@ -634,8 +633,6 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
-
-
 	}
 	shader.UnUse();
 	glDisable(GL_BLEND);

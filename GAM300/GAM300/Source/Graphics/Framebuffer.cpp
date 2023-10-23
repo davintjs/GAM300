@@ -196,8 +196,6 @@ void Framebuffer::Unbind()
 // Bean: update via messaging
 void Framebuffer::Resize(GLuint _width, GLuint _height)
 {
-	std::cout << "we were here\n";
-
 	//COPIUM_ASSERT(_width == 0 || _height == 0, "Resize of Framebuffer Invalid!!");
 	width = _width;
 	height = _height;
