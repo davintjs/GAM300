@@ -891,7 +891,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_WORLD);
 	shader.Use();
 
 	// Setting the projection here since all of them use the same projection
