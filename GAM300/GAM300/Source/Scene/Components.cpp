@@ -34,6 +34,17 @@ bool Transform::isChild() {
 		return false;
 }
 
+glm::vec3 Transform::GetTranslation() const
+{
+	return glm::vec3(GetWorldMatrix()[3]);
+}
+
+glm::vec3 Transform::GetScale() const
+{
+	glm::mat4 mat = GetWorldMatrix();
+	return glm::vec3(mat[0][0], mat[1][1], mat[2][2]);
+}
+
 glm::mat4 Transform::GetWorldMatrix() const
 {
 	if (parent)

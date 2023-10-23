@@ -31,7 +31,7 @@ void BaseCamera::Init()
 	/*framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
 	framebuffer.Init();*/
 
-	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer(GL_TEXTURE_2D, 1600, 900);
+	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer();
 	framebufferID = framebuffer.frameBufferObjectID;
 	FRAMEBUFFER.RenderToTexture(framebuffer, GL_TEXTURE_2D, 1600, 900);
 	colorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);

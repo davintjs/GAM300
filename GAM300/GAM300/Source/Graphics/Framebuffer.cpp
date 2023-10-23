@@ -200,30 +200,82 @@ void FramebufferManager::Exit()
 
 }
 
-Framebuffer2& FramebufferManager::CreateFramebuffer(const GLenum& _textureType, const GLsizei& _width, const GLsizei& _height)
+Framebuffer2& FramebufferManager::CreateFramebuffer(const GLboolean& _isStatic)
+{
+	framebuffers.push_back(Framebuffer2(_isStatic));
+	glCreateFramebuffers(1, &framebuffers.back().frameBufferObjectID);
+
+	return framebuffers.back();
+}
+
+Framebuffer2& FramebufferManager::CreateStaticFramebuffer(const RENDERTEXTURE& _textureType, const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height)
 {
 	// Check if there is framebuffer with the specific texture type and still has attachment
 	Framebuffer2* framebuffer = nullptr;
-	/*for (size_t i = 0; i < framebuffers.size(); i++)
+	for (size_t i = 0; i < framebuffers.size(); i++)
 	{
+		// Only check for static framebuffers
+		if (!framebuffers[i].isStatic)
+			continue;
+
+		// Check if the framebuffer still has color attachments, same width and height
+		if (framebuffers[i].attachment < 16 && framebuffers[i].attachments[0].width == _width && framebuffers[i].attachments[0].height == _height)
+		{
+			framebuffer = &framebuffers[i];
+			break;
+		}
+	}
+
+	// Create new framebuffer
+	if (!framebuffer)
+		framebuffer = &CreateFramebuffer();
+
+	if (_textureType == RENDERTEXTURE::NONE)
+		RenderToBuffer(*framebuffer, _attachment, _width, _height);
+	else // Bean: To change later
+		RenderToTexture(*framebuffer, _attachment, _width, _height);
+
+	return *framebuffer;
+}
+
+Framebuffer2& FramebufferManager::CreateStaticFramebuffer(const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height)
+{
+	return CreateStaticFramebuffer(RENDERTEXTURE::NONE, _attachment, _width, _height);
+}
+
+Framebuffer2& FramebufferManager::CreateDynamicFramebuffer(const RENDERTEXTURE& _textureType, const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height)
+{
+	// Check if there is framebuffer with the specific texture type and still has attachment
+	Framebuffer2* framebuffer = nullptr;
+	for (size_t i = 0; i < framebuffers.size(); i++)
+	{
+		// Only check for non-static framebuffers
+		if (framebuffers[i].isStatic)
+			continue;
+
+		// Check if the framebuffer still has color attachments
 		if (framebuffers[i].attachment < 16)
 		{
 			framebuffer = &framebuffers[i];
 			break;
 		}
-	}*/
+	}
 
 	// Create new framebuffer
 	if (!framebuffer)
-	{
-		framebuffers.push_back(Framebuffer2());
-		framebuffer = &framebuffers.back();
-		glCreateFramebuffers(1, &framebuffer->frameBufferObjectID);
-	}
+		framebuffer = &CreateFramebuffer(false);
 
-	//RenderToTexture(*framebuffer, _textureType, _width, _height);
+	if (_textureType == RENDERTEXTURE::NONE)
+		RenderToBuffer(*framebuffer, _attachment, _width, _height);
+	else // Bean: To change later
+		RenderToTexture(*framebuffer, _attachment, _width, _height);
 
 	return *framebuffer;
+}
+
+Framebuffer2& FramebufferManager::CreateDynamicFramebuffer(const GLenum& _attachment, const GLsizei& _width, const GLsizei& _height)
+{
+	return CreateDynamicFramebuffer(RENDERTEXTURE::NONE, _attachment, _width, _height);
 }
 
 Framebuffer2* FramebufferManager::GetFramebufferByID(const GLuint& _framebufferId)
