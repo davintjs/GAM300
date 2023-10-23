@@ -32,8 +32,9 @@ void NavMeshBuilder::BuildNavMesh()
 {
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> mResPair = GetAllGrounds();
 	std::vector<Triangle3D> GroundTriangles = GetGroundTriangles(mResPair.first, mResPair.second);
-	mRegion = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
-	OffsetRadius(0.2f); // Offset to account for the agent radius
+	mRegions = ComputeRegions(GroundTriangles); // Compute the regions of the given ground
+	GetAllObstacles();
+	//OffsetRadius(0.2f); // Offset to account for the agent radius 
 
 	mNavMesh = CreateNavMesh(); // Create the navmesh
 	mNavMesh->LinkAllTriangles();
@@ -62,11 +63,52 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		}
 		for (int j = 0; j < mesh.indices->size(); j += 3)
 		{
-			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j], (*mesh.indices)[j + 1], (*mesh.indices)[j + 2]));
+			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j] + mIndexCount, (*mesh.indices)[j + 1] + mIndexCount, (*mesh.indices)[j + 2] + mIndexCount));
 		}
+		mIndexCount += 4;
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);
+}
+
+// Finds all obstacles of the current scene
+void NavMeshBuilder::GetAllObstacles()
+{
+	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
+	{
+		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
+		if (mTag.physicsLayerIndex != 6)
+		{
+			continue;
+		}
+
+		// Reaching here means this entity is an obstacle
+		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
+
+		glm::vec3 obstacleBottomFace = t.translation;
+		glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).x,
+								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y,
+								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).z };
+		scaledVec.x *= t.scale.x;
+		scaledVec.y *= t.scale.y;
+		scaledVec.z *= t.scale.z;
+
+		obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y * (t.scale.y / 2.f);
+
+		glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
+		glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
+		glm::vec3 obstacleMaxPoint = { obstacleBottomFace.x + (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
+		glm::vec3 obstacleMaxPointBottom = { obstacleBottomFace.x + (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
+
+		// Counter-clockwise
+		std::vector<glm::vec3> obstaclePosition;
+		obstaclePosition.push_back(obstacleMinPoint);
+		obstaclePosition.push_back(obstacleMaxPointBottom);
+		obstaclePosition.push_back(obstacleMaxPoint);
+		obstaclePosition.push_back(obstacleMinPointTop);
+
+		mObstacles.push_back(Polygon3D(obstaclePosition, ++mObstacleCount));
+	}
 }
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
@@ -86,7 +128,7 @@ void NavMeshBuilder::Rebake()
 
 std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
 {
-	return mRegion;
+	return mRegions;
 }
 
 //std::vector<Polygon3D>& NavMeshBuilder::GetHoles()
@@ -167,7 +209,7 @@ std::vector<Polygon3D> NavMeshBuilder::ComputeRegions(const std::vector<Triangle
 				}
 			}
 		}
-		resPolygons.push_back(Polygon3D(triPos));
+		resPolygons.push_back(Polygon3D(triPos, ++mRegionCount));
 	}
 	return resPolygons;
 }
@@ -198,18 +240,18 @@ void NavMeshBuilder::OffsetRadius(const float& mRadius)
 {
 	int i = 0;
 	int regionTracker = 0;
-	while (regionTracker < mRegion.size())
+	while (regionTracker < mRegions.size())
 	{
-		float zValue = mRegion[regionTracker].GetBarycenter().z; // Finding the barycenter of connected regions by checking their z value matches
+		float yValue = mRegions[regionTracker].GetBarycenter().y; // Finding the barycenter of connected regions by checking their z value matches
 		glm::vec3 baryCenter(0.f, 0.f, 0.f);
-		baryCenter += mRegion[regionTracker].GetBarycenter();
+		baryCenter += mRegions[regionTracker].GetBarycenter();
 
 		++regionTracker;
-		for (; regionTracker < mRegion.size(); ++regionTracker)
+		for (; regionTracker < mRegions.size(); ++regionTracker)
 		{
-			if (mRegion[regionTracker].GetBarycenter().z == zValue)
+			if (mRegions[regionTracker].GetBarycenter().z == yValue)
 			{
-				baryCenter += mRegion[regionTracker].GetBarycenter();
+				baryCenter += mRegions[regionTracker].GetBarycenter();
 			}
 			else // Different region z value, different barycenter
 			{
@@ -222,8 +264,8 @@ void NavMeshBuilder::OffsetRadius(const float& mRadius)
 
 		for (; i < regionTracker - 1; ++i)
 		{
-			Polygon3D& mCurrentRegion = mRegion[i];
-			Polygon3D& mNextRegion = mRegion[i + 1];
+			Polygon3D& mCurrentRegion = mRegions[i];
+			Polygon3D& mNextRegion = mRegions[i + 1];
 
 			// Find current region and next region's shared points
 			std::vector<int> mSharedPointsCurrent;
@@ -311,7 +353,7 @@ void NavMeshBuilder::OffsetRadius(const float& mRadius)
 		}
 
 		// Account for the last region
-		Polygon3D& mLastRegion = mRegion[mRegion.size() - 1];
+		Polygon3D& mLastRegion = mRegions[mRegions.size() - 1];
 
 		for (int a = 0; a < mLastRegion.GetPoints().size(); ++a)
 		{
@@ -388,7 +430,7 @@ void NavMeshBuilder::RemoveObstaclesFromMesh()
 			return p1.GetMaxPoint().y > p2.GetMaxPoint().y;
 		});
 
-	for (auto& polygon : mRegion)
+	for (auto& polygon : mRegions)
 	{
 		for (auto& obstacle : mObstacles)
 		{
@@ -410,7 +452,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 {
 	std::vector<Triangle3D> TriangulatedMesh; // The vector that the method will return
 
-	for (auto& polygon : mRegion)
+	for (auto& polygon : mRegions)
 	{
 		// Step 1: Store the vertices in a list (Includes the next and prev vertices)
 		std::vector<glm::vec3> vertices = polygon.GetPoints();
@@ -657,7 +699,9 @@ void NavMeshBuilder::Exit()
 {
 	//mHoles.clear();
 	mObstacles.clear();
-	mRegion.clear();
+	mRegions.clear();
+	mIndexCount = 0;
+	mRegionCount = 0;
 
 	delete mNavMesh;
 }
@@ -709,10 +753,10 @@ void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 	obstaclePosition.push_back(obstacleMaxPoint);
 	obstaclePosition.push_back(obstacleMinPointTop);
 
-	std::vector<Polygon3D> obstacleHolder = mObstacles;
+	// Set the involved region to be pending rebake
+
 	Exit();
-	obstacleHolder.push_back(Polygon3D(obstaclePosition));
-	mObstacles = obstacleHolder;
+	mObstacles.push_back(Polygon3D(obstaclePosition, ++mObstacleCount));
 	BuildNavMesh();
 }
 

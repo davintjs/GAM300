@@ -39,6 +39,9 @@ public:
 	// Get all grounds of the current scene
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> GetAllGrounds();
 
+	// Get all obstacles of the current scene
+	void GetAllObstacles();
+
 	// NavMeshBuilder exit
 	void Exit();
 
@@ -103,10 +106,13 @@ private:
 	void CallbackContactAdd(ContactAddedEvent* pEvent);
 	void CallbackContactRemove(ContactRemovedEvent* pEvent);
 
+	int mObstacleCount = 0;
+	int mRegionCount = 0;
 	int mTriCount = 0;
+	int mIndexCount = 0;
 	Polygon3D* mBoundary;
 	NavMesh* mNavMesh;
 	//std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
-	std::vector<Polygon3D> mRegion;
+	std::vector<Polygon3D> mRegions; // Contains the total regions of the game
 };

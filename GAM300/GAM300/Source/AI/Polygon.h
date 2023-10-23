@@ -34,7 +34,7 @@ public:
 		COUNTERCLOCKWISE
 	};
 
-	Polygon3D(const std::vector<glm::vec3>& positions);
+	Polygon3D(const std::vector<glm::vec3>& positions, const int& mRegionID);
 	~Polygon3D();
 
 	// Getter functions
@@ -44,7 +44,7 @@ public:
 	const glm::vec3& GetBarycenter() const;
 
 	// Returns the orientation of the polygon
-	Orientation GetOrientation() const;
+	const Orientation& GetOrientation() const;
 
 	// Returns the points of this polygon
 	std::vector<glm::vec3>& GetPoints();
@@ -88,6 +88,8 @@ private:
 	// Calculation of squared distance of the vector
 	float CalculateSquaredDistance(const glm::vec3& mVec);
 
+	bool mPendingRebake = false;
+	int mRegionID = 0;
 	glm::vec3 minPoint;
 	glm::vec3 maxPoint;
 	glm::vec3 mBarycenterPoint;

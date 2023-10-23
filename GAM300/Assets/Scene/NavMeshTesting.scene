@@ -11,6 +11,7 @@ GameObject:
   m_EUID: 2508335683683228376
   m_IsActive: true
   m_Name: Floor
+  m_Layer: 5
   m_Position: [0, -0.349999994, 0]
   m_Rotation: [0, 0, 0]
   m_Scale: [20, 1, 20]
@@ -73,6 +74,7 @@ GameObject:
   m_EUID: 5550770482419583040
   m_IsActive: true
   m_Name: Falling Cube
+  m_Layer: 6
   m_Position: [4.82626724, 2.84137297, -0.506836236]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
@@ -101,7 +103,7 @@ MeshRenderer:
   EUID: 5550770482419583040
   UUID: 5539027295287339116
   MeshName: Cube
-  Albedo: [0, 0, 0, 0.384955764]
+  Albedo: [0.384955764, 0, 0, 0]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -121,6 +123,69 @@ MeshRenderer:
 BoxCollider:
   EUID: 5550770482419583040
   UUID: 6098074139608943075
+  X: 1
+  Y: 1
+  Z: 1
+---
+GameObject:
+  m_EUID: 17732743114822645152
+  m_IsActive: true
+  m_Name: Floor2
+  m_Layer: 5
+  m_Position: [20, -0.349999994, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [20, 1, 20]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 10469389705548650087}  # Rigidbody
+    - component: {fileID: 18022100245030567483}  # MeshFilter
+    - component: {fileID: 10378551780185916022}  # MeshRenderer
+    - component: {fileID: 4581552212520581639}  # BoxCollider
+---
+Rigidbody:
+  EUID: 17732743114822645152
+  UUID: 10469389705548650087
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+MeshFilter:
+  EUID: 17732743114822645152
+  UUID: 18022100245030567483
+  MeshName: Cube
+---
+MeshRenderer:
+  EUID: 17732743114822645152
+  UUID: 10378551780185916022
+  MeshName: Cube
+  Albedo: [0, 0, 0, 0]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: ""
+  NormalMap: ""
+  MetallicTexture: ""
+  RoughnessTexture: ""
+  AoTexture: ""
+  EmissionTexture: ""
+  TextureID: 0
+  NormalMapID: 0
+  RoughnessID: 0
+  MetallicID: 0
+  AoID: 0
+  EmissionID: 0
+---
+BoxCollider:
+  EUID: 17732743114822645152
+  UUID: 4581552212520581639
   X: 1
   Y: 1
   Z: 1

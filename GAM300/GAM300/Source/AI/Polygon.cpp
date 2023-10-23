@@ -22,7 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Polygon.h"
 
-Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
+Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionID)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
 	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
@@ -45,6 +45,7 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 	}
 
 	mNumberOfPoints = static_cast<int>(mPoints.size());
+	mRegionID = regionID;
 }
 
 Polygon3D::~Polygon3D()
@@ -57,7 +58,7 @@ glm::vec3 Polygon3D::GetNormal() const
 	return mNormal;
 }
 
-Polygon3D::Orientation Polygon3D::GetOrientation() const
+const Polygon3D::Orientation& Polygon3D::GetOrientation() const
 {
 	return mOrientation;
 }
