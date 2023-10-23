@@ -185,9 +185,9 @@ struct AssetUnloadedEvent : IEvent
 
 struct DropAssetsEvent : IEvent
 {
-	DropAssetsEvent(const int& _pathCount, const char* _paths[]) : pathCount{ _pathCount }, paths{ _paths } {}
+	DropAssetsEvent(const int& _pathCount, const fs::path* _paths) : pathCount{ _pathCount }, paths{ _paths } {}
 	int pathCount;
-	const char** paths;
+	const fs::path* paths;
 };
 
 #pragma endregion

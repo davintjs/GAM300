@@ -73,7 +73,7 @@ struct MeshAsset : Asset
 	std::vector<unsigned int> mIndices;
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, Folder, ScriptAsset, MetaAsset, AudioAsset>;
+using AssetTypes = TemplatePack<MeshAsset, TextureAsset, Folder, ScriptAsset, MetaAsset, AudioAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 //File extension : Asset Type
 static std::unordered_map<std::string, size_t> AssetExtensionTypes =

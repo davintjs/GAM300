@@ -21,11 +21,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Compiler.h"
 
 #pragma warning( disable : 4100)
-ModelLoader::ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath)
+ModelLoader::ModelLoader(const std::filesystem::path& geomFilePath)
 {
 	_descriptor = new Descriptor;
 
-	DeserializeDescriptor(descriptorFilePath);
+	//DeserializeDescriptor(descriptorFilePath);
 	LoadModel();
 	SerializeBinaryGeom(geomFilePath);
 }
@@ -612,9 +612,11 @@ void ModelLoader::ImportMaterialAndTextures(const aiMaterial& material)
 }
 
 // Serialize to geom binary file a single FBX file
-void ModelLoader::SerializeBinaryGeom(const std::string filepath)
+void ModelLoader::SerializeBinaryGeom(const std::filesystem::path& path)
 {
-	std::ofstream serializeFile(filepath, std::ios_base::binary);
+	std::filesystem::path filePath{ path };
+	filePath.replace_extension(".geom");
+	std::ofstream serializeFile(filePath, std::ios_base::binary);
 	if (!serializeFile)
 	{
 		std::cerr << "Could not open output file to serialize geom!" << std::endl;
@@ -770,69 +772,38 @@ void CreateDescFile(const std::string fbxFilePath, const std::string writeDescFi
 	serializeFile.close();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	std::cout << "Compiling models..." << std::endl;
 
-	for (const auto& dir : std::filesystem::recursive_directory_iterator("Assets/Models"))
+
+	if (argc != 2)
+		return -1;
+	namespace fs = std::filesystem;
+	
+	fs::path path = argv[1];
+	fs::path extension = path.extension();
+
+	if (extension != ".fbx" && extension != ".obj")
 	{
-		if (dir.symlink_status().type() == std::filesystem::file_type::directory) // Is a folder (All should be in folder)
-		{
-			for (const auto& _dir : std::filesystem::recursive_directory_iterator(dir)) // Looping through contents of the model's folder
-			{
-				std::string subFilePath = _dir.path().generic_string();
-				std::string subFilePathDesc = subFilePath;
-				std::string geomFilePath = subFilePath;
-				std::string fileType{};
-				std::string fileName{};
-
-				// Get the file type of the current file in this folder
-				for (size_t i = subFilePath.find_last_of('.') + 1; i != strlen(subFilePath.c_str()); ++i)
-				{
-					fileType += subFilePath[i];
-				}
-
-				if (strcmp(fileType.c_str(), "fbx")) // Skip this file if not fbx
-				{
-					continue;
-				}
-
-				// Reaching here means we are at the fbx file
-
-				// Get file name
-				for (size_t j = subFilePath.find_last_of('/') + 1; j != subFilePath.find_last_of('.'); ++j)
-				{
-					fileName += subFilePath[j];
-				}
-				std::cout << "Compiling " << fileName << "...";
-				geomFilePath.erase(geomFilePath.find_last_of('.'), strlen(fileType.c_str()) + 1);
-				geomFilePath += ".geom";
-
-				subFilePathDesc.erase(subFilePathDesc.find_last_of('.'), strlen(fileType.c_str()) + 1);
-				subFilePathDesc += ".geom.desc";
-
-				// Check if this model had already been previously serialized
-				if (std::filesystem::exists(geomFilePath) && std::filesystem::exists(subFilePathDesc)) // Both geom and desc files must be present
-				{
-					std::cout << "Done!" << std::endl;
-					break; // Go to next model folder
-				}
-
-				// Find the desc file of this model
-				if (!std::filesystem::exists(subFilePathDesc))
-				{
-					// Create desc file for this model
-					CreateDescFile(subFilePath, subFilePathDesc, fileName); // fbx filepath & desc filepath & filename parameters
-				}
-
-				// Reaching here means the desc file exists, but the model is not serialized yet
-				ModelLoader myLoader(subFilePathDesc, geomFilePath);
-
-				// Reaching here means the model is now serialized and now contains desc and geom files
-				std::cout << " Done!" << std::endl;
-				break; // Go to next model folder (Optimization by skipping rest of files)
-			}
-		}
+		return -1;
 	}
+
+	// Reaching here means we are at the fbx file
+
+	// Get file name
+	std::cout << "Compiling " << path.filename() << "...";
+	//// Find the desc file of this model
+	//if (!std::filesystem::exists(subFilePathDesc))
+	//{
+	//	// Create desc file for this model
+	//	CreateDescFile(subFilePath, subFilePathDesc, fileName); // fbx filepath & desc filepath & filename parameters
+	//}
+
+	// Reaching here means the desc file exists, but the model is not serialized yet
+	ModelLoader myLoader(path);
+
+	// Reaching here means the model is now serialized and now contains desc and geom files
+	std::cout << " Done!" << std::endl;
 
 	std::cout << "Finished compiling all models!" << std::endl;
 

@@ -25,9 +25,30 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "yaml-cpp/yaml.h"
 #include <unordered_set>
 
+static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
+{
+	{".jpg", "TextureCompiler.exe "},
+	{".png", "TextureCompiler.exe "},
+	{".fbx", "ModelCompiler.exe "},
+	{".obj", "ModelCompiler.exe "},
+};
+
+void AssetManager::Compile(const fs::path& path)
+{
+	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
+	system(command.c_str());
+}
+
+bool AssetManager::IsCompilable(const fs::path& path)
+{
+	//Read metafile
+	return assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
+}
+
 void AssetManager::Init()
 {
 	E_ASSERT(std::filesystem::exists(AssetPath), "Check if proper assets filepath exists!");
+
 
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
@@ -38,7 +59,6 @@ void AssetManager::Init()
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
 		fs::path path = dir.path();
-
 		// Deserialize from meta file and load the asset asynchronously
 		this->AsyncLoadAsset(dir.path());
 
@@ -54,6 +74,19 @@ void AssetManager::AsyncLoadAsset(const fs::path& filePath)
 void AssetManager::LoadAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
+	if (filePath.extension() == ".meta")
+	{
+		fs::path nonMeta = filePath;
+		nonMeta.replace_extension("");
+		//Actual file does not exist
+		if (!std::filesystem::exists(nonMeta))
+		{
+			std::filesystem::remove(filePath);
+		}
+		return;
+	}
+	if (IsCompilable(filePath))
+		Compile(filePath);
 	assets.AddAsset(filePath);
 }
 
@@ -106,86 +139,78 @@ Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 
 void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 {
-	//namespace fs = std::filesystem;
-	//fs::path filePath{ pEvent->filePath};
+	fs::path filePath{ pEvent->filePath};
 
-	//if (filePath.empty())
+	fs::path extension{ filePath.extension() };
+
+	if (filePath.empty())
+		return;
+
+
+	//If added
+
+	////If deleted, generate a new one
+	//if (extension == ".meta")
 	//{
-	//	PRINT("EMPTY!\n");
+	//	fs::path nonMeta = filePath;
+	//	nonMeta.replace_extension("");
+	//	if (std::filesystem::exists(nonMeta))
+	//	{
+
+	//	}
 	//}
 
-	//std::string fileName = filePath.filename().generic_string();
-	//std::string fileExtension = filePath.extension().generic_string();
-	//std::string filePathEdited = filePath.generic_string();
-	//std::replace(filePathEdited.begin(), filePathEdited.end(), '\\', '/');
+	//temp file, invalid file
+	if (filePath.string().find("~") != std::string::npos)
+		return;
 
+	//temp file, invalid file
+	if (!fs::is_directory(filePath) && !filePath.has_extension())
+		return;
 
-	//if (fileExtension == ".fbx") // Call the fbx compiler
-	//{
-	//	const char* command{ "Compiler.exe" };
-
-	//	system(command);
-
-	//	return; // Return as file watcher will detect an addition of geom file and desc
-	//}
-	//else if (fileExtension == ".png" || fileExtension == ".jpg") // Call the texture compiler
-	//{
-	//	const char* command{ "TextureCompiler.exe" };
-
-	//	system(command);
-	//}
-
-	//if (fileExtension == ".meta" || 
-	//	filePath.string().find("~") != std::string::npos ||
-	//	fileExtension == "")
-	//{
-	//	return;
-	//}
-
-	//fileName.erase(fileName.find_last_of('.'), strlen(fileExtension.c_str()) + 1);
 	
-	//switch (pEvent->fileState)
-	//{
-	//	case FileState::CREATED:
-	//	{
-	//		PRINT("CREATED ");
-	//		LoadAsset(filePathEdited);
-	//		break;
-	//	}
-	//	case FileState::DELETED:
-	//	{
-	//		PRINT("DELETED ");
-	//		UnloadAsset(filePathEdited);
-	//		break;
-	//	}
-	//	case FileState::MODIFIED:
-	//	{
-	//		UpdateAsset(filePathEdited);
-	//		PRINT("MODIFIED ");
-	//		break;
-	//	}
-	//	case FileState::RENAMED_OLD:
-	//	{
-	//		PRINT("RENAMED_OLD ");
-	//		break;
-	//	}
-	//	case FileState::RENAMED_NEW:
-	//	{
-	//		PRINT("RENAMED_NEW ");
-	//		break;
-	//	}
-	//	default:
-	//	{
-	//		break;
-	//	}
+	switch (pEvent->fileState)
+	{
+		case FileState::CREATED:
+		{
+			PRINT("CREATED ");
+			AsyncLoadAsset(filePath);
+			break;
+		}
+		case FileState::DELETED:
+		{
+			PRINT("DELETED ");
+			AsyncUnloadAsset(filePath);
+			break;
+		}
+		case FileState::MODIFIED:
+		{
+			//AsyncUpdateAsset(filePath);
+			PRINT("MODIFIED ");
+			break;
+		}
+		case FileState::RENAMED_OLD:
+		{
+			PRINT("RENAMED_OLD ");
+			break;
+		}
+		case FileState::RENAMED_NEW:
+		{
+			PRINT("RENAMED_NEW ");
+			break;
+		}
+		default:
+		{
+			break;
+		}
 
-	//}
-	//if (filePath.extension() == ".cs")
-	//{
-	//	FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
-	//	EVENTS.Publish(&scriptModifiedEvent);
-	//}
-	//PRINT(filePath.string(), "\n");
+	}
+	if (filePath.extension() == ".cs")
+	{
+		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(filePath.stem().c_str(),pEvent->fileState);
+		EVENTS.Publish(&scriptModifiedEvent);
+	}
+	PRINT(filePath.string(), "\n");
 }
 
 void AssetManager::CallbackGetAsset(GetAssetEvent* pEvent)
@@ -195,37 +220,18 @@ void AssetManager::CallbackGetAsset(GetAssetEvent* pEvent)
 
 void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 {
-	//std::list<std::filesystem::path> paths;
-	//for (int i = 0; i < pEvent->pathCount; i++)
-	//	paths.push_back(pEvent->paths[i]);
 
-	//EditorGetCurrentDirectory e;
-	//EVENTS.Publish(&e);
+	EditorGetCurrentDirectory e;
+	EVENTS.Publish(&e);
 
-	//// Create directories / folders / files in the directory
-	//for (auto path : paths)
-	//{
-	//	std::filesystem::path pathName = e.path + "\\" + path.filename().string();
-	//	std::filesystem::copy(path, pathName);
-
-	//	std::string::size_type i = e.path.find("Assets");
-	//	if (i != std::string::npos)
-	//		e.path.erase(i, 7);
-	//	
-	//	if(e.path.empty())
-	//		pathName = path.filename().string();
-	//	else
-	//		pathName = e.path + "\\" + path.filename().string();
-
-	//	if (std::filesystem::is_directory(path))
-	//	{
-	//		//FileAddProtocol(pathName.string(), path.filename().string(), "");
-	//	}
-	//	else
-	//	{
-	//		//FileAddProtocol(pathName.string(), path.filename().string(), path.extension().string());
-	//	}
-	//}
+	// Create directories / folders / files in the directory
+	for (int i = 0; i < pEvent->pathCount; ++i)
+	{
+		const std::filesystem::path& path = pEvent->paths[i];
+		std::filesystem::path pathName = e.path + "\\" + path.filename().string();
+		std::filesystem::copy(path, pathName);
+		AsyncLoadAsset(pathName);
+	}
 }
 
 

@@ -1,5 +1,5 @@
-[2023-10-22 22:32:45.657] [Error] [critical] 
+[2023-10-23 13:19:55.880] [Error] [critical] 
 Caused By:	std::filesystem::exists(filePath)
-Info:		File does not exist,  "Cancel_Icon"
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 186)
+Info:		File does not exist,  "Icons.meta"
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 200)
 

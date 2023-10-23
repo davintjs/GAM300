@@ -274,6 +274,7 @@ struct AllAssetsGroup
 		size_t seconds = chron::duration_cast<chron::seconds>(duration).count();
 		for (YAML::Node& node : data)
 		{
+			YAML::detail::iterator_value kv = *node.begin();
 			if (node["lastModified"]) // Deserialize guid
 			{
 				if (node["lastModified"].as<size_t>() == seconds)

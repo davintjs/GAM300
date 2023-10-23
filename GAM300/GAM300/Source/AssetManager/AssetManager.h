@@ -77,4 +77,7 @@ private:
 	// Get the dropped files using event callbacks
 	void CallbackDroppedAsset(DropAssetsEvent* pEvent);
 
+	bool IsCompilable(const fs::path & path);
+
+	void Compile(const fs::path & path);
 };
