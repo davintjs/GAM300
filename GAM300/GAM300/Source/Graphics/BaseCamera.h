@@ -83,6 +83,7 @@ public:
 	unsigned int& GetFramebufferID() { return framebufferID; }
 	unsigned int& GetAttachment() { return colorAttachment; }
 	unsigned int& GetHDRAttachment() { return hdrColorAttachment; }
+	unsigned int& GetBloomAttachment() { return bloomAttachment; }
 
 	property_vtable();
 protected:
@@ -124,6 +125,7 @@ protected:
 	unsigned int framebufferID;			// The framebuffer used for this camera
 	unsigned int colorAttachment;		// The color attachment used for this camera
 	unsigned int hdrColorAttachment;	// The hdr color attachment used for this camera
+	unsigned int bloomAttachment;		// The bloom attachment used for this camera
 };
 
 property_begin_name(BaseCamera, "BaseCamera") {
