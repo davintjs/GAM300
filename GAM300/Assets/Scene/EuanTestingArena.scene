@@ -153,12 +153,12 @@ MeshRenderer:
   RoughnessTexture: ""
   AoTexture: Default_AO
   EmissionTexture: Default_emissive
-  TextureID: 9
-  NormalMapID: 13
+  TextureID: 10
+  NormalMapID: 14
   RoughnessID: 0
   MetallicID: 0
-  AoID: 10
-  EmissionID: 11
+  AoID: 11
+  EmissionID: 12
 ---
 BoxCollider:
   EUID: 10548661867949210258
@@ -254,7 +254,7 @@ GameObject:
   m_IsActive: true
   m_Name: Camera
   m_Layer: 0
-  m_Position: [1.45914495, 5.72823143, 5.94999981]
+  m_Position: [1.45914495, -2.37199998, 5.94999981]
   m_Rotation: [0, -0.149999604, 0]
   m_Scale: [0.99999702, 1, 0.99999702]
   m_Children:
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
+  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -339,12 +339,12 @@ GameObject:
   m_IsActive: true
   m_Name: 2D SPACE UI
   m_Layer: 0
-  m_Position: [4.19871521, 6.51778793, 3.5999999]
-  m_Rotation: [-0.141592368, 3.1500001, 3.1500001]
-  m_Scale: [2, 2, 0.999999881]
+  m_Position: [7.6500001, 4.5, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
   m_Children:
     []
-  m_Parent: 0
+  m_Parent: 4212138099454399691
   m_Components:
     - component: {fileID: 2142793048574192356}  # SpriteRenderer
 ---
@@ -363,7 +363,7 @@ GameObject:
   m_Rotation: [0, -0, 0]
   m_Scale: [160, 90, 1]
   m_Children:
-    []
+    - {fileID: 10808569125327567584}
   m_Parent: 0
   m_Components:
     - component: {fileID: 13547543225942679706}  # Canvas

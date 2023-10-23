@@ -95,6 +95,7 @@ void Renderer::Init()
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
+
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "depth Cube framebuffer exploded\n";
 	else
@@ -556,7 +557,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 
 		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+			1, GL_FALSE, glm::value_ptr(transform.GetLocalMatrix()));
 
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
