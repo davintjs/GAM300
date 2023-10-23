@@ -194,5 +194,7 @@
     <None Include="Shaders\UIScreenSpace.vert" />
     <None Include="Shaders\UIWorldSpace.vert" />
     <None Include="Shaders\UIWorldSpace.frag" />
+    <None Include="Shaders\BloomBlur.frag" />
+    <None Include="Shaders\BloomBlur.vert" />
   </ItemGroup>
 </Project>

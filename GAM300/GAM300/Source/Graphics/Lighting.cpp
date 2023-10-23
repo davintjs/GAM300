@@ -49,7 +49,7 @@ void Lighting::Update(float)
 
 		Temporary.lightpos = transform.translation;
 		Temporary.lightColor = lightSource.lightingColor;
-		Temporary.intensity = 1.f;
+		Temporary.intensity = lightSource.intensity;
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
