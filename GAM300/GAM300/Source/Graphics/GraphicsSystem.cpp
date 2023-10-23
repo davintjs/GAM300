@@ -55,6 +55,7 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
 	{
+
 		float quadVertices[] = {
 			// positions        // texture Coords
 			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -259,7 +260,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(10, _vao, _vbo, _camera);
+	bool index = bloom(5, _vao, _vbo, _camera);
 
 	//}
 
