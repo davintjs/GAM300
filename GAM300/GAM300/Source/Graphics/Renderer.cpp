@@ -634,6 +634,8 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 		renderQuad(_quadVAO, _quadVBO);
 
+		//renderQuadWireMesh(_quadVAO, _quadVBO);
+
 	}
 	shader.UnUse();
 	glDisable(GL_BLEND);

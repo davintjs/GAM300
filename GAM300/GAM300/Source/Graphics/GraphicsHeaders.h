@@ -35,6 +35,7 @@ class SkyBox;
 
 // Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
+void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
 // Bean: A temp solution to access the shader
