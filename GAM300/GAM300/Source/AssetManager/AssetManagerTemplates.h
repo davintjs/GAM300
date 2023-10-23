@@ -80,15 +80,18 @@ struct AllAssetsGroup
 				if (GetAssetType::E<T>() == assetType)
 				{
 					Engine::GUID guid = GetGUID(filePath);
-					std::get<AssetsTable<T>>(assets)[guid] = {};
+					T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
+					std::get<AssetsTable<T>>(assets).erase(guid);
+					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, nullptr));
 					return true;
 				}
 				return false;
 			}
 			(Ts{}) || ...))
 		{
-			return;
+			return true;
 		}
+		return false;
 	}
 
 	void UpdateAsset(const std::filesystem::path& filePath)
@@ -182,6 +185,16 @@ struct AllAssetsGroup
 					}
 					case ASSET_UNLOADED:
 					{
+						
+						AssetUnloadedEvent<T> e{ path,GetGUID(path)};
+						EVENTS.Publish(&e);
+						fs::path metaPath = path;
+						metaPath += ".meta";
+						//Actual file does not exist
+						if (std::filesystem::exists(metaPath))
+						{
+							std::filesystem::remove(metaPath);
+						}
 						break;
 					}
 					default:
@@ -197,7 +210,6 @@ struct AllAssetsGroup
 
 	Engine::GUID GetGUID(const std::filesystem::path& filePath)
 	{
-		E_ASSERT(std::filesystem::exists(filePath), "File does not exist, ", filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		if (!std::filesystem::exists(metaPath))
@@ -263,7 +275,7 @@ struct AllAssetsGroup
 	{
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		//If no meta, assume true
+		//If no meta, assume modified as it is just added
 		if (!std::filesystem::exists(metaPath))
 		{
 			CreateMeta(filePath);

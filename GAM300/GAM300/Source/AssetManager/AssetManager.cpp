@@ -93,6 +93,7 @@ void AssetManager::LoadAsset(const fs::path& filePath)
 
 void AssetManager::Update(float dt)
 {
+	//Add a bool 
 	ACQUIRE_SCOPED_LOCK(Assets);
 	UNREFERENCED_PARAMETER(dt);
 	assets.ProcessBuffer();
@@ -113,6 +114,16 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 {
 	//May need to unique lock this
 	ACQUIRE_SCOPED_LOCK(Assets);
+	//One does not simply delete a meta file while the engine is running >:C
+	if (filePath.extension() == ".meta")
+	{
+		PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
+		fs::path nonMeta = filePath;
+		nonMeta.replace_extension("");
+		assets.CreateMeta(nonMeta);
+		return;
+	}
+	assets.RemoveAsset(filePath);
 	std::cout << "Done removing file from memory!" << std::endl;
 }
 
@@ -139,7 +150,8 @@ Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 
 void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 {
-	fs::path filePath{ pEvent->filePath};
+	fs::path filePath{ "Assets/"};
+	filePath += pEvent->filePath;
 
 	fs::path extension{ filePath.extension() };
 
