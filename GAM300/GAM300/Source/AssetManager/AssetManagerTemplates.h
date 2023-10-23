@@ -221,13 +221,18 @@ struct AllAssetsGroup
 	fs::path GetFilePath(const Engine::GUID& guid)
 	{
 		fs::path path;
-		(([&](auto type)
+		if (([&](auto type)
 			{
 				using T = decltype(type);
 				auto& table = std::get<AssetsTable<T>>(assets);
 				if (table.find(guid) != table.end())
-					return table[guid];
-			})(Ts{}), ...);
+				{
+					path = table[guid].mFilePath;
+					return true;
+				}
+				return false;
+			}
+		(Ts{}) || ...));
 		return path;
 	}
 private:
