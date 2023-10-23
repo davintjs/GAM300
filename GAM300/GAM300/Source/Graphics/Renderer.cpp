@@ -25,16 +25,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 // ALL THIS ARE HOPEFULLY TEMPORARY
 bool RenderShadow = true;
 
+// Shadow Mapping
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture
 
-//
+// Shadow Cube Mapping
 unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
 
 glm::mat4 lightSpaceMatrix;
 
-LIGHT_TYPE temporary_test = POINT_LIGHT;
+LIGHT_TYPE temporary_test4 = POINT_LIGHT;
 
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
@@ -43,6 +44,14 @@ LightProperties point_light_stuffs;
 const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 #include "GBuffer.h"
+unsigned int Renderer_quadVAO = 0;
+unsigned int Renderer_quadVBO = 0;
+
+unsigned int Renderer_quadVAO_WM = 0;
+unsigned int Renderer_quadVBO_WM = 0;
+
+
+
 
 void Renderer::Init()
 {
@@ -95,6 +104,9 @@ void Renderer::Init()
 		std::cout << "depth Cube framebuffer created successfully\n";
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	// ping-pong-framebuffer for blurring
 
 	SetupGrid(100);
 }
@@ -264,7 +276,7 @@ void Renderer::Update(float)
 	
 	if (RenderShadow)
 	{
-		DrawDepth();
+		DrawDepth(temporary_test4);
 	}
 }
 
@@ -698,7 +710,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
 
 
-
 		std::string spot_color;
 		spot_color = "spotLights[" + std::to_string(i) + "].colour";
 
@@ -765,7 +776,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
-	glm::mat4 OrthoProjection = glm::ortho(0.f, 1600.f, 0.f, 900.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_SCREEN);
@@ -776,8 +787,6 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
-	unsigned int _quadVAO = 0;
-	unsigned int _quadVBO = 0;
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -812,7 +821,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 		
 
-		renderQuad(_quadVAO, _quadVBO);
+		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 
 	}
 	shader.UnUse();
@@ -836,9 +845,6 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 	
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
-
-	unsigned int _quadVAO = 0;
-	unsigned int _quadVBO = 0;
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -872,13 +878,87 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
 
-		renderQuad(_quadVAO, _quadVBO);
-
+		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 	}
 	shader.UnUse();
 	glDisable(GL_BLEND);
 
 }
+
+void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
+{
+	// Setups required for all UI
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	GLSLShader& shader = SHADER.GetShader(UI_WORLD);
+	shader.Use();
+
+	// Setting the projection here since all of them use the same projection
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		Transform& transform = currentScene.Get<Transform>(entity);
+
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+		glLineWidth(20.f);
+		renderQuadWireMesh(Renderer_quadVAO_WM, Renderer_quadVBO_WM);
+	}
+	glLineWidth(1.f);
+
+	//for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	//{
+	//	// This means it's 2D space
+	//	if (!Sprite.WorldSpace)
+	//	{
+	//		continue;
+	//	}
+
+	//	// Declarations for the things we need - SRT
+	//	Entity& entity = currentScene.Get<Entity>(Sprite);
+	//	Transform& transform = currentScene.Get<Transform>(entity);
+
+	//	// SRT uniform
+	//	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+	//		1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
+	//	// Setting bool to see if there is a sprite to render
+	//	GLint uniform1 =
+	//		glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+	//	if (Sprite.spriteTextureID == 0)
+	//	{
+	//		glUniform1f(uniform1, false);
+	//	}
+	//	else
+	//	{
+	//		glUniform1f(uniform1, true);
+	//	}
+
+	//	// Binding Texture - might be empty , above uniform will sort it
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+
+	//	renderQuad(_quadVAO, _quadVBO);
+
+	//	//renderQuadWireMesh(_quadVAO, _quadVBO);
+
+	//}
+	shader.UnUse();
+	glDisable(GL_BLEND);
+
+}
+
+
 
 void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {
@@ -938,7 +1018,7 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	shader.UnUse();
 }
 
-void Renderer::DrawDepth()
+void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 {
 	glEnable(GL_DEPTH_TEST);
 	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
@@ -950,7 +1030,7 @@ void Renderer::DrawDepth()
 	// Above is directional light and spot light related stuffs
 	// this vector is for point light
 	std::vector<glm::mat4> shadowTransforms;
-
+	
 	if (temporary_test == DIRECTIONAL_LIGHT)
 	{
 		// Good Light pos {-0.2f, -1.0f, -0.3f}

@@ -376,6 +376,18 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
+struct Canvas : Object
+	{
+		property_vtable()
+	};
+	property_begin_name(Canvas, "Canvas")
+	{
+		property_parent(Object).Flags(property::flags::DONTSHOW),
+			//property_var(WorldSpace).Name("World Space"),
+			//property_var(SpriteTexture).Name("SpriteTexture"),
+	} property_vend_h(Canvas)
+
+
 #pragma endregion
 
 //Template pack way to store enums instead of traditional enums
@@ -481,7 +493,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;

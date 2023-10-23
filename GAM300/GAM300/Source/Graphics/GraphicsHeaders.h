@@ -33,24 +33,29 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+
+// Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
+void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
+bool bloom(unsigned int amount);
 
 using InstanceContainer = std::map<GLuint, InstanceProperties>;
 // Bean: A temp solution to access the shader
-//enum SHADERTYPE
-//{
-//	HDR,
-//	PBR,
-//	TIR,// Temporary Instance Render
-//	TDR,// Temporary Debug Instance Render
-//	SKYBOX,
-//	BASICLIGHT,
-//	AFFECTEDLIGHT,
-//	SHADOW,
-//	POINTSHADOW,
-//	UI_SCREEN,
-//	UI_WORLD
-//};
+// enum SHADERTYPE
+// {
+// 	HDR,
+// 	PBR,
+// 	TIR,// Temporary Instance Render
+// 	TDR,// Temporary Debug Instance Render
+// 	SKYBOX,
+// 	BASICLIGHT,
+// 	AFFECTEDLIGHT,
+// 	SHADOW,
+// 	POINTSHADOW,
+// 	UI_SCREEN,
+// 	UI_WORLD,
+// 	BLUR
+// };
 
 ENGINE_SYSTEM(ShaderManager)
 {
@@ -140,9 +145,15 @@ public:
 
 	void Draw(BaseCamera& _camera);
 
+	// Drawing UI onto screenspace
 	void UIDraw_2D(BaseCamera& _camera);
 
+	// Drawing UI onto worldspace
 	void UIDraw_3D(BaseCamera& _camera);
+
+	// Drawing Screenspace UI onto worldspace
+	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		//const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
@@ -154,7 +165,7 @@ public:
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
-	void DrawDepth();
+	void DrawDepth(LIGHT_TYPE temporary_test);
 
 	bool Culling();
 
