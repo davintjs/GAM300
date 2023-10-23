@@ -111,6 +111,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
+    <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
@@ -234,6 +235,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h">
       <SubType>
       </SubType>
@@ -304,6 +306,10 @@
     <None Include="Shaders\BasicLighting.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\DefaultGbuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.vert" />
+    <None Include="Shaders\DefaultShader.frag" />
+    <None Include="Shaders\DefaultShader.vert" />
     <None Include="Shaders\BloomBlur.frag" />
     <None Include="Shaders\BloomBlur.vert" />
     <None Include="Shaders\HDR.frag">

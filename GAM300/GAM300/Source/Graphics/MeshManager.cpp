@@ -19,7 +19,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void MESH_Manager::Init()
 {
-    properties = &RENDERER.GetProperties();
+
+    instanceProperties = &RENDERER.GetInstanceProperties();
 
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
 	CreateInstanceCube();
@@ -85,6 +86,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     newMesh.index = (unsigned int)mContainer.size();
     glm::vec3 min(FLT_MAX);
     glm::vec3 max(FLT_MIN);
+    GLuint VAO;
+    GLuint VBO;
+    GLuint EBO;
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
         //std::cout << "ouchie\n";
@@ -107,9 +111,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         std::cout << "total indices count: " << totalindices << "\n";*/
 
 
-        GLuint VAO;
-        GLuint VBO;
-        GLuint EBO;
+        
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
@@ -158,26 +160,34 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         tempProp.VAO = VAO;
         tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
         tempProp.drawType = GL_TRIANGLES;
-        std::string newName = fileName;
-        std::map<std::string, InstanceProperties>::iterator it;
-        it = properties->find(newName);
-        while (it != properties->end()) {
+
+        //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
+        vaoMap.emplace(std::pair<std::string, GLuint>(fileName, VAO)); // rmb change to guid after u ask someone @kk
+
+        // no need this, maybe can sort by VAO
+        /*std::string newName = fileName;
+        std::map<GLuint, InstanceProperties>::iterator it;
+        it = instanceProperties->find(newName);
+        while (it != instanceProperties->end()) {
             newName += char('0' + i);
-            it = properties->find(newName);
+            it = instanceProperties->find(newName);
         }
-        properties->emplace(std::pair<std::string, InstanceProperties>(newName, tempProp));
+        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(newName, tempProp));*/
+        // yea no need... but lemme transfer over before deleting
 
         newMesh.prim = GL_TRIANGLES;
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)[newName]));
+        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(VAO, tempProp));
+
     }
 
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)[fileName]);
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
     mContainer.emplace(fileName, newMesh);
 }
@@ -333,40 +343,40 @@ void MESH_Manager::CreateInstanceCube()
     GLfloat vertices[] = {
         // Positions           Normals            Tangents          Texture Coords     Colors (RGB)
         // Front face
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,      1.0f, 0.0f, 0.0f, 1.f,
-         0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 0.0f,      1.0f, 0.0f, 0.0f, 1.f,
-         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.f,
-        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.f,
-
-        // Back face
-        -0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      0.0f, 1.0f, 0.0f, 1.f,
-         0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,      0.0f, 1.0f, 0.0f, 1.f,
-         0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.f,
-        -0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.f,
-
-        // Left face
-        -0.5f, 0.5f, 0.5f,     -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 0.0f,      0.0f, 0.0f, 1.0f, 1.f,
-        -0.5f, 0.5f, -0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      0.0f, 0.0f, 1.0f, 1.f,
-        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 1.0f,      0.0f, 0.0f, 1.0f, 1.f,
-        -0.5f, -0.5f, 0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 1.0f,      0.0f, 0.0f, 1.0f, 1.f,
-
-        // Right face
-         0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 0.0f,      1.0f, 1.0f, 0.0f, 1.f,
-         0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f, 1.f,
-         0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 1.0f,      1.0f, 1.0f, 0.0f, 1.f,
-         0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 1.0f,      1.0f, 1.0f, 0.0f, 1.f,
-
-         // Top face
-         -0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      0.0f, 1.0f, 1.0f, 1.f,
-          0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      0.0f, 1.0f, 1.0f, 1.f,
-          0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      0.0f, 1.0f, 1.0f, 1.f,
-         -0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 1.0f,      0.0f, 1.0f, 1.0f, 1.f,
-
-         // Bottom face
-         -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      1.0f, 1.0f, 0.0f, 1.f,
-          0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      1.0f, 1.0f, 0.0f, 1.f,
-          0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      1.0f, 1.0f, 0.0f, 1.f,
-         -0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 1.0f,      1.0f, 1.0f, 0.0f, 1.f
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 0.0f,      //1.0f, 0.0f, 0.0f, 1.f,
+         0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 0.0f,      //1.0f, 0.0f, 0.0f, 1.f,
+         0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,      //1.0f, 0.0f, 0.0f, 1.f,
+        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f, 0.0f,    0.0f, 1.0f,      //1.0f, 0.0f, 0.0f, 1.f,
+                                                                                          //
+        // Back face                                                                      //
+        -0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      //0.0f, 1.0f, 0.0f, 1.f,
+         0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,      //0.0f, 1.0f, 0.0f, 1.f,
+         0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,      //0.0f, 1.0f, 0.0f, 1.f,
+        -0.5f,  0.5f, 0.5f,    0.0f, 0.0f, 1.0f,    -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,      //0.0f, 1.0f, 0.0f, 1.f,
+                                                                                          //
+        // Left face                                                                      //
+        -0.5f, 0.5f, 0.5f,     -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 0.0f,      //0.0f, 0.0f, 1.0f, 1.f,
+        -0.5f, 0.5f, -0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      //0.0f, 0.0f, 1.0f, 1.f,
+        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 1.0f,      //0.0f, 0.0f, 1.0f, 1.f,
+        -0.5f, -0.5f, 0.5f,    -1.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,   0.0f, 1.0f,      //0.0f, 0.0f, 1.0f, 1.f,
+                                                                                          //
+        // Right face                                                                     //
+         0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 0.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+         0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 0.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+         0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  1.0f, 1.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+         0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,     0.0f, -1.0f, 0.0f,  0.0f, 1.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+                                                                                          //
+         // Top face                                                                      //
+         -0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      //0.0f, 1.0f, 1.0f, 1.f,
+          0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      //0.0f, 1.0f, 1.0f, 1.f,
+          0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      //0.0f, 1.0f, 1.0f, 1.f,
+         -0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f, 0.0f,  0.0f, 1.0f,      //0.0f, 1.0f, 1.0f, 1.f,
+                                                                                          //
+         // Bottom face                                                                   //
+         -0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 0.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+          0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 0.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+          0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  1.0f, 1.0f,      //1.0f, 1.0f, 0.0f, 1.f,
+         -0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,    1.0f, 0.0f, 0.0f,  0.0f, 1.0f      //1.0f, 1.0f, 0.0f, 1.f
     };
 
     GLuint indices[] = {
@@ -482,20 +492,20 @@ void MESH_Manager::CreateInstanceCube()
     glBindVertexArray(vaoid);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     // Tangent attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     // Texture coord
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(9 * sizeof(float)));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(9 * sizeof(float)));
     glEnableVertexAttribArray(3);
     // color coord
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
-    glEnableVertexAttribArray(4);
+    /*glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
+    glEnableVertexAttribArray(4);*/
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
@@ -504,20 +514,25 @@ void MESH_Manager::CreateInstanceCube()
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
-    InstanceProperties tempProp;
+    InstanceProperties tempProp; // a lot on the stack, do something about it @kk or @sean
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
-
-    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Cube", vaoid));
+    //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Cube"), vaoid));
+    //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Cube"]));
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)["Cube"]);
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Cube"]));
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
 
     mContainer.emplace(std::string("Cube"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+
 }
 
 
@@ -627,18 +642,24 @@ void MESH_Manager::CreateInstanceSphere()
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
-    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Sphere", vaoid));
+
+    //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
+    //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLE_STRIP;
     newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Sphere"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
 
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*properties)["Sphere"]);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
     mContainer.emplace(std::string("Sphere"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
 
 
 }
@@ -921,15 +942,18 @@ void MESH_Manager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Line", vaoid));
+    //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Line"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
     mContainer.emplace(std::string("Line"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
 
 }
 
@@ -979,14 +1003,18 @@ void MESH_Manager::CreateInstanceSegment3D()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
-    properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
+    vaoMap.emplace(std::pair<std::string, GLuint>("Segment3D", vaoid));
+
+    //properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*properties)["Segment3D"]));
+    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
 
     mContainer.emplace(std::string("Segment3D"), newMesh);
+    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+
 }
 
 void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
@@ -1081,3 +1109,9 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     //return DebugVaoid;
 }
 
+//GLuint GetVAOfromGUID(std::string GUID) {
+//    if (MeshManager.vaoMap.find(GUID) != MeshManager.vaoMap.end()) {
+//        return MeshManager.vaoMap.find(GUID)->second;
+//    }
+//    return UINT_MAX;
+//}

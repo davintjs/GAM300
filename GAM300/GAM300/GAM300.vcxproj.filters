@@ -90,6 +90,7 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\BaseCamera.cpp" />
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
     <ClCompile Include="Source\Editor\EditorHistory.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
     <ClInclude Include="Source\Editor\EditorHistory.h" />
@@ -185,6 +187,10 @@
     <None Include="Shaders\PBR.vert" />
     <None Include="Shaders\Skybox.frag" />
     <None Include="Shaders\Skybox.vert" />
+    <None Include="Shaders\DefaultShader.vert" />
+    <None Include="Shaders\DefaultShader.frag" />
+    <None Include="Shaders\DefaultGbuffer.frag" />
+    <None Include="Shaders\DefaultGbuffer.vert" />
     <None Include="Shaders\Shadow.vert" />
     <None Include="Shaders\Shadow.frag" />
     <None Include="Shaders\PointShadow.frag" />

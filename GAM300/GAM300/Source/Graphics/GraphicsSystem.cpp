@@ -144,7 +144,7 @@ bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& 
 {
 	
 	bool horizontal = true, first_iteration = true;
-	GLSLShader& shader = SHADER.GetShader(BLUR);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::BLUR);
 	shader.Use();
 	
 	for (unsigned int i = 0; i < amount; i++)
@@ -272,8 +272,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-
-	GLSLShader& shader = SHADER.GetShader(HDR);
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::HDR);
 	shader.Use();
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
@@ -321,10 +320,14 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 
 void GraphicsSystem::PostDraw()
 {
-	for (auto& [name, prop] : RENDERER.GetProperties())
-	{
-		prop.iter = 0;
+	//@kk clear the one with shader instead
+	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
+		{
+			prop.iter = 0;
+		}
 	}
+	
 }
 
 void GraphicsSystem::Exit()

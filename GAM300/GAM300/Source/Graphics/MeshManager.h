@@ -20,14 +20,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
+//#include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
 
 #include "Model3d.h"
 
 struct InstanceProperties;
+struct DefaultRenderProperties;
 
+using InstanceContainer = std::map<GLuint, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -42,7 +44,10 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-	unsigned int index;
+	// need these vertices for batch rendering
+	std::vector<glm::vec4> vertexPos;
+
+	unsigned int index{};
 
 };
 
@@ -115,15 +120,19 @@ public:
 	
 	}// Either Geom or Vaoid
 
-
+	//GLuint GetVAOfromGUID(std::string GUID);
 
 	// FUnction to load model
 
 	//void AddTexture(char const* Filename, std::string GUID);
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
+	std::unordered_map<std::string, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
 	std::unordered_map<std::string, Mesh> mContainer;
-	std::map<std::string, InstanceProperties>* properties;
+	InstanceContainer* instanceProperties;
+	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
+	std::vector<DefaultRenderProperties>* defaultProperties;
+
 private:
 	// To load Geoms from FBXs
 	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);

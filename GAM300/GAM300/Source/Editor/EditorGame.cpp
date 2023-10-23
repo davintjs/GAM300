@@ -12,7 +12,7 @@
     1. Editor Scene
     2. Editor Game
 
-All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
 
