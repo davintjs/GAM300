@@ -195,9 +195,10 @@ property_begin_name(Rigidbody, "Rigidbody") {
 
 struct CharacterController : Object
 {
-
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
+	Vector3 direction{};
+
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
@@ -205,6 +206,7 @@ struct CharacterController : Object
 	bool isGrounded = false;
 	property_vtable();
 	UINT32 bid{ 0 };
+
 //JPH::BodyID CharacterBodyID;
 };
 

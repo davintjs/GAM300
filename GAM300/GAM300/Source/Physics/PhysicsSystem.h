@@ -197,6 +197,9 @@ public:
 	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
 
+	// Resolve any character controller moves
+	void ResolveCharacterMovement();
+
 	// A testing function
 	void TestRun();
 
@@ -210,6 +213,7 @@ public:
 	const unsigned int maxObjectPairs =					1024;
 	const unsigned int maxContactConstraints =			1024;
 
+	float characterCollisionTolerance =					0.05f;
 
 	unsigned int step = 0;
 	//float accumulatedTime = 0.f;
@@ -235,6 +239,7 @@ public:
 	#pragma region Character Controller Testing
 	float mTime = 0.f;
 	CharacterControllerTest* ccTest =				nullptr;
+	std::vector<JPH::Ref<JPH::Character>> characters;
 	//JPH::BodyID characterID;
 	#pragma endregion
 

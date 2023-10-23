@@ -123,6 +123,7 @@ void PhysicsSystem::Exit() {
 		JPH::Factory::sInstance = nullptr;
 	}
 
+
 	delete engineContactListener;
 
 	// Destroy Physics World
@@ -145,10 +146,11 @@ void PhysicsSystem::Exit() {
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
 
+	
 	if (!ccTest->mCharacter)
 		return;
 	
-	mTime += dt;
+	/*
 	// Input handling for character
 	JPH::Vec3 direction = JPH::Vec3::sZero();
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_W) || InputHandler::isKeyButtonHolding(GLFW_KEY_W)) {
@@ -197,8 +199,10 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 
 		ccTest->mCharacter->SetLinearVelocity(new_velocity);
 	}
+	*/
 
-
+	// Resolve any character controller moves
+	ResolveCharacterMovement();
 
 }
 void PhysicsSystem::PostPhysicsUpdate() {
@@ -265,27 +269,67 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				std::cout << "Collision Remove!\n";
 			}
 		}
-		/*
-		JPH::BodyLockRead lock(physicsSystem->GetBodyLockInterface(), JPH::BodyID(e.bid1));
-		if (lock.Succeeded()) {
-			std::cout << "success!!\n";
-
-
-
-
-		}
-		else {
-			std::cout << "lock unsuccessful\n";
-		}
-		*/
 
 	}
 	engineContactListener->collisionResolution.clear();
 
 
 	ccTest->mCharacter->PostSimulation(0.05f);
+	for (auto it = ++characters.begin(); it != characters.end(); ++it) {
+		(*it)->PostSimulation(0.05f);
+	}
 
 	UpdateGameObjects();
+}
+
+void PhysicsSystem::ResolveCharacterMovement() {
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& ccArray = scene.GetArray<CharacterController>();
+
+	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
+		CharacterController& cc = *it;
+		JPH::Ref<JPH::Character> mCharacter = nullptr;
+		for (JPH::Ref<JPH::Character> r : characters) {
+			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
+				mCharacter = r;
+			}
+		}
+
+		if (mCharacter == nullptr)
+			continue;
+
+		JPH::Vec3 direction;
+		GlmVec3ToJoltVec3(cc.direction, direction);
+
+		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
+		if (groundState == JPH::Character::EGroundState::OnSteepGround
+			|| groundState == JPH::Character::EGroundState::NotSupported)
+		{
+			JPH::Vec3 normal = mCharacter->GetGroundNormal();
+			normal.SetY(0.0f);
+			float dot = normal.Dot(direction);
+			if (dot < 0.0f)
+				direction -= (dot * normal) / normal.LengthSq();
+		}
+		direction.SetY(0);
+
+		// Update velocity
+		if (mCharacter->IsSupported()) {
+			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
+			JPH::Vec3 desired_velocity = 10.f * direction;
+			desired_velocity.SetY(current_velocity.GetY());
+			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
+
+			// Jump
+			if (groundState != JPH::Character::EGroundState::OnGround)
+				new_velocity.SetY(0);
+
+			mCharacter->SetLinearVelocity(new_velocity);
+		}
+
+
+	}
+
 }
 
 void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent) 
@@ -319,6 +363,17 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	UNREFERENCED_PARAMETER(pEvent);
 	std::cout << "Physics System scene stop test\n";
 
+	// Clean up any characters
+	for (JPH::Ref<JPH::Character> r : characters) {
+
+		if (r == ccTest->mCharacter)
+			continue;
+
+		r->RemoveFromPhysicsSystem();
+
+	}
+	characters.clear();
+
 	// Delete the current physics system, must set to nullptr
 	if (physicsSystem) {
 		//ccTest->mCharacter->RemoveFromPhysicsSystem();
@@ -331,7 +386,6 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 
 	engineContactListener->pSystem = nullptr;
 }
-
 
 void PhysicsSystem::PopulatePhysicsWorld() {
 	Scene& scene = MySceneManager.GetCurrentScene();
@@ -649,7 +703,13 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 
 	character->AddToPhysicsSystem(activeStatus);
 	cc.bid = character->GetBodyID().GetIndexAndSequenceNumber();
-	enginePSystem->ccTest->mCharacter = character;
+	
+	// Main character = 1st character controller in scene
+	if(!enginePSystem->ccTest->mCharacter)
+		enginePSystem->ccTest->mCharacter = character;
+
+	enginePSystem->characters.emplace_back(character);
+
 	return;
 }
 

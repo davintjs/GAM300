@@ -65,6 +65,27 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class CharacterController : Component
+    {
+        public vec3 velocity;
+        public vec3 force;
+        private vec3 direction;
+
+        public float mass = 1f;
+        public float friction = 0.1f;
+        public float gravityFactor = 1f;
+        public float slopeLimit = 45f;
+        public bool isGrounded = false;
+
+
+        public void Move(vec3 dir)
+        {
+            direction = dir;
+        }
+
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class Transform : Component
     {
         public vec3 localPosition;
