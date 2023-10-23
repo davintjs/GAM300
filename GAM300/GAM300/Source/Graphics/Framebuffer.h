@@ -61,7 +61,8 @@ public:
 
 	unsigned int hdrFBO;
 	unsigned int rboDepth;
-	unsigned int colorBuffer;
+	//unsigned int colorBuffer;
+	unsigned int colorBuffer[2];
 
 private:
 	GLuint frameBufferObjectID = 0;
