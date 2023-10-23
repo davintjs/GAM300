@@ -311,23 +311,23 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			if (dot < 0.0f)
 				direction -= (dot * normal) / normal.LengthSq();
 		}
-		direction.SetY(0);
+		//direction.SetY(0);
 
 		// Update velocity
 		if (mCharacter->IsSupported()) {
 			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
-			JPH::Vec3 desired_velocity = 10.f * direction;
+			JPH::Vec3 desired_velocity = direction;
 			desired_velocity.SetY(current_velocity.GetY());
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			if (groundState != JPH::Character::EGroundState::OnGround)
-				new_velocity.SetY(0);
+			if (groundState == JPH::Character::EGroundState::OnGround)
+				new_velocity += JPH::Vec3(0, cc.direction.y, 0);
 
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
 
-
+		cc.direction = Vector3(0, 0, 0);
 	}
 
 }

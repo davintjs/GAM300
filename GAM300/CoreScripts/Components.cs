@@ -35,6 +35,13 @@ namespace BeanFactory
                 return InternalCalls.Get<GameObject>(this);
             } 
         }
+        virtual public CharacterController charactercontroller
+        {
+            get
+            {
+                return InternalCalls.Get<CharacterController>(this);
+            }
+        }
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();
@@ -80,7 +87,7 @@ namespace BeanFactory
 
         public void Move(vec3 dir)
         {
-            direction = dir;
+            direction += dir;
         }
 
     }
