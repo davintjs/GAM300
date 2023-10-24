@@ -138,13 +138,6 @@ void Renderer::Update(float)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-
-		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-
-		//if (t_Mesh == nullptr)
-		//{
-		//	continue;
-		//}
 		//int index = t_Mesh->index;
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
@@ -166,6 +159,8 @@ void Renderer::Update(float)
 			}*/
 
 			size_t s = static_cast<size_t>(renderer.shaderType);
+			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+				continue;
 			GLuint vao = MeshManager.vaoMap[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
 			//Mesh& mesh = MeshManager.mContainer[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
 
@@ -202,6 +197,7 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Specular[iter] = renderer.mr_Specular;
 			instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
 			instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();
+			//instanceContainers[s][renderer.meshID].VAO = vao;
 			++iter;
 			
 			// @jake rmb to do submesh...
@@ -245,6 +241,12 @@ void Renderer::Update(float)
 			// batch it via shader, geom, material instanced
 			// whenever things reach limit, draw
 			// means need calculate SRT here
+			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
+
+			if (t_Mesh == nullptr)
+			{
+				continue;
+			}
 			unsigned int iter = 0;
 			for (unsigned int vao : t_Mesh->Vaoids) {
 				DefaultRenderProperties renderProperties;
@@ -810,7 +812,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -869,7 +871,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -952,7 +954,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
 		{
 			glUniform1f(uniform1, false);
 		}

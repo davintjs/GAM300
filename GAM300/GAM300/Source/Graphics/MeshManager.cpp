@@ -114,36 +114,36 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
     //    //}
 
     //    // bind vbo and pass vertice data into the buffer
-    //    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    //    glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(gVertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(gVertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
 
     //    // set the vertex attributes to tell vert shader pos, uv, normal etc.
     //    // note offsetof uses the struct Vertex as first argument, and member name as second.
     //    // it returns the offset to the member name :)
-    //    glEnableVertexAttribArray(0); //pos
-    //    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
+        glEnableVertexAttribArray(0); //pos
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
 
-    //    glEnableVertexAttribArray(1); // normal
-    //    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
+        glEnableVertexAttribArray(1); // normal
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
 
-    //    glEnableVertexAttribArray(2); //tangent
-    //    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
+        glEnableVertexAttribArray(2); //tangent
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
 
-    //    glEnableVertexAttribArray(3); // tex (uv coords)
-    //    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tex));
+        glEnableVertexAttribArray(3); // tex (uv coords)
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tex));
 
-    //    glEnableVertexAttribArray(4); // color
-    //    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, color));
+        glEnableVertexAttribArray(4); // color
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, color));
 
 
-    //    // bind indices
-    //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, newGeom.mMeshes[i]._indices.size() * sizeof(unsigned int), &newGeom.mMeshes[i]._indices[0], GL_STATIC_DRAW);
+        // bind indices
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, newGeom.mMeshes[i]._indices.size() * sizeof(unsigned int), &newGeom.mMeshes[i]._indices[0], GL_STATIC_DRAW);
 
-    //    glBindVertexArray(0); // unbind vao
-    //    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+        glBindVertexArray(0); // unbind vao
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
@@ -170,7 +170,10 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
     //    newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
         //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-        instanceProperties->emplace(std::make_pair(guid, tempProp));
+        InstanceSetup_PBR(tempProp);
+
+        PRINT("VAO: ", VAO, " -> ", filePath,'\n');
+        instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     }
 
@@ -525,7 +528,7 @@ void MESH_Manager::CreateInstanceCube()
     //KK: Do something about AABB debug
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
-    instanceProperties->emplace(std::make_pair(cubeGUID, tempProp));
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
 
 
@@ -652,7 +655,7 @@ void MESH_Manager::CreateInstanceSphere()
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
     //mContainer.emplace(std::string("Sphere"), newMesh);
-    instanceProperties->emplace(std::make_pair(sphereGUID, tempProp));
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 
 }
@@ -942,7 +945,7 @@ void MESH_Manager::CreateInstanceLine()
     //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
-    instanceProperties->emplace(std::make_pair(lineGUID, tempProp));
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 }
 
@@ -1007,7 +1010,7 @@ void MESH_Manager::CreateInstanceSegment3D()
     InstanceSetup_PBR(tempProp);
 
     //mContainer.emplace(std::string("Segment3D"), newMesh);
-    instanceProperties->emplace(std::make_pair(segGUID, tempProp));
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 }
 

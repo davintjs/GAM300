@@ -28,7 +28,7 @@ struct InstanceProperties;
 struct DefaultRenderProperties;
 
 
-using InstanceContainer = std::unordered_map<Engine::GUID, InstanceProperties>; // <vao, properties>
+using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {

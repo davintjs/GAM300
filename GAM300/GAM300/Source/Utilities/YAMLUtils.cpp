@@ -66,11 +66,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v)
     return out;
 }
 
-
 YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.ToHexString() << YAML::EndSeq;
+    out << v.ToHexString();
     return out;
 }
 

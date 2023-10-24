@@ -81,7 +81,7 @@ void EditorContentBrowser::Update(float dt)
         if (!it.is_directory()) {
 
             GLint tex = GET_TEXTURE_ID(path);
-            if (tex != UINT_MAX) {
+            if (tex != 0) {
                 icon = path;
             }
         }

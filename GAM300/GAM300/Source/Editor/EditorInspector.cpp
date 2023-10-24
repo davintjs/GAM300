@@ -213,7 +213,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             if (!it.is_directory())
             {
                 auto tex = GET_TEXTURE_ID(path);
-                if (tex != UINT_MAX) {
+                if (tex != 0) {
                     icon = path;
                 }
             }

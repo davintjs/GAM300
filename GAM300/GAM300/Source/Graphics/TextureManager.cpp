@@ -242,7 +242,7 @@ GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
         return mTextureContainer.find(GUID)->second.second;
     }
 
-    return UINT_MAX;
+    return 0;
 }
 
 GLuint Texture_Manager::GetTexture(const fs::path& filePath)

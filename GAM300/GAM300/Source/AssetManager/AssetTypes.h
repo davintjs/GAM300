@@ -22,6 +22,7 @@
 //	{"None.mat", Engine::GUID(8)},
 //	{"None.anim", Engine::GUID(9)},
 //};
+
 static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 {
 	//Default Textures
