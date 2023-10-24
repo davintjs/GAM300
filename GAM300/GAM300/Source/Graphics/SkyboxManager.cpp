@@ -27,7 +27,7 @@ void SkyboxManager::CreateSkybox(const fs::path& _name)
 {
 	skyboxTex = TextureManager.GetTexture(_name);
 	skyBoxModel.SkyBoxinit();
-	skyBoxModel->shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
+	skyBoxModel.shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
 }
 
 void SkyboxManager::Draw(BaseCamera& _camera)

@@ -45,7 +45,7 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
-using InstanceContainer = std::map<GLuint, InstanceProperties>;
+using InstanceContainer = std::unordered_map<Engine::GUID, InstanceProperties>; // <vao, properties>
 // Bean: A temp solution to access the shader
 // enum SHADERTYPE
 // {
@@ -113,7 +113,6 @@ public:
 
 private:
 	std::unordered_map<Engine::GUID, InstanceProperties>* properties;
-	std::map<GLuint, InstanceProperties>* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;

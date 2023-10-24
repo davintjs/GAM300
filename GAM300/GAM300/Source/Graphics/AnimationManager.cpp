@@ -644,14 +644,7 @@ std::vector<TextureInfo> AnimationModel::loadMaterialTextures(aiMaterial* mat, a
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             TextureInfo texture;
-
-            std::string filename = str.C_Str();
-            std::string nameWithoutExtension;
-            size_t lastDotPos = filename.find_last_of('.');
-            if (lastDotPos != std::string::npos) { // Extract the part of the string before the last dot
-                nameWithoutExtension = filename.substr(0, lastDotPos);
-            }
-            texture.id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(nameWithoutExtension));
+            //texture.id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filename));
             //texture.id = TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();

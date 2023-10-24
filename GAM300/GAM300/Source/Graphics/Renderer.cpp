@@ -141,10 +141,10 @@ void Renderer::Update(float)
 
 		Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 
-		if (t_Mesh == nullptr)
-		{
-			continue;
-		}
+		//if (t_Mesh == nullptr)
+		//{
+		//	continue;
+		//}
 		//int index = t_Mesh->index;
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
@@ -166,8 +166,8 @@ void Renderer::Update(float)
 			}*/
 
 			size_t s = static_cast<size_t>(renderer.shaderType);
-			GLuint vao = MeshManager.vaoMap[renderer.MeshName]; // pls ask someone how to use GUID instead because deadlock
-			//GLuint vao = renderer.VAO;
+			GLuint vao = MeshManager.vaoMap[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
+			//Mesh& mesh = MeshManager.mContainer[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
 
 			//instanceProperties[vao];
 			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia

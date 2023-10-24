@@ -27,7 +27,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 struct InstanceProperties;
 struct DefaultRenderProperties;
 
-using InstanceContainer = std::map<GLuint, InstanceProperties>; // <vao, properties>
+
+using InstanceContainer = std::unordered_map<Engine::GUID, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -101,8 +102,6 @@ SINGLETON(MESH_Manager)
 public:
 	
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
 
@@ -112,12 +111,12 @@ public:
 	// This is used when we are going to draw, u need to take the geom then render it
 	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
 	{ 
-		if (mContainer.find(meshID) == mContainer.end())
-		{
-			return nullptr;
-		}
-		return &(mContainer.find(meshID)->second);
-	
+		//if (mContainer.find(meshID) == mContainer.end())
+		//{
+		//	return nullptr;
+		//}
+		//return &(mContainer.find(meshID)->second);
+		return nullptr;
 	}// Either Geom or Vaoid
 
 	//GLuint GetVAOfromGUID(std::string GUID);
@@ -127,9 +126,6 @@ public:
 	//void AddTexture(char const* Filename, std::string GUID);
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
-	std::unordered_map<Engine::GUID, Mesh> mContainer;
-	std::unordered_map<Engine::GUID, InstanceProperties>* properties;
-
 	//Handle mesh adding here
 	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);
 	// Adds mesh asset for storing
@@ -138,8 +134,7 @@ public:
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
-	std::unordered_map<std::string, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
-	std::unordered_map<std::string, Mesh> mContainer;
+	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
 	std::vector<DefaultRenderProperties>* defaultProperties;
