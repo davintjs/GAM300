@@ -307,15 +307,16 @@ void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking)
     }
     else // Linking parent and child gameobjects
     {
-        Entity& refEntity = _scene.Get<Entity>(object["m_EUID"].as<Engine::UUID>());
+        Engine::UUID euid{ object["m_EUID"].as<Engine::UUID>() };
         YAML::Node parent = object["m_Parent"];
         if (parent)
         {
             Engine::UUID parentUUID = parent.as<Engine::UUID>();
             if (parentUUID != 0)
             {
-                Transform& transform = _scene.Get<Transform>(refEntity); // Transform
-                transform.SetParent(&_scene.Get<Transform>(parentUUID));
+                Transform& transform = _scene.Get<Transform>(euid); // Transform
+                transform.parent = parentUUID;
+                _scene.Get<Transform>(parentUUID).child.push_back(euid);
             }
         }
         else

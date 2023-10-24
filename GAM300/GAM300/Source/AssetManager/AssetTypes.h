@@ -9,16 +9,39 @@
 
 #pragma once
 
+//static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
+//{
+//	{"None.geom", Engine::GUID(0)},
+//	{"Cube.geom", Engine::GUID(1)},
+//	{"Sphere.geom", Engine::GUID(2)},
+//	{"Capsule.geom", Engine::GUID(3)},
+//	{"Line.geom", Engine::GUID(4)},
+//	{"Plane.geom", Engine::GUID(5)},
+//	{"Segment3D.geom", Engine::GUID(6)},
+//	{"None.dds", Engine::GUID(7)},
+//	{"None.mat", Engine::GUID(8)},
+//	{"None.anim", Engine::GUID(9)},
+//};
 static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 {
-	{"None.geom", Engine::GUID(0)},
-	{"Cube.geom", Engine::GUID(1)},
-	{"Sphere.geom", Engine::GUID(2)},
-	{"Capsule.geom", Engine::GUID(3)},
-	{"Line.geom", Engine::GUID(4)},
-	{"Plane.geom", Engine::GUID(5)},
-	{"Segment3D.geom", Engine::GUID(6)},
-	{"None.dds", Engine::GUID(7)},
+	//Default Textures
+	{"None.dds", Engine::GUID(0)},
+
+	//Default Geometry 
+	{"None.geom", Engine::GUID(100)},
+	{"Cube.geom", Engine::GUID(101)},
+	{"Sphere.geom", Engine::GUID(102)},
+	{"Capsule.geom", Engine::GUID(103)},
+	{"Line.geom", Engine::GUID(104)},
+	{"Plane.geom", Engine::GUID(105)},
+	{"Segment3D.geom", Engine::GUID(106)},
+	{"Quad.geom", Engine::GUID(107)},
+
+	//Default Materials
+	{"None.mat", Engine::GUID(200)},
+
+	//Default Animations
+	{"None.anim", Engine::GUID(300)},
 };
 
 // GUID, last file update time, file name, data

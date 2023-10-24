@@ -162,6 +162,7 @@ namespace YAML
         // Decoding for Vector4 during deserialization
         static bool decode(const Node& node, Engine::GUID& rhs)
         {
+            PRINT(node[0].as<std::string>());
             rhs = Engine::GUID(node[0].as<std::string>());
             return true;
         }
