@@ -27,6 +27,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 #include "Core/Events.h"
+#include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/AnimationManager.h"
 #include "Graphics/TextureManager.h"
 #include "Graphics/MeshManager.h"
 #include "Audio/AudioManager.h"

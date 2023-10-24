@@ -10,7 +10,7 @@
 	This file contains the definitions of Shader Manager that includes:
 	1.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
@@ -66,7 +66,18 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/UIWorldSpace.vert";
 	fragmentPath = shaderPath + "/UIWorldSpace.frag";
 	ShaderCompiler("UI WORLD SHADER", vertexPath, fragmentPath);
+	
+	vertexPath = shaderPath + "/BloomBlur.vert";
+	fragmentPath = shaderPath + "/BloomBlur.frag";
+	ShaderCompiler("BLOOM BLUR SHADER", vertexPath, fragmentPath);
 
+	vertexPath = shaderPath + "/DefaultGbuffer.vert";
+	fragmentPath = shaderPath + "/DefaultGbuffer.frag";
+	ShaderCompiler("GBUFFER SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/DefaultShader.vert";
+	fragmentPath = shaderPath + "/DefaultShader.frag";
+	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)
