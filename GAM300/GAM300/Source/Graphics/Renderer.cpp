@@ -154,7 +154,8 @@ void Renderer::Update(float)
 		// for each cam
 
 		// if instance rendering put into container for instance rendering
-		if (renderer.isInstance) {
+		// 
+		//if (renderer.isInstance) {
 
 			// dun need do dis, coz renderer contains shadertype, can access via that
 			// for each shader, slot in properties into container
@@ -236,14 +237,15 @@ void Renderer::Update(float)
 			//	++(instanceProperties[newName].iter);
 			//}
 
-		}
-		else /*if default rendering*/{
+		//}
+		//else /*if default rendering*/{
 			// if not instance put into container for default rendering
 
 			// batch it via shader, geom, material instanced
 			// whenever things reach limit, draw
 			// means need calculate SRT here
-			unsigned int iter = 0;
+
+			unsigned int iters = 0;
 			for (unsigned int vao : t_Mesh->Vaoids) {
 				DefaultRenderProperties renderProperties;
 				
@@ -269,11 +271,11 @@ void Renderer::Update(float)
 
 
 				renderProperties.drawType = t_Mesh->prim;
-				renderProperties.drawCount = t_Mesh->Drawcounts[iter++];
+				renderProperties.drawCount = t_Mesh->Drawcounts[iters++];
 
 				defaultProperties.emplace_back(renderProperties);
 			}
-		}
+		//}
 		
 		++i;
 	}
@@ -311,59 +313,59 @@ void Renderer::SetupGrid(const int& _num)
 void Renderer::Draw(BaseCamera& _camera)
 {
 	
-	// Looping Properties for instancing
-	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
-	//for (auto& [shader, container] : instanceContainers)
-	{
-		for (auto& [vao, prop] : instanceContainers[s]) {
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			for (int i = 0; i < 31; ++i)
-			{
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
-			}
-			glActiveTexture(GL_TEXTURE0 + 30);
-			glBindTexture(GL_TEXTURE_2D, depthMap);
-			DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, static_cast<SHADERTYPE>(s));
+	//// Looping Properties for instancing
+	//for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
+	////for (auto& [shader, container] : instanceContainers)
+	//{
+	//	for (auto& [vao, prop] : instanceContainers[s]) {
+	//		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//		glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
+	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
+	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
+	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
+	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//		for (int i = 0; i < 31; ++i)
+	//		{
+	//			glActiveTexture(GL_TEXTURE0 + i);
+	//			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
+	//		}
+	//		glActiveTexture(GL_TEXTURE0 + 30);
+	//		glBindTexture(GL_TEXTURE_2D, depthMap);
+	//		DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, static_cast<SHADERTYPE>(s));
 
-			// FOR DEBUG DRAW
-			if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				if (prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.iter);
-			}
+	//		// FOR DEBUG DRAW
+	//		if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
+	//		{
+	//			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+	//			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+	//			glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//			if (prop.debugVAO)
+	//				DrawDebug(prop.debugVAO, prop.iter);
+	//		}
 
-			// @kk this one need uncomment, check vao instead of name
-			/*if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				if (prop.VAO)
-					DrawGrid(prop.VAO, prop.iter);
-			}*/
-		}
+	//		// @kk this one need uncomment, check vao instead of name
+	//		/*if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
+	//		{
+	//			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+	//			glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+	//			glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//			if (prop.VAO)
+	//				DrawGrid(prop.VAO, prop.iter);
+	//		}*/
+	//	}
 
-		
+	//	
 
-	}
+	//}
 
 	// non-instanced render
 	for (DefaultRenderProperties& prop : defaultProperties) {
@@ -413,6 +415,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, depthMap);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
 		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
 		shader.Use();
@@ -454,7 +458,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform1f(Shininess, prop.shininess);
 		glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
 		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
-		glUniform3fv(camPos, 1, glm::value_ptr(EditorCam.GetCameraPosition()));
+		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
 
 
@@ -549,6 +553,32 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint uniform9 = glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
 		glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
+
+		// SHADOW 
+		GLint uniform10 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+
+
+
+
+		glUniformMatrix4fv(uniform10, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix));
+
+
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
+
+		// SETTINGS
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
+
+		GLint uniform11 =
+			glGetUniformLocation(shader.GetHandle(), "renderShadow");
+
+		glUniform1f(uniform11, RenderShadow);
+
+
+
+
 		glBindVertexArray(prop.VAO);
 		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
@@ -624,10 +654,10 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(shader.GetHandle(), "persp_projection");
 	GLint uniform2 =
 		glGetUniformLocation(shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(shader.GetHandle(), "lightColor");
-	GLint uniform4 =
-		glGetUniformLocation(shader.GetHandle(), "lightPos");
+	//GLint uniform3 =
+	//	glGetUniformLocation(shader.GetHandle(), "lightColor");
+	//GLint uniform4 =
+	//	glGetUniformLocation(shader.GetHandle(), "lightPos");
 	GLint uniform5 =
 		glGetUniformLocation(shader.GetHandle(), "camPos");
 	GLint uniform6 =
@@ -644,10 +674,10 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glm::value_ptr(_camera.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(_camera.GetViewMatrix()));
-	glUniform3fv(uniform3, 1,
-		glm::value_ptr(_lightSource.lightColor));
-	glUniform3fv(uniform4, 1,
-		glm::value_ptr(_lightSource.lightpos));
+	//glUniform3fv(uniform3, 1,
+	//	glm::value_ptr(_lightSource.lightColor));
+	//glUniform3fv(uniform4, 1,
+	//	glm::value_ptr(_lightSource.lightpos));
 	glUniform3fv(uniform5, 1,
 		glm::value_ptr(_camera.GetCameraPosition()));
 
@@ -758,6 +788,9 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
 		glm::value_ptr(lightSpaceMatrix));
+
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
+
 
 
 	GLint uniform11 =
@@ -1063,6 +1096,7 @@ void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + 
 			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
 	}
+
 	else if (temporary_test == POINT_LIGHT)
 	{
 		near_plane = 0.001f;

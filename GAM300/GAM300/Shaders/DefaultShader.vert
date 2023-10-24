@@ -20,7 +20,7 @@ layout (location = 0) out vec2 TexCoords;
 layout (location = 1) out vec3 WorldPos;
 layout (location = 2) out vec3 Normal;
 
-//layout (location = 3) out vec3 frag_pos_lightspace;
+layout (location = 3) out vec4 frag_pos_lightspace;
 
 
 //-------------------------
@@ -32,6 +32,8 @@ uniform mat4 persp_projection;
 uniform mat4 View;
 uniform mat4 SRT;
 
+uniform mat4 lightSpaceMatrix;
+
 void main()
 {
     TexCoords = aVertexTexCoord;
@@ -39,6 +41,7 @@ void main()
 	WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
 	gl_Position = persp_projection * View * vec4(WorldPos,1.0);
 
+	frag_pos_lightspace = lightSpaceMatrix * vec4(WorldPos, 1.0);
 
 
 

@@ -280,7 +280,7 @@ struct MeshRenderer : Object
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
-	float mr_Shininess;
+	float mr_Shininess;	
 
 
 	float mr_metallic = 0.5f;

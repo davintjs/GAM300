@@ -58,7 +58,7 @@ GameObject:
   m_IsActive: true
   m_Name: Falling Cube 1
   m_Layer: 0
-  m_Position: [-0.446017146, 2.19421697, 0.701099932]
+  m_Position: [-0.446017146, -0.860101223, 7.195539]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -115,7 +115,7 @@ GameObject:
   m_IsActive: true
   m_Name: Falling Cube 2
   m_Layer: 0
-  m_Position: [-0.655082464, 4.59031582, 1.05738711]
+  m_Position: [1.38175726, -0.662588954, -1.6231966]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -172,7 +172,7 @@ GameObject:
   m_IsActive: true
   m_Name: Floor
   m_Layer: 0
-  m_Position: [0, -3.09993005, 0]
+  m_Position: [3.57136583, -3.09993005, 0]
   m_Rotation: [0, -0, 0]
   m_Scale: [10, 1, 10]
   m_Children:
@@ -229,7 +229,7 @@ GameObject:
   m_IsActive: true
   m_Name: PointLight
   m_Layer: 0
-  m_Position: [0.4354316, 6.06421852, 3.06472206]
+  m_Position: [0.855186343, 4.53894138, -35.3856964]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -242,12 +242,12 @@ LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
   lightType: 2
-  lightpos: [0, 0, 0]
-  Intensity: 1
+  lightpos: [1, 1, 1]
+  Intensity: 50
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
+  Color: [1, 1, 1]
 ---
 GameObject:
   m_EUID: 3741745616850505635
@@ -285,7 +285,7 @@ GameObject:
   m_Name: 3D SPACE UI
   m_Layer: 0
   m_Position: [0.440229654, 5.66990662, -0.0251157284]
-  m_Rotation: [3.14159083, -0.00840728823, 0.00840738136]
+  m_Rotation: [3.14159083, -0.0084072873, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -304,7 +304,7 @@ GameObject:
   m_IsActive: true
   m_Name: WALL
   m_Layer: 0
-  m_Position: [5.32447052, 4.02244663, 0]
+  m_Position: [5.32447052, 4.02244663, 6.55106497]
   m_Rotation: [0, -0, 1.64999998]
   m_Scale: [10.000001, 0.999997497, 9.99999619]
   m_Children:
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
+  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -392,7 +392,7 @@ LightSource:
   lightType: 1
   lightpos: [0, 0, 0]
   Intensity: 10
-  Direction: [8.14999962, 0.100000001, -14.5500002]
+  Direction: [9.80000019, 0.100000001, 1.35000002]
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [1, 1, 1]
@@ -402,7 +402,7 @@ GameObject:
   m_IsActive: true
   m_Name: Spot Light
   m_Layer: 0
-  m_Position: [-4.08451939, 0.0740340948, -4.40794706]
+  m_Position: [1.83919954, 12.7493935, -2.13900757]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
