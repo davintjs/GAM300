@@ -261,7 +261,7 @@ GameObject:
   m_Name: 3D SPACE UI
   m_Layer: 0
   m_Position: [0.440229654, 5.66990662, -0.0251158178]
-  m_Rotation: [3.14159083, -0.00840729661, 0.00840738136]
+  m_Rotation: [3.14159083, -0.00840729196, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -273,7 +273,7 @@ SpriteRenderer:
   EUID: 3250402029849808772
   UUID: 15131644809803265180
   World Space: true
-  SpriteTexture: 00000000000000000000000000000000
+  SpriteTexture: 498de774af6c5bc2a684d2d1c1ef073c
 ---
 GameObject:
   m_EUID: 15963777357859177452
@@ -293,7 +293,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   Mesh: 00000000000000000000000000000065
-  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
+  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5

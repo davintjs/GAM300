@@ -111,12 +111,11 @@ public:
 	// This is used when we are going to draw, u need to take the geom then render it
 	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
 	{ 
-		//if (mContainer.find(meshID) == mContainer.end())
-		//{
-		//	return nullptr;
-		//}
-		//return &(mContainer.find(meshID)->second);
-		return nullptr;
+		if (mContainer.find(meshID) == mContainer.end())
+		{
+			return nullptr;
+		}
+		return &(mContainer.find(meshID)->second);
 	}// Either Geom or Vaoid
 
 	//GLuint GetVAOfromGUID(std::string GUID);
@@ -135,6 +134,7 @@ public:
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
 	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
+	std::unordered_map<Engine::GUID, Mesh> mContainer;
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
 	std::vector<DefaultRenderProperties>* defaultProperties;
