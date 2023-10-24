@@ -28,6 +28,7 @@ using GraphicsSystemsPack =
 TemplatePack
 <
 	ShaderManager,
+	FramebufferManager,
 	DebugDraw,
 	Lighting,
 	Renderer
@@ -154,9 +155,11 @@ bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& 
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "horizontal"), horizontal);
 
-		glBindTexture(
+		/*glBindTexture(
 			GL_TEXTURE_2D, first_iteration ? _camera.GetFramebuffer().colorBuffer[1] : pingpongColorbuffers[!horizontal]
-		);
+		);*/
+
+		glBindTexture(GL_TEXTURE_2D, first_iteration ? FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetBloomAttachment()) : pingpongColorbuffers[!horizontal]);
 
 		renderQuad(VAO, VBO);
 		horizontal = !horizontal;
@@ -241,11 +244,9 @@ void GraphicsSystem::Update(float dt)
 
 void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
 {
-	
-	glViewport(0, 0, 1600, 900);
-	glBindFramebuffer(GL_FRAMEBUFFER, _camera.GetFramebuffer().hdrFBO);
-	//glDrawBuffer(GL_COLOR_ATTACHMENT1);
-	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+	unsigned int attachments[2] = { _camera.GetHDRAttachment(), _camera.GetBloomAttachment() };
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera); // call draw after update
@@ -256,7 +257,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	else
 		RENDERER.UIDraw_2DWorldSpace(_camera);
 
-	_camera.GetFramebuffer().Unbind();
+	FRAMEBUFFER.Unbind();
 
 	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
 	{
@@ -266,11 +267,10 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (blooming)
 	{*/
 	bool index = bloom(5, _vao, _vbo, _camera);
-
 	//}
 
-	_camera.GetFramebuffer().Bind();
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+	glDrawBuffer(_camera.GetAttachment());
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
@@ -280,7 +280,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
@@ -297,7 +297,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	renderQuad(_vao, _vbo);
 	shader.UnUse();
 
-	_camera.GetFramebuffer().Unbind();
+	FRAMEBUFFER.Unbind();
 }
 
 void GraphicsSystem::Draw(BaseCamera& _camera) {

@@ -1,5 +1,5 @@
-[2023-10-23 21:06:10.584] [Error] [critical] 
-Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
-Info:		Trying to access invalid mesh
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 51)
+[2023-10-21 21:55:46.493] [Error] [critical] 
+Caused By:	errorId == GL_FRAMEBUFFER_COMPLETE
+Info:		Framebuffer is incomplete!!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Graphics\Framebuffer.cpp (Line: 399)
 

@@ -254,8 +254,8 @@ GameObject:
   m_IsActive: true
   m_Name: Camera
   m_Layer: 0
-  m_Position: [1.45914495, -2.37199998, 5.94999981]
-  m_Rotation: [0, -0.149999604, 0]
+  m_Position: [0, 2, 16.7999992]
+  m_Rotation: [0, 0, 0]
   m_Scale: [0.99999702, 1, 0.99999702]
   m_Children:
     []
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
+  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5

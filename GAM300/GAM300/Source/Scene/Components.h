@@ -82,6 +82,12 @@ struct Transform : Object
 	//Check whether this is a child
 	bool isChild();
 
+	// Get the translation in world space
+	glm::vec3 GetTranslation() const;
+
+	// Get the scale in world space
+	glm::vec3 GetScale() const;
+
 	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
 
