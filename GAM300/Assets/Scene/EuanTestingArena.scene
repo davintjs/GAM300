@@ -115,7 +115,7 @@ GameObject:
   m_IsActive: true
   m_Name: Falling Cube 2
   m_Layer: 0
-  m_Position: [2.57571006, 4.59031582, 1.05738711]
+  m_Position: [-0.655082464, 4.59031582, 1.05738711]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -153,12 +153,12 @@ MeshRenderer:
   RoughnessTexture: ""
   AoTexture: Default_AO
   EmissionTexture: Default_emissive
-  TextureID: 10
-  NormalMapID: 14
+  TextureID: 9
+  NormalMapID: 13
   RoughnessID: 0
   MetallicID: 0
-  AoID: 11
-  EmissionID: 12
+  AoID: 10
+  EmissionID: 11
 ---
 BoxCollider:
   EUID: 10548661867949210258
@@ -227,9 +227,9 @@ BoxCollider:
 GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
-  m_Name: LightSource
+  m_Name: PointLight
   m_Layer: 0
-  m_Position: [0.0770136714, 4.2396946, 1.5261389]
+  m_Position: [0.4354316, 6.06421852, 3.06472206]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -284,8 +284,8 @@ GameObject:
   m_IsActive: true
   m_Name: 3D SPACE UI
   m_Layer: 0
-  m_Position: [0.440229654, 5.66990662, -0.0251158178]
-  m_Rotation: [3.14159083, -0.00840729661, 0.00840738136]
+  m_Position: [0.440229654, 5.66990662, -0.0251157284]
+  m_Rotation: [3.14159083, -0.00840728823, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
+  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -371,3 +371,53 @@ SpriteRenderer:
   UUID: 8812244467539034998
   World Space: false
   SpriteTexture: BestTeam
+---
+GameObject:
+  m_EUID: 12145185779740132430
+  m_IsActive: true
+  m_Name: DirectionalLight
+  m_Layer: 0
+  m_Position: [0, 1.62171543, -1.7704277]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 11385746517262190844}  # LightSource
+---
+LightSource:
+  EUID: 12145185779740132430
+  UUID: 11385746517262190844
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 10
+  Direction: [8.14999962, 0.100000001, -14.5500002]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]
+---
+GameObject:
+  m_EUID: 9288752464473627312
+  m_IsActive: true
+  m_Name: Spot Light
+  m_Layer: 0
+  m_Position: [-4.08451939, 0.0740340948, -4.40794706]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 2940429698527103915}  # LightSource
+---
+LightSource:
+  EUID: 9288752464473627312
+  UUID: 2940429698527103915
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 90
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]

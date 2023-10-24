@@ -456,6 +456,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
 		glUniform3fv(camPos, 1, glm::value_ptr(EditorCam.GetCameraPosition()));
 
+
+
 		// POINT LIGHT STUFFS
 		auto PointLight_Sources = LIGHTING.GetPointLights();
 		for (int i = 0; i < PointLight_Sources.size(); ++i)
