@@ -470,8 +470,12 @@ void DisplayTexturePicker(Change& change, T& Value) {
 
     using T1 = std::decay_t<decltype(Value)>;
 
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGuiStyle orig = style;
+    style.ItemSpacing = ImVec2(0.0f, 8.f);
+
     ImGui::SameLine();
-    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+    ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse| ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
     static const std::string AssetDirectory = "Assets";
     static std::filesystem::path CurrentDirectory = AssetDirectory;
     static std::string currentFolder = "Assets";
@@ -482,11 +486,16 @@ void DisplayTexturePicker(Change& change, T& Value) {
     }
 
     //Component Settings window
-    ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+    ImGui::SetNextWindowSize(ImVec2(350.f, 350.f));
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
         ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
         // Back button to return to parent directory
+        static ImGuiTextFilter filter;
+
+        ImGui::Text("Filter "); ImGui::SameLine();
+        filter.Draw("##", 200.f);
+
         if (CurrentDirectory != std::filesystem::path(AssetDirectory))
         {
             if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
@@ -532,7 +541,11 @@ void DisplayTexturePicker(Change& change, T& Value) {
         {
             const auto& path = it.path();
             //if not png or dds file, dont show
-            if ((path.string().find("meta") != std::string::npos)) continue;
+            if ((path.string().find(".meta") != std::string::npos)) continue;
+
+            if (!filter.PassFilter(path.string().c_str())) {
+                continue;
+            }
 
             ImGui::PushID(i++);
 
@@ -563,6 +576,8 @@ void DisplayTexturePicker(Change& change, T& Value) {
                     it2 = filename.begin() + filename.find_first_of(".");
                     filename.erase(it2, filename.end());
                 }
+
+                
                 //PRINT(filename);
                 auto tex = GET_TEXTURE_ID(filename);
 
@@ -605,6 +620,8 @@ void DisplayTexturePicker(Change& change, T& Value) {
         ImGui::Columns(1);
         ImGui::EndPopup();
     }
+
+    style = orig;
 }
 
 template <typename T>
