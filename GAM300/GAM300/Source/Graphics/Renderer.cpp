@@ -262,6 +262,11 @@ void Renderer::Update(float)
 
 				renderProperties.textureID = renderer.textureID;
 				renderProperties.NormalID = renderer.normalMapID;
+				renderProperties.RoughnessID = renderer.RoughnessID;
+				renderProperties.MetallicID = renderer.MetallicID;
+				renderProperties.AoID = renderer.AoID;
+				renderProperties.EmissionID = renderer.EmissionID;
+
 
 				renderProperties.drawType = t_Mesh->prim;
 				renderProperties.drawCount = t_Mesh->Drawcounts[iter++];
@@ -420,8 +425,11 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
 
 		glUniform1i(hasTexture, prop.textureID);
+		std::cout << "texture ID " << prop.textureID << "\n";
+
 		glUniform1i(hasNormal, prop.NormalID);
 		glUniform1i(hasRoughness, prop.RoughnessID);
+		std::cout << "roughness ID " << prop.RoughnessID << "\n";
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);

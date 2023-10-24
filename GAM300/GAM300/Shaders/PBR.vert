@@ -31,11 +31,6 @@ layout (location = 12) in vec3 Metal_Rough_AO_constant; // Material Instance Con
 layout (location = 15) in vec2 texture_index;
 
 
-
-
-
-
-
 //-------------------------
 //          GOING OUT
 //-------------------------
