@@ -146,6 +146,11 @@ void AssetManager::UpdateAsset(const fs::path& filePath)
 Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
+	auto it = DEFAULT_ASSETS.find(filePath);
+	if (it != DEFAULT_ASSETS.end())
+	{
+		return it->second;
+	}
 	return assets.GetGUID(filePath);
 }
 

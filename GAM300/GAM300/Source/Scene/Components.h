@@ -297,13 +297,6 @@ struct MeshRenderer : Object
 	float mr_roughness = 0.5f;
 	float ao = 0.5f;
 
-	GLuint textureID = 0;
-	GLuint normalMapID = 0;
-	GLuint RoughnessID = 0;
-	GLuint MetallicID = 0;
-	GLuint AoID = 0;
-	GLuint EmissionID = 0;
-
 	GLuint VAO;
 	GLuint debugVAO;
 
@@ -326,12 +319,6 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
-	property_var(textureID).Name("TextureID").Flags(property::flags::DONTSHOW),
-	property_var(normalMapID).Name("NormalMapID").Flags(property::flags::DONTSHOW),
-	property_var(RoughnessID).Name("RoughnessID").Flags(property::flags::DONTSHOW),
-	property_var(MetallicID).Name("MetallicID").Flags(property::flags::DONTSHOW),
-	property_var(AoID).Name("AoID").Flags(property::flags::DONTSHOW),
-	property_var(EmissionID).Name("EmissionID").Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshRenderer)
 
 
@@ -373,8 +360,7 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 
-		Engine::GUID SpriteTexture;
-		GLuint spriteTextureID = 0;
+		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
 		property_vtable()
 	};

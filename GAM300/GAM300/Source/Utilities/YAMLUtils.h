@@ -155,15 +155,14 @@ namespace YAML
         static Node encode(const Engine::GUID& rhs)
         {
             Node node;
-            node.push_back(rhs.ToHexString());
+            node = rhs.ToHexString();
             return node;
         }
 
         // Decoding for Vector4 during deserialization
         static bool decode(const Node& node, Engine::GUID& rhs)
         {
-            PRINT(node[0].as<std::string>());
-            rhs = Engine::GUID(node[0].as<std::string>());
+            rhs = Engine::GUID(node.as<std::string>());
             return true;
         }
     };

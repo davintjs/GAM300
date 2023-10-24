@@ -178,13 +178,14 @@ void Renderer::Update(float)
 			}
 
 			// use the properties container coz its made for instance rendering already
-			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.textureID));
-			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.normalMapID));
 
-			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.MetallicID));
-			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.RoughnessID));
-			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.AoID));
-			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], renderer.EmissionID));
+			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao],TextureManager.GetTexture(renderer.AlbedoTexture)));
+			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
+
+			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
+			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
+			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
+			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
 
 			float metal_constant = renderer.mr_metallic;
 			float rough_constant = renderer.mr_roughness;
@@ -261,8 +262,8 @@ void Renderer::Update(float)
 				renderProperties.Diffuse = renderer.mr_Diffuse;
 				renderProperties.Ambient = renderer.mr_Ambient;
 
-				renderProperties.textureID = renderer.textureID;
-				renderProperties.NormalID = renderer.normalMapID;
+				renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
+				renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
 
 				renderProperties.drawType = t_Mesh->prim;
 				renderProperties.drawCount = t_Mesh->Drawcounts[iter++];
@@ -808,7 +809,8 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-		if (Sprite.spriteTextureID == 0)
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -819,7 +821,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
 		
 
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
@@ -866,7 +868,8 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-		if (Sprite.spriteTextureID == 0)
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -877,7 +880,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
 
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 	}
@@ -948,7 +951,8 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-		if (Sprite.spriteTextureID == 0)
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.geom"])
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -959,7 +963,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Sprite.spriteTextureID);
+		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
 
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 	}
