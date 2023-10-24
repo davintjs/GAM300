@@ -140,9 +140,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-    static const std::string AssetDirectory = "Assets";
-    static std::filesystem::path CurrentDirectory = AssetDirectory;
-    static std::string currentFolder = "Assets";
 
 
     if (ImGui::Button("Edit")) {
@@ -151,19 +148,12 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+    static ImGuiTextFilter filter;
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
-        ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
-        // Back button to return to parent directory
-        if (CurrentDirectory != std::filesystem::path(AssetDirectory))
-        {
-            if (ImGui::Button("Back", ImVec2{ 50.f, 30.f }))
-            {
-                CurrentDirectory = CurrentDirectory.parent_path();
-                currentFolder = CurrentDirectory.string();
-            }
-        }
+        filter.Draw("Search:", 340.f);
 
+        // Back button to return to parent directory
         static float padding = 15.f;
         static float iconsize = 50.f;
         float cellsize = iconsize + padding;
@@ -178,6 +168,18 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         size_t id = (size_t)GET_TEXTURE_ID("Assets/Icons/Cancel_Icon.dds");
         if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
+            for (auto& pair : DEFAULT_ASSETS)
+            {
+                if (pair.first.extension() != extension)
+                    continue;
+
+                if (pair.first.string().starts_with("None"))
+                {
+                    EDITOR.History.SetPropertyValue(change, guid, pair.second);
+                    break;
+                }
+            }
+
             ImGui::PopStyleColor();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
@@ -185,66 +187,85 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         };
         ImGui::PopStyleColor();
         //render file name below icon
-        ImGui::TextWrapped("Remove Texture");
+        ImGui::TextWrapped("None");
         ImGui::NextColumn();
 
-        int i = 0;
-        //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::directory_iterator{ CurrentDirectory })
-        {
-            const auto& path = it.path();
-            if ((path.extension() == ".meta")) continue;
-            if (!it.is_directory() && path.extension() != extension)
-                continue;
-            GetAssetEvent e { path };
-            EVENTS.Publish(&e);
-            Engine::GUID currentGUID = e.guid;
 
-            fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
+        int i = 0;
+        for (auto& pair : DEFAULT_ASSETS)
+        {
+            if (pair.first.extension() != extension)
+                continue;
+            if (!filter.PassFilter(pair.first.string().c_str()))
+                continue;
+            if (pair.first.string().starts_with("None"))
+                continue;
+
+            fs::path icon = "Assets/Icons/fileicon.dds";
 
             //if not png or dds file, dont show
 
             ImGui::PushID(i++);
 
-            auto relativepath = std::filesystem::relative(path, AssetDirectory);
-            std::string pathStr = relativepath.filename().string();
+            //render respective file icon textures
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+            GLuint icon_id = TextureManager.GetTexture(icon);
+            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            {
+                EDITOR.History.SetPropertyValue(change, guid, pair.second);
+            }
+            ImGui::PopStyleColor();
+            ImGui::TextWrapped(pair.first.stem().string().c_str());
+
+            //render file name below icon
+            ImGui::NextColumn();
+            ImGui::PopID();
+        }
+        //using filesystem to iterate through all folders/files inside the "/Data" directory
+        for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets"})
+        {
+            const auto& path = it.path();
+            if (!filter.PassFilter(path.string().c_str()))
+                continue;
+            if (path.extension() != extension)
+                continue;
+
+            GetAssetEvent e { path };
+            EVENTS.Publish(&e);
+            Engine::GUID currentGUID = e.guid;
+
+            fs::path icon = "Assets/Icons/fileicon.dds";
+
+            //if not png or dds file, dont show
+
+            ImGui::PushID(i++);
 
             //Draw the file / folder icon based on whether it is a directory or not
-            if (!it.is_directory())
-            {
-                auto tex = GET_TEXTURE_ID(path);
-                if (tex != 0) {
-                    icon = path;
-                }
+            auto tex = GET_TEXTURE_ID(path);
+            if (tex != 0) {
+                icon = path;
             }
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
             GLuint icon_id = TextureManager.GetTexture(icon);
-            ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
-
-            ImGui::PopStyleColor();
-
-            //Change directory into the folder clicked
-            if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
-                if (it.is_directory())
-                {
-                    currentFolder = pathStr;
-                    CurrentDirectory /= path.filename();
-                }
-                else
-                {
-                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-                }
+                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
             }
+            ImGui::PopStyleColor();
+            ImGui::TextWrapped(path.stem().string().c_str());
+
             //render file name below icon
-            ImGui::TextWrapped(pathStr.c_str());
             ImGui::NextColumn();
             ImGui::PopID();
         }
         ImGui::Columns(1);
         ImGui::EndPopup();
+    }
+    else
+    {
+        filter.Clear();
     }
 }
 
