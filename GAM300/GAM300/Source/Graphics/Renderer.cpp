@@ -218,7 +218,7 @@ void Renderer::Update(float)
 			//	{
 			//		break;
 			//	}
-			//	//InstanceinstanceProperties* currentProp = &instanceProperties[renderer.MeshName];
+			//	//InstanceinstanceProperties* currentProp = &instanceProperties[renderer.MeshName];	
 
 			//	/*GLuint textureID = 0;
 			//	GLuint normalMapID = 0;*/
@@ -425,11 +425,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
 
 		glUniform1i(hasTexture, prop.textureID);
-		std::cout << "texture ID " << prop.textureID << "\n";
-
 		glUniform1i(hasNormal, prop.NormalID);
 		glUniform1i(hasRoughness, prop.RoughnessID);
-		std::cout << "roughness ID " << prop.RoughnessID << "\n";
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
@@ -447,8 +444,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
 		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
 
-		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(EditorCam.GetProjMatrix()));
-		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
 		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
@@ -480,9 +477,8 @@ void Renderer::Draw(BaseCamera& _camera)
 			glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
 				, 1, &PointLight_Sources[i].intensity);
 
-
 		}
-		// accepted al lthe way to line 635, pls take a look and merge it @kk
+		// accepted all the way to line 635, pls take a look and merge it @kk
 		GLint uniform7 = glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
 		glUniform1i(uniform7, (int)PointLight_Sources.size());
 

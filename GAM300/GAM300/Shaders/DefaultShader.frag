@@ -28,11 +28,25 @@ struct SpotLight
     float intensity;
 };
 
-out vec4 FragColor;
+//-------------------------
+//          GOING OUT
+//-------------------------
+
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 Blooming;
   
+//-------------------------
+//          COMING IN
+//-------------------------
+
 layout (location = 0) in vec2 TexCoords;
 layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
+
+
+//-------------------------
+//          UNIFORMS
+//-------------------------
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
@@ -64,7 +78,7 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 uniform int SpotLight_Count;
 
 const float PI = 3.14159265359;
-
+// PBR Textures
 layout (binding = 0) uniform sampler2D AlbedoTexture;
 layout (binding = 1) uniform sampler2D NormalMap;
 layout (binding = 2) uniform sampler2D RoughnessMap;
@@ -134,6 +148,53 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 // ----------------------------------------------------------------------------
+
+//float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+//{
+//    // perform perspective divide
+//    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+//    // transform to [0,1] range
+//    projCoords = projCoords * 0.5 + 0.5;
+//    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+//    float closestDepth = texture(myTextureSampler[30], projCoords.xy).r; 
+//    // get depth of current fragment from light's perspective
+//    float currentDepth = projCoords.z;  
+//    // check whether current frag pos is in shadow
+//
+//    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+//    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+//
+//    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+////    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+//    if(projCoords.z > 1.0)
+//        shadow = 0.0;
+//    return shadow;
+//}
+//// ----------------------------------------------------------------------------
+//
+//float ShadowCalculation_Point(vec3 lightpos)
+//{
+//
+//    vec3 fragToLight = WorldPos - lightpos;
+//
+//    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+//    float closestDepth = texture(PointShadowBox,fragToLight).r; 
+//    // get depth of current fragment from light's perspective
+//    closestDepth *= farplane;  
+//    // check whether current frag pos is in shadow
+//    float currentDepth = length(fragToLight);
+////    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+////    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+////
+////    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//////    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+////    if(projCoords.z > 1.0)
+////        shadow = 0.0;
+////
+//  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+//float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
+//    return shadow;
+//}
 
 void main()
 {
@@ -279,6 +340,10 @@ void main()
         float NdotL = max(dot(N, L), 0.0);        
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
+
+
+
+
     float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < DirectionalLight_Count; ++i)
     {
