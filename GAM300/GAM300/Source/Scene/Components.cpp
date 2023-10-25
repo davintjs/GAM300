@@ -105,6 +105,11 @@ void Transform::RemoveChild(Transform* t)
 	child.erase(it);
 }
 
+Animator::Animator()/* : m_CurrentAnimation{ BaseAnimator::m_CurrentAnimation }*/
+{
+	BaseAnimator::Init();
+}
+
 Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 {
 	BaseCamera::Init();

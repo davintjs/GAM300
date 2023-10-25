@@ -7,16 +7,16 @@
 \date           10/10/2023
 
 \brief
-	This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the Animation Manager and the declarations of its related functions.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
-#pragma once
+#ifndef ANIMATIONMANAGER_H
+#define ANIMATIONMANAGER_H
 
 #include "../Core/SystemInterface.h"
 #include "../gli-master/gli/gli.hpp"
-//#include "glslshader.h"
+#include "glslshader.h"
 
 #include "GraphicsHeaders.h"
 
@@ -26,14 +26,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "GL/glew.h"
-#include <GLFW/glfw3.h>
-#include "glslshader.h"
+//#include "GL/glew.h"
+//#include <GLFW/glfw3.h>
+//#include "glslshader.h"
 //#include "TextureManager.h"
 #include "AssetManager/AssetManager.h"
 //
 //#include "../../Compiler/Mesh.h"
-
+//#include "Scene/SceneManager.h"
 
 
 #define MAX_BONE_INFLUENCE 4
@@ -44,12 +44,14 @@ struct AnimationVertex {
     glm::vec3 Position;
     // normal
     glm::vec3 Normal;
-    // texCoords
-    glm::vec2 TexCoords;
     // tangent
     glm::vec3 Tangent;
-    // bitangent
-    glm::vec3 Bitangent;
+    // texCoords
+    glm::vec2 TexCoords;
+    //// bitangent
+    //glm::vec3 Bitangent;
+    // color
+    glm::ivec4 Color;
     //bone indexes which will influence this vertex
     int m_BoneIDs[MAX_BONE_INFLUENCE];
     //weights from each bone
@@ -83,7 +85,7 @@ private:
 };
 
 
-
+//compiler only
 class AssimpGLMHelpers
 {
 public:
@@ -202,7 +204,7 @@ public:
     //void init(const std::string& animationPath, AnimationModel* model);
 
 
-    //~Animation();
+    //~Animation();   
 
     Bone* FindBone(const std::string& name);
 
@@ -215,9 +217,9 @@ public:
         return m_BoneInfoMap;
     }
 
-    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model);
+    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model); // compiler only
 
-    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
+    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src); // compiler only
 
 private:
 
@@ -235,7 +237,7 @@ public:
     // model data 
     std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     std::vector<AnimationMesh> meshes;  // might not need this, can steal from mesh manager mb
-    //std::string directory;
+    //std::string directory; 
     //bool gammaCorrection;
 
 
@@ -257,44 +259,45 @@ private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
     std::map<std::string, BoneInfo> m_BoneInfoMap;
     int m_BoneCounter = 0;
-
-    // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    void loadModel(std::string const& path);
-
-    // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene); //process geom equivalent
-
-    AnimationMesh processMesh(aiMesh* mesh, const aiScene* scene);
-
-    void ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene);
-
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
     std::vector<TextureInfo> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-};
 
-class AnimationAnimator
-{
-public:
-    AnimationAnimator();
 
-    void init(Animation* animation);
 
-    void UpdateAnimation(float dt);
 
-    void PlayAnimation(Animation* pAnimation);
+    // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
+    void loadModel(std::string const& path); // compiler only
 
-    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
-
-    std::vector<glm::mat4> GetFinalBoneMatrices();
-
-private:
-    std::vector<glm::mat4> m_FinalBoneMatrices;
-    Animation* m_CurrentAnimation;
-    float m_CurrentTime;
-    float m_DeltaTime;
+    // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
+    void processNode(aiNode* node, const aiScene* scene); //process geom equivalent,  compiler only
+    AnimationMesh processMesh(aiMesh* mesh, const aiScene* scene);  // compiler only
+    void ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene);  // compiler only
 
 };
+
+//class AnimationAnimator
+//{
+//public:
+//    AnimationAnimator();
+//
+//    void init(Animation* animation);
+//
+//    void UpdateAnimation(float dt);
+//
+//    void PlayAnimation(Animation* pAnimation);
+//
+//    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
+//
+//    std::vector<glm::mat4> GetFinalBoneMatrices();
+//
+//private:
+//    std::vector<glm::mat4> m_FinalBoneMatrices;
+//    Animation* m_CurrentAnimation;
+//    float m_CurrentTime;
+//    float m_DeltaTime;
+//
+//};
 
 
 
@@ -303,27 +306,29 @@ private:
 SINGLETON(Animation_Manager)
 {
 public:
-	void Init();
-	void Update(float dt);
-	void Draw(BaseCamera & _camera);
-	void Exit();
+    void Init();
+    void Update(float dt);
+    void Exit();
 
+    void Draw(BaseCamera & _camera);
 
-	//// used in asset manager to add anim to the annim container
-	//void AddAnimation(char const* Filename, std::string GUID);
+    //// creates an animation and returns it to be stored in the texture container
+    //GLuint CreateAnimation(char const* Filename);
 
-	//// creates a texture and returns it to be stored in the texture container
-	//GLuint CreateTexture(char const* Filename);
+    //// used in asset manager to add anim to the anim container
+    //void AddAnimation(char const* Filename, std::string GUID);
 
-	//// uses GUID to retrieve a texture from the texture container
-	//GLuint GetTexture(std::string GUID);
+    //// uses GUID to retrieve a texture from the texture container
+    //GLuint GetTexture(std::string GUID);
 
 private:
 
-	//std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
+    //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
 
-	GLSLShader ourShader{};
+    // can yeet these
+    GLSLShader ourShader{};
 
-	AnimationModel allModels_;
-	AnimationAnimator allAnimators_;
+    AnimationModel allModels_;
+    //AnimationAnimator allAnimators_;
 };
+#endif // !ANIMATIONMANAGER_H

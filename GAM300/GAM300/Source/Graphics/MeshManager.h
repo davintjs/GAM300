@@ -86,6 +86,10 @@ public:
 	std::vector<Material> _materials{};
 };
 
+//
+//class AnimationMesh: public Mesh
+//{
+//};
 
 
 

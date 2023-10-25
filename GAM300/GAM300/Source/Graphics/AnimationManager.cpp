@@ -7,7 +7,7 @@
 \date           10/10/2023
 
 \brief
-	This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the Animation Manager and the declarations of its related functions.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -16,6 +16,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "AnimationManager.h"
 
+//#include "GraphicsHeaders.h"
+//#include "glslshader.h"
+//#include <glm/gtx/quaternion.hpp>
+////#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
+//#include "AssetManager/AssetManager.h"
+#include "Scene/SceneManager.h"
 
 
 
@@ -99,15 +107,18 @@ void AnimationMesh::setupMesh()
     // vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, TexCoords));
     // vertex tangent
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Tangent));
-    // vertex bitangent
+    // vertex texture coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, TexCoords));
+    //// vertex bitangent
+    //glEnableVertexAttribArray(4);
+    //glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Bitangent));
+    // vertex color
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Bitangent));
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Color));
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, m_BoneIDs));
@@ -257,25 +268,6 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
     return glm::scale(glm::mat4(1.0f), finalScale);
 }
 
-//
-//void Animation::init(const std::string& animationPath, AnimationModel* model)
-//{
-//    Assimp::Importer importer;
-//    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
-//    assert(scene && scene->mRootNode);
-//    auto animation = scene->mAnimations[0];
-//    m_Duration = animation->mDuration;
-//    m_TicksPerSecond = animation->mTicksPerSecond;
-//    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-//    globalTransformation = globalTransformation.Inverse();
-//    ReadHierarchyData(m_RootNode, scene->mRootNode);
-//    ReadMissingBones(animation, *model);
-//}
-//
-//Animation::~Animation()
-//{
-//}
-
 Bone* Animation::FindBone(const std::string& name)
 {
     auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
@@ -287,15 +279,6 @@ Bone* Animation::FindBone(const std::string& name)
     if (iter == m_Bones.end()) return nullptr;
     else return &(*iter);
 }
-
-
-//inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-//inline float GetDuration() { return m_Duration; }
-//inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-//inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
-//{
-//    return m_BoneInfoMap;
-//}
 
 
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
@@ -338,70 +321,70 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
         dest.children.push_back(newData);
     }
 }
-
-AnimationAnimator::AnimationAnimator()
-{
-}
-
-void AnimationAnimator::init(Animation* animation)
-{
-    m_CurrentTime = 0.0;
-    m_CurrentAnimation = animation;
-
-    m_FinalBoneMatrices.reserve(100);
-
-    for (int i = 0; i < 100; i++)
-        m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
-}
-
-void AnimationAnimator::UpdateAnimation(float dt)
-{
-    m_DeltaTime = dt;
-    if (m_CurrentAnimation)
-    {
-        m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
-        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
-    }
-}
-
-void AnimationAnimator::PlayAnimation(Animation* pAnimation)
-{
-    m_CurrentAnimation = pAnimation;
-    m_CurrentTime = 0.0f;
-}
-
-void AnimationAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
-{
-    std::string nodeName = node->name;
-    glm::mat4 nodeTransform = node->transformation;
-
-    Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
-
-    if (Bone)
-    {
-        Bone->Update(m_CurrentTime);
-        nodeTransform = Bone->GetLocalTransform();
-    }
-
-    glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-    auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
-    {
-        int index = boneInfoMap[nodeName].id;
-        glm::mat4 offset = boneInfoMap[nodeName].offset;
-        m_FinalBoneMatrices[index] = globalTransformation * offset;
-    }
-
-    for (int i = 0; i < node->childrenCount; i++)
-        CalculateBoneTransform(&node->children[i], globalTransformation);
-}
-
-std::vector<glm::mat4> AnimationAnimator::GetFinalBoneMatrices()
-{
-    return m_FinalBoneMatrices;
-}
+//
+//AnimationAnimator::AnimationAnimator()
+//{
+//}
+//
+//void AnimationAnimator::init(Animation* animation)
+//{
+//    m_CurrentTime = 0.0;
+//    m_CurrentAnimation = animation;
+//
+//    m_FinalBoneMatrices.reserve(100);
+//
+//    for (int i = 0; i < 100; i++)
+//        m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+//}
+//
+//void AnimationAnimator::UpdateAnimation(float dt)
+//{
+//    m_DeltaTime = dt;
+//    if (m_CurrentAnimation)
+//    {
+//        m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
+//        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
+//        CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
+//    }
+//}
+//
+//void AnimationAnimator::PlayAnimation(Animation* pAnimation)
+//{
+//    m_CurrentAnimation = pAnimation;
+//    m_CurrentTime = 0.0f;
+//}
+//
+//void AnimationAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+//{
+//    std::string nodeName = node->name;
+//    glm::mat4 nodeTransform = node->transformation;
+//
+//    Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
+//
+//    if (Bone)
+//    {
+//        Bone->Update(m_CurrentTime);
+//        nodeTransform = Bone->GetLocalTransform();
+//    }
+//
+//    glm::mat4 globalTransformation = parentTransform * nodeTransform;
+//
+//    auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+//    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+//    {
+//        int index = boneInfoMap[nodeName].id;
+//        glm::mat4 offset = boneInfoMap[nodeName].offset;
+//        m_FinalBoneMatrices[index] = globalTransformation * offset;
+//    }
+//
+//    for (int i = 0; i < node->childrenCount; i++)
+//        CalculateBoneTransform(&node->children[i], globalTransformation);
+//}
+//
+//std::vector<glm::mat4> AnimationAnimator::GetFinalBoneMatrices()
+//{
+//    return m_FinalBoneMatrices;
+//}
 
 // constructor, expects a filepath to a 3D model.
 AnimationModel::AnimationModel()
@@ -478,15 +461,6 @@ void AnimationModel::processNode(aiNode* node, const aiScene* scene)
 
 }
 
-//void AnimationModel::SetVertexBoneDataToDefault(AnimationVertex& vertex)
-//{
-//    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-//    {
-//        vertex.m_BoneIDs[i] = -1;
-//        vertex.m_Weights[i] = 0.0f;
-//    }
-//}
-
 
 AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
 {
@@ -541,31 +515,6 @@ AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
 
     return AnimationMesh(vertices, indices, textures);
 }
-//
-//void AnimationModel::SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight)
-//{
-//    // idk if i am doing this right i went to add my own thing
-//    if (weight == 0.0f) // skip if bone weight 0
-//    {
-//        return;
-//    }
-//
-//    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
-//    {
-//        if (vertex.m_BoneIDs[i] == boneID) { // skip if bone existd alr
-//            return;
-//        }
-//
-//        if (vertex.m_BoneIDs[i] < 0)
-//        {
-//            vertex.m_Weights[i] = weight;
-//            vertex.m_BoneIDs[i] = boneID;
-//            break;
-//        }
-//    }
-//
-//}
-
 
 void AnimationModel::ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
@@ -672,86 +621,121 @@ void Animation_Manager::Init()
 
     // move this out....
 
-	std::vector<std::pair<GLenum, std::string>> shdr_files;
-	// Vertex Shader
-	shdr_files.emplace_back(std::make_pair(
-		GL_VERTEX_SHADER,
-		"GAM300/Shaders/BasicAnimation.vert"));
+    std::vector<std::pair<GLenum, std::string>> shdr_files;
+    // Vertex Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_VERTEX_SHADER,
+        "GAM300/Shaders/BasicAnimation.vert"));
 
-	// Fragment Shader
-	shdr_files.emplace_back(std::make_pair(
-		GL_FRAGMENT_SHADER,
-		"GAM300/Shaders/BasicAnimation.frag"));
+    // Fragment Shader
+    shdr_files.emplace_back(std::make_pair(
+        GL_FRAGMENT_SHADER,
+        "GAM300/Shaders/BasicAnimation.frag"));
 
-	PRINT("animshader", '\n');
-	ourShader.CompileLinkValidate(shdr_files);
-	PRINT("animshader", "\n\n");
+    PRINT("animshader", '\n');
+    ourShader.CompileLinkValidate(shdr_files);
+    PRINT("animshader", "\n\n");
 
-	// if linking failed
-	if (GL_FALSE == ourShader.IsLinked())
-	{
-		std::stringstream sstr;
-		sstr << "Unable to compile/link/validate shader programs\n";
-		sstr << ourShader.GetLog() << "\n";
-		PRINT(sstr.str());
-		std::exit(EXIT_FAILURE);
-	}
+    // if linking failed
+    if (GL_FALSE == ourShader.IsLinked())
+    {
+        std::stringstream sstr;
+        sstr << "Unable to compile/link/validate shader programs\n";
+        sstr << ourShader.GetLog() << "\n";
+        PRINT(sstr.str());
+        std::exit(EXIT_FAILURE);
+    }
 
 
-	// we want compiler to serialise model info including the animations
-	allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-	// called to animate animaation
-	allAnimators_.init(&allModels_.GetAnimations());
+    // we want compiler to serialise model info including the animations
+    allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
+    // called to animate animaation, by right i think it should be a component thing 
+    //then in mb render use this fn & init we init whatever is attached to model
+    //allAnimators_.init(&allModels_.GetAnimations());
 
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        animator.SetAnimation(&allModels_.GetAnimations());
+    }
 }
 
 
 void Animation_Manager::Update(float dt)
 {
     //UNREFERENCED_PARAMETER(dt);
-	allAnimators_.UpdateAnimation(dt);
+    //allAnimators_.UpdateAnimation(dt);
+
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        if (animator.AnimationAttached())
+            animator.UpdateAnimation(dt);
+        else
+            animator.SetAnimation(&allModels_.GetAnimations());
+
+    }
 }
 
 void Animation_Manager::Draw(BaseCamera& _camera)
 {
-
-	// render
-	// ------
-	//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// don't forget to enable shader before setting uniforms
-	ourShader.Use();
-
-	// view/projection transformations
-	GLint uniform1 =
-		glGetUniformLocation(ourShader.GetHandle(), "projection");
-	GLint uniform2 =
-		glGetUniformLocation(ourShader.GetHandle(), "view");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetViewMatrix()));
-
-	auto transforms = allAnimators_.GetFinalBoneMatrices();
-	for (int i = 0; i < transforms.size(); ++i)
-	{
-		std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
-		GLint uniform3 =
-			glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
-
-		glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-			glm::value_ptr(transforms[i]));
-	}
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	// render the loaded model
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
-		glm::value_ptr(model));
-	allModels_.Draw(ourShader);
+
+    // FOR ALL W ANIMATIONS, PROB TEMP 
+
+    ourShader.Use();
+    GLint uniform1 =
+        glGetUniformLocation(ourShader.GetHandle(), "projection");
+    GLint uniform2 =
+        glGetUniformLocation(ourShader.GetHandle(), "view");
+    glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+        glm::value_ptr(_camera.GetProjMatrix()));
+    glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+        glm::value_ptr(_camera.GetViewMatrix()));
+
+    //auto transforms = allAnimators_.GetFinalBoneMatrices();
+    //for (int i = 0; i < transforms.size(); ++i)
+    //{
+    //	std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
+    //	GLint uniform3 =
+    //		glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
+
+    //	glUniformMatrix4fv(uniform3, 1, GL_FALSE,
+    //		glm::value_ptr(transforms[i]));
+    //}
+
+    // this is fking wrong
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        if (animator.AnimationAttached())
+        {
+
+            auto transforms = animator.GetFinalBoneMatrices();
+            for (int i = 0; i < transforms.size(); ++i)
+            {
+                std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
+                GLint uniform3 =
+                    glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
+
+                glUniformMatrix4fv(uniform3, 1, GL_FALSE,
+                    glm::value_ptr(transforms[i]));
+            }
+        }
+    }
+
+
+    // render the loaded model
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
+    model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
+    glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
+        glm::value_ptr(model));
+
+
+    allModels_.Draw(ourShader);
 }
 
 void Animation_Manager::Exit()
