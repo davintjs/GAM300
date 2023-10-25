@@ -59,10 +59,11 @@ uniform vec4 Specular;
 uniform vec4 Diffuse;
 uniform vec4 Ambient;
 
-uniform float Shininess;
-uniform float Metal;
-uniform float Roughness;
-uniform float Ao;
+uniform float ShininessConstant;
+uniform float MetalConstant;
+uniform float RoughnessConstant;
+uniform float AoConstant;
+uniform float EmissionConstant;
 
 uniform int hasTexture;
 uniform int hasNormal;
@@ -238,7 +239,7 @@ void main()
     }
     else
     {
-        metallic = Metal;
+        metallic = MetalConstant;
 
         int metal_test = int(metallic-0.1f);
         if(metal_test == -1)
@@ -264,7 +265,7 @@ void main()
     }
     else
     {
-        roughness = Roughness;
+        roughness = RoughnessConstant;
         int rough_test = int(roughness-0.1f);
         if(rough_test == -1)
         {
@@ -280,7 +281,7 @@ void main()
     }
     else
     {
-        ao = Ao;
+        ao = AoConstant;
 
         int ao_test = int(ao-0.1f);
         if(ao_test == -1)
@@ -526,7 +527,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * 10.f);
+    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * EmissionConstant);
     
     vec3 color = ambient + Lo;
 

@@ -286,6 +286,7 @@ struct MeshRenderer : Object
 	float mr_metallic = 0.5f;
 	float mr_roughness = 0.5f;
 	float ao = 0.5f;
+	float emission = 1.f;
 
 	GLuint textureID = 0;
 	GLuint normalMapID = 0;

@@ -4,6 +4,6 @@
 
 bool RenderShadow = true;
 
-unsigned int bloomCount = 4;
+unsigned int bloomCount = 0;
 
 float bloomThreshold = 1.f;

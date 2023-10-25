@@ -188,9 +188,10 @@ void Renderer::Update(float)
 			float metal_constant = renderer.mr_metallic;
 			float rough_constant = renderer.mr_roughness;
 			float ao_constant = renderer.ao;
+			float emission_constant = renderer.emission;
 
 			unsigned int& iter = instanceContainers[s][vao].iter;
-			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant);
 			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
 
@@ -254,6 +255,7 @@ void Renderer::Update(float)
 				renderProperties.metallic = renderer.mr_metallic;
 				renderProperties.roughness = renderer.mr_roughness;
 				renderProperties.ao = renderer.ao;
+				renderProperties.emission = renderer.emission;
 
 				renderProperties.entitySRT = transform.GetWorldMatrix();
 				renderProperties.Albedo = renderer.mr_Albedo;
@@ -324,10 +326,10 @@ void Renderer::Draw(BaseCamera& _camera)
 	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
 	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.M_R_A_Texture[0]));
 	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//		glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
+	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.M_R_A_Constant[0]));
 	//		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 	//		glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
@@ -361,9 +363,6 @@ void Renderer::Draw(BaseCamera& _camera)
 	//				DrawGrid(prop.VAO, prop.iter);
 	//		}*/
 	//	}
-
-	//	
-
 	//}
 
 	// non-instanced render
@@ -420,6 +419,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
 		shader.Use();
 
+		// PBR TEXTURES
 		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
 		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hasNormal");
 		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
@@ -433,6 +433,14 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
+
+		// PBR CONSTANT VALUES
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
+
+
 
 
 		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
