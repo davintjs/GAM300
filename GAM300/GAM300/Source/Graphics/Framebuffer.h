@@ -162,19 +162,19 @@ public:
 
 	// Creates a STATIC(Same Width & Height for all attachments) framebuffer of
 	// specific texture type with a texture attachment
-	Framebuffer2& CreateStaticFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Framebuffer2& CreateStaticFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Creates a STATIC(Same Width & Height for all attachments) framebuffer of
 	// specific texture type with a render buffer attachment
-	Framebuffer2& CreateStaticFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Framebuffer2& CreateStaticFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 	
 	// Creates an empty DYNAMIC(Different Width & Height, usually for editor camera only) framebuffer of 
 	// specific texture type with a texture attachment
-	Framebuffer2& CreateDynamicFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Framebuffer2& CreateDynamicFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Creates an empty DYNAMIC(Different Width & Height, usually for editor camera only) framebuffer of 
 	// specific texture type with a render buffer attachment
-	Framebuffer2& CreateDynamicFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Framebuffer2& CreateDynamicFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Retrieve a pointer to the framebuffer by their id
 	Framebuffer2* GetFramebufferByID(const GLuint& _framebufferId);
@@ -185,32 +185,39 @@ public:
 	// Get the current ATTACHMENT of the framebuffer using the id
 	GLenum GetCurrentAttachment(const GLuint& _framebufferId);
 
+	// Get the current color ATTACHMENT of the framebuffer
+	GLenum GetCurrentColorAttachment(Framebuffer2& _framebuffer) const;
+
+	// Get the current color ATTACHMENT of the framebuffer using the id
+	GLenum GetCurrentColorAttachment(const GLuint& _framebufferId);
+
 	// Get the texture id of the framebuffer with the specific attachment
 	GLuint GetTextureID(Framebuffer2& _framebuffer, const GLenum& _attachment);
 
 	// Get the texture id of the framebuffer with the specific attachment using the framebuffer id
 	GLuint GetTextureID(const GLuint& _framebufferId, const GLenum& _attachment);
 
-
 	// Adds a render texture attachment into the framebuffer of specific ATTACHMENT, RENDERTEXTURE and dimension using the framebuffer id
-	void RenderToTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	void RenderToTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Adds a render texture attachment into the framebuffer of specific ATTACHMENT, RENDERTEXTURE and dimension
-	void RenderToTexture(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	void RenderToTexture(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Creates a texture attachment for the framebuffer
-	Attachment CreateTextureAttachment(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Attachment CreateTextureAttachment(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Adds a render buffer into the framebuffer of specific ATTACHMENT and dimension using the framebuffer id
-	void RenderToBuffer(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	void RenderToBuffer(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
 
 	// Adds a render buffer into the framebuffer of specific ATTACHMENT and dimension
-	void RenderToBuffer(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	void RenderToBuffer(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
 
 	// Creates a render buffer attachment for the framebuffer
-	Attachment CreateRenderBufferAttachment(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT);
+	Attachment CreateRenderBufferAttachment(Framebuffer2& _framebuffer, const GLsizei& _width, const GLsizei& _height, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
 
 	void CreateTexture(GLuint& _index, const GLsizei& _width, const GLsizei& _height, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	void SetTextureFormat(const GLsizei& _width, const GLsizei& _height, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	void SetTextureParameters(const TEXTUREPARAMETERS& _textureFormat);
 

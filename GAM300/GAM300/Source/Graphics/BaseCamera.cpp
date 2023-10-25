@@ -34,50 +34,14 @@ void BaseCamera::Init()
 	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer();
 	framebufferID = framebuffer.frameBufferObjectID;
 
-	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM);
-	colorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
+	colorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 
 	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
-	hdrColorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
+	hdrColorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 
-	// Bean: To modulate
-	FRAMEBUFFER.Bind(framebufferID, hdrColorAttachment);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
-
-	glBindTexture(GL_TEXTURE_2D, hdrColorAttachment);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	
-	glFramebufferTexture2D(GL_FRAMEBUFFER, hdrColorAttachment, GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(framebufferID, hdrColorAttachment), 0);
-
-	Attachment renderbufferAttachment;
-	renderbufferAttachment.width = 1600;
-	renderbufferAttachment.height = 900;
-	renderbufferAttachment.target = GL_TEXTURE_2D;	
-
-	glCreateTextures(GL_TEXTURE_2D, 1, &renderbufferAttachment.index);
-	glBindTexture(GL_TEXTURE_2D, renderbufferAttachment.index);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1600, 900, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  // we clamp to the edge as the blur filter would otherwise sample repeated texture values!
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// attach texture to framebuffer
-	bloomAttachment = GL_COLOR_ATTACHMENT0 + framebuffer.attachment;
-	framebuffer.attachments[bloomAttachment] = renderbufferAttachment;
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, bloomAttachment, GL_TEXTURE_2D, renderbufferAttachment.index, 0);
-
-	framebuffer.drawBuffers[framebuffer.attachment] = bloomAttachment; // Draw the max number of buffers
-	framebuffer.readBuffer = bloomAttachment; // Read the latest buffer
-
-	framebuffer.attachment++;
-
-	FRAMEBUFFER.Completeness();
-
-	FRAMEBUFFER.Unbind();
-	// Bean: End of to modulate
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM, BUFFERTYPE::RENDERBUFFER);
+	bloomAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 }
 
 void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
@@ -142,7 +106,7 @@ void BaseCamera::OnResize(const float& _width, const float& _height, const unsig
 
 	//framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
 	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, _attachment);
-	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, hdrColorAttachment);
+	//FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, hdrColorAttachment);
 }
 
 bool BaseCamera::WithinFrustum() const
