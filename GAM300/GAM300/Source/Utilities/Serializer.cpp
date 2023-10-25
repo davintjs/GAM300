@@ -21,7 +21,6 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
-
 #include "Serializer.h"
 #include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -204,15 +203,6 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     }
 }
 
-void Deserialize(const std::string& _filepath)
-{
-    (void)_filepath;
-}
-
-void DeserializeRuntime(const std::string& _filepath)
-{
-    (void)_filepath;
-}
 
 bool DeserializeScene(Scene& _scene)
 {

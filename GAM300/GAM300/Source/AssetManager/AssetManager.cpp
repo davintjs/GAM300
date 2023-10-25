@@ -25,6 +25,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "yaml-cpp/yaml.h"
 #include <unordered_set>
 
+static std::unordered_set<fs::path> TEMP_EXTENSIONS
+{
+	".dds",
+	".geom"
+};
+
 static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
 	{".jpg", "TextureCompiler.exe "},
@@ -142,6 +148,48 @@ void AssetManager::UpdateAsset(const fs::path& filePath)
 	assets.UpdateAsset(filePath);
 }
 
+
+void AssetManager::AsyncRenameAsset(const fs::path& oldPath, const fs::path& newPath)
+{
+	ACQUIRE_SCOPED_LOCK(Assets);
+	THREADS.EnqueueTask([this, oldPath, newPath] { RenameAsset(oldPath,newPath); });
+}
+
+void AssetManager::RenameAsset(const fs::path& oldPath, const fs::path& newPath)
+{
+	if (oldPath.extension() == ".meta")
+	{
+		//Trying to convert a meta file to something else...
+		if (newPath.extension() != ".meta")
+		{
+			fs::rename(newPath, oldPath);
+			return;
+		}
+
+		fs::path nonMeta = oldPath;
+		nonMeta.replace_extension("");
+		//Old assigned file still exists
+		if (fs::exists(nonMeta))
+		{
+			fs::rename(newPath, oldPath);
+			return;
+		}
+
+		nonMeta = newPath;
+		nonMeta.replace_extension("");
+		//Old assigned file does not exist and new assigned file does not exist
+		if (fs::exists(nonMeta))
+		{
+			fs::remove(newPath);
+			return;
+		}
+
+		//Ok rename meta file done by assetmanager
+		return;
+	}
+	assets.RenameAsset(oldPath,newPath);
+}
+
 // Get a loaded asset GUID
 Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 {
@@ -166,7 +214,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	if (filePath.empty())
 		return;
 
-
+	static fs::path oldPath{};
 	//If added
 
 	////If deleted, generate a new one
@@ -205,17 +253,19 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::MODIFIED:
 		{
-			//AsyncUpdateAsset(filePath);
+			AsyncUpdateAsset(filePath);
 			PRINT("MODIFIED ");
 			break;
 		}
 		case FileState::RENAMED_OLD:
 		{
+			oldPath = filePath;
 			PRINT("RENAMED_OLD ");
 			break;
 		}
 		case FileState::RENAMED_NEW:
 		{
+			AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}

@@ -175,6 +175,16 @@ struct AssetLoadedEvent : IEvent
 };
 
 template <typename AssetType>
+struct AssetUpdatedEvent : IEvent
+{
+	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset)
+		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
+	const AssetType& asset;
+};
+
+template <typename AssetType>
 struct AssetUnloadedEvent : IEvent
 {
 	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid) :

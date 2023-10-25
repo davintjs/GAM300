@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_set>
 #include <Utilities/YAMLUtils.h>
+#include <Utilities/Serializer.h>
 
 //Hash table that maps an ID to a pointer
 template <typename T>
@@ -34,9 +35,8 @@ struct AllAssetsGroup
 		return std::get<AssetsTable<T>>(assets);
 	}
 
-	void AddAsset(const std::filesystem::path& filePath)
+	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
-
 		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		if (([&](auto type)
 			{
@@ -46,15 +46,25 @@ struct AllAssetsGroup
 					Engine::GUID guid = GetGUID(filePath);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
-						//load data
-						std::ifstream inputFile(filePath.c_str());
-						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
+						if (fs::is_directory(filePath))
+							return true;
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid]};
 						asset.mFilePath = filePath;
-						asset.mData.assign(
-							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
-						std::cout << "Done updating file in memory!" << filePath << std::endl;
-						inputFile.close();
+						//Pre-existing data
+						if (pData)
+						{
+							asset.mData = std::move(*pData);
+						}
+						else
+						{
+							//load data
+							std::ifstream inputFile(filePath.c_str());
+							E_ASSERT(inputFile, "Error opening file to update asset in memory!");
+							asset.mData.assign(
+								std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
+							PRINT("Done adding ", filePath, " into memory!", '\n');
+							inputFile.close();
+						}
 						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED,&asset));
 					}
 					else
@@ -107,14 +117,15 @@ struct AllAssetsGroup
 					Engine::GUID guid = GetGUID(filePath);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
-						T& asset = std::get<AssetsTable<T>>(assets)[guid];
-						//load data
-						//std::ifstream inputFile(filePath.c_str());
-						//E_ASSERT(inputFile, "Error opening file to update asset in memory!");
-						//asset.mData.clear();
-						//asset.mData.assign({ std::istreambuf_iterator<char>(inputFile) });
-						//std::cout << "Done updating file in memory!" << filePath << std::endl;
-						//inputFile.close();
+						std::ifstream inputFile(filePath.c_str());
+						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
+						T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
+						asset.mFilePath = filePath;
+						asset.mData.assign(
+							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
+						PRINT("Done updating ", filePath, " in memory!", '\n');
+						inputFile.close();
+						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UPDATED, &asset));
 					}
 					else
 					{
@@ -130,38 +141,26 @@ struct AllAssetsGroup
 		}
 	}
 
-	void RenameAsset(const std::filesystem::path& filePath)
+	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
-		if (([&](auto type)
-			{
-				using T = decltype(type);
-				if (GetAssetType::E<T>() == assetType)
-				{
-					Engine::GUID guid = GetGUID(filePath);
-					if constexpr (std::is_base_of<Asset, T>())
-					{
-						T& asset = std::get<AssetsTable<T>>(assets)[guid];
-						//load data
-						//std::ifstream inputFile(filePath.c_str());
-						//E_ASSERT(inputFile, "Error opening file to update asset in memory!");
-						//asset.mData.clear();
-						//asset.mData.assign({ std::istreambuf_iterator<char>(inputFile) });
-						//std::cout << "Done updating file in memory!" << filePath << std::endl;
-						//inputFile.close();
-					}
-					else
-					{
-						std::get<AssetsTable<T>>(assets)[guid] = {};
-					}
-					return true;
-				}
-				return false;
-			}
-			(Ts{}) || ...))
+		FileData* fileData = GetFileData(oldPath);
+
+		//Deal with meta file conversion here
+		if (AssetExtensionTypes[oldPath.extension()] != AssetExtensionTypes[newPath.extension()])
 		{
-			return;
+
 		}
+		else
+		{
+			fs::path oldMeta{ oldPath };
+			oldMeta += ".meta";
+			fs::path newMeta{ newPath };
+			newMeta += ".meta";
+			fs::rename(oldMeta, newMeta);
+		}
+
+		AddAsset(newPath);
+		RemoveAsset(oldPath);
 	}
 
 	void ProcessBuffer()
@@ -183,6 +182,8 @@ struct AllAssetsGroup
 					}
 					case ASSET_UPDATED:
 					{
+						AssetUpdatedEvent<T> e{ path,GetGUID(path),*pair.second };
+						EVENTS.Publish(&e);
 						break;
 					}
 					case ASSET_UNLOADED:
@@ -211,22 +212,15 @@ struct AllAssetsGroup
 		})(Ts{}), ...);
 	}
 
+
+
 	Engine::GUID GetGUID(const std::filesystem::path& filePath)
 	{
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		if (!std::filesystem::exists(metaPath))
 			CreateMeta(filePath);
-		//Store newly generated guid since it couldnt be found
-		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
-		for (YAML::Node& node : data)
-		{
-			YAML::detail::iterator_value kv = *node.begin();
-			if (node["guid"]) // Deserialize guid
-			{
-				return Engine::GUID(kv.second.as<std::string>());
-			}
-		}
+		MetaFile mFile = Deserialize<FolderMeta>(metaPath);
 		Engine::GUID guid;
 		AddToMeta(metaPath, "guid", guid);
 		return guid;
@@ -250,7 +244,7 @@ struct AllAssetsGroup
 		return path;
 	}
 
-	void CreateMeta(const std::filesystem::path& filePath)
+	void GetMeta(const std::filesystem::path& filePath)
 	{
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
@@ -304,36 +298,31 @@ struct AllAssetsGroup
 		return true;
 	}
 
-	void UpdateModifiedTime(const fs::path& metaPath,size_t seconds)
+	FileData* GetFileData(const std::filesystem::path& filePath)
 	{
-		//File last modified
-		YAML::Emitter out;
-		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
-		for (YAML::Node& node : data)
-		{
-			if (node["lastModified"]) // Deserialize guid
+		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		FileData* pData;
+		if (([&](auto type)
 			{
-				node["lastModified"] = seconds;
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == assetType)
+				{
+					Engine::GUID guid = GetGUID(filePath);
+					if constexpr (std::is_base_of<Asset, T>())
+					{
+						T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
+						pData = &asset.mData;
+					}
+					return true;
+				}
+				return false;
 			}
-			out << node;
+			(Ts{}) || ...))
+		{
+			return pData;
 		}
-		std::ofstream fs(metaPath);
-		fs << out.c_str();
-		fs.close();
+		return pData;
 	}
-
-	//Only use this to update metafiles
-	template <typename T>
-	void AddToMeta(const fs::path& metaPath,const std::string& key ,const T& val)
-	{
-		YAML::Emitter out;
-		out << YAML::BeginMap;
-		out << YAML::Key << key << YAML::Value << val;
-		std::ofstream fs(metaPath, std::ios::app);
-		fs << out.c_str();
-		fs.close();
-	}
-
 private:
 	std::tuple<AssetsTable<Ts>...> assets;
 	std::tuple<AssetsBuffer<Ts>...> assetsBuffer;
