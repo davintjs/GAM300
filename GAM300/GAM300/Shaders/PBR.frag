@@ -232,7 +232,7 @@ void main()
     // ALBEDO
     if (Tex_index < 32)
     {
-        albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+        albedo = vec3(frag_Albedo) * pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
     }
     else
     {
@@ -244,10 +244,10 @@ void main()
     {
         if(Metallic_index == Roughness_index)
         {
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).b;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).b;   
         }
         else
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).r;   
     }
     else
     {
@@ -270,10 +270,10 @@ void main()
     {
         if (Metallic_index == Roughness_index)
         {
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).g;   
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).g;   
         }
         else
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).r;    
     }
     else
     {
@@ -289,7 +289,7 @@ void main()
     // AO
     if (AO_index < 32)
     {
-        ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
+        ao  = frag_Metal_Rough_AO_Emission_constant.b * texture(myTextureSampler[AO_index], TexCoords).r; 
     }
     else
     {
@@ -307,7 +307,7 @@ void main()
 
     if (Emission_index < 32)
     {
-        emission  = texture(myTextureSampler[Emission_index], TexCoords).xyz; 
+        emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
     }
 
 
@@ -544,7 +544,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * frag_Metal_Rough_AO_Emission_constant.w );
+    vec3 ambient = vec3(0.1) * albedo * ao +  emission;
     
     vec3 color = ambient + Lo;
 

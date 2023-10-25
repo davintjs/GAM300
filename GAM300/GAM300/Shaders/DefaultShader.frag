@@ -220,7 +220,7 @@ void main()
     // ALBEDO
     if (hasTexture != 0)
     {
-        albedo = pow(texture(AlbedoTexture, TexCoords).rgb, vec3(2.2));
+        albedo = vec3(Albedo) * pow(texture(AlbedoTexture, TexCoords).rgb, vec3(2.2));
     }
     else
     {
@@ -232,7 +232,7 @@ void main()
     {
         if(hasMetallic == hasRoughness)
         {
-            metallic = texture(MetallicMap, TexCoords).b;   
+            metallic = MetalConstant * texture(MetallicMap, TexCoords).b;   
         }
         else
             metallic = texture(MetallicMap, TexCoords).r;   
@@ -258,7 +258,7 @@ void main()
     {
         if (hasMetallic == hasRoughness)
         {
-            roughness = texture(RoughnessMap, TexCoords).g;   
+            roughness = RoughnessConstant * texture(RoughnessMap, TexCoords).g;   
         }
         else
             roughness = texture(RoughnessMap, TexCoords).r;    
@@ -277,7 +277,7 @@ void main()
     // AO
     if (hasAO != 0)
     {
-        ao  = texture(AoMap, TexCoords).r; 
+        ao  = AoConstant * texture(AoMap, TexCoords).r; 
     }
     else
     {
@@ -295,7 +295,7 @@ void main()
 
     if (hasEmission != 0)
     {
-        emission  = texture(EmmisionMap, TexCoords).xyz; 
+        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
     }
 
 
@@ -527,7 +527,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * EmissionConstant);
+    vec3 ambient = vec3(0.1) * albedo * ao + emission ;
     
     vec3 color = ambient + Lo;
 
