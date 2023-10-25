@@ -127,7 +127,7 @@ void EditorGame::GameView()
         if(indent > 1.f)
             ImGui::Dummy({ 0.f, indent });
 
-        unsigned int textureID = FRAMEBUFFER.GetTextureID(camera->GetFramebufferID(), camera->GetHDRAttachment());
+        unsigned int textureID = FRAMEBUFFER.GetTextureID(camera->GetFramebufferID(), camera->GetAttachment());
         //unsigned int textureID = camera->GetFramebuffer().GetColorAttachmentId();
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)dimension.x, (float)dimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
@@ -160,7 +160,7 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         {
             dimension = adjusted;
 
-            camera->OnResize(dimension.x, dimension.y, camera->GetAttachment());
+            camera->OnResize(dimension.x, dimension.y);
         }
     }
 }

@@ -46,7 +46,7 @@ public:
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
 
 	// Adjust Prespective projection based off viewport
-	void OnResize(const float& _width, const float& _height, const unsigned int& _attachment);
+	void OnResize(const float& _width, const float& _height);
 
 	bool WithinFrustum() const;
 
@@ -79,7 +79,6 @@ public:
 	glm::mat4& GetProjMatrix() { return projMatrix; }
 	glm::mat4& GetViewMatrix() { return viewMatrix; }
 
-	Framebuffer& GetFramebuffer() { return framebuffer; }
 	unsigned int& GetFramebufferID() { return framebufferID; }
 	unsigned int& GetAttachment() { return colorAttachment; }
 	unsigned int& GetHDRAttachment() { return hdrColorAttachment; }
@@ -121,7 +120,6 @@ protected:
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
 
-	Framebuffer framebuffer;
 	unsigned int framebufferID;			// The framebuffer used for this camera
 	unsigned int colorAttachment;		// The color attachment used for this camera
 	unsigned int hdrColorAttachment;	// The hdr color attachment used for this camera

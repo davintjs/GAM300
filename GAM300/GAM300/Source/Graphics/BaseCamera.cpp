@@ -28,10 +28,7 @@ void BaseCamera::Init()
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	/*framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
-	framebuffer.Init();*/
-
-	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer();
+	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer();
 	framebufferID = framebuffer.frameBufferObjectID;
 
 	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
@@ -55,8 +52,17 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	/*framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
-	framebuffer.Init();*/
+	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer();
+	framebufferID = framebuffer.frameBufferObjectID;
+
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
+	colorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
+	hdrColorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM, BUFFERTYPE::RENDERBUFFER);
+	bloomAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 }
 
 void BaseCamera::Update()
@@ -96,7 +102,7 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 	Update();
 }
 
-void BaseCamera::OnResize(const float& _width, const float& _height, const unsigned int& _attachment)
+void BaseCamera::OnResize(const float& _width, const float& _height)
 {
 	dimension.x = _width;
 	dimension.y = _height;
@@ -104,9 +110,7 @@ void BaseCamera::OnResize(const float& _width, const float& _height, const unsig
 
 	UpdateProjection();
 
-	//framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
-	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, _attachment);
-	//FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, hdrColorAttachment);
+	//FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, colorAttachment);
 }
 
 bool BaseCamera::WithinFrustum() const

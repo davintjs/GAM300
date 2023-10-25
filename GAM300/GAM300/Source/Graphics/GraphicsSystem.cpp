@@ -226,7 +226,6 @@ void GraphicsSystem::Update(float dt)
 
 void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo)
 {
-
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
 	unsigned int attachments[2] = { _camera.GetHDRAttachment(), _camera.GetBloomAttachment() };
 	glDrawBuffers(2, attachments);
@@ -251,7 +250,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = bloom(5, _vao, _vbo, _camera);
 	//}
 
-	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
 	glDrawBuffer(_camera.GetAttachment());
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
