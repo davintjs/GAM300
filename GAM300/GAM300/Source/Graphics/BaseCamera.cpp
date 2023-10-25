@@ -34,10 +34,10 @@ void BaseCamera::Init()
 	Framebuffer2& framebuffer = FRAMEBUFFER.CreateFramebuffer();
 	framebufferID = framebuffer.frameBufferObjectID;
 
-	FRAMEBUFFER.RenderToTexture(framebuffer, GL_TEXTURE_2D, 1600, 900);
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM);
 	colorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
 
-	FRAMEBUFFER.RenderToBuffer(framebuffer, GL_DEPTH_ATTACHMENT, 1600, 900);
+	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
 	hdrColorAttachment = FRAMEBUFFER.GetCurrentAttachment(framebuffer);
 
 	// Bean: To modulate
@@ -51,7 +51,7 @@ void BaseCamera::Init()
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER, hdrColorAttachment, GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(framebufferID, hdrColorAttachment), 0);
 
-	RenderbufferAttachment renderbufferAttachment;
+	Attachment renderbufferAttachment;
 	renderbufferAttachment.width = 1600;
 	renderbufferAttachment.height = 900;
 	renderbufferAttachment.target = GL_TEXTURE_2D;	
@@ -132,7 +132,7 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 	Update();
 }
 
-void BaseCamera::OnResize(const float& _width, const float& _height)
+void BaseCamera::OnResize(const float& _width, const float& _height, const unsigned int& _attachment)
 {
 	dimension.x = _width;
 	dimension.y = _height;
@@ -141,7 +141,8 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 	UpdateProjection();
 
 	//framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
-	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, colorAttachment);
+	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, _attachment);
+	FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, hdrColorAttachment);
 }
 
 bool BaseCamera::WithinFrustum() const

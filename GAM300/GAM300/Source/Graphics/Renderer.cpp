@@ -40,8 +40,6 @@ LIGHT_TYPE temporary_test4 = POINT_LIGHT;
 LightProperties spot_light_stuffs;
 LightProperties directional_light_stuffs;
 LightProperties point_light_stuffs;
-	
-const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 #include "GBuffer.h"
 unsigned int Renderer_quadVAO = 0;
@@ -50,64 +48,17 @@ unsigned int Renderer_quadVBO = 0;
 unsigned int Renderer_quadVAO_WM = 0;
 unsigned int Renderer_quadVBO_WM = 0;
 
-
+const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 
 void Renderer::Init()
 {
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
-	// This Framebuffer is used for both directional and spotlight
-	glGenFramebuffers(1, &depthMapFBO);
-	// create depth texture
-	glGenTextures(1, &depthMap);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	// attach depth texture as FBO's depth buffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "depth framebuffer exploded\n";
-	else
-		std::cout << "depth framebuffer created successfully\n";
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO, depthMap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-
-	// This Framebuffer is used for pointlight
-	glGenFramebuffers(1, &depthCubemapFBO);
-	// create depth cubemap texture
-	glGenTextures(1, &depthCubemap);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-	for (unsigned int i = 0; i < 6; ++i)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	// attach depth texture as FBO's depth buffer
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "depth Cube framebuffer exploded\n";
-	else
-		std::cout << "depth Cube framebuffer created successfully\n";
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-	// ping-pong-framebuffer for blurring
+	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	SetupGrid(100);
 }

@@ -153,7 +153,7 @@ void EditorScene::SceneView()
             sceneDimension = { _newDimension.x, _newDimension.y };
             EditorUpdateSceneGeometryEvent e(scenePosition, sceneDimension);
             EVENTS.Publish(&e);
-            EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
+            EditorCam.OnResize(sceneDimension.x, sceneDimension.y, EditorCam.GetAttachment());
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });

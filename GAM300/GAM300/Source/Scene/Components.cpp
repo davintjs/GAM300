@@ -42,8 +42,9 @@ glm::vec3 Transform::GetTranslation() const
 
 glm::vec3 Transform::GetScale() const
 {
-	glm::mat4 mat = GetWorldMatrix();
-	return glm::vec3(mat[0][0], mat[1][1], mat[2][2]);
+	if(parent)
+		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetScale() * glm::vec3(scale);
+	return scale;
 }
 
 glm::mat4 Transform::GetWorldMatrix() const

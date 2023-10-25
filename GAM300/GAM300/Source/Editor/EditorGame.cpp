@@ -160,7 +160,7 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         {
             dimension = adjusted;
 
-            camera->OnResize(dimension.x, dimension.y);
+            camera->OnResize(dimension.x, dimension.y, camera->GetAttachment());
         }
     }
 }

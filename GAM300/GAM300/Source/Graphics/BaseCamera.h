@@ -46,7 +46,7 @@ public:
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
 
 	// Adjust Prespective projection based off viewport
-	void OnResize(const float& _width, const float& _height);
+	void OnResize(const float& _width, const float& _height, const unsigned int& _attachment);
 
 	bool WithinFrustum() const;
 
