@@ -258,9 +258,9 @@ struct AllAssetsGroup
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "guid" << YAML::Value << guid.ToHexString();
-		auto duration = fs::last_write_time(filePath).time_since_epoch();
-		size_t seconds = chron::duration_cast<chron::seconds>(duration).count();
-		out << YAML::Key << "lastModified" << YAML::Value << seconds;
+		//auto duration = fs::last_write_time(filePath).time_since_epoch();
+		//size_t seconds = chron::duration_cast<chron::seconds>(duration).count();
+		//out << YAML::Key << "lastModified" << YAML::Value << seconds;
 		std::ofstream fs(metaPath);
 		fs << out.c_str();
 		fs.close();
@@ -306,6 +306,7 @@ struct AllAssetsGroup
 
 	void UpdateModifiedTime(const fs::path& metaPath,size_t seconds)
 	{
+		return;
 		//File last modified
 		YAML::Emitter out;
 		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
