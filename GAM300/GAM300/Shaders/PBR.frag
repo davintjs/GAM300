@@ -93,6 +93,10 @@ uniform int DirectionalLight_Count;
 uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 uniform int SpotLight_Count;
 
+// Bloom
+uniform float bloomThreshold;
+
+
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
 
@@ -551,7 +555,7 @@ void main()
 //    color = pow(color, vec3(1.0/2.2)); 
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1.0)
+    if(brightness > bloomThreshold)
         Blooming = vec4(color.rgb, 1.0);
     else
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);

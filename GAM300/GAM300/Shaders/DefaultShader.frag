@@ -94,6 +94,9 @@ layout (binding = 7) uniform samplerCube ShadowCubeMap;
 uniform bool renderShadow;
 uniform float farplane;
 
+// Bloom
+uniform float bloomThreshold;
+
 vec3 getNormalFromMap()
 {
     vec3 normal = texture(NormalMap, TexCoords).xyz;
@@ -534,7 +537,7 @@ void main()
 //    color = pow(color, vec3(1.0/2.2)); 
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1.0)
+    if(brightness > bloomThreshold)
         Blooming = vec4(color.rgb, 1.0);
     else
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);

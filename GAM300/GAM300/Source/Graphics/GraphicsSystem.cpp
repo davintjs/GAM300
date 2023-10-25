@@ -143,7 +143,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
 
 bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& _camera)
 {
-	
 	bool horizontal = true, first_iteration = true;
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::BLUR);
 	shader.Use();
@@ -264,7 +263,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(1, _vao, _vbo, _camera);
+	bool index = bloom(bloomCount, _vao, _vbo, _camera);
 
 	//}
 

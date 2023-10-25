@@ -23,7 +23,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
-bool RenderShadow = true;
 
 // Shadow Mapping
 unsigned int depthMapFBO=0; 
@@ -576,6 +575,7 @@ void Renderer::Draw(BaseCamera& _camera)
 
 		glUniform1f(uniform11, RenderShadow);
 
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
 
 
 

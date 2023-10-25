@@ -229,7 +229,7 @@ GameObject:
   m_IsActive: true
   m_Name: PointLight
   m_Layer: 0
-  m_Position: [0.855186343, 4.53894138, -35.3856964]
+  m_Position: [0.855186343, 0.774583161, -2.55443573]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -317,7 +317,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   MeshName: Cube
-  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
+  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5

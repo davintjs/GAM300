@@ -34,6 +34,13 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+// Graphics Settings
+
+bool extern RenderShadow;
+unsigned int extern bloomCount;
+float extern bloomThreshold;
+
+
 // Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
