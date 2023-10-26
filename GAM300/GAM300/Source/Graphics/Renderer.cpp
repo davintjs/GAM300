@@ -199,7 +199,7 @@ void Renderer::Update(float)
 			{
 				continue;
 			}
-			unsigned int iter = 0;
+			unsigned int iters = 0;
 			for (unsigned int vao : t_Mesh->Vaoids) {
 				DefaultRenderProperties renderProperties;
 				
@@ -219,10 +219,10 @@ void Renderer::Update(float)
 
 				// renderProperties.textureID = renderer.textureID;
 				// renderProperties.NormalID = renderer.normalMapID;
-				renderProperties.RoughnessID = renderer.RoughnessID;
-				renderProperties.MetallicID = renderer.MetallicID;
-				renderProperties.AoID = renderer.AoID;
-				renderProperties.EmissionID = renderer.EmissionID;
+				renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
+				renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
+				renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
+				renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
 
 				renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
 				renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
