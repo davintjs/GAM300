@@ -27,31 +27,48 @@ ShaderVariable::VariableType ParseVariableType(const std::string& str) {
 
 void ParseShaderFile(const std::string& fileName) {
 	
+	std::cout << "Parsing shader file...\n";
+
 	std::ifstream ifs;
 	ifs.open(fileName);
-	if (!ifs.is_open())
+	if (!ifs.is_open()) {
+		std::cout << "Error opening file!\n";
 		return;
-	
+	}
+
+
 	std::vector<ShaderVariable> shaderVariables;
 
 	std::string buffer;
 	while (std::getline(ifs, buffer)) {
 
+		std::cout << "Line:" << buffer << std::endl;
+
 		// Delimiter line to make parsing faster?
-		if (buffer.find("//End"))
+		if (buffer.find("//End") != std::string::npos) {
+			std::cout << "Ending Parser...\n";
 			break;
+		}
+
+		if (buffer[0] == '\n')
+			continue;
+
+		// Skip if line is commented
+		if (buffer[0] == '/' && buffer[1] == '/')
+			continue;
 
 
-		std::string name;
-		ShaderVariable::VariableType vt;
 
 		size_t superEnd = buffer.size() - 1;
 
 		// Stop parsing if 1st word is not 'layout' or 'uniform'
 		size_t startPos = 0;
 		size_t endPos = buffer.find_first_of(' ');
-		if (!buffer.substr(startPos, startPos-endPos).find("layout")
-			&& !buffer.substr(startPos, startPos - endPos).find("uniform"))
+		if (endPos == std::string::npos)
+			continue;
+
+		if (buffer.substr(startPos, startPos - endPos).find("layout") == std::string::npos
+			&& buffer.substr(startPos, startPos - endPos).find("uniform") == std::string::npos)
 			continue;
 
 		startPos = endPos + 1;
@@ -59,14 +76,20 @@ void ParseShaderFile(const std::string& fileName) {
 			continue;
 
 		// Stop parsing if not an input var
-		startPos = buffer.find_first_of(' ', startPos) + 1;
+		startPos = buffer.find_first_of(')', startPos) + 2;
 		endPos = buffer.find_first_of(' ', startPos);
-		if (!buffer.substr(startPos, startPos - endPos).find("in"))
+		if (buffer.substr(startPos, startPos - endPos).find("in") == std::string::npos)
 			continue;
+
+		std::cout << "in!\n";
 
 		startPos = endPos + 1;
 		if (startPos >= superEnd)
 			continue;
+
+
+		std::string name;
+		ShaderVariable::VariableType vt;
 
 		// Parse Variable Type
 		endPos = buffer.find_first_of(' ', startPos);
@@ -83,6 +106,17 @@ void ParseShaderFile(const std::string& fileName) {
 
 
 	}
+
+	ifs.close();
+
+
+	for (ShaderVariable& sv : shaderVariables) {
+		std::cout << "Type:" << sv.variableType << " Name:" << sv.name << std::endl;
+	}
+
+
+
+
 
 }
 
