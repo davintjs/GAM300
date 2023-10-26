@@ -541,6 +541,7 @@ void Renderer::Draw(BaseCamera& _camera)
 
 	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
 
+	// glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
 
 
 	//	glBindVertexArray(prop.VAO);
@@ -757,12 +758,14 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
 
+	// Settings
 
 	GLint uniform11 =
 		glGetUniformLocation(shader.GetHandle(), "renderShadow");
 
 	glUniform1f(uniform11, RENDERER.enableShadows());
 
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
 
 
 

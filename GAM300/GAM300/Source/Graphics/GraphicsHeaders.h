@@ -200,6 +200,8 @@ public:
 
 	bool& enableBloom() { return enablebloom; };
 
+	float& getAmbient() { return ambient; };
+
 	gBuffer m_gBuffer;
 private:
 	std::unordered_map<Engine::GUID, InstanceProperties> properties;
@@ -215,6 +217,7 @@ private:
 	unsigned int bloomCount = 1;
 	float bloomThreshold = 1.f;
 	bool enablebloom;
+	float ambient = 1.f;
 };
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H
