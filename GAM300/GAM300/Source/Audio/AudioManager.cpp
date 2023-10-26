@@ -18,8 +18,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 #include <Precompiled.h>
 #include "AudioManager.h"
+#include "Core/EventsManager.h"
 
 void AudioManager::InitAudioManager() {
+	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetLoaded);
+	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetUnloaded);
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, 0);
 	system->getMasterChannelGroup(&master);
@@ -262,4 +265,17 @@ float AudioManager::RandFloat(float min, float max) {
 	if (min == max) return min;
 	float n = (float)rand() / (float)RAND_MAX;
 	return min + n * (max - min);
+}
+
+//Handle audio adding here
+void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent)
+{
+	AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
+	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
+}
+
+//Handle audio removal here
+void AudioManager::CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent)
+{
+
 }

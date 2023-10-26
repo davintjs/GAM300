@@ -66,6 +66,12 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v)
     return out;
 }
 
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v)
+{
+    out << v.ToHexString();
+    return out;
+}
+
 YAML::Emitter& operator<<(YAML::Emitter& out, char*& v)
 {
     std::string buf = v;

@@ -21,6 +21,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GraphicStructsAndClass.h"
 #include "BaseCamera.h"
 
+#include "glslshader.h"
+#include <filesystem>
+
+#include "Utilities/GUID.h"
+
+#include "Model3d.h"
 //#include "glslshader.h"
 #include "GBuffer.h"
 
@@ -34,12 +40,16 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+// Graphics Settings
+
+
+
 // Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
-using InstanceContainer = std::map<GLuint, InstanceProperties>;
+using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // Bean: A temp solution to access the shader
 // enum SHADERTYPE
 // {
@@ -74,20 +84,18 @@ private:
 	std::vector<GLSLShader> shaders;
 };
 
-ENGINE_SYSTEM(SkyboxManager)
+SINGLETON(SkyboxManager)
 {
 public:
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	// Initialize the skybox of the engine
-	void CreateSkybox(const std::string& _name);
+	void CreateSkybox(const std::filesystem::path& _name);
 
 	void Draw(BaseCamera& _camera);
 
 private:
-	SkyBox* skyBoxModel;
+	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
 
@@ -108,7 +116,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<GLuint, InstanceProperties>* properties;
+	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -184,16 +192,32 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
-	bool RenderShadow;
+	bool& enableShadows() { return renderShadow; };
+
+	unsigned int& GetBloomCount() { return bloomCount; };
+
+	float& GetBloomThreshold() { return bloomThreshold; };
+
+	bool& enableBloom() { return enablebloom; };
+
+	float& getAmbient() { return ambient; };
 
 	gBuffer m_gBuffer;
 private:
+	std::unordered_map<Engine::GUID, InstanceProperties> properties;
 	InstanceContainer instanceProperties; // <vao, properties>
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+
+	// Global Graphics Settings
 	float exposure = 1.f;
 	bool hdr = true;
+	bool renderShadow = true;
+	unsigned int bloomCount = 1;
+	float bloomThreshold = 1.f;
+	bool enablebloom;
+	float ambient = 1.f;
 };
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H

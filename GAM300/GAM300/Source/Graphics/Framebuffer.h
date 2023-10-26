@@ -22,100 +22,142 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/vec2.hpp>
 #include "Core/SystemInterface.h"
 
-class Framebuffer
+#define FRAMEBUFFER FramebufferManager::Instance()
+
+enum class TEXTUREPARAMETERS
 {
-public:
-
-	// Initialises the framebuffer by creating a frame buffer and binding it to a texture
-	void Init();
-
-	// Reinitialise the framebuffer without deleting
-	void ReInit();
-
-	void Completeness();
-
-	// Deletes the framebuffer and its textures
-	void Exit();
-
-	// Binds the framebuffer
-	void Bind();
-
-	// Binds the framebuffer
-	void Bind(const unsigned int& _objectID);
-
-	// Unbinds the framebuffer
-	void Unbind();
-
-	// Resizes the framebuffer viewport
-	void Resize(GLuint _width, GLuint _height);
-
-	// Getter and setter for framebuffer size/dimension
-	void SetSize(GLuint _width, GLuint _height);
-	glm::vec2 GetSize() { return glm::vec2(width, height); }
-
-	// Getter for color attachment id, used in the editor scene
-	GLuint GetColorAttachmentId() const { return colorAttachment; }
-
-	// Get the framebuffer id as reference
-	GLuint& GetBufferObjectId() { return frameBufferObjectID; }
-
-	
-	unsigned int gBuffer{};
-	unsigned int gPosition{};
-	unsigned int gNormal{};
-	unsigned int gAlbedoSpec{};
-	unsigned int hdrFBO;
-	unsigned int rboDepth;
-	//unsigned int colorBuffer;
-	unsigned int colorBuffer[2];
-
-private:
-	GLuint frameBufferObjectID = 0;
-
-	GLuint colorAttachment = 0;
-	GLuint depthAttachment = 0;
-
-
-	GLuint width = 0, height = 0;
+	DEFAULT,
+	BORDER,		// For directional and spotlight
+	CUBEMAP,	// For point light
+	BLOOM
 };
 
-//struct Attachment
-//{
-//
-//};
-//
-//struct TextureAttachment : public Attachment
-//{
-//	GLuint textureID;
-//	GLenum textureTarget;
-//	GLuint mipLevel;
-//	GLuint layer;
-//};
-//
-//struct RenderbufferAttachment : public Attachment
-//{
-//	GLuint renderbufferID;
-//	GLenum renderbufferTarget;
-//};
-//
-//class GLContext
-//{
-//	GLuint readFramebufferBinding;
-//	GLuint drawFramebufferBinding;
-//};
-//
-//struct Framebuffer2
-//{
-//	std::map<GLenum, Attachment> attachments;
-//	GLenum drawBuffers[16] = { GL_COLOR_ATTACHMENT0, GL_NONE };
-//	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
-//};
-//
-//ENGINE_SYSTEM(FramebufferManager)
-//{
-//public:
-//	Framebuffer2 GetFramebufferByTarget(const GLenum& _target);
-//	
-//};
+enum class BUFFERTYPE
+{
+	TEXTURE,
+	RENDERBUFFER,
+	DIRECTIONALANDSPOTLIGHT,
+	POINTLIGHT,
+	DEPTH
+};
+
+enum class ATTACHMENTTYPE
+{
+	COLOR,
+	DEPTH,
+	STENCIL,
+	DEPTHSTENCIL
+};
+
+struct Attachment
+{
+	GLuint index;		// The texture object or renderbuffer object
+	GLenum target;
+	GLuint width = 0;
+	GLuint height = 0;
+	GLuint depthIndex;	// The texture object for depth attachment
+	BUFFERTYPE type;
+};
+
+struct Framebuffer
+{
+	std::map<GLenum, Attachment> attachments;
+	GLenum drawBuffers[16] = { GL_NONE };
+	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
+	GLuint attachment = 0;						// Number of attachments
+	GLuint colorAttachments = 0;				// Number of color attachments
+	GLuint frameBufferObjectID = 0;
+};
+
+ENGINE_SYSTEM(FramebufferManager)
+{
+public:
+	void Init();
+
+	void Update(float dt);
+
+	void Exit();
+
+	void CreateDirectionalAndSpotLight(GLuint& _index, GLuint& _textureID, const GLsizei& _width, const GLsizei& _height);
+
+	void CreatePointLight(GLuint& _index, GLuint& _textureID, const GLsizei& _width, const GLsizei& _height);
+
+	void CreateBloom(GLuint* _indexes, GLuint* _textureIDs);
+
+	// Creates an empty framebuffer, all attachments will have the same width and height
+	Framebuffer& CreateFramebuffer();
+
+	// Creates an empty DYNAMIC(Different Width & Height, usually for editor camera only) framebuffer of 
+	// specific texture type with a texture attachment
+	Framebuffer& CreateFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Retrieve a pointer to the framebuffer by their id
+	Framebuffer* GetFramebufferByID(const GLuint& _framebufferId);
+
+	// Get the current ATTACHMENT of the framebuffer
+	GLenum GetCurrentAttachment(Framebuffer& _framebuffer) const;
+
+	// Get the current ATTACHMENT of the framebuffer using the id
+	GLenum GetCurrentAttachment(const GLuint& _framebufferId);
+
+	// Get the current color ATTACHMENT of the framebuffer
+	GLenum GetCurrentColorAttachment(Framebuffer& _framebuffer) const;
+
+	// Get the current color ATTACHMENT of the framebuffer using the id
+	GLenum GetCurrentColorAttachment(const GLuint& _framebufferId);
+
+	// Get the texture id of the framebuffer with the specific attachment
+	GLuint GetTextureID(Framebuffer& _framebuffer, const GLenum& _attachment);
+
+	// Get the texture id of the framebuffer with the specific attachment using the framebuffer id
+	GLuint GetTextureID(const GLuint& _framebufferId, const GLenum& _attachment);
+
+	// Adds a render texture attachment into the framebuffer of specific ATTACHMENT, RENDERTEXTURE and dimension using the framebuffer id
+	void RenderToTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Adds a render texture attachment into the framebuffer of specific ATTACHMENT, RENDERTEXTURE and dimension
+	void RenderToTexture(Framebuffer& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Adds a render buffer into the framebuffer of specific ATTACHMENT and dimension using the framebuffer id
+	void RenderToBuffer(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
+
+	// Adds a render buffer into the framebuffer of specific ATTACHMENT and dimension
+	void RenderToBuffer(Framebuffer& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
+
+	// Create a texture for the attachment
+	void CreateTexture(GLuint& _index, const GLsizei& _width, const GLsizei& _height, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Set the TexImage2D formats for the texture
+	void SetTextureFormat(const GLsizei& _width, const GLsizei& _height, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Set the texture parameters for the texture that is assigned to the attachment
+	void SetTextureParameters(const TEXTUREPARAMETERS& _textureFormat);
+
+	// Bind the frambuffer
+	void Bind(Framebuffer& _framebuffer) const;
+
+	// Bind the framebuffer using the framebuffer id
+	void Bind(const GLuint& _framebufferId);
+
+	// Bind the framebuffer using the framebuffer id and specific 
+	// ATTACHMENT(Set the viewport to the attachments width and height)
+	void Bind(const GLuint& _framebufferId, const GLenum& _attachment);
+
+	// Unbind the framebuffer
+	void Unbind();
+
+private:
+
+	// Creates a texture attachment for the framebuffer
+	Attachment CreateTextureAttachment(Framebuffer& _framebuffer, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+
+	// Creates a render buffer attachment for the framebuffer
+	Attachment CreateRenderBufferAttachment(Framebuffer& _framebuffer, const GLsizei& _width, const GLsizei& _height, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::RENDERBUFFER);
+
+	// Check for completeness of the framebuffer
+	void Completeness();
+
+	std::vector<Framebuffer> framebuffers;
+};
 
 #endif // !FRAMEBUFFER_H

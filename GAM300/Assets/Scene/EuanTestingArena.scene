@@ -25,23 +25,17 @@ GameObject:
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
-  MeshName: Sphere
+  Mesh: 00000000000000000000000000000065
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: ""
-  NormalMap: Default_normal
-  MetallicTexture: Default_metalRoughness
-  RoughnessTexture: Default_metalRoughness
-  AoTexture: Default_AO
-  EmissionTexture: ""
-  TextureID: 0
-  NormalMapID: 0
-  RoughnessID: 0
-  MetallicID: 0
-  AoID: 0
-  EmissionID: 0
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
 ---
 Script:
   EUID: 22203055554271501
@@ -85,23 +79,17 @@ Rigidbody:
 MeshRenderer:
   EUID: 16942626329878887566
   UUID: 1245608959500342360
-  MeshName: Cube
+  Mesh: 00000000000000000000000000000065
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: ""
-  NormalMap: ""
-  MetallicTexture: ""
-  RoughnessTexture: ""
-  AoTexture: ""
-  EmissionTexture: ""
-  TextureID: 0
-  NormalMapID: 0
-  RoughnessID: 0
-  MetallicID: 0
-  AoID: 0
-  EmissionID: 0
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
 ---
 BoxCollider:
   EUID: 16942626329878887566
@@ -142,23 +130,17 @@ Rigidbody:
 MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
-  MeshName: DamagedHelmet
+  Mesh: f3ef3db353c5cac717e1f7bd441119dc
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: Default_albedo
-  NormalMap: Default_normal
-  MetallicTexture: ""
-  RoughnessTexture: ""
-  AoTexture: Default_AO
-  EmissionTexture: Default_emissive
-  TextureID: 10
-  NormalMapID: 14
-  RoughnessID: 0
-  MetallicID: 0
-  AoID: 11
-  EmissionID: 12
+  AlbedoTexture: 06322b8239b55a3aa0af97f360d3cb7c
+  NormalMap: 6f038422a26db8d8bf5892c7e425d553
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: cfe2d403d5b71c2b216a5748405fc53a
 ---
 BoxCollider:
   EUID: 10548661867949210258
@@ -199,23 +181,17 @@ Rigidbody:
 MeshRenderer:
   EUID: 8552727112136102457
   UUID: 15321682287644036185
-  MeshName: Cube
+  Mesh: 00000000000000000000000000000065
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: ""
-  NormalMap: ""
-  MetallicTexture: ""
-  RoughnessTexture: ""
-  AoTexture: ""
-  EmissionTexture: ""
-  TextureID: 0
-  NormalMapID: 0
-  RoughnessID: 0
-  MetallicID: 0
-  AoID: 0
-  EmissionID: 0
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
 ---
 BoxCollider:
   EUID: 8552727112136102457
@@ -254,8 +230,8 @@ GameObject:
   m_IsActive: true
   m_Name: Camera
   m_Layer: 0
-  m_Position: [1.45914495, -2.37199998, 5.94999981]
-  m_Rotation: [0, -0.149999604, 0]
+  m_Position: [0, 2, 16.7999992]
+  m_Rotation: [0, 0, 0]
   m_Scale: [0.99999702, 1, 0.99999702]
   m_Children:
     []
@@ -285,7 +261,7 @@ GameObject:
   m_Name: 3D SPACE UI
   m_Layer: 0
   m_Position: [0.440229654, 5.66990662, -0.0251158178]
-  m_Rotation: [3.14159083, -0.00840729661, 0.00840738136]
+  m_Rotation: [3.14159083, -0.00840729196, 0.00840738136]
   m_Scale: [1, 1, 1]
   m_Children:
     []
@@ -297,7 +273,7 @@ SpriteRenderer:
   EUID: 3250402029849808772
   UUID: 15131644809803265180
   World Space: true
-  SpriteTexture: BestTeam
+  SpriteTexture: 498de774af6c5bc2a684d2d1c1ef073c
 ---
 GameObject:
   m_EUID: 15963777357859177452
@@ -316,23 +292,17 @@ GameObject:
 MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
-  MeshName: Cube
-  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
+  Mesh: 00000000000000000000000000000065
+  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: ""
-  NormalMap: ""
-  MetallicTexture: ""
-  RoughnessTexture: ""
-  AoTexture: ""
-  EmissionTexture: ""
-  TextureID: 0
-  NormalMapID: 0
-  RoughnessID: 0
-  MetallicID: 0
-  AoID: 0
-  EmissionID: 0
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
 ---
 GameObject:
   m_EUID: 4212138099454399691
@@ -343,7 +313,7 @@ GameObject:
   m_Rotation: [0, -0, 0]
   m_Scale: [160, 90, 1]
   m_Children:
-    []
+    - {fileID: 2866402867161245437}
   m_Parent: 0
   m_Components:
     - component: {fileID: 13547543225942679706}  # Canvas
@@ -357,12 +327,12 @@ GameObject:
   m_IsActive: true
   m_Name: Child this to canvas
   m_Layer: 0
-  m_Position: [1.52902234, 138.102646, 0]
+  m_Position: [0.00955638941, 0, 0]
   m_Rotation: [0, -0, 0]
-  m_Scale: [16, 9, 1]
+  m_Scale: [0.100000001, 0.100000001, 1]
   m_Children:
     []
-  m_Parent: 0
+  m_Parent: 4212138099454399691
   m_Components:
     - component: {fileID: 8812244467539034998}  # SpriteRenderer
 ---
@@ -370,4 +340,4 @@ SpriteRenderer:
   EUID: 2866402867161245437
   UUID: 8812244467539034998
   World Space: false
-  SpriteTexture: BestTeam
+  SpriteTexture: 00000000000000000000000000000000

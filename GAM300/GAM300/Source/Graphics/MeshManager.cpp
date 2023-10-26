@@ -9,17 +9,19 @@
 \brief
     This file contains the Mesh Manager and it's related Functionalities's definitions
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
 #include "MeshManager.h"
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
+#include "Core/EventsManager.h"
 
 void MESH_Manager::Init()
 {
-
+    EVENTS.Subscribe(this, &MESH_Manager::CallbackMeshAssetLoaded);
+    EVENTS.Subscribe(this, &MESH_Manager::CallbackMeshAssetUnloaded);
     instanceProperties = &RENDERER.GetInstanceProperties();
 
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
@@ -30,23 +32,16 @@ void MESH_Manager::Init()
     CreateInstanceSegment3D();
 }
 
-void MESH_Manager::Update(float dt)
+MeshAsset& MESH_Manager::GetMeshAsset(const Engine::GUID& meshID)
 {
-    UNREFERENCED_PARAMETER(dt);
-	// Empty by design
-}
-
-void MESH_Manager::Exit()
-{
-	// Loop through the container, clear all the vaoid, vbo and draw count
-
-	mContainer.clear();
+    E_ASSERT(mMeshesAsset.find(meshID) != mMeshesAsset.end(),"Trying to access invalid mesh");
+    return mMeshesAsset[meshID];
 }
 
 
-void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::string& fileName)
+void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::GUID& guid)
 {
-    GeomImported newGeom(std::move(DeserializeGeoms(filePath, fileName)));
+    GeomImported newGeom(std::move(DeserializeGeoms(filePath, guid)));
 
     /*std::cout << "I have Materials : " << newGeom._materials.size() << 
         "from " << filePath << "\n";*/
@@ -105,12 +100,6 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
             max.y = std::max(pos.y, max.y);
             max.z = std::max(pos.z, max.z);
         }
-        /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
-        totalindices += totalGeoms[0].mMeshes[i]._indices.size();
-        std::cout << "total vertices count: " << totalvertices << "\n";
-        std::cout << "total indices count: " << totalindices << "\n";*/
-
-
         
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -118,20 +107,20 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         glBindVertexArray(VAO);
         //std::cout << "box_wf vao is :" << VAO << "\n";
 
-        // test vertex colors
-        //for (size_t i = 0; i < _geom->_vertices.size(); i++)
-        //{
-        //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-        //}
+    //    // test vertex colors
+    //    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
+    //    //{
+    //    //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+    //    //}
 
-        // bind vbo and pass vertice data into the buffer
+    //    // bind vbo and pass vertice data into the buffer
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
         glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(gVertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
 
-        // set the vertex attributes to tell vert shader pos, uv, normal etc.
-        // note offsetof uses the struct Vertex as first argument, and member name as second.
-        // it returns the offset to the member name :)
+    //    // set the vertex attributes to tell vert shader pos, uv, normal etc.
+    //    // note offsetof uses the struct Vertex as first argument, and member name as second.
+    //    // it returns the offset to the member name :)
         glEnableVertexAttribArray(0); //pos
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
 
@@ -162,7 +151,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         tempProp.drawType = GL_TRIANGLES;
 
         //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
-        vaoMap.emplace(std::pair<std::string, GLuint>(fileName, VAO)); // rmb change to guid after u ask someone @kk
+        vaoMap.emplace(std::make_pair(guid, VAO)); // rmb change to guid after u ask someone @kk
 
         // no need this, maybe can sort by VAO
         /*std::string newName = fileName;
@@ -181,7 +170,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
 
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(VAO, tempProp));
+
+        instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     }
 
@@ -189,7 +179,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
     newMesh.vertices_max = max;
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
-    mContainer.emplace(fileName, newMesh);
+    mContainer.emplace(guid, newMesh);
 }
 
 //Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid
@@ -197,7 +187,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const std::stri
 
 // PRIVATE FUNCTIONS
 
-GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const std::string& fileName)
+GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid)
 {
     GeomImported tempGeom;
     std::ifstream ifs(filePath, std::ios::binary);
@@ -236,11 +226,11 @@ GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const s
         // Store the geom vertices position and indices in asset manager
         for (int v = 0; v < tempMesh._vertices.size(); ++v)
         {
-            ASSETMANAGER.StoreMeshVertex(fileName, tempMesh._vertices[v].pos);
+            StoreMeshVertex(guid, tempMesh._vertices[v].pos);
         }
         for (int k = 0; k < tempMesh._indices.size(); ++k)
         {
-            ASSETMANAGER.StoreMeshIndex(fileName, tempMesh._indices[k]);
+            StoreMeshIndex(guid, tempMesh._indices[k]);
         }
 
         // Add this tempMesh into our tempGeom
@@ -314,6 +304,7 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 
 void MESH_Manager::CreateInstanceCube()
 {
+
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
 
@@ -405,17 +396,16 @@ void MESH_Manager::CreateInstanceCube()
         22, 23, 20
     };
 
-    ASSETMANAGER.StoreMeshVertex("Cube", { -0.5f, 0.5f, -0.5f });
-    ASSETMANAGER.StoreMeshVertex("Cube", { 0.5f, 0.5f, -0.5f });
-    ASSETMANAGER.StoreMeshVertex("Cube", { 0.5f, 0.5f, 0.5f });
-    ASSETMANAGER.StoreMeshVertex("Cube", { -0.5f, 0.5f, 0.5f });
-    
-    ASSETMANAGER.StoreMeshIndex("Cube", 0);
-    ASSETMANAGER.StoreMeshIndex("Cube", 1);
-    ASSETMANAGER.StoreMeshIndex("Cube", 2);
-    ASSETMANAGER.StoreMeshIndex("Cube", 2);
-    ASSETMANAGER.StoreMeshIndex("Cube", 3);
-    ASSETMANAGER.StoreMeshIndex("Cube", 0);
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, -0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, -0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, 0.5f });
+    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, 0.5f });
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 1);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 3);
+    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
 
     //// Top Face
     //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
@@ -472,7 +462,7 @@ void MESH_Manager::CreateInstanceCube()
     //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
     //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 23);
     //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
-    
+
     newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
     newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
 
@@ -514,25 +504,25 @@ void MESH_Manager::CreateInstanceCube()
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
+    Engine::GUID& cubeGUID = DEFAULT_ASSETS["Cube.geom"];
     InstanceProperties tempProp; // a lot on the stack, do something about it @kk or @sean
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
-    vaoMap.emplace(std::pair<std::string, GLuint>("Cube", vaoid));
-    //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Cube"), vaoid));
-    //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Cube"),tempProp));
+    vaoMap.emplace(std::make_pair(cubeGUID, vaoid));
+
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_TRIANGLES;
     newMesh.Drawcounts.push_back(36);
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Cube"]));
+
+    //KK: Do something about AABB debug
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
+
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
-
-    mContainer.emplace(std::string("Cube"), newMesh);
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
-
+    mContainer.emplace(cubeGUID, newMesh);
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
 
 
@@ -540,7 +530,6 @@ void MESH_Manager::CreateInstanceSphere()
 {
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
-
     GLuint vaoid;
     GLuint vboid;
     GLuint ebo;
@@ -642,7 +631,9 @@ void MESH_Manager::CreateInstanceSphere()
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
-    vaoMap.emplace(std::pair<std::string, GLuint>("Sphere", vaoid));
+
+    Engine::GUID& sphereGUID = DEFAULT_ASSETS["Sphere.geom"];
+    vaoMap.emplace(std::make_pair(sphereGUID,vaoid));
 
     //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
@@ -652,14 +643,14 @@ void MESH_Manager::CreateInstanceSphere()
     newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
     //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
-
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
+    //Do something about AABB
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
-    mContainer.emplace(std::string("Sphere"), newMesh);
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+    mContainer.emplace(sphereGUID, newMesh);
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 
 }
@@ -872,11 +863,11 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Constant;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Constant);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(12);
-    glVertexAttribPointer(12, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribPointer(12, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
     glVertexAttribDivisor(12, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -901,7 +892,6 @@ void MESH_Manager::CreateInstanceLine()
 {
     Mesh newMesh;
     newMesh.index = (unsigned int)(mContainer.size());
-
     GLfloat vertices[] = {
         -1.f, 0.f, 0.f,   
         1.0f, 0.f, 0.f
@@ -910,9 +900,9 @@ void MESH_Manager::CreateInstanceLine()
     GLuint indices[] = {
         0, 1
     };
+
     newMesh.vertices_min = glm::vec3(-1.f, 0.f, 0.f);
     newMesh.vertices_max = glm::vec3(-1.f, 0.f, 0.f);
-
     // first, configure the cube's VAO (and VBO)
     //unsigned int VBO, cubeVAO;
 
@@ -942,18 +932,20 @@ void MESH_Manager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    vaoMap.emplace(std::pair<std::string, GLuint>("Line", vaoid));
+    Engine::GUID& lineGUID = DEFAULT_ASSETS["Line.geom"];
+    vaoMap.emplace(std::make_pair(lineGUID, vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
     newMesh.Vboids.push_back(vboid);
     newMesh.prim = GL_LINES;
     newMesh.Drawcounts.push_back(2);
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    //InstanceSetup_PBR(tempProp);
     //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
-    mContainer.emplace(std::string("Line"), newMesh);
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+    mContainer.emplace(lineGUID, newMesh);
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 }
 
@@ -1003,7 +995,10 @@ void MESH_Manager::CreateInstanceSegment3D()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
-    vaoMap.emplace(std::pair<std::string, GLuint>("Segment3D", vaoid));
+
+    Engine::GUID& segGUID{DEFAULT_ASSETS["Segment3D.geom"]};
+
+    vaoMap.emplace(std::make_pair(segGUID, vaoid));
 
     //properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
     newMesh.Vaoids.push_back(vaoid);
@@ -1012,8 +1007,10 @@ void MESH_Manager::CreateInstanceSegment3D()
     newMesh.Drawcounts.push_back(2);
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
 
-    mContainer.emplace(std::string("Segment3D"), newMesh);
-    instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(vaoid, tempProp));
+    InstanceSetup_PBR(tempProp);
+
+    mContainer.emplace(segGUID, newMesh);
+    instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
 }
 
@@ -1109,9 +1106,23 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     //return DebugVaoid;
 }
 
-//GLuint GetVAOfromGUID(std::string GUID) {
-//    if (MeshManager.vaoMap.find(GUID) != MeshManager.vaoMap.end()) {
-//        return MeshManager.vaoMap.find(GUID)->second;
-//    }
-//    return UINT_MAX;
-//}
+void MESH_Manager::StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex)
+{
+    mMeshesAsset[mKey].mVertices.push_back(mVertex);
+}
+
+void MESH_Manager::StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex)
+{
+    mMeshesAsset[mKey].mIndices.push_back(mIndex);
+}
+
+void MESH_Manager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)
+{
+    GetGeomFromFiles(pEvent->assetPath.string(), pEvent->guid);
+}
+
+void MESH_Manager::CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent)
+{
+
+}
+

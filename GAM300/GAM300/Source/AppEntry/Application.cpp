@@ -202,8 +202,11 @@ void Application::CallbackWindowFocus(GLFWwindow* _window, int _focused)
 void Application::CallbackWindowDrop(GLFWwindow*, int _pathCount, const char* _paths[])
 {
     PRINT("Application Getting Files...\n");
-
-    DropAssetsEvent e(_pathCount, _paths);
+    std::vector<std::filesystem::path> paths;
+    for (int i = 0; i < _pathCount; ++i) {
+        paths.push_back(std::filesystem::path(_paths[i]));
+    }
+    DropAssetsEvent e(_pathCount, paths.data());
     EVENTS.Publish(&e);
 }
 

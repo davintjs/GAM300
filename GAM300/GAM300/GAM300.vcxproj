@@ -113,6 +113,7 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
@@ -127,6 +128,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\Utilities\GUID.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Utilities\ThreadPool.cpp" />
     <ClCompile Include="Source\Core\FramerateController.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -227,8 +232,11 @@
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
+    <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
+    <ClInclude Include="Source\AssetManager\AssetTypes.h" />
     <ClInclude Include="Source\Audio\AudioManager.h" />
     <ClInclude Include="Source\Audio\AudioSystem.h" />
+    <ClInclude Include="Source\Core\EventInterface.h" />
     <ClInclude Include="Source\Core\SystemsGroup.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Debugging\Debugger.h" />
@@ -259,6 +267,7 @@
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
+    <ClInclude Include="Source\Utilities\GUID.h" />
     <ClInclude Include="Source\Utilities\Interpolation.h" />
     <ClInclude Include="Source\Utilities\ThreadPool.h" />
     <ClInclude Include="Source\Core\EngineCore.h" />

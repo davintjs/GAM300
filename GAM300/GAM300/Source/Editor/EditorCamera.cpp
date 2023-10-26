@@ -137,8 +137,9 @@ void EditorCamera::FocusOnObject(float dt)
 		if (e.pEntity)
 		{
 			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
-			targetFP = t.translation;
-			targetFL = std::max(1.f, 10.f * cbrt((t.scale.x * t.scale.y * t.scale.z) * 0.5f));
+			targetFP = t.GetTranslation();
+			glm::vec3 scale = t.GetScale();
+			targetFL = std::max(1.f, 10.f * cbrt((scale.x * scale.y * scale.z) * 0.5f));
 			initialFP = focalPoint;
 			initialFL = focalLength;
 			timer = 0.f;
