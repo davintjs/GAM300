@@ -25,8 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionID)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
-	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
-	GenerateConvexHull(mTrimmedPos);
+	GeneratePointsCCW(positions);
+	//std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
+	//GenerateConvexHull(positions);
 	CalculateNormalBarycenter(mPoints);
 
 	minPoint = { FLT_MAX, FLT_MAX, FLT_MAX };
@@ -81,6 +82,46 @@ glm::vec3 Polygon3D::GetMaxPoint()
 glm::vec3 Polygon3D::GetMinPoint()
 {
 	return minPoint;
+}
+
+bool Polygon3D::ComparePoints(const glm::vec3& lhs, const glm::vec3& rhs, const glm::vec3& reference)
+{
+	if (lhs == reference || rhs == reference)
+	{
+		return true;
+	}
+
+	double angle1 = atan2(lhs.z - reference.z, lhs.x - reference.x);
+	double angle2 = atan2(rhs.z - reference.z, rhs.x - reference.z);
+
+	if (angle1 < angle2)
+	{
+		return angle1 < angle2;
+	}
+
+	// Here, angle2 > angle1 -> so we need to check distance
+	return ((lhs.x - reference.x) * (lhs.x - reference.x) + (lhs.z - reference.z) * (lhs.z - reference.z)) <
+		((rhs.x - reference.x) * (rhs.x - reference.x) + (rhs.z - reference.z) * (rhs.z - reference.z));
+}
+
+void Polygon3D::GeneratePointsCCW(const std::vector<glm::vec3>& points)
+{
+	// Get the reference point by finding the minimum point in both x-axis and z-axis
+	glm::vec3 minimumPoint = points[0];
+	for (const auto& p : points)
+	{
+		if (p.x < minimumPoint.x && p.z < minimumPoint.z)
+		{
+			minimumPoint = p;
+		}
+	}
+
+	mPoints = points;
+
+	std::sort(mPoints.begin(), mPoints.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
+		{
+			return ComparePoints(lhs, rhs, minimumPoint);
+		});
 }
 
 void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points) 
@@ -565,104 +606,6 @@ void Polygon3D::SwitchOrientation()
 float Polygon3D::PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p)
 {
 	return (l1.x - p.x) * (l2.z - p.z) - (l1.z - p.z) * (l2.x - p.x);
-}
-
-bool Polygon3D::Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt)
-{
-	glm::vec2 EP_line1 = seg1.point2 - seg1.point1;
-	glm::vec2 EP_line2 = seg2.point2 - seg2.point1;
-	float det = EP_line1.x * EP_line2.y - EP_line2.x * EP_line1.y;
-
-	if (det == 0.f)
-	{
-		return false;
-	}
-
-	float t = (EP_line2.x * (seg1.point1.y - seg2.point1.y) + EP_line2.y * (seg2.point1.x - seg1.point1.x)) / det;
-	float u = (EP_line1.x * (seg2.point1.y - seg1.point1.y) + EP_line1.y * (seg1.point1.x - seg2.point1.x)) / (EP_line2.x * EP_line1.y - EP_line2.y * EP_line1.x);
-
-	if (rt != NULL)
-	{
-		*rt = t;
-	}
-
-	if (t >= 0.f && t <= 1.f)
-	{
-		if (u >= 0.f && u <= 1.f)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool Polygon3D::Intersects(const Segment3D& seg1, const Segment3D& seg2, float* rt)
-{
-	float A = seg1.point2.x - seg1.point1.x;
-	float B = seg2.point1.x - seg2.point2.x;
-	float C = seg2.point1.x - seg1.point1.x;
-
-	float D = seg1.point2.z - seg1.point1.z;
-	float E = seg2.point1.z - seg2.point2.z;
-	float F = seg2.point1.z - seg1.point1.z;
-
-	float t = (C * E - F * B) / (E * A - B * D);
-	float s = (D * C - A * F) / (D * B - A * E);
-
-	if (Parallel((seg1.point2 - seg1.point1), (seg2.point2 - seg2.point1)))
-	{
-		return false;
-	}
-
-	if ((0.f <= t && t <= 1.f) && (0.f <= s && s <= 1.f))
-	{
-		if (rt != NULL)
-		{
-			*rt = t;
-		}
-		return true;
-	}
-
-	return false;
-}
-
-bool Polygon3D::Intersects(const Line3D& line, const Plane3D& plane, float* rt)
-{
-	glm::vec3 P_Normal = plane.normal();
-
-	float VdotN = glm::dot(line.vector, P_Normal);
-	float MdotN = glm::dot(line.point, P_Normal);
-	if (VdotN == 0.f)
-	{
-		return false;
-	}
-
-	float t = -((MdotN + plane[3]) / VdotN);
-	if (rt != NULL)
-	{
-		*rt = t;
-	}
-
-	float Mtv = MdotN + (t * VdotN);
-	float test = Mtv + plane[3];
-	if (test != 0.f)
-	{
-		return false;
-	}
-
-	return true;
-
-}
-
-bool Polygon3D::Parallel(const glm::vec3& v1, const glm::vec3& v2)
-{
-	glm::vec3 test = glm::cross(v1, v2);
-	if ((test.x == 0) && (test.y == 0) && (test.z == 0))
-	{
-		return true;
-	}
-	return false;
 }
 
 float Polygon3D::CalculateSquaredDistance(const glm::vec3& mVec)

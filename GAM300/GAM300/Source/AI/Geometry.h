@@ -89,6 +89,8 @@ public:
         return ((1.0f - t) * point1 + t * point2);
     }
 
+    bool PointLiesOnLine(const glm::vec3& mPoint);
+
     glm::vec3 point1;
     glm::vec3 point2;
 };
@@ -119,6 +121,8 @@ public:
     // Returns the normal of this triangle
     const glm::vec3 GetNormal() const;
 
+    bool isNeighbour(const Triangle3D& mRHS);
+
     // Add neighbour of this triangle
     void AddNeighbour(Triangle3D* mTri);
 
@@ -146,3 +150,11 @@ private:
     float mGivenCost = 0.f;
     onList mOnList = onList::NONE;
 };
+
+// Parallel check for two vectors
+bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
+
+// Intersection checks
+bool Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt);
+bool Intersects(const Segment3D& seg1, const Segment3D& seg2, float* rt);
+bool Intersects(const Line3D& line, const Plane3D& plane, float* rt);

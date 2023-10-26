@@ -264,7 +264,7 @@ struct MeshFilter : Object
 {
 	MeshFilter();
 
-	Engine::GUID meshId;
+	Engine::GUID meshId{DEFAULT_ASSETS["Cube.geom"]};
 	std::vector<glm::vec3>* vertices;	// Position
 	std::vector<unsigned int>* indices;	// Index
 	property_vtable();
