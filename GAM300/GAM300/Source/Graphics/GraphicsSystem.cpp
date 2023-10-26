@@ -263,7 +263,13 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(bloomCount, _vao, _vbo, _camera);
+	if (enableBloom)
+	{
+		bool index = bloom(bloomCount, _vao, _vbo, _camera);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+
+	}
 
 	//}
 
@@ -279,8 +285,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -291,6 +296,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		glGetUniformLocation(shader.GetHandle(), "exposure");
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
+
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "enableBloom");
+
+	glUniform1f(uniform3, enableBloom);
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

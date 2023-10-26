@@ -39,6 +39,7 @@ class SkyBox;
 bool extern RenderShadow;
 unsigned int extern bloomCount;
 float extern bloomThreshold;
+bool extern enableBloom;
 
 
 // Graphic Functions

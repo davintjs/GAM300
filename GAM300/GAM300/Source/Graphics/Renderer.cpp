@@ -799,6 +799,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
 
 
 	GLint uniform11 =
