@@ -53,26 +53,31 @@ layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
 
 layout (location = 3) in vec4 frag_Albedo;
-layout (location = 4) in vec4 frag_Metal_Rough_AO_index;
-layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
+layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
+layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
 layout (location = 6) in vec2 frag_texture_index;
+
+layout (location = 7) in vec4 frag_pos_lightspace;
+
 
 //-------------------------
 //          GOING OUT
 //-------------------------
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 Blooming;
 
 //-------------------------
 //          UNIFORMS
 //-------------------------
 
-layout (binding = 0) uniform sampler2D myTextureSampler[32];
-//layout(std140, binding = 1) uniform PointLightBuffer {
-//    PointLight pointLights[NR_POINT_LIGHTS];
-//};
-//uniform vec3 lightColor;
-//uniform vec3 lightPos;
+// The last slot is used for shadows from Directional / SpotLight currently
+layout (binding = 0) uniform sampler2D myTextureSampler[31];
+
+layout (binding = 31) uniform samplerCube PointShadowBox;
+uniform bool renderShadow;
+uniform float farplane;
+
 uniform vec3 camPos;
 uniform bool hdr;
 
@@ -87,6 +92,10 @@ uniform int DirectionalLight_Count;
 // Spot Light 
 uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 uniform int SpotLight_Count;
+
+// Bloom
+uniform float bloomThreshold;
+
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -155,6 +164,51 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
+float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(myTextureSampler[30], projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;  
+    // check whether current frag pos is in shadow
+
+    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    return shadow;
+}
+
+float ShadowCalculation_Point(vec3 lightpos)
+{
+
+    vec3 fragToLight = WorldPos - lightpos;
+
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(PointShadowBox,fragToLight).r; 
+    // get depth of current fragment from light's perspective
+    closestDepth *= farplane;  
+    // check whether current frag pos is in shadow
+    float currentDepth = length(fragToLight);
+//    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+//    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+//
+//    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+////    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+//    if(projCoords.z > 1.0)
+//        shadow = 0.0;
+//
+  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
+    return shadow;
+}
 
 void main()
 {		
@@ -162,10 +216,10 @@ void main()
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
 
-    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.01f); // .x is metallic texture
-    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.01f);    // .y is roughness texture
-    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.01f);    // .z is ao texture
-    int Emission_index = int(frag_Metal_Rough_AO_index.w + 0.01f);    // .w is emission texture
+    int Metallic_index = int(frag_Metal_Rough_AO_Emission_index.x + 0.01f); // .x is metallic texture
+    int Roughness_index = int(frag_Metal_Rough_AO_Emission_index.y + 0.01f);    // .y is roughness texture
+    int AO_index = int(frag_Metal_Rough_AO_Emission_index.z + 0.01f);    // .z is ao texture
+    int Emission_index = int(frag_Metal_Rough_AO_Emission_index.w + 0.01f);    // .w is emission texture
 
 
     vec3 albedo;
@@ -178,7 +232,7 @@ void main()
     // ALBEDO
     if (Tex_index < 32)
     {
-        albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+        albedo = vec3(frag_Albedo) * pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
     }
     else
     {
@@ -190,14 +244,14 @@ void main()
     {
         if(Metallic_index == Roughness_index)
         {
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).b;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).b;   
         }
         else
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).r;   
     }
     else
     {
-        metallic = frag_Metal_Rough_AO_constant.r;
+        metallic = frag_Metal_Rough_AO_Emission_constant.r;
 
         int metal_test = int(metallic-0.1f);
         if(metal_test == -1)
@@ -216,14 +270,14 @@ void main()
     {
         if (Metallic_index == Roughness_index)
         {
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).g;   
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).g;   
         }
         else
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).r;    
     }
     else
     {
-        roughness = frag_Metal_Rough_AO_constant.g;
+        roughness = frag_Metal_Rough_AO_Emission_constant.g;
         int rough_test = int(roughness-0.1f);
         if(rough_test == -1)
         {
@@ -235,11 +289,11 @@ void main()
     // AO
     if (AO_index < 32)
     {
-        ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
+        ao  = frag_Metal_Rough_AO_Emission_constant.b * texture(myTextureSampler[AO_index], TexCoords).r; 
     }
     else
     {
-        ao = frag_Metal_Rough_AO_constant.b;
+        ao = frag_Metal_Rough_AO_Emission_constant.b;
 
         int ao_test = int(ao-0.1f);
         if(ao_test == -1)
@@ -253,7 +307,7 @@ void main()
 
     if (Emission_index < 32)
     {
-        emission  = texture(myTextureSampler[Emission_index], TexCoords).xyz; 
+        emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
     }
 
 
@@ -324,7 +378,27 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+//        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+//        float shadow = ShadowCalculation_Point(pointLights[i].position); 
+        float shadow = renderShadow ? ShadowCalculation_Point(pointLights[i].position) : 0.0; // add a shadows bool
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+
+
+        // test to render the depth map
+
+//        vec3 fragToLight = WorldPos - pointLights[i].position;
+//
+//        // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+//        float closestDepth = texture(PointShadowBox,fragToLight).r; 
+//        // get depth of current fragment from light's perspective
+//        closestDepth *= farplane;  
+//        // check whether current frag pos is in shadow
+//        float currentDepth = length(fragToLight);
+//        FragColor = vec4(vec3(closestDepth / farplane), 1.0);
+//        return;
+
+
+
     }   
    
 
@@ -346,7 +420,7 @@ void main()
 
 
 //        float distance = length(pointLights[i].position - WorldPos);
-        float distance = 1000.f;
+        float distance = 10.f;
         
         
         float attenuation = 1.0 / (distance * distance);
@@ -375,11 +449,19 @@ void main()
         kD *= 1.0 - metallic;	  
 
         // scale light by NdotL
-        float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        float NdotL = max(dot(N, L), 0.0);   
+
+
+
+//        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+
+        
+        
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   
 
-    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats
+    float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
     for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
         float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
@@ -445,7 +527,15 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        
+        
+        
+//        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
+        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+
+        
+        
+        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
         }    
     }   
 
@@ -453,7 +543,8 @@ void main()
 
 
 
-    vec3 ambient = vec3(0.03) * albedo * ao + emission;
+//    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
+    vec3 ambient = vec3(0.1) * albedo * ao +  emission;
     
     vec3 color = ambient + Lo;
 
@@ -463,9 +554,21 @@ void main()
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
 
+    float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > bloomThreshold)
+        Blooming = vec4(color.rgb, 1.0);
+    else
+        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
+
 
 if(hdr)
     color = color / (color + vec3(1.0));
 
     FragColor = vec4(color, 1.0);
+
+//    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+//    if(brightness > 1.0)
+//        Blooming = vec4(FragColor.rgb, 1.0);
+//    else
+//        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
 }

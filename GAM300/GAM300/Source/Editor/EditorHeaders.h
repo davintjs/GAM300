@@ -33,8 +33,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/Events.h"
 
 #define NON_VALID_ENTITY 0
-#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
+#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(filepath);
 #define FIND_TEXTURE(filepath) TextureManager.FindTexture()
+
+struct BaseCamera;
 
 // utility structure for realtime plot
 struct ScrollingBuffer {
@@ -148,24 +150,24 @@ public:
     // Exit the system
     void Exit();
 
+    void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
 private:
+    std::filesystem::path currentDirectory;
 };
 
 
 ENGINE_EDITOR_SYSTEM(EditorScene)
 {
 public:
-    // Initializing the Scene & Game
+    // Initializing the Scene View
     void Init();
 
-    // Updating and displaying of the Scene & Game
+    // Updating and displaying of the Scene View
     void Update(float dt);
 
     bool SelectEntity();
 
     void ToolBar();
-
-    void GameView();
     
     void SceneView();
     
@@ -177,6 +179,7 @@ public:
     // Getters for the data members
     glm::vec2 const GetDimension() { return sceneDimension; }
     glm::vec2 const GetPosition() { return scenePosition; }
+    bool const WindowOpened() { return windowOpened; }
     bool const WindowHovered() { return windowHovered; }
     bool const WindowFocused() { return windowFocused; }
     bool const UsingGizmos() { return inOperation; }
@@ -188,9 +191,65 @@ private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
     glm::vec2 scenePosition{};  // Position of the viewport relative to the engine
     glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
+    bool windowOpened = false;
     bool windowHovered = false;
     bool windowFocused = false;
     bool inOperation = false;
+    bool debug_draw = false;
+};
+
+ENGINE_EDITOR_SYSTEM(EditorGame)
+{
+public:
+    // Initializing the Game View
+    void Init();
+
+    // Updating and displaying of the Game View
+    void Update(float dt);
+
+    void ToolBar();
+
+    void UpdateTargetDisplay();
+
+    void GameView();
+
+    void ResizeGameView(glm::vec2 _newDimension);
+
+    // Exit the system
+    void Exit();
+
+    // Getters for the data members
+    glm::vec2 const GetDimension() { return dimension; }
+    glm::vec2 const GetPosition() { return position; }
+    bool const WindowOpened() { return windowOpened; }
+    bool const WindowHovered() { return windowHovered; }
+    bool const WindowFocused() { return windowFocused; }
+    bool const DebugDraw() { return debug_draw; }
+
+    void CallbackEditorWindow(EditorWindowEvent* pEvent);
+    void CallbackSetCamera(ObjectCreatedEvent<Camera>* pEvent);
+    void CallbackDeleteCamera(ObjectDestroyedEvent<Camera>* pEvent);
+    void CallbackSceneStop(ScenePostCleanupEvent* pEvent);
+
+private:
+
+    struct DisplayTarget
+    {
+        unsigned int targetDisplay = 0;
+        std::string name;
+    };
+
+    BaseCamera* camera = nullptr;
+    DisplayTarget displayTargets[8];
+    glm::vec2 dimension{}; // Dimensions of the viewport
+    glm::vec2 position{};  // Position of the viewport relative to the engine
+    glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
+    unsigned int targetDisplay = 0;
+    float padding = 4.f;
+    float AspectRatio = 16.f / 9.f;
+    bool windowOpened = false;
+    bool windowHovered = false;
+    bool windowFocused = false;
     bool debug_draw = false;
 };
 

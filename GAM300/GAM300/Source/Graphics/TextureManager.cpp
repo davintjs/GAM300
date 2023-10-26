@@ -14,19 +14,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Precompiled.h"
 #include "TextureManager.h"
+#include "Core/EventsManager.h"
+
 
 void Texture_Manager::Init()
 {
+    EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetLoaded);
+    EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetUnloaded);
     std::cout << "TEXTURE MANAGER INIT\n";
 }
 
-
-void Texture_Manager::Update(float dt)
-{
-    UNREFERENCED_PARAMETER(dt);
-}
-
-void Texture_Manager::AddTexture(char const* Filename, std::string GUID)
+void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID& GUID)
 {
     GLuint temp{};
 
@@ -78,7 +76,8 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
     GLenum Target = GL.translate(Texture.target());
-
+    //Texture = gli::flip<gli::texture>(Texture);
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     GLuint TextureName = 0; 
     glGenTextures(1, &TextureName);
     glBindTexture(Target, TextureName);
@@ -237,16 +236,28 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     return Skybox_Tex;
 }
 
-GLuint Texture_Manager::GetTexture(std::string GUID)
+GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
 {
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
         return mTextureContainer.find(GUID)->second.second;
     }
 
-    return UINT_MAX;
+    return 0;
 }
 
-void Texture_Manager::Exit()
+GLuint Texture_Manager::GetTexture(const fs::path& filePath)
 {
-	mTextureContainer.clear();
+    GetAssetEvent e{filePath};
+    EVENTS.Publish(&e);
+    return GetTexture(e.guid);
+}
+
+void Texture_Manager::CallbackTextureAssetLoaded(AssetLoadedEvent<TextureAsset>* pEvent)
+{
+     AddTexture(pEvent->assetPath.string().c_str(), pEvent->guid);
+}
+
+void Texture_Manager::CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>* pEvent)
+{
+
 }

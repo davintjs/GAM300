@@ -14,14 +14,17 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
+
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Model3d.h"
-#include "Editor_Camera.h"
+#include "Editor/EditorCamera.h"
 
-
-#include <algorithm>
 #include "GraphicsSystem.h"
+#include "TextureManager.h"
+#include "MeshManager.h"
 
-//extern Editor_Camera E_Camera;
+//extern EditorCamera E_Camera;
 
 bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
 
@@ -36,12 +39,8 @@ void Model::init() {
     glm::vec2 tex;
     glm::vec4 color;*/
 
-    DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
-
     for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
     {
-        std::cout << "ouch\n";
-
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
@@ -180,7 +179,7 @@ void Model::draw() {
 
     // test
     //glActiveTexture(GL_TEXTURE0);
-    texturebuffer = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color"));
+    texturebuffer = TextureManager.GetTexture("Assets/TD_Checker_Base_Color.dds");
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
     
@@ -1090,7 +1089,7 @@ void SkyBox::SkyBoxinit()
 
 }
 
-void SkyBox::SkyBoxDraw(GLuint skyboxtex)
+void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
 {
     shader.Use();
     GLint uniform_var_loc1 =
@@ -1098,7 +1097,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "projection");
 
     glUniformMatrix4fv(uniform_var_loc1, 1, GL_FALSE,
-        glm::value_ptr(EditorCam.GetProjMatrix()));
+        glm::value_ptr(_camera.GetProjMatrix()));
     
     
     GLint uniform_var_loc2 =
@@ -1106,7 +1105,7 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex)
             "view");
 
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
-        glm::value_ptr(glm::mat4(glm::mat3(EditorCam.GetViewMatrix()))));
+        glm::value_ptr(glm::mat4(glm::mat3(_camera.GetViewMatrix()))));
 
     glBindVertexArray(vaoid);
 

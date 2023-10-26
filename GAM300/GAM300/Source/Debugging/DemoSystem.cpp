@@ -15,36 +15,47 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 
 #include "DemoSystem.h"
+#include "IOManager/InputHandler.h"
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Scene/SceneManager.h"
+#include "AI/NavMeshBuilder.h"
 
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
 
 void DemoSystem::Init()
 {
-	//CreateSceneEvent createScene(nullptr);
-	//EVENTS.Publish(&createScene);
-	//Scene& scene = *createScene.scene;
-	MySceneManager.LoadScene("Assets/Scene/M1.scene");
+	CreateSceneEvent createScene(nullptr);
+	EVENTS.Publish(&createScene);
+	Scene& scene = *createScene.scene;
+	//MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
 	//Entity& testEntity = *scene.Add<Entity>();
+	//scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
+	//scene.Get<Transform>(testEntity).translation = Vector3(0);
 	//MeshRenderer& entityRender = *scene.Add<MeshRenderer>(testEntity);
-	//AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
-	//entityAudio.channel = AudioSource::Channel::MUSIC;
-	////entityAudio.play = true;
-	//entityAudio.currentSound = "LoLnvDie";
+	//entityRender.shaderType = SHADERTYPE::DEFAULT;
 	//entityRender.MeshName = "DamagedHelmet";
 	//entityRender.AlbedoTexture = "Default_albedo";
 	//entityRender.textureID = GET_TEXTURE_ID(entityRender.AlbedoTexture);
+	/*AudioSource& entityAudio = *scene.Add<AudioSource>(testEntity);
+	entityAudio.channel = AudioSource::Channel::MUSIC;
+	//entityAudio.play = true;
+	entityAudio.currentSound = "LoLnvDie";*/
 
-	//entityRender.NormalMap = "Default_normal";
-	//entityRender.normalMapID = GET_TEXTURE_ID(entityRender.NormalMap);
-
-	//entityRender.RoughnessTexture = "Default_metalRoughness";
-	//entityRender.RoughnessID = GET_TEXTURE_ID(entityRender.RoughnessTexture);
+	/*for (int i = 0; i < 5; ++i) {
+		Entity& instanceEntity = *scene.Add<Entity>();
+		MeshRenderer& instanceRender = *scene.Add<MeshRenderer>(instanceEntity);
+		instanceRender.shaderType = SHADERTYPE::PBR;
+		instanceRender.MeshName = "DamagedHelmet";
+		instanceRender.AlbedoTexture = "Default_albedo";
+		instanceRender.textureID = GET_TEXTURE_ID(instanceRender.AlbedoTexture);
+		scene.Get<Transform>(instanceEntity).translation = Vector3((rand() % 20) - 10.f, (rand() % 20) - 10.f, (rand() % 20) - 10.f);
+		scene.Get<Transform>(instanceEntity).scale = Vector3(1.f, 1.f, 1.f);
+		instanceRender.isInstance = true;
+	}*/
 
 	//entityRender.MetallicTexture = "Default_metalRoughness";
 	//entityRender.MetallicID = GET_TEXTURE_ID(entityRender.MetallicTexture);
@@ -138,6 +149,18 @@ void DemoSystem::Init()
 void DemoSystem::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
+	{
+		if (!NAVMESHBUILDER.GetNavMesh()) // First build
+		{
+			NAVMESHBUILDER.BuildNavMesh(); // Build the NavMesh
+		}
+		else // Rebaking
+		{
+			NAVMESHBUILDER.Exit(); // Clear current NavMesh
+			NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
+		}
+	}
 }
 
 void DemoSystem::Exit()

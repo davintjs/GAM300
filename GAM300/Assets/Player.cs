@@ -13,6 +13,8 @@ public class Player : Script
     public string onamae = "HERRO";
     public CharacterController characterController;
 
+    public float ching;
+    
     IEnumerator DoSomething()
     {
         while (true)
@@ -25,17 +27,19 @@ public class Player : Script
     void Start()
     {
         StartCoroutine(DoSomething());
+        Console.WriteLine("START");
         //AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        //Console.WriteLine(onamae);
+        //
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))
         {
+            Console.WriteLine("Q");
             otherT.localRotation.y += sad / 360f;
             //rb.mass -= speed;
         }

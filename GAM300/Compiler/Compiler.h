@@ -72,7 +72,7 @@ class ModelLoader
 public:
 
 	ModelLoader() {};
-	ModelLoader(const std::string descriptorFilePath, const std::string geomFilePath);
+	ModelLoader(const std::filesystem::path& geomFilePath);
 	~ModelLoader();
 
 	// Load the FBX file with import options to be processed
@@ -101,7 +101,7 @@ public:
 	void ImportMaterialAndTextures(const aiMaterial& material);
 
 	// Serialization of the FBX model to custom binary format
-	void SerializeBinaryGeom(const std::string filepath);
+	void SerializeBinaryGeom(const std::filesystem::path& path);
 
 	// Deserialization of descriptor file to read the FBX model
 	void DeserializeDescriptor(const std::string filepath);

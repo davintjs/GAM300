@@ -21,7 +21,6 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
-
 #include "Serializer.h"
 #include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
@@ -105,6 +104,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     {
         auto& component = _scene.Get<Tag>(_entity);
         out << YAML::Key << "m_Name" << YAML::Value << component.name;
+        out << YAML::Key << "m_Layer" << YAML::Value << component.physicsLayerIndex;
     }
 
     if (_scene.Has<Transform>(_entity))
@@ -194,7 +194,7 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     for (size_t i = 0; i < fieldNamesEvent.count; ++i)
     {
         static char buffer[2048]{};
-        Field field{ AllComponentTypes::Size(),buffer };
+        Field field{ AllComponentTypes::Size(),2048,buffer};
         const char* name{ fieldNamesEvent.pStart[i] };
         ScriptGetFieldEvent getFieldEvent{_component,name,field};
         EVENTS.Publish(&getFieldEvent);
@@ -203,15 +203,6 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     }
 }
 
-void Deserialize(const std::string& _filepath)
-{
-    (void)_filepath;
-}
-
-void DeserializeRuntime(const std::string& _filepath)
-{
-    (void)_filepath;
-}
 
 bool DeserializeScene(Scene& _scene)
 {
@@ -300,18 +291,22 @@ void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking)
         transform.rotation = object["m_Rotation"].as<Vector3>();
         transform.scale = object["m_Scale"].as<Vector3>();
         _scene.Get<Tag>(refEntity).name = object["m_Name"].as<std::string>(); // Tag
+
+        if(object["m_Layer"])
+            _scene.Get<Tag>(refEntity).physicsLayerIndex = object["m_Layer"].as<size_t>(); // Tag
     }
     else // Linking parent and child gameobjects
     {
-        Entity& refEntity = _scene.Get<Entity>(object["m_EUID"].as<Engine::UUID>());
+        Engine::UUID euid{ object["m_EUID"].as<Engine::UUID>() };
         YAML::Node parent = object["m_Parent"];
         if (parent)
         {
             Engine::UUID parentUUID = parent.as<Engine::UUID>();
             if (parentUUID != 0)
             {
-                Transform& transform = _scene.Get<Transform>(refEntity); // Transform
-                transform.SetParent(&_scene.Get<Transform>(parentUUID));
+                Transform& transform = _scene.Get<Transform>(euid); // Transform
+                transform.parent = parentUUID;
+                _scene.Get<Transform>(parentUUID).child.push_back(euid);
             }
         }
         else
@@ -343,7 +338,13 @@ void DeserializeComponent(const DeComHelper& _helper)
                     // Extract Component value
                     if (node[name])
                     {
-                        property::set(component, entry.first.c_str(), node[name].as<T1>());
+                        if constexpr (std::is_same<char*, T1>()) {
+                            std::string buf = node[name].as<std::string>();
+                            property::set(component, entry.first.c_str(), buf);
+
+                        }
+                        else
+                            property::set(component, entry.first.c_str(), node[name].as<T1>());
                     }
                     else
                     {
@@ -388,7 +389,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             for (size_t i = 0; i < fieldNamesEvent.count; ++i)
             {
                 static char buffer[2048]{};
-                Field field{ AllComponentTypes::Size(),buffer };
+                Field field{ AllComponentTypes::Size(),2048,buffer };
                 const char* name{ fieldNamesEvent.pStart[i] };
                 YAML::Node varNode = node[name];
                 if (!varNode)
@@ -463,9 +464,17 @@ void SerializeScriptHelper(Field& rhs, YAML::Emitter& out)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            out << YAML::Value << value;
+            if constexpr (std::is_same_v<char*,T>)
+            {
+                std::string str = (char*)rhs.data;
+                out << YAML::Value << str;
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                out << YAML::Value << value;
+            }
         }
 
         return;
@@ -520,9 +529,18 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
         }
         else
         {
-            // Store Basic Types
-            T& value = rhs.Get<T>();
-            value = node.as<T>();
+            if constexpr (std::is_same_v<char*, T>)
+            {
+                std::string value = (char*)rhs.data;
+                value = node.as<std::string>();
+                strcpy((char*)rhs.data,value.data());
+            }
+            else
+            {
+                // Store Basic Types
+                T& value = rhs.Get<T>();
+                value = node.as<T>();
+            }
         }
         return;
     }

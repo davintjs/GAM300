@@ -16,8 +16,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include "EventInterface.h"
+
 #include "Utilities/UUID.h"
 #include <glm/vec2.hpp>
+#include <Utilities/GUID.h>
+#include <filesystem>
 
 struct Entity;
 struct Scene;
@@ -26,11 +30,7 @@ struct Field;
 struct Rigidbody;
 struct ImGuiTextBuffer;
 
-struct IEvent
-{
-protected:
-	virtual ~IEvent() {};
-};
+namespace fs = std::filesystem;
 
 struct ApplicationExitEvent : IEvent
 {
@@ -89,9 +89,17 @@ struct SceneStopEvent : IEvent {};
 
 struct SceneCleanupEvent : IEvent {};
 
+struct ScenePostCleanupEvent : IEvent {};
+
 struct SelectedEntityEvent : IEvent
 {
 	SelectedEntityEvent(Entity* _pEntity) : pEntity{ _pEntity }{}
+	Entity* pEntity;
+};
+
+struct GetSelectedEntityEvent : IEvent
+{
+	GetSelectedEntityEvent() {}
 	Entity* pEntity;
 };
 
@@ -140,15 +148,63 @@ struct ScriptGetFieldNamesEvent : IEvent
 	size_t count{0};
 };
 
+#pragma region Asset Manager
+
 struct GetAssetEvent: IEvent
 {
-	GetAssetEvent(const std::string& _fileName) : fileName{ _fileName } {}
-	const std::string& fileName;
-	std::string guid;
+	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
+	const fs::path& filePath;
+	Engine::GUID guid;
 };
+
+struct GetFilePathEvent : IEvent
+{
+	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
+	const Engine::GUID& guid;
+	fs::path filePath;
+};
+
+template <typename AssetType>
+struct AssetLoadedEvent : IEvent
+{
+	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset) 
+		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
+	const AssetType& asset;
+};
+
+template <typename AssetType>
+struct AssetUpdatedEvent : IEvent
+{
+	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset)
+		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
+	const AssetType& asset;
+};
+
+template <typename AssetType>
+struct AssetUnloadedEvent : IEvent
+{
+	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid) :
+		assetPath{ _assetPath }, guid{ _guid } {}
+	const fs::path& assetPath;
+	const Engine::GUID& guid;
+};
+
+struct DropAssetsEvent : IEvent
+{
+	DropAssetsEvent(const int& _pathCount, const fs::path* _paths) : pathCount{ _pathCount }, paths{ _paths } {}
+	int pathCount;
+	const fs::path* paths;
+};
+
+#pragma endregion
 
 struct ContactAddedEvent : IEvent
 {
+
 	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
 	Rigidbody* rb1;
 	Rigidbody* rb2;
@@ -177,9 +233,11 @@ struct TriggerRemoveEvent : IEvent
 
 struct EditorWindowEvent : IEvent
 {
-	EditorWindowEvent() {};
+	EditorWindowEvent(const std::string& _name) : name{ _name } {};
+	bool isOpened = false;
 	bool isHovered = false;
 	bool isFocused = false;
+	std::string name;
 };
 
 
@@ -195,6 +253,18 @@ struct EditorUpdateSceneGeometryEvent : IEvent
 	EditorUpdateSceneGeometryEvent(const glm::vec2& _position, const glm::vec2& _dimension) : position{ _position }, dimension{ _dimension } {}
 	glm::vec2 position;
 	glm::vec2 dimension;
+};
+
+struct EditorSetGameCameraEvent : IEvent
+{
+	EditorSetGameCameraEvent(const unsigned int& _targetDisplay) : targetDisplay{ _targetDisplay } {}
+	unsigned int targetDisplay;
+};
+
+struct EditorGetCurrentDirectory : IEvent
+{
+	EditorGetCurrentDirectory() {}
+	std::string path;
 };
 
 #pragma endregion

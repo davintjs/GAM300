@@ -15,16 +15,18 @@
 All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
-
 #include "EditorHeaders.h"
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
+#include "IOManager/InputHandler.h"
 #include "Editor.h"
+#include "Editor/EditorCamera.h"
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "Graphics/Editor_Camera.h"
 #include "Graphics/MeshManager.h"
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 namespace
 {
@@ -41,13 +43,11 @@ void EditorScene::Init()
     EVENTS.Subscribe(this, &EditorScene::CallbackEditorWindow);
 }
 
-void EditorScene::Update(float)
+void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     ToolBar();
-
-    GameView();
 
     SceneView();
 
@@ -83,7 +83,8 @@ void EditorScene::ToolBar()
         bool shouldPan = false; // Bean: This is for panning the camera using the Q key
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered))
+        bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -107,8 +108,8 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("E", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered))
+        condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
+        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;
@@ -133,60 +134,16 @@ void EditorScene::ToolBar()
     ImGui::End();
 }
 
-void EditorScene::GameView()
-{
-    if (ImGui::Begin("Game"))
-    {
-        // Bean: For Game Window
-        //float padding = 16.f;
-        //float AspectRatio = 16.f / 9.f;
-
-        //if (_newDimension.x != 0 && _newDimension.y != 0)
-        //{
-        //	bool modified = false;
-        //	_newDimension = glm::floor(_newDimension);
-
-        //	glm::vec2 adjusted = sceneDimension;
-        //	if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
-        //	{
-        //		modified = true;
-        //		adjusted = { _newDimension.y * AspectRatio, _newDimension.y };
-        //	}
-
-        //	if (adjusted.x > _newDimension.x - padding)
-        //	{
-        //		modified = true;
-        //		adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
-        //	}
-
-        //	// If there is any changes to the dimension and modifications, return
-        //	if (adjusted != sceneDimension && modified)
-        //	{
-        //		sceneDimension = adjusted;
-
-        //		EditorCam.onResize(sceneDimension.x, sceneDimension.y);
-
-        //		EditorCam.GetFramebuffer().resize(sceneDimension.x, sceneDimension.y);
-        //	}
-        //}
-
-        /*float indent = (viewportEditorSize.x - sceneDimension.x) * 0.5f;
-        if (indent > 0)
-            ImGui::Indent(indent);*/
-    }
-    ImGui::End();
-}
-
 void EditorScene::SceneView()
 {
     //Editor scene viewport
-    if (ImGui::Begin("Scene"))
+    if (windowOpened = ImGui::Begin("Scene"))
     {
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
-        unsigned int textureID = EditorCam.GetFramebuffer().get_color_attachment_id();
+        unsigned int textureID = FRAMEBUFFER.GetTextureID(EditorCam.GetFramebufferID(), EditorCam.GetAttachment());
         ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -197,19 +154,9 @@ void EditorScene::SceneView()
             EditorUpdateSceneGeometryEvent e(scenePosition, sceneDimension);
             EVENTS.Publish(&e);
             EditorCam.OnResize(sceneDimension.x, sceneDimension.y);
-
-            EditorCam.GetFramebuffer().resize((GLuint)sceneDimension.x, (GLuint)sceneDimension.y);
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
-
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-        float windowWidth = (float)ImGui::GetWindowWidth();
-        float windowHeight = (float)ImGui::GetWindowHeight();
-
-        // Might be wrong -> i think here is the one that need to offset the tab header if there is
-        ImGuizmo::SetRect((float)ImGui::GetWindowPos().x, (float)ImGui::GetWindowPos().y + 22.f, windowWidth, windowHeight - 22.f);
 
         // Display the gizmos for the selected entity
         DisplayGizmos();
@@ -219,7 +166,7 @@ void EditorScene::SceneView()
 
 bool EditorScene::SelectEntity()
 {
-    if (!inOperation && !EditorCam.isMoving && !EditorCam.IsPanning() && InputHandler::isMouseButtonPressed_L())
+    if (!inOperation && !EditorCam.IsMoving() && InputHandler::isMouseButtonPressed_L())
     {
         // Bean: Click within the scene imgui window
         if (!windowHovered)
@@ -252,15 +199,14 @@ void EditorScene::DisplayGizmos()
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
-            glm::quat rot;
-            glm::vec3 skew;
-            glm::vec4 perspective;
+            glm::vec3 rot;
             glm::vec3 scale;
-            glm::decompose(transMatrix, scale, rot, translation, skew, perspective);
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
 
-            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
-            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
-            glm::mat4 rotMat = glm::toMat4(rot);
+            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
+            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
             float& intersect = EditorCam.GetIntersect();
             float& tempIntersect = EditorCam.GetTempIntersect();
@@ -275,8 +221,46 @@ void EditorScene::DisplayGizmos()
                 }
             }
         }
+
+        for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+        {
+            Entity& entity = currentScene.Get<Entity>(Sprite);
+            Transform& transform = currentScene.Get<Transform>(entity);
+
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::vec3 rot;
+            glm::vec3 scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
+
+            //glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
+            //glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            glm::vec3 mins = -scale;
+            glm::vec3 maxs = scale;
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
+
+            float& intersect = EditorCam.GetIntersect();
+            float& tempIntersect = EditorCam.GetTempIntersect();
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
+            {
+                if (tempIntersect < intersect)
+                {
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
+                }
+            }
+
+
+
+        }
     }
 
+    // Display gizmos for selected entity
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
@@ -289,28 +273,50 @@ void EditorScene::DisplayGizmos()
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();
 
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(scenePosition.x, scenePosition.y, sceneDimension.x, sceneDimension.y);
         ImGuizmo::Manipulate(glm::value_ptr(EditorCam.GetViewMatrix()), glm::value_ptr(EditorCam.GetProjMatrix()),
             (ImGuizmo::OPERATION)GizmoType, (ImGuizmo::MODE)coord_selection, glm::value_ptr(transform_1));
 
+        static bool firstmove = true;
+        static Transform origTransform;
+
         if (ImGuizmo::IsUsing())
         {
-            EditorCam.canMove = false;
+            if (firstmove) {
+                origTransform = trans;
+                firstmove = false;
+            }
+
             if (trans.parent)
             {
-                Transform& parentTrans = currentScene.Get<Transform>(trans.parent);
+                Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(trans.parent);
                 glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
             glm::vec3 a_translation;
-            glm::quat a_rot;
+            glm::vec3 a_rot;
             glm::vec3 a_scale;
-            glm::vec3 a_skew;
-            glm::vec4 a_perspective;
-            glm::decompose(transform_1, a_scale, a_rot, a_translation, a_skew, a_perspective);
-
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
             trans.translation = a_translation;
-            trans.rotation = glm::eulerAngles(a_rot);
+            trans.rotation = glm::radians(a_rot);
             trans.scale = a_scale;
+        }
+        else if (!firstmove) {
+            if (trans.translation != origTransform.translation) {
+                Change translate(&trans, "Transform/Translation");
+                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+            }
+            if (trans.rotation != origTransform.rotation) {
+                Change rotate(&trans, "Transform/Rotation");
+                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+            }
+            if (trans.scale != origTransform.scale) {
+                Change scale(&trans, "Transform/Scale");
+                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+            }
+            firstmove = true;
         }
     }
 }
@@ -322,6 +328,11 @@ void EditorScene::Exit()
 
 void EditorScene::CallbackEditorWindow(EditorWindowEvent* pEvent)
 {
+    // If not scene window
+    if (pEvent->name.compare("Scene"))
+        return;
+
+    pEvent->isOpened = WindowOpened();
     pEvent->isHovered = WindowHovered();
     pEvent->isFocused = WindowFocused();
 }

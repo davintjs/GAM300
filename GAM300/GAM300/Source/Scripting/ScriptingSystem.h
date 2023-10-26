@@ -16,7 +16,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define SCRIPTING_SYSTEM_H
 
 #include "Core\SystemInterface.h"
-#include <Core/events.h>
+#include <Core/Events.h>
+#include <Core/EventsManager.h>
 #include <Scene/Components.h>
 
 #include <string>
@@ -24,6 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <mutex>
 #include <Core/FileTypes.h>
 #include <vector>
+#include <queue>
 
 struct Script;
 struct Entity;
@@ -57,7 +59,7 @@ static std::unordered_map<std::string, size_t> fieldTypeMap =
 	{ "System.UInt16",				GetFieldType::E<uint16_t>()},
 	{ "System.UInt32",				GetFieldType::E<uint32_t>()},
 	{ "System.UInt64",				GetFieldType::E<uint64_t>()},
-	{ "System.String",				GetFieldType::E<std::string>()},
+	{ "System.String",				GetFieldType::E<char*>()},
 	{ "GlmSharp.vec2",				GetFieldType::E<Vector2>()},
 	{ "GlmSharp.vec3",				GetFieldType::E<Vector3>()}
 };
@@ -79,6 +81,26 @@ enum class LogicState
 	NONE
 };
 
+
+namespace DefaultMethodTypes
+{
+	enum
+	{
+		Awake = 0,
+		Start,
+		Update,
+		LateUpdate,
+		ExecuteCoroutines,
+		OnCollisionEnter,
+		OnCollisionStay,
+		OnCollisionExit,
+		OnTriggerEnter,
+		OnTriggerStay,
+		OnTriggerExit,
+		SIZE
+	};
+}
+
 struct ScriptClass
 {
 	ScriptClass() = default;
@@ -93,9 +115,11 @@ struct ScriptClass
 	/**************************************************************************/
 	ScriptClass(MonoClass* _mClass);
 	MonoClass* mClass{};
-	std::unordered_map<std::string, MonoMethod*> mMethods;
+	//std::unordered_map<std::string, MonoMethod*> mMethods;
 	std::unordered_map<std::string, MonoClassField*> mFields;
 
+	//Collision
+	MonoMethod* DefaultMethods[DefaultMethodTypes::SIZE]{nullptr};
 };
 
 ENGINE_SYSTEM(ScriptingSystem)
@@ -125,7 +149,7 @@ public:
 	MonoObject* Invoke(MonoObject * mObj, MonoMethod * mMethod, void** params = nullptr);
 
 	//Invokes a mono method on a script
-	void InvokeMethod(Script & script,const std::string& method);
+	void InvokeMethod(Script & script, size_t methodType);
 
 	//Updates all script classes after reloading dll
 	void UpdateScriptClasses();
@@ -149,6 +173,13 @@ public:
 
 	//Sets data from field into C# field
 	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field);
+
+
+
+	void GetFieldValue(Script & script, const std::string & fieldName, Field & field);
+
+
+	void SetFieldValue(Script & script, const std::string & fieldName, Field & field);
 
 	//Checks whether a mono class is script
 	bool IsScript(MonoClass* monoClass);
@@ -210,7 +241,7 @@ public:
 	MonoImage* GetAssemblyImage();
 
 	//Tell all scripts to invoke a function if they are active
-	void InvokeAllScripts(const std::string& funcName);
+	void InvokeAllScripts(size_t methodType);
 
 	//Updates all the references in the scripts when an object is deleted
 	void UpdateReferences();
@@ -233,22 +264,19 @@ public:
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	struct PhysicsStruct
-	{
-		Entity& entity;
-		Rigidbody& rb;
-	};
+	void InvokePhysicsEvent(size_t colType, Rigidbody* rb1, Rigidbody* rb2);
 
-	void InvokePhysicsEvents(std::vector<PhysicsStruct>& physicsArray, std::string name);
-	std::vector<PhysicsStruct> collisionEnter;
-	std::vector<PhysicsStruct> collisionExit;
+	IEvent* scriptingEvent;
 
 	CompilingState compilingState{ CompilingState::Wait };
-	std::vector<Handle> reflectionQueue;
 	LogicState logicState;
-
+	std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
-	std::atomic_bool objectDestroyed = false;
 	std::atomic_bool ran;
+
+	std::map<std::type_index, IEventHandler*> events;
+	template<class EventType>
+	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
+
 };
 #endif // !SCRIPTING_SYSTEM_H

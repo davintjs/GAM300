@@ -16,17 +16,22 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include "Utilities/TemplatePack.h"
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
+#include <Utilities/GUID.h>
+#include <AssetManager/AssetTypes.h>
 
 #include <Properties.h>
+
+#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
+#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -36,6 +41,7 @@ using vec4 = glm::vec4;
 using Quaternion = glm::quat;
 
 struct Entity;
+enum class SHADERTYPE;
 
 extern std::map<std::string, size_t> ComponentTypes;
 
@@ -47,7 +53,15 @@ struct Tag : Object
 	std::string name;
 	Engine::UUID tagName;
 	size_t physicsLayerIndex = 0;
+	property_vtable();
 };
+
+property_begin_name(Tag, "Tag")
+{
+	property_var(name),
+		property_var(tagName).Name("Tag Name"),
+		property_var(physicsLayerIndex).Name("Layer Index"),
+} property_vend_h(Tag)
 
 //To store transform of entity
 struct Transform : Object
@@ -67,6 +81,12 @@ struct Transform : Object
 
 	//Check whether this is a child
 	bool isChild();
+
+	// Get the translation in world space
+	glm::vec3 GetTranslation() const;
+
+	// Get the scale in world space
+	glm::vec3 GetScale() const;
 
 	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
@@ -159,9 +179,18 @@ struct Animator : Object
 {
 };
 
-//struct Camera
-//{
-//};
+struct Camera : Object, BaseCamera
+{
+	Camera();
+	Vector4 backgroundColor{};
+	property_vtable();
+};
+
+property_begin_name(Camera, "Camera") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(backgroundColor).Name("BackgroundColor"),
+	property_parent(BaseCamera)
+} property_vend_h(Camera)
 
 struct Rigidbody : Object
 {
@@ -235,60 +264,67 @@ property_begin_name(Script, "Script") {
 	//property_var(fields)
 } property_vend_h(Script)
 
+
+struct MeshFilter : Object
+{
+	MeshFilter();
+
+	Engine::GUID meshId;
+	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<unsigned int>* indices;	// Index
+	property_vtable();
+};
+
+property_begin_name(MeshFilter, "MeshFilter"){
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+} property_vend_h(MeshFilter)
+
 struct MeshRenderer : Object
 {
-	std::string MeshName = "Cube";
-	std::string AlbedoTexture = "";
-	std::string NormalMap = "";
+	Engine::GUID meshID{ DEFAULT_MESH };
+	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
+	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
+	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
+	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
+	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
+	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
 	//Materials mr_Material;
 
 	// Materials stuff below here
 	Vector4 mr_Albedo;
-
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
-	float mr_Shininess;
+	float mr_Shininess;	
 
 
-	float mr_metallic = 0.5f;
-	float mr_roughness = 0.5f;
-	float ao = 0.5f;
+	float mr_metallic = 1.f;
+	float mr_roughness = 1.f;
+	float ao = 1.f;
+	float emission = 1.f;
 
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
+	GLuint VAO;
+	GLuint debugVAO;
 
-	GLuint textureID = 0;
-	GLuint normalMapID = 0;
-	GLuint RoughnessID = 0;
-	GLuint MetallicID = 0;
-	GLuint AoID = 0;
-	GLuint EmissionID = 0;
+	bool isInstance = false;
+	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(MeshName).Flags(property::flags::DONTSHOW),
-	property_var(mr_Albedo),
-	property_var(AlbedoTexture),
-	property_var(NormalMap),
-	/*property_var(mr_Specular),
-	property_var(mr_Diffuse),
-	property_var(mr_Ambient),
-	property_var(mr_Shininess),*/
-	property_var(mr_metallic),
-	property_var(MetallicTexture),
-
-	property_var(mr_roughness),
-	property_var(RoughnessTexture),
-	property_var(EmissionTexture),
-
-	property_var(ao),
-	property_var(AoTexture),
+	property_var(meshID).Name("Mesh"),
+	property_var(mr_Albedo).Name("Albedo"),
+	property_var(mr_metallic).Name("Metallic"),
+	property_var(mr_roughness).Name("Roughness"),
+	property_var(ao).Name("AmbientOcclusion"),
+	property_var(AlbedoTexture).Name("AlbedoTexture"),
+	property_var(NormalMap).Name("NormalMap"),
+	property_var(MetallicTexture).Name("MetallicTexture"),
+	property_var(RoughnessTexture).Name("RoughnessTexture"),
+	property_var(AoTexture).Name("AoTexture"),
+	property_var(EmissionTexture).Name("EmissionTexture"),
 } property_vend_h(MeshRenderer)
 
 
@@ -317,8 +353,8 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(lightType).Name("Light Type"),
-	property_var(lightpos).Name("Position"),
+	property_var(lightType).Name("lightType"),
+	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
 	property_var(direction).Name("Direction"),
 	property_var(inner_CutOff).Name("Inner Cutoff"),
@@ -326,47 +362,35 @@ struct LightSource : Object
 	property_var(lightingColor).Name("Color")
 } property_vend_h(LightSource)
 
-#pragma endregion
+struct SpriteRenderer : Object
+	{
+		bool WorldSpace = true;
 
-//Template pack way to store enums instead of traditional enums
-template<typename T,typename... Ts>
-struct GetTypeGroup
+		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
+
+		property_vtable()
+	};
+
+property_begin_name(SpriteRenderer, "SpriteRenderer")
 {
-	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
-	constexpr GetTypeGroup() = default;
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(WorldSpace).Name("World Space"),
+		property_var(SpriteTexture).Name("SpriteTexture"),
+} property_vend_h(SpriteRenderer)
 
-	template <typename T1>
-	//Gets the enum value of type T
-	static constexpr size_t E()
+struct Canvas : Object
 	{
-		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
-		if constexpr (std::is_same<T, T1>())
-		{
-			return sizeof...(Ts);
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template E<T1>();
-		}
-	}
-
-	template <typename T1>
-	//Gets the name of type T
-	static constexpr const char* Name()
+		property_vtable()
+	};
+	property_begin_name(Canvas, "Canvas")
 	{
-		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
-		if constexpr (std::is_same<T, T1>())
-		{
-			static const char* name = typeid(T).name() + strlen("struct ");
-			return name;
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template Name<T1>();
-		}
-	}
-};
+		property_parent(Object).Flags(property::flags::DONTSHOW),
+			//property_var(WorldSpace).Name("World Space"),
+			//property_var(SpriteTexture).Name("SpriteTexture"),
+	} property_vend_h(Canvas)
 
+
+#pragma endregion
 
 //Group to store all single component arrays together and accessed easily without
 //declaring multiple variable names
@@ -431,7 +455,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator,MeshRenderer, CharacterController, LightSource>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -478,7 +502,7 @@ using ComponentsBufferArray = decltype(ComponentsBuffer(AllComponentTypes()));
 //to check through every type T in an template pack to compare with its type enum
 #define GENERIC_RECURSIVE(TYPE,FUNC_NAME,FUNC) \
 template<typename T, typename... Ts>\
-TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
+TYPE FUNC_NAME##Iter(size_t objType, void* pObject)\
 {\
 	if (GetType::E<T>() == objType)\
 	{\
@@ -494,7 +518,7 @@ TYPE FUNC_NAME##Iter(size_t objType,void* pObject)\
 	}\
 	if constexpr (sizeof...(Ts) != 0)\
 	{\
-		return FUNC_NAME##Iter<Ts...>(objType,pObject); \
+		return FUNC_NAME##Iter<Ts...>(objType, pObject); \
 	}\
 	else\
 	{\
@@ -508,7 +532,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, std::string, Vector2, Vector3>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

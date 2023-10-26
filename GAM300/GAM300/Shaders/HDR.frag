@@ -16,15 +16,34 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D hdrBuffer;
+layout (binding = 0)uniform sampler2D hdrBuffer;
+layout (binding = 1)uniform sampler2D bloomBlur;
 uniform bool hdr;
 uniform float exposure;
+uniform bool enableBloom;
+
+// Testing
+uniform sampler2D depthMap;
+uniform float near_plane;
+uniform float far_plane;
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC 
+    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
+}
+
 
 void main()
-{             
+{        
+
     const float gamma = 2.2;
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
-    
+    if(enableBloom)
+    {
+         vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;    
+        hdrColor += bloomColor;
+    }
     if(hdr)
     {
         // reinhard
@@ -40,4 +59,17 @@ void main()
         vec3 result = pow(hdrColor, vec3(1.0 / gamma));
         FragColor = vec4(result, 1.0);
     }
+
+////         Testing
+////     float depthValue = texture(depthMap, TexCoords).r;
+//    float depthValue = texture(hdrBuffer, TexCoords).r;
+//     FragColor = vec4(vec3(LinearizeDepth(depthValue) / far_plane), 1.0); // perspective
+////    FragColor = vec4(vec3(depthValue), 1.0); // orthographic
+//
+//
+
+
+
 }
+
+

@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <imgui.h>
+#include <Utilities/GUID.h>
 
 using string_t = std::string;
 
@@ -97,6 +98,10 @@ public:
         if (id == 2) return z;
     }
 
+    bool operator != (const Vector3& other) const {
+        return x != other.x || y != other.y || z != other.z;
+    }
+
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec3() const {
         return glm::vec3(x, y, z);
@@ -116,6 +121,7 @@ public:
     Vector4(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
     Vector4(float i) : w(i), x(i), y(i), z(i) {}
 
+    Vector4(Vector3& vec, float w_) : w(w_), x(vec.x), y(vec.y), z(vec.z) {}
     Vector4(Vector4& vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
     Vector4(glm::vec4 vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
 
@@ -282,7 +288,8 @@ namespace property
         //--------------------------------------------------------------------------------------------
         using data_variant = std::variant
             <
-            int
+            char
+            , int
             , bool
             , float
             , string_t
@@ -290,6 +297,8 @@ namespace property
             , uint32_t
             , Vector3
             , Vector4
+            , char*
+            , Engine::GUID
         >;
     
         //--------------------------------------------------------------------------------------------

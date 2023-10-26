@@ -10,39 +10,31 @@
 	This file contains the definitions of Graphics Skybox that includes:
 	1.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
-#include "AssetManager/AssetManager.h"
+#include "Graphics/TextureManager.h"
+#include "Graphics/MeshManager.h"
 
 void SkyboxManager::Init()
 {
-	skyBoxModel = new SkyBox;
-	CreateSkybox("skybox_default_top");
+	CreateSkybox("Assets//Textures//SkyBox//skybox_default_top.dds");
 }
 
-void SkyboxManager::Update(float)
+void SkyboxManager::CreateSkybox(const fs::path& _name)
 {
-	
+	skyboxTex = TextureManager.GetTexture(_name);
+	skyBoxModel.SkyBoxinit();
+	skyBoxModel.shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
 }
 
-void SkyboxManager::CreateSkybox(const std::string& _name)
-{
-	skyboxTex = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(_name));
-	skyBoxModel->SkyBoxinit();
-	skyBoxModel->shader = SHADER.GetShader(SKYBOX);
-}
-
-void SkyboxManager::Draw()
+void SkyboxManager::Draw(BaseCamera& _camera)
 {
 	glDepthFunc(GL_LEQUAL);
-	skyBoxModel->SkyBoxDraw(skyboxTex);
+	if (skyboxTex == 0)
+		skyboxTex = TextureManager.GetTexture("Assets//Textures//SkyBox//skybox_default_top.dds");
+	skyBoxModel.SkyBoxDraw(skyboxTex, _camera);
 	glDepthFunc(GL_LESS);
-}
-
-void SkyboxManager::Exit()
-{
-	delete skyBoxModel;
 }

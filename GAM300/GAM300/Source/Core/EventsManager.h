@@ -19,7 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define EVENTS_SYSTEM_H
 
-#include "Events.h"
+#include "EventInterface.h"
 #include "SystemInterface.h"
 #include <typeindex>
 #include <list>
@@ -127,7 +127,8 @@ public:
     */
     /*******************************************************************************/
     template<class T, class EventType>
-    void Subscribe(T * instance, void (T:: * memberFunction)(EventType*)) {
+    void Subscribe(T * instance, void (T:: * memberFunction)(EventType*)) 
+    {
         HandlerList& handlers = subscribers[typeid(EventType)];
         handlers.push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
     }

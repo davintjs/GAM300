@@ -12,13 +12,34 @@
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#pragma once
+#ifndef GRAPHICSTRUCTANDCLASS_H
+#define GRAPHICSTRUCTANDCLASS_H
+
 #include "glm/mat4x4.hpp"
 #include "GL/glew.h"
+#include "AI/Geometry.h"	// Bean: For Lines, Segments, Planes and Triangles
 
 #define EntityRenderLimit 1000
-#define EnitityInstanceLimit 1000
+#define EnitityInstanceLimit 200
 
+enum class SHADERTYPE
+{
+	HDR,
+	PBR,
+	TIR,// Temporary Instance Render
+	TDR,// Temporary Debug Instance Render
+	SKYBOX,
+	BASICLIGHT,
+	AFFECTEDLIGHT,
+	SHADOW,
+	POINTSHADOW,
+	UI_SCREEN,
+	UI_WORLD,
+	BLUR,
+	GBUFFER,
+	DEFAULT,
+	COUNT
+};
 
 enum LIGHT_TYPE
 {
@@ -58,7 +79,6 @@ union Light_Type
 	DirectionalLight directionallight;
 };
 
-
 struct LightProperties
 {
 	// Used in point & Spot
@@ -68,41 +88,13 @@ struct LightProperties
 	glm::vec3 direction;
 
 	// Used only in Spot
-	float inner_CutOff ;
-	float outer_CutOff ;
+	float inner_CutOff;
+	float outer_CutOff;
 
 	// Used for all
 	glm::vec3 lightColor;
 	float intensity;
 };
-
-
-//struct Albedo
-//{
-//	Texture pointer;
-//	glm::vec4 Colour;
-//};
-
-
-//struct Settings
-//{
-//	glm::vec4 Albedo; // This means colour for now
-//	glm::vec4 Specular;
-//	glm::vec4 Diffuse;
-//	glm::vec4 Ambient;
-//	float Shininess;
-//	std::string normalmap;
-//};
-//
-//struct Materials 
-//{
-//	// Slam Texture Pointer / Reference whatever GUID magic idk in here
-//	// PADDING IS VERY IMPORTANT THEOPHELIA KUN
-//	// store guid also
-//	std::string current = "defaulttexture"; // to get dds
-//	std::unordered_map<std::string, Settings> mSettingsContainer; // GUID, <file name, GLuint>
-//
-//};
 
 struct InstanceProperties
 {
@@ -114,7 +106,7 @@ struct InstanceProperties
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
 	glm::mat4 entitySRT[EnitityInstanceLimit];
-	
+
 	// -------------- BLINN PHONG --------------------------
 	// make into individual buffers
 	unsigned int AlbedoBuffer;
@@ -143,19 +135,45 @@ struct InstanceProperties
 	glm::vec4 M_R_A_Texture[EnitityInstanceLimit];
 
 	unsigned int Metal_Rough_AO_Texture_Constant;
-	glm::vec3 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec3(1.f,1.f,1.f) };
-
-
-
-
+	glm::vec4 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec4(1.f,1.f,1.f,1.f) };
 
 	unsigned int textureIndexBuffer;
 	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
 
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
-	unsigned int texture[32];// max 32 dds only
+	unsigned int texture[32]{};// max 32 dds only
 	unsigned int textureCount = 0;
-	
+
 	void BatchTexture(std::string texture);
 };
+
+struct DefaultRenderProperties {
+	unsigned int VAO{};
+
+	float shininess{};
+	float metallic{};
+	float roughness{};
+	float ao{};
+	float emission{};
+
+	glm::mat4 entitySRT{};
+	glm::vec4 Albedo{};
+	glm::vec4 Specular{};
+	glm::vec4 Diffuse{};
+	glm::vec4 Ambient{};
+
+	GLuint textureID{};
+	GLuint NormalID{};
+	GLuint RoughnessID{};
+	GLuint MetallicID{};
+	GLuint AoID{};
+	GLuint EmissionID{};
+
+	unsigned int drawCount{};
+
+	//GLSLShader shader;
+
+	GLenum drawType;
+};
+#endif // !GRAPHICSTRUCTANDCLASS_H

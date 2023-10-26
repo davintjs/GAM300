@@ -103,7 +103,7 @@ void PhysicsSystem::Update(float dt) {
 	PrePhysicsUpdate(dt);
 	//step++;
 	if (physicsSystem) {
-		physicsSystem->Update(dt*10, 10, tempAllocator, jobSystem);
+		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
 	}
 	//std::cout << "after physics update but before post update\n";
 	//std::cout << "DT: " << dt << std::endl;

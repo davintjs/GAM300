@@ -31,6 +31,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Properties.h"
 #include "UUID.h"
+#include "GUID.h"
 
 struct Scene;
 struct Transform;
@@ -53,6 +54,12 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector3& v);
 
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
+
+// Overload for output for the Emitter specifically for GUID
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v);
+
+// Overload for output for the Emitter specifically for Vector4
+YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
 
 namespace YAML
 {
@@ -140,6 +147,45 @@ namespace YAML
             return true;
         }
     };
+
+    template<>
+    struct convert<Engine::GUID>
+    {
+        // Encoding for Vector4 during deserialization
+        static Node encode(const Engine::GUID& rhs)
+        {
+            Node node;
+            node = rhs.ToHexString();
+            return node;
+        }
+
+        // Decoding for Vector4 during deserialization
+        static bool decode(const Node& node, Engine::GUID& rhs)
+        {
+            rhs = Engine::GUID(node.as<std::string>());
+            return true;
+        }
+    };
+
+    //template <>
+    //struct convert<char*>
+    //{
+    //    // Encoding for Vector4 during deserialization
+    //    /*static Node encode(const char* rhs)
+    //    {
+    //        Node node;
+    //        node.push_back(std::string(rhs));
+    //        return node;
+    //    }*/
+
+    //    // Decoding for Vector4 during deserialization
+    //    static bool decode(const Node& node, char* rhs)
+    //    {
+    //        static std::string buf = node[0].as<std::string>();
+    //        rhs = buf.data();
+    //        return true;
+    //    }
+    //};
 }
 
 #endif // !YAMLUTILS_H

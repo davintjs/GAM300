@@ -19,7 +19,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager.h"
 #include "Utilities/Serializer.h"
 #include "Core/EventsManager.h"
-#include "Utilities/ThreadPool.h"
 
 namespace
 {
@@ -48,24 +47,24 @@ void SceneManager::CreateScene()
 	//	std::cout << "Warning Duplicate Scene!\n";
 	//	return;
 	//}
-
+	SelectedEntityEvent selected{ nullptr };
+	EVENTS.Publish(&selected);
 	loadedScenes.emplace_front(filePath);
 }
 
 void SceneManager::LoadScene(const std::string& _filePath)
 {
 	// Bean: Next time check if the scene has already been loaded
-
+	SelectedEntityEvent selected{ nullptr };
+	EVENTS.Publish(&selected);
 	loadedScenes.emplace_front(_filePath);
 	
 	Scene& scene = GetCurrentScene();
 	SceneChangingEvent e{ scene };
 	EVENTS.Publish(&e);
 	E_ASSERT(DeserializeScene(scene), "Error loading scene!");
-
 	SelectedEntityEvent sE{ nullptr };
 	EVENTS.Publish(&sE);
-
 
 	PRINT("Scene \"" + scene.sceneName + "\" has been loaded.\n");
 }
@@ -168,7 +167,11 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 	// Publish scene change
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
+
 	loadedScenes.pop_front();
+
+	ScenePostCleanupEvent e1;
+	EVENTS.Publish(&e1);
 }
 
 void SceneManager::Exit()

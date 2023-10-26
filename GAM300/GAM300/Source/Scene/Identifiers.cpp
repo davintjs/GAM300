@@ -13,6 +13,17 @@ void IdentifiersManager::CreateTag(const std::string& tagName)
 	tags.emplace(tagName,Engine::CreateUUID());
 }
 
+void IdentifiersManager::DeleteTag(std::string key)
+{
+	auto it = tags.find(key);
+	if (it != tags.end())
+	{
+		//Error when trying to delete tag
+		//tags.erase(tags.find(key)); 
+		it->second = -1;
+	}
+}
+
 void IdentifiersManager::CreateLayer(const std::string& layerName)
 {
 	int i = 0;
