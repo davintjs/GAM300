@@ -26,7 +26,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "YAMLUtils.h"
 #include "Properties.h"
 #include "Scene/Scene.h"
-#include "Scene/Entity.h"
+#include <filesystem>
 
 // Bean: May be added in the future for modularity of serialization
 //enum CLASSID
@@ -67,11 +67,103 @@ bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id);
 // Serialization specifically for scripts
 void SerializeScript(YAML::Emitter& out, Script& _component);
 
-// Encapsulation for all different types of deserializing like Scene, Prefab, NavMesh Data etc
-void Deserialize(const std::string& _filepath);
 
-// Deserialization for Prefabs, Navmesh & Scene
-void DeserializeRuntime(const std::string& _filepath);
+
+template <typename T>
+void Serialize(YAML::Emitter& out, T& object)
+{
+
+    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    {
+        if (!Flags.m_isDontSave)
+        {
+            auto entry = property::entry { PropertyName, Data };
+            fs::path name{ entry.first };
+            std::visit([&](auto& Value)
+            {
+                using T1 = std::decay_t<decltype(Value)>;
+                namespace fs = std::filesystem;
+                std::string keyName = name.string();
+                //Has a header
+                if (name.parent_path().empty())
+                {
+                    //Deserialize again somehow get the type
+                    T1 object;
+                }
+                //Has no header
+                else
+                {
+                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
+                }
+
+                // Store Component value
+                out << YAML::BeginMap;
+                out << YAML::Key << keyName << YAML::Value << Value;
+            }
+            , entry.second);
+        }
+    });
+}
+
+template <typename T>
+void Serialize(const std::filesystem::path& path, T& object)
+{
+    YAML::Emitter out;
+
+    Serialize(out, object);
+
+    std::ofstream outFile{ path };
+    outFile << out.c_str();
+    outFile.close();
+}
+
+template <typename T>
+bool Deserialize(const std::filesystem::path& path, T& object)
+{
+    namespace fs = std::filesystem;
+
+    if (!std::filesystem::exists(path))
+        return false;
+    YAML::Node node = YAML::LoadFile(path.string());
+
+    // Assign to the component
+    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
+    {
+        auto entry = property::entry { PropertyName, Data };
+        fs::path name{ entry.first };
+        std::visit([&](auto& Value)
+            {
+                using T1 = std::decay_t<decltype(Value)>;
+                namespace fs = std::filesystem;
+                std::string keyName = name.string();
+                //Has a header
+                if (name.parent_path().empty())
+                {
+                    //Deserialize again somehow get the type
+                    T1 object;
+                }
+                //Has no header
+                else
+                {
+                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/')+1);
+                }
+
+                // Extract Component value
+                if (node[keyName])
+                {
+                    if constexpr (std::is_same<char*, T1>()) {
+                        std::string buf = node[keyName].as<std::string>();
+                        property::set(object, entry.first.c_str(), buf);
+
+                    }
+                    else
+                        property::set(object, entry.first.c_str(), node[keyName].as<T1>());
+                }
+            }
+        , entry.second);
+    });
+    return true;
+}
 
 // Deserialize the scene
 bool DeserializeScene(Scene& _scene);

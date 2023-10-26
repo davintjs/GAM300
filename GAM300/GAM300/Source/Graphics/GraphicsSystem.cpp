@@ -50,7 +50,6 @@ extern unsigned int depthCubemap;
 // Bloom
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
-bool blooming = false;
 
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
@@ -144,7 +143,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
 
 bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& _camera)
 {
-	
 	bool horizontal = true, first_iteration = true;
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::BLUR);
 	shader.Use();
@@ -247,7 +245,14 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(3, _vao, _vbo, _camera);
+	if (RENDERER.enableBloom())
+	{
+		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+
+	}
+
 	//}
 
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
@@ -261,9 +266,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
+	// glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+
 	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+	// glActiveTexture(GL_TEXTURE1);
+	// glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -274,6 +281,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		glGetUniformLocation(shader.GetHandle(), "exposure");
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
+
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "enableBloom");
+
+	glUniform1f(uniform3, RENDERER.enableBloom());
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

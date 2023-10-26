@@ -19,7 +19,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager.h"
 #include "Utilities/Serializer.h"
 #include "Core/EventsManager.h"
-#include "Utilities/ThreadPool.h"
 
 namespace
 {
