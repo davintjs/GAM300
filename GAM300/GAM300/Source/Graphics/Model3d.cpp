@@ -21,6 +21,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Editor/EditorCamera.h"
 
 #include "GraphicsSystem.h"
+#include "TextureManager.h"
+#include "MeshManager.h"
 
 //extern EditorCamera E_Camera;
 
@@ -37,12 +39,8 @@ void Model::init() {
     glm::vec2 tex;
     glm::vec4 color;*/
 
-    DeserializeGeoms("Assets/Models/Skull_textured/Skull_textured.geom");
-
     for (int i = 0; i < totalGeoms[0].mMeshes.size(); ++i)
     {
-        std::cout << "ouch\n";
-
         /*totalvertices += totalGeoms[0].mMeshes[i]._vertices.size();
         totalindices += totalGeoms[0].mMeshes[i]._indices.size();
         std::cout << "total vertices count: " << totalvertices << "\n";
@@ -181,7 +179,7 @@ void Model::draw() {
 
     // test
     //glActiveTexture(GL_TEXTURE0);
-    texturebuffer = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID("TD_Checker_Base_Color"));
+    texturebuffer = TextureManager.GetTexture("Assets/TD_Checker_Base_Color.dds");
     glBindTexture(GL_TEXTURE_2D, texturebuffer);
     glUniform1i(glGetUniformLocation(shader.GetHandle(), "myTextureSampler"), 0);
     

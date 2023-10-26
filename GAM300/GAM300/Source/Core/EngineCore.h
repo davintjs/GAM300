@@ -40,6 +40,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Debugging/Debugger.h"
 #include "SystemsGroup.h"
 #include "Debugging/DemoSystem.h"
+#include "Audio/AudioManager.h"
+#include "Graphics/MeshManager.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 1.f;
@@ -80,6 +82,8 @@ public:
 		RegisterComponents(AllObjectTypes());
 		BEHAVIORTREEBUILDER.Init();
 		AUDIOMANAGER.InitAudioManager();
+		MeshManager.Init();
+		TextureManager.Init();
 		AllSystems::Init();
 
 

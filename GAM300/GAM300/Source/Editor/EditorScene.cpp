@@ -143,7 +143,7 @@ void EditorScene::SceneView()
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         scenePosition = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
-        unsigned int textureID = EditorCam.GetFramebuffer().GetColorAttachmentId();
+        unsigned int textureID = FRAMEBUFFER.GetTextureID(EditorCam.GetFramebufferID(), EditorCam.GetAttachment());
         ImVec2 viewportEditorSize = sceneRect.GetSize();
         glm::vec2 _newDimension = *((glm::vec2*)&viewportEditorSize);
 
@@ -203,8 +203,8 @@ void EditorScene::DisplayGizmos()
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
 
-            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
-            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
+            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 

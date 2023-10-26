@@ -20,13 +20,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <unordered_set>
 #include <string>
 
+#include <Core/Events.h>
+
 FileWatcher::FileWatcher()
 {
     THREADS.EnqueueTask([this] {ThreadWork(); });
     hDir = CreateFile(
         std::wstring(L"ASSETS").c_str(),
         FILE_LIST_DIRECTORY,
-        FILE_SHARE_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
         nullptr,
         OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS,
@@ -56,6 +58,7 @@ struct PairEqual {
         return lhs.first == rhs.first && lhs.second == rhs.second;
     }
 };
+
 
 void FileWatcher::ThreadWork()
 {

@@ -16,6 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define SCRIPTING_SYSTEM_H
 
 #include "Core\SystemInterface.h"
+#include <Core/Events.h>
 #include <Core/EventsManager.h>
 #include <Scene/Components.h>
 
