@@ -50,6 +50,8 @@ protected:
 	float m_CurrentTime;
 	float m_DeltaTime;
 
+	//maybe temp add pointer to parent of animator
+
 };
 
 //property_begin_name(BaseAnimator, "BaseAnimator") {

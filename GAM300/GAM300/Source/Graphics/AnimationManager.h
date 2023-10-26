@@ -39,7 +39,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define MAX_BONE_INFLUENCE 4
 class AnimationModel;
 
-struct AnimationVertex {
+struct AnimationVertex {// ideally can delete aft move to compiler
     // position
     glm::vec3 Position;
     // normal
@@ -81,7 +81,7 @@ public:
 private:
 
     // initializes all the buffer objects/arrays
-    void setupMesh();
+    void setupMesh(); // kinda like get geom from files
 };
 
 
@@ -216,6 +216,10 @@ public:
     {
         return m_BoneInfoMap;
     }
+    inline std::vector<Bone>& GetBones()
+    {
+        return m_Bones;
+    }
 
     void ReadMissingBones(const aiAnimation* animation, AnimationModel& model); // compiler only
 
@@ -231,12 +235,12 @@ private:
 };
 
 
-class AnimationModel
+class AnimationModel // similar to geom imported
 {
 public:
     // model data 
     std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::vector<AnimationMesh> meshes;  // might not need this, can steal from mesh manager mb
+    std::vector<AnimationMesh> meshes;  // same as mMeshes
     //std::string directory; 
     //bool gammaCorrection;
 
@@ -252,19 +256,17 @@ public:
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
     int& GetBoneCount() { return m_BoneCounter; }
+
     Animation& GetAnimations() { return allAnimations; } // also temp
 
 
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
-    int m_BoneCounter = 0;
+    std::map<std::string, BoneInfo> m_BoneInfoMap; // compiler only
+    int m_BoneCounter = 0; // compiler only
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
-    std::vector<TextureInfo> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-
-
-
+    std::vector<TextureInfo> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName); // aother compiler boi
 
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(std::string const& path); // compiler only
@@ -320,10 +322,12 @@ public:
 
     //// uses GUID to retrieve a texture from the texture container
     //GLuint GetTexture(std::string GUID);
+    AnimationModel GetModel() { return allModels_; }; //temp shld be deleted
 
 private:
 
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
+    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp...
 
     // can yeet these
     GLSLShader ourShader{};

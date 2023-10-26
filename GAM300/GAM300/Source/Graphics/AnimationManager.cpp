@@ -653,10 +653,33 @@ void Animation_Manager::Init()
     //then in mb render use this fn & init we init whatever is attached to model
     //allAnimators_.init(&allModels_.GetAnimations());
 
+    // temp
+    Animation tempanim;
+    tempanim.GetDuration() = allModels_.GetAnimations().GetDuration();
+    tempanim.GetTicksPerSecond() = allModels_.GetAnimations().GetTicksPerSecond();
+    tempanim.GetRootNode() = allModels_.GetAnimations().GetRootNode();
+
+    std::map<std::string, BoneInfo> tempmap = tempanim.GetBoneIDMap();
+    for (auto& tempmap_src : allModels_.GetAnimations().GetBoneIDMap())
+    {
+        tempmap.emplace(tempmap_src);
+    }
+
+    std::vector<Bone> tempbone = tempanim.GetBones();
+    for (auto& tempbone_src : allModels_.GetAnimations().GetBones())
+    {
+        tempbone.push_back(tempbone_src);
+    }
+    mAnimationContainer.emplace("docattc", tempanim);
+    //   
+
+
     Scene& currentScene = MySceneManager.GetCurrentScene();
     for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
     {
-        animator.SetAnimation(&allModels_.GetAnimations());
+        auto animIt = mAnimationContainer.find("docattc");
+        if (animIt != mAnimationContainer.end())
+            animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
     }
 }
 
