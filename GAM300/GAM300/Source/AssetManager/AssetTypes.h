@@ -44,6 +44,18 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	{"None.anim", Engine::GUID(300)},
 };
 
+struct MetaFile : property::base
+{
+	Engine::GUID guid;
+	property_vtable()
+};
+
+property_begin_name(MetaFile, "")
+{
+	property_var(guid),
+} property_vend_h(MetaFile)
+
+
 // GUID, last file update time, file name, data
 struct FileInfo
 {
@@ -57,22 +69,25 @@ using FileData = std::vector<char>;
 struct Asset : FileInfo
 {
 	FileData mData;
+	using Meta = MetaFile;
 };
 
-struct MetaFile : property::base
+struct TextureImporter : MetaFile
 {
-	Engine::GUID guid;
+	size_t maxTextureSize;
 	property_vtable()
 };
 
-property_begin_name(MetaFile,"")
+property_begin_name(TextureImporter,"")
 {
-	property_var(guid),
-} property_vend_h(MetaFile)
+	property_parent(MetaFile),
+	property_var(maxTextureSize),
+} property_vend_h(TextureImporter)
+
 
 struct TextureAsset : Asset
 {
-
+	using Meta = TextureImporter;
 };
 
 struct ScriptAsset : Asset

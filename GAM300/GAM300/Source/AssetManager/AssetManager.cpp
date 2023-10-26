@@ -74,23 +74,26 @@ void AssetManager::Init()
 // Multi-threaded loading of assets
 void AssetManager::AsyncLoadAsset(const fs::path& filePath)
 {
+	{
+		ACQUIRE_SCOPED_LOCK(Assets);
+		if (filePath.extension() == ".meta")
+		{
+			fs::path nonMeta = filePath;
+			nonMeta.replace_extension("");
+			//Actual file does not exist
+			if (!std::filesystem::exists(nonMeta))
+			{
+				std::filesystem::remove(filePath);
+			}
+			return;
+		}
+	}
 	THREADS.EnqueueTask([this, filePath] { LoadAsset(filePath); });
 }
 
 void AssetManager::LoadAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
-	if (filePath.extension() == ".meta")
-	{
-		fs::path nonMeta = filePath;
-		nonMeta.replace_extension("");
-		//Actual file does not exist
-		if (!std::filesystem::exists(nonMeta))
-		{
-			std::filesystem::remove(filePath);
-		}
-		return;
-	}
 	if (IsCompilable(filePath))
 		Compile(filePath);
 	assets.AddAsset(filePath);
@@ -267,7 +270,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			//AsyncRenameAsset(oldPath,filePath);
+			AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}
