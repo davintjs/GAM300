@@ -72,7 +72,6 @@ private:
 	void GenerateConvexHull(const std::vector<glm::vec3>& points);
 
 	void GeneratePointsCCW(const std::vector<glm::vec3>& points);
-	bool ComparePoints(const glm::vec3& lhs, const glm::vec3& rhs, const glm::vec3& reference);
 
 	std::vector<glm::vec3> TrimPositions(const std::vector<glm::vec3>& positions);
 

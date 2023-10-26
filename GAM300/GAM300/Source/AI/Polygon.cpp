@@ -84,44 +84,59 @@ glm::vec3 Polygon3D::GetMinPoint()
 	return minPoint;
 }
 
-bool Polygon3D::ComparePoints(const glm::vec3& lhs, const glm::vec3& rhs, const glm::vec3& reference)
-{
-	if (lhs == reference || rhs == reference)
-	{
-		return true;
-	}
-
-	double angle1 = atan2(lhs.z - reference.z, lhs.x - reference.x);
-	double angle2 = atan2(rhs.z - reference.z, rhs.x - reference.z);
-
-	if (angle1 < angle2)
-	{
-		return angle1 < angle2;
-	}
-
-	// Here, angle2 > angle1 -> so we need to check distance
-	return ((lhs.x - reference.x) * (lhs.x - reference.x) + (lhs.z - reference.z) * (lhs.z - reference.z)) <
-		((rhs.x - reference.x) * (rhs.x - reference.x) + (rhs.z - reference.z) * (rhs.z - reference.z));
-}
-
 void Polygon3D::GeneratePointsCCW(const std::vector<glm::vec3>& points)
 {
-	// Get the reference point by finding the minimum point in both x-axis and z-axis
-	glm::vec3 minimumPoint = points[0];
+	// Get the barycenter point of the points
+	glm::vec3 _BaryCenterPoint = { 0.f, 0.f, 0.f };
 	for (const auto& p : points)
 	{
-		if (p.x < minimumPoint.x && p.z < minimumPoint.z)
+		_BaryCenterPoint += p;
+	}
+	_BaryCenterPoint /= static_cast<int>(points.size());
+
+	// Split the points on upper semi-circle and lower semi-circle based on their z-value comparing to _BaryCenterPoint
+	std::vector<glm::vec3> mLowerSemiCircle;
+	std::vector<glm::vec3> mUpperSemiCircle;
+	for (const auto& _point : points)
+	{
+		if (_point.z <= _BaryCenterPoint.z)
 		{
-			minimumPoint = p;
+			mLowerSemiCircle.push_back(_point);
+		}
+		else
+		{
+			mUpperSemiCircle.push_back(_point);
 		}
 	}
 
-	mPoints = points;
+	// Reaching here we have partitioned the points in upper and lower semi-circle
 
-	std::sort(mPoints.begin(), mPoints.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
+	// For lower semi-circle, we sort based on least x-value first, if it is tied we sort based on least z-value
+	std::sort(mLowerSemiCircle.begin(), mLowerSemiCircle.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
 		{
-			return ComparePoints(lhs, rhs, minimumPoint);
+			if (lhs.x == rhs.x)
+			{
+				return lhs.z < rhs.z;
+			}
+			return lhs.x < rhs.x;
 		});
+
+	// For upper semi-circle, we sort based on x-value most first, if it is tied we sort based on least z-value
+	std::sort(mUpperSemiCircle.begin(), mUpperSemiCircle.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
+		{
+			if (lhs.x == rhs.x)
+			{
+				return lhs.z < rhs.z;
+			}
+			return lhs.x > rhs.x;
+		});
+
+	mPoints = mLowerSemiCircle;
+	for (int i = 0; i < mUpperSemiCircle.size(); ++i)
+	{
+		mPoints.push_back(mUpperSemiCircle[i]);
+	}
+
 }
 
 void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points) 
@@ -400,7 +415,7 @@ void Polygon3D::JoinPolygon(Polygon3D& polygon)
 		}
 	}
 
-	glm::vec3 tempSecondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f)); // Might need to do rounding for floating error??
+	glm::vec3 tempSecondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f));
 	
 	Segment3D infiniteLine(rightVertex, tempSecondPoint); // Starting from the right most vertex of the hole's polygon, extend the line infinitely to the right
 
