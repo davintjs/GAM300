@@ -78,59 +78,20 @@ void FramebufferManager::CreateBloom(GLuint* _indexes, GLuint* _textureIDs)
 	}
 }
 
-Framebuffer& FramebufferManager::CreateFramebuffer(const GLboolean& _isStatic)
+Framebuffer& FramebufferManager::CreateFramebuffer()
 {
-	framebuffers.push_back(Framebuffer(_isStatic));
+	framebuffers.push_back(Framebuffer());
 	glCreateFramebuffers(1, &framebuffers.back().frameBufferObjectID);
 
 	return framebuffers.back();
 }
 
-Framebuffer& FramebufferManager::CreateStaticFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType, const TEXTUREPARAMETERS& _textureFormat, const BUFFERTYPE& _type)
+Framebuffer& FramebufferManager::CreateFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType, const TEXTUREPARAMETERS& _textureFormat, const BUFFERTYPE& _type)
 {
 	// Check if there is framebuffer with the specific texture type and still has attachment
 	Framebuffer* framebuffer = nullptr;
 	for (size_t i = 0; i < framebuffers.size(); i++)
 	{
-		// Only check for static framebuffers
-		if (!framebuffers[i].isStatic)
-			continue;
-
-		// Check if the framebuffer still has color attachments, same width and height
-		if (framebuffers[i].attachment < 16 && framebuffers[i].attachments[0].width == _width && framebuffers[i].attachments[0].height == _height)
-		{
-			framebuffer = &framebuffers[i];
-			break;
-		}
-	}
-
-	// Create new framebuffer
-	if (!framebuffer)
-		framebuffer = &CreateFramebuffer();
-
-	if (_textureType == RENDERTEXTURE::NONE)
-		RenderToBuffer(*framebuffer, _width, _height, _attachmentType, _textureFormat, _type);
-	else // Bean: To change later
-		RenderToTexture(*framebuffer, _width, _height, _attachmentType, _textureFormat, _type);
-
-	return *framebuffer;
-}
-
-Framebuffer& FramebufferManager::CreateStaticFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType, const TEXTUREPARAMETERS& _textureFormat, const BUFFERTYPE& _type)
-{
-	return CreateStaticFramebuffer(RENDERTEXTURE::NONE, _width, _height, _attachmentType, _textureFormat, _type);
-}
-
-Framebuffer& FramebufferManager::CreateDynamicFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType, const TEXTUREPARAMETERS& _textureFormat, const BUFFERTYPE& _type)
-{
-	// Check if there is framebuffer with the specific texture type and still has attachment
-	Framebuffer* framebuffer = nullptr;
-	for (size_t i = 0; i < framebuffers.size(); i++)
-	{
-		// Only check for non-static framebuffers
-		if (framebuffers[i].isStatic)
-			continue;
-
 		// Check if the framebuffer still has color attachments
 		if (framebuffers[i].attachment < 16)
 		{
@@ -141,19 +102,14 @@ Framebuffer& FramebufferManager::CreateDynamicFramebuffer(const RENDERTEXTURE& _
 
 	// Create new framebuffer
 	if (!framebuffer)
-		framebuffer = &CreateFramebuffer(false);
+		framebuffer = &CreateFramebuffer();
 
-	if (_textureType == RENDERTEXTURE::NONE)
+	if (_attachmentType == ATTACHMENTTYPE::DEPTH)
 		RenderToBuffer(*framebuffer, _width, _height, _attachmentType, _textureFormat, _type);
 	else // Bean: To change later
 		RenderToTexture(*framebuffer, _width, _height, _attachmentType, _textureFormat, _type);
 
 	return *framebuffer;
-}
-
-Framebuffer& FramebufferManager::CreateDynamicFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType, const TEXTUREPARAMETERS& _textureFormat, const BUFFERTYPE& _type)
-{
-	return CreateDynamicFramebuffer(RENDERTEXTURE::NONE, _width, _height, _attachmentType, _textureFormat, _type);
 }
 
 Framebuffer* FramebufferManager::GetFramebufferByID(const GLuint& _framebufferId)
@@ -397,27 +353,6 @@ void FramebufferManager::SetTextureParameters(const TEXTUREPARAMETERS& _textureF
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
-	}
-}
-
-void FramebufferManager::ChangeTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const GLenum& _attachment)
-{
-	Framebuffer* framebuffer = GetFramebufferByID(_framebufferId);
-
-	if (framebuffer)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, _framebufferId);
-
-		Attachment& attachment = framebuffer->attachments[_attachment];
-		attachment.width = _width;
-		attachment.height = _height;
-
-		// Rebind color attachment
-		glBindTexture(attachment.target, attachment.index);
-		SetTextureFormat(_width, _height, attachment.type);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, _attachment, GL_TEXTURE_2D, attachment.index, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
 

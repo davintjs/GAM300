@@ -745,6 +745,8 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
 		glm::value_ptr(model));
 	allModels_.Draw(ourShader);
+
+    ourShader.UnUse();
 }
 
 void Animation_Manager::Exit()

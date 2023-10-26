@@ -52,10 +52,8 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer();
+	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer(1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
 	framebufferID = framebuffer.frameBufferObjectID;
-
-	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
 	colorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 
 	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
@@ -109,8 +107,6 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 	aspect = dimension.x / dimension.y;
 
 	UpdateProjection();
-
-	//FRAMEBUFFER.ChangeTexture(framebufferID, (GLsizei)dimension.x, (GLsizei)dimension.y, colorAttachment);
 }
 
 bool BaseCamera::WithinFrustum() const

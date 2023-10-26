@@ -24,16 +24,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define FRAMEBUFFER FramebufferManager::Instance()
 
-enum class RENDERTEXTURE
-{
-	NONE,
-	DEFAULT,
-	MIPMAPS,
-	CUBEMAPS,
-	DEPTH,
-	DEPTHSTENCIL
-};
-
 enum class TEXTUREPARAMETERS
 {
 	DEFAULT,
@@ -71,15 +61,12 @@ struct Attachment
 
 struct Framebuffer
 {
-	Framebuffer(const GLboolean& _isStatic = true) : isStatic{ _isStatic } {}
-
 	std::map<GLenum, Attachment> attachments;
 	GLenum drawBuffers[16] = { GL_NONE };
 	GLenum readBuffer = GL_COLOR_ATTACHMENT0;
 	GLuint attachment = 0;						// Number of attachments
 	GLuint colorAttachments = 0;				// Number of color attachments
 	GLuint frameBufferObjectID = 0;
-	GLboolean isStatic = true;					// Checks if the framebuffer is static(Same texture dimensions) or dynamic(Different texture dimensions)
 };
 
 ENGINE_SYSTEM(FramebufferManager)
@@ -97,25 +84,12 @@ public:
 
 	void CreateBloom(GLuint* _indexes, GLuint* _textureIDs);
 
-	// Creates an empty framebuffer, either STATIC(Same Width & Height for all attachments)
-	// or DYANMIC(Different Width & Height, usually for editor camera only)
-	Framebuffer& CreateFramebuffer(const GLboolean& _isStatic = true);
-
-	// Creates a STATIC(Same Width & Height for all attachments) framebuffer of
-	// specific texture type with a texture attachment
-	Framebuffer& CreateStaticFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
-
-	// Creates a STATIC(Same Width & Height for all attachments) framebuffer of
-	// specific texture type with a render buffer attachment
-	Framebuffer& CreateStaticFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
-	
-	// Creates an empty DYNAMIC(Different Width & Height, usually for editor camera only) framebuffer of 
-	// specific texture type with a texture attachment
-	Framebuffer& CreateDynamicFramebuffer(const RENDERTEXTURE& _textureType, const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+	// Creates an empty framebuffer, all attachments will have the same width and height
+	Framebuffer& CreateFramebuffer();
 
 	// Creates an empty DYNAMIC(Different Width & Height, usually for editor camera only) framebuffer of 
-	// specific texture type with a render buffer attachment
-	Framebuffer& CreateDynamicFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
+	// specific texture type with a texture attachment
+	Framebuffer& CreateFramebuffer(const GLsizei& _width, const GLsizei& _height, const ATTACHMENTTYPE& _attachmentType = ATTACHMENTTYPE::COLOR, const TEXTUREPARAMETERS& _textureFormat = TEXTUREPARAMETERS::DEFAULT, const BUFFERTYPE& _type = BUFFERTYPE::TEXTURE);
 
 	// Retrieve a pointer to the framebuffer by their id
 	Framebuffer* GetFramebufferByID(const GLuint& _framebufferId);
@@ -158,9 +132,6 @@ public:
 
 	// Set the texture parameters for the texture that is assigned to the attachment
 	void SetTextureParameters(const TEXTUREPARAMETERS& _textureFormat);
-
-	// Change the texture's dimensions of the framebuffer using the framebuffer id
-	void ChangeTexture(const GLuint& _framebufferId, const GLsizei& _width, const GLsizei& _height, const GLenum& _attachment);
 
 	// Bind the frambuffer
 	void Bind(Framebuffer& _framebuffer) const;
