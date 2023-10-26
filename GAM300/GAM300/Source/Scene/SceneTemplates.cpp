@@ -363,7 +363,12 @@ void Scene::ClearBufferStruct<T, Ts...>::CleanComponents()
 	{
 		auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
 		for (T1* pComponent : arr)
+		{
+
+			if constexpr (std::is_same_v<T1, Transform>)
+				pComponent->SetParent(nullptr);
 			compArray.erase(*pComponent);
+		}
 	}
 	else if constexpr (MultiComponentTypes::Has<T1>())
 	{

@@ -60,6 +60,8 @@ void EditorSystem::Init()
 
 void EditorSystem::Update(float dt)
 {
+    if (!MySceneManager.HasScene() || !MySceneManager.GetCurrentScene().HasHandle<Entity>({ selectedEntity }))
+        selectedEntity = 0;
     //Editor Functions
     Editor_Dockspace();
     EditorSystems::Update(dt);

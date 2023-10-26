@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "BaseCamera.h"
+#include "Framebuffer.h"
 
 void BaseCamera::Init()
 {
@@ -27,8 +28,17 @@ void BaseCamera::Init()
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.SetSize((unsigned int)1600, (unsigned int)900);
-	framebuffer.Init();
+	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer();
+	framebufferID = framebuffer.frameBufferObjectID;
+
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
+	colorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
+	hdrColorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM, BUFFERTYPE::RENDERBUFFER);
+	bloomAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 }
 
 void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
@@ -42,8 +52,15 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 	UpdateViewMatrix();
 	UpdateProjection();
 
-	framebuffer.SetSize((unsigned int)_dimension.x, (unsigned int)_dimension.y);
-	framebuffer.Init();
+	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer(1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
+	framebufferID = framebuffer.frameBufferObjectID;
+	colorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToBuffer(framebuffer, 1600, 900, ATTACHMENTTYPE::DEPTH, TEXTUREPARAMETERS::BLOOM);
+	hdrColorAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
+
+	FRAMEBUFFER.RenderToTexture(framebuffer, 1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::BLOOM, BUFFERTYPE::RENDERBUFFER);
+	bloomAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 }
 
 void BaseCamera::Update()
@@ -90,8 +107,6 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 	aspect = dimension.x / dimension.y;
 
 	UpdateProjection();
-
-	framebuffer.Resize((GLuint)dimension.x, (GLuint)dimension.y);
 }
 
 bool BaseCamera::WithinFrustum() const

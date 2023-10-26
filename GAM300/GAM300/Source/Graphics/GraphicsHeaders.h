@@ -21,6 +21,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GraphicStructsAndClass.h"
 #include "BaseCamera.h"
 
+#include "glslshader.h"
+#include <filesystem>
+
+#include "Utilities/GUID.h"
+
+#include "Model3d.h"
 //#include "glslshader.h"
 #include "GBuffer.h"
 
@@ -39,7 +45,7 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
-using InstanceContainer = std::map<GLuint, InstanceProperties>;
+using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // Bean: A temp solution to access the shader
 // enum SHADERTYPE
 // {
@@ -74,20 +80,18 @@ private:
 	std::vector<GLSLShader> shaders;
 };
 
-ENGINE_SYSTEM(SkyboxManager)
+SINGLETON(SkyboxManager)
 {
 public:
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	// Initialize the skybox of the engine
-	void CreateSkybox(const std::string& _name);
+	void CreateSkybox(const std::filesystem::path& _name);
 
 	void Draw(BaseCamera& _camera);
 
 private:
-	SkyBox* skyBoxModel;
+	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
 
@@ -108,7 +112,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<GLuint, InstanceProperties>* properties;
+	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -186,6 +190,7 @@ public:
 
 	gBuffer m_gBuffer;
 private:
+	std::unordered_map<Engine::GUID, InstanceProperties> properties;
 	InstanceContainer instanceProperties; // <vao, properties>
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype

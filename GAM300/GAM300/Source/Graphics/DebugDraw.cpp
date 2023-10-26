@@ -10,7 +10,7 @@
 	This file contains the definitions of Debug Draw that includes:
 	1.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -57,7 +57,7 @@ void DebugDraw::Draw()
 		}
 	}
 	;
-	auto& prop = (*properties)[MeshManager.vaoMap["Segment3D"]];
+	auto& prop = (*properties)[MeshManager.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
 	glLineWidth(4.f);
 	glPointSize(10.f);
 
@@ -103,7 +103,8 @@ void DebugDraw::Draw()
 
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MeshManager.vaoMap["Segment3D"]];
+	//auto& prop = (*properties)[DEFAULT_ASSETS["Segment3D.geom"]];
+	auto& prop = (*properties)[MeshManager.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
@@ -125,7 +126,7 @@ void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _col
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MeshManager.vaoMap["Segment3D"]];
+	auto& prop = (*properties)[MeshManager.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
