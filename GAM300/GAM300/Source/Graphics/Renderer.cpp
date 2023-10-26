@@ -66,16 +66,16 @@ void Renderer::Init()
 void Renderer::Update(float)
 {
 	// maybe no need clear every time?
-	for (InstanceContainer& container : instanceContainers) {
+	/*for (InstanceContainer& container : instanceContainers) {
 		for (auto& [vao, prop] : container)
 		{
 			std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
 			std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
 			std::fill_n(prop.texture, 32, 0);
 		}
-	}
+	}*/
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
-	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT)); // need this meh? alr reserve tho
+	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -94,10 +94,6 @@ void Renderer::Update(float)
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-		// Loop through camera (@euan)
-
-		// for each cam
-
 		// if instance rendering put into container for instance rendering
 		if (renderer.isInstance) {
 
@@ -112,79 +108,53 @@ void Renderer::Update(float)
 			size_t s = static_cast<size_t>(renderer.shaderType);
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
-			GLuint vao = MeshManager.vaoMap[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
-			//Mesh& mesh = MeshManager.mContainer[renderer.meshID]; // pls ask someone how to use GUID instead because deadlock
 
-			//instanceProperties[vao];
-			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
-
-			// slot in the InstanceProperties into this vector if it doesnt alr exist
-			if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) {
-				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
-			}
-
-			// use the properties container coz its made for instance rendering already
-
-			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao],TextureManager.GetTexture(renderer.AlbedoTexture)));
-			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
-
-			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
-			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
-			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
-			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
-
-			float metal_constant = renderer.mr_metallic;
-			float rough_constant = renderer.mr_roughness;
-			float ao_constant = renderer.ao;
-
-			unsigned int& iter = instanceContainers[s][vao].iter;
-			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
-			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
-
-			instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
-			instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
-			instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
-			instanceContainers[s][vao].Specular[iter] = renderer.mr_Specular;
-			instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
-			instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();
-			//instanceContainers[s][renderer.meshID].VAO = vao;
-			++iter;
+			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
+			//GLuint vao = MeshManager.vaoMap[renderer.meshID];
 			
-			// @jake rmb to do submesh...
+			for (GLuint vao : t_Mesh->Vaoids) { // for each submesh, slot things into instanceContainer[s]
+				if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
+					instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
+				}
 
-			//++(instanceProperties[renderer.MeshName].iter);
-			//
-			//// sub meshes into instance properties
-			//char maxcount = 32;
-			//for (char namecount = 0; namecount < maxcount; ++namecount)
-			//{
-			//	std::string newName = renderer.MeshName;
+				// use the properties container coz its made for instance rendering already
+				float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
+				float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
 
-			//	newName += ('1' + namecount);
+				float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
+				float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
+				float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
+				float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
 
-			//	if (instanceProperties.find(newName) == instanceProperties.end())
-			//	{
-			//		break;
-			//	}
-			//	//InstanceinstanceProperties* currentProp = &instanceProperties[renderer.MeshName];
+				float metal_constant = renderer.mr_metallic;
+				float rough_constant = renderer.mr_roughness;
+				float ao_constant = renderer.ao;
 
-			//	/*GLuint textureID = 0;
-			//	GLuint normalMapID = 0;*/
+				unsigned int& iter = instanceContainers[s][vao].iter;
+				/*instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+				instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
+				instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
 
-			//	instanceProperties[newName].entitySRT[instanceProperties[newName].iter] = transform.GetWorldMatrix();
-			//	instanceProperties[newName].Albedo[instanceProperties[newName].iter] = renderer.mr_Albedo;
-			//	instanceProperties[newName].Ambient[instanceProperties[newName].iter] = renderer.mr_Ambient;
-			//	instanceProperties[newName].Diffuse[instanceProperties[newName].iter] = renderer.mr_Diffuse;
-			//	instanceProperties[newName].Specular[instanceProperties[newName].iter] = renderer.mr_Specular;
-			//	instanceProperties[newName].Shininess[instanceProperties[newName].iter] = renderer.mr_Shininess;
+				instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
+				instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
+				instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
+				instanceContainers[s][vao].Specular[iter] = renderer.mr_Specular;
+				instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
+				instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();*/
 
-			//	instanceProperties[newName].M_R_A_Texture[instanceProperties[newName].iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			//	instanceProperties[newName].M_R_A_Constant[instanceProperties[newName].iter] = glm::vec3(metal_constant, rough_constant, ao_constant);
+				instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec3(metal_constant, rough_constant, ao_constant));
+				instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
+				instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
 
-			//	++(instanceProperties[newName].iter);
-			//}
-
+				instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
+				instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
+				instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
+				instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
+				instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
+				instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+				//instanceContainers[s][renderer.meshID].VAO = vao;
+				++iter;
+			}
 		}
 		else /*if default rendering*/{
 			// if not instance put into container for default rendering
@@ -266,20 +236,21 @@ void Renderer::Draw(BaseCamera& _camera)
 	//for (auto& [shader, container] : instanceContainers)
 	{
 		for (auto& [vao, prop] : instanceContainers[s]) {
+			size_t buffersize = prop.iter;
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec4), prop.Albedo.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Texture[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec3), prop.M_R_A_Texture.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec3), &(prop.M_R_A_Constant[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec3), prop.M_R_A_Constant.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec2), &(prop.textureIndex[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			for (int i = 0; i < 31; ++i)
 			{
@@ -294,7 +265,7 @@ void Renderer::Draw(BaseCamera& _camera)
 			if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.iter) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 				if (prop.debugVAO)
 					DrawDebug(prop.debugVAO, prop.iter);
