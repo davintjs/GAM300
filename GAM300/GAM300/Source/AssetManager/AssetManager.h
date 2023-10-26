@@ -62,6 +62,9 @@ private:
 	void AsyncUpdateAsset(const fs::path& filePath);
 	void UpdateAsset(const fs::path& filePath);
 
+	void AsyncRenameAsset(const fs::path & oldPath, const fs::path & newPath);
+	void RenameAsset(const fs::path & oldPath, const fs::path & newPath);
+
 	// FileWatching system using event callbacks
 	void CallbackFileModified(FileModifiedEvent* pEvent);
 

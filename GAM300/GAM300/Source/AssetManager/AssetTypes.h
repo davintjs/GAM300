@@ -3,7 +3,6 @@
 #include "Utilities/TemplatePack.h"
 #include "glm/vec3.hpp"
 #include <list>
-#include <yaml-cpp/yaml.h>
 
 #include <Properties.h>
 
@@ -51,19 +50,25 @@ struct FileInfo
 	FileInfo() {};
 	FileInfo(std::filesystem::path _mFilePath) : mFilePath{_mFilePath} {}
 	std::filesystem::path mFilePath;
-	Engine::GUID guid;
 };
+
+using FileData = std::vector<char>;
 
 struct Asset : FileInfo
 {
-	std::vector<char> mData;
+	FileData mData;
 };
 
-//property_begin_name(FileInfo, "File")
-//{
-//	property_var(guid),
-//	property_var(mFilePath).Name("File Path"),
-//} property_vend_h(FileInfo)
+struct MetaFile : property::base
+{
+	Engine::GUID guid;
+	property_vtable()
+};
+
+property_begin_name(MetaFile,"")
+{
+	property_var(guid),
+} property_vend_h(MetaFile)
 
 struct TextureAsset : Asset
 {
@@ -80,16 +85,17 @@ struct AudioAsset : Asset
 
 };
 
-struct MetaAsset : Asset
+struct FolderMeta : MetaFile
 {
-
+	bool folderAsset{ true };
+	property_vtable()
 };
 
-struct Folder : FileInfo
+property_begin_name(FolderMeta, "")
 {
-	std::list<FileInfo*> folderMembers;
-};
-
+	property_parent(MetaFile),
+	property_var(folderAsset),
+} property_vend_h(FolderMeta)
 
 struct MeshAsset : Asset
 {
@@ -97,16 +103,14 @@ struct MeshAsset : Asset
 	std::vector<unsigned int> mIndices;
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, Folder, ScriptAsset, MetaAsset, AudioAsset, Asset>;
+using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 //File extension : Asset Type
-static std::unordered_map<std::string, size_t> AssetExtensionTypes =
+static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
 	{".geom",	GetAssetType::E<MeshAsset>()},
-	{".meta",	GetAssetType::E<MetaAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
-	{"",		GetAssetType::E<Folder>()},
 };
