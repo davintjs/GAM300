@@ -50,7 +50,6 @@ extern unsigned int depthCubemap;
 // Bloom
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
-bool blooming = false;
 
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
@@ -246,9 +245,9 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	if (enableBloom)
+	if (RENDERER.enableBloom())
 	{
-		bool index = bloom(bloomCount, _vao, _vbo, _camera);
+		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
@@ -286,7 +285,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 
-	glUniform1f(uniform3, enableBloom);
+	glUniform1f(uniform3, RENDERER.enableBloom());
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

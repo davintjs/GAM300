@@ -42,10 +42,6 @@ class SkyBox;
 
 // Graphics Settings
 
-bool extern RenderShadow;
-unsigned int extern bloomCount;
-float extern bloomThreshold;
-bool extern enableBloom;
 
 
 // Graphic Functions
@@ -196,6 +192,14 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
+	bool& enableShadows() { return renderShadow; };
+
+	unsigned int& GetBloomCount() { return bloomCount; };
+
+	float& GetBloomThreshold() { return bloomThreshold; };
+
+	bool& enableBloom() { return enablebloom; };
+
 	gBuffer m_gBuffer;
 private:
 	std::unordered_map<Engine::GUID, InstanceProperties> properties;
@@ -203,8 +207,14 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+
+	// Global Graphics Settings
 	float exposure = 1.f;
 	bool hdr = true;
+	bool renderShadow = true;
+	unsigned int bloomCount = 1;
+	float bloomThreshold = 1.f;
+	bool enablebloom;
 };
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H

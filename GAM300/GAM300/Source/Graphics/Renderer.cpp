@@ -239,7 +239,7 @@ void Renderer::Update(float)
 
 	//properties[MeshManager.vaoMap["Line"]].iter = 200;
 	
-	if (RenderShadow)
+	if (RENDERER.enableShadows())
 	{
 		DrawDepth(temporary_test4);
 	}
@@ -761,7 +761,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	GLint uniform11 =
 		glGetUniformLocation(shader.GetHandle(), "renderShadow");
 
-	glUniform1f(uniform11, RenderShadow);
+	glUniform1f(uniform11, RENDERER.enableShadows());
 
 
 
