@@ -139,14 +139,14 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 // Multi-threaded unloading of assets
 void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 {
+	if (filePath.extension() == ".meta")
+		return;
 	THREADS.EnqueueTask([this, filePath] { UpdateAsset(filePath); });
 }
 
 void AssetManager::UpdateAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
-	if (filePath.extension() == ".meta")
-		return;
 	assets.UpdateAsset(filePath);
 }
 
@@ -267,7 +267,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			AsyncRenameAsset(oldPath,filePath);
+			//AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}
