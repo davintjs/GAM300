@@ -128,7 +128,7 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 		if (fs::exists(nonMeta))
 		{
 			PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
-			assets.CreateMeta(nonMeta);
+			assets.GetGUID(nonMeta);
 		}
 		return;
 	}
@@ -145,6 +145,8 @@ void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 void AssetManager::UpdateAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
+	if (filePath.extension() == ".meta")
+		return;
 	assets.UpdateAsset(filePath);
 }
 

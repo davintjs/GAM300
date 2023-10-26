@@ -218,12 +218,28 @@ struct AllAssetsGroup
 	{
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		if (!std::filesystem::exists(metaPath))
-			CreateMeta(filePath);
-		MetaFile mFile = Deserialize<FolderMeta>(metaPath);
-		Engine::GUID guid;
-		AddToMeta(metaPath, "guid", guid);
-		return guid;
+		MetaFile mFile;
+		bool success = Deserialize<MetaFile>(metaPath,mFile);
+		if (!success)
+		{
+			if (([&](auto type)
+			{
+				using T = decltype(type);
+				auto& table = std::get<AssetsTable<T>>(assets);
+				for (auto& pair : table)
+				{
+					if (pair.second.mFilePath == filePath)
+					{
+						mFile.guid = pair.first;
+						return true;
+					}
+				}
+				return false;
+			}
+			(Ts{}) || ...));
+		}
+		Serialize(metaPath,mFile);
+		return mFile.guid;
 	}
 
 	fs::path GetFilePath(const Engine::GUID& guid)
@@ -244,29 +260,6 @@ struct AllAssetsGroup
 		return path;
 	}
 
-	void GetMeta(const std::filesystem::path& filePath)
-	{
-		std::filesystem::path metaPath = filePath;
-		metaPath += ".meta";
-		Engine::GUID guid;
-		YAML::Emitter out;
-		out << YAML::BeginMap;
-		out << YAML::Key << "guid" << YAML::Value << guid.ToHexString();
-		auto duration = fs::last_write_time(filePath).time_since_epoch();
-		size_t seconds = chron::duration_cast<chron::seconds>(duration).count();
-		out << YAML::Key << "lastModified" << YAML::Value << seconds;
-		std::ofstream fs(metaPath);
-		fs << out.c_str();
-		fs.close();
-		//// Mark meta files as hidden files
-		const wchar_t* fileLPCWSTR = metaPath.wstring().c_str();
-		int attribute = GetFileAttributes(fileLPCWSTR);
-		if ((attribute & FILE_ATTRIBUTE_HIDDEN) == 0)
-		{
-			SetFileAttributes(fileLPCWSTR, attribute | FILE_ATTRIBUTE_HIDDEN);
-		}
-	}
-
 	//Compare to meta file to see if file was modified while engine was closed
 	bool IsModified(const std::filesystem::path& filePath)
 	{
@@ -275,27 +268,16 @@ struct AllAssetsGroup
 		//If no meta, assume modified as it is just added
 		if (!std::filesystem::exists(metaPath))
 		{
-			CreateMeta(filePath);
+			GetGUID(filePath);
 			return true;
 		}
 		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
-		auto duration = fs::last_write_time(filePath).time_since_epoch();
-		size_t seconds = chron::duration_cast<chron::seconds>(duration).count();
-		for (YAML::Node& node : data)
+		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			if (node["lastModified"]) // Deserialize guid
-			{
-				if (node["lastModified"].as<size_t>() == seconds)
-				{
-					return false;
-				}
-				UpdateModifiedTime(metaPath,seconds);
-				return true;
-			}
+			GetGUID(filePath);
+			return true;
 		}
-		//Failed to find node
-		AddToMeta(metaPath,"lastModified", seconds);
-		return true;
+		return false;
 	}
 
 	FileData* GetFileData(const std::filesystem::path& filePath)

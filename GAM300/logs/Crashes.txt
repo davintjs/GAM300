@@ -1,5 +1,5 @@
-[2023-10-25 15:02:32.140] [Error] [critical] 
+[2023-10-26 12:30:35.889] [Error] [critical] 
 Caused By:	inputFile
 Info:		Error opening file to update asset in memory!
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 60)
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 121)
 

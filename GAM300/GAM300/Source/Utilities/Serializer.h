@@ -78,31 +78,6 @@ void Serialize(YAML::Emitter& out, T& object)
         if (!Flags.m_isDontSave)
         {
             auto entry = property::entry { PropertyName, Data };
-            std::visit([&](auto& Value)
-            {
-                using T = std::decay_t<decltype(Value)>;
-                if (name.parent_path().empty())
-                {
-                    //Deserialize again somehow get the type
-                    T1 object;
-                }
-                //Has no header
-                else
-                {
-                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
-                }
-
-                // Store Component value
-                out << YAML::BeginMap;
-                out << YAML::Key << Name << YAML::Value << Value;
-            }
-            , entry.second);
-        }
-    });
-
-    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
-        {
-            auto entry = property::entry { PropertyName, Data };
             fs::path name{ entry.first };
             std::visit([&](auto& Value)
             {
@@ -121,20 +96,13 @@ void Serialize(YAML::Emitter& out, T& object)
                     keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
                 }
 
-                // Extract Component value
-                if (node[keyName])
-                {
-                    if constexpr (std::is_same<char*, T1>()) {
-                        std::string buf = node[keyName].as<std::string>();
-                        property::set(object, entry.first.c_str(), buf);
-
-                    }
-                    else
-                        property::set(object, entry.first.c_str(), node[keyName].as<T1>());
-                }
+                // Store Component value
+                out << YAML::BeginMap;
+                out << YAML::Key << keyName << YAML::Value << Value;
             }
             , entry.second);
-        });
+        }
+    });
 }
 
 template <typename T>
@@ -145,17 +113,17 @@ void Serialize(const std::filesystem::path& path, T& object)
     Serialize(out, object);
 
     std::ofstream outFile{ path };
-    outFile << out;
+    outFile << out.c_str();
     outFile.close();
 }
 
 template <typename T>
-void Deserialize(const std::filesystem::path& path, T& object)
+bool Deserialize(const std::filesystem::path& path, T& object)
 {
     namespace fs = std::filesystem;
 
     if (!std::filesystem::exists(path))
-        return;
+        return false;
     YAML::Node node = YAML::LoadFile(path.string());
 
     // Assign to the component
@@ -194,6 +162,7 @@ void Deserialize(const std::filesystem::path& path, T& object)
             }
         , entry.second);
     });
+    return true;
 }
 
 // Deserialize the scene

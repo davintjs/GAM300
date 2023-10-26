@@ -61,20 +61,13 @@ struct Asset : FileInfo
 
 struct MetaFile : property::base
 {
-	MetaFile(std::filesystem::path& filePath)
-	{
-		auto duration = fs::last_write_time(filePath).time_since_epoch();
-		lastModified = chron::duration_cast<chron::seconds>(duration).count();
-	};
 	Engine::GUID guid;
-	size_t lastModified;
 	property_vtable()
 };
 
 property_begin_name(MetaFile,"")
 {
 	property_var(guid),
-	property_var(lastModified),
 } property_vend_h(MetaFile)
 
 struct TextureAsset : Asset
