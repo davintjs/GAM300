@@ -153,24 +153,78 @@ void EditorMenuBar::Update(float dt)
     }
 
     if (graphics_settings) {
+        //Formating spacing between menu items
+        ImGuiStyle& style = ImGui::GetStyle();
+        ImGuiStyle origStyle = style;
+        style.CellPadding = ImVec2(0.0f, 6.0f);
+
         ImVec2 center = ImGui::GetMainViewport()->GetCenter();
         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-        ImGui::SetNextWindowSize(ImVec2(300.f, 450.f));
+        ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
 
         auto hdr = &RENDERER.IsHDR();
-        ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-        ImGui::Checkbox("Enable HDR lighting", hdr);
 
-        ImGui::Text("Light Exposure"); ImGui::SameLine();
-        if (ImGui::IsItemHovered()) ImGui::SetTooltip("Light exposure available only when HDR enabled");
-        if(*hdr)
-            ImGui::SliderFloat("##", &RENDERER.GetExposure(), 0.f, 10.f);
-        else {
-            //only allow when HDR is enabled
-            ImGui::BeginDisabled();
-            ImGui::SliderFloat("##", &RENDERER.GetExposure(), 0.f, 10.f);
-            ImGui::EndDisabled();
-        }      
+        ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+        if (ImGui::BeginTable("GraphicSetting", 2, ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersInnerH)) {
+
+            ImGui::TableSetupColumn("0", ImGuiTableColumnFlags_WidthFixed, 200.0f);
+            ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, ImGui::GetContentRegionAvail().x);
+
+            ImGui::TableNextColumn();
+            ImGui::Checkbox("Enable HDR lighting", hdr);
+            ImGui::TableNextRow();
+
+            if (*hdr) {
+                ImGui::TableNextColumn();
+                ImGui::Text("Light Exposure"); ImGui::SameLine();
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                ImGui::DragFloat("##", &RENDERER.GetExposure(), 0.01f, 0.f, 5.f);
+                ImGui::TableNextRow();              
+            }
+
+            ImGui::TableNextColumn();         
+            auto shadows = &RENDERER.enableShadows();
+            ImGui::Checkbox("Enable Shadows", shadows);
+            ImGui::TableNextRow();
+
+            ImGui::TableNextColumn();
+            auto bloom = &RENDERER.enableBloom();
+            ImGui::Checkbox("Enable Bloom", bloom);
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Bloom count and threshold available only when Bloom Enabled");
+            ImGui::TableNextRow();
+
+            if (*bloom) {
+                ImGui::TableNextColumn();
+                int& bloomcount = reinterpret_cast<int&>(RENDERER.GetBloomCount());
+                ImGui::Text("Bloom Count"); ImGui::SameLine();
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                ImGui::DragInt("##bloomcount", &bloomcount, 1, 0, 10);
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Bloom Threshold"); ImGui::SameLine();
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+                ImGui::DragFloat("##bloomthreshold", &RENDERER.GetBloomThreshold(), 0.01f, 0.f, 10.f);
+                ImGui::TableNextRow();
+            }
+
+            ImGui::TableNextColumn();
+            ImGui::Text("Ambient"); ImGui::SameLine();
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            ImGui::DragFloat("##ambient", &RENDERER.getAmbient(), 0.02f, 0.f, 20.f);
+            ImGui::TableNextRow();
+
+            ImGui::EndTable();
+        }
+
+    
+        ImGui::GetStyle() = origStyle;
+   
         ImGui::End();
     }
     
