@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 #include "ShaderFileParser.h"
+#include "Scripting/ScriptFields.h"
 
 ShaderVariable::VariableType ParseVariableType(const std::string& str) {
 
@@ -39,6 +40,7 @@ void ParseShaderFile(const std::string& fileName) {
 
 	std::vector<ShaderVariable> shaderVariables;
 
+	// Parse each line
 	std::string buffer;
 	while (std::getline(ifs, buffer)) {
 
