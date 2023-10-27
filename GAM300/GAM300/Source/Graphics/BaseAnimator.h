@@ -12,17 +12,18 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
+#pragma once
+
 #ifndef BASEANIMATOR_H
 #define BASEANIMATOR_H
 
-//#include <glm/glm.hpp>
+#include <glm/glm.hpp>
 //#include <glm/gtx/quaternion.hpp>
 //#include "Framebuffer.h"
-#include "AnimationManager.h"
-#include "Properties.h"
 
 
-
+struct Animation;
+struct AssimpNodeData;
 
 struct BaseAnimator /*: property::base*/
 {

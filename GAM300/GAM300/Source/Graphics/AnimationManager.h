@@ -327,7 +327,7 @@ public:
 private:
 
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
-    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp...
+    std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ->  temp...
 
     // can yeet these
     GLSLShader ourShader{};

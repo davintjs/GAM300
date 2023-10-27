@@ -245,8 +245,9 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\GBuffer.h" />
+    <ClInclude Include="Source\Graphics\AnimationManager.h" />
     <ClInclude Include="Source\Graphics\BaseAnimator.h" />
+    <ClInclude Include="Source\Graphics\GBuffer.h" />
     <ClInclude Include="Source\Graphics\BaseCamera.h">
       <SubType>
       </SubType>
