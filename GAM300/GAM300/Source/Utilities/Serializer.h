@@ -99,6 +99,7 @@ void Serialize(YAML::Emitter& out, T& object)
                 // Store Component value
                 out << YAML::BeginMap;
                 out << YAML::Key << keyName << YAML::Value << Value;
+                out << YAML::EndMap;
             }
             , entry.second);
         }

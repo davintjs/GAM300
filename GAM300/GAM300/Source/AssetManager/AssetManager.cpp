@@ -144,6 +144,8 @@ void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 {
 	if (filePath.extension() == ".meta")
 		return;
+	if (fs::is_directory(filePath))
+		return;
 	THREADS.EnqueueTask([this, filePath] { UpdateAsset(filePath); });
 }
 

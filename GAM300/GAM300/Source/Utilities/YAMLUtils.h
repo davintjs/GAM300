@@ -167,6 +167,14 @@ namespace YAML
         }
     };
 
+    //struct CustomAnchor
+    //{
+    //    std::string str;
+    //};
+
+    //inline Emitter& operator<<(Emitter& emitter, const CustomAnchor& v) {
+    //    return emitter.Write(v);
+    //}
     //template <>
     //struct convert<char*>
     //{

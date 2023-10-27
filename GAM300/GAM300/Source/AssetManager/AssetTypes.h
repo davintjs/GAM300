@@ -87,7 +87,6 @@ property_begin_name(TextureImporter,"")
 
 struct TextureAsset : Asset
 {
-	using Meta = TextureImporter;
 };
 
 struct ScriptAsset : Asset

@@ -49,7 +49,6 @@ bool SerializeScene(Scene& _scene)
     YAML::Emitter out;
     std::string versionStr = "Serializer Version " + versionID;
     out << versionStr;
-
     // Serialize Scene Settings
     E_ASSERT(SerializeSettings(out, _scene), "Unable To Serialize Entity!\n");
 
@@ -93,6 +92,7 @@ bool SerializeSettings(YAML::Emitter& out, Scene& _scene)
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 {
     out << YAML::BeginMap;
+    out << YAML::Key << "ID" << YAML::Value << _entity.EUID();
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
     out << YAML::Key << "m_EUID" << YAML::Value << _entity.EUID();
@@ -132,6 +132,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::EndSeq;
     out << YAML::EndMap;
     out << YAML::EndMap;
+
 
     // Serialize the actual component after
     hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene, false);
@@ -239,7 +240,7 @@ bool DeserializeScene(Scene& _scene)
     for (size_t i = 2; i < data.size(); i++)
     {
         YAML::Node node = data[i];
-
+        PRINT("TAG: ", node.Tag(), '\n');
         if (node["GameObject"]) // Deserialize Gameobject
         {
             DeserializeEntity(node, _scene);

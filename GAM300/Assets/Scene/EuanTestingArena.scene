@@ -7,6 +7,7 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 22203055554271501
 GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
@@ -47,6 +48,7 @@ Script:
   otherT: {fileID: 22203055554271501}  # Component
   ching: 0
 ---
+ID: 16942626329878887566
 GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
@@ -98,6 +100,7 @@ BoxCollider:
   Y: 1
   Z: 1
 ---
+ID: 10548661867949210258
 GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
@@ -149,6 +152,7 @@ BoxCollider:
   Y: 1
   Z: 1
 ---
+ID: 8552727112136102457
 GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
@@ -200,6 +204,7 @@ BoxCollider:
   Y: 1
   Z: 1
 ---
+ID: 6606253624498158492
 GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
@@ -225,6 +230,7 @@ LightSource:
   Outer Cutoff: 0
   Color: [100, 100, 100]
 ---
+ID: 3741745616850505635
 GameObject:
   m_EUID: 3741745616850505635
   m_IsActive: true
@@ -255,6 +261,7 @@ Camera:
   OcclusionCulling: false
   FrustumCulling: true
 ---
+ID: 3250402029849808772
 GameObject:
   m_EUID: 3250402029849808772
   m_IsActive: true
@@ -275,6 +282,7 @@ SpriteRenderer:
   World Space: true
   SpriteTexture: 498de774af6c5bc2a684d2d1c1ef073c
 ---
+ID: 15963777357859177452
 GameObject:
   m_EUID: 15963777357859177452
   m_IsActive: true
@@ -293,7 +301,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   Mesh: 00000000000000000000000000000065
-  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
+  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -304,6 +312,7 @@ MeshRenderer:
   AoTexture: 00000000000000000000000000000000
   EmissionTexture: 00000000000000000000000000000000
 ---
+ID: 4212138099454399691
 GameObject:
   m_EUID: 4212138099454399691
   m_IsActive: true
@@ -322,6 +331,7 @@ Canvas:
   EUID: 4212138099454399691
   UUID: 13547543225942679706
 ---
+ID: 2866402867161245437
 GameObject:
   m_EUID: 2866402867161245437
   m_IsActive: true
