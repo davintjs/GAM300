@@ -521,6 +521,7 @@ void AddReferencePanel(T*& container)
     if (ImGui::Begin(windowName.c_str(), &open))
     {
         ImGui::PushItemWidth(-1);
+        ImGui::Text("Filter"); ImGui::SameLine();
         filter.Draw("##References");
         ImGui::PopItemWidth();
         static std::string buttonName{};

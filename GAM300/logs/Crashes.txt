@@ -1,5 +1,5 @@
-[2023-10-25 18:16:24.291] [Error] [critical] 
-Caused By:	errorId == GL_FRAMEBUFFER_COMPLETE
-Info:		Framebuffer is incomplete!!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Graphics\Framebuffer.cpp (Line: 642)
+[2023-10-27 20:51:45.109] [Error] [critical] 
+Caused By:	inputFile
+Info:		Error opening file to update asset in memory!
+Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 121)
 

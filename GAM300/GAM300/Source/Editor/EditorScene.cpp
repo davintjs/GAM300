@@ -131,7 +131,7 @@ void EditorScene::ToolBar()
 
         //For thoe to change to toggle debug drawing
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
-        ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &Renderer::Instance().RenderShadow)) {}
+        //ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
     }
     ImGui::End();
 }
@@ -159,6 +159,28 @@ void EditorScene::SceneView()
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+
+                ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
+                Engine::GUID guid = data.guid;
+
+                if (data.type == MESH) {
+                    //Create new entity
+                    Scene& curr_scene = MySceneManager.GetCurrentScene();
+                    Entity* ent = curr_scene.Add<Entity>();
+                    //Add mesh renderer
+                    curr_scene.Add<MeshRenderer>(*ent);
+                    //Attach dragged mesh GUID from the content browser
+                    curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
+                    curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                }
+
+                //add other file types here
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         // Display the gizmos for the selected entity
         DisplayGizmos();

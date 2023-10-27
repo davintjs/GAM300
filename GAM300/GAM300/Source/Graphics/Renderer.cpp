@@ -50,7 +50,6 @@ const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
 void Renderer::Init()
 {
-	RenderShadow = true;
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
 	

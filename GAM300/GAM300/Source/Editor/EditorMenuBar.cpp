@@ -201,7 +201,7 @@ void EditorMenuBar::Update(float dt)
                 ImGui::Text("Bloom Count"); ImGui::SameLine();
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::DragInt("##bloomcount", &bloomcount, 1, 0, 10);
+                ImGui::DragInt("##bloomcount", &bloomcount, 0.05, 0, 20);
                 ImGui::TableNextRow();
 
                 ImGui::TableNextColumn();
