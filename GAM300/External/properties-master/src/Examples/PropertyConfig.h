@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <imgui.h>
+#include <Utilities/GUID.h>
 
 using string_t = std::string;
 
@@ -120,6 +121,7 @@ public:
     Vector4(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
     Vector4(float i) : w(i), x(i), y(i), z(i) {}
 
+    Vector4(Vector3& vec, float w_) : w(w_), x(vec.x), y(vec.y), z(vec.z) {}
     Vector4(Vector4& vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
     Vector4(glm::vec4 vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
 
@@ -296,6 +298,7 @@ namespace property
             , Vector3
             , Vector4
             , char*
+            , Engine::GUID
         >;
     
         //--------------------------------------------------------------------------------------------

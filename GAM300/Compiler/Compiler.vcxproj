@@ -56,11 +56,13 @@
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
     <IncludePath>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson</IncludePath>
     <OutDir>$(ProjectDir)Bin\Debug_x64\</OutDir>
+    <TargetName>ModelCompiler</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)External\assimp\include\;$(SolutionDir)External\rapidjson;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)Bin\Release_x64\</OutDir>
+    <TargetName>ModelCompiler</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -593,14 +593,7 @@ std::vector<TextureInfo> AnimationModel::loadMaterialTextures(aiMaterial* mat, a
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             TextureInfo texture;
-
-            std::string filename = str.C_Str();
-            std::string nameWithoutExtension;
-            size_t lastDotPos = filename.find_last_of('.');
-            if (lastDotPos != std::string::npos) { // Extract the part of the string before the last dot
-                nameWithoutExtension = filename.substr(0, lastDotPos);
-            }
-            texture.id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(nameWithoutExtension));
+            //texture.id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filename));
             //texture.id = TextureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();
@@ -750,15 +743,15 @@ void Animation_Manager::Draw(BaseCamera& _camera)
     }
 
 
-    // render the loaded model
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-    glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
-        glm::value_ptr(model));
+	// render the loaded model
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
+	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
+	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
+		glm::value_ptr(model));
+	allModels_.Draw(ourShader);
 
-
-    allModels_.Draw(ourShader);
+    ourShader.UnUse();
 }
 
 void Animation_Manager::Exit()

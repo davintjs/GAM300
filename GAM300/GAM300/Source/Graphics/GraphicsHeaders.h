@@ -10,7 +10,7 @@
 	This file contains the declaration of Graphics System that includes:
 	1. 
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
@@ -22,6 +22,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "BaseCamera.h"
 
 #include "glslshader.h"
+#include <filesystem>
+
+#include "Utilities/GUID.h"
+
+#include "Model3d.h"
+//#include "glslshader.h"
+#include "GBuffer.h"
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -33,28 +40,32 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+// Graphics Settings
+
+
+
 // Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
-
+using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // Bean: A temp solution to access the shader
-enum SHADERTYPE
-{
-	HDR,
-	PBR,
-	TIR,// Temporary Instance Render
-	TDR,// Temporary Debug Instance Render
-	SKYBOX,
-	BASICLIGHT,
-	AFFECTEDLIGHT,
-	SHADOW,
-	POINTSHADOW,
-	UI_SCREEN,
-	UI_WORLD,
-	BLUR
-};
+// enum SHADERTYPE
+// {
+// 	HDR,
+// 	PBR,
+// 	TIR,// Temporary Instance Render
+// 	TDR,// Temporary Debug Instance Render
+// 	SKYBOX,
+// 	BASICLIGHT,
+// 	AFFECTEDLIGHT,
+// 	SHADOW,
+// 	POINTSHADOW,
+// 	UI_SCREEN,
+// 	UI_WORLD,
+// 	BLUR
+// };
 
 ENGINE_SYSTEM(ShaderManager)
 {
@@ -67,26 +78,24 @@ public:
 	void ShaderCompiler(const std::string & _name, const std::string& _vertPath, 
 		const std::string& _fragPath, const std::string & _geometryPath = "");
 
-	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[_type]; }
+	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
 private:
 	std::vector<GLSLShader> shaders;
 };
 
-ENGINE_SYSTEM(SkyboxManager)
+SINGLETON(SkyboxManager)
 {
 public:
 	void Init();
-	void Update(float dt);
-	void Exit();
 
 	// Initialize the skybox of the engine
-	void CreateSkybox(const std::string& _name);
+	void CreateSkybox(const std::filesystem::path& _name);
 
 	void Draw(BaseCamera& _camera);
 
 private:
-	SkyBox* skyBoxModel;
+	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
 
@@ -107,7 +116,7 @@ public:
 	void DrawRay();
 
 private:
-	std::map<std::string, InstanceProperties>* properties;
+	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -155,7 +164,8 @@ public:
 
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera);
+		//const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
+		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera, SHADERTYPE shaderType);
 	//glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin);
 	//Materials Mat);
 
@@ -171,18 +181,43 @@ public:
 
 	void Deferred();
 	
-	unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
+	unsigned int ReturnTextureIdx(InstanceProperties& prop, const GLuint & _id);
+	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);
 
-	std::map<std::string, InstanceProperties>& GetProperties() { return properties; }
+	InstanceContainer& GetInstanceProperties() { return instanceProperties; }
+	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
+	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }
 
+	bool& enableShadows() { return renderShadow; };
+
+	unsigned int& GetBloomCount() { return bloomCount; };
+
+	float& GetBloomThreshold() { return bloomThreshold; };
+
+	bool& enableBloom() { return enablebloom; };
+
+	float& getAmbient() { return ambient; };
+
+	gBuffer m_gBuffer;
 private:
-	std::map<std::string, InstanceProperties> properties;
+	std::unordered_map<Engine::GUID, InstanceProperties> properties;
+	InstanceContainer instanceProperties; // <vao, properties>
+	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
+	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
+	std::vector<DefaultRenderProperties> defaultProperties;
+
+	// Global Graphics Settings
 	float exposure = 1.f;
 	bool hdr = true;
+	bool renderShadow = true;
+	unsigned int bloomCount = 1;
+	float bloomThreshold = 1.f;
+	bool enablebloom;
+	float ambient = 1.f;
 };
-
+void renderQuad();
 #endif // !GRAPHICSHEADERS_H

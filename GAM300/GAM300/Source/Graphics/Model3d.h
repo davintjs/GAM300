@@ -20,7 +20,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 // #include "LapSupGraphics/Compiler.h"
 // #include "LapSupGraphics/Mesh.h"
 #include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
 

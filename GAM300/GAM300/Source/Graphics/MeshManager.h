@@ -12,7 +12,7 @@
 	2. Creates our own meshes - Cube,Sphere,Line
 	3. Sets up all the VAOs, VBOs and set up for instancing
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #pragma once
@@ -21,7 +21,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 #include "AnimationManager.h"
 #include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
 
 #include "../../Compiler/Mesh.h"
 
@@ -30,7 +29,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define MAX_BONE_INFLUENCE 4
 
 struct InstanceProperties;
+struct DefaultRenderProperties;
 
+
+using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
@@ -45,7 +47,10 @@ struct Mesh
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-	unsigned int index;
+	// need these vertices for batch rendering
+	std::vector<glm::vec4> vertexPos;
+
+	unsigned int index{};
 
 };
 
@@ -147,35 +152,49 @@ SINGLETON(MESH_Manager)
 public:
 	
 	void Init();
-	void Update(float dt);
-	void Exit();
 
-	void GetGeomFromFiles(const std::string& filePath, const std::string& fileName);
+	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
+
+	MeshAsset& GetMeshAsset(const Engine::GUID& meshID);
 
 
 	// This is used when we are going to draw, u need to take the geom then render it
-	Mesh* DereferencingMesh(std::string mesh_Name) 
+	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
 	{ 
-		if (mContainer.find(mesh_Name) == mContainer.end())
+		if (mContainer.find(meshID) == mContainer.end())
 		{
 			return nullptr;
 		}
-		return &(mContainer.find(mesh_Name)->second); 
-	
+		return &(mContainer.find(meshID)->second);
 	}// Either Geom or Vaoid
 
-
+	//GLuint GetVAOfromGUID(std::string GUID);
 
 	// FUnction to load model
 
 	//void AddTexture(char const* Filename, std::string GUID);
 	//GLuint& GetTexture(std::string GUID);
 	//GLuint CreateTexture(char const* Filename);
-	std::unordered_map<std::string, Mesh> mContainer;
-	std::map<std::string, InstanceProperties>* properties;
+	//Handle mesh adding here
+	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);
+	// Adds mesh asset for storing
+	void StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex);
+	void StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex);
+
+	//Handle mesh removal here
+	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
+	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
+	std::unordered_map<Engine::GUID, Mesh> mContainer;
+	InstanceContainer* instanceProperties;
+	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
+	std::vector<DefaultRenderProperties>* defaultProperties;
+
 private:
+
+	std::unordered_map<Engine::GUID, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
+
 	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string& filePath, const std::string& fileName);
+	GeomImported DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid);
 	AnimGeomImported DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName); // i think can combine w the original fn
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 

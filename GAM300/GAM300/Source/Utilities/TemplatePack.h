@@ -64,6 +64,46 @@ struct TemplatePack
 
 };
 
+//Template pack way to store enums instead of traditional enums
+template<typename T, typename... Ts>
+struct GetTypeGroup
+{
+	constexpr GetTypeGroup(TemplatePack<T, Ts...> pack) {}
+	constexpr GetTypeGroup() = default;
+
+	template <typename T1>
+	//Gets the enum value of type T
+	static constexpr size_t E()
+	{
+		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
+		if constexpr (std::is_same<T, T1>())
+		{
+			return sizeof...(Ts);
+		}
+		else
+		{
+			return GetTypeGroup<Ts...>::template E<T1>();
+		}
+	}
+
+	template <typename T1>
+	//Gets the name of type T
+	static constexpr const char* Name()
+	{
+		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
+		if constexpr (std::is_same<T, T1>())
+		{
+			static const char* name = typeid(T).name() + strlen("struct ");
+			return name;
+		}
+		else
+		{
+			return GetTypeGroup<Ts...>::template Name<T1>();
+		}
+	}
+};
+
+
 //Reverse the order of elements in a template pack
 template<typename, typename>
 struct AppendToTypeSeq { };

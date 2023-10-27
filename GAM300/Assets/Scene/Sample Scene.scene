@@ -1,0 +1,150 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: Sample Scene
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 4110821391483343681
+  m_IsActive: true
+  m_Name: Camera
+  m_Layer: 0
+  m_Position: [0, 2.90038109, 5.71547604]
+  m_Rotation: [-0.555135012, -0, 0]
+  m_Scale: [1, 0.999996603, 0.999997377]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 4888167216841182236}  # Camera
+---
+Camera:
+  EUID: 4110821391483343681
+  UUID: 4888167216841182236
+  BackgroundColor: [0, 0, 0, 0]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+---
+GameObject:
+  m_EUID: 13088949262410595366
+  m_IsActive: true
+  m_Name: Cube
+  m_Layer: 0
+  m_Position: [5.55598678e-10, -0.5, -5.15226528e-10]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 2254143688722544293}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 13088949262410595366
+  UUID: 2254143688722544293
+  Mesh: 00000000000000000000000000000065
+  Albedo: [0, 0, 0, 0]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 9158095438169401397
+  m_IsActive: true
+  m_Name: Floor
+  m_Layer: 0
+  m_Position: [0, -1, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [10, 0.00999999978, 10]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 17749047500947588343}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 9158095438169401397
+  UUID: 17749047500947588343
+  Mesh: 00000000000000000000000000000065
+  Albedo: [0, 0, 0, 0]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 5975153394956010415
+  m_IsActive: true
+  m_Name: Light
+  m_Layer: 0
+  m_Position: [0, 1.97121608, 2.74531388]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 9668237460726814966}  # LightSource
+---
+LightSource:
+  EUID: 5975153394956010415
+  UUID: 9668237460726814966
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 7
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [100, 100, 100]
+---
+GameObject:
+  m_EUID: 5033727834872342318
+  m_IsActive: true
+  m_Name: Helmet
+  m_Layer: 0
+  m_Position: [-2.52375698, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 15693191006833575313}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 5033727834872342318
+  UUID: 15693191006833575313
+  Mesh: f3ef3db353c5cac717e1f7bd441119dc
+  Albedo: [0, 0, 0, 0]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 06322b8239b55a3aa0af97f360d3cb7c
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000

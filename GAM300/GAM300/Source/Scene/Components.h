@@ -26,8 +26,13 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
+#include <Utilities/GUID.h>
+#include <AssetManager/AssetTypes.h>
 
 #include <Properties.h>
+
+#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
+#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -37,6 +42,7 @@ using vec4 = glm::vec4;
 using Quaternion = glm::quat;
 
 struct Entity;
+enum class SHADERTYPE;
 
 extern std::map<std::string, size_t> ComponentTypes;
 
@@ -76,6 +82,12 @@ struct Transform : Object
 
 	//Check whether this is a child
 	bool isChild();
+
+	// Get the translation in world space
+	glm::vec3 GetTranslation() const;
+
+	// Get the scale in world space
+	glm::vec3 GetScale() const;
 
 	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
@@ -264,7 +276,7 @@ struct MeshFilter : Object
 {
 	MeshFilter();
 
-	std::string MeshName = "Cube";
+	Engine::GUID meshId;
 	std::vector<glm::vec3>* vertices;	// Position
 	std::vector<unsigned int>* indices;	// Index
 	property_vtable();
@@ -272,18 +284,18 @@ struct MeshFilter : Object
 
 property_begin_name(MeshFilter, "MeshFilter"){
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(MeshName).Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshFilter)
 
 struct MeshRenderer : Object
 {
-	std::string MeshName = "Cube";
-	std::string AlbedoTexture = "";
-	std::string NormalMap = "";
-	std::string MetallicTexture = "";
-	std::string RoughnessTexture = "";
-	std::string AoTexture = "";
-	std::string EmissionTexture = "";
+
+	Engine::GUID meshID{ DEFAULT_MESH };
+	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
+	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
+	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
+	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
+	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
+	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
 	//Materials mr_Material;
 
 	// Materials stuff below here
@@ -291,26 +303,26 @@ struct MeshRenderer : Object
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
-	float mr_Shininess;
+	float mr_Shininess;	
 
 
-	float mr_metallic = 0.5f;
-	float mr_roughness = 0.5f;
-	float ao = 0.5f;
+	float mr_metallic = 1.f;
+	float mr_roughness = 1.f;
+	float ao = 1.f;
+	float emission = 1.f;
 
-	GLuint textureID = 0;
-	GLuint normalMapID = 0;
-	GLuint RoughnessID = 0;
-	GLuint MetallicID = 0;
-	GLuint AoID = 0;
-	GLuint EmissionID = 0;
+	GLuint VAO;
+	GLuint debugVAO;
+
+	bool isInstance = false;
+	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(MeshName).Flags(property::flags::DONTSHOW),
+	property_var(meshID).Name("Mesh"),
 	property_var(mr_Albedo).Name("Albedo"),
 	property_var(mr_metallic).Name("Metallic"),
 	property_var(mr_roughness).Name("Roughness"),
@@ -321,12 +333,6 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
-	property_var(textureID).Name("TextureID").Flags(property::flags::DONTSHOW),
-	property_var(normalMapID).Name("NormalMapID").Flags(property::flags::DONTSHOW),
-	property_var(RoughnessID).Name("RoughnessID").Flags(property::flags::DONTSHOW),
-	property_var(MetallicID).Name("MetallicID").Flags(property::flags::DONTSHOW),
-	property_var(AoID).Name("AoID").Flags(property::flags::DONTSHOW),
-	property_var(EmissionID).Name("EmissionID").Flags(property::flags::DONTSHOW)
 } property_vend_h(MeshRenderer)
 
 
@@ -368,8 +374,7 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 
-		std::string SpriteTexture = "";
-		GLuint spriteTextureID = 0;
+		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
 		property_vtable()
 	};
@@ -394,46 +399,6 @@ struct Canvas : Object
 
 
 #pragma endregion
-
-//Template pack way to store enums instead of traditional enums
-template<typename T,typename... Ts>
-struct GetTypeGroup
-{
-	constexpr GetTypeGroup(TemplatePack<T,Ts...> pack) {}
-	constexpr GetTypeGroup() = default;
-
-	template <typename T1>
-	//Gets the enum value of type T
-	static constexpr size_t E()
-	{
-		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
-		if constexpr (std::is_same<T, T1>())
-		{
-			return sizeof...(Ts);
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template E<T1>();
-		}
-	}
-
-	template <typename T1>
-	//Gets the name of type T
-	static constexpr const char* Name()
-	{
-		static_assert(std::is_same_v<T1, T> || (std::is_same_v<T1, Ts> || ...), "Type not found in group");
-		if constexpr (std::is_same<T, T1>())
-		{
-			static const char* name = typeid(T).name() + strlen("struct ");
-			return name;
-		}
-		else
-		{
-			return GetTypeGroup<Ts...>::template Name<T1>();
-		}
-	}
-};
-
 
 //Group to store all single component arrays together and accessed easily without
 //declaring multiple variable names

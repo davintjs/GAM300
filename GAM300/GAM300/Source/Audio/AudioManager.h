@@ -20,6 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma once
 
 #include <FMOD/fmod.hpp>
+#include <Core/Events.h>
+#include <AssetManager/AssetTypes.h>
 
 #define AUDIOMANAGER AudioManager::Instance()
 using SoundMap = std::map<std::string, FMOD::Sound*>;
@@ -82,6 +84,12 @@ public:
 
 	// Generate random float number
 	float RandFloat(float min, float max);
+
+	//Handle audio adding here
+	void CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent);
+
+	//Handle audio removal here
+	void CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent);
 private:
 
 	FMOD::System* system{};

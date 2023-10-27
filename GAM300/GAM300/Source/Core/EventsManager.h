@@ -19,7 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define EVENTS_SYSTEM_H
 
-#include "Events.h"
+#include "EventInterface.h"
 #include "SystemInterface.h"
 #include <typeindex>
 #include <list>
