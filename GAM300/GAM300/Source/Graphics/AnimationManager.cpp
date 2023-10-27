@@ -663,17 +663,17 @@ void Animation_Manager::Init()
     {
         tempbone.push_back(tempbone_src);
     }
-    //mAnimationContainer.emplace("docattc", tempanim);
+    mAnimationContainer.emplace("docattc", tempanim);
     ////   
 
 
-    //Scene& currentScene = MySceneManager.GetCurrentScene();
-    //for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    //{
-    //    auto animIt = mAnimationContainer.find("docattc");
-    //    if (animIt != mAnimationContainer.end())
-    //        animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
-    //}
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        auto animIt = mAnimationContainer.find("docattc");
+        if (animIt != mAnimationContainer.end())
+            animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
+    }
 }
 
 
@@ -683,14 +683,14 @@ void Animation_Manager::Update(float dt)
     //allAnimators_.UpdateAnimation(dt);
 
     Scene& currentScene = MySceneManager.GetCurrentScene();
-    //for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    //{
-    //    if (animator.AnimationAttached())
-    //        animator.UpdateAnimation(dt);
-    //    else
-    //        animator.SetAnimation(&allModels_.GetAnimations());
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        if (animator.AnimationAttached())
+            animator.UpdateAnimation(dt);
+        else
+            animator.SetAnimation(&allModels_.GetAnimations());
 
-    //}
+    }
 }
 
 void Animation_Manager::Draw(BaseCamera& _camera)
@@ -724,23 +724,23 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 
     // this is fking wrong
     Scene& currentScene = MySceneManager.GetCurrentScene();
-    //for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    //{
-    //    if (animator.AnimationAttached())
-    //    {
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        if (animator.AnimationAttached())
+        {
 
-    //        auto transforms = animator.GetFinalBoneMatrices();
-    //        for (int i = 0; i < transforms.size(); ++i)
-    //        {
-    //            std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
-    //            GLint uniform3 =
-    //                glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
+            auto transforms = animator.GetFinalBoneMatrices();
+            for (int i = 0; i < transforms.size(); ++i)
+            {
+                std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
+                GLint uniform3 =
+                    glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
 
-    //            glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-    //                glm::value_ptr(transforms[i]));
-    //        }
-    //    }
-    //}
+                glUniformMatrix4fv(uniform3, 1, GL_FALSE,
+                    glm::value_ptr(transforms[i]));
+            }
+        }
+    }
 
 
 	// render the loaded model
