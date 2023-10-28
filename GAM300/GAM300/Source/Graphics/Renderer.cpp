@@ -22,8 +22,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "MeshManager.h"
 #include "Editor/EditorCamera.h"
 
-// ALL THIS ARE HOPEFULLY TEMPORARY
-
 // Shadow Mapping
 unsigned int depthMapFBO=0; 
 unsigned int depthMap; // Shadow Texture

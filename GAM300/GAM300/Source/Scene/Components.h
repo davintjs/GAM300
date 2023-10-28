@@ -136,6 +136,7 @@ property_begin_name(AudioSource, "Audio Source") {
 		//property_var(ChannelName).Name("channel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
 
