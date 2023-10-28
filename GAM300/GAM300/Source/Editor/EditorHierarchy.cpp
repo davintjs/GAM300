@@ -288,6 +288,11 @@ void EditorHierarchy::Update(float dt)
 				ImGui::TextDisabled(name.c_str());
 			}
 
+			ImGui::Separator();
+			if (ImGui::MenuItem("Add to Prefabs")) {
+				//For zac to add prefab implementation here
+			}
+
 			ImGui::EndPopup();
 		}
 
