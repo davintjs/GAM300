@@ -25,6 +25,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Editor/EditorHeaders.h"
 #include "Scene/SceneManager.h"
 #include "Utilities/ThreadPool.h"
+#include "Scene/Identifiers.h"
 
 namespace
 {
@@ -100,34 +101,18 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     // Bean: Components should have its own category like Entities, and just loop thru
-    if (_scene.Has<Tag>(_entity))
-    {
-        auto& component = _scene.Get<Tag>(_entity);
-        out << YAML::Key << "m_Name" << YAML::Value << component.name;
-        out << YAML::Key << "m_Layer" << YAML::Value << component.physicsLayerIndex;
-    }
-
-    if (_scene.Has<Transform>(_entity))
-    {
-        auto& component = _scene.Get<Transform>(_entity);
-        out << YAML::Key << "m_Position" << YAML::Value << component.translation;
-        out << YAML::Key << "m_Rotation" << YAML::Value << component.rotation;
-        out << YAML::Key << "m_Scale" << YAML::Value << component.scale;
-        out << YAML::Key << "m_Children" << YAML::Value << Child{component.child, _scene};
-
-        if (component.parent)
-            out << YAML::Key << "m_Parent" << YAML::Value << component.parent;
-        else
-            out << YAML::Key << "m_Parent" << YAML::Value << 0;
-    }
+    auto& tag = _scene.Get<Tag>(_entity);
+    out << YAML::Key << "m_Name" << YAML::Value << tag.name;
+    out << YAML::Key << "m_TagString" << YAML::Value << IDENTIFIERS.GetTagString(tag.tagName);
+    out << YAML::Key << "m_Layer" << YAML::Value << tag.physicsLayerIndex;
 
     // Serialize components
-    out << YAML::Key << "m_Components" << YAML::Value;
+    out << YAML::Key << "m_Component" << YAML::Value;
     out << YAML::BeginSeq;
 
-    SerializeAllComponentsStruct componentSerializer{};
+    ComponentsSerializer componentSerializer{};
     // Serialize the id of the component
-    bool hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene);
+    bool hasSerialized = componentSerializer.SerializeComponents<true>(out, _entity, _scene);
 
     out << YAML::EndSeq;
     out << YAML::EndMap;
@@ -135,50 +120,74 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 
 
     // Serialize the actual component after
-    hasSerialized = componentSerializer.SerializeComponents(out, _entity, _scene, false);
+    hasSerialized = componentSerializer.SerializeComponents<false>(out, _entity, _scene);
 
     return hasSerialized;
 }
 
+
 template <typename T>
-bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id)
+bool SerializeReferenceField(YAML::Emitter& out, T& _component)
 {
-    if (_id)
-    {
-        // Store UUID for each component
-        std::string componentName = GetType::Name<T>();
-        out << YAML::BeginMap;
-        out << YAML::Key << "component" << YAML::Key << YAML::Flow << YAML::BeginMap;
-        out << YAML::Key << "fileID" << YAML::Value << _component.UUID() << YAML::EndMap << YAML::Comment(componentName);
-        out << YAML::EndMap;
-        return true;
-    }
+    // Store UUID for each component
+    std::string componentName = GetType::Name<T>();
+    out << YAML::BeginMap;
+    out << YAML::Key << "component" << YAML::Key << YAML::Flow << YAML::BeginMap;
+    out << YAML::Key << "fileID" << YAML::Value << _component.UUID() << YAML::EndMap << YAML::Comment(componentName);
+    out << YAML::EndMap;
+    return true;
+}
+
+template <typename T>
+bool SerializeComponent(YAML::Emitter& out, T& _component)
+{
 
     std::string componentName = GetType::Name<T>();
 
     out << YAML::BeginMap;
+    out << YAML::Key << "ID" << YAML::Value << _component.UUID();
     out << YAML::Key << componentName << YAML::Value << YAML::BeginMap;
 
     property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
+            auto entry = property::entry { PropertyName, Data };
+            std::string Name = entry.first;
             if (!Flags.m_isDontSave)
             {
-                auto entry = property::entry { PropertyName, Data };
                 std::visit([&](auto& Value)
                     {
                         using T = std::decay_t<decltype(Value)>;
 
                         // Edit name
-                        std::string Name = entry.first;
                         auto it = Name.begin() + Name.find_last_of("/");
                         Name.erase(Name.begin(), ++it);
-
                         // Store Component value
-                        out << YAML::Key << Name << YAML::Value << Value;
+                        if (Flags.m_isReference)
+                        {
+                            out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                            out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
+                        }
+                        else
+                        {
+                            if constexpr (std::is_same<T,Engine::GUID>())
+                            {
+                                out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                                out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
+                            }
+                            else
+                            {
+                                out << YAML::Key << Name << YAML::Value << Value;
+                            }
+                        }
                     }
                 , entry.second);
             }
         });
+
+    if constexpr (std::is_same<T, Transform>())
+    {
+        out << YAML::Key << "m_Children" << YAML::Value << Child{ _component.child, MySceneManager.GetCurrentScene()};
+    }
 
     if constexpr (std::is_same<T, Script>())
         SerializeScript(out, _component);

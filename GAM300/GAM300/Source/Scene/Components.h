@@ -107,9 +107,12 @@ struct Transform : Object
 
 property_begin_name(Transform, "Transform")
 {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(translation).Name("Translation"),
-		property_var(rotation).Name("Rotation"),
-		property_var(scale).Name("Scale"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
+	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE),
+	property_var(child).Name("Children").Flags(property::flags::DONTSHOW),
 } property_vend_h(Transform)
 
 struct AudioSource : Object

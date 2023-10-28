@@ -1,6 +1,5 @@
-[2023-10-27 15:30:33.384] [Error] [critical] 
+[2023-10-28 11:40:18.266] [Error] [critical] 
 Caused By:	false
-Info:		Failed to load .scene file "Assets\Scene\EuanTestingArena.scene" due to: yaml-cpp: error at line 10, column 11: illegal map value
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 226)
+Info:		Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 365)
 

@@ -12,32 +12,41 @@ GameObject:
   m_EUID: 22203055554271501
   m_IsActive: true
   m_Name: Helmet
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [156.493225, 116.136734, 360.909332]
-  m_Rotation: [8.45425205e-08, -1.50000012, 0]
-  m_Scale: [0.999995291, 1, 0.999995291]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 5262673950323683124}  # Transform
     - component: {fileID: 10413881243206984898}  # MeshRenderer
     - component: {fileID: 10379670187260712593}  # Script
 ---
+ID: 5262673950323683124
+Transform:
+  EUID: 22203055554271501
+  UUID: 5262673950323683124
+  Translation: [156.493225, 116.136734, 360.909332]
+  Rotation: [8.45425205e-08, -1.50000012, 0]
+  Scale: [0.999995291, 1, 0.999995291]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 10413881243206984898
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
-  Mesh: 00000000000000000000000000000065
+  Mesh: {guid: 00000000000000000000000000000065}
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
 ---
+ID: 10379670187260712593
 Script:
   EUID: 22203055554271501
   UUID: 10379670187260712593
@@ -53,18 +62,26 @@ GameObject:
   m_EUID: 16942626329878887566
   m_IsActive: true
   m_Name: Falling Cube 1
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [-0.446017146, 2.19421697, 0.701099932]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 13057247457689164130}  # Transform
     - component: {fileID: 9923304188943745678}  # Rigidbody
     - component: {fileID: 1245608959500342360}  # MeshRenderer
     - component: {fileID: 9199614747982128663}  # BoxCollider
 ---
+ID: 13057247457689164130
+Transform:
+  EUID: 16942626329878887566
+  UUID: 13057247457689164130
+  Translation: [-0.446017146, 2.19421697, 0.701099932]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9923304188943745678
 Rigidbody:
   EUID: 16942626329878887566
   UUID: 9923304188943745678
@@ -78,21 +95,23 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
+ID: 1245608959500342360
 MeshRenderer:
   EUID: 16942626329878887566
   UUID: 1245608959500342360
-  Mesh: 00000000000000000000000000000065
+  Mesh: {guid: 00000000000000000000000000000065}
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
 ---
+ID: 9199614747982128663
 BoxCollider:
   EUID: 16942626329878887566
   UUID: 9199614747982128663
@@ -105,18 +124,26 @@ GameObject:
   m_EUID: 10548661867949210258
   m_IsActive: true
   m_Name: Falling Cube 2
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [2.57571006, 4.59031582, 1.05738711]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 6874982577583930407}  # Transform
     - component: {fileID: 6571208101418498788}  # Rigidbody
     - component: {fileID: 7126588879192483760}  # MeshRenderer
     - component: {fileID: 6281041356284068935}  # BoxCollider
 ---
+ID: 6874982577583930407
+Transform:
+  EUID: 10548661867949210258
+  UUID: 6874982577583930407
+  Translation: [2.57571006, 4.59031582, 1.05738711]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6571208101418498788
 Rigidbody:
   EUID: 10548661867949210258
   UUID: 6571208101418498788
@@ -130,21 +157,23 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
+ID: 7126588879192483760
 MeshRenderer:
   EUID: 10548661867949210258
   UUID: 7126588879192483760
-  Mesh: f3ef3db353c5cac717e1f7bd441119dc
+  Mesh: {guid: f3ef3db353c5cac717e1f7bd441119dc}
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 06322b8239b55a3aa0af97f360d3cb7c
-  NormalMap: 6f038422a26db8d8bf5892c7e425d553
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: cfe2d403d5b71c2b216a5748405fc53a
+  AlbedoTexture: {guid: 06322b8239b55a3aa0af97f360d3cb7c}
+  NormalMap: {guid: 6f038422a26db8d8bf5892c7e425d553}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: cfe2d403d5b71c2b216a5748405fc53a}
 ---
+ID: 6281041356284068935
 BoxCollider:
   EUID: 10548661867949210258
   UUID: 6281041356284068935
@@ -157,18 +186,26 @@ GameObject:
   m_EUID: 8552727112136102457
   m_IsActive: true
   m_Name: Floor
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0, -3.09993005, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [10, 1, 10]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 2173368134796270854}  # Transform
     - component: {fileID: 13671943860368736027}  # Rigidbody
     - component: {fileID: 15321682287644036185}  # MeshRenderer
     - component: {fileID: 16306965832790122227}  # BoxCollider
 ---
+ID: 2173368134796270854
+Transform:
+  EUID: 8552727112136102457
+  UUID: 2173368134796270854
+  Translation: [0, -3.09993005, 0]
+  Rotation: [0, -0, 0]
+  Scale: [10, 1, 10]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13671943860368736027
 Rigidbody:
   EUID: 8552727112136102457
   UUID: 13671943860368736027
@@ -182,21 +219,23 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
+ID: 15321682287644036185
 MeshRenderer:
   EUID: 8552727112136102457
   UUID: 15321682287644036185
-  Mesh: 00000000000000000000000000000065
+  Mesh: {guid: 00000000000000000000000000000065}
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
 ---
+ID: 16306965832790122227
 BoxCollider:
   EUID: 8552727112136102457
   UUID: 16306965832790122227
@@ -209,16 +248,24 @@ GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
   m_Name: LightSource
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0.0770136714, 4.2396946, 1.5261389]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 4302703421028640435}  # Transform
     - component: {fileID: 2383003823628521294}  # LightSource
 ---
+ID: 4302703421028640435
+Transform:
+  EUID: 6606253624498158492
+  UUID: 4302703421028640435
+  Translation: [0.0770136714, 4.2396946, 1.5261389]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2383003823628521294
 LightSource:
   EUID: 6606253624498158492
   UUID: 2383003823628521294
@@ -235,16 +282,24 @@ GameObject:
   m_EUID: 3741745616850505635
   m_IsActive: true
   m_Name: Camera
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0, 2, 16.7999992]
-  m_Rotation: [0, 0, 0]
-  m_Scale: [0.99999702, 1, 0.99999702]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 8569438467435945995}  # Transform
     - component: {fileID: 8581604554917408359}  # Camera
 ---
+ID: 8569438467435945995
+Transform:
+  EUID: 3741745616850505635
+  UUID: 8569438467435945995
+  Translation: [0, 2, 16.7999992]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999702, 1, 0.99999702]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8581604554917408359
 Camera:
   EUID: 3741745616850505635
   UUID: 8581604554917408359
@@ -266,67 +321,93 @@ GameObject:
   m_EUID: 3250402029849808772
   m_IsActive: true
   m_Name: 3D SPACE UI
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0.440229654, 5.66990662, -0.0251158178]
-  m_Rotation: [3.14159083, -0.00840729196, 0.00840738136]
-  m_Scale: [1, 1, 1]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 4447887204076114548}  # Transform
     - component: {fileID: 15131644809803265180}  # SpriteRenderer
 ---
+ID: 4447887204076114548
+Transform:
+  EUID: 3250402029849808772
+  UUID: 4447887204076114548
+  Translation: [0.440229654, 5.66990662, -0.0251158178]
+  Rotation: [3.14159083, -0.00840729196, 0.00840738136]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15131644809803265180
 SpriteRenderer:
   EUID: 3250402029849808772
   UUID: 15131644809803265180
   World Space: true
-  SpriteTexture: 498de774af6c5bc2a684d2d1c1ef073c
+  SpriteTexture: {guid: 498de774af6c5bc2a684d2d1c1ef073c}
 ---
 ID: 15963777357859177452
 GameObject:
   m_EUID: 15963777357859177452
   m_IsActive: true
   m_Name: WALL
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [5.32447052, 4.02244663, 0]
-  m_Rotation: [0, -0, 1.64999998]
-  m_Scale: [10.000001, 0.999997497, 9.99999619]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 12942395467464714539}  # Transform
     - component: {fileID: 844126210943487470}  # MeshRenderer
 ---
+ID: 12942395467464714539
+Transform:
+  EUID: 15963777357859177452
+  UUID: 12942395467464714539
+  Translation: [5.32447052, 4.02244663, 0]
+  Rotation: [0, -0, 1.64999998]
+  Scale: [10.000001, 0.999997497, 9.99999619]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 844126210943487470
 MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
-  Mesh: 00000000000000000000000000000065
-  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
+  Mesh: {guid: 00000000000000000000000000000065}
+  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
 ---
 ID: 4212138099454399691
 GameObject:
   m_EUID: 4212138099454399691
   m_IsActive: true
   m_Name: Canvas
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0, 138.102646, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [160, 90, 1]
-  m_Children:
-    - {fileID: 2866402867161245437}
-  m_Parent: 0
-  m_Components:
+  m_Component:
+    - component: {fileID: 682185485614387432}  # Transform
     - component: {fileID: 13547543225942679706}  # Canvas
 ---
+ID: 682185485614387432
+Transform:
+  EUID: 4212138099454399691
+  UUID: 682185485614387432
+  Translation: [0, 138.102646, 0]
+  Rotation: [0, -0, 0]
+  Scale: [160, 90, 1]
+  Father: {fileID: 0}
+  Children[]: {fileID: 1}
+  Children[0]: 2866402867161245437
+  m_Children:
+    - {fileID: 2866402867161245437}
+---
+ID: 13547543225942679706
 Canvas:
   EUID: 4212138099454399691
   UUID: 13547543225942679706
@@ -336,18 +417,26 @@ GameObject:
   m_EUID: 2866402867161245437
   m_IsActive: true
   m_Name: Child this to canvas
+  m_TagString: ""
   m_Layer: 0
-  m_Position: [0.00955638941, 0, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [0.100000001, 0.100000001, 1]
-  m_Children:
-    []
-  m_Parent: 4212138099454399691
-  m_Components:
+  m_Component:
+    - component: {fileID: 15394604333779206167}  # Transform
     - component: {fileID: 8812244467539034998}  # SpriteRenderer
 ---
+ID: 15394604333779206167
+Transform:
+  EUID: 2866402867161245437
+  UUID: 15394604333779206167
+  Translation: [0.00955638941, 0, 0]
+  Rotation: [0, -0, 0]
+  Scale: [0.100000001, 0.100000001, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 8812244467539034998
 SpriteRenderer:
   EUID: 2866402867161245437
   UUID: 8812244467539034998
   World Space: false
-  SpriteTexture: 00000000000000000000000000000000
+  SpriteTexture: {guid: 00000000000000000000000000000000}
