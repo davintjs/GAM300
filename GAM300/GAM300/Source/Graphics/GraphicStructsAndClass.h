@@ -135,7 +135,7 @@ struct InstanceProperties
 	glm::vec4 M_R_A_Texture[EnitityInstanceLimit];
 
 	unsigned int Metal_Rough_AO_Texture_Constant;
-	glm::vec3 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec3(1.f,1.f,1.f) };
+	glm::vec4 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec4(1.f,1.f,1.f,1.f) };
 
 	unsigned int textureIndexBuffer;
 	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
@@ -155,6 +155,7 @@ struct DefaultRenderProperties {
 	float metallic{};
 	float roughness{};
 	float ao{};
+	float emission{};
 
 	glm::mat4 entitySRT{};
 	glm::vec4 Albedo{};

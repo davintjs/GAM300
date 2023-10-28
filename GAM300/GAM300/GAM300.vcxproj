@@ -113,6 +113,7 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />

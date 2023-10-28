@@ -40,6 +40,10 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+// Graphics Settings
+
+
+
 // Graphic Functions
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO);
 void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
@@ -188,6 +192,16 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
+	bool& enableShadows() { return renderShadow; };
+
+	unsigned int& GetBloomCount() { return bloomCount; };
+
+	float& GetBloomThreshold() { return bloomThreshold; };
+
+	bool& enableBloom() { return enablebloom; };
+
+	float& getAmbient() { return ambient; };
+
 	gBuffer m_gBuffer;
 private:
 	std::unordered_map<Engine::GUID, InstanceProperties> properties;
@@ -195,8 +209,15 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+
+	// Global Graphics Settings
 	float exposure = 1.f;
 	bool hdr = true;
+	bool renderShadow = true;
+	unsigned int bloomCount = 1;
+	float bloomThreshold = 1.f;
+	bool enablebloom;
+	float ambient = 1.f;
 };
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H
