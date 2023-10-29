@@ -253,7 +253,10 @@ property_begin_name(CharacterController, "CharacterController") {
 struct Script : Object
 {
 	Script(){}
-	Script(const char* yes) { PRINT(yes, '\n'); }
+	Script(const char* yes) 
+	{
+		PRINT("HEREEEEEEEEEEEEEEEEEEEEE: ", yes, '\n');
+	}
 	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
 	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
 	property_vtable();

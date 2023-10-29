@@ -46,13 +46,12 @@ MeshRenderer:
 ID: 10379670187260712593
 Script:
   m_GameObject: {fileID: 22203055554271501}
-  Name: Player
-  Script: {guid: a3a6c5f319ba38c92bffbc78122415a7}
+  Script: {guid: 441880e9633a5feefe7a88ad6acfa23c}
   onamae: HERRO
-  gameObj: {fileID: 0}
+  gameObj: {fileID: 22203055554271501}  # GameObject
   sad: 0
   otherT: {fileID: 0}
-  ching: 0
+  ching: 1
 ---
 ID: 16942626329878887566
 GameObject:
@@ -342,7 +341,7 @@ ID: 844126210943487470
 MeshRenderer:
   m_GameObject: {fileID: 15963777357859177452}
   Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
+  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5

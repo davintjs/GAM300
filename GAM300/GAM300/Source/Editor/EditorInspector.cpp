@@ -879,7 +879,7 @@ void DisplayComponentHelper(T& component)
         GetFilePathEvent<ScriptAsset> e{component.scriptId};
         EVENTS.Publish(&e);
         if(&component)
-            name = (e.filePath.string() + " (Script)");
+            name = (e.filePath.stem().string() + " (Script)");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {

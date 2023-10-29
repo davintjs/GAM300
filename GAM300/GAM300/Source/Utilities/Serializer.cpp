@@ -369,7 +369,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             // Check for Scripts
             if constexpr (std::is_same<T, Script>())
             {
-                _scene.Add<T>(entity,component.scriptId);
+                _scene.Add<T>(component.EUID(),component.UUID(), component.scriptId);
             }
             else
             {
@@ -420,7 +420,7 @@ void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data)
             YAML::detail::iterator_value kv = *(++node.begin());
             std::string name = kv.first.as<std::string>();
             //PRINT("Loading " + name + " component... \n");
-            DeComHelper helper{ &node, &_scene, false };
+            DeComHelper helper{ &node, &_scene, true };
             DeserializeComponent(ComponentTypes[name], &helper);
         }
     }
