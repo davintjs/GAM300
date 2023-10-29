@@ -27,7 +27,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <map>
 #include <Utilities/GUID.h>
 #include <AssetManager/AssetTypes.h>
-
+#include <Core/EventsManager.h>
+#include <Core/Events.h>
 #include <Properties.h>
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
@@ -251,15 +252,16 @@ property_begin_name(CharacterController, "CharacterController") {
 
 struct Script : Object
 {
-	std::string name;
-	Script() {}
-	Script(const char* _name) :name{ _name } {}
+	Script(){}
+	Script(const char* yes) { PRINT(yes, '\n'); }
+	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
 	property_vtable();
 };
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
+	property_var(scriptId).Name("Script").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
@@ -455,10 +457,10 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));

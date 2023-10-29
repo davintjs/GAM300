@@ -42,6 +42,9 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},
+
+	//Default Scripts
+	{"None.cs", Engine::GUID(400)}
 };
 
 struct MetaFile : property::base
@@ -128,3 +131,8 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
 };
+
+
+//Hash table that maps an ID to a pointer
+template <typename T>
+using AssetsTable = std::unordered_map<Engine::GUID, T>;

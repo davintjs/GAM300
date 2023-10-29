@@ -177,7 +177,7 @@ bool DeserializeScene(Scene& _scene);
 bool DeserializeSettings(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the entities in the specific scene
-void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking = false);
+void DeserializeEntity(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the components in the specific scene, the id parameter checks for deserialization of components
 // for the GameObject or for mainly the Component

@@ -7,10 +7,6 @@
 #include <Utilities/YAMLUtils.h>
 #include <Utilities/Serializer.h>
 
-//Hash table that maps an ID to a pointer
-template <typename T>
-using AssetsTable = std::unordered_map<Engine::GUID, T>;
-
 namespace chron = std::chrono;
 
 enum AssetState

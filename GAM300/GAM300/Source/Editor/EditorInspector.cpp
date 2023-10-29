@@ -281,6 +281,27 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     }
 }
 
+template <typename... Ts>
+fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
+{
+    fs::path path;
+    if (([&](auto type)
+    {
+        using T = decltype(type);
+        GetFilePathEvent<T> e{ guid };
+        EVENTS.Publish(&e);
+        if (e.filePath == "")
+            return false;
+        path = e.filePath;
+        return true;
+    }
+    (Ts{}) || ...))
+    {
+        return path;
+    }
+    return path;
+}
+
 void DisplayType(Change& change, const char* name, Engine::GUID& val)
 {
     static std::string idName{};
@@ -298,9 +319,7 @@ void DisplayType(Change& change, const char* name, Engine::GUID& val)
     }
     if (fp.empty())
     {
-        GetFilePathEvent e{ val };
-        EVENTS.Publish(&e);
-        fp = e.filePath;
+        fp = DisplayGUIDHelper(AssetTypes(),val);
     }
     const std::string& pathStr = fp.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
@@ -775,7 +794,7 @@ void Display_Property(T& comp) {
                 property::set(comp, entry.first.c_str(), Data);
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
             }
            
         });
@@ -857,8 +876,10 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
+        GetFilePathEvent<ScriptAsset> e{component.scriptId};
+        EVENTS.Publish(&e);
         if(&component)
-            name = (component.name + " [Script]");
+            name = (e.filePath.string() + " (Script)");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
@@ -1046,14 +1067,14 @@ private:
         {
             if constexpr (std::is_same_v<T1, Script>)
             {
-                GetScriptNamesEvent nameEvent;
-                EVENTS.Publish(&nameEvent);
+                GetAssetsEvent<ScriptAsset> e;
+                EVENTS.Publish(&e);
 
-                for (size_t i = 0; i < nameEvent.count; ++i)
+                for (auto& pair : *e.pAssets)
                 {
-                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
-                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        scene.Add<T1>(entity, pair.first);
                         EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }
