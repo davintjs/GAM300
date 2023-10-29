@@ -25,18 +25,27 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "yaml-cpp/yaml.h"
 #include <unordered_set>
 
+// Bean: Include model compiler here temporarily, should use events instead
+#include "ModelCompiler.h"
+
 static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
 	{".jpg", "TextureCompiler.exe "},
 	{".png", "TextureCompiler.exe "},
-	{".fbx", "ModelCompiler.exe "},
-	{".obj", "ModelCompiler.exe "},
+	//{".fbx", "ModelCompiler.exe "},
+	//{".obj", "ModelCompiler.exe "},
 };
 
 void AssetManager::Compile(const fs::path& path)
 {
 	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
 	system(command.c_str());
+
+	if (path.extension() == ".fbx" || path.extension() == ".obj")
+	{
+		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
+		MODELCOMPILER.LoadModel(path);
+	}
 }
 
 bool AssetManager::IsCompilable(const fs::path& path)

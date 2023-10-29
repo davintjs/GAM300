@@ -96,6 +96,7 @@
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
     <ClCompile Include="Source\Editor\EditorHistory.cpp" />
     <ClCompile Include="Source\Utilities\GUID.cpp" />
+    <ClCompile Include="Source\AssetManager\ModelCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -177,6 +178,7 @@
     <ClInclude Include="Source\AssetManager\AssetTypes.h" />
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\Core\EventInterface.h" />
+    <ClInclude Include="Source\AssetManager\ModelCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
