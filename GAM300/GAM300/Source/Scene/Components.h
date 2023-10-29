@@ -30,6 +30,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Core/EventsManager.h>
 #include <Core/Events.h>
 #include <Properties.h>
+#include "Debugging/Debugger.h"
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
@@ -255,7 +256,7 @@ struct Script : Object
 	Script(){}
 	Script(const char* yes) 
 	{
-		PRINT("HEREEEEEEEEEEEEEEEEEEEEE: ", yes, '\n');
+		E_ASSERT(false,"INVALID CONSTRUCTOR");
 	}
 	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
 	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
