@@ -254,10 +254,6 @@ void Renderer::Update(float)
 	
 	if (RENDERER.enableShadows())
 	{
-		LightProperties spot_light_stuffs;
-		LightProperties directional_light_stuffs;
-		LightProperties point_light_stuffs;
-
 		if (spot_light_stuffs.inUse)
 		{
 			DrawDepthSpot();
@@ -400,7 +396,8 @@ void Renderer::Draw(BaseCamera& _camera)
 	//	glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
 	//	glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
 	//	glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, depthMap);
-	//	glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	//	glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, depthMap_S);
+	//	glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
 	//	GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
 	//	shader.Use();
@@ -549,13 +546,13 @@ void Renderer::Draw(BaseCamera& _camera)
 
 	//	// SHADOW 
 	//	GLint uniform10 =
-	//		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
-
-
-
-
+	//		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
 	//	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
-	//		glm::value_ptr(lightSpaceMatrix));
+	//		glm::value_ptr(lightSpaceMatrix_directional));
+	//	GLint uniform11 =
+	//		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Spot");
+	//	glUniformMatrix4fv(uniform11, 1, GL_FALSE,
+	//		glm::value_ptr(lightSpaceMatrix_spot));
 
 
 
@@ -564,10 +561,10 @@ void Renderer::Draw(BaseCamera& _camera)
 	//	// SETTINGS
 	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
 
-	//	GLint uniform11 =
+	//	GLint uniform12 =
 	//		glGetUniformLocation(shader.GetHandle(), "renderShadow");
 
-	//	glUniform1f(uniform11, RenderShadow);
+	//	glUniform1f(uniform12, RENDERER.enableShadows());
 
 	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
 

@@ -42,7 +42,8 @@ layout (location = 1) out vec4 Blooming;
 layout (location = 0) in vec2 TexCoords;
 layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
-layout (location = 3) in vec4 frag_pos_lightspace;
+layout (location = 3) in vec4 frag_pos_lightspace_D;
+layout (location = 4) in vec4 frag_pos_lightspace_S;
 
 
 //-------------------------
@@ -89,8 +90,9 @@ layout (binding = 4) uniform sampler2D AoMap;
 layout (binding = 5) uniform sampler2D EmmisionMap;
 
 // Shadow textureSamples
-layout (binding = 6) uniform sampler2D ShadowMap;
-layout (binding = 7) uniform samplerCube ShadowCubeMap;
+layout (binding = 6) uniform sampler2D ShadowMap_Directional;
+layout (binding = 7) uniform sampler2D ShadowMap_Spot;
+layout (binding = 8) uniform samplerCube ShadowCubeMap;
 
 uniform bool renderShadow;
 uniform float farplane;
@@ -164,14 +166,14 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
-float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(ShadowMap, projCoords.xy).r; 
+    float closestDepth = texture(ShadowMap_Directional, projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow
@@ -186,6 +188,30 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
     return shadow;
 }
 // ----------------------------------------------------------------------------
+
+float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(ShadowMap_Spot, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;  
+    // check whether current frag pos is in shadow
+
+    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    return shadow;
+}
+// ----------------------------------------------------------------------------
+
 
 float ShadowCalculation_Point(vec3 lightpos)
 {
@@ -440,7 +466,7 @@ void main()
 
 
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
 
         
         
@@ -517,7 +543,7 @@ void main()
         
         
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
 
         
         
