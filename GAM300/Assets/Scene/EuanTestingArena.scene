@@ -32,7 +32,7 @@ ID: 10413881243206984898
 MeshRenderer:
   m_GameObject: {fileID: 22203055554271501}
   Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [1, 1, 1, 1]
+  Albedo: [1, 0, 0, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -68,7 +68,7 @@ GameObject:
 ID: 17375001972001814902
 Transform:
   m_GameObject: {fileID: 16942626329878887566}
-  Translation: [-0.446017146, 2.19421697, 0.701099932]
+  Translation: [-0.44597137, 2.19421697, 0.701099932]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -92,7 +92,7 @@ ID: 1245608959500342360
 MeshRenderer:
   m_GameObject: {fileID: 16942626329878887566}
   Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [1, 1, 1, 1]
+  Albedo: [1, 0.0575221181, 0.0575221181, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5

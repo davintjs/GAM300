@@ -139,7 +139,6 @@ namespace YAML
             {
                 return false;
             }
-
             rhs.x = node[0].as<float>();
             rhs.y = node[1].as<float>();
             rhs.z = node[2].as<float>();
