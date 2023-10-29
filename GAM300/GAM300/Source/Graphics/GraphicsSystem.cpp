@@ -194,6 +194,10 @@ void GraphicsSystem::Init()
 	darkBlueMat.roughness = 1.f;
 	darkBlueMat.ao = 1.f;
 
+	temporary_presets.emplace_back(emissionMat);
+	temporary_presets.emplace_back(blackSurfaceMat);
+	temporary_presets.emplace_back(darkBlueMat);
+
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
 	SkyboxManager::Instance().Init();

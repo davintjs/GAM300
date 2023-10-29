@@ -24,14 +24,14 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 struct temp_instance
 {
-	vec4 albedo;
+	std::string name;
+	glm::vec4 albedo;
 	float metallic;
 	float roughness;
 	float ao;
 
 };
 
-std::vector<temp_instance> temporary_presets;
 
 
 
@@ -95,6 +95,7 @@ union Light_Type
 
 struct LightProperties
 {
+	bool inUse = true;
 	// Used in point & Spot
 	glm::vec3 lightpos;
 

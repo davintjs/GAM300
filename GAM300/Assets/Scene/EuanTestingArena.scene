@@ -203,9 +203,9 @@ BoxCollider:
 GameObject:
   m_EUID: 6606253624498158492
   m_IsActive: true
-  m_Name: LightSource
+  m_Name: Point Light
   m_Layer: 0
-  m_Position: [-0.849790037, 4.59470415, 1.5261389]
+  m_Position: [-0.849790037, 4.59470415, 2.1199491]
   m_Rotation: [0, -0, 0]
   m_Scale: [1, 1, 1]
   m_Children:
@@ -219,11 +219,11 @@ LightSource:
   UUID: 2383003823628521294
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 1
+  Intensity: 100
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
+  Color: [1, 1, 1]
 ---
 GameObject:
   m_EUID: 3741745616850505635
@@ -293,7 +293,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   Mesh: 00000000000000000000000000000065
-  Albedo: [0.926188409, 0.926188409, 1, 0.964601755]
+  Albedo: [1, 0.964601755, 0.926188409, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
@@ -457,3 +457,53 @@ MeshRenderer:
   RoughnessTexture: 00000000000000000000000000000000
   AoTexture: 00000000000000000000000000000000
   EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 15105405909020026169
+  m_IsActive: true
+  m_Name: Directional Light
+  m_Layer: 0
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, 0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 17025454500342147841}  # LightSource
+---
+LightSource:
+  EUID: 15105405909020026169
+  UUID: 17025454500342147841
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 93
+  Direction: [-0.200000003, -1, -0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]
+---
+GameObject:
+  m_EUID: 9927821557611252741
+  m_IsActive: true
+  m_Name: Spot Light
+  m_Layer: 0
+  m_Position: [15.2868824, 7.74735641, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 12701185002496820023}  # LightSource
+---
+LightSource:
+  EUID: 9927821557611252741
+  UUID: 12701185002496820023
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 100
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]
