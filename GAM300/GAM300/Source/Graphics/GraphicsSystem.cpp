@@ -51,6 +51,7 @@ extern unsigned int depthCubemap;
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
 
+std::vector<temp_instance> temporary_presets;
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
@@ -172,7 +173,26 @@ bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& 
 
 void GraphicsSystem::Init()
 {
+	temp_instance emissionMat;
+	emissionMat.name = "Emission material";
+	emissionMat.albedo = glm::vec4(0.f, 255.f, 255.f, 255.f);
+	emissionMat.metallic = 1.f;
+	emissionMat.roughness = 1.f;
+	emissionMat.ao = 1.f;
 
+	temp_instance blackSurfaceMat;
+	blackSurfaceMat.name = "Black Surface material";
+	blackSurfaceMat.albedo = glm::vec4(0.f, 0.f, 0.f, 255.f);
+	blackSurfaceMat.metallic = 1.f;
+	blackSurfaceMat.roughness = 1.f;
+	blackSurfaceMat.ao = 1.f;
+
+	temp_instance darkBlueMat;
+	darkBlueMat.name = "Dark Blue material";
+	darkBlueMat.albedo = glm::vec4(73.f, 85.f, 128.f, 255.f);
+	darkBlueMat.metallic = 1.f;
+	darkBlueMat.roughness = 1.f;
+	darkBlueMat.ao = 1.f;
 
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
