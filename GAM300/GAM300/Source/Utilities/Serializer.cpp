@@ -326,7 +326,6 @@ bool DeserializeSettings(YAML::Node& _node, Scene& _scene)
 
 void DeserializeEntity(YAML::Node& _node, Scene& _scene)
 {
-    PRINT(_node.as<std::string>());
     YAML::Node object = _node["GameObject"];
     
     Engine::UUID euid = _node["ID"].as<Engine::UUID>();
