@@ -27,6 +27,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 #include "Graphics/MeshManager.h"
+#include "Graphics/GraphicsHeaders.h"
 
 namespace
 {
@@ -126,10 +127,11 @@ void EditorScene::ToolBar()
         }
         ImGui::PopStyleColor();
 
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(30.0f, 0.f));
+        ImGui::SameLine(); ImGui::Dummy(ImVec2(20.0f, 0.f));
 
         //For thoe to change to toggle debug drawing
         ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        //ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
     }
     ImGui::End();
 }
@@ -157,6 +159,28 @@ void EditorScene::SceneView()
         }
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)sceneDimension.x, (float)sceneDimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+
+                ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
+                Engine::GUID guid = data.guid;
+
+                if (data.type == MESH) {
+                    //Create new entity
+                    Scene& curr_scene = MySceneManager.GetCurrentScene();
+                    Entity* ent = curr_scene.Add<Entity>();
+                    //Add mesh renderer
+                    curr_scene.Add<MeshRenderer>(*ent);
+                    //Attach dragged mesh GUID from the content browser
+                    curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
+                    curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                }
+
+                //add other file types here
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         // Display the gizmos for the selected entity
         DisplayGizmos();
