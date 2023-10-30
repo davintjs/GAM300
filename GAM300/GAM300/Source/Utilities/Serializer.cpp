@@ -35,16 +35,6 @@ namespace
 GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((DeComHelper*)pObject)));
 
 
-void Serialize(const std::string& _filepath)
-{
-    (void)_filepath;
-}
-
-void SerializeRuntime(const std::string& _filepath)
-{
-    (void)_filepath;
-}
-
 bool SerializeScene(Scene& _scene)
 {
     YAML::Emitter out;
@@ -88,6 +78,32 @@ bool SerializeSettings(YAML::Emitter& out, Scene& _scene)
     out << YAML::EndMap << YAML::EndMap << YAML::Comment("All settings above are just examples");
 
     return true;
+}
+
+bool SerializePrefab(Entity& _entity, Scene& _scene)
+{
+    YAML::Emitter out;
+    std::string name{ _scene.Get<Tag>(_entity).name };
+    name = "Assets/" + name;
+    name += ".prefab";
+    if (fs::exists(name))
+    {
+        PRINT("FAILED TO SERIALIZE PREFAB AS IT ALREADY EXISTS");
+        return false;
+    }
+    //Success
+    if (SerializeEntity(out, _entity, _scene))
+    {
+        std::ofstream fout(name, std::ios::out);
+        fout << out.c_str();
+
+        if (fout.fail())
+        {
+            fout.close();
+            return false;
+        }
+        fout.close();
+    }
 }
 
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
@@ -382,6 +398,13 @@ void DeserializeComponent(const DeComHelper& _helper)
     }
     else
     {
+        if constexpr (std::is_same<T, Transform>())
+        {
+            if (component.parent)
+            {
+                MySceneManager.GetCurrentScene().Get<Transform>(component.parent).child.push_back(component.EUID());
+            }
+        }
         if constexpr (std::is_same<T, Script>())
         {
             T& script = _scene.Get<T>(component.EUID(), component.UUID());

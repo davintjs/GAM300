@@ -44,12 +44,6 @@ struct DeComHelper
     bool linker;
 };
 
-// Encapsulation for all different types of serializing like Scene, Prefab, NavMesh Data etc
-void Serialize(const std::string& _filepath);
-
-// Serialization for Prefabs, Navmesh & Scene
-void SerializeRuntime(const std::string& _filepath);
-
 // Serialize the scene
 bool SerializeScene(Scene& _scene);
 
@@ -58,6 +52,8 @@ bool SerializeSettings(YAML::Emitter& out, Scene& _scene);
 
 // Serialize the entities in the specific scene
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
+
+bool SerializePrefab(Entity& _entity, Scene& _scene);
 
 // When serializing ids/pointers
 template <typename T>
