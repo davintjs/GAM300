@@ -139,7 +139,6 @@ namespace YAML
             {
                 return false;
             }
-
             rhs.x = node[0].as<float>();
             rhs.y = node[1].as<float>();
             rhs.z = node[2].as<float>();
@@ -167,6 +166,14 @@ namespace YAML
         }
     };
 
+    //struct CustomAnchor
+    //{
+    //    std::string str;
+    //};
+
+    //inline Emitter& operator<<(Emitter& emitter, const CustomAnchor& v) {
+    //    return emitter.Write(v);
+    //}
     //template <>
     //struct convert<char*>
     //{

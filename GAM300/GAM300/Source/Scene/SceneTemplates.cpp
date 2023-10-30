@@ -294,10 +294,10 @@ T* Scene::Add
 	else if constexpr (AllComponentTypes::Has<T>())
 	{
 		Entity& entity{ Get<Entity>(euid) };
+		//Entities UUID is a dense Index
 		object = &arr.emplace((ObjectIndex)entity.uuid, args...);
 		object->euid = euid;
-		if (uuid)
-			object->uuid = uuid;
+		object->uuid = uuid;
 		if constexpr (SingleComponentTypes::Has<T>())
 		{
 			singleHandles.emplace(object, object->euid);

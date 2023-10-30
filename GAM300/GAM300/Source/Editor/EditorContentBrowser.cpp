@@ -51,9 +51,9 @@ void EditorContentBrowser::Update(float dt)
     }
 
 
-    static float padding = 12.0f;
+    static float padding = 20.0f;
     static float iconsize = 100.f;
-    float cellsize = iconsize + padding;
+    float cellsize = iconsize + padding + 20.f;
 
     float window_width = ImGui::GetContentRegionAvail().x;
     int columncount = (int)(window_width / cellsize);
@@ -85,11 +85,44 @@ void EditorContentBrowser::Update(float dt)
                 icon = path;
             }
         }
-       
+
+        ImGui::BeginGroup();
+
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         icon_id = GET_TEXTURE_ID(icon);
         ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
+
+        //Drag drop logic for content browser
+        if (!it.is_directory() && ImGui::BeginDragDropSource()) {
+            std::string filepath = relativepath.string();
+            std::string ext = filepath;
+            //check what extension is the file
+            ext.erase(0, ext.find_last_of(".") + 1);
+
+            ContentBrowserPayload payload;
+            /*
+            GetAssetEvent e{ it.path() };
+            EVENTS.Publish(&e);
+            Engine::GUID currentGUID = e.guid;
+            payload.payload = &currentGUID;
+            payload.type = MESH;*/
+            
+            if (ext == "geom") { //mesh files
+                GetAssetEvent e{ it.path() };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MESH;
+            }
+            else if (ext == "prefab") { //prefab files
+
+            }
+           
+            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
+            ImGui::EndDragDropSource();
+
+        }
 
         ImGui::PopStyleColor();
         //Change directory into the folder clicked
@@ -119,6 +152,23 @@ void EditorContentBrowser::Update(float dt)
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
         }
+    
+        //render extension button
+        if (!it.is_directory() && (path.string().find(".fbx") != std::string::npos)) {
+            ImGui::SameLine();
+
+            // Calculate the position to align the buttons to the center of the row height
+            float rowHeight = ImGui::GetTextLineHeightWithSpacing();
+            float buttonPosY = ImGui::GetCursorPos().y + 50.f;
+
+            // Set the cursor position to center the buttons vertically
+            ImGui::SetCursorPosY(buttonPosY);
+
+            icon_id = GET_TEXTURE_ID("Assets/Icons/Editorplaybutton.dds");
+            ImGui::ImageButton((ImTextureID)icon_id, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
+        }
+       
+        ImGui::EndGroup();
 
         //render file name below icon
         ImGui::TextWrapped(pathStr.c_str());

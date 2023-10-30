@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <Utilities/GUID.h>
+#include <Debugging/Debugger.h>
 
 using string_t = std::string;
 
@@ -102,6 +103,13 @@ public:
         return x != other.x || y != other.y || z != other.z;
     }
 
+    Vector3& operator *=(float value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        return *this;
+    }
+
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec3() const {
         return glm::vec3(x, y, z);
@@ -114,39 +122,39 @@ public:
 class Vector4 {
 public:
     
-    float w, x, y, z;
+    float x, y, z, w;
 
     //Constructors
     Vector4() : x(0.f), y(0.f), z(0.f), w(0.f) {}
-    Vector4(float w_, float x_, float y_, float z_) : w(w_), x(x_), y(y_), z(z_) {}
-    Vector4(float i) : w(i), x(i), y(i), z(i) {}
+    Vector4(float x_, float y_, float z_, float w_) : x(x_), y(y_), z(z_), w(w_) {}
+    Vector4(float i) : x(i), y(i), z(i), w(i) {}
 
-    Vector4(Vector3& vec, float w_) : w(w_), x(vec.x), y(vec.y), z(vec.z) {}
-    Vector4(Vector4& vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
-    Vector4(glm::vec4 vec) : w(vec.w), x(vec.x), y(vec.y), z(vec.z) {}
+    Vector4(Vector3& vec, float w_) : x(vec.x), y(vec.y), z(vec.z), w(w_) {}
+    Vector4(Vector4& vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w) {}
+    Vector4(glm::vec4 vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w) {}
 
     //Operator Overloads
     Vector4& operator=(const Vector4& Vec4) {
-        w = Vec4.w;
         x = Vec4.x;
         y = Vec4.y;
         z = Vec4.z;
+        w = Vec4.w;
         return *this;
     }
 
     Vector4& operator=(const glm::vec4& glmVec4) {
-        w = glmVec4.w;
         x = glmVec4.x;
         y = glmVec4.y;
         z = glmVec4.z;
+        w = glmVec4.w;
         return *this;
     }
 
     Vector4& operator=(const ImVec4& imvec4) {
-        w = imvec4.w;
         x = imvec4.x;
         y = imvec4.y;
         z = imvec4.z;
+        w = imvec4.w;
         return *this;
     }
 
@@ -154,15 +162,15 @@ public:
 
         E_ASSERT((id < 0 || id > 3),  "Vector4 Subscript operator out of range!");
 
-        if (id == 0) return w;
-        if (id == 1) return x;
-        if (id == 2) return y;
-        if (id == 3) return z;
+        if (id == 0) return x;
+        if (id == 1) return y;
+        if (id == 2) return z;
+        if (id == 3) return w;
     }
 
     // Conversion operator from Vector3 to glm::vec3
     operator glm::vec4() const {
-        return glm::vec4(w, x, y, z);
+        return glm::vec4(x, y, z, w);
     }
 
 };

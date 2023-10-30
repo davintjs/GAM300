@@ -33,30 +33,30 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "AssetManager/AssetManager.h"
 //
 //#include "../../Compiler/Mesh.h"
-//#include "Scene/SceneManager.h"
+#include "../../Compiler/Mesh.h"
 
 
-#define MAX_BONE_INFLUENCE 4
+//#define MAX_BONE_INFLUENCE 4
 class AnimationModel;
 
-struct AnimationVertex {// ideally can delete aft move to compiler
-    // position
-    glm::vec3 Position;
-    // normal
-    glm::vec3 Normal;
-    // tangent
-    glm::vec3 Tangent;
-    // texCoords
-    glm::vec2 TexCoords;
-    //// bitangent
-    //glm::vec3 Bitangent;
-    // color
-    glm::ivec4 Color;
-    //bone indexes which will influence this vertex
-    int m_BoneIDs[MAX_BONE_INFLUENCE];
-    //weights from each bone
-    float m_Weights[MAX_BONE_INFLUENCE];
-};
+//struct AnimationVertex {// ideally can delete aft move to compiler
+//    // position
+//    glm::vec3 Position;
+//    // normal
+//    glm::vec3 Normal;
+//    // tangent
+//    glm::vec3 Tangent;
+//    // texCoords
+//    glm::vec2 TexCoords;
+//    //// bitangent
+//    //glm::vec3 Bitangent;
+//    // color
+//    glm::ivec4 Color;
+//    //bone indexes which will influence this vertex
+//    int m_BoneIDs[MAX_BONE_INFLUENCE];
+//    //weights from each bone
+//    float m_Weights[MAX_BONE_INFLUENCE];
+//};
 
 struct TextureInfo {
     unsigned int id;
@@ -67,13 +67,13 @@ struct TextureInfo {
 class AnimationMesh {
 public:
     // mesh Data
-    std::vector<AnimationVertex> vertices;
+    std::vector<ModelVertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<TextureInfo> textures;
     GLuint _VAO;
 
     // constructor
-    AnimationMesh(std::vector<AnimationVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
+    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
 
     // render the mesh
     void Draw(GLSLShader& shader);
@@ -81,11 +81,11 @@ public:
 private:
 
     // initializes all the buffer objects/arrays
-    void setupMesh(); // kinda like get geom from files
+    void setupMesh();
 };
 
 
-//compiler only
+
 class AssimpGLMHelpers
 {
 public:
@@ -204,7 +204,7 @@ public:
     //void init(const std::string& animationPath, AnimationModel* model);
 
 
-    //~Animation();   
+    //~Animation();
 
     Bone* FindBone(const std::string& name);
 
@@ -244,8 +244,6 @@ public:
     //std::string directory; 
     //bool gammaCorrection;
 
-
-
     // constructor, expects a filepath to a 3D model.
     AnimationModel();
 
@@ -259,23 +257,10 @@ public:
 
     Animation& GetAnimations() { return allAnimations; } // also temp
 
-
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
-    std::map<std::string, BoneInfo> m_BoneInfoMap; // compiler only
-    int m_BoneCounter = 0; // compiler only
-    // checks all material textures of a given type and loads the textures if they're not loaded yet.
-    // the required info is returned as a Texture struct.
-    std::vector<TextureInfo> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName); // aother compiler boi
-
-    // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    void loadModel(std::string const& path); // compiler only
-
-    // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene); //process geom equivalent,  compiler only
-    AnimationMesh processMesh(aiMesh* mesh, const aiScene* scene);  // compiler only
-    void ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene);  // compiler only
-
+    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    int m_BoneCounter = 0;
 };
 
 //class AnimationAnimator

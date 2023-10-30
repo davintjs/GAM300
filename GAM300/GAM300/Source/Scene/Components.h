@@ -28,8 +28,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <map>
 #include <Utilities/GUID.h>
 #include <AssetManager/AssetTypes.h>
-
+#include <Core/EventsManager.h>
+#include <Core/Events.h>
 #include <Properties.h>
+#include "Debugging/Debugger.h"
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
@@ -108,9 +110,11 @@ struct Transform : Object
 
 property_begin_name(Transform, "Transform")
 {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(translation).Name("Translation"),
-		property_var(rotation).Name("Rotation"),
-		property_var(scale).Name("Scale"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
+	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE)
 } property_vend_h(Transform)
 
 struct AudioSource : Object
@@ -134,6 +138,7 @@ property_begin_name(AudioSource, "Audio Source") {
 		//property_var(ChannelName).Name("channel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
 
@@ -259,15 +264,19 @@ property_begin_name(CharacterController, "CharacterController") {
 
 struct Script : Object
 {
-	std::string name;
-	Script() {}
-	Script(const char* _name) :name{ _name } {}
+	Script(){}
+	Script(const char* yes) 
+	{
+		E_ASSERT(false,"INVALID CONSTRUCTOR");
+	}
+	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
 	property_vtable();
 };
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
+	property_var(scriptId).Name("Script").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
@@ -333,6 +342,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(emission).Name("EmissionScalar"),
 } property_vend_h(MeshRenderer)
 
 
@@ -463,10 +473,10 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
