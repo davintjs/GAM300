@@ -176,7 +176,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
 
     }
 
-    newMesh.vertices_min = min;
+
     newMesh.vertices_max = max;
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
@@ -483,7 +483,7 @@ void MESH_Manager::CreateInstanceCube()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     Engine::GUID& cubeGUID = DEFAULT_ASSETS["Cube.geom"];
-    InstanceProperties tempProp; // a lot on the stack, do something about it @kk or @sean
+    InstanceProperties tempProp; 
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;

@@ -59,7 +59,6 @@ void Renderer::Init()
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-	SetupGrid(100);
 }
 
 void Renderer::Update(float)
@@ -76,6 +75,7 @@ void Renderer::Update(float)
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
+	SetupGrid(100);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -240,24 +240,27 @@ void Renderer::Update(float)
 
 void Renderer::SetupGrid(const int& _num)
 {
-	//float spacing = 100.f;
-	//float length = _num * spacing * 0.5f;
-	// float spacing = 1.f;
-	// float length = _num * spacing * 0.5f;
+
+	float spacing = 1.f;
+	float length = _num * spacing * 0.5f;
 
 	//instanceProperties["Line"].iter = _num * 2;
-	//
+	GLuint vao = MeshManager.vaoMap[DEFAULT_ASSETS["Line.geom"]];
+	size_t s = static_cast<int>(SHADERTYPE::TDR);
+	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
+		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
+	}
+	
+	for (int i = 0; i < _num; i++)
+	{
+		glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
+		glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
+		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
 
-	//for (int i = 0; i < _num; i++)
-	//{
-	//	glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
-	//	glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//	glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
-	//	glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
-
-	//	instanceProperties["Line"].entitySRT[i] = transMatrixZ * scalMatrix; // z axis
-	//	instanceProperties["Line"].entitySRT[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
-	//}
+		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixZ * scalMatrix);// [i] = transMatrixZ * scalMatrix; // z axis
+		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixX * rotMatrix * scalMatrix);//[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
+	}
 }
 
 void Renderer::Draw(BaseCamera& _camera)
@@ -284,6 +287,20 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			// if debug line draw
+			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
+				if (s == static_cast<int>(SHADERTYPE::TDR)) {
+					DrawGrid(vao, prop.entitySRT.size());
+					continue;
+				}
+
+				// FOR DEBUG DRAW
+				if (EditorScene::Instance().DebugDraw())
+					DrawDebug(prop.debugVAO, prop.entitySRT.size());
+			}
+			
+
 			for (int i = 0; i < 31; ++i)
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
@@ -291,27 +308,8 @@ void Renderer::Draw(BaseCamera& _camera)
 			}
 			glActiveTexture(GL_TEXTURE0 + 30);
 			glBindTexture(GL_TEXTURE_2D, depthMap);
-			DrawMeshes(prop.VAO, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, static_cast<SHADERTYPE>(s));
-
-			// FOR DEBUG DRAW
-			if (EditorScene::Instance().DebugDraw() && _camera.GetCameraType() == CAMERATYPE::SCENE)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.iter) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				if (prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.iter);
-			}
-
-			// @kk this one need uncomment, check vao instead of name
-			/*if (name == "Line" && _camera.GetCameraType() == CAMERATYPE::SCENE)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EntityRenderLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				if (prop.VAO)
-					DrawGrid(prop.VAO, prop.iter);
-			}*/
+			DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, static_cast<SHADERTYPE>(s));
+			
 		}
 	}
 
