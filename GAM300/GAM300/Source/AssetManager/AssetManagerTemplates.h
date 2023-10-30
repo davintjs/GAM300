@@ -39,7 +39,7 @@ struct AllAssetsGroup
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID<T::Meta>(filePath,true);
+					Engine::GUID guid = GetGUID(filePath,true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
 						if (fs::is_directory(filePath))
@@ -157,7 +157,7 @@ struct AllAssetsGroup
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == oldExtension)
 				{
-					Engine::GUID guid = GetGUID<T::Meta>(newPath, true);
+					Engine::GUID guid = GetGUID(newPath, true);
 					return true;
 				}
 				return false;
@@ -221,6 +221,7 @@ struct AllAssetsGroup
 	template <typename MetaType>
 	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
+		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaType mFile;

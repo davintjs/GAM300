@@ -22,8 +22,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 static const std::string AssetDirectory = "Assets";
 static std::string currentFolder = "Assets";
 
-
-
 void EditorContentBrowser::Init()
 {
     currentDirectory = AssetDirectory;
