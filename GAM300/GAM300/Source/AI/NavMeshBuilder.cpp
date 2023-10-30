@@ -93,7 +93,7 @@ void NavMeshBuilder::GetAllObstacles()
 		scaledVec.y *= t.scale.y;
 		scaledVec.z *= t.scale.z;
 
-		obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y * (t.scale.y / 2.f);
+		obstacleBottomFace.y = t.translation.y - (scaledVec.y / 2.f);// MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y* (t.scale.y / 2.f);
 
 		glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
 		glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };

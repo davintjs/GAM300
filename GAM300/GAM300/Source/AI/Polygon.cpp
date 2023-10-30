@@ -586,7 +586,7 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 	for (int i = 0; i < mHole.GetPoints().size(); ++i)
 	{
 		glm::vec3& pos = mHole.GetPoints()[i];
-		Line3D line(pos, glm::vec3(0.f, 0.f, 1.f));
+		Line3D line(pos, glm::vec3(0.f, 1.f, 0.f));
 
 		float t;
 		if (Intersects(line, plane, &t))
