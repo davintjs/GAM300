@@ -432,7 +432,8 @@ void Animation_Manager::Init()
 	//allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
 
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
+    //ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
+    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/PlayerV2_Running.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation
