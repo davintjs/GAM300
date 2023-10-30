@@ -221,6 +221,7 @@ struct AllAssetsGroup
 	template <typename MetaType>
 	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
+		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaType mFile;

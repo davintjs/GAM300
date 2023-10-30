@@ -330,6 +330,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(emission).Name("EmissionScalar"),
 } property_vend_h(MeshRenderer)
 
 
