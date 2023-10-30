@@ -96,6 +96,8 @@ uniform int SpotLight_Count;
 // Bloom
 uniform float bloomThreshold;
 
+// ambience value
+uniform float ambience_multiplier;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -544,7 +546,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao +  emission;
+    vec3 ambient = vec3(ambience_multiplier) * albedo * ao +  emission;
     
     vec3 color = ambient + Lo;
 

@@ -276,6 +276,7 @@ property_begin_name(MeshFilter, "MeshFilter"){
 
 struct MeshRenderer : Object
 {
+
 	Engine::GUID meshID{ DEFAULT_MESH };
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };

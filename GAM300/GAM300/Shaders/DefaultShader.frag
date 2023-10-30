@@ -98,6 +98,9 @@ uniform float farplane;
 // Bloom
 uniform float bloomThreshold;
 
+// ambience value
+uniform float ambience_multiplier;
+
 vec3 getNormalFromMap()
 {
     vec3 normal = texture(NormalMap, TexCoords).xyz;
@@ -527,7 +530,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + emission ;
+    vec3 ambient = vec3(ambience_multiplier) * albedo * ao + emission ;
     
     vec3 color = ambient + Lo;
 
