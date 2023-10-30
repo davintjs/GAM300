@@ -46,9 +46,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
     /*std::cout << "I have Materials : " << newGeom._materials.size() << 
         "from " << filePath << "\n";*/
 
-    for (int i = 0; i < newGeom._materials.size(); ++i)
+    /*for (int i = 0; i < newGeom._materials.size(); ++i)
     {
-        /*std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.g << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.b << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.a << "\n";
@@ -74,8 +74,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
             newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a));
         temp_AmbientContainer.push_back(glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
             newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a));
-        temp_ShininessContainer.push_back(0.f);*/
-    }
+        temp_ShininessContainer.push_back(0.f);
+    }*/
 
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
@@ -169,16 +169,15 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
-
+        
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-
+        
         instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     }
-
-
+    /*newMesh.vertices_min = min;
     newMesh.vertices_max = max;
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, MeshManager.instanceProperties[VAO]);*/
 
     mContainer.emplace(guid, newMesh);
 }
@@ -1019,6 +1018,13 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     pntAABB[5] = glm::vec3(maxpt.x, maxpt.y, minpt.z);
     pntAABB[6] = glm::vec3(maxpt.x, minpt.y, minpt.z);
     pntAABB[7] = glm::vec3(maxpt.x, minpt.y, maxpt.z);
+
+    /*for (int i = 0; i < 8; ++i) {
+        PRINT(pntAABB[i].x, ", ");
+        PRINT(pntAABB[i].y, ", ");
+        PRINT(pntAABB[i].z, "\n");
+    }
+    PRINT("\n");*/
 
     int indice = 0;
 

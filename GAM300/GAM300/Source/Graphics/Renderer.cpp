@@ -296,7 +296,7 @@ void Renderer::Draw(BaseCamera& _camera)
 				}
 
 				// FOR DEBUG DRAW
-				if (EditorScene::Instance().DebugDraw())
+				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
 					DrawDebug(prop.debugVAO, prop.entitySRT.size());
 			}
 			
