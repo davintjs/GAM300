@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma warning( disable : 4100)
 
-ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath)
+ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, const bool& _serialize)
 {
 	// Ensure that it is a fbx or obj file
 	CheckExtension(_filePath);
@@ -37,32 +37,56 @@ ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath)
 
 	Assimp::Importer assimpImporter;
 	uint32_t ImportOptions{};
+
+	// Default import
 	ImportOptions =
-		aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
-		aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
-		aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
-		aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
-		aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
-		aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
-		aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
-		aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
-		aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
-		aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced _material
-		aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
-		aiPostProcessSteps::aiProcess_FlipWindingOrder |			// Flip face winding order to CW (Animation)
-		aiPostProcessSteps::aiProcess_PreTransformVertices;
+		aiPostProcessSteps::aiProcess_CalcTangentSpace |
+		aiPostProcessSteps::aiProcess_Triangulate |
+		aiPostProcessSteps::aiProcess_GenUVCoords |
+		aiPostProcessSteps::aiProcess_GenNormals |
+		aiPostProcessSteps::aiProcess_TransformUVCoords |
+		aiPostProcessSteps::aiProcess_FlipUVs;
+		aiPostProcessSteps::aiProcess_FlipWindingOrder;
 
-
-	// Import fbx
-	const aiScene* _scene = assimpImporter.ReadFile(_filePath.string(), ImportOptions);
-	E_ASSERT(_scene, "Error reading file into assimp _scene!!");
+	// Import fbx with animation
+	const aiScene* defaultScene = assimpImporter.ReadFile(_filePath.string(), ImportOptions);
+	E_ASSERT(defaultScene, "Error reading file into assimp _scene!!");
 
 	ModelComponents model;
 	pModel = &model;
 
-	ProcessNode(*_scene->mRootNode, *_scene);
+	// If the scene does not contain any animations
+	if (!defaultScene->HasAnimations())
+	{
+		ImportOptions =
+			aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
+			aiPostProcessSteps::aiProcess_Triangulate |					// Triangulates all faces of all meshes
+			aiPostProcessSteps::aiProcess_JoinIdenticalVertices |		// Identifies and joins identical vertex data sets within all imported meshes
+			aiPostProcessSteps::aiProcess_LimitBoneWeights |			// for skin model max;
+			aiPostProcessSteps::aiProcess_GenUVCoords |					// Convert ro proper UV coordinate channel
+			aiPostProcessSteps::aiProcess_GenNormals |					// Generate normals
+			aiPostProcessSteps::aiProcess_TransformUVCoords |			// apply UV projection
+			aiPostProcessSteps::aiProcess_FlipUVs |						// flips all UV coordinates along the y-axis and adjusts
+			aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
+			aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced _material
+			aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
+			aiPostProcessSteps::aiProcess_PreTransformVertices;
 
-	SerializeBinaryGeom(_filePath);
+		// Import fbx without animation
+		const aiScene* scene = assimpImporter.ReadFile(_filePath.string(), ImportOptions);
+		E_ASSERT(scene, "Error reading file into assimp _scene!!");
+
+		ProcessNode(*scene->mRootNode, *scene);
+	}
+	else
+	{
+		ProcessNode(*defaultScene->mRootNode, *defaultScene);
+
+		ProcessBones(*defaultScene->mRootNode, *defaultScene);
+	}
+
+	if(_serialize)
+		SerializeBinaryGeom(_filePath);
 
 	return model;
 }
@@ -71,7 +95,12 @@ void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 {
 	if (_scene.HasAnimations())
 	{
-
+		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
+		Animation& animation = pModel->animations.GetAnimations();
+		animation.GetDuration() = animations->mDuration;
+		animation.GetTicksPerSecond() = animations->mTicksPerSecond;
+		animation.ReadHierarchyData(animation.GetRootNode(), _scene.mRootNode);
+		animation.ReadMissingBones(animations, pModel->animations);
 	}
 }
 
@@ -93,15 +122,16 @@ void ModelCompiler::ProcessNode(const aiNode& _node, const aiScene& _scene)
 
 Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 {
-	std::vector<TempVertex> _tempVertex;
+	std::vector<ModelVertex> tempVertex;
 	std::vector<unsigned int> tempIndices;
+	std::vector<TextureInfo> tempTextures;
 
 	for (unsigned int i = 0; i < _mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
-		TempVertex temp;
+		ModelVertex temp;
 
 		// Vertex position
-		temp.pos = glm::vec3(static_cast<float>(_mesh.mVertices[i].x),
+		temp.position = glm::vec3(static_cast<float>(_mesh.mVertices[i].x),
 			static_cast<float>(_mesh.mVertices[i].y),
 			static_cast<float>(_mesh.mVertices[i].z));
 
@@ -112,7 +142,7 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 
 		if (_mesh.HasTextureCoords(0)) // Vertex Texture 
 		{
-			temp.tex = glm::vec2(static_cast<float>(_mesh.mTextureCoords[0][i].x),
+			temp.textureCords = glm::vec2(static_cast<float>(_mesh.mTextureCoords[0][i].x),
 				static_cast<float>(_mesh.mTextureCoords[0][i].y));
 		}
 
@@ -136,11 +166,11 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		// Animation
 		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
 		{
-			temp.m_BoneIDs[i] = -1;
-			temp.m_Weights[i] = 0.f;
+			temp.boneIDs[i] = -1;
+			temp.weights[i] = 0.f;
 		}
 
-		_tempVertex.push_back(temp); // Add this vertex into our vector of vertices
+		tempVertex.push_back(temp); // Add this vertex into our vector of vertices
 	}
 
 	for (unsigned int j = 0; j < _mesh.mNumFaces; ++j) // Processing all faces in this single mesh
@@ -159,25 +189,32 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		ImportMaterialAndTextures(mat);
 	}
 
-	TransformVertices(_tempVertex); // Apply transformation on the mesh according to descriptor file specifications
+	TransformVertices(tempVertex); // Apply transformation on the mesh according to descriptor file specifications
 
-	Optimize(_tempVertex, tempIndices); // Optimize this mesh
+	// Only extract bone data if there is animations
+	if (_scene.HasAnimations())
+	{
+		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
 
-	// Compress vertices for storing in our vertex
-	std::vector<Vertex> _compressedVertices;
-	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
-	std::pair<glm::vec3, glm::vec2> mPosTexScale;
-	CompressVertices(_compressedVertices, _tempVertex, mPosTexOffset, mPosTexScale);
+		pModel->animations.meshes.push_back(AnimationMesh(tempVertex, tempIndices, std::vector<TextureInfo>()));
+	}
+	
+	Optimize(tempVertex, tempIndices); // Optimize this mesh
 
 	// Calculate the _material index of this mesh
 	int materialIndex = static_cast<int>(pModel->materials.size() - 1);
 
-	ExtractBoneWeightForVertices(_tempVertex, _mesh, _scene);
+	std::vector<Vertex> _compressedVertices;
+	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
+	std::pair<glm::vec3, glm::vec2> mPosTexScale;
+
+	// Compress vertices for storing in our vertex
+	CompressVertices(_compressedVertices, tempVertex, mPosTexOffset, mPosTexScale);
 
 	return Geom_Mesh(_compressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
 }
 
-void ModelCompiler::Optimize(std::vector<TempVertex>& _vert, std::vector<unsigned int>& _ind)
+void ModelCompiler::Optimize(std::vector<ModelVertex>& _vert, std::vector<unsigned int>& _ind)
 {
 	std::vector<unsigned int> remap(_ind.size());
 	const size_t vertCount = meshopt_generateVertexRemap(&remap[0],
@@ -185,22 +222,22 @@ void ModelCompiler::Optimize(std::vector<TempVertex>& _vert, std::vector<unsigne
 		_ind.size(),
 		_vert.data(),
 		_ind.size(),
-		sizeof(TempVertex));
+		sizeof(ModelVertex));
 
 	std::vector<unsigned int> remappedIndices(_ind.size());
-	std::vector<TempVertex> remappedVertices(vertCount);
+	std::vector<ModelVertex> remappedVertices(vertCount);
 
 	meshopt_remapIndexBuffer(remappedIndices.data(), _ind.data(), _ind.size(), &remap[0]);
-	meshopt_remapVertexBuffer(remappedVertices.data(), _vert.data(), _vert.size(), sizeof(TempVertex), &remap[0]);
+	meshopt_remapVertexBuffer(remappedVertices.data(), _vert.data(), _vert.size(), sizeof(ModelVertex), &remap[0]);
 
 	meshopt_optimizeVertexCache(remappedIndices.data(), remappedIndices.data(), _ind.size(), vertCount);
 
 	meshopt_optimizeOverdraw(remappedIndices.data(),
 		remappedIndices.data(),
 		_ind.size(),
-		&remappedVertices[0].pos.x,
+		&remappedVertices[0].position.x,
 		vertCount,
-		sizeof(TempVertex),
+		sizeof(ModelVertex),
 		1.05f);
 
 	meshopt_optimizeVertexFetch(remappedVertices.data(),
@@ -208,7 +245,7 @@ void ModelCompiler::Optimize(std::vector<TempVertex>& _vert, std::vector<unsigne
 		_ind.size(),
 		remappedVertices.data(),
 		vertCount,
-		sizeof(TempVertex));
+		sizeof(ModelVertex));
 
 	// Below is for LOD of meshes
 
@@ -219,7 +256,7 @@ void ModelCompiler::Optimize(std::vector<TempVertex>& _vert, std::vector<unsigne
 	//indicesLod.resize(meshopt_simplify(&indicesLod[0],
 	//									remappedIndices.data(), 
 	//									remappedIndices.size(),
-	//									&remappedVertices[0].pos.x, 
+	//									&remappedVertices[0].position.x, 
 	//									vertCount, 
 	//									sizeof(Vertex), 
 	//									targetIndexCount,
@@ -231,16 +268,16 @@ void ModelCompiler::Optimize(std::vector<TempVertex>& _vert, std::vector<unsigne
 
 // Basically changing floats to 2 bytes integers
 void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
-	const std::vector<TempVertex> _tempVertex,
+	const std::vector<ModelVertex> tempVertex,
 	std::pair<glm::vec3, glm::vec2>& _mOffsets,
 	std::pair<glm::vec3, glm::vec2>& _mScales)
 {
-	//for (const auto& _vert : _tempVertex)
+	//for (const auto& _vert : tempVertex)
 	//{
 	//	Vertex currVert;
-	//	currVert.pos.x = _vert.pos.x;
-	//	currVert.pos.y = _vert.pos.y;
-	//	currVert.pos.z = _vert.pos.z;
+	//	currVert.position.x = _vert.position.x;
+	//	currVert.position.y = _vert.position.y;
+	//	currVert.position.z = _vert.position.z;
 	//	currVert.normal.x = _vert.normal.x;
 	//	currVert.normal.y = _vert.normal.y;
 	//	currVert.normal.z = _vert.normal.z;
@@ -248,8 +285,8 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 	//	currVert.tangent.y = _vert.tangent.y;
 	//	currVert.tangent.z = _vert.tangent.z;
 	//	//currVert.tanSign = _vert.tangent.z >= 0 ? 0x1 : 0x3;
-	//	currVert.tex.x = _vert.tex.x;
-	//	currVert.tex.y = _vert.tex.y;
+	//	currVert.textureCords.x = _vert.textureCords.x;
+	//	currVert.textureCords.y = _vert.textureCords.y;
 	//	currVert.color.r = _vert.color.r;
 	//	currVert.color.g = _vert.color.g;
 	//	currVert.color.b = _vert.color.b;
@@ -265,21 +302,21 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 
 	float mTexMinU = FLT_MAX, mTexMinV = FLT_MAX;
 	float mTexMaxU = -FLT_MAX, mTexMaxV = -FLT_MAX;
-	for (const auto& v : _tempVertex)
+	for (const auto& v : tempVertex)
 	{
 		// Position
-		mPosMinX = std::min(mPosMinX, v.pos.x);
-		mPosMinY = std::min(mPosMinY, v.pos.y);
-		mPosMinZ = std::min(mPosMinZ, v.pos.z);
-		mPosMaxX = std::max(mPosMaxX, v.pos.x);
-		mPosMaxY = std::max(mPosMaxY, v.pos.y);
-		mPosMaxZ = std::max(mPosMaxZ, v.pos.z);
+		mPosMinX = std::min(mPosMinX, v.position.x);
+		mPosMinY = std::min(mPosMinY, v.position.y);
+		mPosMinZ = std::min(mPosMinZ, v.position.z);
+		mPosMaxX = std::max(mPosMaxX, v.position.x);
+		mPosMaxY = std::max(mPosMaxY, v.position.y);
+		mPosMaxZ = std::max(mPosMaxZ, v.position.z);
 
 		// Texture
-		mTexMinU = std::min(mTexMinU, v.tex.x);
-		mTexMinV = std::min(mTexMinV, v.tex.y);
-		mTexMaxU = std::max(mTexMaxU, v.tex.x);
-		mTexMaxV = std::max(mTexMaxV, v.tex.y);
+		mTexMinU = std::min(mTexMinU, v.textureCords.x);
+		mTexMinV = std::min(mTexMinV, v.textureCords.y);
+		mTexMaxU = std::max(mTexMaxU, v.textureCords.x);
+		mTexMaxV = std::max(mTexMaxV, v.textureCords.y);
 	}
 
 	glm::vec3 minPos{ mPosMinX, mPosMinY, mPosMinZ };
@@ -303,26 +340,26 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 	_mOffsets.second = (mTexAABB.mMin + mTexAABB.mMax) / 2.f;
 
 	// Compressing the vertices here
-	for (const auto& _vert : _tempVertex)
+	for (const auto& _vert : tempVertex)
 	{
 		float val;
 		Vertex currVert;
 
 		// Position
-		val = (_vert.pos.x - _mOffsets.first.x) / _mScales.first.x;
+		val = (_vert.position.x - _mOffsets.first.x) / _mScales.first.x;
 		currVert.posX = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000); // Multiply by maximum + value or minimum - value
 
-		val = (_vert.pos.y - _mOffsets.first.y) / _mScales.first.y;
+		val = (_vert.position.y - _mOffsets.first.y) / _mScales.first.y;
 		currVert.posY = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
 
-		val = (_vert.pos.z - _mOffsets.first.z) / _mScales.first.z;
+		val = (_vert.position.z - _mOffsets.first.z) / _mScales.first.z;
 		currVert.posZ = static_cast<std::int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
 
 		// Texture
-		val = (_vert.tex.x - _mOffsets.second.x) / _mScales.second.x;
+		val = (_vert.textureCords.x - _mOffsets.second.x) / _mScales.second.x;
 		currVert.texU = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
 
-		val = (_vert.tex.y - _mOffsets.second.y) / _mScales.second.y;
+		val = (_vert.textureCords.y - _mOffsets.second.y) / _mScales.second.y;
 		currVert.texV = static_cast<int16_t>(val >= 0 ? val * 0x7FFF : val * 0x8000);
 
 		// Normals
@@ -345,7 +382,7 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 	}
 }
 
-void ModelCompiler::TransformVertices(std::vector<TempVertex> _vert) // Apply the modifications to our vertices from desc to our geom
+void ModelCompiler::TransformVertices(std::vector<ModelVertex> _vert) // Apply the modifications to our vertices from desc to our geom
 {
 	glm::mat4 concat
 	{
@@ -357,8 +394,8 @@ void ModelCompiler::TransformVertices(std::vector<TempVertex> _vert) // Apply th
 
 	for (size_t i = 0; i < _vert.size(); ++i)
 	{
-		glm::vec3 resultant = concat * glm::vec4(_vert[i].pos, 0.f);
-		_vert[i].pos = resultant;
+		glm::vec3 resultant = concat * glm::vec4(_vert[i].position, 0.f);
+		_vert[i].position = resultant;
 	}
 }
 
@@ -485,7 +522,7 @@ void ModelCompiler::ImportMaterialAndTextures(const aiMaterial& _material)
 	return;
 }
 
-void ModelCompiler::ExtractBoneWeightForVertices(std::vector<TempVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene)
+void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene)
 {
 	auto& boneInfoMap = pModel->animations.GetBoneInfoMap();
 	int& boneCount = pModel->animations.GetBoneCount();
@@ -526,14 +563,14 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<TempVertex>& _vert,
 
 			for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
 			{
-				if (_vert[vertexId].m_BoneIDs[i] == boneID) { // skip if bone existd alr
+				if (_vert[vertexId].boneIDs[i] == boneID) { // skip if bone existd alr
 					return;
 				}
 
-				if (_vert[vertexId].m_BoneIDs[i] < 0)
+				if (_vert[vertexId].boneIDs[i] < 0)
 				{
-					_vert[vertexId].m_Weights[i] = weight;
-					_vert[vertexId].m_BoneIDs[i] = boneID;
+					_vert[vertexId].weights[i] = weight;
+					_vert[vertexId].boneIDs[i] = boneID;
 					break;
 				}
 			}
@@ -546,15 +583,24 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 {
 	std::filesystem::path filePath{ _filePath };
 	filePath.replace_extension(".geom");
-	std::ofstream serializeFile(filePath, std::ios_base::binary);
-	E_ASSERT(serializeFile, "Could not open output file to serialize geom!");
-
-	// Mesh vertices
-	size_t meshSize = pModel->meshes.size();
-	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+	
+	int meshCount = 0;
 
 	for (auto& _mesh : pModel->meshes)
 	{
+		if (meshCount != 0)
+		{
+			std::string str = _filePath.stem().string() + "_" + std::to_string(meshCount) + ".geom";
+			filePath.replace_filename(str);
+		}
+		std::ofstream serializeFile(filePath, std::ios_base::binary);
+		E_ASSERT(serializeFile, "Could not open output file to serialize geom!");
+
+		// Mesh vertices
+		//size_t meshSize = pModel->meshes.size();
+		size_t meshSize = 1;
+		serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
 		// Vertices
 		size_t vertexSize = _mesh._vertices.size();
 		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
@@ -572,13 +618,12 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 
 		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	 // Position offset
 		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	 // Texture offset
-	}
+	
+		//size_t materialSize = pModel->materials.size();
+		size_t materialSize = 1;
+		serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
 
-	size_t materialSize = pModel->materials.size();
-	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
-
-	for (auto& mat : pModel->materials) // Save _material of this model
-	{
+		auto& mat = pModel->materials[_mesh.materialIndex]; // Save _material of this model
 		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
 		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
 		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
@@ -589,10 +634,13 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 		//{
 		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		//}
-	}
+		// 
+		// Animations
+		serializeFile.flush();
+		serializeFile.close();
 
-	serializeFile.flush();
-	serializeFile.close();
+		meshCount++;
+	}
 }
 
 void ModelCompiler::CheckExtension(const std::filesystem::path& _filePath)

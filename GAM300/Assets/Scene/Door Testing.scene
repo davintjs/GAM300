@@ -1,0 +1,136 @@
+Serializer Version 1.1
+---
+Scene Settings:
+  Name: Door Testing
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+GameObject:
+  m_EUID: 5873807906959737705
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_Layer: 0
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 10019469884933492602
+  m_Components:
+    - component: {fileID: 7791066772941582346}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 5873807906959737705
+  UUID: 7791066772941582346
+  Mesh: 17b59db05cc8848f9e366623aed45ab8
+  Albedo: [0, 0.866666675, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 6354930600120499198
+  m_IsActive: true
+  m_Name: New GameObject(2)
+  m_Layer: 0
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 10019469884933492602
+  m_Components:
+    - component: {fileID: 9921833159086141082}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 6354930600120499198
+  UUID: 9921833159086141082
+  Mesh: e9f5845f540c2d54aa88519807597225
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 4303390421090808512
+  m_IsActive: true
+  m_Name: New GameObject(3)
+  m_Layer: 0
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 10019469884933492602
+  m_Components:
+    - component: {fileID: 2289516112577245471}  # MeshRenderer
+---
+MeshRenderer:
+  EUID: 4303390421090808512
+  UUID: 2289516112577245471
+  Mesh: 9ff59d086b0c7135d0ee6b88a8e8d12f
+  Albedo: [0.988235354, 1, 0, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: 00000000000000000000000000000000
+  NormalMap: 00000000000000000000000000000000
+  MetallicTexture: 00000000000000000000000000000000
+  RoughnessTexture: 00000000000000000000000000000000
+  AoTexture: 00000000000000000000000000000000
+  EmissionTexture: 00000000000000000000000000000000
+---
+GameObject:
+  m_EUID: 10019469884933492602
+  m_IsActive: true
+  m_Name: Main
+  m_Layer: 0
+  m_Position: [0, 0, 0]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    - {fileID: 5873807906959737705}
+    - {fileID: 6354930600120499198}
+    - {fileID: 4303390421090808512}
+  m_Parent: 0
+  m_Components:
+    []
+---
+GameObject:
+  m_EUID: 8053645521084163911
+  m_IsActive: true
+  m_Name: Light
+  m_Layer: 0
+  m_Position: [0, 1.35995781, 1.9016335]
+  m_Rotation: [0, -0, 0]
+  m_Scale: [1, 1, 1]
+  m_Children:
+    []
+  m_Parent: 0
+  m_Components:
+    - component: {fileID: 16831443115531205869}  # LightSource
+---
+LightSource:
+  EUID: 8053645521084163911
+  UUID: 16831443115531205869
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 1
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]

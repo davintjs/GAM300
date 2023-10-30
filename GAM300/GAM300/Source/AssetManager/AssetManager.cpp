@@ -32,19 +32,22 @@ static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
 	{".jpg", "TextureCompiler.exe "},
 	{".png", "TextureCompiler.exe "},
-	//{".fbx", "ModelCompiler.exe "},
-	//{".obj", "ModelCompiler.exe "},
+	{".fbx", "ModelCompiler.exe "},
+	{".obj", "ModelCompiler.exe "},
 };
 
 void AssetManager::Compile(const fs::path& path)
 {
 	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
-	system(command.c_str());
 
 	if (path.extension() == ".fbx" || path.extension() == ".obj")
 	{
 		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
 		MODELCOMPILER.LoadModel(path);
+	}
+	else
+	{
+		system(command.c_str());
 	}
 }
 

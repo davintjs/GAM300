@@ -247,7 +247,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(3, _vao, _vbo, _camera);
+	bool index = bloom(1, _vao, _vbo, _camera);
 	//}
 
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());

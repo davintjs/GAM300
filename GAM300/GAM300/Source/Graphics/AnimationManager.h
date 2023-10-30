@@ -33,28 +33,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "AssetManager/AssetManager.h"
 //
 //#include "../../Compiler/Mesh.h"
+#include "../../Compiler/Mesh.h"
 
 
 
-#define MAX_BONE_INFLUENCE 4
 class AnimationModel;
-
-struct AnimationVertex {
-    // position
-    glm::vec3 Position;
-    // normal
-    glm::vec3 Normal;
-    // texCoords
-    glm::vec2 TexCoords;
-    // tangent
-    glm::vec3 Tangent;
-    // bitangent
-    glm::vec3 Bitangent;
-    //bone indexes which will influence this vertex
-    int m_BoneIDs[MAX_BONE_INFLUENCE];
-    //weights from each bone
-    float m_Weights[MAX_BONE_INFLUENCE];
-};
 
 struct TextureInfo {
     unsigned int id;
@@ -65,13 +48,13 @@ struct TextureInfo {
 class AnimationMesh {
 public:
     // mesh Data
-    std::vector<AnimationVertex> vertices;
+    std::vector<ModelVertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<TextureInfo> textures;
     GLuint _VAO;
 
     // constructor
-    AnimationMesh(std::vector<AnimationVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
+    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
 
     // render the mesh
     void Draw(GLSLShader& shader);
@@ -238,8 +221,6 @@ public:
     //std::string directory;
     //bool gammaCorrection;
 
-
-
     // constructor, expects a filepath to a 3D model.
     AnimationModel();
 
@@ -252,25 +233,10 @@ public:
     int& GetBoneCount() { return m_BoneCounter; }
     Animation& GetAnimations() { return allAnimations; } // also temp
 
-
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
     std::map<std::string, BoneInfo> m_BoneInfoMap;
     int m_BoneCounter = 0;
-
-    // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    void loadModel(std::string const& path);
-
-    // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene); //process geom equivalent
-
-    AnimationMesh processMesh(aiMesh* mesh, const aiScene* scene);
-
-    void ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene);
-
-    // checks all material textures of a given type and loads the textures if they're not loaded yet.
-    // the required info is returned as a Texture struct.
-    std::vector<TextureInfo> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };
 
 class AnimationAnimator

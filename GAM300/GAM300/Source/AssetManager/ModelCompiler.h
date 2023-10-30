@@ -37,19 +37,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define MODELCOMPILER ModelCompiler::Instance()
 
-struct TempVertex
-{
-	glm::vec3 pos;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec2 tex;
-	glm::ivec4 color;
-
-	// Animation Related Properties
-	int m_BoneIDs[MAX_BONE_INFLUENCE];
-	float m_Weights[MAX_BONE_INFLUENCE];
-};
-
 // The model components that are extracted from the aiScene which contains the fbx/obj data
 // essentially only a portion of the data extracted from the file is needed thus this struct
 // is technically the model itself which the engine will be using
@@ -64,8 +51,9 @@ SINGLETON(ModelCompiler)
 {
 public:
 
-	// Load the FBX file with import options to be processed
-	ModelComponents LoadModel(const std::filesystem::path& _filePath);
+	// Load the FBX file with import options to be processed and choose whether to serialize the model
+	// into a geom file
+	ModelComponents LoadModel(const std::filesystem::path& _filePath, const bool& _serialize = true);
 
 private:
 
@@ -79,22 +67,22 @@ private:
 	Geom_Mesh ProcessMesh(const aiMesh& _mesh, const aiScene& _scene);
 
 	// Optimization of vertices of the FBX model
-	void Optimize(std::vector<TempVertex>& _vert, std::vector<unsigned int>& _ind);
+	void Optimize(std::vector<ModelVertex>& _vert, std::vector<unsigned int>& _ind);
 
 	// Compression of vertices to reduce custom binary custom file size
 	void CompressVertices(std::vector<Vertex>& _compressVertices,
-		const std::vector<TempVertex> _tempVertex,
+		const std::vector<ModelVertex> _tempVertex,
 		std::pair<glm::vec3, glm::vec2>& _mOffsets,
 		std::pair<glm::vec3, glm::vec2>& _mScales);
 
 	// Applies the transformations stated in the descriptor file onto the FBX model
-	void TransformVertices(std::vector<TempVertex> _vert);
+	void TransformVertices(std::vector<ModelVertex> _vert);
 
 	// Import materials and textures of the FBX model
 	void ImportMaterialAndTextures(const aiMaterial& _material);
 
 	// Extract bone setting from the vertices in the model for animation
-	void ExtractBoneWeightForVertices(std::vector<TempVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene);
+	void ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene);
 	
 	// Serialization of the FBX model to custom binary format
 	void SerializeBinaryGeom(const std::filesystem::path& _filePath);

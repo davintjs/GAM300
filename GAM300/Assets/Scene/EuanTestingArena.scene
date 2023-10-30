@@ -12,8 +12,8 @@ GameObject:
   m_IsActive: true
   m_Name: Helmet
   m_Layer: 0
-  m_Position: [156.493225, 116.136734, 360.909332]
-  m_Rotation: [8.45425205e-08, -1.50000012, 0]
+  m_Position: [1, 0, 0]
+  m_Rotation: [8.45425205e-08, 0, 0]
   m_Scale: [0.999995291, 1, 0.999995291]
   m_Children:
     []
@@ -25,15 +25,15 @@ GameObject:
 MeshRenderer:
   EUID: 22203055554271501
   UUID: 10413881243206984898
-  Mesh: 00000000000000000000000000000065
+  Mesh: 02f52871b1f39405231d0c2588cde2d8
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
+  AlbedoTexture: 06322b8239b55a3aa0af97f360d3cb7c
+  NormalMap: 6f038422a26db8d8bf5892c7e425d553
   MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
+  RoughnessTexture: 29dacfa9ea8372b560d1352f0ee634af
   AoTexture: 00000000000000000000000000000000
   EmissionTexture: 00000000000000000000000000000000
 ---
@@ -293,7 +293,7 @@ MeshRenderer:
   EUID: 15963777357859177452
   UUID: 844126210943487470
   Mesh: 00000000000000000000000000000065
-  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
+  Albedo: [0.926188409, 1, 0.964601755, 0.926188409]
   Metallic: 0.5
   Roughness: 0.5
   AmbientOcclusion: 0.5
