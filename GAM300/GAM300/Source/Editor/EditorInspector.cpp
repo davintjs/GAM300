@@ -1,4 +1,4 @@
-﻿/*!***************************************************************************************
+/*!***************************************************************************************
 \file			EditorInspector.cpp
 \project
 \author         Joseph Ho
@@ -34,6 +34,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
+#define PI 3.1415927
+#define EPSILON 0.01f
+
+enum ComponentType {
+    AUDIO, MESHRENDERER, SPRITERENDERER
+};
 
 //Flags for inspector headers/windows
 static ImGuiTableFlags windowFlags =
@@ -48,6 +54,12 @@ Object* newReference = nullptr;
 std::string refFieldName{};
 bool isAddingReference = false;
 size_t editedContainer{};
+
+//for checking of drag fields
+bool valueChanged = false;
+float initialvalue = 0.f;
+float changedvalue = 0.f;
+Vector3 initialVector;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -269,6 +281,27 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     }
 }
 
+template <typename... Ts>
+fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
+{
+    fs::path path;
+    if (([&](auto type)
+    {
+        using T = decltype(type);
+        GetFilePathEvent<T> e{ guid };
+        EVENTS.Publish(&e);
+        if (e.filePath == "")
+            return false;
+        path = e.filePath;
+        return true;
+    }
+    (Ts{}) || ...))
+    {
+        return path;
+    }
+    return path;
+}
+
 void DisplayType(Change& change, const char* name, Engine::GUID& val)
 {
     static std::string idName{};
@@ -286,9 +319,7 @@ void DisplayType(Change& change, const char* name, Engine::GUID& val)
     }
     if (fp.empty())
     {
-        GetFilePathEvent e{ val };
-        EVENTS.Publish(&e);
-        fp = e.filePath;
+        fp = DisplayGUIDHelper(AssetTypes(),val);
     }
     const std::string& pathStr = fp.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
@@ -312,8 +343,25 @@ bool DisplayType(const char* name, float& val)
         idName += name;
         cIdName = idName.c_str();
     }
-    return ImGui::DragFloat(cIdName, &val, 0.15f);
+    bool ischanged = false;
+    float buf = val;
+
+    if (ImGui::DragFloat(cIdName, &buf, 0.15f)) {
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        ischanged = true;
+        valueChanged = false;
+    }
+
+    return ischanged;
 }
+
 
 void DisplayType(Change& change, const char* name, float& val)
 {
@@ -333,8 +381,20 @@ void DisplayType(Change& change, const char* name, float& val)
     //ImGui::DragFloat(cIdName, &val, 0.15f);
 
     float buf = val;
+   
     if (ImGui::DragFloat(cIdName, &buf)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+        changedvalue = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        valueChanged = false;
+        val = initialvalue;
+        EDITOR.History.SetPropertyValue(change, val, changedvalue);
     }
 }
 
@@ -358,6 +418,9 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName += name;
 
     Vector3 buf = val;
+    if (!std::strcmp(name, "Rotation")) {
+        buf *= (180.f / PI);
+    }
     bool changed = false;
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
@@ -365,22 +428,56 @@ void DisplayType(Change& change, const char* name, Vector3& val)
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+
         changed = DisplayType(idName.c_str(), buf.x);
+        if (changed) {
+            initialVector = val;
+
+            initialVector.x = initialvalue;
+            val = initialVector;
+        }
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.y))
+        if (!changed && DisplayType(idName.c_str(), buf.y)) {
             changed = true;
+            initialVector = val;
+            initialVector.y = initialvalue;
+            val = initialVector;
+        }
+           
+
 
         ImGui::TableNextColumn();
         idName.back() = 'Z';
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.z))
+        if (!changed && DisplayType(idName.c_str(), buf.z)) {
             changed = true;
+            initialVector = val;
+            initialVector.z = initialvalue;
+            val = initialVector;
+        }
+
+       
+
+        //convert rotation from degree back to radians
+        if (!std::strcmp(name, "Rotation")) {
+            buf *= (PI / 180.f);
+            val *= (PI / 180.f);
+            //Check whether value is within epsilon range (to avoid negative 0)
+            for (int i = 0; i < 3; ++i) {
+                if (std::fabs(buf[i] - 0.f) < EPSILON)
+                    buf[i] = 0;
+            }
+        }
+
+        if (!changed)
+            val = buf;
 
         ImGui::EndTable();
     }
+
     if (changed) {
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
@@ -443,6 +540,7 @@ void AddReferencePanel(T*& container)
     if (ImGui::Begin(windowName.c_str(), &open))
     {
         ImGui::PushItemWidth(-1);
+        ImGui::Text("Filter"); ImGui::SameLine();
         filter.Draw("##References");
         ImGui::PopItemWidth();
         static std::string buttonName{};
@@ -630,7 +728,6 @@ void Display(const char* string)
 
 //Function to display and edit textures of a given property.
 
-
 template <typename T>
 void DisplayLightTypes(Change& change, T& value) {
     if constexpr (std::is_same<T, int>()) {
@@ -697,7 +794,7 @@ void Display_Property(T& comp) {
                 property::set(comp, entry.first.c_str(), Data);
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
             }
            
         });
@@ -779,8 +876,10 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
+        GetFilePathEvent<ScriptAsset> e{component.scriptId};
+        EVENTS.Publish(&e);
         if(&component)
-            name = (component.name + " [Script]");
+            name = (e.filePath.stem().string() + " (Script)");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
@@ -968,14 +1067,14 @@ private:
         {
             if constexpr (std::is_same_v<T1, Script>)
             {
-                GetScriptNamesEvent nameEvent;
-                EVENTS.Publish(&nameEvent);
+                GetAssetsEvent<ScriptAsset> e;
+                EVENTS.Publish(&e);
 
-                for (size_t i = 0; i < nameEvent.count; ++i)
+                for (auto& pair : *e.pAssets)
                 {
-                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
-                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        scene.Add<T1>(entity, pair.first);
                         EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }

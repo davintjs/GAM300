@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <Utilities/GUID.h>
+#include <Debugging/Debugger.h>
 
 using string_t = std::string;
 
@@ -100,6 +101,13 @@ public:
 
     bool operator != (const Vector3& other) const {
         return x != other.x || y != other.y || z != other.z;
+    }
+
+    Vector3& operator *=(float value) {
+        x *= value;
+        y *= value;
+        z *= value;
+        return *this;
     }
 
     // Conversion operator from Vector3 to glm::vec3

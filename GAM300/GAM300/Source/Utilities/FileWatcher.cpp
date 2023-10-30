@@ -91,8 +91,10 @@ void FileWatcher::ThreadWork()
 
             #if defined(UNICODE)
             {
-                lstrcpynW(szFile, pNotify->FileName,
-                    min(MAX_PATH, pNotify->FileNameLength / sizeof(WCHAR) + 1));
+                size_t sz{ pNotify->FileNameLength / sizeof(WCHAR) + 1 };
+                if (sz > MAX_PATH)
+                    sz = MAX_PATH;
+                lstrcpynW(szFile, pNotify->FileName, sz);
             }
             #else
             {

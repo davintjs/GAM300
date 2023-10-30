@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/Scene.h"
 #include "Core/EventsManager.h"
 #include "Scene/SceneManager.h"
+#include "Utilities/Serializer.h"
 
 void EditorHierarchy::Init() 
 {
@@ -286,6 +287,14 @@ void EditorHierarchy::Update(float dt)
 			else
 			{
 				ImGui::TextDisabled(name.c_str());
+			}
+
+			ImGui::Separator();
+			if (ImGui::MenuItem("Add to Prefabs")) 
+			{
+				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+				SerializePrefab(ent, curr_scene);
+				//For zac to add prefab implementation here
 			}
 
 			ImGui::EndPopup();

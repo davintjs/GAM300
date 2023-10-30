@@ -17,7 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Core\SystemInterface.h"
 #include <Core/Events.h>
-#include <Core/EventsManager.h>
 #include <Scene/Components.h>
 
 #include <string>
@@ -142,6 +141,8 @@ public:
 	//Initializes mono by creating a root domain
 	void InitMono();
 
+	std::string GetScriptName(Script& script);
+
 	//Cleans up mono and its domains
 	void ShutdownMono();
 
@@ -209,9 +210,6 @@ public:
 	//Callback function when a scene is about to end
 	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
 
-	//Callback function to get all the script names
-	void CallbackGetScriptNames(GetScriptNamesEvent* pEvent);
-
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
@@ -257,8 +255,8 @@ public:
 	//Field name to field
 	using FieldMap = std::unordered_map<std::string, Field>;
 
-	//Script name to script class
-	std::unordered_map<std::string, ScriptClass> scriptClassMap;
+	//Script guid to script class
+	std::unordered_map<Engine::GUID, ScriptClass> scriptClassMap;
 	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 	//Cached fields
@@ -277,6 +275,5 @@ public:
 	std::map<std::type_index, IEventHandler*> events;
 	template<class EventType>
 	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
-
 };
 #endif // !SCRIPTING_SYSTEM_H

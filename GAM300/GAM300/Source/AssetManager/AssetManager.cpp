@@ -62,6 +62,17 @@ bool AssetManager::IsCompilable(const fs::path& path)
 	return assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
 }
 
+template <typename... Ts>
+void AssetManager::SubscribeGetAssets(TemplatePack<Ts...>)
+{
+	(([&](auto type)
+	{
+		using T = decltype(type);
+		EVENTS.Subscribe(this,&AssetManager::CallbackGetAssets<T>);
+		EVENTS.Subscribe(this,&AssetManager::CallbackGetFilePath<T>);
+	})(Ts{}), ...);
+}
+
 void AssetManager::Init()
 {
 	E_ASSERT(std::filesystem::exists(AssetPath), "Check if proper assets filepath exists!");
@@ -71,7 +82,7 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset);
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
-	EVENTS.Subscribe(this, &AssetManager::CallbackGetFilePath);
+	SubscribeGetAssets(AssetTypes());
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
 	{
@@ -85,23 +96,26 @@ void AssetManager::Init()
 // Multi-threaded loading of assets
 void AssetManager::AsyncLoadAsset(const fs::path& filePath)
 {
+	{
+		ACQUIRE_SCOPED_LOCK(Assets);
+		if (filePath.extension() == ".meta")
+		{
+			fs::path nonMeta = filePath;
+			nonMeta.replace_extension("");
+			//Actual file does not exist
+			if (!std::filesystem::exists(nonMeta))
+			{
+				std::filesystem::remove(filePath);
+			}
+			return;
+		}
+	}
 	THREADS.EnqueueTask([this, filePath] { LoadAsset(filePath); });
 }
 
 void AssetManager::LoadAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
-	if (filePath.extension() == ".meta")
-	{
-		fs::path nonMeta = filePath;
-		nonMeta.replace_extension("");
-		//Actual file does not exist
-		if (!std::filesystem::exists(nonMeta))
-		{
-			std::filesystem::remove(filePath);
-		}
-		return;
-	}
 	if (IsCompilable(filePath))
 		Compile(filePath);
 	assets.AddAsset(filePath);
@@ -151,6 +165,8 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 {
 	if (filePath.extension() == ".meta")
+		return;
+	if (fs::is_directory(filePath))
 		return;
 	THREADS.EnqueueTask([this, filePath] { UpdateAsset(filePath); });
 }
@@ -216,6 +232,11 @@ Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
 }
 
 
+template <typename AssetType>
+void AssetManager::CallbackGetAssets(GetAssetsEvent<AssetType>* pEvent)
+{
+	pEvent->pAssets = &assets.GetAssets<AssetType>();
+}
 
 void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 {
@@ -278,7 +299,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			//AsyncRenameAsset(oldPath,filePath);
+			AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}
@@ -317,8 +338,8 @@ void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 	}
 }
 
-
-void AssetManager::CallbackGetFilePath(GetFilePathEvent* pEvent)
+template <typename AssetType>
+void AssetManager::CallbackGetFilePath(GetFilePathEvent<AssetType>* pEvent)
 {
 	pEvent->filePath = assets.GetFilePath(pEvent->guid);
 }
