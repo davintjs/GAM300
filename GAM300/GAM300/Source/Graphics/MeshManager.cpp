@@ -46,9 +46,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
     /*std::cout << "I have Materials : " << newGeom._materials.size() << 
         "from " << filePath << "\n";*/
 
-    for (int i = 0; i < newGeom._materials.size(); ++i)
+    /*for (int i = 0; i < newGeom._materials.size(); ++i)
     {
-        /*std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.g << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.b << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.a << "\n";
@@ -74,8 +74,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
             newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a));
         temp_AmbientContainer.push_back(glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
             newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a));
-        temp_ShininessContainer.push_back(0.f);*/
-    }
+        temp_ShininessContainer.push_back(0.f);
+    }*/
 
     
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
@@ -152,7 +152,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         tempProp.drawType = GL_TRIANGLES;
 
         //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
-        vaoMap.emplace(std::make_pair(guid, VAO)); // rmb change to guid after u ask someone @kk
+        
+        vaoMap.emplace(std::make_pair(guid, VAO)); // maybe just use mesh, coz same guid, different submesh
 
         // no need this, maybe can sort by VAO
         /*std::string newName = fileName;
@@ -169,9 +170,9 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         newMesh.Vaoids.push_back(VAO);
         newMesh.Vboids.push_back(VBO);
         newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
-
+        
         newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-
+        
         instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
         newMesh.vertices_min = min;
@@ -307,29 +308,6 @@ void MESH_Manager::CreateInstanceCube()
 
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
-
-    // positions            // Normals              // Tangents             // Texture Coords   // Colors
-    //float vertices[] = {
-    //   -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-    //    1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-    //    1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-    //   -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-    //   -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-    //    1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-    //    1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-    //   -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-
-    //};
-
-    //int indices[] = {
-    //    0, 1, 2, 2, 3, 0,  // Front face
-    //    4, 5, 6, 6, 7, 4,  // Back face
-    //    1, 5, 6, 6, 2, 1,  // Right face
-    //    0, 4, 7, 7, 3, 0,  // Left face
-    //    3, 2, 6, 6, 7, 3,  // Top face
-    //    0, 1, 5, 5, 4, 0   // Bottom face
-    //};
-
 
     GLfloat vertices[] = {
         // Positions           Normals            Tangents          Texture Coords     Colors (RGB)
@@ -505,7 +483,7 @@ void MESH_Manager::CreateInstanceCube()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     Engine::GUID& cubeGUID = DEFAULT_ASSETS["Cube.geom"];
-    InstanceProperties tempProp; // a lot on the stack, do something about it @kk or @sean
+    InstanceProperties tempProp; 
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
@@ -806,12 +784,12 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 // THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
 unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
-
+    size_t buffersize = prop.entitySRT.size();
     // SRT Buffer set up
     prop.entitySRTbuffer;
     glGenBuffers(1, &prop.entitySRTbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(prop.entitySRT[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), prop.entitySRT.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     //entitySRTBuffer
@@ -837,7 +815,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.AlbedoBuffer;
     glGenBuffers(1, &prop.AlbedoBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Albedo[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.Albedo.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(10);
@@ -850,7 +828,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Buffer;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.M_R_A_Texture.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(11);
@@ -863,7 +841,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Constant;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Constant);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.M_R_A_Constant.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(12);
@@ -876,7 +854,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), prop.textureIndex.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);
@@ -1007,7 +985,7 @@ void MESH_Manager::CreateInstanceSegment3D()
     newMesh.Drawcounts.push_back(2);
     newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
 
-    InstanceSetup_PBR(tempProp);
+    //InstanceSetup_PBR(tempProp);
 
     mContainer.emplace(segGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
@@ -1041,6 +1019,13 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     pntAABB[5] = glm::vec3(maxpt.x, maxpt.y, minpt.z);
     pntAABB[6] = glm::vec3(maxpt.x, minpt.y, minpt.z);
     pntAABB[7] = glm::vec3(maxpt.x, minpt.y, maxpt.z);
+
+    /*for (int i = 0; i < 8; ++i) {
+        PRINT(pntAABB[i].x, ", ");
+        PRINT(pntAABB[i].y, ", ");
+        PRINT(pntAABB[i].z, "\n");
+    }
+    PRINT("\n");*/
 
     int indice = 0;
 
