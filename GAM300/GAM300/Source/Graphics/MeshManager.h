@@ -195,7 +195,7 @@ private:
 
 	// To load Geoms from FBXs
 	GeomImported DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid);
-	AnimGeomImported DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName); // i think can combine w the original fn
+	//AnimGeomImported DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName); // i think can combine w the original fn
 	// Decompress
 	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
 		const std::vector<Vertex>& oVertices,

@@ -302,46 +302,46 @@ void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
     }
 }
 
-// NEED TO CHANGE TO MAKE IT PROCESS STUFF FROM COMPILER
-AnimGeomImported MESH_Manager::DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName)
-{
-    std::vector<AnimationMesh> tempmesh = AnimationManager.GetModel().meshes;
-    AnimGeomImported tempgeom;
-
-    for (size_t i = 0; i < tempmesh.size(); i++)
-    {
-        gAnimMesh newtempmesh;
-
-        for (size_t j = 0; j < tempmesh[i].vertices.size(); j++)
-        {
-            gAnimVertex newtempvert;
-            newtempvert.pos = tempmesh[i].vertices[j].Position;
-            newtempvert.normal = tempmesh[i].vertices[j].Normal;
-            newtempvert.tangent = tempmesh[i].vertices[j].Tangent;
-            newtempvert.tex = tempmesh[i].vertices[j].TexCoords;
-            newtempvert.color = tempmesh[i].vertices[j].Color;
-            
-            for (size_t k = 0; k < MAX_BONE_INFLUENCE; k++)
-            {
-                newtempvert.m_BoneIDs[k] = tempmesh[i].vertices[j].m_BoneIDs[k];
-                newtempvert.m_Weights[k] = tempmesh[i].vertices[j].m_Weights[k];
-            }
-            newtempmesh._vertices.push_back(newtempvert);
-        }
-        for (size_t j = 0; j < tempmesh[i].indices.size(); j++)
-        {
-            unsigned int newtempind;
-            newtempind = tempmesh[i].indices[j];
-            newtempmesh._indices.push_back(newtempind);
-        }
-
-        tempgeom.mMeshes.push_back(newtempmesh);
-    }
-
-    //tempgeom.oneAnimation = 
-
-    return tempgeom;
-}
+//// NEED TO CHANGE TO MAKE IT PROCESS STUFF FROM COMPILER
+//AnimGeomImported MESH_Manager::DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName)
+//{
+//    std::vector<AnimationMesh> tempmesh = AnimationManager.GetModel().meshes;
+//    AnimGeomImported tempgeom;
+//
+//    for (size_t i = 0; i < tempmesh.size(); i++)
+//    {
+//        gAnimMesh newtempmesh;
+//
+//        for (size_t j = 0; j < tempmesh[i].vertices.size(); j++)
+//        {
+//            gAnimVertex newtempvert;
+//            newtempvert.pos = tempmesh[i].vertices[j].Position;
+//            newtempvert.normal = tempmesh[i].vertices[j].Normal;
+//            newtempvert.tangent = tempmesh[i].vertices[j].Tangent;
+//            newtempvert.tex = tempmesh[i].vertices[j].TexCoords;
+//            newtempvert.color = tempmesh[i].vertices[j].Color;
+//            
+//            for (size_t k = 0; k < MAX_BONE_INFLUENCE; k++)
+//            {
+//                newtempvert.m_BoneIDs[k] = tempmesh[i].vertices[j].m_BoneIDs[k];
+//                newtempvert.m_Weights[k] = tempmesh[i].vertices[j].m_Weights[k];
+//            }
+//            newtempmesh._vertices.push_back(newtempvert);
+//        }
+//        for (size_t j = 0; j < tempmesh[i].indices.size(); j++)
+//        {
+//            unsigned int newtempind;
+//            newtempind = tempmesh[i].indices[j];
+//            newtempmesh._indices.push_back(newtempind);
+//        }
+//
+//        tempgeom.mMeshes.push_back(newtempmesh);
+//    }
+//
+//    //tempgeom.oneAnimation = 
+//
+//    return tempgeom;
+//}
 
 void MESH_Manager::CreateInstanceCube()
 {
