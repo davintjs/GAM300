@@ -77,16 +77,17 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         temp_ShininessContainer.push_back(0.f);*/
     }
 
-    Mesh newMesh;
-    newMesh.index = (unsigned int)mContainer.size();
-    glm::vec3 min(FLT_MAX);
-    glm::vec3 max(FLT_MIN);
-    GLuint VAO;
-    GLuint VBO;
-    GLuint EBO;
+    
     for (int i = 0; i < newGeom.mMeshes.size(); ++i)
     {
-        //std::cout << "ouchie\n";
+        Mesh newMesh;
+        newMesh.index = (unsigned int)mContainer.size();
+        glm::vec3 min(FLT_MAX);
+        glm::vec3 max(FLT_MIN);
+        GLuint VAO;
+        GLuint VBO;
+        GLuint EBO;
+
         for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
         {
             glm::vec3& pos = newGeom.mMeshes[i]._vertices[k].pos;
@@ -173,13 +174,12 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
 
         instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
+        newMesh.vertices_min = min;
+        newMesh.vertices_max = max;
+        //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
+
+        mContainer.emplace(guid, newMesh);
     }
-
-    newMesh.vertices_min = min;
-    newMesh.vertices_max = max;
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
-
-    mContainer.emplace(guid, newMesh);
 }
 
 //Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid

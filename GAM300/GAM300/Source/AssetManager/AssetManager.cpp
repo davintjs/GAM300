@@ -30,6 +30,8 @@ static std::unordered_set<fs::path> TEMP_EXTENSIONS
 	".dds",
 	".geom"
 };
+// Bean: Include model compiler here temporarily, should use events instead
+#include "ModelCompiler.h"
 
 static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
@@ -42,7 +44,16 @@ static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 void AssetManager::Compile(const fs::path& path)
 {
 	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
-	system(command.c_str());
+
+	if (path.extension() == ".fbx" || path.extension() == ".obj")
+	{
+		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
+		MODELCOMPILER.LoadModel(path);
+	}
+	else
+	{
+		system(command.c_str());
+	}
 }
 
 bool AssetManager::IsCompilable(const fs::path& path)
