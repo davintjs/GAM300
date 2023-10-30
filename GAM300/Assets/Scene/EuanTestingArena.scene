@@ -529,7 +529,7 @@ ID: 10017389020236708708
 MeshRenderer:
   m_GameObject: {fileID: 7501871677822992409}
   Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [0, 0, 0, 0]
+  Albedo: [1, 0, 1, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
@@ -601,7 +601,7 @@ ID: 6550840211212089432
 MeshRenderer:
   m_GameObject: {fileID: 18281932028324934750}
   Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [0, 0, 0, 0]
+  Albedo: [1, 0.286274523, 0.333333343, 0.501960814]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
