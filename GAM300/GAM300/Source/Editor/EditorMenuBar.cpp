@@ -208,7 +208,7 @@ void EditorMenuBar::Update(float dt)
                 ImGui::Text("Bloom Threshold"); ImGui::SameLine();
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::DragFloat("##bloomthreshold", &RENDERER.GetBloomThreshold(), 0.01f, 0.f, 10.f);
+                ImGui::DragFloat("##bloomthreshold", &RENDERER.GetBloomThreshold(), 0.01f, 1.f, 10.f);
                 ImGui::TableNextRow();
             }
 

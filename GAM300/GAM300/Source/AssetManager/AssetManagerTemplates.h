@@ -216,6 +216,7 @@ struct AllAssetsGroup
 
 	Engine::GUID GetGUID(const std::filesystem::path& filePath)
 	{
+		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaFile mFile;
@@ -226,13 +227,17 @@ struct AllAssetsGroup
 			if (([&](auto type)
 			{
 				using T = decltype(type);
-				auto& table = std::get<AssetsTable<T>>(assets);
-				for (auto& pair : table)
+
+				if (GetAssetType::E<T>() == assetType)
 				{
-					if (pair.second.mFilePath == filePath)
+					auto& table = std::get<AssetsTable<T>>(assets);
+					for (auto& pair : table)
 					{
-						mFile.guid = pair.first;
-						return true;
+						if (pair.second.mFilePath == filePath)
+						{
+							mFile.guid = pair.first;
+							return true;
+						}
 					}
 				}
 				Serialize(metaPath, mFile);
