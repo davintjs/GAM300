@@ -219,6 +219,7 @@ struct AllAssetsGroup
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaFile mFile;
+		Engine::GUID tempGUID{ mFile.guid };
 		bool success = Deserialize<MetaFile>(metaPath,mFile);
 		if (!success)
 		{
@@ -234,11 +235,14 @@ struct AllAssetsGroup
 						return true;
 					}
 				}
+				Serialize(metaPath, mFile);
 				return false;
 			}
 			(Ts{}) || ...));
 		}
-		Serialize(metaPath,mFile);
+		//Failed to find guid
+		if (tempGUID == mFile.guid)
+			Serialize(metaPath, mFile);
 		return mFile.guid;
 	}
 

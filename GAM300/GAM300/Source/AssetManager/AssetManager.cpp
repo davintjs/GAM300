@@ -30,6 +30,8 @@ static std::unordered_set<fs::path> TEMP_EXTENSIONS
 	".dds",
 	".geom"
 };
+// Bean: Include model compiler here temporarily, should use events instead
+#include "ModelCompiler.h"
 
 static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
@@ -42,7 +44,16 @@ static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 void AssetManager::Compile(const fs::path& path)
 {
 	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
-	system(command.c_str());
+
+	if (path.extension() == ".fbx" || path.extension() == ".obj")
+	{
+		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
+		MODELCOMPILER.LoadModel(path);
+	}
+	else
+	{
+		system(command.c_str());
+	}
 }
 
 bool AssetManager::IsCompilable(const fs::path& path)
@@ -139,14 +150,14 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 // Multi-threaded unloading of assets
 void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 {
+	if (filePath.extension() == ".meta")
+		return;
 	THREADS.EnqueueTask([this, filePath] { UpdateAsset(filePath); });
 }
 
 void AssetManager::UpdateAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
-	if (filePath.extension() == ".meta")
-		return;
 	assets.UpdateAsset(filePath);
 }
 
@@ -267,7 +278,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			AsyncRenameAsset(oldPath,filePath);
+			//AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}

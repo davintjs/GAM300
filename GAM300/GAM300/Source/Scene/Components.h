@@ -276,6 +276,7 @@ property_begin_name(MeshFilter, "MeshFilter"){
 
 struct MeshRenderer : Object
 {
+
 	Engine::GUID meshID{ DEFAULT_MESH };
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
@@ -290,17 +291,18 @@ struct MeshRenderer : Object
 	Vector4 mr_Specular;
 	Vector4 mr_Diffuse;
 	Vector4 mr_Ambient;
-	float mr_Shininess;
+	float mr_Shininess;	
 
 
-	float mr_metallic = 0.5f;
-	float mr_roughness = 0.5f;
-	float ao = 0.5f;
+	float mr_metallic = 1.f;
+	float mr_roughness = 1.f;
+	float ao = 1.f;
+	float emission = 1.f;
 
 	GLuint VAO;
 	GLuint debugVAO;
 
-	bool isInstance = true;
+	bool isInstance = false;
 	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
 	property_vtable();

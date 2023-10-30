@@ -50,8 +50,8 @@ extern unsigned int depthCubemap;
 // Bloom
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
-bool blooming = false;
 
+std::vector<temp_instance> temporary_presets;
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
@@ -144,7 +144,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO)
 
 bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& _camera)
 {
-	
 	bool horizontal = true, first_iteration = true;
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::BLUR);
 	shader.Use();
@@ -174,7 +173,30 @@ bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& 
 
 void GraphicsSystem::Init()
 {
+	temp_instance emissionMat;
+	emissionMat.name = "Emission material";
+	emissionMat.albedo = glm::vec4(0.f, 255.f, 255.f, 255.f);
+	emissionMat.metallic = 1.f;
+	emissionMat.roughness = 1.f;
+	emissionMat.ao = 1.f;
 
+	temp_instance blackSurfaceMat;
+	blackSurfaceMat.name = "Black Surface material";
+	blackSurfaceMat.albedo = glm::vec4(0.f, 0.f, 0.f, 255.f);
+	blackSurfaceMat.metallic = 1.f;
+	blackSurfaceMat.roughness = 1.f;
+	blackSurfaceMat.ao = 1.f;
+
+	temp_instance darkBlueMat;
+	darkBlueMat.name = "Dark Blue material";
+	darkBlueMat.albedo = glm::vec4(73.f, 85.f, 128.f, 255.f);
+	darkBlueMat.metallic = 1.f;
+	darkBlueMat.roughness = 1.f;
+	darkBlueMat.ao = 1.f;
+
+	temporary_presets.emplace_back(emissionMat);
+	temporary_presets.emplace_back(blackSurfaceMat);
+	temporary_presets.emplace_back(darkBlueMat);
 
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
@@ -247,7 +269,14 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	bool index = bloom(3, _vao, _vbo, _camera);
+	if (RENDERER.enableBloom())
+	{
+		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+
+	}
+
 	//}
 
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
@@ -261,9 +290,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 	glActiveTexture(GL_TEXTURE0);
+	// glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+
 	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+	// glActiveTexture(GL_TEXTURE1);
+	// glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -274,6 +305,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		glGetUniformLocation(shader.GetHandle(), "exposure");
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
+
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "enableBloom");
+
+	glUniform1f(uniform3, RENDERER.enableBloom());
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

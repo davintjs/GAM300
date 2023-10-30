@@ -53,11 +53,13 @@ layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
 
 layout (location = 3) in vec4 frag_Albedo;
-layout (location = 4) in vec4 frag_Metal_Rough_AO_index;
-layout (location = 5) in vec3 frag_Metal_Rough_AO_constant;
+layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
+layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
-layout (location = 7) in vec4 frag_pos_lightspace;
+layout (location = 7) in vec4 frag_pos_lightspace_D;
+
+layout (location = 8) in vec4 frag_pos_lightspace_S;
 
 
 //-------------------------
@@ -92,6 +94,12 @@ uniform int DirectionalLight_Count;
 // Spot Light 
 uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 uniform int SpotLight_Count;
+
+// Bloom
+uniform float bloomThreshold;
+
+// ambience value
+uniform float ambience_multiplier;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -160,7 +168,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
-float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -181,6 +189,29 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
         shadow = 0.0;
     return shadow;
 }
+
+float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(myTextureSampler[29], projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;  
+    // check whether current frag pos is in shadow
+
+    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    return shadow;
+}
+
 
 float ShadowCalculation_Point(vec3 lightpos)
 {
@@ -212,10 +243,10 @@ void main()
     int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
     int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
 
-    int Metallic_index = int(frag_Metal_Rough_AO_index.x + 0.01f); // .x is metallic texture
-    int Roughness_index = int(frag_Metal_Rough_AO_index.y + 0.01f);    // .y is roughness texture
-    int AO_index = int(frag_Metal_Rough_AO_index.z + 0.01f);    // .z is ao texture
-    int Emission_index = int(frag_Metal_Rough_AO_index.w + 0.01f);    // .w is emission texture
+    int Metallic_index = int(frag_Metal_Rough_AO_Emission_index.x + 0.01f); // .x is metallic texture
+    int Roughness_index = int(frag_Metal_Rough_AO_Emission_index.y + 0.01f);    // .y is roughness texture
+    int AO_index = int(frag_Metal_Rough_AO_Emission_index.z + 0.01f);    // .z is ao texture
+    int Emission_index = int(frag_Metal_Rough_AO_Emission_index.w + 0.01f);    // .w is emission texture
 
 
     vec3 albedo;
@@ -228,7 +259,7 @@ void main()
     // ALBEDO
     if (Tex_index < 32)
     {
-        albedo = pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+        albedo = vec3(frag_Albedo) * pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
     }
     else
     {
@@ -240,14 +271,14 @@ void main()
     {
         if(Metallic_index == Roughness_index)
         {
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).b;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).b;   
         }
         else
-            metallic = texture(myTextureSampler[Metallic_index], TexCoords).r;   
+            metallic = frag_Metal_Rough_AO_Emission_constant.r * texture(myTextureSampler[Metallic_index], TexCoords).r;   
     }
     else
     {
-        metallic = frag_Metal_Rough_AO_constant.r;
+        metallic = frag_Metal_Rough_AO_Emission_constant.r;
 
         int metal_test = int(metallic-0.1f);
         if(metal_test == -1)
@@ -266,14 +297,14 @@ void main()
     {
         if (Metallic_index == Roughness_index)
         {
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).g;   
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).g;   
         }
         else
-            roughness = texture(myTextureSampler[Roughness_index], TexCoords).r;    
+            roughness = frag_Metal_Rough_AO_Emission_constant.g * texture(myTextureSampler[Roughness_index], TexCoords).r;    
     }
     else
     {
-        roughness = frag_Metal_Rough_AO_constant.g;
+        roughness = frag_Metal_Rough_AO_Emission_constant.g;
         int rough_test = int(roughness-0.1f);
         if(rough_test == -1)
         {
@@ -285,11 +316,11 @@ void main()
     // AO
     if (AO_index < 32)
     {
-        ao  = texture(myTextureSampler[AO_index], TexCoords).r; 
+        ao  = frag_Metal_Rough_AO_Emission_constant.b * texture(myTextureSampler[AO_index], TexCoords).r; 
     }
     else
     {
-        ao = frag_Metal_Rough_AO_constant.b;
+        ao = frag_Metal_Rough_AO_Emission_constant.b;
 
         int ao_test = int(ao-0.1f);
         if(ao_test == -1)
@@ -303,7 +334,7 @@ void main()
 
     if (Emission_index < 32)
     {
-        emission  = texture(myTextureSampler[Emission_index], TexCoords).xyz; 
+        emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
     }
 
 
@@ -450,7 +481,7 @@ void main()
 
 
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
 
         
         
@@ -527,7 +558,7 @@ void main()
         
         
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
 
         
         
@@ -540,7 +571,7 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(0.1) * albedo * ao + ( emission * 10.f);
+    vec3 ambient = vec3(ambience_multiplier) * albedo * ao +  emission;
     
     vec3 color = ambient + Lo;
 
@@ -551,7 +582,7 @@ void main()
 //    color = pow(color, vec3(1.0/2.2)); 
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1.0)
+    if(brightness > bloomThreshold)
         Blooming = vec4(color.rgb, 1.0);
     else
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);
