@@ -40,6 +40,25 @@ class Ray3D;
 class RaycastLine;
 class SkyBox;
 
+//// Map of all shader field types
+//static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
+//{
+//	{ "float",						GetFieldType::E<float>()},
+//	{ "double",						GetFieldType::E<double>()},
+//	{ "bool",						GetFieldType::E<bool>()},
+//	{ "char",						GetFieldType::E<char>()},
+//	{ "short",						GetFieldType::E<short>()},
+//	{ "int",						GetFieldType::E<int>()},
+//	{ "int64",						GetFieldType::E<int64_t>()},
+//	{ "uint16_t",					GetFieldType::E<uint16_t>()},
+//	{ "uint32_t",					GetFieldType::E<uint32_t>()},
+//	{ "uint32_t",					GetFieldType::E<uint32_t>()},
+//	{ "char*",						GetFieldType::E<char*>()},
+//	{ "vec2",						GetFieldType::E<Vector2>()},
+//	{ "vec3",						GetFieldType::E<Vector3>()},
+//	{ "vec4",						GetFieldType::E<Vector4>()}
+//};
+
 // Graphics Settings
 
 bool extern RenderShadow;
@@ -84,8 +103,12 @@ public:
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
+	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
+	void ParseShaderFile(const std::string& _filename, bool _frag);
+
 private:
 	std::vector<GLSLShader> shaders;
+	std::vector<ShaderProperties> shaderProperties;
 };
 
 SINGLETON(SkyboxManager)

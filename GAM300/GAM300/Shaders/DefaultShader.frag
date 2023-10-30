@@ -98,6 +98,7 @@ uniform float farplane;
 // Bloom
 uniform float bloomThreshold;
 
+//End
 vec3 getNormalFromMap()
 {
     vec3 normal = texture(NormalMap, TexCoords).xyz;

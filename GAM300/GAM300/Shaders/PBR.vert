@@ -57,6 +57,8 @@ uniform mat4 persp_projection;
 uniform mat4 View;
 uniform mat4 lightSpaceMatrix;
 
+//End
+
 void main()
 {
     TexCoords = aTexCoords;

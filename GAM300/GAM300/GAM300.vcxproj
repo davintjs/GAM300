@@ -117,6 +117,7 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
+    <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Scene\Object.h" />

@@ -25,8 +25,31 @@ ShaderVariable::VariableType ParseVariableType(const std::string& str) {
 	return ShaderVariable::None;
 }
 
+//template <typename T, typename... Ts>
+//void CreateField(const char* name, size_t fieldEnum, std::unordered_map<std::string, Field>& shaderVariableMap) {
+//
+//	if (GetFieldType::E<T>() == fieldEnum) {
+//
+//		// Allocate static sized buffer
+//		if constexpr (std::is_same_v<T, char*>) {
+//
+//
+//
+//
+//		}
+//		else {
+//			shaderVariableMap.insert({name, Field(fieldEnum, sizeof(T))});
+//		}
+//	}
+//	// If havent hit jackpot for field type, check next field type
+//	if constexpr (sizeof...(Ts) != 0) {
+//		CreateField<Ts...>(name, fieldEnum, shaderVariableMap);
+//	}
+//}
 
-void ParseShaderFile(const std::string& fileName) {
+
+
+void ParseShaderFile(const std::string& fileName, bool frag) {
 	
 	std::cout << "Parsing shader file...\n";
 
@@ -37,12 +60,13 @@ void ParseShaderFile(const std::string& fileName) {
 		return;
 	}
 
-
 	std::vector<ShaderVariable> shaderVariables;
 
 	// Parse each line
 	std::string buffer;
 	while (std::getline(ifs, buffer)) {
+
+		std::string vtBuffer;
 
 		std::cout << "Line:" << buffer << std::endl;
 
@@ -73,6 +97,9 @@ void ParseShaderFile(const std::string& fileName) {
 			&& buffer.substr(startPos, startPos - endPos).find("uniform") == std::string::npos)
 			continue;
 
+		if (frag && buffer.substr(startPos, startPos - endPos).find("uniform") == std::string::npos)
+			continue;
+
 		startPos = endPos + 1;
 		if (startPos >= superEnd)
 			continue;
@@ -95,16 +122,29 @@ void ParseShaderFile(const std::string& fileName) {
 
 		// Parse Variable Type
 		endPos = buffer.find_first_of(' ', startPos);
-		if (endPos == std::string::npos)
-			vt = ShaderVariable::None;
+		if (endPos == std::string::npos) {
+			continue;
+		}
 		else {
+			vtBuffer = buffer.substr(startPos, endPos - startPos);
 			vt = ParseVariableType(buffer.substr(startPos, startPos - endPos));
 		}
 
+
+		
+
 		// Parse Variable Name
 		name = buffer.substr(endPos + 1);
-
+		//CreateField<FieldTypes>(name.c_str(), shaderFieldTypeMap[vtBuffer], testShaderFields);
 		shaderVariables.emplace_back(ShaderVariable(name, vt));
+
+
+
+
+
+		// variables.emplace_back(shaderFieldType[vtBuffer], shaderFieldType[vtBuffer]);
+		// 
+		// DisplayField(variableName, variables.back())
 
 
 	}
@@ -114,11 +154,11 @@ void ParseShaderFile(const std::string& fileName) {
 
 	for (ShaderVariable& sv : shaderVariables) {
 		std::cout << "Type:" << sv.variableType << " Name:" << sv.name << std::endl;
+
+		// Make a new field in the new shader and assign proper values
+
+
 	}
-
-
-
-
 
 }
 

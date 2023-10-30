@@ -42,6 +42,9 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},
+
+	//Default Shaders
+	{"Test.shader", Engine::GUID(400)},
 };
 
 // GUID, last file update time, file name, data
@@ -103,7 +106,17 @@ struct MeshAsset : Asset
 	std::vector<unsigned int> mIndices;
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, Asset>;
+struct ShaderAsset : Asset
+{
+	// Map of variable name to type enum
+	//std::unordered_map<std::string, size_t> variables;
+
+	std::string vertexShaderBuffer;
+	std::string fragmentShaderBuffer;
+
+};
+
+using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 //File extension : Asset Type
 static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
@@ -113,4 +126,5 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".geom",	GetAssetType::E<MeshAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".shader", GetAssetType::E<ShaderAsset>()},
 };

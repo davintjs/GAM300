@@ -96,6 +96,7 @@ uniform int SpotLight_Count;
 // Bloom
 uniform float bloomThreshold;
 
+//End
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
