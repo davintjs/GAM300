@@ -497,12 +497,12 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     idName += name;
     Vector4 buf = val;
 
-    ImVec4 color = ImVec4(buf.w, buf.x, buf.y, buf.z);
+    ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
     bool ischanged = false;
 
-
     if (ImGui::ColorButton("hi", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+
         ImGui::OpenPopup("hi-picker");
 
     if (ImGui::BeginPopup("hi-picker"))
