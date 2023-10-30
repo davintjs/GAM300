@@ -38,7 +38,7 @@ GENERIC_RECURSIVE(void, DeserializeComponent, DeserializeComponent<T>(*((DeComHe
 bool SerializeScene(Scene& _scene)
 {
     YAML::Emitter out;
-    std::string versionStr = "Serializer Version " + versionID;
+    std::string versionStr = "%Serializer Version " + versionID;
     out << versionStr;
     // Serialize Scene Settings
     E_ASSERT(SerializeSettings(out, _scene), "Unable To Serialize Entity!\n");
@@ -230,6 +230,30 @@ void SerializeScript(YAML::Emitter& out, Script& _component)
     }
 }
 
+void DeserializePrefab(const fs::path& path,Scene& _scene)
+{
+    std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
+    for (size_t i = 2; i < data.size(); i++)
+    {
+        YAML::Node node = data[i];
+        if (node["GameObject"]) // Deserialize Gameobject
+        {
+            DeserializeEntity(node, _scene);
+        }
+        else // Deserialize component
+        {
+            // Check which component this node is
+
+            YAML::detail::iterator_value kv = *(++node.begin());
+            std::string name = kv.first.as<std::string>();
+            //PRINT("Loading " + name + " component... \n");
+            DeComHelper helper{ &node, &_scene, false };
+            DeserializeComponent(ComponentTypes[name], &helper);
+        }
+    }
+    DeserializeLinker(_scene, data);
+}
+
 
 bool DeserializeScene(Scene& _scene)
 {
@@ -302,6 +326,7 @@ bool DeserializeSettings(YAML::Node& _node, Scene& _scene)
 
 void DeserializeEntity(YAML::Node& _node, Scene& _scene)
 {
+    PRINT(_node.as<std::string>());
     YAML::Node object = _node["GameObject"];
     
     Engine::UUID euid = _node["ID"].as<Engine::UUID>();
