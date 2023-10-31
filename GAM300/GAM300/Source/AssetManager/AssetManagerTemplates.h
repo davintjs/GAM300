@@ -33,6 +33,8 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
+		if (fs::is_directory(filePath))
+			return;
 		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		if (([&](auto type)
 			{
@@ -79,6 +81,8 @@ struct AllAssetsGroup
 
 	bool RemoveAsset(const std::filesystem::path& filePath)
 	{
+		if (fs::is_directory(filePath))
+			return true;
 		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		if (([&](auto type)
 			{
@@ -104,6 +108,8 @@ struct AllAssetsGroup
 
 	void UpdateAsset(const std::filesystem::path& filePath)
 	{
+		if (fs::is_directory(filePath))
+			return;
 		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
 		if (([&](auto type)
 			{
