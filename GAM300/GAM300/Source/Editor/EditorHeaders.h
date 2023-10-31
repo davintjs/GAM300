@@ -36,6 +36,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(filepath);
 #define FIND_TEXTURE(filepath) TextureManager.FindTexture()
 
+//types of files that can be dragged drop from the content browser
+enum filetype {
+    NONE, MESH, PREFAB
+};
+
+//an object containing the data needed for the payload
+struct ContentBrowserPayload {
+    ContentBrowserPayload() { type = NONE; }
+    ContentBrowserPayload(filetype _type, Engine::GUID _guid) : type(_type), guid(_guid) {}
+    filetype type;
+    Engine::GUID guid;
+};
+
 struct BaseCamera;
 
 // utility structure for realtime plot

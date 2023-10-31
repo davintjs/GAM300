@@ -1,5 +1,5 @@
-[2023-10-25 18:16:24.291] [Error] [critical] 
-Caused By:	errorId == GL_FRAMEBUFFER_COMPLETE
-Info:		Framebuffer is incomplete!!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Graphics\Framebuffer.cpp (Line: 642)
+[2023-10-30 15:23:10.252] [Error] [critical] 
+Caused By:	vertexId <= _vert.size()
+Info:		Vertex id exceed vertices size!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\ModelCompiler.cpp (Line: 552)
 

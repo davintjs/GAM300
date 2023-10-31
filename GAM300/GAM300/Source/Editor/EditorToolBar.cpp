@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorTemplates.h"
 #include "Core/EventsManager.h"
 #include "Utilities/ThreadPool.h"
+#include "Graphics/TextureManager.h"
 
 void AlignForWidth(float width, float alignment = 0.5f)
 {
@@ -52,7 +53,7 @@ void EditorToolBar::Update(float dt)
 
 
 
-    ImVec2 buttonSize = { 50.f, ImGui::GetTextLineHeight() + 10.f};
+    ImVec2 buttonSize = { 25.f, ImGui::GetTextLineHeight() + 10.f};
     
     ImGuiStyle& style = ImGui::GetStyle();
     float width = 0.0f;
@@ -61,8 +62,13 @@ void EditorToolBar::Update(float dt)
     width += buttonSize.x;
     AlignForWidth(width);
 
-    std::string play_status = (scene_playing ? "Stop" : "Play"); 
-    if (ImGui::Button(play_status.c_str(), buttonSize)) {
+    //std::string icon = (scene_playing ? "Assets/Icons/Editorplaybuttontoggled.dds" : "Assets/Icons/Editorplaybutton.dds" );
+    std::string icon = "Assets/Icons/Editorplaybutton.dds";
+    size_t icon_id = GET_TEXTURE_ID(icon);
+
+    ImVec4 tintcolor = (scene_playing ? ImVec4(0, 0, 0, 0) : ImVec4(0.6, 0.6, 0.6, 1));
+
+    if (ImGui::ImageButton((ImTextureID)icon_id, buttonSize, { 0 , 0 }, { 1 , 1 }, 0, tintcolor)){
         if (!scene_playing)
         {
             PRINT("SCENE START\n");
@@ -80,8 +86,10 @@ void EditorToolBar::Update(float dt)
     }
 
     ImGui::SameLine();
-    std::string pause_status = (scene_paused ? "Resume" : "Pause");
-    if (ImGui::Button(pause_status.c_str(), buttonSize)) {
+    tintcolor = (scene_paused ? ImVec4(0, 0, 0, 0) : ImVec4(0.6, 0.6, 0.6, 1));
+    icon = "Assets/Icons/Editorpausebutton.dds";
+    icon_id = GET_TEXTURE_ID(icon);
+    if (ImGui::ImageButton((ImTextureID)icon_id, buttonSize, { 0 , 0 }, { 1 , 1 }, 0, tintcolor)) {
         scene_paused = scene_paused ? false : true;
     }
     

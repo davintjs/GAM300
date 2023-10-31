@@ -23,6 +23,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "glm/glm.hpp"
 #include "assimp/color4.h"
 
+#define MAX_BONE_INFLUENCE 4
+
 struct Vertex
 {
     std::int16_t posX;
@@ -44,6 +46,20 @@ struct Vertex
     std::int8_t colorG;
     std::int8_t colorB;
     std::int8_t colorA;
+};
+
+struct ModelVertex
+{
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 bitTangent;
+    glm::vec2 textureCords;
+    glm::ivec4 color;
+
+    // Animation Related Properties
+    int boneIDs[MAX_BONE_INFLUENCE];
+    float weights[MAX_BONE_INFLUENCE];
 };
 
 struct Texture

@@ -45,3 +45,14 @@ void IdentifiersManager::CreateLayer(const std::string& layerName)
 Tags& IdentifiersManager::GetTags() {
 	return tags;
 }
+
+
+std::string IdentifiersManager::GetTagString(Engine::UUID tagID)
+{
+	for (auto& pair : tags)
+	{
+		if (pair.second == tagID)
+			return pair.first;
+	}
+	return "";
+}

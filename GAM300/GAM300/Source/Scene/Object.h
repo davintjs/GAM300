@@ -52,6 +52,10 @@ struct Object : property::base
 	Engine::UUID EUID() const{ return euid; }
 	//Get uuid of object
 	Engine::UUID UUID () const { return uuid; }
+	//Get euid of object
+	void EUID(Engine::UUID _euid) { euid = _euid; }
+	//Get uuid of object
+	void UUID(Engine::UUID _uuid) { uuid = _uuid; }
 	//Get euid and uuid as a handle
 	operator Handle() const { return{ euid, uuid }; }
 
@@ -64,8 +68,8 @@ protected:
 };
 
 property_begin_name(Object, "Object") {
-	property_var(euid).Name("EUID").Flags(property::flags::DONTSHOW),
-		property_var(uuid).Name("UUID").Flags(property::flags::DONTSHOW),
+	property_var(euid).Name("EUID").Flags(property::flags::DONTSAVE),
+	property_var(uuid).Name("UUID").Flags(property::flags::DONTSAVE),
 }property_vend_h(Object)
 
 #endif // !OBJECT_H
