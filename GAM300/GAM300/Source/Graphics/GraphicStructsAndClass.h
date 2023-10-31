@@ -22,6 +22,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 200
 
+class temp_instance
+{
+public:
+	std::string name;
+	glm::vec4 albedo;
+	float metallic;
+	float roughness;
+	float ao;
+
+};
+
 enum class SHADERTYPE
 {
 	HDR,

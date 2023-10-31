@@ -42,6 +42,12 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},
+
+	//Default Scripts
+	{"None.cs", Engine::GUID(400)},
+
+	//Default Audio
+	{"None.wav", Engine::GUID(500)}
 };
 
 // GUID, last file update time, file name, data
