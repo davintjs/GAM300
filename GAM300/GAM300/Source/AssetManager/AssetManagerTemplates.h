@@ -230,8 +230,12 @@ struct AllAssetsGroup
 		if (!success)
 		{
 			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == assetType)
 				{
-					using T = decltype(type);
+					Engine::GUID guid = GetGUID(filePath);
+
 					auto& table = std::get<AssetsTable<T>>(assets);
 					for (auto& pair : table)
 					{
@@ -241,9 +245,12 @@ struct AllAssetsGroup
 							return true;
 						}
 					}
+					//Could not find
 					Serialize(metaPath, mFile);
-					return false;
+					return true;
 				}
+				return false;
+			}
 			(Ts{}) || ...));
 		}
 		//Failed to find guid

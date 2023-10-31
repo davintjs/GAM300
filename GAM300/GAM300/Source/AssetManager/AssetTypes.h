@@ -135,6 +135,9 @@ struct ShaderAsset : Asset
 
 using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
+
+template <typename AssetType>
+using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
 static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 {

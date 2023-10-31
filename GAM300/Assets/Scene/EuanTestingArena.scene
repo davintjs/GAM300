@@ -1,4 +1,4 @@
-Serializer Version 1.1
+"%Serializer Version 1.1"
 ---
 Scene Settings:
   Name: EuanTestingArena
@@ -42,6 +42,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 10379670187260712593
 Script:
@@ -102,6 +103,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 9199614747982128663
 BoxCollider:
@@ -159,6 +161,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: cfe2d403d5b71c2b216a5748405fc53a}
+  EmissionScalar: 1
 ---
 ID: 6281041356284068935
 BoxCollider:
@@ -216,6 +219,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 16306965832790122227
 BoxCollider:
@@ -254,42 +258,6 @@ LightSource:
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [100, 100, 100]
----
-ID: 3741745616850505635
-GameObject:
-  m_IsActive: true
-  m_Name: Camera
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12525885762250101481}  # Transform
-    - component: {fileID: 8581604554917408359}  # Camera
----
-ID: 12525885762250101481
-Transform:
-  m_GameObject: {fileID: 3741745616850505635}
-  Translation: [0, 2, 16.7999992]
-  Rotation: [0, 0, 0]
-  Scale: [0.99999702, 1, 0.99999702]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 8581604554917408359
-Camera:
-  m_GameObject: {fileID: 3741745616850505635}
-  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
-  ClearFlags: "\x01"
-  CullingMask: "\x00"
-  FocalLength: 10
-  NearClip: 0.100000001
-  FarClip: 1000
-  FieldOfView: 45
-  Orthographic: false
-  TargetDisplay: 0
-  HDR: true
-  OcclusionCulling: false
-  FrustumCulling: true
 ---
 ID: 3250402029849808772
 GameObject:
@@ -351,6 +319,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 4212138099454399691
 GameObject:
@@ -370,7 +339,7 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 2866402867161245437}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -401,3 +370,164 @@ SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
   SpriteTexture: {guid: 00000000000000000000000000000000}
+---
+ID: 15289366501670632114
+GameObject:
+  m_IsActive: true
+  m_Name: Player Controller
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4106534775576874237}  # Transform
+---
+ID: 4106534775576874237
+Transform:
+  m_GameObject: {fileID: 15289366501670632114}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 8260743621659077465}
+    - {fileID: 1695368342802387540}
+---
+ID: 8260743621659077465
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerMesh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3344830532402882466}  # Transform
+    - component: {fileID: 10427774337522683023}  # MeshRenderer
+    - component: {fileID: 448090007727020233}  # CharacterController
+---
+ID: 3344830532402882466
+Transform:
+  m_GameObject: {fileID: 8260743621659077465}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15289366501670632114}
+  m_Children:
+    []
+---
+ID: 10427774337522683023
+MeshRenderer:
+  m_GameObject: {fileID: 8260743621659077465}
+  Mesh: {guid: 00000000000000000000000000000065}
+  Albedo: [1, 0.999899983, 0.999899983, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+---
+ID: 448090007727020233
+CharacterController:
+  m_GameObject: {fileID: 8260743621659077465}
+  Velocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  GravityFactor: 1
+  SlopeLimit: 45
+  IsGrounded: false
+---
+ID: 1695368342802387540
+GameObject:
+  m_IsActive: true
+  m_Name: CameraYawPivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11563004528250627739}  # Transform
+---
+ID: 11563004528250627739
+Transform:
+  m_GameObject: {fileID: 1695368342802387540}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15289366501670632114}
+  m_Children:
+    - {fileID: 4275359921890831835}
+---
+ID: 4275359921890831835
+GameObject:
+  m_IsActive: true
+  m_Name: CameraMovePivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10905084284938268571}  # Transform
+---
+ID: 10905084284938268571
+Transform:
+  m_GameObject: {fileID: 4275359921890831835}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1695368342802387540}
+  m_Children:
+    - {fileID: 4964458971924238682}
+---
+ID: 4964458971924238682
+GameObject:
+  m_IsActive: true
+  m_Name: CameraPitchPivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15546231443066563511}  # Transform
+---
+ID: 15546231443066563511
+Transform:
+  m_GameObject: {fileID: 4964458971924238682}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4275359921890831835}
+  m_Children:
+    - {fileID: 6781034947786371873}
+---
+ID: 6781034947786371873
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerCamera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12955484496699409018}  # Transform
+    - component: {fileID: 6895759788178408565}  # Camera
+---
+ID: 12955484496699409018
+Transform:
+  m_GameObject: {fileID: 6781034947786371873}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4964458971924238682}
+  m_Children:
+    []
+---
+ID: 6895759788178408565
+Camera:
+  m_GameObject: {fileID: 6781034947786371873}
+  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
