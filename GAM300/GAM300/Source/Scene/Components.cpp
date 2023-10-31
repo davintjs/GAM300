@@ -40,6 +40,11 @@ glm::vec3 Transform::GetTranslation() const
 	return glm::vec3(GetWorldMatrix()[3]);
 }
 
+glm::vec3 Transform::GetRotation() const
+{
+	return glm::eulerAngles(glm::quat_cast(GetWorldMatrix()));
+}
+
 glm::vec3 Transform::GetScale() const
 {
 	if(parent)

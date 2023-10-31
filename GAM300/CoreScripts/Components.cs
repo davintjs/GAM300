@@ -35,6 +35,13 @@ namespace BeanFactory
                 return InternalCalls.Get<GameObject>(this);
             } 
         }
+        virtual public CharacterController charactercontroller
+        {
+            get
+            {
+                return InternalCalls.Get<CharacterController>(this);
+            }
+        }
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();
@@ -62,6 +69,27 @@ namespace BeanFactory
         public bool isKinematic = true;          //is object simulated?
         public bool useGravity = true;           //is object affected by gravity?
         public bool is_trigger = false;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class CharacterController : Component
+    {
+        public vec3 velocity;
+        public vec3 force;
+        private vec3 direction;
+
+        public float mass = 1f;
+        public float friction = 0.1f;
+        public float gravityFactor = 1f;
+        public float slopeLimit = 45f;
+        public bool isGrounded = false;
+
+
+        public void Move(vec3 dir)
+        {
+            direction += dir;
+        }
+
     }
 
     [StructLayout(LayoutKind.Sequential)]

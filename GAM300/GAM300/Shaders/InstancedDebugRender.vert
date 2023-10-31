@@ -20,6 +20,8 @@ layout (location = 6) in mat4 SRT;
 uniform mat4 persp_projection;
 uniform mat4 View;
 
+//End
+
 void main()
 {
 	//vColor = aVertexColor;

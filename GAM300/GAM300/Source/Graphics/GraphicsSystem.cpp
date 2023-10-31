@@ -23,6 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
 
+#include <glm/gtx/matrix_decompose.hpp>
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -237,7 +238,7 @@ void GraphicsSystem::Update(float dt)
 			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 			// Update camera view 
-			camera.UpdateCamera(transform->translation, transform->rotation);
+			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}

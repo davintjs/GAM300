@@ -26,13 +26,14 @@ void ThreadPool::Init()
             [this,i]
             {
                 //Threads are constantly asking for jobs
-                while (!stop)
+                while (true)
                 {
                     std::function<void()> mTask;
                     {
-                        ACQUIRE_SCOPED_LOCK(Queue);
-                        if (mTasks.empty())
-                            continue;
+                        auto func = [this] { return stop || !mTasks.empty(); };
+                        ACQUIRE_UNIQUE_LOCK(Queue,func);
+                        if (stop && mTasks.empty())
+                            return; // Thread should exit
                         mTask = std::move(mTasks.front());
                         mTasks.pop();
                     }
