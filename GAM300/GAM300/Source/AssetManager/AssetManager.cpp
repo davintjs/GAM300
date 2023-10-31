@@ -287,7 +287,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::MODIFIED:
 		{
-			AsyncUpdateAsset(filePath);
+			//AsyncUpdateAsset(filePath);
 			PRINT("MODIFIED ");
 			break;
 		}

@@ -35,6 +35,7 @@ void EditorGame::Init()
     EVENTS.Subscribe(this, &EditorGame::CallbackEditorWindow);
     EVENTS.Subscribe(this, &EditorGame::CallbackSetCamera);
     EVENTS.Subscribe(this, &EditorGame::CallbackDeleteCamera);
+    EVENTS.Subscribe(this, &EditorGame::CallbackSceneChange);
     EVENTS.Subscribe(this, &EditorGame::CallbackSceneStop);
 }
 
@@ -192,6 +193,11 @@ void EditorGame::CallbackDeleteCamera(ObjectDestroyedEvent<Camera>* pEvent)
 {
     if (pEvent->pObject->GetTargetDisplay() == targetDisplay)
         camera = nullptr;
+}
+
+void EditorGame::CallbackSceneChange(SceneChangingEvent* pEvent)
+{
+    UpdateTargetDisplay();
 }
 
 void EditorGame::CallbackSceneStop(ScenePostCleanupEvent* pEvent)
