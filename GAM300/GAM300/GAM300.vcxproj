@@ -120,6 +120,7 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
+    <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Scene\Object.h" />
@@ -491,7 +493,7 @@ copy "$(SolutionDir)External\Mono\mono\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-
       <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono\mono\Release;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Release;$(SolutionDir)External\spdlog\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cpp.lib;$(SolutionDir)External\Meshoptimizer\Meshoptimizer\meshoptimizer.lib;Jolt.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;mono-2.0-sgen.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib /LTCG</AdditionalOptions>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)External\assimp\assimp-vc142-mt.dll" "$(TargetDir)assimp-vc142-mt.dll" /Y

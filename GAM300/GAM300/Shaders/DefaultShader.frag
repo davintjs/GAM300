@@ -103,6 +103,7 @@ uniform float bloomThreshold;
 // ambience value
 uniform float ambience_multiplier;
 
+//End
 vec3 getNormalFromMap()
 {
     vec3 normal = texture(NormalMap, TexCoords).xyz;

@@ -33,7 +33,7 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -79,7 +79,7 @@ struct AllAssetsGroup
 
 	bool RemoveAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -104,7 +104,7 @@ struct AllAssetsGroup
 
 	void UpdateAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -140,8 +140,8 @@ struct AllAssetsGroup
 	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
 		FileData* fileData = GetFileData(oldPath);
-		size_t oldExtension{ AssetExtensionTypes[oldPath.extension()] };
-		size_t newExtension{ AssetExtensionTypes[newPath.extension()] };
+		size_t oldExtension{ GetAssetType(oldPath) };
+		size_t newExtension{ GetAssetType(newPath) };
 
 		fs::path oldMeta{ oldPath };
 		oldMeta += ".meta";
@@ -221,6 +221,7 @@ struct AllAssetsGroup
 	template <typename MetaType>
 	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
+		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaType mFile;
@@ -229,8 +230,10 @@ struct AllAssetsGroup
 		if (!success)
 		{
 			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == assetType)
 				{
-					using T = decltype(type);
 					auto& table = std::get<AssetsTable<T>>(assets);
 					for (auto& pair : table)
 					{
@@ -240,9 +243,12 @@ struct AllAssetsGroup
 							return true;
 						}
 					}
+					//Could not find
 					Serialize(metaPath, mFile);
-					return false;
+					return true;
 				}
+				return false;
+			}
 			(Ts{}) || ...));
 		}
 		//Failed to find guid
@@ -256,6 +262,14 @@ struct AllAssetsGroup
 		return GetGUID<MetaFile>(filePath,update);
 	}
 
+	size_t GetAssetType(const std::filesystem::path& path)
+	{
+		if (AssetExtensionTypes.contains(path.extension().string()))
+		{
+			return AssetExtensionTypes[path.extension().string()];
+		}
+		return GetAssetType::E<Asset>();
+	}
 
 	fs::path GetFilePath(const Engine::GUID& guid)
 	{
@@ -296,7 +310,7 @@ struct AllAssetsGroup
 
 	FileData* GetFileData(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		FileData* pData;
 		if (([&](auto type)
 			{

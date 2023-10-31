@@ -1,4 +1,4 @@
-Serializer Version 1.1
+"%Serializer Version 1.1"
 ---
 Scene Settings:
   Name: EuanTestingArena
@@ -370,7 +370,7 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 2866402867161245437}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -401,3 +401,164 @@ SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
   SpriteTexture: {guid: 00000000000000000000000000000000}
+---
+ID: 16279065018212808363
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(11)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12617293148582574228}  # Transform
+    - component: {fileID: 16054070646967862911}  # MeshRenderer
+---
+ID: 12617293148582574228
+Transform:
+  m_GameObject: {fileID: 16279065018212808363}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6034621871942586701}
+  m_Children:
+    []
+---
+ID: 16054070646967862911
+MeshRenderer:
+  m_GameObject: {fileID: 16279065018212808363}
+  Mesh: {guid: ac71374f2cc7fd24be588c5af213a59e}
+  Albedo: [1, 1, 1, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+---
+ID: 307508712453590974
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(12)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17818027525535172416}  # Transform
+    - component: {fileID: 8468092194177855558}  # MeshRenderer
+---
+ID: 17818027525535172416
+Transform:
+  m_GameObject: {fileID: 307508712453590974}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6034621871942586701}
+  m_Children:
+    []
+---
+ID: 8468092194177855558
+MeshRenderer:
+  m_GameObject: {fileID: 307508712453590974}
+  Mesh: {guid: 6831e7c9ff199ed041497fcaefe2f432}
+  Albedo: [0.508849561, 0.272437155, 0.272437155, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+---
+ID: 18227054109373820900
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(13)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3204215473868705861}  # Transform
+    - component: {fileID: 7825276195013139527}  # MeshRenderer
+---
+ID: 3204215473868705861
+Transform:
+  m_GameObject: {fileID: 18227054109373820900}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6034621871942586701}
+  m_Children:
+    []
+---
+ID: 7825276195013139527
+MeshRenderer:
+  m_GameObject: {fileID: 18227054109373820900}
+  Mesh: {guid: d49185749e47a9a13c30d85cee523bc4}
+  Albedo: [0.185840726, 0.185840726, 0.185840726, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+---
+ID: 6034621871942586701
+GameObject:
+  m_IsActive: true
+  m_Name: Eyebot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11850865939537737725}  # Transform
+---
+ID: 11850865939537737725
+Transform:
+  m_GameObject: {fileID: 6034621871942586701}
+  Translation: [-2.12199426, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 16279065018212808363}
+    - {fileID: 307508712453590974}
+    - {fileID: 18227054109373820900}
+---
+ID: 10116943992668002733
+GameObject:
+  m_IsActive: true
+  m_Name: Bird
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 961266123794441226}  # Transform
+    - component: {fileID: 9124181928554685499}  # MeshRenderer
+---
+ID: 961266123794441226
+Transform:
+  m_GameObject: {fileID: 10116943992668002733}
+  Translation: [1.81947875, -2.5030303, 2.39705753]
+  Rotation: [0, 0, 0]
+  Scale: [20, 20, 20]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9124181928554685499
+MeshRenderer:
+  m_GameObject: {fileID: 10116943992668002733}
+  Mesh: {guid: efc618a9fd7264f94a8607332f138199}
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0
+  Roughness: 2
+  AmbientOcclusion: 0.5
+  AlbedoTexture: {guid: 1d9889777c4cf79ce109f328ea00411c}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

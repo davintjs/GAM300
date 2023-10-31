@@ -174,6 +174,8 @@ void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 void AssetManager::UpdateAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
+	if (IsCompilable(filePath))
+		Compile(filePath);
 	assets.UpdateAsset(filePath);
 }
 
