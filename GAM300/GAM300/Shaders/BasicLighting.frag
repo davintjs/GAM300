@@ -14,7 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #version 450 core
 out vec4 FragColor;
-
+//End
 void main()
 {
     FragColor = vec4(1.0); // set all 4 vector values to 1.0
