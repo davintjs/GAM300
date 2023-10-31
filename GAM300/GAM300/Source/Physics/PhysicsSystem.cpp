@@ -273,9 +273,9 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	}
 	engineContactListener->collisionResolution.clear();
 
-
-	ccTest->mCharacter->PostSimulation(0.05f);
-	for (auto it = ++characters.begin(); it != characters.end(); ++it) {
+	//if(ccTest->mCharacter != nullptr)
+	//	ccTest->mCharacter->PostSimulation(0.05f);
+	for (auto it = characters.begin(); it != characters.end(); ++it) {
 		(*it)->PostSimulation(0.05f);
 	}
 

@@ -167,9 +167,10 @@ public:
 
 class CharacterControllerTest {
 public:
-	JPH::Ref<JPH::Character> mCharacter;
+	JPH::Ref<JPH::Character> mCharacter = nullptr;
 	~CharacterControllerTest() {
-		mCharacter->RemoveFromPhysicsSystem();
+		if(mCharacter)
+			mCharacter->RemoveFromPhysicsSystem();
 	}
 };
 
