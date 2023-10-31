@@ -272,7 +272,7 @@ GameObject:
 ID: 12525885762250101481
 Transform:
   m_GameObject: {fileID: 3741745616850505635}
-  Translation: [0, 2, 16.7999992]
+  Translation: [0, 3.3499999, 18.6000004]
   Rotation: [0, 0, 0]
   Scale: [0.99999702, 1, 0.99999702]
   Father: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
 ID: 14294943393459393441
 Transform:
   m_GameObject: {fileID: 3250402029849808772}
-  Translation: [0.440229654, 5.66990662, -0.0251158178]
+  Translation: [-3.90899301, 4.43682671, -0.0251158178]
   Rotation: [3.14159083, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -371,11 +371,12 @@ ID: 7659592668176000466
 Transform:
   m_GameObject: {fileID: 4212138099454399691}
   Translation: [0, 138.102646, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 2866402867161245437}
+    - {fileID: 4559226579474559207}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -394,8 +395,8 @@ GameObject:
 ID: 8004829041645098527
 Transform:
   m_GameObject: {fileID: 2866402867161245437}
-  Translation: [0.00955638941, 0, 0]
-  Rotation: [0, -0, 0]
+  Translation: [-0.31627202, 0.643727541, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.100000001, 0.100000001, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
@@ -405,7 +406,7 @@ ID: 8812244467539034998
 SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
-  SpriteTexture: {guid: 00000000000000000000000000000000}
+  SpriteTexture: {guid: 144318b4babb0ecaa7db0af7eb3276f7}
 ---
 ID: 14820429532710331944
 GameObject:
@@ -612,3 +613,29 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 4559226579474559207
+GameObject:
+  m_IsActive: true
+  m_Name: 2D SCREEN UI test
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9663463911675431575}  # Transform
+    - component: {fileID: 8193606581408906252}  # SpriteRenderer
+---
+ID: 9663463911675431575
+Transform:
+  m_GameObject: {fileID: 4559226579474559207}
+  Translation: [0.481561869, 0.554961681, 0]
+  Rotation: [0, 0, 2.32337642]
+  Scale: [0.5, 0.5, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 8193606581408906252
+SpriteRenderer:
+  m_GameObject: {fileID: 4559226579474559207}
+  World Space: false
+  SpriteTexture: {guid: 1d3c7172929e2f58e7ce39593d7bed66}

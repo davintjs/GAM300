@@ -113,6 +113,8 @@ void EditorGame::GameView()
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         position = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
+        std::cout << "editor game position:" << position.x << " , " << position.y << "\n";
+
         ImVec2 viewportEditorSize = sceneRect.GetSize();
 
         // Check if it needs to resize the game view
@@ -159,7 +161,7 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         if (dimension != adjusted && modified)
         {
             dimension = adjusted;
-
+            std::cout << "editor game dimensions:" << dimension.x << " , " << dimension.y << "\n";
             camera->OnResize(dimension.x, dimension.y);
         }
     }

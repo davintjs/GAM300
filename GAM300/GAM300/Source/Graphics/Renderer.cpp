@@ -41,9 +41,6 @@ unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
 
 
-// Colour Picking
-unsigned int colorPickFBO;
-unsigned int colorPickTex;
 
 
 //LIGHT_TYPE temporary_test4 = POINT_LIGHT;
@@ -76,7 +73,6 @@ void Renderer::Init()
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-	FRAMEBUFFER.CreateColorPicking(colorPickFBO, colorPickTex);
 
 	SetupGrid(100);
 
