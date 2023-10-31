@@ -59,7 +59,7 @@ void AssetManager::Compile(const fs::path& path)
 bool AssetManager::IsCompilable(const fs::path& path)
 {
 	//Read metafile
-	return fs::is_directory(path) && assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
+	return assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
 }
 
 template <typename... Ts>
@@ -174,6 +174,8 @@ void AssetManager::AsyncUpdateAsset(const fs::path& filePath)
 void AssetManager::UpdateAsset(const fs::path& filePath)
 {
 	ACQUIRE_SCOPED_LOCK(Assets);
+	if (IsCompilable(filePath))
+		Compile(filePath);
 	assets.UpdateAsset(filePath);
 }
 
