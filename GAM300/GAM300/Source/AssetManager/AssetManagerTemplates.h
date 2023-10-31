@@ -33,9 +33,7 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
-		if (fs::is_directory(filePath))
-			return;
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -81,9 +79,7 @@ struct AllAssetsGroup
 
 	bool RemoveAsset(const std::filesystem::path& filePath)
 	{
-		if (fs::is_directory(filePath))
-			return true;
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -108,9 +104,7 @@ struct AllAssetsGroup
 
 	void UpdateAsset(const std::filesystem::path& filePath)
 	{
-		if (fs::is_directory(filePath))
-			return;
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -146,8 +140,8 @@ struct AllAssetsGroup
 	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
 		FileData* fileData = GetFileData(oldPath);
-		size_t oldExtension{ AssetExtensionTypes[oldPath.extension()] };
-		size_t newExtension{ AssetExtensionTypes[newPath.extension()] };
+		size_t oldExtension{ GetAssetType(oldPath) };
+		size_t newExtension{ GetAssetType(newPath) };
 
 		fs::path oldMeta{ oldPath };
 		oldMeta += ".meta";
@@ -227,7 +221,7 @@ struct AllAssetsGroup
 	template <typename MetaType>
 	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaType mFile;
@@ -240,8 +234,6 @@ struct AllAssetsGroup
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID(filePath);
-
 					auto& table = std::get<AssetsTable<T>>(assets);
 					for (auto& pair : table)
 					{
@@ -270,6 +262,14 @@ struct AllAssetsGroup
 		return GetGUID<MetaFile>(filePath,update);
 	}
 
+	size_t GetAssetType(const std::filesystem::path& path)
+	{
+		if (AssetExtensionTypes.contains(path.extension().string()))
+		{
+			return AssetExtensionTypes[path.extension().string()];
+		}
+		return GetAssetType::E<Asset>();
+	}
 
 	fs::path GetFilePath(const Engine::GUID& guid)
 	{
@@ -310,7 +310,7 @@ struct AllAssetsGroup
 
 	FileData* GetFileData(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		FileData* pData;
 		if (([&](auto type)
 			{

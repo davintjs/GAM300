@@ -59,7 +59,7 @@ void AssetManager::Compile(const fs::path& path)
 bool AssetManager::IsCompilable(const fs::path& path)
 {
 	//Read metafile
-	return assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
+	return fs::is_directory(path) && assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
 }
 
 template <typename... Ts>
