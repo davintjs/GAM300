@@ -63,6 +63,9 @@ public:
 	// Load configuration from file
 	static bool LoadConfig(const std::string& _filename, const int& _width, const int& _height);
 
+	// Set if the cursor should be shown or not
+	void SetCursorMode(const bool& _shown);
+
 	// Set dimensions of the window
 	void SetDimensions(const int& _width, const int& _height) { windowWidth = _width; windowHeight = _height; }
 

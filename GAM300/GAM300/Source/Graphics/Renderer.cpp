@@ -94,11 +94,6 @@ void Renderer::Update(float)
 
 	int i = 0;
 
-	for (Camera& camera : currentScene.GetArray<Camera>())
-	{
-		
-	}
-
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		//int index = t_Mesh->index;
