@@ -98,8 +98,7 @@
     <ClCompile Include="Source\Utilities\GUID.cpp" />
     <ClCompile Include="Source\AssetManager\ModelCompiler.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
-    <ClCompile Include="Source\Graphics\Shadows.cpp" />
-    <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
+    <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -182,6 +181,7 @@
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\Core\EventInterface.h" />
     <ClInclude Include="Source\AssetManager\ModelCompiler.h" />
+    <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

@@ -125,11 +125,31 @@ public:
 	}
 };
 
+struct EngineCollisionData {
+public:
+
+	enum collisionOperation : char {
+		added = 0,
+		persisted,
+		removed
+	};
+
+	EngineCollisionData(EngineCollisionData::collisionOperation cop) : op{ cop } {}
+
+	UINT32 bid1;
+	UINT32 bid2;
+
+
+	collisionOperation op;
+	//Vector3 body1CollisionPos;
+	//Vector3 body2CollisionPos;
+
+};
 
 // Contact Listener (collision)
 class EngineContactListener : public JPH::ContactListener {
 public:
-	EngineContactListener() : pSystem{nullptr}{}
+	EngineContactListener() : pSystem{ nullptr } {}
 	// Callback to validate a collision (contact)
 	virtual JPH::ValidateResult OnContactValidate(const JPH::Body& body1, const JPH::Body& body2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& collisionResult) override;
 	// Callback when new collision is registered
@@ -140,21 +160,20 @@ public:
 	virtual void OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) override;
 
 	JPH::PhysicsSystem* pSystem;
+	std::vector<EngineCollisionData> collisionResolution;
 };
 
 #pragma region In Progress
-class EngineCollisionData {
+
+class CharacterControllerTest {
 public:
-	EngineCollisionData() = default;
-
-private:
-	
-	Rigidbody* rb1 = nullptr;
-	Rigidbody* rb2 = nullptr;
-	//Vector3 body1CollisionPos;
-	//Vector3 body2CollisionPos;
-
+	JPH::Ref<JPH::Character> mCharacter = nullptr;
+	~CharacterControllerTest() {
+		if(mCharacter)
+			mCharacter->RemoveFromPhysicsSystem();
+	}
 };
+
 #pragma endregion
 
 ENGINE_RUNTIME_SYSTEM(PhysicsSystem)
@@ -174,11 +193,16 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
+	// Resolve any updates before Physics Simulation
+	void PrePhysicsUpdate(float dt);
+	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
+
+	// Resolve any character controller moves
+	void ResolveCharacterMovement();
 
 	// A testing function
 	void TestRun();
-
 
 	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
@@ -190,8 +214,10 @@ public:
 	const unsigned int maxObjectPairs =					1024;
 	const unsigned int maxContactConstraints =			1024;
 
+	float characterCollisionTolerance =					0.05f;
 
 	unsigned int step = 0;
+	//float accumulatedTime = 0.f;
 
 	JPH::TempAllocatorImpl* tempAllocator =			nullptr;
 	JPH::JobSystemThreadPool* jobSystem =			nullptr;
@@ -211,6 +237,12 @@ public:
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
 
 
+	#pragma region Character Controller Testing
+	float mTime = 0.f;
+	CharacterControllerTest* ccTest =				nullptr;
+	std::vector<JPH::Ref<JPH::Character>> characters;
+	//JPH::BodyID characterID;
+	#pragma endregion
 
 };
 

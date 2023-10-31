@@ -34,6 +34,8 @@ uniform mat4 SRT;
 uniform mat4 lightSpaceMatrix_Directional;
 uniform mat4 lightSpaceMatrix_Spot;
 
+//End
+
 void main()
 {
     TexCoords = aVertexTexCoord;

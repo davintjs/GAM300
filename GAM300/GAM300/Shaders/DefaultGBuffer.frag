@@ -10,7 +10,7 @@ layout (location = 4) out vec4 gAlbedoSpec;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_spec;
-
+//End
 void main(){
 	gPos = FragmentPos;
 	gNormal = normalize(Normal);

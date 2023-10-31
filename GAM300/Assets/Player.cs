@@ -8,8 +8,11 @@ public class Player : Script
     //Rigidbody rb;
     public GameObject gameObj = null;
     public float sad;
+    public float jumpSpeed;
     public Transform otherT;
     public string onamae = "HERRO";
+    public CharacterController characterController;
+
     public float ching;
     
     IEnumerator DoSomething()
@@ -48,23 +51,29 @@ public class Player : Script
 
         if (Input.GetKey(KeyCode.W))
         {
-            otherT.localPosition += otherT.forward * sad;
+            //otherT.localPosition += otherT.forward * sad;
+            characterController.Move(otherT.forward * sad);
             //rb.mass -= speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            otherT.localPosition += otherT.back * sad;
-            //rb.mass -= speed;
+            //otherT.localPosition += otherT.back * sad;
+            characterController.Move(otherT.back * sad);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            otherT.localPosition += otherT.left * sad;
-            //rb.mass -= speed;
+            //otherT.localPosition += otherT.left * sad;
+            characterController.Move(otherT.left * sad);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            otherT.localPosition += otherT.right * sad;
-            //rb.mass += speed;
+            //otherT.localPosition += otherT.right * sad;
+            characterController.Move(otherT.right * sad);
+        }
+        // Jump
+        if (Input.GetKey(KeyCode.Space))
+        {
+            characterController.Move(otherT.up * jumpSpeed);
         }
         //Console.WriteLine("Hello");
         //enabled = false;
