@@ -9,7 +9,7 @@
 \brief
 	Fragment Shader for PBR
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #version 450 core
 
@@ -100,6 +100,7 @@ uniform float bloomThreshold;
 
 // ambience value
 uniform float ambience_multiplier;
+//End
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -160,7 +161,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     float ggx1 = GeometrySchlickGGX(NdotL, roughness);
 
     return ggx1 * ggx2;
-}
+} 
 // ----------------------------------------------------------------------------
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {

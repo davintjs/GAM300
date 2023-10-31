@@ -8,6 +8,8 @@ uniform mat4 lightSpaceMatrix;
 
 uniform mat4 model; // This is SRT from above
 
+//End
+
 void main()
 {
 //    gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);

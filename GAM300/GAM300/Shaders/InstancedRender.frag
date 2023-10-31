@@ -51,6 +51,8 @@ uniform vec3 camPos;
 
 layout (binding = 0) uniform sampler2D myTextureSampler[32];
 
+//End
+
 void main()
 {
 

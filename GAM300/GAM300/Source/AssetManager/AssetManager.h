@@ -84,7 +84,7 @@ private:
 	template <typename AssetType>
 	void CallbackGetFilePath(GetFilePathEvent<AssetType> * pEvent);
 	
-	AllAssets assets{};
+	AllAssets assets;
 
 	// Get the dropped files using event callbacks
 	void CallbackDroppedAsset(DropAssetsEvent* pEvent);

@@ -75,9 +75,6 @@ private:
 		std::pair<glm::vec3, glm::vec2>& _mOffsets,
 		std::pair<glm::vec3, glm::vec2>& _mScales);
 
-	// Applies the transformations stated in the descriptor file onto the FBX model
-	void TransformVertices(std::vector<ModelVertex> _vert);
-
 	// Import materials and textures of the FBX model
 	void ImportMaterialAndTextures(const aiMaterial& _material);
 
@@ -86,6 +83,8 @@ private:
 	
 	// Serialization of the FBX model to custom binary format
 	void SerializeBinaryGeom(const std::filesystem::path& _filePath);
+
+	void SerializeBinaryAnim(const std::filesystem::path& _filePath);
 
 	// Checks the file extension to ensure that it is the correct file type
 	void CheckExtension(const std::filesystem::path& _filePath);
