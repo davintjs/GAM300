@@ -222,6 +222,25 @@ private:
 	float bloomThreshold = 1.f;
 	bool enablebloom;
 	float ambient = 1.f;
+
 };
+
+//ENGINE_SYSTEM(ShadowRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+//
+//ENGINE_SYSTEM(UIRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H

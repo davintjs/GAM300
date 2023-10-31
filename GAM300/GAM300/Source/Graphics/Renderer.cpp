@@ -36,10 +36,14 @@ unsigned int depthMap_S; // Shadow Texture
 
 glm::mat4 lightSpaceMatrix_spot;
 
-
 // Shadow Cube Mapping
 unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
+
+
+// Colour Picking
+unsigned int colorPickFBO;
+unsigned int colorPickTex;
 
 
 //LIGHT_TYPE temporary_test4 = POINT_LIGHT;
@@ -59,6 +63,8 @@ const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
 
+
+
 void Renderer::Init()
 {
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
@@ -69,6 +75,8 @@ void Renderer::Init()
 	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO_S, depthMap_S, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+	FRAMEBUFFER.CreateColorPicking(colorPickFBO, colorPickTex);
 
 	SetupGrid(100);
 
@@ -293,7 +301,6 @@ void Renderer::SetupGrid(const int& _num)
 
 void Renderer::Draw(BaseCamera& _camera)
 {
-	
 	// Looping Properties for instancing
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	//for (auto& [shader, container] : instanceContainers)

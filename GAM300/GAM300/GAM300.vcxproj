@@ -122,7 +122,9 @@
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
+    <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\HandlesTable.cpp">

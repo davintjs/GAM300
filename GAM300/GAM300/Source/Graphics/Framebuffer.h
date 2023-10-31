@@ -84,6 +84,8 @@ public:
 
 	void CreateBloom(GLuint* _indexes, GLuint* _textureIDs);
 
+	void CreateColorPicking(GLuint & _index, GLuint & _textureID);
+
 	// Creates an empty framebuffer, all attachments will have the same width and height
 	Framebuffer& CreateFramebuffer();
 
