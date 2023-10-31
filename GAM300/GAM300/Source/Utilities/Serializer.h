@@ -44,12 +44,6 @@ struct DeComHelper
     bool linker;
 };
 
-// Encapsulation for all different types of serializing like Scene, Prefab, NavMesh Data etc
-void Serialize(const std::string& _filepath);
-
-// Serialization for Prefabs, Navmesh & Scene
-void SerializeRuntime(const std::string& _filepath);
-
 // Serialize the scene
 bool SerializeScene(Scene& _scene);
 
@@ -59,10 +53,16 @@ bool SerializeSettings(YAML::Emitter& out, Scene& _scene);
 // Serialize the entities in the specific scene
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene);
 
+bool SerializePrefab(Entity& _entity, Scene& _scene);
+
+// When serializing ids/pointers
+template <typename T>
+bool SerializeReferenceField(YAML::Emitter& out, T& _component);
+
 // Serialize the components in the specific scene, the id parameter checks for serialization of components
 // for the GameObject or for mainly the Component
 template <typename T>
-bool SerializeComponent(YAML::Emitter& out, T& _component, const bool& _id);
+bool SerializeComponent(YAML::Emitter& out, T& _component);
 
 // Serialization specifically for scripts
 void SerializeScript(YAML::Emitter& out, Script& _component);
@@ -99,6 +99,7 @@ void Serialize(YAML::Emitter& out, T& object)
                 // Store Component value
                 out << YAML::BeginMap;
                 out << YAML::Key << keyName << YAML::Value << Value;
+                out << YAML::EndMap;
             }
             , entry.second);
         }
@@ -172,7 +173,7 @@ bool DeserializeScene(Scene& _scene);
 bool DeserializeSettings(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the entities in the specific scene
-void DeserializeEntity(YAML::Node& _node, Scene& _scene, bool _linking = false);
+void DeserializeEntity(YAML::Node& _node, Scene& _scene);
 
 // Deserialize the components in the specific scene, the id parameter checks for deserialization of components
 // for the GameObject or for mainly the Component
@@ -208,24 +209,33 @@ public:
     SerializeComponentsStruct() = default;
     
     // Serializing all components in the scene
-    bool SerializeComponents(YAML::Emitter& out, Entity& _entity, Scene& _scene, const bool& _id = true)
+    template<bool SerializeReference>
+    bool SerializeComponents(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     {
-        return SerializeNext<T, Ts...>(out, _entity, _scene, _id);
+        return SerializeNext<SerializeReference,T, Ts...>(out, _entity, _scene);
     }
 private:
     // Next component to serialize
-    template<typename T1, typename... T1s>
-    bool SerializeNext(YAML::Emitter& out, Entity& _entity, Scene& _scene, const bool& _id)
+    template<bool SerializeReference,typename T1, typename... T1s>
+    bool SerializeNext(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>())
         {
             if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
-                if constexpr (!std::is_same<T1, Tag>() && !std::is_same<T1, Transform>())
+                if constexpr (!std::is_same<T1, Tag>())
                 {
-                    if (!SerializeComponent(out, component, _id))
-                        return false;
+                    if constexpr (SerializeReference)
+                    {
+                        if (!SerializeReferenceField(out, component))
+                            return false;
+                    }
+                    else
+                    {
+                        if (!SerializeComponent(out, component))
+                            return false;
+                    }
                 }
             }
         }
@@ -234,20 +244,29 @@ private:
             auto components = _scene.GetMulti<T1>(_entity);
             for (T1* component : components)
             {
-                if (!SerializeComponent(out, *component, _id))
-                    return false;
+                if constexpr (SerializeReference)
+                {
+                    if (!SerializeReferenceField(out, *component))
+                        return false;
+                }
+                else
+                {
+                    if (!SerializeComponent(out, *component))
+                        return false;
+                }
             }
         }
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            if (!SerializeNext<T1s...>(out, _entity, _scene, _id))
+            if (!SerializeNext<SerializeReference,T1s...>(out, _entity, _scene))
                 return false;
         }
 
         return true;
     }
 };
-using SerializeAllComponentsStruct = decltype(SerializeComponentsStruct(AllComponentTypes()));
+
+using ComponentsSerializer = decltype(SerializeComponentsStruct(AllComponentTypes()));
 
 #endif // !SERIALIZER_H

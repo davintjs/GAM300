@@ -27,8 +27,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <map>
 #include <Utilities/GUID.h>
 #include <AssetManager/AssetTypes.h>
-
+#include <Core/EventsManager.h>
+#include <Core/Events.h>
 #include <Properties.h>
+#include "Debugging/Debugger.h"
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
@@ -85,6 +87,9 @@ struct Transform : Object
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
 
+	// Get the rotation in world space
+	glm::vec3 GetRotation() const;
+
 	// Get the scale in world space
 	glm::vec3 GetScale() const;
 
@@ -107,9 +112,11 @@ struct Transform : Object
 
 property_begin_name(Transform, "Transform")
 {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(translation).Name("Translation"),
-		property_var(rotation).Name("Rotation"),
-		property_var(scale).Name("Scale"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
+	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE)
 } property_vend_h(Transform)
 
 struct AudioSource : Object
@@ -228,12 +235,16 @@ struct CharacterController : Object
 {
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
+	Vector3 direction{};
+
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	bool isGrounded = false;
 	property_vtable();
 	UINT32 bid{ 0 };
+
 //JPH::BodyID CharacterBodyID;
 };
 
@@ -244,20 +255,25 @@ property_begin_name(CharacterController, "CharacterController") {
 	property_var(friction).Name("Friction"),
 	property_var(mass).Name("Mass"),
 	property_var(gravityFactor).Name("GravityFactor"),
-	property_var(slopeLimit).Name("SlopeLimit")
+	property_var(slopeLimit).Name("SlopeLimit"),
+	property_var(isGrounded).Name("IsGrounded")
 } property_vend_h(CharacterController)
 
 struct Script : Object
 {
-	std::string name;
-	Script() {}
-	Script(const char* _name) :name{ _name } {}
+	Script(){}
+	Script(const char* yes) 
+	{
+		E_ASSERT(false,"INVALID CONSTRUCTOR");
+	}
+	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
 	property_vtable();
 };
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
+	property_var(scriptId).Name("Script").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
@@ -460,10 +476,10 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
@@ -537,7 +553,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

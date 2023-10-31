@@ -229,3 +229,12 @@ bool Application::LoadConfig(const std::string& _filename, const int& _width, co
 {
     return false;
 }
+
+// Set the cursor's mode
+void Application::SetCursorMode(const bool& _shown)
+{
+    if (_shown)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    else
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}

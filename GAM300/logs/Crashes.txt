@@ -1,5 +1,5 @@
-[2023-10-27 20:51:45.109] [Error] [critical] 
-Caused By:	inputFile
-Info:		Error opening file to update asset in memory!
-Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\AssetManager\AssetManagerTemplates.h (Line: 121)
+[2023-10-31 00:20:19.931] [Error] [critical] 
+Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
+Info:		Trying to access invalid mesh
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 37)
 

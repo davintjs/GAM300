@@ -47,8 +47,26 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	{"None.cs", Engine::GUID(400)},
 
 	//Default Audio
-	{"None.wav", Engine::GUID(500)}
+	{"None.wav", Engine::GUID(500)},
+
+	//Default Shaders
+	{"Test.shader", Engine::GUID(600)},
+	
+	//Default Scripts
+	{"None.cs", Engine::GUID(1000)},
 };
+
+struct MetaFile : property::base
+{
+	Engine::GUID guid;
+	property_vtable()
+};
+
+property_begin_name(MetaFile, "")
+{
+	property_var(guid),
+} property_vend_h(MetaFile)
+
 
 // GUID, last file update time, file name, data
 struct FileInfo
@@ -63,22 +81,24 @@ using FileData = std::vector<char>;
 struct Asset : FileInfo
 {
 	FileData mData;
+	using Meta = MetaFile;
 };
 
-struct MetaFile : property::base
+struct TextureImporter : MetaFile
 {
-	Engine::GUID guid;
+	size_t maxTextureSize;
 	property_vtable()
 };
 
-property_begin_name(MetaFile,"")
+property_begin_name(TextureImporter,"")
 {
-	property_var(guid),
-} property_vend_h(MetaFile)
+	property_parent(MetaFile),
+	property_var(maxTextureSize),
+} property_vend_h(TextureImporter)
+
 
 struct TextureAsset : Asset
 {
-
 };
 
 struct ScriptAsset : Asset
@@ -109,14 +129,28 @@ struct MeshAsset : Asset
 	std::vector<unsigned int> mIndices;
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, Asset>;
+struct ShaderAsset : Asset
+{
+	// Map of variable name to type enum
+	//std::unordered_map<std::string, size_t> variables;
+
+	std::string vertexShaderBuffer;
+	std::string fragmentShaderBuffer;
+
+};
+
+using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
+
+template <typename AssetType>
+using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
-static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
+static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
 	{".geom",	GetAssetType::E<MeshAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".shader", GetAssetType::E<ShaderAsset>()},
 };

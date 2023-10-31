@@ -19,6 +19,8 @@ out vec3 TexCoords;
 uniform mat4 projection;
 uniform mat4 view;
 
+//End
+
 void main()
 {
     TexCoords = aPos;

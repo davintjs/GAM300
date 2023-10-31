@@ -22,9 +22,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 200
 
-class temp_instance
+struct temp_instance
 {
-public:
 	std::string name;
 	glm::vec4 albedo;
 	float metallic;
@@ -92,6 +91,7 @@ union Light_Type
 
 struct LightProperties
 {
+	bool inUse = true;
 	// Used in point & Spot
 	glm::vec3 lightpos;
 
@@ -187,4 +187,14 @@ struct DefaultRenderProperties {
 
 	GLenum drawType;
 };
+
+
+
+struct ShaderProperties {
+	std::string name;
+	std::unordered_map<size_t, std::pair<std::string, size_t>> fragmentVariables;
+	std::unordered_map<size_t, std::pair<std::string, size_t>> vertexVariables;
+};
+
+
 #endif // !GRAPHICSTRUCTANDCLASS_H

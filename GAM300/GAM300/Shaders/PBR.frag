@@ -9,7 +9,7 @@
 \brief
 	Fragment Shader for PBR
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #version 450 core
 
@@ -57,7 +57,9 @@ layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
 layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
-layout (location = 7) in vec4 frag_pos_lightspace;
+layout (location = 7) in vec4 frag_pos_lightspace_D;
+
+layout (location = 8) in vec4 frag_pos_lightspace_S;
 
 
 //-------------------------
@@ -98,6 +100,7 @@ uniform float bloomThreshold;
 
 // ambience value
 uniform float ambience_multiplier;
+//End
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -158,7 +161,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     float ggx1 = GeometrySchlickGGX(NdotL, roughness);
 
     return ggx1 * ggx2;
-}
+} 
 // ----------------------------------------------------------------------------
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
@@ -166,7 +169,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
-float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -187,6 +190,29 @@ float ShadowCalculation(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
         shadow = 0.0;
     return shadow;
 }
+
+float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(myTextureSampler[29], projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;  
+    // check whether current frag pos is in shadow
+
+    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
+//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    return shadow;
+}
+
 
 float ShadowCalculation_Point(vec3 lightpos)
 {
@@ -456,7 +482,7 @@ void main()
 
 
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
 
         
         
@@ -533,7 +559,7 @@ void main()
         
         
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-        float shadow = renderShadow ? ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
 
         
         

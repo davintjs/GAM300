@@ -159,6 +159,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::OpenPopup("Texture");
     }
 
+    GLuint defaultFileIcon = TextureManager.GetTexture("Assets/Icons/fileicon.dds");
+
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
     static ImGuiTextFilter filter;
@@ -251,21 +253,19 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             EVENTS.Publish(&e);
             Engine::GUID currentGUID = e.guid;
 
-            fs::path icon = "Assets/Icons/fileicon.dds";
 
             //if not png or dds file, dont show
 
             ImGui::PushID(i++);
 
             //Draw the file / folder icon based on whether it is a directory or not
-            auto tex = GET_TEXTURE_ID(path);
-            if (tex != 0) {
-                icon = path;
+            GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+            if (icon_id == 0) {
+                icon_id = defaultFileIcon;
             }
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            GLuint icon_id = TextureManager.GetTexture(icon);
             if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, currentGUID);
@@ -288,6 +288,27 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     }
 }
 
+template <typename... Ts>
+fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
+{
+    fs::path path;
+    if (([&](auto type)
+    {
+        using T = decltype(type);
+        GetFilePathEvent<T> e{ guid };
+        EVENTS.Publish(&e);
+        if (e.filePath == "")
+            return false;
+        path = e.filePath;
+        return true;
+    }
+    (Ts{}) || ...))
+    {
+        return path;
+    }
+    return path;
+}
+
 void DisplayType(Change& change, const char* name, Engine::GUID& val)
 {
     static std::string idName{};
@@ -305,9 +326,7 @@ void DisplayType(Change& change, const char* name, Engine::GUID& val)
     }
     if (fp.empty())
     {
-        GetFilePathEvent e{ val };
-        EVENTS.Publish(&e);
-        fp = e.filePath;
+        fp = DisplayGUIDHelper(AssetTypes(),val);
     }
     const std::string& pathStr = fp.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
@@ -481,23 +500,23 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     Vector4 buf = val;
     ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
-    //std::cout << buf.x << " " << buf.y << " " << buf.z << " " << buf.w << std::endl;
-    
     bool ischanged = false;
     bool clickend = false;
 
 
-    if (ImGui::ColorButton("##color", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+    if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
         ImGui::OpenPopup("colorpicker");
 
     if (ImGui::BeginPopup("colorpicker"))
     {
-            if (!valueChanged) 
-                intialColor = val;
-            
-            valueChanged = true;
-            val = buf;
-        }
+        if (!valueChanged)
+            intialColor = val;
+
+        valueChanged = true;
+        val = buf;
+        ImGui::EndPopup();
+    }
+
 
         if (ImGui::IsItemDeactivatedAfterEdit()) {
             valueChanged = false;
@@ -506,8 +525,8 @@ void DisplayType(Change& change, const char* name, Vector4& val)
             EDITOR.History.SetPropertyValue(change, val, buf);
         }
 
-        ImGui::EndPopup();
-    }
+        
+    
 }
 
 void DisplayType(Change& change, const char* name, Vector2& val)
@@ -837,7 +856,7 @@ void Display_Property(T& comp) {
                 property::set(comp, entry.first.c_str(), Data);
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
             }
            
         });
@@ -919,8 +938,10 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
+        GetFilePathEvent<ScriptAsset> e{component.scriptId};
+        EVENTS.Publish(&e);
         if(&component)
-            name = (component.name + " [Script]");
+            name = (e.filePath.stem().string() + " (Script)");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
@@ -1106,14 +1127,14 @@ private:
         {
             if constexpr (std::is_same_v<T1, Script>)
             {
-                GetScriptNamesEvent nameEvent;
-                EVENTS.Publish(&nameEvent);
+                GetAssetsEvent<ScriptAsset> e;
+                EVENTS.Publish(&e);
 
-                for (size_t i = 0; i < nameEvent.count; ++i)
+                for (auto& pair : *e.pAssets)
                 {
-                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
-                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        scene.Add<T1>(entity, pair.first);
                         EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }

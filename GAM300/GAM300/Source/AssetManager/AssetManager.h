@@ -65,17 +65,26 @@ private:
 	void AsyncRenameAsset(const fs::path & oldPath, const fs::path & newPath);
 	void RenameAsset(const fs::path & oldPath, const fs::path & newPath);
 
+	void GetAssets();
+
+	template <typename... Ts>
+	void SubscribeGetAssets(TemplatePack<Ts...>);
+
 	// FileWatching system using event callbacks
 	void CallbackFileModified(FileModifiedEvent* pEvent);
 
 	// Get the GUID of the asset using event callbacks
 	void CallbackGetAsset(GetAssetEvent* pEvent);
 
+	// Get the table of the asset using event callbacks
+	template <typename AssetType>
+	void CallbackGetAssets(GetAssetsEvent<AssetType> *pEvent);
 
 	// Get the Filepath of the asset using event callbacks
-	void CallbackGetFilePath(GetFilePathEvent * pEvent);
+	template <typename AssetType>
+	void CallbackGetFilePath(GetFilePathEvent<AssetType> * pEvent);
 	
-	AllAssets assets{};
+	AllAssets assets;
 
 	// Get the dropped files using event callbacks
 	void CallbackDroppedAsset(DropAssetsEvent* pEvent);

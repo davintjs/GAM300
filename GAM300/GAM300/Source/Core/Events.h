@@ -20,8 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Utilities/UUID.h"
 #include <glm/vec2.hpp>
-#include <Utilities/GUID.h>
 #include <filesystem>
+#include <AssetManager/AssetTypes.h>
 
 struct Entity;
 struct Scene;
@@ -103,13 +103,6 @@ struct GetSelectedEntityEvent : IEvent
 	Entity* pEntity;
 };
 
-struct GetScriptNamesEvent : IEvent
-{
-	GetScriptNamesEvent() {};
-	const char** arr = nullptr;
-	size_t count = 0;
-};
-
 template <typename T>
 struct ObjectCreatedEvent : IEvent
 {
@@ -157,12 +150,15 @@ struct GetAssetEvent: IEvent
 	Engine::GUID guid;
 };
 
+
+template <typename AssetType>
 struct GetFilePathEvent : IEvent
 {
 	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
 	const Engine::GUID& guid;
 	fs::path filePath;
 };
+
 
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
@@ -200,6 +196,12 @@ struct DropAssetsEvent : IEvent
 	const fs::path* paths;
 };
 
+template <typename AssetType>
+struct GetAssetsEvent : IEvent
+{
+	AssetsTable<AssetType>* pAssets{};
+};
+
 #pragma endregion
 
 struct ContactAddedEvent : IEvent
@@ -216,6 +218,18 @@ struct ContactRemovedEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
+struct TriggerEnterEvent : IEvent
+{
+	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
+struct TriggerRemoveEvent : IEvent
+{
+	TriggerRemoveEvent() : rb1{ nullptr }, rb2{ nullptr }{}
+	Rigidbody* rb1;
+	Rigidbody* rb2;
+};
 
 #pragma region EDITOR STUFF
 
@@ -227,6 +241,8 @@ struct EditorWindowEvent : IEvent
 	bool isFocused = false;
 	std::string name;
 };
+
+
 
 struct EditorPanCameraEvent : IEvent
 {

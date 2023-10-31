@@ -7,10 +7,6 @@
 #include <Utilities/YAMLUtils.h>
 #include <Utilities/Serializer.h>
 
-//Hash table that maps an ID to a pointer
-template <typename T>
-using AssetsTable = std::unordered_map<Engine::GUID, T>;
-
 namespace chron = std::chrono;
 
 enum AssetState
@@ -37,13 +33,13 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID(filePath);
+					Engine::GUID guid = GetGUID(filePath,true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
 						if (fs::is_directory(filePath))
@@ -83,7 +79,7 @@ struct AllAssetsGroup
 
 	bool RemoveAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -108,13 +104,13 @@ struct AllAssetsGroup
 
 	void UpdateAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID(filePath);
+					Engine::GUID guid = GetGUID(filePath,true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
 						std::ifstream inputFile(filePath.c_str());
@@ -144,22 +140,32 @@ struct AllAssetsGroup
 	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
 		FileData* fileData = GetFileData(oldPath);
+		size_t oldExtension{ GetAssetType(oldPath) };
+		size_t newExtension{ GetAssetType(newPath) };
 
+		fs::path oldMeta{ oldPath };
+		oldMeta += ".meta";
+		fs::path newMeta{ newPath };
+		newMeta += ".meta";
+		fs::rename(oldMeta, newMeta);
 		//Deal with meta file conversion here
-		if (AssetExtensionTypes[oldPath.extension()] != AssetExtensionTypes[newPath.extension()])
+		if (oldExtension != newExtension)
 		{
-
+			//Look for oldExtension
+			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == oldExtension)
+				{
+					Engine::GUID guid = GetGUID(newPath, true);
+					return true;
+				}
+				return false;
+			}
+			(Ts{}) || ...));
 		}
-		else
-		{
-			fs::path oldMeta{ oldPath };
-			oldMeta += ".meta";
-			fs::path newMeta{ newPath };
-			newMeta += ".meta";
-			fs::rename(oldMeta, newMeta);
-		}
 
-		AddAsset(newPath);
+		AddAsset(newPath,fileData);
 		RemoveAsset(oldPath);
 	}
 
@@ -212,22 +218,20 @@ struct AllAssetsGroup
 		})(Ts{}), ...);
 	}
 
-
-
-	Engine::GUID GetGUID(const std::filesystem::path& filePath)
+	template <typename MetaType>
+	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		MetaFile mFile;
+		MetaType mFile;
 		Engine::GUID tempGUID{ mFile.guid };
-		bool success = Deserialize<MetaFile>(metaPath,mFile);
+		bool success = Deserialize<MetaType>(metaPath, mFile);
 		if (!success)
 		{
 			if (([&](auto type)
 			{
 				using T = decltype(type);
-
 				if (GetAssetType::E<T>() == assetType)
 				{
 					auto& table = std::get<AssetsTable<T>>(assets);
@@ -239,16 +243,32 @@ struct AllAssetsGroup
 							return true;
 						}
 					}
+					//Could not find
+					Serialize(metaPath, mFile);
+					return true;
 				}
-				Serialize(metaPath, mFile);
 				return false;
 			}
 			(Ts{}) || ...));
 		}
 		//Failed to find guid
-		if (tempGUID == mFile.guid)
+		if (tempGUID == mFile.guid || update)
 			Serialize(metaPath, mFile);
 		return mFile.guid;
+	}
+
+	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
+	{
+		return GetGUID<MetaFile>(filePath,update);
+	}
+
+	size_t GetAssetType(const std::filesystem::path& path)
+	{
+		if (AssetExtensionTypes.contains(path.extension().string()))
+		{
+			return AssetExtensionTypes[path.extension().string()];
+		}
+		return GetAssetType::E<Asset>();
 	}
 
 	fs::path GetFilePath(const Engine::GUID& guid)
@@ -277,13 +297,12 @@ struct AllAssetsGroup
 		//If no meta, assume modified as it is just added
 		if (!std::filesystem::exists(metaPath))
 		{
-			GetGUID(filePath);
+			GetGUID(filePath,true);
 			return true;
 		}
-		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
 		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			GetGUID(filePath);
+			GetGUID(filePath, true);
 			return true;
 		}
 		return false;
@@ -291,7 +310,7 @@ struct AllAssetsGroup
 
 	FileData* GetFileData(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		FileData* pData;
 		if (([&](auto type)
 			{

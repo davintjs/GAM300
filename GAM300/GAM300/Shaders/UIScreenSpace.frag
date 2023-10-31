@@ -19,6 +19,8 @@ out vec4 FragColor;
 uniform sampler2D Sprite;
 uniform bool RenderSprite; // if there is a texture, this is true else false
 
+//End
+
 void main()
 {    
 

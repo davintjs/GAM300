@@ -303,6 +303,7 @@ namespace property
                       bool        m_isShowReadOnly  : 1                                 // When in display mode it will let the user knows to render the property as a read only
                                 , m_isDontSave      : 1                                 // Properties with this flag wont be saved
                                 , m_isDontShow      : 1                                 // Properties with this flags wont be shown to the user
+                                , m_isReference     : 1                                 // The field is some reference like a uuid/pointer
                                 , m_isScope         : 1;                                // When Enumerating in display mode it will let the user know if it is a scope
             };
 
@@ -320,6 +321,7 @@ namespace property
         constexpr type SHOW_READONLY                    { 1 << 0 };                         // Property can not be edited other wise it will save and load just like any other
         constexpr type DONTSAVE                         { 1 << 1 };                         // Makes the property not save under on serialization
         constexpr type DONTSHOW                         { 1 << 2 };                         // Hides a property under enum display so it wont be shown 
+        constexpr type REFERENCE                        { 1 << 3 };                         // The field is some reference like a uuid/pointer
         constexpr type DISABLE                          { DONTSAVE.m_Value | DONTSHOW.m_Value };    // Completely disables a property
     }
 
