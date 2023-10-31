@@ -87,6 +87,9 @@ struct Transform : Object
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
 
+	// Get the rotation in world space
+	glm::vec3 GetRotation() const;
+
 	// Get the scale in world space
 	glm::vec3 GetScale() const;
 
