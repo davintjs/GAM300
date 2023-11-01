@@ -29,7 +29,7 @@ public:
 
 private:
 
-	bool lockCursor = true;
+	bool lockCursor = false;
 
 };
 #endif // !INPUT_SYSTEM_H
