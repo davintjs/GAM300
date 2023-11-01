@@ -107,15 +107,15 @@ void AnimationMesh::setupMesh()
     // vertex normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
     // vertex tangent
-    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(2);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
-    // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, bitTangent));
+    // vertex texture coords
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
+    //// vertex bitangent
+    //glEnableVertexAttribArray(4);
+    //glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, bitTangent));
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
@@ -300,7 +300,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& m
             boneInfoMap[channel->mNodeName.data].id, channel));
     }
 
-    m_BoneInfoMap = boneInfoMap;
+    m_BoneInfoMap_ = boneInfoMap;
 }
 
 void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
@@ -440,32 +440,37 @@ void Animation_Manager::Init()
     //allAnimators_.init(&allModels_.GetAnimations());
 
     // temp
-    Animation tempanim;
-    tempanim.GetDuration() = allModels_.GetAnimations().GetDuration();
-    tempanim.GetTicksPerSecond() = allModels_.GetAnimations().GetTicksPerSecond();
-    tempanim.GetRootNode() = allModels_.GetAnimations().GetRootNode();
+    //Animation tempanim;
+    //tempanim.GetDuration() = allModels_.GetAnimations().GetDuration();
+    //tempanim.GetTicksPerSecond() = allModels_.GetAnimations().GetTicksPerSecond();
+    //tempanim.GetRootNode() = allModels_.GetAnimations().GetRootNode();
 
-    std::map<std::string, BoneInfo> tempmap = tempanim.GetBoneIDMap();
-    for (auto& tempmap_src : allModels_.GetAnimations().GetBoneIDMap())
-    {
-        tempmap.emplace(tempmap_src);
-    }
+    //std::map<std::string, BoneInfo> tempmap = tempanim.GetBoneIDMap();
+    //for (auto& tempmap_src : allModels_.GetAnimations().GetBoneIDMap())
+    //{
+    //    tempmap.emplace(tempmap_src);
+    //}
 
-    std::vector<Bone> tempbone = tempanim.GetBones();
-    for (auto& tempbone_src : allModels_.GetAnimations().GetBones())
-    {
-        tempbone.push_back(tempbone_src);
-    }
-    mAnimationContainer.emplace("docattc", tempanim);
+    //std::vector<Bone> tempbone = tempanim.GetBones();
+    //for (auto& tempbone_src : allModels_.GetAnimations().GetBones())
+    //{
+    //    tempbone.push_back(tempbone_src);
+    //}
+    //mAnimationContainer.emplace("docattc", tempanim);
     ////   
+    mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
 
 
     Scene& currentScene = MySceneManager.GetCurrentScene();
     for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
     {
-        auto animIt = mAnimationContainer.find("docattc");
-        if (animIt != mAnimationContainer.end())
-            animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
+
+        Entity& entity = currentScene.Get<Entity>(animator);
+        MeshRenderer& meshrenderer = currentScene.Get<MeshRenderer>(entity);
+        
+        //auto animIt = mAnimationContainer.find("docattc");
+        //if (animIt != mAnimationContainer.end())
+        //    animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
     }
 }
 
@@ -496,9 +501,9 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 
     ourShader.Use();
     GLint uniform1 =
-        glGetUniformLocation(ourShader.GetHandle(), "projection");
+        glGetUniformLocation(ourShader.GetHandle(), "persp_projection");
     GLint uniform2 =
-        glGetUniformLocation(ourShader.GetHandle(), "view");
+        glGetUniformLocation(ourShader.GetHandle(), "View");
     glUniformMatrix4fv(uniform1, 1, GL_FALSE,
         glm::value_ptr(_camera.GetProjMatrix()));
     glUniformMatrix4fv(uniform2, 1, GL_FALSE,
@@ -540,7 +545,7 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
 	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
+	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
 		glm::value_ptr(model));
 	allModels_.Draw(ourShader);
 

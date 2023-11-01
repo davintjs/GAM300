@@ -214,7 +214,7 @@ public:
     inline AssimpNodeData& GetRootNode() { return m_RootNode; }
     inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
     {
-        return m_BoneInfoMap;
+        return m_BoneInfoMap_;
     }
     inline std::vector<Bone>& GetBones()
     {
@@ -231,7 +231,7 @@ private:
     int m_TicksPerSecond;
     std::vector<Bone> m_Bones;
     AssimpNodeData m_RootNode;
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::map<std::string, BoneInfo> m_BoneInfoMap_;
 };
 
 
@@ -259,7 +259,7 @@ public:
 
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::map<std::string, BoneInfo> m_BoneInfoMap; // looks p useless
     int m_BoneCounter = 0;
 };
 
