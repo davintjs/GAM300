@@ -815,6 +815,29 @@ void DisplayLightTypes(Change& change, T& value) {
 }
 
 template <typename T>
+void DisplayAudioChannels(Change& change, T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Channel");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Music"); layers.push_back("SFX"); layers.push_back("Loop FX");
+        int index = value;
+        ImGui::PushItemWidth(100.f);
+        if (ImGui::Combo("##AudioChannel", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
+template <typename T>
 void DisplayMaterial(Change& change, T& value) {
     if constexpr (std::is_same_v<T, int>) {
         ImGui::AlignTextToFramePadding();
@@ -864,6 +887,10 @@ void Display_Property(T& comp) {
                     if (entry.first.find("Material") != std::string::npos) {
                         Change newchange(&comp, entry.first);
                         DisplayMaterial(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayAudioChannels(newchange, Value);
                     }
                     else {
                         //Edit name
