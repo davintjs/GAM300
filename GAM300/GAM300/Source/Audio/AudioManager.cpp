@@ -38,6 +38,8 @@ void AudioManager::InitAudioManager() {
 	modes[CATEGORY_LOOPFX] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
 	// Seed random number generator for SFXs
 	srand((unsigned int)time(0));
+
+	soundvec.resize(static_cast<size_t>(CATEGORY_COUNT));
 }
 
 void AudioManager::DestroyAudioManager() {
@@ -73,19 +75,19 @@ void AudioManager::Update(float dt) {
 		if (nextVolume <= 0.0f) {
 			currentMusic->stop();
 			currentMusic = 0;
-			currentMusicPath.clear();
+			currentMusicPath = DEFAULT_ASSETS["None.wav"];
 			fade = FADE_NONE;
-			if (!nextMusicPath.empty()) {
+			if (nextMusicPath != DEFAULT_ASSETS["None.wav"]) {
 				PlayMusic(nextMusicPath);
 				fade = FADE_IN;
-				nextMusicPath.clear();
+				nextMusicPath = DEFAULT_ASSETS["None.wav"];
 			}
 		}
 		else {
 			currentMusic->setVolume(nextVolume);
 		}
 	}
-	else if (currentMusic == 0 && !nextMusicPath.empty()) {
+	else if (currentMusic == 0 && nextMusicPath != DEFAULT_ASSETS["None.wav"]) {
 		PlayMusic(nextMusicPath);
 	}
 	currentFX->setVolume(GetSFXVolume() * loopfxVolume);
@@ -93,33 +95,32 @@ void AudioManager::Update(float dt) {
 }
 
 
-void AudioManager::AddMusic(const std::string& path, const std::string& name) {
+void AudioManager::AddMusic(const std::string& path, const Engine::GUID& name) {
 
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC], 0, &sound);
-	E_ASSERT(r == FMOD_OK, path , " doesnt exist!\n");
-	sounds[CATEGORY_MUSIC].insert(std::make_pair(name, sound));
+	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
+	sounds[CATEGORY_MUSIC].emplace(name, sound);
 }
 
-void AudioManager::AddLoopFX(const std::string& path, const std::string& name) {
+void AudioManager::AddLoopFX(const std::string& path, const Engine::GUID name) {
 
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_LOOPFX], 0, &sound);
 	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
 
-	sounds[CATEGORY_LOOPFX].insert(std::make_pair(name, sound));
+	sounds[CATEGORY_LOOPFX].emplace(name, sound);
 }
 
-void AudioManager::AddSFX(const std::string& path, const std::string& name) {
+void AudioManager::AddSFX(const std::string& path, const Engine::GUID name) {
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_SFX], 0, &sound);
 	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
-	sounds[CATEGORY_SFX].insert(std::make_pair(name, sound));
+	sounds[CATEGORY_SFX].emplace(name, sound);/**/
 }
 
-void AudioManager::PlayMusic(const std::string name) {
-
-	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
+//@kk change var name
+void AudioManager::PlayMusic(const Engine::GUID name) {
 
 	if (currentMusicPath == name) {
 		groups[CATEGORY_MUSIC]->setPaused(false);
@@ -134,7 +135,10 @@ void AudioManager::PlayMusic(const std::string name) {
 	}
 	// Find the Music in the corresponding sound map
 	SoundMap::iterator sound = sounds[CATEGORY_MUSIC].find(name);
-	E_ASSERT(sound != sounds[CATEGORY_MUSIC].end(), name, " not found!\n");
+	//E_ASSERT(sound != sounds[CATEGORY_MUSIC].end(), name.ToHexString(), " not found!\n");
+	if (sound == sounds[CATEGORY_MUSIC].end()) {
+		return;
+	}
 	// Start playing Music with volume set to 0 and fade in
 	currentMusicPath = name;
 	system->playSound(sound->second, 0, true, &currentMusic);
@@ -146,7 +150,7 @@ void AudioManager::PlayMusic(const std::string name) {
 
 }
 
-void AudioManager::PlayLoopFX(const std::string name, float pan, float vol) {
+void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol) {
 
 	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
 	if (currentFXPath == name) {
@@ -163,7 +167,10 @@ void AudioManager::PlayLoopFX(const std::string name, float pan, float vol) {
 	}
 	// Find the Music in the corresponding sound map
 	SoundMap::iterator sound = sounds[CATEGORY_LOOPFX].find(name);
-	E_ASSERT(sound != sounds[CATEGORY_LOOPFX].end(), name, " not found!\n");
+	//E_ASSERT(sound != sounds[CATEGORY_LOOPFX].end(), name.ToHexString(), " not found!\n");
+	if (sound == sounds[CATEGORY_MUSIC].end()) {
+		return;
+	}
 	// Start playing Music with volume set to 0 and fade in
 	currentFXPath = name;
 	system->playSound(sound->second, 0, true, &currentFX);
@@ -183,7 +190,7 @@ void AudioManager::PlayMusic() {
 		currentMusic->setPaused(false);
 		return;
 	}
-	if (!nextMusicPath.empty())
+	if (nextMusicPath != DEFAULT_ASSETS["None.wav"])
 	{
 		currentMusicPath = nextMusicPath;
 	}
@@ -195,7 +202,7 @@ void AudioManager::PauseMusic() {
 	currentMusic->setPaused(true);
 }
 
-void AudioManager::PlaySFX(const std::string& name,
+void AudioManager::PlaySFX(const Engine::GUID name,
 	float pan,
 	float minVolume, float maxVolume,
 	float minPitch, float maxPitch)
@@ -218,7 +225,7 @@ void AudioManager::PlaySFX(const std::string& name,
 	frequency = frequency * pow(semitone_ratio, pitch);
 	channel->setFrequency(frequency);
 	channel->setPan(pan);
-	channel->setPaused(false);
+	channel->setPaused(false);/**/
 }
 
 void AudioManager::StopMusic() {
@@ -229,7 +236,7 @@ void AudioManager::StopMusic() {
 void AudioManager::StopFX() {
 	currentFX->stop();
 	currentFX = 0;
-	currentFXPath.clear();
+	currentFXPath = DEFAULT_ASSETS["None.wav"];
 }
 
 void AudioManager::SetMasterVolume(float volume) {
@@ -270,8 +277,12 @@ float AudioManager::RandFloat(float min, float max) {
 //Handle audio adding here
 void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent)
 {
-	AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
-	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
+	// @kk rmb to delete when done
+	/*AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
+	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());*/
+	std::cout << "guid: " << pEvent->guid.ToHexString() << "\t\t sound: " << pEvent->assetPath.stem().string() << std::endl;
+	AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->guid);
+	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->guid);
 }
 
 //Handle audio removal here
