@@ -26,8 +26,8 @@ Transform:
   Scale: [0.999994159, 1, 0.999994159]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 15437581623968739888}
     - {fileID: 5588025465971199737}
+    - {fileID: 15437581623968739888}
 ---
 ID: 12258422859569935717
 CharacterController:
@@ -45,7 +45,7 @@ Script:
   m_GameObject: {fileID: 15876712306982219188}
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   MoveSpeed: 500
-  JumpSpeed: 3
+  JumpSpeed: 1
   PlayerModel: {fileID: 15437581623968739888}  # Component
   CamYawPivot: {fileID: 5588025465971199737}  # Component
   Gravity: 9.81000042
@@ -152,10 +152,10 @@ Script:
   m_GameObject: {fileID: 306000570273784193}
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
   MaxPitchAngle: 85
-  YawRotSpeed: 180
+  YawRotSpeed: 360
   CamYawPivot: {fileID: 5588025465971199737}  # Component
   InvertPitch: false
-  PitchRotSpeed: 180
+  PitchRotSpeed: 360
   CamPitchPivot: {fileID: 8070469368306795598}  # Component
   MinPitchAngle: -85
   CamMovePivot: {fileID: 17118584384463415622}  # Component
@@ -175,9 +175,9 @@ GameObject:
 ID: 3467605314491215014
 Transform:
   m_GameObject: {fileID: 17376879019681064740}
-  Translation: [0, 0, 0]
+  Translation: [0, -25, 0]
   Rotation: [0, 0, 0]
-  Scale: [50, 1, 50]
+  Scale: [50, 50, 50]
   Father: {fileID: 0}
   m_Children:
     []
@@ -242,7 +242,7 @@ Transform:
 ID: 7543481948093770990
 MeshRenderer:
   m_GameObject: {fileID: 15437581623968739888}
-  Mesh: {guid: 00000000000000000000000000000065}
+  Mesh: {guid: 1c49e466f3ebf5c5e4e400f2074e15c7}
   Albedo: [1, 0, 0, 0]
   Metallic: 1
   Roughness: 1
