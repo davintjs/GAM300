@@ -24,7 +24,6 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//std::cout << "inside\n";
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
@@ -42,19 +41,14 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 	int offset = 1;
 
 	int index = 0;
+
+
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		if (!Sprite.ColourPicked)
 		{
 ;			continue;
 		}
-
-		glm::vec2 dimension = EditorGame::Instance().GetDimension();
-		glm::vec2 position = EditorGame::Instance().GetPosition();
-
-
-		//std::cout << "dimension : " << dimension.x << " , " << dimension.y << "\n";
-		//std::cout << "position : " << position.x << " , " << position.y << "\n";
 
 		Entity& entity = currentScene.Get<Entity>(Sprite);
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -113,15 +107,7 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 	}
 
-	//std::cout << "out\n";
 	shader.UnUse();
-
-	//std::cout << "\n\n\n\n";
-
-	//std::cout << "window pos" << windowPos.x << " , " << windowPos.y << "\n";
-
-
-	//std::cout << "window dimension" << windowDimension.x << " , " << windowDimension.y << "\n";
 
 	glm::vec2 mousepos = InputHandler::getMousePos();
 	
@@ -134,6 +120,7 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 	// X Offset Magician
 	true_mousepos.x = mousepos.x - windowPos.x;
 	true_mousepos.x = (true_mousepos.x / windowDimension.x) * 1600.f;
+
 	// Y Offset Magician
 	//std::cout << "window pos y " << windowPos.y << "\n";
 	//std::cout << "window dimension y " << windowDimension.y << "\n";
