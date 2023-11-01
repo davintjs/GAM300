@@ -205,7 +205,7 @@ void GraphicsSystem::Init()
 	GraphicsSubSystems::Init();
 	SkyboxManager::Instance().Init();
 	COLOURPICKER.Init();
-	AnimationManager.Init();
+	//AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 
