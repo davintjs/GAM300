@@ -277,8 +277,11 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (path.extension() != extension)
-                    continue;
+                if (AssetExtensionTypes.find(path.extension().string()) != AssetExtensionTypes.end()) {
+                    if (AssetExtensionTypes[path.extension().string()] != AssetExtensionTypes[extension.string()])
+                        continue;
+                }
+                //if (path.extension() != extension)
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
