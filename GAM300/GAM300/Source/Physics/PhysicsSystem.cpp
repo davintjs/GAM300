@@ -99,6 +99,23 @@ void PhysicsSystem::Update(float dt) {
 		//t.rotation = ballRotEuler;
 
 	}
+
+	int i = 0;
+	auto& ccArray = scene.GetArray<CharacterController>();
+	for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
+	{
+		CharacterController& cc = *it;
+		JPH::BodyID tmpBid{ cc.bid };
+		if (characters[i]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		{
+			cc.isGrounded = true;
+		}
+		else
+		{
+			cc.isGrounded = false;
+		}
+		++i;
+	}
 	//std::cout << "pre update\n";
 	PrePhysicsUpdate(dt);
 	//step++;

@@ -165,7 +165,7 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 	//std::cout << selectedID-1 << "\n";
 
 
-	if ( (selectedID > 0) && (selectedID != 13421772) )
+	if (EUID_Holder.size() > 1 && (selectedID > 0) && (selectedID != 13421772) )
 	{
 
 		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];

@@ -36,6 +36,8 @@
   <ItemGroup>
     <Compile Include="Assets\Enemy.cs" />
     <Compile Include="Assets\Player.cs" />
+    <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
+    <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
     <Compile Include="CoreScripts\Application.cs" />
     <Compile Include="CoreScripts\Collision.cs" />
     <Compile Include="CoreScripts\Components.cs" />
@@ -441,6 +443,8 @@
     <None Include="Assets\Models\Skull_textured\Skull_textured.geom.desc" />
     <None Include="Assets\Scene\M1.scene" />
     <None Include="Assets\Scene\Test 1.scene" />
+    <None Include="Assets\Scripts\ThirdPersonCamera.cs.meta" />
+    <None Include="Assets\Scripts\ThirdPersonController.cs.meta" />
     <None Include="External\GlmSharp\bin\GlmSharp.netmodule" />
   </ItemGroup>
   <ItemGroup>
