@@ -501,22 +501,20 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
     bool ischanged = false;
-    bool clickend = false;
-
 
     if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
         ImGui::OpenPopup("colorpicker");
 
     if (ImGui::BeginPopup("colorpicker"))
     {
-        if (!valueChanged)
-            intialColor = val;
+        if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
+            ischanged = true;
+            if (!valueChanged)
+                intialColor = val;
 
-        valueChanged = true;
-        val = buf;
-        ImGui::EndPopup();
-    }
-
+            valueChanged = true;
+            val = buf;
+        }
 
         if (ImGui::IsItemDeactivatedAfterEdit()) {
             valueChanged = false;
@@ -524,9 +522,9 @@ void DisplayType(Change& change, const char* name, Vector4& val)
             val = intialColor;
             EDITOR.History.SetPropertyValue(change, val, buf);
         }
+        ImGui::EndPopup();
+    }
 
-        
-    
 }
 
 void DisplayType(Change& change, const char* name, Vector2& val)

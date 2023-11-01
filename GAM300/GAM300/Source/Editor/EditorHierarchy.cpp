@@ -57,7 +57,9 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	}
 
 	//Invisible button for drag drop reordering
-	ImGui::InvisibleButton("##", ImVec2(ImGui::GetWindowContentRegionWidth(), 2.5f));
+	float button_width = (ImGui::GetWindowContentRegionWidth() > 0) ? ImGui::GetWindowContentRegionWidth() : 0.1f;
+	ImGui::InvisibleButton("##", ImVec2(button_width, 2.5f));
+
 
 	//Drag drop reordering implementation
 	if (ImGui::BeginDragDropTarget())
