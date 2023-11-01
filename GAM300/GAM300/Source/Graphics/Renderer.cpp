@@ -451,6 +451,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
 		GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
 		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
+		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
 		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
 		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
@@ -463,8 +464,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
 		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
-
-
 
 		// POINT LIGHT STUFFS
 		auto PointLight_Sources = LIGHTING.GetPointLights();
@@ -591,6 +590,7 @@ void Renderer::Draw(BaseCamera& _camera)
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 		}
 
 		glBindVertexArray(prop.VAO);
