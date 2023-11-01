@@ -63,12 +63,15 @@ struct AllAssetsGroup
 							int i = 0;
 							for (MeshAsset& meshAsset : mc.meshes)
 							{
-								// Assign GUID
-								Engine::GUID guid;
-								metaFile.meshes.push_back(guid);
-
 								meshAsset.mFilePath = filePath.stem();
 								meshAsset.mFilePath += "_" + std::to_string(i++) + ".geom";
+
+								// Assign GUID
+								// Bean: Should be random and not based of the mFilePath, 
+								// need the mFilePath because AssetLoad uses it as the guid
+								Engine::GUID guid = GetGUID(meshAsset.mFilePath);
+								//Engine::GUID guid;
+								metaFile.meshes.push_back(guid);
 
 								std::get<AssetsTable<T>>(assets)[guid] = std::move(meshAsset);
 								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[guid]));
@@ -82,7 +85,7 @@ struct AllAssetsGroup
 							{
 								mc.meshes[i].mFilePath = filePath.stem();
 								mc.meshes[i].mFilePath += "_" + std::to_string(i) + ".geom";
-
+								
 								std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]] = std::move(mc.meshes[i]);
 								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]]));
 							}
@@ -230,10 +233,12 @@ struct AllAssetsGroup
 			for (auto& pair : buffer)
 			{
 				fs::path path{pair.second->mFilePath };
+				
 				switch (pair.first)
 				{
 					case ASSET_LOADED:
 					{
+						
 						AssetLoadedEvent<T> e{ path,GetGUID(path),*pair.second };
 						EVENTS.Publish(&e);
 						break;

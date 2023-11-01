@@ -269,7 +269,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	//temp file, invalid file
 	if (!fs::is_directory(filePath) && !filePath.has_extension())
 		return;
-
 	
 	switch (pEvent->fileState)
 	{
@@ -287,7 +286,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::MODIFIED:
 		{
-			//AsyncUpdateAsset(filePath);
+			AsyncUpdateAsset(filePath);
 			PRINT("MODIFIED ");
 			break;
 		}
