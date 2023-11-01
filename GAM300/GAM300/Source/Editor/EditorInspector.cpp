@@ -266,37 +266,43 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         }
         else
         {
-            const auto& path = it.path();
-
-            if (!filter.PassFilter(path.string().c_str()))
-                continue;
-            if (path.extension() != extension)
-                continue;
-
-            GetAssetEvent e { path };
-            EVENTS.Publish(&e);
-            Engine::GUID currentGUID = e.guid;
-
-
-            //if not png or dds file, dont show
-
-            ImGui::PushID(i++);
-
-            //Draw the file / folder icon based on whether it is a directory or not
-            GLuint icon_id = GET_TEXTURE_ID(currentGUID);
-            if (icon_id == 0) {
-                icon_id = defaultFileIcon;
-            }
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
             {
-                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-            }
+                const auto& path = it.path();
+
+                if (!filter.PassFilter(path.string().c_str()))
+                    continue;
+                if (path.extension() != extension)
+                    continue;
+
+                GetAssetEvent e { path };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+
+
+                //if not png or dds file, dont show
+
+                ImGui::PushID(i++);
+
+                //Draw the file / folder icon based on whether it is a directory or not
+                GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+                if (icon_id == 0) {
+                    icon_id = defaultFileIcon;
+                }
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                }
             
-            ImGui::PopStyleColor();
-            ImGui::TextWrapped(path.stem().string().c_str());
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(path.stem().string().c_str());
+
+                ImGui::NextColumn();
+                ImGui::PopID();
+            }
         }
        
         ImGui::Columns(1);

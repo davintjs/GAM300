@@ -157,7 +157,6 @@ struct ShaderAsset : Asset
 
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, Asset>;
 struct ModelImporter : MetaFile
 {
 	// GUID to index of asset in memory (Separate in the future for materials, animations, and textures)
@@ -182,7 +181,7 @@ struct ModelAsset : Asset
 	using Meta = ModelImporter;
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, Asset>;
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>

@@ -316,12 +316,12 @@ struct AllAssetsGroup
 
 	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
-		size_t oldExtension{ AssetExtensionTypes[filePath.extension()] };
+		size_t assetType = GetAssetType(filePath);
 		Engine::GUID guid;
 		if (([&](auto type)
 			{
 				using T = decltype(type);
-				if (GetAssetType::E<T>() == oldExtension)
+				if (GetAssetType::E<T>() == assetType)
 				{
 					if constexpr (std::is_same<T, MeshAsset>())
 					{
