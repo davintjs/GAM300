@@ -76,7 +76,6 @@ public class ThirdPersonController : Script
         dir += VerticalVelocity;
 
         //Apply movement
-        Console.WriteLine("{0},{1},{2}",dir.x,dir.y,dir.z);
         CC.Move(dir * MoveSpeed * Time.deltaTime);
     }
 }

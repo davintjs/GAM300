@@ -170,5 +170,8 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetGameNDC(out GlmSharp.vec2 pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetMouseDelta(out GlmSharp.vec2 pos);
     }
 }

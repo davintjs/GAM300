@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BeanFactory;
 using GlmSharp;
+using System;
 public class ThirdPersonCamera : Script
 {
     public float YawRotSpeed = 180f;
@@ -34,7 +35,8 @@ public class ThirdPersonCamera : Script
 
         //Pitch Camera Rotation
         //PitchAngle += Input.GetAxis("Mouse Y") * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime;
-
+        vec2 mouseDelta = Input.GetMouseDelta();
+        Console.WriteLine("{},{}",mouseDelta.x, mouseDelta.y);
         if (PitchAngle > MaxPitchAngle)
             PitchAngle = MaxPitchAngle;
         else if (PitchAngle < MinPitchAngle)
