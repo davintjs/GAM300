@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma warning( disable : 4100)
 
-ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, const bool& _serialize)
+GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, const bool& _serialize)
 {
 	// Ensure that it is a fbx or obj file
 	CheckExtension(_filePath);
@@ -43,7 +43,7 @@ ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath,
 		aiPostProcessSteps::aiProcess_CalcTangentSpace |
 		aiPostProcessSteps::aiProcess_Triangulate |
 		aiPostProcessSteps::aiProcess_GenUVCoords |
-		aiPostProcessSteps::aiProcess_GenNormals |
+		aiPostProcessSteps::aiProcess_GenSmoothNormals |
 		aiPostProcessSteps::aiProcess_TransformUVCoords |
 		aiPostProcessSteps::aiProcess_FlipUVs;
 		aiPostProcessSteps::aiProcess_FlipWindingOrder;
@@ -52,7 +52,7 @@ ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath,
 	const aiScene* defaultScene = assimpImporter.ReadFile(_filePath.string(), ImportOptions);
 	E_ASSERT(defaultScene, "Error reading file into assimp _scene!!");
 
-	ModelComponents model;
+	GeomComponents model;
 	pModel = &model;
 
 	// If the scene does not contain any animations
@@ -77,26 +77,23 @@ ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath,
 		E_ASSERT(scene, "Error reading file into assimp _scene!!");
 
 		ProcessNode(*scene->mRootNode, *scene);
-
-		if (_serialize)
-			SerializeBinaryGeom(_filePath);
 	}
 	else
 	{
 		ProcessNode(*defaultScene->mRootNode, *defaultScene);
 
 		ProcessBones(*defaultScene->mRootNode, *defaultScene);
-
-		if (_serialize)
-			SerializeBinaryAnim(_filePath);
 	}
+
+	if (_serialize)
+		SerializeBinaryAnim(_filePath);
 
 	return model;
 }
 
 void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 {
-	if (_scene.HasAnimations())
+	if (_scene.HasAnimations()) //instead of this, pushback into my animmanager animation container
 	{
 		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
 		Animation& animation = pModel->animations.GetAnimations();
@@ -128,7 +125,7 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	std::vector<ModelVertex> tempVertex;
 	std::vector<unsigned int> tempIndices;
 	std::vector<TextureInfo> tempTextures;
-
+	
 	for (unsigned int i = 0; i < _mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
 		ModelVertex temp;
@@ -235,7 +232,7 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		mPosTexOffset = std::make_pair(glm::vec3(0), glm::vec2(0));
 		mPosTexScale = std::make_pair(glm::vec3(1.f), glm::vec2(1.f));*/
 	}
-
+	
 	Optimize(tempVertex, tempIndices); // Optimize this mesh
 
 	// Compress vertices for storing in our vertex
@@ -408,6 +405,13 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 		currVert.colorB = static_cast<std::int8_t>(_vert.color.b);
 		currVert.colorA = static_cast<std::int8_t>(_vert.color.a);
 
+		// Bones
+		for (size_t i = 0; i < MAX_BONE_INFLUENCE; i++)
+		{
+			currVert.boneIDs[i] = static_cast<std::int16_t>(_vert.boneIDs[i]);
+			currVert.weights[i] = static_cast<std::int16_t>(_vert.weights[i] >= 0 ? _vert.weights[i] * 0x7FFF : _vert.weights[i] * 0x8000);
+		}
+
 		_compressedVertices.push_back(currVert);
 	}
 }
@@ -557,7 +561,7 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 		{
 			boneID = boneInfoMap[boneName].id;
 		}
-		assert(boneID != -1);
+		E_ASSERT(boneID != -1, "Bone id is invalid!");
 		auto weights = _mesh.mBones[boneIndex]->mWeights;
 		int numWeights = _mesh.mBones[boneIndex]->mNumWeights;
 
@@ -679,13 +683,13 @@ void ModelCompiler::SerializeBinaryAnim(const std::filesystem::path& _filePath)
 		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
 		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex));// Material index
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	 // Position scale
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));    // Texture scale
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	// Position scale
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));   // Texture scale
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	 // Position offset
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	 // Texture offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	// Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	// Texture offset
 	}
 
 	size_t materialSize = pModel->materials.size();

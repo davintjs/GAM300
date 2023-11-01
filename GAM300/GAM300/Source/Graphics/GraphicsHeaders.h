@@ -32,6 +32,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
+#define COLOURPICKER ColourPicker::Instance()
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
@@ -121,6 +122,26 @@ private:
 	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
+
+SINGLETON(ColourPicker)
+{
+public:
+	void Init();
+
+	// Initialize the skybox of the engine
+
+	void ColorPickingUI(BaseCamera & _camera);
+
+	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+
+private:
+
+	// Colour Picking
+	unsigned int colorPickFBO;
+	unsigned int colorPickTex;
+
+};
+
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
@@ -245,6 +266,27 @@ private:
 	float bloomThreshold = 1.f;
 	bool enablebloom;
 	float ambient = 1.f;
+
 };
+
+//ENGINE_SYSTEM(ShadowRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+//
+//ENGINE_SYSTEM(UIRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+
+
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H

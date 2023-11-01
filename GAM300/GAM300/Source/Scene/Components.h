@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseAnimator.h"
 #include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
@@ -184,9 +185,20 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_var(radius).Name("Radius")
 } property_vend_h(CapsuleCollider)
 
-struct Animator : Object
+struct Animator : Object, BaseAnimator
 {
+	Animator();
+	bool playing;
+	// selected anim
+	//Animation* m_CurrentAnimation{};
+	property_vtable();
 };
+
+property_begin_name(Animator, "Animator") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(playing).Name("Playing")
+		//property_parent(BaseAnimator)
+} property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera
 {
@@ -283,7 +295,7 @@ struct MeshFilter : Object
 	MeshFilter();
 
 	Engine::GUID meshId;
-	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<ModelVertex>* vertices;	// Position
 	std::vector<unsigned int>* indices;	// Index
 	property_vtable();
 };
@@ -365,8 +377,8 @@ struct LightSource : Object
 	float outer_CutOff;
 
 	// Used for all
-	float intensity;
-	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
+	float intensity = 10.f;
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
 	
 	property_vtable()
@@ -386,6 +398,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
+		bool ColourPicked = true;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 

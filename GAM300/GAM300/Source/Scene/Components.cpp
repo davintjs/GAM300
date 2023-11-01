@@ -123,6 +123,11 @@ void Transform::RemoveChild(Transform* t)
 	child.erase(it);
 }
 
+Animator::Animator()/* : m_CurrentAnimation{ BaseAnimator::m_CurrentAnimation }*/
+{
+	BaseAnimator::Init();
+}
+
 Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 {
 	BaseCamera::Init();
@@ -131,6 +136,8 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 
 MeshFilter::MeshFilter()
 {
-	vertices = &MeshManager.GetMeshAsset(meshId).mVertices;
-	indices = &MeshManager.GetMeshAsset(meshId).mIndices;
+
+
+	vertices = &MeshManager.GetMeshAsset(meshId).vertices;
+	indices = &MeshManager.GetMeshAsset(meshId).indices;
 }

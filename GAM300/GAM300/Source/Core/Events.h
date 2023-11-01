@@ -148,6 +148,7 @@ struct GetAssetEvent: IEvent
 	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
 	const fs::path& filePath;
 	Engine::GUID guid;
+	Asset* asset;
 };
 
 

@@ -72,38 +72,47 @@ void SerializeScript(YAML::Emitter& out, Script& _component);
 template <typename T>
 void Serialize(YAML::Emitter& out, T& object)
 {
-
-    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    if constexpr (std::is_same<T, ModelImporter>())
     {
-        if (!Flags.m_isDontSave)
-        {
-            auto entry = property::entry { PropertyName, Data };
-            fs::path name{ entry.first };
-            std::visit([&](auto& Value)
+        out << YAML::BeginMap;
+        out << YAML::Key << "guid" << YAML::Value << object.guid;
+        out << object;
+        out << YAML::EndMap;
+    }
+    else
+    {
+        property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
             {
-                using T1 = std::decay_t<decltype(Value)>;
-                namespace fs = std::filesystem;
-                std::string keyName = name.string();
-                //Has a header
-                if (name.parent_path().empty())
+                if (!Flags.m_isDontSave)
                 {
-                    //Deserialize again somehow get the type
-                    T1 object;
-                }
-                //Has no header
-                else
-                {
-                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
-                }
+                    auto entry = property::entry { PropertyName, Data };
+                    fs::path name{ entry.first };
+                    std::visit([&](auto& Value)
+                        {
+                            using T1 = std::decay_t<decltype(Value)>;
+                            namespace fs = std::filesystem;
+                            std::string keyName = name.string();
+                            //Has a header
+                            if (name.parent_path().empty())
+                            {
+                                //Deserialize again somehow get the type
+                                T1 object;
+                            }
+                            //Has no header
+                            else
+                            {
+                                keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
+                            }
 
-                // Store Component value
-                out << YAML::BeginMap;
-                out << YAML::Key << keyName << YAML::Value << Value;
-                out << YAML::EndMap;
-            }
-            , entry.second);
-        }
-    });
+                            // Store Component value
+                            out << YAML::BeginMap;
+                            out << YAML::Key << keyName << YAML::Value << Value;
+                            out << YAML::EndMap;
+                        }
+                    , entry.second);
+                }
+            });
+    }
 }
 
 template <typename T>
@@ -129,40 +138,62 @@ bool Deserialize(const std::filesystem::path& path, T& object)
 
     // Assign to the component
     property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
-    {
-        auto entry = property::entry { PropertyName, Data };
-        fs::path name{ entry.first };
-        std::visit([&](auto& Value)
-            {
-                using T1 = std::decay_t<decltype(Value)>;
-                namespace fs = std::filesystem;
-                std::string keyName = name.string();
-                //Has a header
-                if (name.parent_path().empty())
+        {
+            auto entry = property::entry { PropertyName, Data };
+            fs::path name{ entry.first };
+            std::visit([&](auto& Value)
                 {
-                    //Deserialize again somehow get the type
-                    T1 object;
-                }
-                //Has no header
-                else
-                {
-                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/')+1);
-                }
-
-                // Extract Component value
-                if (node[keyName])
-                {
-                    if constexpr (std::is_same<char*, T1>()) {
-                        std::string buf = node[keyName].as<std::string>();
-                        property::set(object, entry.first.c_str(), buf);
-
+                    using T1 = std::decay_t<decltype(Value)>;
+                    namespace fs = std::filesystem;
+                    std::string keyName = name.string();
+                    //Has a header
+                    if (name.parent_path().empty())
+                    {
+                        //Deserialize again somehow get the type
+                        T1 object;
                     }
+                    //Has no header
                     else
-                        property::set(object, entry.first.c_str(), node[keyName].as<T1>());
+                    {
+                        keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
+                    }
+
+                    // Extract Component value
+                    if (node[keyName])
+                    {
+                        if constexpr (std::is_same<char*, T1>()) {
+                            std::string buf = node[keyName].as<std::string>();
+                            property::set(object, entry.first.c_str(), buf);
+
+                        }
+                        else
+                            property::set(object, entry.first.c_str(), node[keyName].as<T1>());
+                    }
+                }
+            , entry.second);
+        });
+
+    if constexpr (std::is_same<T, ModelImporter>())
+    {
+        if (node["meshes"])
+        {
+            YAML::Node meshes = node["meshes"];
+            for (YAML::const_iterator it = meshes.begin(); it != meshes.end(); ++it) 
+            {
+                YAML::Node data = it->second;
+                if (data["guid"])
+                {
+                    object.meshes.push_back(data["guid"].as<Engine::GUID>());
                 }
             }
-        , entry.second);
-    });
+        }
+        
+    }
+    else
+    {
+        return true;
+    }
+   
     return true;
 }
 

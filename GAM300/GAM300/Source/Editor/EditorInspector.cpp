@@ -240,45 +240,75 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         }
 
         //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+
+        if (extension == ".geom")
         {
-            const auto& path = it.path();
+            GetAssetsEvent<MeshAsset> e1;
+            EVENTS.Publish(&e1);
+            fs::path icon = "Assets/Icons/fileicon.dds";
+            auto iconID = GET_TEXTURE_ID(icon);
 
-            if (!filter.PassFilter(path.string().c_str()))
-                continue;
-            if (path.extension() != extension)
-                continue;
-
-            GetAssetEvent e { path };
-            EVENTS.Publish(&e);
-            Engine::GUID currentGUID = e.guid;
-
-
-            //if not png or dds file, dont show
-
-            ImGui::PushID(i++);
-
-            //Draw the file / folder icon based on whether it is a directory or not
-            GLuint icon_id = GET_TEXTURE_ID(currentGUID);
-            if (icon_id == 0) {
-                icon_id = defaultFileIcon;
-            }
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            for (auto& meshAsset : *e1.pAssets)
             {
-                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                ImGui::PushID(i++);
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    Engine::GUID currentGUID = meshAsset.first;
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                    PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
+                }
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+
+                //render file name below icon
+                ImGui::NextColumn();
+                ImGui::PopID();
             }
-            
-            ImGui::PopStyleColor();
-            ImGui::TextWrapped(path.stem().string().c_str());
-
-            //render file name below icon
-            ImGui::NextColumn();
-            ImGui::PopID();
         }
+        else
+        {
+            for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+            {
+                const auto& path = it.path();
 
+                if (!filter.PassFilter(path.string().c_str()))
+                    continue;
+                if (path.extension() != extension)
+                    continue;
+
+                GetAssetEvent e { path };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+
+
+                //if not png or dds file, dont show
+
+                ImGui::PushID(i++);
+
+                //Draw the file / folder icon based on whether it is a directory or not
+                GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+                if (icon_id == 0) {
+                    icon_id = defaultFileIcon;
+                }
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                }
+            
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(path.stem().string().c_str());
+
+                ImGui::NextColumn();
+                ImGui::PopID();
+            }
+        }
+       
         ImGui::Columns(1);
         ImGui::EndPopup();
     }
