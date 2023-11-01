@@ -48,7 +48,7 @@ void InputSystem::Update(float dt)
 	
 	
 	}
-
+	
 	glfwPollEvents();
 
 	if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
@@ -101,6 +101,7 @@ void InputSystem::Update(float dt)
 		InputHandler::doubleclickAndHold = false;
 	}
 	
+	InputHandler::setDimensions(windowDimension);
 
 	//std::cout << "mouse difference " << InputHandler::mouseDelta().x <<
 	//	" , " << InputHandler::mouseDelta().y << "\n";
