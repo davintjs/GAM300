@@ -226,6 +226,8 @@ struct AllAssetsGroup
 		(([&](auto type) 
 		{
 			using T = decltype(type);
+			if (std::is_same_v<ScriptAsset,T>)
+				return false;
 			auto& buffer{std::get<AssetsBuffer<T>>(assetsBuffer)};
 			for (auto& pair : buffer)
 			{
@@ -279,6 +281,17 @@ struct AllAssetsGroup
 		metaPath += ".meta";
 		MetaType mFile;
 		Engine::GUID tempGUID{ mFile.guid };
+		if (filePath.extension() == ".geom")
+		{
+			auto& table = std::get<AssetsTable<MeshAsset>>(assets);
+			for (auto& pair : table)
+			{
+				if (pair.second.mFilePath == filePath)
+				{
+					return pair.first;
+				}
+			}
+		}
 		bool success = Deserialize<MetaType>(metaPath, mFile);
 		if (!success)
 		{
