@@ -588,7 +588,7 @@ GameObject:
 ID: 13977861641454709036
 Transform:
   m_GameObject: {fileID: 2969956901856633639}
-  Translation: [0, 0, 0]
+  Translation: [2.73199463, 0, -0.255947292]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -633,6 +633,7 @@ GameObject:
     - component: {fileID: 7561681053467878944}  # Transform
     - component: {fileID: 16156822962176766110}  # Rigidbody
     - component: {fileID: 16901598040625959306}  # MeshRenderer
+    - component: {fileID: 4043673184742957062}  # BoxCollider
     - component: {fileID: 14187865103723936494}  # Script
 ---
 ID: 7561681053467878944
@@ -653,8 +654,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
-  IsKinematic: true
+  IsStatic: false
+  IsKinematic: false
   UseGravity: true
   Is_trigger: false
 ---
@@ -673,6 +674,13 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 4043673184742957062
+BoxCollider:
+  m_GameObject: {fileID: 7286726903709488583}
+  X: 1
+  Y: 1
+  Z: 1
 ---
 ID: 14187865103723936494
 Script:
