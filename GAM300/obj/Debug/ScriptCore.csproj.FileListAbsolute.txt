@@ -1,0 +1,2 @@
+C:\Users\Kenneth\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
+C:\Users\Kenneth\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
