@@ -17,10 +17,6 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "InputHandler.h"
 
 
-extern glm::vec2 windowPos;
-extern glm::vec2 windowDimension;
-
-
 void InputSystem::Init()
 {
 	
@@ -34,28 +30,7 @@ void InputSystem::Update(float dt)
 	InputHandler::mouseReset();
 
 
-
-	if (lockCursor)
-	{
-		// Full Application 
-		//glm::vec2 minPos(0.f);
-		//glm::vec2 dimensions(Application::GetWidth(), Application::GetHeight());
-
-		glm::vec2 minPos = windowPos;
-		glm::vec2 dimensions = windowDimension;
-
-		CenterCursor(minPos, dimensions); // Bug - it will map to where the game screen is even when no game screen is there.
-	
-	
-	}
-
 	glfwPollEvents();
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
-	{
-		toggleCursorLock();
-	}
-	std::cout << lockCursor << "\n";
 
 	if (InputHandler::isMouseButtonHolding_L())
 	{
@@ -101,12 +76,6 @@ void InputSystem::Update(float dt)
 		InputHandler::doubleclickAndHold = false;
 	}
 	
-
-	std::cout << "mouse difference " << InputHandler::mouseDelta().x <<
-		" , " << InputHandler::mouseDelta().y << "\n";
-
-
-
 	/*if (InputHandler::isMouseButtonPressed_M())
 	{
 		std::cout << "middle mouse clicked\n";
@@ -132,6 +101,13 @@ void InputSystem::Update(float dt)
 	{
 		std::cout << "doubleclick & Hold ONLY\n";
 	}*/
+
+
+
+
+
+
+
 
 
 
@@ -166,16 +142,3 @@ void InputSystem::Exit()
 {
 
 }
-
-void InputSystem::CenterCursor(glm::vec2 position, glm::vec2 dimension)
-{
-	position += dimension / 2.f;
-	glfwSetCursorPos(Application::GetWindow(), position.x, position.y);
-
-}
-
-void InputSystem::toggleCursorLock()
-{
-	lockCursor = !lockCursor;
-}
-

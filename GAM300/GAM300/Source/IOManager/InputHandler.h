@@ -114,21 +114,13 @@ public:
 	static int get_Prev_MouseButtonState(int index); // change to button state
 	// [0] is left click, [1] is right click
 	
-	static glm::vec2 mouseDelta();
-
 
 	inline static std::chrono::high_resolution_clock::time_point prevMouse_LClick;
 
 	inline static bool doubleclick = false;
 	inline static bool doubleclickAndHold = false;
 
-
-
 private:
-
-
-	inline static glm::vec2 prevMousePos{ 0.f,0.f };
-
 	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold
 	inline static int last_Key_states[MAX_KEY_COUNT]; // Used for the difference between press and hold
 	

@@ -79,8 +79,6 @@ void InputHandler::copyingCurrStatetoLast()
 	prev_mouse_Button_states[0] = mouse_Button_states[0];
 	prev_mouse_Button_states[1] = mouse_Button_states[1];
 	prev_mouse_Button_states[2] = mouse_Button_states[2];
-
-	prevMousePos = getMousePos();
 	//std::cout << "PREV STATE VAL : " << prev_mouse_Button_states[1] << "\n";
 }
 
@@ -216,6 +214,7 @@ bool InputHandler::isMouse_L_DoubleClickandHold()
 		return true;
 	}
 	return false;
+
 }
 
 
@@ -232,16 +231,5 @@ int InputHandler::getMouseButtonState(int index)
 int InputHandler::get_Prev_MouseButtonState(int index)
 {
 	return InputHandler::prev_mouse_Button_states[index];
-}
 
-glm::vec2 InputHandler::mouseDelta()
-{
-	return InputHandler::getMousePos() - prevMousePos;
-}
-
-glm::vec2 InputHandler::mouseDeltaNormalized(glm::vec2 dimensions)
-{
-	glm::vec2 delta = InputHandler::getMousePos() - prevMousePos;
-	delta /= dimensions;
-	return delta;
 }
