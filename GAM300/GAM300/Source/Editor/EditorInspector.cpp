@@ -236,7 +236,35 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         }
 
         //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets"})
+
+        if (extension == ".geom")
+        {
+            GetAssetsEvent<MeshAsset> e1;
+            EVENTS.Publish(&e1);
+            fs::path icon = "Assets/Icons/fileicon.dds";
+            auto iconID = GET_TEXTURE_ID(icon);
+
+            for (auto& meshAsset : *e1.pAssets)
+            {
+                ImGui::PushID(i++);
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    Engine::GUID currentGUID = meshAsset.first;
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                    PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
+                }
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+
+                //render file name below icon
+                ImGui::NextColumn();
+                ImGui::PopID();
+            }
+        }
+        else
         {
             const auto& path = it.path();
 
@@ -269,12 +297,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             
             ImGui::PopStyleColor();
             ImGui::TextWrapped(path.stem().string().c_str());
-
-            //render file name below icon
-            ImGui::NextColumn();
-            ImGui::PopID();
         }
-
+       
         ImGui::Columns(1);
         ImGui::EndPopup();
     }

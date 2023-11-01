@@ -24,28 +24,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 #include <filesystem>
 
-#include "../../Compiler/Mesh.h"
 #include "../../Compiler/BoundingBox.h"
 
 #include "assimp/scene.h"
 #include "assimp/mesh.h"
 
 #include "Core/SystemInterface.h"
+#include "AssetManager/ModelClassAndStruct.h"
 
 // Bean: Temporary
 #include "Graphics/AnimationManager.h"
 
 #define MODELCOMPILER ModelCompiler::Instance()
-
-// The model components that are extracted from the aiScene which contains the fbx/obj data
-// essentially only a portion of the data extracted from the file is needed thus this struct
-// is technically the model itself which the engine will be using
-struct ModelComponents
-{
-	std::vector<Geom_Mesh> meshes{};	// Individual meshes in the model, which also contains its individual vertices and indices
-	std::vector<Material> materials{};	// Total materials of the WHOLE model (One mesh uses one material only)
-	AnimationModel animations{};		// The animations contained on this model
-};
 
 SINGLETON(ModelCompiler)
 {
@@ -53,7 +43,7 @@ public:
 
 	// Load the FBX file with import options to be processed and choose whether to serialize the model
 	// into a geom file
-	ModelComponents LoadModel(const std::filesystem::path& _filePath, const bool& _serialize = true);
+	GeomComponents LoadModel(const std::filesystem::path& _filePath, const bool& _serialize = true);
 
 private:
 
@@ -89,7 +79,7 @@ private:
 	// Checks the file extension to ensure that it is the correct file type
 	void CheckExtension(const std::filesystem::path& _filePath);
 
-	ModelComponents* pModel = nullptr;	// Pointer to the model
+	GeomComponents* pModel = nullptr;	// Pointer to the model
 };
 
 #endif // !MODELCOMPILER_H
