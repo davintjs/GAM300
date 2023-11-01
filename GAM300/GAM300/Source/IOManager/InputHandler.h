@@ -115,8 +115,10 @@ public:
 	// [0] is left click, [1] is right click
 	
 	static glm::vec2 mouseDelta();
-	static glm::vec2 mouseDeltaNormalized(glm::vec2 dimensions);
+	//static glm::vec2 mouseDeltaNormalized(glm::vec2 dimensions);
+	static glm::vec2 mouseDeltaNormalized();
 
+	static void setDimensions(glm::vec2 _dimension);
 
 	inline static std::chrono::high_resolution_clock::time_point prevMouse_LClick;
 
@@ -127,7 +129,7 @@ public:
 
 private:
 
-
+	inline static glm::vec2 dimensions;
 	inline static glm::vec2 prevMousePos{ 0.f,0.f };
 
 	inline static int curr_Key_states[MAX_KEY_COUNT]; // 0 (Release) , 1 (Pressed), 2 Hold

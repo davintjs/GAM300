@@ -239,9 +239,21 @@ glm::vec2 InputHandler::mouseDelta()
 	return InputHandler::getMousePos() - prevMousePos;
 }
 
-glm::vec2 InputHandler::mouseDeltaNormalized(glm::vec2 dimensions)
+//glm::vec2 InputHandler::mouseDeltaNormalized(glm::vec2 dimensions)
+//{
+//	glm::vec2 delta = InputHandler::getMousePos() - prevMousePos;
+//	delta /= dimensions;
+//	return delta;
+//}
+
+glm::vec2 InputHandler::mouseDeltaNormalized()
 {
 	glm::vec2 delta = InputHandler::getMousePos() - prevMousePos;
 	delta /= dimensions;
 	return delta;
+}
+
+void InputHandler::setDimensions(glm::vec2 _dimension)
+{
+	dimensions = _dimension;
 }

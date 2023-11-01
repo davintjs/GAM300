@@ -30,7 +30,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "glslshader.h"
 #include "GBuffer.h"
 
-// Bean: Added for Fields for material instance
 #include "Scripting/ScriptFields.h"
 
 #define SHADER ShaderManager::Instance()
@@ -276,6 +275,7 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings
 	float exposure = 1.f;

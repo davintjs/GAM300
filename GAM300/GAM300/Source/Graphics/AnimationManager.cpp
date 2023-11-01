@@ -423,7 +423,7 @@ void Animation_Manager::Init()
 
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation
@@ -451,17 +451,17 @@ void Animation_Manager::Init()
     mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
 
 
-    Scene& currentScene = MySceneManager.GetCurrentScene();
-    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    {
+    //Scene& currentScene = MySceneManager.GetCurrentScene();
+    //for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    //{
 
-        Entity& entity = currentScene.Get<Entity>(animator);
-        MeshRenderer& meshrenderer = currentScene.Get<MeshRenderer>(entity);
-        
-        //auto animIt = mAnimationContainer.find("docattc");
-        //if (animIt != mAnimationContainer.end())
-        //    animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
-    }
+    //    Entity& entity = currentScene.Get<Entity>(animator);
+    //    MeshRenderer& meshrenderer = currentScene.Get<MeshRenderer>(entity);
+    //    
+    //    //auto animIt = mAnimationContainer.find("docattc");
+    //    //if (animIt != mAnimationContainer.end())
+    //    //    animator.SetAnimation(&animIt->second); // Pass the 'temp_anim' to SetAnimation
+    //}
 }
 
 
@@ -469,6 +469,17 @@ void Animation_Manager::Update(float dt)
 {
     //UNREFERENCED_PARAMETER(dt);
     //allAnimators_.UpdateAnimation(dt);
+    GetAssetsEvent<MeshAsset> e1;
+    EVENTS.Publish(&e1);
+    for (auto& meshAsset : *e1.pAssets)
+    {
+        if (meshAsset.second.mFilePath.string().find("PlayerV2_Running")/*HasBones(meshAsset.second)*/)
+        {
+            AnimationManager.AddAnimMesh(meshAsset);
+        }
+    }
+
+    
 
     Scene& currentScene = MySceneManager.GetCurrentScene();
     for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
@@ -479,6 +490,8 @@ void Animation_Manager::Update(float dt)
             animator.SetAnimation(&allModels_.GetAnimations());
 
     }
+    std::cout << AnimationManager.mAnimationMeshContainer.size();
+    std::cout << "end of update  loop \n";
 }
 
 void Animation_Manager::Draw(BaseCamera& _camera)
@@ -487,38 +500,38 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 
 
 
-    // FOR ALL W ANIMATIONS, PROB TEMP 
+ //   // FOR ALL W ANIMATIONS, PROB TEMP 
 
-    ourShader.Use();
-    GLint uniform1 =
-        glGetUniformLocation(ourShader.GetHandle(), "persp_projection");
-    GLint uniform2 =
-        glGetUniformLocation(ourShader.GetHandle(), "View");
-    glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-        glm::value_ptr(_camera.GetProjMatrix()));
-    glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-        glm::value_ptr(_camera.GetViewMatrix()));
+ //   ourShader.Use();
+ //   GLint uniform1 =
+ //       glGetUniformLocation(ourShader.GetHandle(), "persp_projection");
+ //   GLint uniform2 =
+ //       glGetUniformLocation(ourShader.GetHandle(), "View");
+ //   glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+ //       glm::value_ptr(_camera.GetProjMatrix()));
+ //   glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+ //       glm::value_ptr(_camera.GetViewMatrix()));
 
-    //auto transforms = allAnimators_.GetFinalBoneMatrices();
-    //for (int i = 0; i < transforms.size(); ++i)
-    //{
-    //	std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
-    //	GLint uniform3 =
-    //		glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
+ //   //auto transforms = allAnimators_.GetFinalBoneMatrices();
+ //   //for (int i = 0; i < transforms.size(); ++i)
+ //   //{
+ //   //	std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
+ //   //	GLint uniform3 =
+ //   //		glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
 
-    //	glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-    //		glm::value_ptr(transforms[i]));
-    //}
+ //   //	glUniformMatrix4fv(uniform3, 1, GL_FALSE,
+ //   //		glm::value_ptr(transforms[i]));
+ //   //}
 
-    // this is fking wrong
-    Scene& currentScene = MySceneManager.GetCurrentScene();
-    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    {
-        if (animator.AnimationAttached())
-        {
+ //   // this is fking wrong
+ //   Scene& currentScene = MySceneManager.GetCurrentScene();
+ //   for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+ //   {
+ //       if (animator.AnimationAttached())
+ //       {
 
-            auto transforms = animator.GetFinalBoneMatrices();
-            for (int i = 0; i < transforms.size(); ++i)
+
+            /*for (int i = 0; i < transforms.size(); ++i)
             {
                 std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
                 GLint uniform3 =
@@ -526,22 +539,33 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 
                 glUniformMatrix4fv(uniform3, 1, GL_FALSE,
                     glm::value_ptr(transforms[i]));
-            }
-        }
-    }
+            }*/
+    //    }
+    //}
 
 
-	// render the loaded model
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
-		glm::value_ptr(model));
-	allModels_.Draw(ourShader);
+	//// render the loaded model
+	//glm::mat4 model = glm::mat4(1.0f);
+	//model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
+	//model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
+	//glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
+	//	glm::value_ptr(model));
+	//allModels_.Draw(ourShader);
 
-    ourShader.UnUse();
+ //   ourShader.UnUse();
 }
 
 void Animation_Manager::Exit()
 {
+}
+
+
+bool Animation_Manager::HasBones(MeshAsset meshAsset) {
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
+        if ((meshAsset.vertices[0].boneIDs[i] != 0) || (meshAsset.vertices[0].weights[i] != 0.0f) )
+        {
+            return true;  // At least one non-zero element in either array
+        }
+    }
+    return false;  // All elements are zero in both arrays
 }

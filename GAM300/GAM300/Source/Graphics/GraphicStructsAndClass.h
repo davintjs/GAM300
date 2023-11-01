@@ -191,6 +191,9 @@ struct DefaultRenderProperties {
 	//GLSLShader shader;
 
 	GLenum drawType;
+
+	bool isAnimatable{ false };
+	int boneidx{ -1 };
 };
 
 
