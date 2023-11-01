@@ -77,16 +77,19 @@ ModelComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath,
 		E_ASSERT(scene, "Error reading file into assimp _scene!!");
 
 		ProcessNode(*scene->mRootNode, *scene);
+
+		if (_serialize)
+			SerializeBinaryGeom(_filePath);
 	}
 	else
 	{
 		ProcessNode(*defaultScene->mRootNode, *defaultScene);
 
 		ProcessBones(*defaultScene->mRootNode, *defaultScene);
-	}
 
-	if(_serialize)
-		SerializeBinaryGeom(_filePath);
+		if (_serialize)
+			SerializeBinaryAnim(_filePath);
+	}
 
 	return model;
 }
@@ -189,7 +192,12 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		ImportMaterialAndTextures(mat);
 	}
 
-	TransformVertices(tempVertex); // Apply transformation on the mesh according to descriptor file specifications
+	// Calculate the _material index of this mesh
+	int materialIndex = static_cast<int>(pModel->materials.size() - 1);
+
+	std::vector<Vertex> _compressedVertices;
+	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
+	std::pair<glm::vec3, glm::vec2> mPosTexScale;
 
 	// Only extract bone data if there is animations
 	if (_scene.HasAnimations())
@@ -197,16 +205,38 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
 
 		pModel->animations.meshes.push_back(AnimationMesh(tempVertex, tempIndices, std::vector<TextureInfo>()));
+
+		/*for (ModelVertex v : tempVertex)
+		{
+			Vertex vert;
+			vert.posX = v.position.x;
+			vert.posY = v.position.y;
+			vert.posZ = v.position.z;
+
+			vert.normX = v.normal.x;
+			vert.normY = v.normal.y;
+			vert.normZ = v.normal.z;
+
+			vert.colorA = v.color.a;
+			vert.colorR = v.color.r;
+			vert.colorG = v.color.g;
+			vert.colorB = v.color.b;
+
+			vert.tanX = v.tangent.x;
+			vert.tanY = v.tangent.y;
+			vert.tanZ = v.tangent.z;
+
+			vert.texU = v.textureCords.x;
+			vert.texV = v.textureCords.y;
+
+			_compressedVertices.push_back(vert);
+		}
+
+		mPosTexOffset = std::make_pair(glm::vec3(0), glm::vec2(0));
+		mPosTexScale = std::make_pair(glm::vec3(1.f), glm::vec2(1.f));*/
 	}
-	
+
 	Optimize(tempVertex, tempIndices); // Optimize this mesh
-
-	// Calculate the _material index of this mesh
-	int materialIndex = static_cast<int>(pModel->materials.size() - 1);
-
-	std::vector<Vertex> _compressedVertices;
-	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
-	std::pair<glm::vec3, glm::vec2> mPosTexScale;
 
 	// Compress vertices for storing in our vertex
 	CompressVertices(_compressedVertices, tempVertex, mPosTexOffset, mPosTexScale);
@@ -379,23 +409,6 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 		currVert.colorA = static_cast<std::int8_t>(_vert.color.a);
 
 		_compressedVertices.push_back(currVert);
-	}
-}
-
-void ModelCompiler::TransformVertices(std::vector<ModelVertex> _vert) // Apply the modifications to our vertices from desc to our geom
-{
-	glm::mat4 concat
-	{
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	};
-
-	for (size_t i = 0; i < _vert.size(); ++i)
-	{
-		glm::vec3 resultant = concat * glm::vec4(_vert[i].position, 0.f);
-		_vert[i].position = resultant;
 	}
 }
 
@@ -578,12 +591,11 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 	}
 }
 
-// Serialize to geom binary file a single FBX file
 void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 {
 	std::filesystem::path filePath{ _filePath };
 	filePath.replace_extension(".geom");
-	
+
 	int meshCount = 0;
 
 	for (auto& _mesh : pModel->meshes)
@@ -635,12 +647,70 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		//}
 		// 
-		// Animations
+
 		serializeFile.flush();
 		serializeFile.close();
 
 		meshCount++;
 	}
+}
+
+void ModelCompiler::SerializeBinaryAnim(const std::filesystem::path& _filePath)
+{
+	std::filesystem::path filePath{ _filePath };
+	filePath.replace_extension(".geom");
+
+	std::ofstream serializeFile(filePath, std::ios_base::binary);
+	E_ASSERT(serializeFile, "Could not open output file to serialize geom!");
+
+	// Mesh vertices
+	size_t meshSize = pModel->meshes.size();
+	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+
+	for (auto& _mesh : pModel->meshes)
+	{
+		// Vertices
+		size_t vertexSize = _mesh._vertices.size();
+		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
+
+		// Indices
+		size_t indicesSize = _mesh._indices.size();
+		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	 // Position scale
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));    // Texture scale
+
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	 // Position offset
+		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	 // Texture offset
+	}
+
+	size_t materialSize = pModel->materials.size();
+	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
+
+	for (auto& mat : pModel->materials) // Save material of this model
+	{
+		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
+		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
+
+		//size_t texSize = mat.textures.size(); // Save all textures of this material
+		//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+		//if (texSize > 0)
+		//{
+		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
+		//}
+	}
+
+	// Animations
+
+
+
+	serializeFile.flush();
+	serializeFile.close();
 }
 
 void ModelCompiler::CheckExtension(const std::filesystem::path& _filePath)

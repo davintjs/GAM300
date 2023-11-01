@@ -24,6 +24,8 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 
+//End
+
 void main()
 {
     // Initial   

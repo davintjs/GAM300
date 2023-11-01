@@ -158,6 +158,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::OpenPopup("Texture");
     }
 
+    GLuint defaultFileIcon = TextureManager.GetTexture("Assets/Icons/fileicon.dds");
+
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
     static ImGuiTextFilter filter;
@@ -206,35 +208,32 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
         int i = 0;
 
-        //for (auto& pair : DEFAULT_ASSETS)
-        //{
-        //    if (pair.first.extension() != extension)
-        //        continue;
-        //    if (!filter.PassFilter(pair.first.string().c_str()))
-        //        continue;
-        //    if (pair.first.string().starts_with("None"))
-        //        continue;
+        for (auto& pair : DEFAULT_ASSETS)
+        {
+            if (pair.first.extension() != extension)
+                continue;
+            if (!filter.PassFilter(pair.first.string().c_str()))
+                continue;
+            if (pair.first.string().starts_with("None"))
+                continue;
 
-        //    fs::path icon = "Assets/Icons/fileicon.dds";
+            //if not png or dds file, dont show
 
-        //    //if not png or dds file, dont show
+            ImGui::PushID(i++);
 
-        //    ImGui::PushID(i++);
+            //render respective file icon textures
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+            if (ImGui::ImageButton((ImTextureID)defaultFileIcon, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            {
+                EDITOR.History.SetPropertyValue(change, guid, pair.second);
+            }
+            ImGui::PopStyleColor();
+            ImGui::TextWrapped(pair.first.stem().string().c_str());
 
-        //    //render respective file icon textures
-        //    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        //    GLuint icon_id = TextureManager.GetTexture(icon);
-        //    if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-        //    {
-        //        EDITOR.History.SetPropertyValue(change, guid, pair.second);
-        //    }
-        //    ImGui::PopStyleColor();
-        //    ImGui::TextWrapped(pair.first.stem().string().c_str());
-
-        //    //render file name below icon
-        //    ImGui::NextColumn();
-        //    ImGui::PopID();
-        //}
+            //render file name below icon
+            ImGui::NextColumn();
+            ImGui::PopID();
+        }
 
         //using filesystem to iterate through all folders/files inside the "/Data" directory
         for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets"})
@@ -250,24 +249,22 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             EVENTS.Publish(&e);
             Engine::GUID currentGUID = e.guid;
 
-            fs::path icon = "Assets/Icons/fileicon.dds";
 
             //if not png or dds file, dont show
 
             ImGui::PushID(i++);
 
             //Draw the file / folder icon based on whether it is a directory or not
-            auto tex = GET_TEXTURE_ID(path);
-            if (tex != 0) {
-                icon = path;
+            GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+            if (icon_id == 0) {
+                icon_id = defaultFileIcon;
             }
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            GLuint icon_id = TextureManager.GetTexture(icon);
             if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
-                //EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
             }
             
             ImGui::PopStyleColor();

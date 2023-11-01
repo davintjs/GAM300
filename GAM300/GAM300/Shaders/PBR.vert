@@ -60,6 +60,8 @@ uniform mat4 View;
 uniform mat4 lightSpaceMatrix_Directional;
 uniform mat4 lightSpaceMatrix_Spot;
 
+//End
+
 void main()
 {
     TexCoords = aTexCoords;

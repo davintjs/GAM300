@@ -27,6 +27,8 @@ uniform sampler2D depthMap;
 uniform float near_plane;
 uniform float far_plane;
 
+//End
+
 float LinearizeDepth(float depth)
 {
     float z = depth * 2.0 - 1.0; // Back to NDC 
