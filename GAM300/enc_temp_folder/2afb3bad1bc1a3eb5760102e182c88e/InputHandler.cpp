@@ -216,6 +216,7 @@ bool InputHandler::isMouse_L_DoubleClickandHold()
 		return true;
 	}
 	return false;
+
 }
 
 
@@ -236,12 +237,9 @@ int InputHandler::get_Prev_MouseButtonState(int index)
 
 glm::vec2 InputHandler::mouseDelta()
 {
-	return InputHandler::getMousePos() - prevMousePos;
-}
+	
 
-glm::vec2 InputHandler::mouseDeltaNormalized(glm::vec2 dimensions)
-{
-	glm::vec2 delta = InputHandler::getMousePos() - prevMousePos;
-	delta /= dimensions;
-	return delta;
+	
+	return InputHandler::getMousePos() - prevMousePos;
+
 }

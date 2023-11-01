@@ -32,21 +32,19 @@ void InputSystem::Update(float dt)
 	InputHandler::copyingCurrStatetoLast();
 
 	InputHandler::mouseReset();
-
-
-
+	std::cout << "window pos : " << windowPos.x << " , " << windowPos.y << "\n";
+	std::cout << "window dimension : " << windowDimension.x << " , " << windowDimension.y << "\n";
 	if (lockCursor)
 	{
 		// Full Application 
+		
 		//glm::vec2 minPos(0.f);
 		//glm::vec2 dimensions(Application::GetWidth(), Application::GetHeight());
 
 		glm::vec2 minPos = windowPos;
 		glm::vec2 dimensions = windowDimension;
 
-		CenterCursor(minPos, dimensions); // Bug - it will map to where the game screen is even when no game screen is there.
-	
-	
+		CenterCursor(minPos, dimensions);
 	}
 
 	glfwPollEvents();
@@ -169,6 +167,7 @@ void InputSystem::Exit()
 
 void InputSystem::CenterCursor(glm::vec2 position, glm::vec2 dimension)
 {
+	// WRONG
 	position += dimension / 2.f;
 	glfwSetCursorPos(Application::GetWindow(), position.x, position.y);
 

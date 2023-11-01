@@ -155,6 +155,8 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
 
+
+			
 			instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
 			instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
 			instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
