@@ -243,7 +243,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     }
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
-
+    PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);

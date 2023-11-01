@@ -332,7 +332,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-	AnimationManager.Draw(_camera); // temp
 	
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
