@@ -178,6 +178,8 @@ struct AllAssetsGroup
 			for (auto& pair : buffer)
 			{
 				fs::path path{pair.second->mFilePath };
+				if (path.extension() == ".cs")
+					continue;
 				switch (pair.first)
 				{
 					case ASSET_LOADED:
