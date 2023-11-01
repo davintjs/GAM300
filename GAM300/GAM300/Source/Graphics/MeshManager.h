@@ -19,11 +19,15 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
+#include "AnimationManager.h"
 #include "TextureManager.h"
 
 #include "../../Compiler/Mesh.h"
 
 #include "Model3d.h"
+
+#define MAX_BONE_INFLUENCE 4
+
 struct InstanceProperties;
 struct DefaultRenderProperties;
 
@@ -32,67 +36,37 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
+	// need these vertices for batch rendering
+	std::vector<glm::vec4> vertexPos;
 
 	std::vector<GLuint> Vaoids;
 	std::vector<GLuint> Vboids;
 	std::vector<GLuint> Drawcounts;
 	std::vector<GLuint> SRT_Buffer_Index;
 
-	GLenum prim;
-
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-	// need these vertices for batch rendering
-	std::vector<glm::vec4> vertexPos;
+	unsigned int index = 0; // Number of meshes
 
-	unsigned int index{};
-
+	GLenum prim;
 };
 
-// While Porting into the game
-struct gVertex
+
+struct Mesh2
 {
-	glm::vec3 pos;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec2 tex;
-	glm::ivec4 color;
+	glm::vec3 vertices_min{};
+	glm::vec3 vertices_max{};
+
+	unsigned int index = 0;
+
+	GLuint Vaoids;
+	GLuint Vboids;
+	GLuint Drawcounts;
+	GLuint SRT_Buffer_Index;
+
+	GLenum prim;
 };
-
-class gMesh {
-public:
-	std::vector<gVertex> _vertices; // This individual mesh vertices
-	std::vector<unsigned int> _indices; // This individual mesh indices
-
-	glm::vec3 mPosCompressionScale{}; // Scale value according to the bounding box of the vertices positions of this sub mesh
-	glm::vec2 mTexCompressionScale{}; // Scale value according to the bounding box of the texture coordinates of this sub mesh
-
-	glm::vec3 mPosCompressionOffset{}; // This individual mesh vertices' positions' center offset from original
-	glm::vec2 mTexCompressionOffset{}; // This individual mesh textures' coordinates' center offset from original
-
-	int materialIndex = 0; // Material index
-
-	gMesh() {};
-
-};
-
-// This is the "MiddleMan between loading from geom into making a mesh
-class GeomImported
-{
-public:
-	std::vector<gMesh> mMeshes; // Total submeshes of this geom
-
-	// Model loader values
-	//glm::vec3 mPosCompressionScale;
-	//glm::vec2 mTexCompressionScale;
-
-	std::vector<Material> _materials{};
-};
-
-
-
-
 
 #define MeshManager MESH_Manager::Instance()
 
@@ -104,6 +78,8 @@ public:
 	void Init();
 
 	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
+
+	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid);
 
 	MeshAsset& GetMeshAsset(const Engine::GUID& meshID);
 
@@ -142,17 +118,6 @@ public:
 private:
 
 	std::unordered_map<Engine::GUID, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
-
-	// To load Geoms from FBXs
-	GeomImported DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid);
-	// Decompress
-	void DecompressVertices(std::vector<gVertex>& mMeshVertices, 
-		const std::vector<Vertex>& oVertices,
-		const glm::vec3& mPosCompressScale,
-		const glm::vec2& mTexCompressScale,
-		const glm::vec3& mPosOffset,
-		const glm::vec2& mTexOffset);
-
 
 	void CreateInstanceCube();
 	void CreateInstanceSphere();

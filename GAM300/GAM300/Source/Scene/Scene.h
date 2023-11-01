@@ -128,9 +128,9 @@ struct Scene
 		bool val;
 	};
 	//Set active from scripts
-	GENERIC_RECURSIVE(void, SetActive,SetActive(*(T*)reinterpret_cast<SetActiveHelper*>(pObject)->object, reinterpret_cast<SetActiveHelper*>(pObject)->val));
+	GENERIC_RECURSIVE(void, SetActive, SetActive(*(T*)reinterpret_cast<SetActiveHelper*>(pObject)->object, reinterpret_cast<SetActiveHelper*>(pObject)->val));
 
-	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle *)pObject));
+	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle*)pObject));
 	//Check whether handle exists in scene
 	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
 #pragma endregion
@@ -172,7 +172,7 @@ private:
 		//Adds to components buffer for deletion
 		template <typename T1, typename... T1s>
 		void DestroyComponents();
-		
+
 		Scene& scene;
 		Entity& entity;
 	};

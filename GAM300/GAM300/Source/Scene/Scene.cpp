@@ -48,4 +48,3 @@ void Scene::ClearBuffer()
 	ClearBufferHelper(*this);
 }
 
-

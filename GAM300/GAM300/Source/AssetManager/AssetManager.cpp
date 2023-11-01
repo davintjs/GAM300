@@ -271,7 +271,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	//temp file, invalid file
 	if (!fs::is_directory(filePath) && !filePath.has_extension())
 		return;
-
 	
 	switch (pEvent->fileState)
 	{
