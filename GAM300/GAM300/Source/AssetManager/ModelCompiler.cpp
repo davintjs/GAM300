@@ -94,7 +94,7 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 
 void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 {
-	if (hasAnimation)
+	if (hasAnimation) //instead of this, pushback into my animmanager animation container
 	{
 		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
 		Animation& animation = pModel->animations.GetAnimations();

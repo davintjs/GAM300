@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseAnimator.h"
 #include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
@@ -183,9 +184,20 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_var(radius).Name("Radius")
 } property_vend_h(CapsuleCollider)
 
-struct Animator : Object
+struct Animator : Object, BaseAnimator
 {
+	Animator();
+	bool playing;
+	// selected anim
+	//Animation* m_CurrentAnimation{};
+	property_vtable();
 };
+
+property_begin_name(Animator, "Animator") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(playing).Name("Playing")
+		//property_parent(BaseAnimator)
+} property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera
 {
@@ -234,12 +246,16 @@ struct CharacterController : Object
 {
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
+	Vector3 direction{};
+
 	float mass{ 1.f };					// mass of object
 	float friction{ 0.1f };				// friction of body (0 <= x <= 1)
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
+	bool isGrounded = false;
 	property_vtable();
 	UINT32 bid{ 0 };
+
 //JPH::BodyID CharacterBodyID;
 };
 
@@ -250,7 +266,8 @@ property_begin_name(CharacterController, "CharacterController") {
 	property_var(friction).Name("Friction"),
 	property_var(mass).Name("Mass"),
 	property_var(gravityFactor).Name("GravityFactor"),
-	property_var(slopeLimit).Name("SlopeLimit")
+	property_var(slopeLimit).Name("SlopeLimit"),
+	property_var(isGrounded).Name("IsGrounded")
 } property_vend_h(CharacterController)
 
 struct Script : Object
@@ -289,7 +306,14 @@ property_begin_name(MeshFilter, "MeshFilter"){
 struct MeshRenderer : Object
 {
 
+	// Material Instance
+	//Material_instance* materialInstance;
+
 	Engine::GUID meshID{ DEFAULT_MESH };
+
+
+
+
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
@@ -333,6 +357,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(emission).Name("EmissionScalar"),
 } property_vend_h(MeshRenderer)
 
 
@@ -352,8 +377,8 @@ struct LightSource : Object
 	float outer_CutOff;
 
 	// Used for all
-	float intensity;
-	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
+	float intensity = 10.f;
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
 	
 	property_vtable()
@@ -373,6 +398,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
+		bool ColourPicked = true;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
@@ -540,7 +566,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, std::string>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

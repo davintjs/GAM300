@@ -52,6 +52,7 @@ enum class SHADERTYPE
 	BLUR,
 	GBUFFER,
 	DEFAULT,
+	COLOURPICKING,
 	COUNT
 };
 
@@ -191,4 +192,14 @@ struct DefaultRenderProperties {
 
 	GLenum drawType;
 };
+
+
+
+struct ShaderProperties {
+	std::string name;
+	std::unordered_map<size_t, std::pair<std::string, size_t>> fragmentVariables;
+	std::unordered_map<size_t, std::pair<std::string, size_t>> vertexVariables;
+};
+
+
 #endif // !GRAPHICSTRUCTANDCLASS_H

@@ -19,11 +19,15 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
+#include "AnimationManager.h"
 #include "TextureManager.h"
 
 #include "../../Compiler/Mesh.h"
 
 #include "Model3d.h"
+
+#define MAX_BONE_INFLUENCE 4
+
 struct InstanceProperties;
 struct DefaultRenderProperties;
 

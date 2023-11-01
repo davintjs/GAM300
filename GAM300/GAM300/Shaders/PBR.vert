@@ -66,6 +66,8 @@ const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 finalBonesMatrices[MAX_BONES];
 uniform bool hasAnimation;
 
+//End
+
 void main()
 {
     TexCoords = aTexCoords;

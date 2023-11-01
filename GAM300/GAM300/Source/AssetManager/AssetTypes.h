@@ -57,8 +57,11 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},
 
+	//Default Shaders
+	{"Test.shader", Engine::GUID(400)},
+	
 	//Default Scripts
-	{"None.cs", Engine::GUID(400)}
+	{"None.cs", Engine::GUID(1000)}
 };
 
 struct MetaFile : property::base
@@ -144,6 +147,16 @@ struct MeshAsset : Asset
 	using Meta = MetaFile;
 };
 
+struct ShaderAsset : Asset
+{
+	// Map of variable name to type enum
+	//std::unordered_map<std::string, size_t> variables;
+
+	std::string vertexShaderBuffer;
+	std::string fragmentShaderBuffer;
+
+};
+
 struct ModelImporter : MetaFile
 {
 	// GUID to index of asset in memory (Separate in the future for materials, animations, and textures)
@@ -168,10 +181,13 @@ struct ModelAsset : Asset
 	using Meta = ModelImporter;
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, Asset>;
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
+
+template <typename AssetType>
+using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
-static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
+static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
@@ -179,9 +195,5 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".shader", GetAssetType::E<ShaderAsset>()},
 };
-
-
-//Hash table that maps an ID to a pointer
-template <typename T>
-using AssetsTable = std::unordered_map<Engine::GUID, T>;

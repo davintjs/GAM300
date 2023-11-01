@@ -32,6 +32,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
+#define COLOURPICKER ColourPicker::Instance()
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
@@ -39,6 +40,25 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 class Ray3D;
 class RaycastLine;
 class SkyBox;
+
+//// Map of all shader field types
+//static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
+//{
+//	{ "float",						GetFieldType::E<float>()},
+//	{ "double",						GetFieldType::E<double>()},
+//	{ "bool",						GetFieldType::E<bool>()},
+//	{ "char",						GetFieldType::E<char>()},
+//	{ "short",						GetFieldType::E<short>()},
+//	{ "int",						GetFieldType::E<int>()},
+//	{ "int64",						GetFieldType::E<int64_t>()},
+//	{ "uint16_t",					GetFieldType::E<uint16_t>()},
+//	{ "uint32_t",					GetFieldType::E<uint32_t>()},
+//	{ "uint32_t",					GetFieldType::E<uint32_t>()},
+//	{ "char*",						GetFieldType::E<char*>()},
+//	{ "vec2",						GetFieldType::E<Vector2>()},
+//	{ "vec3",						GetFieldType::E<Vector3>()},
+//	{ "vec4",						GetFieldType::E<Vector4>()}
+//};
 
 // Graphics Settings
 
@@ -67,6 +87,18 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct Material_instance
+{
+	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+
+	Engine::GUID matInstanceName;
+
+					   // Var name   // Data Storage
+	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
+
+};
+
+
 ENGINE_SYSTEM(ShaderManager)
 {
 public:
@@ -80,8 +112,16 @@ public:
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
+	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
+	void ParseShaderFile(const std::string& _filename, bool _frag);
+
+	// 2 different instances of a PBR.
+
+	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
+
 private:
 	std::vector<GLSLShader> shaders;
+	std::vector<ShaderProperties> shaderProperties;
 };
 
 SINGLETON(SkyboxManager)
@@ -98,6 +138,26 @@ private:
 	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
+
+SINGLETON(ColourPicker)
+{
+public:
+	void Init();
+
+	// Initialize the skybox of the engine
+
+	void ColorPickingUI(BaseCamera & _camera);
+
+	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+
+private:
+
+	// Colour Picking
+	unsigned int colorPickFBO;
+	unsigned int colorPickTex;
+
+};
+
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
@@ -222,6 +282,27 @@ private:
 	float bloomThreshold = 1.f;
 	bool enablebloom;
 	float ambient = 1.f;
+
 };
+
+//ENGINE_SYSTEM(ShadowRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+//
+//ENGINE_SYSTEM(UIRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+
+
 void renderQuad();
 #endif // !GRAPHICSHEADERS_H

@@ -21,6 +21,10 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
+extern glm::vec2 windowPos; // In ColourPicker.cpp
+extern glm::vec2 windowDimension; // In ColourPicker.cpp
+
+
 void EditorGame::Init()
 {
     dimension = glm::vec2(1600.f, 900.f);
@@ -114,6 +118,8 @@ void EditorGame::GameView()
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
         position = glm::vec2(sceneRect.Min.x, sceneRect.Min.y);
+        //std::cout << "editor game position:" << position.x << " , " << position.y << "\n";
+
         ImVec2 viewportEditorSize = sceneRect.GetSize();
 
         // Check if it needs to resize the game view
@@ -123,8 +129,15 @@ void EditorGame::GameView()
         float indent = (viewportEditorSize.x - dimension.x) * 0.5f;
         if (indent > 0.f)
             ImGui::Indent(indent);
-            
+        float x_offset = indent;
+
         indent = (viewportEditorSize.y - dimension.y) * 0.5f;
+        float y_offset = indent;
+
+
+        windowPos.x = position.x + x_offset; // Colour Picking.cpp
+        windowPos.y = position.y + y_offset; // Colour Picking.cpp
+
         if(indent > 1.f)
             ImGui::Dummy({ 0.f, indent });
 
@@ -160,6 +173,9 @@ void EditorGame::ResizeGameView(glm::vec2 _newDimension)
         if (dimension != adjusted && modified)
         {
             dimension = adjusted;
+
+            windowDimension.x = dimension.x; // Colour Picking.cpp
+            windowDimension.y = dimension.y; // Colour Picking.cpp
 
             camera->OnResize(dimension.x, dimension.y);
         }
