@@ -15,7 +15,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 16929792338682825015}  # Transform
-    - component: {fileID: 14794588032852937934}  # MeshRenderer
     - component: {fileID: 12258422859569935717}  # CharacterController
     - component: {fileID: 6814756148610344436}  # Script
 ---
@@ -27,23 +26,8 @@ Transform:
   Scale: [0.999994159, 1, 0.999994159]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 15437581623968739888}
     - {fileID: 5588025465971199737}
----
-ID: 14794588032852937934
-MeshRenderer:
-  m_GameObject: {fileID: 15876712306982219188}
-  Mesh: {guid: 00000000000000000000000000000065}
-  Albedo: [1, 0, 0, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 12258422859569935717
 CharacterController:
@@ -62,7 +46,7 @@ Script:
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   MoveSpeed: 500
   JumpSpeed: 3
-  PlayerModel: {fileID: 0}
+  PlayerModel: {fileID: 15437581623968739888}  # Component
   CamYawPivot: {fileID: 5588025465971199737}  # Component
   Gravity: 9.81000042
   CamMovePivot: {fileID: 17118584384463415622}  # Component
@@ -140,8 +124,8 @@ GameObject:
 ID: 6134956032947507217
 Transform:
   m_GameObject: {fileID: 306000570273784193}
-  Translation: [0, 1, 5]
-  Rotation: [0, 0, 0]
+  Translation: [0, 1, -5]
+  Rotation: [0, 3.14159274, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 8070469368306795598}
   m_Children:
@@ -226,6 +210,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 3051552509869831105
 BoxCollider:
@@ -233,3 +218,40 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+---
+ID: 15437581623968739888
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerModel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7311944308886447343}  # Transform
+    - component: {fileID: 7543481948093770990}  # MeshRenderer
+---
+ID: 7311944308886447343
+Transform:
+  m_GameObject: {fileID: 15437581623968739888}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000584, 1, 1.00000584]
+  Father: {fileID: 15876712306982219188}
+  m_Children:
+    []
+---
+ID: 7543481948093770990
+MeshRenderer:
+  m_GameObject: {fileID: 15437581623968739888}
+  Mesh: {guid: 00000000000000000000000000000065}
+  Albedo: [1, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+  IsInstance: true

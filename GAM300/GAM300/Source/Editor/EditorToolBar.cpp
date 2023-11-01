@@ -20,6 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/EventsManager.h"
 #include "Utilities/ThreadPool.h"
 #include "Graphics/TextureManager.h"
+#include "IOManager/InputSystem.h"
 
 void AlignForWidth(float width, float alignment = 0.5f)
 {
@@ -72,11 +73,13 @@ void EditorToolBar::Update(float dt)
         if (!scene_playing)
         {
             PRINT("SCENE START\n");
+            InputSystem::Instance().LockCursor(true);
             SceneStartEvent startEvent{};
             EVENTS.Publish(&startEvent);
         }
         else
         {
+            InputSystem::Instance().LockCursor(false);
             PRINT("SCENE STOP\n");
             SceneStopEvent stopEvent{};
             EVENTS.Publish(&stopEvent);

@@ -114,6 +114,17 @@ void PhysicsSystem::Update(float dt) {
 		{
 			cc.isGrounded = false;
 		}
+		Entity& entity = scene.Get<Entity>(cc);
+		Transform& t = scene.Get<Transform>(entity);
+
+
+		Vector3 tmpVec;
+		JPH::BodyID tmpBID(cc.bid);
+		JPH::RVec3 tmp;
+		JPH::Quat tmpQuat;
+		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
+		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
+
 		++i;
 	}
 	//std::cout << "pre update\n";

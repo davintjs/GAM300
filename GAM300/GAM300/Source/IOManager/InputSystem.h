@@ -25,10 +25,8 @@ public:
 
 	void CenterCursor(glm::vec2 position, glm::vec2 dimension);
 
-	void toggleCursorLock();
-
+	void LockCursor(bool lock);
 private:
-
 	bool lockCursor = false;
 
 };

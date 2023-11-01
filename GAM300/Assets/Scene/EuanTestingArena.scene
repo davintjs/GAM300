@@ -43,6 +43,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 10379670187260712593
 Script:
@@ -51,6 +52,8 @@ Script:
   onamae: HERRO
   gameObj: {fileID: 22203055554271501}  # GameObject
   sad: 0
+  characterController: {fileID: 0}
+  jumpSpeed: 0
   otherT: {fileID: 0}
   ching: 1
 ---
@@ -104,6 +107,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 9199614747982128663
 BoxCollider:
@@ -162,6 +166,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: cfe2d403d5b71c2b216a5748405fc53a}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 6281041356284068935
 BoxCollider:
@@ -220,6 +225,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 16306965832790122227
 BoxCollider:
@@ -356,6 +362,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 4212138099454399691
 GameObject:
@@ -442,6 +449,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 307508712453590974
 GameObject:
@@ -478,6 +486,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 18227054109373820900
 GameObject:
@@ -514,6 +523,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 6034621871942586701
 GameObject:
@@ -571,6 +581,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 16971042021324461215
 GameObject:
@@ -607,6 +618,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 8740433663814950322
 GameObject:
@@ -669,6 +681,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 7385165949795843138
 GameObject:
@@ -705,6 +718,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 8719579351848968546
 GameObject:
@@ -741,6 +755,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 994935625189140824
 GameObject:
@@ -777,6 +792,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 11009722445582721790
 GameObject:
@@ -813,6 +829,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 4912126542955525499
 GameObject:
@@ -849,6 +866,7 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true
 ---
 ID: 7241795154003583698
 GameObject:
@@ -885,3 +903,4 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+  IsInstance: true

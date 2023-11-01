@@ -490,8 +490,8 @@ void Animation_Manager::Update(float dt)
             animator.SetAnimation(&allModels_.GetAnimations());
 
     }
-    std::cout << AnimationManager.mAnimationMeshContainer.size();
-    std::cout << "end of update  loop \n";
+    //std::cout << AnimationManager.mAnimationMeshContainer.size();
+    //std::cout << "end of update  loop \n";
 }
 
 void Animation_Manager::Draw(BaseCamera& _camera)

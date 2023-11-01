@@ -184,7 +184,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static void GetMouseDelta(Vector2& mouseDelta)
 	{
-		mouseDelta = InputHandler::mouseDelta();
+		mouseDelta = InputHandler::mouseDeltaNormalized();
 	}
 
 	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
