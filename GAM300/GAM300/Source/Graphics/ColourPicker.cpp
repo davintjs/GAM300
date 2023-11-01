@@ -7,9 +7,13 @@
 #include "Core/Events.h"
 #include "Editor/Editor.h"
 
+
 extern unsigned int Renderer_quadVAO;
 extern unsigned int Renderer_quadVBO;
 
+
+glm::vec2 windowPos;
+glm::vec2 windowDimension;
 
 void ColourPicker::Init()
 {
@@ -49,8 +53,8 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 		glm::vec2 position = EditorGame::Instance().GetPosition();
 
 
-		std::cout << "dimension : " << dimension.x << " , " << dimension.y << "\n";
-		std::cout << "position : " << position.x << " , " << position.y << "\n";
+		//std::cout << "dimension : " << dimension.x << " , " << dimension.y << "\n";
+		//std::cout << "position : " << position.x << " , " << position.y << "\n";
 
 		Entity& entity = currentScene.Get<Entity>(Sprite);
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -112,33 +116,45 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 	//std::cout << "out\n";
 	shader.UnUse();
 
-	double x, y;
-	glfwGetCursorPos(Application::GetWindow(), &x, &y);
-		
+	//std::cout << "\n\n\n\n";
 
+	//std::cout << "window pos" << windowPos.x << " , " << windowPos.y << "\n";
+
+
+	//std::cout << "window dimension" << windowDimension.x << " , " << windowDimension.y << "\n";
+
+	glm::vec2 mousepos = InputHandler::getMousePos();
 	
+	glm::vec2 true_mousepos;
+	true_mousepos.y = mousepos.y;
 
-	//double mouseX, mouseY;
-	//glfwGetCursorPos(Application::GetWindow(), &mouseX, &mouseY);
+	float width = (float)Application::GetWidth();
+	float height = (float)Application::GetHeight();
+	//std::cout << "WIDTH & HEIGHT " << width << " , " << height << "\n";
+	// X Offset Magician
+	true_mousepos.x = mousepos.x - windowPos.x;
+	true_mousepos.x = (true_mousepos.x / windowDimension.x) * 1600.f;
+	// Y Offset Magician
+	//std::cout << "window pos y " << windowPos.y << "\n";
+	//std::cout << "window dimension y " << windowDimension.y << "\n";
+	//std::cout << "mouse pos y " << mousepos.y << "\n";
 
-	//int windowWidth, windowHeight;
-	//glfwGetWindowSize(Application::GetWindow(), &windowWidth, &windowHeight);
+	true_mousepos.y = mousepos.y - ( -(windowPos.y + windowDimension.y) + height );
 
-	//int framebufferWidth, framebufferHeight;
-	//glfwGetFramebufferSize(Application::GetWindow(), &framebufferWidth, &framebufferHeight);
-
-	//// Convert to framebuffer coordinates
-	//int framebufferMouseX = (int)(mouseX * framebufferWidth / windowWidth);
-	//int framebufferMouseY = (int)(mouseY * framebufferHeight / windowHeight);
-
+	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
+	//std::cout << "true mouse pos" << true_mousepos.x << " , " << true_mousepos.y << "\n";
 
 	// Capture here
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	unsigned char data[4];
 
 	//std::cout << x << " , " << y << "\n";
-	glReadPixels(InputHandler::getMouseX(), InputHandler::getMouseY(), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+	glReadPixels(true_mousepos.x, true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	
+
+
+
 	//std::cout << framebufferMouseX << " , " << framebufferMouseY << "\n";
 	//glReadPixels(framebufferMouseX, framebufferMouseY, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
