@@ -116,6 +116,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
@@ -124,7 +125,9 @@
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
+    <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\HandlesTable.cpp">
@@ -329,6 +332,8 @@
     <None Include="Shaders\BasicLighting.vert">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\ColourPicking.frag" />
+    <None Include="Shaders\ColourPicking.vert" />
     <None Include="Shaders\DefaultGbuffer.frag" />
     <None Include="Shaders\DefaultGbuffer.vert" />
     <None Include="Shaders\DefaultShader.frag" />

@@ -370,8 +370,8 @@ struct LightSource : Object
 	float outer_CutOff;
 
 	// Used for all
-	float intensity;
-	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
+	float intensity = 10.f;
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
 	
 	property_vtable()
@@ -391,6 +391,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
+		bool ColourPicked = true;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
