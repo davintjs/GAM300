@@ -62,6 +62,7 @@ void EditorSystem::Update(float dt)
 {
     if (!MySceneManager.HasScene() || !MySceneManager.GetCurrentScene().HasHandle<Entity>({ selectedEntity }))
         selectedEntity = 0;
+    Scene& currScene{ MySceneManager.GetCurrentScene() };
     //Editor Functions
     Editor_Dockspace();
     EditorSystems::Update(dt);
@@ -75,6 +76,16 @@ void EditorSystem::Update(float dt)
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
         if (ImGui::IsKeyPressed(ImGuiKey_Y, false))
             History.RedoChange();
+    }
+
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyPressed(ImGuiKey_D, false))
+        {
+            if (selectedEntity)
+            {
+                currScene.Clone(currScene.Get<Entity>(selectedEntity));
+            }
+        }
     }
 
     //demo

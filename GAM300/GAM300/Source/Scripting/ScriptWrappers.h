@@ -182,6 +182,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return scene.GetActive(pair->second,reinterpret_cast<void*>(addr));
 	}
 
+	static void GetMouseDelta(Vector2& mouseDelta)
+	{
+	}
+
 	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);

@@ -124,6 +124,7 @@ void EditorMenuBar::Update(float dt)
             }
 
 
+
             // Undo Functionality
             if(EDITOR.History.UndoStackEmpty())
                 ImGui::TextDisabled("Undo");

@@ -32,41 +32,31 @@ struct InstanceProperties;
 struct DefaultRenderProperties;
 
 
+struct VertexBoneInfo
+{
+	int boneIDs[MAX_BONE_INFLUENCE];
+	float weights[MAX_BONE_INFLUENCE];
+};
+
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
-	// need these vertices for batch rendering
-	std::vector<glm::vec4> vertexPos;
-
-	std::vector<GLuint> Vaoids;
-	std::vector<GLuint> Vboids;
-	std::vector<GLuint> Drawcounts;
-	std::vector<GLuint> SRT_Buffer_Index;
-
+	std::vector<VertexBoneInfo> verticesBoneInfo;
+	
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 
-	unsigned int index = 0; // Number of meshes
+	unsigned int index = 0;
+	unsigned int numBones = 0;
+
+	GLuint vaoID;
+	GLuint vboID;
+	GLuint drawCounts;
+	GLuint SRTBufferIndex;
 
 	GLenum prim;
 };
-
-// Bean: The original mesh should only contain one of each id
-//struct Mesh
-//{
-//	glm::vec3 vertices_min{};
-//	glm::vec3 vertices_max{};
-//
-//	unsigned int index = 0;
-//
-//	GLuint Vaoids;
-//	GLuint Vboids;
-//	GLuint Drawcounts;
-//	GLuint SRT_Buffer_Index;
-//
-//	GLenum prim;
-//};
 
 #define MeshManager MESH_Manager::Instance()
 
