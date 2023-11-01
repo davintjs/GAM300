@@ -213,39 +213,35 @@ void Renderer::Update(float)
 			{
 				continue;
 			}
-			unsigned int iters = 0;
-			for (unsigned int vao : t_Mesh->Vaoids) {
-				DefaultRenderProperties renderProperties;
-				
-				renderProperties.VAO = vao;
+			DefaultRenderProperties renderProperties;
+			renderProperties.VAO = t_Mesh->vaoID;
 
-				renderProperties.shininess = renderer.mr_Shininess;
-				renderProperties.metallic = renderer.mr_metallic;
-				renderProperties.roughness = renderer.mr_roughness;
-				renderProperties.ao = renderer.ao;
-				renderProperties.emission = renderer.emission;
+			renderProperties.shininess = renderer.mr_Shininess;
+			renderProperties.metallic = renderer.mr_metallic;
+			renderProperties.roughness = renderer.mr_roughness;
+			renderProperties.ao = renderer.ao;
+			renderProperties.emission = renderer.emission;
 
-				renderProperties.entitySRT = transform.GetWorldMatrix();
-				renderProperties.Albedo = renderer.mr_Albedo;
-				renderProperties.Specular = renderer.mr_Specular;
-				renderProperties.Diffuse = renderer.mr_Diffuse;
-				renderProperties.Ambient = renderer.mr_Ambient;
+			renderProperties.entitySRT = transform.GetWorldMatrix();
+			renderProperties.Albedo = renderer.mr_Albedo;
+			renderProperties.Specular = renderer.mr_Specular;
+			renderProperties.Diffuse = renderer.mr_Diffuse;
+			renderProperties.Ambient = renderer.mr_Ambient;
 
-				// renderProperties.textureID = renderer.textureID;
-				// renderProperties.NormalID = renderer.normalMapID;
-				renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
-				renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
-				renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
-				renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
+			// renderProperties.textureID = renderer.textureID;
+			// renderProperties.NormalID = renderer.normalMapID;
+			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
 
-				renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
-				renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
+			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
 
-				renderProperties.drawType = t_Mesh->prim;
-				renderProperties.drawCount = t_Mesh->Drawcounts[iters++];
+			renderProperties.drawType = t_Mesh->prim;
+			renderProperties.drawCount = t_Mesh->drawCounts;
 
-				defaultProperties.emplace_back(renderProperties);
-			}
+			defaultProperties.emplace_back(renderProperties);
 		//}
 		
 		++i;

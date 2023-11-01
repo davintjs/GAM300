@@ -518,7 +518,10 @@ void Animation_Manager::Draw(BaseCamera& _camera)
         {
 
             auto transforms = animator.GetFinalBoneMatrices();
-            for (int i = 0; i < transforms.size(); ++i)
+            GLint uniform3 = glGetUniformLocation(ourShader.GetHandle(), "finalBonesMatrices");
+            glUniformMatrix4fv(uniform3, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+
+            /*for (int i = 0; i < transforms.size(); ++i)
             {
                 std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
                 GLint uniform3 =
@@ -526,7 +529,7 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 
                 glUniformMatrix4fv(uniform3, 1, GL_FALSE,
                     glm::value_ptr(transforms[i]));
-            }
+            }*/
         }
     }
 

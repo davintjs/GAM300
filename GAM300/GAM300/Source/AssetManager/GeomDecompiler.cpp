@@ -79,6 +79,9 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
 
+        meshAsset.numVertices = vertSize;
+        meshAsset.numIndices = indSize;
+
         // Converts Vertex to ModelVertex
         DecompressVertices(meshAsset.vertices, tempVerts, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
 
