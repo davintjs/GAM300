@@ -99,6 +99,9 @@
     <ClCompile Include="Source\AssetManager\ModelCompiler.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
+    <ClCompile Include="Source\Graphics\Shadows.cpp" />
+    <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
+    <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -213,5 +216,7 @@
     <None Include="Shaders\UIWorldSpace.frag" />
     <None Include="Shaders\BloomBlur.frag" />
     <None Include="Shaders\BloomBlur.vert" />
+    <None Include="Shaders\ColourPicking.frag" />
+    <None Include="Shaders\ColourPicking.vert" />
   </ItemGroup>
 </Project>

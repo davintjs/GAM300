@@ -52,6 +52,8 @@ extern unsigned int depthCubemap;
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
 
+
+
 std::vector<temp_instance> temporary_presets;
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
@@ -202,11 +204,14 @@ void GraphicsSystem::Init()
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
 	SkyboxManager::Instance().Init();
-	//AnimationManager.Init();
+	COLOURPICKER.Init();
+	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 
 	FRAMEBUFFER.CreateBloom(pingpongFBO, pingpongColorbuffers);
+
+
 }
 
 void GraphicsSystem::Update(float dt)
@@ -239,6 +244,8 @@ void GraphicsSystem::Update(float dt)
 
 			// Update camera view 
 			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+
+			COLOURPICKER.ColorPickingUI(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
