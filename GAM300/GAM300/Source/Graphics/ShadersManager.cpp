@@ -178,8 +178,8 @@ void ShaderManager::CreateShaderProperties(const std::string& _frag, const std::
 		}
 
 	}
-}
 
+}
 
 
 void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {

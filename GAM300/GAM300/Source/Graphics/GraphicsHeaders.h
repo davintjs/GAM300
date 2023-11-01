@@ -87,6 +87,18 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct Material_instance
+{
+	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+
+	Engine::GUID matInstanceName;
+
+					   // Var name   // Data Storage
+	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
+
+};
+
+
 ENGINE_SYSTEM(ShaderManager)
 {
 public:
@@ -102,6 +114,10 @@ public:
 
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
+
+	// 2 different instances of a PBR.
+
+	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
 
 private:
 	std::vector<GLSLShader> shaders;
