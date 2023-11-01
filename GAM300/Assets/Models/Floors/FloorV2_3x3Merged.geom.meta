@@ -1,1 +1,8 @@
-guid: 4ff8c82a80e2e6d97925d43f4af9471e
+guid: d14a411236dd8ef59a090e4f3337b79d
+meshes:
+  data: {guid: 40ccbac3712d8bf9f798507ef4d59df0}
+  data: {guid: 602366b0ad56a39582a6e9441d9644cd}
+materials:
+  {}
+animations:
+  {}

@@ -283,6 +283,17 @@ struct AllAssetsGroup
 		metaPath += ".meta";
 		MetaType mFile;
 		Engine::GUID tempGUID{ mFile.guid };
+		if (filePath.extension() == ".geom")
+		{
+			auto& table = std::get<AssetsTable<MeshAsset>>(assets);
+			for (auto& pair : table)
+			{
+				if (pair.second.mFilePath == filePath)
+				{
+					return pair.first;
+				}
+			}
+		}
 		bool success = Deserialize<MetaType>(metaPath, mFile);
 		if (!success)
 		{
