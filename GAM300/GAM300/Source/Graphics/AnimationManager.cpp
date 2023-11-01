@@ -17,9 +17,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "AnimationManager.h"
 #include "AssetManager/ModelCompiler.h"
 
-
-
-
 // constructor
 AnimationMesh::AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
 {

@@ -22,10 +22,32 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
     ModelComponents tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
 
+    // Retrieve mesh assets
+    DeserializeMeshes(ifs, tempModel);
+
+    // Retrieve material assets
+    //DeserializeMaterials(ifs, tempModel);
+
+    // Retrieve texture assets
+    DeserializeTextures(ifs, tempModel);
+
+    // Retrieve animation assets
+    /*bool hasAnimation;
+    ifs.read(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
+    if(hasAnimation)
+        DeserializeAnimations(ifs, tempModel);*/
+
+
+    ifs.close();
+
+    return tempModel;
+}
+
+void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
+{
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
 
-    // Retrieve mesh assets
     for (int i = 0; i < meshSize; ++i)
     {
         MeshAsset meshAsset;
@@ -53,6 +75,8 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
         ifs.read(reinterpret_cast<char*>(&posCompressionOffset), sizeof(glm::vec3)); // Position Offset
         ifs.read(reinterpret_cast<char*>(&texCompressionOffset), sizeof(glm::vec2)); // Texture Offset
 
+        ifs.read(reinterpret_cast<char*>(&meshAsset.numBones), sizeof(meshAsset.numBones)); // Number of bones
+
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
 
         // Converts Vertex to ModelVertex
@@ -79,18 +103,154 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
         meshAsset.boundsMax = max;
 
         // Add this tempMesh into our tempGeom
-        tempModel.meshes.push_back(meshAsset);
+        _model.meshes.push_back(meshAsset);
+    }
+}
+
+void GeomDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model)
+{
+    size_t matSize;
+    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+    
+    for (int j = 0; j < matSize; ++j)
+    {
+        Material tempMat;
+    
+        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
+        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
+    
+        //size_t texSize;
+        //ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+        //if (texSize > 0)
+        //{
+        //    tempMat.textures.resize(texSize);
+        //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
+        //}
+    
+        _model.materials.push_back(tempMat);
+    }
+}
+
+void GeomDecompiler::DeserializeTextures(std::ifstream& ifs, ModelComponents& _model)
+{
+
+}
+
+void GeomDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model)
+{
+    //size_t animationSize = pModel->animations.GetAnimations().size();
+    size_t animationSize;
+    ifs.read(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
+
+    Animation& animation = _model.animations.GetAnimations();
+
+    ifs.read(reinterpret_cast<char*>(&animation.m_Duration), sizeof(animation.m_Duration));
+    ifs.read(reinterpret_cast<char*>(&animation.m_TicksPerSecond), sizeof(animation.m_TicksPerSecond));
+
+    // Bones
+    size_t boneSize;
+    ifs.read(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
+    animation.m_Bones.resize(boneSize);
+
+    for (size_t i = 0; i < boneSize; i++)
+    {
+        Bone& bone = animation.m_Bones[i];
+        // Position
+        ifs.read(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
+        bone.m_Positions.resize(bone.m_NumPositions);
+        ifs.read(reinterpret_cast<char*>(&bone.m_Positions[0]), bone.m_NumPositions * sizeof(KeyPosition));
+
+        // Rotation
+        ifs.read(reinterpret_cast<char*>(&bone.m_NumRotations), sizeof(bone.m_NumRotations));
+        bone.m_Rotations.resize(bone.m_NumRotations);
+        ifs.read(reinterpret_cast<char*>(&bone.m_Rotations[0]), bone.m_NumRotations * sizeof(KeyRotation));
+
+        // Scale
+        ifs.read(reinterpret_cast<char*>(&bone.m_NumScalings), sizeof(bone.m_NumScalings));
+        bone.m_Scales.resize(bone.m_NumScalings);
+        ifs.read(reinterpret_cast<char*>(&bone.m_Scales[0]), bone.m_NumScalings * sizeof(KeyScale));
+
+        // Local Transform
+        ifs.read(reinterpret_cast<char*>(&bone.m_LocalTransform), sizeof(glm::mat4));
+
+        // Name of Bone
+        size_t nameSize;
+        ifs.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+        bone.m_Name.resize(nameSize);
+        ifs.read(reinterpret_cast<char*>(&bone.m_Name[0]), nameSize * sizeof(char));
+
+        // Bone ID
+        ifs.read(reinterpret_cast<char*>(&bone.m_ID), sizeof(bone.m_ID));
     }
 
-    // Retrieve material assets
+    // AssimpNodeData
+    AssimpNodeData& nodeData = animation.m_RootNode;
+    DeserializeRecursiveNode(ifs, _model, nodeData);
 
-    // Retrieve texture assets
+    // Bone Info Map
+    size_t boneInfoSize = 0;
+    ifs.read(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
 
-    // Retrieve animation assets
+    for (size_t i = 0; i < boneInfoSize; i++)
+    {
+        // Kay of BoneInfoMap
+        size_t keySize;
+        ifs.read(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+        std::string key;
+        key.resize(keySize);
+        ifs.read(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
 
-    ifs.close();
+        // Value of BoneInfoMap
+        BoneInfo boneInfo;
+        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
 
-    return tempModel;
+        animation.m_BoneInfoMap[key] = boneInfo;
+    }
+
+    // Animation Model
+    AnimationModel& model = _model.animations;
+
+    // Bone Info Map
+    boneInfoSize = 0;
+    ifs.read(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
+
+    for (size_t i = 0; i < boneInfoSize; i++)
+    {
+        // Kay of BoneInfoMap
+        size_t keySize;
+        ifs.read(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+        std::string key;
+        key.resize(keySize);
+        ifs.read(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
+
+        // Value of BoneInfoMap
+        BoneInfo boneInfo;
+        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
+
+        model.GetBoneInfoMap()[key] = boneInfo;
+    }
+
+    ifs.read(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
+}
+
+void GeomDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
+{
+    ifs.read(reinterpret_cast<char*>(&_node.transformation), sizeof(glm::mat4)); // Transformation
+
+    size_t nameSize;
+    ifs.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+    std::string name;
+    name.resize(nameSize);
+    ifs.read(reinterpret_cast<char*>(&name[0]), nameSize * sizeof(char)); // Name of Node
+
+    ifs.read(reinterpret_cast<char*>(&_node.childrenCount), sizeof(_node.childrenCount)); // Num of children
+
+    _node.children.resize(_node.childrenCount);
+    for (size_t i = 0; i < _node.childrenCount; i++)
+    {
+        DeserializeRecursiveNode(ifs, _model, _node.children[i]);
+    }
 }
 
 void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,

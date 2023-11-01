@@ -115,6 +115,7 @@ struct KeyScale
 class Bone
 {
 public:
+    Bone() {};
     Bone(const std::string& name, int ID, const aiNodeAnim* channel);
 
     void Update(float animationTime);
@@ -130,6 +131,16 @@ public:
 
     int GetScaleIndex(float animationTime);
 
+    std::vector<KeyPosition> m_Positions;
+    std::vector<KeyRotation> m_Rotations;
+    std::vector<KeyScale> m_Scales;
+    int m_NumPositions;
+    int m_NumRotations;
+    int m_NumScalings;
+
+    glm::mat4 m_LocalTransform;
+    std::string m_Name;
+    int m_ID;
 
 private:
 
@@ -141,16 +152,7 @@ private:
 
     glm::mat4 InterpolateScaling(float animationTime);
 
-    std::vector<KeyPosition> m_Positions;
-    std::vector<KeyRotation> m_Rotations;
-    std::vector<KeyScale> m_Scales;
-    int m_NumPositions;
-    int m_NumRotations;
-    int m_NumScalings;
-
-    glm::mat4 m_LocalTransform;
-    std::string m_Name;
-    int m_ID;
+    
 };
 
 
@@ -201,8 +203,6 @@ public:
     void ReadMissingBones(const aiAnimation* animation, AnimationModel& model);
 
     void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
-
-private:
 
     float m_Duration;
     int m_TicksPerSecond;

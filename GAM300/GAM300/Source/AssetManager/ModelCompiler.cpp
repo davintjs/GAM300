@@ -56,7 +56,8 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 	pModel = &model;
 
 	// If the scene does not contain any animations
-	if (!defaultScene->HasAnimations())
+	hasAnimation = defaultScene->HasAnimations();
+	if (!hasAnimation)
 	{
 		ImportOptions =
 			aiPostProcessSteps::aiProcess_CalcTangentSpace |			// Calculates the tangents and bitangents for the imported meshes.
@@ -86,14 +87,14 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 	}
 
 	if (_serialize)
-		SerializeBinaryAnim(_filePath);
+		SerializeBinaryGeom(_filePath);
 
 	return model;
 }
 
 void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 {
-	if (_scene.HasAnimations())
+	if (hasAnimation)
 	{
 		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
 		Animation& animation = pModel->animations.GetAnimations();
@@ -197,6 +198,8 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	std::pair<glm::vec3, glm::vec2> mPosTexScale;
 
 	// Only extract bone data if there is animations
+	
+	unsigned int numBones = _mesh.mNumBones;
 	if (_scene.HasAnimations())
 	{
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
@@ -238,7 +241,7 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	// Compress vertices for storing in our vertex
 	CompressVertices(_compressedVertices, tempVertex, mPosTexOffset, mPosTexScale);
 
-	return Geom_Mesh(_compressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
+	return Geom_Mesh(_compressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second, numBones); // Create this mesh
 }
 
 void ModelCompiler::Optimize(std::vector<ModelVertex>& _vert, std::vector<unsigned int>& _ind)
@@ -543,7 +546,7 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 {
 	auto& boneInfoMap = pModel->animations.GetBoneInfoMap();
 	int& boneCount = pModel->animations.GetBoneCount();
-
+	
 	for (int boneIndex = 0; boneIndex < _mesh.mNumBones; ++boneIndex)
 	{
 		int boneID = -1;
@@ -574,15 +577,12 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 			//SetVertexBoneData(_vert[vertexId], boneID, weight); 
 			// idk if i am doing this right i went to add my own thing
 			if (weight == 0.0f) // skip if bone weight 0
-			{
-				return;
-			}
+				continue;
 
 			for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
 			{
-				if (_vert[vertexId].boneIDs[i] == boneID) { // skip if bone existd alr
-					return;
-				}
+				if (_vert[vertexId].boneIDs[i] == boneID) // skip if bone existd alr
+					continue;
 
 				if (_vert[vertexId].boneIDs[i] < 0)
 				{
@@ -600,121 +600,179 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 	std::filesystem::path filePath{ _filePath };
 	filePath.replace_extension(".geom");
 
-	int meshCount = 0;
-
-	for (auto& _mesh : pModel->meshes)
-	{
-		if (meshCount != 0)
-		{
-			std::string str = _filePath.stem().string() + "_" + std::to_string(meshCount) + ".geom";
-			filePath.replace_filename(str);
-		}
-		std::ofstream serializeFile(filePath, std::ios_base::binary);
-		E_ASSERT(serializeFile, "Could not open output file to serialize geom!");
-
-		// Mesh vertices
-		//size_t meshSize = pModel->meshes.size();
-		size_t meshSize = 1;
-		serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
-
-		// Vertices
-		size_t vertexSize = _mesh._vertices.size();
-		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
-
-		// Indices
-		size_t indicesSize = _mesh._indices.size();
-		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
-
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex)); // Material index
-
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	 // Position scale
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));    // Texture scale
-
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	 // Position offset
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	 // Texture offset
-	
-		//size_t materialSize = pModel->materials.size();
-		size_t materialSize = 1;
-		serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
-
-		auto& mat = pModel->materials[_mesh.materialIndex]; // Save _material of this model
-		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
-
-		//size_t texSize = mat.textures.size(); // Save all textures of this _material
-		//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-		//if (texSize > 0)
-		//{
-		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
-		//}
-		// 
-
-		serializeFile.flush();
-		serializeFile.close();
-
-		meshCount++;
-	}
-}
-
-void ModelCompiler::SerializeBinaryAnim(const std::filesystem::path& _filePath)
-{
-	std::filesystem::path filePath{ _filePath };
-	filePath.replace_extension(".geom");
-
 	std::ofstream serializeFile(filePath, std::ios_base::binary);
 	E_ASSERT(serializeFile, "Could not open output file to serialize geom!");
 
-	// Mesh vertices
+	// Meshes
+	SerializeBinaryMeshes(serializeFile);
+
+	// Materials
+	//SerializeBinaryMaterials(serializeFile);
+
+	// Animations
+	/*serializeFile.write(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
+	if (hasAnimation)
+		SerializeBinaryAnimations(serializeFile);*/
+	
+	serializeFile.flush();
+	serializeFile.close();
+}
+
+// Serialize Meshes
+void ModelCompiler::SerializeBinaryMeshes(std::ofstream& _serializeFile)
+{
 	size_t meshSize = pModel->meshes.size();
-	serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+	_serializeFile.write(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
 
 	for (auto& _mesh : pModel->meshes)
 	{
 		// Vertices
 		size_t vertexSize = _mesh._vertices.size();
-		serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
-		serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
+		_serializeFile.write(reinterpret_cast<char*>(&vertexSize), sizeof(vertexSize));
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh._vertices[0]), vertexSize * sizeof(Vertex));
 
 		// Indices
 		size_t indicesSize = _mesh._indices.size();
-		serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-		serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+		_serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex));// Material index
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex));// Material index
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	// Position scale
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));   // Texture scale
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionScale), sizeof(glm::vec3));	// Position scale
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionScale), sizeof(glm::vec2));   // Texture scale
 
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	// Position offset
-		serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	// Texture offset
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.mPosCompressionOffset), sizeof(glm::vec3));	// Position offset
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.mTexCompressionOffset), sizeof(glm::vec2));	// Texture offset
+
+		// Number of bones
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh.numBones), sizeof(_mesh.numBones));	// Number of bones
 	}
+}
 
+void ModelCompiler::SerializeBinaryMaterials(std::ofstream& _serializeFile)
+{
 	size_t materialSize = pModel->materials.size();
-	serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
+	_serializeFile.write(reinterpret_cast<char*>(&materialSize), sizeof(materialSize));
 
 	for (auto& mat : pModel->materials) // Save material of this model
 	{
-		serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
-		serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
+		_serializeFile.write(reinterpret_cast<char*>(&mat.Specular), sizeof(aiColor4D));
+		_serializeFile.write(reinterpret_cast<char*>(&mat.Diffuse), sizeof(aiColor4D));
+		_serializeFile.write(reinterpret_cast<char*>(&mat.Ambient), sizeof(aiColor4D));
 
 		//size_t texSize = mat.textures.size(); // Save all textures of this material
-		//serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
+		//_serializeFile.write(reinterpret_cast<char*>(&texSize), sizeof(texSize));
 		//if (texSize > 0)
 		//{
-		//	serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
+		//	_serializeFile.write(reinterpret_cast<char*>(&mat.textures[0]), texSize * sizeof(Texture));
 		//}
 	}
+}
 
-	// Animations
+void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
+{
+	//size_t animationSize = pModel->animations.GetAnimations().size();
+	size_t animationSize = 1;
+	_serializeFile.write(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
 
+	Animation animation = pModel->animations.GetAnimations();
 
+	_serializeFile.write(reinterpret_cast<char*>(&animation.m_Duration), sizeof(animation.m_Duration));
+	_serializeFile.write(reinterpret_cast<char*>(&animation.m_TicksPerSecond), sizeof(animation.m_TicksPerSecond));
 
-	serializeFile.flush();
-	serializeFile.close();
+	// Bones
+	size_t boneSize = animation.m_Bones.size();
+	_serializeFile.write(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
+
+	for (auto& bone : animation.m_Bones)
+	{
+		// Position
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_Positions[0]), bone.m_NumPositions * sizeof(KeyPosition));
+
+		// Rotation
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_NumRotations), sizeof(bone.m_NumRotations));
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_Rotations[0]), bone.m_NumRotations * sizeof(KeyRotation));
+
+		// Scale
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_NumScalings), sizeof(bone.m_NumScalings));
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_Scales[0]), bone.m_NumScalings * sizeof(KeyScale));
+
+		// Local Transform
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_LocalTransform), sizeof(glm::mat4));
+
+		// Name of Bone
+		size_t nameSize = bone.m_Name.length();
+		_serializeFile.write(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_Name[0]), nameSize * sizeof(char));
+
+		// Bone ID
+		_serializeFile.write(reinterpret_cast<char*>(&bone.m_ID), sizeof(bone.m_ID));
+	}
+
+	// AssimpNodeData
+	AssimpNodeData& nodeData = animation.m_RootNode;
+	SerializeBinaryRecursiveNode(_serializeFile, nodeData);
+
+	// Bone Info Map
+	size_t boneInfoSize = animation.m_BoneInfoMap.size();
+	_serializeFile.write(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
+
+	for (auto it = animation.m_BoneInfoMap.begin(); it != animation.m_BoneInfoMap.end(); ++it)
+	{
+		// Kay of BoneInfoMap
+		size_t keySize = it->first.length();
+		_serializeFile.write(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+		std::string key = it->first;
+		_serializeFile.write(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
+
+		// Value of BoneInfoMap
+		BoneInfo boneInfo = it->second;
+		_serializeFile.write(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
+	}
+
+	// Animation Model
+	AnimationModel model = pModel->animations;
+
+	// Bone Info Map
+	boneInfoSize = model.GetBoneInfoMap().size();
+	_serializeFile.write(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
+
+	for (auto it = model.GetBoneInfoMap().begin(); it != model.GetBoneInfoMap().end(); ++it)
+	{
+		// Kay of BoneInfoMap
+		size_t keySize = it->first.length();
+		_serializeFile.write(reinterpret_cast<char*>(&keySize), sizeof(keySize));
+		std::string key = it->first;
+		_serializeFile.write(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
+
+		// Value of BoneInfoMap
+		BoneInfo boneInfo = it->second;
+		_serializeFile.write(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
+	}
+
+	_serializeFile.write(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
+
+	/*for (auto& anim : pModel->animations.GetAnimations())
+	{
+
+	}*/
+}
+
+void ModelCompiler::SerializeBinaryRecursiveNode(std::ofstream& _serializeFile, AssimpNodeData& _nodeData)
+{
+	_serializeFile.write(reinterpret_cast<char*>(&_nodeData.transformation), sizeof(glm::mat4)); // Transformation
+
+	size_t nameSize = _nodeData.name.length();
+	_serializeFile.write(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
+	_serializeFile.write(reinterpret_cast<char*>(&_nodeData.name[0]), nameSize * sizeof(char)); // Name of Node
+
+	_serializeFile.write(reinterpret_cast<char*>(&_nodeData.childrenCount), sizeof(_nodeData.childrenCount)); // Num of children
+
+	for (auto& child : _nodeData.children)
+	{
+		SerializeBinaryRecursiveNode(_serializeFile, child);
+	}
 }
 
 void ModelCompiler::CheckExtension(const std::filesystem::path& _filePath)

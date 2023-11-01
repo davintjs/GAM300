@@ -205,11 +205,11 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(4); // Color
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, color));
 
-    //glEnableVertexAttribArray(5); // Bone Indexes
-    //glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
+    glEnableVertexAttribArray(5); // Bone Indexes
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-    //glEnableVertexAttribArray(7); // Bone Weights
-    //glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+    glEnableVertexAttribArray(7); // Bone Weights
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
     // bind indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -224,8 +224,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     tempProp.drawCount = (unsigned int)_meshAsset.indices.size();
     tempProp.drawType = GL_TRIANGLES;
 
-    vaoMap.emplace(std::make_pair(_guid, VAO)); // rmb change to guid after u ask someone @kk
-    PRINT("GUID: ", _guid.ToHexString(), " name: ", _meshAsset.mFilePath.stem().string(), '\n');
+    vaoMap.emplace(std::make_pair(_guid, VAO));
 
     newMesh.prim = GL_TRIANGLES;
     newMesh.Vaoids.push_back(VAO);
