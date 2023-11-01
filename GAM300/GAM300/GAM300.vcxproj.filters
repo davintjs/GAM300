@@ -103,6 +103,7 @@
     <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
+    <ClCompile Include="Source\AssetManager\GeomDecompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -188,6 +189,8 @@
     <ClInclude Include="Source\Graphics\BaseAnimator.h" />
     <ClInclude Include="Source\Graphics\AnimationManager.h" />
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
+    <ClInclude Include="Source\AssetManager\GeomDecompiler.h" />
+    <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

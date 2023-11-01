@@ -30,7 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#include <GLFW/glfw3.h>
 //#include "glslshader.h"
 //#include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
+
 //
 //#include "../../Compiler/Mesh.h"
 #include "../../Compiler/Mesh.h"

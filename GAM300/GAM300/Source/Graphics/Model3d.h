@@ -26,21 +26,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 // Bean: Should not be here and instead be in renderer system
 #include "Graphics/BaseCamera.h"
 
-// Just a wrapper class to hold all these values
-class troll_Geom
-{
-public:
-	std::vector<Geom_Mesh> mMeshes; // Total submeshes of this geom
-
-	// Model loader values
-	//glm::vec3 mPosCompressionScale;
-	//glm::vec2 mTexCompressionScale;
-
-	std::vector<Material> _materials{};
-};
-
-
-
 //tempory model
 struct GeneralModel {
 
@@ -68,9 +53,6 @@ public:
 
 	// This 3D Model version
 	//void init(AssimpLoader* geom); // make vao vbo
-	
-	// make vao vbo
-	void init(); 
 
 	// display the models created
 	void draw();
@@ -125,12 +107,6 @@ public:
 
 
 	//AssimpLoader* _geom; 
-
-	std::vector<troll_Geom> totalGeoms; // Contains all geom of the project
-
-protected:
-	// deserializing
-	void DeserializeGeoms(const std::string filePath);
 };
 
 class SkyBox: public Model

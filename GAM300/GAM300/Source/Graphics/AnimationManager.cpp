@@ -17,13 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "AnimationManager.h"
 #include "AssetManager/ModelCompiler.h"
 
-//#include "GraphicsHeaders.h"
-//#include "glslshader.h"
-//#include <glm/gtx/quaternion.hpp>
-////#include <assimp/Importer.hpp>
-//#include <assimp/scene.h>
-//#include <assimp/postprocess.h>
-//#include "AssetManager/AssetManager.h"
+
 #include "Scene/SceneManager.h"
 
 
@@ -109,13 +103,10 @@ void AnimationMesh::setupMesh()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
     // vertex tangent
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
     // vertex texture coords
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
-    //// vertex bitangent
-    //glEnableVertexAttribArray(4);
-    //glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, bitTangent));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
@@ -278,6 +269,8 @@ Bone* Animation::FindBone(const std::string& name)
 }
 
 
+
+
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
 {
     int size = animation->mNumChannels;
@@ -421,7 +414,7 @@ void Animation_Manager::Init()
     if (GL_FALSE == ourShader.IsLinked())
     {
         std::stringstream sstr;
-        sstr << "Unable to compile/link/validate shader programs\n";
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Walking.fbx", false);
         sstr << ourShader.GetLog() << "\n";
         PRINT(sstr.str());
         std::exit(EXIT_FAILURE);
@@ -429,11 +422,8 @@ void Animation_Manager::Init()
 
 
 	// we want compiler to serialise model info including the animations
-	//allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    //ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/PlayerV2_Running.fbx", false);
+    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation
@@ -535,8 +525,8 @@ void Animation_Manager::Draw(BaseCamera& _camera)
                     glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
 
                 glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-                    glm::value_ptr(transforms[i]));
-            }
+	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
+	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
         }
     }
 
@@ -545,7 +535,7 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
 	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
+	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
 		glm::value_ptr(model));
 	allModels_.Draw(ourShader);
 
