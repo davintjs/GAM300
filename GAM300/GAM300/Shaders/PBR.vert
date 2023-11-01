@@ -22,9 +22,7 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangents;
 layout (location = 3) in vec2 aTexCoords;
 //layout (location = 4) in vec2 aColor;
-layout(location = 5) in ivec4 boneIds; 
 layout (location = 6) in mat4 SRT;
-layout(location = 7) in vec4 weights;
 
 layout (location = 10) in vec4 Albedo;
 layout (location = 11) in vec4 Metal_Rough_AO_Emission_index; // Texture Index
@@ -61,32 +59,12 @@ uniform mat4 View;
 uniform mat4 lightSpaceMatrix_Directional;
 uniform mat4 lightSpaceMatrix_Spot;
 
-const int MAX_BONES = 200;
-const int MAX_BONE_INFLUENCE = 4;
-uniform mat4 finalBonesMatrices[MAX_BONES];
-uniform bool hasAnimation;
-
 //End
 
 void main()
 {
     TexCoords = aTexCoords;
     WorldPos = vec3(SRT * vec4(aPos, 1.0));
-
-//    for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
-//    {
-//        if(boneIds[i] == -1) 
-//            continue;
-//        if(boneIds[i] >=MAX_BONES) 
-//        {
-//            WorldPos = vec3(SRT * vec4(aPos, 1.0));
-//        }
-//        else
-//        {
-//            vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aPos,1.0f) * weights[i];
-//            WorldPos = vec3(SRT * localPosition);
-//        }
-//    }
     
     frag_Albedo = Albedo;
     frag_Metal_Rough_AO_Emission_index = Metal_Rough_AO_Emission_index;

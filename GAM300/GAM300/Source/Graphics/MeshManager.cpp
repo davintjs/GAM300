@@ -208,8 +208,8 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(5); // Bone Indexes
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-    glEnableVertexAttribArray(7); // Bone Weights
-    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+    glEnableVertexAttribArray(6); // Bone Weights
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
     // bind indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

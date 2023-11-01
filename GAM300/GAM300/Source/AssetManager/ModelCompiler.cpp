@@ -714,28 +714,11 @@ void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
 	AssimpNodeData& nodeData = animation.m_RootNode;
 	SerializeBinaryRecursiveNode(_serializeFile, nodeData);
 
-	// Bone Info Map
-	size_t boneInfoSize = animation.m_BoneInfoMap.size();
-	_serializeFile.write(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
-
-	for (auto it = animation.m_BoneInfoMap.begin(); it != animation.m_BoneInfoMap.end(); ++it)
-	{
-		// Kay of BoneInfoMap
-		size_t keySize = it->first.length();
-		_serializeFile.write(reinterpret_cast<char*>(&keySize), sizeof(keySize));
-		std::string key = it->first;
-		_serializeFile.write(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
-
-		// Value of BoneInfoMap
-		BoneInfo boneInfo = it->second;
-		_serializeFile.write(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
-	}
-
 	// Animation Model
 	AnimationModel model = pModel->animations;
 
 	// Bone Info Map
-	boneInfoSize = model.GetBoneInfoMap().size();
+	size_t boneInfoSize = model.GetBoneInfoMap().size();
 	_serializeFile.write(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
 
 	for (auto it = model.GetBoneInfoMap().begin(); it != model.GetBoneInfoMap().end(); ++it)

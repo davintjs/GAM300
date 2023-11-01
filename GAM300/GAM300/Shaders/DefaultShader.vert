@@ -47,6 +47,22 @@ void main()
 {
     TexCoords = aVertexTexCoord;
     
+    //    WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
+    //    for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
+    //    {
+    //        if(boneIds[i] == -1) 
+    //            continue;
+    //        if(boneIds[i] >=MAX_BONES) 
+    //        {
+    //            WorldPos = vec3(SRT * vec4(aPos, 1.0));
+    //        }
+    //        else
+    //        {
+    //            vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aPos,1.0f) * weights[i];
+    //            WorldPos = vec3(SRT * localPosition);
+    //        }
+    //    }
+
     bool isAnim = true;
     if (isAnim)
     {

@@ -1,5 +1,5 @@
-[2023-10-31 00:20:19.931] [Error] [critical] 
-Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
-Info:		Trying to access invalid mesh
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 37)
+[2023-11-01 19:23:22.111] [Error] [critical] 
+Caused By:	defaultScene
+Info:		Error reading file into assimp _scene!!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\ModelCompiler.cpp (Line: 53)
 

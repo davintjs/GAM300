@@ -52,21 +52,21 @@ struct Mesh
 	GLenum prim;
 };
 
-
-struct Mesh2
-{
-	glm::vec3 vertices_min{};
-	glm::vec3 vertices_max{};
-
-	unsigned int index = 0;
-
-	GLuint Vaoids;
-	GLuint Vboids;
-	GLuint Drawcounts;
-	GLuint SRT_Buffer_Index;
-
-	GLenum prim;
-};
+// Bean: The original mesh should only contain one of each id
+//struct Mesh
+//{
+//	glm::vec3 vertices_min{};
+//	glm::vec3 vertices_max{};
+//
+//	unsigned int index = 0;
+//
+//	GLuint Vaoids;
+//	GLuint Vboids;
+//	GLuint Drawcounts;
+//	GLuint SRT_Buffer_Index;
+//
+//	GLenum prim;
+//};
 
 #define MeshManager MESH_Manager::Instance()
 

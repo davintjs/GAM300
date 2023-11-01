@@ -423,7 +423,7 @@ void Animation_Manager::Init()
 
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Walking.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation

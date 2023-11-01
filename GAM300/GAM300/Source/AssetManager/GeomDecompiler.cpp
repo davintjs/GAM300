@@ -188,31 +188,11 @@ void GeomDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& 
     AssimpNodeData& nodeData = animation.m_RootNode;
     DeserializeRecursiveNode(ifs, _model, nodeData);
 
-    // Bone Info Map
-    size_t boneInfoSize = 0;
-    ifs.read(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
-
-    for (size_t i = 0; i < boneInfoSize; i++)
-    {
-        // Kay of BoneInfoMap
-        size_t keySize;
-        ifs.read(reinterpret_cast<char*>(&keySize), sizeof(keySize));
-        std::string key;
-        key.resize(keySize);
-        ifs.read(reinterpret_cast<char*>(&key[0]), keySize * sizeof(char));
-
-        // Value of BoneInfoMap
-        BoneInfo boneInfo;
-        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
-
-        animation.m_BoneInfoMap[key] = boneInfo;
-    }
-
     // Animation Model
     AnimationModel& model = _model.animations;
 
     // Bone Info Map
-    boneInfoSize = 0;
+    size_t boneInfoSize = 0;
     ifs.read(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
 
     for (size_t i = 0; i < boneInfoSize; i++)

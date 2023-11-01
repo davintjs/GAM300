@@ -30,6 +30,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "glslshader.h"
 #include "GBuffer.h"
 
+// Bean: Added for Fields for material instance
+#include "Scripting/ScriptFields.h"
+
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define COLOURPICKER ColourPicker::Instance()
