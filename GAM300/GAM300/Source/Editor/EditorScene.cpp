@@ -218,7 +218,7 @@ void EditorScene::DisplayGizmos()
         {
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
-
+            Tag& tag = currentScene.Get<Tag>(entity);
             // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
@@ -226,7 +226,7 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            PRINT(renderer.meshID.ToHexString(),'\n');
+            PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
             glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
             glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);

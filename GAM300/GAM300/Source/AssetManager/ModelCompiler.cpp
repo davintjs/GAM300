@@ -204,8 +204,6 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	{
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
 
-		pModel->animations.meshes.push_back(AnimationMesh(tempVertex, tempIndices, std::vector<TextureInfo>()));
-
 		/*for (ModelVertex v : tempVertex)
 		{
 			Vertex vert;

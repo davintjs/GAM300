@@ -90,7 +90,9 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
         for (int i = 0; i < meshAsset.vertices.size(); ++i)
         {
             glm::vec3& pos = meshAsset.vertices[i].position;
-            pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters
+
+            if(meshAsset.numBones == 0)
+                pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters
 
             min.x = std::min(pos.x, min.x);
             min.y = std::min(pos.y, min.y);
