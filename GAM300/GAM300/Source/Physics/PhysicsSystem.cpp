@@ -82,11 +82,11 @@ void PhysicsSystem::Update(float dt) {
 		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::Activate);
 
-		//tmp = bodyInterface->GetLinearVelocity(tmpBID);
-		//JoltVec3ToGlmVec3(tmp, rb.linearVelocity);
-
-		//tmp = bodyInterface->GetAngularVelocity(tmpBID);
-		//JoltVec3ToGlmVec3(tmp, rb.angularVelocity);
+		GlmVec3ToJoltVec3(rb.linearVelocity, tmp);
+		bodyInterface->SetLinearVelocity(tmpBID, tmp);
+		//std::cout << "velocity:" << rb.linearVelocity.x << ',' << rb.linearVelocity.y << std::endl;
+		GlmVec3ToJoltVec3(rb.angularVelocity, tmp);
+		bodyInterface->SetAngularVelocity(tmpBID, tmp);
 
 
 		//Transform& t = scene.Get<Transform>(*ball);
