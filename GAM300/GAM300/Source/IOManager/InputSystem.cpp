@@ -55,7 +55,7 @@ void InputSystem::Update(float dt)
 	{
 		toggleCursorLock();
 	}
-	std::cout << lockCursor << "\n";
+	//std::cout << lockCursor << "\n";
 
 	if (InputHandler::isMouseButtonHolding_L())
 	{
@@ -102,8 +102,8 @@ void InputSystem::Update(float dt)
 	}
 	
 
-	std::cout << "mouse difference " << InputHandler::mouseDelta().x <<
-		" , " << InputHandler::mouseDelta().y << "\n";
+	//std::cout << "mouse difference " << InputHandler::mouseDelta().x <<
+	//	" , " << InputHandler::mouseDelta().y << "\n";
 
 
 

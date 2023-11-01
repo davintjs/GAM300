@@ -115,6 +115,7 @@ public:
 	// [0] is left click, [1] is right click
 	
 	static glm::vec2 mouseDelta();
+	static glm::vec2 mouseDeltaNormalized(glm::vec2 dimensions);
 
 
 	inline static std::chrono::high_resolution_clock::time_point prevMouse_LClick;
