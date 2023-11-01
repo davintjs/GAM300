@@ -1,0 +1,57 @@
+ID: 8552727112136102457
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13861012122657554983}  # Transform
+    - component: {fileID: 13671943860368736027}  # Rigidbody
+    - component: {fileID: 15321682287644036185}  # MeshRenderer
+    - component: {fileID: 16306965832790122227}  # BoxCollider
+---
+ID: 13861012122657554983
+Transform:
+  m_GameObject: {fileID: 8552727112136102457}
+  Translation: [0, -3.09993005, 0]
+  Rotation: [0, 0, 0]
+  Scale: [10, 1, 10]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13671943860368736027
+Rigidbody:
+  m_GameObject: {fileID: 8552727112136102457}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 15321682287644036185
+MeshRenderer:
+  m_GameObject: {fileID: 8552727112136102457}
+  Mesh: {guid: 00000000000000000000000000000065}
+  Albedo: [1, 1, 1, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+---
+ID: 16306965832790122227
+BoxCollider:
+  m_GameObject: {fileID: 8552727112136102457}
+  X: 1
+  Y: 1
+  Z: 1
