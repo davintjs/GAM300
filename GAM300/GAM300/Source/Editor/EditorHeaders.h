@@ -242,6 +242,7 @@ public:
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
     void CallbackSetCamera(ObjectCreatedEvent<Camera>* pEvent);
     void CallbackDeleteCamera(ObjectDestroyedEvent<Camera>* pEvent);
+    void CallbackSceneChange(SceneChangingEvent* pEvent);
     void CallbackSceneStop(ScenePostCleanupEvent* pEvent);
 
 private:

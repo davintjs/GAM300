@@ -105,9 +105,6 @@ void AnimationMesh::setupMesh()
     // vertex tangent
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
-    // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, bitTangent));
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
@@ -257,25 +254,6 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
     return glm::scale(glm::mat4(1.0f), finalScale);
 }
 
-//
-//void Animation::init(const std::string& animationPath, AnimationModel* model)
-//{
-//    Assimp::Importer importer;
-//    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
-//    assert(scene && scene->mRootNode);
-//    auto animation = scene->mAnimations[0];
-//    m_Duration = animation->mDuration;
-//    m_TicksPerSecond = animation->mTicksPerSecond;
-//    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-//    globalTransformation = globalTransformation.Inverse();
-//    ReadHierarchyData(m_RootNode, scene->mRootNode);
-//    ReadMissingBones(animation, *model);
-//}
-//
-//Animation::~Animation()
-//{
-//}
-
 Bone* Animation::FindBone(const std::string& name)
 {
     auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
@@ -287,16 +265,6 @@ Bone* Animation::FindBone(const std::string& name)
     if (iter == m_Bones.end()) return nullptr;
     else return &(*iter);
 }
-
-
-//inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-//inline float GetDuration() { return m_Duration; }
-//inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-//inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
-//{
-//    return m_BoneInfoMap;
-//}
-
 
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
 {
@@ -449,10 +417,8 @@ void Animation_Manager::Init()
 
 
 	// we want compiler to serialise model info including the animations
-	//allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Walking.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation
@@ -502,7 +468,7 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
 	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
 		glm::value_ptr(model));
 	allModels_.Draw(ourShader);

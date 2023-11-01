@@ -1,7 +1,7 @@
 #include <filesystem>
 #include "Utilities/GUID.h"
 #include "Utilities/TemplatePack.h"
-#include "glm/vec3.hpp"
+#include <glm/glm.hpp>
 #include <list>
 
 #include <Properties.h>
@@ -21,6 +21,20 @@
 //	{"None.mat", Engine::GUID(8)},
 //	{"None.anim", Engine::GUID(9)},
 //};
+
+#define MAX_BONE_INFLUENCE 4
+struct ModelVertex
+{
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::vec2 textureCords;
+	glm::ivec4 color;
+
+	// Animation Related Properties
+	int boneIDs[MAX_BONE_INFLUENCE];
+	float weights[MAX_BONE_INFLUENCE];
+};
 
 static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 {
@@ -56,10 +70,9 @@ struct MetaFile : property::base
 	property_vtable()
 };
 
-property_begin_name(MetaFile, "")
-{
+property_begin_name(MetaFile, ""){
 	property_var(guid),
-} property_vend_h(MetaFile)
+} property_vend_h(MetaFile);
 
 
 // GUID, last file update time, file name, data
@@ -84,25 +97,25 @@ struct TextureImporter : MetaFile
 	property_vtable()
 };
 
-property_begin_name(TextureImporter,"")
-{
+property_begin_name(TextureImporter,""){
 	property_parent(MetaFile),
-	property_var(maxTextureSize),
-} property_vend_h(TextureImporter)
+	property_var(maxTextureSize)
+} property_vend_h(TextureImporter);
 
 
 struct TextureAsset : Asset
 {
+	using Meta = MetaFile;
 };
 
 struct ScriptAsset : Asset
 {
-
+	using Meta = MetaFile;
 };
 
 struct AudioAsset : Asset
 {
-
+	using Meta = MetaFile;
 };
 
 struct FolderMeta : MetaFile
@@ -111,16 +124,27 @@ struct FolderMeta : MetaFile
 	property_vtable()
 };
 
-property_begin_name(FolderMeta, "")
-{
+property_begin_name(FolderMeta, ""){
 	property_parent(MetaFile),
 	property_var(folderAsset),
-} property_vend_h(FolderMeta)
+} property_vend_h(FolderMeta);
 
 struct MeshAsset : Asset
 {
-	std::vector<glm::vec3> mVertices;
-	std::vector<unsigned int> mIndices;
+	std::vector<ModelVertex> vertices;	// This individual mesh vertices
+	std::vector<glm::mat4> bindPoses;	// The bind pose at each index refers to the bone with the same index
+	std::vector<unsigned int> indices;	// This individual mesh indices
+
+	glm::vec3 boundsMin{};				// The min position of the mesh
+	glm::vec3 boundsMax{};				// The max position of the mesh
+
+	unsigned int numVertices;
+	unsigned int numIndices;
+	unsigned int numBones;
+	unsigned int numBindPoses;
+	unsigned int materialIndex;
+
+	using Meta = MetaFile;
 };
 
 struct ShaderAsset : Asset
@@ -133,7 +157,31 @@ struct ShaderAsset : Asset
 
 };
 
-using AssetTypes = TemplatePack<MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, Asset>;
+struct ModelImporter : MetaFile
+{
+	// GUID to index of asset in memory (Separate in the future for materials, animations, and textures)
+	// For now its only for meshes
+	std::vector<Engine::GUID> meshes; 
+	std::vector<Engine::GUID> materials; 
+	std::vector<Engine::GUID> animations; 
+	property_vtable()
+};
+
+property_begin_name(ModelImporter, "ModelImporter") {
+	property_parent(MetaFile),
+	property_var(meshes),
+	property_var(materials),
+	property_var(animations),
+} property_vend_h(ModelImporter);
+
+// Asset that contains reference to all components of the model(Mesh, Material, Texture, Animations)
+// User can add this asset into the scene and it will assign the materials onto the mesh etc
+struct ModelAsset : Asset
+{
+	using Meta = ModelImporter;
+};
+
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>
@@ -144,6 +192,7 @@ static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
 	{".geom",	GetAssetType::E<MeshAsset>()},
+	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
