@@ -150,6 +150,9 @@ void DisplayType(Change& change, const char* name, char*& val)
 void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
     fs::path extension = fp.extension();
+    size_t extensionType = GetAssetType::E<Asset>();
+    if (AssetExtensionTypes.contains(extension))
+        extensionType = AssetExtensionTypes[extension];
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
@@ -277,10 +280,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (AssetExtensionTypes.find(path.extension().string()) != AssetExtensionTypes.end()) {
-                    if (AssetExtensionTypes[path.extension().string()] != AssetExtensionTypes[extension.string()])
-                        continue;
-                }
+                if (!AssetExtensionTypes.contains(path.extension()))
+                    continue;
+                if (AssetExtensionTypes[path.extension()] != extensionType)
+                    continue;
                 //if (path.extension() != extension)
 
                 GetAssetEvent e { path };

@@ -193,7 +193,7 @@ using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 template <typename AssetType>
 using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
-static std::unordered_map<std::string, size_t> AssetExtensionTypes =
+static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
