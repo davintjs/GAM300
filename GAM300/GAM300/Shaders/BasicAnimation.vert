@@ -36,7 +36,7 @@ uniform mat4 SRT;
 uniform mat4 lightSpaceMatrix_Directional;
 uniform mat4 lightSpaceMatrix_Spot;
 
-const int MAX_BONES = 200;
+const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 finalBonesMatrices[MAX_BONES];
 //uniform bool isAnim;

@@ -414,7 +414,7 @@ void Animation_Manager::Init()
     if (GL_FALSE == ourShader.IsLinked())
     {
         std::stringstream sstr;
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Walking.fbx", false);
+
         sstr << ourShader.GetLog() << "\n";
         PRINT(sstr.str());
         std::exit(EXIT_FAILURE);
@@ -423,7 +423,7 @@ void Animation_Manager::Init()
 
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    ModelComponents md = MODELCOMPILER.LoadModel("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Walking.fbx", false);
     allModels_ = md.animations;
     
 	// called to animate animaation
@@ -525,8 +525,8 @@ void Animation_Manager::Draw(BaseCamera& _camera)
                     glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
 
                 glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
+                    glm::value_ptr(transforms[i]));
+            }
         }
     }
 
@@ -535,7 +535,7 @@ void Animation_Manager::Draw(BaseCamera& _camera)
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
 	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
+	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "SRT"), 1, GL_FALSE,
 		glm::value_ptr(model));
 	allModels_.Draw(ourShader);
 
