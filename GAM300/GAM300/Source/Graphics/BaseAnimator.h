@@ -22,7 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#include "Framebuffer.h"
 
 
-struct Animation;
+class Animation;
 struct AssimpNodeData;
 
 struct BaseAnimator /*: property::base*/
