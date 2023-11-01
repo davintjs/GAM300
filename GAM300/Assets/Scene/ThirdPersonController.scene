@@ -60,7 +60,7 @@ ID: 6814756148610344436
 Script:
   m_GameObject: {fileID: 15876712306982219188}
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
-  MoveSpeed: 5
+  MoveSpeed: 500
   JumpSpeed: 3
   PlayerModel: {fileID: 0}
   CamYawPivot: {fileID: 5588025465971199737}  # Component
