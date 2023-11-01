@@ -16,10 +16,6 @@ public class Enemy : Script
 
     void Start()
     {
-        Console.WriteLine("START");
-        moveSpeed = 2f;
-        //AddComponent<Rigidbody>();
-        //rb = GetComponent<Rigidbody>();
         
     }
 
@@ -30,9 +26,9 @@ public class Enemy : Script
         //double angle = Math.Atan2(direction.x, direction.z);
         //vec3.Distance(player.localPosition, this.transform.localPosition);
 
-        if(vec3.Distance(player.localPosition, this.transform.localPosition) <= chaseDistance)
+        if(vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
         {
-            GetComponent<Rigidbody>().linearVelocity = new vec3(direction.Normalized) * moveSpeed;
+            GetComponent<Rigidbody>().linearVelocity = direction.Normalized * moveSpeed;
         }
     }
 

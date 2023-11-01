@@ -1,5 +1,6 @@
-[2023-11-02 00:19:29.971] [Error] [critical] 
-Caused By:	sizeof(T) < size
-Info:		FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptFields.h (Line: 72)
+[2023-11-02 01:33:41.623] [Error] [critical] 
+Caused By:	false
+Info:		Failed to load .scene file "Assets\Scene\LevelPlay.scene" due to: yaml-cpp: error at line 821, column 3: illegal map value
+
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 270)
 
