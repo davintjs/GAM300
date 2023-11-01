@@ -42,6 +42,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 10379670187260712593
 Script:
@@ -102,6 +103,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 9199614747982128663
 BoxCollider:
@@ -159,6 +161,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: cfe2d403d5b71c2b216a5748405fc53a}
+  EmissionScalar: 1
 ---
 ID: 6281041356284068935
 BoxCollider:
@@ -216,6 +219,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 16306965832790122227
 BoxCollider:
@@ -351,6 +355,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 4212138099454399691
 GameObject:
@@ -436,6 +441,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 307508712453590974
 GameObject:
@@ -471,6 +477,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 18227054109373820900
 GameObject:
@@ -506,6 +513,7 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
 ---
 ID: 6034621871942586701
 GameObject:
@@ -562,3 +570,4 @@ MeshRenderer:
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1

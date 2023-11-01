@@ -4,7 +4,7 @@ using BeanFactory;
 
 public class ThirdPersonController : Script
 {
-    public float MoveSpeed = 5f;
+  /*  public float MoveSpeed = 5f;
     public float JumpSpeed = 3f;
     public float Gravity = 9.81f;
 
@@ -74,5 +74,5 @@ public class ThirdPersonController : Script
 
         //Apply movement
         CC.Move(dir * MoveSpeed * Time.deltaTime);
-    }
+    }*/
 }
