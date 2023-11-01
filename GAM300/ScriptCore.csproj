@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Enemy.cs" />
     <Compile Include="Assets\Player.cs" />
     <Compile Include="CoreScripts\Application.cs" />
     <Compile Include="CoreScripts\Collision.cs" />

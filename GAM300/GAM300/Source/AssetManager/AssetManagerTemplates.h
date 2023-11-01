@@ -229,6 +229,8 @@ struct AllAssetsGroup
 		(([&](auto type) 
 		{
 			using T = decltype(type);
+			if (std::is_same_v<ScriptAsset,T>)
+				return false;
 			auto& buffer{std::get<AssetsBuffer<T>>(assetsBuffer)};
 			for (auto& pair : buffer)
 			{

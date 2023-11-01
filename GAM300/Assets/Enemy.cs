@@ -6,20 +6,18 @@ using GlmSharp;
 
 public class Enemy : Script
 {
-    //Rigidbody rb;
-    public GameObject gameObj = null;
-    public float sad;
-    public float jumpSpeed;
-    public Transform otherT;
-    public string kkkkk = "!!!!!";
-    public CharacterController characterController;
-    public vec3 test;
-    public float ching;
+    public float moveSpeed = 2f;
+    public float chaseDistance = 5f;
+    public Transform player;
+    public int count;
+
+    //public float ching;
 
 
     void Start()
     {
         Console.WriteLine("START");
+        moveSpeed = 2f;
         //AddComponent<Rigidbody>();
         //rb = GetComponent<Rigidbody>();
         
@@ -27,51 +25,15 @@ public class Enemy : Script
 
     void Update()
     {
-        //
-        if (otherT == null)
-            return;
-        if (Input.GetKey(KeyCode.Q))
-        {
-            Console.WriteLine("Q");
-            otherT.localRotation.y += sad / 360f;
-            //rb.mass -= speed;
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            otherT.localRotation.y -= sad / 360f;
-            //rb.mass -= speed;
-        }
+        //follow target
+        vec3 direction = player.localPosition - transform.localPosition;
+        //double angle = Math.Atan2(direction.x, direction.z);
+        //vec3.Distance(player.localPosition, this.transform.localPosition);
 
-        if (Input.GetKey(KeyCode.W))
+        if(vec3.Distance(player.localPosition, this.transform.localPosition) <= chaseDistance)
         {
-            //otherT.localPosition += otherT.forward * sad;
-            characterController.Move(otherT.forward * sad);
-            //rb.mass -= speed;
+            GetComponent<Rigidbody>().linearVelocity = new vec3(direction.Normalized) * moveSpeed;
         }
-        if (Input.GetKey(KeyCode.S))
-        {
-            //otherT.localPosition += otherT.back * sad;
-            characterController.Move(otherT.back * sad);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            //otherT.localPosition += otherT.left * sad;
-            characterController.Move(otherT.left * sad);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            //otherT.localPosition += otherT.right * sad;
-            characterController.Move(otherT.right * sad);
-        }
-        // Jump
-        if (Input.GetKey(KeyCode.Space))
-        {
-            characterController.Move(otherT.up * jumpSpeed);
-        }
-        //Console.WriteLine("Hello");
-        //enabled = false;
-        //Destroy(this);
-        //transform.localPosition = newPos;
     }
 
     void Exit()
