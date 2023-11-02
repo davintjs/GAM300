@@ -32,10 +32,6 @@ struct temp_instance
 
 };
 
-
-
-
-
 enum class SHADERTYPE
 {
 	HDR,

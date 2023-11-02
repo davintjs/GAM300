@@ -57,7 +57,9 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	}
 
 	//Invisible button for drag drop reordering
-	ImGui::InvisibleButton("##", ImVec2(ImGui::GetWindowContentRegionWidth(), 2.5f));
+	float button_width = (ImGui::GetWindowContentRegionWidth() > 0) ? ImGui::GetWindowContentRegionWidth() : 0.1f;
+	ImGui::InvisibleButton("##", ImVec2(button_width, 2.5f));
+
 
 	//Drag drop reordering implementation
 	if (ImGui::BeginDragDropTarget())
@@ -267,14 +269,24 @@ void EditorHierarchy::Update(float dt)
                 EVENTS.Publish(&selectedEvent);
 			}
 
-			std::string name = "Delete Entity";
 			if (selectedEntity != NON_VALID_ENTITY)
 			{
-				if (ImGui::MenuItem(name.c_str()))
+				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+				auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
+				//add child entity to current selected entity
+				if (ImGui::MenuItem("Add Child Entity")) {
+					
+					Entity* Newentity = curr_scene.Add<Entity>();
+					auto& newtransform = curr_scene.Get<Transform>(*Newentity);
+					newtransform.SetParent(&currEntity);
+					SelectedEntityEvent selectedEvent{ Newentity  };
+					EVENTS.Publish(&selectedEvent);
+
+				}
+				if (ImGui::MenuItem("Delete Entity"))
 				{
-					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
-					auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
+					
 					for (auto child : currEntity.child)
 					{
 						curr_scene.Destroy(child);
@@ -286,7 +298,8 @@ void EditorHierarchy::Update(float dt)
 			}
 			else
 			{
-				ImGui::TextDisabled(name.c_str());
+				ImGui::TextDisabled("Add Child Entity");
+				ImGui::TextDisabled("Deleted Entity");
 			}
 
 			ImGui::Separator();

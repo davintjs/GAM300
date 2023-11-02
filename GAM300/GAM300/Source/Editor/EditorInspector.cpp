@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
-
+#include "Graphics/GraphicsSystem.h"
 #include "PropertyConfig.h"
 
 #define BUTTON_HEIGHT .1 //Percent
@@ -60,6 +60,7 @@ bool valueChanged = false;
 float initialvalue = 0.f;
 float changedvalue = 0.f;
 Vector3 initialVector;
+Vector4 intialColor;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -148,6 +149,7 @@ void DisplayType(Change& change, const char* name, char*& val)
 
 void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
+    static ImGuiTextFilter filter;
     fs::path extension = fp.extension();
 
     ImGui::SameLine();
@@ -155,6 +157,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
 
     if (ImGui::Button("Edit")) {
+        filter.Clear();
         ImGui::OpenPopup("Texture");
     }
 
@@ -162,7 +165,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
-    static ImGuiTextFilter filter;
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
         ImGui::Text("Filter: "); ImGui::SameLine();
@@ -205,17 +207,21 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::TextWrapped("None");
         ImGui::NextColumn();
 
-
         int i = 0;
 
         for (auto& pair : DEFAULT_ASSETS)
         {
             if (pair.first.extension() != extension)
                 continue;
-            if (!filter.PassFilter(pair.first.string().c_str()))
-                continue;
+
             if (pair.first.string().starts_with("None"))
                 continue;
+            
+            if (!filter.PassFilter(pair.first.string().c_str()))
+                continue;
+
+
+            fs::path icon = "Assets/Icons/fileicon.dds";
 
             //if not png or dds file, dont show
 
@@ -223,7 +229,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            if (ImGui::ImageButton((ImTextureID)defaultFileIcon, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            GLuint icon_id = TextureManager.GetTexture(icon);
+            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, pair.second);
             }
@@ -234,9 +241,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             ImGui::NextColumn();
             ImGui::PopID();
         }
-
-        //using filesystem to iterate through all folders/files inside the "/Data" directory
-
+        
         if (extension == ".geom")
         {
             // Bean: Put this publish event in the open popup in the future
@@ -246,26 +251,28 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             auto iconID = GET_TEXTURE_ID(icon);
 
             for (auto& meshAsset : *e1.pAssets)
-            {
-                if (!filter.PassFilter(meshAsset.second.mFilePath.string().c_str()))
-                    continue;
+            {                    
+                std::string path = meshAsset.second.mFilePath.stem().string().c_str();
 
-                ImGui::PushID(i++);
+                if (!filter.PassFilter(path.c_str()))
+                    continue;
 
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                ImGui::PushID(i++);
                 if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
                     Engine::GUID currentGUID = meshAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-                    PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
+                    //PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
                 }
+                ImGui::PopID();
                 ImGui::PopStyleColor();
-                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+                ImGui::TextWrapped(path.c_str());
 
                 //render file name below icon
                 ImGui::NextColumn();
-                ImGui::PopID();
+                
             }
         }
         else
@@ -273,20 +280,19 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
             {
                 const auto& path = it.path();
+                if (path.extension() != extension)
+                    continue;
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (path.extension() != extension)
-                    continue;
+                
+                ImGui::PushID(i++);
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
 
-
                 //if not png or dds file, dont show
-
-                ImGui::PushID(i++);
 
                 //Draw the file / folder icon based on whether it is a directory or not
                 GLuint icon_id = GET_TEXTURE_ID(currentGUID);
@@ -311,10 +317,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
        
         ImGui::Columns(1);
         ImGui::EndPopup();
-    }
-    else
-    {
-        filter.Clear();
     }
 }
 
@@ -526,33 +528,34 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    Vector4 buf = val;
 
+    Vector4 buf = val;
     ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
     bool ischanged = false;
 
-    if (ImGui::ColorButton("hi", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+    if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
+        ImGui::OpenPopup("colorpicker");
 
-        ImGui::OpenPopup("hi-picker");
-
-    if (ImGui::BeginPopup("hi-picker"))
+    if (ImGui::BeginPopup("colorpicker"))
     {
         if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
             ischanged = true;
+            if (!valueChanged)
+                intialColor = val;
+
+            valueChanged = true;
+            val = buf;
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            valueChanged = false;
+            buf = val;
+            val = intialColor;
+            EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
     }
-
-    //buf = color;
-
-    if (ischanged) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }
-
-   /* if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueBar)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }*/
 
 }
 
@@ -812,6 +815,40 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
+template <typename T>
+void DisplayMaterial(Change& change, T& value) {
+    if constexpr (std::is_same_v<T, int>) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Material");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        int index = value;
+        for (auto& mat : GRAPHICS.temporary_presets) {
+            layers.push_back(mat.name.c_str());
+        }
+        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+        if (ImGui::Combo("##Material", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+
+            //try try
+            auto& presets = GRAPHICS.temporary_presets;
+            MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
+
+            rend.mr_Albedo = presets[index].albedo/255.f;
+            rend.mr_metallic = presets[index].metallic;
+            rend.mr_roughness = presets[index].roughness;
+            rend.ao = presets[index].ao;
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
@@ -824,19 +861,26 @@ void Display_Property(T& comp) {
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
 
-                    //Edit name
-                    std::string DisplayName = entry.first;
-                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                    DisplayName.erase(DisplayName.begin(), ++it);
+                    //Temporary implementation for materials
+                    if (entry.first.find("Material") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayMaterial(newchange, Value);
+                    }
+                    else {
+                        //Edit name
+                        std::string DisplayName = entry.first;
+                        auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                        DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());   
-                    
-                    Change newchange(&comp, entry.first); 
+                        ImGui::PushID(entry.first.c_str());
 
-                    //Properties with Texture picker
-                    Display<T1>(newchange, DisplayName.c_str(), Value);
+                        Change newchange(&comp, entry.first);
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
 
-                    ImGui::PopID();
+                        ImGui::PopID();
+                    }
+
+
                     }
                 , Data);
                 property::set(comp, entry.first.c_str(), Data);
@@ -1018,7 +1062,7 @@ void DisplayComponentHelper(T& component)
             {
                 DisplayComponent(component);
             }
-            if constexpr (std::is_same_v<T, LightSource>) {
+            else if constexpr (std::is_same_v<T, LightSource>) {
                 DisplayLightProperties(component);
             }
             else
