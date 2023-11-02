@@ -22,7 +22,6 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangents;
 layout (location = 3) in vec2 aTexCoords;
 //layout (location = 4) in vec2 aColor;
-
 layout (location = 6) in mat4 SRT;
 
 layout (location = 10) in vec4 Albedo;
@@ -66,7 +65,7 @@ void main()
 {
     TexCoords = aTexCoords;
     WorldPos = vec3(SRT * vec4(aPos, 1.0));
-
+    
     frag_Albedo = Albedo;
     frag_Metal_Rough_AO_Emission_index = Metal_Rough_AO_Emission_index;
     frag_Metal_Rough_AO_Emission_constant = Metal_Rough_AO_Emission_constant;
@@ -78,9 +77,6 @@ void main()
     frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
 
     frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
-    
-    
-    
     
     gl_Position =  persp_projection * View * vec4(WorldPos, 1.0);
 }

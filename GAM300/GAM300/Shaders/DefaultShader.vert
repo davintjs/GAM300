@@ -36,20 +36,19 @@ uniform mat4 SRT;
 uniform mat4 lightSpaceMatrix_Directional;
 uniform mat4 lightSpaceMatrix_Spot;
 
-const int MAX_BONES = 200;
+const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
 uniform mat4 finalBonesMatrices[MAX_BONES];
-//uniform bool isAnim;
+uniform bool isAnim;
 
 //End
 
 void main()
 {
     TexCoords = aVertexTexCoord;
-    
-    bool isAnim = true;
+
     if (isAnim)
-    {
+    {    
         vec4 totalPosition = vec4(0.0f);
         for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
         {
@@ -63,11 +62,12 @@ void main()
             vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aVertexPosition,1.0f);
             totalPosition += localPosition * weights[i];
        }
-	
+
 	    WorldPos = vec3(SRT * totalPosition);
     }
     else
 	    WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
+        
 
 	gl_Position = persp_projection * View * vec4(WorldPos,1.0);
 

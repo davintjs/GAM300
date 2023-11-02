@@ -134,8 +134,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         glEnableVertexAttribArray(5); // Bone Indexes
         glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-        glEnableVertexAttribArray(7); // Bone Weights
-        glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+        glEnableVertexAttribArray(6); // Bone Weights
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
         // bind indices
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -155,12 +155,12 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         vaoMap.emplace(std::make_pair(guid, VAO)); // maybe just use mesh, coz same guid, different submesh
 
         newMesh.prim = GL_TRIANGLES;
-        newMesh.Vaoids.push_back(VAO);
-        newMesh.Vboids.push_back(VBO);
-        newMesh.Drawcounts.push_back((GLuint)(newGeom.meshes[i].indices.size()));
+        newMesh.vaoID = VAO;
+        newMesh.vboID = VBO;
+        newMesh.drawCounts = (GLuint)(newGeom.meshes[i].indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-        
+        newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
+
         instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     }
@@ -207,11 +207,11 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(4); // Color
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, color));
 
-    //glEnableVertexAttribArray(5); // Bone Indexes
-    //glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
+    glEnableVertexAttribArray(5); // Bone Indexes
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-    //glEnableVertexAttribArray(7); // Bone Weights
-    //glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+    glEnableVertexAttribArray(6); // Bone Weights
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
     // bind indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -226,16 +226,26 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     tempProp.drawCount = (unsigned int)_meshAsset.indices.size();
     tempProp.drawType = GL_TRIANGLES;
 
-    vaoMap.emplace(std::make_pair(_guid, VAO)); // rmb change to guid after u ask someone @kk
-    PRINT("GUID: ", _guid.ToHexString(), " name: ", _meshAsset.mFilePath.stem().string(), '\n');
+    vaoMap.emplace(std::make_pair(_guid, VAO));
 
     newMesh.prim = GL_TRIANGLES;
-    newMesh.Vaoids.push_back(VAO);
-    newMesh.Vboids.push_back(VBO);
-    newMesh.Drawcounts.push_back((GLuint)(_meshAsset.indices.size()));
+    newMesh.vaoID = VAO;
+    newMesh.vboID = VBO;
+    newMesh.drawCounts = (GLuint)(_meshAsset.indices.size());
+    newMesh.numBones = _meshAsset.numBones;
 
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.verticesBoneInfo.resize(_meshAsset.numVertices);
+    for (size_t i = 0; i < _meshAsset.numVertices; i++)
+    {
+        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+        {
+            newMesh.verticesBoneInfo[i].boneIDs[j] = _meshAsset.vertices[i].boneIDs[j];
+            newMesh.verticesBoneInfo[i].weights[j] = _meshAsset.vertices[i].weights[j];
+        }
+    }
 
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
+    PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
@@ -470,11 +480,11 @@ void MESH_Manager::CreateInstanceCube()
     tempProp.drawType = GL_TRIANGLES;
     vaoMap.emplace(std::make_pair(cubeGUID, vaoid));
 
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_TRIANGLES;
-    newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 36;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     //KK: Do something about AABB debug
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
@@ -596,12 +606,12 @@ void MESH_Manager::CreateInstanceSphere()
 
     //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_TRIANGLE_STRIP;
-    newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
+    newMesh.drawCounts = (unsigned int)(indices.size());
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
+    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
@@ -894,13 +904,13 @@ void MESH_Manager::CreateInstanceLine()
     Engine::GUID& lineGUID = DEFAULT_ASSETS["Line.geom"];
     vaoMap.emplace(std::make_pair(lineGUID, vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_LINES;
-    newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 2;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //InstanceSetup_PBR(tempProp);
-    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
+    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
     mContainer.emplace(lineGUID, newMesh);
@@ -960,11 +970,11 @@ void MESH_Manager::CreateInstanceSegment3D()
     vaoMap.emplace(std::make_pair(segGUID, vaoid));
 
     //properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_LINES;
-    newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 2;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     //InstanceSetup_PBR(tempProp);
 

@@ -2,6 +2,7 @@ using BeanFactory;
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using GlmSharp;
 
 public class Player : Script
 {
@@ -34,7 +35,9 @@ public class Player : Script
 
     void Update()
     {
-        //
+        //follow target
+        vec3 direction = otherT.localPosition - this.transform.localPosition;
+        double angle = Math.Atan2(direction.x, direction.z);
         if (otherT == null)
             return;
         if (Input.GetKey(KeyCode.Q))

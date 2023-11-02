@@ -1,6 +1,5 @@
-[2023-11-01 21:14:10.271] [Error] [critical] 
-Caused By:	sound != sounds[CATEGORY_MUSIC].end()
-Info:		3e4d17ac5bac848ffca6af8116f8a0be  not found!
-
-Source:		F:\SITSTUFF\GAM300\GAM300\GAM300\Source\Audio\AudioManager.cpp (Line: 138)
+[2023-11-01 18:22:55.211] [Error] [critical] 
+Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
+Info:		Trying to access invalid mesh
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 38)
 

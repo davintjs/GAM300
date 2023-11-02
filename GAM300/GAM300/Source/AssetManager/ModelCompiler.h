@@ -74,12 +74,23 @@ private:
 	// Serialization of the FBX model to custom binary format
 	void SerializeBinaryGeom(const std::filesystem::path& _filePath);
 
-	void SerializeBinaryAnim(const std::filesystem::path& _filePath);
+	// Serialize Meshes
+	void SerializeBinaryMeshes(std::ofstream& _serializeFile);
+
+	// Serialize Materials
+	void SerializeBinaryMaterials(std::ofstream& _serializeFile);
+
+	// Serialize Animations
+	void SerializeBinaryAnimations(std::ofstream& _serializeFile);
+
+	// Recusively serialize the assimp node data
+	void SerializeBinaryRecursiveNode(std::ofstream& _serializeFile, AssimpNodeData& _nodeData);
 
 	// Checks the file extension to ensure that it is the correct file type
 	void CheckExtension(const std::filesystem::path& _filePath);
 
 	GeomComponents* pModel = nullptr;	// Pointer to the model
+	bool hasAnimation = false;
 };
 
 #endif // !MODELCOMPILER_H

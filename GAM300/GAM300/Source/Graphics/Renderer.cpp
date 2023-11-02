@@ -89,7 +89,7 @@ void Renderer::Update(float)
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
-	SetupGrid(100);
+	finalBoneMatContainer.clear();
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -145,6 +145,8 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
 
+
+			
 			instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
 			instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
 			instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
@@ -201,36 +203,48 @@ void Renderer::Update(float)
 			{
 				continue;
 			}
-			unsigned int iters = 0;
-			for (unsigned int vao : t_Mesh->Vaoids) {
-				DefaultRenderProperties renderProperties;
+			DefaultRenderProperties renderProperties;
+			renderProperties.VAO = t_Mesh->vaoID;
+
+			renderProperties.shininess = renderer.mr_Shininess;
+			renderProperties.metallic = renderer.mr_metallic;
+			renderProperties.roughness = renderer.mr_roughness;
+			renderProperties.ao = renderer.ao;
+			renderProperties.emission = renderer.emission;
+
+			renderProperties.entitySRT = transform.GetWorldMatrix();
+			renderProperties.Albedo = renderer.mr_Albedo;
+			renderProperties.Specular = renderer.mr_Specular;
+			renderProperties.Diffuse = renderer.mr_Diffuse;
+			renderProperties.Ambient = renderer.mr_Ambient;
+
+			// renderProperties.textureID = renderer.textureID;
+			// renderProperties.NormalID = renderer.normalMapID;
+			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
+
+			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
+
+			renderProperties.drawType = t_Mesh->prim;
+			renderProperties.drawCount = t_Mesh->drawCounts;
+
+				renderProperties.isAnimatable = false;
+				renderProperties.boneidx = -1;
 				
-				renderProperties.VAO = vao;
+				if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+				{
+					Animator& animator = currentScene.Get<Animator>(entity);
+					if (animator.AnimationAttached())
+					{
+						renderProperties.isAnimatable = true;
+						renderProperties.boneidx = finalBoneMatContainer.size();
+						finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
+					}
+				}
 
-				renderProperties.shininess = renderer.mr_Shininess;
-				renderProperties.metallic = renderer.mr_metallic;
-				renderProperties.roughness = renderer.mr_roughness;
-				renderProperties.ao = renderer.ao;
-				renderProperties.emission = renderer.emission;
-
-				renderProperties.entitySRT = transform.GetWorldMatrix();
-				renderProperties.Albedo = renderer.mr_Albedo;
-				renderProperties.Specular = renderer.mr_Specular;
-				renderProperties.Diffuse = renderer.mr_Diffuse;
-				renderProperties.Ambient = renderer.mr_Ambient;
-
-				// renderProperties.textureID = renderer.textureID;
-				// renderProperties.NormalID = renderer.normalMapID;
-				renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
-				renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
-				renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
-				renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
-
-				renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
-				renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
-
-				renderProperties.drawType = t_Mesh->prim;
-				renderProperties.drawCount = t_Mesh->Drawcounts[iters++];
 
 				defaultProperties.emplace_back(renderProperties);
 
@@ -240,6 +254,7 @@ void Renderer::Update(float)
 				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
 				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][vao].iter++;
 			}
+			
 		}
 		
 		++i;
@@ -432,6 +447,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
 		GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
 		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
+		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
 		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
 		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
@@ -444,8 +460,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
 		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
-
-
 
 		// POINT LIGHT STUFFS
 		auto PointLight_Sources = LIGHTING.GetPointLights();
@@ -565,6 +579,15 @@ void Renderer::Draw(BaseCamera& _camera)
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
 
+
+		// ANIMATONS
+		if (prop.isAnimatable)
+		{
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		}
 
 		glBindVertexArray(prop.VAO);
 		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);

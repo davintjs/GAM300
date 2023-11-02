@@ -308,7 +308,14 @@ property_begin_name(MeshFilter, "MeshFilter"){
 struct MeshRenderer : Object
 {
 
+	// Material Instance
+	//Material_instance* materialInstance;
+
 	Engine::GUID meshID{ DEFAULT_MESH };
+
+
+
+
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
@@ -359,6 +366,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
 	property_var(emission).Name("EmissionScalar"),
+	property_var(isInstance).Name("IsInstance"),
 } property_vend_h(MeshRenderer)
 
 
