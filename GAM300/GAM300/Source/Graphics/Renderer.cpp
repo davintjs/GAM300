@@ -56,7 +56,7 @@ unsigned int Renderer_quadVBO = 0;
 unsigned int Renderer_quadVAO_WM = 0;
 unsigned int Renderer_quadVBO_WM = 0;
 
-const unsigned int SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
+const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
 

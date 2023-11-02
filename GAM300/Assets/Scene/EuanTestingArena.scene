@@ -16,7 +16,6 @@ GameObject:
   m_Component:
     - component: {fileID: 6099909618851813401}  # Transform
     - component: {fileID: 10413881243206984898}  # MeshRenderer
-    - component: {fileID: 10379670187260712593}  # Script
 ---
 ID: 6099909618851813401
 Transform:
@@ -44,18 +43,6 @@ MeshRenderer:
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
   IsInstance: true
----
-ID: 10379670187260712593
-Script:
-  m_GameObject: {fileID: 22203055554271501}
-  Script: {guid: 441880e9633a5feefe7a88ad6acfa23c}
-  onamae: HERRO
-  gameObj: {fileID: 22203055554271501}  # GameObject
-  sad: 0
-  characterController: {fileID: 0}
-  jumpSpeed: 0
-  otherT: {fileID: 0}
-  ching: 1
 ---
 ID: 16942626329878887566
 GameObject:
