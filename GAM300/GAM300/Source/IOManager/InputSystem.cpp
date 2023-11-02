@@ -51,10 +51,10 @@ void InputSystem::Update(float dt)
 	
 	glfwPollEvents();
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
+	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
 	{
 		toggleCursorLock();
-	}
+	}*/
 	//std::cout << lockCursor << "\n";
 
 	if (InputHandler::isMouseButtonHolding_L())

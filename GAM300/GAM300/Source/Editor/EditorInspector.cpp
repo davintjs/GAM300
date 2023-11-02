@@ -149,6 +149,7 @@ void DisplayType(Change& change, const char* name, char*& val)
 
 void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
+    static ImGuiTextFilter filter;
     fs::path extension = fp.extension();
 
     ImGui::SameLine();
@@ -156,6 +157,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
 
     if (ImGui::Button("Edit")) {
+        filter.Clear();
         ImGui::OpenPopup("Texture");
     }
 
@@ -163,7 +165,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
-    static ImGuiTextFilter filter;
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
         ImGui::Text("Filter: "); ImGui::SameLine();
@@ -206,17 +207,19 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::TextWrapped("None");
         ImGui::NextColumn();
 
-
         int i = 0;
 
         for (auto& pair : DEFAULT_ASSETS)
         {
             if (pair.first.extension() != extension)
                 continue;
-            if (!filter.PassFilter(pair.first.string().c_str()))
-                continue;
+
             if (pair.first.string().starts_with("None"))
                 continue;
+            
+            if (!filter.PassFilter(pair.first.string().c_str()))
+                continue;
+
 
             fs::path icon = "Assets/Icons/fileicon.dds";
 
@@ -238,9 +241,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             ImGui::NextColumn();
             ImGui::PopID();
         }
-
-        //using filesystem to iterate through all folders/files inside the "/Data" directory
-
+        
         if (extension == ".geom")
         {
             GetAssetsEvent<MeshAsset> e1;
@@ -249,23 +250,29 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             auto iconID = GET_TEXTURE_ID(icon);
 
             for (auto& meshAsset : *e1.pAssets)
-            {
-                ImGui::PushID(i++);
+            {                    
+                std::string path = meshAsset.second.mFilePath.stem().string().c_str();
+
+                if (!filter.PassFilter(path.c_str()))
+                    continue;
 
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                ImGui::PushID(i++);
                 if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
+                    PRINT(path, "\n");
                     Engine::GUID currentGUID = meshAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
                     PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
                 }
+                ImGui::PopID();
                 ImGui::PopStyleColor();
-                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+                ImGui::TextWrapped(path.c_str());
 
                 //render file name below icon
                 ImGui::NextColumn();
-                ImGui::PopID();
+                
             }
         }
         else
@@ -273,20 +280,19 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
             {
                 const auto& path = it.path();
+                if (path.extension() != extension)
+                    continue;
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (path.extension() != extension)
-                    continue;
+                
+                ImGui::PushID(i++);
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
 
-
                 //if not png or dds file, dont show
-
-                ImGui::PushID(i++);
 
                 //Draw the file / folder icon based on whether it is a directory or not
                 GLuint icon_id = GET_TEXTURE_ID(currentGUID);
@@ -311,10 +317,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
        
         ImGui::Columns(1);
         ImGui::EndPopup();
-    }
-    else
-    {
-        filter.Clear();
     }
 }
 
