@@ -18,8 +18,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
+#include <Core/SystemInterface.h>
 
-class Application
+SINGLETON(Application)
 {
 public:
 

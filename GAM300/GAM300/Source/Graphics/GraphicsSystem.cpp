@@ -205,7 +205,7 @@ void GraphicsSystem::Init()
 	GraphicsSubSystems::Init();
 	SkyboxManager::Instance().Init();
 	COLOURPICKER.Init();
-	//AnimationManager.Init();
+	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 
@@ -332,7 +332,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-	//AnimationManager.Draw(_camera); // temp
 	
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();

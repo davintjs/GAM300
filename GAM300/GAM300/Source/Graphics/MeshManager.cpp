@@ -150,9 +150,7 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         tempProp.drawCount = (unsigned int)newGeom.meshes[i].indices.size();
         tempProp.drawType = GL_TRIANGLES;
 
-        //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
-        
-        vaoMap.emplace(std::make_pair(guid, VAO)); // maybe just use mesh, coz same guid, different submesh
+        vaoMap.emplace(std::make_pair(guid, VAO)); // rmb change to guid after u ask someone @kk
 
         newMesh.prim = GL_TRIANGLES;
         newMesh.vaoID = VAO;

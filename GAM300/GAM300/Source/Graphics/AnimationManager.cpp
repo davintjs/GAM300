@@ -9,7 +9,7 @@
 \brief
     This file contains the Animation Manager and the declarations of its related functions.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 
@@ -274,7 +274,8 @@ void Animation_Manager::Init()
     std::cout << "ANIMATION MANAGER INIT\n";
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
+    //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
     allModels_ = md.animations;
    
     mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
@@ -286,11 +287,14 @@ void Animation_Manager::Update(float dt)
     Scene& currentScene = MySceneManager.GetCurrentScene();
     for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
     {
-        if (animator.AnimationAttached())
+        if (animator.playing && animator.AnimationAttached())
+        {
             animator.UpdateAnimation(dt);
-        else
+        }
+        else if (!animator.AnimationAttached())
+        {
             animator.SetAnimation(&allModels_.GetAnimations());
-
+        }
     }
 }
 
