@@ -141,3 +141,18 @@ MeshFilter::MeshFilter()
 	vertices = &MeshManager.GetMeshAsset(meshId).vertices;
 	indices = &MeshManager.GetMeshAsset(meshId).indices;
 }
+
+void ParticleComponent::Update(float dt)
+{
+	Particle p;
+	
+	// Calculate new position using the current velocity
+	p.position += p.velocity * dt;
+
+	// Calculate new velocity using the current acceleration
+	p.velocity += p.acceleration * dt;
+
+	// Reset the acceleration to zero after each update
+	p.acceleration = glm::vec3(0.0f);
+	
+}

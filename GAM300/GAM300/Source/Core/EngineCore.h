@@ -42,6 +42,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Debugging/DemoSystem.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/MeshManager.h"
+#include "ParticleSystem/ParticleSystem.h"
+#include "UISystem/UISystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 1.f;
@@ -60,7 +62,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
 		GraphicsSystem,
-		Blackboard
+		Blackboard,
+		ParticleManager,
+		UISystem
 	>;
 #endif
 

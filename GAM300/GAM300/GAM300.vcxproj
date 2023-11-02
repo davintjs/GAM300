@@ -132,6 +132,7 @@
     <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
+    <ClCompile Include="Source\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\HandlesTable.cpp">
@@ -141,6 +142,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Scripting\ScriptingSystem.cpp" />
+    <ClCompile Include="Source\UISystem\UISystem.cpp" />
     <ClCompile Include="Source\Utilities\GUID.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -279,6 +281,7 @@
     <ClInclude Include="Source\Graphics\MeshManager.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
+    <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />
     <ClInclude Include="Source\Scene\Object.h" />
@@ -292,6 +295,7 @@
     <ClInclude Include="Source\Scripting\ScriptFields.h" />
     <ClInclude Include="Source\Scripting\ScriptingSystem.h" />
     <ClInclude Include="Source\Scripting\ScriptWrappers.h" />
+    <ClInclude Include="Source\UISystem\UISystem.h" />
     <ClInclude Include="Source\Utilities\GUID.h" />
     <ClInclude Include="Source\Utilities\Interpolation.h" />
     <ClInclude Include="Source\Utilities\ThreadPool.h" />

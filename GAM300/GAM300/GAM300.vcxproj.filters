@@ -104,6 +104,8 @@
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\AssetManager\GeomDecompiler.cpp" />
+    <ClCompile Include="Source\ParticleSystem\ParticleSystem.cpp" />
+    <ClCompile Include="Source\UISystem\UISystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -191,6 +193,8 @@
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\AssetManager\GeomDecompiler.h" />
     <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
+    <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
+    <ClInclude Include="Source\UISystem\UISystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
