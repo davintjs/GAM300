@@ -102,7 +102,7 @@ struct Material_instance
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-
+	std::string		name = "New Material";
 	glm::vec4		albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
 	float			metallicConstant{ 1.f };
 	float			roughnessConstant{ 1.f };
@@ -147,22 +147,17 @@ public:
 	// Adding into material instance
 
 	// Removing from material instance
-
-	
-
-private:
-	
 	void createPBR_Instanced();
 
 	void createPBR_NonInstanced();
-
+	
 	std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
 
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
+private:
+
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
-
-
 };
 
 
