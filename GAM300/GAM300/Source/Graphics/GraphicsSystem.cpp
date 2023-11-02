@@ -20,7 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "AnimationManager.h"
+//#include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
 
 #include <glm/gtx/matrix_decompose.hpp>
@@ -218,7 +218,7 @@ void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
-	AnimationManager.Update(dt);
+	//AnimationManager.Update(dt);
 
 	// Editor Camera
 	EditorWindowEvent e("Scene");
@@ -349,14 +349,12 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 void GraphicsSystem::PostDraw()
 {
 	//@kk clear the one with shader instead
-	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+	/*for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
 		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
 		{
 			prop.iter = 0;
 		}
-	}
-
-
+	}*/
 	
 }
 
