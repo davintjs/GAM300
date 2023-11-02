@@ -73,10 +73,6 @@ void Renderer::Init()
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-
-	SetupGrid(100);
-
-
 }
 
 void Renderer::Update(float)
@@ -94,6 +90,7 @@ void Renderer::Update(float)
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
+	SetupGrid(100);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -122,8 +119,8 @@ void Renderer::Update(float)
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
 
-			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-			//GLuint vao = MeshManager.vaoMap[renderer.meshID];
+			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
+			GLuint vao = MeshManager.vaoMap[renderer.meshID];
 			//instanceProperties[vao];
 			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
 
@@ -158,40 +155,38 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
 			instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();*/
 			
-			for (GLuint vao : t_Mesh->Vaoids) { // for each submesh, slot things into instanceContainer[s]
-				if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
-					instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
-				}
-
-				// use the properties container coz its made for instance rendering already
-				float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
-				float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
-
-				float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
-				float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
-				float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
-				float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
-
-				float metal_constant = renderer.mr_metallic;
-				float rough_constant = renderer.mr_roughness;
-				float ao_constant = renderer.ao;
-				float emission_constant = renderer.emission;
-
-				unsigned int& iter = instanceContainers[s][vao].iter;
-
-				instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-				instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
-				instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
-
-				instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
-				instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
-				instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
-				instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
-				instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
-				instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-				//instanceContainers[s][renderer.meshID].VAO = vao;
-				++iter;
+			if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
+				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 			}
+
+			// use the properties container coz its made for instance rendering already
+			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
+			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
+
+			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
+			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
+			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
+			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
+
+			float metal_constant = renderer.mr_metallic;
+			float rough_constant = renderer.mr_roughness;
+			float ao_constant = renderer.ao;
+			float emission_constant = renderer.emission;
+
+			unsigned int& iter = instanceContainers[s][vao].iter;
+
+			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
+			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
+			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
+
+			instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
+			instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
+			instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
+			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
+			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
+			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			//instanceContainers[s][renderer.meshID].VAO = vao;
+			++iter;
 		}
 		else /*if default rendering*/{
 		//}
