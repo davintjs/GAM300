@@ -22,13 +22,16 @@ public class Enemy : Script
     void Update()
     {
         //follow target
-        vec3 direction = player.localPosition - transform.localPosition;
+        vec3 direction = (player.localPosition - transform.localPosition).Normalized;
+        direction.y = 0;
         //double angle = Math.Atan2(direction.x, direction.z);
         //vec3.Distance(player.localPosition, this.transform.localPosition);
 
-        if(vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
+        if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
         {
-            GetComponent<Rigidbody>().linearVelocity = direction.Normalized * moveSpeed;
+            float angle = (float)Math.Atan2(direction.x,direction.z);
+            transform.localRotation = new vec3(0,angle,0);
+            GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
         }
     }
 

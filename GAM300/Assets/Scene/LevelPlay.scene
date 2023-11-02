@@ -1127,7 +1127,7 @@ GameObject:
   m_Component:
     - component: {fileID: 7055470201288667192}  # Transform
     - component: {fileID: 3371457950610080205}  # Rigidbody
-    - component: {fileID: 17570201046710880384}  # SphereCollider
+    - component: {fileID: 10484578499633482393}  # BoxCollider
     - component: {fileID: 12685898372765139776}  # Script
 ---
 ID: 7055470201288667192
@@ -1155,17 +1155,19 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
-ID: 17570201046710880384
-SphereCollider:
+ID: 10484578499633482393
+BoxCollider:
   m_GameObject: {fileID: 9022108232813852398}
-  Radius: 1
+  X: 1
+  Y: 1
+  Z: 1
 ---
 ID: 12685898372765139776
 Script:
   m_GameObject: {fileID: 9022108232813852398}
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  moveSpeed: 500
-  chaseDistance: 1
+  moveSpeed: 2
+  chaseDistance: 5
   player: {fileID: 15876712306982219188}  # Component
   count: 0
 ---
