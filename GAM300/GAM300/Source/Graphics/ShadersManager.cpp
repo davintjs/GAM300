@@ -99,6 +99,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/DefaultShader.vert";
 	fragmentPath = shaderPath + "/DefaultShader.frag";
 	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/ColourPicking.vert";
+	fragmentPath = shaderPath + "/ColourPicking.frag";
+	ShaderCompiler("Colour Picking SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)
@@ -174,8 +178,8 @@ void ShaderManager::CreateShaderProperties(const std::string& _frag, const std::
 		}
 
 	}
-}
 
+}
 
 
 void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {

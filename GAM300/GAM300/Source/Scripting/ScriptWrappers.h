@@ -182,6 +182,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return scene.GetActive(pair->second,reinterpret_cast<void*>(addr));
 	}
 
+	static void GetMouseDelta(Vector2& mouseDelta)
+	{
+		mouseDelta = InputHandler::mouseDeltaNormalized();
+	}
+
 	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -260,5 +265,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetActive);
 		Register(SetActive);
 		Register(AddComponent);
+		Register(GetMouseDelta);
 	}
 #endif // !SCRIPT_WRAPPERS_H

@@ -59,7 +59,7 @@ void AssetManager::Compile(const fs::path& path)
 bool AssetManager::IsCompilable(const fs::path& path)
 {
 	//Read metafile
-	return assets.IsModified(path) && COMPILABLE_EXTENSIONS.contains(path.extension());
+	return COMPILABLE_EXTENSIONS.contains(path.extension()) && assets.IsModified(path);
 }
 
 template <typename... Ts>
@@ -271,7 +271,6 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	//temp file, invalid file
 	if (!fs::is_directory(filePath) && !filePath.has_extension())
 		return;
-
 	
 	switch (pEvent->fileState)
 	{
@@ -301,7 +300,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			AsyncRenameAsset(oldPath,filePath);
+			//AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}

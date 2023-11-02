@@ -7,16 +7,16 @@
 \date           10/10/2023
 
 \brief
-	This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the Animation Manager and the declarations of its related functions.
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
-#pragma once
+#ifndef ANIMATIONMANAGER_H
+#define ANIMATIONMANAGER_H
 
 #include "../Core/SystemInterface.h"
 #include "../gli-master/gli/gli.hpp"
-//#include "glslshader.h"
+#include "glslshader.h"
 
 #include "GraphicsHeaders.h"
 
@@ -26,17 +26,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "GL/glew.h"
-#include <GLFW/glfw3.h>
-#include "glslshader.h"
+//#include "GL/glew.h"
+//#include <GLFW/glfw3.h>
+//#include "glslshader.h"
 //#include "TextureManager.h"
-#include "AssetManager/AssetManager.h"
+
 //
 //#include "../../Compiler/Mesh.h"
 #include "../../Compiler/Mesh.h"
 
 
-
+//#define MAX_BONE_INFLUENCE 4
 class AnimationModel;
 
 struct TextureInfo {
@@ -45,27 +45,22 @@ struct TextureInfo {
     std::string path;
 };
 
-class AnimationMesh {
-public:
-    // mesh Data
-    std::vector<ModelVertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<TextureInfo> textures;
-    GLuint _VAO;
-
-    // constructor
-    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
-
-    // render the mesh
-    void Draw(GLSLShader& shader);
-
-private:
-
-    // initializes all the buffer objects/arrays
-    void setupMesh();
-};
-
-
+//class AnimationMesh {
+//public:
+//    // mesh Data
+//    std::vector<ModelVertex> vertices;
+//    std::vector<unsigned int> indices;
+//    std::vector<TextureInfo> textures;
+//    GLuint _VAO;
+//
+//    // constructor
+//    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
+//
+//private:
+//
+//    // initializes all the buffer objects/arrays
+//    void setupMesh();
+//};
 
 class AssimpGLMHelpers
 {
@@ -115,6 +110,7 @@ struct KeyScale
 class Bone
 {
 public:
+    Bone() {};
     Bone(const std::string& name, int ID, const aiNodeAnim* channel);
 
     void Update(float animationTime);
@@ -122,24 +118,11 @@ public:
     std::string GetBoneName() const { return m_Name; }
     int GetBoneID() { return m_ID; }
 
-
-
     int GetPositionIndex(float animationTime);
 
     int GetRotationIndex(float animationTime);
 
     int GetScaleIndex(float animationTime);
-
-
-private:
-
-    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
-
-    glm::mat4 InterpolatePosition(float animationTime);
-
-    glm::mat4 InterpolateRotation(float animationTime);
-
-    glm::mat4 InterpolateScaling(float animationTime);
 
     std::vector<KeyPosition> m_Positions;
     std::vector<KeyRotation> m_Rotations;
@@ -151,8 +134,17 @@ private:
     glm::mat4 m_LocalTransform;
     std::string m_Name;
     int m_ID;
-};
 
+private:
+
+    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+
+    glm::mat4 InterpolatePosition(float animationTime);
+
+    glm::mat4 InterpolateRotation(float animationTime);
+
+    glm::mat4 InterpolateScaling(float animationTime);
+};
 
 struct BoneInfo
 {
@@ -161,11 +153,7 @@ struct BoneInfo
 
     /*offset matrix transforms vertex from model space to bone space*/
     glm::mat4 offset;
-
 };
-
-
-
 
 struct AssimpNodeData
 {
@@ -195,73 +183,42 @@ public:
     inline AssimpNodeData& GetRootNode() { return m_RootNode; }
     inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
     {
-        return m_BoneInfoMap;
+        return m_BoneInfoMap_;
+    }
+    inline std::vector<Bone>& GetBones()
+    {
+        return m_Bones;
     }
 
-    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model);
+    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model); // compiler only
 
-    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
-
-private:
+    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src); // compiler only
 
     float m_Duration;
     int m_TicksPerSecond;
     std::vector<Bone> m_Bones;
     AssimpNodeData m_RootNode;
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::map<std::string, BoneInfo> m_BoneInfoMap_;
 };
 
 
-class AnimationModel
+class AnimationModel // similar to geom imported
 {
 public:
     // model data 
     std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::vector<AnimationMesh> meshes;  // might not need this, can steal from mesh manager mb
-    //std::string directory;
-    //bool gammaCorrection;
-
-    // constructor, expects a filepath to a 3D model.
-    AnimationModel();
-
-    void init(std::string const& path, bool gamma);
-
-    // draws the model, and thus all its meshes
-    void Draw(GLSLShader& shader);
+    //std::vector<AnimationMesh> meshes;  // same as mMeshes
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
     int& GetBoneCount() { return m_BoneCounter; }
+
     Animation& GetAnimations() { return allAnimations; } // also temp
 
 private:
     Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::map<std::string, BoneInfo> m_BoneInfoMap; // looks p useless
     int m_BoneCounter = 0;
 };
-
-class AnimationAnimator
-{
-public:
-    AnimationAnimator();
-
-    void init(Animation* animation);
-
-    void UpdateAnimation(float dt);
-
-    void PlayAnimation(Animation* pAnimation);
-
-    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
-
-    std::vector<glm::mat4> GetFinalBoneMatrices();
-
-private:
-    std::vector<glm::mat4> m_FinalBoneMatrices;
-    Animation* m_CurrentAnimation;
-    float m_CurrentTime;
-    float m_DeltaTime;
-
-};
-
 
 
 #define AnimationManager Animation_Manager::Instance()
@@ -269,27 +226,34 @@ private:
 SINGLETON(Animation_Manager)
 {
 public:
-	void Init();
-	void Update(float dt);
-	void Draw(BaseCamera & _camera);
-	void Exit();
+    void Init();
+    void Update(float dt);
+    void Exit();
 
+    //// used in asset manager to add anim to the anim container
+    //void AddAnimation(char const* Filename, std::string GUID);
+    void AddAnimMesh(std::pair<Engine::GUID, MeshAsset> meshAsset)//;
+    {
+        mAnimationMeshContainer.emplace(meshAsset.first, meshAsset.second);
+    }
 
-	//// used in asset manager to add anim to the annim container
-	//void AddAnimation(char const* Filename, std::string GUID);
-
-	//// creates a texture and returns it to be stored in the texture container
-	//GLuint CreateTexture(char const* Filename);
-
-	//// uses GUID to retrieve a texture from the texture container
-	//GLuint GetTexture(std::string GUID);
+    //// uses GUID to retrieve a texture from the texture container
+    //GLuint GetTexture(std::string GUID);
+    AnimationModel GetModel() { return allModels_; }; //temp shld be deleted
 
 private:
 
-	//std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
+    //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
+    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp... throw after compiler done
+    //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ->  temp...
+    std::unordered_map<Engine::GUID, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
 
-	GLSLShader ourShader{};
+    // can yeet these
+    GLSLShader ourShader{};
 
-	AnimationModel allModels_;
-	AnimationAnimator allAnimators_;
+    AnimationModel allModels_;
+    //AnimationAnimator allAnimators_;
+    bool HasBones(MeshAsset meshAsset);
+
 };
+#endif // !ANIMATIONMANAGER_H

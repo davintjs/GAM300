@@ -279,8 +279,7 @@ bool DeserializeScene(Scene& _scene)
     if (data[0])
     {
         std::string versioning = data[0].as<std::string>();
-        versioning.erase(0, 19);
-        if (versioning.compare(versionID))
+        if (versioning.find(versionID) == std::string::npos)
             PRINT("Warning! Serializer version ", versioning, " is different from ", versionID, ", update the serializer!\n");
     }
 

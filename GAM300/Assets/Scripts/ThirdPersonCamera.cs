@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using BeanFactory;
-
+using GlmSharp;
+using System;
 public class ThirdPersonCamera : Script
 {
     public float YawRotSpeed = 180f;
@@ -29,12 +30,18 @@ public class ThirdPersonCamera : Script
     void Update()
     {
         //Yaw Camera Rotation
-/*        YawAngle += Input.GetAxis("Mouse X") * YawRotSpeed * Time.deltaTime;
-        CamYawPivot.localRotation = Quaternion.Euler(0f, YawAngle, 0f);
 
+        vec2 mouseDelta = Input.GetMouseDelta();
+        YawAngle += mouseDelta.x * YawRotSpeed * Time.deltaTime * 3.14f / 180f;
+        CamYawPivot.localRotation = new vec3(0f, YawAngle, 0f);
         //Pitch Camera Rotation
-        PitchAngle += Input.GetAxis("Mouse Y") * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime;
-        PitchAngle = Mathf.Clamp(PitchAngle, MinPitchAngle, MaxPitchAngle);
-        CamPitchPivot.localRotation = Quaternion.Euler(PitchAngle, 0f, 0f);*/
+        PitchAngle += mouseDelta.y * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime * 3.14f / 180f;
+        //Console.WriteLine("{0},{1}",mouseDelta.x, mouseDelta.y);
+        if (PitchAngle > MaxPitchAngle)
+            PitchAngle = MaxPitchAngle * 3.14f / 180f;
+        else if (PitchAngle < MinPitchAngle)
+            PitchAngle = MinPitchAngle * 3.14f / 180f;
+        CamPitchPivot.localRotation = new vec3(PitchAngle, 0f, 0f);
     }
+
 }

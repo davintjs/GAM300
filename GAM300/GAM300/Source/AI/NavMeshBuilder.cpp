@@ -58,7 +58,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 
 		for (int i = 0; i < mesh.vertices->size(); ++i)
 		{
-			glm::vec4 temp = glm::vec4((*mesh.vertices)[i], 1.f);
+			glm::vec4 temp = glm::vec4((*mesh.vertices)[i].position, 1.f);
 			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
 		}
 		for (int j = 0; j < mesh.indices->size(); j += 3)
