@@ -75,9 +75,9 @@ GameObject:
 ID: 8004829041645098527
 Transform:
   m_GameObject: {fileID: 2866402867161245437}
-  Translation: [-0.898326576, 0.884088516, 1.25072987e-07]
+  Translation: [-0.748000026, 0.884088516, 1.25072987e-07]
   Rotation: [0, 0, 0]
-  Scale: [0.100000001, 0.100000001, 1]
+  Scale: [0.25, 0.100000001, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -86,7 +86,7 @@ ID: 8812244467539034998
 SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
-  SpriteTexture: {guid: 00000000000000000000000000000000}
+  SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
 ---
 ID: 4273817804516731435
 GameObject:
@@ -1073,7 +1073,7 @@ Script:
   m_GameObject: {fileID: 306000570273784193}
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
   MaxPitchAngle: 85
-  YawRotSpeed: 720
+  YawRotSpeed: 1440
   CamYawPivot: {fileID: 5588025465971199737}  # Component
   InvertPitch: false
   PitchRotSpeed: 360
