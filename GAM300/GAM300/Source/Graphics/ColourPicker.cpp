@@ -42,14 +42,14 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 	int index = 0;
 
-
+	bool spriteToColourPick = false;
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		if (!Sprite.ColourPicked)
 		{
 ;			continue;
 		}
-
+		spriteToColourPick = true;
 		Entity& entity = currentScene.Get<Entity>(Sprite);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
@@ -69,7 +69,6 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 		glUniform4fv(glGetUniformLocation(shader.GetHandle(), "PickingColour")
 		, 1, glm::value_ptr(picking_color));
-
 
 
 		if (Sprite.WorldSpace) // 3D Space UI
@@ -149,12 +148,11 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	//std::cout << selectedID-1 << "\n";
+	//std::cout << selectedID << "\n";
 
 
-	if (EUID_Holder.size() > 1 && (selectedID > 0) && (selectedID != 13421772) )
+	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
-
 		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
 		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 		PRINT(entity_tag.name, "\n");
@@ -163,8 +161,6 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 }

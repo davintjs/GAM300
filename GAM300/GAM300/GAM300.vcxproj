@@ -148,6 +148,7 @@
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
+    <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
