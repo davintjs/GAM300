@@ -30,6 +30,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "glslshader.h"
 #include "GBuffer.h"
 
+#include "Scripting/ScriptFields.h"
+
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define COLOURPICKER ColourPicker::Instance()
@@ -87,6 +89,18 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct Material_instance
+{
+	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+
+	Engine::GUID matInstanceName;
+
+					   // Var name   // Data Storage
+	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
+
+};
+
+
 ENGINE_SYSTEM(ShaderManager)
 {
 public:
@@ -102,6 +116,10 @@ public:
 
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
+
+	// 2 different instances of a PBR.
+
+	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
 
 private:
 	std::vector<GLSLShader> shaders;
@@ -257,6 +275,7 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings
 	float exposure = 1.f;

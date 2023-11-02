@@ -187,14 +187,19 @@ struct DefaultRenderProperties {
 	//GLSLShader shader;
 
 	GLenum drawType;
+
+	bool isAnimatable{ false };
+	int boneidx{ -1 };
 };
 
 
-
+// Each Shader has 1 ShaderProperties
 struct ShaderProperties {
 	std::string name;
+					// Index			// Var Name   // Type Enum
 	std::unordered_map<size_t, std::pair<std::string, size_t>> fragmentVariables;
 	std::unordered_map<size_t, std::pair<std::string, size_t>> vertexVariables;
+
 };
 
 

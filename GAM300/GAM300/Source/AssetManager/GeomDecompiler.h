@@ -26,6 +26,16 @@ public:
 	// To load Geoms from FBXs
 	ModelComponents DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid);
 
+	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);
+
+	void DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model);
+
+	void DeserializeTextures(std::ifstream& ifs, ModelComponents& _model);
+
+	void DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model);
+
+	void DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node);
+
 	// Decompress
 	void DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 		const std::vector<Vertex>& _oVertices,

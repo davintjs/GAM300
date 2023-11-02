@@ -14,6 +14,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef INPUT_SYSTEM_H
 #define INPUT_SYSTEM_H
 #include "Core/SystemInterface.h"
+#include <glm/gtc/type_ptr.hpp>
 
 ENGINE_SYSTEM(InputSystem)
 {
@@ -21,5 +22,14 @@ public:
 	void Init();
 	void Update(float dt);
 	void Exit();
+
+	void CenterCursor(glm::vec2 position, glm::vec2 dimension);
+
+	void toggleCursorLock();
+
+private:
+
+	bool lockCursor = false;
+
 };
 #endif // !INPUT_SYSTEM_H

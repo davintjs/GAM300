@@ -93,6 +93,7 @@ void Renderer::Update(float)
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT)); // need this meh? alr reserve tho
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
+	finalBoneMatContainer.clear();
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -111,7 +112,7 @@ void Renderer::Update(float)
 
 		// if instance rendering put into container for instance rendering
 		// 
-		//if (renderer.isInstance) {
+		if (renderer.isInstance) {
 
 			// dun need do dis, coz renderer contains shadertype, can access via that
 			// for each shader, slot in properties into container
@@ -155,6 +156,8 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
 			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
 
+
+			
 			instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
 			instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
 			instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
@@ -198,8 +201,9 @@ void Renderer::Update(float)
 			//	++(instanceProperties[newName].iter);
 			//}
 
-		//}
-		//else /*if default rendering*/{
+		}
+		else /*if default rendering*/
+		{
 			// if not instance put into container for default rendering
 
 			// batch it via shader, geom, material instanced
@@ -211,40 +215,52 @@ void Renderer::Update(float)
 			{
 				continue;
 			}
-			unsigned int iters = 0;
-			for (unsigned int vao : t_Mesh->Vaoids) {
-				DefaultRenderProperties renderProperties;
+			DefaultRenderProperties renderProperties;
+			renderProperties.VAO = t_Mesh->vaoID;
+
+			renderProperties.shininess = renderer.mr_Shininess;
+			renderProperties.metallic = renderer.mr_metallic;
+			renderProperties.roughness = renderer.mr_roughness;
+			renderProperties.ao = renderer.ao;
+			renderProperties.emission = renderer.emission;
+
+			renderProperties.entitySRT = transform.GetWorldMatrix();
+			renderProperties.Albedo = renderer.mr_Albedo;
+			renderProperties.Specular = renderer.mr_Specular;
+			renderProperties.Diffuse = renderer.mr_Diffuse;
+			renderProperties.Ambient = renderer.mr_Ambient;
+
+			// renderProperties.textureID = renderer.textureID;
+			// renderProperties.NormalID = renderer.normalMapID;
+			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
+
+			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
+
+			renderProperties.drawType = t_Mesh->prim;
+			renderProperties.drawCount = t_Mesh->drawCounts;
+
+				renderProperties.isAnimatable = false;
+				renderProperties.boneidx = -1;
 				
-				renderProperties.VAO = vao;
+				if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+				{
+					Animator& animator = currentScene.Get<Animator>(entity);
+					if (animator.AnimationAttached())
+					{
+						renderProperties.isAnimatable = true;
+						renderProperties.boneidx = finalBoneMatContainer.size();
+						finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
+					}
+				}
 
-				renderProperties.shininess = renderer.mr_Shininess;
-				renderProperties.metallic = renderer.mr_metallic;
-				renderProperties.roughness = renderer.mr_roughness;
-				renderProperties.ao = renderer.ao;
-				renderProperties.emission = renderer.emission;
-
-				renderProperties.entitySRT = transform.GetWorldMatrix();
-				renderProperties.Albedo = renderer.mr_Albedo;
-				renderProperties.Specular = renderer.mr_Specular;
-				renderProperties.Diffuse = renderer.mr_Diffuse;
-				renderProperties.Ambient = renderer.mr_Ambient;
-
-				// renderProperties.textureID = renderer.textureID;
-				// renderProperties.NormalID = renderer.normalMapID;
-				renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
-				renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
-				renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
-				renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
-
-				renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
-				renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
-
-				renderProperties.drawType = t_Mesh->prim;
-				renderProperties.drawCount = t_Mesh->Drawcounts[iters++];
 
 				defaultProperties.emplace_back(renderProperties);
-			}
-		//}
+			
+		}
 		
 		++i;
 	}
@@ -345,267 +361,275 @@ void Renderer::Draw(BaseCamera& _camera)
 		}
 	}
 
-	//// non-instanced render
-	//for (DefaultRenderProperties& prop : defaultProperties) {
+	// non-instanced render
+	for (DefaultRenderProperties& prop : defaultProperties) {
 
-	//	
-	//	//glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer.gFBO);
-	//	//unsigned int attachments[3] =
-	//	//{ GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 }; // position, normal, albedospec
-	//	//glDrawBuffers(3, attachments);
-	//	//
-	//	
-	//	//GLSLShader& geomPass = SHADER.GetShader(GBUFFER);
-	//	//geomPass.Use();
-	//	//GLint uProj =
-	//	//	glGetUniformLocation(geomPass.GetHandle(), "persp_projection");
-	//	//GLint uView =
-	//	//	glGetUniformLocation(geomPass.GetHandle(), "View");
-	//	//GLint SRT =
-	//	//	glGetUniformLocation(geomPass.GetHandle(), "SRT");
-	//	//
-	//	//glUniformMatrix4fv(uProj, 1, GL_FALSE,
-	//	//	glm::value_ptr(EditorCam.GetProjMatrix()));
-	//	//glUniformMatrix4fv(uView, 1, GL_FALSE,
-	//	//	glm::value_ptr(EditorCam.GetViewMatrix()));
-	//	//glUniformMatrix4fv(SRT, 1, GL_FALSE,
-	//	//	glm::value_ptr(prop.entitySRT));
-	//	////m_gBuffer.BindForWriting();
-	//	//glBindVertexArray(prop.VAO);
-	//	//glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-	//	//glBindVertexArray(0);
-	//	//geomPass.UnUse();
-	//	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//	//// lighting pass
-	//	//// render
+		
+		//glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer.gFBO);
+		//unsigned int attachments[3] =
+		//{ GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 }; // position, normal, albedospec
+		//glDrawBuffers(3, attachments);
+		//
+		
+		//GLSLShader& geomPass = SHADER.GetShader(GBUFFER);
+		//geomPass.Use();
+		//GLint uProj =
+		//	glGetUniformLocation(geomPass.GetHandle(), "persp_projection");
+		//GLint uView =
+		//	glGetUniformLocation(geomPass.GetHandle(), "View");
+		//GLint SRT =
+		//	glGetUniformLocation(geomPass.GetHandle(), "SRT");
+		//
+		//glUniformMatrix4fv(uProj, 1, GL_FALSE,
+		//	glm::value_ptr(EditorCam.GetProjMatrix()));
+		//glUniformMatrix4fv(uView, 1, GL_FALSE,
+		//	glm::value_ptr(EditorCam.GetViewMatrix()));
+		//glUniformMatrix4fv(SRT, 1, GL_FALSE,
+		//	glm::value_ptr(prop.entitySRT));
+		////m_gBuffer.BindForWriting();
+		//glBindVertexArray(prop.VAO);
+		//glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(0);
+		//geomPass.UnUse();
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//// lighting pass
+		//// render
 
-	//	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//	//glActiveTexture(GL_TEXTURE0);
-	//	//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gPosition);
-	//	//glActiveTexture(GL_TEXTURE1);
-	//	//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gNormal);
-	//	//glActiveTexture(GL_TEXTURE2);
-	//	//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gAlbedoSpec);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gPosition);
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gNormal);
+		//glActiveTexture(GL_TEXTURE2);
+		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gAlbedoSpec);
 
-	//	glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
-	//	glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
-	//	glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
-	//	glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
-	//	glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
-	//	glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
-	//	glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, depthMap);
-	//	glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, depthMap_S);
-	//	glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, depthMap);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, depthMap_S);
+		glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
-	//	GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
-	//	shader.Use();
+		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
+		shader.Use();
 
-	//	// PBR TEXTURES
-	//	GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
-	//	GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hasNormal");
-	//	GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
-	//	GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
-	//	GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
-	//	GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
+		// PBR TEXTURES
+		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hasNormal");
+		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
+		GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
+		GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
+		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
 
-	//	glUniform1i(hasTexture, prop.textureID);
-	//	glUniform1i(hasNormal, prop.NormalID);
-	//	glUniform1i(hasRoughness, prop.RoughnessID);
-	//	glUniform1i(hasMetallic, prop.MetallicID);
-	//	glUniform1i(hasAO, prop.AoID);
-	//	glUniform1i(hasEmission, prop.EmissionID);
+		glUniform1i(hasTexture, prop.textureID);
+		glUniform1i(hasNormal, prop.NormalID);
+		glUniform1i(hasRoughness, prop.RoughnessID);
+		glUniform1i(hasMetallic, prop.MetallicID);
+		glUniform1i(hasAO, prop.AoID);
+		glUniform1i(hasEmission, prop.EmissionID);
 
-	//	// PBR CONSTANT VALUES
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
-
-
-
-
-	//	GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	//	GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
-	//	GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
-	//	GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
-	//	GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
-	//	GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
-	//	GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
-	//	GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
-	//	GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
-	//	GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
-	//	GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
-
-	//	glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
-	//	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
-	//	glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-	//	glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
-	//	glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
-	//	glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
-	//	glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
-	//	glUniform1f(Shininess, prop.shininess);
-	//	glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
-	//	glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
-	//	glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
+		// PBR CONSTANT VALUES
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
 
 
 
-	//	// POINT LIGHT STUFFS
-	//	auto PointLight_Sources = LIGHTING.GetPointLights();
-	//	for (int i = 0; i < PointLight_Sources.size(); ++i)
-	//	{
-	//		//pointLights.colour
-	//		std::string point_color;
-	//		point_color = "pointLights[" + std::to_string(i) + "].colour";
 
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
-	//			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
+		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
+		GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
+		GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
+		GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
+		GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
+		GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
+		GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
+		GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
+		GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
+		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
+		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
-	//		std::string point_pos;
-	//		point_pos = "pointLights[" + std::to_string(i) + "].position";
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
-	//			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
+		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
+		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
+		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
+		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
+		glUniform1f(Shininess, prop.shininess);
+		glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
+		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
+		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
-	//		std::string point_intensity;
-	//		point_intensity = "pointLights[" + std::to_string(i) + "].intensity";
-	//		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
-	//			, 1, &PointLight_Sources[i].intensity);
+		// POINT LIGHT STUFFS
+		auto PointLight_Sources = LIGHTING.GetPointLights();
+		for (int i = 0; i < PointLight_Sources.size(); ++i)
+		{
+			//pointLights.colour
+			std::string point_color;
+			point_color = "pointLights[" + std::to_string(i) + "].colour";
 
-	//	}
-	//	// accepted all the way to line 635, pls take a look and merge it @kk
-	//	GLint uniform7 = glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
-	//	glUniform1i(uniform7, (int)PointLight_Sources.size());
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
+				, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 
-	//	// DIRECTIONAL LIGHT STUFFS
-	//	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
-	//	for (int i = 0; i < DirectionLight_Sources.size(); ++i)
-	//	{
-	//		//directionalLights.colour
-	//		std::string directional_color;
-	//		directional_color = "directionalLights[" + std::to_string(i) + "].colour";
+			std::string point_pos;
+			point_pos = "pointLights[" + std::to_string(i) + "].position";
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
+				, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
 
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_color.c_str())
-	//			, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
+			std::string point_intensity;
+			point_intensity = "pointLights[" + std::to_string(i) + "].intensity";
+			glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
+				, 1, &PointLight_Sources[i].intensity);
 
-	//		std::string directional_direction;
-	//		directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
-	//			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
+		}
+		// accepted all the way to line 635, pls take a look and merge it @kk
+		GLint uniform7 = glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
+		glUniform1i(uniform7, (int)PointLight_Sources.size());
 
-	//		std::string directional_intensity;
-	//		directional_intensity = "directionalLights[" + std::to_string(i) + "].intensity";
-	//		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
-	//			, 1, &DirectionLight_Sources[i].intensity);
-	//	}
+		// DIRECTIONAL LIGHT STUFFS
+		auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
+		for (int i = 0; i < DirectionLight_Sources.size(); ++i)
+		{
+			//directionalLights.colour
+			std::string directional_color;
+			directional_color = "directionalLights[" + std::to_string(i) + "].colour";
 
-	//	GLint uniform8 = glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
-	//	glUniform1i(uniform8, (int)DirectionLight_Sources.size());
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_color.c_str())
+				, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
 
-	//	// SPOTLIGHT STUFFS
-	//	auto SpotLight_Sources = LIGHTING.GetSpotLights();
-	//	for (int i = 0; i < SpotLight_Sources.size(); ++i)
-	//	{
+			std::string directional_direction;
+			directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
+				, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
 
-	//		//pointLights.position
-	//		std::string spot_pos;
-	//		spot_pos = "spotLights[" + std::to_string(i) + "].position";
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
-	//			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
+			std::string directional_intensity;
+			directional_intensity = "directionalLights[" + std::to_string(i) + "].intensity";
+			glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
+				, 1, &DirectionLight_Sources[i].intensity);
+		}
 
-	//		std::string spot_color;
-	//		spot_color = "spotLights[" + std::to_string(i) + "].colour";
+		GLint uniform8 = glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
+		glUniform1i(uniform8, (int)DirectionLight_Sources.size());
 
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
-	//			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
+		// SPOTLIGHT STUFFS
+		auto SpotLight_Sources = LIGHTING.GetSpotLights();
+		for (int i = 0; i < SpotLight_Sources.size(); ++i)
+		{
 
-	//		std::string spot_direction;
-	//		spot_direction = "spotLights[" + std::to_string(i) + "].direction";
-	//		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
-	//			, 1, glm::value_ptr(SpotLight_Sources[i].direction));
+			//pointLights.position
+			std::string spot_pos;
+			spot_pos = "spotLights[" + std::to_string(i) + "].position";
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+				, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
 
-	//		std::string spot_cutoff_inner;
-	//		spot_cutoff_inner = "spotLights[" + std::to_string(i) + "].innerCutOff";
-	//		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_inner.c_str())
-	//			, 1, &SpotLight_Sources[i].inner_CutOff);
+			std::string spot_color;
+			spot_color = "spotLights[" + std::to_string(i) + "].colour";
 
-	//		std::string spot_cutoff_outer;
-	//		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].outerCutOff";
-	//		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
-	//			, 1, &SpotLight_Sources[i].outer_CutOff);
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
+				, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
 
-	//		std::string spot_intensity;
-	//		spot_intensity = "spotLights[" + std::to_string(i) + "].intensity";
-	//		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
-	//			, 1, &SpotLight_Sources[i].intensity);
-	//	}
-	//	GLint uniform9 = glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
-	//	glUniform1i(uniform9, (int)SpotLight_Sources.size());
+			std::string spot_direction;
+			spot_direction = "spotLights[" + std::to_string(i) + "].direction";
+			glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
+				, 1, glm::value_ptr(SpotLight_Sources[i].direction));
 
+			std::string spot_cutoff_inner;
+			spot_cutoff_inner = "spotLights[" + std::to_string(i) + "].innerCutOff";
+			glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_inner.c_str())
+				, 1, &SpotLight_Sources[i].inner_CutOff);
 
-	//	// SHADOW 
-	//	GLint uniform10 =
-	//		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
-	//	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
-	//		glm::value_ptr(lightSpaceMatrix_directional));
-	//	GLint uniform11 =
-	//		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Spot");
-	//	glUniformMatrix4fv(uniform11, 1, GL_FALSE,
-	//		glm::value_ptr(lightSpaceMatrix_spot));
+			std::string spot_cutoff_outer;
+			spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].outerCutOff";
+			glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
+				, 1, &SpotLight_Sources[i].outer_CutOff);
 
-
-
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
-
-	//	// SETTINGS
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
-
-	//	GLint uniform12 =
-	//		glGetUniformLocation(shader.GetHandle(), "renderShadow");
-
-	//	glUniform1f(uniform12, RENDERER.enableShadows());
-
-	//	glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
-
-	// glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
-
-
-	//	glBindVertexArray(prop.VAO);
-	//	glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-	//	glBindVertexArray(0);
-
-	//	shader.UnUse();/**/
-
-	//	// forward render
-	//	/*glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_2D, prop.textureID);
-	//	glActiveTexture(GL_TEXTURE1);
-	//	glBindTexture(GL_TEXTURE_2D, prop.NormalID);*/
+			std::string spot_intensity;
+			spot_intensity = "spotLights[" + std::to_string(i) + "].intensity";
+			glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
+				, 1, &SpotLight_Sources[i].intensity);
+		}
+		GLint uniform9 = glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
+		glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
 
-	//	/*GLSLShader& shader =  SHADER.GetShader(DEFAULT);
-	//	shader.Use();
+		// SHADOW 
+		GLint uniform10 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
+		glUniformMatrix4fv(uniform10, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix_directional));
+		GLint uniform11 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Spot");
+		glUniformMatrix4fv(uniform11, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix_spot));
 
-	//	GLint uProj =
-	//		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	//	GLint uView =
-	//		glGetUniformLocation(shader.GetHandle(), "View");
-	//	GLint SRT =
-	//		glGetUniformLocation(shader.GetHandle(), "SRT");
 
-	//	glUniformMatrix4fv(uProj, 1, GL_FALSE,
-	//		glm::value_ptr(EditorCam.GetProjMatrix()));
-	//	glUniformMatrix4fv(uView, 1, GL_FALSE,
-	//		glm::value_ptr(EditorCam.GetViewMatrix()));
-	//	glUniformMatrix4fv(SRT, 1, GL_FALSE,
-	//		glm::value_ptr(prop.entitySRT));
 
-	//	glBindVertexArray(prop.VAO);
-	//	glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-	//	glBindVertexArray(0);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
-	//	shader.UnUse();*/
-	//	
-	//}
+		// SETTINGS
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
+
+		GLint uniform12 =
+			glGetUniformLocation(shader.GetHandle(), "renderShadow");
+
+		glUniform1f(uniform12, RENDERER.enableShadows());
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), bloomThreshold);
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
+
+
+		// ANIMATONS
+		if (prop.isAnimatable)
+		{
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		}
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();/**/
+
+		// forward render
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, prop.NormalID);*/
+
+
+		/*GLSLShader& shader =  SHADER.GetShader(DEFAULT);
+		shader.Use();
+
+		GLint uProj =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uView =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		GLint SRT =
+			glGetUniformLocation(shader.GetHandle(), "SRT");
+
+		glUniformMatrix4fv(uProj, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE,
+			glm::value_ptr(prop.entitySRT));
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();*/
+		
+	}
 	
 	
 }

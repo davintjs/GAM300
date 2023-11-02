@@ -82,6 +82,11 @@ std::vector<glm::mat4> BaseAnimator::GetFinalBoneMatrices()
     return m_FinalBoneMatrices;
 }
 
+std::vector<glm::mat4>* BaseAnimator::GetFinalBoneMatricesPointer()
+{
+    return &m_FinalBoneMatrices;
+}
+
 bool BaseAnimator::AnimationAttached() {
     // Check if m_CurrentAnimation is not nullptr (i.e., it's attached)
     return m_CurrentAnimation != nullptr;

@@ -39,52 +39,28 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#define MAX_BONE_INFLUENCE 4
 class AnimationModel;
 
-//struct AnimationVertex {// ideally can delete aft move to compiler
-//    // position
-//    glm::vec3 Position;
-//    // normal
-//    glm::vec3 Normal;
-//    // tangent
-//    glm::vec3 Tangent;
-//    // texCoords
-//    glm::vec2 TexCoords;
-//    //// bitangent
-//    //glm::vec3 Bitangent;
-//    // color
-//    glm::ivec4 Color;
-//    //bone indexes which will influence this vertex
-//    int m_BoneIDs[MAX_BONE_INFLUENCE];
-//    //weights from each bone
-//    float m_Weights[MAX_BONE_INFLUENCE];
-//};
-
 struct TextureInfo {
     unsigned int id;
     std::string type;
     std::string path;
 };
 
-class AnimationMesh {
-public:
-    // mesh Data
-    std::vector<ModelVertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<TextureInfo> textures;
-    GLuint _VAO;
-
-    // constructor
-    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
-
-    // render the mesh
-    void Draw(GLSLShader& shader);
-
-private:
-
-    // initializes all the buffer objects/arrays
-    void setupMesh();
-};
-
-
+//class AnimationMesh {
+//public:
+//    // mesh Data
+//    std::vector<ModelVertex> vertices;
+//    std::vector<unsigned int> indices;
+//    std::vector<TextureInfo> textures;
+//    GLuint _VAO;
+//
+//    // constructor
+//    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
+//
+//private:
+//
+//    // initializes all the buffer objects/arrays
+//    void setupMesh();
+//};
 
 class AssimpGLMHelpers
 {
@@ -134,6 +110,7 @@ struct KeyScale
 class Bone
 {
 public:
+    Bone() {};
     Bone(const std::string& name, int ID, const aiNodeAnim* channel);
 
     void Update(float animationTime);
@@ -141,24 +118,11 @@ public:
     std::string GetBoneName() const { return m_Name; }
     int GetBoneID() { return m_ID; }
 
-
-
     int GetPositionIndex(float animationTime);
 
     int GetRotationIndex(float animationTime);
 
     int GetScaleIndex(float animationTime);
-
-
-private:
-
-    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
-
-    glm::mat4 InterpolatePosition(float animationTime);
-
-    glm::mat4 InterpolateRotation(float animationTime);
-
-    glm::mat4 InterpolateScaling(float animationTime);
 
     std::vector<KeyPosition> m_Positions;
     std::vector<KeyRotation> m_Rotations;
@@ -170,8 +134,17 @@ private:
     glm::mat4 m_LocalTransform;
     std::string m_Name;
     int m_ID;
-};
 
+private:
+
+    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+
+    glm::mat4 InterpolatePosition(float animationTime);
+
+    glm::mat4 InterpolateRotation(float animationTime);
+
+    glm::mat4 InterpolateScaling(float animationTime);
+};
 
 struct BoneInfo
 {
@@ -180,11 +153,7 @@ struct BoneInfo
 
     /*offset matrix transforms vertex from model space to bone space*/
     glm::mat4 offset;
-
 };
-
-
-
 
 struct AssimpNodeData
 {
@@ -225,8 +194,6 @@ public:
 
     void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src); // compiler only
 
-private:
-
     float m_Duration;
     int m_TicksPerSecond;
     std::vector<Bone> m_Bones;
@@ -240,17 +207,7 @@ class AnimationModel // similar to geom imported
 public:
     // model data 
     std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::vector<AnimationMesh> meshes;  // same as mMeshes
-    //std::string directory; 
-    //bool gammaCorrection;
-
-    // constructor, expects a filepath to a 3D model.
-    AnimationModel();
-
-    void init(std::string const& path, bool gamma);
-
-    // draws the model, and thus all its meshes
-    void Draw(GLSLShader& shader);
+    //std::vector<AnimationMesh> meshes;  // same as mMeshes
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
     int& GetBoneCount() { return m_BoneCounter; }
@@ -263,30 +220,6 @@ private:
     int m_BoneCounter = 0;
 };
 
-//class AnimationAnimator
-//{
-//public:
-//    AnimationAnimator();
-//
-//    void init(Animation* animation);
-//
-//    void UpdateAnimation(float dt);
-//
-//    void PlayAnimation(Animation* pAnimation);
-//
-//    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
-//
-//    std::vector<glm::mat4> GetFinalBoneMatrices();
-//
-//private:
-//    std::vector<glm::mat4> m_FinalBoneMatrices;
-//    Animation* m_CurrentAnimation;
-//    float m_CurrentTime;
-//    float m_DeltaTime;
-//
-//};
-
-
 
 #define AnimationManager Animation_Manager::Instance()
 
@@ -297,13 +230,12 @@ public:
     void Update(float dt);
     void Exit();
 
-    void Draw(BaseCamera & _camera);
-
-    //// creates an animation and returns it to be stored in the texture container
-    //GLuint CreateAnimation(char const* Filename);
-
     //// used in asset manager to add anim to the anim container
     //void AddAnimation(char const* Filename, std::string GUID);
+    void AddAnimMesh(std::pair<Engine::GUID, MeshAsset> meshAsset)//;
+    {
+        mAnimationMeshContainer.emplace(meshAsset.first, meshAsset.second);
+    }
 
     //// uses GUID to retrieve a texture from the texture container
     //GLuint GetTexture(std::string GUID);
@@ -314,11 +246,14 @@ private:
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
     std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp... throw after compiler done
     //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ->  temp...
+    std::unordered_map<Engine::GUID, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
 
     // can yeet these
     GLSLShader ourShader{};
 
     AnimationModel allModels_;
     //AnimationAnimator allAnimators_;
+    bool HasBones(MeshAsset meshAsset);
+
 };
 #endif // !ANIMATIONMANAGER_H

@@ -67,10 +67,7 @@ struct AllAssetsGroup
 								meshAsset.mFilePath += "_" + std::to_string(i++) + ".geom";
 
 								// Assign GUID
-								// Bean: Should be random and not based of the mFilePath, 
-								// need the mFilePath because AssetLoad uses it as the guid
 								Engine::GUID guid = GetGUID(meshAsset.mFilePath);
-								//Engine::GUID guid;
 								metaFile.meshes.push_back(guid);
 
 								std::get<AssetsTable<T>>(assets)[guid] = std::move(meshAsset);
@@ -229,6 +226,8 @@ struct AllAssetsGroup
 		(([&](auto type) 
 		{
 			using T = decltype(type);
+			if (std::is_same_v<ScriptAsset,T>)
+				return false;
 			auto& buffer{std::get<AssetsBuffer<T>>(assetsBuffer)};
 			for (auto& pair : buffer)
 			{
@@ -238,7 +237,6 @@ struct AllAssetsGroup
 				{
 					case ASSET_LOADED:
 					{
-						
 						AssetLoadedEvent<T> e{ path,GetGUID(path),*pair.second };
 						EVENTS.Publish(&e);
 						break;
@@ -283,6 +281,17 @@ struct AllAssetsGroup
 		metaPath += ".meta";
 		MetaType mFile;
 		Engine::GUID tempGUID{ mFile.guid };
+		if (filePath.extension() == ".geom")
+		{
+			auto& table = std::get<AssetsTable<MeshAsset>>(assets);
+			for (auto& pair : table)
+			{
+				if (pair.second.mFilePath == filePath)
+				{
+					return pair.first;
+				}
+			}
+		}
 		bool success = Deserialize<MetaType>(metaPath, mFile);
 		if (!success)
 		{

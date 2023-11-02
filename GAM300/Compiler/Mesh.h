@@ -133,9 +133,12 @@ public:
 
     int materialIndex = 0;              // Material index
 
+    // For Animation
+    unsigned int numBones;              // Number of bones within the mesh
+
     Geom_Mesh() {};
-    Geom_Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posScale, glm::vec2 texScale, glm::vec3 posOffset, glm::vec2 texOffset)
-        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionScale(posScale), mTexCompressionScale(texScale), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset) {};
+    Geom_Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posScale, glm::vec2 texScale, glm::vec3 posOffset, glm::vec2 texOffset, unsigned int numBones)
+        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionScale(posScale), mTexCompressionScale(texScale), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset), numBones(numBones) {};
 
 };
 
