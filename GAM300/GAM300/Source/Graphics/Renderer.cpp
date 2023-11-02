@@ -169,10 +169,26 @@ void Renderer::Update(float)
 			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
 			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
 
-			float metal_constant = renderer.mr_metallic;
-			float rough_constant = renderer.mr_roughness;
-			float ao_constant = renderer.ao;
-			float emission_constant = renderer.emission;
+
+			float metal_constant;
+			float rough_constant;
+			float ao_constant;
+			float emission_constant;
+
+			if (renderer.material_ptr) {
+				 metal_constant = renderer.material_ptr->metallicConstant;
+				 rough_constant = renderer.material_ptr->roughnessConstant;
+				 ao_constant = renderer.material_ptr->aoConstant;
+				 emission_constant = renderer.material_ptr->emissionConstant;
+				 instanceContainers[s][vao].Albedo.emplace_back(renderer.material_ptr->albedoColour);
+			}
+			else {
+				 metal_constant = renderer.mr_metallic;
+				 rough_constant = renderer.mr_roughness;
+				 ao_constant = renderer.ao;
+				 emission_constant = renderer.emission;
+				 instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
+			}
 
 			unsigned int& iter = instanceContainers[s][vao].iter;
 
@@ -180,7 +196,7 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
 			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
 
-			instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
+			//instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
 			instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
 			instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
 			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);

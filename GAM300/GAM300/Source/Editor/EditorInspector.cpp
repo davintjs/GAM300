@@ -815,6 +815,9 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
+static bool material_inspector = false;
+int mat_id = 0;
+
 template <typename T>
 void DisplayMaterial(Change& change, T& value) {
     if constexpr (std::is_same_v<T, int>) {
@@ -828,24 +831,41 @@ void DisplayMaterial(Change& change, T& value) {
         Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
 
         std::vector<const char*> layers;
-        int index = value;
-        for (auto& mat : GRAPHICS.temporary_presets) {
+        mat_id = value;
+        //Get all materials inside PBR shader
+        layers.push_back("Default");
+        for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::PBR]) {
             layers.push_back(mat.name.c_str());
         }
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-        if (ImGui::Combo("##Material", &index, layers.data(), (int)layers.size(), 5)) {
-            EDITOR.History.SetPropertyValue(change, value, index);
 
-            //try try
-            auto& presets = GRAPHICS.temporary_presets;
-            MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
 
-            rend.mr_Albedo = presets[index].albedo/255.f;
-            rend.mr_metallic = presets[index].metallic;
-            rend.mr_roughness = presets[index].roughness;
-            rend.ao = presets[index].ao;
+        //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+        if (ImGui::Combo("##Material", &mat_id, layers.data(), (int)layers.size(), 5)) {
+          
+            EDITOR.History.SetPropertyValue(change, value, mat_id); 
+            if (mat_id > 0) {
+                
+                mat_id -= 1; //remove default              
+                auto& materials = MATERIALSYSTEM._material[SHADERTYPE::PBR];
+                MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
+
+                rend.mr_Albedo = materials[mat_id].albedoColour;
+                rend.mr_Albedo /= 255.f;
+                rend.mr_metallic = materials[mat_id].metallicConstant;
+                rend.mr_roughness = materials[mat_id].roughnessConstant;
+                rend.ao = materials[mat_id].aoConstant;
+                rend.emission = materials[mat_id].emissionConstant;
+
+                rend.material_ptr = &(materials[mat_id]);
+            }
+          
         }
-        ImGui::PopItemWidth();
+
+        //ImGui::PopItemWidth();
+        ImGui::SameLine();
+        if (ImGui::Button("Edit")) {
+            material_inspector = true;
+        }
     }
 }
 
@@ -861,6 +881,8 @@ void Display_Property(T& comp) {
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
 
+                    ImGui::PushID(entry.first.c_str());
+
                     //Temporary implementation for materials
                     if (entry.first.find("Material") != std::string::npos) {
                         Change newchange(&comp, entry.first);
@@ -872,14 +894,11 @@ void Display_Property(T& comp) {
                         auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                         DisplayName.erase(DisplayName.begin(), ++it);
 
-                        ImGui::PushID(entry.first.c_str());
-
                         Change newchange(&comp, entry.first);
-                        Display<T1>(newchange, DisplayName.c_str(), Value);
-
-                        ImGui::PopID();
+                        Display<T1>(newchange, DisplayName.c_str(), Value); 
                     }
 
+                    ImGui::PopID();
 
                     }
                 , Data);
@@ -1046,8 +1065,6 @@ void DisplayComponentHelper(T& component)
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
-
-        
 
         if (ImGui::BeginTable("Component", 2, winFlags))
         {
@@ -1477,6 +1494,77 @@ void EditorInspector::Update(float dt)
 
     if (isAddComponentPanel) {
         AddComponentPanel(curr_scene.Get<Entity>(curr_index));
+    }
+
+    if (material_inspector) {
+
+        ImGui::Begin("Material", &material_inspector);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+
+        int id;
+        if ( (mat_id - 1) >= 0)
+            id = mat_id - 1;
+        else
+            id = mat_id;
+        
+        auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][id];
+
+        ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+            | ImGuiTableFlags_PadOuterX;
+
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
+
+        if (ImGui::BeginTable("Mats", 2, tableflags))
+        {
+            ImGui::Indent();
+            ImGui::TableSetupColumn("Text", 0, 0.4f);
+            ImGui::TableSetupColumn("Input", 0, 0.6f);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+            property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+                {
+                    if (!Flags.m_isDontShow) {
+                        auto entry = property::entry { PropertyName, Data };
+                        std::visit([&](auto& Value) {
+                            using T1 = std::decay_t<decltype(Value)>;
+                            //Edit name
+                            std::string DisplayName = entry.first;
+                            auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                            DisplayName.erase(DisplayName.begin(), ++it);
+
+                            ImGui::PushID(entry.first.c_str());
+                            Change newchange(&material, entry.first);
+                            Display<T1>(newchange, DisplayName.c_str(), Value);
+                            ImGui::PopID();
+
+                            } 
+                        , Data);
+                        property::set(material, entry.first.c_str(), Data);
+
+                        // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                        //assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                    }
+
+                });
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+
+            ImGui::Unindent();
+            ImGui::EndTable();
+        }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        ImGui::End();
     }
 
     if (isAddTagPanel) {

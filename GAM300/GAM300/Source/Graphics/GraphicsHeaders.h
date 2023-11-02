@@ -31,6 +31,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GBuffer.h"
 
 #include "Scripting/ScriptFields.h"
+#include "Scene/Object.h"
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -90,11 +91,29 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
-struct Material_instance
+struct Material_instance : Object
 {
 					// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
+	Material_instance() {
+		name = std::string();
+		albedoColour = Vector4(1.f,1.f,1.f,1.f );
+		metallicConstant = 1.f ;
+		roughnessConstant = 1.f ;
+		aoConstant = 1.f ;
+		emissionConstant = 1.f ;
+	}
+
+	Material_instance(const Material_instance& other) {
+		// Copy each member variable from 'other' to 'this'
+		name = other.name;
+		albedoColour = other.albedoColour;
+		metallicConstant = other.metallicConstant;
+		roughnessConstant = other.roughnessConstant;
+		aoConstant = other.aoConstant;
+		emissionConstant = other.emissionConstant;
+	}
 
 	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
 	Engine::GUID matInstanceName;
@@ -103,7 +122,7 @@ struct Material_instance
 	//      PBR VARIABLES
 	//-------------------------
 	std::string		name = "New Material";
-	glm::vec4		albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
+	Vector4			albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
 	float			metallicConstant{ 1.f };
 	float			roughnessConstant{ 1.f };
 	float			aoConstant{ 1.f };
@@ -134,7 +153,25 @@ struct Material_instance
 	glm::vec4		ambient;
 	float			shininess;
 	*/
+	property_vtable();
 };
+
+property_begin_name(Material_instance, "Material_Instance") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(matInstanceName).Name("GUID").Flags(property::flags::DONTSHOW),
+		property_var(name).Name("Material Name"),
+		property_var(albedoColour).Name("Material"),
+		property_var(metallicConstant).Name("Albedo"),
+		property_var(roughnessConstant).Name("Metallic"),
+		property_var(aoConstant).Name("Roughness"),
+		property_var(emissionConstant).Name("AmbientOcclusion"),
+		property_var(albedoTexture).Name("AlbedoTexture"),
+		property_var(normalMap).Name("NormalMap"),
+		property_var(metallicTexture).Name("MetallicTexture"),
+		property_var(roughnessTexture).Name("RoughnessTexture"),
+		property_var(aoTexture).Name("AoTexture"),
+		property_var(emissionTexture).Name("EmissionTexture"),
+} property_vend_h(Material_instance)
 
 ENGINE_SYSTEM(MaterialSystem)
 {

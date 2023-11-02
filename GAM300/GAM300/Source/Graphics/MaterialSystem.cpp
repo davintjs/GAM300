@@ -2,6 +2,7 @@
 #include "GraphicsHeaders.h"
 #include "Scene/Components.h"
 
+
 void MaterialSystem::Init()
 {
 	// Creating PBR (Instanced) Material
@@ -47,7 +48,7 @@ void MaterialSystem::createPBR_Instanced()
 
 	Material_instance darkBlueMat;
 	darkBlueMat.name = "Dark Blue material";
-	darkBlueMat.albedoColour = glm::vec4(73.f, 85.f, 128.f, 255.f);
+	darkBlueMat.albedoColour = glm::vec4(0.f, 0.f, 255.f, 255.f);
 	darkBlueMat.metallicConstant = 0.4f;
 	darkBlueMat.roughnessConstant = 0.5f;
 	darkBlueMat.aoConstant = 1.f;
