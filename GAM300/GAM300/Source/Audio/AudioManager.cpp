@@ -150,7 +150,9 @@ void AudioManager::PlayMusic(const Engine::GUID name) {
 
 }
 
-void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol) {
+void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol,
+	float minVolume, float maxVolume,
+	float minPitch, float maxPitch) {
 
 	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
 	if (currentFXPath == name) {
@@ -168,13 +170,19 @@ void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol) {
 	// Find the Music in the corresponding sound map
 	SoundMap::iterator sound = sounds[CATEGORY_LOOPFX].find(name);
 	//E_ASSERT(sound != sounds[CATEGORY_LOOPFX].end(), name.ToHexString(), " not found!\n");
-	if (sound == sounds[CATEGORY_MUSIC].end()) {
+	if (sound == sounds[CATEGORY_LOOPFX].end()) {
 		return;
 	}
 	// Start playing Music with volume set to 0 and fade in
 	currentFXPath = name;
 	system->playSound(sound->second, 0, true, &currentFX);
 	currentFX->setChannelGroup(groups[CATEGORY_LOOPFX]);
+	//volume = RandFloat(minVolume, maxVolume);
+	static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
+	float pitch = RandFloat(minPitch, maxPitch);
+	float frequency = frequency * pow(semitone_ratio, pitch);
+	currentFX->setFrequency(frequency);
+
 	currentFX->setVolume(1.0f);
 	currentFX->setPan(pan);
 	loopfxVolume = vol;
@@ -200,6 +208,11 @@ void AudioManager::PlayMusic() {
 void AudioManager::PauseMusic() {
 	groups[CATEGORY_MUSIC]->setPaused(true);
 	currentMusic->setPaused(true);
+}
+
+void AudioManager::PauseLoopFX() {
+	groups[CATEGORY_LOOPFX]->setPaused(true);
+	currentFX->setPaused(true);
 }
 
 void AudioManager::PlaySFX(const Engine::GUID name,
@@ -283,6 +296,7 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 	std::cout << "guid: " << pEvent->guid.ToHexString() << "\t\t sound: " << pEvent->assetPath.stem().string() << std::endl;
 	AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->guid);
 	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->guid);
+	AUDIOMANAGER.AddLoopFX(pEvent->assetPath.string(), pEvent->guid);
 }
 
 //Handle audio removal here

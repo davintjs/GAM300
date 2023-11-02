@@ -63,7 +63,9 @@ public:
 	
 	// Play SFX with the filename on loop
 	//void PlayLoopFX(const std::string soundGUID, float pan = 0.f, float vol = 1.f);
-	void PlayLoopFX(Engine::GUID soundGUID, float pan = 0.f, float vol = 1.f);
+	void PlayLoopFX(Engine::GUID soundGUID, float pan = 0.f, float vol = 1.f,
+		float minVolume = 1, float maxVolume = 1,
+		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
 	//void PlaySFX(const std::string& name, float pan = 0,
@@ -79,6 +81,9 @@ public:
 
 	// pause current music
 	void PauseMusic();
+
+	//pause loopinf sfx
+	void PauseLoopFX();
 
 	// Functions for volume settings
 	void SetMasterVolume(float volume);

@@ -33,7 +33,8 @@ void AudioSystem::Update(float dt) {
 			}
 			continue;
 		}
-
+		AUDIOMANAGER.PauseMusic();
+		AUDIOMANAGER.PauseLoopFX();
 		// update music settings
 		if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
 			// music should auto loop
@@ -44,9 +45,15 @@ void AudioSystem::Update(float dt) {
 		// update SFX settings
 		if (audio.current_channel == (int)AudioSource::Channel::SFX) {
 			//no loop
-			audio.play = false;
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
-			AUDIOMANAGER.PlaySFX(audio.currentSound);
+			if (audio.loop) {
+				AUDIOMANAGER.PlayLoopFX(audio.currentSound);
+			}
+			else {
+				AUDIOMANAGER.PlaySFX(audio.currentSound);
+				audio.play = false;
+			}
+			
 			continue;
 		}
 	}

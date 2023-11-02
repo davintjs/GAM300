@@ -140,7 +140,7 @@ struct AudioSource : Object
 
 property_begin_name(AudioSource, "Audio Source") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		//property_var(ChannelName).Name("channel"),
+		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
 		property_var(currentSound).Name("Sound File"),
