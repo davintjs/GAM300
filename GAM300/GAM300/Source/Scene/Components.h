@@ -187,6 +187,7 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 struct Animator : Object, BaseAnimator
 {
 	Animator();
+	//Engine::GUID m_CurrentAnimation;
 	bool playing;
 	// selected anim
 	//Animation* m_CurrentAnimation{};
@@ -195,8 +196,9 @@ struct Animator : Object, BaseAnimator
 
 property_begin_name(Animator, "Animator") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(playing).Name("Playing")
-		//property_parent(BaseAnimator)
+	property_parent(BaseAnimator),
+	//property_var(animationID).Name("Animation"),
+	property_var(playing).Name("Playing")
 } property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera
