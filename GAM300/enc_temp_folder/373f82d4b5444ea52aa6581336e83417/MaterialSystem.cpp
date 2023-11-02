@@ -33,8 +33,8 @@ void MaterialSystem::createPBR_Instanced()
 	Material_instance temp;
 
 	_material[SHADERTYPE::PBR].push_back(temp);
-	//std::cout << "map size : " << _material.size();
-	//std::cout << "vector size : " << _material[SHADERTYPE::PBR].size();
+	std::cout << "map size : " << _material.size();
+	std::cout << "vector size : " << _material[SHADERTYPE::PBR].size();
 }
 
 void MaterialSystem::createPBR_NonInstanced()
