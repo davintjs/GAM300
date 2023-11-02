@@ -13,6 +13,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #version 450 core
 
+//Start
+//End
+
 //-------------------------
 //          DECLARATIONS
 //-------------------------
@@ -96,7 +99,6 @@ uniform int SpotLight_Count;
 // Bloom
 uniform float bloomThreshold;
 
-//End
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------

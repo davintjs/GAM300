@@ -30,6 +30,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "glslshader.h"
 #include "GBuffer.h"
 
+#include "Scene/Entity.h"
+#include "Scene/Components.h"
+
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define DEBUGDRAW DebugDraw::Instance()
@@ -103,6 +106,7 @@ public:
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
+	void CreateShaderInstance(size_t shaderIndex);
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
 
@@ -230,4 +234,31 @@ private:
 	bool hdr = true;
 };
 void renderQuad();
+
+
+template <typename T, typename... Ts>
+void CreateField(const char* name, size_t typeEnum, std::unordered_map<std::string, Field>& variableMap) {
+
+	if (GetFieldType::E<T>() == typeEnum) {
+		
+		if constexpr (std::is_same_v<T, char*>) {
+			
+			// Magic char buffer of 100
+			variableMap.insert({ name, Field(typeEnum, 100) });
+
+		}
+		else {
+			variableMap.insert({ name, Field(typeEnum, sizeof(T)) });
+		}
+
+	}
+
+	if constexpr (sizeof...(Ts) != 0) {
+		CreateField<Ts...>(name, typeEnum, variableMap);
+	}
+
+
+}
+
+
 #endif // !GRAPHICSHEADERS_H

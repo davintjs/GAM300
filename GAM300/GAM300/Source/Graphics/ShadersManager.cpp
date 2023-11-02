@@ -18,6 +18,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 const std::string shaderPath = "GAM300/Shaders";
 
+void HandleVectorVariable(std::string& buffer, const std::string& suffix);
+int isVectorVariable(std::string& buffer);
+
 // Map of all shader field types
 static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 {
@@ -34,8 +37,17 @@ static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 	{ "char*",						GetFieldType::E<char*>()},
 	{ "vec2",						GetFieldType::E<Vector2>()},
 	{ "vec3",						GetFieldType::E<Vector3>()},
-	{ "vec4",						GetFieldType::E<Vector4>()}
+	{ "vec4",						GetFieldType::E<Vector4>()},
+	{ "id",							GetFieldType::E<Engine::GUID>()},
 };
+
+template <typename... Ts>
+void Helper(TemplatePack<Ts...>, std::unordered_map<size_t, std::pair<std::string, size_t>>& variableDeclarations, std::unordered_map<std::string, Field>& variableMap) {
+	for (const auto& a : variableDeclarations) {
+		CreateField<Ts...>(a.second.first.c_str(), a.second.second, variableMap);
+	}
+
+}
 
 void ShaderManager::Init()
 {
@@ -176,8 +188,6 @@ void ShaderManager::CreateShaderProperties(const std::string& _frag, const std::
 	}
 }
 
-
-
 void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {
 
 	std::cout << "Parsing shader file...\n";
@@ -191,22 +201,41 @@ void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {
 
 	size_t idx = 0;
 
-	// Parse each line
+
+	// Skip to "//Start", which is where the variables begin
 	std::string buffer;
 	while (std::getline(ifs, buffer)) {
+		if (buffer != "//Start")
+			break;
+	}
+
+	bool parse = false;
+	// Parsing
+	while (std::getline(ifs, buffer)) {
+
+		// Only start parsing variables within blocks
+		if (buffer == "//{") {
+			parse = true;
+			continue;
+		}
+		else if (buffer == "//}") {
+			parse = false;
+			continue;
+		}
+		if (!parse)
+			continue;
 
 		std::string vtBuffer;
 
 		//std::cout << "Line:" << buffer << std::endl;
 
-		// Delimiter line to make parsing faster?
-		if (buffer.find("//End") != std::string::npos) {
-			//std::cout << "Ending Parser...\n";
-			break;
-		}
-
+		// Skip empty lines
 		if (buffer[0] == '\n')
 			continue;
+
+		// Stop parsing when delimiter is found
+		if (buffer.find("//End") != std::string::npos)
+			break;
 
 		// Skip if line is commented
 		if (buffer[0] == '/' && buffer[1] == '/')
@@ -274,6 +303,9 @@ void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {
 		size_t semicolon = buffer.find_first_of(';', endPos);
 		name = buffer.substr(endPos+1, semicolon-(endPos+1));
 
+		// Special cases for vector variables
+		HandleVectorVariable(vtBuffer, buffer.substr(semicolon));
+
 		// Create Shaderobject and place variable in correct container
 		if (frag) {
 			shaderProperties.back().fragmentVariables.insert({ idx, { name, shaderFieldTypeMap[vtBuffer] } });
@@ -290,3 +322,41 @@ void ShaderManager::ParseShaderFile(const std::string& fileName, bool frag) {
 
 }
 
+void ShaderManager::CreateShaderInstance(size_t shaderIndex) {
+
+	//test
+	std::unordered_map<std::string, Field> variables;
+	if (shaderIndex >= shaderProperties.size())
+		return;
+
+	ShaderProperties& sp = shaderProperties[shaderIndex];
+	Helper(AllFieldTypes(), sp.fragmentVariables, variables);
+	Helper(AllFieldTypes(), sp.vertexVariables, variables);
+
+}
+
+void HandleVectorVariable(std::string& vtBuffer, const std::string& suffix) {
+
+	int res = isVectorVariable(vtBuffer);
+	if (res == -1)
+		return;
+
+
+	if (suffix.find("//ID") != std::string::npos)
+		vtBuffer = "id";
+
+
+}
+
+int isVectorVariable(std::string& buffer) {
+
+	if (buffer == "vec2")
+		return 2;
+	else if (buffer == "vec3")
+		return 3;
+	else if (buffer == "vec4")
+		return 4;
+
+
+	return -1;
+}
