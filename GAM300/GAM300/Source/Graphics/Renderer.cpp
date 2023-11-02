@@ -215,9 +215,14 @@ void Renderer::Update(float)
 			{
 				continue;
 			}
-			DefaultRenderProperties renderProperties;
-			renderProperties.VAO = t_Mesh->vaoID;
 
+			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+				continue;
+			GLuint vao = MeshManager.vaoMap[renderer.meshID];
+
+			DefaultRenderProperties renderProperties;
+			renderProperties.VAO = vao;
+			
 			renderProperties.shininess = renderer.mr_Shininess;
 			renderProperties.metallic = renderer.mr_metallic;
 			renderProperties.roughness = renderer.mr_roughness;
@@ -239,26 +244,25 @@ void Renderer::Update(float)
 
 			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
 			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
-
+			
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;
 
-				renderProperties.isAnimatable = false;
-				renderProperties.boneidx = -1;
+			renderProperties.isAnimatable = false;
+			renderProperties.boneidx = -1;
 				
-				if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			{
+				Animator& animator = currentScene.Get<Animator>(entity);
+				if (animator.AnimationAttached())
 				{
-					Animator& animator = currentScene.Get<Animator>(entity);
-					if (animator.AnimationAttached())
-					{
-						renderProperties.isAnimatable = true;
-						renderProperties.boneidx = finalBoneMatContainer.size();
-						finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
-					}
+					renderProperties.isAnimatable = true;
+					renderProperties.boneidx = finalBoneMatContainer.size();
+					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
+			}
 
-
-				defaultProperties.emplace_back(renderProperties);
+			defaultProperties.emplace_back(renderProperties);
 			
 		}
 		
@@ -312,6 +316,10 @@ void Renderer::Draw(BaseCamera& _camera)
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	//for (auto& [shader, container] : instanceContainers)
 	{
+		// Skip default shader for instanced rendering
+		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+			continue;
+
 		for (auto& [vao, prop] : instanceContainers[s]) {
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -362,7 +370,8 @@ void Renderer::Draw(BaseCamera& _camera)
 	}
 
 	// non-instanced render
-	for (DefaultRenderProperties& prop : defaultProperties) {
+	for (DefaultRenderProperties& prop : defaultProperties) 
+	{
 
 		
 		//glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer.gFBO);
@@ -437,7 +446,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
 
-
+		// Shadow
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
 
 
 		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
@@ -448,8 +458,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
 		GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
 		GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
-		GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
-		GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
+		//GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
+		//GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
 		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
 		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
@@ -461,8 +471,8 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
 		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
 		glUniform1f(Shininess, prop.shininess);
-		glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
-		glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
+		//glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
+		//glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
 		// POINT LIGHT STUFFS
@@ -556,7 +566,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		GLint uniform9 = glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
 		glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
-
 		// SHADOW 
 		GLint uniform10 =
 			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
@@ -566,8 +575,6 @@ void Renderer::Draw(BaseCamera& _camera)
 			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Spot");
 		glUniformMatrix4fv(uniform11, 1, GL_FALSE,
 			glm::value_ptr(lightSpaceMatrix_spot));
-
-
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
@@ -585,12 +592,12 @@ void Renderer::Draw(BaseCamera& _camera)
 
 
 		// ANIMATONS
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 		if (prop.isAnimatable)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
-			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 		}
 
 		glBindVertexArray(prop.VAO);
@@ -1259,30 +1266,53 @@ void Renderer::DrawDepthDirectional()
 
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
 	shader.Use();
+
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(lightSpaceMatrix_directional));
+
+	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	{
-		for (auto& [vao, prop] : instanceContainers[s]) {
-			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
-			//{
+		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		{
+			glUniform1i(uniform2, true);
 
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			for (DefaultRenderProperties prop : defaultProperties)
+			{
+				GLint uniform3 =
+					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
-			
+				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+				if (prop.isAnimatable)
+				{
+					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+				}
 
-			GLint uniform1 =
-				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+				glBindVertexArray(prop.VAO);
+				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+			}
+		}
+		else
+		{
+			glUniform1i(uniform2, false);
 
-			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-				glm::value_ptr(lightSpaceMatrix_directional));
+			for (auto& [vao, prop] : instanceContainers[s])
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-			glBindVertexArray(0);
-
-
-			
+				glBindVertexArray(prop.VAO);
+				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+				glBindVertexArray(0);
+			}
 		}
 	}
 
@@ -1311,30 +1341,53 @@ void Renderer::DrawDepthSpot()
 
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
 	shader.Use();
+
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(lightSpaceMatrix_spot));
+
+	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	{
-		for (auto& [vao, prop] : instanceContainers[s]) {
-			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
-			//{
+		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		{
+			glUniform1i(uniform2, true);
 
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			for (DefaultRenderProperties prop : defaultProperties)
+			{
+				GLint uniform3 =
+					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
+				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+				if (prop.isAnimatable)
+				{
+					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+				}
 
+				glBindVertexArray(prop.VAO);
+				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+			}
+		}
+		else
+		{
+			glUniform1i(uniform2, false);
 
-			GLint uniform1 =
-				glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+			for (auto& [vao, prop] : instanceContainers[s])
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-				glm::value_ptr(lightSpaceMatrix_spot));
-
-			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-			glBindVertexArray(0);
-
-
-
+				glBindVertexArray(prop.VAO);
+				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+				glBindVertexArray(0);
+			}
 		}
 	}
 
@@ -1370,46 +1423,63 @@ void Renderer::DrawDepthPoint()
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
 	shader.Use();
 
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+		, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
 
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "lightPos");
+	glUniform3fv(uniform1, 1,
+		glm::value_ptr(point_light_stuffs.lightpos));
+
+	GLint uniform2 =
+		glGetUniformLocation(shader.GetHandle(), "far_plane");
+	glUniform1f(uniform2, far_plane);
+
+	GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	{
-		for (auto& [vao, prop] : instanceContainers[s]) {
-			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
-			//{
+		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		{
+			glUniform1i(uniform3, true);
 
-			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-			/*for (int i = 0; i < 6; ++i)
+			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				std::string spot_pos;
-				spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
-				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
-					, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-			}*/
+				GLint uniform4 =
+					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
-				, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+				GLint uniform3 =
+					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
-			GLint uniform1 =
-				glGetUniformLocation(shader.GetHandle(), "lightPos");
-			glUniform3fv(uniform1, 1,
-				glm::value_ptr(point_light_stuffs.lightpos));
+				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+				if (prop.isAnimatable)
+				{
+					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+				}
 
-			GLint uniform2 =
-				glGetUniformLocation(shader.GetHandle(), "far_plane");
-			glUniform1f(uniform2, far_plane);
-
-
-			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-			glBindVertexArray(0);
-
-
+				glBindVertexArray(prop.VAO);
+				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+			}
+		}
+		else
+		{
+			glUniform1i(uniform3, false);
 			
+			for (auto& [vao, prop] : instanceContainers[s])
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				glBindVertexArray(prop.VAO);
+				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+				glBindVertexArray(0);
+			}
 		}
 	}
 

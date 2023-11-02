@@ -239,6 +239,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
         if (extension == ".geom")
         {
+            // Bean: Put this publish event in the open popup in the future
             GetAssetsEvent<MeshAsset> e1;
             EVENTS.Publish(&e1);
             fs::path icon = "Assets/Icons/fileicon.dds";
@@ -246,6 +247,9 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
             for (auto& meshAsset : *e1.pAssets)
             {
+                if (!filter.PassFilter(meshAsset.second.mFilePath.string().c_str()))
+                    continue;
+
                 ImGui::PushID(i++);
 
                 //render respective file icon textures

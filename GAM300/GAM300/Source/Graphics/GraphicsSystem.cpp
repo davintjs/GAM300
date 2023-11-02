@@ -355,6 +355,8 @@ void GraphicsSystem::PostDraw()
 			prop.iter = 0;
 		}
 	}
+
+
 	
 }
 

@@ -18,9 +18,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void BaseAnimator::Init()
 {
-    m_CurrentTime = 0.0;
+    m_CurrentTime = 0.0f;
     //m_CurrentAnimation = animation;
-    m_CurrentAnimation = nullptr;
+    hasAnimation = false;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -30,23 +30,27 @@ void BaseAnimator::Init()
 
 void BaseAnimator::SetAnimation(Animation* animation)
 {
-    m_CurrentAnimation = animation;
+    m_CurrentAnimation = *animation;
+
+    // Need to set to current entity's transform for either the bones or assimpnodedata
+    // CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+    hasAnimation = true;
 }
 
 void BaseAnimator::UpdateAnimation(float dt)
 {
     m_DeltaTime = dt;
-    if (m_CurrentAnimation)
+    if (hasAnimation)
     {
-        m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
-        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
+        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
+        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
     }
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)
 {
-    m_CurrentAnimation = pAnimation;
+    m_CurrentAnimation = *pAnimation;
     m_CurrentTime = 0.0f;
 }
 
@@ -55,7 +59,7 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
     std::string nodeName = node->name;
     glm::mat4 nodeTransform = node->transformation;
 
-    Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
+    Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
 
     if (Bone)
     {
@@ -65,7 +69,7 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
 
     glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-    auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+    auto boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
     if (boneInfoMap.find(nodeName) != boneInfoMap.end())
     {
         int index = boneInfoMap[nodeName].id;
@@ -89,5 +93,5 @@ std::vector<glm::mat4>* BaseAnimator::GetFinalBoneMatricesPointer()
 
 bool BaseAnimator::AnimationAttached() {
     // Check if m_CurrentAnimation is not nullptr (i.e., it's attached)
-    return m_CurrentAnimation != nullptr;
+    return hasAnimation;
 }

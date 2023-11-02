@@ -125,6 +125,7 @@ void Transform::RemoveChild(Transform* t)
 
 Animator::Animator()/* : m_CurrentAnimation{ BaseAnimator::m_CurrentAnimation }*/
 {
+	playing = false;
 	BaseAnimator::Init();
 }
 
