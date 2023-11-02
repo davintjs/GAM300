@@ -159,6 +159,7 @@ void Renderer::Update(float)
 				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 			}
 
+
 			// use the properties container coz its made for instance rendering already
 			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
 			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
@@ -185,7 +186,9 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
 			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
 			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+
 			//instanceContainers[s][renderer.meshID].VAO = vao;
+			
 			++iter;
 		}
 		else /*if default rendering*/{
@@ -248,11 +251,8 @@ void Renderer::Update(float)
 					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
 			}
-
 			defaultProperties.emplace_back(renderProperties);
-			
 		}
-		
 		++i;
 	}
 

@@ -401,7 +401,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
-		bool ColourPicked = true;
+		bool ColourPicked = false;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
@@ -412,6 +412,7 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(WorldSpace).Name("World Space"),
+		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 

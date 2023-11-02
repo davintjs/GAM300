@@ -97,7 +97,7 @@ struct Material_instance
 
 					   // Var name   // Data Storage
 	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
-
+	
 };
 
 
@@ -117,12 +117,12 @@ public:
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
 
-	// 2 different instances of a PBR.
 
 	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
 
 private:
 	std::vector<GLSLShader> shaders;
+	ShaderProperties tempPBR_Properties; // This is temporary, eventually will move into the shaderProperties below
 	std::vector<ShaderProperties> shaderProperties;
 };
 
