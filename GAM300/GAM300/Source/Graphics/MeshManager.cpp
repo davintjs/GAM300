@@ -17,6 +17,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 #include "Core/EventsManager.h"
+#include "AssetManager/GeomDecompiler.h"
 
 void MESH_Manager::Init()
 {
@@ -38,17 +39,16 @@ MeshAsset& MESH_Manager::GetMeshAsset(const Engine::GUID& meshID)
     return mMeshesAsset[meshID];
 }
 
-
 void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::GUID& guid)
 {
-    GeomImported newGeom(std::move(DeserializeGeoms(filePath, guid)));
+    ModelComponents newGeom(std::move(GEOMDECOMPILER.DeserializeGeoms(filePath, guid)));
 
     /*std::cout << "I have Materials : " << newGeom._materials.size() << 
         "from " << filePath << "\n";*/
 
-    for (int i = 0; i < newGeom._materials.size(); ++i)
+    /*for (int i = 0; i < newGeom._materials.size(); ++i)
     {
-        /*std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
+        std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.g << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.b << "\n";
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.a << "\n";
@@ -74,8 +74,8 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
             newGeom._materials[i].Specular.b, newGeom._materials[i].Specular.a));
         temp_AmbientContainer.push_back(glm::vec4(newGeom._materials[i].Ambient.r, newGeom._materials[i].Ambient.g,
             newGeom._materials[i].Ambient.b, newGeom._materials[i].Ambient.a));
-        temp_ShininessContainer.push_back(0.f);*/
-    }
+        temp_ShininessContainer.push_back(0.f);
+    }*/
 
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
@@ -84,12 +84,13 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
     GLuint VAO;
     GLuint VBO;
     GLuint EBO;
-    for (int i = 0; i < newGeom.mMeshes.size(); ++i)
+
+    for (int i = 0; i < newGeom.meshes.size(); ++i)
     {
-        //std::cout << "ouchie\n";
-        for (int k = 0; k < newGeom.mMeshes[i]._vertices.size(); ++k)
+
+        for (int k = 0; k < newGeom.meshes[i].vertices.size(); ++k)
         {
-            glm::vec3& pos = newGeom.mMeshes[i]._vertices[k].pos;
+            glm::vec3& pos = newGeom.meshes[i].vertices[k].position;
             pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters
 
             min.x = std::min(pos.x, min.x);
@@ -100,46 +101,45 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
             max.y = std::max(pos.y, max.y);
             max.z = std::max(pos.z, max.z);
         }
+
+        // Bounds
+        newMesh.vertices_min = newGeom.meshes[i].boundsMin = min;
+        newMesh.vertices_max = newGeom.meshes[i].boundsMax = max;
         
+        // Generate Vertex Array and Buffers
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
         glBindVertexArray(VAO);
-        //std::cout << "box_wf vao is :" << VAO << "\n";
 
-    //    // test vertex colors
-    //    //for (size_t i = 0; i < _geom->_vertices.size(); i++)
-    //    //{
-    //    //    _geom->_vertices[i].color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-    //    //}
-
-    //    // bind vbo and pass vertice data into the buffer
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-        glBufferData(GL_ARRAY_BUFFER, newGeom.mMeshes[i]._vertices.size() * sizeof(gVertex), &newGeom.mMeshes[i]._vertices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, newGeom.meshes[i].vertices.size() * sizeof(ModelVertex), &newGeom.meshes[i].vertices[0], GL_STATIC_DRAW);
 
-    //    // set the vertex attributes to tell vert shader pos, uv, normal etc.
-    //    // note offsetof uses the struct Vertex as first argument, and member name as second.
-    //    // it returns the offset to the member name :)
-        glEnableVertexAttribArray(0); //pos
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)0);
+        glEnableVertexAttribArray(0); // Position
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
 
-        glEnableVertexAttribArray(1); // normal
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, normal));
+        glEnableVertexAttribArray(1); // Normal
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
 
-        glEnableVertexAttribArray(2); //tangent
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tangent));
+        glEnableVertexAttribArray(2); // Tangent
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
 
-        glEnableVertexAttribArray(3); // tex (uv coords)
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, tex));
+        glEnableVertexAttribArray(3); // Texture Coordinates (uv coords)
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
 
-        glEnableVertexAttribArray(4); // color
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(gVertex), (void*)offsetof(gVertex, color));
+        glEnableVertexAttribArray(4); // Color
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, color));
 
+        glEnableVertexAttribArray(5); // Bone Indexes
+        glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
+
+        glEnableVertexAttribArray(6); // Bone Weights
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
         // bind indices
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, newGeom.mMeshes[i]._indices.size() * sizeof(unsigned int), &newGeom.mMeshes[i]._indices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, newGeom.meshes[i].indices.size() * sizeof(unsigned int), &newGeom.meshes[i].indices[0], GL_STATIC_DRAW);
 
         glBindVertexArray(0); // unbind vao
         glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
@@ -147,189 +147,156 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
 
         InstanceProperties tempProp;
         tempProp.VAO = VAO;
-        tempProp.drawCount = (unsigned int)newGeom.mMeshes[i]._indices.size();
+        tempProp.drawCount = (unsigned int)newGeom.meshes[i].indices.size();
         tempProp.drawType = GL_TRIANGLES;
 
-        //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID(fileName), VAO));
         vaoMap.emplace(std::make_pair(guid, VAO)); // rmb change to guid after u ask someone @kk
 
-        // no need this, maybe can sort by VAO
-        /*std::string newName = fileName;
-        std::map<GLuint, InstanceProperties>::iterator it;
-        it = instanceProperties->find(newName);
-        while (it != instanceProperties->end()) {
-            newName += char('0' + i);
-            it = instanceProperties->find(newName);
-        }
-        instanceProperties->emplace(std::pair<GLuint, InstanceProperties>(newName, tempProp));*/
-        // yea no need... but lemme transfer over before deleting
-
         newMesh.prim = GL_TRIANGLES;
-        newMesh.Vaoids.push_back(VAO);
-        newMesh.Vboids.push_back(VBO);
-        newMesh.Drawcounts.push_back((GLuint)(newGeom.mMeshes[i]._indices.size()));
+        newMesh.vaoID = VAO;
+        newMesh.vboID = VBO;
+        newMesh.drawCounts = (GLuint)(newGeom.meshes[i].indices.size());
 
-        newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+        newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
         instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     }
 
-    newMesh.vertices_min = min;
-    newMesh.vertices_max = max;
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
     mContainer.emplace(guid, newMesh);
 }
 
-//Mesh& DereferencingMesh(std::string mesh_Name);// Either Geom or Vaoid
-
-
-// PRIVATE FUNCTIONS
-
-GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid)
+void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid)
 {
-    GeomImported tempGeom;
-    std::ifstream ifs(filePath, std::ios::binary);
+    Mesh newMesh;
+    newMesh.index = (unsigned int)mContainer.size();
+    GLuint VAO;
+    GLuint VBO;
+    GLuint EBO;
 
-    size_t meshSize;
-    ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
+    // Bounds
+    newMesh.vertices_min = _meshAsset.boundsMin;
+    newMesh.vertices_max = _meshAsset.boundsMax;
 
-    for (int i = 0; i < meshSize; ++i)
+    // Generate Vertex Array and Buffers
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, _meshAsset.vertices.size() * sizeof(ModelVertex), &_meshAsset.vertices[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0); // Position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
+
+    glEnableVertexAttribArray(1); // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
+
+    glEnableVertexAttribArray(2); // Tangent
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
+
+    glEnableVertexAttribArray(3); // Texture Coordinates (uv coords)
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
+
+    glEnableVertexAttribArray(4); // Color
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, color));
+
+    glEnableVertexAttribArray(5); // Bone Indexes
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
+
+    glEnableVertexAttribArray(6); // Bone Weights
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+
+    // bind indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+
+    InstanceProperties tempProp;
+    tempProp.VAO = VAO;
+    tempProp.drawCount = (unsigned int)_meshAsset.indices.size();
+    tempProp.drawType = GL_TRIANGLES;
+
+    vaoMap.emplace(std::make_pair(_guid, VAO));
+
+    newMesh.prim = GL_TRIANGLES;
+    newMesh.vaoID = VAO;
+    newMesh.vboID = VBO;
+    newMesh.drawCounts = (GLuint)(_meshAsset.indices.size());
+    newMesh.numBones = _meshAsset.numBones;
+
+    newMesh.verticesBoneInfo.resize(_meshAsset.numVertices);
+    for (size_t i = 0; i < _meshAsset.numVertices; i++)
     {
-        gMesh tempMesh;
-
-        // Vertices
-        std::vector<Vertex> tempVerts;
-        size_t vertSize;
-        ifs.read(reinterpret_cast<char*>(&vertSize), sizeof(vertSize));
-        tempVerts.resize(vertSize);
-        ifs.read(reinterpret_cast<char*>(&tempVerts[0]), vertSize * sizeof(Vertex));
-
-        // Indices
-        size_t indSize;
-        ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
-        tempMesh._indices.resize(indSize);
-        ifs.read(reinterpret_cast<char*>(&tempMesh._indices[0]), indSize * sizeof(unsigned int));
-
-        ifs.read(reinterpret_cast<char*>(&tempMesh.materialIndex), sizeof(tempMesh.materialIndex)); // Material Index
-
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionScale), sizeof(glm::vec3)); // Position Scale
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionScale), sizeof(glm::vec2)); // Texture Scale
-
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mPosCompressionOffset), sizeof(glm::vec3)); // Position Offset
-        ifs.read(reinterpret_cast<char*>(&tempMesh.mTexCompressionOffset), sizeof(glm::vec2)); // Texture Offset
-
-        tempMesh._vertices.resize(vertSize); // Resize our vertices vector
-        DecompressVertices(tempMesh._vertices, tempVerts, tempMesh.mPosCompressionScale, tempMesh.mTexCompressionScale, tempMesh.mPosCompressionOffset, tempMesh.mTexCompressionOffset); // Converts Vertex to gVertex
-
-        // Store the geom vertices position and indices in asset manager
-        for (int v = 0; v < tempMesh._vertices.size(); ++v)
+        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
         {
-            StoreMeshVertex(guid, tempMesh._vertices[v].pos);
+            newMesh.verticesBoneInfo[i].boneIDs[j] = _meshAsset.vertices[i].boneIDs[j];
+            newMesh.verticesBoneInfo[i].weights[j] = _meshAsset.vertices[i].weights[j];
         }
-        for (int k = 0; k < tempMesh._indices.size(); ++k)
-        {
-            StoreMeshIndex(guid, tempMesh._indices[k]);
-        }
-
-        // Add this tempMesh into our tempGeom
-        tempGeom.mMeshes.push_back(tempMesh);
     }
 
-    size_t matSize;
-    ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
+    PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
+    instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
-    for (int j = 0; j < matSize; ++j)
-    {
-        Material tempMat;
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
-        ifs.read(reinterpret_cast<char*>(&tempMat.Specular), sizeof(aiColor4D));
-        ifs.read(reinterpret_cast<char*>(&tempMat.Diffuse), sizeof(aiColor4D));
-        ifs.read(reinterpret_cast<char*>(&tempMat.Ambient), sizeof(aiColor4D));
-
-        //size_t texSize;
-        //ifs.read(reinterpret_cast<char*>(&texSize), sizeof(texSize));
-        //if (texSize > 0)
-        //{
-        //    tempMat.textures.resize(texSize);
-        //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
-        //}
-
-        tempGeom._materials.push_back(tempMat);
-    }
-
-    ifs.close();
-
-    return tempGeom;
+    mContainer.emplace(_guid, newMesh);
 }
 
-void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
-    const std::vector<Vertex>& oVertices,
-    const glm::vec3& mPosCompressScale,
-    const glm::vec2& mTexCompressScale,
-    const glm::vec3& mPosOffset,
-    const glm::vec2& mTexOffset)
-{
-    E_ASSERT(mMeshVertices.size() == oVertices.size(), "Both vertices vector sizes not equal for decompressing.");
-
-    for (int i = 0; i < mMeshVertices.size(); ++i)
-    {
-        // Position
-        mMeshVertices[i].pos.x = (oVertices[i].posX >= 0 ? static_cast<float>(oVertices[i].posX) / 0x7FFF : static_cast<float>(oVertices[i].posX) / 0x8000) * mPosCompressScale.x + mPosOffset.x;
-        mMeshVertices[i].pos.y = (oVertices[i].posY >= 0 ? static_cast<float>(oVertices[i].posY) / 0x7FFF : static_cast<float>(oVertices[i].posY) / 0x8000) * mPosCompressScale.y + mPosOffset.y;
-        mMeshVertices[i].pos.z = (oVertices[i].posZ >= 0 ? static_cast<float>(oVertices[i].posZ) / 0x7FFF : static_cast<float>(oVertices[i].posZ) / 0x8000) * mPosCompressScale.z + mPosOffset.z;
-
-        // Texture
-        mMeshVertices[i].tex.x = (oVertices[i].texU >= 0 ? static_cast<float>(oVertices[i].texU) / 0x7FFF : static_cast<float>(oVertices[i].texU) / 0x8000) * mTexCompressScale.x + mTexOffset.x;
-        mMeshVertices[i].tex.y = (oVertices[i].texV >= 0 ? static_cast<float>(oVertices[i].texV) / 0x7FFF : static_cast<float>(oVertices[i].texV) / 0x8000) * mTexCompressScale.y + mTexOffset.y;
-
-        // Normal
-        mMeshVertices[i].normal.x = (oVertices[i].normX >= 0 ? static_cast<float>(oVertices[i].normX) / 0x7FFF : static_cast<float>(oVertices[i].normX) / 0x8000);
-        mMeshVertices[i].normal.y = (oVertices[i].normY >= 0 ? static_cast<float>(oVertices[i].normY) / 0x7FFF : static_cast<float>(oVertices[i].normY) / 0x8000);
-        mMeshVertices[i].normal.z = (oVertices[i].normZ >= 0 ? static_cast<float>(oVertices[i].normZ) / 0x7FFF : static_cast<float>(oVertices[i].normZ) / 0x8000);
-
-        // Tangent
-        mMeshVertices[i].tangent.x = (oVertices[i].tanX >= 0 ? static_cast<float>(oVertices[i].tanX) / 0x7FFF : static_cast<float>(oVertices[i].tanX) / 0x8000);
-        mMeshVertices[i].tangent.y = (oVertices[i].tanY >= 0 ? static_cast<float>(oVertices[i].tanX) / 0x7FFF : static_cast<float>(oVertices[i].tanY) / 0x8000);
-        mMeshVertices[i].tangent.z = (oVertices[i].tanZ >= 0 ? static_cast<float>(oVertices[i].tanZ) / 0x7FFF : static_cast<float>(oVertices[i].tanZ) / 0x8000);
-
-        // Color
-        mMeshVertices[i].color.r = oVertices[i].colorR;
-        mMeshVertices[i].color.g = oVertices[i].colorG;
-        mMeshVertices[i].color.b = oVertices[i].colorB;
-        mMeshVertices[i].color.a = oVertices[i].colorA;
-    }
-}
+//// NEED TO CHANGE TO MAKE IT PROCESS STUFF FROM COMPILER
+//AnimGeomImported MESH_Manager::DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName)
+//{
+//    std::vector<AnimationMesh> tempmesh = AnimationManager.GetModel().meshes;
+//    AnimGeomImported tempgeom;
+//
+//    for (size_t i = 0; i < tempmesh.size(); i++)
+//    {
+//        gAnimMesh newtempmesh;
+//
+//        for (size_t j = 0; j < tempmesh[i].vertices.size(); j++)
+//        {
+//            gAnimVertex newtempvert;
+//            newtempvert.pos = tempmesh[i].vertices[j].Position;
+//            newtempvert.normal = tempmesh[i].vertices[j].Normal;
+//            newtempvert.tangent = tempmesh[i].vertices[j].Tangent;
+//            newtempvert.tex = tempmesh[i].vertices[j].TexCoords;
+//            newtempvert.color = tempmesh[i].vertices[j].Color;
+//            
+//            for (size_t k = 0; k < MAX_BONE_INFLUENCE; k++)
+//            {
+//                newtempvert.m_BoneIDs[k] = tempmesh[i].vertices[j].m_BoneIDs[k];
+//                newtempvert.m_Weights[k] = tempmesh[i].vertices[j].m_Weights[k];
+//            }
+//            newtempmesh._vertices.push_back(newtempvert);
+//        }
+//        for (size_t j = 0; j < tempmesh[i].indices.size(); j++)
+//        {
+//            unsigned int newtempind;
+//            newtempind = tempmesh[i].indices[j];
+//            newtempmesh._indices.push_back(newtempind);
+//        }
+//
+//        tempgeom.mMeshes.push_back(newtempmesh);
+//    }
+//
+//    //tempgeom.oneAnimation = 
+//
+//    return tempgeom;
+//}
 
 void MESH_Manager::CreateInstanceCube()
 {
 
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
-
-    // positions            // Normals              // Tangents             // Texture Coords   // Colors
-    //float vertices[] = {
-    //   -1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, // Vertex 0
-    //    1.0f, -1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 0.0f, 1.0f, // Vertex 1
-    //    1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 2
-    //   -1.0f,  1.0f, -1.0f,    0.0f, 0.0f, -1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         1.0f, 1.0f, 0.0f, 1.0f, // Vertex 3
-    //   -1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 0.0f,         0.0f, 0.0f, 1.0f, 1.0f, // Vertex 4
-    //    1.0f, -1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 0.0f,         0.0f, 1.0f, 1.0f, 1.0f, // Vertex 5
-    //    1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       1.0f, 1.0f,         1.0f, 0.0f, 1.0f, 1.0f, // Vertex 6
-    //   -1.0f,  1.0f,  1.0f,    0.0f, 0.0f,  1.0f,      1.0f, 0.0f, 0.0f,       0.0f, 1.0f,         0.5f, 0.5f, 0.5f, 1.0f,  // Vertex 7
-
-    //};
-
-    //int indices[] = {
-    //    0, 1, 2, 2, 3, 0,  // Front face
-    //    4, 5, 6, 6, 7, 4,  // Back face
-    //    1, 5, 6, 6, 2, 1,  // Right face
-    //    0, 4, 7, 7, 3, 0,  // Left face
-    //    3, 2, 6, 6, 7, 3,  // Top face
-    //    0, 1, 5, 5, 4, 0   // Bottom face
-    //};
-
 
     GLfloat vertices[] = {
         // Positions           Normals            Tangents          Texture Coords     Colors (RGB)
@@ -505,17 +472,17 @@ void MESH_Manager::CreateInstanceCube()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     Engine::GUID& cubeGUID = DEFAULT_ASSETS["Cube.geom"];
-    InstanceProperties tempProp; // a lot on the stack, do something about it @kk or @sean
+    InstanceProperties tempProp; 
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
     vaoMap.emplace(std::make_pair(cubeGUID, vaoid));
 
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_TRIANGLES;
-    newMesh.Drawcounts.push_back(36);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 36;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     //KK: Do something about AABB debug
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
@@ -637,12 +604,12 @@ void MESH_Manager::CreateInstanceSphere()
 
     //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_TRIANGLE_STRIP;
-    newMesh.Drawcounts.push_back((unsigned int)(indices.size()));
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
-    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
+    newMesh.drawCounts = (unsigned int)(indices.size());
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
+    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Sphere"]));
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
@@ -806,12 +773,12 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 // THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
 unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
 
-
+    size_t buffersize = prop.entitySRT.size();
     // SRT Buffer set up
     prop.entitySRTbuffer;
     glGenBuffers(1, &prop.entitySRTbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), &(prop.entitySRT[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), prop.entitySRT.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     //entitySRTBuffer
@@ -837,7 +804,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.AlbedoBuffer;
     glGenBuffers(1, &prop.AlbedoBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.Albedo[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.Albedo.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(10);
@@ -850,7 +817,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Buffer;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Buffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Buffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Texture[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.M_R_A_Texture.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(11);
@@ -863,7 +830,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.Metal_Rough_AO_Texture_Constant;
     glGenBuffers(1, &prop.Metal_Rough_AO_Texture_Constant);
     glBindBuffer(GL_ARRAY_BUFFER, prop.Metal_Rough_AO_Texture_Constant);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), &(prop.M_R_A_Constant[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec4), prop.M_R_A_Constant.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(12);
@@ -876,7 +843,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), prop.textureIndex.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);
@@ -935,13 +902,13 @@ void MESH_Manager::CreateInstanceLine()
     Engine::GUID& lineGUID = DEFAULT_ASSETS["Line.geom"];
     vaoMap.emplace(std::make_pair(lineGUID, vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_LINES;
-    newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 2;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //InstanceSetup_PBR(tempProp);
-    //newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
+    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
 
     mContainer.emplace(lineGUID, newMesh);
@@ -1001,13 +968,13 @@ void MESH_Manager::CreateInstanceSegment3D()
     vaoMap.emplace(std::make_pair(segGUID, vaoid));
 
     //properties->emplace(std::pair<std::string, InstanceProperties>(std::string("Segment3D"), tempProp));
-    newMesh.Vaoids.push_back(vaoid);
-    newMesh.Vboids.push_back(vboid);
+    newMesh.vaoID = vaoid;
+    newMesh.vboID = vboid;
     newMesh.prim = GL_LINES;
-    newMesh.Drawcounts.push_back(2);
-    newMesh.SRT_Buffer_Index.push_back(InstanceSetup_PBR(tempProp));
+    newMesh.drawCounts = 2;
+    newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
-    InstanceSetup_PBR(tempProp);
+    //InstanceSetup_PBR(tempProp);
 
     mContainer.emplace(segGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
@@ -1041,6 +1008,13 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     pntAABB[5] = glm::vec3(maxpt.x, maxpt.y, minpt.z);
     pntAABB[6] = glm::vec3(maxpt.x, minpt.y, minpt.z);
     pntAABB[7] = glm::vec3(maxpt.x, minpt.y, maxpt.z);
+
+    /*for (int i = 0; i < 8; ++i) {
+        PRINT(pntAABB[i].x, ", ");
+        PRINT(pntAABB[i].y, ", ");
+        PRINT(pntAABB[i].z, "\n");
+    }
+    PRINT("\n");*/
 
     int indice = 0;
 
@@ -1108,17 +1082,19 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
 
 void MESH_Manager::StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex)
 {
-    mMeshesAsset[mKey].mVertices.push_back(mVertex);
+    ModelVertex v;
+    v.position = mVertex;
+    mMeshesAsset[mKey].vertices.push_back(v);
 }
 
 void MESH_Manager::StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex)
 {
-    mMeshesAsset[mKey].mIndices.push_back(mIndex);
+    mMeshesAsset[mKey].indices.push_back(mIndex);
 }
 
 void MESH_Manager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)
 {
-    GetGeomFromFiles(pEvent->assetPath.string(), pEvent->guid);
+    AddMesh(pEvent->asset, pEvent->guid);
 }
 
 void MESH_Manager::CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent)

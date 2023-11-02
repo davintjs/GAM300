@@ -1,4 +1,4 @@
-﻿/*!***************************************************************************************
+/*!***************************************************************************************
 \file			EditorInspector.cpp
 \project
 \author         Joseph Ho
@@ -34,6 +34,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
+#define PI 3.1415927
+#define EPSILON 0.01f
+
+enum ComponentType {
+    AUDIO, MESHRENDERER, SPRITERENDERER
+};
 
 //Flags for inspector headers/windows
 static ImGuiTableFlags windowFlags =
@@ -48,6 +54,12 @@ Object* newReference = nullptr;
 std::string refFieldName{};
 bool isAddingReference = false;
 size_t editedContainer{};
+
+//for checking of drag fields
+bool valueChanged = false;
+float initialvalue = 0.f;
+float changedvalue = 0.f;
+Vector3 initialVector;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -146,12 +158,15 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::OpenPopup("Texture");
     }
 
+    GLuint defaultFileIcon = TextureManager.GetTexture("Assets/Icons/fileicon.dds");
+
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
     static ImGuiTextFilter filter;
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
-        filter.Draw("Search:", 340.f);
+        ImGui::Text("Filter: "); ImGui::SameLine();
+        filter.Draw();
 
         // Back button to return to parent directory
         static float padding = 15.f;
@@ -192,6 +207,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
 
         int i = 0;
+
         for (auto& pair : DEFAULT_ASSETS)
         {
             if (pair.first.extension() != extension)
@@ -201,16 +217,13 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             if (pair.first.string().starts_with("None"))
                 continue;
 
-            fs::path icon = "Assets/Icons/fileicon.dds";
-
             //if not png or dds file, dont show
 
             ImGui::PushID(i++);
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            GLuint icon_id = TextureManager.GetTexture(icon);
-            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            if (ImGui::ImageButton((ImTextureID)defaultFileIcon, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, pair.second);
             }
@@ -221,45 +234,81 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             ImGui::NextColumn();
             ImGui::PopID();
         }
+
         //using filesystem to iterate through all folders/files inside the "/Data" directory
-        for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets"})
+
+        if (extension == ".geom")
         {
-            const auto& path = it.path();
-            if (!filter.PassFilter(path.string().c_str()))
-                continue;
-            if (path.extension() != extension)
-                continue;
-
-            GetAssetEvent e { path };
-            EVENTS.Publish(&e);
-            Engine::GUID currentGUID = e.guid;
-
+            // Bean: Put this publish event in the open popup in the future
+            GetAssetsEvent<MeshAsset> e1;
+            EVENTS.Publish(&e1);
             fs::path icon = "Assets/Icons/fileicon.dds";
+            auto iconID = GET_TEXTURE_ID(icon);
 
-            //if not png or dds file, dont show
-
-            ImGui::PushID(i++);
-
-            //Draw the file / folder icon based on whether it is a directory or not
-            auto tex = GET_TEXTURE_ID(path);
-            if (tex != 0) {
-                icon = path;
-            }
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            GLuint icon_id = TextureManager.GetTexture(icon);
-            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            for (auto& meshAsset : *e1.pAssets)
             {
-                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-            }
-            ImGui::PopStyleColor();
-            ImGui::TextWrapped(path.stem().string().c_str());
+                if (!filter.PassFilter(meshAsset.second.mFilePath.string().c_str()))
+                    continue;
 
-            //render file name below icon
-            ImGui::NextColumn();
-            ImGui::PopID();
+                ImGui::PushID(i++);
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    Engine::GUID currentGUID = meshAsset.first;
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                    PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
+                }
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+
+                //render file name below icon
+                ImGui::NextColumn();
+                ImGui::PopID();
+            }
         }
+        else
+        {
+            for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+            {
+                const auto& path = it.path();
+
+                if (!filter.PassFilter(path.string().c_str()))
+                    continue;
+                if (path.extension() != extension)
+                    continue;
+
+                GetAssetEvent e { path };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+
+
+                //if not png or dds file, dont show
+
+                ImGui::PushID(i++);
+
+                //Draw the file / folder icon based on whether it is a directory or not
+                GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+                if (icon_id == 0) {
+                    icon_id = defaultFileIcon;
+                }
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                }
+            
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(path.stem().string().c_str());
+
+                ImGui::NextColumn();
+                ImGui::PopID();
+            }
+        }
+       
         ImGui::Columns(1);
         ImGui::EndPopup();
     }
@@ -267,6 +316,27 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     {
         filter.Clear();
     }
+}
+
+template <typename... Ts>
+fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
+{
+    fs::path path;
+    if (([&](auto type)
+    {
+        using T = decltype(type);
+        GetFilePathEvent<T> e{ guid };
+        EVENTS.Publish(&e);
+        if (e.filePath == "")
+            return false;
+        path = e.filePath;
+        return true;
+    }
+    (Ts{}) || ...))
+    {
+        return path;
+    }
+    return path;
 }
 
 void DisplayType(Change& change, const char* name, Engine::GUID& val)
@@ -286,9 +356,7 @@ void DisplayType(Change& change, const char* name, Engine::GUID& val)
     }
     if (fp.empty())
     {
-        GetFilePathEvent e{ val };
-        EVENTS.Publish(&e);
-        fp = e.filePath;
+        fp = DisplayGUIDHelper(AssetTypes(),val);
     }
     const std::string& pathStr = fp.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
@@ -312,8 +380,25 @@ bool DisplayType(const char* name, float& val)
         idName += name;
         cIdName = idName.c_str();
     }
-    return ImGui::DragFloat(cIdName, &val, 0.15f);
+    bool ischanged = false;
+    float buf = val;
+
+    if (ImGui::DragFloat(cIdName, &buf, 0.15f)) {
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        ischanged = true;
+        valueChanged = false;
+    }
+
+    return ischanged;
 }
+
 
 void DisplayType(Change& change, const char* name, float& val)
 {
@@ -333,8 +418,20 @@ void DisplayType(Change& change, const char* name, float& val)
     //ImGui::DragFloat(cIdName, &val, 0.15f);
 
     float buf = val;
+   
     if (ImGui::DragFloat(cIdName, &buf)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
+        if (!valueChanged) {
+            initialvalue = val;
+        }
+        valueChanged = true;
+        val = buf;
+        changedvalue = buf;
+    }
+
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        valueChanged = false;
+        val = initialvalue;
+        EDITOR.History.SetPropertyValue(change, val, changedvalue);
     }
 }
 
@@ -358,6 +455,9 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName += name;
 
     Vector3 buf = val;
+    if (!std::strcmp(name, "Rotation")) {
+        buf *= (180.f / PI);
+    }
     bool changed = false;
     if (ImGui::BeginTable("Vector3", 3, windowFlags))
     {
@@ -365,22 +465,56 @@ void DisplayType(Change& change, const char* name, Vector3& val)
         ImGui::AlignTextToFramePadding();
         idName += 'X';
         ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+
         changed = DisplayType(idName.c_str(), buf.x);
+        if (changed) {
+            initialVector = val;
+
+            initialVector.x = initialvalue;
+            val = initialVector;
+        }
 
         ImGui::TableNextColumn();
         idName.back() = 'Y';
         ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.y))
+        if (!changed && DisplayType(idName.c_str(), buf.y)) {
             changed = true;
+            initialVector = val;
+            initialVector.y = initialvalue;
+            val = initialVector;
+        }
+           
+
 
         ImGui::TableNextColumn();
         idName.back() = 'Z';
         ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if(!changed && DisplayType(idName.c_str(), buf.z))
+        if (!changed && DisplayType(idName.c_str(), buf.z)) {
             changed = true;
+            initialVector = val;
+            initialVector.z = initialvalue;
+            val = initialVector;
+        }
+
+       
+
+        //convert rotation from degree back to radians
+        if (!std::strcmp(name, "Rotation")) {
+            buf *= (PI / 180.f);
+            val *= (PI / 180.f);
+            //Check whether value is within epsilon range (to avoid negative 0)
+            for (int i = 0; i < 3; ++i) {
+                if (std::fabs(buf[i] - 0.f) < EPSILON)
+                    buf[i] = 0;
+            }
+        }
+
+        if (!changed)
+            val = buf;
 
         ImGui::EndTable();
     }
+
     if (changed) {
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
@@ -393,9 +527,33 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     idName = "##";
     idName += name;
     Vector4 buf = val;
-    if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_DisplayHSV)) {
+
+    ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
+
+    bool ischanged = false;
+
+    if (ImGui::ColorButton("hi", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+
+        ImGui::OpenPopup("hi-picker");
+
+    if (ImGui::BeginPopup("hi-picker"))
+    {
+        if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
+            ischanged = true;
+        }
+        ImGui::EndPopup();
+    }
+
+    //buf = color;
+
+    if (ischanged) {
         EDITOR.History.SetPropertyValue(change, val, buf);
     }
+
+   /* if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueBar)) {
+        EDITOR.History.SetPropertyValue(change, val, buf);
+    }*/
+
 }
 
 void DisplayType(Change& change, const char* name, Vector2& val)
@@ -443,6 +601,7 @@ void AddReferencePanel(T*& container)
     if (ImGui::Begin(windowName.c_str(), &open))
     {
         ImGui::PushItemWidth(-1);
+        ImGui::Text("Filter"); ImGui::SameLine();
         filter.Draw("##References");
         ImGui::PopItemWidth();
         static std::string buttonName{};
@@ -630,7 +789,6 @@ void Display(const char* string)
 
 //Function to display and edit textures of a given property.
 
-
 template <typename T>
 void DisplayLightTypes(Change& change, T& value) {
     if constexpr (std::is_same<T, int>()) {
@@ -657,19 +815,6 @@ void DisplayLightTypes(Change& change, T& value) {
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
-    // @joe do the drop down hahaha, idk how to do it
-    //if constexpr (std::is_same<T, AudioSource>()) {
-    //    //Combo field for mesh renderer
-    //    ImGui::AlignTextToFramePadding();
-    //    ImGui::TableNextColumn();
-    //    ImGui::Text("Channel");
-    //    ImGui::TableNextColumn();
-    //    int number = (int)comp.channel;
-    //    ImGui::PushItemWidth(-1);
-    //    ImGui::Combo("Channel", &number, comp.ChannelName.data(), (int)comp.ChannelName.size(), 4);
-    //    ImGui::PopItemWidth();
-    //    comp.channel = static_cast<AudioSource::Channel>(number);
-    //}
 
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
@@ -697,7 +842,7 @@ void Display_Property(T& comp) {
                 property::set(comp, entry.first.c_str(), Data);
 
                 // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
             }
            
         });
@@ -779,8 +924,10 @@ void DisplayComponentHelper(T& component)
     static std::string name{};
     if constexpr (std::is_same<T, Script>())
     {
+        GetFilePathEvent<ScriptAsset> e{component.scriptId};
+        EVENTS.Publish(&e);
         if(&component)
-            name = (component.name + " [Script]");
+            name = (e.filePath.stem().string() + " (Script)");
     }
     else if constexpr (AllComponentTypes::Has<T>())
     {
@@ -866,8 +1013,6 @@ void DisplayComponentHelper(T& component)
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
-
-            
 
             if constexpr (std::is_same_v<T,Script>)
             {
@@ -968,14 +1113,14 @@ private:
         {
             if constexpr (std::is_same_v<T1, Script>)
             {
-                GetScriptNamesEvent nameEvent;
-                EVENTS.Publish(&nameEvent);
+                GetAssetsEvent<ScriptAsset> e;
+                EVENTS.Publish(&e);
 
-                for (size_t i = 0; i < nameEvent.count; ++i)
+                for (auto& pair : *e.pAssets)
                 {
-                    if (CENTERED_CONTROL(ImGui::Button(nameEvent.arr[i], ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
-                        scene.Add<T1>(entity, nameEvent.arr[i]);
+                        scene.Add<T1>(entity, pair.first);
                         EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }

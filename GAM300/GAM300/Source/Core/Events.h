@@ -20,8 +20,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Utilities/UUID.h"
 #include <glm/vec2.hpp>
-#include <Utilities/GUID.h>
 #include <filesystem>
+#include <AssetManager/AssetTypes.h>
 
 struct Entity;
 struct Scene;
@@ -103,13 +103,6 @@ struct GetSelectedEntityEvent : IEvent
 	Entity* pEntity;
 };
 
-struct GetScriptNamesEvent : IEvent
-{
-	GetScriptNamesEvent() {};
-	const char** arr = nullptr;
-	size_t count = 0;
-};
-
 template <typename T>
 struct ObjectCreatedEvent : IEvent
 {
@@ -155,14 +148,18 @@ struct GetAssetEvent: IEvent
 	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
 	const fs::path& filePath;
 	Engine::GUID guid;
+	Asset* asset;
 };
 
+
+template <typename AssetType>
 struct GetFilePathEvent : IEvent
 {
 	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
 	const Engine::GUID& guid;
 	fs::path filePath;
 };
+
 
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
@@ -198,6 +195,12 @@ struct DropAssetsEvent : IEvent
 	DropAssetsEvent(const int& _pathCount, const fs::path* _paths) : pathCount{ _pathCount }, paths{ _paths } {}
 	int pathCount;
 	const fs::path* paths;
+};
+
+template <typename AssetType>
+struct GetAssetsEvent : IEvent
+{
+	AssetsTable<AssetType>* pAssets{};
 };
 
 #pragma endregion

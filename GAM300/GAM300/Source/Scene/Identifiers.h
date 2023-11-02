@@ -29,6 +29,8 @@ public:
 
 	void DeleteTag(std::string key);
 
+	std::string GetTagString(Engine::UUID tagID);
+
 	Tags& GetTags();
 
 	void CreateSortingLayer(const std::string & layerName,size_t index);

@@ -12,27 +12,22 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #version 450 core
-
-//Start
 //-------------------------
 //          COMING IN
 //-------------------------
+
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec3 aTangents;
 layout (location = 3) in vec2 aTexCoords;
 //layout (location = 4) in vec2 aColor;
-
 layout (location = 6) in mat4 SRT;
-//{
-layout (location = 10) in vec4 Albedo;//ID
-// Texture Index
-layout (location = 11) in vec4 Metal_Rough_AO_Emission_index;
-// Material Instance Constants
-layout (location = 12) in vec4 Metal_Rough_AO_Emission_constant;
-//albedo tex , normal map indexs
-layout (location = 15) in vec2 texture_index; 
-//}
+
+layout (location = 10) in vec4 Albedo;
+layout (location = 11) in vec4 Metal_Rough_AO_Emission_index; // Texture Index
+layout (location = 12) in vec4 Metal_Rough_AO_Emission_constant; // Material Instance Constants
+layout (location = 15) in vec2 texture_index;
 
 
 //-------------------------
@@ -46,9 +41,11 @@ layout (location = 3) out vec4 frag_Albedo;
 layout (location = 4) out vec4 frag_Metal_Rough_AO_Emission_index; // Texture Index
 layout (location = 5) out vec4 frag_Metal_Rough_AO_Emission_constant; // Material Instance Constants
 
-layout (location = 6) out vec2 frag_texture_index; // albedo tex , normal map 
+layout (location = 6) out vec2 frag_texture_index;
 
-layout (location = 7) out vec4 frag_pos_lightspace;
+layout (location = 7) out vec4 frag_pos_lightspace_D;
+
+layout (location = 8) out vec4 frag_pos_lightspace_S;
 
 
 
@@ -59,14 +56,16 @@ layout (location = 7) out vec4 frag_pos_lightspace;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 lightSpaceMatrix_Directional;
+uniform mat4 lightSpaceMatrix_Spot;
+
 //End
 
 void main()
 {
     TexCoords = aTexCoords;
     WorldPos = vec3(SRT * vec4(aPos, 1.0));
-
+    
     frag_Albedo = Albedo;
     frag_Metal_Rough_AO_Emission_index = Metal_Rough_AO_Emission_index;
     frag_Metal_Rough_AO_Emission_constant = Metal_Rough_AO_Emission_constant;
@@ -75,10 +74,9 @@ void main()
     
     Normal = mat3(transpose(inverse(SRT))) * aNormal;
 
-    frag_pos_lightspace = lightSpaceMatrix * vec4(WorldPos, 1.0);
-    
-    
-    
+    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
+
+    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
     
     gl_Position =  persp_projection * View * vec4(WorldPos, 1.0);
 }

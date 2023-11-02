@@ -97,11 +97,11 @@ void Application::InitApp(const int& _width, const int& _height, const std::stri
         PRINT("Using glew version: ", glewGetString(GLEW_VERSION));
         PRINT("Driver supports OpenGL 4.5\n");
     }
-    else
-    {
-        std::cerr << "Driver doesn't support OpenGL 4.5 - abort program" << std::endl;
-        abort();
-    }
+    //else
+    //{
+    //    std::cerr << "Driver doesn't support OpenGL 4.5 - abort program" << std::endl;
+    //    abort();
+    //}
 
     // Initialise Viewport
     glViewport(0, 0, windowWidth, windowHeight);
@@ -228,4 +228,13 @@ void Application::CallbackMouseScrollState(GLFWwindow*, double, double _yOffset)
 bool Application::LoadConfig(const std::string& _filename, const int& _width, const int& _height)
 {
     return false;
+}
+
+// Set the cursor's mode
+void Application::SetCursorMode(const bool& _shown)
+{
+    if (_shown)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    else
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }

@@ -23,6 +23,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/EventsManager.h"
 #include "HandlesTable.h"
 
+//Original, to New
+using ReferencesTable = std::unordered_map<Handle, Handle>;
 
 struct Scene
 {
@@ -33,8 +35,31 @@ struct Scene
 	std::vector<tag>Tags;
 	std::string sceneName;
 
+	//ReferencesTable PreClone(Entity& target);
 	//Creates empty scene
 	Scene(const std::string& _filepath);
+
+	//void StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID transformID);
+
+	//template <typename T, typename... Ts>
+	//void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID)
+
+	void Clone(Entity& source);
+
+	void Clone(Entity& source, Entity& dest);
+
+	template <typename T>
+	void Clone(T& source, Entity& entity);
+
+	template <typename T, typename... Ts>
+	void CloneHelper(Entity& entity);
+
+
+	template <typename... Ts>
+	void CloneHelper(Entity& source, TemplatePack<Ts...>);
+
+	template <typename T, typename... Ts>
+	void CloneHelper(Entity& source, Entity& dest);
 
 	//Copy assignment
 	Scene& operator=(Scene& rhs);
@@ -112,6 +137,9 @@ struct Scene
 		Args&&... args
 	);
 
+	template <typename T>
+	void Clone(T& dest, const T& source);
+
 
 #pragma region SCRIPTING/DESERIALIZATION HELPERS
 	//Get component of another object as a void pointer(Mono does type casting)
@@ -128,9 +156,9 @@ struct Scene
 		bool val;
 	};
 	//Set active from scripts
-	GENERIC_RECURSIVE(void, SetActive,SetActive(*(T*)reinterpret_cast<SetActiveHelper*>(pObject)->object, reinterpret_cast<SetActiveHelper*>(pObject)->val));
+	GENERIC_RECURSIVE(void, SetActive, SetActive(*(T*)reinterpret_cast<SetActiveHelper*>(pObject)->object, reinterpret_cast<SetActiveHelper*>(pObject)->val));
 
-	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle *)pObject));
+	GENERIC_RECURSIVE(void*, GetByHandle, &Get<T>(*(Handle*)pObject));
 	//Check whether handle exists in scene
 	GENERIC_RECURSIVE(bool, HasHandle, HasHandle<T>(*(Handle*)pObject));
 #pragma endregion
@@ -172,7 +200,7 @@ private:
 		//Adds to components buffer for deletion
 		template <typename T1, typename... T1s>
 		void DestroyComponents();
-		
+
 		Scene& scene;
 		Entity& entity;
 	};

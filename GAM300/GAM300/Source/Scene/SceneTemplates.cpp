@@ -16,6 +16,67 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene.h"
 
+
+template <typename T, typename... Ts>
+void Scene::CloneHelper(Entity& source, Entity& dest)
+{
+	if constexpr (SingleComponentTypes::Has<T>())
+	{
+		if (Has<T>(source))
+		{
+			Clone(Get<T>(source), dest);
+		}
+	}
+	else
+	{
+		if (Has<T>(source))
+		{
+			for (auto* pObject : GetMulti<T>(source))
+			{
+				Clone(*pObject, dest);
+			}
+		}
+	}
+
+	if constexpr (sizeof...(Ts) != 0)
+	{
+		
+		CloneHelper<Ts...>(source,dest);
+	}
+}
+
+template <typename... Ts>
+void Scene::CloneHelper(Entity& source, TemplatePack<Ts...>)
+{
+	CloneHelper<Ts...>(source,*Add<Entity>());
+}
+
+template <typename T>
+void Scene::Clone(T& source, Entity& entity)
+{
+	T* object;
+	if constexpr (std::is_same<T,Transform>())
+	{
+		object = &Get<T>(entity);
+	}
+	else
+	{
+		object = Add<T>(entity);
+	}
+	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+	{
+		if (!Flags.m_isDontShow) {
+			auto entry = property::entry { PropertyName, Data };
+
+			property::set(*object, entry.first.c_str(), Data);
+			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
+		}
+
+	});
+}
+
+
 template<typename T>
 T& Scene::GetByUUID(Engine::UUID uuid)
 {
@@ -294,10 +355,10 @@ T* Scene::Add
 	else if constexpr (AllComponentTypes::Has<T>())
 	{
 		Entity& entity{ Get<Entity>(euid) };
+		//Entities UUID is a dense Index
 		object = &arr.emplace((ObjectIndex)entity.uuid, args...);
 		object->euid = euid;
-		if (uuid)
-			object->uuid = uuid;
+		object->uuid = uuid;
 		if constexpr (SingleComponentTypes::Has<T>())
 		{
 			singleHandles.emplace(object, object->euid);

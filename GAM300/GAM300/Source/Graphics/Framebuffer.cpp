@@ -67,6 +67,38 @@ void FramebufferManager::CreatePointLight(GLuint& _index, GLuint& _textureID, co
 	_textureID = fm.attachments[GL_DEPTH_ATTACHMENT].depthIndex;
 }
 
+
+void FramebufferManager::CreateColorPicking(GLuint& _index, GLuint& _textureID)
+{
+
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glGenFramebuffers(1, &_index);
+	glBindFramebuffer(GL_FRAMEBUFFER, _index);
+	//std::cout << "generate ID : " << tex_Id << "\n"; // debug
+	glGenTextures(1, &_textureID);
+	//std::cout << "generated ID : " << tex_Id << "\n"; // debug
+	//glActiveTexture(GL_TEXTURE0 + tex_Id);
+	glBindTexture(GL_TEXTURE_2D, _textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1600, 900
+		, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _textureID, 0);
+	//unsigned int rbo_id;
+	//glGenRenderbuffers(1, &rbo_id);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rbo_id);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1600, 900);
+	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo_id);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
 void FramebufferManager::CreateBloom(GLuint* _indexes, GLuint* _textureIDs)
 {
 	for (unsigned int i = 0; i < 2; i++)

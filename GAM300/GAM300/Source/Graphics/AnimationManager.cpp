@@ -7,117 +7,73 @@
 \date           10/10/2023
 
 \brief
-	This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the Animation Manager and the declarations of its related functions.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 
 #include "Precompiled.h"
 #include "AnimationManager.h"
+#include "AssetManager/ModelCompiler.h"
 
+#include "Scene/SceneManager.h"
 
-
-
-
-// constructor
-AnimationMesh::AnimationMesh(std::vector<AnimationVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
-{
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
-
-    // now that we have all the required data, set the vertex buffers and its attribute pointers.
-    setupMesh();
-}
-
-// render the mesh
-void AnimationMesh::Draw(GLSLShader& shader)
-{
-    // bind appropriate textures
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++)
-    {
-        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-        // retrieve texture number (the N in diffuse_textureN)
-        std::string number;
-        std::string name = textures[i].type;
-        if (name == "texture_diffuse")
-            number = std::to_string(diffuseNr++);
-        else if (name == "texture_specular")
-            number = std::to_string(specularNr++); // transfer unsigned int to string
-        else if (name == "texture_normal")
-            number = std::to_string(normalNr++); // transfer unsigned int to string
-        else if (name == "texture_height")
-            number = std::to_string(heightNr++); // transfer unsigned int to string
-
-        // now set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.GetHandle(), (name + number).c_str()), i);
-        // and finally bind the texture
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
-    }
-
-    // draw mesh
-    glBindVertexArray(_VAO);
-    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-
-    // always good practice to set everything back to defaults once configured.
-    glActiveTexture(GL_TEXTURE0);
-}
-
-// initializes all the buffer objects/arrays
-void AnimationMesh::setupMesh()
-{
-    if (glewInit() != GLEW_OK) {
-        std::cout << "omg help";
-    }
-    GLuint VAO, VBO, EBO;
-    // create buffers/arrays
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-    // load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // A great thing about structs is that their memory layout is sequential for all its items.
-    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-    // again translates to 3/2 floats which translates to a byte array.
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(AnimationVertex), &vertices[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
-    // set the vertex attribute pointers
-    // vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)0);
-    // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Normal));
-    // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, TexCoords));
-    // vertex tangent
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Tangent));
-    // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, Bitangent));
-    // ids
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, m_BoneIDs));
-
-    // weights
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(AnimationVertex), (void*)offsetof(AnimationVertex, m_Weights));
-    glBindVertexArray(0);
-    _VAO = VAO;
-}
+//AnimationMesh::AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
+//{
+//    this->vertices = vertices;
+//    this->indices = indices;
+//    this->textures = textures;
+//
+//    // now that we have all the required data, set the vertex buffers and its attribute pointers.
+//    setupMesh();
+//}
+//
+//void AnimationMesh::setupMesh()
+//{
+//    if (glewInit() != GLEW_OK) {
+//        std::cout << "omg help";
+//    }
+//    GLuint VAO, VBO, EBO;
+//    // create buffers/arrays
+//    glGenVertexArrays(1, &VAO);
+//    glGenBuffers(1, &VBO);
+//    glGenBuffers(1, &EBO);
+//
+//    glBindVertexArray(VAO);
+//    // load data into vertex buffers
+//    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//    // A great thing about structs is that their memory layout is sequential for all its items.
+//    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
+//    // again translates to 3/2 floats which translates to a byte array.
+//    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(ModelVertex), &vertices[0], GL_STATIC_DRAW);
+//
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+//
+//    // set the vertex attribute pointers
+//    // vertex Positions
+//    glEnableVertexAttribArray(0);
+//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
+//    // vertex normals
+//    glEnableVertexAttribArray(1);
+//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
+//    // vertex tangent
+//    glEnableVertexAttribArray(2);
+//    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
+//    // vertex texture coords
+//    glEnableVertexAttribArray(3);
+//    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
+//    // ids
+//    glEnableVertexAttribArray(5);
+//    glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
+//
+//    // weights
+//    glEnableVertexAttribArray(6);
+//    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+//    glBindVertexArray(0);
+//    _VAO = VAO;
+//}
 
 
 
@@ -257,25 +213,6 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
     return glm::scale(glm::mat4(1.0f), finalScale);
 }
 
-//
-//void Animation::init(const std::string& animationPath, AnimationModel* model)
-//{
-//    Assimp::Importer importer;
-//    const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
-//    assert(scene && scene->mRootNode);
-//    auto animation = scene->mAnimations[0];
-//    m_Duration = animation->mDuration;
-//    m_TicksPerSecond = animation->mTicksPerSecond;
-//    aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-//    globalTransformation = globalTransformation.Inverse();
-//    ReadHierarchyData(m_RootNode, scene->mRootNode);
-//    ReadMissingBones(animation, *model);
-//}
-//
-//Animation::~Animation()
-//{
-//}
-
 Bone* Animation::FindBone(const std::string& name)
 {
     auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
@@ -289,13 +226,6 @@ Bone* Animation::FindBone(const std::string& name)
 }
 
 
-//inline float GetTicksPerSecond() { return m_TicksPerSecond; }
-//inline float GetDuration() { return m_Duration; }
-//inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-//inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
-//{
-//    return m_BoneInfoMap;
-//}
 
 
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
@@ -320,7 +250,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& m
             boneInfoMap[channel->mNodeName.data].id, channel));
     }
 
-    m_BoneInfoMap = boneInfoMap;
+    m_BoneInfoMap_ = boneInfoMap;
 }
 
 void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
@@ -339,416 +269,46 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
     }
 }
 
-AnimationAnimator::AnimationAnimator()
-{
-}
-
-void AnimationAnimator::init(Animation* animation)
-{
-    m_CurrentTime = 0.0;
-    m_CurrentAnimation = animation;
-
-    m_FinalBoneMatrices.reserve(100);
-
-    for (int i = 0; i < 100; i++)
-        m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
-}
-
-void AnimationAnimator::UpdateAnimation(float dt)
-{
-    m_DeltaTime = dt;
-    if (m_CurrentAnimation)
-    {
-        m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
-        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
-    }
-}
-
-void AnimationAnimator::PlayAnimation(Animation* pAnimation)
-{
-    m_CurrentAnimation = pAnimation;
-    m_CurrentTime = 0.0f;
-}
-
-void AnimationAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
-{
-    std::string nodeName = node->name;
-    glm::mat4 nodeTransform = node->transformation;
-
-    Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
-
-    if (Bone)
-    {
-        Bone->Update(m_CurrentTime);
-        nodeTransform = Bone->GetLocalTransform();
-    }
-
-    glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-    auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
-    {
-        int index = boneInfoMap[nodeName].id;
-        glm::mat4 offset = boneInfoMap[nodeName].offset;
-        m_FinalBoneMatrices[index] = globalTransformation * offset;
-    }
-
-    for (int i = 0; i < node->childrenCount; i++)
-        CalculateBoneTransform(&node->children[i], globalTransformation);
-}
-
-std::vector<glm::mat4> AnimationAnimator::GetFinalBoneMatrices()
-{
-    return m_FinalBoneMatrices;
-}
-
-// constructor, expects a filepath to a 3D model.
-AnimationModel::AnimationModel()
-{
-}
-
-void AnimationModel::init(std::string const& path, bool gamma = false)
-{
-    //gammaCorrection = gamma;
-    loadModel(path);
-    m_BoneCounter = 0; // Initialize boneCounter to 0
-}
-
-// draws the model, and thus all its meshes
-void AnimationModel::Draw(GLSLShader& shader)
-{
-    for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader);
-}
-
-
-// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-void AnimationModel::loadModel(std::string const& path)
-{
-    // read file via ASSIMP
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals
-        | aiProcess_CalcTangentSpace | aiProcess_FlipWindingOrder
-        | aiProcess_TransformUVCoords | aiProcess_FlipUVs);
-    // check for errors
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-    {
-        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        return;
-    }
-    // retrieve the directory path of the filepath
-    //directory = path.substr(0, path.find_last_of('/'));
-
-    // process ASSIMP's root node recursively
-    processNode(scene->mRootNode, scene);
-
-    if (scene->HasAnimations())
-    {
-        // Animation init
-        //Assimp::Importer importer;
-        /*const aiScene* */scene = importer.ReadFile(path, aiProcess_Triangulate);
-        assert(scene && scene->mRootNode);
-        auto animation = scene->mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
-        allAnimations.GetDuration() = animation->mDuration;
-        allAnimations.GetTicksPerSecond() = animation->mTicksPerSecond;
-        aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-        globalTransformation = globalTransformation.Inverse();
-        allAnimations.ReadHierarchyData(allAnimations.GetRootNode(), scene->mRootNode);
-        allAnimations.ReadMissingBones(animation, *this);
-    }
-}
-
-// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-void AnimationModel::processNode(aiNode* node, const aiScene* scene)
-{
-    // process each mesh located at the current node
-    for (unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
-        // the node object only contains indices to index the actual objects in the scene. 
-        // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(processMesh(mesh, scene));
-    }
-    // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
-    {
-        processNode(node->mChildren[i], scene);
-    }
-
-}
-
-//void AnimationModel::SetVertexBoneDataToDefault(AnimationVertex& vertex)
-//{
-//    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-//    {
-//        vertex.m_BoneIDs[i] = -1;
-//        vertex.m_Weights[i] = 0.0f;
-//    }
-//}
-
-
-AnimationMesh AnimationModel::processMesh(aiMesh* mesh, const aiScene* scene)
-{
-    std::vector<AnimationVertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<TextureInfo> textures;
-
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        AnimationVertex vertex;
-
-        //SetVertexBoneDataToDefault(vertex);
-        for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
-        {
-            vertex.m_BoneIDs[i] = -1;
-            vertex.m_Weights[i] = 0.0f;
-        }
-
-        vertex.Position = AssimpGLMHelpers::GetGLMVec(mesh->mVertices[i]);
-        vertex.Normal = AssimpGLMHelpers::GetGLMVec(mesh->mNormals[i]);
-
-        if (mesh->mTextureCoords[0])
-        {
-            glm::vec2 vec;
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
-        }
-        else
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-
-        vertices.push_back(vertex);
-    }
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    {
-        aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
-            indices.push_back(face.mIndices[j]);
-    }
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
-    std::vector<TextureInfo> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    //std::vector<Animation> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    //textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    //std::vector<AnimationTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    //textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    //std::vector<AnimationTexture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    //textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-    ExtractBoneWeightForVertices(vertices, mesh, scene);
-
-    return AnimationMesh(vertices, indices, textures);
-}
-//
-//void AnimationModel::SetVertexBoneData(AnimationVertex& vertex, int boneID, float weight)
-//{
-//    // idk if i am doing this right i went to add my own thing
-//    if (weight == 0.0f) // skip if bone weight 0
-//    {
-//        return;
-//    }
-//
-//    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
-//    {
-//        if (vertex.m_BoneIDs[i] == boneID) { // skip if bone existd alr
-//            return;
-//        }
-//
-//        if (vertex.m_BoneIDs[i] < 0)
-//        {
-//            vertex.m_Weights[i] = weight;
-//            vertex.m_BoneIDs[i] = boneID;
-//            break;
-//        }
-//    }
-//
-//}
-
-
-void AnimationModel::ExtractBoneWeightForVertices(std::vector<AnimationVertex>& vertices, aiMesh* mesh, const aiScene* scene)
-{
-    auto& boneInfoMap = m_BoneInfoMap;
-    int& boneCount = m_BoneCounter;
-
-    for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
-    {
-        int boneID = -1;
-        std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-        if (boneInfoMap.find(boneName) == boneInfoMap.end())
-        {
-            BoneInfo newBoneInfo;
-            newBoneInfo.id = boneCount;
-            newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
-            boneInfoMap[boneName] = newBoneInfo;
-            boneID = boneCount;
-            boneCount++;
-        }
-        else
-        {
-            boneID = boneInfoMap[boneName].id;
-        }
-        assert(boneID != -1);
-        auto weights = mesh->mBones[boneIndex]->mWeights;
-        int numWeights = mesh->mBones[boneIndex]->mNumWeights;
-
-        for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
-        {
-            int vertexId = weights[weightIndex].mVertexId;
-            float weight = weights[weightIndex].mWeight;
-            assert(vertexId <= vertices.size());
-
-            //SetVertexBoneData(vertices[vertexId], boneID, weight); 
-            // idk if i am doing this right i went to add my own thing
-            if (weight == 0.0f) // skip if bone weight 0
-            {
-                return;
-            }
-
-            for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
-            {
-                if (vertices[vertexId].m_BoneIDs[i] == boneID) { // skip if bone existd alr
-                    return;
-                }
-
-                if (vertices[vertexId].m_BoneIDs[i] < 0)
-                {
-                    vertices[vertexId].m_Weights[i] = weight;
-                    vertices[vertexId].m_BoneIDs[i] = boneID;
-                    break;
-                }
-            }
-        }
-    }
-}
-
-std::vector<TextureInfo> AnimationModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-{
-    std::vector<TextureInfo> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-    {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-        bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++)
-        {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
-            {
-                textures.push_back(textures_loaded[j]);
-                skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-                break;
-            }
-        }
-        if (!skip)
-        {   // if texture hasn't been loaded already, load it
-            TextureInfo texture;
-            //texture.id = TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filename));
-            //texture.id = TextureFromFile(str.C_Str(), this->directory);
-            texture.type = typeName;
-            texture.path = str.C_Str();
-            textures.push_back(texture);
-            textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
-        }
-    }
-    return textures;
-}
-
-
-
-
 void Animation_Manager::Init()
 {
     std::cout << "ANIMATION MANAGER INIT\n";
-
-
-    // move this out....
-
-	std::vector<std::pair<GLenum, std::string>> shdr_files;
-	// Vertex Shader
-	shdr_files.emplace_back(std::make_pair(
-		GL_VERTEX_SHADER,
-		"GAM300/Shaders/BasicAnimation.vert"));
-
-	// Fragment Shader
-	shdr_files.emplace_back(std::make_pair(
-		GL_FRAGMENT_SHADER,
-		"GAM300/Shaders/BasicAnimation.frag"));
-
-	PRINT("animshader", '\n');
-	ourShader.CompileLinkValidate(shdr_files);
-	PRINT("animshader", "\n\n");
-
-	// if linking failed
-	if (GL_FALSE == ourShader.IsLinked())
-	{
-		std::stringstream sstr;
-		sstr << "Unable to compile/link/validate shader programs\n";
-		sstr << ourShader.GetLog() << "\n";
-		PRINT(sstr.str());
-		std::exit(EXIT_FAILURE);
-	}
-
-
 	// we want compiler to serialise model info including the animations
-	allModels_.init("Assets/Models/Doctor_Attacking/Doctor_Attacking.fbx", false);
-	// called to animate animaation
-	allAnimators_.init(&allModels_.GetAnimations());
-
+    // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
+    //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
+    allModels_ = md.animations;
+   
+    mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
 }
 
 
 void Animation_Manager::Update(float dt)
 {
-    //UNREFERENCED_PARAMETER(dt);
-	allAnimators_.UpdateAnimation(dt);
-}
-
-void Animation_Manager::Draw(BaseCamera& _camera)
-{
-
-	// render
-	// ------
-	//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// don't forget to enable shader before setting uniforms
-	ourShader.Use();
-
-	// view/projection transformations
-	GLint uniform1 =
-		glGetUniformLocation(ourShader.GetHandle(), "projection");
-	GLint uniform2 =
-		glGetUniformLocation(ourShader.GetHandle(), "view");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetViewMatrix()));
-
-	auto transforms = allAnimators_.GetFinalBoneMatrices();
-	for (int i = 0; i < transforms.size(); ++i)
-	{
-		std::string temp = "finalBonesMatrices[" + std::to_string(i) + "]";
-		GLint uniform3 =
-			glGetUniformLocation(ourShader.GetHandle(), temp.c_str());
-
-		glUniformMatrix4fv(uniform3, 1, GL_FALSE,
-			glm::value_ptr(transforms[i]));
-	}
-
-
-	// render the loaded model
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-	model = glm::scale(model, glm::vec3(.01f, .01f, .01f));	// it's a bit too big for our scene, so scale it down
-	glUniformMatrix4fv(glGetUniformLocation(ourShader.GetHandle(), "model"), 1, GL_FALSE,
-		glm::value_ptr(model));
-	allModels_.Draw(ourShader);
-
-    ourShader.UnUse();
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        if (animator.playing && animator.AnimationAttached())
+        {
+            animator.UpdateAnimation(dt);
+        }
+        else if (!animator.AnimationAttached())
+        {
+            animator.SetAnimation(&allModels_.GetAnimations());
+        }
+    }
 }
 
 void Animation_Manager::Exit()
 {
+}
+
+
+bool Animation_Manager::HasBones(MeshAsset meshAsset) {
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
+        if ((meshAsset.vertices[0].boneIDs[i] != 0) || (meshAsset.vertices[0].weights[i] != 0.0f) )
+        {
+            return true;  // At least one non-zero element in either array
+        }
+    }
+    return false;  // All elements are zero in both arrays
 }

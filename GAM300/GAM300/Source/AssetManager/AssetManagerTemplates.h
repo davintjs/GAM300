@@ -7,9 +7,8 @@
 #include <Utilities/YAMLUtils.h>
 #include <Utilities/Serializer.h>
 
-//Hash table that maps an ID to a pointer
-template <typename T>
-using AssetsTable = std::unordered_map<Engine::GUID, T>;
+#include "GeomDecompiler.h"
+#include "Graphics/MeshManager.h"
 
 namespace chron = std::chrono;
 
@@ -37,13 +36,62 @@ struct AllAssetsGroup
 
 	void AddAsset(const std::filesystem::path& filePath, FileData* pData = nullptr)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
+
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID(filePath);
+					if constexpr (std::is_same<T, MeshAsset>())
+					{
+						ModelImporter metaFile;
+
+						// Check if there is an existing meta file, read main geom file
+						fs::path oldMeta{ filePath };
+						oldMeta += ".meta";
+						bool success = Deserialize<ModelImporter>(oldMeta, metaFile);
+						if (!success)
+							Serialize(oldMeta, metaFile);
+
+						// Get all model components
+						ModelComponents mc = GEOMDECOMPILER.DeserializeGeoms(filePath.string(), metaFile.guid);
+
+						// Check for existing guid within the geom meta file
+						if (mc.meshes.size() != metaFile.meshes.size())
+						{
+							int i = 0;
+							for (MeshAsset& meshAsset : mc.meshes)
+							{
+								meshAsset.mFilePath = filePath.stem();
+								meshAsset.mFilePath += "_" + std::to_string(i++) + ".geom";
+
+								// Assign GUID
+								Engine::GUID guid = GetGUID(meshAsset.mFilePath);
+								metaFile.meshes.push_back(guid);
+
+								std::get<AssetsTable<T>>(assets)[guid] = std::move(meshAsset);
+								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[guid]));
+							}
+
+							Serialize(oldMeta, metaFile);
+						}
+						else // Has existing guid
+						{
+							for (int i = 0; i < mc.meshes.size(); i++)
+							{
+								mc.meshes[i].mFilePath = filePath.stem();
+								mc.meshes[i].mFilePath += "_" + std::to_string(i) + ".geom";
+								
+								std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]] = std::move(mc.meshes[i]);
+								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]]));
+							}
+						}
+						
+						return true;
+					}
+
+					Engine::GUID guid = GetGUID(filePath,true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
 						if (fs::is_directory(filePath))
@@ -83,7 +131,7 @@ struct AllAssetsGroup
 
 	bool RemoveAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
@@ -108,13 +156,13 @@ struct AllAssetsGroup
 
 	void UpdateAsset(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		if (([&](auto type)
 			{
 				using T = decltype(type);
 				if (GetAssetType::E<T>() == assetType)
 				{
-					Engine::GUID guid = GetGUID(filePath);
+					Engine::GUID guid = GetGUID(filePath, true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
 						std::ifstream inputFile(filePath.c_str());
@@ -144,22 +192,32 @@ struct AllAssetsGroup
 	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
 		FileData* fileData = GetFileData(oldPath);
+		size_t oldExtension{ GetAssetType(oldPath) };
+		size_t newExtension{ GetAssetType(newPath) };
 
+		fs::path oldMeta{ oldPath };
+		oldMeta += ".meta";
+		fs::path newMeta{ newPath };
+		newMeta += ".meta";
+		fs::rename(oldMeta, newMeta);
 		//Deal with meta file conversion here
-		if (AssetExtensionTypes[oldPath.extension()] != AssetExtensionTypes[newPath.extension()])
+		if (oldExtension != newExtension)
 		{
-
+			//Look for oldExtension
+			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == oldExtension)
+				{
+					Engine::GUID guid = GetGUID(newPath, true);
+					return true;
+				}
+				return false;
+			}
+			(Ts{}) || ...));
 		}
-		else
-		{
-			fs::path oldMeta{ oldPath };
-			oldMeta += ".meta";
-			fs::path newMeta{ newPath };
-			newMeta += ".meta";
-			fs::rename(oldMeta, newMeta);
-		}
 
-		AddAsset(newPath);
+		AddAsset(newPath,fileData);
 		RemoveAsset(oldPath);
 	}
 
@@ -168,10 +226,13 @@ struct AllAssetsGroup
 		(([&](auto type) 
 		{
 			using T = decltype(type);
+			if (std::is_same_v<ScriptAsset,T>)
+				return false;
 			auto& buffer{std::get<AssetsBuffer<T>>(assetsBuffer)};
 			for (auto& pair : buffer)
 			{
 				fs::path path{pair.second->mFilePath };
+				
 				switch (pair.first)
 				{
 					case ASSET_LOADED:
@@ -212,38 +273,88 @@ struct AllAssetsGroup
 		})(Ts{}), ...);
 	}
 
-
-
-	Engine::GUID GetGUID(const std::filesystem::path& filePath)
+	template <typename MetaType>
+	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
+		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		MetaFile mFile;
+		MetaType mFile;
 		Engine::GUID tempGUID{ mFile.guid };
-		bool success = Deserialize<MetaFile>(metaPath,mFile);
+		if (filePath.extension() == ".geom")
+		{
+			auto& table = std::get<AssetsTable<MeshAsset>>(assets);
+			for (auto& pair : table)
+			{
+				if (pair.second.mFilePath == filePath)
+				{
+					return pair.first;
+				}
+			}
+		}
+		bool success = Deserialize<MetaType>(metaPath, mFile);
 		if (!success)
 		{
 			if (([&](auto type)
 			{
 				using T = decltype(type);
-				auto& table = std::get<AssetsTable<T>>(assets);
-				for (auto& pair : table)
+				if (GetAssetType::E<T>() == assetType)
 				{
-					if (pair.second.mFilePath == filePath)
+					auto& table = std::get<AssetsTable<T>>(assets);
+					for (auto& pair : table)
 					{
-						mFile.guid = pair.first;
-						return true;
+						if (pair.second.mFilePath == filePath)
+						{
+							mFile.guid = pair.first;
+							return true;
+						}
 					}
+					//Could not find
+					Serialize(metaPath, mFile);
+					return true;
 				}
-				Serialize(metaPath, mFile);
 				return false;
 			}
 			(Ts{}) || ...));
 		}
 		//Failed to find guid
-		if (tempGUID == mFile.guid)
+		if (tempGUID == mFile.guid || update)
 			Serialize(metaPath, mFile);
 		return mFile.guid;
+	}
+
+	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
+	{
+		size_t assetType = GetAssetType(filePath);
+		Engine::GUID guid;
+		if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == assetType)
+				{
+					if constexpr (std::is_same<T, MeshAsset>())
+					{
+						guid = GetGUID<ModelImporter>(filePath, false);
+					}
+					else
+					{
+						guid = GetGUID<MetaFile>(filePath, false);
+					}
+					return true;
+				}
+				return false;
+			}
+		(Ts{}) || ...));
+		return guid;
+	}
+
+	size_t GetAssetType(const std::filesystem::path& path)
+	{
+		if (AssetExtensionTypes.contains(path.extension().string()))
+		{
+			return AssetExtensionTypes[path.extension().string()];
+		}
+		return GetAssetType::E<Asset>();
 	}
 
 	fs::path GetFilePath(const Engine::GUID& guid)
@@ -272,13 +383,12 @@ struct AllAssetsGroup
 		//If no meta, assume modified as it is just added
 		if (!std::filesystem::exists(metaPath))
 		{
-			GetGUID(filePath);
+			GetGUID(filePath,true);
 			return true;
 		}
-		std::vector<YAML::Node> data = YAML::LoadAllFromFile(metaPath.string());
 		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			GetGUID(filePath);
+			GetGUID(filePath, true);
 			return true;
 		}
 		return false;
@@ -286,7 +396,7 @@ struct AllAssetsGroup
 
 	FileData* GetFileData(const std::filesystem::path& filePath)
 	{
-		size_t assetType = AssetExtensionTypes[filePath.extension().string()];
+		size_t assetType = GetAssetType(filePath);
 		FileData* pData;
 		if (([&](auto type)
 			{

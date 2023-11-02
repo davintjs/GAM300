@@ -21,14 +21,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
+#include "Graphics/BaseAnimator.h"
 #include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
 #include <map>
 #include <Utilities/GUID.h>
 #include <AssetManager/AssetTypes.h>
-
+#include <Core/EventsManager.h>
+#include <Core/Events.h>
 #include <Properties.h>
+#include "Debugging/Debugger.h"
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
@@ -85,6 +88,9 @@ struct Transform : Object
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
 
+	// Get the rotation in world space
+	glm::vec3 GetRotation() const;
+
 	// Get the scale in world space
 	glm::vec3 GetScale() const;
 
@@ -107,9 +113,11 @@ struct Transform : Object
 
 property_begin_name(Transform, "Transform")
 {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(translation).Name("Translation"),
-		property_var(rotation).Name("Rotation"),
-		property_var(scale).Name("Scale"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
+	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE)
 } property_vend_h(Transform)
 
 struct AudioSource : Object
@@ -133,6 +141,7 @@ property_begin_name(AudioSource, "Audio Source") {
 		//property_var(ChannelName).Name("channel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
 
@@ -175,9 +184,22 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 	property_var(radius).Name("Radius")
 } property_vend_h(CapsuleCollider)
 
-struct Animator : Object
+struct Animator : Object, BaseAnimator
 {
+	Animator();
+	//Engine::GUID m_CurrentAnimation;
+	bool playing;
+	// selected anim
+	//Animation* m_CurrentAnimation{};
+	property_vtable();
 };
+
+property_begin_name(Animator, "Animator") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_parent(BaseAnimator),
+	//property_var(animationID).Name("Animation"),
+	property_var(playing).Name("Playing")
+} property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera
 {
@@ -252,15 +274,19 @@ property_begin_name(CharacterController, "CharacterController") {
 
 struct Script : Object
 {
-	std::string name;
-	Script() {}
-	Script(const char* _name) :name{ _name } {}
+	Script(){}
+	Script(const char* yes) 
+	{
+		E_ASSERT(false,"INVALID CONSTRUCTOR");
+	}
+	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
 	property_vtable();
 };
 
 property_begin_name(Script, "Script") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(name).Name("Name").Flags(property::flags::DONTSHOW),
+	property_var(scriptId).Name("Script").Flags(property::flags::DONTSHOW),
 	//property_var(fields)
 } property_vend_h(Script)
 
@@ -270,7 +296,7 @@ struct MeshFilter : Object
 	MeshFilter();
 
 	Engine::GUID meshId;
-	std::vector<glm::vec3>* vertices;	// Position
+	std::vector<ModelVertex>* vertices;	// Position
 	std::vector<unsigned int>* indices;	// Index
 	property_vtable();
 };
@@ -281,7 +307,15 @@ property_begin_name(MeshFilter, "MeshFilter"){
 
 struct MeshRenderer : Object
 {
+
+	// Material Instance
+	//Material_instance* materialInstance;
+
 	Engine::GUID meshID{ DEFAULT_MESH };
+
+
+
+
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
@@ -306,7 +340,7 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
-	bool isInstance = false;
+	bool isInstance = true;
 	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
 	property_vtable();
@@ -325,6 +359,8 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(RoughnessTexture).Name("RoughnessTexture"),
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
+	property_var(emission).Name("EmissionScalar"),
+	property_var(isInstance).Name("IsInstance"),
 } property_vend_h(MeshRenderer)
 
 
@@ -344,8 +380,8 @@ struct LightSource : Object
 	float outer_CutOff;
 
 	// Used for all
-	float intensity;
-	Vector3 lightingColor{ 50000.f, 50000.f, 50000.f };
+	float intensity = 10.f;
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
 	
 	property_vtable()
@@ -365,6 +401,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
+		bool ColourPicked = true;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
@@ -455,10 +492,10 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));

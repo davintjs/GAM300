@@ -38,6 +38,11 @@ void Lighting::Update(float)
 	pointLightSources.clear();
 	directionLightSources.clear();
 	spotLightSources.clear();
+		// This is temporary - a further reset
+	point_light_stuffs.inUse = false;
+	directional_light_stuffs.inUse = false;
+	spot_light_stuffs.inUse = false;
+
 
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{

@@ -32,9 +32,11 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene/Entity.h"
 #include "Scene/Components.h"
+#include "Scripting/ScriptFields.h"
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
+#define COLOURPICKER ColourPicker::Instance()
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
@@ -64,10 +66,6 @@ class SkyBox;
 
 // Graphics Settings
 
-bool extern RenderShadow;
-unsigned int extern bloomCount;
-float extern bloomThreshold;
-bool extern enableBloom;
 
 
 // Graphic Functions
@@ -93,6 +91,18 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct Material_instance
+{
+	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+
+	Engine::GUID matInstanceName;
+
+					   // Var name   // Data Storage
+	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
+
+};
+
+
 ENGINE_SYSTEM(ShaderManager)
 {
 public:
@@ -109,6 +119,10 @@ public:
 	void CreateShaderInstance(size_t shaderIndex);
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
+
+	// 2 different instances of a PBR.
+
+	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
 
 private:
 	std::vector<GLSLShader> shaders;
@@ -129,6 +143,26 @@ private:
 	SkyBox skyBoxModel;
 	GLuint skyboxTex;
 };
+
+SINGLETON(ColourPicker)
+{
+public:
+	void Init();
+
+	// Initialize the skybox of the engine
+
+	void ColorPickingUI(BaseCamera & _camera);
+
+	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+
+private:
+
+	// Colour Picking
+	unsigned int colorPickFBO;
+	unsigned int colorPickTex;
+
+};
+
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
@@ -204,7 +238,11 @@ public:
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
-	void DrawDepth(LIGHT_TYPE temporary_test);
+	void DrawDepthDirectional();
+
+	void DrawDepthSpot();
+
+	void DrawDepthPoint();
 
 	bool Culling();
 
@@ -223,6 +261,16 @@ public:
 
 	bool& IsHDR() { return hdr; }
 
+	bool& enableShadows() { return renderShadow; };
+
+	unsigned int& GetBloomCount() { return bloomCount; };
+
+	float& GetBloomThreshold() { return bloomThreshold; };
+
+	bool& enableBloom() { return enablebloom; };
+
+	float& getAmbient() { return ambient; };
+
 	gBuffer m_gBuffer;
 private:
 	std::unordered_map<Engine::GUID, InstanceProperties> properties;
@@ -230,9 +278,38 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
+
+	// Global Graphics Settings
 	float exposure = 1.f;
 	bool hdr = true;
+	bool renderShadow = true;
+	unsigned int bloomCount = 1;
+	float bloomThreshold = 1.f;
+	bool enablebloom;
+	float ambient = 1.f;
+
 };
+
+//ENGINE_SYSTEM(ShadowRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+//
+//ENGINE_SYSTEM(UIRenderer)
+//{
+//public:
+//	void Init();
+//	void Update(float dt);
+//	void Exit();
+//
+//};
+
+
 void renderQuad();
 
 

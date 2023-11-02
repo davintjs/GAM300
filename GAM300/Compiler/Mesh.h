@@ -23,6 +23,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "glm/glm.hpp"
 #include "assimp/color4.h"
 
+#define MAX_BONE_INFLUENCE 4
+
 struct Vertex
 {
     std::int16_t posX;
@@ -44,6 +46,10 @@ struct Vertex
     std::int8_t colorG;
     std::int8_t colorB;
     std::int8_t colorA;
+
+    // Animation Related Properties
+    std::int16_t boneIDs[MAX_BONE_INFLUENCE];
+    std::int16_t weights[MAX_BONE_INFLUENCE];
 };
 
 struct Texture
@@ -113,21 +119,26 @@ struct Material
 
 class Geom_Mesh {
 public:
-    std::vector<Vertex> _vertices; // This individual mesh vertices
+    std::vector<Vertex> _vertices;      // This individual mesh vertices
     std::vector<unsigned int> _indices; // This individual mesh indices
 
-    glm::vec3 mPosCompressionScale{}; // Scale value according to the bounding box of the vertices positions of this sub mesh
-    glm::vec2 mTexCompressionScale{}; // Scale value according to the bounding box of the texture coordinates of this sub mesh
+    glm::vec3 boundsMin{};				// The min position of the mesh
+    glm::vec3 boundsMax{};				// The max position of the mesh
 
-    glm::vec3 mPosCompressionOffset{}; // This individual mesh vertices' positions' center offset from original
-    glm::vec2 mTexCompressionOffset{}; // This individual mesh textures' coordinates' center offset from original
+    glm::vec3 mPosCompressionScale{};   // Scale value according to the bounding box of the vertices positions of this sub mesh
+    glm::vec3 mPosCompressionOffset{};  // This individual mesh vertices' positions' center offset from original
 
-    int materialIndex = 0; // Material index
+    glm::vec2 mTexCompressionScale{};   // Scale value according to the bounding box of the texture coordinates of this sub mesh
+    glm::vec2 mTexCompressionOffset{};  // This individual mesh textures' coordinates' center offset from original
+
+    int materialIndex = 0;              // Material index
+
+    // For Animation
+    unsigned int numBones;              // Number of bones within the mesh
 
     Geom_Mesh() {};
-    Geom_Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posScale, glm::vec2 texScale, glm::vec3 posOffset, glm::vec2 texOffset)
-        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionScale(posScale), mTexCompressionScale(texScale), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset)
-    {};
+    Geom_Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, int material, glm::vec3 posScale, glm::vec2 texScale, glm::vec3 posOffset, glm::vec2 texOffset, unsigned int numBones)
+        :_vertices(vertices), _indices(indices), materialIndex(material), mPosCompressionScale(posScale), mTexCompressionScale(texScale), mPosCompressionOffset(posOffset), mTexCompressionOffset(texOffset), numBones(numBones) {};
 
 };
 

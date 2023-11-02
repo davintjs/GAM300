@@ -20,9 +20,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "AnimationManager.h"
+//#include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
 
+#include <glm/gtx/matrix_decompose.hpp>
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -50,8 +51,10 @@ extern unsigned int depthCubemap;
 // Bloom
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
-bool blooming = false;
 
+
+
+std::vector<temp_instance> temporary_presets;
 
 void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
@@ -173,23 +176,49 @@ bool bloom(unsigned int amount, unsigned int VAO, unsigned int VBO, BaseCamera& 
 
 void GraphicsSystem::Init()
 {
+	temp_instance emissionMat;
+	emissionMat.name = "Emission material";
+	emissionMat.albedo = glm::vec4(0.f, 255.f, 255.f, 255.f);
+	emissionMat.metallic = 1.f;
+	emissionMat.roughness = 1.f;
+	emissionMat.ao = 1.f;
 
+	temp_instance blackSurfaceMat;
+	blackSurfaceMat.name = "Black Surface material";
+	blackSurfaceMat.albedo = glm::vec4(0.f, 0.f, 0.f, 255.f);
+	blackSurfaceMat.metallic = 1.f;
+	blackSurfaceMat.roughness = 1.f;
+	blackSurfaceMat.ao = 1.f;
+
+	temp_instance darkBlueMat;
+	darkBlueMat.name = "Dark Blue material";
+	darkBlueMat.albedo = glm::vec4(73.f, 85.f, 128.f, 255.f);
+	darkBlueMat.metallic = 1.f;
+	darkBlueMat.roughness = 1.f;
+	darkBlueMat.ao = 1.f;
+
+	temporary_presets.emplace_back(emissionMat);
+	temporary_presets.emplace_back(blackSurfaceMat);
+	temporary_presets.emplace_back(darkBlueMat);
 
 	// All subsystem initialize
 	GraphicsSubSystems::Init();
 	SkyboxManager::Instance().Init();
+	COLOURPICKER.Init();
 	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
 
 	FRAMEBUFFER.CreateBloom(pingpongFBO, pingpongColorbuffers);
+
+
 }
 
 void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
-	AnimationManager.Update(dt);
+	//AnimationManager.Update(dt);
 
 	// Editor Camera
 	EditorWindowEvent e("Scene");
@@ -214,7 +243,9 @@ void GraphicsSystem::Update(float dt)
 			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 			// Update camera view 
-			camera.UpdateCamera(transform->translation, transform->rotation);
+			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+
+			COLOURPICKER.ColorPickingUI(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
@@ -246,9 +277,9 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	bool index = false;
 	if (blooming)
 	{*/
-	if (enableBloom)
+	if (RENDERER.enableBloom())
 	{
-		bool index = bloom(bloomCount, _vao, _vbo, _camera);
+		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
@@ -286,7 +317,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 
-	glUniform1f(uniform3, enableBloom);
+	glUniform1f(uniform3, RENDERER.enableBloom());
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();
@@ -301,7 +332,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-	AnimationManager.Draw(_camera); // temp
 	
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
@@ -319,12 +349,12 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 void GraphicsSystem::PostDraw()
 {
 	//@kk clear the one with shader instead
-	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+	/*for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
 		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
 		{
 			prop.iter = 0;
 		}
-	}
+	}*/
 	
 }
 

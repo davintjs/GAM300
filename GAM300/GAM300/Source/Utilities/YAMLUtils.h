@@ -32,6 +32,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Properties.h"
 #include "UUID.h"
 #include "GUID.h"
+#include "AssetManager/AssetTypes.h"
 
 struct Scene;
 struct Transform;
@@ -42,6 +43,12 @@ struct Child
     std::vector<Engine::UUID> _transform;
     Scene& _scene;
 };
+
+// Overload for output for the Emitter specifically for vector of guids
+YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID>& _data);
+
+// Overload for output for the Emitter specifically for model importer struct
+YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data);
 
 // Overload for output for the Emitter specifically for child struct
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data);
@@ -63,6 +70,48 @@ YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
 
 namespace YAML
 {
+    template<>
+    struct convert<std::vector<Engine::GUID>>
+    {
+        // Encoding for vector of guid during deserialization
+        static Node encode(const std::vector<Engine::GUID>& rhs)
+        {
+            Node node;
+            for (Engine::GUID guid : rhs)
+                node.push_back(guid);
+            return node;
+        }
+
+        // Decoding for vector of guid during deserialization
+        static bool decode(const Node& node, std::vector<Engine::GUID>& rhs)
+        {
+            rhs = node.as<std::vector<Engine::GUID>>();
+            return true;
+        }
+    };
+
+    template<>
+    struct convert<ModelImporter>
+    {
+        // Encoding for model importer during deserialization
+        static Node encode(const ModelImporter& rhs)
+        {
+            Node node;
+            node.push_back(rhs.meshes);
+            node.push_back(rhs.materials);
+            node.push_back(rhs.animations);
+            return node;
+        }
+
+        // Decoding for model importer during deserialization
+        static bool decode(const Node& node, ModelImporter& rhs)
+        {
+            rhs.meshes = node[0].as<std::vector<Engine::GUID>>();
+            rhs.materials = node[1].as<std::vector<Engine::GUID>>();
+            rhs.animations = node[2].as<std::vector<Engine::GUID>>();
+            return true;
+        }
+    };
 
     template<>
     struct convert<Vector2>
@@ -139,7 +188,6 @@ namespace YAML
             {
                 return false;
             }
-
             rhs.x = node[0].as<float>();
             rhs.y = node[1].as<float>();
             rhs.z = node[2].as<float>();
@@ -167,6 +215,14 @@ namespace YAML
         }
     };
 
+    //struct CustomAnchor
+    //{
+    //    std::string str;
+    //};
+
+    //inline Emitter& operator<<(Emitter& emitter, const CustomAnchor& v) {
+    //    return emitter.Write(v);
+    //}
     //template <>
     //struct convert<char*>
     //{

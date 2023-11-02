@@ -18,8 +18,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
+#include <Core/SystemInterface.h>
 
-class Application
+SINGLETON(Application)
 {
 public:
 
@@ -62,6 +63,9 @@ public:
 
 	// Load configuration from file
 	static bool LoadConfig(const std::string& _filename, const int& _width, const int& _height);
+
+	// Set if the cursor should be shown or not
+	void SetCursorMode(const bool& _shown);
 
 	// Set dimensions of the window
 	void SetDimensions(const int& _width, const int& _height) { windowWidth = _width; windowHeight = _height; }
