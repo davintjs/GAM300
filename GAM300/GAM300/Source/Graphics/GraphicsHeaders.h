@@ -30,8 +30,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //#include "glslshader.h"
 #include "GBuffer.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Components.h"
 #include "Scripting/ScriptFields.h"
 
 #define SHADER ShaderManager::Instance()
@@ -313,29 +311,7 @@ private:
 void renderQuad();
 
 
-template <typename T, typename... Ts>
-void CreateField(const char* name, size_t typeEnum, std::unordered_map<std::string, Field>& variableMap) {
 
-	if (GetFieldType::E<T>() == typeEnum) {
-		
-		if constexpr (std::is_same_v<T, char*>) {
-			
-			// Magic char buffer of 100
-			variableMap.insert({ name, Field(typeEnum, 100) });
-
-		}
-		else {
-			variableMap.insert({ name, Field(typeEnum, sizeof(T)) });
-		}
-
-	}
-
-	if constexpr (sizeof...(Ts) != 0) {
-		CreateField<Ts...>(name, typeEnum, variableMap);
-	}
-
-
-}
 
 
 #endif // !GRAPHICSHEADERS_H

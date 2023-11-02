@@ -14,7 +14,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
-#include "Scene/Components.h"
+#include "Scene/Entity.h"
 
 const std::string shaderPath = "GAM300/Shaders";
 
@@ -40,6 +40,31 @@ static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 	{ "vec4",						GetFieldType::E<Vector4>()},
 	{ "id",							GetFieldType::E<Engine::GUID>()},
 };
+
+
+template <typename T, typename... Ts>
+void CreateField(const char* name, size_t typeEnum, std::unordered_map<std::string, Field>& variableMap) {
+
+	if (GetFieldType::E<T>() == typeEnum) {
+
+		if constexpr (std::is_same_v<T, char*>) {
+
+			// Magic char buffer of 100
+			variableMap.insert({ name, Field(typeEnum, 100) });
+
+		}
+		else {
+			variableMap.insert({ name, Field(typeEnum, sizeof(T)) });
+		}
+
+	}
+
+	if constexpr (sizeof...(Ts) != 0) {
+		CreateField<Ts...>(name, typeEnum, variableMap);
+	}
+
+
+}
 
 template <typename... Ts>
 void Helper(TemplatePack<Ts...>, std::unordered_map<size_t, std::pair<std::string, size_t>>& variableDeclarations, std::unordered_map<std::string, Field>& variableMap) {

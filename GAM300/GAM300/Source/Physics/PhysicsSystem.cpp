@@ -120,9 +120,14 @@ void PhysicsSystem::Update(float dt) {
 	}
 	//std::cout << "pre update\n";
 	PrePhysicsUpdate(dt);
-	//step++;
-	if (physicsSystem) {
-		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
+
+	// Fixed time steps
+	if (physicsSystem && accumulatedTime >= 1.f/60.f) {
+		physicsSystem->Update(dt, ceil(accumulatedTime/(1.f/60.f)), tempAllocator, jobSystem);
+		accumulatedTime = 0.f;
+	}
+	else {
+		accumulatedTime += dt;
 	}
 	//std::cout << "after physics update but before post update\n";
 	//std::cout << "DT: " << dt << std::endl;
