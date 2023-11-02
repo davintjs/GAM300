@@ -28,11 +28,17 @@ void AudioSystem::Update(float dt) {
 	for (AudioSource& audio : currentScene.GetArray<AudioSource>()) {
 		// if audio is not playing, skip this loop unless it is music
 		if (!audio.play) {
+			if (audio.current_channel == (int)AudioSource::Channel::SFX) {
+				AUDIOMANAGER.PauseLoopFX();
+				AUDIOMANAGER.StopFX();
+				continue;
+			}
 			if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
 				AUDIOMANAGER.PauseMusic();
+				continue;
 			}
-			continue;
 		}
+		/**/
 		AUDIOMANAGER.PauseMusic();
 		AUDIOMANAGER.PauseLoopFX();
 		// update music settings

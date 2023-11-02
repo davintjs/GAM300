@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <FMOD/fmod.hpp>
 #include <Core/Events.h>
 #include <AssetManager/AssetTypes.h>
+#include "Scene/Components.h" // @kk or @bean does this slow down compile time? i need AudioSource component tho
 
 #define AUDIOMANAGER AudioManager::Instance()
 //using SoundMap = std::map<std::string, FMOD::Sound*>; //@kk delete once done
@@ -64,7 +65,6 @@ public:
 	// Play SFX with the filename on loop
 	//void PlayLoopFX(const std::string soundGUID, float pan = 0.f, float vol = 1.f);
 	void PlayLoopFX(Engine::GUID soundGUID, float pan = 0.f, float vol = 1.f,
-		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
@@ -72,6 +72,9 @@ public:
 	void PlaySFX(Engine::GUID soundGUID, float pan = 0,
 		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
+
+	// play from component
+	void PlayComponent(AudioSource Source);
 
 	// stop SFX from playing
 	void StopFX();

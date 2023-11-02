@@ -118,8 +118,8 @@ void Renderer::Update(float)
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
 
-			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-			//GLuint vao = MeshManager.vaoMap[renderer.meshID];
+			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
+			GLuint vao = MeshManager.vaoMap[renderer.meshID];
 			//instanceProperties[vao];
 			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
 
@@ -154,7 +154,7 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
 			instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();*/
 			
-			for (GLuint vao : t_Mesh->Vaoids) { // for each submesh, slot things into instanceContainer[s]
+			//for (GLuint vao : t_Mesh->Vaoids) { // for each submesh, slot things into instanceContainer[s]
 				if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 					instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 				}
@@ -187,7 +187,7 @@ void Renderer::Update(float)
 				instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
 				//instanceContainers[s][renderer.meshID].VAO = vao;
 				++iter;
-			}
+			//}
 		}
 		else /*if default rendering*/{
 		//}
@@ -231,29 +231,29 @@ void Renderer::Update(float)
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;
 
-				renderProperties.isAnimatable = false;
-				renderProperties.boneidx = -1;
+			renderProperties.isAnimatable = false;
+			renderProperties.boneidx = -1;
 				
-				if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			{
+				Animator& animator = currentScene.Get<Animator>(entity);
+				if (animator.AnimationAttached())
 				{
-					Animator& animator = currentScene.Get<Animator>(entity);
-					if (animator.AnimationAttached())
-					{
-						renderProperties.isAnimatable = true;
-						renderProperties.boneidx = finalBoneMatContainer.size();
-						finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
-					}
+					renderProperties.isAnimatable = true;
+					renderProperties.boneidx = finalBoneMatContainer.size();
+					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
-
-
-				defaultProperties.emplace_back(renderProperties);
-
-				if (instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].cend()) { // if container does not have this vao, emplace
-					instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].emplace(std::pair(vao, instanceProperties[vao]));
-				}
-				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][vao].iter++;
 			}
+
+
+			defaultProperties.emplace_back(renderProperties);
+
+			if (instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].find(t_Mesh->vaoID) == instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].cend()) { // if container does not have this vao, emplace
+				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].emplace(std::pair(t_Mesh->vaoID, instanceProperties[t_Mesh->vaoID]));
+			}
+			instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
+			instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
+			
 			
 		}
 		

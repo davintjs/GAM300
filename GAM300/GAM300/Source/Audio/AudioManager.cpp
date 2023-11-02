@@ -151,7 +151,6 @@ void AudioManager::PlayMusic(const Engine::GUID name) {
 }
 
 void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol,
-	float minVolume, float maxVolume,
 	float minPitch, float maxPitch) {
 
 	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
@@ -160,11 +159,29 @@ void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol,
 		currentFX->setPaused(false);
 		currentFX->setPan(pan);
 		loopfxVolume = vol;
+		int count{ 1 };
+		currentFX->getLoopCount(&count);
+		if (count == 1 || count == -1) {
+			count = 1;
+			currentFX->setFrequency(44100.f);
+		}
+		currentFX->setLoopCount(count);
+		if (count == 0) {
+			static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
+			float frequency{1};
+			float pitch = RandFloat(minPitch, maxPitch);
+			currentFX->getFrequency(&frequency);
+			frequency = frequency * pow(semitone_ratio, pitch);
+			currentFX->setFrequency(frequency);
+			currentFX->setLoopCount(2);
+
+		}
 		return;
 	}
 	// If a Music is playing stop them and set this as the next Music
 	if (currentFX != 0) {
 		//AudioManager::StopFX();
+		
 		return;
 	}
 	// Find the Music in the corresponding sound map
@@ -178,11 +195,7 @@ void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol,
 	system->playSound(sound->second, 0, true, &currentFX);
 	currentFX->setChannelGroup(groups[CATEGORY_LOOPFX]);
 	//volume = RandFloat(minVolume, maxVolume);
-	static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
-	float pitch = RandFloat(minPitch, maxPitch);
-	float frequency = frequency * pow(semitone_ratio, pitch);
-	currentFX->setFrequency(frequency);
-
+	
 	currentFX->setVolume(1.0f);
 	currentFX->setPan(pan);
 	loopfxVolume = vol;
@@ -204,6 +217,23 @@ void AudioManager::PlayMusic() {
 	}
 	//StopMusic();
 }
+
+void AudioManager::PlayComponent(AudioSource Source) {
+	switch (Source.current_channel)
+	{
+	case 0: // Music
+		currentMusic->setVolume(Source.volume);
+		PlayMusic(Source.currentSound);
+		break;
+	case 1: // SFX
+		currentMusic->setVolume(Source.volume);
+		PlaySFX(Source.currentSound);
+		break;
+	default:
+		break;
+	}
+}
+
 
 void AudioManager::PauseMusic() {
 	groups[CATEGORY_MUSIC]->setPaused(true);
