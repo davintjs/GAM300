@@ -33,8 +33,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Properties.h>
 #include "Debugging/Debugger.h"
 
-#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
-#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 
 constexpr size_t MAX_ENTITIES{ 5 };
 

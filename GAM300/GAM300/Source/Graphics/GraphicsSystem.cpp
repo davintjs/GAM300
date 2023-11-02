@@ -32,6 +32,7 @@ TemplatePack
 	FramebufferManager,
 	DebugDraw,
 	Lighting,
+	MaterialSystem,
 	Renderer
 >;
 
