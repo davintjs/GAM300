@@ -86,33 +86,27 @@ void MaterialSystem::deleteInstance(Material_instance& matInstance)
 {
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
-	
-	// Swap them out to default material
+	// Swap them out to default material before deleting the instance
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-		std::cout << "enter\n";
 		if (renderer.material_ptr == NULL)
 		{
 			continue;
 		}
+
 		if (renderer.material_ptr->name == matInstance.name)// change to matInstanceName
 		{
-			renderer.material_ptr = &(_material[SHADERTYPE::PBR][0]);
+			renderer.material_ptr = &(_material[matInstance.shaderType][0]);
 		}
-		std::cout << "looping\n";
 	}
 
+	// Deleting the material instance
 	for (std::vector<Material_instance>::iterator iter(_material[matInstance.shaderType].begin());
 		iter != _material[matInstance.shaderType].end();
 		++iter)
 	{
 		if ((*iter).name == matInstance.name)// change to matInstanceName
 		{
-			//log << "Deletting object " << *it << "\n"
-			//or other actions
-			//or if your vector keep pointers you can call delete
-			//delete *it;
-
 			iter = _material[matInstance.shaderType].erase(iter);
 		}
 
