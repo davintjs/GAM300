@@ -5,6 +5,9 @@
 
 void MaterialSystem::Init()
 {
+
+	NewMaterialInstance();
+
 	// Creating PBR (Instanced) Material
 	createPBR_Instanced();
 
@@ -27,9 +30,8 @@ void MaterialSystem::Exit()
 
 void MaterialSystem::createPBR_Instanced()
 {
+	// Creating a Default PBR-Instanced Material Instance
 	
-	//Material_Types.push_back(SHADERTYPE::PBR);
-	//_material.insert(SHADERTYPE::PBR)
 
 	//Test material instances
 	Material_instance emissionMat;
@@ -53,6 +55,7 @@ void MaterialSystem::createPBR_Instanced()
 	darkBlueMat.roughnessConstant = 0.5f;
 	darkBlueMat.aoConstant = 1.f;
 
+
 	_material[SHADERTYPE::PBR].push_back(emissionMat);
 	_material[SHADERTYPE::PBR].push_back(blackSurfaceMat);
 	_material[SHADERTYPE::PBR].push_back(darkBlueMat);
@@ -62,6 +65,17 @@ void MaterialSystem::createPBR_NonInstanced()
 {
 
 	//Material_Types.push_back(SHADERTYPE::DEFAULT);
+
+
+}
+
+Material_instance& MaterialSystem::NewMaterialInstance()
+{
+
+	Material_instance defaultMaterial;
+	_material[defaultMaterial.parentMaterial].push_back(defaultMaterial);
+
+	return *(_material[defaultMaterial.parentMaterial].end()-1);
 
 
 }

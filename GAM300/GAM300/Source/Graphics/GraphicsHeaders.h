@@ -97,43 +97,60 @@ struct Material_instance : Object
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
 	Material_instance() {
-		name = std::string();
+		parentMaterial = SHADERTYPE::PBR;
+		name = "Default Material";
 		albedoColour = Vector4(1.f,1.f,1.f,1.f );
 		metallicConstant = 1.f ;
 		roughnessConstant = 1.f ;
 		aoConstant = 1.f ;
 		emissionConstant = 1.f ;
-	}
 
-	Material_instance(const Material_instance& other) {
+		albedoTexture =		DEFAULT_TEXTURE;
+		normalMap =			DEFAULT_TEXTURE;
+		metallicTexture =	DEFAULT_TEXTURE;
+		roughnessTexture =	DEFAULT_TEXTURE;
+		aoTexture =			DEFAULT_TEXTURE;
+		emissionTexture =	DEFAULT_TEXTURE;
+
+
+	}
+	Material_instance(const Material_instance& other) { 
 		// Copy each member variable from 'other' to 'this'
-		name = other.name;
+		name = other.name + " - copy";
 		albedoColour = other.albedoColour;
 		metallicConstant = other.metallicConstant;
 		roughnessConstant = other.roughnessConstant;
 		aoConstant = other.aoConstant;
 		emissionConstant = other.emissionConstant;
+
+		albedoTexture = other.albedoTexture;
+		normalMap = other.normalMap;
+		metallicTexture = other.metallicTexture;
+		roughnessTexture = other.roughnessTexture;
+		aoTexture = other.aoTexture;
+		emissionTexture = other.emissionTexture;
+
 	}
 
-	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+	SHADERTYPE parentMaterial;
 	Engine::GUID matInstanceName;
 
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-	std::string		name = "New Material";
-	Vector4			albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
-	float			metallicConstant{ 1.f };
-	float			roughnessConstant{ 1.f };
-	float			aoConstant{ 1.f };
-	float			emissionConstant{ 1.f };
+	std::string		name;
+	Vector4			albedoColour;// This is pretty much used in all types of shaders
+	float			metallicConstant;
+	float			roughnessConstant;
+	float			aoConstant;
+	float			emissionConstant;
 
-	Engine::GUID	albedoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	normalMap{ DEFAULT_TEXTURE };
-	Engine::GUID	metallicTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	roughnessTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	aoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	emissionTexture{ DEFAULT_TEXTURE };
+	Engine::GUID	albedoTexture;
+	Engine::GUID	normalMap;
+	Engine::GUID	metallicTexture;
+	Engine::GUID	roughnessTexture;
+	Engine::GUID	aoTexture;
+	Engine::GUID	emissionTexture;
 
 
 
@@ -173,6 +190,8 @@ property_begin_name(Material_instance, "Material_Instance") {
 		property_var(emissionTexture).Name("EmissionTexture"),
 } property_vend_h(Material_instance)
 
+
+
 ENGINE_SYSTEM(MaterialSystem)
 {
 public:
@@ -188,7 +207,9 @@ public:
 
 	void createPBR_NonInstanced();
 	
-	std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
+	Material_instance& NewMaterialInstance();
+
+	//std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
 
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 

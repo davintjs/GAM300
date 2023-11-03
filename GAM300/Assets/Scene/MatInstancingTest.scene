@@ -1,0 +1,46 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: MatInstancingTest
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 14053862913570285849
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10826594211189145001}  # Transform
+    - component: {fileID: 520627173202468843}  # MeshRenderer
+---
+ID: 10826594211189145001
+Transform:
+  m_GameObject: {fileID: 14053862913570285849}
+  Translation: [3.64583206, 3.36212611, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 520627173202468843
+MeshRenderer:
+  m_GameObject: {fileID: 14053862913570285849}
+  IsInstance: true
+  Mesh: {guid: 00000000000000000000000000000065}
+  Material: 1
+  Albedo: [0.00392156886, 0.00392156886, 0.00392156886, 0.00392156886]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
