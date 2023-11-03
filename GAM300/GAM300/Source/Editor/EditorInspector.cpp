@@ -874,6 +874,37 @@ void DisplayMaterial(Change& change, T& value) {
     }
 }
 
+int shader_id;
+
+template <typename T>
+void DisplayShaders(Change& change, T& value) {
+    if constexpr (std::is_same_v<T, int>) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Shader");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+        MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
+
+        std::vector<const char*> layers;
+        shader_id = value;
+        //Get all materials inside PBR shader
+        for (auto& shader : MATERIALSYSTEM.available_shaders) {
+            layers.push_back(shader.name.c_str());
+        }
+
+
+        //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+        if (ImGui::Combo("##Shader", &shader_id, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, shader_id);
+        }
+    }
+}
+
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
@@ -1532,17 +1563,24 @@ void EditorInspector::Update(float dt)
                     if (!Flags.m_isDontShow) {
                         auto entry = property::entry { PropertyName, Data };
                         std::visit([&](auto& Value) {
+
                             using T1 = std::decay_t<decltype(Value)>;
+
                             //Edit name
                             std::string DisplayName = entry.first;
                             auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                             DisplayName.erase(DisplayName.begin(), ++it);
-
-                            ImGui::PushID(entry.first.c_str());
                             Change newchange(&material, entry.first);
-                            Display<T1>(newchange, DisplayName.c_str(), Value);
-                            ImGui::PopID();
+                            ImGui::PushID(entry.first.c_str());
 
+                            if (entry.first.find("Shader") != std::string::npos) {
+                                DisplayShaders(newchange, Value);
+                            }
+                            else {                            
+                                 Display<T1>(newchange, DisplayName.c_str(), Value);     
+                            }
+
+                            ImGui::PopID();
                             }
                         , Data);
                         property::set(material, entry.first.c_str(), Data);

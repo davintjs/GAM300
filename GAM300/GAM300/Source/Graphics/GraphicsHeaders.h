@@ -91,14 +91,22 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct Shader {
+	Shader(std::string _name, SHADERTYPE type) : name(_name), shadertype(type) {}
+	std::string name;
+	SHADERTYPE shadertype;
+};
+
 struct Material_instance : Object
 {
 					// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
+	
+
 	Material_instance() 
 	{
-		shaderType = SHADERTYPE::PBR;
+		shaderType = (int)SHADERTYPE::PBR;
 		name = "Default Material";
 		albedoColour = Vector4(1.f,1.f,1.f,1.f );
 		metallicConstant = 1.f ;
@@ -154,7 +162,7 @@ struct Material_instance : Object
 		return *this;
 	}
 
-	SHADERTYPE shaderType;
+	int shaderType = (int)SHADERTYPE::PBR;
 	Engine::GUID matInstanceName;
 
 	//-------------------------
@@ -199,6 +207,7 @@ property_begin_name(Material_instance, "Material_Instance") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(matInstanceName).Name("GUID").Flags(property::flags::DONTSHOW),
 		property_var(name).Name("Material Name"),
+		property_var(shaderType).Name("Shader"),
 		property_var(albedoColour).Name("Albedo"),
 		property_var(metallicConstant).Name("Metallic"),
 		property_var(roughnessConstant).Name("Roughness"),
@@ -238,7 +247,11 @@ public:
 	// Deleting a Material Instance
 	void deleteInstance(Material_instance & matInstance);
 	
+	
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+
+	std::vector<Shader>available_shaders;
+
 private:
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables

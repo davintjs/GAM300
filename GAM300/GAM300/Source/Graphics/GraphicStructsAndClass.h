@@ -45,8 +45,9 @@ struct temp_instance
 
 enum class SHADERTYPE
 {
-	HDR,
+	DEFAULT,
 	PBR,
+	HDR,
 	TIR,// Temporary Instance Render
 	TDR,// Temporary Debug Instance Render
 	SKYBOX,
@@ -58,7 +59,6 @@ enum class SHADERTYPE
 	UI_WORLD,
 	BLUR,
 	GBUFFER,
-	DEFAULT,
 	COLOURPICKING,
 	COUNT
 };

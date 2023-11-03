@@ -838,6 +838,7 @@ void SkyBox::SkyBoxinit()
 
 void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
 {
+    GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
     shader.Use();
     GLint uniform_var_loc1 =
         glGetUniformLocation(this->shader.GetHandle(),

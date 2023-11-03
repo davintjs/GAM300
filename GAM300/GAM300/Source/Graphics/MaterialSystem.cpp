@@ -15,7 +15,10 @@ void MaterialSystem::Init()
 	// Creating PBR (Non-Instanced) Material
 	createPBR_NonInstanced();
 
-
+	//temp 	
+	available_shaders.push_back(Shader("Default", SHADERTYPE::DEFAULT));
+	available_shaders.push_back(Shader("PBR", SHADERTYPE::PBR));
+	
 }
 
 void MaterialSystem::Update(float dt)
@@ -85,8 +88,8 @@ Material_instance& MaterialSystem::NewMaterialInstance(std::string _name)
 {
 	Material_instance defaultMaterial;
 	defaultMaterial.name = _name;
-	_material[defaultMaterial.shaderType].push_back(defaultMaterial);
-	return *(_material[defaultMaterial.shaderType].end()-1);
+	_material[(SHADERTYPE)defaultMaterial.shaderType].push_back(defaultMaterial);
+	return *(_material[(SHADERTYPE)defaultMaterial.shaderType].end()-1);
 }
 
 void MaterialSystem::deleteInstance(Material_instance& matInstance)
@@ -103,18 +106,18 @@ void MaterialSystem::deleteInstance(Material_instance& matInstance)
 
 		if (renderer.material_ptr->name == matInstance.name)// change to matInstanceName
 		{
-			renderer.material_ptr = &(_material[matInstance.shaderType][0]);
+			renderer.material_ptr = &(_material[(SHADERTYPE)matInstance.shaderType][0]);
 		}
 	}
 
 	// Deleting the material instance
-	for (std::vector<Material_instance>::iterator iter(_material[matInstance.shaderType].begin());
-		iter != _material[matInstance.shaderType].end();
+	for (std::vector<Material_instance>::iterator iter(_material[(SHADERTYPE)matInstance.shaderType].begin());
+		iter != _material[(SHADERTYPE)matInstance.shaderType].end();
 		++iter)
 	{
 		if ((*iter).name == matInstance.name)// change to matInstanceName
 		{
-			iter = _material[matInstance.shaderType].erase(iter);
+			iter = _material[(SHADERTYPE)matInstance.shaderType].erase(iter);
 		}
 
 
