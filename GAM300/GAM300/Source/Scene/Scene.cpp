@@ -57,66 +57,71 @@ Scene& Scene::operator=(Scene& rhs)
 
 void Scene::Clone(Entity& source)
 {
+	ReferencesTable references;
+	StoreTransformHierarchy(references, source.EUID());
 	CloneHelper(source, AllComponentTypes());
 }
 
-//template <typename T, typename... Ts>
-//void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID)
-//{
-//	Transform& transform{ Get<Transform>(transformID) };
-//	//Create map entry
-//	storage[transform];
-//	for (Engine::UUID euid : transform.child)
-//	{
-//		StoreTransformHierarchy(storage, transformID);
-//	}
-//}
-//
-//void Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID transformID)
-//{
-//	Transform& transform{ Get<Transform>(transformID) };
-//	//Create map entry
-//	storage[transform];
-//	for (Engine::UUID euid : transform.child)
-//	{
-//		StoreTransformHierarchy(storage, transformID);
-//	}
-//}
+template <typename T, typename... Ts>
+void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID)
+{
+	Transform& transform{ Get<Transform>(transformID) };
+	//Create map entry
+	storage[transform];
+	for (Engine::UUID euid : transform.child)
+	{
+		StoreTransformHierarchy(storage, transformID);
+	}
+}
 
-//ReferencesTable Scene::PreClone(Entity& target)
-//{
-//	ReferencesTable references;
-//	//StoreTransformHierarchy(references, target.EUID());
-//
-//	static char buffer[2048]{};
-//	for (Script* pScript : GetMulti<Script>(target))
-//	{
-//		ScriptGetFieldNamesEvent getFieldNamesEvent{ *pScript };
-//		EVENTS.Publish(&getFieldNamesEvent);
-//		for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
-//		{
-//			const char* fieldName = getFieldNamesEvent.pStart[i];
-//			Field field{ AllFieldTypes::Size(),2048, buffer };
-//			ScriptGetFieldEvent getFieldEvent{ *pScript,fieldName,field };
-//			EVENTS.Publish(&getFieldEvent);
-//			//Objects
-//			if (field.fType >= FieldTypes::Size())
-//			{
-//				Handle& handle{ field.Get<Handle>() };
-//				if (references.contains(handle))
-//				{
-//					//Set to internal linkage in game object
-//					handle = references[handle];
-//				}
-//				ScriptSetFieldEvent setFieldEvent{ *pScript,fieldName,field };
-//				EVENTS.Publish(&setFieldEvent);
-//			}
-//
-//		}
-//	}
-//
-//	static char buffer[2048]{};
-//}
+void Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID transformID)
+{
+	Entity& key = Get<Entity>(transformID);
+	Entity& val = *Add<Entity>();
+	storage[key] = val;
+	Transform& transform{ Get<Transform>(transformID) };
+	//Create map entry
+	storage[transform];
+	for (Engine::UUID euid : transform.child)
+	{
+		StoreTransformHierarchy(storage, transformID);
+	}
+}
+
+
+
+ReferencesTable Scene::PreClone(Entity& target)
+{
+
+	static char buffer[2048]{};
+	for (Script* pScript : GetMulti<Script>(target))
+	{
+		ScriptGetFieldNamesEvent getFieldNamesEvent{ *pScript };
+		EVENTS.Publish(&getFieldNamesEvent);
+		for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
+		{
+			const char* fieldName = getFieldNamesEvent.pStart[i];
+			Field field{ AllFieldTypes::Size(),2048, buffer };
+			ScriptGetFieldEvent getFieldEvent{ *pScript,fieldName,field };
+			EVENTS.Publish(&getFieldEvent);
+			//Objects
+			if (field.fType >= FieldTypes::Size())
+			{
+				Handle& handle{ field.Get<Handle>() };
+				if (references.contains(handle))
+				{
+					//Set to internal linkage in game object
+					handle = references[handle];
+				}
+				ScriptSetFieldEvent setFieldEvent{ *pScript,fieldName,field };
+				EVENTS.Publish(&setFieldEvent);
+			}
+
+		}
+	}
+
+	static char buffer[2048]{};
+}
 
 void Scene::ClearBuffer()
 {
