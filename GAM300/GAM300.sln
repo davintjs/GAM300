@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GAM300", "GAM300\GAM300.vcxproj", "{2EA1E690-1736-464D-B586-92E837EE3292}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Compiler", "Compiler\Compiler.vcxproj", "{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2836EE83-F281-4C41-9D93-4A7A3FE7F68C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureCompiler", "TextureCompiler\TextureCompiler.vcxproj", "{34DD9413-1C22-42BE-8F02-16EF0250D6C0}"
@@ -14,19 +16,32 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Distribution|x64 = Distribution|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2EA1E690-1736-464D-B586-92E837EE3292}.Debug|x64.ActiveCfg = Debug|x64
 		{2EA1E690-1736-464D-B586-92E837EE3292}.Debug|x64.Build.0 = Debug|x64
+		{2EA1E690-1736-464D-B586-92E837EE3292}.Distribution|x64.ActiveCfg = Distribution|x64
+		{2EA1E690-1736-464D-B586-92E837EE3292}.Distribution|x64.Build.0 = Distribution|x64
 		{2EA1E690-1736-464D-B586-92E837EE3292}.Release|x64.ActiveCfg = Release|x64
 		{2EA1E690-1736-464D-B586-92E837EE3292}.Release|x64.Build.0 = Release|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Debug|x64.ActiveCfg = Debug|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Debug|x64.Build.0 = Debug|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Distribution|x64.ActiveCfg = Distribution|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Distribution|x64.Build.0 = Distribution|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Release|x64.ActiveCfg = Release|x64
+		{541A3CFB-18C3-486D-ABD9-6B7BB6F84300}.Release|x64.Build.0 = Release|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Debug|x64.ActiveCfg = Debug|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Debug|x64.Build.0 = Debug|x64
+		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Distribution|x64.ActiveCfg = Debug|x64
+		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Distribution|x64.Build.0 = Debug|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Release|x64.ActiveCfg = Release|x64
 		{34DD9413-1C22-42BE-8F02-16EF0250D6C0}.Release|x64.Build.0 = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|x64.ActiveCfg = Debug|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|x64.Build.0 = Debug|x64
+		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Distribution|x64.ActiveCfg = Distribution|x64
+		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Distribution|x64.Build.0 = Distribution|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.ActiveCfg = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
