@@ -178,10 +178,8 @@ void ScriptingSystem::RecompileThreadWork()
 void ScriptingSystem::Init()
 {
 	logicState = LogicState::NONE;
-	#ifdef _BUILD
-		SwapDll();
-	#else
-		THREADS.EnqueueTask([this] {ThreadWork(); });
+	THREADS.EnqueueTask([this] {ThreadWork(); });
+	#ifndef _BUILD
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	#endif
 	Subscribe(&ScriptingSystem::CallbackScriptSetField);
