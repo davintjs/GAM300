@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 #include "Scene/Components.h"
+#include "Scene/SceneManager.h"
 
 
 void MaterialSystem::Init()
@@ -56,6 +57,8 @@ void MaterialSystem::createPBR_Instanced()
 	_material[SHADERTYPE::PBR].push_back(emissionMat);
 	_material[SHADERTYPE::PBR].push_back(blackSurfaceMat);
 	_material[SHADERTYPE::PBR].push_back(darkBlueMat);
+
+	//deleteInstance(blackSurfaceMat);
 }
 
 void MaterialSystem::AddMaterial(const Material_instance& new_mat) {
@@ -80,15 +83,41 @@ Material_instance& MaterialSystem::DuplicateMaterial(const Material_instance& in
 
 Material_instance& MaterialSystem::NewMaterialInstance(std::string _name)
 {
-
 	Material_instance defaultMaterial;
 	defaultMaterial.name = _name;
 	_material[defaultMaterial.shaderType].push_back(defaultMaterial);
 	return *(_material[defaultMaterial.shaderType].end()-1);
-
 }
 
 void MaterialSystem::deleteInstance(Material_instance& matInstance)
 {
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+
+	// Swap them out to default material before deleting the instance
+	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
+	{
+		if (renderer.material_ptr == NULL)
+		{
+			continue;
+		}
+
+		if (renderer.material_ptr->name == matInstance.name)// change to matInstanceName
+		{
+			renderer.material_ptr = &(_material[matInstance.shaderType][0]);
+		}
+	}
+
+	// Deleting the material instance
+	for (std::vector<Material_instance>::iterator iter(_material[matInstance.shaderType].begin());
+		iter != _material[matInstance.shaderType].end();
+		++iter)
+	{
+		if ((*iter).name == matInstance.name)// change to matInstanceName
+		{
+			iter = _material[matInstance.shaderType].erase(iter);
+		}
+
+
+	}
 
 }

@@ -235,10 +235,10 @@ public:
 
 	Material_instance& NewMaterialInstance(std::string _name = "Default Material");
 
+	// Deleting a Material Instance
 	void deleteInstance(Material_instance & matInstance);
 	
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
-
 private:
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
