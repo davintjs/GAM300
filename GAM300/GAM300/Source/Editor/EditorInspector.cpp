@@ -421,7 +421,7 @@ void DisplayType(Change& change, const char* name, float& val)
 
     float buf = val;
    
-    if (ImGui::DragFloat(cIdName, &buf)) {
+    if (ImGui::DragFloat(cIdName, &buf, 0.01f)) {
         if (!valueChanged) {
             initialvalue = val;
         }
@@ -829,11 +829,11 @@ void DisplayMaterial(Change& change, T& value) {
         Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
         Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
         Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+        MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
 
         std::vector<const char*> layers;
         mat_id = value;
         //Get all materials inside PBR shader
-        layers.push_back("Default");
         for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::PBR]) {
             layers.push_back(mat.name.c_str());
         }
@@ -841,31 +841,36 @@ void DisplayMaterial(Change& change, T& value) {
 
         //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
         if (ImGui::Combo("##Material", &mat_id, layers.data(), (int)layers.size(), 5)) {
-          
-            EDITOR.History.SetPropertyValue(change, value, mat_id); 
-            if (mat_id > 0) {
-                
-                mat_id -= 1; //remove default              
-                auto& materials = MATERIALSYSTEM._material[SHADERTYPE::PBR];
-                MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
 
-                rend.mr_Albedo = materials[mat_id].albedoColour;
-                rend.mr_Albedo /= 255.f;
-                rend.mr_metallic = materials[mat_id].metallicConstant;
-                rend.mr_roughness = materials[mat_id].roughnessConstant;
-                rend.ao = materials[mat_id].aoConstant;
-                rend.emission = materials[mat_id].emissionConstant;
+            EDITOR.History.SetPropertyValue(change, value, mat_id);
 
-                rend.material_ptr = &(materials[mat_id]);
-            }
-          
+            auto& materials = MATERIALSYSTEM._material[SHADERTYPE::PBR];
+            
+
+            rend.mr_Albedo = materials[mat_id].albedoColour;
+            rend.mr_Albedo /= 255.f;
+            rend.mr_metallic = materials[mat_id].metallicConstant;
+            rend.mr_roughness = materials[mat_id].roughnessConstant;
+            rend.ao = materials[mat_id].aoConstant;
+            rend.emission = materials[mat_id].emissionConstant;
+
+            rend.material_ptr = &(materials[mat_id]);
         }
 
         //ImGui::PopItemWidth();
         ImGui::SameLine();
         if (ImGui::Button("Edit")) {
             material_inspector = true;
+            ImGui::SetWindowFocus("Material");
         }
+        ImGui::SameLine();
+
+        if (ImGui::Button("+")) {
+            mat_id = (int)(MATERIALSYSTEM._material[SHADERTYPE::PBR].size());
+            EDITOR.History.SetPropertyValue(change, value, mat_id);
+            rend.material_ptr = &MATERIALSYSTEM.NewMaterialInstance("New Material");
+        }
+
     }
 }
 
@@ -1502,14 +1507,8 @@ void EditorInspector::Update(float dt)
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
-
-        int id;
-        if ( (mat_id - 1) >= 0)
-            id = mat_id - 1;
-        else
-            id = mat_id;
         
-        auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][id];
+        auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
 
         ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
@@ -1544,7 +1543,7 @@ void EditorInspector::Update(float dt)
                             Display<T1>(newchange, DisplayName.c_str(), Value);
                             ImGui::PopID();
 
-                            } 
+                            }
                         , Data);
                         property::set(material, entry.first.c_str(), Data);
 
@@ -1563,6 +1562,21 @@ void EditorInspector::Update(float dt)
         }
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
+
+        ImGui::Separator();
+
+        if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        {
+            Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+            Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+            MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
+            Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
+            
+            Change newchange(&rend, "MeshRenderer/material");
+            int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
+            EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
+            rend.material_ptr = &new_mat;
+        }
 
         ImGui::End();
     }

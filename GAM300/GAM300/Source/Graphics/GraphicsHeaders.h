@@ -150,6 +150,8 @@ struct Material_instance : Object
 		roughnessTexture = other.roughnessTexture;
 		aoTexture = other.aoTexture;
 		emissionTexture = other.emissionTexture;
+
+		return *this;
 	}
 
 	SHADERTYPE shaderType;
@@ -197,11 +199,11 @@ property_begin_name(Material_instance, "Material_Instance") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(matInstanceName).Name("GUID").Flags(property::flags::DONTSHOW),
 		property_var(name).Name("Material Name"),
-		property_var(albedoColour).Name("Material"),
-		property_var(metallicConstant).Name("Albedo"),
-		property_var(roughnessConstant).Name("Metallic"),
-		property_var(aoConstant).Name("Roughness"),
-		property_var(emissionConstant).Name("AmbientOcclusion"),
+		property_var(albedoColour).Name("Albedo"),
+		property_var(metallicConstant).Name("Metallic"),
+		property_var(roughnessConstant).Name("Roughness"),
+		property_var(aoConstant).Name("AmbientOcclusion"),
+		property_var(emissionConstant).Name("Emission"),
 		property_var(albedoTexture).Name("AlbedoTexture"),
 		property_var(normalMap).Name("NormalMap"),
 		property_var(metallicTexture).Name("MetallicTexture"),
@@ -226,11 +228,14 @@ public:
 	void createPBR_Instanced();
 
 	void createPBR_NonInstanced();
-	
-	Material_instance& NewMaterialInstance();
+
+	void AddMaterial(const Material_instance & new_mat);
+
+	Material_instance& DuplicateMaterial(const Material_instance & instance);
+
+	Material_instance& NewMaterialInstance(std::string _name = "Default Material");
 
 	void deleteInstance(Material_instance & matInstance);
-	
 	
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 

@@ -5,7 +5,7 @@
 
 void MaterialSystem::Init()
 {
-
+	// Creating a Default PBR-Instanced Material Instance
 	NewMaterialInstance();
 
 	// Creating PBR (Instanced) Material
@@ -30,9 +30,6 @@ void MaterialSystem::Exit()
 
 void MaterialSystem::createPBR_Instanced()
 {
-	// Creating a Default PBR-Instanced Material Instance
-	
-
 	//Test material instances
 	Material_instance emissionMat;
 	emissionMat.name = "Emission material";
@@ -61,6 +58,10 @@ void MaterialSystem::createPBR_Instanced()
 	_material[SHADERTYPE::PBR].push_back(darkBlueMat);
 }
 
+void MaterialSystem::AddMaterial(const Material_instance& new_mat) {
+	_material[SHADERTYPE::PBR].push_back(new_mat);
+}
+
 void MaterialSystem::createPBR_NonInstanced()
 {
 
@@ -69,12 +70,20 @@ void MaterialSystem::createPBR_NonInstanced()
 
 }
 
-Material_instance& MaterialSystem::NewMaterialInstance()
+Material_instance& MaterialSystem::DuplicateMaterial(const Material_instance& instance)
+{
+	Material_instance new_mat = Material_instance(instance);
+	new_mat.name += " - copy";
+	_material[SHADERTYPE::PBR].push_back(new_mat);
+	return _material[SHADERTYPE::PBR][_material[SHADERTYPE::PBR].size() - 1];
+}
+
+Material_instance& MaterialSystem::NewMaterialInstance(std::string _name)
 {
 
 	Material_instance defaultMaterial;
+	defaultMaterial.name = _name;
 	_material[defaultMaterial.shaderType].push_back(defaultMaterial);
-
 	return *(_material[defaultMaterial.shaderType].end()-1);
 
 }

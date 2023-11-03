@@ -339,7 +339,7 @@ struct MeshRenderer : Object
 	GLuint debugVAO;
 
 	bool isInstance = true;
-	SHADERTYPE shaderType = SHADERTYPE::PBR;
+	int shaderType = (int)SHADERTYPE::PBR;
 
 	//temp_instance material;
 	//temporary index for current material
