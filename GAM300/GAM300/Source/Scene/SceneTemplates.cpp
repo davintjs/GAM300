@@ -16,12 +16,51 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene.h"
 
+template <typename... Ts>
+void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID, TemplatePack<Ts...>)
+{
+	StoreComponentHierarchy<Ts...>(storage, entityID);
+}
+
+template <typename T,typename... Ts>
+void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID)
+{
+	Entity& entity{ Get<Entity>(entityID) };
+
+	if (Has<T>(entity))
+	{
+		if constexpr (SingleComponentTypes::Has<T>())
+		{
+			T& component{ Get<T>(entityID) };
+			storage[component] = *object;
+			T* object;
+			if constexpr (std::is_same<T, Transform>() || std::is_same<T, Tag>())
+			{
+				object = &Get<T>(newEntityID);
+			}
+			else
+			{
+				object = Add<T>(newEntityID);
+			}
+			CopyValues(component, *object);
+		}
+		else
+		{
+			for (T* pComponent : GetMulti<T>(entityID))
+			{
+				storage[*pComponent] = *Add<T>(newEntityID);
+				CopyValues(*pComponent, *object);
+			}
+		}
+	}
+}
 
 template <typename T, typename... Ts>
 void Scene::CloneHelper(Entity& source, Entity& dest)
 {
 	if constexpr (SingleComponentTypes::Has<T>())
 	{
+		
 		if (Has<T>(source))
 		{
 			Clone(Get<T>(source), dest);
@@ -52,23 +91,40 @@ void Scene::CloneHelper(Entity& source, TemplatePack<Ts...>)
 }
 
 template <typename T>
-void Scene::Clone(T& source, Entity& entity)
+void Scene::CopyValues(T& source, T& dest)
 {
-	T* object;
-	if constexpr (std::is_same<T,Transform>())
-	{
-		object = &Get<T>(entity);
-	}
-	else
-	{
-		object = Add<T>(entity);
-	}
 	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
 	{
 		if (!Flags.m_isDontShow) {
 			auto entry = property::entry { PropertyName, Data };
 
 			property::set(*object, entry.first.c_str(), Data);
+			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
+		}
+
+	});
+}
+
+template <typename T, typename... Ts>
+void LinkReferences(ReferencesTable& storage, Handle& handle)
+{
+	T& 
+	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+	{
+		if (!Flags.m_isDontShow) 
+		{
+			auto entry = property::entry { PropertyName, Data };
+
+			std::visit([&](auto& Value) 
+			{
+				using T1 = std::decay_t<decltype(Value)>;
+
+				if constexpr (std::is_same<Engine::UUID>())
+				{
+					property::set(*object, entry.first.c_str(), Data);
+				}
+			}, Data);
 			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
 			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
 		}

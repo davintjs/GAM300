@@ -39,17 +39,20 @@ struct Scene
 	//Creates empty scene
 	Scene(const std::string& _filepath);
 
-	void StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID transformID);
+	void StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID);
+
+	template <typename... Ts>
+	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID, Engine::UUID newEntityID,TemplatePack<Ts...>);
 
 	template <typename T, typename... Ts>
-	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID)
+	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID);
 
 	void Clone(Entity& source);
 
 	void Clone(Entity& source, Entity& dest);
 
 	template <typename T>
-	void Clone(T& source, Entity& entity);
+	void CopyValues(T& source, T& dest)
 
 	template <typename T, typename... Ts>
 	void CloneHelper(Entity& entity);
