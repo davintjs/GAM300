@@ -173,6 +173,11 @@ struct ModelImporter : MetaFile
 	property_vtable()
 };
 
+struct MaterialAsset : Asset
+{
+
+};
+
 property_begin_name(ModelImporter, "ModelImporter") {
 	property_parent(MetaFile),
 	property_var(meshes),
@@ -187,7 +192,7 @@ struct ModelAsset : Asset
 	using Meta = ModelImporter;
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset,Asset>;
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>
@@ -201,5 +206,6 @@ static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".material", GetAssetType::E<MaterialAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
 };

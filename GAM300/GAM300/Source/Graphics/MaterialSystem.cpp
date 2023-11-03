@@ -3,6 +3,8 @@
 #include "Scene/Components.h"
 #include "Scene/SceneManager.h"
 
+#include "Utilities/Serializer.h"
+
 
 void MaterialSystem::Init()
 {
@@ -56,6 +58,16 @@ void MaterialSystem::createPBR_Instanced()
 	darkBlueMat.roughnessConstant = 0.5f;
 	darkBlueMat.aoConstant = 1.f;
 
+	Serialize(darkBlueMat);
+	Material_instance test;
+	GetAssetsEvent<MaterialAsset> e;
+	EVENTS.Publish(&e);
+	//for (auto& asset : *e.pAssets)
+	//{
+	//	asset.second.mFilePath();
+	//}
+	fs::path path{ "Assets/Dark Blue material.material" };
+	Deserialize(test,path);
 
 	_material[SHADERTYPE::PBR].push_back(emissionMat);
 	_material[SHADERTYPE::PBR].push_back(blackSurfaceMat);

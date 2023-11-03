@@ -120,12 +120,6 @@ struct Material_instance : Object
 		roughnessTexture =	DEFAULT_TEXTURE;
 		aoTexture =			DEFAULT_TEXTURE;
 		emissionTexture =	DEFAULT_TEXTURE;
-
-		
-
-
-
-
 	}
 
 	Material_instance(const Material_instance& other) 

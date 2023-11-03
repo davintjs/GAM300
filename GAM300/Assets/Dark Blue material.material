@@ -1,0 +1,15 @@
+Material:
+  GUID: {guid: b6bc07216fe162718522693eb66406cf}
+  Material Name: Dark Blue material
+  Shader: 1
+  Albedo: [0, 0, 255, 255]
+  Metallic: 0.400000006
+  Roughness: 0.5
+  AmbientOcclusion: 1
+  Emission: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
