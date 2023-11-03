@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Identifiers.h"
 #include "Graphics/GraphicsSystem.h"
 #include "PropertyConfig.h"
+#include "Utilities/Serializer.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -815,67 +816,6 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
-static bool material_inspector = false;
-int mat_id = 0;
-
-template <typename T>
-void DisplayMaterial(Change& change, T& value) {
-    if constexpr (std::is_same_v<T, int>) {
-        ImGui::AlignTextToFramePadding();
-        ImGui::TableNextColumn();
-        ImGui::Text("Material");
-        ImGui::TableNextColumn();
-
-        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
-        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
-        MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
-
-        std::vector<const char*> layers;
-        mat_id = value;
-        //Get all materials inside PBR shader
-        for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::PBR]) {
-            layers.push_back(mat.name.c_str());
-        }
-        for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::DEFAULT]) {
-            layers.push_back(mat.name.c_str());
-        }
-
-        //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-        if (ImGui::Combo("##Material", &mat_id, layers.data(), (int)layers.size(), 5)) {
-
-            EDITOR.History.SetPropertyValue(change, value, mat_id);
-
-            auto& materials = MATERIALSYSTEM._material[SHADERTYPE::PBR];
-            
-
-            rend.mr_Albedo = materials[mat_id].albedoColour;
-            rend.mr_Albedo /= 255.f;
-            rend.mr_metallic = materials[mat_id].metallicConstant;
-            rend.mr_roughness = materials[mat_id].roughnessConstant;
-            rend.ao = materials[mat_id].aoConstant;
-            rend.emission = materials[mat_id].emissionConstant;
-
-            rend.material_ptr = &(materials[mat_id]);
-        }
-
-        //ImGui::PopItemWidth();
-        ImGui::SameLine();
-        if (ImGui::Button("Edit")) {
-            material_inspector = true;
-            ImGui::SetWindowFocus("Material");
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("+")) {
-            mat_id = (int)(MATERIALSYSTEM._material[SHADERTYPE::PBR].size());
-            EDITOR.History.SetPropertyValue(change, value, mat_id);
-            rend.material_ptr = &MATERIALSYSTEM.NewMaterialInstance("New Material");
-        }
-
-    }
-}
-
 int shader_id;
 
 template <typename T>
@@ -922,20 +862,15 @@ void Display_Property(T& comp) {
                     ImGui::PushID(entry.first.c_str());
 
                     //Temporary implementation for materials
-                    if (entry.first.find("Material") != std::string::npos) {
-                        Change newchange(&comp, entry.first);
-                        DisplayMaterial(newchange, Value);
-                    }
-                    else {
+
                         //Edit name
-                        std::string DisplayName = entry.first;
-                        auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                        DisplayName.erase(DisplayName.begin(), ++it);
+                    std::string DisplayName = entry.first;
+                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                    DisplayName.erase(DisplayName.begin(), ++it);
 
-                        Change newchange(&comp, entry.first);
-                        Display<T1>(newchange, DisplayName.c_str(), Value); 
-                    }
-
+                    Change newchange(&comp, entry.first);
+                    Display<T1>(newchange, DisplayName.c_str(), Value);
+           
                     ImGui::PopID();
 
                     }
@@ -1541,7 +1476,7 @@ void EditorInspector::Update(float dt)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
         
-        auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
+        //auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
 
         ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
@@ -1550,6 +1485,8 @@ void EditorInspector::Update(float dt)
         ImVec2 center = ImGui::GetMainViewport()->GetCenter();
         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
+
+        auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
 
         if (ImGui::BeginTable("Mats", 2, tableflags))
         {
@@ -1605,17 +1542,21 @@ void EditorInspector::Update(float dt)
 
         ImGui::Separator();
 
-        if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        //if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        //{
+        //    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        //    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        //    MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
+        //    //Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
+        //    
+        //    Change newchange(&rend, "MeshRenderer/material");
+        //    //int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
+        //    //EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
+        //}
+
+        if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
-            Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
-            Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-            MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
-            Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
-            
-            Change newchange(&rend, "MeshRenderer/material");
-            int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
-            EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
-            rend.material_ptr = &new_mat;
+            Serialize(material);
         }
 
         ImGui::End();

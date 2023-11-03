@@ -462,9 +462,11 @@ void DeserializeComponent(const DeComHelper& _helper)
                             }
                             else
                             {
+                                
                                 if constexpr (std::is_same<T1, Engine::GUID>())
                                 {
-                                    property::set(component, entry.first.c_str(), node[name]["guid"].as<T1>());
+                                    if (node[name]["guid"])
+                                        property::set(component, entry.first.c_str(), node[name]["guid"].as<T1>());
                                 }
                                 else
                                 {

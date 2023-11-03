@@ -102,8 +102,6 @@ struct Material_instance : Object
 					// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
-	
-
 	Material_instance();
 
 	// This is for Editor
@@ -187,7 +185,7 @@ public:
 
 	Material_instance& DuplicateMaterial(const Material_instance & instance);
 
-	Material_instance& NewMaterialInstance(std::string _name = "Default Material");
+	Engine::GUID NewMaterialInstance(std::string _name = "Default Material");
 
 	// Deleting a Material Instance
 	void deleteInstance(Engine::GUID& matGUID);
@@ -199,10 +197,9 @@ public:
 
 	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
 
-	const Material_instance& getMaterialInstance(Engine::GUID matGUID);
+	Material_instance& getMaterialInstance(Engine::GUID matGUID);
 
-
-	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
 	std::unordered_map< Engine::GUID, Material_instance> _allMaterialInstances;
 

@@ -343,13 +343,9 @@ struct MeshRenderer : Object
 	// This 2 dont delete -> Future use
 	bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
-
-	//temp_instance material;
 	
 	//temporary index for current material
 	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
-
-	int material = 0; //default
 
 	property_vtable();
 };
@@ -358,7 +354,7 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(isInstance).Name("IsInstance"),	
 	property_var(meshID).Name("Mesh"),
-	property_var(material).Name("Material"),
+	property_var(materialGUID).Name("Material_ID"),
 	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
 	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
 	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),

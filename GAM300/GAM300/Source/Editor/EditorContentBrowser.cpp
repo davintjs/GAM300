@@ -151,6 +151,16 @@ void EditorContentBrowser::Update(float dt)
                 EVENTS.Publish(&loadScene);
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
+
+            //Open Scene file
+            if ((path.string().find(".material") != std::string::npos)) {
+                //Open scene file logic here
+                GetAssetEvent e{ path };
+                EVENTS.Publish(&e);
+                selectedAss = e.guid;
+                EditorInspector::Instance().material_inspector = true;
+                ImGui::SetWindowFocus("Material");
+            }
         }
     
         //render extension button
@@ -166,6 +176,21 @@ void EditorContentBrowser::Update(float dt)
 
             icon_id = GET_TEXTURE_ID("Assets/Icons/Editorplaybutton.dds");
             ImGui::ImageButton((ImTextureID)icon_id, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
+        }
+
+        //right click options
+        if (ImGui::BeginPopupContextWindow(0, true))
+        {
+            if (ImGui::BeginMenu("Add"))
+            {
+                if (ImGui::MenuItem("Material")) {
+                    selectedAss = MATERIALSYSTEM.NewMaterialInstance("New Material");         
+                    EditorInspector::Instance().material_inspector = true;
+                    ImGui::SetWindowFocus("Material");
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndPopup();
         }
        
         ImGui::EndGroup();
