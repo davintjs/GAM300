@@ -837,7 +837,9 @@ void DisplayMaterial(Change& change, T& value) {
         for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::PBR]) {
             layers.push_back(mat.name.c_str());
         }
-
+        for (auto& mat : MATERIALSYSTEM._material[SHADERTYPE::DEFAULT]) {
+            layers.push_back(mat.name.c_str());
+        }
 
         //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
         if (ImGui::Combo("##Material", &mat_id, layers.data(), (int)layers.size(), 5)) {

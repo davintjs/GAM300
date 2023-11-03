@@ -98,14 +98,19 @@ void Renderer::Update(float)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-		//int index = t_Mesh->index;
+		// No material instance, then just go next
+		if (renderer.material_ptr == NULL)
+		{
+			continue;
+		}
+
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// if instance rendering put into container for instance rendering
 		// 
-		if (renderer.isInstance) {
+		if (renderer.material_ptr->shaderType == (int)SHADERTYPE::PBR) {
 
 			// dun need do dis, coz renderer contains shadertype, can access via that
 			// for each shader, slot in properties into container
@@ -223,7 +228,8 @@ void Renderer::Update(float)
 			
 			//++iter;
 		}
-		else /*if default rendering*/{
+		else if (renderer.material_ptr->shaderType == (int)SHADERTYPE::DEFAULT) 
+		{
 		//}
 		//else /*if default rendering*/{
 			// if not instance put into container for default rendering
@@ -232,7 +238,6 @@ void Renderer::Update(float)
 			// whenever things reach limit, draw
 			// means need calculate SRT here
 			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-
 			if (t_Mesh == nullptr)
 			{
 				continue;
@@ -245,27 +250,29 @@ void Renderer::Update(float)
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
 			
-			renderProperties.shininess = renderer.mr_Shininess;
-			renderProperties.metallic = renderer.mr_metallic;
-			renderProperties.roughness = renderer.mr_roughness;
-			renderProperties.ao = renderer.ao;
-			renderProperties.emission = renderer.emission;
+			//renderProperties.shininess = renderer.mr_Shininess;
+			//renderProperties.Specular = renderer.mr_Specular;
+			//renderProperties.Diffuse = renderer.mr_Diffuse;
+			//renderProperties.Ambient = renderer.mr_Ambient;
+
+
+			renderProperties.metallic = renderer.material_ptr->metallicConstant;
+			renderProperties.roughness = renderer.material_ptr->roughnessConstant;
+			renderProperties.ao = renderer.material_ptr->aoConstant;
+			renderProperties.emission = renderer.material_ptr->emissionConstant;
 
 			renderProperties.entitySRT = transform.GetWorldMatrix();
-			renderProperties.Albedo = renderer.mr_Albedo;
-			renderProperties.Specular = renderer.mr_Specular;
-			renderProperties.Diffuse = renderer.mr_Diffuse;
-			renderProperties.Ambient = renderer.mr_Ambient;
+			renderProperties.Albedo = renderer.material_ptr->albedoColour;
 
 			// renderProperties.textureID = renderer.textureID;
 			// renderProperties.NormalID = renderer.normalMapID;
-			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
-			renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
-			renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
-			renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
+			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.material_ptr->roughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(renderer.material_ptr->metallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(renderer.material_ptr->aoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(renderer.material_ptr->emissionTexture);
 
-			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
-			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
+			renderProperties.textureID = TextureManager.GetTexture(renderer.material_ptr->albedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(renderer.material_ptr->normalMap);
 			
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;

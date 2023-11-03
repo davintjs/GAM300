@@ -65,7 +65,7 @@ void MaterialSystem::createPBR_Instanced()
 }
 
 void MaterialSystem::AddMaterial(const Material_instance& new_mat) {
-	_material[new_mat.shaderType].push_back(new_mat);
+	_material[(SHADERTYPE)new_mat.shaderType].push_back(new_mat);
 }
 
 
@@ -75,14 +75,36 @@ void MaterialSystem::createPBR_NonInstanced()
 	//Material_Types.push_back(SHADERTYPE::DEFAULT);
 
 
+	Material_instance trolololMat;
+	trolololMat.shaderType = (int)SHADERTYPE::DEFAULT;
+	trolololMat.name = "trololol Material";
+	trolololMat.albedoColour = glm::vec4(0.f, 255.f, 0.f, 255.f);
+	trolololMat.metallicConstant = 0.4f;
+	trolololMat.roughnessConstant = 0.5f;
+	trolololMat.aoConstant = 1.f;
+
+
+	Material_instance falalalaMat;
+	falalalaMat.shaderType = (int)SHADERTYPE::DEFAULT;
+	falalalaMat.name = "falalala Material";
+	falalalaMat.albedoColour = glm::vec4(255.f, 0.f, 0.f, 255.f);
+	falalalaMat.metallicConstant = 0.4f;
+	falalalaMat.roughnessConstant = 0.5f;
+	falalalaMat.aoConstant = 1.f;
+
+
+	_material[SHADERTYPE::DEFAULT].push_back(trolololMat);
+	_material[SHADERTYPE::DEFAULT].push_back(falalalaMat);
+
+
 }
 
 Material_instance& MaterialSystem::DuplicateMaterial(const Material_instance& instance)
 {
 	Material_instance new_mat = Material_instance(instance);
 	new_mat.name += " - copy";
-	_material[SHADERTYPE::PBR].push_back(new_mat);
-	return _material[SHADERTYPE::PBR][_material[SHADERTYPE::PBR].size() - 1];
+	_material[(SHADERTYPE)new_mat.shaderType].push_back(new_mat);
+	return *(_material[(SHADERTYPE)new_mat.shaderType].end() - 1);
 }
 
 
