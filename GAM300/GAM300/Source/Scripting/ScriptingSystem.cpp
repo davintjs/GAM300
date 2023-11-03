@@ -487,8 +487,10 @@ void ScriptingSystem::ThreadWork()
 		#endif
 	}
 	mono_domain_set(mRootDomain, false);
+	#ifdef _DEBUG
 	if (mAppDomain)
 		mono_domain_unload(mAppDomain);
+	#endif
 	mAppDomain = nullptr;
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
