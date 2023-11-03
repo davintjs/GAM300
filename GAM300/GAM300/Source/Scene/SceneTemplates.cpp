@@ -107,29 +107,26 @@ void Scene::CopyValues(T& source, T& dest)
 }
 
 template <typename T, typename... Ts>
-void LinkReferences(ReferencesTable& storage, Handle& handle)
+void Scene::LinkReferences(ReferencesTable& storage, T& newObject)
 {
-	T& 
-	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+	if constexpr (std::is_same<T, Transform>())
 	{
-		if (!Flags.m_isDontShow) 
+		if (newObject.parent)
 		{
-			auto entry = property::entry { PropertyName, Data };
-
-			std::visit([&](auto& Value) 
+			for (auto& pair : storage)
 			{
-				using T1 = std::decay_t<decltype(Value)>;
-
-				if constexpr (std::is_same<Engine::UUID>())
+				if (pair.first.euid == newObject.parent)
 				{
-					property::set(*object, entry.first.c_str(), Data);
+					newObject.parent = pair.second.euid;
 				}
-			}, Data);
-			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
+			}
 		}
+	}
+	for ()
+	{
 
-	});
+	}
+	handle
 }
 
 

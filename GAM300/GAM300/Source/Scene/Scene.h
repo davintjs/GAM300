@@ -47,6 +47,9 @@ struct Scene
 	template <typename T, typename... Ts>
 	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID);
 
+	template <typename T, typename... Ts>
+	void LinkReferences(ReferencesTable& storage, T& newObject);
+
 	void Clone(Entity& source);
 
 	void Clone(Entity& source, Entity& dest);
