@@ -6,7 +6,7 @@
 
 void MaterialSystem::Init()
 {
-	// Creating a Default PBR-Instanced Material Instance
+
 	NewMaterialInstance();
 
 	// Creating PBR (Instanced) Material
@@ -62,8 +62,9 @@ void MaterialSystem::createPBR_Instanced()
 }
 
 void MaterialSystem::AddMaterial(const Material_instance& new_mat) {
-	_material[SHADERTYPE::PBR].push_back(new_mat);
+	_material[new_mat.shaderType].push_back(new_mat);
 }
+
 
 void MaterialSystem::createPBR_NonInstanced()
 {
@@ -81,12 +82,13 @@ Material_instance& MaterialSystem::DuplicateMaterial(const Material_instance& in
 	return _material[SHADERTYPE::PBR][_material[SHADERTYPE::PBR].size() - 1];
 }
 
+
 Material_instance& MaterialSystem::NewMaterialInstance(std::string _name)
 {
 	Material_instance defaultMaterial;
 	defaultMaterial.name = _name;
 	_material[defaultMaterial.shaderType].push_back(defaultMaterial);
-	return *(_material[defaultMaterial.shaderType].end()-1);
+	return *(_material[defaultMaterial.shaderType].end() - 1);
 }
 
 void MaterialSystem::deleteInstance(Material_instance& matInstance)

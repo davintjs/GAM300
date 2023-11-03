@@ -343,7 +343,7 @@ struct MeshRenderer : Object
 
 	//temp_instance material;
 	//temporary index for current material
-	Material_instance* material_ptr;
+	Material_instance* material_ptr = NULL;
 	int material = 0; //default
 
 	property_vtable();

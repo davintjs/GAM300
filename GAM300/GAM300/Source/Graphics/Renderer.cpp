@@ -119,6 +119,11 @@ void Renderer::Update(float)
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
 
+			if (renderer.material_ptr == NULL)
+			{
+				continue;
+			}
+
 			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 			GLuint vao = MeshManager.vaoMap[renderer.meshID];
 			//instanceProperties[vao];
@@ -175,38 +180,48 @@ void Renderer::Update(float)
 			float rough_constant;
 			float ao_constant;
 			float emission_constant;
-
-			if (renderer.material_ptr) {
-				 metal_constant = renderer.material_ptr->metallicConstant;
-				 rough_constant = renderer.material_ptr->roughnessConstant;
-				 ao_constant = renderer.material_ptr->aoConstant;
-				 emission_constant = renderer.material_ptr->emissionConstant;
-				 instanceContainers[s][vao].Albedo.emplace_back(renderer.material_ptr->albedoColour);
-			}
-			else {
-				 metal_constant = renderer.mr_metallic;
-				 rough_constant = renderer.mr_roughness;
-				 ao_constant = renderer.ao;
-				 emission_constant = renderer.emission;
-				 instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
-			}
-
 			unsigned int& iter = instanceContainers[s][vao].iter;
 
+			metal_constant = renderer.material_ptr->metallicConstant;
+			rough_constant = renderer.material_ptr->roughnessConstant;
+			ao_constant = renderer.material_ptr->aoConstant;
+			emission_constant = renderer.material_ptr->emissionConstant;
+			instanceContainers[s][vao].Albedo.emplace_back(renderer.material_ptr->albedoColour);
+
+
+			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->albedoTexture)));
+			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->normalMap)));
+
+
+			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->metallicTexture)));
+			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->roughnessTexture)));
+			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->aoTexture)));
+			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->emissionTexture)));
+
+
 			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
+			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx));
 			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
+			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			++iter;
+
+			
+
+
+			//instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
+			//instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
+			//instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
 
 			//instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
-			instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
-			instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
-			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
-			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
-			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			//instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
+			//instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
+			//instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
+			//instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
+			//instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
 
 			//instanceContainers[s][renderer.meshID].VAO = vao;
 			
-			++iter;
+			//++iter;
 		}
 		else /*if default rendering*/{
 		//}
