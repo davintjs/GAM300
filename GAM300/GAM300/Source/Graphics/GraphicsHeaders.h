@@ -96,8 +96,9 @@ struct Material_instance : Object
 					// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
-	Material_instance() {
-		parentMaterial = SHADERTYPE::PBR;
+	Material_instance() 
+	{
+		shaderType = SHADERTYPE::PBR;
 		name = "Default Material";
 		albedoColour = Vector4(1.f,1.f,1.f,1.f );
 		metallicConstant = 1.f ;
@@ -111,12 +112,13 @@ struct Material_instance : Object
 		roughnessTexture =	DEFAULT_TEXTURE;
 		aoTexture =			DEFAULT_TEXTURE;
 		emissionTexture =	DEFAULT_TEXTURE;
-
-
 	}
-	Material_instance(const Material_instance& other) { 
+
+	Material_instance(const Material_instance& other) 
+	{ 
 		// Copy each member variable from 'other' to 'this'
-		name = other.name + " - copy";
+		shaderType = other.shaderType;
+		name = other.name;
 		albedoColour = other.albedoColour;
 		metallicConstant = other.metallicConstant;
 		roughnessConstant = other.roughnessConstant;
@@ -129,10 +131,28 @@ struct Material_instance : Object
 		roughnessTexture = other.roughnessTexture;
 		aoTexture = other.aoTexture;
 		emissionTexture = other.emissionTexture;
-
 	}
 
-	SHADERTYPE parentMaterial;
+	Material_instance& Duplicate_MaterialInstance(const Material_instance& other)
+	{
+		// Copy each member variable from 'other' to 'this'
+		shaderType = other.shaderType;
+		name = other.name + " - Copy";
+		albedoColour = other.albedoColour;
+		metallicConstant = other.metallicConstant;
+		roughnessConstant = other.roughnessConstant;
+		aoConstant = other.aoConstant;
+		emissionConstant = other.emissionConstant;
+
+		albedoTexture = other.albedoTexture;
+		normalMap = other.normalMap;
+		metallicTexture = other.metallicTexture;
+		roughnessTexture = other.roughnessTexture;
+		aoTexture = other.aoTexture;
+		emissionTexture = other.emissionTexture;
+	}
+
+	SHADERTYPE shaderType;
 	Engine::GUID matInstanceName;
 
 	//-------------------------
@@ -209,8 +229,9 @@ public:
 	
 	Material_instance& NewMaterialInstance();
 
-	//std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
-
+	void deleteInstance(Material_instance & matInstance);
+	
+	
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
 private:

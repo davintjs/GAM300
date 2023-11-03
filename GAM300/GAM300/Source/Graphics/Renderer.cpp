@@ -168,6 +168,7 @@ void Renderer::Update(float)
 			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
 			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
 			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
+			
 
 
 			float metal_constant;

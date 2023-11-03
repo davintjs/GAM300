@@ -73,9 +73,13 @@ Material_instance& MaterialSystem::NewMaterialInstance()
 {
 
 	Material_instance defaultMaterial;
-	_material[defaultMaterial.parentMaterial].push_back(defaultMaterial);
+	_material[defaultMaterial.shaderType].push_back(defaultMaterial);
 
-	return *(_material[defaultMaterial.parentMaterial].end()-1);
+	return *(_material[defaultMaterial.shaderType].end()-1);
 
+}
+
+void MaterialSystem::deleteInstance(Material_instance& matInstance)
+{
 
 }
