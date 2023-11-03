@@ -47,6 +47,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define UPDATE_TIME 1.f;
 
 #if defined(_BUILD)
+	using AllSystemsPack =
+	TemplatePack
+	<
+		AssetManager,
+		InputSystem,
+		SceneManager,
+		ScriptingSystem,
+		DemoSystem,//RUN AFTER EDITOR
+		AudioSystem,
+		PhysicsSystem, //AFTER SCRIPTING
+		GraphicsSystem,
+		Blackboard
+	>;
 #else
 	using AllSystemsPack =
 	TemplatePack
