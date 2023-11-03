@@ -99,18 +99,16 @@ void Renderer::Update(float)
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		// No material instance, then just go next
-		if (renderer.material_ptr == NULL)
-		{
-			continue;
-		}
 
-
+		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+	
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// if instance rendering put into container for instance rendering
 		// 
-		if (renderer.material_ptr->shaderType == (int)SHADERTYPE::PBR) {
+		if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
+		{
 
 			// dun need do dis, coz renderer contains shadertype, can access via that
 			// for each shader, slot in properties into container
@@ -124,10 +122,7 @@ void Renderer::Update(float)
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
 
-			if (renderer.material_ptr == NULL)
-			{
-				continue;
-			}
+	
 
 			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 			GLuint vao = MeshManager.vaoMap[renderer.meshID];
@@ -187,21 +182,21 @@ void Renderer::Update(float)
 			float emission_constant;
 			unsigned int& iter = instanceContainers[s][vao].iter;
 
-			metal_constant = renderer.material_ptr->metallicConstant;
-			rough_constant = renderer.material_ptr->roughnessConstant;
-			ao_constant = renderer.material_ptr->aoConstant;
-			emission_constant = renderer.material_ptr->emissionConstant;
-			instanceContainers[s][vao].Albedo.emplace_back(renderer.material_ptr->albedoColour);
+			metal_constant = currMatInstance.metallicConstant;
+			rough_constant = currMatInstance.roughnessConstant;
+			ao_constant = currMatInstance.aoConstant;
+			emission_constant = currMatInstance.emissionConstant;
+			instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
 
 
-			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->albedoTexture)));
-			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->normalMap)));
+			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
+			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
 
 
-			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->metallicTexture)));
-			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->roughnessTexture)));
-			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->aoTexture)));
-			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.material_ptr->emissionTexture)));
+			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
+			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
+			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
+			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
 
 
 			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
@@ -209,9 +204,6 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
 			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
 			++iter;
-
-			
-
 
 			//instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
 			//instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
@@ -227,8 +219,11 @@ void Renderer::Update(float)
 			//instanceContainers[s][renderer.meshID].VAO = vao;
 			
 			//++iter;
+
+
 		}
-		else if (renderer.material_ptr->shaderType == (int)SHADERTYPE::DEFAULT) 
+		else if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT) 
+
 		{
 		//}
 		//else /*if default rendering*/{
@@ -256,23 +251,23 @@ void Renderer::Update(float)
 			//renderProperties.Ambient = renderer.mr_Ambient;
 
 
-			renderProperties.metallic = renderer.material_ptr->metallicConstant;
-			renderProperties.roughness = renderer.material_ptr->roughnessConstant;
-			renderProperties.ao = renderer.material_ptr->aoConstant;
-			renderProperties.emission = renderer.material_ptr->emissionConstant;
+			renderProperties.metallic = currMatInstance.metallicConstant;
+			renderProperties.roughness = currMatInstance.roughnessConstant;
+			renderProperties.ao = currMatInstance.aoConstant;
+			renderProperties.emission = currMatInstance.emissionConstant;
 
 			renderProperties.entitySRT = transform.GetWorldMatrix();
-			renderProperties.Albedo = renderer.material_ptr->albedoColour;
+			renderProperties.Albedo = currMatInstance.albedoColour;
 
 			// renderProperties.textureID = renderer.textureID;
 			// renderProperties.NormalID = renderer.normalMapID;
-			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.material_ptr->roughnessTexture);
-			renderProperties.MetallicID = TextureManager.GetTexture(renderer.material_ptr->metallicTexture);
-			renderProperties.AoID = TextureManager.GetTexture(renderer.material_ptr->aoTexture);
-			renderProperties.EmissionID = TextureManager.GetTexture(renderer.material_ptr->emissionTexture);
+			renderProperties.RoughnessID = TextureManager.GetTexture(currMatInstance.roughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(currMatInstance.metallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(currMatInstance.aoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(currMatInstance.emissionTexture);
 
-			renderProperties.textureID = TextureManager.GetTexture(renderer.material_ptr->albedoTexture);
-			renderProperties.NormalID = TextureManager.GetTexture(renderer.material_ptr->normalMap);
+			renderProperties.textureID = TextureManager.GetTexture(currMatInstance.albedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(currMatInstance.normalMap);
 			
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;
@@ -293,6 +288,8 @@ void Renderer::Update(float)
 			defaultProperties.emplace_back(renderProperties);
 		}
 		++i;
+
+
 	}
 
 	//properties[MeshManager.vaoMap["Line"]].iter = 200;

@@ -24,7 +24,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
-
+#define DEFAULT_MATERIALINSTANCE DEFAULT_ASSETS["None.material"]
 
 struct temp_instance
 {

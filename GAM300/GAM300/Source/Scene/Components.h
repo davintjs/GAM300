@@ -338,12 +338,17 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
+
+
+	// This 2 dont delete -> Future use
 	bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 
 	//temp_instance material;
+	
 	//temporary index for current material
-	Material_instance* material_ptr = NULL;
+	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
+
 	int material = 0; //default
 
 	property_vtable();

@@ -52,7 +52,7 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	{"Quad.geom", Engine::GUID(107)},
 
 	//Default Materials
-	{"None.mat", Engine::GUID(200)},
+	{"None.material", Engine::GUID(200)},
 
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},

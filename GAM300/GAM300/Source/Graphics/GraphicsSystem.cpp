@@ -287,7 +287,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	}
 
 	//}
-
+	
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
 	glDrawBuffer(_camera.GetAttachment());
 

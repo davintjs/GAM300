@@ -104,70 +104,20 @@ struct Material_instance : Object
 
 	
 
-	Material_instance() 
-	{
-		shaderType = (int)SHADERTYPE::PBR;
-		name = "Default Material";
-		albedoColour = Vector4(1.f,1.f,1.f,1.f );
-		metallicConstant = 1.f ;
-		roughnessConstant = 1.f ;
-		aoConstant = 1.f ;
-		emissionConstant = 1.f ;
+	Material_instance();
 
-		albedoTexture =		DEFAULT_TEXTURE;
-		normalMap =			DEFAULT_TEXTURE;
-		metallicTexture =	DEFAULT_TEXTURE;
-		roughnessTexture =	DEFAULT_TEXTURE;
-		aoTexture =			DEFAULT_TEXTURE;
-		emissionTexture =	DEFAULT_TEXTURE;
-	}
+	// This is for Editor
+	Material_instance(const Material_instance& other);
 
-	Material_instance(const Material_instance& other) 
-	{ 
-		// Copy each member variable from 'other' to 'this'
-		shaderType = other.shaderType;
-		name = other.name;
-		albedoColour = other.albedoColour;
-		metallicConstant = other.metallicConstant;
-		roughnessConstant = other.roughnessConstant;
-		aoConstant = other.aoConstant;
-		emissionConstant = other.emissionConstant;
-
-		albedoTexture = other.albedoTexture;
-		normalMap = other.normalMap;
-		metallicTexture = other.metallicTexture;
-		roughnessTexture = other.roughnessTexture;
-		aoTexture = other.aoTexture;
-		emissionTexture = other.emissionTexture;
-	}
-
-	Material_instance& Duplicate_MaterialInstance(const Material_instance& other)
-	{
-		// Copy each member variable from 'other' to 'this'
-		shaderType = other.shaderType;
-		name = other.name + " - Copy";
-		albedoColour = other.albedoColour;
-		metallicConstant = other.metallicConstant;
-		roughnessConstant = other.roughnessConstant;
-		aoConstant = other.aoConstant;
-		emissionConstant = other.emissionConstant;
-
-		albedoTexture = other.albedoTexture;
-		normalMap = other.normalMap;
-		metallicTexture = other.metallicTexture;
-		roughnessTexture = other.roughnessTexture;
-		aoTexture = other.aoTexture;
-		emissionTexture = other.emissionTexture;
-
-		return *this;
-	}
+	Material_instance& Duplicate_MaterialInstance(const Material_instance& other);
 
 	int shaderType = (int)SHADERTYPE::PBR;
-	Engine::GUID matInstanceName;
 
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
+
+
 	std::string		name;
 	Vector4			albedoColour;// This is pretty much used in all types of shaders
 	float			metallicConstant;
@@ -201,7 +151,6 @@ struct Material_instance : Object
 
 property_begin_name(Material_instance, "Material_Instance") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		property_var(matInstanceName).Name("GUID").Flags(property::flags::DONTSHOW),
 		property_var(name).Name("Material Name"),
 		property_var(shaderType).Name("Shader"),
 		property_var(albedoColour).Name("Albedo"),
@@ -241,10 +190,21 @@ public:
 	Material_instance& NewMaterialInstance(std::string _name = "Default Material");
 
 	// Deleting a Material Instance
-	void deleteInstance(Material_instance & matInstance);
+	void deleteInstance(Engine::GUID& matGUID);
 	
-	
+	//
+	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID & _guid);
+
+	//MaterialAsset& GetMaterialAsset(const Engine::GUID & meshID);
+
+	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
+
+	const Material_instance& getMaterialInstance(Engine::GUID matGUID);
+
+
 	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+
+	std::unordered_map< Engine::GUID, Material_instance> _allMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 

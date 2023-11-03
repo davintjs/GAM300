@@ -69,7 +69,7 @@ void SerializeScript(YAML::Emitter& out, Script& _component);
 
 void Serialize(Material_instance& material);
 
-void Deserialize(Material_instance& material, fs::path& path);
+void Deserialize(Material_instance& material, const fs::path& path);
 
 template <typename T>
 void Serialize(YAML::Emitter& out, T& object)

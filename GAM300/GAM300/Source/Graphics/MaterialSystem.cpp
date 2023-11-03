@@ -6,8 +6,12 @@
 #include "Utilities/Serializer.h"
 
 
+
+
+
 void MaterialSystem::Init()
 {
+	EVENTS.Subscribe(this, &MaterialSystem::CallbackMaterialAssetLoaded);
 
 	NewMaterialInstance();
 
@@ -128,35 +132,136 @@ Material_instance& MaterialSystem::NewMaterialInstance(std::string _name)
 	return *(_material[(SHADERTYPE)defaultMaterial.shaderType].end()-1);
 }
 
-void MaterialSystem::deleteInstance(Material_instance& matInstance)
+void MaterialSystem::deleteInstance(Engine::GUID& matGUID)
 {
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	//Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
-	// Swap them out to default material before deleting the instance
-	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
+	//// Swap them out to default material before deleting the instance
+	//for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
+	//{
+	//	if (renderer.material_ptr == NULL)
+	//	{
+	//		continue;
+	//	}
+
+	//	if (renderer.material_ptr->matGUID == matInstance.matGUID)// change to matInstanceName
+	//	{
+	//		renderer.material_ptr = &(_material[(SHADERTYPE)matInstance.shaderType][0]);
+	//	}
+	//}
+
+	//// Deleting the material instance
+	//for (std::vector<Material_instance>::iterator iter(_material[(SHADERTYPE)matInstance.shaderType].begin());
+	//	iter != _material[(SHADERTYPE)matInstance.shaderType].end();
+	//	++iter)
+	//{
+	//	if ((*iter).name == matInstance.name)// change to matInstanceName
+	//	{
+	//		iter = _material[(SHADERTYPE)matInstance.shaderType].erase(iter);
+	//	}
+
+
+	//}
+
+	_allMaterialInstances.erase(matGUID);
+
+}
+
+
+
+void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Engine::GUID& _guid)
+{
+
+	//_allMaterialInstances[_guid](Deserialize(_materialAsset.mFilePath));
+	Deserialize(_allMaterialInstances[_guid], _materialAsset.mFilePath);
+
+}
+
+
+void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>* pEvent)
+{
+
+	LoadMaterial(pEvent->asset, pEvent->guid);
+
+}
+
+
+const Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID matGUID)
+{
+
+	static Material_instance defaultInstance;
+
+	auto iter = _allMaterialInstances.find(matGUID);
+
+	if (iter != _allMaterialInstances.end())
 	{
-		if (renderer.material_ptr == NULL)
-		{
-			continue;
-		}
-
-		if (renderer.material_ptr->name == matInstance.name)// change to matInstanceName
-		{
-			renderer.material_ptr = &(_material[(SHADERTYPE)matInstance.shaderType][0]);
-		}
+		return iter->second;
 	}
 
-	// Deleting the material instance
-	for (std::vector<Material_instance>::iterator iter(_material[(SHADERTYPE)matInstance.shaderType].begin());
-		iter != _material[(SHADERTYPE)matInstance.shaderType].end();
-		++iter)
-	{
-		if ((*iter).name == matInstance.name)// change to matInstanceName
-		{
-			iter = _material[(SHADERTYPE)matInstance.shaderType].erase(iter);
-		}
+	return defaultInstance;
+
+}
 
 
-	}
 
+Material_instance::Material_instance()
+{
+	shaderType = (int)SHADERTYPE::PBR;
+	name = "Default Material";
+	albedoColour = Vector4(1.f, 1.f, 1.f, 1.f);
+	metallicConstant = 1.f;
+	roughnessConstant = 1.f;
+	aoConstant = 1.f;
+	emissionConstant = 1.f;
+
+	albedoTexture = DEFAULT_TEXTURE;
+	normalMap = DEFAULT_TEXTURE;
+	metallicTexture = DEFAULT_TEXTURE;
+	roughnessTexture = DEFAULT_TEXTURE;
+	aoTexture = DEFAULT_TEXTURE;
+	emissionTexture = DEFAULT_TEXTURE;
+}
+
+// This is for Editor
+Material_instance::Material_instance(const Material_instance& other)
+{
+	// Copy each member variable from 'other' to 'this'
+	shaderType = other.shaderType;
+	name = other.name;
+	albedoColour = other.albedoColour;
+	metallicConstant = other.metallicConstant;
+	roughnessConstant = other.roughnessConstant;
+	aoConstant = other.aoConstant;
+	emissionConstant = other.emissionConstant;
+
+	albedoTexture = other.albedoTexture;
+	normalMap = other.normalMap;
+	metallicTexture = other.metallicTexture;
+	roughnessTexture = other.roughnessTexture;
+	aoTexture = other.aoTexture;
+	emissionTexture = other.emissionTexture;
+}
+
+Material_instance& Material_instance::Duplicate_MaterialInstance(const Material_instance& other)
+{
+	// Copy each member variable from 'other' to 'this'
+
+	shaderType = other.shaderType;
+	name = other.name + " - Copy";
+	albedoColour = other.albedoColour;
+	metallicConstant = other.metallicConstant;
+	roughnessConstant = other.roughnessConstant;
+	aoConstant = other.aoConstant;
+	emissionConstant = other.emissionConstant;
+
+	albedoTexture = other.albedoTexture;
+	normalMap = other.normalMap;
+	metallicTexture = other.metallicTexture;
+	roughnessTexture = other.roughnessTexture;
+	aoTexture = other.aoTexture;
+	emissionTexture = other.emissionTexture;
+
+	Serialize(*this);
+
+	return *this;
 }

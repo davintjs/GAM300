@@ -255,7 +255,7 @@ void Serialize(Material_instance& material)
 }
 
 
-void Deserialize(Material_instance& material,fs::path& path)
+void Deserialize(Material_instance& material,const fs::path& path)
 {
     std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
     PRINT(path);
