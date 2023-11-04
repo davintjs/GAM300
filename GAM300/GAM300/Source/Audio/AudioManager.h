@@ -82,6 +82,12 @@ public:
 	// stop current music
 	void StopMusic();
 
+	// stop component from playing
+	void StopAudioComponent(AudioSource& Source);
+
+	// stops all audio
+	void StopAllAudio();
+
 	// pause current music
 	void PauseMusic();
 
@@ -113,7 +119,6 @@ private:
 	FMOD_MODE modes[CATEGORY_COUNT]{};
 	FMOD::Channel* currentMusic{};
 	FMOD::Channel* currentFX{};
-	FMOD::Channel* currentFootSteps{};
 	SoundMap sounds[CATEGORY_COUNT];
 	std::vector<SoundMap> soundvec;
 	Engine::GUID currentMusicPath{ DEFAULT_ASSETS["None.wav"] };
