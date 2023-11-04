@@ -24,8 +24,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "AI/NavMeshBuilder.h"
 
-#define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(AssetManager::Instance().GetAssetGUID(filepath));
-
 void DemoSystem::Init()
 {
 	//CreateSceneEvent createScene(nullptr);
