@@ -139,9 +139,8 @@ void EditorScene::ToolBar()
 void EditorScene::SceneView()
 {
     //Editor scene viewport
-    if (ImGui::Begin("Scene"))
+    if (windowOpened = ImGui::Begin("Scene"))
     {
-        windowOpened = true;
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
@@ -185,10 +184,6 @@ void EditorScene::SceneView()
 
         // Display the gizmos for the selected entity
         DisplayGizmos();
-    }
-    else
-    {
-        windowOpened = false;
     }
     ImGui::End();
 }

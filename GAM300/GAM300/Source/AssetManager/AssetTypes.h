@@ -144,10 +144,10 @@ struct MeshAsset : Asset
 	glm::vec3 boundsMin{};				// The min position of the mesh
 	glm::vec3 boundsMax{};				// The max position of the mesh
 
-	Engine::GUID mainMesh;				// The original FBX that contains the meshes
 	unsigned int numVertices;
 	unsigned int numIndices;
 	unsigned int numBones;
+	unsigned int numBindPoses;
 	unsigned int materialIndex;
 
 	using Meta = MetaFile;
@@ -198,7 +198,7 @@ using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 template <typename AssetType>
 using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
-static std::unordered_map<std::string, size_t> AssetExtensionTypes =
+static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},

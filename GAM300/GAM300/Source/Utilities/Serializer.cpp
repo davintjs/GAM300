@@ -426,6 +426,8 @@ void DeserializeComponent(const DeComHelper& _helper)
     Engine::UUID uuid = (*_helper.node)["ID"].as<Engine::UUID>();
     T component{};
     component.UUID(uuid);
+    //if constexpr (std::is_same<T, AudioSource>())
+    //    PRINT("HELLO");
     YAML::Node node = (*_helper.node)[GetType::Name<T>()];
     Scene& _scene = *_helper.scene;
     Engine::UUID euid = node["m_GameObject"]["fileID"].as<Engine::UUID>();
@@ -489,14 +491,23 @@ void DeserializeComponent(const DeComHelper& _helper)
         if (&entity)
         {
             // Check for Scripts
-            if constexpr (std::is_same<T, Script>())
+            if constexpr (std::is_same<Transform, T>())
+            {
+                T& transform = _scene.Get<T>(component.EUID());
+                transform = component;
+            }
+            else if constexpr (std::is_same<Tag, T>())
+            {
+
+            }
+            else if constexpr (std::is_same<T, Script>())
             {
                 _scene.Add<T>(component.EUID(),component.UUID(), component.scriptId);
             }
             else
             {
-                T& tempComponent = *_scene.Add<T>(entity);
-                tempComponent = component;
+                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID());
+                *pComponent = component;
             }
         }
         else
@@ -648,6 +659,7 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
                     }
                     else
                     {
+                        
                         object = &scene.GetByUUID<T>(uuid);
                     }
                 }

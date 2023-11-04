@@ -26,7 +26,7 @@ public:
 	// To load Geoms from FBXs
 	ModelComponents DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid);
 
-	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model, const Engine::GUID& _guid);
+	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);
 
 	void DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model);
 

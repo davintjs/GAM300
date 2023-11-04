@@ -162,6 +162,9 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
     static ImGuiTextFilter filter;
     fs::path extension = fp.extension();
+    size_t extensionType = GetAssetType::E<Asset>();
+    if (AssetExtensionTypes.contains(extension))
+        extensionType = AssetExtensionTypes[extension];
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
@@ -252,8 +255,11 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             ImGui::NextColumn();
             ImGui::PopID();
         }
-        
+
+        //using filesystem to iterate through all folders/files inside the "/Data" directory
+
         if (extension == ".geom")
+        //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
         {
             // Bean: Put this publish event in the open popup in the future
             GetAssetsEvent<MeshAsset> e1;
@@ -296,8 +302,11 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                
-                ImGui::PushID(i++);
+                if (!AssetExtensionTypes.contains(path.extension()))
+                    continue;
+                if (AssetExtensionTypes[path.extension()] != extensionType)
+                    continue;
+                //if (path.extension() != extension)
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
@@ -830,6 +839,30 @@ void DisplayLightTypes(Change& change, T& value) {
 int shader_id;
 
 template <typename T>
+
+void DisplayAudioChannels(Change& change, T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Channel");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Music"); layers.push_back("SFX"); layers.push_back("Loop FX");
+        int index = value;
+        ImGui::PushItemWidth(100.f);
+        if (ImGui::Combo("##AudioChannel", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
+template <typename T>
 void DisplayShaders(Change& change, T& value) {
     if constexpr (std::is_same_v<T, int>) {
         ImGui::AlignTextToFramePadding();
@@ -873,7 +906,15 @@ void Display_Property(T& comp) {
                     ImGui::PushID(entry.first.c_str());
 
                     //Temporary implementation for materials
-
+                    if (entry.first.find("Material") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayMaterial(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayAudioChannels(newchange, Value);
+                    }
+                    else {
                         //Edit name
                     std::string DisplayName = entry.first;
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
