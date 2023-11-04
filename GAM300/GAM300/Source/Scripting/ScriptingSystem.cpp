@@ -414,6 +414,45 @@ Handle ScriptingSystem::GetScriptHandle(MonoObject* script)
 	return handle;
 }
 
+
+void ScriptingSystem::UnloadAppDomain()
+{
+	if (!mAppDomain)
+		return;
+	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+	int rows = mono_table_info_get_rows(table_info);
+	for (auto& sceneScripts : mSceneScripts)
+	{
+		for (auto& scriptPair : sceneScripts.second)
+		{
+			MonoClass* _class = mono_object_get_class(scriptPair.second);
+			if (!_class || mono_class_get_parent(_class) != mScript)
+				continue;
+			MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
+			if (!vTable)
+				continue;
+			void* fieldIterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+			{
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_STATIC)
+				{
+					mono_field_static_set_value(vTable, field, nullptr);
+				}
+				else
+				{
+					mono_field_set_value(scriptPair.second, field, nullptr);
+				}
+			}
+		}
+	}
+	mono_domain_set(mRootDomain, false);
+	#ifdef _DEBUG
+		mono_domain_unload(mAppDomain);
+	#endif
+	mAppDomain = nullptr;
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	SCRIPTING_THREAD_ID = std::this_thread::get_id();
@@ -421,7 +460,6 @@ void ScriptingSystem::ThreadWork()
 	SwapDll();
 	if (mCoreAssembly == nullptr)
 	{
-		PRINT("RECOMPILE AT SCENE START");
 		RecompileThreadWork();
 	}
 
@@ -488,12 +526,7 @@ void ScriptingSystem::ThreadWork()
 		}
 		#endif
 	}
-	mono_domain_set(mRootDomain, false);
-	#ifdef _DEBUG
-	if (mAppDomain)
-		mono_domain_unload(mAppDomain);
-	#endif
-	mAppDomain = nullptr;
+	UnloadAppDomain();
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
 }
@@ -557,11 +590,7 @@ void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	if (mAppDomain)
-	{
-		mono_domain_set(mRootDomain, false);
-		mono_domain_unload(mAppDomain);
-	}
+	UnloadAppDomain();
 	mAppDomain = CreateAppDomain();
 	mono_domain_set(mAppDomain, false);
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");

@@ -34,16 +34,16 @@ public class ThirdPersonController : Script
         vec3 dir = vec3.Zero;
         //Handle Movement Input
         if (Input.GetKey(KeyCode.W))
-            dir += (CamYawPivot.forward * MoveSpeed);
-
-        if (Input.GetKey(KeyCode.A))
-            dir += (CamYawPivot.right * MoveSpeed);
-
-        if (Input.GetKey(KeyCode.S))
             dir -= (CamYawPivot.forward * MoveSpeed);
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.A))
             dir -= (CamYawPivot.right * MoveSpeed);
+
+        if (Input.GetKey(KeyCode.S))
+            dir += (CamYawPivot.forward * MoveSpeed);
+
+        if (Input.GetKey(KeyCode.D))
+            dir += (CamYawPivot.right * MoveSpeed);
 
 
         //Determine whether a movement input was given

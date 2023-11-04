@@ -158,6 +158,8 @@ public:
 	//Creates a new app domain
 	MonoDomain* CreateAppDomain();
 
+	void UnloadAppDomain();
+
 	//Mono String from string
 	MonoString* CreateMonoString(const std::string&);
 

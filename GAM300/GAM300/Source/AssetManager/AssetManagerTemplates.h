@@ -168,10 +168,9 @@ struct AllAssetsGroup
 					Engine::GUID guid = GetGUID(filePath, true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
-						std::ifstream inputFile(filePath.c_str());
-						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
 						asset.mFilePath = filePath;
+						std::ifstream inputFile(filePath.c_str());
 						asset.mData.assign(
 							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
 						PRINT("Done updating ", filePath, " in memory!", '\n');
@@ -348,22 +347,22 @@ struct AllAssetsGroup
 		size_t assetType = GetAssetType(filePath);
 		Engine::GUID guid;
 		if (([&](auto type)
+		{
+			using T = decltype(type);
+			if (GetAssetType::E<T>() == assetType)
 			{
-				using T = decltype(type);
-				if (GetAssetType::E<T>() == assetType)
+				if constexpr (std::is_same<T, MeshAsset>())
 				{
-					if constexpr (std::is_same<T, MeshAsset>())
-					{
-						guid = GetGUID<ModelImporter>(filePath, false);
-					}
-					else
-					{
-						guid = GetGUID<MetaFile>(filePath, false);
-					}
-					return true;
+					guid = GetGUID<ModelImporter>(filePath, false);
 				}
-				return false;
+				else
+				{
+					guid = GetGUID<MetaFile>(filePath, false);
+				}
+				return true;
 			}
+			return false;
+		}
 		(Ts{}) || ...));
 		return guid;
 	}
