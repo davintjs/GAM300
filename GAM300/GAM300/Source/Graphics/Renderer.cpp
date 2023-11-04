@@ -259,7 +259,13 @@ void Renderer::Update(float)
 			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
 			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
 			
-			defaultProperties.emplace_back(renderProperties);
+			 if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
+			 	instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
+			 }
+			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			 //instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].debugVAO;
+			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
+			 defaultProperties.emplace_back(renderProperties);
 		}
 		++i;
 	}
@@ -341,14 +347,13 @@ void Renderer::Draw(BaseCamera& _camera)
 			// if debug line draw
 #ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
+				// FOR DEBUG DRAW
+				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+					DrawDebug(prop.debugVAO, prop.entitySRT.size());
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
 					DrawGrid(vao, prop.entitySRT.size());
 					continue;
 				}
-
-				// FOR DEBUG DRAW
-				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.entitySRT.size());
 			}
 #endif
 
