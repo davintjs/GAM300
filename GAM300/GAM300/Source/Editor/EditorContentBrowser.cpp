@@ -80,12 +80,15 @@ void EditorContentBrowser::Update(float dt)
 
         GLint icon_id = fileIcon;
         
-        if (!it.is_directory() && path.extension() == ".dds")
+        if (!it.is_directory() )
         {
-            GLint tex = GET_TEXTURE_ID(path);
-            if (tex != 0) 
+            if (path.extension() == ".dds")
             {
-                icon_id = tex;
+                GLint tex = GET_TEXTURE_ID(path);
+                if (tex != 0)
+                {
+                    icon_id = tex;
+                }
             }
         }
         else
