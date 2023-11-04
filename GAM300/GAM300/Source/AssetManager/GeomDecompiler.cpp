@@ -17,25 +17,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "GeomDecompiler.h"
 
-namespace
-{
-    std::ofstream out;
-    bool write1 = false;
-}
-
 ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid)
 {
     ModelComponents tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
-
-    if (_filePath.find("PlayerV2_Running") != std::string::npos)
-    {
-        write1 = false;
-    }
-    else
-    {
-        write1 = false;
-    }
 
     // Retrieve mesh assets
     DeserializeMeshes(ifs, tempModel);
@@ -65,13 +50,6 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
     for (int i = 0; i < meshSize; ++i)
     {
-        if (write1)
-        {
-            static int id = 0;
-            std::string name = "Vertices2_";
-            name += std::to_string(id++) + ".txt";
-            out.open(name.c_str());
-        }
         MeshAsset meshAsset;
 
         // Vertices
@@ -133,11 +111,6 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
         // Add this tempMesh into our tempGeom
         _model.meshes.push_back(meshAsset);
-
-        if (write1)
-        {
-            out.close();
-        }
     }
 }
 
@@ -276,8 +249,6 @@ void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 {
     E_ASSERT(_meshVertices.size() == _oVertices.size(), "Both vertices vector sizes not equal for decompressing.");
 
-    
-
     for (int i = 0; i < _meshVertices.size(); ++i)
     {
         // Position
@@ -310,11 +281,6 @@ void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
         {
             _meshVertices[i].boneIDs[j] = static_cast<int>(_oVertices[i].boneIDs[j]);
             _meshVertices[i].weights[j] = (_oVertices[i].weights[j] >= 0 ? static_cast<float>(_oVertices[i].weights[j]) / 0x7FFF : static_cast<float>(_oVertices[i].weights[j]) / 0x8000);
-        }
-
-        if (write1)
-        {
-            out << "Vertex " << i << " : " << _meshVertices[i].position.x << " " << _meshVertices[i].position.y << " " << _meshVertices[i].position.z << '\n';
         }
     }
 }

@@ -83,11 +83,7 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 	{
 		ProcessNode(*defaultScene->mRootNode, *defaultScene);
 
-		// Import fbx without animation
-		const aiScene* scene = assimpImporter.ReadFile(_filePath.string(), aiPostProcessSteps::aiProcess_Triangulate);
-		E_ASSERT(scene, "Error reading file into assimp _scene!!");
-
-		ProcessBones(*scene->mRootNode, *scene);
+		ProcessBones(*defaultScene->mRootNode, *defaultScene);
 	}
 
 	if (_serialize)
@@ -207,8 +203,6 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	if (_scene.HasAnimations())
 	{
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
-
-		pModel->animations.meshes.push_back(AnimationMesh(tempVertex, tempIndices, std::vector<TextureInfo>()));
 		/*for (ModelVertex v : tempVertex)
 		{
 			Vertex vert;
@@ -239,7 +233,7 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		mPosTexScale = std::make_pair(glm::vec3(1.f), glm::vec2(1.f));*/
 	}
 	
-	//Optimize(tempVertex, tempIndices); // Optimize this mesh
+	Optimize(tempVertex, tempIndices); // Optimize this mesh
 
 	// Compress vertices for storing in our vertex
 	CompressVertices(_compressedVertices, tempVertex, mPosTexOffset, mPosTexScale);

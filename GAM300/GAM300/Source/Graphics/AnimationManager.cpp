@@ -19,42 +19,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Scene/SceneManager.h"
 
-AnimationMesh::AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
-{
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
-
-    /*static int id = 0;
-    std::string name = "Vertices_";
-    name += std::to_string(id++) + ".txt";
-    std::ofstream out(name.c_str());
-    
-    for (size_t i = 0; i < vertices.size(); i++)
-    {
-        out << "Vertex " << i << " : "<< vertices[i].position.x << " "<< vertices[i].position.y << " " << vertices[i].position.z << '\n';
-    }
-
-    out.close();
-
-    static int id2 = 0;
-    name = "VerticesBones_" + std::to_string(id2++) + ".txt";
-    out.open(name.c_str());
-
-    for (size_t i = 0; i < vertices.size(); i++)
-    {
-        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
-        {
-            if (vertices[i].boneIDs[j] > 100)
-                out << "Vertex " << " : " << vertices[i].boneIDs[j] << "\n";
-        }
-        
-    }
-
-    out.close();*/
-
-    // now that we have all the required data, set the vertex buffers and its attribute pointers.
-}
+//AnimationMesh::AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
+//{
+//    this->vertices = vertices;
+//    this->indices = indices;
+//    this->textures = textures;
+//
+//    // now that we have all the required data, set the vertex buffers and its attribute pointers.
+//}
 
 Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     :
@@ -104,7 +76,6 @@ void Bone::Update(float animationTime)
     glm::mat4 scale = InterpolateScaling(animationTime);
     m_LocalTransform = translation * rotation * scale;
 }
-
 
 int Bone::GetPositionIndex(float animationTime)
 {
@@ -204,9 +175,6 @@ Bone* Animation::FindBone(const std::string& name)
     else return &(*iter);
 }
 
-
-
-
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
 {
     int size = animation->mNumChannels;
@@ -253,13 +221,12 @@ void Animation_Manager::Init()
     std::cout << "ANIMATION MANAGER INIT\n";
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
-    //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerCharacter_AnimationsAllAnimations.fbx", false);
+    //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
     allModels_ = md.animations;
    
     mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
 }
-
 
 void Animation_Manager::Update(float dt)
 {
