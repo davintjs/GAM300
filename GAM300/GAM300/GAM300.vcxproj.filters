@@ -104,6 +104,7 @@
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\AssetManager\GeomDecompiler.cpp" />
+    <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">

@@ -9,7 +9,7 @@
 \brief
 	This file contains the definations of Graphics System
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -34,6 +34,7 @@ TemplatePack
 	FramebufferManager,
 	DebugDraw,
 	Lighting,
+	MaterialSystem,
 	Renderer
 >;
 
@@ -220,7 +221,7 @@ void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
-	//AnimationManager.Update(dt);
+	AnimationManager.Update(dt);
 
 #if defined(_BUILD)
 	Scene& currentScene = MySceneManager.GetCurrentScene();
@@ -361,8 +362,10 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	RENDERER.Draw(_camera);
 	
+#ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
+#endif
 
 	MYSKYBOX.Draw(_camera);
 }

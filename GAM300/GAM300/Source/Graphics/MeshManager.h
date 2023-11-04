@@ -31,19 +31,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 struct InstanceProperties;
 struct DefaultRenderProperties;
 
-
-struct VertexBoneInfo
-{
-	int boneIDs[MAX_BONE_INFLUENCE];
-	float weights[MAX_BONE_INFLUENCE];
-};
-
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
 // ACTUAL MESH USED IN GAME ENGINE
 struct Mesh
 {
-	std::vector<VertexBoneInfo> verticesBoneInfo;
-	
 	glm::vec3 vertices_min{};
 	glm::vec3 vertices_max{};
 

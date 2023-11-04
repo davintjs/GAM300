@@ -38,6 +38,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
+#define MATERIALSYSTEM MaterialSystem::Instance()
 
 class Ray3D;
 class RaycastLine;
@@ -91,13 +92,72 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 
 struct Material_instance
 {
-	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
+					// Var name   // Data Storage
+	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
+
+	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
 	Engine::GUID matInstanceName;
 
-					   // Var name   // Data Storage
-	std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
+	//-------------------------
+	//      PBR VARIABLES
+	//-------------------------
+	std::string		name = "New Material";
+	glm::vec4		albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
+	float			metallicConstant{ 1.f };
+	float			roughnessConstant{ 1.f };
+	float			aoConstant{ 1.f };
+	float			emissionConstant{ 1.f };
 
+	Engine::GUID	albedoTexture{ DEFAULT_TEXTURE };
+	Engine::GUID	normalMap{ DEFAULT_TEXTURE };
+	Engine::GUID	metallicTexture{ DEFAULT_TEXTURE };
+	Engine::GUID	roughnessTexture{ DEFAULT_TEXTURE };
+	Engine::GUID	aoTexture{ DEFAULT_TEXTURE };
+	Engine::GUID	emissionTexture{ DEFAULT_TEXTURE };
+
+
+
+	//PBR - not instanced;
+
+
+
+	// Blinn Phong - Not in use
+
+	//-------------------------
+	//      Blinn Phong - Not in use
+	//-------------------------
+
+	/*
+	glm::vec4		specular;
+	glm::vec4		diffuse;
+	glm::vec4		ambient;
+	float			shininess;
+	*/
+};
+
+ENGINE_SYSTEM(MaterialSystem)
+{
+public:
+	
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+	// Adding into material instance
+
+	// Removing from material instance
+	void createPBR_Instanced();
+
+	void createPBR_NonInstanced();
+	
+	std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
+
+	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+
+private:
+
+	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 };
 
 
@@ -118,12 +178,12 @@ public:
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
 
-	// 2 different instances of a PBR.
 
 	std::unordered_map <SHADERTYPE, std::vector<Material_instance>> MaterialS;
 
 private:
 	std::vector<GLSLShader> shaders;
+	ShaderProperties tempPBR_Properties; // This is temporary, eventually will move into the shaderProperties below
 	std::vector<ShaderProperties> shaderProperties;
 };
 

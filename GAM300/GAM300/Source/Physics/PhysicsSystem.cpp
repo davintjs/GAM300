@@ -12,7 +12,7 @@
 	1. Physics System
 	2. Math conversion helper functions
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "Core/EventsManager.h"

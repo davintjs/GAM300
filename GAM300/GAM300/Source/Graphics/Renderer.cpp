@@ -1,7 +1,7 @@
 /*!***************************************************************************************
 \file			Renderer.cpp
 \project
-\author
+\author			
 
 \par			Course: GAM300
 \date           11/10/2023
@@ -10,7 +10,7 @@
 	This file contains the definitions of Graphics Renderer that includes:
 	1.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
@@ -90,8 +90,9 @@ void Renderer::Update(float)
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
+#ifndef _BUILD
 	SetupGrid(100);
-
+#endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -159,6 +160,7 @@ void Renderer::Update(float)
 				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 			}
 
+
 			// use the properties container coz its made for instance rendering already
 			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
 			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
@@ -185,7 +187,9 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
 			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
 			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+
 			//instanceContainers[s][renderer.meshID].VAO = vao;
+			
 			++iter;
 		}
 		else /*if default rendering*/{
@@ -244,15 +248,12 @@ void Renderer::Update(float)
 				if (animator.AnimationAttached())
 				{
 					renderProperties.isAnimatable = true;
-					renderProperties.boneidx = finalBoneMatContainer.size();
+					renderProperties.boneidx = (int)finalBoneMatContainer.size();
 					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
 			}
-
 			defaultProperties.emplace_back(renderProperties);
-			
 		}
-		
 		++i;
 	}
 
@@ -329,17 +330,18 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// if debug line draw
+#ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
-					DrawGrid(vao, prop.entitySRT.size());
+					DrawGrid(vao, (const unsigned int)prop.entitySRT.size());
 					continue;
 				}
 
 				// FOR DEBUG DRAW
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.entitySRT.size());
+					DrawDebug(prop.debugVAO, (const unsigned int)prop.entitySRT.size());
 			}
-			
+#endif
 
 			for (int i = 0; i < 30; ++i)
 			{
@@ -583,7 +585,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 
 		glBindVertexArray(prop.VAO);
@@ -1277,7 +1279,7 @@ void Renderer::DrawDepthDirectional()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1292,7 +1294,7 @@ void Renderer::DrawDepthDirectional()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1352,7 +1354,7 @@ void Renderer::DrawDepthSpot()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1367,7 +1369,7 @@ void Renderer::DrawDepthSpot()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1435,16 +1437,12 @@ void Renderer::DrawDepthPoint()
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
-				GLint uniform3 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
 				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 				if (prop.isAnimatable)
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					GLint uniform5 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+					glUniformMatrix4fv(uniform5, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1459,7 +1457,7 @@ void Renderer::DrawDepthPoint()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1474,7 +1472,6 @@ void Renderer::DrawDepthPoint()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 }
 

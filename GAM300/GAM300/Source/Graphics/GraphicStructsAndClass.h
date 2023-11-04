@@ -22,6 +22,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 200
 
+#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
+#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
+
+
 struct temp_instance
 {
 	std::string name;
@@ -32,7 +36,10 @@ struct temp_instance
 
 };
 
+struct materialInstance
+{
 
+};
 
 
 

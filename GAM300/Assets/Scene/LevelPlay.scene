@@ -86,6 +86,7 @@ ID: 8812244467539034998
 SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
+  Colour Picker Mode: true
   SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
 ---
 ID: 4273817804516731435
