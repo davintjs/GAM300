@@ -178,10 +178,8 @@ void ScriptingSystem::RecompileThreadWork()
 void ScriptingSystem::Init()
 {
 	logicState = LogicState::NONE;
-	#ifdef _BUILD
-		SwapDll();
-	#else
-		THREADS.EnqueueTask([this] {ThreadWork(); });
+	THREADS.EnqueueTask([this] {ThreadWork(); });
+	#ifndef _BUILD
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	#endif
 	Subscribe(&ScriptingSystem::CallbackScriptSetField);
@@ -372,8 +370,11 @@ void ScriptingSystem::UpdateReferences()
 				GetFieldValue(mS, pair.second, field);
 				if (!pObject)
 					continue;
-				if (scene.HasHandle(fType, pObject))
+				Handle handle{ (Handle)(*pObject)};
+				if (scene.HasHandle(fType, &handle))
 					continue;
+				pObject = nullptr;
+				SetFieldValue(mS, pair.second, field);
 			}
 		}
 	}

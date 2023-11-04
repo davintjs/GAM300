@@ -1,7 +1,7 @@
 #version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 5) in ivec4 boneIds; 
-layout (location = 6) in vec4 weights;
+layout (location = 13) in vec4 weights;
 layout (location = 6) in mat4 SRT;
 
 //uniform mat4 model;

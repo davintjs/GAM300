@@ -276,11 +276,6 @@ void EditorHierarchy::Update(float dt)
 				{
 					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
-					auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
-					for (auto child : currEntity.child)
-					{
-						curr_scene.Destroy(child);
-					}
 					curr_scene.Destroy(ent);
 					SelectedEntityEvent selectedEvent{0};
 					EVENTS.Publish(&selectedEvent);

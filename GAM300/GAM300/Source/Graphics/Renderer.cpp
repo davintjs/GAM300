@@ -90,8 +90,9 @@ void Renderer::Update(float)
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
+#ifndef _BUILD
 	SetupGrid(100);
-
+#endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -159,6 +160,7 @@ void Renderer::Update(float)
 				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 			}
 
+
 			// use the properties container coz its made for instance rendering already
 			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
 			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
@@ -185,7 +187,9 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
 			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
 			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+
 			//instanceContainers[s][renderer.meshID].VAO = vao;
+			
 			++iter;
 		}
 		else /*if default rendering*/{
@@ -249,16 +253,14 @@ void Renderer::Update(float)
 				}
 			}
 
-			if (instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].find(t_Mesh->vaoID) == instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].cend()) { // if container does not have this vao, emplace
-				instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].emplace(std::pair(t_Mesh->vaoID, instanceProperties[t_Mesh->vaoID]));
-			}
-			instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
-			instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
+			// if (instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].find(t_Mesh->vaoID) == instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].cend()) { // if container does not have this vao, emplace
+			// 	instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].emplace(std::pair(t_Mesh->vaoID, instanceProperties[t_Mesh->vaoID]));
+			// }
+			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
+			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
 			
 			defaultProperties.emplace_back(renderProperties);
-			
 		}
-		
 		++i;
 	}
 
@@ -337,6 +339,7 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// if debug line draw
+#ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
 					DrawGrid(vao, prop.entitySRT.size());
@@ -347,7 +350,7 @@ void Renderer::Draw(BaseCamera& _camera)
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
 					DrawDebug(prop.debugVAO, prop.entitySRT.size());
 			}
-			
+#endif
 
 			for (int i = 0; i < 30; ++i)
 			{
@@ -1445,10 +1448,6 @@ void Renderer::DrawDepthPoint()
 
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				GLint uniform4 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
 				GLint uniform3 =
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
@@ -1488,7 +1487,6 @@ void Renderer::DrawDepthPoint()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 }
 

@@ -203,7 +203,6 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	if (_scene.HasAnimations())
 	{
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
-
 		/*for (ModelVertex v : tempVertex)
 		{
 			Vertex vert;
@@ -468,6 +467,7 @@ void ModelCompiler::ImportMaterialAndTextures(const aiMaterial& _material)
 	}
 
 	pModel->materials.push_back(tempMat);
+	//pMC->materials.push_back(tempMat);
 
 	//_materials.emplace_back();
 	//Material& mat = _materials[0];

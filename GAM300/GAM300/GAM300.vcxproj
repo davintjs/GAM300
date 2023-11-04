@@ -148,6 +148,7 @@
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
+    <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
@@ -507,8 +508,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Bin\Release_x64\</OutDir>
+    <OutDir>$(SolutionDir)Bin\Distribution_x64\</OutDir>
     <IncludePath>$(SolutionDir)External\imgui\include;$(IncludePath)</IncludePath>
+    <TargetName>TheGrid</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
