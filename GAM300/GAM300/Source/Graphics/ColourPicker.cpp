@@ -138,15 +138,14 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	std::cout << selectedID << "\n";
-
+	//std::cout << selectedID << "\n";
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
 		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
 		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 		//PRINT(entity_tag.name, "\n");
-		std::cout << entity_tag.name << "\n";
+		//std::cout << entity_tag.name << "\n";
 
 
 	}
