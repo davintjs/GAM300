@@ -30,6 +30,9 @@ void EditorContentBrowser::Init()
 
 void EditorContentBrowser::Update(float dt)
 {
+
+    GLint folderIcon = GET_TEXTURE_ID("Assets/Icons/foldericon.dds");
+    GLint fileIcon = GET_TEXTURE_ID("Assets/Icons/fileicon.dds");
     UNREFERENCED_PARAMETER(dt);
     bool isOpened = ImGui::Begin("Content Browser");
     if (!isOpened)
@@ -74,23 +77,26 @@ void EditorContentBrowser::Update(float dt)
         std::string pathStr = relativepath.filename().string();
 
         //Draw the file / folder icon based on whether it is a directory or not
-        fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
 
-        size_t icon_id = 0;
+        GLint icon_id = fileIcon;
         
-        if (!it.is_directory()) {
-
+        if (!it.is_directory() && path.extension() == ".dds")
+        {
             GLint tex = GET_TEXTURE_ID(path);
-            if (tex != 0) {
-                icon = path;
+            if (tex != 0) 
+            {
+                icon_id = tex;
             }
+        }
+        else
+        {
+            icon_id = folderIcon;
         }
 
         ImGui::BeginGroup();
 
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        icon_id = GET_TEXTURE_ID(icon);
         ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
         //Drag drop logic for content browser
