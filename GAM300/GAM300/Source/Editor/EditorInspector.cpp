@@ -32,6 +32,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/Serializer.h"
 
+#include "Core/Events.h"
+#include "Core/EventsManager.h"
+
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
 #define TEXT_BUFFER_SIZE 2048
@@ -99,8 +102,11 @@ void DisplayType(const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    std::string buffer = val;
-    ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
+    PRINT(val, '\n');
+    static char buffer[TEXT_BUFFER_SIZE];
+    strcpy(buffer, val.c_str());
+    ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_ReadOnly);
+    val = buffer;
 }
 
 void DisplayType(Change& change, const char* name, std::string& val)
@@ -108,10 +114,14 @@ void DisplayType(Change& change, const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    std::string buffer = val;
-    if(ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)){
-        EDITOR.History.SetPropertyValue(change, val, buffer);
+    static char buffer[TEXT_BUFFER_SIZE];
+    strcpy(buffer, val.c_str());
+    if(ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        std::string newString = buffer;
+        EDITOR.History.SetPropertyValue(change, val, newString);
     }
+    val = buffer;
 }
 
 void DisplayType(Change& change, const char* name, int& val)
@@ -1508,6 +1518,7 @@ void EditorInspector::Update(float dt)
 
                             //Edit name
                             std::string DisplayName = entry.first;
+                            
                             auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                             DisplayName.erase(DisplayName.begin(), ++it);
                             Change newchange(&material, entry.first);
@@ -1557,7 +1568,33 @@ void EditorInspector::Update(float dt)
 
         if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
-            Serialize(material);
+            GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
+            EVENTS.Publish(&e);
+            std::string fPathStr{ e.filePath.string() };
+            size_t strPos = fPathStr.find_last_of("\\");
+            if (strPos == std::string::npos)
+                strPos = fPathStr.find_last_of("/");
+            fs::path fPath;
+            if (strPos != std::string::npos)
+            {
+                fPathStr = std::string(fPathStr.begin(), fPathStr.begin() + strPos);
+                fPath = fPathStr;
+            }
+            if (!fPath.empty())
+            {
+                std::string directory = fPathStr;
+                fPath += "\\";
+                fPath += material.name.c_str();
+                fPath += ".material";
+                fs::rename(e.filePath, fPath);
+                Serialize(material, fPathStr);
+            }
+            else
+            {
+                Serialize(material);
+            }
+            PRINT(fPath);
+            //material.name
         }
 
         ImGui::End();

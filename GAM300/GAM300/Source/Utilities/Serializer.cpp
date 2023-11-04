@@ -216,7 +216,7 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     return true;
 }
 
-void Serialize(Material_instance& material)
+void Serialize(Material_instance& material, std::string directory)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -249,8 +249,8 @@ void Serialize(Material_instance& material)
         }
     });
     out << YAML::EndMap << YAML::EndMap;
-    std::string fName{"Assets/"};
-    std::ofstream fout(fName+material.name+".material", std::ios::out);
+    directory += "/";
+    std::ofstream fout(directory + material.name + ".material", std::ios::out);
     fout << out.c_str();
 }
 
