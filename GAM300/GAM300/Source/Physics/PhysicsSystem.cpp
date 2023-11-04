@@ -352,7 +352,6 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			// Jump
 			if (groundState != JPH::Character::EGroundState::OnGround) {
 				new_velocity.SetY(0);
-				std::cout << "Character is not grounded, setting directional y to 0\n";
 			}
 			else {
 
