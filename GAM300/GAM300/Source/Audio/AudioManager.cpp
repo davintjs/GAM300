@@ -282,6 +282,46 @@ void AudioManager::StopFX() {
 	currentFXPath = DEFAULT_ASSETS["None.wav"];
 }
 
+void AudioManager::StopAllAudio() {
+	currentMusicPath = DEFAULT_ASSETS["None.wav"];
+	currentFXPath = DEFAULT_ASSETS["None.wav"];
+	nextMusicPath = DEFAULT_ASSETS["None.wav"];
+	groups[CATEGORY_SFX]->stop();
+	groups[CATEGORY_MUSIC]->stop();
+	groups[CATEGORY_LOOPFX]->stop();
+	currentMusic = 0;
+	currentMusic->stop();
+	currentFX->stop();
+	fade = FADE_OUT;
+}
+
+void AudioManager::StopAudioComponent(AudioSource& Source) {
+	groups[Source.current_channel]->stop();
+	Source.play = 0;
+	//sounds[Source.current_channel][Source.current_channel]
+	switch (static_cast<Category>(Source.current_channel))
+	{
+	case CATEGORY_SFX:
+		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		groups[CATEGORY_SFX]->stop();
+		currentFX->stop();
+		break;
+	case CATEGORY_MUSIC:
+		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		groups[CATEGORY_MUSIC]->stop();
+		currentMusic->stop();
+		fade = FADE_OUT;
+		break;
+	case CATEGORY_LOOPFX:
+		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		groups[CATEGORY_LOOPFX]->stop();
+		currentFX->stop();
+		break;
+	default:
+		break;
+	}
+}
+
 void AudioManager::SetMasterVolume(float volume) {
 	master->setVolume(volume);
 }
