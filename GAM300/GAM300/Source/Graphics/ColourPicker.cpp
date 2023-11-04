@@ -60,9 +60,9 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 		
 		EUID_Holder.emplace_back(entity.EUID());
 
-		float r = (temp & 0x000000FF) >> 0;
-		float g = (temp & 0x0000FF00) >> 8;
-		float b = (temp & 0x00FF0000) >> 16;
+		float r = (float)((temp & 0x000000FF) >> 0);
+		float g = (float)((temp & 0x0000FF00) >> 8);
+		float b = (float)((temp & 0x00FF0000) >> 16);
 
 		// in game mode, only care about buttons
 		glm::vec4 picking_color = glm::vec4 (r / 255.f, g / 255.f, b / 255.f, 1.f);
@@ -129,7 +129,7 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 	true_mousepos.y = mousepos.y - (-(windowPos.y + windowDimension.y) + height);
 	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
 
-	glReadPixels(true_mousepos.x, true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glReadPixels((GLint)true_mousepos.x, (GLint)true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 
 #endif // _BUILD

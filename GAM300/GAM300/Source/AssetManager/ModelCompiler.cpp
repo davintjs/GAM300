@@ -98,8 +98,8 @@ void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 	{
 		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
 		Animation& animation = pModel->animations.GetAnimations();
-		animation.GetDuration() = animations->mDuration;
-		animation.GetTicksPerSecond() = animations->mTicksPerSecond;
+		animation.GetDuration() = (float)animations->mDuration;
+		animation.GetTicksPerSecond() = (int)animations->mTicksPerSecond;
 		animation.ReadHierarchyData(animation.GetRootNode(), _scene.mRootNode);
 		animation.ReadMissingBones(animations, pModel->animations);
 	}
@@ -165,10 +165,10 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 		}
 
 		// Animation
-		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+		for (int j = 0; j < MAX_BONE_INFLUENCE; j++)
 		{
-			temp.boneIDs[i] = -1;
-			temp.weights[i] = 0.f;
+			temp.boneIDs[j] = -1;
+			temp.weights[j] = 0.f;
 		}
 
 		tempVertex.push_back(temp); // Add this vertex into our vector of vertices
@@ -545,7 +545,7 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 	auto& boneInfoMap = pModel->animations.GetBoneInfoMap();
 	int& boneCount = pModel->animations.GetBoneCount();
 	
-	for (int boneIndex = 0; boneIndex < _mesh.mNumBones; ++boneIndex)
+	for (int boneIndex = 0; boneIndex < (int)_mesh.mNumBones; ++boneIndex)
 	{
 		int boneID = -1;
 		std::string boneName = _mesh.mBones[boneIndex]->mName.C_Str();

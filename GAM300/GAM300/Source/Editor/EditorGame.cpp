@@ -12,7 +12,7 @@
     1. Editor Scene
     2. Editor Game
 
-All content � 2023 DigiPen Institute of Technology Singapore.All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore.All rights reserved.
 * *****************************************************************************************/
 #include "Precompiled.h"
 
@@ -106,8 +106,9 @@ void EditorGame::UpdateTargetDisplay()
 void EditorGame::GameView()
 {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
-    if (windowOpened = ImGui::Begin("Game", nullptr, flags))
+    if (ImGui::Begin("Game", nullptr, flags))
     {
+        windowOpened = true;
         if (!camera) // If the camera does not exist
         {
             ImGui::End();
@@ -145,6 +146,10 @@ void EditorGame::GameView()
         //unsigned int textureID = camera->GetFramebuffer().GetColorAttachmentId();
 
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)dimension.x, (float)dimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
+    }
+    else
+    {
+        windowOpened = false;
     }
     ImGui::End();
 }

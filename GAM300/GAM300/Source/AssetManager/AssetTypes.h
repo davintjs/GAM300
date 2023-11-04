@@ -138,10 +138,10 @@ struct MeshAsset : Asset
 	glm::vec3 boundsMin{};				// The min position of the mesh
 	glm::vec3 boundsMax{};				// The max position of the mesh
 
+	Engine::GUID mainMesh;				// The original FBX that contains the meshes
 	unsigned int numVertices;
 	unsigned int numIndices;
 	unsigned int numBones;
-	unsigned int numBindPoses;
 	unsigned int materialIndex;
 
 	using Meta = MetaFile;

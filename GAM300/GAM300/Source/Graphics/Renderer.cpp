@@ -1,7 +1,7 @@
 /*!***************************************************************************************
 \file			Renderer.cpp
 \project
-\author
+\author			
 
 \par			Course: GAM300
 \date           11/10/2023
@@ -10,7 +10,7 @@
 	This file contains the definitions of Graphics Renderer that includes:
 	1.
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
@@ -248,7 +248,7 @@ void Renderer::Update(float)
 				if (animator.AnimationAttached())
 				{
 					renderProperties.isAnimatable = true;
-					renderProperties.boneidx = finalBoneMatContainer.size();
+					renderProperties.boneidx = (int)finalBoneMatContainer.size();
 					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
 			}
@@ -333,13 +333,13 @@ void Renderer::Draw(BaseCamera& _camera)
 #ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
-					DrawGrid(vao, prop.entitySRT.size());
+					DrawGrid(vao, (const unsigned int)prop.entitySRT.size());
 					continue;
 				}
 
 				// FOR DEBUG DRAW
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.entitySRT.size());
+					DrawDebug(prop.debugVAO, (const unsigned int)prop.entitySRT.size());
 			}
 #endif
 
@@ -585,7 +585,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 
 		glBindVertexArray(prop.VAO);
@@ -1279,7 +1279,7 @@ void Renderer::DrawDepthDirectional()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1354,7 +1354,7 @@ void Renderer::DrawDepthSpot()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1433,16 +1433,16 @@ void Renderer::DrawDepthPoint()
 
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				GLint uniform3 =
+				GLint uniform4 =
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
 				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 				if (prop.isAnimatable)
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					GLint uniform5 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+					glUniformMatrix4fv(uniform5, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
