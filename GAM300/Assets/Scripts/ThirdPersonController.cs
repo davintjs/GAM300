@@ -19,6 +19,8 @@ public class ThirdPersonController : Script
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
 
+    //public Transform test;
+
     // Start is called before the first frame update
     void Start()
     {
