@@ -447,7 +447,9 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
-				ReflectFromOther(MySceneManager.GetPreviousScene());
+				#ifndef _BUILD
+					ReflectFromOther(MySceneManager.GetPreviousScene());
+				#endif
 				InvokeAllScripts(DefaultMethodTypes::Awake);
 				InvokeAllScripts(DefaultMethodTypes::Start);
 				logicState = LogicState::UPDATE;

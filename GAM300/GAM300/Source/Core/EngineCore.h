@@ -99,18 +99,14 @@ public:
 		TextureManager.Init();
 		AllSystems::Init();
 
-
-		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
-		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
-
-
 		#if defined(_BUILD)
 			InputSystem::Instance().LockCursor(true);
 			SceneStartEvent startEvent{};
 			EVENTS.Publish(&startEvent);
+		#else
+			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		#endif
-		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
-		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;
 		app_time = 0.f;
 	}
