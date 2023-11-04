@@ -131,7 +131,7 @@ public:
     glm::vec2 mTexCompressionScale{};   // Scale value according to the bounding box of the texture coordinates of this sub mesh
     glm::vec2 mTexCompressionOffset{};  // This individual mesh textures' coordinates' center offset from original
 
-    int materialIndex = 0;              // Material index
+    unsigned int materialIndex = 0;              // Material index
 
     // For Animation
     unsigned int numBones;              // Number of bones within the mesh

@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
-
+#include "Audio/AudioManager.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -77,6 +77,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
 		addr += 8;
 		return reinterpret_cast<void*>(addr);
+	}
+
+	static void AudioSourcePlay(AudioSource* pAudioSource)
+	{
+		size_t addr = reinterpret_cast<size_t>(pAudioSource);
+		addr -= 8;
+		pAudioSource = reinterpret_cast<AudioSource*>(addr);
+		AUDIOMANAGER.PlayComponent(*pAudioSource);
 	}
 
 	//Gets object that entity has
@@ -184,6 +192,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static void GetMouseDelta(Vector2& mouseDelta)
 	{
+		mouseDelta = InputHandler::mouseDeltaNormalized();
 	}
 
 	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
@@ -264,5 +273,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetActive);
 		Register(SetActive);
 		Register(AddComponent);
+		Register(GetMouseDelta);
+		Register(AudioSourcePlay);
 	}
 #endif // !SCRIPT_WRAPPERS_H

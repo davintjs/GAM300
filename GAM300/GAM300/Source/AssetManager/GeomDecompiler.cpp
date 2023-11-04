@@ -83,7 +83,9 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
         meshAsset.numIndices = indSize;
 
         // Converts Vertex to ModelVertex
+        
         DecompressVertices(meshAsset.vertices, tempVerts, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
+
 
         glm::vec3 min(FLT_MAX);
         glm::vec3 max(FLT_MIN);

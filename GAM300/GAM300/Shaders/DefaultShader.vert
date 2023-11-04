@@ -11,7 +11,7 @@ layout (location = 3) in vec2 aVertexTexCoord; //UVs info
 layout (location = 4) in vec4 aVertexColor; // This can throw
 
 layout(location = 5) in ivec4 boneIds; 
-layout(location = 6) in vec4 weights;
+layout(location = 13) in vec4 weights;
 
 
 //-------------------------

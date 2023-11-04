@@ -31,7 +31,7 @@ void DemoSystem::Init()
 	//CreateSceneEvent createScene(nullptr);
 	//EVENTS.Publish(&createScene);
 	//Scene& scene = *createScene.scene;
-	MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
+	MySceneManager.LoadScene("Assets/Scene/LevelPlay.scene");
 	//Entity& testEntity = *scene.Add<Entity>();
 	//scene.Get<Transform>(testEntity).scale = Vector3(1.f, 1.f, 1.f);
 	//scene.Get<Transform>(testEntity).translation = Vector3(0);

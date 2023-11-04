@@ -16,14 +16,15 @@ public class ThirdPersonController : Script
     public Transform CamPitchPivot;
     public Transform PlayerModel;
 
-
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
+
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        audioSource.Play();
     }
 
     // Update is called once per frame
@@ -37,13 +38,13 @@ public class ThirdPersonController : Script
             dir += CamYawPivot.forward;
 
         if (Input.GetKey(KeyCode.A))
-            dir -= CamYawPivot.right;
+            dir += CamYawPivot.right;
 
         if (Input.GetKey(KeyCode.S))
             dir -= CamYawPivot.forward;
 
         if (Input.GetKey(KeyCode.D))
-            dir += CamYawPivot.right;
+            dir -= CamYawPivot.right;
 
 
         //Determine whether a movement input was given
@@ -52,8 +53,7 @@ public class ThirdPersonController : Script
         //Adjust the rotation of the model whenever the player moves
         if (IsMoving)
         {
-
-            //transform.forward = CamYawPivot.forward;
+            PlayerModel.localRotation.y = CamYawPivot.localRotation.y;
         }
 
         //Handle Gravity 
@@ -76,7 +76,6 @@ public class ThirdPersonController : Script
         dir += VerticalVelocity;
 
         //Apply movement
-        Console.WriteLine("{0},{1},{2}",dir.x,dir.y,dir.z);
-        CC.Move(dir * MoveSpeed * Time.deltaTime);
+        CC.Move(dir * MoveSpeed);
     }
 }

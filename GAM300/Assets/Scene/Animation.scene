@@ -1,0 +1,139 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: Animation
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 16971042021324461215
+GameObject:
+  m_IsActive: true
+  m_Name: Body
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9951651598483564701}  # Transform
+    - component: {fileID: 15609799257596260444}  # Animator
+    - component: {fileID: 17698552145363034886}  # MeshRenderer
+---
+ID: 9951651598483564701
+Transform:
+  m_GameObject: {fileID: 16971042021324461215}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 8740433663814950322}
+  m_Children:
+    []
+---
+ID: 15609799257596260444
+Animator:
+  m_GameObject: {fileID: 16971042021324461215}
+  Time: 0
+  Playing: false
+---
+ID: 17698552145363034886
+MeshRenderer:
+  m_GameObject: {fileID: 16971042021324461215}
+  Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
+  Albedo: [0.476280749, 0.476244509, 0.476233125, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+  IsInstance: false
+---
+ID: 8740433663814950322
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16394273166130057897}  # Transform
+---
+ID: 16394273166130057897
+Transform:
+  m_GameObject: {fileID: 8740433663814950322}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 16971042021324461215}
+---
+ID: 1093866452432998051
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2629151410123732397}  # Transform
+    - component: {fileID: 6624460600492297826}  # MeshRenderer
+---
+ID: 2629151410123732397
+Transform:
+  m_GameObject: {fileID: 1093866452432998051}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [15.1787987, 0.00100000005, 15.1787987]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6624460600492297826
+MeshRenderer:
+  m_GameObject: {fileID: 1093866452432998051}
+  Mesh: {guid: 00000000000000000000000000000065}
+  Albedo: [1, 0.999899983, 0.999899983, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+  IsInstance: true
+---
+ID: 14365891126363820688
+GameObject:
+  m_IsActive: true
+  m_Name: Light
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6202871815354044321}  # Transform
+    - component: {fileID: 17398114022074565735}  # LightSource
+---
+ID: 6202871815354044321
+Transform:
+  m_GameObject: {fileID: 14365891126363820688}
+  Translation: [0.306191623, 1.55135417, 0.393201053]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 17398114022074565735
+LightSource:
+  m_GameObject: {fileID: 14365891126363820688}
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 10
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]

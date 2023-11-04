@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
-
+#include "Graphics/GraphicsSystem.h"
 #include "PropertyConfig.h"
 
 #define BUTTON_HEIGHT .1 //Percent
@@ -60,6 +60,7 @@ bool valueChanged = false;
 float initialvalue = 0.f;
 float changedvalue = 0.f;
 Vector3 initialVector;
+Vector4 intialColor;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -149,6 +150,9 @@ void DisplayType(Change& change, const char* name, char*& val)
 void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
     fs::path extension = fp.extension();
+    size_t extensionType = GetAssetType::E<Asset>();
+    if (AssetExtensionTypes.contains(extension))
+        extensionType = AssetExtensionTypes[extension];
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
@@ -217,13 +221,16 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             if (pair.first.string().starts_with("None"))
                 continue;
 
+            fs::path icon = "Assets/Icons/fileicon.dds";
+
             //if not png or dds file, dont show
 
             ImGui::PushID(i++);
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            if (ImGui::ImageButton((ImTextureID)defaultFileIcon, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            GLuint icon_id = TextureManager.GetTexture(icon);
+            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, pair.second);
             }
@@ -238,7 +245,9 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         //using filesystem to iterate through all folders/files inside the "/Data" directory
 
         if (extension == ".geom")
+        //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
         {
+            // Bean: Put this publish event in the open popup in the future
             GetAssetsEvent<MeshAsset> e1;
             EVENTS.Publish(&e1);
             fs::path icon = "Assets/Icons/fileicon.dds";
@@ -246,6 +255,9 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
             for (auto& meshAsset : *e1.pAssets)
             {
+                if (!filter.PassFilter(meshAsset.second.mFilePath.string().c_str()))
+                    continue;
+
                 ImGui::PushID(i++);
 
                 //render respective file icon textures
@@ -272,8 +284,11 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (path.extension() != extension)
+                if (!AssetExtensionTypes.contains(path.extension()))
                     continue;
+                if (AssetExtensionTypes[path.extension()] != extensionType)
+                    continue;
+                //if (path.extension() != extension)
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
@@ -522,33 +537,34 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    Vector4 buf = val;
 
+    Vector4 buf = val;
     ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
     bool ischanged = false;
 
-    if (ImGui::ColorButton("hi", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+    if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
+        ImGui::OpenPopup("colorpicker");
 
-        ImGui::OpenPopup("hi-picker");
-
-    if (ImGui::BeginPopup("hi-picker"))
+    if (ImGui::BeginPopup("colorpicker"))
     {
         if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
             ischanged = true;
+            if (!valueChanged)
+                intialColor = val;
+
+            valueChanged = true;
+            val = buf;
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            valueChanged = false;
+            buf = val;
+            val = intialColor;
+            EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
     }
-
-    //buf = color;
-
-    if (ischanged) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }
-
-   /* if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueBar)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }*/
 
 }
 
@@ -704,6 +720,7 @@ void DisplayField(Change& change, const char* name, Field& field)
     {
         if (field.fType < AllObjectTypes::Size())
         {
+            Scene& scene{ MySceneManager.GetCurrentScene() };
             T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
@@ -711,7 +728,7 @@ void DisplayField(Change& change, const char* name, Field& field)
             }
             else
             {
-
+                
                 DisplayType(change, name, value);
             }
         }
@@ -808,6 +825,63 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
+template <typename T>
+void DisplayAudioChannels(Change& change, T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Channel");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Music"); layers.push_back("SFX"); layers.push_back("Loop FX");
+        int index = value;
+        ImGui::PushItemWidth(100.f);
+        if (ImGui::Combo("##AudioChannel", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
+template <typename T>
+void DisplayMaterial(Change& change, T& value) {
+    if constexpr (std::is_same_v<T, int>) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Material");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        int index = value;
+        for (auto& mat : GRAPHICS.temporary_presets) {
+            layers.push_back(mat.name.c_str());
+        }
+        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+        if (ImGui::Combo("##Material", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+
+            //try try
+            auto& presets = GRAPHICS.temporary_presets;
+            MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
+
+            rend.mr_Albedo = presets[index].albedo/255.f;
+            rend.mr_metallic = presets[index].metallic;
+            rend.mr_roughness = presets[index].roughness;
+            rend.ao = presets[index].ao;
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
@@ -820,19 +894,30 @@ void Display_Property(T& comp) {
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
 
-                    //Edit name
-                    std::string DisplayName = entry.first;
-                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                    DisplayName.erase(DisplayName.begin(), ++it);
+                    //Temporary implementation for materials
+                    if (entry.first.find("Material") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayMaterial(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        Change newchange(&comp, entry.first);
+                        DisplayAudioChannels(newchange, Value);
+                    }
+                    else {
+                        //Edit name
+                        std::string DisplayName = entry.first;
+                        auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                        DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());   
-                    
-                    Change newchange(&comp, entry.first); 
+                        ImGui::PushID(entry.first.c_str());
 
-                    //Properties with Texture picker
-                    Display<T1>(newchange, DisplayName.c_str(), Value);
+                        Change newchange(&comp, entry.first);
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
 
-                    ImGui::PopID();
+                        ImGui::PopID();
+                    }
+
+
                     }
                 , Data);
                 property::set(comp, entry.first.c_str(), Data);
@@ -1014,7 +1099,7 @@ void DisplayComponentHelper(T& component)
             {
                 DisplayComponent(component);
             }
-            if constexpr (std::is_same_v<T, LightSource>) {
+            else if constexpr (std::is_same_v<T, LightSource>) {
                 DisplayLightProperties(component);
             }
             else
