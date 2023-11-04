@@ -102,6 +102,13 @@ public:
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
+
+
+		#if defined(_BUILD)
+			InputSystem::Instance().LockCursor(true);
+			SceneStartEvent startEvent{};
+			EVENTS.Publish(&startEvent);
+		#endif
 		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
 		//tempEnemy.Update(1.f); // Temporary dt lol
 		update_timer = 0.f;

@@ -7,6 +7,63 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 12782378855973885857
+GameObject:
+  m_IsActive: true
+  m_Name: ThirdPersonController
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5965778476668171504}  # Transform
+    - component: {fileID: 13309067361601249763}  # CharacterController
+    - component: {fileID: 15540813315251420325}  # AudioSource
+    - component: {fileID: 14353790485598771316}  # Script
+---
+ID: 5965778476668171504
+Transform:
+  m_GameObject: {fileID: 12782378855973885857}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 3518888091788160185}
+    - {fileID: 13631632486827666491}
+---
+ID: 13309067361601249763
+CharacterController:
+  m_GameObject: {fileID: 12782378855973885857}
+  Velocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  GravityFactor: 1
+  SlopeLimit: 45
+  IsGrounded: false
+---
+ID: 15540813315251420325
+AudioSource:
+  m_GameObject: {fileID: 12782378855973885857}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 54833b09a3e8292700a8226f0e4db1a3}
+  Play: false
+---
+ID: 14353790485598771316
+Script:
+  m_GameObject: {fileID: 12782378855973885857}
+  Script: {guid: 47f8df58609a73e48a47639b5258e80a}
+  MoveSpeed: 5
+  JumpSpeed: 3
+  PlayerModel: {fileID: 13631632486827666491}  # Component
+  CamYawPivot: {fileID: 3518888091788160185}  # Component
+  Gravity: 9.81000042
+  CamMovePivot: {fileID: 15558856225549399582}  # Component
+  CC: {fileID: 13309067361601249763}  # Component
+  CamPitchPivot: {fileID: 12647441126163305309}  # Component
+  audioSource: {fileID: 15540813315251420325}  # Component
+---
 ID: 6606253624498158492
 GameObject:
   m_IsActive: true
@@ -37,42 +94,6 @@ LightSource:
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [100, 100, 100]
----
-ID: 3741745616850505635
-GameObject:
-  m_IsActive: true
-  m_Name: Camera
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12525885762250101481}  # Transform
-    - component: {fileID: 8581604554917408359}  # Camera
----
-ID: 12525885762250101481
-Transform:
-  m_GameObject: {fileID: 3741745616850505635}
-  Translation: [0, 12.4943771, 16.7999992]
-  Rotation: [-0.43719095, 0, 0]
-  Scale: [0.99999702, 0.999999583, 0.999996662]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 8581604554917408359
-Camera:
-  m_GameObject: {fileID: 3741745616850505635}
-  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
-  ClearFlags: "\x01"
-  CullingMask: "\x00"
-  FocalLength: 10
-  NearClip: 0.100000001
-  FarClip: 1000
-  FieldOfView: 45
-  Orthographic: false
-  TargetDisplay: 0
-  HDR: true
-  OcclusionCulling: false
-  FrustumCulling: true
 ---
 ID: 4212138099454399691
 GameObject:
@@ -11121,3 +11142,167 @@ Transform:
     - {fileID: 4872176723683220624}
     - {fileID: 7184842061523962735}
     - {fileID: 10055382662224545046}
+---
+ID: 15558856225549399582
+GameObject:
+  m_IsActive: true
+  m_Name: CameraMovePivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11107782583573566695}  # Transform
+---
+ID: 11107782583573566695
+Transform:
+  m_GameObject: {fileID: 15558856225549399582}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3518888091788160185}
+  m_Children:
+    - {fileID: 12647441126163305309}
+---
+ID: 12647441126163305309
+GameObject:
+  m_IsActive: true
+  m_Name: CameraPitchPivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 439577573729340575}  # Transform
+---
+ID: 439577573729340575
+Transform:
+  m_GameObject: {fileID: 12647441126163305309}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15558856225549399582}
+  m_Children:
+    - {fileID: 17054887937050869341}
+---
+ID: 13631632486827666491
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerModelOffset
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13699401859378856763}  # Transform
+---
+ID: 13699401859378856763
+Transform:
+  m_GameObject: {fileID: 13631632486827666491}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12782378855973885857}
+  m_Children:
+    - {fileID: 7605712729267509620}
+---
+ID: 7605712729267509620
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerModel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6396639512768926260}  # Transform
+    - component: {fileID: 5964355975430216817}  # MeshRenderer
+---
+ID: 6396639512768926260
+Transform:
+  m_GameObject: {fileID: 7605712729267509620}
+  Translation: [0, 0, -1.23347855]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13631632486827666491}
+  m_Children:
+    []
+---
+ID: 5964355975430216817
+MeshRenderer:
+  m_GameObject: {fileID: 7605712729267509620}
+  IsInstance: true
+  Material: 1
+  Mesh: {guid: 872b8e766b8122de16b24583fa009940}
+  Albedo: [0, 0, 0, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+---
+ID: 17054887937050869341
+GameObject:
+  m_IsActive: true
+  m_Name: ThirdPersonCamera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3297371545793011233}  # Transform
+    - component: {fileID: 7426910934689840407}  # Camera
+    - component: {fileID: 10464857548300635336}  # Script
+---
+ID: 3297371545793011233
+Transform:
+  m_GameObject: {fileID: 17054887937050869341}
+  Translation: [0, 0, 5]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12647441126163305309}
+  m_Children:
+    []
+---
+ID: 7426910934689840407
+Camera:
+  m_GameObject: {fileID: 17054887937050869341}
+  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+---
+ID: 10464857548300635336
+Script:
+  m_GameObject: {fileID: 17054887937050869341}
+  Script: {guid: f204530c811d06247b59f2ef14dd1085}
+  MaxPitchAngle: 85
+  YawRotSpeed: 180
+  CamYawPivot: {fileID: 3518888091788160185}  # Component
+  InvertPitch: false
+  PitchRotSpeed: 180
+  CamPitchPivot: {fileID: 12647441126163305309}  # Component
+  MinPitchAngle: -85
+  CamMovePivot: {fileID: 15558856225549399582}  # Component
+---
+ID: 3518888091788160185
+GameObject:
+  m_IsActive: true
+  m_Name: CameraYawPivot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8324064926827957504}  # Transform
+---
+ID: 8324064926827957504
+Transform:
+  m_GameObject: {fileID: 3518888091788160185}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12782378855973885857}
+  m_Children:
+    - {fileID: 15558856225549399582}
