@@ -1591,7 +1591,13 @@ void EditorInspector::Update(float dt)
             }
             else
             {
+                fPath = "Assets\\";
+                fPath += material.name.c_str();
+                fPath += ".material";
                 Serialize(material);
+                GetAssetEvent e(fPath);
+                EVENTS.Publish(&e);
+                EditorContentBrowser::Instance().selectedAss = e.guid;
             }
             PRINT(fPath);
             //material.name
