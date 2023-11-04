@@ -24,7 +24,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "HandlesTable.h"
 
 //Original, to New
-using ReferencesTable = std::unordered_map<Handle, Handle>;
+//Enum to old handle -> new handle
+using ReferencesTable = std::unordered_map < size_t,std::unordered_map<Handle, Handle>>;
 
 struct Scene
 {
@@ -47,25 +48,17 @@ struct Scene
 	template <typename T, typename... Ts>
 	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID);
 
+	template <typename... Ts>
+	void LinkReferences(ReferencesTable& storage, TemplatePack<Ts...>);
+
 	template <typename T, typename... Ts>
-	void LinkReferences(ReferencesTable& storage, T& newObject);
+	void LinkReferences(ReferencesTable& storage);
 
 	void Clone(Entity& source);
 
-	void Clone(Entity& source, Entity& dest);
-
 	template <typename T>
-	void CopyValues(T& source, T& dest)
+	void CopyValues(T& source, T& dest);
 
-	template <typename T, typename... Ts>
-	void CloneHelper(Entity& entity);
-
-
-	template <typename... Ts>
-	void CloneHelper(Entity& source, TemplatePack<Ts...>);
-
-	template <typename T, typename... Ts>
-	void CloneHelper(Entity& source, Entity& dest);
 
 	//Copy assignment
 	Scene& operator=(Scene& rhs);

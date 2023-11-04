@@ -19,7 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 template <typename... Ts>
 void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID, TemplatePack<Ts...>)
 {
-	StoreComponentHierarchy<Ts...>(storage, entityID);
+	StoreComponentHierarchy<Ts...>(storage, entityID, newEntityID);
 }
 
 template <typename T,typename... Ts>
@@ -32,9 +32,13 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 		if constexpr (SingleComponentTypes::Has<T>())
 		{
 			T& component{ Get<T>(entityID) };
-			storage[component] = *object;
 			T* object;
-			if constexpr (std::is_same<T, Transform>() || std::is_same<T, Tag>())
+			if constexpr (std::is_same<T, Transform>())
+			{
+				object = &Get<T>(newEntityID);
+				object->child.clear();
+			}
+			else if constexpr (std::is_same<T, Tag>())
 			{
 				object = &Get<T>(newEntityID);
 			}
@@ -42,52 +46,33 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			{
 				object = Add<T>(newEntityID);
 			}
+			storage[GetType::E<T>()][component] = *object;
 			CopyValues(component, *object);
 		}
 		else
 		{
 			for (T* pComponent : GetMulti<T>(entityID))
 			{
-				storage[*pComponent] = *Add<T>(newEntityID);
+				
+				T* object;
+				if constexpr (std::is_same_v<T, Script>)
+				{
+					object = Add<T>(Get<Entity>(newEntityID), pComponent->scriptId);
+				}
+				else
+				{
+					object = Add<T>(newEntityID);
+				}
+				storage[GetType::E<T>()][*pComponent] = *object;
 				CopyValues(*pComponent, *object);
-			}
-		}
-	}
-}
-
-template <typename T, typename... Ts>
-void Scene::CloneHelper(Entity& source, Entity& dest)
-{
-	if constexpr (SingleComponentTypes::Has<T>())
-	{
-		
-		if (Has<T>(source))
-		{
-			Clone(Get<T>(source), dest);
-		}
-	}
-	else
-	{
-		if (Has<T>(source))
-		{
-			for (auto* pObject : GetMulti<T>(source))
-			{
-				Clone(*pObject, dest);
 			}
 		}
 	}
 
 	if constexpr (sizeof...(Ts) != 0)
 	{
-		
-		CloneHelper<Ts...>(source,dest);
+		StoreComponentHierarchy<Ts...>(storage, entityID, newEntityID);
 	}
-}
-
-template <typename... Ts>
-void Scene::CloneHelper(Entity& source, TemplatePack<Ts...>)
-{
-	CloneHelper<Ts...>(source,*Add<Entity>());
 }
 
 template <typename T>
@@ -95,38 +80,75 @@ void Scene::CopyValues(T& source, T& dest)
 {
 	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
 	{
-		if (!Flags.m_isDontShow) {
-			auto entry = property::entry { PropertyName, Data };
+		auto entry = property::entry { PropertyName, Data };
 
-			property::set(*object, entry.first.c_str(), Data);
-			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
-		}
+		property::set(dest, entry.first.c_str(), Data);
+		// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+		//assert(Flags.m_isScope == false || PropertyName.back() == ']');
 
 	});
 }
 
-template <typename T, typename... Ts>
-void Scene::LinkReferences(ReferencesTable& storage, T& newObject)
+template <typename... Ts>
+void Scene::LinkReferences(ReferencesTable& storage, TemplatePack<Ts...>)
 {
-	if constexpr (std::is_same<T, Transform>())
+	LinkReferences<Ts...>(storage);
+}
+
+template <typename T, typename... Ts>
+void Scene::LinkReferences(ReferencesTable& storage)
+{
+	for (auto& old_new : storage[GetType::E<T>()])
 	{
-		if (newObject.parent)
+		T& newObject = Get<T>(old_new.second);
+
+		if constexpr (std::is_same<T, Transform>())
 		{
-			for (auto& pair : storage)
+			if (newObject.parent)
 			{
-				if (pair.first.euid == newObject.parent)
+				for (auto& pair : storage[GetType::E<T>()])
 				{
-					newObject.parent = pair.second.euid;
+					if (pair.first.euid == newObject.parent)
+					{
+						newObject.parent = pair.second.euid;
+						Get<Transform>(newObject.parent).child.push_back(newObject.EUID());
+					}
 				}
 			}
 		}
+		else if constexpr (std::is_same<T, Script>())
+		{
+			static char buffer[2048]{};
+			T& oldObject = Get<T>(old_new.first);
+			T& newObject = Get<T>(old_new.second);
+			ScriptGetFieldNamesEvent getFieldNamesEvent{ oldObject };
+			EVENTS.Publish(&getFieldNamesEvent);
+			for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
+			{
+				const char* fieldName = getFieldNamesEvent.pStart[i];
+				Field field{ AllFieldTypes::Size(),2048, buffer };
+				ScriptGetFieldEvent getFieldEvent{ oldObject,fieldName,field };
+				EVENTS.Publish(&getFieldEvent);
+				//Objects
+				if (field.fType >= FieldTypes::Size())
+				{
+					Handle& handle{ field.Get<Handle>() };
+					if (storage[field.fType].contains(handle))
+					{
+						//Set to internal linkage in game object
+						handle = storage[field.fType][handle];
+					}
+				}
+				ScriptSetFieldEvent setFieldEvent{ newObject,fieldName,field };
+				EVENTS.Publish(&setFieldEvent);
+			}
+		}
 	}
-	for ()
-	{
 
+	if constexpr (sizeof...(Ts) != 0)
+	{
+		LinkReferences<Ts...>(storage);
 	}
-	handle
 }
 
 
@@ -200,6 +222,13 @@ void Scene::Destroy(T& object)
 	{
 		entitiesDeletionBuffer.push_back(&object);
 		entities.SetActive((ObjectIndex)object.uuid, false);
+		
+		Transform& transform = Get<Transform>(object);
+		transform.SetParent(nullptr);
+		for (auto& child : transform.child)
+		{
+			Destroy<Entity>(Get<Entity>(child));
+		}
 		DestroyEntityComponents(*this, object);
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())
