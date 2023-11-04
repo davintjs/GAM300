@@ -424,15 +424,14 @@ void ScriptingSystem::ThreadWork()
 		PRINT("RECOMPILE AT SCENE START");
 		RecompileThreadWork();
 	}
+
 	while (!THREADS.HasStopped())
 	{
 		ACQUIRE_SCOPED_LOCK(Mono);
+		if (scriptingEvent)
 		{
-			if (scriptingEvent)
-			{
-				events[typeid(*scriptingEvent)]->exec(scriptingEvent);
-				scriptingEvent = nullptr;
-			}
+			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
+			scriptingEvent = nullptr;
 		}
 
 		if (logicState != LogicState::NONE)

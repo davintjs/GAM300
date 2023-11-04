@@ -219,9 +219,26 @@ struct AllAssetsGroup
 			}
 			(Ts{}) || ...));
 		}
+		else
+		{
+			//Look for oldExtension
+			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == oldExtension)
+				{
+					Engine::GUID guid = GetGUID(newPath, true);
+					auto& table{ std::get<AssetsTable<T>>(assets) };
+					table[guid].mFilePath = newPath;
+					return true;
+				}
+				return false;
+			}
+			(Ts{}) || ...));
+		}
 
-		AddAsset(newPath,fileData);
-		RemoveAsset(oldPath);
+		//AddAsset(newPath,fileData);
+		//RemoveAsset(oldPath);
 	}
 
 	void ProcessBuffer()

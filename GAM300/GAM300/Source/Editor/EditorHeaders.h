@@ -164,6 +164,8 @@ public:
     void Exit();
 
     void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
+
+    Engine::GUID selectedAss;
 private:
     std::filesystem::path currentDirectory;
 };
@@ -282,6 +284,8 @@ public:
     bool isAddComponentPanel;
     bool isAddTagPanel;
     bool isAddLayerPanel;
+
+    bool material_inspector;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;

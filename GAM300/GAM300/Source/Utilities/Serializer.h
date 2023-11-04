@@ -67,7 +67,9 @@ bool SerializeComponent(YAML::Emitter& out, T& _component);
 // Serialization specifically for scripts
 void SerializeScript(YAML::Emitter& out, Script& _component);
 
+void Serialize(Material_instance& material, std::string directory = "Assets");
 
+void Deserialize(Material_instance& material, const fs::path& path);
 
 template <typename T>
 void Serialize(YAML::Emitter& out, T& object)
