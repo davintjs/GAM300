@@ -30,19 +30,18 @@ public class ThirdPersonController : Script
     {
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
-
         //Handle Movement Input
         if (Input.GetKey(KeyCode.W))
-            dir += CamYawPivot.forward;
+            dir += (CamYawPivot.forward * MoveSpeed);
 
         if (Input.GetKey(KeyCode.A))
-            dir += CamYawPivot.right;
+            dir += (CamYawPivot.right * MoveSpeed);
 
         if (Input.GetKey(KeyCode.S))
-            dir -= CamYawPivot.forward;
+            dir -= (CamYawPivot.forward * MoveSpeed);
 
         if (Input.GetKey(KeyCode.D))
-            dir -= CamYawPivot.right;
+            dir -= (CamYawPivot.right * MoveSpeed);
 
 
         //Determine whether a movement input was given
@@ -51,6 +50,7 @@ public class ThirdPersonController : Script
         //Adjust the rotation of the model whenever the player moves
         if (IsMoving)
         {
+            
             PlayerModel.localRotation.y = CamYawPivot.localRotation.y;
         }
 
@@ -67,13 +67,16 @@ public class ThirdPersonController : Script
         else
         {
             //Increase gravity for every frame we're not contacting the ground
-            VerticalVelocity += new vec3(0, -1, 0) * Gravity * Time.deltaTime;
+            VerticalVelocity += new vec3(0, -1, 0) * Gravity;
         }
 
         //Apply Gravity
         dir += VerticalVelocity;
 
+        //Console.WriteLine("dir in c#:" + dir.x + "," + dir.y + "," + dir.z);
+
+
         //Apply movement
-        CC.Move(dir * MoveSpeed);
+        CC.Move(dir);
     }
 }

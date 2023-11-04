@@ -99,6 +99,7 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBid{ cc.bid };
 		if (characters[i]->GetGroundState() == JPH::Character::EGroundState::OnGround)
 		{
+			std::cout << "Character " << i << " is grounded\n";
 			cc.isGrounded = true;
 		}
 		else
@@ -123,7 +124,7 @@ void PhysicsSystem::Update(float dt) {
 
 	// Fixed time steps
 	if (physicsSystem && accumulatedTime >= 1.f/60.f) {
-		physicsSystem->Update(dt, ceil(accumulatedTime/(1.f/60.f)), tempAllocator, jobSystem);
+		physicsSystem->Update(accumulatedTime, ceil(accumulatedTime/(1.f/60.f)), tempAllocator, jobSystem);
 		accumulatedTime = 0.f;
 	}
 	else {
@@ -169,11 +170,6 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-
-	
-	if (!ccTest->mCharacter)
-		return;
-	
 	/*
 	// Input handling for character
 	JPH::Vec3 direction = JPH::Vec3::sZero();
@@ -307,6 +303,9 @@ void PhysicsSystem::PostPhysicsUpdate() {
 }
 
 void PhysicsSystem::ResolveCharacterMovement() {
+
+
+	std::cout << "Resolve Character Movement\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& ccArray = scene.GetArray<CharacterController>();
 
@@ -316,6 +315,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
 				mCharacter = r;
+				break;
 			}
 		}
 
@@ -327,6 +327,8 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		if (cc.direction != Vector3(0, 0, 0)) {
 			std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
 		}
+		//direction = direction.Normalized();
+		//std::cout << "direction:" << direction.GetX() << ',' << direction.GetY() << ',' << direction.GetZ() << std::endl;
 
 		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
 		if (groundState == JPH::Character::EGroundState::OnSteepGround
@@ -339,6 +341,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 				direction -= (dot * normal) / normal.LengthSq();
 		}
 
+
 		// Update velocity
 		if (mCharacter->IsSupported()) {
 			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
@@ -347,8 +350,8 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			if (groundState == JPH::Character::EGroundState::OnGround)
-				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+			if (groundState != JPH::Character::EGroundState::OnGround)
+				new_velocity.SetY(0);
 
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
@@ -734,7 +737,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	if(!enginePSystem->ccTest->mCharacter)
 		enginePSystem->ccTest->mCharacter = character;
 
-	enginePSystem->characters.emplace_back(character);
+	enginePSystem->characters.push_back(character);
 
 	return;
 }
