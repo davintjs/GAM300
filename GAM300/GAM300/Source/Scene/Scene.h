@@ -40,7 +40,7 @@ struct Scene
 	//Creates empty scene
 	Scene(const std::string& _filepath);
 
-	void StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID);
+	Entity& StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID);
 
 	template <typename... Ts>
 	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID, Engine::UUID newEntityID,TemplatePack<Ts...>);

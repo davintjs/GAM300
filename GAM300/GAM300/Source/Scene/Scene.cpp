@@ -38,13 +38,21 @@ Scene& Scene::operator=(Scene& rhs)
 void Scene::Clone(Entity& source)
 {
 	ReferencesTable references;
-	StoreTransformHierarchy(references, source.EUID());
+	Transform& sourceTrans{ Get<Transform>(source) };
+	Entity& dest = StoreTransformHierarchy(references, source.EUID());
+	if (sourceTrans.parent)
+	{
+		Transform& parent{ Get<Transform>(sourceTrans.parent) };
+		parent.child.push_back(dest.EUID());
+		Transform& destTrans{ Get<Transform>(dest) };
+		destTrans.parent = parent.EUID();
+	}
 	LinkReferences(references, AllComponentTypes());
 }
 
 
 
-void Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID)
+Entity& Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID)
 {
 	Entity& key = Get<Entity>(entityID);
 	Entity& val = *Add<Entity>();
@@ -56,6 +64,7 @@ void Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entit
 	{
 		StoreTransformHierarchy(storage, euid);
 	}
+	return val;
 }
 
 void Scene::ClearBuffer()
