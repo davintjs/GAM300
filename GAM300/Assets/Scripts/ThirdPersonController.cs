@@ -19,6 +19,8 @@ public class ThirdPersonController : Script
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
 
+    public float RotationSpeed = 1;
+
     public AudioSource audioSource;
 
     // Start is called before the first frame update
@@ -34,16 +36,16 @@ public class ThirdPersonController : Script
         vec3 dir = vec3.Zero;
         //Handle Movement Input
         if (Input.GetKey(KeyCode.W))
-            dir -= (CamYawPivot.forward * MoveSpeed);
+            dir -= (CamYawPivot.forward);
 
         if (Input.GetKey(KeyCode.A))
-            dir -= (CamYawPivot.right * MoveSpeed);
+            dir -= (CamYawPivot.right);
 
         if (Input.GetKey(KeyCode.S))
-            dir += (CamYawPivot.forward * MoveSpeed);
+            dir += (CamYawPivot.forward);
 
         if (Input.GetKey(KeyCode.D))
-            dir += (CamYawPivot.right * MoveSpeed);
+            dir += (CamYawPivot.right);
 
 
         //Determine whether a movement input was given
@@ -52,8 +54,14 @@ public class ThirdPersonController : Script
         //Adjust the rotation of the model whenever the player moves
         if (IsMoving)
         {
-            
-            PlayerModel.localRotation.y = CamYawPivot.localRotation.y;
+            dir = dir.Normalized;
+            float angle = (float)Math.Atan2(-dir.x, -dir.z);
+            vec3 newRot = new vec3(0, angle, 0);
+            quat newQuat = glm.FromEulerToQuat(newRot);
+            quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation);
+            quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
+            dvec3 rot = midQuat.EulerAngles;
+            PlayerModel.localRotation = new vec3(0, (float)rot.y, 0);
         }
 
         //Handle Gravity 
@@ -65,7 +73,6 @@ public class ThirdPersonController : Script
             //Jump
             if (Input.GetKeyDown(KeyCode.Space)){
                 VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
-                Console.WriteLine("Vertical velocity:" + VerticalVelocity.x + "," + VerticalVelocity.y + "," + VerticalVelocity.z);               
             }
 
         }
@@ -81,7 +88,8 @@ public class ThirdPersonController : Script
         //Console.WriteLine("dir in c#:" + dir.x + "," + dir.y + "," + dir.z);
 
 
-        //Apply movement
-        CC.Move(dir);
+        if (IsMoving)
+            //Apply movement
+            CC.Move(PlayerModel.back * MoveSpeed + VerticalVelocity);
     }
 }

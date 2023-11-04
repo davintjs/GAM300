@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 void AudioManager::InitAudioManager() {
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetLoaded);
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetUnloaded);
+	EVENTS.Subscribe(this, &AudioManager::CallbackSceneStop);
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, 0);
 	system->getMasterChannelGroup(&master);
@@ -373,4 +374,10 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 void AudioManager::CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent)
 {
 
+}
+
+
+void AudioManager::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	StopAllAudio();
 }

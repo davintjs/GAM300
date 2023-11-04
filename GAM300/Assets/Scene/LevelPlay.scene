@@ -11177,6 +11177,7 @@ Script:
   CamMovePivot: {fileID: 1999010381617278315}  # Component
   CC: {fileID: 15939117778428800744}  # Component
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
+  RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
 ---
 ID: 6663313825132233637

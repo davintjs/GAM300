@@ -13,8 +13,6 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
 
-using GlmSharp;
-
 namespace GlmSharp
 {
 	public static partial class glm

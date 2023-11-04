@@ -111,6 +111,8 @@ public:
 
 	//Handle audio removal here
 	void CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent);
+
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 private:
 
 	FMOD::System* system{};
