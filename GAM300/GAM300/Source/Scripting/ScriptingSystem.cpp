@@ -427,9 +427,9 @@ void ScriptingSystem::ThreadWork()
 
 	while (!THREADS.HasStopped())
 	{
+		ACQUIRE_SCOPED_LOCK(Mono);
 		if (scriptingEvent)
 		{
-			ACQUIRE_SCOPED_LOCK(Mono);
 			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
 			scriptingEvent = nullptr;
 		}
@@ -438,7 +438,6 @@ void ScriptingSystem::ThreadWork()
 		{
 			if (ran)
 				continue;
-			ACQUIRE_SCOPED_LOCK(Mono);
 			if (logicState == LogicState::UPDATE)
 			{
 				InvokeAllScripts(DefaultMethodTypes::Update);
@@ -466,7 +465,6 @@ void ScriptingSystem::ThreadWork()
 		//Pause timer when recompiling
 		if (timeUntilRecompile > 0)
 		{
-			ACQUIRE_SCOPED_LOCK(Mono);
 			Sleep(1000);
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
@@ -476,7 +474,6 @@ void ScriptingSystem::ThreadWork()
 		}
 		else if (compilingState == CompilingState::SwapAssembly)
 		{
-			ACQUIRE_SCOPED_LOCK(Mono);
 			CacheScripts();
 			if (MySceneManager.HasScene())
 			{
