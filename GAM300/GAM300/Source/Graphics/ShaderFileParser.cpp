@@ -38,7 +38,7 @@ ShaderVariable::VariableType ParseVariableType(const std::string& str) {
 //
 //		}
 //		else {
-//			shaderVariableMap.insert({name, Field(fieldEnum, sizeof(T))});
+//			shadeVariableMap.insert({name, Field(fieldEnum, sizeof(T))});
 //		}
 //	}
 //	// If havent hit jackpot for field type, check next field type

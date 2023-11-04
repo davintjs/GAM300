@@ -224,6 +224,7 @@ public:
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
+	void CreateShaderInstance(size_t shaderIndex);
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
 
@@ -418,4 +419,9 @@ private:
 
 
 void renderQuad();
+
+
+
+
+
 #endif // !GRAPHICSHEADERS_H
