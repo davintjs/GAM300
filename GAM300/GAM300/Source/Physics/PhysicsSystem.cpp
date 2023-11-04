@@ -145,6 +145,25 @@ void PhysicsSystem::Exit() {
 
 	delete engineContactListener;
 
+	PRINT("CLEANING UP PHYSICS\n");
+	// Clean up any characters
+	for (JPH::Ref<JPH::Character> r : characters) {
+
+		if (r == ccTest->mCharacter)
+			continue;
+
+		r->RemoveFromPhysicsSystem();
+
+	}
+	characters.clear();
+
+	// Delete the current physics system, must set to nullptr
+	if (ccTest) {
+		//ccTest->mCharacter->RemoveFromPhysicsSystem();
+		delete ccTest;
+		ccTest = nullptr;
+	}
+
 	// Destroy Physics World
 	if (physicsSystem) {
 		delete physicsSystem;
@@ -319,9 +338,9 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 		JPH::Vec3 direction;
 		GlmVec3ToJoltVec3(cc.direction, direction);
-		if (cc.direction != Vector3(0, 0, 0)) {
-			std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
-		}
+		//if (cc.direction != Vector3(0, 0, 0)) {
+		//	std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
+		//}
 
 		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
 		if (groundState == JPH::Character::EGroundState::OnSteepGround
@@ -379,6 +398,9 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	std::cout << "Physics System scene start test\n";
 
 }
+
+
+
 void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
 {
 	UNREFERENCED_PARAMETER(pEvent);

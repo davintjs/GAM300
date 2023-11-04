@@ -46,6 +46,7 @@ int main(int, char**) {
 	}
 
 	MyEngineCore.Exit();
+
 	app->Exit();
 
 	delete app;
