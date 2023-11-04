@@ -247,9 +247,8 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
-
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
     mContainer.emplace(_guid, newMesh);
 }
@@ -487,9 +486,6 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.drawCounts = 36;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
-    //KK: Do something about AABB debug
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
-
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
@@ -618,7 +614,6 @@ void MESH_Manager::CreateInstanceSphere()
 
     //Do something about AABB
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
     mContainer.emplace(sphereGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
@@ -912,7 +907,7 @@ void MESH_Manager::CreateInstanceLine()
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //InstanceSetup_PBR(tempProp);
     //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
 
     mContainer.emplace(lineGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
