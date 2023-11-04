@@ -90,12 +90,7 @@ struct AllAssetsGroup
 								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]]));
 							}
 						}
-
-						// bean: We should use this after M2, Still store original model file to load the entire model
-						/*T& asset{ std::get<AssetsTable<T>>(assets)[metaFile.guid]};
-						asset.mFilePath = filePath;
-						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &asset));
-						*/
+						
 						return true;
 					}
 

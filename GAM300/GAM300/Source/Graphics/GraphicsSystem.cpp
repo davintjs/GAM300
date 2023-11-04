@@ -9,7 +9,7 @@
 \brief
 	This file contains the definations of Graphics System
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"

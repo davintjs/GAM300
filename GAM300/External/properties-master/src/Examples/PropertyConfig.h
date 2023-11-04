@@ -117,8 +117,6 @@ public:
 
 };
 
-
-
 class Vector4 {
 public:
     
@@ -158,9 +156,25 @@ public:
         return *this;
     }
 
+    Vector4& operator /= (const float divider) {
+        x /= divider;
+        y /= divider;
+        z /= divider;
+        w /= divider;
+        return *this;
+    }
+
+    Vector4& operator *= (const float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        return *this;
+    }
+
     float& operator[](int id) {
 
-        E_ASSERT((id < 0 || id > 3),  "Vector4 Subscript operator out of range!");
+        E_ASSERT((id < 0 || id > 3), "Vector4 Subscript operator out of range!");
 
         if (id == 0) return x;
         if (id == 1) return y;
@@ -172,7 +186,16 @@ public:
     operator glm::vec4() const {
         return glm::vec4(x, y, z, w);
     }
+};
 
+class tmp_instance {
+public:
+    //tmp_instance() { name = "", albedo = Vector4(), metallic = roughness = ao = 0; }
+    std::string name;
+    glm::vec4 albedo;
+    float metallic;
+    float roughness;
+    float ao;
 };
 
 
@@ -306,7 +329,7 @@ namespace property
             , Vector3
             , Vector4
             , char*
-            , Engine::GUID
+            , Engine::GUID                  
         >;
     
         //--------------------------------------------------------------------------------------------

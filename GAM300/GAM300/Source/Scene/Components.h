@@ -120,7 +120,9 @@ property_begin_name(Transform, "Transform")
 
 struct AudioSource : Object
 {
-	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
+	enum Channel { MUSIC, SFX, LOOPFX, COUNT };
+	int current_channel = (int)SFX;
+
 	std::vector<const char*> ChannelName =
 	{
 		"Music",
@@ -130,13 +132,13 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume = 1.0f;
-	std::string currentSound = "";
+	Engine::GUID currentSound = DEFAULT_ASSETS["None.wav"];
 	property_vtable();
 };
 
 property_begin_name(AudioSource, "Audio Source") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		//property_var(ChannelName).Name("channel"),
+		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
 		property_var(currentSound).Name("Sound File"),
@@ -341,16 +343,22 @@ struct MeshRenderer : Object
 	bool isInstance = true;
 	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
+	//temp_instance material;
+	//temporary index for current material
+	int material;
+
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(isInstance).Name("IsInstance"),
+	property_var(material).Name("Material"),
 	property_var(meshID).Name("Mesh"),
-	property_var(mr_Albedo).Name("Albedo"),
-	property_var(mr_metallic).Name("Metallic"),
-	property_var(mr_roughness).Name("Roughness"),
-	property_var(ao).Name("AmbientOcclusion"),
+	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
+	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
+	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),
+	property_var(ao).Name("AmbientOcclusion").Flags(property::flags::DONTSHOW),
 	property_var(AlbedoTexture).Name("AlbedoTexture"),
 	property_var(NormalMap).Name("NormalMap"),
 	property_var(MetallicTexture).Name("MetallicTexture"),
@@ -358,7 +366,6 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
 	property_var(emission).Name("EmissionScalar"),
-	property_var(isInstance).Name("IsInstance"),
 } property_vend_h(MeshRenderer)
 
 

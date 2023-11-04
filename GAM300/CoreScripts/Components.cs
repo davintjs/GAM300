@@ -93,6 +93,12 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class AudioSource : Component
+    {
+        public void Play() { InternalCalls.AudioSourcePlay(this); }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class Transform : Component
     {
         public vec3 localPosition;

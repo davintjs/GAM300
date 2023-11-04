@@ -98,7 +98,7 @@ namespace BeanFactory
 
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AudioSourcePlay(ulong ID);
+        public static extern void AudioSourcePlay(AudioSource audioSource);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 

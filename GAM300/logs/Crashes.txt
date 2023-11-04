@@ -1,5 +1,5 @@
-[2023-11-04 23:25:34.181] [Error] [critical] 
-Caused By:	mClassField
-Info:		FIELD  нннннннннннннннннннннннннннннннннннннннннннн COULD NOT BE FOUND IN SCRIPT 
-Source:		C:\Users\matth\Desktop\BleepBloop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 677)
+[2023-11-04 23:15:02.665] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 235)
 

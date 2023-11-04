@@ -94,7 +94,7 @@ void FileWatcher::ThreadWork()
                 size_t sz{ pNotify->FileNameLength / sizeof(WCHAR) + 1 };
                 if (sz > MAX_PATH)
                     sz = MAX_PATH;
-                lstrcpynW(szFile, pNotify->FileName, (int)sz);
+                lstrcpynW(szFile, pNotify->FileName, sz);
             }
             #else
             {
