@@ -1294,7 +1294,7 @@ void Renderer::DrawDepthDirectional()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1369,7 +1369,7 @@ void Renderer::DrawDepthSpot()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1457,7 +1457,7 @@ void Renderer::DrawDepthPoint()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
