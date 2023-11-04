@@ -13,7 +13,7 @@
 	2. Parenting and reordering of entities in the tree
 	3. Adding/removing of entities from the hierarchy window
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"

@@ -108,41 +108,31 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 	shader.UnUse();
 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	unsigned char data[4];
+
 	glm::vec2 mousepos = InputHandler::getMousePos();
-	
+#if defined(_BUILD)
+
+	glReadPixels(mousepos.x, mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+#else
+
 	glm::vec2 true_mousepos;
 	true_mousepos.y = mousepos.y;
 
 	float width = (float)Application::GetWidth();
 	float height = (float)Application::GetHeight();
-	//std::cout << "WIDTH & HEIGHT " << width << " , " << height << "\n";
-	// X Offset Magician
 	true_mousepos.x = mousepos.x - windowPos.x;
 	true_mousepos.x = (true_mousepos.x / windowDimension.x) * 1600.f;
 
-	// Y Offset Magician
-	//std::cout << "window pos y " << windowPos.y << "\n";
-	//std::cout << "window dimension y " << windowDimension.y << "\n";
-	//std::cout << "mouse pos y " << mousepos.y << "\n";
-
-	true_mousepos.y = mousepos.y - ( -(windowPos.y + windowDimension.y) + height );
-
+	true_mousepos.y = mousepos.y - (-(windowPos.y + windowDimension.y) + height);
 	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
-	//std::cout << "true mouse pos" << true_mousepos.x << " , " << true_mousepos.y << "\n";
-
-	// Capture here
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	unsigned char data[4];
-
-	//std::cout << x << " , " << y << "\n";
 
 	glReadPixels(true_mousepos.x, true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	
 
 
-
-	//std::cout << framebufferMouseX << " , " << framebufferMouseY << "\n";
-	//glReadPixels(framebufferMouseX, framebufferMouseY, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+#endif // _BUILD
 
 	int selectedID = data[0] +
 		data[1] * 256 +
@@ -150,12 +140,13 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 
 	//std::cout << selectedID << "\n";
 
-
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
 		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
 		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-		PRINT(entity_tag.name, "\n");
+		//PRINT(entity_tag.name, "\n");
+		//std::cout << entity_tag.name << "\n";
+
 
 	}
 

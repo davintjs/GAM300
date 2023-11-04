@@ -26,56 +26,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //    this->textures = textures;
 //
 //    // now that we have all the required data, set the vertex buffers and its attribute pointers.
-//    setupMesh();
 //}
-//
-//void AnimationMesh::setupMesh()
-//{
-//    if (glewInit() != GLEW_OK) {
-//        std::cout << "omg help";
-//    }
-//    GLuint VAO, VBO, EBO;
-//    // create buffers/arrays
-//    glGenVertexArrays(1, &VAO);
-//    glGenBuffers(1, &VBO);
-//    glGenBuffers(1, &EBO);
-//
-//    glBindVertexArray(VAO);
-//    // load data into vertex buffers
-//    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//    // A great thing about structs is that their memory layout is sequential for all its items.
-//    // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-//    // again translates to 3/2 floats which translates to a byte array.
-//    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(ModelVertex), &vertices[0], GL_STATIC_DRAW);
-//
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-//
-//    // set the vertex attribute pointers
-//    // vertex Positions
-//    glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
-//    // vertex normals
-//    glEnableVertexAttribArray(1);
-//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
-//    // vertex tangent
-//    glEnableVertexAttribArray(2);
-//    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
-//    // vertex texture coords
-//    glEnableVertexAttribArray(3);
-//    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
-//    // ids
-//    glEnableVertexAttribArray(5);
-//    glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
-//
-//    // weights
-//    glEnableVertexAttribArray(6);
-//    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
-//    glBindVertexArray(0);
-//    _VAO = VAO;
-//}
-
-
 
 Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     :
@@ -125,7 +76,6 @@ void Bone::Update(float animationTime)
     glm::mat4 scale = InterpolateScaling(animationTime);
     m_LocalTransform = translation * rotation * scale;
 }
-
 
 int Bone::GetPositionIndex(float animationTime)
 {
@@ -225,9 +175,6 @@ Bone* Animation::FindBone(const std::string& name)
     else return &(*iter);
 }
 
-
-
-
 void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
 {
     int size = animation->mNumChannels;
@@ -274,13 +221,12 @@ void Animation_Manager::Init()
     std::cout << "ANIMATION MANAGER INIT\n";
 	// we want compiler to serialise model info including the animations
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
+    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerCharacter_AnimationsAllAnimations.fbx", false);
     //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/Walking.fbx", false);
     allModels_ = md.animations;
    
     mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
 }
-
 
 void Animation_Manager::Update(float dt)
 {

@@ -187,8 +187,11 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
     glBufferData(GL_ARRAY_BUFFER, _meshAsset.vertices.size() * sizeof(ModelVertex), &_meshAsset.vertices[0], GL_STATIC_DRAW);
+
+    // bind indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0); // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
@@ -208,16 +211,10 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(5); // Bone Indexes
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-    glEnableVertexAttribArray(6); // Bone Weights
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
-
-    // bind indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(13); // Bone Weights
+    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
     glBindVertexArray(0); // unbind vao
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     InstanceProperties tempProp;
     tempProp.VAO = VAO;
@@ -232,21 +229,10 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     newMesh.drawCounts = (GLuint)(_meshAsset.indices.size());
     newMesh.numBones = _meshAsset.numBones;
 
-    newMesh.verticesBoneInfo.resize(_meshAsset.numVertices);
-    for (size_t i = 0; i < _meshAsset.numVertices; i++)
-    {
-        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
-        {
-            newMesh.verticesBoneInfo[i].boneIDs[j] = _meshAsset.vertices[i].boneIDs[j];
-            newMesh.verticesBoneInfo[i].weights[j] = _meshAsset.vertices[i].weights[j];
-        }
-    }
-
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
-    PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
+    //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
-
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
 
     mContainer.emplace(_guid, newMesh);
 }
@@ -484,9 +470,6 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.drawCounts = 36;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
-    //KK: Do something about AABB debug
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Cube"]);
-
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
@@ -615,7 +598,6 @@ void MESH_Manager::CreateInstanceSphere()
 
     //Do something about AABB
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, (*instanceProperties)["Sphere"]);
     mContainer.emplace(sphereGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
@@ -909,7 +891,7 @@ void MESH_Manager::CreateInstanceLine()
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //InstanceSetup_PBR(tempProp);
     //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, properties["Line"]);
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
 
     mContainer.emplace(lineGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));

@@ -90,8 +90,9 @@ void Renderer::Update(float)
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
+#ifndef _BUILD
 	SetupGrid(100);
-
+#endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -365,6 +366,7 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// if debug line draw
+#ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
 					DrawGrid(vao, prop.entitySRT.size());
@@ -375,7 +377,7 @@ void Renderer::Draw(BaseCamera& _camera)
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
 					DrawDebug(prop.debugVAO, prop.entitySRT.size());
 			}
-			
+#endif
 
 			for (int i = 0; i < 30; ++i)
 			{
@@ -1467,10 +1469,6 @@ void Renderer::DrawDepthPoint()
 
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				GLint uniform4 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
 				GLint uniform3 =
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));

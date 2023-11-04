@@ -265,7 +265,7 @@ Geom_Mesh ModelLoader::ProcessMesh(const aiMesh& mesh, const aiScene& scene)
 	// Calculate the material index of this mesh
 	int materialIndex = static_cast<int>(_materials.size() - 1);
 
-	return Geom_Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second); // Create this mesh
+	return Geom_Mesh(CompressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second, 0); // Create this mesh
 }
 
 void ModelLoader::Optimize(std::vector<TempVertex>& vert, std::vector<unsigned int>& ind)

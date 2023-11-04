@@ -81,6 +81,7 @@ void EditorSystem::Update(float dt)
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
         if (ImGui::IsKeyPressed(ImGuiKey_D, false))
         {
+            PRINT("SELECTED ENTITY: ", selectedEntity, "\n");
             if (selectedEntity)
             {
                 currScene.Clone(currScene.Get<Entity>(selectedEntity));
