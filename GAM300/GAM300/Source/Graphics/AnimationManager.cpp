@@ -9,7 +9,7 @@
 \brief
     This file contains the Animation Manager and the declarations of its related functions.
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 

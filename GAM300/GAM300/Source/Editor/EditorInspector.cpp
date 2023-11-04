@@ -708,6 +708,7 @@ void DisplayField(Change& change, const char* name, Field& field)
     {
         if (field.fType < AllObjectTypes::Size())
         {
+            Scene& scene{ MySceneManager.GetCurrentScene() };
             T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
@@ -715,7 +716,7 @@ void DisplayField(Change& change, const char* name, Field& field)
             }
             else
             {
-
+                
                 DisplayType(change, name, value);
             }
         }

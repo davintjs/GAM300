@@ -20,10 +20,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "AnimationManager.h"
+//#include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
 
 #include <glm/gtx/matrix_decompose.hpp>
+
+#include "AppEntry/Application.h"
 
 using GraphicsSystemsPack =
 TemplatePack
@@ -32,6 +34,7 @@ TemplatePack
 	FramebufferManager,
 	DebugDraw,
 	Lighting,
+	MaterialSystem,
 	Renderer
 >;
 
@@ -218,8 +221,22 @@ void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
-	AnimationManager.Update(dt);
+	//AnimationManager.Update(dt);
 
+#if defined(_BUILD)
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+
+		// Update camera view 
+		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+
+		COLOURPICKER.ColorPickingUI(camera);
+
+		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
+	}
+#else
 	// Editor Camera
 	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
@@ -250,6 +267,7 @@ void GraphicsSystem::Update(float dt)
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
 	}
+#endif	
 
 	PostDraw();
 }
@@ -287,8 +305,14 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	//}
 
+#if defined(_BUILD)
+	GLsizei height = Application::GetWidth() / 16.f * 9.f;
+	GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
+	glViewport(0, 0, Application::GetWidth(), Application::GetHeight());
+#else
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
 	glDrawBuffer(_camera.GetAttachment());
+#endif
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
@@ -302,7 +326,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
 	// glActiveTexture(GL_TEXTURE1);
-	// glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+	// glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]); 
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");
@@ -322,7 +346,12 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	renderQuad(_vao, _vbo);
 	shader.UnUse();
 
+#if defined(_BUILD)
+
+#else
 	FRAMEBUFFER.Unbind();
+#endif
+	
 }
 
 void GraphicsSystem::Draw(BaseCamera& _camera) {
@@ -333,8 +362,10 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	RENDERER.Draw(_camera);
 	
+#ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 		DEBUGDRAW.Draw();
+#endif
 
 	MYSKYBOX.Draw(_camera);
 }
@@ -349,14 +380,12 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 void GraphicsSystem::PostDraw()
 {
 	//@kk clear the one with shader instead
-	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+	/*for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
 		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
 		{
 			prop.iter = 0;
 		}
-	}
-
-
+	}*/
 	
 }
 

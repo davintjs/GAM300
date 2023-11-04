@@ -72,6 +72,12 @@ namespace BeanFactory
             return pos;
         }
 
+        public static vec2 GetMouseDelta()
+        {
+            InternalCalls.GetMouseDelta(out vec2 pos);
+            return pos;
+        }
+
         public static vec2 GetGameNDC()
         {
             InternalCalls.GetGameNDC(out vec2 pos);

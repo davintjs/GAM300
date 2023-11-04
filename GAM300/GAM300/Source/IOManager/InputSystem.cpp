@@ -20,10 +20,16 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 extern glm::vec2 windowPos;
 extern glm::vec2 windowDimension;
 
+#include "AppEntry/Application.h"
 
 void InputSystem::Init()
 {
-	
+}
+
+void InputSystem::LockCursor(bool lock)
+{
+	lockCursor = lock;
+	Application::Instance().SetCursorMode(!lock);
 }
 
 void InputSystem::Update(float dt)
@@ -44,16 +50,16 @@ void InputSystem::Update(float dt)
 		glm::vec2 minPos = windowPos;
 		glm::vec2 dimensions = windowDimension;
 
-		CenterCursor(minPos, dimensions); // Bug - it will map to where the game screen is even when no game screen is there.
+		//CenterCursor(minPos, dimensions); // Bug - it will map to where the game screen is even when no game screen is there.
 	
 	
 	}
-
+	
 	glfwPollEvents();
 
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_ESCAPE))
 	{
-		toggleCursorLock();
+		LockCursor(false);
 	}
 	//std::cout << lockCursor << "\n";
 
@@ -101,6 +107,7 @@ void InputSystem::Update(float dt)
 		InputHandler::doubleclickAndHold = false;
 	}
 	
+	InputHandler::setDimensions(windowDimension);
 
 	//std::cout << "mouse difference " << InputHandler::mouseDelta().x <<
 	//	" , " << InputHandler::mouseDelta().y << "\n";
@@ -172,10 +179,5 @@ void InputSystem::CenterCursor(glm::vec2 position, glm::vec2 dimension)
 	position += dimension / 2.f;
 	glfwSetCursorPos(Application::GetWindow(), position.x, position.y);
 
-}
-
-void InputSystem::toggleCursorLock()
-{
-	lockCursor = !lockCursor;
 }
 

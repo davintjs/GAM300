@@ -22,6 +22,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define EntityRenderLimit 1000
 #define EnitityInstanceLimit 200
 
+#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
+#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
+
+
 struct temp_instance
 {
 	std::string name;
@@ -32,7 +36,10 @@ struct temp_instance
 
 };
 
+struct materialInstance
+{
 
+};
 
 
 
@@ -121,40 +128,45 @@ struct InstanceProperties
 	unsigned int debugVAO{};
 	// rmb to convert everything to AOS
 	unsigned int entitySRTbuffer;
-	glm::mat4 entitySRT[EnitityInstanceLimit];
+	//glm::mat4 entitySRT[EnitityInstanceLimit];
+	std::vector<glm::mat4> entitySRT;
 
 	// -------------- BLINN PHONG --------------------------
 	// make into individual buffers
 	unsigned int AlbedoBuffer;
-	glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
+	//glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
+	std::vector<glm::vec4> Albedo; // This means colour for now
 
 	unsigned int SpecularBuffer;
-	glm::vec4 Specular[EnitityInstanceLimit];
+	//glm::vec4 Specular[EnitityInstanceLimit];
+	std::vector<glm::vec4> Specular;
 
 	unsigned int DiffuseBuffer;
-	glm::vec4 Diffuse[EnitityInstanceLimit];
+	//glm::vec4 Diffuse[EnitityInstanceLimit];
+	std::vector<glm::vec4> Diffuse;
 
 	unsigned int AmbientBuffer;
-	glm::vec4 Ambient[EnitityInstanceLimit];
+	//glm::vec4 Ambient[EnitityInstanceLimit];
+	std::vector<glm::vec4> Ambient;
 
 	unsigned int ShininessBuffer;
-	float Shininess[EnitityInstanceLimit];
+	//float Shininess[EnitityInstanceLimit];
+	std::vector<float> Shininess;
 
 	// -------------- PBR --------------------------
 	// USES Albedo Buffer from above too
-	// 
-	// make into individual buffers
-	//unsigned int AlbedoBuffer;
-	//glm::vec4 Albedo[EnitityInstanceLimit]; // This means colour for now
 
 	unsigned int Metal_Rough_AO_Texture_Buffer;
-	glm::vec4 M_R_A_Texture[EnitityInstanceLimit];
+	//glm::vec4 M_R_A_Texture[EnitityInstanceLimit];
+	std::vector<glm::vec4> M_R_A_Texture;
 
 	unsigned int Metal_Rough_AO_Texture_Constant;
-	glm::vec4 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec4(1.f,1.f,1.f,1.f) };
+	//glm::vec3 M_R_A_Constant[EnitityInstanceLimit]{ glm::vec3(1.f,1.f,1.f) };
+	std::vector<glm::vec4> M_R_A_Constant;
 
 	unsigned int textureIndexBuffer;
-	glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
+	//glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
+	std::vector<glm::vec2> textureIndex; // (texture index, normal map index)
 
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
