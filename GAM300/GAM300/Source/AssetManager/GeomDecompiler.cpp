@@ -23,7 +23,7 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
     std::ifstream ifs(_filePath, std::ios::binary);
 
     // Retrieve mesh assets
-    DeserializeMeshes(ifs, tempModel, _guid);
+    DeserializeMeshes(ifs, tempModel);
 
     // Retrieve material assets
     //DeserializeMaterials(ifs, tempModel);
@@ -43,7 +43,7 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
     return tempModel;
 }
 
-void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model, const Engine::GUID& _guid)
+void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
 {
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
@@ -79,19 +79,19 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
 
-        meshAsset.numVertices = (unsigned int)vertSize;
-        meshAsset.numIndices = (unsigned int)indSize;
-        meshAsset.mainMesh = _guid;
+        meshAsset.numVertices = vertSize;
+        meshAsset.numIndices = indSize;
 
         // Converts Vertex to ModelVertex
         
         DecompressVertices(meshAsset.vertices, tempVerts, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
 
+
         glm::vec3 min(FLT_MAX);
         glm::vec3 max(FLT_MIN);
-        for (int j = 0; j < meshAsset.vertices.size(); ++j)
+        for (int i = 0; i < meshAsset.vertices.size(); ++i)
         {
-            glm::vec3& pos = meshAsset.vertices[j].position;
+            glm::vec3& pos = meshAsset.vertices[i].position;
 
             if(meshAsset.numBones == 0)
                 pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters

@@ -178,8 +178,9 @@ void Application::Fullscreen(const bool& _enable, const int& _width, const int& 
 
 void Application::CallbackError(int, char const* _description)
 {
-    //PRINT("GLFW error: ", _description, "\n");
-
+#if defined(DEBUG) | defined(_DEBUG)
+    std::cerr << "GLFW error: " << _description << std::endl;
+#endif
     (void)_description;
 }
 

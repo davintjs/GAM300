@@ -12,7 +12,7 @@
 	2. Updating buffers
 	3. Drawing
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #ifndef GRAPHICS_SYSTEM_H
@@ -50,6 +50,8 @@ public:
 	void PostDraw();
 
 	void Exit();
+
+	std::vector<temp_instance> temporary_presets;
 
 private:
 	std::vector<ISystem*> graphicSystems;
