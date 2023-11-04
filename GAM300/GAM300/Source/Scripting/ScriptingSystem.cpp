@@ -372,6 +372,8 @@ void ScriptingSystem::UpdateReferences()
 					continue;
 				if (scene.HasHandle(fType, pObject))
 					continue;
+				pObject = nullptr;
+				SetFieldValue(mS, pair.second, field);
 			}
 		}
 	}

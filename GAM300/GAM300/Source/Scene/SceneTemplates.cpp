@@ -48,6 +48,10 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			}
 			storage[GetType::E<T>()][component] = *object;
 			CopyValues(component, *object);
+			if constexpr (std::is_same<T, Tag>())
+			{
+				object->name += " - Copy";
+			}
 		}
 		else
 		{
@@ -130,13 +134,31 @@ void Scene::LinkReferences(ReferencesTable& storage)
 				ScriptGetFieldEvent getFieldEvent{ oldObject,fieldName,field };
 				EVENTS.Publish(&getFieldEvent);
 				//Objects
-				if (field.fType >= FieldTypes::Size())
+				if (field.fType < AllObjectTypes::Size())
 				{
-					Handle& handle{ field.Get<Handle>() };
-					if (storage[field.fType].contains(handle))
+
+					Object*& pObject = *(Object**)field.data;
+					if (field.fType < MultiComponentTypes::Size())
 					{
-						//Set to internal linkage in game object
-						handle = storage[field.fType][handle];
+						if (storage[field.fType].contains(*pObject))
+						{
+							Handle& newHandle = storage[field.fType][*pObject];
+							pObject = (Object*)GetByHandle(field.fType, &newHandle);
+							//Set to internal linkage in game object
+							//handle = storage[field.fType][handle];
+						}
+					}
+					else
+					{
+						for (auto& pair : storage[field.fType])
+						{
+							if (pair.first.euid == pObject->euid)
+							{
+								Handle& newHandle = storage[field.fType][*pObject];
+								pObject = (Object*)GetByHandle(field.fType, &newHandle);
+								break;
+							}
+						}
 					}
 				}
 				ScriptSetFieldEvent setFieldEvent{ newObject,fieldName,field };
