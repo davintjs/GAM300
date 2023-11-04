@@ -187,8 +187,11 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
     glBufferData(GL_ARRAY_BUFFER, _meshAsset.vertices.size() * sizeof(ModelVertex), &_meshAsset.vertices[0], GL_STATIC_DRAW);
+
+    // bind indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0); // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
@@ -211,13 +214,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(6); // Bone Weights
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
 
-    // bind indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
-
     glBindVertexArray(0); // unbind vao
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     InstanceProperties tempProp;
     tempProp.VAO = VAO;
@@ -243,7 +240,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     }
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
-    PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
+    //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);

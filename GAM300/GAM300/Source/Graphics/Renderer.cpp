@@ -1445,10 +1445,6 @@ void Renderer::DrawDepthPoint()
 
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				GLint uniform4 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
 				GLint uniform3 =
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));

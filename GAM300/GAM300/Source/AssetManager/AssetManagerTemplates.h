@@ -54,9 +54,12 @@ struct AllAssetsGroup
 						if (!success)
 							Serialize(oldMeta, metaFile);
 
+
+						//std::filesystem::path path = filePath;
+						//path.replace_extension(".fbx");
 						// Get all model components
 						ModelComponents mc = GEOMDECOMPILER.DeserializeGeoms(filePath.string(), metaFile.guid);
-
+						//ModelComponents mc = MODELCOMPILER.LoadModel(path.string(), metaFile.guid);
 						// Check for existing guid within the geom meta file
 						if (mc.meshes.size() != metaFile.meshes.size())
 						{
