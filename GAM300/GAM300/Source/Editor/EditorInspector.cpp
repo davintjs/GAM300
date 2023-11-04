@@ -320,6 +320,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                     icon_id = defaultFileIcon;
                 }
 
+                ImGui::PushID(i++);
+
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
                 if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
@@ -903,26 +905,24 @@ void Display_Property(T& comp) {
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
 
-                    ImGui::PushID(entry.first.c_str());
-
-                    //Temporary implementation for materials
-                    if (entry.first.find("Material") != std::string::npos) {
-                        Change newchange(&comp, entry.first);
-                        DisplayMaterial(newchange, Value);
-                    }
-                    else if (entry.first.find("AudioChannel") != std::string::npos) {
-                        Change newchange(&comp, entry.first);
-                        DisplayAudioChannels(newchange, Value);
-                    }
-                    else {
-                        //Edit name
                     std::string DisplayName = entry.first;
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
                     Change newchange(&comp, entry.first);
-                    Display<T1>(newchange, DisplayName.c_str(), Value);
-           
+
+                    ImGui::PushID(entry.first.c_str());
+
+                    //Temporary implementation for materials
+                    if (entry.first.find("Shader") != std::string::npos) {
+                        DisplayShaders(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        DisplayAudioChannels(newchange, Value);
+                    }
+                    else {
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
+                    }
                     ImGui::PopID();
 
                     }
