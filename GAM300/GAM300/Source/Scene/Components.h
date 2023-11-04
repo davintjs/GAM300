@@ -433,27 +433,27 @@ struct Canvas : Object
 	} property_vend_h(Canvas)
 
 
-struct ParticleComponent : Object
-{
-	ParticleComponent() {}
-	int numParticles_ = 1;
-	float particleLifetime_ = 0.0f;
-	float particleEmissionRate_ = 0.0f; 
-	Particle* particles_;
-
-	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate); 
-	void Update(float dt);
-	void Render();
-	property_vtable();
-};
-
-property_begin_name(ParticleComponent, "ParticleComponent")
-{
-	property_var(numParticles_).Name("NumberOfParticles"),
-	property_var(particleLifetime_).Name("ParticleLifetime"),
-	property_var(particleEmissionRate_).Name("ParticleEmissionRate")
-
-} property_vend_h(ParticleComponent)
+//struct ParticleComponent : Object
+//{
+//	ParticleComponent() {}
+//	int numParticles_ = 1;
+//	float particleLifetime_ = 0.0f;
+//	float particleEmissionRate_ = 0.0f; 
+//	Particle* particles_;
+//
+//	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate); 
+//	void Update(float dt);
+//	void Render();
+//	property_vtable();
+//};
+//
+//property_begin_name(ParticleComponent, "ParticleComponent")
+//{
+//	property_var(numParticles_).Name("NumberOfParticles"),
+//	property_var(particleLifetime_).Name("ParticleLifetime"),
+//	property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+//
+//} property_vend_h(ParticleComponent)
 
 struct Particle : Object
 {
@@ -487,36 +487,36 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleEmissionRate_).Name("ParticleEmissionRate")
 
 } property_vend_h(ParticleComponent)
+//
+//struct Particle : Object
+//{
+//	Particle() {}
+//	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
+//		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+//	vec3 position;
+//	vec3 velocity;
+//	vec3 acceleration;
+//	float lifetime;
+//};
 
-struct Particle : Object
+struct Button : Object
 {
-	Particle() {}
-	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
-		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
-	vec3 position;
-	vec3 velocity;
-	vec3 acceleration;
-	float lifetime;
+	//char* id;
+	//int x, y, width, height; 
+	bool is_clicked;
+	////void(*on_click)(void);
+	int x, y, width, height;
+	std::string label;
+	std::function<void()> clickHandler;
+	Button(int x, int y, int width, int height, std::string label, std::function<void()> clickHandler)
+		: x(x), y(y), width(width), height(height), label(label), clickHandler(clickHandler) {}
+
+	bool isClicked(int xPos, int yPos) {
+		return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
+	}
+
+
 };
-
-	struct Button : Object
-	{
-		//char* id;
-		//int x, y, width, height; 
-		bool is_clicked;
-		////void(*on_click)(void);
-		int x, y, width, height;
-		std::string label;
-		std::function<void()> clickHandler;
-		Button(int x, int y, int width, int height, std::string label, std::function<void()> clickHandler)
-			: x(x), y(y), width(width), height(height), label(label), clickHandler(clickHandler) {}
-
-		bool isClicked(int xPos, int yPos) {
-			return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
-		}
-
-
-	};
 
 struct ButtonComponent : Object
 {
