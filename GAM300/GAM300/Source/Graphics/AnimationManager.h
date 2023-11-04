@@ -207,7 +207,6 @@ class AnimationModel // similar to geom imported
 public:
     // model data 
     std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    //std::vector<AnimationMesh> meshes;  // same as mMeshes
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
     int& GetBoneCount() { return m_BoneCounter; }

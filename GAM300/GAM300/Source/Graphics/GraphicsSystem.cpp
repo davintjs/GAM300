@@ -221,7 +221,7 @@ void GraphicsSystem::Update(float dt)
 {
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
-	//AnimationManager.Update(dt);
+	AnimationManager.Update(dt);
 
 #if defined(_BUILD)
 	Scene& currentScene = MySceneManager.GetCurrentScene();

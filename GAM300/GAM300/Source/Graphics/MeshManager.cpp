@@ -188,16 +188,10 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, _meshAsset.vertices.size() * sizeof(ModelVertex), &_meshAsset.vertices[0], GL_STATIC_DRAW);
-    
-    // Bean:: This might be affecting the current crash
-    //glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
 
     // bind indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _meshAsset.indices.size() * sizeof(unsigned int), &_meshAsset.indices[0], GL_STATIC_DRAW);
-    
-    // Bean:: This might be affecting the current crash
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
     glEnableVertexAttribArray(0); // Position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
@@ -217,9 +211,9 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     glEnableVertexAttribArray(5); // Bone Indexes
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
 
-    glEnableVertexAttribArray(6); // Bone Weights
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
-    
+    glEnableVertexAttribArray(13); // Bone Weights
+    glVertexAttribPointer(13, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
+
     glBindVertexArray(0); // unbind vao
 
     InstanceProperties tempProp;
@@ -234,16 +228,6 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
     newMesh.vboID = VBO;
     newMesh.drawCounts = (GLuint)(_meshAsset.indices.size());
     newMesh.numBones = _meshAsset.numBones;
-
-    newMesh.verticesBoneInfo.resize(_meshAsset.numVertices);
-    for (size_t i = 0; i < _meshAsset.numVertices; i++)
-    {
-        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
-        {
-            newMesh.verticesBoneInfo[i].boneIDs[j] = _meshAsset.vertices[i].boneIDs[j];
-            newMesh.verticesBoneInfo[i].weights[j] = _meshAsset.vertices[i].weights[j];
-        }
-    }
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
