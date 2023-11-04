@@ -61,14 +61,17 @@ public class ThirdPersonController : Script
             VerticalVelocity = new vec3(0,-1,0) * 0.5f;
 
             //Jump
-            if (Input.GetKeyDown(KeyCode.Space))
-                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed;
+            if (Input.GetKeyDown(KeyCode.Space)){
+                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
+                Console.WriteLine("Vertical velocity:" + VerticalVelocity.x + "," + VerticalVelocity.y + "," + VerticalVelocity.z);               
+            }
+
         }
-        else
-        {
-            //Increase gravity for every frame we're not contacting the ground
-            VerticalVelocity += new vec3(0, -1, 0) * Gravity;
-        }
+        // else
+        // {
+        //     //Increase gravity for every frame we're not contacting the ground
+        //     VerticalVelocity += new vec3(0, -1, 0) * Gravity;
+        // }
 
         //Apply Gravity
         dir += VerticalVelocity;

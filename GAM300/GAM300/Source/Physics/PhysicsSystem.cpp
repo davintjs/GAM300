@@ -350,8 +350,15 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			if (groundState != JPH::Character::EGroundState::OnGround)
+			if (groundState != JPH::Character::EGroundState::OnGround) {
 				new_velocity.SetY(0);
+				std::cout << "Character is not grounded, setting directional y to 0\n";
+			}
+			else {
+
+				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+			}
+
 
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
