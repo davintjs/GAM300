@@ -218,7 +218,7 @@ void AudioManager::PlayMusic() {
 	//StopMusic();
 }
 
-void AudioManager::PlayComponent(AudioSource Source) {
+void AudioManager::PlayComponent(AudioSource& Source) {
 	switch (Source.current_channel)
 	{
 	case 0: // Music

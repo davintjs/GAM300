@@ -19,10 +19,12 @@ public class ThirdPersonController : Script
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
 
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        audioSource.Play();
     }
 
     // Update is called once per frame

@@ -84,6 +84,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		size_t addr = reinterpret_cast<size_t>(pAudioSource);
 		addr -= 8;
 		pAudioSource = reinterpret_cast<AudioSource*>(addr);
+		AUDIOMANAGER.PlayComponent(*pAudioSource);
 	}
 
 	//Gets object that entity has
@@ -273,5 +274,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetActive);
 		Register(AddComponent);
 		Register(GetMouseDelta);
+		Register(AudioSourcePlay);
 	}
 #endif // !SCRIPT_WRAPPERS_H

@@ -74,7 +74,7 @@ public:
 		float minPitch = -1, float maxPitch = 3);
 
 	// play from component
-	void PlayComponent(AudioSource Source);
+	void PlayComponent(AudioSource& Source);
 
 	// stop SFX from playing
 	void StopFX();

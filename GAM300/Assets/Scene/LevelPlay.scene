@@ -127,6 +127,8 @@ Rigidbody:
 ID: 8772716637828078001
 MeshRenderer:
   m_GameObject: {fileID: 4273817804516731435}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 40ccbac3712d8bf9f798507ef4d59df0}
   Albedo: [4.65321364e-08, 0.00127933128, 0.0975849628, 1]
   Metallic: 1
@@ -139,7 +141,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 1502711495091549141
 BoxCollider:
@@ -171,6 +172,8 @@ Transform:
 ID: 6041680933754748612
 MeshRenderer:
   m_GameObject: {fileID: 4831385178420616568}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 602366b0ad56a39582a6e9441d9644cd}
   Albedo: [0, 0.953239202, 1, 0]
   Metallic: 1
@@ -183,7 +186,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 9681551289959623269
 GameObject:
@@ -224,6 +226,8 @@ Rigidbody:
 ID: 13272375965240929909
 MeshRenderer:
   m_GameObject: {fileID: 9681551289959623269}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: e922450dbf42abf809035062aa5f0680}
   Albedo: [0, 0, 0.0235294122, 0]
   Metallic: 1
@@ -236,7 +240,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 18095668038045493567
 BoxCollider:
@@ -268,6 +271,8 @@ Transform:
 ID: 4048990303413284073
 MeshRenderer:
   m_GameObject: {fileID: 6009133509915091607}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 4c8a65df7f4608d7ccf944f70b43d64c}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -280,7 +285,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 9782568624274342872
 GameObject:
@@ -305,6 +309,8 @@ Transform:
 ID: 4073422433971498132
 MeshRenderer:
   m_GameObject: {fileID: 9782568624274342872}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 022e8379570aa3ad7273d80ece4e8bf6}
   Albedo: [9.99999975e-05, 9.9989993e-05, 9.9989993e-05, 0]
   Metallic: 1
@@ -317,7 +323,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 17559873268884455769
 GameObject:
@@ -358,6 +363,8 @@ Rigidbody:
 ID: 9415038663319596400
 MeshRenderer:
   m_GameObject: {fileID: 17559873268884455769}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: e922450dbf42abf809035062aa5f0680}
   Albedo: [0, 0, 0.0235294122, 0]
   Metallic: 1
@@ -370,7 +377,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 17638731661942047321
 BoxCollider:
@@ -402,6 +408,8 @@ Transform:
 ID: 202377693546849967
 MeshRenderer:
   m_GameObject: {fileID: 8344862159009368421}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 4c8a65df7f4608d7ccf944f70b43d64c}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -414,7 +422,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 15140290584156344856
 GameObject:
@@ -439,6 +446,8 @@ Transform:
 ID: 17835776281528269532
 MeshRenderer:
   m_GameObject: {fileID: 15140290584156344856}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 022e8379570aa3ad7273d80ece4e8bf6}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -451,7 +460,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 7405095129710979039
 GameObject:
@@ -492,6 +500,8 @@ Rigidbody:
 ID: 3159898278575507026
 MeshRenderer:
   m_GameObject: {fileID: 7405095129710979039}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
   Albedo: [0, 0, 0.0235294122, 0]
   Metallic: 1
@@ -504,7 +514,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 9736596138860701791
 BoxCollider:
@@ -552,6 +561,8 @@ Rigidbody:
 ID: 2711922581456505087
 MeshRenderer:
   m_GameObject: {fileID: 10170722549999376186}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
   Albedo: [0, 0, 0.0235294122, 0]
   Metallic: 1
@@ -564,7 +575,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 12720805654565983234
 BoxCollider:
@@ -612,6 +622,8 @@ Rigidbody:
 ID: 12847320802225609868
 MeshRenderer:
   m_GameObject: {fileID: 11841820677240367090}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
   Albedo: [0, 0, 0.0980392173, 1]
   Metallic: 1
@@ -624,7 +636,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 18136241653261116072
 BoxCollider:
@@ -656,6 +667,8 @@ Transform:
 ID: 76798172460783907
 MeshRenderer:
   m_GameObject: {fileID: 5120544508943145563}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 4e0d47e68d87f56bb4e1b30bed0af355}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -668,7 +681,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 10950757358322963045
 GameObject:
@@ -693,6 +705,8 @@ Transform:
 ID: 13897033604222614634
 MeshRenderer:
   m_GameObject: {fileID: 10950757358322963045}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -705,7 +719,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 14110507054613469000
 GameObject:
@@ -730,6 +743,8 @@ Transform:
 ID: 18380840392063915066
 MeshRenderer:
   m_GameObject: {fileID: 14110507054613469000}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 4e0d47e68d87f56bb4e1b30bed0af355}
   Albedo: [0, 0, 0, 1]
   Metallic: 1
@@ -742,7 +757,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 588260861136365972
 GameObject:
@@ -767,6 +781,8 @@ Transform:
 ID: 12623632380939939826
 MeshRenderer:
   m_GameObject: {fileID: 588260861136365972}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -779,7 +795,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 14927482526739211364
 GameObject:
@@ -804,6 +819,8 @@ Transform:
 ID: 827571719988322067
 MeshRenderer:
   m_GameObject: {fileID: 14927482526739211364}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 4e0d47e68d87f56bb4e1b30bed0af355}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -816,7 +833,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 517736107361213759
 GameObject:
@@ -841,6 +857,8 @@ Transform:
 ID: 9113790283256845465
 MeshRenderer:
   m_GameObject: {fileID: 517736107361213759}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -853,7 +871,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 11392120045747279282
 GameObject:
@@ -893,6 +910,8 @@ Rigidbody:
 ID: 12121385205082449079
 MeshRenderer:
   m_GameObject: {fileID: 11392120045747279282}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: a1270f80d9dc328e2a329a724fdb3cae}
   Albedo: [0, 0, 0.0235294122, 0]
   Metallic: 1
@@ -905,7 +924,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 17394437502800640074
 BoxCollider:
@@ -937,6 +955,8 @@ Transform:
 ID: 13300537263787265129
 MeshRenderer:
   m_GameObject: {fileID: 16412260223154226204}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: 67dadb5a457b3df016b5da184b02fd27}
   Albedo: [0, 0.952941179, 1, 0]
   Metallic: 1
@@ -949,7 +969,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 15876712306982219188
 GameObject:
@@ -960,6 +979,7 @@ GameObject:
   m_Component:
     - component: {fileID: 16929792338682825015}  # Transform
     - component: {fileID: 12258422859569935717}  # CharacterController
+    - component: {fileID: 5076784077825629177}  # AudioSource
     - component: {fileID: 6814756148610344436}  # Script
 ---
 ID: 16929792338682825015
@@ -984,6 +1004,15 @@ CharacterController:
   SlopeLimit: 45
   IsGrounded: false
 ---
+ID: 5076784077825629177
+AudioSource:
+  m_GameObject: {fileID: 15876712306982219188}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 54833b09a3e8292700a8226f0e4db1a3}
+  Play: false
+---
 ID: 6814756148610344436
 Script:
   m_GameObject: {fileID: 15876712306982219188}
@@ -995,7 +1024,8 @@ Script:
   Gravity: 9.81000042
   CamMovePivot: {fileID: 17118584384463415622}  # Component
   CC: {fileID: 12258422859569935717}  # Component
-  CamPitchPivot: {fileID: 8070469368306795598}  # Component
+  CamPitchPivot: {fileID: 17118584384463415622}  # Component
+  audioSource: {fileID: 5076784077825629177}  # Component
 ---
 ID: 5588025465971199737
 GameObject:
@@ -1128,12 +1158,14 @@ Transform:
 ID: 12874486778315004076
 Animator:
   m_GameObject: {fileID: 15437581623968739888}
-  Time: 13.631566
+  Time: 236.301285
   Playing: true
 ---
 ID: 7543481948093770990
 MeshRenderer:
   m_GameObject: {fileID: 15437581623968739888}
+  IsInstance: false
+  Material: 0
   Mesh: {guid: 2ac70bc77553b5233744c66492ecaf6c}
   Albedo: [0.798188686, 0.609178662, 0.609178662, 0]
   Metallic: 1
@@ -1146,7 +1178,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: false
 ---
 ID: 9022108232813852398
 GameObject:
@@ -1224,6 +1255,8 @@ Transform:
 ID: 13298890551581682363
 MeshRenderer:
   m_GameObject: {fileID: 15928395772539587614}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: e94faee75023fb281815cbe42e58bf46}
   Albedo: [0, 0, 0.0980392173, 1]
   Metallic: 1
@@ -1236,7 +1269,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 10824056964330965839
 GameObject:
@@ -1261,6 +1293,8 @@ Transform:
 ID: 13471265537491674210
 MeshRenderer:
   m_GameObject: {fileID: 10824056964330965839}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: cda938153ab88c47f02175a2b96ca693}
   Albedo: [0.304259211, 0.304259211, 0.304289639, 1]
   Metallic: 1
@@ -1273,7 +1307,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 7148446300412772389
 GameObject:
@@ -1298,6 +1331,8 @@ Transform:
 ID: 4871900423285180183
 MeshRenderer:
   m_GameObject: {fileID: 7148446300412772389}
+  IsInstance: true
+  Material: 0
   Mesh: {guid: e1fc92ced6d495a0ebddb7e0a41730a8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -1310,7 +1345,6 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
-  IsInstance: true
 ---
 ID: 15151294352788072090
 GameObject:
