@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			DefaultShader.vert
+\project
+\author         Jake Lian, Euan Lim, Sean Ngo
+
+\par			Course: GAM300
+\date           05/11/2023
+
+\brief
+	Vertex Shader for PBR - Non Instanced
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #version 450 core
 
 //-------------------------

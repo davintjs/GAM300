@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			PointShadow.vert
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           05/11/2023
+
+\brief
+	Vertex Shader for Point Shadows
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #version 450 core
 layout (location = 0) in vec3 aPos;
 layout (location = 5) in ivec4 boneIds; 
