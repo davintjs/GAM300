@@ -4,7 +4,7 @@
 \author         Joseph Ho
 
 \par			Course: GAM300
-\date           07/09/2023
+\date           07/10/2023
 
 \brief
 	This file contains the declarations and types of the History system that handles the
@@ -23,7 +23,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 using Component = Object*;
 
-
 enum ChangeType { REDO, UNDO };
 
 //struct for each undo/redo change
@@ -34,23 +33,27 @@ struct Change {
 		oldreference = newreference = nullptr;
 	}
 
+
+
 	Change(Component comp, std::string prop) : component(comp), property(prop) { oldreference = newreference = nullptr; }
 
-	Component component;
+	std::string property; //name of property that changed
+	Component component; //component of which value was changed
 
 	//variables for script references
-	bool isreference = false;
-	Component oldreference;
-	Component newreference;
+	bool isreference = false; //check if value changed is a reference
+	Component oldreference; //holds the old reference that was changed
+	Component newreference; //holds the new reference that was changed
 
-	std::string property; //name of property that changed
 
-	property::data previousValue;
-	property::data newValue;
+
+	property::data previousValue; //holds the old value that was changed
+	property::data newValue;	  //holds the new value that was changed
 };
 
 using History = std::stack<Change>;
 
+//History Manager contains the data containers that store all the undo and redo moves in the editor
 class HistoryManager {
 	public:
 		//Checks whether the undo stack is empty
@@ -62,10 +65,8 @@ class HistoryManager {
 		//Clears the entire redo stack
 		void ClearRedoStack();
 
-		History& GetUndoStack() {
-			return UndoStack;
-		}
-
+		//Return the reference to under
+		History& GetUndoStack() { return UndoStack; }
 
 		void SetScriptField(Change& change, ChangeType);
 		void SetScriptReference(Change& change, ChangeType);
@@ -75,6 +76,7 @@ class HistoryManager {
 		//redo will be populated with undo changes
 		bool RedoChange();
 
+		//Add a reference 
 		void AddReferenceChange(Change& change, Component oldRef, Component newRef);
 
 		//change a variable and add the change to the undo buffer

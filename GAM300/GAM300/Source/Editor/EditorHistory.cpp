@@ -4,7 +4,7 @@
 \author         Joseph Ho
 
 \par			Course: GAM300
-\date           07/09/2023
+\date           07/10/2023
 
 \brief
     This file contains the definitions of functions in the History system that handles the
@@ -17,14 +17,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorHistory.h"
 #include "Scene/SceneManager.h"
 
+//Check if the undo stack is empty
 bool HistoryManager::UndoStackEmpty() {
     return UndoStack.empty();
 }
 
+//Check if the redo stack is empty
 bool HistoryManager::RedoStackEmpty() {
     return RedoStack.empty();
 }
 
+//Function to undo reference fields from scripts
 template <typename T, typename... Ts>
 void ReferenceSetBackHelper(Field& rhs, Object*& data)
 {
@@ -44,6 +47,7 @@ void ReferenceSetBackHelper(Field& rhs, Object*& data)
     }
 }
 
+//Main function thats calls the helper function to undo reference fields from scripts
 template <typename T, typename... Ts>
 void ReferenceSetBack(Field& rhs, Object* & data, TemplatePack<T, Ts...>)
 {
@@ -86,6 +90,7 @@ void ScriptSetback(Field& rhs, property::data& data, TemplatePack<T, Ts...>)
     ScriptSetbackHelper<T, Ts...>(rhs, data);
 }
 
+//undo and redo logic for script fields
 void HistoryManager::SetScriptField(Change& change, ChangeType type) {
 
     std::string fieldName = change.property;
@@ -111,6 +116,7 @@ void HistoryManager::SetScriptField(Change& change, ChangeType type) {
     EVENTS.Publish(&setFieldEvent);
 }
 
+//change a reference in a script
 void HistoryManager::SetScriptReference(Change& change, ChangeType type) {
 
     //set previous reference back to field
@@ -133,6 +139,7 @@ void HistoryManager::SetScriptReference(Change& change, ChangeType type) {
     EVENTS.Publish(&setFieldEvent);
 }
 
+//undo a change for a field or action in the editor
 bool HistoryManager::UndoChange() {
     //get most recent move
     if (!UndoStack.empty()) {
@@ -156,6 +163,7 @@ bool HistoryManager::UndoChange() {
     return false;
 }
 
+//redo an undo move for a field or action in the editor
 bool HistoryManager::RedoChange() {
     //get most recent move
     if (!RedoStack.empty()) {
@@ -179,12 +187,14 @@ bool HistoryManager::RedoChange() {
     return false;
 }
 
+//Clear the redo stack
 void HistoryManager::ClearRedoStack() {
     while (!RedoStack.empty()) {
         RedoStack.pop();
     }
 }
 
+//add a change in reference action to the undo stack
 void HistoryManager::AddReferenceChange(Change& change, Component oldRef, Component newRef) {
     change.oldreference = oldRef;
     change.newreference = newRef;
