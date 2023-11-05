@@ -38,8 +38,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	// ImGuiTreeNodeFlags_SpanAvailWidth
 
 	ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
-		ImGuiTreeNodeFlags_OpenOnDoubleClick |
-		ImGuiTreeNodeFlags_DefaultOpen;
+		ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (euid == selectedEntity)
 	{
