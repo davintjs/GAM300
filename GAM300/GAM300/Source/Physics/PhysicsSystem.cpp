@@ -112,7 +112,7 @@ void PhysicsSystem::Update(float dt) {
 
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(cc.bid);
-		JPH::RVec3 tmp;
+		//JPH::RVec3 tmp;
 		JPH::Quat tmpQuat;
 		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
@@ -124,7 +124,7 @@ void PhysicsSystem::Update(float dt) {
 
 	// Fixed time steps
 	if (physicsSystem && accumulatedTime >= 1.f/60.f) {
-		physicsSystem->Update(accumulatedTime, ceil(accumulatedTime/(1.f/60.f)), tempAllocator, jobSystem);
+		physicsSystem->Update(accumulatedTime, static_cast<int>(ceil(accumulatedTime/(1.f/60.f))), tempAllocator, jobSystem);
 		accumulatedTime = 0.f;
 	}
 	else {
