@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System.Runtime.InteropServices;
 using GlmSharp;
+using System;
 
 
 namespace BeanFactory

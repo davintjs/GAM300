@@ -91,45 +91,40 @@ void PhysicsSystem::Update(float dt) {
 
 	}
 
-	int i = 0;
-	auto& ccArray = scene.GetArray<CharacterController>();
-	for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
-	{
-		CharacterController& cc = *it;
-		JPH::BodyID tmpBid{ cc.bid };
-		if (characters[i]->GetGroundState() == JPH::Character::EGroundState::OnGround)
-		{
-			std::cout << "Character " << i << " is grounded\n";
-			cc.isGrounded = true;
-		}
-		else
-		{
-			cc.isGrounded = false;
-		}
-		Entity& entity = scene.Get<Entity>(cc);
-		Transform& t = scene.Get<Transform>(entity);
-
-
-		Vector3 tmpVec;
-		JPH::BodyID tmpBID(cc.bid);
-		JPH::RVec3 tmp;
-		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
-		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
-
-		++i;
-	}
 	//std::cout << "pre update\n";
-	PrePhysicsUpdate(dt);
 
 	// Fixed time steps
-	if (physicsSystem && accumulatedTime >= 1.f/60.f) {
-		physicsSystem->Update(accumulatedTime, ceil(accumulatedTime/(1.f/60.f)), tempAllocator, jobSystem);
-		accumulatedTime = 0.f;
+	if (physicsSystem) {
+		float fixedDt = MyFrameRateController.GetFixedDt();
+		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
+		{
+			int j = 0;
+			auto& ccArray = scene.GetArray<CharacterController>();
+			for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
+			{
+				CharacterController& cc = *it;
+				JPH::BodyID tmpBid{ cc.bid };
+				if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+				{
+					//std::cout << "Character " << i << " is grounded\n";
+					cc.isGrounded = true;
+				}
+				else
+				{
+					cc.isGrounded = false;
+				}
+
+				++j;
+			}
+			PrePhysicsUpdate(dt);
+			physicsSystem->Update(MyFrameRateController.GetFixedDt(), 1, tempAllocator, jobSystem);
+
+		}
+	//	accumulatedTime = 0.f;
 	}
-	else {
-		accumulatedTime += dt;
-	}
+//	else {
+	//	accumulatedTime += dt;
+	//}
 	//std::cout << "after physics update but before post update\n";
 	//std::cout << "DT: " << dt << std::endl;
 	//std::cout << "Physics update!\n";	
@@ -324,7 +319,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 void PhysicsSystem::ResolveCharacterMovement() {
 
 
-	std::cout << "Resolve Character Movement\n";
+	//std::cout << "Resolve Character Movement\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& ccArray = scene.GetArray<CharacterController>();
 

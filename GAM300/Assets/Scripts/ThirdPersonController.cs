@@ -42,7 +42,7 @@ public class ThirdPersonController : Script
             dir -= (CamYawPivot.right);
 
         if (Input.GetKey(KeyCode.S))
-            dir += (CamYawPivot.forward);
+            dir += CamYawPivot.forward;
 
         if (Input.GetKey(KeyCode.D))
             dir += (CamYawPivot.right);
@@ -55,13 +55,28 @@ public class ThirdPersonController : Script
         if (IsMoving)
         {
             dir = dir.Normalized;
+
+            // Calculate the angle based on the direction of movement
+
             float angle = (float)Math.Atan2(-dir.x, -dir.z);
-            vec3 newRot = new vec3(0, angle, 0);
-            quat newQuat = glm.FromEulerToQuat(newRot);
-            quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation);
+
+            quat newQuat = glm.FromEulerToQuat(new vec3(0,angle,0)).Normalized;
+            quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation).Normalized;
+
+            // Interpolate using spherical linear interpolation (slerp)
             quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
-            dvec3 rot = midQuat.EulerAngles;
-            PlayerModel.localRotation = new vec3(0, (float)rot.y, 0);
+
+            vec3 rot = ((vec3)midQuat.EulerAngles);
+
+            if (rot != vec3.NaN)
+            {
+                Console.WriteLine(rot);
+                PlayerModel.localRotation = rot;
+            }
+            else
+            {
+                Console.WriteLine("Is NAN");
+            }
         }
 
         //Handle Gravity 
