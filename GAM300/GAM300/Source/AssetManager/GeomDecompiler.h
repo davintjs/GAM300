@@ -11,7 +11,7 @@
     This file contains the declarations of the following:
     1. Loads Geoms files and extract the meshes, material, textures and animations
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content Â© 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GEOMDECOMPILER_H
 #define GEOMDECOMPILER_H
@@ -25,15 +25,20 @@ SINGLETON(GeomDecompiler)
 public:
 	// To load Geoms from FBXs
 	ModelComponents DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid);
-
+	
+	// Load meshes from the FBX file
 	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);
 
+	// Load materials from the FBX file
 	void DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model);
 
+	// Load textures from the FBX file
 	void DeserializeTextures(std::ifstream& ifs, ModelComponents& _model);
 
+	// Load animations from the FBX file
 	void DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model);
 
+	// Load animation nodes recursively to retrieve bone data
 	void DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node);
 
 	// Decompress
