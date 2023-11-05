@@ -93,7 +93,9 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
-		BEHAVIORTREEBUILDER.Init();
+		//#ifndef _BUILD
+		//	BEHAVIORTREEBUILDER.Init();
+		//#endif
 		AUDIOMANAGER.InitAudioManager();
 		MeshManager.Init();
 		TextureManager.Init();
@@ -186,7 +188,9 @@ public:
 	{
 		AllSystems::Exit();
 		THREADS.Exit();
-		BEHAVIORTREEBUILDER.Exit();
+		//#ifndef _BUILD
+		//	BEHAVIORTREEBUILDER.Exit();
+		//#endif
 		NAVMESHBUILDER.Exit();
 	}
 

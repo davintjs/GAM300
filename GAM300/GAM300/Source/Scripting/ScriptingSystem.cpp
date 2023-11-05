@@ -13,6 +13,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 #pragma warning( disable : 26110 )
 #pragma warning( disable : 26111 )
+#pragma warning( disable : 4996 )
 #include "Precompiled.h"
 #include "Scripting/ScriptingSystem.h"
 #include "Scripting/Compiler.h"

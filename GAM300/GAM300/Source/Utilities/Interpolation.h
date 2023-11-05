@@ -15,6 +15,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef INTERPOLATION_H
 #define INTERPOLATION_H
 
+#pragma warning( disable : 4505 )
+
 enum class EASINGTYPE
 {
 	LINEAR,

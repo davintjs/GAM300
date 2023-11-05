@@ -93,10 +93,10 @@ struct AllAssetsGroup
 						
 						return true;
 					}
-
-					Engine::GUID guid = GetGUID(filePath,true);
-					if constexpr (std::is_base_of<Asset, T>())
+					else if constexpr (std::is_base_of<Asset, T>())
 					{
+
+						Engine::GUID guid = GetGUID(filePath, true);
 						if (fs::is_directory(filePath))
 							return true;
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid]};
@@ -117,12 +117,14 @@ struct AllAssetsGroup
 							inputFile.close();
 						}
 						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED,&asset));
+						return true;
 					}
 					else
 					{
+						Engine::GUID guid = GetGUID(filePath, true);
 						std::get<AssetsTable<T>>(assets)[guid];
+						return true;
 					}
-					return true;
 				}
 				return false;
 			}

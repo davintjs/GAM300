@@ -98,7 +98,7 @@ void Serialize(YAML::Emitter& out, T& object)
                             if (name.parent_path().empty())
                             {
                                 //Deserialize again somehow get the type
-                                T1 object;
+                                //T1 object;
                             }
                             //Has no header
                             else
@@ -152,7 +152,7 @@ bool Deserialize(const std::filesystem::path& path, T& object)
                     if (name.parent_path().empty())
                     {
                         //Deserialize again somehow get the type
-                        T1 object;
+                        //T1 object;
                     }
                     //Has no header
                     else

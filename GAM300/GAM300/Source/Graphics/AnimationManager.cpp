@@ -39,7 +39,7 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     for (int positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex)
     {
         aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
-        float timeStamp = channel->mPositionKeys[positionIndex].mTime;
+        float timeStamp = (float)channel->mPositionKeys[positionIndex].mTime;
         KeyPosition data;
         data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
         data.timeStamp = timeStamp;
@@ -50,7 +50,7 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     for (int rotationIndex = 0; rotationIndex < m_NumRotations; ++rotationIndex)
     {
         aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
-        float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
+        float timeStamp = (float)channel->mRotationKeys[rotationIndex].mTime;
         KeyRotation data;
         data.orientation = AssimpGLMHelpers::GetGLMQuat(aiOrientation);
         data.timeStamp = timeStamp;
@@ -61,7 +61,7 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     for (int keyIndex = 0; keyIndex < m_NumScalings; ++keyIndex)
     {
         aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
-        float timeStamp = channel->mScalingKeys[keyIndex].mTime;
+        float timeStamp = (float)channel->mScalingKeys[keyIndex].mTime;
         KeyScale data;
         data.scale = AssimpGLMHelpers::GetGLMVec(scale);
         data.timeStamp = timeStamp;
@@ -208,7 +208,7 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
     dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
     dest.childrenCount = src->mNumChildren;
 
-    for (int i = 0; i < src->mNumChildren; i++)
+    for (unsigned int i = 0; i < src->mNumChildren; i++)
     {
         AssimpNodeData newData;
         ReadHierarchyData(newData, src->mChildren[i]);

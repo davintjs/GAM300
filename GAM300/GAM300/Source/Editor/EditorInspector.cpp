@@ -243,8 +243,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            GLuint icon_id = TextureManager.GetTexture(icon);
-            if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            ImTextureID icon_id = (ImTextureID)TextureManager.GetTexture(icon);
+            if (ImGui::ImageButton(icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, pair.second);
             }
@@ -277,7 +277,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
                 ImGui::PushID(i++);
-                if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                ImTextureID textureID = (ImTextureID)iconID;
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
                     Engine::GUID currentGUID = meshAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
@@ -321,10 +322,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 }
 
                 ImGui::PushID(i++);
-
+                ImTextureID textureID = (ImTextureID)icon_id;
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
                 }
@@ -963,8 +964,8 @@ void DisplayComponent(Script& script)
                 AddReferencePanel(field.fType, &field);
                 //add reference change to undo stack
                 if (referenceChanged) {
-                    Change change(&script, fieldName);
-                    EDITOR.History.AddReferenceChange(change, previousReference, newReference);
+                    Change refChange(&script, fieldName);
+                    EDITOR.History.AddReferenceChange(refChange, previousReference, newReference);
                     referenceChanged = false;
                 }
             }
@@ -1636,8 +1637,8 @@ void EditorInspector::Update(float dt)
                 fPath += material.name.c_str();
                 fPath += ".material";
                 Serialize(material);
-                GetAssetEvent e(fPath);
-                EVENTS.Publish(&e);
+                GetAssetEvent pathEvent(fPath);
+                EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
             PRINT(fPath);

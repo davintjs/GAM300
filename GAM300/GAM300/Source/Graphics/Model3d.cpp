@@ -838,8 +838,8 @@ void SkyBox::SkyBoxinit()
 
 void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
 {
-    GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SKYBOX);
-    shader.Use();
+    GLSLShader& skyBoxShader = SHADER.GetShader(SHADERTYPE::SKYBOX);
+    skyBoxShader.Use();
     GLint uniform_var_loc1 =
         glGetUniformLocation(this->shader.GetHandle(),
             "projection");
@@ -864,6 +864,6 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 
-    shader.UnUse();
+    skyBoxShader.UnUse();
 
 }

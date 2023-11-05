@@ -17,6 +17,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorHistory.h"
 #include "Scene/SceneManager.h"
 
+
+#pragma warning( disable : 4996)
+
 bool HistoryManager::UndoStackEmpty() {
     return UndoStack.empty();
 }

@@ -102,7 +102,7 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBid{ cc.bid };
 
 		Transform& t = scene.Get<Transform>(cc);
-		JPH::RVec3 scale;
+		//JPH::RVec3 scale;
 		JPH::RVec3 pos;
 		Vector3 tpos = t.GetTranslation();
 		GlmVec3ToJoltVec3(tpos, pos);
@@ -128,7 +128,7 @@ void PhysicsSystem::Update(float dt) {
 	// Fixed time steps
 	if (physicsSystem) {
 
-		float fixedDt = MyFrameRateController.GetFixedDt();
+		float fixedDt = (float)MyFrameRateController.GetFixedDt();
 		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
 		{
 			
@@ -604,6 +604,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 
 }
+
 void PhysicsSystem::UpdateGameObjects() {
 
 	if (!physicsSystem)
@@ -661,7 +662,6 @@ void PhysicsSystem::UpdateGameObjects() {
 
 	}
 }
-
 
 void PhysicsSystem::TestRun() {
 
@@ -795,6 +795,7 @@ JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& bo
 	//std::cout << "Contact validate callback!\n";
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
+
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
 	(void)manifold;
 	(void)ioSettings;
@@ -811,14 +812,16 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 
 	//std::cout << "Contact Added\n";
 }
-void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
+
+void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
+{
 	(void)body1;
 	(void)body2;
 	(void)manifold;
 	(void)ioSettings;
-	
 	//std::cout << "Contact persisting!\n";
 }
+
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
 	if (!pSystem)
 		return;
@@ -836,11 +839,13 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 #pragma endregion
 
 // Math conversion helpers
-void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) {
+void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) 
+{
 	jVec3.SetX(gVec3.x);
 	jVec3.SetY(gVec3.y);
 	jVec3.SetZ(gVec3.z);
 }
+
 void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	JPH::RVec3 tmp;
 	GlmVec3ToJoltVec3(gVec3, tmp);
@@ -848,11 +853,13 @@ void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	jQuat = JPH::Quat::sEulerAngles(tmp);
 
 }
+
 void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3) {
 	gVec3.x = jVec3.GetX();
 	gVec3.y = jVec3.GetY();
 	gVec3.z = jVec3.GetZ();
 }
+
 void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3) {
 	JPH::RVec3 tmp = jQuat.GetEulerAngles();
 	JoltVec3ToGlmVec3(tmp, gVec3);

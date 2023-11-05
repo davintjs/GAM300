@@ -105,7 +105,8 @@ void EditorGame::UpdateTargetDisplay()
 void EditorGame::GameView()
 {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
-    if (windowOpened = ImGui::Begin("Game", nullptr, flags))
+    windowOpened = ImGui::Begin("Game", nullptr, flags);
+    if (windowOpened)
     {
         if (!camera) // If the camera does not exist
         {

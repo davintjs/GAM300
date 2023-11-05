@@ -97,10 +97,10 @@ void EditorContentBrowser::Update(float dt)
         }
 
         ImGui::BeginGroup();
-
+        ImTextureID textureID = (ImTextureID)icon_id;
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
+        ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
         //Drag drop logic for content browser
         if (!it.is_directory() && ImGui::BeginDragDropSource()) {
@@ -184,7 +184,8 @@ void EditorContentBrowser::Update(float dt)
             ImGui::SetCursorPosY(buttonPosY);
 
             icon_id = GET_TEXTURE_ID("Assets/Icons/Editorplaybutton.dds");
-            ImGui::ImageButton((ImTextureID)icon_id, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
+            ImTextureID btnTextureID = (ImTextureID)icon_id;
+            ImGui::ImageButton(btnTextureID, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
         }
 
         //right click options
