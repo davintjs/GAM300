@@ -44,7 +44,6 @@ public class Enemy : Script
 
     void OnCollisionEnter(Rigidbody rb)
     {
-        Console.WriteLine("Hello from Enemy");
         if (rb.tag == "Attack")
         {
             Health -= 1;

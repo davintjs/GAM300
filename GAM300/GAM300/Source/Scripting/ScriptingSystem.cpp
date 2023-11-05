@@ -752,41 +752,41 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 	Entity& e1 = scene.Get<Entity>(rb1->EUID());
 	Entity& e2 = scene.Get<Entity>(rb2->EUID());
 
-	if (scene.Has<Script>(e1))
-	{
-		for (Script* script : scene.GetMulti<Script>(e1))
-		{
-			//Incase collision disables gameobject
-			if (!scene.IsActive(e1))
-				break;
-			if (!scene.IsActive(*script))
-				continue;
-			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
-			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
-			if (!mMethod)
-				continue;
-			void* param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb2) + 8);
-			Invoke(mSceneScripts[scene.uuid][*script], mMethod, (void**)param);
-		}
-	}
+	//if (scene.Has<Script>(e1))
+	//{
+	//	for (Script* script : scene.GetMulti<Script>(e1))
+	//	{
+	//		//Incase collision disables gameobject
+	//		if (!scene.IsActive(e1))
+	//			break;
+	//		if (!scene.IsActive(*script))
+	//			continue;
+	//		ScriptClass& scriptClass = scriptClassMap[script->scriptId];
+	//		MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
+	//		if (!mMethod)
+	//			continue;
+	//		voi param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb2) - 8);
+	//		Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+	//	}
+	//}
 
-	if (scene.Has<Script>(e2) && scene.IsActive(e2))
-	{
-		for (Script* script : scene.GetMulti<Script>(e2))
-		{
-			//Incase collision disables gameobject
-			if (!scene.IsActive(e2))
-				break;
-			if (!scene.IsActive(*script))
-				continue;
-			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
-			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
-			if (!mMethod)
-				continue;
-			void* param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb1) + 8);
-			Invoke(mSceneScripts[scene.uuid][*script], mMethod, (void**)param);
-		}
-	}
+	//if (scene.Has<Script>(e2) && scene.IsActive(e2))
+	//{
+	//	for (Script* script : scene.GetMulti<Script>(e2))
+	//	{
+	//		//Incase collision disables gameobject
+	//		if (!scene.IsActive(e2))
+	//			break;
+	//		if (!scene.IsActive(*script))
+	//			continue;
+	//		ScriptClass& scriptClass = scriptClassMap[script->scriptId];
+	//		MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
+	//		if (!mMethod)
+	//			continue;
+	//		void* param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb1) - 8);
+	//		Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+	//	}
+	//}
 }
 
 
