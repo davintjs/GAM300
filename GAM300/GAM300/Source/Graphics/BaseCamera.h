@@ -45,6 +45,9 @@ public:
 
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
 
+	// Attemp to resize the camera's dimension
+	void TryResize(glm::vec2 _newDimension);
+
 	// Adjust Prespective projection based off viewport
 	void OnResize(const float& _width, const float& _height);
 

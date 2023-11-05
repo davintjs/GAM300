@@ -100,6 +100,36 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 	Update();
 }
 
+void BaseCamera::TryResize(glm::vec2 _newDimension)
+{
+	if (_newDimension.x != 0 && _newDimension.y != 0)
+	{
+		bool modified = false;
+		_newDimension = glm::floor(_newDimension);
+
+		glm::vec2 adjusted = dimension;
+		if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
+		{
+			modified = true;
+			adjusted = { (_newDimension.y) * (16.f / 9.f), _newDimension.y };
+		}
+
+		if (adjusted.x > _newDimension.x)
+		{
+			modified = true;
+			adjusted = { _newDimension.x, (_newDimension.x) / (16.f / 9.f) };
+		}
+
+		// If there is any changes to the dimension and modifications, return
+		if (dimension != adjusted && modified)
+		{
+			dimension = adjusted;
+
+			OnResize(dimension.x, dimension.y);
+		}
+	}
+}
+
 void BaseCamera::OnResize(const float& _width, const float& _height)
 {
 	dimension.x = _width;
