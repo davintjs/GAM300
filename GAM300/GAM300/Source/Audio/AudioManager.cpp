@@ -223,6 +223,7 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	switch (Source.current_channel)
 	{
 	case 0: // Music
+		Source.play = true;
 		currentMusic->setVolume(Source.volume);
 		PlayMusic(Source.currentSound);
 		break;

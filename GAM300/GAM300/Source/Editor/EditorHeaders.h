@@ -228,8 +228,6 @@ public:
 
     void GameView();
 
-    void ResizeGameView(glm::vec2 _newDimension);
-
     // Exit the system
     void Exit();
 

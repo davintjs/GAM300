@@ -1,14 +1,14 @@
 /*!***************************************************************************************
 \file			Renderer.cpp
 \project
-\author
+\author			Sean Ngo, Jake Lian, Euan Lim
 
 \par			Course: GAM300
 \date           11/10/2023
 
 \brief
 	This file contains the definitions of Graphics Renderer that includes:
-	1.
+	1. Render UI, Meshs, Depth Draw calls
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
