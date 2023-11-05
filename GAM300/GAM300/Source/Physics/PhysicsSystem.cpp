@@ -21,9 +21,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/FramerateController.h"
 #include "IOManager/InputHandler.h"
 
+// Testing
 JPH::BodyID testBallID;
 JPH::BodyID testBallID2;
-
 Entity* ball = nullptr;
 Entity* ball2 = nullptr;
 
@@ -41,6 +41,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 
 void PhysicsSystem::Init() 
 {
+	// Event Subscriptions
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
 
@@ -53,17 +54,20 @@ void PhysicsSystem::Init()
 	// Register all JPH types
 	JPH::RegisterTypes();
 
+	// Allocate chunk of memory for usage by Physics System
 	tempAllocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024);
 	
+	// Jolt uses multi-threading
 	jobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, JPH::thread::hardware_concurrency()-1);
 	
+	// Basic contact listener
 	engineContactListener = new EngineContactListener();
 }
 void PhysicsSystem::Update(float dt) {
-	// Handle Inputs
 	if (!physicsSystem)
 		return;
 
+	// Update positions, linear velocity of bodies so that any scripting logic is applied for the physics simulation
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
@@ -90,7 +94,6 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetAngularVelocity(tmpBID, tmp);
 
 	}
-
 	int i = 0;
 	auto& ccArray = scene.GetArray<CharacterController>();
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
@@ -119,10 +122,10 @@ void PhysicsSystem::Update(float dt) {
 
 		++i;
 	}
-	//std::cout << "pre update\n";
+	
 	PrePhysicsUpdate(dt);
 
-	// Fixed time steps
+	// Fixed time steps at 60fps
 	if (physicsSystem && accumulatedTime >= 1.f/60.f) {
 		physicsSystem->Update(accumulatedTime, static_cast<int>(ceil(accumulatedTime/(1.f/60.f))), tempAllocator, jobSystem);
 		accumulatedTime = 0.f;
@@ -130,9 +133,6 @@ void PhysicsSystem::Update(float dt) {
 	else {
 		accumulatedTime += dt;
 	}
-	//std::cout << "after physics update but before post update\n";
-	//std::cout << "DT: " << dt << std::endl;
-	//std::cout << "Physics update!\n";	
 
 	PostPhysicsUpdate();
 
@@ -148,8 +148,10 @@ void PhysicsSystem::Exit() {
 		JPH::Factory::sInstance = nullptr;
 	}
 
-
-	delete engineContactListener;
+	if (engineContactListener) {
+		delete engineContactListener;
+		engineContactListener = nullptr;
+	}
 
 	// Destroy Physics World
 	if (physicsSystem) {
@@ -170,64 +172,13 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-	/*
-	// Input handling for character
-	JPH::Vec3 direction = JPH::Vec3::sZero();
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_W) || InputHandler::isKeyButtonHolding(GLFW_KEY_W)) {
-		std::cout << "move forward\n";
-		direction.SetX(10);
-	}
-	else if (InputHandler::isKeyButtonPressed(GLFW_KEY_A) || InputHandler::isKeyButtonHolding(GLFW_KEY_A)) {
-		direction.SetZ(-10);
-	}
-	else if (InputHandler::isKeyButtonPressed(GLFW_KEY_D) || InputHandler::isKeyButtonHolding(GLFW_KEY_D)) {
-		direction.SetZ(10);
-	}
-	else if (InputHandler::isKeyButtonPressed(GLFW_KEY_S) || InputHandler::isKeyButtonHolding(GLFW_KEY_S)) {
-		direction.SetX(-10);
-	}
-	if (direction != JPH::Vec3::sZero())
-		direction = direction.Normalized();
 
-	bool jump = false;
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_SPACE))
-		jump = true;
-
-
-	JPH::Character::EGroundState groundState = ccTest->mCharacter->GetGroundState();
-	if (groundState == JPH::Character::EGroundState::OnSteepGround
-		|| groundState == JPH::Character::EGroundState::NotSupported)
-	{
-		JPH::Vec3 normal = ccTest->mCharacter->GetGroundNormal();
-		normal.SetY(0.0f);
-		float dot = normal.Dot(direction);
-		if (dot < 0.0f)
-			direction -= (dot * normal) / normal.LengthSq();
-	}
-	direction.SetY(0);
-	
-	// Update velocity
-	if (ccTest->mCharacter->IsSupported()) {
-		JPH::Vec3 current_velocity = ccTest->mCharacter->GetLinearVelocity();
-		JPH::Vec3 desired_velocity = 10.f * direction;
-		desired_velocity.SetY(current_velocity.GetY());
-		JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
-
-		// Jump
-		if (jump && groundState == JPH::Character::EGroundState::OnGround)
-			new_velocity += JPH::Vec3(0, 40.f, 0);
-
-		ccTest->mCharacter->SetLinearVelocity(new_velocity);
-	}
-	*/
-
-	// Resolve any character controller moves
+	// Resolve any character controller movement from scripting system
 	ResolveCharacterMovement();
 
 }
 void PhysicsSystem::PostPhysicsUpdate() {
 	//std::cout << "Post physics update\n";
-	//std::cout << engineContactListener->collisionResolution.size() << std::endl;
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
 		// Find rigidbody components of the two bodies
 		Rigidbody* rb1 = nullptr;
@@ -261,14 +212,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.rb1 = rb1;
 				tee.rb2 = rb2;
 				EVENTS.Publish(&tee);
-				std::cout << "Trigger Enter!\n";
+				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.rb1 = rb1;
 				cae.rb2 = rb2;
 				EVENTS.Publish(&cae);
-				std::cout << "Collision Enter!\n";
+				//std::cout << "Collision Enter!\n";
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::removed) {
@@ -279,22 +230,20 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.rb1 = rb1;
 				tre.rb2 = rb2;
 				EVENTS.Publish(&tre);
-				std::cout << "Trigger Remove!\n";
+				//std::cout << "Trigger Remove!\n";
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.rb1 = rb1;
 				cre.rb2 = rb2;
 				EVENTS.Publish(&cre);
-				std::cout << "Collision Remove!\n";
+				//std::cout << "Collision Remove!\n";
 			}
 		}
 
 	}
 	engineContactListener->collisionResolution.clear();
 
-	//if(ccTest->mCharacter != nullptr)
-	//	ccTest->mCharacter->PostSimulation(0.05f);
 	for (auto it = characters.begin(); it != characters.end(); ++it) {
 		(*it)->PostSimulation(0.05f);
 	}
@@ -305,7 +254,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 void PhysicsSystem::ResolveCharacterMovement() {
 
 
-	std::cout << "Resolve Character Movement\n";
+	//std::cout << "Resolve Character Movement\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& ccArray = scene.GetArray<CharacterController>();
 
@@ -324,12 +273,13 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 		JPH::Vec3 direction;
 		GlmVec3ToJoltVec3(cc.direction, direction);
-		if (cc.direction != Vector3(0, 0, 0)) {
-			std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
-		}
+		//if (cc.direction != Vector3(0, 0, 0)) {
+		//	std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
+		//}
 		//direction = direction.Normalized();
 		//std::cout << "direction:" << direction.GetX() << ',' << direction.GetY() << ',' << direction.GetZ() << std::endl;
 
+		// Prevent character from going up steep slopes
 		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
 		if (groundState == JPH::Character::EGroundState::OnSteepGround
 			|| groundState == JPH::Character::EGroundState::NotSupported)
@@ -362,6 +312,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
 
+		// Reset character controller's direction
 		cc.direction = Vector3(0, 0, 0);
 	}
 
@@ -390,13 +341,13 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	PopulatePhysicsWorld();
 
 
-	std::cout << "Physics System scene start test\n";
+	//std::cout << "Physics System scene start test\n";
 
 }
 void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
 {
 	UNREFERENCED_PARAMETER(pEvent);
-	std::cout << "Physics System scene stop test\n";
+	//std::cout << "Physics System scene stop test\n";
 
 	// Clean up any characters
 	for (JPH::Ref<JPH::Character> r : characters) {
@@ -429,7 +380,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	//auto& bcArray = scene.GetArray<BoxCollider>();
-	std::cout << "Number of rigidbodies:" << rbArray.size() << std::endl;
+	//std::cout << "Number of rigidbodies:" << rbArray.size() << std::endl;
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 			
 	
@@ -464,8 +415,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 		// Set enabled status
 		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
-		//if (!rb.a)
-		//	enabledStatus = JPH::EActivation::DontActivate;
 
 		// Motion Type
 		JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
@@ -567,7 +516,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 
 
-	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
 
 
 }
@@ -577,6 +526,8 @@ void PhysicsSystem::UpdateGameObjects() {
 		return;
 
 	Scene& scene = MySceneManager.GetCurrentScene();
+
+	// Rigidbodies
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
@@ -601,18 +552,9 @@ void PhysicsSystem::UpdateGameObjects() {
 		tmp = bodyInterface->GetAngularVelocity(tmpBID);
 		JoltVec3ToGlmVec3(tmp, rb.angularVelocity);
 
-
-		//Transform& t = scene.Get<Transform>(*ball);
-		//t.translation = gBallPos;
-
-
-		//Vector3 ballRotEuler;
-		//JPH::Quat ballQuat = bodyInterface->GetRotation(testBallID);
-		//JoltQuatToGlmVec3(ballQuat, ballRotEuler);
-		//t.rotation = ballRotEuler;
-
 	}
 
+	// Character Controllers
 	auto& ccArray = scene.GetArray<CharacterController>();
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
 		CharacterController& cc = *it;
@@ -650,7 +592,7 @@ void PhysicsSystem::TestRun() {
 
 	// Optimise broad phase only if there is an excess amount of bodies
 	//physicsSystem->OptimizeBroadPhase();
-	std::cout << "Number of bodies before:" << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Number of bodies before:" << physicsSystem->GetNumBodies() << std::endl;
 
 	//Creating a rigid body that will be used as a floor 
 	//For this, we create the settings for the collision volume such as the shape 
@@ -700,7 +642,7 @@ void PhysicsSystem::TestRun() {
 	//bodyInterface->SetLinearVelocity(sphere_ID, JPH::Vec3(0.0f, 0.0f, 0.0f));
 	//testBallID = sphere_ID;
 
-	std::cout << "Number of bodies after:" << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Number of bodies after:" << physicsSystem->GetNumBodies() << std::endl;
 
 	//PopulatePhysicsWorld();
 }
@@ -802,6 +744,7 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 }
 #pragma endregion
 
+#pragma region MathConversionHelpers
 // Math conversion helpers
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) {
 	jVec3.SetX(gVec3.x);
@@ -824,3 +767,4 @@ void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3) {
 	JPH::RVec3 tmp = jQuat.GetEulerAngles();
 	JoltVec3ToGlmVec3(tmp, gVec3);
 }
+#pragma endregion

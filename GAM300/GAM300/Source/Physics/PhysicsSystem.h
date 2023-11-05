@@ -125,6 +125,7 @@ public:
 	}
 };
 
+// Holds data that will be used to resolve any collisions filtered so that collision callbacks to the game objects involved are triggered
 struct EngineCollisionData {
 public:
 
@@ -141,8 +142,6 @@ public:
 
 
 	collisionOperation op;
-	//Vector3 body1CollisionPos;
-	//Vector3 body2CollisionPos;
 
 };
 
@@ -163,7 +162,7 @@ public:
 	std::vector<EngineCollisionData> collisionResolution;
 };
 
-#pragma region In Progress
+#pragma region Testing
 
 class CharacterControllerTest {
 public:
@@ -198,7 +197,7 @@ public:
 	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
 
-	// Resolve any character controller moves
+	// Resolve any character controller movement
 	void ResolveCharacterMovement();
 
 	// A testing function
@@ -241,7 +240,6 @@ public:
 	float mTime = 0.f;
 	CharacterControllerTest* ccTest =				nullptr;
 	std::vector<JPH::Ref<JPH::Character>> characters;
-	//JPH::BodyID characterID;
 	#pragma endregion
 
 };
