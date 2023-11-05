@@ -72,18 +72,25 @@ struct Framebuffer
 ENGINE_SYSTEM(FramebufferManager)
 {
 public:
+	// Initialize the framebuffer manager
 	void Init();
 
+	// Update the manager
 	void Update(float dt);
 
+	// Exit the framebuffer manager
 	void Exit();
 
+	// Create a framebuffer for directional and spot lights
 	void CreateDirectionalAndSpotLight(GLuint& _index, GLuint& _textureID, const GLsizei& _width, const GLsizei& _height);
 
+	// Create a framebuffer for point light
 	void CreatePointLight(GLuint& _index, GLuint& _textureID, const GLsizei& _width, const GLsizei& _height);
 
+	// Create a framebuffer for bloom
 	void CreateBloom(GLuint* _indexes, GLuint* _textureIDs);
 
+	// Create a framebuffer for color picking
 	void CreateColorPicking(GLuint & _index, GLuint & _textureID);
 
 	// Creates an empty framebuffer, all attachments will have the same width and height
