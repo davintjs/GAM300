@@ -839,10 +839,8 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
-int shader_id;
-
+//Display all available audio channels inside the system for user to choose
 template <typename T>
-
 void DisplayAudioChannels(Change& change, T& value) {
     if constexpr (std::is_same<T, int>()) {
         ImGui::AlignTextToFramePadding();
@@ -865,6 +863,9 @@ void DisplayAudioChannels(Change& change, T& value) {
     }
 }
 
+int shader_id;
+
+//Display all available shaders inside the system for user to choose
 template <typename T>
 void DisplayShaders(Change& change, T& value) {
     if constexpr (std::is_same_v<T, int>) {
@@ -937,6 +938,7 @@ void Display_Property(T& comp) {
         });
 }
 
+//Display all fields from a script component
 void DisplayComponent(Script& script)
 {
     static char buffer[2048]{};
@@ -976,6 +978,7 @@ void DisplayComponent(Script& script)
     }
 }
 
+//Display all available light types inside the system for user to choose
 void DisplayLightProperties(LightSource& source) {
     Change lighttypes(&source, "LightSource/lightType");
     DisplayLightTypes(lighttypes, source.lightType);
