@@ -128,9 +128,5 @@ public class ThirdPersonController : Script
     void OnCollisionEnter(Rigidbody rb)
     {
         Console.WriteLine("INTO THE UNKNOWN");
-        if (rb.tag == "Void")
-        {
-            Console.WriteLine("INTO THE UNKNOWN");
-        }
     }
 }

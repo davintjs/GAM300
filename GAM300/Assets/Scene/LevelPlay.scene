@@ -10941,7 +10941,7 @@ ID: 2388217857791609504
 GameObject:
   m_IsActive: true
   m_Name: AttackCollider
-  m_TagString: ""
+  m_TagString: Test2
   m_Layer: 0
   m_Component:
     - component: {fileID: 8974008219274630184}  # Transform
@@ -11004,6 +11004,7 @@ Script:
   Script: {guid: bd73ea774e83cb5793d6be5959fe3ede}
   player: {fileID: 3977294589520766028}  # Component
   orient: {fileID: 18364898161930433210}  # Component
+  distance: 2
 ---
 ID: 3977294589520766028
 GameObject:

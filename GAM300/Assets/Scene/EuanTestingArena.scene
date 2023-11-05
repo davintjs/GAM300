@@ -664,6 +664,7 @@ GameObject:
     - component: {fileID: 3527267282861818079}  # Rigidbody
     - component: {fileID: 16929793178803184824}  # MeshRenderer
     - component: {fileID: 5369074148515424110}  # BoxCollider
+    - component: {fileID: 16707376066281378915}  # Script
 ---
 ID: 1825754854474661487
 Transform:
@@ -712,3 +713,13 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+---
+ID: 16707376066281378915
+Script:
+  m_GameObject: {fileID: 12364780341127539901}
+  Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
+  Health: 1
+  moveSpeed: 2
+  chaseDistance: 5
+  player: {fileID: 0}
+  count: 0

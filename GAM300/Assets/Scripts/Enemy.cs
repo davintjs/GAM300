@@ -23,6 +23,8 @@ public class Enemy : Script
 
     void Update()
     {
+        if (player == null)
+            return;
         //follow target
         vec3 direction = (player.localPosition - transform.localPosition).Normalized;
         direction.y = 0;
@@ -44,12 +46,14 @@ public class Enemy : Script
 
     void OnCollisionEnter(Rigidbody rb)
     {
-        if (rb.tag == "Attack")
+/*        Console.WriteLine("Enemy collided tag: " + GetTag(rb));
+        if (GetTag(rb) == "Test2")
         {
+            Console.WriteLine("I have been attacked!");
             Health -= 1;
             if (Health <= 0)
                 Destroy(gameObject);
-        }
+        }*/
     }
 }
 

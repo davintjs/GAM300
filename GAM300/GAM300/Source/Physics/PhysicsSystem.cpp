@@ -291,14 +291,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.rb1 = rb1;
 				tee.rb2 = rb2;
 				EVENTS.Publish(&tee);
-				std::cout << "Trigger Enter!\n";
+				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.rb1 = rb1;
 				cae.rb2 = rb2;
 				EVENTS.Publish(&cae);
-				std::cout << "Collision Enter!\n";
+				//std::cout << "Collision Enter!\n";
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::removed) {
@@ -309,14 +309,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.rb1 = rb1;
 				tre.rb2 = rb2;
 				EVENTS.Publish(&tre);
-				std::cout << "Trigger Remove!\n";
+				//std::cout << "Trigger Remove!\n";
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.rb1 = rb1;
 				cre.rb2 = rb2;
 				EVENTS.Publish(&cre);
-				std::cout << "Collision Remove!\n";
+				//std::cout << "Collision Remove!\n";
 			}
 		}
 

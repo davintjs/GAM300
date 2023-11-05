@@ -26,6 +26,10 @@ namespace BeanFactory
         UInt64 euid;
         UInt64 uuid;
 
+        public string GetTag<T>(T component)
+        {
+            return InternalCalls.GetTag(component);
+        }
         public virtual bool enabled
         {
             get
