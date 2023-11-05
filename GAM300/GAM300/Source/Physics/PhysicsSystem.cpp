@@ -93,33 +93,47 @@ void PhysicsSystem::Update(float dt) {
 
 	}
 
+
+	auto& ccArray = scene.GetArray<CharacterController>();
+	int j = 0;
+	for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
+	{
+		CharacterController& cc = *it;
+		JPH::BodyID tmpBid{ cc.bid };
+
+		Transform& t = scene.Get<Transform>(cc);
+		JPH::RVec3 scale;
+		JPH::RVec3 pos;
+		Vector3 tpos = t.GetTranslation();
+		GlmVec3ToJoltVec3(tpos, pos);
+		JPH::Quat rot;
+		Vector3 trot = t.GetRotation();
+		GlmVec3ToJoltQuat(trot, rot);
+		//bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
+		//bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
+		if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		{
+			//std::cout << "Character " << i << " is grounded\n";
+			cc.isGrounded = true;
+		}
+		else
+		{
+			cc.isGrounded = false;
+		}
+		++j;
+	}
+
 	//std::cout << "pre update\n";
 
 	// Fixed time steps
 	if (physicsSystem) {
+
 		float fixedDt = MyFrameRateController.GetFixedDt();
 		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
 		{
-			int j = 0;
-			auto& ccArray = scene.GetArray<CharacterController>();
-			for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
-			{
-				CharacterController& cc = *it;
-				JPH::BodyID tmpBid{ cc.bid };
-				if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
-				{
-					//std::cout << "Character " << i << " is grounded\n";
-					cc.isGrounded = true;
-				}
-				else
-				{
-					cc.isGrounded = false;
-				}
-
-				++j;
-			}
+			
 			PrePhysicsUpdate(dt);
-			physicsSystem->Update(MyFrameRateController.GetFixedDt(), 1, tempAllocator, jobSystem);
+			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
 
 		}
 	//	accumulatedTime = 0.f;

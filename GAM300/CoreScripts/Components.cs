@@ -43,6 +43,12 @@ namespace BeanFactory
                 return InternalCalls.Get<CharacterController>(this);
             }
         }
+
+        virtual public string tag
+        {
+            get { return InternalCalls.GetTag(this); }
+        }
+
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();

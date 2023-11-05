@@ -153,6 +153,10 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetLayer(string layerName);
 
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetTag(Object owner);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLayerName(int layer);
         #endregion

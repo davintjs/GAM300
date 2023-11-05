@@ -142,7 +142,7 @@ struct Scene
 
 #pragma region SCRIPTING/DESERIALIZATION HELPERS
 	//Get component of another object as a void pointer(Mono does type casting)
-	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
+	GENERIC_RECURSIVE(Object*, Get, &Get<T>(*(Object*)pObject));
 
 	GENERIC_RECURSIVE(void*, Add, Add<T>(*(Entity*)pObject));
 

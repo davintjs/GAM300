@@ -1,9 +1,9 @@
 Material:
-  Material Name: Black
+  Material Name: EnemyMaterial
   Shader: 1
-  Albedo: [0, 0, 0, 1]
+  Albedo: [1, 1, 1, 1]
   Metallic: 1
-  Roughness: 0.200000003
+  Roughness: 1
   AmbientOcclusion: 1
   Emission: 1
   AlbedoTexture: {guid: 00000000000000000000000000000000}

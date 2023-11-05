@@ -11,6 +11,8 @@ public class Enemy : Script
     public Transform player;
     public int count;
 
+    public int Health = 1;
+
     //public float ching;
 
 
@@ -38,6 +40,17 @@ public class Enemy : Script
     void Exit()
     {
 
+    }
+
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        Console.WriteLine("Hello from Enemy");
+        if (rb.tag == "Attack")
+        {
+            Health -= 1;
+            if (Health <= 0)
+                Destroy(gameObject);
+        }
     }
 }
 

@@ -765,8 +765,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			void* param = rb1;
-			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+			void* param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb2) + 8);
+			Invoke(mSceneScripts[scene.uuid][*script], mMethod, (void**)param);
 		}
 	}
 
@@ -783,8 +783,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			void* param = rb2;
-			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+			void* param = reinterpret_cast<void*>(reinterpret_cast<size_t>(rb1) + 8);
+			Invoke(mSceneScripts[scene.uuid][*script], mMethod, (void**)param);
 		}
 	}
 }

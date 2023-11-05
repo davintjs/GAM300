@@ -16,6 +16,8 @@ public class ThirdPersonController : Script
     public Transform CamPitchPivot;
     public Transform PlayerModel;
 
+    List<vec3> pos = new List<vec3>(); 
+
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
 
@@ -70,18 +72,30 @@ public class ThirdPersonController : Script
 
             if (rot != vec3.NaN)
             {
-                Console.WriteLine(rot);
-                PlayerModel.localRotation = rot;
-            }
-            else
-            {
-                Console.WriteLine("Is NAN");
+                bool isNan = false;
+                foreach (float val in rot)
+                {
+                    if (float.IsNaN(val))
+                    {
+                        isNan = true;
+                        break;
+                    }
+                }
+                if (!isNan)
+                {
+                    PlayerModel.localRotation = rot;
+                }
             }
         }
 
         //Handle Gravity 
         if (CC.isGrounded)
         {
+            if (pos.Count == 10)
+            {
+                pos.RemoveAt(0);
+            }
+            pos.Add(transform.localPosition);
             //Small gravity applied when character is grounded to ensure grounded flag stays active
             VerticalVelocity = new vec3(0,-1,0) * 0.5f;
 
@@ -89,7 +103,10 @@ public class ThirdPersonController : Script
             if (Input.GetKeyDown(KeyCode.Space)){
                 VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
             }
-
+        }
+        else if (transform.localPosition.y <= -10f)
+        {
+            transform.localPosition = pos[0];
         }
         // else
         // {
@@ -106,5 +123,14 @@ public class ThirdPersonController : Script
         if (IsMoving)
             //Apply movement
             CC.Move(PlayerModel.back * MoveSpeed + VerticalVelocity);
+    }
+
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        Console.WriteLine("INTO THE UNKNOWN");
+        if (rb.tag == "Void")
+        {
+            Console.WriteLine("INTO THE UNKNOWN");
+        }
     }
 }
