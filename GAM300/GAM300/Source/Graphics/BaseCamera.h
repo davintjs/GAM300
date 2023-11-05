@@ -8,9 +8,9 @@
 
 \brief
     This file contains the declarations of the following:
-    1.
+    1. The base camera used in editor and the game
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content Â© 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef BASECAMERA_H
 #define BASECAMERA_H
@@ -31,18 +31,25 @@ struct BaseCamera : property::base
 {
 public:
 
+	// Initialize the base camera which sets the default properties of the camera and creates a framebuffer
 	void Init();
 	
+	// Initialize the base camera with the parameters as the properties of the camera and creates a framebuffer
 	void Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength);
 	
+	// Update the camera
 	void Update();
-
+	
+	// Update the view matrix of the camera
 	void UpdateViewMatrix();
 
+	// Update the projection matrix of the camera
 	void UpdateProjection();
 
+	// Update the camera's frustrum
 	void UpdateFrustum();
 
+	// Update the camera's position and rotation
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
 
 	// Attemp to resize the camera's dimension
@@ -51,16 +58,17 @@ public:
 	// Adjust Prespective projection based off viewport
 	void OnResize(const float& _width, const float& _height);
 
+	// Check if items are within the camera's frustum
 	bool WithinFrustum() const;
-
+	
+	// Getting Things relative to Cameras 
 	void SetCameraRotation(const glm::vec3& _rotation);
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
 
 	glm::vec3 GetFocalPoint();
-
-	// Getting Things relative to Cameras
+	
 	glm::vec2& GetViewportSize() { return dimension; }
 	void SetViewportSize(const float& _width, const float& _height) { dimension = glm::vec2(_width, _height); }
 	void SetViewportSize(const glm::vec2& _dimension) { dimension = _dimension; }
