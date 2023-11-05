@@ -75,11 +75,13 @@ void PhysicsSystem::Update(float dt) {
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp;
-		GlmVec3ToJoltVec3(t.translation, tmp);
+		Vector3 translation = t.GetTranslation();
+		GlmVec3ToJoltVec3(translation, tmp);
 		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
 
 		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
+		Vector3 rotation = t.GetRotation();
+		GlmVec3ToJoltQuat(rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::Activate);
 
 
@@ -467,9 +469,11 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		Transform& t = scene.Get<Transform>(entity);
 		JPH::RVec3 scale;
 		JPH::RVec3 pos;
-		GlmVec3ToJoltVec3(t.translation, pos);
+		Vector3 tpos = t.GetTranslation();
+		GlmVec3ToJoltVec3(tpos, pos);
 		JPH::Quat rot;
-		GlmVec3ToJoltQuat(t.rotation, rot);
+		Vector3 trot = t.GetRotation();
+		GlmVec3ToJoltQuat(trot, rot);
 
 		// Linear + Angular Velocity
 		JPH::RVec3 linearVel;
