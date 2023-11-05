@@ -1,13 +1,25 @@
+/*!***************************************************************************************
+\file			MaterialSystem.cpp
+\project
+\author			Euan Lim, Joseph Ho, Zacharie Hong
+
+\par			Course: GAM300
+\date           11/10/2023
+
+\brief
+	This file contains the definitions of Material System that includes:
+	1. Functionalities to Serialize Deserialize Material Instances
+	2. Make Duplicates of Material Instances 
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 #include "Scene/Components.h"
 #include "Scene/SceneManager.h"
 
 #include "Utilities/Serializer.h"
-
-
-
-
 
 void MaterialSystem::Init()
 {

@@ -1,7 +1,7 @@
 /*!***************************************************************************************
 \file			GraphicsHeaders.h
 \project
-\author         Sean Ngo
+\author         Sean Ngo , Euan Lim
 
 \par			Course: GAM300
 \date           10/10/2023
@@ -107,6 +107,7 @@ struct Material_instance : Object
 	// This is for Editor
 	Material_instance(const Material_instance& other);
 
+	// To make Copies
 	Material_instance& Duplicate_MaterialInstance(const Material_instance& other);
 
 	int shaderType = (int)SHADERTYPE::PBR;
@@ -174,15 +175,15 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	// Adding into material instance
 
-	// Removing from material instance
 	void createPBR_Instanced();
 
 	void createPBR_NonInstanced();
 
+	// New Material Instance
 	void AddMaterial(const Material_instance & new_mat);
 
+	// Duplicating Material Instance
 	Material_instance& DuplicateMaterial(const Material_instance & instance);
 
 	Engine::GUID NewMaterialInstance(std::string _name = "Default Material");
@@ -190,13 +191,15 @@ public:
 	// Deleting a Material Instance
 	void deleteInstance(Engine::GUID& matGUID);
 	
-	//
+	// Deserialize Materials 
 	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID & _guid);
 
 	//MaterialAsset& GetMaterialAsset(const Engine::GUID & meshID);
 
+	// Load Material Instance
 	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
 
+	// capture Material Instance
 	Material_instance& getMaterialInstance(Engine::GUID matGUID);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
@@ -346,10 +349,13 @@ public:
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
+	// Depth draw call for directional shadows
 	void DrawDepthDirectional();
 
+	// Depth draw call for spotlight shadows
 	void DrawDepthSpot();
 
+	// Depth draw call for point shadows
 	void DrawDepthPoint();
 
 	bool Culling();

@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			ColourPicker.cpp
+\project
+\author         Euan Lim
+
+\par			Course: GAM300
+\date           05/11/2023
+
+\brief
+	This file contains the definitions to implementing colour picking
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
