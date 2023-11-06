@@ -34,12 +34,17 @@ void EditorContentBrowser::Update(float dt)
     GLint folderIcon = GET_TEXTURE_ID("Assets/Icons/foldericon.dds");
     GLint fileIcon = GET_TEXTURE_ID("Assets/Icons/fileicon.dds");
     UNREFERENCED_PARAMETER(dt);
+
+    static ImGuiTextFilter filter;
     bool isOpened = ImGui::Begin("Content Browser");
     if (!isOpened)
     {
         ImGui::End();
         return;
     }
+
+    ImGui::Text("Filter: "); ImGui::SameLine();
+    filter.Draw();
 
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
 
@@ -70,6 +75,9 @@ void EditorContentBrowser::Update(float dt)
     {
         const auto& path = it.path();
         if (path.string().find("meta") != std::string::npos) continue;
+
+        if (!filter.PassFilter(path.string().c_str()))
+            continue;
 
         ImGui::PushID(i++);
 
