@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			DefaultShader.vert
+\project
+\author         Jake Lian, Euan Lim, Sean Ngo
+
+\par			Course: GAM300
+\date           05/11/2023
+
+\brief
+	Vertex Shader for PBR - Non Instanced
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #version 450 core
 
 //-------------------------
@@ -11,7 +25,7 @@ layout (location = 3) in vec2 aVertexTexCoord; //UVs info
 layout (location = 4) in vec4 aVertexColor; // This can throw
 
 layout(location = 5) in ivec4 boneIds; 
-layout(location = 6) in vec4 weights;
+layout(location = 13) in vec4 weights;
 
 
 //-------------------------

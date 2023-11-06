@@ -24,7 +24,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "HandlesTable.h"
 
 //Original, to New
-using ReferencesTable = std::unordered_map<Handle, Handle>;
+//Enum to old handle -> new handle
+using ReferencesTable = std::unordered_map < size_t,std::unordered_map<Handle, Handle>>;
 
 struct Scene
 {
@@ -39,27 +40,25 @@ struct Scene
 	//Creates empty scene
 	Scene(const std::string& _filepath);
 
-	//void StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID transformID);
+	Entity& StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID entityID);
 
-	//template <typename T, typename... Ts>
-	//void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID)
+	template <typename... Ts>
+	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID transformID, Engine::UUID newEntityID,TemplatePack<Ts...>);
+
+	template <typename T, typename... Ts>
+	void StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID);
+
+	template <typename... Ts>
+	void LinkReferences(ReferencesTable& storage, TemplatePack<Ts...>);
+
+	template <typename T, typename... Ts>
+	void LinkReferences(ReferencesTable& storage);
 
 	void Clone(Entity& source);
 
-	void Clone(Entity& source, Entity& dest);
-
 	template <typename T>
-	void Clone(T& source, Entity& entity);
+	void CopyValues(T& source, T& dest);
 
-	template <typename T, typename... Ts>
-	void CloneHelper(Entity& entity);
-
-
-	template <typename... Ts>
-	void CloneHelper(Entity& source, TemplatePack<Ts...>);
-
-	template <typename T, typename... Ts>
-	void CloneHelper(Entity& source, Entity& dest);
 
 	//Copy assignment
 	Scene& operator=(Scene& rhs);
@@ -143,7 +142,7 @@ struct Scene
 
 #pragma region SCRIPTING/DESERIALIZATION HELPERS
 	//Get component of another object as a void pointer(Mono does type casting)
-	GENERIC_RECURSIVE(void*, Get, &Get<T>(*(Object*)pObject));
+	GENERIC_RECURSIVE(Object*, Get, &Get<T>(*(Object*)pObject));
 
 	GENERIC_RECURSIVE(void*, Add, Add<T>(*(Entity*)pObject));
 

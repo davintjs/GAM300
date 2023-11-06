@@ -106,6 +106,8 @@ bool SerializePrefab(Entity& _entity, Scene& _scene)
     }
 }
 
+
+
 bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
 {
     out << YAML::BeginMap;
@@ -212,6 +214,85 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     out << YAML::EndMap << YAML::EndMap;
 
     return true;
+}
+
+void Serialize(Material_instance& material, std::string directory)
+{
+    YAML::Emitter out;
+    out << YAML::BeginMap;
+    out << YAML::Key << "Material" << YAML::Value;
+    out << YAML::BeginMap;
+    property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    {
+        auto entry = property::entry { PropertyName, Data };
+        std::string Name = entry.first;
+        if (!Flags.m_isDontSave)
+        {
+            std::visit([&](auto& Value)
+                {
+                    using T = std::decay_t<decltype(Value)>;
+
+                    // Edit name
+                    auto it = Name.begin() + Name.find_last_of("/");
+                    Name.erase(Name.begin(), ++it);
+                    if constexpr (std::is_same<T, Engine::GUID>())
+                    {
+                        out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                        out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
+                    }
+                    else
+                    {
+                        out << YAML::Key << Name << YAML::Value << Value;
+                    }
+                }
+            , entry.second);
+        }
+    });
+    out << YAML::EndMap << YAML::EndMap;
+    directory += "/";
+    std::ofstream fout(directory + material.name + ".material", std::ios::out);
+    fout << out.c_str();
+}
+
+
+void Deserialize(Material_instance& material,const fs::path& path)
+{
+    std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
+    PRINT(path);
+    YAML::Node node = data[0]["Material"];
+    property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+        {
+            auto entry = property::entry { PropertyName, Data };
+            std::visit([&](auto& Value)
+            {
+                using T1 = std::decay_t<decltype(Value)>;
+                std::string name = entry.first;
+                // Edit name
+                auto it = name.begin() + name.find_last_of("/");
+                name.erase(name.begin(), ++it);
+                // Edit name
+                if (node[name])
+                {
+                    if constexpr (std::is_same<char*, T1>()) {
+                        std::string buf = node[name].as<std::string>();
+                        property::set(material, entry.first.c_str(), buf);
+
+                    }
+                    else
+                    {
+                        if constexpr (std::is_same<T1, Engine::GUID>())
+                        {
+                            property::set(material, entry.first.c_str(), node[name]["guid"].as<T1>());
+                        }
+                        else
+                        {
+                            property::set(material, entry.first.c_str(), node[name].as<T1>());
+                        }
+                    }
+                }
+            }
+            , entry.second);
+        });
 }
 
 void SerializeScript(YAML::Emitter& out, Script& _component)
@@ -345,6 +426,8 @@ void DeserializeComponent(const DeComHelper& _helper)
     Engine::UUID uuid = (*_helper.node)["ID"].as<Engine::UUID>();
     T component{};
     component.UUID(uuid);
+    //if constexpr (std::is_same<T, AudioSource>())
+    //    PRINT("HELLO");
     YAML::Node node = (*_helper.node)[GetType::Name<T>()];
     Scene& _scene = *_helper.scene;
     Engine::UUID euid = node["m_GameObject"]["fileID"].as<Engine::UUID>();
@@ -381,9 +464,11 @@ void DeserializeComponent(const DeComHelper& _helper)
                             }
                             else
                             {
+                                
                                 if constexpr (std::is_same<T1, Engine::GUID>())
                                 {
-                                    property::set(component, entry.first.c_str(), node[name]["guid"].as<T1>());
+                                    if (node[name]["guid"])
+                                        property::set(component, entry.first.c_str(), node[name]["guid"].as<T1>());
                                 }
                                 else
                                 {
@@ -406,14 +491,23 @@ void DeserializeComponent(const DeComHelper& _helper)
         if (&entity)
         {
             // Check for Scripts
-            if constexpr (std::is_same<T, Script>())
+            if constexpr (std::is_same<Transform, T>())
+            {
+                T& transform = _scene.Get<T>(component.EUID());
+                transform = component;
+            }
+            else if constexpr (std::is_same<Tag, T>())
+            {
+
+            }
+            else if constexpr (std::is_same<T, Script>())
             {
                 _scene.Add<T>(component.EUID(),component.UUID(), component.scriptId);
             }
             else
             {
-                T& tempComponent = *_scene.Add<T>(entity);
-                tempComponent = component;
+                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID());
+                *pComponent = component;
             }
         }
         else
@@ -565,6 +659,7 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
                     }
                     else
                     {
+                        
                         object = &scene.GetByUUID<T>(uuid);
                     }
                 }

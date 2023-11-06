@@ -28,8 +28,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
-
+#include "Graphics/GraphicsSystem.h"
 #include "PropertyConfig.h"
+#include "Utilities/Serializer.h"
+
+#include "Core/Events.h"
+#include "Core/EventsManager.h"
 
 #define BUTTON_HEIGHT .1 //Percent
 #define BUTTON_WIDTH .6 //Percent
@@ -60,6 +64,7 @@ bool valueChanged = false;
 float initialvalue = 0.f;
 float changedvalue = 0.f;
 Vector3 initialVector;
+Vector4 intialColor;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -97,8 +102,11 @@ void DisplayType(const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    std::string buffer = val;
-    ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_ReadOnly);
+    PRINT(val, '\n');
+    static char buffer[TEXT_BUFFER_SIZE];
+    strcpy(buffer, val.c_str());
+    ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_ReadOnly);
+    val = buffer;
 }
 
 void DisplayType(Change& change, const char* name, std::string& val)
@@ -106,10 +114,14 @@ void DisplayType(Change& change, const char* name, std::string& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    std::string buffer = val;
-    if(ImGui::InputText(idName.c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue)){
-        EDITOR.History.SetPropertyValue(change, val, buffer);
+    static char buffer[TEXT_BUFFER_SIZE];
+    strcpy(buffer, val.c_str());
+    if(ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        std::string newString = buffer;
+        EDITOR.History.SetPropertyValue(change, val, newString);
     }
+    val = buffer;
 }
 
 void DisplayType(Change& change, const char* name, int& val)
@@ -148,13 +160,18 @@ void DisplayType(Change& change, const char* name, char*& val)
 
 void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 {
+    static ImGuiTextFilter filter;
     fs::path extension = fp.extension();
+    size_t extensionType = GetAssetType::E<Asset>();
+    if (AssetExtensionTypes.contains(extension))
+        extensionType = AssetExtensionTypes[extension];
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
 
 
     if (ImGui::Button("Edit")) {
+        filter.Clear();
         ImGui::OpenPopup("Texture");
     }
 
@@ -162,7 +179,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
-    static ImGuiTextFilter filter;
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
         ImGui::Text("Filter: "); ImGui::SameLine();
@@ -205,17 +221,21 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::TextWrapped("None");
         ImGui::NextColumn();
 
-
         int i = 0;
 
         for (auto& pair : DEFAULT_ASSETS)
         {
             if (pair.first.extension() != extension)
                 continue;
-            if (!filter.PassFilter(pair.first.string().c_str()))
-                continue;
+
             if (pair.first.string().starts_with("None"))
                 continue;
+            
+            if (!filter.PassFilter(pair.first.string().c_str()))
+                continue;
+
+
+            fs::path icon = "Assets/Icons/fileicon.dds";
 
             //if not png or dds file, dont show
 
@@ -223,7 +243,8 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
             //render respective file icon textures
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            if (ImGui::ImageButton((ImTextureID)defaultFileIcon, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            ImTextureID icon_id = (ImTextureID)TextureManager.GetTexture(icon);
+            if (ImGui::ImageButton(icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
             {
                 EDITOR.History.SetPropertyValue(change, guid, pair.second);
             }
@@ -238,6 +259,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         //using filesystem to iterate through all folders/files inside the "/Data" directory
 
         if (extension == ".geom")
+        //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
         {
             // Bean: Put this publish event in the open popup in the future
             GetAssetsEvent<MeshAsset> e1;
@@ -246,26 +268,29 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             auto iconID = GET_TEXTURE_ID(icon);
 
             for (auto& meshAsset : *e1.pAssets)
-            {
-                if (!filter.PassFilter(meshAsset.second.mFilePath.string().c_str()))
-                    continue;
+            {                    
+                std::string path = meshAsset.second.mFilePath.stem().string().c_str();
 
-                ImGui::PushID(i++);
+                if (!filter.PassFilter(path.c_str()))
+                    continue;
 
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                if (ImGui::ImageButton((ImTextureID)iconID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                ImGui::PushID(i++);
+                ImTextureID textureID = (ImTextureID)iconID;
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
                     Engine::GUID currentGUID = meshAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-                    PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
+                    //PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
                 }
+                ImGui::PopID();
                 ImGui::PopStyleColor();
-                ImGui::TextWrapped(meshAsset.second.mFilePath.stem().string().c_str());
+                ImGui::TextWrapped(path.c_str());
 
                 //render file name below icon
                 ImGui::NextColumn();
-                ImGui::PopID();
+                
             }
         }
         else
@@ -273,20 +298,22 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
             {
                 const auto& path = it.path();
+                if (path.extension() != extension)
+                    continue;
 
                 if (!filter.PassFilter(path.string().c_str()))
                     continue;
-                if (path.extension() != extension)
+                if (!AssetExtensionTypes.contains(path.extension()))
                     continue;
+                if (AssetExtensionTypes[path.extension()] != extensionType)
+                    continue;
+                //if (path.extension() != extension)
 
                 GetAssetEvent e { path };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
 
-
                 //if not png or dds file, dont show
-
-                ImGui::PushID(i++);
 
                 //Draw the file / folder icon based on whether it is a directory or not
                 GLuint icon_id = GET_TEXTURE_ID(currentGUID);
@@ -294,9 +321,11 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                     icon_id = defaultFileIcon;
                 }
 
+                ImGui::PushID(i++);
+                ImTextureID textureID = (ImTextureID)icon_id;
                 //render respective file icon textures
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                if (ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
                 }
@@ -311,10 +340,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
        
         ImGui::Columns(1);
         ImGui::EndPopup();
-    }
-    else
-    {
-        filter.Clear();
     }
 }
 
@@ -419,7 +444,7 @@ void DisplayType(Change& change, const char* name, float& val)
 
     float buf = val;
    
-    if (ImGui::DragFloat(cIdName, &buf)) {
+    if (ImGui::DragFloat(cIdName, &buf, 0.01f)) {
         if (!valueChanged) {
             initialvalue = val;
         }
@@ -526,33 +551,34 @@ void DisplayType(Change& change, const char* name, Vector4& val)
     static std::string idName{};
     idName = "##";
     idName += name;
-    Vector4 buf = val;
 
+    Vector4 buf = val;
     ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
     bool ischanged = false;
 
-    if (ImGui::ColorButton("hi", color , 0, ImVec2(ImGui::GetContentRegionAvail().x , 20.f)))
+    if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
+        ImGui::OpenPopup("colorpicker");
 
-        ImGui::OpenPopup("hi-picker");
-
-    if (ImGui::BeginPopup("hi-picker"))
+    if (ImGui::BeginPopup("colorpicker"))
     {
         if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
             ischanged = true;
+            if (!valueChanged)
+                intialColor = val;
+
+            valueChanged = true;
+            val = buf;
+        }
+
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            valueChanged = false;
+            buf = val;
+            val = intialColor;
+            EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
     }
-
-    //buf = color;
-
-    if (ischanged) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }
-
-   /* if (ImGui::ColorEdit4("MyColor##4", (float*)&buf, ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueBar)) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
-    }*/
 
 }
 
@@ -708,6 +734,7 @@ void DisplayField(Change& change, const char* name, Field& field)
     {
         if (field.fType < AllObjectTypes::Size())
         {
+            Scene& scene{ MySceneManager.GetCurrentScene() };
             T*& value = *reinterpret_cast<T**>(field.data);
             if constexpr (std::is_same<T, Script>())
             {
@@ -715,7 +742,7 @@ void DisplayField(Change& change, const char* name, Field& field)
             }
             else
             {
-
+                
                 DisplayType(change, name, value);
             }
         }
@@ -812,6 +839,62 @@ void DisplayLightTypes(Change& change, T& value) {
     }
 }
 
+//Display all available audio channels inside the system for user to choose
+template <typename T>
+void DisplayAudioChannels(Change& change, T& value) {
+    if constexpr (std::is_same<T, int>()) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Channel");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+
+        std::vector<const char*> layers;
+        layers.push_back("Music"); layers.push_back("SFX"); layers.push_back("Loop FX");
+        int index = value;
+        ImGui::PushItemWidth(100.f);
+        if (ImGui::Combo("##AudioChannel", &index, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, index);
+        }
+        ImGui::PopItemWidth();
+    }
+}
+
+int shader_id;
+
+//Display all available shaders inside the system for user to choose
+template <typename T>
+void DisplayShaders(Change& change, T& value) {
+    if constexpr (std::is_same_v<T, int>) {
+        ImGui::AlignTextToFramePadding();
+        ImGui::TableNextColumn();
+        ImGui::Text("Shader");
+        ImGui::TableNextColumn();
+
+        Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
+        MeshRenderer& rend = static_cast<MeshRenderer&>(*change.component);
+
+        std::vector<const char*> layers;
+        shader_id = value;
+        //Get all materials inside PBR shader
+        for (auto& shader : MATERIALSYSTEM.available_shaders) {
+            layers.push_back(shader.name.c_str());
+        }
+
+
+        //ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+        if (ImGui::Combo("##Shader", &shader_id, layers.data(), (int)layers.size(), 5)) {
+            EDITOR.History.SetPropertyValue(change, value, shader_id);
+        }
+    }
+}
+
+
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
@@ -824,19 +907,26 @@ void Display_Property(T& comp) {
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
 
-                    //Edit name
                     std::string DisplayName = entry.first;
                     auto it = DisplayName.begin() + DisplayName.find_last_of("/");
                     DisplayName.erase(DisplayName.begin(), ++it);
 
-                    ImGui::PushID(entry.first.c_str());   
-                    
-                    Change newchange(&comp, entry.first); 
+                    Change newchange(&comp, entry.first);
 
-                    //Properties with Texture picker
-                    Display<T1>(newchange, DisplayName.c_str(), Value);
+                    ImGui::PushID(entry.first.c_str());
 
+                    //Temporary implementation for materials
+                    if (entry.first.find("Shader") != std::string::npos) {
+                        DisplayShaders(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        DisplayAudioChannels(newchange, Value);
+                    }
+                    else {
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
+                    }
                     ImGui::PopID();
+
                     }
                 , Data);
                 property::set(comp, entry.first.c_str(), Data);
@@ -848,6 +938,7 @@ void Display_Property(T& comp) {
         });
 }
 
+//Display all fields from a script component
 void DisplayComponent(Script& script)
 {
     static char buffer[2048]{};
@@ -875,8 +966,8 @@ void DisplayComponent(Script& script)
                 AddReferencePanel(field.fType, &field);
                 //add reference change to undo stack
                 if (referenceChanged) {
-                    Change change(&script, fieldName);
-                    EDITOR.History.AddReferenceChange(change, previousReference, newReference);
+                    Change refChange(&script, fieldName);
+                    EDITOR.History.AddReferenceChange(refChange, previousReference, newReference);
                     referenceChanged = false;
                 }
             }
@@ -887,6 +978,7 @@ void DisplayComponent(Script& script)
     }
 }
 
+//Display all available light types inside the system for user to choose
 void DisplayLightProperties(LightSource& source) {
     Change lighttypes(&source, "LightSource/lightType");
     DisplayLightTypes(lighttypes, source.lightType);
@@ -1003,8 +1095,6 @@ void DisplayComponentHelper(T& component)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
 
-        
-
         if (ImGui::BeginTable("Component", 2, winFlags))
         {
             ImGui::Indent();
@@ -1018,7 +1108,7 @@ void DisplayComponentHelper(T& component)
             {
                 DisplayComponent(component);
             }
-            if constexpr (std::is_same_v<T, LightSource>) {
+            else if constexpr (std::is_same_v<T, LightSource>) {
                 DisplayLightProperties(component);
             }
             else
@@ -1434,6 +1524,132 @@ void EditorInspector::Update(float dt)
 
     if (isAddComponentPanel) {
         AddComponentPanel(curr_scene.Get<Entity>(curr_index));
+    }
+
+    if (material_inspector) {
+
+        ImGui::Begin("Material", &material_inspector);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+        
+        //auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
+
+        ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+            | ImGuiTableFlags_PadOuterX;
+
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
+
+        auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
+
+        if (ImGui::BeginTable("Mats", 2, tableflags))
+        {
+            ImGui::Indent();
+            ImGui::TableSetupColumn("Text", 0, 0.4f);
+            ImGui::TableSetupColumn("Input", 0, 0.6f);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+            property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+                {
+                    if (!Flags.m_isDontShow) {
+                        auto entry = property::entry { PropertyName, Data };
+                        std::visit([&](auto& Value) {
+
+                            using T1 = std::decay_t<decltype(Value)>;
+
+                            //Edit name
+                            std::string DisplayName = entry.first;
+                            
+                            auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                            DisplayName.erase(DisplayName.begin(), ++it);
+                            Change newchange(&material, entry.first);
+                            ImGui::PushID(entry.first.c_str());
+
+                            if (entry.first.find("Shader") != std::string::npos) {
+                                DisplayShaders(newchange, Value);
+                            }
+                            else {                            
+                                 Display<T1>(newchange, DisplayName.c_str(), Value);     
+                            }
+
+                            ImGui::PopID();
+                            }
+                        , Data);
+                        property::set(material, entry.first.c_str(), Data);
+
+                        // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                        //assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                    }
+
+                });
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+
+            ImGui::Unindent();
+            ImGui::EndTable();
+        }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        ImGui::Separator();
+
+        //if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        //{
+        //    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
+        //    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        //    MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
+        //    //Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
+        //    
+        //    Change newchange(&rend, "MeshRenderer/material");
+        //    //int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
+        //    //EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
+        //}
+
+        if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        {
+            GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
+            EVENTS.Publish(&e);
+            std::string fPathStr{ e.filePath.string() };
+            size_t strPos = fPathStr.find_last_of("\\");
+            if (strPos == std::string::npos)
+                strPos = fPathStr.find_last_of("/");
+            fs::path fPath;
+            if (strPos != std::string::npos)
+            {
+                fPathStr = std::string(fPathStr.begin(), fPathStr.begin() + strPos);
+                fPath = fPathStr;
+            }
+            if (!fPath.empty())
+            {
+                std::string directory = fPathStr;
+                fPath += "\\";
+                fPath += material.name.c_str();
+                fPath += ".material";
+                fs::rename(e.filePath, fPath);
+                Serialize(material, fPathStr);
+            }
+            else
+            {
+                fPath = "Assets\\";
+                fPath += material.name.c_str();
+                fPath += ".material";
+                Serialize(material);
+                GetAssetEvent pathEvent(fPath);
+                EVENTS.Publish(&pathEvent);
+                EditorContentBrowser::Instance().selectedAss = e.guid;
+            }
+            PRINT(fPath);
+            //material.name
+        }
+
+        ImGui::End();
     }
 
     if (isAddTagPanel) {

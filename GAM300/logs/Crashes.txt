@@ -1,5 +1,5 @@
-[2023-11-02 15:01:10.663] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 237)
+[2023-11-05 15:09:29.091] [Error] [critical] 
+Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
+Info:		Trying to access invalid mesh
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 38)
 

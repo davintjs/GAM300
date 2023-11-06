@@ -16,13 +16,19 @@ public class ThirdPersonController : Script
     public Transform CamPitchPivot;
     public Transform PlayerModel;
 
+    List<vec3> pos = new List<vec3>(); 
+
     private vec3 VerticalVelocity;
     private bool IsMoving = false;
+
+    public float RotationSpeed = 1;
+
+    public AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        audioSource.Play();
     }
 
     // Update is called once per frame
@@ -30,19 +36,18 @@ public class ThirdPersonController : Script
     {
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
-
         //Handle Movement Input
         if (Input.GetKey(KeyCode.W))
-            dir += CamYawPivot.forward;
+            dir -= (CamYawPivot.forward);
 
         if (Input.GetKey(KeyCode.A))
-            dir += CamYawPivot.right;
+            dir -= (CamYawPivot.right);
 
         if (Input.GetKey(KeyCode.S))
-            dir -= CamYawPivot.forward;
+            dir += CamYawPivot.forward;
 
         if (Input.GetKey(KeyCode.D))
-            dir -= CamYawPivot.right;
+            dir += (CamYawPivot.right);
 
 
         //Determine whether a movement input was given
@@ -51,29 +56,77 @@ public class ThirdPersonController : Script
         //Adjust the rotation of the model whenever the player moves
         if (IsMoving)
         {
-            PlayerModel.localRotation.y = CamYawPivot.localRotation.y;
+            dir = dir.Normalized;
+
+            // Calculate the angle based on the direction of movement
+
+            float angle = (float)Math.Atan2(-dir.x, -dir.z);
+
+            quat newQuat = glm.FromEulerToQuat(new vec3(0,angle,0)).Normalized;
+            quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation).Normalized;
+
+            // Interpolate using spherical linear interpolation (slerp)
+            quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
+
+            vec3 rot = ((vec3)midQuat.EulerAngles);
+
+            if (rot != vec3.NaN)
+            {
+                bool isNan = false;
+                foreach (float val in rot)
+                {
+                    if (float.IsNaN(val))
+                    {
+                        isNan = true;
+                        break;
+                    }
+                }
+                if (!isNan)
+                {
+                    PlayerModel.localRotation = rot;
+                }
+            }
         }
 
         //Handle Gravity 
         if (CC.isGrounded)
         {
+            if (pos.Count == 10)
+            {
+                pos.RemoveAt(0);
+            }
+            pos.Add(transform.localPosition);
             //Small gravity applied when character is grounded to ensure grounded flag stays active
             VerticalVelocity = new vec3(0,-1,0) * 0.5f;
 
             //Jump
-            if (Input.GetKeyDown(KeyCode.Space))
-                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed;
+            if (Input.GetKeyDown(KeyCode.Space)){
+                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
+            }
         }
-        else
+        else if (transform.localPosition.y <= -10f)
         {
-            //Increase gravity for every frame we're not contacting the ground
-            VerticalVelocity += new vec3(0, -1, 0) * Gravity * Time.deltaTime;
+            transform.localPosition = pos[0];
         }
+        // else
+        // {
+        //     //Increase gravity for every frame we're not contacting the ground
+        //     VerticalVelocity += new vec3(0, -1, 0) * Gravity;
+        // }
 
         //Apply Gravity
         dir += VerticalVelocity;
 
-        //Apply movement
-        CC.Move(dir * MoveSpeed);
+        //Console.WriteLine("dir in c#:" + dir.x + "," + dir.y + "," + dir.z);
+
+
+        if (IsMoving)
+            //Apply movement
+            CC.Move(PlayerModel.back * MoveSpeed + VerticalVelocity);
+    }
+
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        Console.WriteLine("INTO THE UNKNOWN");
     }
 }

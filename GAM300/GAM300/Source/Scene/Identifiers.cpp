@@ -20,7 +20,7 @@ void IdentifiersManager::DeleteTag(std::string key)
 	{
 		//Error when trying to delete tag
 		//tags.erase(tags.find(key)); 
-		it->second = -1;
+		it->second = Engine::UUID(-1);
 	}
 }
 

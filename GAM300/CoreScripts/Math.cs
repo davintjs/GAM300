@@ -12,9 +12,7 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
-
-using GlmSharp;
-
+using System;
 namespace GlmSharp
 {
 	public static partial class glm
@@ -22,9 +20,8 @@ namespace GlmSharp
 		public static quat FromEulerToQuat(vec3 eulerAngle)
 		{
 			quat q = new quat();
-			vec3 c = glm.Cos(eulerAngle * 0.5f);
-			vec3 s = glm.Sin(eulerAngle * 0.5f);
-
+			vec3 c = Cos(eulerAngle * 0.5f);
+			vec3 s = Sin(eulerAngle * 0.5f);
 			q.w = c.x* c.y * c.z + s.x* s.y* s.z;
 			q.x = s.x* c.y * c.z - c.x* s.y* s.z;
 			q.y = c.x* s.y * c.z + s.x* c.y* s.z;

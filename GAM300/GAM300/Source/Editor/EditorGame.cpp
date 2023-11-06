@@ -24,7 +24,6 @@ All content � 2023 DigiPen Institute of Technology Singapore.All rights reserv
 extern glm::vec2 windowPos; // In ColourPicker.cpp
 extern glm::vec2 windowDimension; // In ColourPicker.cpp
 
-
 void EditorGame::Init()
 {
     dimension = glm::vec2(1600.f, 900.f);
@@ -106,7 +105,8 @@ void EditorGame::UpdateTargetDisplay()
 void EditorGame::GameView()
 {
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
-    if (windowOpened = ImGui::Begin("Game", nullptr, flags))
+    windowOpened = ImGui::Begin("Game", nullptr, flags);
+    if (windowOpened)
     {
         if (!camera) // If the camera does not exist
         {
@@ -123,7 +123,7 @@ void EditorGame::GameView()
         ImVec2 viewportEditorSize = sceneRect.GetSize();
 
         // Check if it needs to resize the game view
-        ResizeGameView(*((glm::vec2*)&viewportEditorSize));
+        camera->TryResize(*((glm::vec2*)&viewportEditorSize));
 
         // Indentation for the game view to be in the center of the game window
         float indent = (viewportEditorSize.x - dimension.x) * 0.5f;
@@ -134,9 +134,13 @@ void EditorGame::GameView()
         indent = (viewportEditorSize.y - dimension.y) * 0.5f;
         float y_offset = indent;
 
+        dimension = camera->GetViewportSize();
 
         windowPos.x = position.x + x_offset; // Colour Picking.cpp
         windowPos.y = position.y + y_offset; // Colour Picking.cpp
+
+        windowDimension.x = dimension.x; // Colour Picking.cpp
+        windowDimension.y = dimension.y; // Colour Picking.cpp
 
         if(indent > 1.f)
             ImGui::Dummy({ 0.f, indent });
@@ -147,39 +151,6 @@ void EditorGame::GameView()
         ImGui::Image((void*)(size_t)textureID, ImVec2{ (float)dimension.x, (float)dimension.y }, ImVec2{ 0 , 1 }, ImVec2{ 1 , 0 });
     }
     ImGui::End();
-}
-
-void EditorGame::ResizeGameView(glm::vec2 _newDimension)
-{
-    if (_newDimension.x != 0 && _newDimension.y != 0)
-    {
-        bool modified = false;
-        _newDimension = glm::floor(_newDimension);
-
-        glm::vec2 adjusted = dimension;
-        if (adjusted.y > _newDimension.y || adjusted.y != _newDimension.y)
-        {
-            modified = true;
-            adjusted = { (_newDimension.y) * AspectRatio, _newDimension.y};
-        }
-
-        if (adjusted.x > _newDimension.x - padding)
-        {
-            modified = true;
-            adjusted = { _newDimension.x - padding, (_newDimension.x - padding) / AspectRatio };
-        }
-
-        // If there is any changes to the dimension and modifications, return
-        if (dimension != adjusted && modified)
-        {
-            dimension = adjusted;
-
-            windowDimension.x = dimension.x; // Colour Picking.cpp
-            windowDimension.y = dimension.y; // Colour Picking.cpp
-
-            camera->OnResize(dimension.x, dimension.y);
-        }
-    }
 }
 
 void EditorGame::Exit()

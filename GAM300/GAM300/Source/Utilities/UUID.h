@@ -19,9 +19,15 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace Engine
 {
+	size_t CreateUUID();
+	//struct UUID 
+	//{
+	//	UUID(size_t _data = CreateUUID()){}
+	//	operator size_t () { return data; }
+	//	size_t data{};
+	//};
 	using UUID = size_t;
 	//Generates a random UUID
-	UUID CreateUUID();
 }
 
 

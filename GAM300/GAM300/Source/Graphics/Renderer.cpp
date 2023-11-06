@@ -1,14 +1,14 @@
 /*!***************************************************************************************
 \file			Renderer.cpp
 \project
-\author
+\author			Sean Ngo, Jake Lian, Euan Lim
 
 \par			Course: GAM300
 \date           11/10/2023
 
 \brief
 	This file contains the definitions of Graphics Renderer that includes:
-	1.
+	1. Render UI, Meshs, Depth Draw calls
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
@@ -90,22 +90,26 @@ void Renderer::Update(float)
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
+#ifndef _BUILD
 	SetupGrid(100);
-
+#endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-		//int index = t_Mesh->index;
+		// No material instance, then just go next
 
+		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+	
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// if instance rendering put into container for instance rendering
 		// 
-		if (renderer.isInstance) {
+		if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
+		{
 
 			// dun need do dis, coz renderer contains shadertype, can access via that
 			// for each shader, slot in properties into container
@@ -118,6 +122,8 @@ void Renderer::Update(float)
 			size_t s = static_cast<size_t>(renderer.shaderType);
 			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 				continue;
+
+	
 
 			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 			GLuint vao = MeshManager.vaoMap[renderer.meshID];
@@ -159,6 +165,7 @@ void Renderer::Update(float)
 				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 			}
 
+
 			// use the properties container coz its made for instance rendering already
 			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
 			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
@@ -167,28 +174,58 @@ void Renderer::Update(float)
 			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
 			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
 			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
+			
 
-			float metal_constant = renderer.mr_metallic;
-			float rough_constant = renderer.mr_roughness;
-			float ao_constant = renderer.ao;
-			float emission_constant = renderer.emission;
 
+			float metal_constant;
+			float rough_constant;
+			float ao_constant;
+			float emission_constant;
 			unsigned int& iter = instanceContainers[s][vao].iter;
 
-			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
-			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
+			metal_constant = currMatInstance.metallicConstant;
+			rough_constant = currMatInstance.roughnessConstant;
+			ao_constant = currMatInstance.aoConstant;
+			emission_constant = currMatInstance.emissionConstant;
+			instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
 
-			instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
-			instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
-			instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
-			instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
-			instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
+
+			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
+			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
+
+
+			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
+			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
+			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
+			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
+
+
+			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
+			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx));
+			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
 			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-			//instanceContainers[s][renderer.meshID].VAO = vao;
 			++iter;
+
+			//instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
+			//instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
+			//instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
+
+			//instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
+			//instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
+			//instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
+			//instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
+			//instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
+			//instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+
+			//instanceContainers[s][renderer.meshID].VAO = vao;
+			
+			//++iter;
+
+
 		}
-		else /*if default rendering*/{
+		else if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT) 
+
+		{
 		//}
 		//else /*if default rendering*/{
 			// if not instance put into container for default rendering
@@ -197,7 +234,6 @@ void Renderer::Update(float)
 			// whenever things reach limit, draw
 			// means need calculate SRT here
 			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-
 			if (t_Mesh == nullptr)
 			{
 				continue;
@@ -210,27 +246,29 @@ void Renderer::Update(float)
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
 			
-			renderProperties.shininess = renderer.mr_Shininess;
-			renderProperties.metallic = renderer.mr_metallic;
-			renderProperties.roughness = renderer.mr_roughness;
-			renderProperties.ao = renderer.ao;
-			renderProperties.emission = renderer.emission;
+			//renderProperties.shininess = renderer.mr_Shininess;
+			//renderProperties.Specular = renderer.mr_Specular;
+			//renderProperties.Diffuse = renderer.mr_Diffuse;
+			//renderProperties.Ambient = renderer.mr_Ambient;
+
+
+			renderProperties.metallic = currMatInstance.metallicConstant;
+			renderProperties.roughness = currMatInstance.roughnessConstant;
+			renderProperties.ao = currMatInstance.aoConstant;
+			renderProperties.emission = currMatInstance.emissionConstant;
 
 			renderProperties.entitySRT = transform.GetWorldMatrix();
-			renderProperties.Albedo = renderer.mr_Albedo;
-			renderProperties.Specular = renderer.mr_Specular;
-			renderProperties.Diffuse = renderer.mr_Diffuse;
-			renderProperties.Ambient = renderer.mr_Ambient;
+			renderProperties.Albedo = currMatInstance.albedoColour;
 
 			// renderProperties.textureID = renderer.textureID;
 			// renderProperties.NormalID = renderer.normalMapID;
-			renderProperties.RoughnessID = TextureManager.GetTexture(renderer.RoughnessTexture);
-			renderProperties.MetallicID = TextureManager.GetTexture(renderer.MetallicTexture);
-			renderProperties.AoID = TextureManager.GetTexture(renderer.AoTexture);
-			renderProperties.EmissionID = TextureManager.GetTexture(renderer.EmissionTexture);
+			renderProperties.RoughnessID = TextureManager.GetTexture(currMatInstance.roughnessTexture);
+			renderProperties.MetallicID = TextureManager.GetTexture(currMatInstance.metallicTexture);
+			renderProperties.AoID = TextureManager.GetTexture(currMatInstance.aoTexture);
+			renderProperties.EmissionID = TextureManager.GetTexture(currMatInstance.emissionTexture);
 
-			renderProperties.textureID = TextureManager.GetTexture(renderer.AlbedoTexture);
-			renderProperties.NormalID = TextureManager.GetTexture(renderer.NormalMap);
+			renderProperties.textureID = TextureManager.GetTexture(currMatInstance.albedoTexture);
+			renderProperties.NormalID = TextureManager.GetTexture(currMatInstance.normalMap);
 			
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;
@@ -244,16 +282,28 @@ void Renderer::Update(float)
 				if (animator.AnimationAttached())
 				{
 					renderProperties.isAnimatable = true;
-					renderProperties.boneidx = finalBoneMatContainer.size();
+					renderProperties.boneidx = (int)finalBoneMatContainer.size();
 					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
 			}
 
-			defaultProperties.emplace_back(renderProperties);
+			// if (instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].find(t_Mesh->vaoID) == instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].cend()) { // if container does not have this vao, emplace
+			// 	instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)].emplace(std::pair(t_Mesh->vaoID, instanceProperties[t_Mesh->vaoID]));
+			// }
+			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
+			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
 			
+			 if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
+			 	instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
+			 }
+			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			 //instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].debugVAO;
+			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
+			 defaultProperties.emplace_back(renderProperties);
 		}
-		
 		++i;
+
+
 	}
 
 	//properties[MeshManager.vaoMap["Line"]].iter = 200;
@@ -306,6 +356,8 @@ void Renderer::Draw(BaseCamera& _camera)
 	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
 	//for (auto& [shader, container] : instanceContainers)
 	{
+		if (s == static_cast<int>(SHADERTYPE::SHADOW))
+			continue;
 		// Skip default shader for instanced rendering
 		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
 			continue;
@@ -329,17 +381,17 @@ void Renderer::Draw(BaseCamera& _camera)
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			// if debug line draw
+#ifndef _BUILD
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
-				if (s == static_cast<int>(SHADERTYPE::TDR)) {
-					DrawGrid(vao, prop.entitySRT.size());
-					continue;
-				}
-
 				// FOR DEBUG DRAW
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-					DrawDebug(prop.debugVAO, prop.entitySRT.size());
+					DrawDebug(prop.debugVAO, (unsigned)prop.entitySRT.size());
+				if (s == static_cast<int>(SHADERTYPE::TDR)) {
+					DrawGrid(vao, (unsigned)prop.entitySRT.size());
+					continue;
+				}
 			}
-			
+#endif
 
 			for (int i = 0; i < 30; ++i)
 			{
@@ -583,7 +635,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform13, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 
 		glBindVertexArray(prop.VAO);
@@ -1266,6 +1318,9 @@ void Renderer::DrawDepthDirectional()
 		{
 			glUniform1i(uniform2, true);
 
+			// glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			// glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
+			// glBindBuffer(GL_ARRAY_BUFFER, 0);
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
 				GLint uniform3 =
@@ -1277,7 +1332,7 @@ void Renderer::DrawDepthDirectional()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1292,7 +1347,7 @@ void Renderer::DrawDepthDirectional()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1341,6 +1396,9 @@ void Renderer::DrawDepthSpot()
 		{
 			glUniform1i(uniform2, true);
 
+			// glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			// glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
+			// glBindBuffer(GL_ARRAY_BUFFER, 0);
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
 				GLint uniform3 =
@@ -1352,7 +1410,7 @@ void Renderer::DrawDepthSpot()
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1367,7 +1425,7 @@ void Renderer::DrawDepthSpot()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1431,20 +1489,16 @@ void Renderer::DrawDepthPoint()
 
 			for (DefaultRenderProperties prop : defaultProperties)
 			{
-				GLint uniform4 =
+				GLint uniform3_t =
 					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
-				GLint uniform3 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+				glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
 				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 				if (prop.isAnimatable)
 				{
 					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
 					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 				}
 
 				glBindVertexArray(prop.VAO);
@@ -1459,7 +1513,7 @@ void Renderer::DrawDepthPoint()
 			for (auto& [vao, prop] : instanceContainers[s])
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				glBindVertexArray(prop.VAO);
@@ -1474,7 +1528,6 @@ void Renderer::DrawDepthPoint()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 }
 

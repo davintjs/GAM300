@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
-
+#include "Audio/AudioManager.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -77,6 +77,23 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
 		addr += 8;
 		return reinterpret_cast<void*>(addr);
+	}
+
+	static MonoString* GetTag(void* object)
+	{
+		size_t addr = reinterpret_cast<size_t>(object);
+		addr -= 8;
+		Object* pObject{ reinterpret_cast<Object*>(addr) };
+		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(pObject->EUID());
+		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
+	}
+
+	static void AudioSourcePlay(AudioSource* pAudioSource)
+	{
+		size_t addr = reinterpret_cast<size_t>(pAudioSource);
+		addr -= 8;
+		pAudioSource = reinterpret_cast<AudioSource*>(addr);
+		AUDIOMANAGER.PlayComponent(*pAudioSource);
 	}
 
 	//Gets object that entity has
@@ -266,5 +283,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetActive);
 		Register(AddComponent);
 		Register(GetMouseDelta);
+		Register(AudioSourcePlay);
+		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H

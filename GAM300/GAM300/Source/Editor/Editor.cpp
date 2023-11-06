@@ -81,6 +81,7 @@ void EditorSystem::Update(float dt)
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
         if (ImGui::IsKeyPressed(ImGuiKey_D, false))
         {
+            PRINT("SELECTED ENTITY: ", selectedEntity, "\n");
             if (selectedEntity)
             {
                 currScene.Clone(currScene.Get<Entity>(selectedEntity));
@@ -90,8 +91,8 @@ void EditorSystem::Update(float dt)
 
     //demo
     /*bool demo = true;
-    ImGui::ShowDemoWindow(&demo);
-    ImPlot::ShowDemoWindow(&demo);*/
+    ImGui::ShowDemoWindow(&demo);*/
+    //ImPlot::ShowDemoWindow(&demo);
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;

@@ -1,14 +1,14 @@
 /*!***************************************************************************************
 \file			Lighting.cpp
 \project
-\author
+\author			Euan Lim
 
 \par			Course: GAM300
 \date           11/10/2023
 
 \brief
 	This file contains the definitions of Graphics Lighting that includes:
-	1.
+	1. Computation for the light stuffs that will be given to the eventual rendering
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/

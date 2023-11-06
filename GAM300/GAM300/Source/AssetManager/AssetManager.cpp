@@ -82,6 +82,7 @@ void AssetManager::Init()
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
 	EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset);
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
+	EVENTS.Subscribe(this, &AssetManager::CallbackGetFilePathGeneric);
 	SubscribeGetAssets(AssetTypes());
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
@@ -209,7 +210,7 @@ void AssetManager::RenameAsset(const fs::path& oldPath, const fs::path& newPath)
 		nonMeta = newPath;
 		nonMeta.replace_extension("");
 		//Old assigned file does not exist and new assigned file does not exist
-		if (fs::exists(nonMeta))
+		if (!fs::exists(nonMeta))
 		{
 			fs::remove(newPath);
 			return;
@@ -288,7 +289,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::MODIFIED:
 		{
-			AsyncUpdateAsset(filePath);
+			//AsyncUpdateAsset(filePath);
 			PRINT("MODIFIED ");
 			break;
 		}
@@ -300,7 +301,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 		}
 		case FileState::RENAMED_NEW:
 		{
-			//AsyncRenameAsset(oldPath,filePath);
+			AsyncRenameAsset(oldPath,filePath);
 			PRINT("RENAMED_NEW ");
 			break;
 		}
@@ -341,6 +342,12 @@ void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 
 template <typename AssetType>
 void AssetManager::CallbackGetFilePath(GetFilePathEvent<AssetType>* pEvent)
+{
+	pEvent->filePath = assets.GetFilePath(pEvent->guid);
+}
+
+
+void AssetManager::CallbackGetFilePathGeneric(GetFilePathGenericEvent* pEvent)
 {
 	pEvent->filePath = assets.GetFilePath(pEvent->guid);
 }

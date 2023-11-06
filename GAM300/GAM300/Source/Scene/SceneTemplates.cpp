@@ -16,64 +16,160 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene.h"
 
-
-template <typename T, typename... Ts>
-void Scene::CloneHelper(Entity& source, Entity& dest)
+template <typename... Ts>
+void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID, TemplatePack<Ts...>)
 {
-	if constexpr (SingleComponentTypes::Has<T>())
+	StoreComponentHierarchy<Ts...>(storage, entityID, newEntityID);
+}
+
+template <typename T,typename... Ts>
+void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entityID, Engine::UUID newEntityID)
+{
+	Entity& entity{ Get<Entity>(entityID) };
+
+	if (Has<T>(entity))
 	{
-		if (Has<T>(source))
+		if constexpr (SingleComponentTypes::Has<T>())
 		{
-			Clone(Get<T>(source), dest);
-		}
-	}
-	else
-	{
-		if (Has<T>(source))
-		{
-			for (auto* pObject : GetMulti<T>(source))
+			T& component{ Get<T>(entityID) };
+			T* object;
+			if constexpr (std::is_same<T, Transform>())
 			{
-				Clone(*pObject, dest);
+				object = &Get<T>(newEntityID);
+				object->child.clear();
+			}
+			else if constexpr (std::is_same<T, Tag>())
+			{
+				object = &Get<T>(newEntityID);
+			}
+			else
+			{
+				object = Add<T>(newEntityID);
+			}
+			storage[GetType::E<T>()][component] = *object;
+			CopyValues(component, *object);
+			if constexpr (std::is_same<T, Tag>())
+			{
+				object->name += " - Copy";
+			}
+		}
+		else
+		{
+			for (T* pComponent : GetMulti<T>(entityID))
+			{
+				
+				T* object;
+				if constexpr (std::is_same_v<T, Script>)
+				{
+					object = Add<T>(Get<Entity>(newEntityID), pComponent->scriptId);
+				}
+				else
+				{
+					object = Add<T>(newEntityID);
+				}
+				storage[GetType::E<T>()][*pComponent] = *object;
+				CopyValues(*pComponent, *object);
 			}
 		}
 	}
 
 	if constexpr (sizeof...(Ts) != 0)
 	{
-		
-		CloneHelper<Ts...>(source,dest);
+		StoreComponentHierarchy<Ts...>(storage, entityID, newEntityID);
 	}
-}
-
-template <typename... Ts>
-void Scene::CloneHelper(Entity& source, TemplatePack<Ts...>)
-{
-	CloneHelper<Ts...>(source,*Add<Entity>());
 }
 
 template <typename T>
-void Scene::Clone(T& source, Entity& entity)
+void Scene::CopyValues(T& source, T& dest)
 {
-	T* object;
-	if constexpr (std::is_same<T,Transform>())
-	{
-		object = &Get<T>(entity);
-	}
-	else
-	{
-		object = Add<T>(entity);
-	}
 	property::SerializeEnum(source, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
 	{
-		if (!Flags.m_isDontShow) {
-			auto entry = property::entry { PropertyName, Data };
+		auto entry = property::entry { PropertyName, Data };
 
-			property::set(*object, entry.first.c_str(), Data);
-			// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-			//assert(Flags.m_isScope == false || PropertyName.back() == ']');
-		}
+		property::set(dest, entry.first.c_str(), Data);
+		// If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+		//assert(Flags.m_isScope == false || PropertyName.back() == ']');
 
 	});
+}
+
+template <typename... Ts>
+void Scene::LinkReferences(ReferencesTable& storage, TemplatePack<Ts...>)
+{
+	LinkReferences<Ts...>(storage);
+}
+
+template <typename T, typename... Ts>
+void Scene::LinkReferences(ReferencesTable& storage)
+{
+	for (auto& old_new : storage[GetType::E<T>()])
+	{
+		T& newObject = Get<T>(old_new.second);
+
+		if constexpr (std::is_same<T, Transform>())
+		{
+			if (newObject.parent)
+			{
+				for (auto& pair : storage[GetType::E<T>()])
+				{
+					if (pair.first.euid == newObject.parent)
+					{
+						newObject.parent = pair.second.euid;
+						Get<Transform>(newObject.parent).child.push_back(newObject.EUID());
+					}
+				}
+			}
+		}
+		else if constexpr (std::is_same<T, Script>())
+		{
+			static char buffer[2048]{};
+			T& oldObject = Get<T>(old_new.first);
+			ScriptGetFieldNamesEvent getFieldNamesEvent{ oldObject };
+			EVENTS.Publish(&getFieldNamesEvent);
+			for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
+			{
+				const char* fieldName = getFieldNamesEvent.pStart[i];
+				Field field{ AllFieldTypes::Size(),2048, buffer };
+				ScriptGetFieldEvent getFieldEvent{ oldObject,fieldName,field };
+				EVENTS.Publish(&getFieldEvent);
+				//Objects
+				if (field.fType < AllObjectTypes::Size())
+				{
+
+					Object*& pObject = *(Object**)field.data;
+					if (field.fType < MultiComponentTypes::Size())
+					{
+						if (storage[field.fType].contains(*pObject))
+						{
+							Handle& newHandle = storage[field.fType][*pObject];
+							pObject = (Object*)GetByHandle(field.fType, &newHandle);
+							//Set to internal linkage in game object
+							//handle = storage[field.fType][handle];
+						}
+					}
+					else
+					{
+						for (auto& pair : storage[field.fType])
+						{
+							if (pair.first.euid == pObject->euid)
+							{
+								Handle& newHandle = storage[field.fType][*pObject];
+								pObject = (Object*)GetByHandle(field.fType, &newHandle);
+								break;
+							}
+						}
+					}
+				}
+				ScriptSetFieldEvent setFieldEvent{ newObject,fieldName,field };
+				EVENTS.Publish(&setFieldEvent);
+			}
+		}
+	}
+
+	if constexpr (sizeof...(Ts) != 0)
+	{
+		LinkReferences<Ts...>(storage);
+	}
 }
 
 
@@ -146,7 +242,16 @@ void Scene::Destroy(T& object)
 	if constexpr (std::is_same<T, Entity>())
 	{
 		entitiesDeletionBuffer.push_back(&object);
+		PRINT(Get<Tag>(object).name);
 		entities.SetActive((ObjectIndex)object.uuid, false);
+		
+		Transform& transform = Get<Transform>(object);
+		transform.SetParent(nullptr);
+		auto children{ transform.child };
+		for (auto& child : children)
+		{
+			Destroy<Entity>(Get<Entity>(child));
+		}
 		DestroyEntityComponents(*this, object);
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())
@@ -425,9 +530,6 @@ void Scene::ClearBufferStruct<T, Ts...>::CleanComponents()
 		auto& compArray = scene.singleComponentsArrays.GetArray<T1>();
 		for (T1* pComponent : arr)
 		{
-
-			if constexpr (std::is_same_v<T1, Transform>)
-				pComponent->SetParent(nullptr);
 			compArray.erase(*pComponent);
 		}
 	}

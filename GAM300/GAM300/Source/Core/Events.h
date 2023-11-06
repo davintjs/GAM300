@@ -151,6 +151,12 @@ struct GetAssetEvent: IEvent
 	Asset* asset;
 };
 
+struct GetFilePathGenericEvent : IEvent
+{
+	GetFilePathGenericEvent(const Engine::GUID& _guid) : guid{ _guid } {}
+	const Engine::GUID& guid;
+	fs::path filePath;
+};
 
 template <typename AssetType>
 struct GetFilePathEvent : IEvent
@@ -219,6 +225,7 @@ struct ContactRemovedEvent : IEvent
 	Rigidbody* rb1;
 	Rigidbody* rb2;
 };
+
 struct TriggerEnterEvent : IEvent
 {
 	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}

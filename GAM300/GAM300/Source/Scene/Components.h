@@ -33,8 +33,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Properties.h>
 #include "Debugging/Debugger.h"
 
-#define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
-#define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 
 constexpr size_t MAX_ENTITIES{ 5 };
 
@@ -122,7 +120,9 @@ property_begin_name(Transform, "Transform")
 
 struct AudioSource : Object
 {
-	enum Channel { MUSIC, SFX, LOOPFX, COUNT } channel = SFX;
+	enum Channel { MUSIC, SFX, LOOPFX, COUNT };
+	int current_channel = (int)SFX;
+
 	std::vector<const char*> ChannelName =
 	{
 		"Music",
@@ -132,13 +132,13 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume = 1.0f;
-	std::string currentSound = "";
+	Engine::GUID currentSound = DEFAULT_ASSETS["None.wav"];
 	property_vtable();
 };
 
 property_begin_name(AudioSource, "Audio Source") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-		//property_var(ChannelName).Name("channel"),
+		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
 		property_var(currentSound).Name("Sound File"),
@@ -313,15 +313,14 @@ struct MeshRenderer : Object
 
 	Engine::GUID meshID{ DEFAULT_MESH };
 
-
-
-
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
 	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
 	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
 	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
+
+	
 	//Materials mr_Material;
 
 	// Materials stuff below here
@@ -340,19 +339,27 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
+
+
+	// This 2 dont delete -> Future use
 	bool isInstance = true;
-	SHADERTYPE shaderType = SHADERTYPE::PBR;
+	int shaderType = (int)SHADERTYPE::PBR;
+	
+	//temporary index for current material
+	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(isInstance).Name("IsInstance"),	
 	property_var(meshID).Name("Mesh"),
-	property_var(mr_Albedo).Name("Albedo"),
-	property_var(mr_metallic).Name("Metallic"),
-	property_var(mr_roughness).Name("Roughness"),
-	property_var(ao).Name("AmbientOcclusion"),
+	property_var(materialGUID).Name("Material_ID"),
+	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
+	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
+	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),
+	property_var(ao).Name("AmbientOcclusion").Flags(property::flags::DONTSHOW),
 	property_var(AlbedoTexture).Name("AlbedoTexture"),
 	property_var(NormalMap).Name("NormalMap"),
 	property_var(MetallicTexture).Name("MetallicTexture"),
@@ -360,7 +367,6 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(AoTexture).Name("AoTexture"),
 	property_var(EmissionTexture).Name("EmissionTexture"),
 	property_var(emission).Name("EmissionScalar"),
-	property_var(isInstance).Name("IsInstance"),
 } property_vend_h(MeshRenderer)
 
 
@@ -401,7 +407,7 @@ struct LightSource : Object
 struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
-		bool ColourPicked = true;
+		bool ColourPicked = false;
 
 		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
 
@@ -412,6 +418,7 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(WorldSpace).Name("World Space"),
+		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
@@ -569,7 +576,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, std::string>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, Engine::GUID, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

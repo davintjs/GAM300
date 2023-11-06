@@ -75,11 +75,13 @@ void PhysicsSystem::Update(float dt) {
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp;
-		GlmVec3ToJoltVec3(t.translation, tmp);
+		Vector3 translation = t.GetTranslation();
+		GlmVec3ToJoltVec3(translation, tmp);
 		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
 
 		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
+		Vector3 rotation = t.GetRotation();
+		GlmVec3ToJoltQuat(rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::Activate);
 
 
@@ -91,39 +93,54 @@ void PhysicsSystem::Update(float dt) {
 
 	}
 
-	int i = 0;
+
 	auto& ccArray = scene.GetArray<CharacterController>();
+	int j = 0;
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it)
 	{
 		CharacterController& cc = *it;
 		JPH::BodyID tmpBid{ cc.bid };
-		if (characters[i]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+
+		Transform& t = scene.Get<Transform>(cc);
+		//JPH::RVec3 scale;
+		JPH::RVec3 pos;
+		Vector3 tpos = t.GetTranslation();
+		GlmVec3ToJoltVec3(tpos, pos);
+		JPH::Quat rot;
+		Vector3 trot = t.GetRotation();
+		GlmVec3ToJoltQuat(trot, rot);
+		//bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
+		//bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
+		if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
 		{
+			//std::cout << "Character " << i << " is grounded\n";
 			cc.isGrounded = true;
 		}
 		else
 		{
 			cc.isGrounded = false;
 		}
-		Entity& entity = scene.Get<Entity>(cc);
-		Transform& t = scene.Get<Transform>(entity);
-
-
-		Vector3 tmpVec;
-		JPH::BodyID tmpBID(cc.bid);
-		JPH::RVec3 tmp;
-		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
-		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
-
-		++i;
+		++j;
 	}
+
 	//std::cout << "pre update\n";
-	PrePhysicsUpdate(dt);
-	//step++;
+
+	// Fixed time steps
 	if (physicsSystem) {
-		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
+
+		float fixedDt = (float)MyFrameRateController.GetFixedDt();
+		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
+		{
+			
+			PrePhysicsUpdate(dt);
+			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
+
+		}
+	//	accumulatedTime = 0.f;
 	}
+//	else {
+	//	accumulatedTime += dt;
+	//}
 	//std::cout << "after physics update but before post update\n";
 	//std::cout << "DT: " << dt << std::endl;
 	//std::cout << "Physics update!\n";	
@@ -145,6 +162,25 @@ void PhysicsSystem::Exit() {
 
 	delete engineContactListener;
 
+	PRINT("CLEANING UP PHYSICS\n");
+	// Clean up any characters
+	for (JPH::Ref<JPH::Character> r : characters) {
+
+		if (r == ccTest->mCharacter)
+			continue;
+
+		r->RemoveFromPhysicsSystem();
+
+	}
+	characters.clear();
+
+	// Delete the current physics system, must set to nullptr
+	if (ccTest) {
+		//ccTest->mCharacter->RemoveFromPhysicsSystem();
+		delete ccTest;
+		ccTest = nullptr;
+	}
+
 	// Destroy Physics World
 	if (physicsSystem) {
 		delete physicsSystem;
@@ -164,11 +200,6 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-
-	
-	if (!ccTest->mCharacter)
-		return;
-	
 	/*
 	// Input handling for character
 	JPH::Vec3 direction = JPH::Vec3::sZero();
@@ -260,14 +291,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.rb1 = rb1;
 				tee.rb2 = rb2;
 				EVENTS.Publish(&tee);
-				std::cout << "Trigger Enter!\n";
+				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.rb1 = rb1;
 				cae.rb2 = rb2;
 				EVENTS.Publish(&cae);
-				std::cout << "Collision Enter!\n";
+				//std::cout << "Collision Enter!\n";
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::removed) {
@@ -278,14 +309,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.rb1 = rb1;
 				tre.rb2 = rb2;
 				EVENTS.Publish(&tre);
-				std::cout << "Trigger Remove!\n";
+				//std::cout << "Trigger Remove!\n";
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.rb1 = rb1;
 				cre.rb2 = rb2;
 				EVENTS.Publish(&cre);
-				std::cout << "Collision Remove!\n";
+				//std::cout << "Collision Remove!\n";
 			}
 		}
 
@@ -302,6 +333,9 @@ void PhysicsSystem::PostPhysicsUpdate() {
 }
 
 void PhysicsSystem::ResolveCharacterMovement() {
+
+
+	//std::cout << "Resolve Character Movement\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& ccArray = scene.GetArray<CharacterController>();
 
@@ -311,6 +345,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
 				mCharacter = r;
+				break;
 			}
 		}
 
@@ -319,9 +354,9 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 		JPH::Vec3 direction;
 		GlmVec3ToJoltVec3(cc.direction, direction);
-		if (cc.direction != Vector3(0, 0, 0)) {
-			std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
-		}
+		//if (cc.direction != Vector3(0, 0, 0)) {
+		//	std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
+		//}
 
 		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
 		if (groundState == JPH::Character::EGroundState::OnSteepGround
@@ -334,6 +369,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 				direction -= (dot * normal) / normal.LengthSq();
 		}
 
+
 		// Update velocity
 		if (mCharacter->IsSupported()) {
 			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
@@ -342,8 +378,14 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			if (groundState == JPH::Character::EGroundState::OnGround)
+			if (groundState != JPH::Character::EGroundState::OnGround) {
+				new_velocity.SetY(0);
+			}
+			else {
+
 				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+			}
+
 
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
@@ -379,6 +421,9 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	std::cout << "Physics System scene start test\n";
 
 }
+
+
+
 void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
 {
 	UNREFERENCED_PARAMETER(pEvent);
@@ -438,9 +483,11 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		Transform& t = scene.Get<Transform>(entity);
 		JPH::RVec3 scale;
 		JPH::RVec3 pos;
-		GlmVec3ToJoltVec3(t.translation, pos);
+		Vector3 tpos = t.GetTranslation();
+		GlmVec3ToJoltVec3(tpos, pos);
 		JPH::Quat rot;
-		GlmVec3ToJoltQuat(t.rotation, rot);
+		Vector3 trot = t.GetRotation();
+		GlmVec3ToJoltQuat(trot, rot);
 
 		// Linear + Angular Velocity
 		JPH::RVec3 linearVel;
@@ -557,6 +604,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 
 }
+
 void PhysicsSystem::UpdateGameObjects() {
 
 	if (!physicsSystem)
@@ -614,7 +662,6 @@ void PhysicsSystem::UpdateGameObjects() {
 
 	}
 }
-
 
 void PhysicsSystem::TestRun() {
 
@@ -729,7 +776,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	if(!enginePSystem->ccTest->mCharacter)
 		enginePSystem->ccTest->mCharacter = character;
 
-	enginePSystem->characters.emplace_back(character);
+	enginePSystem->characters.push_back(character);
 
 	return;
 }
@@ -748,6 +795,7 @@ JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& bo
 	//std::cout << "Contact validate callback!\n";
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
+
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
 	(void)manifold;
 	(void)ioSettings;
@@ -764,14 +812,16 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 
 	//std::cout << "Contact Added\n";
 }
-void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
+
+void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
+{
 	(void)body1;
 	(void)body2;
 	(void)manifold;
 	(void)ioSettings;
-	
 	//std::cout << "Contact persisting!\n";
 }
+
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
 	if (!pSystem)
 		return;
@@ -789,11 +839,13 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 #pragma endregion
 
 // Math conversion helpers
-void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) {
+void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3) 
+{
 	jVec3.SetX(gVec3.x);
 	jVec3.SetY(gVec3.y);
 	jVec3.SetZ(gVec3.z);
 }
+
 void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	JPH::RVec3 tmp;
 	GlmVec3ToJoltVec3(gVec3, tmp);
@@ -801,11 +853,13 @@ void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	jQuat = JPH::Quat::sEulerAngles(tmp);
 
 }
+
 void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3) {
 	gVec3.x = jVec3.GetX();
 	gVec3.y = jVec3.GetY();
 	gVec3.z = jVec3.GetZ();
 }
+
 void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3) {
 	JPH::RVec3 tmp = jQuat.GetEulerAngles();
 	JoltVec3ToGlmVec3(tmp, gVec3);

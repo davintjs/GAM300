@@ -217,7 +217,7 @@ public:
 	float characterCollisionTolerance =					0.05f;
 
 	unsigned int step = 0;
-	//float accumulatedTime = 0.f;
+	float accumulatedTime = 0.f;
 
 	JPH::TempAllocatorImpl* tempAllocator =			nullptr;
 	JPH::JobSystemThreadPool* jobSystem =			nullptr;

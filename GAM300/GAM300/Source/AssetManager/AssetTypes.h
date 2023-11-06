@@ -52,16 +52,22 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	{"Quad.geom", Engine::GUID(107)},
 
 	//Default Materials
-	{"None.mat", Engine::GUID(200)},
+	{"None.material", Engine::GUID(200)},
 
 	//Default Animations
 	{"None.anim", Engine::GUID(300)},
 
+	//Default Scripts
+	{"None.cs", Engine::GUID(400)},
+
+	//Default Audio
+	{"None.wav", Engine::GUID(500)},
+
 	//Default Shaders
-	{"Test.shader", Engine::GUID(400)},
+	{"Test.shader", Engine::GUID(600)},
 	
 	//Default Scripts
-	{"None.cs", Engine::GUID(1000)}
+	{"None.cs", Engine::GUID(1000)},
 };
 
 struct MetaFile : property::base
@@ -167,6 +173,11 @@ struct ModelImporter : MetaFile
 	property_vtable()
 };
 
+struct MaterialAsset : Asset
+{
+
+};
+
 property_begin_name(ModelImporter, "ModelImporter") {
 	property_parent(MetaFile),
 	property_var(meshes),
@@ -181,13 +192,13 @@ struct ModelAsset : Asset
 	using Meta = ModelImporter;
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset,Asset>;
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>
 using AssetsTable = std::unordered_map < Engine::GUID, AssetType>;
 //File extension : Asset Type
-static std::unordered_map<std::string, size_t> AssetExtensionTypes =
+static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 {
 	{".cs",		GetAssetType::E<ScriptAsset>()},
 	{".dds",	GetAssetType::E<TextureAsset>()},
@@ -195,5 +206,6 @@ static std::unordered_map<std::string, size_t> AssetExtensionTypes =
 	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".material", GetAssetType::E<MaterialAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
 };
