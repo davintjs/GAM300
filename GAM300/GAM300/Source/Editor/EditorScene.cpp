@@ -26,7 +26,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "Graphics/MeshManager.h"
+#include "Graphics/MESHMANAGER.h"
 #include "Graphics/GraphicsHeaders.h"
 
 namespace
@@ -219,17 +219,17 @@ void EditorScene::DisplayGizmos()
         {
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
-            Tag& tag = currentScene.Get<Tag>(entity);
-            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            //Tag& tag = currentScene.Get<Tag>(entity);
+            //PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
+            
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
-            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
-            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
@@ -260,8 +260,8 @@ void EditorScene::DisplayGizmos()
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
 
-            //glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
-            //glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            //glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.MeshName)->vertices_min;
+            //glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.MeshName)->vertices_max;
             glm::vec3 mins = -scale;
             glm::vec3 maxs = scale;
             rot = glm::radians(rot);

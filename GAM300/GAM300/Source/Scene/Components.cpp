@@ -143,11 +143,3 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 	BaseCamera::Init();
 	cameraType = CAMERATYPE::GAME;
 }
-
-MeshFilter::MeshFilter()
-{
-
-
-	vertices = &MeshManager.GetMeshAsset(meshId).vertices;
-	indices = &MeshManager.GetMeshAsset(meshId).indices;
-}

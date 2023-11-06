@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			GeomDecompiler.cpp
+\file			ModelDecompiler.cpp
 \project
 \author         Davin Tan
 \co-author      Sean Ngo
@@ -9,15 +9,15 @@
 
 \brief
     This file contains the definitions of the following:
-    1. Loads Geoms files and extract the meshes, material, textures and animations
+    1. Loads model files and extract the meshes, material, textures and animations
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
-#include "GeomDecompiler.h"
+#include "ModelDecompiler.h"
 
-ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid)
+ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
 {
     ModelComponents tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
@@ -43,7 +43,7 @@ ModelComponents GeomDecompiler::DeserializeGeoms(const std::string& _filePath, c
     return tempModel;
 }
 
-void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
 {
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
@@ -114,7 +114,7 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
     }
 }
 
-void GeomDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model)
 {
     size_t matSize;
     ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
@@ -139,12 +139,12 @@ void GeomDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _
     }
 }
 
-void GeomDecompiler::DeserializeTextures(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelComponents& _model)
 {
 
 }
 
-void GeomDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model)
 {
     //size_t animationSize = pModel->animations.GetAnimations().size();
     size_t animationSize;
@@ -221,7 +221,7 @@ void GeomDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& 
     ifs.read(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
 }
 
-void GeomDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
+void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
 {
     ifs.read(reinterpret_cast<char*>(&_node.transformation), sizeof(glm::mat4)); // Transformation
 
@@ -240,7 +240,7 @@ void GeomDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponent
     }
 }
 
-void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
+void ModelDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 	const std::vector<Vertex>& _oVertices,
 	const glm::vec3& _posCompressScale,
 	const glm::vec2& _texCompressScale,
@@ -285,7 +285,7 @@ void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
     }
 }
 
-//GeomImported MESH_Manager::DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid)
+//GeomImported MeshManager::DeserializeGeoms(const std::string& filePath, const Engine::GUID& guid)
 //{
 //    GeomImported tempGeom;
 //    std::ifstream ifs(filePath, std::ios::binary);
@@ -362,7 +362,7 @@ void GeomDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 //    return tempGeom;
 //}
 //
-//void MESH_Manager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
+//void MeshManager::DecompressVertices(std::vector<gVertex>& mMeshVertices,
 //    const std::vector<Vertex>& oVertices,
 //    const glm::vec3& mPosCompressScale,
 //    const glm::vec2& mTexCompressScale,
