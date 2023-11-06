@@ -13,6 +13,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 ******************************************************************************************/
 #pragma warning( disable : 26110 )
 #pragma warning( disable : 26111 )
+#pragma warning( disable : 4996 )
 #include "Precompiled.h"
 #include "Scripting/ScriptingSystem.h"
 #include "Scripting/Compiler.h"
@@ -414,6 +415,45 @@ Handle ScriptingSystem::GetScriptHandle(MonoObject* script)
 	return handle;
 }
 
+
+void ScriptingSystem::UnloadAppDomain()
+{
+	if (!mAppDomain)
+		return;
+	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+	int rows = mono_table_info_get_rows(table_info);
+	for (auto& sceneScripts : mSceneScripts)
+	{
+		for (auto& scriptPair : sceneScripts.second)
+		{
+			MonoClass* _class = mono_object_get_class(scriptPair.second);
+			if (!_class || mono_class_get_parent(_class) != mScript)
+				continue;
+			MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
+			if (!vTable)
+				continue;
+			void* fieldIterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+			{
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_STATIC)
+				{
+					mono_field_static_set_value(vTable, field, nullptr);
+				}
+				else
+				{
+					mono_field_set_value(scriptPair.second, field, nullptr);
+				}
+			}
+		}
+	}
+	mono_domain_set(mRootDomain, false);
+	#ifdef _DEBUG
+		mono_domain_unload(mAppDomain);
+	#endif
+	mAppDomain = nullptr;
+}
+
 void ScriptingSystem::ThreadWork()
 {
 	SCRIPTING_THREAD_ID = std::this_thread::get_id();
@@ -421,18 +461,16 @@ void ScriptingSystem::ThreadWork()
 	SwapDll();
 	if (mCoreAssembly == nullptr)
 	{
-		PRINT("RECOMPILE AT SCENE START");
 		RecompileThreadWork();
 	}
+
 	while (!THREADS.HasStopped())
 	{
 		ACQUIRE_SCOPED_LOCK(Mono);
+		if (scriptingEvent)
 		{
-			if (scriptingEvent)
-			{
-				events[typeid(*scriptingEvent)]->exec(scriptingEvent);
-				scriptingEvent = nullptr;
-			}
+			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
+			scriptingEvent = nullptr;
 		}
 
 		if (logicState != LogicState::NONE)
@@ -447,7 +485,9 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::START)
 			{
-				ReflectFromOther(MySceneManager.GetPreviousScene());
+				#ifndef _BUILD
+					ReflectFromOther(MySceneManager.GetPreviousScene());
+				#endif
 				InvokeAllScripts(DefaultMethodTypes::Awake);
 				InvokeAllScripts(DefaultMethodTypes::Start);
 				logicState = LogicState::UPDATE;
@@ -487,12 +527,7 @@ void ScriptingSystem::ThreadWork()
 		}
 		#endif
 	}
-	mono_domain_set(mRootDomain, false);
-	#ifdef _DEBUG
-	if (mAppDomain)
-		mono_domain_unload(mAppDomain);
-	#endif
-	mAppDomain = nullptr;
+	UnloadAppDomain();
 	ShutdownMono();
 	PRINT("MONO THREAD ENDED!\n");
 }
@@ -556,11 +591,7 @@ void ScriptingSystem::SwapDll()
 {
 	//Load Mono
 	PRINT("SWAPPING DLL\n");
-	if (mAppDomain)
-	{
-		mono_domain_set(mRootDomain, false);
-		mono_domain_unload(mAppDomain);
-	}
+	UnloadAppDomain();
 	mAppDomain = CreateAppDomain();
 	mono_domain_set(mAppDomain, false);
 	mCoreAssembly = Utils::loadAssembly("scripts.dll");
@@ -715,12 +746,12 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	mono_field_set_value(instance, mClassField, field.data);
 }
 
-void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigidbody* rb2)
+void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigidbody& rb2)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
 
-	Entity& e1 = scene.Get<Entity>(rb1->EUID());
-	Entity& e2 = scene.Get<Entity>(rb2->EUID());
+	Entity& e1 = scene.Get<Entity>(rb1.EUID());
+	Entity& e2 = scene.Get<Entity>(rb2.EUID());
 
 	if (scene.Has<Script>(e1))
 	{
@@ -735,7 +766,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			void* param = rb1;
+			size_t addr = reinterpret_cast<size_t>(&rb2) + 8;
+			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
@@ -753,7 +785,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			void* param = rb2;
+			size_t addr = reinterpret_cast<size_t>(&rb1) + 8;
+			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
@@ -763,13 +796,13 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody* rb1, Rigi
 void ScriptingSystem::CallbackCollisionEnter(ContactAddedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,pEvent->rb1,pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->rb1,*pEvent->rb2);
 }
 
 void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, pEvent->rb1, pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->rb1, *pEvent->rb2);
 }
 
 void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)

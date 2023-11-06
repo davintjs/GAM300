@@ -7,7 +7,7 @@
 \date           28/09/2023
 
 \brief
-	Fragment Shader for PBR
+	Fragment Shader for PBR - Instancing
 
 All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/

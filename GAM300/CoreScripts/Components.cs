@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System.Runtime.InteropServices;
 using GlmSharp;
+using System;
 
 
 namespace BeanFactory
@@ -42,6 +43,7 @@ namespace BeanFactory
                 return InternalCalls.Get<CharacterController>(this);
             }
         }
+
         public bool HasComponent<T>()
         {
             return gameObject.HasComponent<T>();

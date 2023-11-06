@@ -55,7 +55,8 @@ extern unsigned int depthCubemap;
 unsigned int pingpongFBO[2];
 unsigned int pingpongColorbuffers[2];
 
-
+extern glm::vec2 windowPos; // In ColourPicker.cpp
+extern glm::vec2 windowDimension; // In ColourPicker.cpp
 
 std::vector<temp_instance> temporary_presets;
 
@@ -228,6 +229,9 @@ void GraphicsSystem::Update(float dt)
 	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+		camera.TryResize(glm::vec2(Application::GetWidth(), Application::GetHeight()));
+		windowDimension = camera.GetViewportSize();
+		windowPos = glm::vec2(0.f, 0.f);
 
 		// Update camera view 
 		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
@@ -306,8 +310,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	//}
 
 #if defined(_BUILD)
-	GLsizei height = Application::GetWidth() / 16.f * 9.f;
-	GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
+	//GLsizei height = Application::GetWidth() / 16.f * 9.f;
+	//GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
 	glViewport(0, 0, Application::GetWidth(), Application::GetHeight());
 #else
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());

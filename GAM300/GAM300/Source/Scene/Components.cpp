@@ -42,7 +42,16 @@ glm::vec3 Transform::GetTranslation() const
 
 glm::vec3 Transform::GetRotation() const
 {
-	return glm::eulerAngles(glm::quat_cast(GetWorldMatrix()));
+	//return glm::eulerAngles(glm::quat_cast(GetWorldMatrix()));
+	glm::quat rot;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	vec3 _scale;
+	vec3 _translation;
+	glm::mat4 globalTransform = GetWorldMatrix();
+	// Calculate the global transformation matrix
+	glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
+	return glm::eulerAngles(rot);
 }
 
 glm::vec3 Transform::GetScale() const

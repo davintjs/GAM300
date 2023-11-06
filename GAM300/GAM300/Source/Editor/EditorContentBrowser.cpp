@@ -30,13 +30,21 @@ void EditorContentBrowser::Init()
 
 void EditorContentBrowser::Update(float dt)
 {
+
+    GLint folderIcon = GET_TEXTURE_ID("Assets/Icons/foldericon.dds");
+    GLint fileIcon = GET_TEXTURE_ID("Assets/Icons/fileicon.dds");
     UNREFERENCED_PARAMETER(dt);
+
+    static ImGuiTextFilter filter;
     bool isOpened = ImGui::Begin("Content Browser");
     if (!isOpened)
     {
         ImGui::End();
         return;
     }
+
+    ImGui::Text("Filter: "); ImGui::SameLine();
+    filter.Draw();
 
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
 
@@ -68,30 +76,39 @@ void EditorContentBrowser::Update(float dt)
         const auto& path = it.path();
         if (path.string().find("meta") != std::string::npos) continue;
 
+        if (!filter.PassFilter(path.string().c_str()))
+            continue;
+
         ImGui::PushID(i++);
 
         auto relativepath = std::filesystem::relative(path, AssetDirectory);
         std::string pathStr = relativepath.filename().string();
 
         //Draw the file / folder icon based on whether it is a directory or not
-        fs::path icon = it.is_directory() ? "Assets/Icons/foldericon.dds" : "Assets/Icons/fileicon.dds";
 
-        size_t icon_id = 0;
+        GLint icon_id = fileIcon;
         
-        if (!it.is_directory()) {
-
-            GLint tex = GET_TEXTURE_ID(path);
-            if (tex != 0) {
-                icon = path;
+        if (!it.is_directory() )
+        {
+            if (path.extension() == ".dds")
+            {
+                GLint tex = GET_TEXTURE_ID(path);
+                if (tex != 0)
+                {
+                    icon_id = tex;
+                }
             }
+        }
+        else
+        {
+            icon_id = folderIcon;
         }
 
         ImGui::BeginGroup();
-
+        ImTextureID textureID = (ImTextureID)icon_id;
         //render respective file icon textures
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-        icon_id = GET_TEXTURE_ID(icon);
-        ImGui::ImageButton((ImTextureID)icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
+        ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 });
 
         //Drag drop logic for content browser
         if (!it.is_directory() && ImGui::BeginDragDropSource()) {
@@ -151,6 +168,16 @@ void EditorContentBrowser::Update(float dt)
                 EVENTS.Publish(&loadScene);
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
+
+            //Open Scene file
+            if ((path.string().find(".material") != std::string::npos)) {
+                //Open scene file logic here
+                GetAssetEvent e{ path };
+                EVENTS.Publish(&e);
+                selectedAss = e.guid;
+                EditorInspector::Instance().material_inspector = true;
+                ImGui::SetWindowFocus("Material");
+            }
         }
     
         //render extension button
@@ -165,7 +192,23 @@ void EditorContentBrowser::Update(float dt)
             ImGui::SetCursorPosY(buttonPosY);
 
             icon_id = GET_TEXTURE_ID("Assets/Icons/Editorplaybutton.dds");
-            ImGui::ImageButton((ImTextureID)icon_id, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
+            ImTextureID btnTextureID = (ImTextureID)icon_id;
+            ImGui::ImageButton(btnTextureID, {20.f, 20.f}, {0 , 0}, {1 , 1}, 0);
+        }
+
+        //right click options
+        if (ImGui::BeginPopupContextWindow(0, true))
+        {
+            if (ImGui::BeginMenu("Add"))
+            {
+                if (ImGui::MenuItem("Material")) {
+                    selectedAss = MATERIALSYSTEM.NewMaterialInstance("New Material");         
+                    EditorInspector::Instance().material_inspector = true;
+                    ImGui::SetWindowFocus("Material");
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndPopup();
         }
        
         ImGui::EndGroup();

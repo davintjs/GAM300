@@ -313,15 +313,14 @@ struct MeshRenderer : Object
 
 	Engine::GUID meshID{ DEFAULT_MESH };
 
-
-
-
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
 	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
 	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
 	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
+
+	
 	//Materials mr_Material;
 
 	// Materials stuff below here
@@ -340,21 +339,23 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
-	bool isInstance = true;
-	SHADERTYPE shaderType = SHADERTYPE::PBR;
 
-	//temp_instance material;
+
+	// This 2 dont delete -> Future use
+	bool isInstance = true;
+	int shaderType = (int)SHADERTYPE::PBR;
+	
 	//temporary index for current material
-	int material;
+	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
 
 	property_vtable();
 };
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(isInstance).Name("IsInstance"),
-	property_var(material).Name("Material"),
+	property_var(isInstance).Name("IsInstance"),	
 	property_var(meshID).Name("Mesh"),
+	property_var(materialGUID).Name("Material_ID"),
 	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
 	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
 	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),

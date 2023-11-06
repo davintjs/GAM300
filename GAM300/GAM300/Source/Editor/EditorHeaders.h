@@ -164,6 +164,8 @@ public:
     void Exit();
 
     void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
+
+    Engine::GUID selectedAss;
 private:
     std::filesystem::path currentDirectory;
 };
@@ -226,8 +228,6 @@ public:
 
     void GameView();
 
-    void ResizeGameView(glm::vec2 _newDimension);
-
     // Exit the system
     void Exit();
 
@@ -282,6 +282,8 @@ public:
     bool isAddComponentPanel;
     bool isAddTagPanel;
     bool isAddLayerPanel;
+
+    bool material_inspector;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;

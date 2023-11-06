@@ -79,8 +79,8 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
 
-        meshAsset.numVertices = vertSize;
-        meshAsset.numIndices = indSize;
+        meshAsset.numVertices = (unsigned int)vertSize;
+        meshAsset.numIndices = (unsigned int)indSize;
 
         // Converts Vertex to ModelVertex
         
@@ -89,9 +89,9 @@ void GeomDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mod
 
         glm::vec3 min(FLT_MAX);
         glm::vec3 max(FLT_MIN);
-        for (int i = 0; i < meshAsset.vertices.size(); ++i)
+        for (size_t j = 0; j < meshAsset.vertices.size(); ++j)
         {
-            glm::vec3& pos = meshAsset.vertices[i].position;
+            glm::vec3& pos = meshAsset.vertices[j].position;
 
             if(meshAsset.numBones == 0)
                 pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters

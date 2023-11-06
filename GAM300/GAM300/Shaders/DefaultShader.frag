@@ -1,3 +1,17 @@
+/*!***************************************************************************************
+\file			DefaultShader.frag
+\project
+\author         Jake Lian, Euan Lim, Sean Ngo
+
+\par			Course: GAM300
+\date           05/11/2023
+
+\brief
+	Fragment Shader for PBR - Non Instanced
+
+All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #version 450 core
 
 #define MAX_POINT_LIGHT 20

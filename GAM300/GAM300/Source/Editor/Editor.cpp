@@ -91,8 +91,8 @@ void EditorSystem::Update(float dt)
 
     //demo
     /*bool demo = true;
-    ImGui::ShowDemoWindow(&demo);
-    ImPlot::ShowDemoWindow(&demo);*/
+    ImGui::ShowDemoWindow(&demo);*/
+    //ImPlot::ShowDemoWindow(&demo);
 
     ImGui::StyleColorsDark();
     ImVec4* colors = ImGui::GetStyle().Colors;

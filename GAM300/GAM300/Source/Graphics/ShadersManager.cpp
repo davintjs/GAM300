@@ -78,15 +78,22 @@ void ShaderManager::Init()
 {
 	// Loaded in sequence, changing it will break, check GraphicsHeader.h for the shadertype sequence
 	// Bean: A temporary solution for now
-	std::string vertexPath = shaderPath + "/HDR.vert";
-	std::string fragmentPath = shaderPath + "/HDR.frag";
+	std::string vertexPath;
+	std::string fragmentPath;
 	std::string geometryPath;
-	ShaderCompiler("HDR SHADER", vertexPath, fragmentPath );
+
+	vertexPath = shaderPath + "/DefaultShader.vert";
+	fragmentPath = shaderPath + "/DefaultShader.frag";
+	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/PBR.vert";
 	fragmentPath = shaderPath + "/PBR.frag";
 	ShaderCompiler("PBR SHADER", vertexPath, fragmentPath);
 	CreateShaderProperties(fragmentPath, vertexPath);
+
+	vertexPath = shaderPath + "/HDR.vert";
+	fragmentPath = shaderPath + "/HDR.frag";
+	ShaderCompiler("HDR SHADER", vertexPath, fragmentPath );
 
 	vertexPath = shaderPath + "/InstancedRender.vert";
 	fragmentPath = shaderPath + "/InstancedRender.frag";
@@ -132,10 +139,6 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/DefaultGbuffer.vert";
 	fragmentPath = shaderPath + "/DefaultGbuffer.frag";
 	ShaderCompiler("GBUFFER SHADER", vertexPath, fragmentPath);
-
-	vertexPath = shaderPath + "/DefaultShader.vert";
-	fragmentPath = shaderPath + "/DefaultShader.frag";
-	ShaderCompiler("Default SHADER", vertexPath, fragmentPath);
 
 	vertexPath = shaderPath + "/ColourPicking.vert";
 	fragmentPath = shaderPath + "/ColourPicking.frag";

@@ -93,10 +93,10 @@ struct AllAssetsGroup
 						
 						return true;
 					}
-
-					Engine::GUID guid = GetGUID(filePath,true);
-					if constexpr (std::is_base_of<Asset, T>())
+					else if constexpr (std::is_base_of<Asset, T>())
 					{
+
+						Engine::GUID guid = GetGUID(filePath, true);
 						if (fs::is_directory(filePath))
 							return true;
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid]};
@@ -117,12 +117,14 @@ struct AllAssetsGroup
 							inputFile.close();
 						}
 						std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED,&asset));
+						return true;
 					}
 					else
 					{
+						Engine::GUID guid = GetGUID(filePath, true);
 						std::get<AssetsTable<T>>(assets)[guid];
+						return true;
 					}
-					return true;
 				}
 				return false;
 			}
@@ -168,10 +170,9 @@ struct AllAssetsGroup
 					Engine::GUID guid = GetGUID(filePath, true);
 					if constexpr (std::is_base_of<Asset, T>())
 					{
-						std::ifstream inputFile(filePath.c_str());
-						E_ASSERT(inputFile, "Error opening file to update asset in memory!");
 						T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
 						asset.mFilePath = filePath;
+						std::ifstream inputFile(filePath.c_str());
 						asset.mData.assign(
 							std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>());
 						PRINT("Done updating ", filePath, " in memory!", '\n');
@@ -219,9 +220,26 @@ struct AllAssetsGroup
 			}
 			(Ts{}) || ...));
 		}
+		else
+		{
+			//Look for oldExtension
+			if (([&](auto type)
+			{
+				using T = decltype(type);
+				if (GetAssetType::E<T>() == oldExtension)
+				{
+					Engine::GUID guid = GetGUID(newPath, true);
+					auto& table{ std::get<AssetsTable<T>>(assets) };
+					table[guid].mFilePath = newPath;
+					return true;
+				}
+				return false;
+			}
+			(Ts{}) || ...));
+		}
 
-		AddAsset(newPath,fileData);
-		RemoveAsset(oldPath);
+		//AddAsset(newPath,fileData);
+		//RemoveAsset(oldPath);
 	}
 
 	void ProcessBuffer()
@@ -331,22 +349,22 @@ struct AllAssetsGroup
 		size_t assetType = GetAssetType(filePath);
 		Engine::GUID guid;
 		if (([&](auto type)
+		{
+			using T = decltype(type);
+			if (GetAssetType::E<T>() == assetType)
 			{
-				using T = decltype(type);
-				if (GetAssetType::E<T>() == assetType)
+				if constexpr (std::is_same<T, MeshAsset>())
 				{
-					if constexpr (std::is_same<T, MeshAsset>())
-					{
-						guid = GetGUID<ModelImporter>(filePath, false);
-					}
-					else
-					{
-						guid = GetGUID<MetaFile>(filePath, false);
-					}
-					return true;
+					guid = GetGUID<ModelImporter>(filePath, false);
 				}
-				return false;
+				else
+				{
+					guid = GetGUID<MetaFile>(filePath, false);
+				}
+				return true;
 			}
+			return false;
+		}
 		(Ts{}) || ...));
 		return guid;
 	}

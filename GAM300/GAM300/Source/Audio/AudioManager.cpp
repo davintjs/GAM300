@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 void AudioManager::InitAudioManager() {
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetLoaded);
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetUnloaded);
+	EVENTS.Subscribe(this, &AudioManager::CallbackSceneStop);
 	FMOD::System_Create(&system);
 	system->init(32, FMOD_INIT_NORMAL, 0);
 	system->getMasterChannelGroup(&master);
@@ -222,6 +223,7 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	switch (Source.current_channel)
 	{
 	case 0: // Music
+		Source.play = true;
 		currentMusic->setVolume(Source.volume);
 		PlayMusic(Source.currentSound);
 		break;
@@ -373,4 +375,10 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 void AudioManager::CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent)
 {
 
+}
+
+
+void AudioManager::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	StopAllAudio();
 }
