@@ -279,12 +279,24 @@ void EditorHierarchy::Update(float dt)
 				EVENTS.Publish(&selectedEvent);
 			}
 
+			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+			auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
+
+			//add child entity to current selected entity
+			if (ImGui::MenuItem("Add Child Entity")) {
+
+				Entity* Newentity = curr_scene.Add<Entity>();
+				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
+				newtransform.SetParent(&currEntity);
+				SelectedEntityEvent selectedEvent{ Newentity };
+				EVENTS.Publish(&selectedEvent);
+			}
+
 			std::string name = "Delete Entity";
 			if (selectedEntity != NON_VALID_ENTITY)
 			{
 				if (ImGui::MenuItem(name.c_str()))
 				{
-					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
 					curr_scene.Destroy(ent);
 					SelectedEntityEvent selectedEvent{ 0 };
@@ -299,9 +311,7 @@ void EditorHierarchy::Update(float dt)
 			ImGui::Separator();
 			if (ImGui::MenuItem("Add to Prefabs"))
 			{
-				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 				SerializePrefab(ent, curr_scene);
-				//For zac to add prefab implementation here
 			}
 
 			ImGui::EndPopup();
