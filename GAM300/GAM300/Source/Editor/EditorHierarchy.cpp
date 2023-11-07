@@ -216,17 +216,28 @@ void EditorHierarchy::Update(float dt)
 	//When clicked on, shows all children
 	//Drag and drop of entities into and from other entities to form groups (using a node system, parent child relationship)
 	//Add/Delete entities using right click
+	static ImGuiTextFilter filter;
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-
+	ImGui::Text("Filter: "); ImGui::SameLine();
+	filter.Draw();
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
 	Scene::Layer& layer = curr_scene.layer;
+
+	
+
 	if (sceneopen)
 	{
+		
+
 		for (Engine::UUID euid : layer)
 		{
 			if (!curr_scene.Get<Transform>(euid).isChild())
 			{
+				//check if filter characters matches the name and filter accordingly
+				if (!filter.PassFilter(curr_scene.Get<Tag>(euid).name.c_str()))
+					continue;
+
 				//Recursive function to display entities in a hierarchy tree
 				DisplayEntity(euid);
 			}
