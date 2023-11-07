@@ -294,14 +294,14 @@ struct AllAssetsGroup
 		})(Ts{}), ...);
 	}
 
-	template <typename MetaType>
-	Engine::GUID GetGUID(const std::filesystem::path& filePath, bool update = false)
+	template <typename AssetType>
+	Engine::GUID<AssetType> GetGUID(const std::filesystem::path& filePath, bool update = false)
 	{
 		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
 		MetaType mFile;
-		Engine::GUID tempGUID{ mFile.guid };
+		Engine::GUID<AssetType> tempGUID{ mFile.guid };
 		if (filePath.extension() == ".geom")
 		{
 			auto& table = std::get<AssetsTable<MeshAsset>>(assets);

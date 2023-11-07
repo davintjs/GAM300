@@ -36,9 +36,6 @@ public:
 	// Returns the asset data with the given fileName
 	const std::vector<char>& GetAssetWithFileName(const std::string& fileName);
 
-	// Returns the GUID of the given fileName
-	Engine::GUID GetAssetGUID(const fs::path& filePath);
-
 	// Get the mesh asset
 	std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
 

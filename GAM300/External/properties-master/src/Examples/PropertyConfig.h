@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <Utilities/GUID.h>
+#include <AssetManager/AssetTypes.h>
 #include <Debugging/Debugger.h>
 
 using string_t = std::string;
@@ -329,7 +330,15 @@ namespace property
             , Vector3
             , Vector4
             , char*
-            , Engine::GUID                  
+            , Engine::GUID<MeshAsset>
+            , Engine::GUID<Asset>
+            , Engine::GUID<ModelAsset>
+            , Engine::GUID<TextureAsset>
+            , Engine::GUID<MaterialAsset>
+            , Engine::GUID<ShaderAsset>
+            , Engine::GUID<AudioAsset>
+            , Engine::GUID<ScriptAsset>
+            , Engine::GUID<AnimationAsset>
         >;
     
         //--------------------------------------------------------------------------------------------

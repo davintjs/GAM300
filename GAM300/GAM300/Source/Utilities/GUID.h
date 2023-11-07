@@ -10,6 +10,7 @@
 
 namespace Engine
 {
+	template <typename T>
 	struct GUID
 	{
 		GUID();
@@ -50,14 +51,14 @@ namespace Engine
 		}
 	private:
 		size_t longInt[2];
-		friend std::hash<Engine::GUID>;
+		friend std::hash<Engine::GUID<T>>;
 	};
 }
 
 namespace std 
 {
-	template <>
-	struct hash<Engine::GUID> {
-		std::size_t operator()(const Engine::GUID& obj) const;
+	template <typename T>
+	struct hash<Engine::GUID<T>> {
+		std::size_t operator()(const Engine::GUID<T>& obj) const;
 	};
 }

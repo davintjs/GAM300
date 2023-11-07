@@ -45,10 +45,11 @@ struct Child
 };
 
 // Overload for output for the Emitter specifically for vector of guids
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID>& _data);
+template <typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID<T>>& _data);
 
 // Overload for output for the Emitter specifically for model importer struct
-YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data);
+YAML::Emitter& operator<<(YAML::Emitter& out, const ModelAsset& _data);
 
 // Overload for output for the Emitter specifically for child struct
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data);
@@ -63,7 +64,8 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
 
 // Overload for output for the Emitter specifically for GUID
-YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v);
+template <typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID<T>& v);
 
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
@@ -104,7 +106,7 @@ namespace YAML
         }
 
         // Decoding for model importer during deserialization
-        static bool decode(const Node& node, ModelImporter& rhs)
+        static bool decode(const Node& node, ModelAsset& rhs)
         {
             rhs.meshes = node[0].as<std::vector<Engine::GUID>>();
             rhs.materials = node[1].as<std::vector<Engine::GUID>>();
