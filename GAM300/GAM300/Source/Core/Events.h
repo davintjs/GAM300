@@ -143,26 +143,28 @@ struct ScriptGetFieldNamesEvent : IEvent
 
 #pragma region Asset Manager
 
+template <typename T>
 struct GetAssetEvent: IEvent
 {
 	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
 	const fs::path& filePath;
-	Engine::GUID guid;
+	Engine::GUID<T> guid;
 	Asset* asset;
 };
 
+template <typename T>
 struct GetFilePathGenericEvent : IEvent
 {
-	GetFilePathGenericEvent(const Engine::GUID& _guid) : guid{ _guid } {}
-	const Engine::GUID& guid;
+	GetFilePathGenericEvent(const Engine::GUID<T>& _guid) : guid{ _guid } {}
+	const Engine::GUID<T>& guid;
 	fs::path filePath;
 };
 
 template <typename AssetType>
 struct GetFilePathEvent : IEvent
 {
-	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
-	const Engine::GUID& guid;
+	GetFilePathEvent(const Engine::GUID<AssetType>& _guid) : guid{ _guid } {}
+	const Engine::GUID<AssetType>& guid;
 	fs::path filePath;
 };
 
@@ -170,30 +172,30 @@ struct GetFilePathEvent : IEvent
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
 {
-	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset) 
+	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
 		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
 	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	const Engine::GUID<AssetType>& guid;
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUpdatedEvent : IEvent
 {
-	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset)
+	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
 		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
 	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	const Engine::GUID<AssetType>& guid;
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUnloadedEvent : IEvent
 {
-	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid) :
+	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid) :
 		assetPath{ _assetPath }, guid{ _guid } {}
 	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	const Engine::GUID<AssetType>& guid;
 };
 
 struct DropAssetsEvent : IEvent

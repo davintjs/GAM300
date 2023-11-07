@@ -72,31 +72,31 @@ YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
 
 namespace YAML
 {
-    template<>
-    struct convert<std::vector<Engine::GUID>>
+    template<typename T>
+    struct convert<std::vector<Engine::GUID<T>>>
     {
         // Encoding for vector of guid during deserialization
-        static Node encode(const std::vector<Engine::GUID>& rhs)
+        static Node encode(const std::vector<Engine::GUID<T>>& rhs)
         {
             Node node;
-            for (Engine::GUID guid : rhs)
+            for (Engine::GUID<T> guid : rhs)
                 node.push_back(guid);
             return node;
         }
 
         // Decoding for vector of guid during deserialization
-        static bool decode(const Node& node, std::vector<Engine::GUID>& rhs)
+        static bool decode(const Node& node, std::vector<Engine::GUID<T>>& rhs)
         {
-            rhs = node.as<std::vector<Engine::GUID>>();
+            rhs = node.as<std::vector<Engine::GUID<T>>>();
             return true;
         }
     };
 
     template<>
-    struct convert<ModelImporter>
+    struct convert<ModelAsset>
     {
         // Encoding for model importer during deserialization
-        static Node encode(const ModelImporter& rhs)
+        static Node encode(const ModelAsset& rhs)
         {
             Node node;
             node.push_back(rhs.meshes);
@@ -108,9 +108,9 @@ namespace YAML
         // Decoding for model importer during deserialization
         static bool decode(const Node& node, ModelAsset& rhs)
         {
-            rhs.meshes = node[0].as<std::vector<Engine::GUID>>();
-            rhs.materials = node[1].as<std::vector<Engine::GUID>>();
-            rhs.animations = node[2].as<std::vector<Engine::GUID>>();
+            rhs.meshes = node[0].as<std::vector<Engine::GUID<MeshAsset>>>();
+            rhs.materials = node[1].as<std::vector<Engine::GUID<MaterialAsset>>>();
+            rhs.animations = node[2].as<std::vector<Engine::GUID<AnimationAsset>>>();
             return true;
         }
     };
@@ -198,11 +198,11 @@ namespace YAML
         }
     };
 
-    template<>
-    struct convert<Engine::GUID>
+    template<typename T>
+    struct convert<Engine::GUID<T>>
     {
         // Encoding for Vector4 during deserialization
-        static Node encode(const Engine::GUID& rhs)
+        static Node encode(const Engine::GUID<T>& rhs)
         {
             Node node;
             node = rhs.ToHexString();
@@ -210,9 +210,9 @@ namespace YAML
         }
 
         // Decoding for Vector4 during deserialization
-        static bool decode(const Node& node, Engine::GUID& rhs)
+        static bool decode(const Node& node, Engine::GUID<T>& rhs)
         {
-            rhs = Engine::GUID(node.as<std::string>());
+            rhs = Engine::GUID<T>(node.as<std::string>());
             return true;
         }
     };

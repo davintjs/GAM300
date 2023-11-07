@@ -158,7 +158,8 @@ void DisplayType(Change& change, const char* name, char*& val)
     }
 }
 
-void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
+template<typename AssetType>
+void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetType>& guid)
 {
     static ImGuiTextFilter filter;
     fs::path extension = fp.extension();
@@ -198,19 +199,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         size_t id = (size_t)GET_TEXTURE_ID("Assets/Icons/Cancel_Icon.dds");
-        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
-            for (auto& pair : DEFAULT_ASSETS)
-            {
-                if (pair.first.extension() != extension)
-                    continue;
-
-                if (pair.first.string().starts_with("None"))
-                {
-                    EDITOR.History.SetPropertyValue(change, guid, pair.second);
-                    break;
-                }
-            }
-
+        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) 
+        {
+            static Engine::GUID<AssetType> none{ 0 };
+            EDITOR.History.SetPropertyValue(change, guid, none);
             ImGui::PopStyleColor();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
@@ -222,39 +214,6 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         ImGui::NextColumn();
 
         int i = 0;
-
-        for (auto& pair : DEFAULT_ASSETS)
-        {
-            if (pair.first.extension() != extension)
-                continue;
-
-            if (pair.first.string().starts_with("None"))
-                continue;
-            
-            if (!filter.PassFilter(pair.first.string().c_str()))
-                continue;
-
-
-            fs::path icon = "Assets/Icons/fileicon.dds";
-
-            //if not png or dds file, dont show
-
-            ImGui::PushID(i++);
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            ImTextureID icon_id = (ImTextureID)TextureManager.GetTexture(icon);
-            if (ImGui::ImageButton(icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-            {
-                EDITOR.History.SetPropertyValue(change, guid, pair.second);
-            }
-            ImGui::PopStyleColor();
-            ImGui::TextWrapped(pair.first.stem().string().c_str());
-
-            //render file name below icon
-            ImGui::NextColumn();
-            ImGui::PopID();
-        }
 
         //using filesystem to iterate through all folders/files inside the "/Data" directory
 
@@ -280,7 +239,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 ImTextureID textureID = (ImTextureID)iconID;
                 if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
-                    Engine::GUID currentGUID = meshAsset.first;
+                    Engine::GUID<AssetType> currentGUID = meshAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
                     //PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
                 }
@@ -309,7 +268,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                     continue;
                 //if (path.extension() != extension)
 
-                GetAssetEvent e { path };
+                GetAssetEvent<AssetType> e { path };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
 
@@ -343,49 +302,18 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     }
 }
 
-template <typename... Ts>
-fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
-{
-    fs::path path;
-    if (([&](auto type)
-    {
-        using T = decltype(type);
-        GetFilePathEvent<T> e{ guid };
-        EVENTS.Publish(&e);
-        if (e.filePath == "")
-            return false;
-        path = e.filePath;
-        return true;
-    }
-    (Ts{}) || ...))
-    {
-        return path;
-    }
-    return path;
-}
-
-void DisplayType(Change& change, const char* name, Engine::GUID& val)
+template <typename AssetType>
+void DisplayType(Change& change, const char* name, Engine::GUID<AssetType>& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
     //Val is a default asset guid
-    fs::path fp;
-    for (auto& pair : DEFAULT_ASSETS)
-    {
-        if (pair.second == val)
-        {
-            fp = pair.first;
-            break;
-        }
-    }
-    if (fp.empty())
-    {
-        fp = DisplayGUIDHelper(AssetTypes(),val);
-    }
-    const std::string& pathStr = fp.stem().string();
+    GetFilePathEvent<AssetType> e{ val };
+    EVENTS.Publish(&e);
+    const std::string& pathStr = e.filePath.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
-    DisplayAssetPicker(change,fp,val);
+    DisplayAssetPicker(change,e.filePath, val);
 }
 
 
@@ -1613,7 +1541,7 @@ void EditorInspector::Update(float dt)
 
         if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
-            GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
+            GetFilePathEvent<MaterialAsset> e{ EditorContentBrowser::Instance().selectedAss };
             EVENTS.Publish(&e);
             std::string fPathStr{ e.filePath.string() };
             size_t strPos = fPathStr.find_last_of("\\");
@@ -1640,7 +1568,7 @@ void EditorInspector::Update(float dt)
                 fPath += material.name.c_str();
                 fPath += ".material";
                 Serialize(material);
-                GetAssetEvent pathEvent(fPath);
+                GetAssetEvent<MaterialAsset> pathEvent(fPath);
                 EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }

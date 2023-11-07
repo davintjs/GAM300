@@ -17,7 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "ModelDecompiler.h"
 
-ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
+ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID<ModelAsset>& _guid)
 {
     ModelComponents tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);

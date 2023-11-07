@@ -33,7 +33,7 @@ void MeshManager::Init()
     CreateInstanceSegment3D();
 }
 
-MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID& meshID)
+MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID<MeshAsset>& meshID)
 {
     GetAssetsEvent<MeshAsset> e;
     EVENTS.Publish(&e);
@@ -44,7 +44,7 @@ MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID& meshID)
     return &(e.pAssets->find(meshID)->second);
 } 
 
-void MeshManager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid)
+void MeshManager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID<MeshAsset>& _guid)
 {
     // Bean: Move this to material system
     /*for (int i = 0; i < newGeom._materials.size(); ++i)
@@ -310,7 +310,7 @@ void MeshManager::CreateInstanceCube()
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
-    Engine::GUID& cubeGUID = DEFAULT_ASSETS["Cube.geom"];
+    Engine::GUID<MeshAsset> cubeGUID{ vaoMap.size() + 1};
     InstanceProperties tempProp; 
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
@@ -435,7 +435,7 @@ void MeshManager::CreateInstanceSphere()
     tempProp.VAO = vaoid;
     tempProp.drawCount = (unsigned int)(indices.size()) ;
 
-    Engine::GUID& sphereGUID = DEFAULT_ASSETS["Sphere.geom"];
+    Engine::GUID<MeshAsset> sphereGUID{ vaoMap.size() + 1 };
     vaoMap.emplace(std::make_pair(sphereGUID,vaoid));
 
     //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
@@ -734,7 +734,7 @@ void MeshManager::CreateInstanceLine()
     InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
-    Engine::GUID& lineGUID = DEFAULT_ASSETS["Line.geom"];
+    Engine::GUID<MeshAsset> lineGUID{ vaoMap.size() + 1 };
     vaoMap.emplace(std::make_pair(lineGUID, vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Line"), tempProp));
     newMesh.vaoID = vaoid;
@@ -798,7 +798,7 @@ void MeshManager::CreateInstanceSegment3D()
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
 
-    Engine::GUID& segGUID{DEFAULT_ASSETS["Segment3D.geom"]};
+    Engine::GUID<MeshAsset> segGUID{ vaoMap.size() + 1 };
 
     vaoMap.emplace(std::make_pair(segGUID, vaoid));
 

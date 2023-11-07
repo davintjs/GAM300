@@ -165,7 +165,7 @@ void EditorScene::SceneView()
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
 
                 ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
-                Engine::GUID guid = data.guid;
+                Engine::HexID guid = data.guid;
 
                 if (data.type == MESH) {
                     //Create new entity
@@ -174,7 +174,7 @@ void EditorScene::SceneView()
                     //Add mesh renderer
                     curr_scene.Add<MeshRenderer>(*ent);
                     //Attach dragged mesh GUID from the content browser
-                    curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
+                    curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
                 }
 

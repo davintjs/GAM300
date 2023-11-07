@@ -68,6 +68,7 @@ void AssetManager::SubscribeGetAssets(TemplatePack<Ts...>)
 	(([&](auto type)
 	{
 		using T = decltype(type);
+		EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset<T>);
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetAssets<T>);
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetFilePath<T>);
 	})(Ts{}), ...);
@@ -80,9 +81,7 @@ void AssetManager::Init()
 
 	//EVENT SUBSCRIPTIONS
 	EVENTS.Subscribe(this, &AssetManager::CallbackFileModified);
-	EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset);
 	EVENTS.Subscribe(this, &AssetManager::CallbackDroppedAsset);
-	EVENTS.Subscribe(this, &AssetManager::CallbackGetFilePathGeneric);
 	SubscribeGetAssets(AssetTypes());
 
 	for (const auto& dir : std::filesystem::recursive_directory_iterator(AssetPath))
@@ -149,13 +148,13 @@ void AssetManager::UnloadAsset(const fs::path& filePath)
 	//One does not simply delete a meta file while the engine is running >:C
 	if (filePath.extension() == ".meta")
 	{
-		fs::path nonMeta = filePath;
-		nonMeta.replace_extension("");
-		if (fs::exists(nonMeta))
-		{
-			PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
-			assets.GetGUID(nonMeta);
-		}
+		//fs::path nonMeta = filePath;
+		//nonMeta.replace_extension("");
+		//if (fs::exists(nonMeta))
+		//{
+		//	PRINT("I see you just tried to delete a meta file... So you have chosen death\n");
+		//	assets.GetGUID(nonMeta);
+		//}
 		return;
 	}
 	assets.RemoveAsset(filePath);
@@ -221,19 +220,6 @@ void AssetManager::RenameAsset(const fs::path& oldPath, const fs::path& newPath)
 	}
 	assets.RenameAsset(oldPath,newPath);
 }
-
-// Get a loaded asset GUID
-Engine::GUID AssetManager::GetAssetGUID(const fs::path& filePath)
-{
-	ACQUIRE_SCOPED_LOCK(Assets);
-	auto it = DEFAULT_ASSETS.find(filePath);
-	if (it != DEFAULT_ASSETS.end())
-	{
-		return it->second;
-	}
-	return assets.GetGUID(filePath);
-}
-
 
 template <typename AssetType>
 void AssetManager::CallbackGetAssets(GetAssetsEvent<AssetType>* pEvent)
@@ -319,9 +305,10 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 	PRINT(filePath.string(), "\n");
 }
 
-void AssetManager::CallbackGetAsset(GetAssetEvent* pEvent)
+template <typename T>
+void AssetManager::CallbackGetAsset(GetAssetEvent<T>* pEvent)
 {
-	pEvent->guid = GetAssetGUID(pEvent->filePath);
+	pEvent->guid = assets.GetGUID<T>(pEvent->filePath);
 }
 
 void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
@@ -342,12 +329,6 @@ void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)
 
 template <typename AssetType>
 void AssetManager::CallbackGetFilePath(GetFilePathEvent<AssetType>* pEvent)
-{
-	pEvent->filePath = assets.GetFilePath(pEvent->guid);
-}
-
-
-void AssetManager::CallbackGetFilePathGeneric(GetFilePathGenericEvent* pEvent)
 {
 	pEvent->filePath = assets.GetFilePath(pEvent->guid);
 }

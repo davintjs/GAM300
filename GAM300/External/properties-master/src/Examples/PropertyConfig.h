@@ -309,7 +309,6 @@ namespace property
     constexpr editor::style_info<string_t>      edstyle<string_t>::     Default     (void)                                              noexcept { return {}; }
     constexpr editor::style_info<string_t>      edstyle<string_t>::     Button      (void)                                              noexcept { return {}; }
 #endif
-
     //--------------------------------------------------------------------------------------------
     // Settings for the property system
     //--------------------------------------------------------------------------------------------
@@ -339,6 +338,7 @@ namespace property
             , Engine::GUID<AudioAsset>
             , Engine::GUID<ScriptAsset>
             , Engine::GUID<AnimationAsset>
+            , Engine::HexID
         >;
     
         //--------------------------------------------------------------------------------------------

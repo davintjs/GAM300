@@ -30,7 +30,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID>& _data)
+template <typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID<T>>& _data)
 {
     out << YAML::BeginMap;
     for (Engine::GUID data : _data)
@@ -42,7 +43,7 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID>& _
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data)
+YAML::Emitter& operator<<(YAML::Emitter& out, const ModelAsset& _data)
 {
     out << YAML::Key << "meshes" << YAML::Value << _data.meshes;
     out << YAML::Key << "materials" << YAML::Value << _data.materials;
@@ -87,7 +88,14 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v)
+template <typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID<T>& v)
+{
+    out << v.ToHexString();
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::HexID& v)
 {
     out << v.ToHexString();
     return out;

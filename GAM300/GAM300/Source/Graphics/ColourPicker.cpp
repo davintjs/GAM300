@@ -107,7 +107,7 @@ void ColourPicker::ColorPickingUI(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}

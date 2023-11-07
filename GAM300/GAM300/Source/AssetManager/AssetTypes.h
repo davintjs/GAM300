@@ -4,23 +4,17 @@
 #include <glm/glm.hpp>
 #include <list>
 
-#include <Properties.h>
-
 #pragma once
 
-//static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
-//{
-//	{"None.geom", Engine::GUID(0)},
-//	{"Cube.geom", Engine::GUID(1)},
-//	{"Sphere.geom", Engine::GUID(2)},
-//	{"Capsule.geom", Engine::GUID(3)},
-//	{"Line.geom", Engine::GUID(4)},
-//	{"Plane.geom", Engine::GUID(5)},
-//	{"Segment3D.geom", Engine::GUID(6)},
-//	{"None.dds", Engine::GUID(7)},
-//	{"None.mat", Engine::GUID(8)},
-//	{"None.anim", Engine::GUID(9)},
-//};
+#ifndef ASSET_TYPES_H
+#define ASSET_TYPES_H
+
+#define ASSET_CUBE 1
+#define ASSET_SPHERE 2
+#define ASSET_LINE 3
+#define ASSET_SEG3D 4
+
+#define ASSET(className) struct className : Asset
 
 #define MAX_BONE_INFLUENCE 4
 struct ModelVertex
@@ -37,46 +31,22 @@ struct ModelVertex
 
 };
 
-// GUID, last file update time, file name, data
-struct FileInfo
+using FileData = std::vector<char>;
+
+struct Asset
 {
-	FileInfo() {};
-	FileInfo(std::filesystem::path _mFilePath) : mFilePath{ _mFilePath } {}
+	FileData mData;
 	std::filesystem::path mFilePath;
 };
 
-using FileData = std::vector<char>;
-
-struct Asset : FileInfo
-{
-	FileData mData;
-	using Meta = MetaFile;
-};
+ASSET(TextureAsset){};
 
 
-struct MetaFile : property::base
-{
-	Engine::GUID<Asset> guid;
-	property_vtable()
-};
+ASSET(ScriptAsset) {};
 
-property_begin_name(MetaFile, ""){
-	property_var(guid),
-} property_vend_h(MetaFile);
+ASSET(AudioAsset) {};
 
-struct TextureAsset : Asset
-{
-};
-
-struct ScriptAsset : Asset
-{
-};
-
-struct AudioAsset : Asset
-{
-};
-
-struct MeshAsset : Asset
+ASSET(MeshAsset)
 {
 	std::vector<ModelVertex> vertices;	// This individual mesh vertices
 	std::vector<glm::mat4> bindPoses;	// The bind pose at each index refers to the bone with the same index
@@ -90,11 +60,9 @@ struct MeshAsset : Asset
 	unsigned int numBones;
 	unsigned int numBindPoses;
 	unsigned int materialIndex;
-
-	using Meta = MetaFile;
 };
 
-struct ShaderAsset : Asset
+ASSET(ShaderAsset)
 {
 	// Map of variable name to type enum
 	//std::unordered_map<std::string, size_t> variables;
@@ -104,25 +72,17 @@ struct ShaderAsset : Asset
 
 };
 
+ASSET(MaterialAsset){ };
 
-struct MaterialAsset : Asset
-{
-
-};
-
+ASSET(AnimationAsset){};
 
 // Asset that contains reference to all components of the model(Mesh, Material, Texture, Animations)
 // User can add this asset into the scene and it will assign the materials onto the mesh etc
-struct ModelAsset : Asset
+ASSET(ModelAsset)
 {
 	std::vector<Engine::GUID<MeshAsset>> meshes;
 	std::vector<Engine::GUID<MaterialAsset>> materials;
 	std::vector<Engine::GUID<AnimationAsset>> animations;
-};
-
-struct AnimationAsset : Asset
-{
-
 };
 
 using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset, AnimationAsset,Asset>;
@@ -143,13 +103,4 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".shader", GetAssetType::E<ShaderAsset>()},
 };
 
-//Takes in a guid, does a huge switch case, returns Asset*
-template <typename T, typename... Ts>
-struct GetAssetHelper
-{
-	template <typename T, typename... Ts>
-	GetAssetHelper()
-	{
-
-	}
-};
+#endif

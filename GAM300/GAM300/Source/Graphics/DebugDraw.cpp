@@ -57,7 +57,7 @@ void DebugDraw::Draw()
 		}
 	}
 	;
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 	glLineWidth(4.f);
 	glPointSize(10.f);
 
@@ -104,7 +104,7 @@ void DebugDraw::Draw()
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
 {
 	//auto& prop = (*properties)[DEFAULT_ASSETS["Segment3D.geom"]];
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
@@ -126,7 +126,7 @@ void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _col
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;

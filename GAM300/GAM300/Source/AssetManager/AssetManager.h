@@ -71,7 +71,8 @@ private:
 	void CallbackFileModified(FileModifiedEvent* pEvent);
 
 	// Get the GUID of the asset using event callbacks
-	void CallbackGetAsset(GetAssetEvent* pEvent);
+	template <typename AssetType>
+	void CallbackGetAsset(GetAssetEvent<AssetType>* pEvent);
 
 	// Get the table of the asset using event callbacks
 	template <typename AssetType>
@@ -80,8 +81,6 @@ private:
 	// Get the Filepath of the asset using event callbacks
 	template <typename AssetType>
 	void CallbackGetFilePath(GetFilePathEvent<AssetType> * pEvent);
-
-	void CallbackGetFilePathGeneric(GetFilePathGenericEvent *pEvent);
 	
 	AllAssets assets;
 

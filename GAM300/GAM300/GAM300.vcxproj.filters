@@ -192,6 +192,7 @@
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\AssetManager\ModelDecompiler.h" />
     <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
+    <ClInclude Include="Source\AssetManager\ImporterTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

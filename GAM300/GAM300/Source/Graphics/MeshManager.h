@@ -58,12 +58,12 @@ public:
 	
 	void Init();
 
-	MeshAsset* GetMeshAsset(const Engine::GUID& meshID);
+	MeshAsset* GetMeshAsset(const Engine::GUID<MeshAsset>& meshID);
 
-	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid);
+	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID<MeshAsset>& _guid);
 
 	// This is used when we are going to draw, u need to take the geom then render it
-	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
+	Mesh* DereferencingMesh(const Engine::GUID<MeshAsset>& meshID)
 	{ 
 		if (mContainer.find(meshID) == mContainer.end())
 		{
@@ -84,8 +84,8 @@ public:
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
-	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
-	std::unordered_map<Engine::GUID, Mesh> mContainer;
+	std::unordered_map<Engine::GUID<MeshAsset>, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
+	std::unordered_map<Engine::GUID<MeshAsset>, Mesh> mContainer;
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
 	std::vector<DefaultRenderProperties>* defaultProperties;

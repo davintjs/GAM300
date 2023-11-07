@@ -77,16 +77,16 @@ void Lighting::Update(float)
 		}
 
 
-		if (currentScene.Has<MeshRenderer>(entity))
-		{
-			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
-			mesh_component.mr_Albedo = glm::vec4(Temporary.lightColor, 1.f);
+		//if (currentScene.Has<MeshRenderer>(entity))
+		//{
+		//	MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
+		//	mesh_component.mr_Albedo = glm::vec4(Temporary.lightColor, 1.f);
 
-			mesh_component.mr_metallic = -1.f;
-			mesh_component.mr_roughness = -1.f;
-			mesh_component.ao = -1.f;
-			mesh_component.ao = -1.f;
-		}
+		//	mesh_component.mr_metallic = -1.f;
+		//	mesh_component.mr_roughness = -1.f;
+		//	mesh_component.ao = -1.f;
+		//	mesh_component.ao = -1.f;
+		//}
 	}
 
 

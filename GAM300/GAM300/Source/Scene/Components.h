@@ -306,6 +306,7 @@ struct MeshRenderer : Object
 
 
 	// This 2 dont delete -> Future use
+	Engine::GUID<MeshAsset> meshID{ 0 };
 	bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 	

@@ -24,7 +24,7 @@ SINGLETON(ModelDecompiler)
 {
 public:
 	// To load Geoms from FBXs
-	ModelComponents DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid);
+	ModelComponents DeserializeModel(const std::string& _filePath, const Engine::GUID<ModelAsset>& _guid);
 	
 	// Load meshes from the FBX file
 	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);

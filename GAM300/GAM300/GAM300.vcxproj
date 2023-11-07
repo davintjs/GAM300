@@ -288,6 +288,7 @@
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\AssetManager\AssetTypes.h" />
+    <ClInclude Include="Source\AssetManager\ImporterTypes.h" />
     <ClInclude Include="Source\AssetManager\ModelDecompiler.h">
       <SubType>
       </SubType>

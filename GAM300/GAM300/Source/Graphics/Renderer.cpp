@@ -167,13 +167,13 @@ void Renderer::Update(float)
 
 
 			// use the properties container coz its made for instance rendering already
-			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
-			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
+			//float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
+			//float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
 
-			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
-			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
-			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
-			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
+			//float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
+			//float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
+			//float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
+			//float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
 			
 
 
@@ -190,14 +190,12 @@ void Renderer::Update(float)
 			instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
 
 
-			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
-			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
-
-
-			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
-			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
-			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
-			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
+			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
+			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
+			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
+			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
+			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
+			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
 
 
 			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
@@ -332,7 +330,7 @@ void Renderer::SetupGrid(const int& _num)
 	float length = _num * spacing * 0.5f;
 
 	//instanceProperties["Line"].iter = _num * 2;
-	GLuint vao = MESHMANAGER.vaoMap[DEFAULT_ASSETS["Line.geom"]];
+	GLuint vao = MESHMANAGER.vaoMap[ASSET_LINE];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
@@ -919,7 +917,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -978,7 +976,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -1061,7 +1059,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}

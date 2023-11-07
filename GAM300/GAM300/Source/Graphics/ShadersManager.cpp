@@ -38,7 +38,6 @@ static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 	{ "vec2",						GetFieldType::E<Vector2>()},
 	{ "vec3",						GetFieldType::E<Vector3>()},
 	{ "vec4",						GetFieldType::E<Vector4>()},
-	{ "id",							GetFieldType::E<Engine::GUID>()},
 };
 
 

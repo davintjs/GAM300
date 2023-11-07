@@ -16,8 +16,7 @@ namespace
 
 namespace Engine
 {
-	template <typename T>
-	GUID<T>::GUID()
+	HexID::HexID()
 	{
 		longInt[0] = CreateRandomNumber();
 		longInt[1] = CreateRandomNumber();
@@ -30,7 +29,12 @@ namespace Engine
 	}
 
 	template <typename T>
-	GUID<T>::GUID(const std::string& hexString)
+	GUID<T>::GUID(const HexID& rhs)
+	{
+		memcpy(longInt, rhs.longInt, sizeof(longInt));
+	}
+
+	HexID::HexID(const std::string& hexString)
 	{
 		if (hexString.size() == 0)
 		{

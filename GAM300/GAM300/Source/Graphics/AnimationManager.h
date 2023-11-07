@@ -231,7 +231,7 @@ public:
 
     //// used in asset manager to add anim to the anim container
     //void AddAnimation(char const* Filename, std::string GUID);
-    void AddAnimMesh(std::pair<Engine::GUID, MeshAsset> meshAsset)//;
+    void AddAnimMesh(std::pair<Engine::GUID<MeshAsset>, MeshAsset> meshAsset)//;
     {
         mAnimationMeshContainer.emplace(meshAsset.first, meshAsset.second);
     }
@@ -245,7 +245,7 @@ private:
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
     std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp... throw after compiler done
     //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ->  temp...
-    std::unordered_map<Engine::GUID, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
+    std::unordered_map<Engine::GUID<MeshAsset>, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
 
     // can yeet these
     GLSLShader ourShader{};

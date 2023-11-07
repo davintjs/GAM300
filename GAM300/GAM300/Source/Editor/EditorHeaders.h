@@ -44,9 +44,9 @@ enum filetype {
 //an object containing the data needed for the payload
 struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
-    ContentBrowserPayload(filetype _type, Engine::GUID _guid) : type(_type), guid(_guid) {}
+    ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
     filetype type;
-    Engine::GUID guid;
+    Engine::HexID guid;
 };
 
 struct BaseCamera;
@@ -165,7 +165,7 @@ public:
 
     void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
 
-    Engine::GUID selectedAss;
+    Engine::HexID selectedAss;
 private:
     std::filesystem::path currentDirectory;
 };
