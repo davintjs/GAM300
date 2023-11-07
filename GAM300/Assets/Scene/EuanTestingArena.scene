@@ -732,17 +732,32 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 7048375660779944849}  # Transform
+    - component: {fileID: 17941510528446115617}  # Rigidbody
     - component: {fileID: 15277237740940870281}  # MeshRenderer
+    - component: {fileID: 6341531718385659797}  # BoxCollider
 ---
 ID: 7048375660779944849
 Transform:
   m_GameObject: {fileID: 14079781030746446599}
-  Translation: [-10.0009813, 1.00000012, 0]
+  Translation: [-25.6670952, 1.00000012, 0]
   Rotation: [0, 0, 0]
   Scale: [10, 1, 10]
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 17941510528446115617
+Rigidbody:
+  m_GameObject: {fileID: 14079781030746446599}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 15277237740940870281
 MeshRenderer:
@@ -761,6 +776,13 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 6341531718385659797
+BoxCollider:
+  m_GameObject: {fileID: 14079781030746446599}
+  X: 1
+  Y: 1
+  Z: 1
 ---
 ID: 1368727277479088206
 GameObject:
@@ -991,3 +1013,63 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 8095399288714090839
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(26)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10314976153041721911}  # Transform
+    - component: {fileID: 6043978958880215036}  # Rigidbody
+    - component: {fileID: 15765640483283106724}  # MeshRenderer
+    - component: {fileID: 6030178282861626899}  # BoxCollider
+---
+ID: 10314976153041721911
+Transform:
+  m_GameObject: {fileID: 8095399288714090839}
+  Translation: [-23.2377243, 5.32355118, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6043978958880215036
+Rigidbody:
+  m_GameObject: {fileID: 8095399288714090839}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 15765640483283106724
+MeshRenderer:
+  m_GameObject: {fileID: 8095399288714090839}
+  IsInstance: true
+  Mesh: {guid: 00000000000000000000000000000065}
+  Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
+  Albedo: [0, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+---
+ID: 6030178282861626899
+BoxCollider:
+  m_GameObject: {fileID: 8095399288714090839}
+  X: 1
+  Y: 1
+  Z: 1

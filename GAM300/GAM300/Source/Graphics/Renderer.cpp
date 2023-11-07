@@ -385,7 +385,9 @@ void Renderer::Draw(BaseCamera& _camera)
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				// FOR DEBUG DRAW
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+				{
 					DrawDebug(prop.debugVAO, (unsigned)prop.entitySRT.size());
+				}
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
 					DrawGrid(vao, (unsigned)prop.entitySRT.size());
 					continue;
