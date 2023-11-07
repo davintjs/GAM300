@@ -48,9 +48,20 @@ void DebugDraw::Update(float)
 	{
 		BoxCollider& bc = *it;
 		Transform& t = scene.Get<Transform>(bc);
-		MeshRenderer& renderer = scene.Get<MeshRenderer>(bc);
-		GLuint vao = MeshManager.vaoMap[renderer.meshID];
 
+
+		
+
+		MeshRenderer& renderer = scene.Get<MeshRenderer>(bc);
+
+
+		if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+		{
+			std::cout << "hit\n";
+			continue;
+		}
+
+		GLuint vao = MeshManager.vaoMap[renderer.meshID];
 		InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
 
 		RigidDebug currRigidDebug;
@@ -140,6 +151,8 @@ void DebugDraw::Draw()
 	
 	glLineWidth(1.f);
 	prop.iter = 0;
+
+
 	}
 
 	// Physic's Debug Draw

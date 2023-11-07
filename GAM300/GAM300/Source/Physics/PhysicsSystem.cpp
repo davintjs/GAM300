@@ -66,6 +66,7 @@ void PhysicsSystem::Update(float dt) {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
+
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
 		Entity& entity = scene.Get<Entity>(rb);

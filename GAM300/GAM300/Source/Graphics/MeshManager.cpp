@@ -982,6 +982,7 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstancePro
     //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
     //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
     //}
+
     glm::vec3 pntAABB[8];
     std::vector<glm::ivec2> idxAABB{};
 
