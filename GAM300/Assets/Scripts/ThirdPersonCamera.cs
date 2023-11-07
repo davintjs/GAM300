@@ -32,10 +32,10 @@ public class ThirdPersonCamera : Script
         //Yaw Camera Rotation
 
         vec2 mouseDelta = Input.GetMouseDelta();
-        YawAngle += mouseDelta.x * YawRotSpeed * Time.deltaTime * 3.14f / 180f;
+        YawAngle -= mouseDelta.x * YawRotSpeed * Time.deltaTime * 3.14f / 180f;
         CamYawPivot.localRotation = new vec3(0f, YawAngle, 0f);
         //Pitch Camera Rotation
-        PitchAngle += mouseDelta.y * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime * 3.14f / 180f;
+        PitchAngle -= mouseDelta.y * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime * 3.14f / 180f;
         //Console.WriteLine("{0},{1}",mouseDelta.x, mouseDelta.y);
         if (PitchAngle > MaxPitchAngle)
             PitchAngle = MaxPitchAngle * 3.14f / 180f;

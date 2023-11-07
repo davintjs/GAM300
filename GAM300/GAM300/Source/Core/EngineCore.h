@@ -93,17 +93,22 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
-		BEHAVIORTREEBUILDER.Init();
+		//#ifndef _BUILD
+		//	BEHAVIORTREEBUILDER.Init();
+		//#endif
 		AUDIOMANAGER.InitAudioManager();
 		MeshManager.Init();
 		TextureManager.Init();
 		AllSystems::Init();
 
-
-		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
-		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
-		//Enemy tempEnemy(BehaviorTreeBuilder::Instance().GetBehaviorTree("TestTree"));
-		//tempEnemy.Update(1.f); // Temporary dt lol
+		#if defined(_BUILD)
+			InputSystem::Instance().LockCursor(true);
+			SceneStartEvent startEvent{};
+			EVENTS.Publish(&startEvent);
+		#else
+			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
+		#endif
 		update_timer = 0.f;
 		app_time = 0.f;
 	}
@@ -183,7 +188,9 @@ public:
 	{
 		AllSystems::Exit();
 		THREADS.Exit();
-		BEHAVIORTREEBUILDER.Exit();
+		//#ifndef _BUILD
+		//	BEHAVIORTREEBUILDER.Exit();
+		//#endif
 		NAVMESHBUILDER.Exit();
 	}
 

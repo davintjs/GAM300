@@ -13,7 +13,7 @@
 	2. Parenting and reordering of entities in the tree
 	3. Adding/removing of entities from the hierarchy window
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content Â© 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -24,11 +24,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/SceneManager.h"
 #include "Utilities/Serializer.h"
 
-void EditorHierarchy::Init() 
+void EditorHierarchy::Init()
 {
-    //no selected entity at start
-    selectedEntity = NON_VALID_ENTITY;
-    EVENTS.Subscribe(this,&EditorHierarchy::CallbackSelectedEntity);
+	//no selected entity at start
+	selectedEntity = NON_VALID_ENTITY;
+	EVENTS.Subscribe(this, &EditorHierarchy::CallbackSelectedEntity);
 }
 
 //Display the entity in the hierarchy tree
@@ -38,8 +38,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	// ImGuiTreeNodeFlags_SpanAvailWidth
 
 	ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
-		ImGuiTreeNodeFlags_OpenOnDoubleClick |
-		ImGuiTreeNodeFlags_DefaultOpen;
+		ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (euid == selectedEntity)
 	{
@@ -57,7 +56,9 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	}
 
 	//Invisible button for drag drop reordering
-	ImGui::InvisibleButton("##", ImVec2(ImGui::GetWindowContentRegionWidth(), 2.5f));
+	float button_width = (ImGui::GetWindowContentRegionWidth() > 0) ? ImGui::GetWindowContentRegionWidth() : 0.1f;
+	ImGui::InvisibleButton("##", ImVec2(button_width, 2.5f));
+
 
 	//Drag drop reordering implementation
 	if (ImGui::BeginDragDropTarget())
@@ -82,7 +83,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					//if current entity has a parent
 					if (currTransform.isChild())
 					{
-						
+
 						//if reordering within the same parent
 						if (currParent.child == targetParent.child)
 						{
@@ -125,7 +126,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 						{
 							parent.pop_back();
 							auto it = std::find(parent.begin(), parent.end(), targetTransform.EUID());
-							parent.insert(it,currTransform.EUID());
+							parent.insert(it, currTransform.EUID());
 						}
 					}
 
@@ -157,8 +158,8 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	//select entity from hierarchy
 	if (ImGui::IsItemClicked())
 	{
-        SelectedEntityEvent selectedEvent{&curr_scene.Get<Entity>(euid)};
-        EVENTS.Publish(&selectedEvent);
+		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
+		EVENTS.Publish(&selectedEvent);
 	}
 
 	if (ImGui::BeginDragDropSource())
@@ -215,17 +216,28 @@ void EditorHierarchy::Update(float dt)
 	//When clicked on, shows all children
 	//Drag and drop of entities into and from other entities to form groups (using a node system, parent child relationship)
 	//Add/Delete entities using right click
+	static ImGuiTextFilter filter;
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-
+	ImGui::Text("Filter: "); ImGui::SameLine();
+	filter.Draw();
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
 	Scene::Layer& layer = curr_scene.layer;
+
+	
+
 	if (sceneopen)
 	{
+		
+
 		for (Engine::UUID euid : layer)
 		{
 			if (!curr_scene.Get<Transform>(euid).isChild())
 			{
+				//check if filter characters matches the name and filter accordingly
+				if (!filter.PassFilter(curr_scene.Get<Tag>(euid).name.c_str()))
+					continue;
+
 				//Recursive function to display entities in a hierarchy tree
 				DisplayEntity(euid);
 			}
@@ -248,14 +260,14 @@ void EditorHierarchy::Update(float dt)
 				{
 					Entity& entity = curr_scene.Get<Entity>(Index);
 					auto it = std::find(layer.begin(), layer.end(), entity.EUID());
-					
+
 					layer.erase(it);
 					layer.insert(layer.end(), entity.EUID());
 				}
-		
+
 			}
 			ImGui::EndDragDropTarget();
-		
+
 		}
 
 		//Right click adding of entities in hierarchy window
@@ -263,8 +275,8 @@ void EditorHierarchy::Update(float dt)
 		{
 			if (ImGui::MenuItem("Add Entity"))
 			{
-                SelectedEntityEvent selectedEvent{ curr_scene.Add<Entity>() };
-                EVENTS.Publish(&selectedEvent);
+				SelectedEntityEvent selectedEvent{ curr_scene.Add<Entity>() };
+				EVENTS.Publish(&selectedEvent);
 			}
 
 			std::string name = "Delete Entity";
@@ -275,7 +287,7 @@ void EditorHierarchy::Update(float dt)
 					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
 					curr_scene.Destroy(ent);
-					SelectedEntityEvent selectedEvent{0};
+					SelectedEntityEvent selectedEvent{ 0 };
 					EVENTS.Publish(&selectedEvent);
 				}
 			}
@@ -285,7 +297,7 @@ void EditorHierarchy::Update(float dt)
 			}
 
 			ImGui::Separator();
-			if (ImGui::MenuItem("Add to Prefabs")) 
+			if (ImGui::MenuItem("Add to Prefabs"))
 			{
 				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 				SerializePrefab(ent, curr_scene);
@@ -302,10 +314,10 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-    if (pEvent->pEntity)
-        selectedEntity = pEvent->pEntity->EUID();
-    else
-        selectedEntity = NON_VALID_ENTITY;
+	if (pEvent->pEntity)
+		selectedEntity = pEvent->pEntity->EUID();
+	else
+		selectedEntity = NON_VALID_ENTITY;
 }
 
 void EditorHierarchy::Exit() {

@@ -158,6 +158,8 @@ public:
 	//Creates a new app domain
 	MonoDomain* CreateAppDomain();
 
+	void UnloadAppDomain();
+
 	//Mono String from string
 	MonoString* CreateMonoString(const std::string&);
 
@@ -262,7 +264,7 @@ public:
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	void InvokePhysicsEvent(size_t colType, Rigidbody* rb1, Rigidbody* rb2);
+	void InvokePhysicsEvent(size_t colType, Rigidbody& rb1, Rigidbody& rb2);
 
 	IEvent* scriptingEvent;
 

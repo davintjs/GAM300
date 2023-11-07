@@ -151,6 +151,7 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
+	#ifndef _BUILD
 
 	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
 	// Publish scene change
@@ -158,6 +159,7 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 	GetCurrentScene() = GetPreviousScene();
 	//Herr
 	GetCurrentScene().sceneName += " [PREVIEW]";
+	#endif _BUILD
 }
 
 void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)

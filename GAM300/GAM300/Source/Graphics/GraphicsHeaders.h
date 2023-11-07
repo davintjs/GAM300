@@ -1,7 +1,7 @@
 /*!***************************************************************************************
 \file			GraphicsHeaders.h
 \project
-\author         Sean Ngo
+\author         Sean Ngo , Euan Lim
 
 \par			Course: GAM300
 \date           10/10/2023
@@ -31,6 +31,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GBuffer.h"
 
 #include "Scripting/ScriptFields.h"
+#include "Scene/Object.h"
 
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
@@ -90,35 +91,45 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
-struct Material_instance
+struct Shader {
+	Shader(std::string _name, SHADERTYPE type) : name(_name), shadertype(type) {}
+	std::string name;
+	SHADERTYPE shadertype;
+};
+
+struct Material_instance : Object
 {
 					// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
+	Material_instance();
 
-	SHADERTYPE parentMaterial = SHADERTYPE::PBR;
-	Engine::GUID matInstanceName;
+	// This is for Editor
+	Material_instance(const Material_instance& other);
+
+	// To make Copies
+	Material_instance& Duplicate_MaterialInstance(const Material_instance& other);
+
+	int shaderType = (int)SHADERTYPE::PBR;
 
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-	std::string		name = "New Material";
-	glm::vec4		albedoColour{ 1.f,1.f,1.f,1.f };// This is pretty much used in all types of shaders
-	float			metallicConstant{ 1.f };
-	float			roughnessConstant{ 1.f };
-	float			aoConstant{ 1.f };
-	float			emissionConstant{ 1.f };
-
-	Engine::GUID	albedoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	normalMap{ DEFAULT_TEXTURE };
-	Engine::GUID	metallicTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	roughnessTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	aoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID	emissionTexture{ DEFAULT_TEXTURE };
 
 
+	std::string		name;
+	Vector4			albedoColour;// This is pretty much used in all types of shaders
+	float			metallicConstant;
+	float			roughnessConstant;
+	float			aoConstant;
+	float			emissionConstant;
 
-	//PBR - not instanced;
+	Engine::GUID	albedoTexture;
+	Engine::GUID	normalMap;
+	Engine::GUID	metallicTexture;
+	Engine::GUID	roughnessTexture;
+	Engine::GUID	aoTexture;
+	Engine::GUID	emissionTexture;
 
 
 
@@ -134,7 +145,27 @@ struct Material_instance
 	glm::vec4		ambient;
 	float			shininess;
 	*/
+	property_vtable();
 };
+
+property_begin_name(Material_instance, "Material_Instance") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(name).Name("Material Name"),
+		property_var(shaderType).Name("Shader"),
+		property_var(albedoColour).Name("Albedo"),
+		property_var(metallicConstant).Name("Metallic"),
+		property_var(roughnessConstant).Name("Roughness"),
+		property_var(aoConstant).Name("AmbientOcclusion"),
+		property_var(emissionConstant).Name("Emission"),
+		property_var(albedoTexture).Name("AlbedoTexture"),
+		property_var(normalMap).Name("NormalMap"),
+		property_var(metallicTexture).Name("MetallicTexture"),
+		property_var(roughnessTexture).Name("RoughnessTexture"),
+		property_var(aoTexture).Name("AoTexture"),
+		property_var(emissionTexture).Name("EmissionTexture"),
+} property_vend_h(Material_instance)
+
+
 
 ENGINE_SYSTEM(MaterialSystem)
 {
@@ -144,16 +175,38 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	// Adding into material instance
 
-	// Removing from material instance
 	void createPBR_Instanced();
 
 	void createPBR_NonInstanced();
-	
-	std::vector<SHADERTYPE> Material_Types;// Everything inside here is the variables
 
-	std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+	// New Material Instance
+	void AddMaterial(const Material_instance & new_mat);
+
+	// Duplicating Material Instance
+	Material_instance& DuplicateMaterial(const Material_instance & instance);
+
+	Engine::GUID NewMaterialInstance(std::string _name = "Default Material");
+
+	// Deleting a Material Instance
+	void deleteInstance(Engine::GUID& matGUID);
+	
+	// Deserialize Materials 
+	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID & _guid);
+
+	//MaterialAsset& GetMaterialAsset(const Engine::GUID & meshID);
+
+	// Load Material Instance
+	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
+
+	// capture Material Instance
+	Material_instance& getMaterialInstance(Engine::GUID matGUID);
+
+	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
+
+	std::unordered_map< Engine::GUID, Material_instance> _allMaterialInstances;
+
+	std::vector<Shader>available_shaders;
 
 private:
 
@@ -174,6 +227,7 @@ public:
 
 	GLSLShader& GetShader(const SHADERTYPE& _type) { return shaders[static_cast<int>(_type)]; }
 
+	void CreateShaderInstance(size_t shaderIndex);
 	void CreateShaderProperties(const std::string& _frag, const std::string& _vert);
 	void ParseShaderFile(const std::string& _filename, bool _frag);
 
@@ -295,10 +349,13 @@ public:
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
 
+	// Depth draw call for directional shadows
 	void DrawDepthDirectional();
 
+	// Depth draw call for spotlight shadows
 	void DrawDepthSpot();
 
+	// Depth draw call for point shadows
 	void DrawDepthPoint();
 
 	bool Culling();
@@ -368,4 +425,9 @@ private:
 
 
 void renderQuad();
+
+
+
+
+
 #endif // !GRAPHICSHEADERS_H

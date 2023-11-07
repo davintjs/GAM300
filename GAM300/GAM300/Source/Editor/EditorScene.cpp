@@ -138,8 +138,9 @@ void EditorScene::ToolBar()
 
 void EditorScene::SceneView()
 {
+    windowOpened = ImGui::Begin("Scene");
     //Editor scene viewport
-    if (windowOpened = ImGui::Begin("Scene"))
+    if (windowOpened)
     {
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();

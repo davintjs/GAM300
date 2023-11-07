@@ -35,7 +35,11 @@ void MESH_Manager::Init()
 
 MeshAsset& MESH_Manager::GetMeshAsset(const Engine::GUID& meshID)
 {
-    E_ASSERT(mMeshesAsset.find(meshID) != mMeshesAsset.end(),"Trying to access invalid mesh");
+    //E_ASSERT(mMeshesAsset.find(meshID) != mMeshesAsset.end(),"Trying to access invalid mesh");
+    if (mMeshesAsset.find(meshID) == mMeshesAsset.end())
+    {
+        return mMeshesAsset[DEFAULT_ASSETS["None.geom"]];
+    }
     return mMeshesAsset[meshID];
 }
 

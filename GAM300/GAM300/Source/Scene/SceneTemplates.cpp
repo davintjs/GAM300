@@ -124,7 +124,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 		{
 			static char buffer[2048]{};
 			T& oldObject = Get<T>(old_new.first);
-			T& newObject = Get<T>(old_new.second);
 			ScriptGetFieldNamesEvent getFieldNamesEvent{ oldObject };
 			EVENTS.Publish(&getFieldNamesEvent);
 			for (size_t i = 0; i < getFieldNamesEvent.count; ++i)
