@@ -195,6 +195,19 @@ struct AllAssetsGroup
 		}
 	}
 
+	template <typename T>
+	constexpr auto Importer()
+	{
+		if constexpr (std::is_same_v<T,ModelAsset>)
+		{
+			return ModelImporter();
+		}
+		else
+		{
+			return DefaultImporter();
+		}
+	}
+
 	void RenameAsset(const std::filesystem::path& oldPath, const std::filesystem::path& newPath)
 	{
 		FileData* fileData = GetFileData(oldPath);
@@ -302,7 +315,8 @@ struct AllAssetsGroup
 		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
-		DefaultImporter mFile;
+		using AssetImporter = decltype(Importer<AssetType>());
+		AssetImporter mFile;
 		Engine::GUID<AssetType> tempGUID{ mFile.guid };
 		if (filePath.extension() == ".geom")
 		{
