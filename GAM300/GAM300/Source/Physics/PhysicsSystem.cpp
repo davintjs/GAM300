@@ -73,11 +73,6 @@ void PhysicsSystem::Update(float dt) {
 
 		Transform& t = scene.Get<Transform>(entity);
 
-		if (scene.Has<BoxCollider>(entity))
-		{
-			BoxCollider& test = scene.Get<BoxCollider>(entity);
-
-		}
 
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);

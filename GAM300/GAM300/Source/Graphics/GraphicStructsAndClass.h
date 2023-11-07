@@ -60,6 +60,7 @@ enum class SHADERTYPE
 	BLUR,
 	GBUFFER,
 	COLOURPICKING,
+	FORWARDDEBUG, // Non instanced debug draw
 	COUNT
 };
 

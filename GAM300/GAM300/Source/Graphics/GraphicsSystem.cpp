@@ -369,7 +369,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 #ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
-		std::cout << "want to debug draw\n";
 		DEBUGDRAW.Draw();
 
 	}

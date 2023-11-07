@@ -425,6 +425,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\NormalDebugRender.frag" />
+    <None Include="Shaders\NormalDebugRender.vert" />
     <None Include="Shaders\PBR.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>
