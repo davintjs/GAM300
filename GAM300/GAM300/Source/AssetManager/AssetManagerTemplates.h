@@ -7,7 +7,7 @@
 #include <Utilities/YAMLUtils.h>
 #include <Utilities/Serializer.h>
 
-#include "GeomDecompiler.h"
+#include "ModelDecompiler.h"
 #include "Graphics/MeshManager.h"
 
 namespace chron = std::chrono;
@@ -43,7 +43,7 @@ struct AllAssetsGroup
 
 				if (GetAssetType::E<T>() == assetType)
 				{
-					if constexpr (std::is_same<T, MeshAsset>())
+					if constexpr (std::is_same<T, ModelAsset>())
 					{
 						ModelImporter metaFile;
 
@@ -58,7 +58,7 @@ struct AllAssetsGroup
 						//std::filesystem::path path = filePath;
 						//path.replace_extension(".fbx");
 						// Get all model components
-						ModelComponents mc = GEOMDECOMPILER.DeserializeGeoms(filePath.string(), metaFile.guid);
+						ModelComponents mc = MODELDECOMPILER.DeserializeModel(filePath.string(), metaFile.guid);
 						//ModelComponents mc = MODELCOMPILER.LoadModel(path.string(), metaFile.guid);
 						// Check for existing guid within the geom meta file
 						if (mc.meshes.size() != metaFile.meshes.size())
@@ -73,8 +73,8 @@ struct AllAssetsGroup
 								Engine::GUID guid = GetGUID(meshAsset.mFilePath);
 								metaFile.meshes.push_back(guid);
 
-								std::get<AssetsTable<T>>(assets)[guid] = std::move(meshAsset);
-								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[guid]));
+								std::get<AssetsTable<MeshAsset>>(assets)[guid] = std::move(meshAsset);
+								std::get<AssetsBuffer<MeshAsset>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<MeshAsset>>(assets)[guid]));
 							}
 
 							Serialize(oldMeta, metaFile);
@@ -86,8 +86,8 @@ struct AllAssetsGroup
 								mc.meshes[i].mFilePath = filePath.stem();
 								mc.meshes[i].mFilePath += "_" + std::to_string(i) + ".geom";
 								
-								std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]] = std::move(mc.meshes[i]);
-								std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<T>>(assets)[metaFile.meshes[i]]));
+								std::get<AssetsTable<MeshAsset>>(assets)[metaFile.meshes[i]] = std::move(mc.meshes[i]);
+								std::get<AssetsBuffer<MeshAsset>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<MeshAsset>>(assets)[metaFile.meshes[i]]));
 							}
 						}
 						

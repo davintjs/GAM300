@@ -37,8 +37,6 @@ struct ModelVertex
 
 };
 
-
-
 // GUID, last file update time, file name, data
 struct FileInfo
 {

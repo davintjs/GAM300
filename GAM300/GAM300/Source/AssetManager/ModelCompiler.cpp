@@ -71,6 +71,8 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 			aiPostProcessSteps::aiProcess_FindInstances |				// searches for duplicate meshes and replaces them with references to the first mesh
 			aiPostProcessSteps::aiProcess_RemoveRedundantMaterials |	// remove unreferenced _material
 			aiPostProcessSteps::aiProcess_FindInvalidData |				// remove or fix invalid data
+			//aiPostProcessSteps::aiProcess_OptimizeMeshes |			// Reduce mesh count
+			//aiPostProcessSteps::aiProcess_OptimizeGraph |				// Optimize scene hierarchy
 			aiPostProcessSteps::aiProcess_PreTransformVertices;
 
 		// Import fbx without animation
@@ -596,7 +598,7 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 {
 	std::filesystem::path filePath{ _filePath };
-	filePath.replace_extension(".geom");
+	filePath.replace_extension(".model");
 
 	std::ofstream serializeFile(filePath, std::ios_base::binary);
 	E_ASSERT(serializeFile, "Could not open output file to serialize geom!");

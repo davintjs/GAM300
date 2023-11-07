@@ -1,5 +1,5 @@
 /*!***************************************************************************************
-\file			GeomDecompiler.h
+\file			ModelDecompiler.h
 \project		
 \author         Davin Tan
 \co-author      Sean Ngo
@@ -9,22 +9,22 @@
 
 \brief
     This file contains the declarations of the following:
-    1. Loads Geoms files and extract the meshes, material, textures and animations
+    1. Loads model files and extract the meshes, material, textures and animations
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#ifndef GEOMDECOMPILER_H
-#define GEOMDECOMPILER_H
+#ifndef MODELDECOMPILER_H
+#define MODELDECOMPILER_H
 
 #include "AssetManager/ModelClassAndStruct.h"
 
-#define GEOMDECOMPILER GeomDecompiler::Instance()
+#define MODELDECOMPILER ModelDecompiler::Instance()
 
-SINGLETON(GeomDecompiler)
+SINGLETON(ModelDecompiler)
 {
 public:
 	// To load Geoms from FBXs
-	ModelComponents DeserializeGeoms(const std::string& _filePath, const Engine::GUID& _guid);
+	ModelComponents DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid);
 	
 	// Load meshes from the FBX file
 	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);
@@ -52,4 +52,4 @@ private:
 
 };
 
-#endif // !GEOMDECOMPILER_H
+#endif // !MODELDECOMPILER_H
