@@ -517,6 +517,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+			
 			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 

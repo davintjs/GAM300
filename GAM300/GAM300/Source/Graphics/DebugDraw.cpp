@@ -35,7 +35,6 @@ void DebugDraw::Init()
 
 void DebugDraw::Update(float)
 {
-
 	ResetPhysicDebugContainer();
 
 	Scene& scene = MySceneManager.GetCurrentScene();
@@ -48,28 +47,59 @@ void DebugDraw::Update(float)
 	{
 		BoxCollider& bc = *it;
 		Transform& t = scene.Get<Transform>(bc);
+		Entity& entity = scene.Get<Entity>(bc);
 
 
-		
+		/*geometryDebugData temp;
+		if (scene.Has<MeshRenderer>(entity))
+		{
+			MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
 
+			temp = MeshManager.offsetAndBoundContainer.find(mr.meshID)->second;
+		}
+		else
+		{
+			temp = MeshManager.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
+		}*/
+
+		/*if (scene.Has<MeshRenderer>(bc))
+		{
+
+		}
+		else
+		{
+
+		}
 		MeshRenderer& renderer = scene.Get<MeshRenderer>(bc);
-
 
 		if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
 		{
 			std::cout << "hit\n";
 			continue;
-		}
+		}*/
 
-		GLuint vao = MeshManager.vaoMap[renderer.meshID];
+		//GLuint vao = MeshManager.vaoMap[renderer.meshID];
+		GLuint vao = MeshManager.vaoMap[DEFAULT_MESH];
 		InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
 
 		RigidDebug currRigidDebug;
 
 		currRigidDebug.vao = temporary.debugVAO;
 		glm::mat4 SRT = t.GetWorldMatrix();
+		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
+
+		//SRT *= scalarMat;
+
+		//std::cout << "scalar vals : " << temp.scalarBound.x << "\n";
+		//std::cout << "scalar offset : " << temp.offset.x << "\n";
+
+		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), temp.scalarBound);
+		//glm::mat4 transMat = glm::translate(glm::mat4(1.f), temp.offset);
+
 		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
-		SRT *= scalarMat;
+		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
+
+		SRT *= transMat * scalarMat;
 
 		currRigidDebug.SRT = SRT;
 		//currRigidDebug.RigidScalar = glm::vec3(bc.x, bc.y, bc.z);
@@ -157,7 +187,7 @@ void DebugDraw::Draw()
 
 	// Physic's Debug Draw
 	{
-		glLineWidth(2.f);
+		glLineWidth(5.f);
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::FORWARDDEBUG);
 		shader.Use();
@@ -182,6 +212,8 @@ void DebugDraw::Draw()
 			glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 				glm::value_ptr(EditorCam.GetViewMatrix()));
 			glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 1.f, 0.f)));
+			//glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(175.f / 255.f, 225.f / 255.f, 175.f / 255.f)));
+
 
 			// UNIFORM VARIABLES ----------------------------------------		
 			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(currRD.SRT));

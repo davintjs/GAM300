@@ -235,7 +235,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, _guid, tempProp);
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     mContainer.emplace(_guid, newMesh);
@@ -474,7 +474,7 @@ void MESH_Manager::CreateInstanceCube()
     newMesh.drawCounts = 36;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, cubeGUID, tempProp);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
@@ -601,7 +601,7 @@ void MESH_Manager::CreateInstanceSphere()
     newMesh.vertices_max = max;
 
     //Do something about AABB
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, sphereGUID, tempProp);
     mContainer.emplace(sphereGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
@@ -967,8 +967,12 @@ void MESH_Manager::CreateInstanceSegment3D()
 
 }
 
-void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
+void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid,  InstanceProperties& prop) // vao
 {
+    
+    offsetAndBoundContainer[_guid].offset = (maxpt + minpt) / 2.f;
+    offsetAndBoundContainer[_guid].scalarBound = (maxpt - offsetAndBoundContainer[_guid].offset) * 2.f;
+
     //// find min max points for each axis
     //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
 

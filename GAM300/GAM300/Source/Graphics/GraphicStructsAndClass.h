@@ -26,6 +26,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
 #define DEFAULT_MATERIALINSTANCE DEFAULT_ASSETS["None.material"]
 
+struct geometryDebugData
+{
+	glm::vec3 offset;
+	glm::vec3 scalarBound;
+};
+
 struct temp_instance
 {
 	std::string name;

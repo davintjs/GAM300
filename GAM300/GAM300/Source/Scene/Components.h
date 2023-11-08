@@ -73,7 +73,6 @@ struct Transform : Object
 
 	//Parent's euid
 	Engine::UUID parent = 0;
-
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 
@@ -150,6 +149,8 @@ struct BoxCollider : Object
 	float x = 1.0f;
 	float y = 1.0f;
 	float z = 1.0f;
+
+	Vector3 offset{ 0.f };
 	property_vtable();
 };
 
@@ -158,6 +159,7 @@ property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(x).Name("X"),
 	property_var(y).Name("Y"),
 	property_var(z).Name("Z"),
+	property_var(offset).Name("Offset"),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
