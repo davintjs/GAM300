@@ -210,6 +210,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 void EditorHierarchy::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+
 	ImGui::Begin("Hierarchy");
 
 	//List out all entities in current scene
@@ -218,18 +219,18 @@ void EditorHierarchy::Update(float dt)
 	//Add/Delete entities using right click
 	static ImGuiTextFilter filter;
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
 	ImGui::Text("Filter: "); ImGui::SameLine();
 	filter.Draw();
+
+	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
+
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
 	Scene::Layer& layer = curr_scene.layer;
 
-	
-
 	if (sceneopen)
 	{
-		
-
 		for (Engine::UUID euid : layer)
 		{
 			if (!curr_scene.Get<Transform>(euid).isChild())
@@ -318,7 +319,9 @@ void EditorHierarchy::Update(float dt)
 		}
 
 		ImGui::TreePop();
+		
 	}
+	ImGui::EndChild();
 	ImGui::End();
 }
 
