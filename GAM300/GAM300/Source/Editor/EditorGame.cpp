@@ -46,8 +46,6 @@ void EditorGame::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
-    ToolBar();
-
     GameView();
 
     ImGui::PopStyleVar();
@@ -55,15 +53,10 @@ void EditorGame::Update(float dt)
 
 void EditorGame::ToolBar()
 {
-    ImGuiWindowClass window_class;
-    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
-
-    ImGui::SetNextWindowClass(&window_class);
-
-    //Scene toolbar
-    if (ImGui::Begin("Game Toolbar"))
+    if (ImGui::BeginMenuBar())
     {
         static std::string display = displayTargets[0].name.c_str();
+        ImGui::SetNextItemWidth(76.f + 20.f);
         if (ImGui::BeginCombo("##Target Display", display.c_str()))
         {
             for (int n = 0; n < IM_ARRAYSIZE(displayTargets); n++)
@@ -82,8 +75,9 @@ void EditorGame::ToolBar()
             }
             ImGui::EndCombo();
         }
+
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
 }
 
 void EditorGame::UpdateTargetDisplay()
@@ -104,10 +98,12 @@ void EditorGame::UpdateTargetDisplay()
 
 void EditorGame::GameView()
 {
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar;
     windowOpened = ImGui::Begin("Game", nullptr, flags);
     if (windowOpened)
     {
+        ToolBar();
+
         if (!camera) // If the camera does not exist
         {
             ImGui::End();

@@ -48,8 +48,6 @@ void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
-    ToolBar();
-
     SceneView();
 
     ImGui::PopStyleVar();
@@ -59,19 +57,14 @@ void EditorScene::Update(float dt)
 
 void EditorScene::ToolBar()
 {
-    ImGuiWindowClass window_class;
-    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
-
-    ImGui::SetNextWindowClass(&window_class);
-
     //Scene toolbar
-    if (ImGui::Begin("Scene Toolbar"))
+    if (ImGui::BeginMenuBar())
     {
-        ImGui::Dummy(ImVec2(0.0f, 3.f));
-        ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
-        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
+        ImGui::Combo("##Coord Space", &coord_selection, GizmoWorld, 2, 2);
+
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         float buttonSize = 20.f;
         ImVec2 btn = ImVec2(buttonSize, buttonSize);
@@ -85,7 +78,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
+        if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -99,8 +92,7 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 2) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("W", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
             toggled = 2;
@@ -110,7 +102,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
+        if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;
@@ -119,29 +111,33 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 4) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("R", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = ImGuizmo::SCALE;
             toggled = 4;
         }
         ImGui::PopStyleColor();
 
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(20.0f, 0.f));
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
-        //ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+        if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
 }
 
 void EditorScene::SceneView()
 {
-    windowOpened = ImGui::Begin("Scene");
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar;
+    windowOpened = ImGui::Begin("Scene", nullptr, flags);
     //Editor scene viewport
     if (windowOpened)
     {
+        ToolBar();
+
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;

@@ -44,7 +44,7 @@ void EditorCamera::Update(float dt)
 	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
 	
-	if(e.isHovered) // Focus on object using F key
+	if(e.isHovered || isFocusing) // Focus on object using F key
 		FocusOnObject(dt);
 
 	if(e.isHovered || isFlying)	// Rotating and Flying
