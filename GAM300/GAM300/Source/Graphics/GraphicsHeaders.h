@@ -91,6 +91,20 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct RigidDebug
+{
+	glm::mat4 SRT; // This has been multiplied by 
+	
+	GLuint vao;
+
+	/*
+	glm::vec3 translation;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+	glm::vec3 RigidScalar;
+	*/
+};
+
 struct Shader {
 	Shader(std::string _name, SHADERTYPE type) : name(_name), shadertype(type) {}
 	std::string name;
@@ -291,11 +305,24 @@ public:
 
 	void DrawRay();
 
+	// Loop through all rigid bodies and get them
+	void LoopAndGetRigidBodies();
+
+	// Add into Rigid
+	void AddBoxColliderDraw(RigidDebug rigidDebugDraw);
+
+	// Reset all Physic's Rigid Body Container
+	void ResetPhysicDebugContainer();
+
+
 private:
+
 	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
+	std::vector<RigidDebug> boxColliderContainer;
+
 };
 
 ENGINE_SYSTEM(Lighting)

@@ -66,9 +66,12 @@ void PhysicsSystem::Update(float dt) {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
+
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
 		Entity& entity = scene.Get<Entity>(rb);
+		
+
 		Transform& t = scene.Get<Transform>(entity);
 
 
@@ -514,6 +517,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+			
 			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
