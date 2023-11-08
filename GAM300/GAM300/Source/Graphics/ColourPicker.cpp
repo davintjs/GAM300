@@ -187,9 +187,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 }
 
 
-bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
+Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	
 
@@ -197,10 +196,12 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	glm::mat4 viewToUse = _camera.GetViewMatrix();
 	glm::mat4 srtToUse;
 
-	//glViewport(0, 0, 1600, 900);
-	glViewport(0, 0, EditorCam.GetViewportSize().x, EditorCam.GetViewportSize().y);
+	glViewport(0, 0, 1600, 900);
+	//glViewport(0, 0, EditorCam.GetViewportSize().x, EditorCam.GetViewportSize().y);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, colorPickFBO);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::COLOURPICKING);
 	shader.Use();
@@ -225,6 +226,7 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	int offset = 1;
 	int index = 0;
 	bool meshToColourPick = false;
+
 	for (MeshRenderer& mr : currentScene.GetArray<MeshRenderer>())
 	{
 		if (!meshToColourPick)
@@ -247,7 +249,7 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 		float b = (float)((temp & 0x00FF0000) >> 16);
 
 		// in game mode, only care about buttons
-		glm::vec4 picking_color = glm::vec4(r / 255.f, g / 255.f, b / 255.f, 1.f);
+		glm::vec4 picking_color = glm::vec4((r / 255.f), (g / 255.f) , (b / 255.f) , 1.f);
 
 		glUniform4fv(glGetUniformLocation(shader.GetHandle(), "PickingColour")
 			, 1, glm::value_ptr(picking_color));
@@ -257,9 +259,7 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 
 		if (MeshManager.vaoMap.find(mr.meshID) == MeshManager.vaoMap.end())
 		{
-			std::cout << "missing vao?\n";
 			continue;
-
 		}
 
 		Mesh* currMesh = MeshManager.DereferencingMesh(mr.meshID);
@@ -277,37 +277,24 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	unsigned char data[4];
 
-	glm::vec2 mousepos = InputHandler::getMousePos();
+
 #if defined(_BUILD)
 
-	glReadPixels(mousepos.x, mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glReadPixels(mousePosition.x, mousePosition.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 #else
 
-	glm::vec2 true_mousepos;
-	true_mousepos.y = mousepos.y;
+	glm::vec2 mousePosition = InputHandler::getMousePos();
 
-	float width = (float)Application::GetWidth();
-	float height = (float)Application::GetHeight();
-	true_mousepos.x = mousepos.x - windowPos.x;
-	true_mousepos.x = (true_mousepos.x / windowDimension.x) * 1600.f;
+	mousePosition.y -= Application::GetHeight() - EditorCam.GetScenePosition().y - EditorCam.GetViewportSize().y;
 
-	true_mousepos.y = mousepos.y - (-(windowPos.y + windowDimension.y) + height);
-	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
+	glm::vec2 mouseScenePosition = { mousePosition.x - EditorCam.GetScenePosition().x, mousePosition.y };
 
-	glm::vec2 mp = EditorCam.GetMouseInNDC();
-	//std::cout << "mouse pos : " << mp.x << " , " << mp.y << "\n";
+	glm::vec2 mp = mouseScenePosition / EditorCam.GetViewportSize();
+	mp.x *= 1600.f;
+	mp.y *= 900.f;
 
-	//float x = (2.0f * (float)mp.x) / Application::GetWidth() - 1.0f;
-	//float y = (2.0f * (float)mp.y) / Application::GetHeight() - 1.0f;
-
-	float x = ((float)mp.x * EditorCam.GetViewportSize().x) / Application::GetWidth()-1.0f;
-	float y = ((float)mp.y * EditorCam.GetViewportSize().y) / Application::GetHeight()-1.0f;
-	std::cout << "mouse pos : " << x << " , " << y << "\n";
-
-	//glReadPixels((GLint)mp.x, (GLint)mp.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	glReadPixels((GLint)x, (GLint)y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
+	glReadPixels((GLint)mp.x, (GLint)mp.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 #endif // _BUILD
 
@@ -315,21 +302,32 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	std::cout << selectedID << "\n";
+	//std::cout << selectedID << "\n";
 
 	if (meshToColourPick && (selectedID > 0) && (selectedID != 13421772))
 	{
-		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
-		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-		//PRINT(entity_tag.name, "\n");
-		std::cout << "from ColorPickingMeshs : " << entity_tag.name << "\n";
+		int index = selectedID - offset;
+		if (index < EUID_Holder.size())
+		{
+			Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
+			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
+			//PRINT(entity_tag.name, "\n");
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+			return EUID_Index;
+		}
+		
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	return true;
+	return 0;
 
 }
 void ColourPicker::DrawSprites(glm::mat4 _projection , glm::mat4 _view , glm::mat4 _srt , GLSLShader& _shader)
