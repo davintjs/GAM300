@@ -83,6 +83,8 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 	}
 	else
 	{
+		pModel->animations.push_back(Animation());
+
 		ProcessNode(*defaultScene->mRootNode, *defaultScene);
 
 		ProcessBones(*defaultScene->mRootNode, *defaultScene);
@@ -99,11 +101,11 @@ void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 	if (hasAnimation) //instead of this, pushback into my animmanager animation container
 	{
 		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
-		Animation& animation = pModel->animations.GetAnimations();
+		Animation& animation = pModel->animations[0];
 		animation.GetDuration() = (float)animations->mDuration;
 		animation.GetTicksPerSecond() = (int)animations->mTicksPerSecond;
 		animation.ReadHierarchyData(animation.GetRootNode(), _scene.mRootNode);
-		animation.ReadMissingBones(animations, pModel->animations);
+		animation.ReadMissingBones(animations);
 	}
 }
 
@@ -127,7 +129,6 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 {
 	std::vector<ModelVertex> tempVertex;
 	std::vector<unsigned int> tempIndices;
-	std::vector<TextureInfo> tempTextures;
 	
 	for (unsigned int i = 0; i < _mesh.mNumVertices; ++i) // Processing all vertices in this single mesh
 	{
@@ -544,8 +545,10 @@ void ModelCompiler::ImportMaterialAndTextures(const aiMaterial& _material)
 
 void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene)
 {
-	auto& boneInfoMap = pModel->animations.GetBoneInfoMap();
-	int& boneCount = pModel->animations.GetBoneCount();
+	// Just need one animation to reference to get the bones and boneCount, because all animations
+	// use the same bones and have the same bone count, id and offset
+	auto& boneInfoMap = pModel->animations[0].GetBoneInfoMap();
+	int& boneCount = pModel->animations[0].GetBoneCount();
 	
 	for (int boneIndex = 0; boneIndex < (int)_mesh.mNumBones; ++boneIndex)
 	{
@@ -607,12 +610,12 @@ void ModelCompiler::SerializeBinaryGeom(const std::filesystem::path& _filePath)
 	SerializeBinaryMeshes(serializeFile);
 
 	// Materials
-	//SerializeBinaryMaterials(serializeFile);
+	SerializeBinaryMaterials(serializeFile);
 
 	// Animations
-	/*serializeFile.write(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
+	serializeFile.write(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
 	if (hasAnimation)
-		SerializeBinaryAnimations(serializeFile);*/
+		SerializeBinaryAnimations(serializeFile);
 	
 	serializeFile.flush();
 	serializeFile.close();
@@ -675,16 +678,16 @@ void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
 	size_t animationSize = 1;
 	_serializeFile.write(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
 
-	Animation animation = pModel->animations.GetAnimations();
+	Animation& animation = pModel->animations[0];
 
-	_serializeFile.write(reinterpret_cast<char*>(&animation.m_Duration), sizeof(animation.m_Duration));
-	_serializeFile.write(reinterpret_cast<char*>(&animation.m_TicksPerSecond), sizeof(animation.m_TicksPerSecond));
+	_serializeFile.write(reinterpret_cast<char*>(&animation.GetDuration()), sizeof(animation.GetDuration()));
+	_serializeFile.write(reinterpret_cast<char*>(&animation.GetTicksPerSecond()), sizeof(animation.GetTicksPerSecond()));
 
 	// Bones
-	size_t boneSize = animation.m_Bones.size();
+	size_t boneSize = animation.GetBones().size();
 	_serializeFile.write(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
 
-	for (auto& bone : animation.m_Bones)
+	for (auto& bone : animation.GetBones())
 	{
 		// Position
 		_serializeFile.write(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
@@ -711,17 +714,14 @@ void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
 	}
 
 	// AssimpNodeData
-	AssimpNodeData& nodeData = animation.m_RootNode;
+	AssimpNodeData& nodeData = animation.GetRootNode();
 	SerializeBinaryRecursiveNode(_serializeFile, nodeData);
 
-	// Animation Model
-	AnimationModel model = pModel->animations;
-
 	// Bone Info Map
-	size_t boneInfoSize = model.GetBoneInfoMap().size();
+	size_t boneInfoSize = animation.GetBoneInfoMap().size();
 	_serializeFile.write(reinterpret_cast<char*>(&boneInfoSize), sizeof(boneInfoSize));
 
-	for (auto it = model.GetBoneInfoMap().begin(); it != model.GetBoneInfoMap().end(); ++it)
+	for (auto it = animation.GetBoneInfoMap().begin(); it != animation.GetBoneInfoMap().end(); ++it)
 	{
 		// Kay of BoneInfoMap
 		size_t keySize = it->first.length();
@@ -734,12 +734,7 @@ void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
 		_serializeFile.write(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
 	}
 
-	_serializeFile.write(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
-
-	/*for (auto& anim : pModel->animations.GetAnimations())
-	{
-
-	}*/
+	_serializeFile.write(reinterpret_cast<char*>(&animation.GetBoneCount()), sizeof(BoneInfo));
 }
 
 void ModelCompiler::SerializeBinaryRecursiveNode(std::ofstream& _serializeFile, AssimpNodeData& _nodeData)

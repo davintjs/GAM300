@@ -32,7 +32,7 @@ public:
 
 	void SetAnimation(Animation* animation);
 
-	void UpdateAnimation(float dt);
+	void UpdateAnimation(float dt, glm::mat4& pTransform);
 
 	void PlayAnimation(Animation* pAnimation);
 

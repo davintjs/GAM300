@@ -26,17 +26,16 @@ ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, 
     DeserializeMeshes(ifs, tempModel);
 
     // Retrieve material assets
-    //DeserializeMaterials(ifs, tempModel);
+    DeserializeMaterials(ifs, tempModel);
 
     // Retrieve texture assets
     DeserializeTextures(ifs, tempModel);
 
     // Retrieve animation assets
-    /*bool hasAnimation;
+    bool hasAnimation;
     ifs.read(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
     if(hasAnimation)
-        DeserializeAnimations(ifs, tempModel);*/
-
+        DeserializeAnimations(ifs, tempModel);
 
     ifs.close();
 
@@ -149,20 +148,19 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
     //size_t animationSize = pModel->animations.GetAnimations().size();
     size_t animationSize;
     ifs.read(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
+    Animation animation;
 
-    Animation& animation = _model.animations.GetAnimations();
-
-    ifs.read(reinterpret_cast<char*>(&animation.m_Duration), sizeof(animation.m_Duration));
-    ifs.read(reinterpret_cast<char*>(&animation.m_TicksPerSecond), sizeof(animation.m_TicksPerSecond));
+    ifs.read(reinterpret_cast<char*>(&animation.GetDuration()), sizeof(animation.GetDuration()));
+    ifs.read(reinterpret_cast<char*>(&animation.GetTicksPerSecond()), sizeof(animation.GetTicksPerSecond()));
 
     // Bones
     size_t boneSize;
     ifs.read(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
-    animation.m_Bones.resize(boneSize);
+    animation.GetBones().resize(boneSize);
 
     for (size_t i = 0; i < boneSize; i++)
     {
-        Bone& bone = animation.m_Bones[i];
+        Bone& bone = animation.GetBones()[i];
         // Position
         ifs.read(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
         bone.m_Positions.resize(bone.m_NumPositions);
@@ -192,11 +190,8 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
     }
 
     // AssimpNodeData
-    AssimpNodeData& nodeData = animation.m_RootNode;
+    AssimpNodeData& nodeData = animation.GetRootNode();
     DeserializeRecursiveNode(ifs, _model, nodeData);
-
-    // Animation Model
-    AnimationModel& model = _model.animations;
 
     // Bone Info Map
     size_t boneInfoSize = 0;
@@ -215,10 +210,11 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
         BoneInfo boneInfo;
         ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
 
-        model.GetBoneInfoMap()[key] = boneInfo;
+        animation.GetBoneInfoMap()[key] = boneInfo;
     }
 
-    ifs.read(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
+    ifs.read(reinterpret_cast<char*>(&animation.GetBoneCount()), sizeof(BoneInfo));
+    _model.animations.push_back(animation);
 }
 
 void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
