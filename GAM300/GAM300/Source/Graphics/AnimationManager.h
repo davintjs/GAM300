@@ -236,6 +236,18 @@ public:
         mAnimationMeshContainer.emplace(meshAsset.first, meshAsset.second);
     }
 
+    int AddAnimCopy(std::string animguid)//;
+    {
+        int idx = mAnimationSceneContainer.size();
+        mAnimationSceneContainer.emplace(idx, mAnimationContainer[animguid]);
+        return idx;
+    }
+
+    Animation& GetAnimCopy(int idx)
+    {
+        return mAnimationSceneContainer[idx];
+    }
+
     //// uses GUID to retrieve a texture from the texture container
     //GLuint GetTexture(std::string GUID);
     AnimationModel GetModel() { return allModels_; }; //temp shld be deleted
@@ -243,8 +255,10 @@ public:
 private:
 
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
-    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation ->  temp... throw after compiler done
-    //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ->  temp...
+    //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ---------------> to be used instead once compiler stuff ok
+    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation
+    std::unordered_map<int, Animation> mAnimationSceneContainer; // Index, Animation -> for current anims in scene
+
     std::unordered_map<Engine::GUID, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
 
     // can yeet these

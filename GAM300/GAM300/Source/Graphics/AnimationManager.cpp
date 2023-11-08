@@ -225,7 +225,19 @@ void Animation_Manager::Init()
     //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
     allModels_ = md.animations;
    
-    mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
+    mAnimationContainer.emplace("fakeguid", allModels_.GetAnimations()); //
+
+    // pretend we are loading the scene
+    std::string animguid = "fakeguid"; // emulating taking guid of anim from scene file
+    // emulating making a copy of the anim and initialising animator component -> doesnt actually do anything for now
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        //int idx = AddAnimCopy(animguid);
+        //animator.SetAnimationIdx(idx);
+        animator.SetAnimation(animguid); // makes a copy of the anim and sets idx in animator component to access the copy
+    }
+
 }
 
 void Animation_Manager::Update(float dt)
@@ -239,7 +251,11 @@ void Animation_Manager::Update(float dt)
         }
         else if (!animator.AnimationAttached())
         {
-            animator.SetAnimation(&allModels_.GetAnimations());
+            //int idx = AddAnimCopy(mAnimationContainer["fakeguid"]);
+            //animator.SetAnimationIdx(idx);
+
+            animator.SetAnimation("fakeguid");
+            //animator.SetAnimation(&allModels_.GetAnimations());
         }
     }
 }
