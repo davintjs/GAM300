@@ -280,8 +280,14 @@ public:
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	bool ColorPickingMeshs(BaseCamera & _camera);
 
-	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
+	void DrawMeshes( GLSLShader & _shader);
+
+	glm::vec2 gameWindowPos;
+	glm::vec2 gameWindowDimension;
+	glm::vec2 editorWindowPos;
+	glm::vec2 editorWindowDimension;
 private:
 
 	// Colour Picking

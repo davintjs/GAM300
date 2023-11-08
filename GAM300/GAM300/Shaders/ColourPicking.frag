@@ -49,7 +49,7 @@ void main()
 
     
     case 0: // Mesh Renderer Picking
-
+        FragColor = PickingColour;
 
     break;
 

@@ -214,6 +214,8 @@ void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
 
+    COLOURPICKER.ColorPickingMeshs(EditorCam);
+
     if (SelectEntity())
     {
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())

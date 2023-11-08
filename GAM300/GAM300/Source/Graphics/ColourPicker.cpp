@@ -20,6 +20,8 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "IOManager/InputHandler.h"
 #include "Core/Events.h"
 #include "Editor/Editor.h"
+#include "MeshManager.h"
+#include "Editor/EditorCamera.h"
 
 
 extern unsigned int Renderer_quadVAO;
@@ -122,7 +124,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			glUniform1f(uniform2, true);
 		}
 
-		Draw(projToUse, viewToUse, srtToUse, shader);
+		DrawSprites(projToUse, viewToUse, srtToUse, shader);
 
 	}
 
@@ -148,7 +150,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 	true_mousepos.y = mousepos.y - (-(windowPos.y + windowDimension.y) + height);
 	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
-
+	//std::cout << "game : " << true_mousepos.x << " , " << true_mousepos.y << "\n";
 	glReadPixels((GLint)true_mousepos.x, (GLint)true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 
@@ -162,12 +164,20 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
-		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
-		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-		//PRINT(entity_tag.name, "\n");
-		std::cout << entity_tag.name << "\n";
-
-
+		int index = selectedID - offset;
+		if (index < EUID_Holder.size())
+		{
+			
+			Engine::UUID EUID_Index = EUID_Holder[index];
+		
+			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
+			//PRINT(entity_tag.name, "\n");
+			std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
+		}
+		/*else
+		{
+			std::cout << "wtf\n";
+		}*/
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -180,14 +190,16 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	
-	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
-	glm::mat4 IdentityMat = glm::mat4(1.f);
-	glm::mat4 projToUse, viewToUse, srtToUse;
 
-	glViewport(0, 0, 1600, 900);
+	glm::mat4 projToUse = _camera.GetProjMatrix(); 
+	glm::mat4 viewToUse = _camera.GetViewMatrix();
+	glm::mat4 srtToUse;
+
+	//glViewport(0, 0, 1600, 900);
+	glViewport(0, 0, EditorCam.GetViewportSize().x, EditorCam.GetViewportSize().y);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, colorPickFBO);
 
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::COLOURPICKING);
@@ -197,21 +209,28 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	GLint uniform2 =
 		glGetUniformLocation(shader.GetHandle(), "isTexture");
 
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(projToUse));
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(viewToUse));
 
 
-	glUniform1f(uniform1, 0);
+
+	glUniform1i(uniform1, 0);
 	glUniform1f(uniform2, false);
-
 
 	std::vector<Engine::UUID> EUID_Holder;
 
 	int offset = 1;
-
 	int index = 0;
-
+	bool meshToColourPick = false;
 	for (MeshRenderer& mr : currentScene.GetArray<MeshRenderer>())
 	{
-		
+		if (!meshToColourPick)
+		{
+			meshToColourPick = true;
+		}
 
 		Entity& entity = currentScene.Get<Entity>(mr);
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -234,38 +253,22 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 			, 1, glm::value_ptr(picking_color));
 
 
-		//if (Sprite.WorldSpace) // 3D Space UI
-		//{
-		//	projToUse = _camera.GetProjMatrix();
-		//	viewToUse = _camera.GetViewMatrix();
-		//	srtToUse = transform.GetWorldMatrix();
-		//}
-		//else // Screen Space UI
-		//{
-		//	projToUse = OrthoProjection;
-		//	viewToUse = IdentityMat;
-		//	srtToUse = transform.GetLocalMatrix();
-		//}
+		srtToUse = transform.GetWorldMatrix();
 
+		if (MeshManager.vaoMap.find(mr.meshID) == MeshManager.vaoMap.end())
+		{
+			std::cout << "missing vao?\n";
+			continue;
 
-		//GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		}
 
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, spriteTextureID);
+		Mesh* currMesh = MeshManager.DereferencingMesh(mr.meshID);
 
-		//GLint uniform1 =
-		//	glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(srtToUse));
 
-		//if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
-		//{
-		//	glUniform1f(uniform1, false);
-		//}
-		//else
-		//{
-		//	glUniform1f(uniform1, true);
-		//}
-
-		Draw(projToUse, viewToUse, srtToUse, shader);
+		glBindVertexArray(currMesh->vaoID);
+		glDrawElements(currMesh->prim, currMesh->drawCounts, GL_UNSIGNED_INT, 0);
 
 	}
 
@@ -292,7 +295,18 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	true_mousepos.y = mousepos.y - (-(windowPos.y + windowDimension.y) + height);
 	true_mousepos.y = (true_mousepos.y / windowDimension.y) * 900.f;
 
-	glReadPixels((GLint)true_mousepos.x, (GLint)true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glm::vec2 mp = EditorCam.GetMouseInNDC();
+	//std::cout << "mouse pos : " << mp.x << " , " << mp.y << "\n";
+
+	//float x = (2.0f * (float)mp.x) / Application::GetWidth() - 1.0f;
+	//float y = (2.0f * (float)mp.y) / Application::GetHeight() - 1.0f;
+
+	float x = ((float)mp.x * EditorCam.GetViewportSize().x) / Application::GetWidth()-1.0f;
+	float y = ((float)mp.y * EditorCam.GetViewportSize().y) / Application::GetHeight()-1.0f;
+	std::cout << "mouse pos : " << x << " , " << y << "\n";
+
+	//glReadPixels((GLint)mp.x, (GLint)mp.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glReadPixels((GLint)x, (GLint)y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 
 #endif // _BUILD
@@ -301,26 +315,24 @@ bool ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	//std::cout << selectedID << "\n";
+	std::cout << selectedID << "\n";
 
-	//if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772))
-	//{
-	//	Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
-	//	Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-	//	//PRINT(entity_tag.name, "\n");
-	//	//std::cout << entity_tag.name << "\n";
-
-
-	//}
+	if (meshToColourPick && (selectedID > 0) && (selectedID != 13421772))
+	{
+		Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];
+		Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
+		//PRINT(entity_tag.name, "\n");
+		std::cout << "from ColorPickingMeshs : " << entity_tag.name << "\n";
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return true;
 
 }
-void ColourPicker::Draw(glm::mat4 _projection , glm::mat4 _view , glm::mat4 _srt , GLSLShader& _shader)
+void ColourPicker::DrawSprites(glm::mat4 _projection , glm::mat4 _view , glm::mat4 _srt , GLSLShader& _shader)
 {
 	glUniformMatrix4fv(glGetUniformLocation(_shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(_projection));
