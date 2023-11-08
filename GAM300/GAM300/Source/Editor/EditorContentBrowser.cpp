@@ -134,13 +134,18 @@ void EditorContentBrowser::Update(float dt)
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
+            else if (ext == "material") {
+                GetAssetEvent e{ it.path() };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MATERIAL;
+            }
             else if (ext == "prefab") { //prefab files
 
-            }
-           
+            }          
             ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
             ImGui::EndDragDropSource();
-
         }
 
         ImGui::PopStyleColor();
