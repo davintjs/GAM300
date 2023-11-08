@@ -213,6 +213,7 @@ bool EditorScene::SelectEntity()
 void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
+
     if (SelectEntity())
     {
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())

@@ -276,7 +276,9 @@ public:
 
 	// Initialize the skybox of the engine
 
-	void ColorPickingUI(BaseCamera & _camera);
+	void ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
+	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
+	bool ColorPickingMeshs(BaseCamera & _camera);
 
 	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
