@@ -90,6 +90,8 @@ public:
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
 	std::vector<DefaultRenderProperties>* defaultProperties;
 
+	std::unordered_map<Engine::GUID, geometryDebugData> offsetAndBoundContainer;
+
 private:
 
 	void CreateInstanceCube();
@@ -106,6 +108,6 @@ private:
 	// Did not make this version because i realized that its all within instance properties
 	//unsigned int InstanceSetup_MAT(InstanceProperties& prop);
 
-	void debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop); // vao
+	void debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid, InstanceProperties& prop); // vao
 
 };

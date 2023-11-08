@@ -385,7 +385,9 @@ void Renderer::Draw(BaseCamera& _camera)
 			if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
 				// FOR DEBUG DRAW
 				if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+				{
 					DrawDebug(prop.debugVAO, (unsigned)prop.entitySRT.size());
+				}
 				if (s == static_cast<int>(SHADERTYPE::TDR)) {
 					DrawGrid(vao, (unsigned)prop.entitySRT.size());
 					continue;
@@ -1141,146 +1143,6 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 	shader.UnUse();
 }
 
-//void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
-//{
-//	glEnable(GL_DEPTH_TEST);
-//	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
-//	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
-//	lightPos = -lightPos;
-//	glm::mat4 lightProjection, lightView;
-//	float near_plane = -100.f, far_plane = 100.f;
-//
-//	// Above is directional light and spot light related stuffs
-//	// this vector is for point light
-//	std::vector<glm::mat4> shadowTransforms;
-//	
-//	//if (temporary_test == DIRECTIONAL_LIGHT)
-//	//{
-//		// Good Light pos {-0.2f, -1.0f, -0.3f}
-//		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
-//		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
-//		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-//
-//	//}
-//
-//
-//	//else if (temporary_test == SPOT_LIGHT)	
-//	//{
-//		lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
-//		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + 
-//			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
-//	//}
-//
-//	//else if (temporary_test == POINT_LIGHT)
-//	//{
-//		near_plane = 0.001f;
-//		far_plane = 1000.f;
-//		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-//	//}
-//
-//	lightSpaceMatrix = lightProjection * lightView;
-//	
-//
-//	//glEnable(GL_CULL_FACE);
-//	//glCullFace(GL_FRONT);
-//
-//
-//	if (temporary_test == POINT_LIGHT)
-//	{
-//		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-//		glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
-//		glClear(GL_DEPTH_BUFFER_BIT);
-//	}
-//	else
-//	{
-//		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-//		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-//		glClear(GL_DEPTH_BUFFER_BIT);
-//	}
-//
-//	/*for (auto& [str, vao] : MESHMANAGER.vaoMap) {
-//		std::cout << "NAME: " << str << " vao: " << vao << "\n";
-//	}*/
-//	//std::cout << std::endl;
-//	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
-//	{
-//		for (auto& [vao, prop] : instanceContainers[s]) {
-//			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
-//			//{
-//			
-//			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-//			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-//			glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//			if (temporary_test == POINT_LIGHT)
-//			{
-//				//glClear(GL_DEPTH_BUFFER_BIT);
-//
-//				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
-//				shader.Use();
-//				/*for (int i = 0; i < 6; ++i)
-//				{
-//					std::string spot_pos;
-//					spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
-//					glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
-//						, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
-//				}*/
-//
-//				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
-//					, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
-//
-//				GLint uniform1 =
-//					glGetUniformLocation(shader.GetHandle(), "lightPos");
-//				glUniform3fv(uniform1, 1,
-//					glm::value_ptr(point_light_stuffs.lightpos));
-//
-//				GLint uniform2 =
-//					glGetUniformLocation(shader.GetHandle(), "far_plane");
-//				glUniform1f(uniform2, far_plane);
-//
-//
-//				glBindVertexArray(prop.VAO);
-//				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-//				glBindVertexArray(0);
-//
-//				shader.UnUse();
-//
-//			}
-//			else
-//			{
-//				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
-//				shader.Use();
-//
-//				GLint uniform1 =
-//					glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
-//
-//				glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-//					glm::value_ptr(lightSpaceMatrix));
-//
-//				glBindVertexArray(prop.VAO);
-//				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-//				glBindVertexArray(0);
-//
-//				shader.UnUse();
-//
-//			}
-//		}
-//	}
-//
-//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//
-//	//glDisable(GL_CULL_FACE);
-//
-//	// reset viewport
-//	//glViewport(0, 0, 1600, 900);// screen width and screen height
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//}
 
 
 void Renderer::DrawDepthDirectional()
@@ -1574,3 +1436,144 @@ void Renderer::Exit()
 {
 
 }
+
+//void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
+//{
+//	glEnable(GL_DEPTH_TEST);
+//	//glm::vec3 lightPos(-2.0f, 4.0f, -1.0f); // This suppouse to be the actual light direction
+//	glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
+//	lightPos = -lightPos;
+//	glm::mat4 lightProjection, lightView;
+//	float near_plane = -100.f, far_plane = 100.f;
+//
+//	// Above is directional light and spot light related stuffs
+//	// this vector is for point light
+//	std::vector<glm::mat4> shadowTransforms;
+//	
+//	//if (temporary_test == DIRECTIONAL_LIGHT)
+//	//{
+//		// Good Light pos {-0.2f, -1.0f, -0.3f}
+//		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
+//		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
+//		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+//
+//	//}
+//
+//
+//	//else if (temporary_test == SPOT_LIGHT)	
+//	//{
+//		lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
+//		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos + 
+//			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
+//	//}
+//
+//	//else if (temporary_test == POINT_LIGHT)
+//	//{
+//		near_plane = 0.001f;
+//		far_plane = 1000.f;
+//		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+//		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+//	//}
+//
+//	lightSpaceMatrix = lightProjection * lightView;
+//	
+//
+//	//glEnable(GL_CULL_FACE);
+//	//glCullFace(GL_FRONT);
+//
+//
+//	if (temporary_test == POINT_LIGHT)
+//	{
+//		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+//		glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
+//		glClear(GL_DEPTH_BUFFER_BIT);
+//	}
+//	else
+//	{
+//		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+//		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+//		glClear(GL_DEPTH_BUFFER_BIT);
+//	}
+//
+//	/*for (auto& [str, vao] : MeshManager.vaoMap) {
+//		std::cout << "NAME: " << str << " vao: " << vao << "\n";
+//	}*/
+//	//std::cout << std::endl;
+//	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
+//	{
+//		for (auto& [vao, prop] : instanceContainers[s]) {
+//			//for (auto& [name, prop] : instanceProperties) // @kk check if need use the container with shader anot
+//			//{
+//			
+//			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+//			glBufferSubData(GL_ARRAY_BUFFER, 0, (EnitityInstanceLimit) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+//			glBindBuffer(GL_ARRAY_BUFFER, 0);
+//
+//			if (temporary_test == POINT_LIGHT)
+//			{
+//				//glClear(GL_DEPTH_BUFFER_BIT);
+//
+//				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
+//				shader.Use();
+//				/*for (int i = 0; i < 6; ++i)
+//				{
+//					std::string spot_pos;
+//					spot_pos = "shadowMatrices[" + std::to_string(i) + "]";
+//					glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+//						, 1, GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+//				}*/
+//
+//				glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+//					, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+//
+//				GLint uniform1 =
+//					glGetUniformLocation(shader.GetHandle(), "lightPos");
+//				glUniform3fv(uniform1, 1,
+//					glm::value_ptr(point_light_stuffs.lightpos));
+//
+//				GLint uniform2 =
+//					glGetUniformLocation(shader.GetHandle(), "far_plane");
+//				glUniform1f(uniform2, far_plane);
+//
+//
+//				glBindVertexArray(prop.VAO);
+//				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+//				glBindVertexArray(0);
+//
+//				shader.UnUse();
+//
+//			}
+//			else
+//			{
+//				GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
+//				shader.Use();
+//
+//				GLint uniform1 =
+//					glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+//
+//				glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+//					glm::value_ptr(lightSpaceMatrix));
+//
+//				glBindVertexArray(prop.VAO);
+//				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+//				glBindVertexArray(0);
+//
+//				shader.UnUse();
+//
+//			}
+//		}
+//	}
+//
+//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//
+//	//glDisable(GL_CULL_FACE);
+//
+//	// reset viewport
+//	//glViewport(0, 0, 1600, 900);// screen width and screen height
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//}

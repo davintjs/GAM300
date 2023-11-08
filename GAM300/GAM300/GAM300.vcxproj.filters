@@ -225,5 +225,7 @@
     <None Include="Shaders\BloomBlur.vert" />
     <None Include="Shaders\ColourPicking.frag" />
     <None Include="Shaders\ColourPicking.vert" />
+    <None Include="Shaders\NormalDebugRender.frag" />
+    <None Include="Shaders\NormalDebugRender.vert" />
   </ItemGroup>
 </Project>
