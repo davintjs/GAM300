@@ -242,12 +242,12 @@ void Scene::Destroy(T& object)
 	if constexpr (std::is_same<T, Entity>())
 	{
 		entitiesDeletionBuffer.push_back(&object);
-		PRINT(Get<Tag>(object).name);
 		entities.SetActive((ObjectIndex)object.uuid, false);
 		
 		Transform& transform = Get<Transform>(object);
 		transform.SetParent(nullptr);
 		auto children{ transform.child };
+
 		for (auto& child : children)
 		{
 			Destroy<Entity>(Get<Entity>(child));

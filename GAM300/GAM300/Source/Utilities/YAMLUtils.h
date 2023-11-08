@@ -32,7 +32,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Properties.h"
 #include "UUID.h"
 #include "GUID.h"
-#include "AssetManager/AssetTypes.h"
+#include "AssetManager/ImporterTypes.h"
 
 struct Scene;
 struct Transform;
@@ -46,10 +46,20 @@ struct Child
 
 // Overload for output for the Emitter specifically for vector of guids
 template <typename T>
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID<T>>& _data);
+YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID<T>>& _data)
+{
+    out << YAML::BeginMap;
+    for (Engine::GUID data : _data)
+    {
+        out << YAML::Key << "data" << YAML::Key << YAML::Flow << YAML::BeginMap;
+        out << YAML::Key << "guid" << YAML::Value << data << YAML::EndMap;
+    }
+    out << YAML::EndMap;
+    return out;
+}
 
 // Overload for output for the Emitter specifically for model importer struct
-YAML::Emitter& operator<<(YAML::Emitter& out, const ModelAsset& _data);
+YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data);
 
 // Overload for output for the Emitter specifically for child struct
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data);
@@ -65,7 +75,13 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v);
 
 // Overload for output for the Emitter specifically for GUID
 template <typename T>
-YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID<T>& v);
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID<T>& v)
+{
+    out << v.ToHexString();
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::HexID& v);
 
 // Overload for output for the Emitter specifically for Vector4
 YAML::Emitter& operator<<(YAML::Emitter& out, char*& v);
@@ -93,10 +109,10 @@ namespace YAML
     };
 
     template<>
-    struct convert<ModelAsset>
+    struct convert<ModelImporter>
     {
         // Encoding for model importer during deserialization
-        static Node encode(const ModelAsset& rhs)
+        static Node encode(const ModelImporter& rhs)
         {
             Node node;
             node.push_back(rhs.meshes);
@@ -106,7 +122,7 @@ namespace YAML
         }
 
         // Decoding for model importer during deserialization
-        static bool decode(const Node& node, ModelAsset& rhs)
+        static bool decode(const Node& node, ModelImporter& rhs)
         {
             rhs.meshes = node[0].as<std::vector<Engine::GUID<MeshAsset>>>();
             rhs.materials = node[1].as<std::vector<Engine::GUID<MaterialAsset>>>();
@@ -213,6 +229,26 @@ namespace YAML
         static bool decode(const Node& node, Engine::GUID<T>& rhs)
         {
             rhs = Engine::GUID<T>(node.as<std::string>());
+            return true;
+        }
+    };
+
+
+    template<>
+    struct convert<Engine::HexID>
+    {
+        // Encoding for Vector4 during deserialization
+        static Node encode(const Engine::HexID& rhs)
+        {
+            Node node;
+            node = rhs.ToHexString();
+            return node;
+        }
+
+        // Decoding for Vector4 during deserialization
+        static bool decode(const Node& node, Engine::HexID& rhs)
+        {
+            rhs = Engine::HexID(node.as<std::string>());
             return true;
         }
     };

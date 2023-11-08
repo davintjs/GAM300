@@ -308,7 +308,7 @@ void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)
 template <typename T>
 void AssetManager::CallbackGetAsset(GetAssetEvent<T>* pEvent)
 {
-	pEvent->guid = assets.GetGUID<T>(pEvent->filePath);
+	pEvent->guid = assets.GetImporter<T>(pEvent->filePath).guid;
 }
 
 void AssetManager::CallbackDroppedAsset(DropAssetsEvent* pEvent)

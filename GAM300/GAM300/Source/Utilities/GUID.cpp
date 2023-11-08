@@ -22,18 +22,6 @@ namespace Engine
 		longInt[1] = CreateRandomNumber();
 	}
 
-	template <typename T>
-	GUID<T>::GUID(const GUID<T>& rhs)
-	{
-		memcpy(longInt, rhs.longInt, sizeof(longInt));
-	}
-
-	template <typename T>
-	GUID<T>::GUID(const HexID& rhs)
-	{
-		memcpy(longInt, rhs.longInt, sizeof(longInt));
-	}
-
 	HexID::HexID(const std::string& hexString)
 	{
 		if (hexString.size() == 0)
@@ -50,13 +38,4 @@ namespace Engine
 	}
 
 
-}
-
-namespace std
-{
-	template <typename T>
-	std::size_t hash<Engine::GUID<T>>::operator()(const Engine::GUID<T>& obj) const
-	{
-		return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
-	}
 }

@@ -49,7 +49,6 @@ namespace Engine
 			memcpy(longInt, rhs.longInt, sizeof(longInt));
 			return *this;
 		}
-	protected:
 		size_t longInt[2];
 	};
 
@@ -58,10 +57,18 @@ namespace Engine
 	{
 		GUID() : HexID::HexID() {}
 		GUID(const size_t val) : HexID::HexID(val){}
-		GUID(const GUID& rhs);
-		GUID(const HexID& rhs);
-
+		GUID(const GUID& rhs)
+		{
+			memcpy(longInt, rhs.longInt, sizeof(longInt));
+		}
+		GUID(const HexID& rhs)
+		{
+			memcpy(longInt, rhs.longInt, sizeof(longInt));
+		}
 		explicit GUID(const std::string& hexString) : HexID::HexID(hexString){}
+
+
+		bool operator==(const HexID& rhs) const { return HexID::operator==(rhs); }
 	private:
 		friend std::hash<Engine::GUID<T>>;
 	};
@@ -71,6 +78,9 @@ namespace std
 {
 	template <typename T>
 	struct hash<Engine::GUID<T>> {
-		std::size_t operator()(const Engine::GUID<T>& obj) const;
+		std::size_t operator()(const Engine::GUID<T>& obj) const
+		{
+			return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
+		}
 	};
 }

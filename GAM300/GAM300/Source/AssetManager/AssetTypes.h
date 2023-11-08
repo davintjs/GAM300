@@ -14,8 +14,6 @@
 #define ASSET_LINE 3
 #define ASSET_SEG3D 4
 
-#define ASSET(className) struct className : Asset
-
 #define MAX_BONE_INFLUENCE 4
 struct ModelVertex
 {
@@ -28,25 +26,24 @@ struct ModelVertex
 	// Animation Related Properties
 	int boneIDs[MAX_BONE_INFLUENCE];
 	float weights[MAX_BONE_INFLUENCE];
-
 };
 
-using FileData = std::vector<char>;
+struct DefaultImporter;
 
 struct Asset
 {
-	FileData mData;
 	std::filesystem::path mFilePath;
+	DefaultImporter* pImporter;
 };
 
-ASSET(TextureAsset){};
+struct TextureAsset : Asset{};
 
 
-ASSET(ScriptAsset) {};
+struct ScriptAsset : Asset {};
 
-ASSET(AudioAsset) {};
+struct AudioAsset : Asset {};
 
-ASSET(MeshAsset)
+struct MeshAsset : Asset
 {
 	std::vector<ModelVertex> vertices;	// This individual mesh vertices
 	std::vector<glm::mat4> bindPoses;	// The bind pose at each index refers to the bone with the same index
@@ -62,7 +59,7 @@ ASSET(MeshAsset)
 	unsigned int materialIndex;
 };
 
-ASSET(ShaderAsset)
+struct ShaderAsset : Asset
 {
 	// Map of variable name to type enum
 	//std::unordered_map<std::string, size_t> variables;
@@ -72,17 +69,14 @@ ASSET(ShaderAsset)
 
 };
 
-ASSET(MaterialAsset){ };
+struct MaterialAsset : Asset { };
 
-ASSET(AnimationAsset){};
+struct AnimationAsset : Asset {};
 
 // Asset that contains reference to all components of the model(Mesh, Material, Texture, Animations)
 // User can add this asset into the scene and it will assign the materials onto the mesh etc
-ASSET(ModelAsset)
+struct ModelAsset : Asset
 {
-	std::vector<Engine::GUID<MeshAsset>> meshes;
-	std::vector<Engine::GUID<MaterialAsset>> materials;
-	std::vector<Engine::GUID<AnimationAsset>> animations;
 };
 
 using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset, AnimationAsset,Asset>;
