@@ -79,8 +79,8 @@ void DebugDraw::Update(float)
 		}*/
 
 		//GLuint vao = MeshManager.vaoMap[renderer.meshID];
-		GLuint vao = MeshManager.vaoMap[DEFAULT_MESH];
-		InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
+		GLuint vao = MESHMANAGER.vaoMap[DEFAULT_MESH];
+		InstanceProperties& temporary = MESHMANAGER.instanceProperties->find(vao)->second;
 
 		RigidDebug currRigidDebug;
 
