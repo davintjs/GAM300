@@ -99,158 +99,26 @@ void Renderer::Update(float)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-		// No material instance, then just go next
+		if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end()) continue; // no vao? go next
 
 		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 	
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-		// if instance rendering put into container for instance rendering
-		// 
-		if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
+		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
 
-			// dun need do dis, coz renderer contains shadertype, can access via that
-			// for each shader, slot in properties into container
-			/*for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s) {
-				//SHADERTYPE sType = static_cast<SHADERTYPE>(s);
-				instanceProperties.emplace();
-				instanceContainers[s].emplace();
-			}*/
-
-			size_t s = static_cast<size_t>(renderer.shaderType);
-			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
-				continue;
-
-	
-
-			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-			GLuint vao = MeshManager.vaoMap[renderer.meshID];
-			//instanceProperties[vao];
-			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
-
-			// slot in the InstanceProperties into this vector if it doesnt alr exist
-			
-			// use the properties container coz its made for instance rendering already
-
-			/*float texidx = float(ReturnTextureIdx(instanceContainers[s][vao],TextureManager.GetTexture(renderer.AlbedoTexture)));
-			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
-
-			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
-			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
-			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
-			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
-
-			float metal_constant = renderer.mr_metallic;
-			float rough_constant = renderer.mr_roughness;
-			float ao_constant = renderer.ao;
-			float emission_constant = renderer.emission;
-
-			unsigned int& iter = instanceContainers[s][vao].iter;
-			instanceContainers[s][vao].M_R_A_Constant[iter] = glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant);
-			instanceContainers[s][vao].M_R_A_Texture[iter] = glm::vec4(metalidx, roughidx, aoidx, emissionidx);
-			instanceContainers[s][vao].textureIndex[iter] = glm::vec2(texidx, normidx);
-
-
-			
-			instanceContainers[s][vao].Albedo[iter] = renderer.mr_Albedo;
-			instanceContainers[s][vao].Ambient[iter] = renderer.mr_Ambient;
-			instanceContainers[s][vao].Diffuse[iter] = renderer.mr_Diffuse;
-			instanceContainers[s][vao].Specular[iter] = renderer.mr_Specular;
-			instanceContainers[s][vao].Shininess[iter] = renderer.mr_Shininess;
-			instanceContainers[s][vao].entitySRT[iter] = transform.GetWorldMatrix();*/
-			
-			if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
-				instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
-			}
-
-
-			// use the properties container coz its made for instance rendering already
-			float texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AlbedoTexture)));
-			float normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.NormalMap)));
-
-			float metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.MetallicTexture)));
-			float roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.RoughnessTexture)));
-			float aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.AoTexture)));
-			float emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(renderer.EmissionTexture)));
-			
-
-
-			float metal_constant;
-			float rough_constant;
-			float ao_constant;
-			float emission_constant;
-			unsigned int& iter = instanceContainers[s][vao].iter;
-
-			metal_constant = currMatInstance.metallicConstant;
-			rough_constant = currMatInstance.roughnessConstant;
-			ao_constant = currMatInstance.aoConstant;
-			emission_constant = currMatInstance.emissionConstant;
-			instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
-
-
-			texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
-			normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
-
-
-			metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
-			roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
-			aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
-			emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
-
-
-			instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-			instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx));
-			instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
-			instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-			++iter;
-
-			//instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-			//instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx)) ;
-			//instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
-
-			//instanceContainers[s][vao].Albedo.emplace_back(renderer.mr_Albedo);
-			//instanceContainers[s][vao].Ambient.emplace_back(renderer.mr_Ambient);
-			//instanceContainers[s][vao].Diffuse.emplace_back(renderer.mr_Diffuse);
-			//instanceContainers[s][vao].Specular.emplace_back(renderer.mr_Specular);
-			//instanceContainers[s][vao].Shininess.emplace_back(renderer.mr_Shininess);
-			//instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-
-			//instanceContainers[s][renderer.meshID].VAO = vao;
-			
-			//++iter;
-
-
-		}
-		else if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT) 
-
-		{
-		//}
-		//else /*if default rendering*/{
-			// if not instance put into container for default rendering
-
-			// batch it via shader, geom, material instanced
-			// whenever things reach limit, draw
-			// means need calculate SRT here
 			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
 			if (t_Mesh == nullptr)
 			{
 				continue;
-			}
-
-			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
-				continue;
+			}/**/
+			
 			GLuint vao = MeshManager.vaoMap[renderer.meshID];
 
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
-			
-			//renderProperties.shininess = renderer.mr_Shininess;
-			//renderProperties.Specular = renderer.mr_Specular;
-			//renderProperties.Diffuse = renderer.mr_Diffuse;
-			//renderProperties.Ambient = renderer.mr_Ambient;
-
 
 			renderProperties.metallic = currMatInstance.metallicConstant;
 			renderProperties.roughness = currMatInstance.roughnessConstant;
@@ -260,8 +128,6 @@ void Renderer::Update(float)
 			renderProperties.entitySRT = transform.GetWorldMatrix();
 			renderProperties.Albedo = currMatInstance.albedoColour;
 
-			// renderProperties.textureID = renderer.textureID;
-			// renderProperties.NormalID = renderer.normalMapID;
 			renderProperties.RoughnessID = TextureManager.GetTexture(currMatInstance.roughnessTexture);
 			renderProperties.MetallicID = TextureManager.GetTexture(currMatInstance.metallicTexture);
 			renderProperties.AoID = TextureManager.GetTexture(currMatInstance.aoTexture);
@@ -269,13 +135,13 @@ void Renderer::Update(float)
 
 			renderProperties.textureID = TextureManager.GetTexture(currMatInstance.albedoTexture);
 			renderProperties.NormalID = TextureManager.GetTexture(currMatInstance.normalMap);
-			
+
 			renderProperties.drawType = t_Mesh->prim;
 			renderProperties.drawCount = t_Mesh->drawCounts;
 
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
-				
+
 			if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
 			{
 				Animator& animator = currentScene.Get<Animator>(entity);
@@ -292,19 +158,56 @@ void Renderer::Update(float)
 			// }
 			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].entitySRT.emplace_back(transform.GetWorldMatrix());
 			// instanceContainers[static_cast<int>(SHADERTYPE::SHADOW)][t_Mesh->vaoID].iter++;
-			
-			 if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
-			 	instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
-			 }
-			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
-			 //instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].debugVAO;
-			 instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
-			 defaultProperties.emplace_back(renderProperties);
+
+			if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
+				instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
+			}
+			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			//instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].debugVAO;
+			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
+			defaultProperties.emplace_back(renderProperties);
+			++i;
+			continue;
+		} // END NON-INSTANCED RENDERING CONDITION
+
+		//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
+		//size_t s = static_cast<size_t>(currMatInstance.shaderType);
+		size_t s = static_cast<size_t>(SHADERTYPE::PBR);
+		/*if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+			continue;*/
+		GLuint vao = MeshManager.vaoMap[renderer.meshID];
+
+		if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
+			instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 		}
+
+		float texidx, normidx, metalidx, roughidx, aoidx, emissionidx, metal_constant, rough_constant, ao_constant, emission_constant;
+		unsigned int& iter = instanceContainers[s][vao].iter;
+
+		metal_constant = currMatInstance.metallicConstant;
+		rough_constant = currMatInstance.roughnessConstant;
+		ao_constant = currMatInstance.aoConstant;
+		emission_constant = currMatInstance.emissionConstant;
+		instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
+
+		texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
+		normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
+
+		metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
+		roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
+		aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
+		emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
+
+		instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
+		instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx));
+		instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
+		instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+		++iter;
+
 		++i;
 
 
-	}
+	} // END MESHRENDERER LOOP
 
 	//properties[MeshManager.vaoMap["Line"]].iter = 200;
 	
@@ -410,46 +313,6 @@ void Renderer::Draw(BaseCamera& _camera)
 	// non-instanced render
 	for (DefaultRenderProperties& prop : defaultProperties) 
 	{
-
-		
-		//glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer.gFBO);
-		//unsigned int attachments[3] =
-		//{ GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 }; // position, normal, albedospec
-		//glDrawBuffers(3, attachments);
-		//
-		
-		//GLSLShader& geomPass = SHADER.GetShader(GBUFFER);
-		//geomPass.Use();
-		//GLint uProj =
-		//	glGetUniformLocation(geomPass.GetHandle(), "persp_projection");
-		//GLint uView =
-		//	glGetUniformLocation(geomPass.GetHandle(), "View");
-		//GLint SRT =
-		//	glGetUniformLocation(geomPass.GetHandle(), "SRT");
-		//
-		//glUniformMatrix4fv(uProj, 1, GL_FALSE,
-		//	glm::value_ptr(EditorCam.GetProjMatrix()));
-		//glUniformMatrix4fv(uView, 1, GL_FALSE,
-		//	glm::value_ptr(EditorCam.GetViewMatrix()));
-		//glUniformMatrix4fv(SRT, 1, GL_FALSE,
-		//	glm::value_ptr(prop.entitySRT));
-		////m_gBuffer.BindForWriting();
-		//glBindVertexArray(prop.VAO);
-		//glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0);
-		//geomPass.UnUse();
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//// lighting pass
-		//// render
-
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gPosition);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gNormal);
-		//glActiveTexture(GL_TEXTURE2);
-		//glBindTexture(GL_TEXTURE_2D, m_gBuffer.gAlbedoSpec);
-
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
@@ -509,8 +372,6 @@ void Renderer::Draw(BaseCamera& _camera)
 		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
 		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
 		glUniform1f(Shininess, prop.shininess);
-		//glUniform3fv(lightColor, 1, glm::value_ptr(LIGHTING.GetLight().lightColor));
-		//glUniform3fv(lightPos, 1, glm::value_ptr(LIGHTING.GetLight().lightpos));
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
 		// POINT LIGHT STUFFS
@@ -642,38 +503,7 @@ void Renderer::Draw(BaseCamera& _camera)
 		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		shader.UnUse();/**/
-
-		// forward render
-		/*glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, prop.textureID);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, prop.NormalID);*/
-
-
-		/*GLSLShader& shader =  SHADER.GetShader(DEFAULT);
-		shader.Use();
-
-		GLint uProj =
-			glGetUniformLocation(shader.GetHandle(), "persp_projection");
-		GLint uView =
-			glGetUniformLocation(shader.GetHandle(), "View");
-		GLint SRT =
-			glGetUniformLocation(shader.GetHandle(), "SRT");
-
-		glUniformMatrix4fv(uProj, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.GetProjMatrix()));
-		glUniformMatrix4fv(uView, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.GetViewMatrix()));
-		glUniformMatrix4fv(SRT, 1, GL_FALSE,
-			glm::value_ptr(prop.entitySRT));
-
-		glBindVertexArray(prop.VAO);
-		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-		shader.UnUse();*/
-		
+		shader.UnUse();
 	}
 	
 	
@@ -1312,49 +1142,41 @@ void Renderer::DrawDepthDirectional()
 
 	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
-	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
+	// render all non-instanced shadows
+	glUniform1i(uniform2, true);
+
+	for (DefaultRenderProperties prop : defaultProperties)
 	{
-		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		GLint uniform3_t =
+			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		if (prop.isAnimatable)
 		{
-			glUniform1i(uniform2, true);
-
-			// glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			// glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
-			// glBindBuffer(GL_ARRAY_BUFFER, 0);
-			for (DefaultRenderProperties prop : defaultProperties)
-			{
-				GLint uniform3 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
-				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-				if (prop.isAnimatable)
-				{
-					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
-				}
-
-				glBindVertexArray(prop.VAO);
-				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-			}
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
-		else
-		{
-			glUniform1i(uniform2, false);
 
-			for (auto& [vao, prop] : instanceContainers[s])
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 
-				glBindVertexArray(prop.VAO);
-				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-				glBindVertexArray(0);
-			}
-		}
+
+	// render all instanced shadows
+	glUniform1i(uniform2, false);
+
+	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(prop.VAO);
+		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+		glBindVertexArray(0);
 	}
 
 	shader.UnUse();
@@ -1390,49 +1212,41 @@ void Renderer::DrawDepthSpot()
 
 	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
-	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
+	// render all non-instanced shadows
+	glUniform1i(uniform2, true);
+
+	for (DefaultRenderProperties prop : defaultProperties)
 	{
-		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		GLint uniform3_t =
+			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		if (prop.isAnimatable)
 		{
-			glUniform1i(uniform2, true);
-
-			// glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			// glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), prop.entitySRT.data());
-			// glBindBuffer(GL_ARRAY_BUFFER, 0);
-			for (DefaultRenderProperties prop : defaultProperties)
-			{
-				GLint uniform3 =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
-				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-				if (prop.isAnimatable)
-				{
-					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
-				}
-
-				glBindVertexArray(prop.VAO);
-				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-			}
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
-		else
-		{
-			glUniform1i(uniform2, false);
 
-			for (auto& [vao, prop] : instanceContainers[s])
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 
-				glBindVertexArray(prop.VAO);
-				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-				glBindVertexArray(0);
-			}
-		}
+
+	// render all instanced shadows
+	glUniform1i(uniform2, false);
+
+	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(prop.VAO);
+		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+		glBindVertexArray(0);
 	}
 
 	shader.UnUse();
@@ -1481,46 +1295,41 @@ void Renderer::DrawDepthPoint()
 
 	GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
-	for (int s = 0; s < static_cast<int>(SHADERTYPE::COUNT); ++s)
+	// render all non-instanced shadows
+	glUniform1i(uniform3, true);
+
+	for (DefaultRenderProperties prop : defaultProperties)
 	{
-		if (s == static_cast<int>(SHADERTYPE::DEFAULT))
+		GLint uniform3_t =
+			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		if (prop.isAnimatable)
 		{
-			glUniform1i(uniform3, true);
-
-			for (DefaultRenderProperties prop : defaultProperties)
-			{
-				GLint uniform3_t =
-					glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-				glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-
-				glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-				if (prop.isAnimatable)
-				{
-					std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-					GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-					glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
-				}
-
-				glBindVertexArray(prop.VAO);
-				glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-				glBindVertexArray(0);
-			}
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
-		else
-		{
-			glUniform1i(uniform3, false);
-			
-			for (auto& [vao, prop] : instanceContainers[s])
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-				glBindVertexArray(prop.VAO);
-				glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-				glBindVertexArray(0);
-			}
-		}
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+
+	// render all instanced shadows
+	glUniform1i(uniform3, false);
+
+	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(prop.VAO);
+		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+		glBindVertexArray(0);
 	}
 
 	shader.UnUse();

@@ -1,0 +1,14 @@
+Material:
+  Material Name: New hrhr
+  Shader: 1
+  Albedo: [0.296286762, 0.296299398, 0.296316385, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  Emission: 1
+  AlbedoTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
