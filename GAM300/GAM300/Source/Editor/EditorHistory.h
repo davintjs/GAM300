@@ -25,6 +25,10 @@ using Component = Object*;
 
 enum ChangeType { REDO, UNDO };
 
+enum ChangeAction { CREATING, DELETING };
+
+enum Change_ID { VARIABLE, SCRIPT, REFERENCE, ENTITY, COMPONENT };
+
 //struct for each undo/redo change
 struct Change {
 
@@ -33,19 +37,19 @@ struct Change {
 		oldreference = newreference = nullptr;
 	}
 
+	Change(Component comp) : component(comp) { oldreference = newreference = nullptr; entity = nullptr; }
 
-
-	Change(Component comp, std::string prop) : component(comp), property(prop) { oldreference = newreference = nullptr; }
+	Change(Component comp, std::string prop) : component(comp), property(prop) { oldreference = newreference = nullptr; entity = nullptr; }
 
 	std::string property; //name of property that changed
 	Component component; //component of which value was changed
+	Entity* entity;      //entity deleted (if change is entity based)
 
 	//variables for script references
-	bool isreference = false; //check if value changed is a reference
+	Change_ID type = VARIABLE; //checks what type the change was
+	ChangeAction action = DELETING;     //When entities or components are created or destroyed
 	Component oldreference; //holds the old reference that was changed
 	Component newreference; //holds the new reference that was changed
-
-
 
 	property::data previousValue; //holds the old value that was changed
 	property::data newValue;	  //holds the new value that was changed
@@ -76,6 +80,12 @@ class HistoryManager {
 		//redo will be populated with undo changes
 		bool RedoChange();
 
+		void AddComponentChange(Change& change);
+		void AmendComponent(Change& change, ChangeType type);
+
+		void AddEntityChange(Change& change);
+		void AmendEntity(Change& change, ChangeType type);
+
 		//Add a reference 
 		void AddReferenceChange(Change& change, Component oldRef, Component newRef);
 
@@ -94,9 +104,11 @@ class HistoryManager {
 			//clear redo when new changes are made
 			ClearRedoStack();
 		}
+
 	private: 
 		History UndoStack;
 		History RedoStack;
+		
 };
 
 #endif //EDITORHISTORY_H

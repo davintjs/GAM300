@@ -21,6 +21,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #ifndef OBJECT_H
 #define OBJECT_H
 
+enum STATE { NORMAL, DELETED };
+
 struct Handle
 {
 	Engine::UUID euid;
@@ -45,7 +47,8 @@ struct Object : property::base
 {
 	//Constructor that generates IDs if not params are given
 	Object(Engine::UUID _euid = Engine::CreateUUID(), Engine::UUID _uuid = Engine::CreateUUID()) 
-		:euid{ _euid }, uuid{ _uuid } {}
+		:euid{ _euid }, uuid{ _uuid } { state = (int)NORMAL; }
+
 	//Copy constructor
 	Object(const Object& rhs) = default;
 	//Get euid of object
@@ -58,6 +61,9 @@ struct Object : property::base
 	void UUID(Engine::UUID _uuid) { uuid = _uuid; }
 	//Get euid and uuid as a handle
 	operator Handle() const { return{ euid, uuid }; }
+
+	//State of the current object (normal / deleted)
+	int state; 
 
 	property_vtable();
 protected:

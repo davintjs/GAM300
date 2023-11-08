@@ -100,6 +100,7 @@ void Renderer::Update(float)
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		// No material instance, then just go next
+		if (renderer.state == DELETED) continue;
 
 		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 	
@@ -903,6 +904,8 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
+		if (Sprite.state == DELETED) continue;
+
 		// This means it's 3D space
 		if (Sprite.WorldSpace)
 		{
@@ -962,6 +965,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
+		if (Sprite.state == DELETED) continue;
 		// This means it's 2D space
 		if (!Sprite.WorldSpace)
 		{
@@ -1022,6 +1026,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
 	{
+		if (currCanvas.state == DELETED) continue;
 		Entity& entity = currentScene.Get<Entity>(currCanvas);
 		Transform& transform = currentScene.Get<Transform>(entity);
 

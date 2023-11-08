@@ -25,7 +25,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 std::map<std::string, size_t> ComponentTypes{};
 
 bool Transform::isLeaf() {
-	return (child.size()) ? false : true;
+	size_t size = child.size();
+	for (auto& c : child) {
+		if (MySceneManager.GetCurrentScene().Get<Entity>(c).state == DELETED)
+			size--;
+	}
+	return (size) ? false : true;
 }
 
 bool Transform::isChild() {

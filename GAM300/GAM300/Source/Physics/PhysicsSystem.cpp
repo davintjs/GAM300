@@ -69,6 +69,9 @@ void PhysicsSystem::Update(float dt) {
 
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
+
+		if (rb.state == DELETED) continue;
+
 		Entity& entity = scene.Get<Entity>(rb);
 		
 
@@ -271,6 +274,9 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
 
 			Rigidbody& rb = *it;
+
+			if (rb.state == DELETED) continue;
+
 			if (rb.bid == e.bid1) {
 				rb1 = &rb;
 			}
@@ -344,6 +350,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
 		CharacterController& cc = *it;
+		if(cc.state == DELETED) continue;
 		JPH::Ref<JPH::Character> mCharacter = nullptr;
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
@@ -468,6 +475,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			
 	
 		Rigidbody& rb = *it;
+		if (rb.state == DELETED) continue;
 		Entity& entity = scene.Get<Entity>(rb);
 		
 

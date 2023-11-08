@@ -66,6 +66,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	bool spriteToColourPick = false;
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
+		if (Sprite.state == DELETED) continue;
+
 		if (!Sprite.ColourPicked)
 		{
 ;			continue;
@@ -229,6 +231,7 @@ Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 
 	for (MeshRenderer& mr : currentScene.GetArray<MeshRenderer>())
 	{
+		if (mr.state == DELETED) continue; 
 		if (!meshToColourPick)
 		{
 			meshToColourPick = true;

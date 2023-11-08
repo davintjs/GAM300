@@ -257,6 +257,8 @@ private:
             if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
+                //skip deleted components 
+                if (component.state == DELETED) return true;
                 if constexpr (!std::is_same<T1, Tag>())
                 {
                     if constexpr (SerializeReference)
@@ -277,6 +279,8 @@ private:
             auto components = _scene.GetMulti<T1>(_entity);
             for (T1* component : components)
             {
+                //skip deleted components 
+                if (component->state == DELETED)  return true;
                 if constexpr (SerializeReference)
                 {
                     if (!SerializeReferenceField(out, *component))

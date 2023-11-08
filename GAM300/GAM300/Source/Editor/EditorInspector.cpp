@@ -958,6 +958,7 @@ void DisplayComponent(Script& script)
         {
             std::string fieldproperty = "Script/" + std::string(fieldName);
             Change change(&script, fieldproperty);
+            change.type = SCRIPT;
             Display(change, fieldName, field);
             if (isAddingReference)
             {
@@ -1072,7 +1073,12 @@ void DisplayComponentHelper(T& component)
         if constexpr (!std::is_same<T, Transform>()) {
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
-                curr_scene.Destroy(component);
+                Change newchange;
+                newchange.component = &component;
+                newchange.property = popup;
+                std::cout << popup << " component deleted\n" << std::endl;
+                EDITOR.History.AddComponentChange(newchange);
+                //curr_scene.Destroy(component);
             }
         }
         else {
@@ -1157,7 +1163,8 @@ private:
                 if constexpr (!std::is_same<T1, Tag>())
                 {   
                     auto& component = curr_scene.Get<T1>(entity);
-                    DisplayComponentHelper(component);
+                    if (component.state != DELETED)
+                        DisplayComponentHelper(component);
                 }              
             }
         }
@@ -1165,7 +1172,8 @@ private:
 
             auto components = curr_scene.GetMulti<T1>(entity);
             for (T1* component : components){
-                DisplayComponentHelper(*component);
+                if (component->state != DELETED)
+                    DisplayComponentHelper(*component);
             }
         }
 
@@ -1199,7 +1207,7 @@ private:
                
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    T1* pObject =  scene.Add<T1>(entity);
+                    T1* pObject =  scene.Add<T1>(entity);                   
 
                     if constexpr (std::is_same<T1, BoxCollider>())
                     {
@@ -1221,7 +1229,9 @@ private:
                         pObject->offset = temp.offset;
                     }
 
-
+                    Change newchange(pObject);
+                    newchange.action = CREATING;
+                    EDITOR.History.AddComponentChange(newchange);
 
                     EditorInspector::Instance().isAddComponentPanel = false;
                 }
@@ -1237,8 +1247,11 @@ private:
                 for (auto& pair : *e.pAssets)
                 {
                     if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
-                    {
-                        scene.Add<T1>(entity, pair.first);
+                    {                      
+                        T1* comp = scene.Add<T1>(entity, pair.first);
+                        Change newchange(comp);
+                        newchange.action = CREATING;
+                        EDITOR.History.AddComponentChange(newchange);
                         EditorInspector::Instance().isAddComponentPanel = false;
                     }
                 }
@@ -1247,7 +1260,10 @@ private:
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    scene.Add<T1>(entity);
+                    T1* comp = scene.Add<T1>(entity);
+                    Change newchange(comp);
+                    newchange.action = CREATING;
+                    EDITOR.History.AddComponentChange(newchange);
                     EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }

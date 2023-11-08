@@ -1,0 +1,84 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: JosScene
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 7404499298810882921
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(3) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12414060009747258149}  # Transform
+    - component: {fileID: 16858793512904798818}  # MeshRenderer
+---
+ID: 12414060009747258149
+Transform:
+  m_GameObject: {fileID: 7404499298810882921}
+  Translation: [2.45132709, 2.98023224e-08, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 16235896872671839011}
+---
+ID: 16858793512904798818
+MeshRenderer:
+  m_GameObject: {fileID: 7404499298810882921}
+  IsInstance: true
+  Mesh: {guid: 00000000000000000000000000000065}
+  Material_ID: {guid: 000000000000000000000000000000c8}
+  Albedo: [0, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
+---
+ID: 16235896872671839011
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(2)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9417551930930767440}  # Transform
+    - component: {fileID: 1065714759764214775}  # MeshRenderer
+---
+ID: 9417551930930767440
+Transform:
+  m_GameObject: {fileID: 16235896872671839011}
+  Translation: [-2.45132709, -2.98023224e-08, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 7404499298810882921}
+  m_Children:
+    []
+---
+ID: 1065714759764214775
+MeshRenderer:
+  m_GameObject: {fileID: 16235896872671839011}
+  IsInstance: true
+  Mesh: {guid: 00000000000000000000000000000065}
+  Material_ID: {guid: 000000000000000000000000000000c8}
+  Albedo: [0, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1
