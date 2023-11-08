@@ -1196,9 +1196,33 @@ private:
         if constexpr (SingleComponentTypes::Has<T1>()) {
             if (!scene.Has<T1>(entity))
             {
+               
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    scene.Add<T1>(entity);
+                    T1* pObject =  scene.Add<T1>(entity);
+
+                    if constexpr (std::is_same<T1, BoxCollider>())
+                    {
+                        geometryDebugData temp;
+                        if (scene.Has<MeshRenderer>(entity))
+                        {
+                            MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
+
+                            temp = MeshManager.offsetAndBoundContainer.find(mr.meshID)->second;
+                        }
+                        else
+                        {
+                            temp = MeshManager.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
+                        }
+
+                        pObject->x = temp.scalarBound.x;
+                        pObject->y = temp.scalarBound.y;
+                        pObject->z = temp.scalarBound.z;
+                        pObject->offset = temp.offset;
+                    }
+
+
+
                     EditorInspector::Instance().isAddComponentPanel = false;
                 }
             }
@@ -1247,6 +1271,8 @@ void AddComponentPanel(Entity& entity) {
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddComponentPanel = false;
     }
+
+
     ImGui::OpenPopup("Add Component");
     if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
 

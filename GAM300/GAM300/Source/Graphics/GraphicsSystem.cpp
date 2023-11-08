@@ -266,7 +266,7 @@ void GraphicsSystem::Update(float dt)
 			// Update camera view 
 			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
-			COLOURPICKER.ColorPickingUI(camera);
+			COLOURPICKER.ColorPickingUIButton(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
@@ -368,7 +368,10 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	
 #ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+	{
 		DEBUGDRAW.Draw();
+
+	}
 #endif
 
 	MYSKYBOX.Draw(_camera);

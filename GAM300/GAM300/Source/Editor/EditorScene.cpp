@@ -213,8 +213,24 @@ bool EditorScene::SelectEntity()
 void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
+
     if (SelectEntity())
     {
+        // Colour picking Version if needed
+        /*Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+        if (temp == 0)
+        {
+            SelectedEntityEvent SelectingEntity(0);
+            EVENTS.Publish(&SelectingEntity);
+        }
+        else
+        {
+            Entity& currEntity = currentScene.Get<Entity>(temp);
+
+            SelectedEntityEvent SelectingEntity(&currEntity);
+            EVENTS.Publish(&SelectingEntity);
+        }*/
+
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
             Entity& entity = currentScene.Get<Entity>(renderer);

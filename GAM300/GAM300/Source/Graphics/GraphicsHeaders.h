@@ -91,6 +91,20 @@ using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <va
 // 	BLUR
 // };
 
+struct RigidDebug
+{
+	glm::mat4 SRT; // This has been multiplied by 
+	
+	GLuint vao;
+
+	/*
+	glm::vec3 translation;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+	glm::vec3 RigidScalar;
+	*/
+};
+
 struct Shader {
 	Shader(std::string _name, SHADERTYPE type) : name(_name), shadertype(type) {}
 	std::string name;
@@ -262,10 +276,18 @@ public:
 
 	// Initialize the skybox of the engine
 
-	void ColorPickingUI(BaseCamera & _camera);
+	void ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
+	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
+	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
-	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
+	void DrawMeshes( GLSLShader & _shader);
+
+	glm::vec2 gameWindowPos;
+	glm::vec2 gameWindowDimension;
+	glm::vec2 editorWindowPos;
+	glm::vec2 editorWindowDimension;
 private:
 
 	// Colour Picking
@@ -291,11 +313,24 @@ public:
 
 	void DrawRay();
 
+	// Loop through all rigid bodies and get them
+	void LoopAndGetRigidBodies();
+
+	// Add into Rigid
+	void AddBoxColliderDraw(RigidDebug rigidDebugDraw);
+
+	// Reset all Physic's Rigid Body Container
+	void ResetPhysicDebugContainer();
+
+
 private:
+
 	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
+	std::vector<RigidDebug> boxColliderContainer;
+
 };
 
 ENGINE_SYSTEM(Lighting)
