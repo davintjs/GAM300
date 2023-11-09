@@ -82,6 +82,8 @@ struct Transform : Object
 	//Check whether this is a child
 	bool isChild();
 
+	bool isSelectedChild();
+
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
 

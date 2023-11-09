@@ -172,6 +172,12 @@ void EditorScene::SceneView()
                     //Attach dragged mesh GUID from the content browser
                     curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
+
+                    //undo/redo for entity
+                    /*Change newchange;
+                    newchange.entity = ent;
+                    newchange.action = CREATING;
+                    EDITOR.History.AddEntityChange(newchange);*/
                 }
                 else if (data.type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
@@ -247,6 +253,8 @@ void EditorScene::DisplayGizmos()
 
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
+            if (renderer.state == DELETED) continue;
+
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
             //Tag& tag = currentScene.Get<Tag>(entity);
@@ -273,12 +281,14 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }
 
         for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
         {
+            if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
             Transform& transform = currentScene.Get<Transform>(entity);
 
@@ -309,9 +319,6 @@ void EditorScene::DisplayGizmos()
                     intersect = tempIntersect;
                 }
             }
-
-
-
         }
     }
 
@@ -319,6 +326,8 @@ void EditorScene::DisplayGizmos()
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+
+        
         Transform& trans = currentScene.Get<Transform>(entity);
         for (int i = 0; i < 3; ++i)
         {

@@ -144,7 +144,7 @@ public:
     void DisplayEntity(Engine::UUID euid);
     //void DisplayChildren(const ObjectIndex& Parent);
     Engine::UUID selectedEntity;
-
+    bool newselect = false;
     bool initLayer = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);

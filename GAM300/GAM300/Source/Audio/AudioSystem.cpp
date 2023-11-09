@@ -26,6 +26,7 @@ void AudioSystem::Init() {
 void AudioSystem::Update(float dt) {
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	for (AudioSource& audio : currentScene.GetArray<AudioSource>()) {
+		if (audio.state == DELETED) continue;
 		// if audio is not playing, skip this loop unless it is music
 		if (!audio.play) {
 			if (audio.current_channel == (int)AudioSource::Channel::SFX) {
