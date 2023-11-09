@@ -364,13 +364,13 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
 	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),
 	property_var(ao).Name("AmbientOcclusion").Flags(property::flags::DONTSHOW),
-	property_var(AlbedoTexture).Name("AlbedoTexture"),
-	property_var(NormalMap).Name("NormalMap"),
-	property_var(MetallicTexture).Name("MetallicTexture"),
-	property_var(RoughnessTexture).Name("RoughnessTexture"),
-	property_var(AoTexture).Name("AoTexture"),
-	property_var(EmissionTexture).Name("EmissionTexture"),
-	property_var(emission).Name("EmissionScalar"),
+	property_var(AlbedoTexture).Name("AlbedoTexture").Flags(property::flags::DONTSHOW),
+	property_var(NormalMap).Name("NormalMap").Flags(property::flags::DONTSHOW),
+	property_var(MetallicTexture).Name("MetallicTexture").Flags(property::flags::DONTSHOW),
+	property_var(RoughnessTexture).Name("RoughnessTexture").Flags(property::flags::DONTSHOW),
+	property_var(AoTexture).Name("AoTexture").Flags(property::flags::DONTSHOW),
+	property_var(EmissionTexture).Name("EmissionTexture").Flags(property::flags::DONTSHOW),
+	property_var(emission).Name("EmissionScalar").Flags(property::flags::DONTSHOW),
 } property_vend_h(MeshRenderer)
 
 
