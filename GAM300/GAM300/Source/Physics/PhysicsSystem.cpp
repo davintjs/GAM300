@@ -129,14 +129,14 @@ void PhysicsSystem::Update(float dt) {
 			cc.isGrounded = false;
 		}
 		Entity& entity = scene.Get<Entity>(cc);
-		Transform& t = scene.Get<Transform>(entity);
+		Transform& te = scene.Get<Transform>(entity);
 
 
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(cc.bid);
 		//JPH::RVec3 tmp;
 		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(t.rotation, tmpQuat);
+		GlmVec3ToJoltQuat(te.rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
 		++j;
 	}
@@ -223,10 +223,12 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 }
 void PhysicsSystem::PostPhysicsUpdate() {
 	//std::cout << "Post physics update\n";
+
+	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
 		// Find rigidbody components of the two bodies
-		Rigidbody* rb1 = nullptr;
-		Rigidbody* rb2 = nullptr;
+		PhysicsComponent* pc1 = nullptr;
+		PhysicsComponent* pc2 = nullptr;
 		bool found = false;
 		Scene& scene = MySceneManager.GetCurrentScene();
 		auto& rbArray = scene.GetArray<Rigidbody>();
@@ -237,52 +239,92 @@ void PhysicsSystem::PostPhysicsUpdate() {
 			if (rb.state == DELETED) continue;
 
 			if (rb.bid == e.bid1) {
-				rb1 = &rb;
+				pc1 = &rb;
 			}
 			else if (rb.bid == e.bid2) {
-				rb2 = &rb;
+				pc2 = &rb;
 			}
 
-			if (rb1 && rb2)
+			if (pc1 && pc2)
+				found = true;
+		}
+		auto& ccArray = scene.GetArray<CharacterController>();
+		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it) {
+
+			CharacterController& cc = *it;
+			if (cc.bid == e.bid1) {
+				pc1 = &cc;
+			}
+			else if (cc.bid == e.bid2) {
+				pc2 = &cc;
+			}
+
+			if (pc1 && pc2)
 				found = true;
 		}
 
-		if (!rb1 || !rb2)
+		if (!pc1 || !pc2)
 			continue;
 
 		// Publish the right event
 		if (e.op == EngineCollisionData::collisionOperation::added) {
 
+			bool trigger = false;
+			bool trigger2 = false;
+			
+			if (pc1->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc1);
+				if (tmp->is_trigger)
+					trigger = true;
+			}
+			if (pc2->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc2);
+				if (tmp->is_trigger)
+					trigger2 = true;
+			}
+
 			// Trigger or Collision
-			if (rb1->is_trigger || rb2->is_trigger) {
+			if (trigger || trigger2) {
 				TriggerEnterEvent tee;
-				tee.rb1 = rb1;
-				tee.rb2 = rb2;
+				tee.pc1 = pc1;
+				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
 				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
-				cae.rb1 = rb1;
-				cae.rb2 = rb2;
+				cae.pc1 = pc1;
+				cae.pc2 = pc2;
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::removed) {
+			bool trigger = false;
+			bool trigger2 = false;
 
+			if (pc1->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc1);
+				if (tmp->is_trigger)
+					trigger = true;
+			}
+			if (pc2->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc2);
+				if (tmp->is_trigger)
+					trigger2 = true;
+			}
 			// Trigger or Collision
-			if (rb1->is_trigger || rb2->is_trigger) {
+			if (trigger || trigger2) {
 				TriggerRemoveEvent tre;
-				tre.rb1 = rb1;
-				tre.rb2 = rb2;
+				tre.pc1 = pc1;
+				tre.pc2 = pc2;
 				EVENTS.Publish(&tre);
 				//std::cout << "Trigger Remove!\n";
 			}
 			else {
 				ContactRemovedEvent cre;
-				cre.rb1 = rb1;
-				cre.rb2 = rb2;
+				cre.pc1 = pc1;
+				cre.pc2 = pc2;
 				EVENTS.Publish(&cre);
 				//std::cout << "Collision Remove!\n";
 			}
@@ -291,6 +333,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	}
 	engineContactListener->collisionResolution.clear();
 
+	// Character collision tolerance
 	for (auto it = characters.begin(); it != characters.end(); ++it) {
 		(*it)->PostSimulation(0.05f);
 	}
@@ -484,10 +527,11 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
-			
-			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
+			Vector3 colliderScale(boxCollider.dimensions.x * t.scale.x/2.f, boxCollider.dimensions.y * t.scale.y/2.f, boxCollider.dimensions.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
+			Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)

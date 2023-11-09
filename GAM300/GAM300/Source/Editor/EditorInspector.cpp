@@ -1221,9 +1221,9 @@ private:
                             temp = MESHMANAGER.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
                         }
 
-                        pObject->x = temp.scalarBound.x;
-                        pObject->y = temp.scalarBound.y;
-                        pObject->z = temp.scalarBound.z;
+                        pObject->dimensions.x = temp.scalarBound.x;
+                        pObject->dimensions.y = temp.scalarBound.y;
+                        pObject->dimensions.z = temp.scalarBound.z;
                         pObject->offset = temp.offset;
                     }
 

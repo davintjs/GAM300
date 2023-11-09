@@ -27,7 +27,7 @@ struct Entity;
 struct Scene;
 struct Script;
 struct Field;
-struct Rigidbody;
+struct PhysicsComponent;
 struct ImGuiTextBuffer;
 
 namespace fs = std::filesystem;
@@ -214,29 +214,32 @@ struct GetAssetsEvent : IEvent
 struct ContactAddedEvent : IEvent
 {
 
-	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactAddedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
 
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct ContactRemovedEvent : IEvent
 {
-	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactRemovedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 struct TriggerEnterEvent : IEvent
 {
-	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerEnterEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct TriggerRemoveEvent : IEvent
 {
-	TriggerRemoveEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerRemoveEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 #pragma region EDITOR STUFF

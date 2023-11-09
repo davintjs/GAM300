@@ -148,20 +148,15 @@ property_begin_name(AudioSource, "Audio Source") {
 
 struct BoxCollider : Object
 {
-	float x = 1.0f;
-	float y = 1.0f;
-	float z = 1.0f;
-
-	Vector3 offset{ 0.f };
+	Vector3 dimensions;
+	Vector3 offset;
 	property_vtable();
 };
 
 property_begin_name(BoxCollider, "BoxCollider") {
 property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(x).Name("X"),
-	property_var(y).Name("Y"),
-	property_var(z).Name("Z"),
-	property_var(offset).Name("Offset"),
+	property_var(dimensions).Name("Dimensions"),
+	property_var(offset).Name("Offset")
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
@@ -218,7 +213,18 @@ property_begin_name(Camera, "Camera") {
 	property_parent(BaseCamera)
 } property_vend_h(Camera)
 
-struct Rigidbody : Object
+
+struct PhysicsComponent : Object 
+{
+	enum Type {
+		rb = 0, cc
+	};
+	UINT32 bid{ 0 };					// Jolt Body ID
+	Type componentType{ rb };
+
+};
+
+struct Rigidbody : PhysicsComponent
 {
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
@@ -231,8 +237,6 @@ struct Rigidbody : Object
 	bool is_trigger = false;
 
 	property_vtable();
-	UINT32 bid{ 0 };
-	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
@@ -248,7 +252,7 @@ property_begin_name(Rigidbody, "Rigidbody") {
 	property_var(is_trigger).Name("Is_trigger")
 } property_vend_h(Rigidbody)
 
-struct CharacterController : Object
+struct CharacterController : PhysicsComponent
 {
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
@@ -260,9 +264,6 @@ struct CharacterController : Object
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	bool isGrounded = false;
 	property_vtable();
-	UINT32 bid{ 0 };
-
-//JPH::BodyID CharacterBodyID;
 };
 
 property_begin_name(CharacterController, "CharacterController") {

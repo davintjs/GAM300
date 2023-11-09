@@ -264,7 +264,7 @@ public:
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	void InvokePhysicsEvent(size_t colType, Rigidbody& rb1, Rigidbody& rb2);
+	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 
 	IEvent* scriptingEvent;
 

@@ -244,7 +244,19 @@ public:
 
 };
 
+struct PhysicsObject {
+	Vector3 linearVelocity;
+	UINT32 BID;
 
+};
+
+struct CharacterObject : PhysicsObject {
+
+};
+
+struct RigidBodyObject : PhysicsObject {
+
+};
 
 
 
