@@ -197,51 +197,40 @@ Geom_Mesh ModelCompiler::ProcessMesh(const aiMesh& _mesh, const aiScene& _scene)
 	int materialIndex = static_cast<int>(pModel->materials.size() - 1);
 
 	std::vector<Vertex> _compressedVertices;
+	std::vector<std::uint16_t> _compressedIndices;
+	std::vector<VertexBoneInfo> tempBoneInfo;
 	std::pair<glm::vec3, glm::vec2> mPosTexOffset;
 	std::pair<glm::vec3, glm::vec2> mPosTexScale;
 
 	// Only extract bone data if there is animations
 	
 	unsigned int numBones = _mesh.mNumBones;
-	if (_scene.HasAnimations())
-	{
+	if (hasAnimation)
 		ExtractBoneWeightForVertices(tempVertex, _mesh, _scene);
-		/*for (ModelVertex v : tempVertex)
-		{
-			Vertex vert;
-			vert.posX = v.position.x;
-			vert.posY = v.position.y;
-			vert.posZ = v.position.z;
-
-			vert.normX = v.normal.x;
-			vert.normY = v.normal.y;
-			vert.normZ = v.normal.z;
-
-			vert.colorA = v.color.a;
-			vert.colorR = v.color.r;
-			vert.colorG = v.color.g;
-			vert.colorB = v.color.b;
-
-			vert.tanX = v.tangent.x;
-			vert.tanY = v.tangent.y;
-			vert.tanZ = v.tangent.z;
-
-			vert.texU = v.textureCords.x;
-			vert.texV = v.textureCords.y;
-
-			_compressedVertices.push_back(vert);
-		}
-
-		mPosTexOffset = std::make_pair(glm::vec3(0), glm::vec2(0));
-		mPosTexScale = std::make_pair(glm::vec3(1.f), glm::vec2(1.f));*/
-	}
 	
 	Optimize(tempVertex, tempIndices); // Optimize this mesh
 
 	// Compress vertices for storing in our vertex
 	CompressVertices(_compressedVertices, tempVertex, mPosTexOffset, mPosTexScale);
 
-	return Geom_Mesh(_compressedVertices, tempIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second, numBones); // Create this mesh
+	if (hasAnimation)
+	{
+		// Bones
+		tempBoneInfo.resize(tempVertex.size());
+		for (size_t i = 0; i < tempVertex.size(); i++)
+		{
+			for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+			{
+				tempBoneInfo[i].boneIDs[j] = static_cast<std::int16_t>(tempVertex[i].boneIDs[j]);
+				tempBoneInfo[i].weights[j] = static_cast<std::int16_t>(tempVertex[i].weights[j] >= 0 ? tempVertex[i].weights[j] * 0x7FFF : tempVertex[i].weights[j] * 0x8000);
+			}
+		}
+	}
+
+	// Compress indices for storing in our indices
+	CompressIndices(_compressedIndices, tempIndices);
+
+	return Geom_Mesh(_compressedVertices, tempBoneInfo, _compressedIndices, materialIndex, mPosTexScale.first, mPosTexScale.second, mPosTexOffset.first, mPosTexOffset.second, numBones); // Create this mesh
 }
 
 void ModelCompiler::Optimize(std::vector<ModelVertex>& _vert, std::vector<unsigned int>& _ind)
@@ -408,14 +397,16 @@ void ModelCompiler::CompressVertices(std::vector<Vertex>& _compressedVertices,
 		currVert.colorB = static_cast<std::int8_t>(_vert.color.b);
 		currVert.colorA = static_cast<std::int8_t>(_vert.color.a);
 
-		// Bones
-		for (size_t i = 0; i < MAX_BONE_INFLUENCE; i++)
-		{
-			currVert.boneIDs[i] = static_cast<std::int16_t>(_vert.boneIDs[i]);
-			currVert.weights[i] = static_cast<std::int16_t>(_vert.weights[i] >= 0 ? _vert.weights[i] * 0x7FFF : _vert.weights[i] * 0x8000);
-		}
-
 		_compressedVertices.push_back(currVert);
+	}
+}
+
+void ModelCompiler::CompressIndices(std::vector<std::uint16_t>& _compressedIndices, std::vector<unsigned int>& _tempInd)
+{
+	_compressedIndices.resize(_tempInd.size());
+	for (size_t i = 0; i < _tempInd.size(); i++)
+	{
+		_compressedIndices[i] = static_cast<std::uint16_t>(_tempInd[i]);
 	}
 }
 
@@ -637,7 +628,7 @@ void ModelCompiler::SerializeBinaryMeshes(std::ofstream& _serializeFile)
 		// Indices
 		size_t indicesSize = _mesh._indices.size();
 		_serializeFile.write(reinterpret_cast<char*>(&indicesSize), sizeof(indicesSize));
-		_serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(unsigned int));
+		_serializeFile.write(reinterpret_cast<char*>(&_mesh._indices[0]), indicesSize * sizeof(std::uint16_t));
 
 		_serializeFile.write(reinterpret_cast<char*>(&_mesh.materialIndex), sizeof(_mesh.materialIndex));// Material index
 
@@ -649,6 +640,10 @@ void ModelCompiler::SerializeBinaryMeshes(std::ofstream& _serializeFile)
 
 		// Number of bones
 		_serializeFile.write(reinterpret_cast<char*>(&_mesh.numBones), sizeof(_mesh.numBones));	// Number of bones
+
+		// Bone info for each vertex for this mesh
+		if(_mesh.numBones) // Check if there is bones within this mesh
+			_serializeFile.write(reinterpret_cast<char*>(&_mesh._boneInfo[0]), vertexSize * sizeof(VertexBoneInfo));
 	}
 }
 

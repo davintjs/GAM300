@@ -1,5 +1,5 @@
-[2023-11-05 15:09:29.091] [Error] [critical] 
-Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
-Info:		Trying to access invalid mesh
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 38)
+[2023-11-09 13:46:45.541] [Error] [critical] 
+Caused By:	_meshVertices.size() == _oVertices.size() == _boneInfo.size()
+Info:		Both vertices vector sizes not equal for decompressing.
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\ModelDecompiler.cpp (Line: 257)
 

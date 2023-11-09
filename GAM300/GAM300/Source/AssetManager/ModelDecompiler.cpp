@@ -59,10 +59,11 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
         ifs.read(reinterpret_cast<char*>(&tempVerts[0]), vertSize * sizeof(Vertex));
 
         // Indices
+        std::vector<std::uint16_t> tempInd;
         size_t indSize;
         ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
-        meshAsset.indices.resize(indSize);
-        ifs.read(reinterpret_cast<char*>(&meshAsset.indices[0]), indSize * sizeof(unsigned int));
+        tempInd.resize(indSize);
+        ifs.read(reinterpret_cast<char*>(&tempInd[0]), indSize * sizeof(std::uint16_t));
 
         ifs.read(reinterpret_cast<char*>(&meshAsset.materialIndex), sizeof(meshAsset.materialIndex)); // Material Index
 
@@ -76,15 +77,24 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
 
         ifs.read(reinterpret_cast<char*>(&meshAsset.numBones), sizeof(meshAsset.numBones)); // Number of bones
 
+        std::vector<VertexBoneInfo> tempBoneInfo;
+        if (meshAsset.numBones)
+        {
+            tempBoneInfo.resize(vertSize);
+            ifs.read(reinterpret_cast<char*>(&tempBoneInfo[0]), vertSize * sizeof(VertexBoneInfo)); // Number of bones
+        }
+        
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
+        meshAsset.indices.resize(indSize);
 
         meshAsset.numVertices = (unsigned int)vertSize;
         meshAsset.numIndices = (unsigned int)indSize;
 
         // Converts Vertex to ModelVertex
+        DecompressVertices(meshAsset.vertices, tempVerts, tempBoneInfo, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
         
-        DecompressVertices(meshAsset.vertices, tempVerts, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
-
+        // Converts unsigned short to unsigned int
+        DecompressIndices(meshAsset.indices, tempInd);
 
         glm::vec3 min(FLT_MAX);
         glm::vec3 max(FLT_MIN);
@@ -208,12 +218,12 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
 
         // Value of BoneInfoMap
         BoneInfo boneInfo;
-        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
+        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(boneInfo));
 
         animation.GetBoneInfoMap()[key] = boneInfo;
     }
 
-    ifs.read(reinterpret_cast<char*>(&animation.GetBoneCount()), sizeof(BoneInfo));
+    ifs.read(reinterpret_cast<char*>(&animation.GetBoneCount()), sizeof(animation.GetBoneCount()));
     _model.animations.push_back(animation);
 }
 
@@ -238,6 +248,7 @@ void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponen
 
 void ModelDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 	const std::vector<Vertex>& _oVertices,
+    const std::vector<VertexBoneInfo>& _boneInfo,
 	const glm::vec3& _posCompressScale,
 	const glm::vec2& _texCompressScale,
 	const glm::vec3& _posOffset,
@@ -273,11 +284,33 @@ void ModelDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices
         _meshVertices[i].color.a = _oVertices[i].colorA;
 
         // Animation
-        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+        if (!_boneInfo.empty()) // If there are boneInfos
         {
-            _meshVertices[i].boneIDs[j] = static_cast<int>(_oVertices[i].boneIDs[j]);
-            _meshVertices[i].weights[j] = (_oVertices[i].weights[j] >= 0 ? static_cast<float>(_oVertices[i].weights[j]) / 0x7FFF : static_cast<float>(_oVertices[i].weights[j]) / 0x8000);
+            E_ASSERT(_meshVertices.size() == _boneInfo.size(), "Mesh vertices and bone size not equal for decompressing.");
+            for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+            {
+                _meshVertices[i].boneIDs[j] = static_cast<int>(_boneInfo[i].boneIDs[j]);
+                _meshVertices[i].weights[j] = (_boneInfo[i].weights[j] >= 0 ? static_cast<float>(_boneInfo[i].weights[j]) / 0x7FFF : static_cast<float>(_boneInfo[i].weights[j]) / 0x8000);
+            }
         }
+        else
+        {
+            auto& boneId = _meshVertices[i].boneIDs;
+            auto& weights = _meshVertices[i].weights;
+
+            boneId[0] = boneId[1] = boneId[2] = boneId[3] = -1;
+            weights[0] = weights[1] = weights[2] = weights[3] = 0.f;
+        }
+    }
+}
+
+void ModelDecompiler::DecompressIndices(std::vector<unsigned int>&_meshIndices, const std::vector<std::uint16_t>&_oIndices)
+{
+    E_ASSERT(_meshIndices.size() == _oIndices.size(), "Both indices vector sizes not equal for decompressing.");
+
+    for (size_t i = 0; i < _oIndices.size(); i++)
+    {
+        _meshIndices[i] = static_cast<unsigned int>(_oIndices[i]);
     }
 }
 

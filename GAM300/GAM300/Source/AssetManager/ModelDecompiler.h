@@ -41,13 +41,17 @@ public:
 	// Load animation nodes recursively to retrieve bone data
 	void DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node);
 
-	// Decompress
+	// Decompress vertices
 	void DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 		const std::vector<Vertex>& _oVertices,
+		const std::vector<VertexBoneInfo>& _boneInfo,
 		const glm::vec3& _posCompressScale,
 		const glm::vec2& _texCompressScale,
 		const glm::vec3& _posOffset,
 		const glm::vec2& _texOffset);
+
+	//Decompress indices
+	void DecompressIndices(std::vector<unsigned int>& _meshIndices, const std::vector<std::uint16_t>& _oIndices);
 private:
 
 };
