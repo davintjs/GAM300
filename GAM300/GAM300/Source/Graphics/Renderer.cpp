@@ -99,12 +99,15 @@ void Renderer::Update(float)
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
-		if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end()) continue; // no vao? go next
 		// No material instance, then just go next
 		if (renderer.state == DELETED) continue;
 
-		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+		if (!currentScene.IsActive(renderer)) continue;
+
+		if (MESHMANAGER.vaoMap.find(renderer.meshID) == MESHMANAGER.vaoMap.end()) continue; // no vao? go next
 	
+		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
@@ -168,7 +171,7 @@ void Renderer::Update(float)
 
 		//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
 		size_t s = static_cast<size_t>(SHADERTYPE::PBR);
-		GLuint vao = MeshManager.vaoMap[renderer.meshID];
+		GLuint vao = MESHMANAGER.vaoMap[renderer.meshID];
 
 		if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 			instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));

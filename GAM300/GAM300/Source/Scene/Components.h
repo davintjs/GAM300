@@ -331,7 +331,7 @@ struct MeshRenderer : Object
 
 
 	// This 2 dont delete -> Future use
-	bool isInstance = true;
+	//bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 	
 	//temporary index for current material
@@ -342,7 +342,6 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(isInstance).Name("IsInstance"),	
 	property_var(meshID).Name("Mesh"),
 	property_var(materialGUID).Name("Material_ID"),
 	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
