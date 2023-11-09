@@ -38,7 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 //types of files that can be dragged drop from the content browser
 enum filetype {
-    NONE, MESH, PREFAB
+    NONE, MESH, PREFAB, MATERIAL
 };
 
 //an object containing the data needed for the payload

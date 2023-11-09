@@ -210,6 +210,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 void EditorHierarchy::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+
 	ImGui::Begin("Hierarchy");
 
 	//List out all entities in current scene
@@ -218,18 +219,18 @@ void EditorHierarchy::Update(float dt)
 	//Add/Delete entities using right click
 	static ImGuiTextFilter filter;
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
 	ImGui::Text("Filter: "); ImGui::SameLine();
 	filter.Draw();
+
+	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
+
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
 	Scene::Layer& layer = curr_scene.layer;
 
-	
-
 	if (sceneopen)
 	{
-		
-
 		for (Engine::UUID euid : layer)
 		{
 			if (!curr_scene.Get<Transform>(euid).isChild())
@@ -279,12 +280,24 @@ void EditorHierarchy::Update(float dt)
 				EVENTS.Publish(&selectedEvent);
 			}
 
+			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+			auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
+
+			//add child entity to current selected entity
+			if (ImGui::MenuItem("Add Child Entity")) {
+
+				Entity* Newentity = curr_scene.Add<Entity>();
+				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
+				newtransform.SetParent(&currEntity);
+				SelectedEntityEvent selectedEvent{ Newentity };
+				EVENTS.Publish(&selectedEvent);
+			}
+
 			std::string name = "Delete Entity";
 			if (selectedEntity != NON_VALID_ENTITY)
 			{
 				if (ImGui::MenuItem(name.c_str()))
 				{
-					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
 					curr_scene.Destroy(ent);
 					SelectedEntityEvent selectedEvent{ 0 };
@@ -299,16 +312,16 @@ void EditorHierarchy::Update(float dt)
 			ImGui::Separator();
 			if (ImGui::MenuItem("Add to Prefabs"))
 			{
-				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 				SerializePrefab(ent, curr_scene);
-				//For zac to add prefab implementation here
 			}
 
 			ImGui::EndPopup();
 		}
 
 		ImGui::TreePop();
+		
 	}
+	ImGui::EndChild();
 	ImGui::End();
 }
 
