@@ -87,7 +87,7 @@ void DebugDraw::Update(float)
 
 		RigidDebug currRigidDebug;
 
-		currRigidDebug.vao = MeshManager.offsetAndBoundContainer[DEFAULT_MESH].vao;
+		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[DEFAULT_MESH].vao;
 
 		glm::mat4 SRT = t.GetWorldMatrix();
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
