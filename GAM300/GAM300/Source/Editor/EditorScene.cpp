@@ -250,6 +250,8 @@ void EditorScene::DisplayGizmos()
             SelectedEntityEvent SelectingEntity(&currEntity);
             EVENTS.Publish(&SelectingEntity);
         }*/
+        float& intersect = EditorCam.GetIntersect();
+        float& tempIntersect = EditorCam.GetTempIntersect();
 
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
@@ -271,8 +273,6 @@ void EditorScene::DisplayGizmos()
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -307,8 +307,6 @@ void EditorScene::DisplayGizmos()
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -317,6 +315,42 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                }
+            }
+        }
+
+        for (BoxCollider& bc : currentScene.GetArray<BoxCollider>())
+        {
+            Entity& entity = currentScene.Get<Entity>(bc);
+
+            if (currentScene.Has<MeshRenderer>(entity)) continue;
+            if (bc.state == DELETED) continue;
+
+            Transform& transform = currentScene.Get<Transform>(entity);
+            Tag& tag = currentScene.Get<Tag>(entity);
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::vec3 rot;
+            glm::vec3 scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
+            glm::vec3 mins = scale * MeshManager.DereferencingMesh(DEFAULT_MESH)->vertices_min;
+            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(DEFAULT_MESH)->vertices_max;
+            mins *= glm::vec3(bc.x, bc.y, bc.z);
+            maxs *= glm::vec3(bc.x, bc.y, bc.z);
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
+
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
+            {
+                if (tempIntersect < intersect)
+                {
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }

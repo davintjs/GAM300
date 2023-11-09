@@ -30,6 +30,7 @@ struct geometryDebugData
 {
 	glm::vec3 offset;
 	glm::vec3 scalarBound;
+	GLuint vao;
 };
 
 struct temp_instance
