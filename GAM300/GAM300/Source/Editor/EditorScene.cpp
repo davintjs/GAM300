@@ -266,8 +266,8 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
-            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
