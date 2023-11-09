@@ -30,8 +30,13 @@ out vec4 FragColor;
 //          UNIFORMS
 //-------------------------
 
-uniform sampler2D Sprite;
-uniform bool RenderSprite; // if there is a texture, this is true else false
+uniform sampler2D Texture;
+uniform bool isTexture; // if there is a texture, this is true else false
+
+// 0: ColourPicking for Mesh Renderer
+// 1: ColourPicking for UI (Editor Mode)
+// 2: ColourPicking for UI (Button Mode)
+uniform int mode; 
 
 uniform vec4 PickingColour;
 //End
@@ -39,27 +44,46 @@ uniform vec4 PickingColour;
 void main()
 {    
 
-
-//    FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
-
-    if(RenderSprite)
+    switch(mode)
     {
-        vec4  colour = texture(Sprite, TexCoords);
-        if(colour.a <0.7)
+
+    
+    case 0: // Mesh Renderer Picking
+        FragColor = PickingColour;
+
+    break;
+
+
+    case 1: // UI (Editor Mode) Picking
+
+
+    break;
+
+    case 2:// UI (Button Mode) Picking
+        if(isTexture)
         {
-            discard;
+            vec4 colour = texture(Texture, TexCoords);
+            if(colour.a <1.0)
+            {
+                discard;
+            }
+            else
+            {
+                FragColor = PickingColour;
+            }
         }
         else
         {
             FragColor = PickingColour;
         }
 
+    break;
 
     }
-    else
-    {
-        FragColor = PickingColour;
-    }
+
+//    FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
+
+    
 
 //     FragColor = vec4(1.f,1.f,1.f,1.f);
 }   
