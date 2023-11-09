@@ -215,6 +215,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             }
 
             ImGui::PopStyleColor();
+            ImGui::EndChild();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
             return;
@@ -1722,7 +1723,7 @@ void EditorInspector::Update(float dt)
                 EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
-            PRINT(fPath);
+            //PRINT(fPath);
             //material.name
         }
 

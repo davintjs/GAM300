@@ -191,6 +191,19 @@ bool Deserialize(const std::filesystem::path& path, T& object)
                 }
             }
         }
+
+        if (node["animations"])
+        {
+            YAML::Node animations = node["animations"];
+            for (YAML::const_iterator it = animations.begin(); it != animations.end(); ++it)
+            {
+                YAML::Node data = it->second;
+                if (data["guid"])
+                {
+                    object.animations.push_back(data["guid"].as<Engine::GUID>());
+                }
+            }
+        }
         
     }
     else
