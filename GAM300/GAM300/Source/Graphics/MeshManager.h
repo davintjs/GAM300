@@ -49,24 +49,18 @@ struct Mesh
 	GLenum prim;
 };
 
+#define MESHMANAGER MeshManager::Instance()
 
-
-
-#define MeshManager MESH_Manager::Instance()
-
-SINGLETON(MESH_Manager)
+SINGLETON(MeshManager)
 {
 
 public:
 	
 	void Init();
 
-	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
+	MeshAsset* GetMeshAsset(const Engine::GUID& meshID);
 
 	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid);
-
-	MeshAsset& GetMeshAsset(const Engine::GUID& meshID);
-
 
 	// This is used when we are going to draw, u need to take the geom then render it
 	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
@@ -87,9 +81,6 @@ public:
 	//GLuint CreateTexture(char const* Filename);
 	//Handle mesh adding here
 	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);
-	// Adds mesh asset for storing
-	void StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex);
-	void StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex);
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
@@ -102,8 +93,6 @@ public:
 	std::unordered_map<Engine::GUID, geometryDebugData> offsetAndBoundContainer;
 
 private:
-
-	std::unordered_map<Engine::GUID, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
 
 	void CreateInstanceCube();
 	void CreateInstanceSphere();

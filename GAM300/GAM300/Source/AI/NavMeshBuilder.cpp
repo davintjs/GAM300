@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "NavMeshBuilder.h"
 #include "NavMesh.h"
 #include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 void NavMeshBuilder::BuildNavMesh()
 {
@@ -38,6 +39,10 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	std::vector<glm::vec3> mGroundVertices;
 	std::vector<glm::ivec3> mGroundIndices;
 
+	// Get all mesh assets
+	GetAssetsEvent<MeshAsset> e;
+	EVENTS.Publish(&e);
+
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
@@ -47,17 +52,29 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		}
 
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
-		const MeshFilter& mesh = MySceneManager.GetCurrentScene().Get<MeshFilter>(entity);
+		const MeshRenderer& mesh = MySceneManager.GetCurrentScene().Get<MeshRenderer>(entity);
 
-		for (int i = 0; i < mesh.vertices->size(); ++i)
+		// Mesh asset does not exist
+		if (e.pAssets->find(mesh.meshID) == e.pAssets->end())
+			continue;
+
+		// Get the mesh asset with the specific id
+		MeshAsset& meshAsset = e.pAssets->find(mesh.meshID)->second;
+		
+		// Use this to get all top vertices
+		float topY = meshAsset.boundsMax.y;
+		float marginY = 0.001f; // Bean: Maybe need some margin error? Dont need then remove :D
+
+		// Bean: Need to recalculate to get top vertices only or check if it is a slope
+		/*for (int i = 0; i < meshAsset.vertices.size(); ++i)
 		{
-			glm::vec4 temp = glm::vec4((*mesh.vertices)[i].position, 1.f);
+			glm::vec4 temp = glm::vec4(meshAsset.vertices[i].position, 1.f);
 			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
 		}
-		for (int j = 0; j < mesh.indices->size(); j += 3)
+		for (int j = 0; j < meshAsset.indices.size(); j += 3)
 		{
-			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j], (*mesh.indices)[j + 1], (*mesh.indices)[j + 2]));
-		}
+			mGroundIndices.push_back(glm::ivec3(meshAsset.indices[j], meshAsset.indices[j + 1], meshAsset.indices[j + 2]));
+		}*/
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);

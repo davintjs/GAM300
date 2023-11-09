@@ -260,12 +260,12 @@ Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 
 		srtToUse = transform.GetWorldMatrix();
 
-		if (MeshManager.vaoMap.find(mr.meshID) == MeshManager.vaoMap.end())
+		if (MESHMANAGER.vaoMap.find(mr.meshID) == MESHMANAGER.vaoMap.end())
 		{
 			continue;
 		}
 
-		Mesh* currMesh = MeshManager.DereferencingMesh(mr.meshID);
+		Mesh* currMesh = MESHMANAGER.DereferencingMesh(mr.meshID);
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(srtToUse));
