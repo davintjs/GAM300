@@ -1,29 +1,24 @@
-guid: 67fba8b2e30ac78685191fa7d0ccf072
 meshes:
-  data: {guid: 3ce1d2a0dac7343e3c6ef66c8e4265d6}
-  data: {guid: 9609b9d9bc0a058629832b79c8122bbd}
-  data: {guid: c287426422a29c543a7b8d97d78988bf}
-  data: {guid: 92bd33b1278213758073b34ab446f6a1}
-  data: {guid: a248855e006be319856c45964c2bd533}
-  data: {guid: 38f03f97f61524f1f7782242a71d42e4}
-  data: {guid: 6405cb7969fe0974cde7b68df2339c3c}
-  data: {guid: 3b0333eeb925c0c047d2ccb2dd54c683}
-  data: {guid: 30c0f8d6d9fef52c011d2ffd29ce6f08}
-  data: {guid: f32c131e22bc7f61527986a4d99813fb}
-  data: {guid: c3b3fbc9789e095b304d35486d1d9481}
-  data: {guid: 160b299fdc4a3e4a3c45fbbc8d5c87bf}
-  data: {guid: 638bebea56b64a857857b5049e1c67dd}
-  data: {guid: a421462c3e86f861844cf40323cb0fa8}
-  data: {guid: b6f5834e0ce395fb943af5966843cb40}
-  data: {guid: a68bb66e049641123aa7648ad8c809d1}
-  data: {guid: 9cbd0aa601e1b5c57511cf0fd7773529}
-  data: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
-  data: {guid: 4dd09bdd7e7bdecfa30c2db8c4fb0db1}
-  data: {guid: 491f5cb3e294cf99a48b68bbd6ec121a}
-  data: {guid: 82864e28cb934672702e869fd748c9fd}
-  data: {guid: fd0ac0a61aebcee6355104663f52c562}
-  data: {guid: 932fdb19b5ba386143b36df61a3f474d}
-materials:
-  {}
-animations:
-  {}
+  data: 465bb8fdaef3add0d82924cefb2b3367
+  data: fbef9ff2ed961152125943a39540a34a
+  data: 51dc95a48e5ba73e088e6079038047e3
+  data: 1baa2dbcddfb9814d17945ffdde582ba
+  data: 53f7c77141d5bdbd4fa647e97c823ced
+  data: e81b8d6a36dda5160b7b4c7c3b57bd33
+  data: 6a3e4baa9ee7d69b94dfdc72048e921e
+  data: 0f5ae0a43ac3c2faf38fbf8c4f588716
+  data: c7a12baa1204b59cef440c8c02ac2a57
+  data: 8dd8543fdd81076848827d8bee03c164
+  data: ca3a75ef4db798b3197d318d669350b0
+  data: e42e9c939dfb75865fd503e35c9a5ad2
+  data: b23f38221104bf894177f59d564515f8
+  data: 86557f247990e6cfb1b1924b96919da0
+  data: 7817ae7cfb4ce4bbb53ba0a7fde187d8
+  data: 8c8139aaa56cd84f3b5131f93d8af43c
+  data: 804ae6160a15d3b5ba8e0652d67a465e
+  data: 7f3e5b821588cf8671d49f76212ab6cf
+  data: 1221db0c039111c26db02d5bcc9fa943
+  data: c1c6c2b3a36c927e2eecf4c91646353a
+  data: 88022ee4d66eb14d71c11e5be6eb7311
+  data: ecee48e1c7f2fe638ad4f152f6d6bbad
+  data: 8c94f26b97befdec8e73e9629b3a6da0

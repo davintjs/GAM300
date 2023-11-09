@@ -74,6 +74,8 @@ void Deserialize(Material_instance& material, const fs::path& path);
 template <typename T>
 void Serialize(YAML::Emitter& out, T& object)
 {
+    int containerIndex = 0;
+    int containerSize = 0;
     property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
     {
         if (!Flags.m_isDontSave)
@@ -96,11 +98,29 @@ void Serialize(YAML::Emitter& out, T& object)
                     {
                         keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
                     }
-
                     // Store Component value
-                    out << YAML::BeginMap;
-                    out << YAML::Key << keyName << YAML::Value << Value;
-                    out << YAML::EndMap;
+                    if (keyName.ends_with("[]"))
+                    {
+                        if constexpr (std::is_same_v<T1, int>)
+                        {
+                            keyName.resize(keyName.size() - 2);
+                            out << YAML::BeginMap << YAML::Key << keyName << YAML::Value << YAML::BeginMap;
+                            containerSize = Value;
+                        }
+                    }
+                    else if (keyName.ends_with(']'))
+                    {
+                        keyName = "data";
+                        out << YAML::Key << keyName << YAML::Value << Value;
+                        ++containerIndex;
+                        if (containerSize == containerIndex)
+                        {
+                            out << YAML::EndMap;
+                            out << YAML::EndMap;
+                            containerSize = 0;
+                            containerIndex = 0;
+                        }
+                    }
                 }
             , entry.second);
         }

@@ -46,10 +46,10 @@ struct Child
 
 // Overload for output for the Emitter specifically for vector of guids
 template <typename T>
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID<T>>& _data)
+YAML::Emitter& operator<<(YAML::Emitter& out, std::vector<Engine::GUID<T>>& _data)
 {
     out << YAML::BeginMap;
-    for (Engine::GUID data : _data)
+    for (Engine::GUID<T>& data : _data)
     {
         out << YAML::Key << "data" << YAML::Key << YAML::Flow << YAML::BeginMap;
         out << YAML::Key << "guid" << YAML::Value << data << YAML::EndMap;
@@ -108,28 +108,6 @@ namespace YAML
         }
     };
 
-    template<>
-    struct convert<ModelImporter>
-    {
-        // Encoding for model importer during deserialization
-        static Node encode(const ModelImporter& rhs)
-        {
-            Node node;
-            node.push_back(rhs.meshes);
-            node.push_back(rhs.materials);
-            node.push_back(rhs.animations);
-            return node;
-        }
-
-        // Decoding for model importer during deserialization
-        static bool decode(const Node& node, ModelImporter& rhs)
-        {
-            rhs.meshes = node[0].as<std::vector<Engine::GUID<MeshAsset>>>();
-            rhs.materials = node[1].as<std::vector<Engine::GUID<MaterialAsset>>>();
-            rhs.animations = node[2].as<std::vector<Engine::GUID<AnimationAsset>>>();
-            return true;
-        }
-    };
 
     template<>
     struct convert<Vector2>
@@ -252,6 +230,7 @@ namespace YAML
             return true;
         }
     };
+
 
     //struct CustomAnchor
     //{

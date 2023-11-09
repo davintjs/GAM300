@@ -1,14 +1,9 @@
-guid: bcff7c78e92806c43fa2b67253f05392
 meshes:
-  data: {guid: 80bd8e5bfed634e8f39efdff1014f363}
-  data: {guid: c3620b369d07f80e078569251280dcbb}
-  data: {guid: f348af3a2f098c66b0931c3f0579ceb3}
-  data: {guid: 1c49e466f3ebf5c5e4e400f2074e15c7}
-  data: {guid: 313bdd1f8c753e09768340cbb5fcfd7b}
-  data: {guid: b986eb66330375f82171e42ce996d742}
-  data: {guid: f84367fd680fd32decc1bebf5c230252}
-  data: {guid: 7e542a6330429c304e0f01b457198155}
-materials:
-  {}
-animations:
-  {}
+  data: c1dc70d9a74f7f2443a0547454a62884
+  data: 35d18592f971a883a71685d09af19b16
+  data: 919da3735834d58ac952235a5dc2ba9b
+  data: 89584b1029ae89fe3acd2fd5928dae3d
+  data: 86726a962b206abee9bc1f40dc0cc597
+  data: 905429a346288b6ebeb9214061fccae7
+  data: 70009d19941e06039fc90612c18f1575
+  data: 6861655efbef1b60bce460e10cdf8092
