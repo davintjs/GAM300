@@ -166,7 +166,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
-		int index = selectedID - offset;
+		index = selectedID - offset;
 		if (index < EUID_Holder.size())
 		{
 			
@@ -309,7 +309,7 @@ Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 
 	if (meshToColourPick && (selectedID > 0) && (selectedID != 13421772))
 	{
-		int index = selectedID - offset;
+		index = selectedID - offset;
 		if (index < EUID_Holder.size())
 		{
 			Engine::UUID EUID_Index = EUID_Holder[selectedID - offset];

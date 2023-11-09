@@ -28,6 +28,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/Scene.h"
 #include <filesystem>
 
+#include "Graphics/GraphicsHeaders.h"
+
 // Bean: May be added in the future for modularity of serialization
 //enum CLASSID
 //{

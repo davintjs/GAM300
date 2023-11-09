@@ -97,14 +97,15 @@
     <ClCompile Include="Source\Utilities\GUID.cpp" />
     <ClCompile Include="Source\AssetManager\ModelCompiler.cpp" />
     <ClCompile Include="Source\Graphics\GraphicsSetting.cpp" />
-    <ClCompile Include="Source\Graphics\BaseAnimator.cpp" />
-    <ClCompile Include="Source\Graphics\AnimationManager.cpp" />
+    <ClCompile Include="Source\Graphics\Animation\BaseAnimator.cpp" />
+    <ClCompile Include="Source\Graphics\Animation\AnimationManager.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
     <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\AssetManager\ModelDecompiler.cpp" />
     <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
+    <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -187,11 +188,13 @@
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\Core\EventInterface.h" />
     <ClInclude Include="Source\AssetManager\ModelCompiler.h" />
-    <ClInclude Include="Source\Graphics\BaseAnimator.h" />
-    <ClInclude Include="Source\Graphics\AnimationManager.h" />
+    <ClInclude Include="Source\Graphics\Animation\BaseAnimator.h" />
+    <ClInclude Include="Source\Graphics\Animation\AnimationManager.h" />
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\AssetManager\ModelDecompiler.h" />
     <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
+    <ClInclude Include="Source\AssetManager\GeometryMesh.h" />
+    <ClInclude Include="Source\Graphics\Animation\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
