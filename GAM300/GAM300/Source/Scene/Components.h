@@ -294,21 +294,6 @@ property_begin_name(Script, "Script") {
 	//property_var(fields)
 } property_vend_h(Script)
 
-
-struct MeshFilter : Object
-{
-	MeshFilter();
-
-	Engine::GUID meshId;
-	std::vector<ModelVertex>* vertices;	// Position
-	std::vector<unsigned int>* indices;	// Index
-	property_vtable();
-};
-
-property_begin_name(MeshFilter, "MeshFilter"){
-	property_parent(Object).Flags(property::flags::DONTSHOW),
-} property_vend_h(MeshFilter)
-
 struct MeshRenderer : Object
 {
 
@@ -503,7 +488,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;

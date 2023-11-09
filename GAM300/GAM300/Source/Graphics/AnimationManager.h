@@ -35,16 +35,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //#include "../../Compiler/Mesh.h"
 #include "../../Compiler/Mesh.h"
 
-
-//#define MAX_BONE_INFLUENCE 4
-class AnimationModel;
-
-struct TextureInfo {
-    unsigned int id;
-    std::string type;
-    std::string path;
-};
-
 //class AnimationMesh {
 //public:
 //    // mesh Data
@@ -167,58 +157,29 @@ struct AssimpNodeData
 class Animation
 {
 public:
-    //Animation() = default;
-
-    //Animation(const std::string& animationPath, AnimationModel* model);
-    //void init(const std::string& animationPath, AnimationModel* model);
-
-
-    //~Animation();
-
     Bone* FindBone(const std::string& name);
 
-
-    inline int& GetTicksPerSecond() { return m_TicksPerSecond; }
     inline float& GetDuration() { return m_Duration; }
+    inline int& GetTicksPerSecond() { return m_TicksPerSecond; }
+    inline std::map<std::string, glm::vec2>& GetAnimationRange() { return m_AnimationRange; }
+    inline std::vector<Bone>& GetBones() { return m_Bones; }
     inline AssimpNodeData& GetRootNode() { return m_RootNode; }
-    inline const std::map<std::string, BoneInfo>& GetBoneIDMap()
-    {
-        return m_BoneInfoMap_;
-    }
-    inline std::vector<Bone>& GetBones()
-    {
-        return m_Bones;
-    }
+    inline std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_BoneInfoMap; }
+    inline int& GetBoneCount() { return m_BoneCounter; }
 
-    void ReadMissingBones(const aiAnimation* animation, AnimationModel& model); // compiler only
+    void ReadMissingBones(const aiAnimation* animation); // compiler only
 
     void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src); // compiler only
 
+protected:
     float m_Duration;
     int m_TicksPerSecond;
+    std::map<std::string, glm::vec2> m_AnimationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
     std::vector<Bone> m_Bones;
     AssimpNodeData m_RootNode;
-    std::map<std::string, BoneInfo> m_BoneInfoMap_;
-};
-
-
-class AnimationModel // similar to geom imported
-{
-public:
-    // model data 
-    std::vector<TextureInfo> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-
-    auto& GetBoneInfoMap() { return m_BoneInfoMap; }
-    int& GetBoneCount() { return m_BoneCounter; }
-
-    Animation& GetAnimations() { return allAnimations; } // also temp
-
-private:
-    Animation allAnimations; // temp, mb need to make it a vec to store more anim next time
-    std::map<std::string, BoneInfo> m_BoneInfoMap; // looks p useless
+    std::map<std::string, BoneInfo> m_BoneInfoMap;
     int m_BoneCounter = 0;
 };
-
 
 #define AnimationManager Animation_Manager::Instance()
 
@@ -238,7 +199,7 @@ public:
 
     //// uses GUID to retrieve a texture from the texture container
     //GLuint GetTexture(std::string GUID);
-    AnimationModel GetModel() { return allModels_; }; //temp shld be deleted
+    Animation GetModel() { return allModels_; }; //temp shld be deleted
 
 private:
 
@@ -250,7 +211,7 @@ private:
     // can yeet these
     GLSLShader ourShader{};
 
-    AnimationModel allModels_;
+    Animation allModels_;
     //AnimationAnimator allAnimators_;
     bool HasBones(MeshAsset meshAsset);
 

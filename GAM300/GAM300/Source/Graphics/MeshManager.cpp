@@ -17,12 +17,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
 #include "Core/EventsManager.h"
-#include "AssetManager/GeomDecompiler.h"
+#include "AssetManager/ModelDecompiler.h"
 
-void MESH_Manager::Init()
+void MeshManager::Init()
 {
-    EVENTS.Subscribe(this, &MESH_Manager::CallbackMeshAssetLoaded);
-    EVENTS.Subscribe(this, &MESH_Manager::CallbackMeshAssetUnloaded);
+    EVENTS.Subscribe(this, &MeshManager::CallbackMeshAssetLoaded);
+    EVENTS.Subscribe(this, &MeshManager::CallbackMeshAssetUnloaded);
     instanceProperties = &RENDERER.GetInstanceProperties();
 
     // Create all the hardcoded meshes here : Cube , (Maybe circle)?
@@ -33,23 +33,20 @@ void MESH_Manager::Init()
     CreateInstanceSegment3D();
 }
 
-MeshAsset& MESH_Manager::GetMeshAsset(const Engine::GUID& meshID)
+MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID& meshID)
 {
-    //E_ASSERT(mMeshesAsset.find(meshID) != mMeshesAsset.end(),"Trying to access invalid mesh");
-    if (mMeshesAsset.find(meshID) == mMeshesAsset.end())
-    {
-        return mMeshesAsset[DEFAULT_ASSETS["None.geom"]];
-    }
-    return mMeshesAsset[meshID];
-}
+    GetAssetsEvent<MeshAsset> e;
+    EVENTS.Publish(&e);
 
-void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::GUID& guid)
+    if (e.pAssets->find(meshID) == e.pAssets->end())
+        return nullptr;
+
+    return &(e.pAssets->find(meshID)->second);
+} 
+
+void MeshManager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid)
 {
-    ModelComponents newGeom(std::move(GEOMDECOMPILER.DeserializeGeoms(filePath, guid)));
-
-    /*std::cout << "I have Materials : " << newGeom._materials.size() << 
-        "from " << filePath << "\n";*/
-
+    // Bean: Move this to material system
     /*for (int i = 0; i < newGeom._materials.size(); ++i)
     {
         std::cout << "Ambience : " << newGeom._materials[i].Ambient.r << "\n";
@@ -81,99 +78,6 @@ void MESH_Manager::GetGeomFromFiles(const std::string& filePath, const Engine::G
         temp_ShininessContainer.push_back(0.f);
     }*/
 
-    Mesh newMesh;
-    newMesh.index = (unsigned int)mContainer.size();
-    glm::vec3 min(FLT_MAX);
-    glm::vec3 max(FLT_MIN);
-    GLuint VAO;
-    GLuint VBO;
-    GLuint EBO;
-
-    for (int i = 0; i < newGeom.meshes.size(); ++i)
-    {
-
-        for (int k = 0; k < newGeom.meshes[i].vertices.size(); ++k)
-        {
-            glm::vec3& pos = newGeom.meshes[i].vertices[k].position;
-            pos = pos * 0.01f; // Bean: 0.01f here converts the vertices position from centimeters to meters
-
-            min.x = std::min(pos.x, min.x);
-            min.y = std::min(pos.y, min.y);
-            min.z = std::min(pos.z, min.z);
-
-            max.x = std::max(pos.x, max.x);
-            max.y = std::max(pos.y, max.y);
-            max.z = std::max(pos.z, max.z);
-        }
-
-        // Bounds
-        newMesh.vertices_min = newGeom.meshes[i].boundsMin = min;
-        newMesh.vertices_max = newGeom.meshes[i].boundsMax = max;
-        
-        // Generate Vertex Array and Buffers
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, newGeom.meshes[i].vertices.size() * sizeof(ModelVertex), &newGeom.meshes[i].vertices[0], GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(0); // Position
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)0);
-
-        glEnableVertexAttribArray(1); // Normal
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, normal));
-
-        glEnableVertexAttribArray(2); // Tangent
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, tangent));
-
-        glEnableVertexAttribArray(3); // Texture Coordinates (uv coords)
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, textureCords));
-
-        glEnableVertexAttribArray(4); // Color
-        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, color));
-
-        glEnableVertexAttribArray(5); // Bone Indexes
-        glVertexAttribIPointer(5, 4, GL_INT, sizeof(ModelVertex), (void*)offsetof(ModelVertex, boneIDs));
-
-        glEnableVertexAttribArray(6); // Bone Weights
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void*)offsetof(ModelVertex, weights));
-
-        // bind indices
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, newGeom.meshes[i].indices.size() * sizeof(unsigned int), &newGeom.meshes[i].indices[0], GL_STATIC_DRAW);
-
-        glBindVertexArray(0); // unbind vao
-        glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
-
-        InstanceProperties tempProp;
-        tempProp.VAO = VAO;
-        tempProp.drawCount = (unsigned int)newGeom.meshes[i].indices.size();
-        tempProp.drawType = GL_TRIANGLES;
-
-        vaoMap.emplace(std::make_pair(guid, VAO)); // rmb change to guid after u ask someone @kk
-
-        newMesh.prim = GL_TRIANGLES;
-        newMesh.vaoID = VAO;
-        newMesh.vboID = VBO;
-        newMesh.drawCounts = (GLuint)(newGeom.meshes[i].indices.size());
-
-        newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
-
-        instanceProperties->emplace(std::make_pair(VAO, tempProp));
-
-    }
-
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, instanceProperties[0]);
-
-    mContainer.emplace(guid, newMesh);
-}
-
-void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid)
-{
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
     GLuint VAO;
@@ -242,7 +146,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
 }
 
 //// NEED TO CHANGE TO MAKE IT PROCESS STUFF FROM COMPILER
-//AnimGeomImported MESH_Manager::DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName)
+//AnimGeomImported MeshManager::DeserializeAnimGeoms(const std::string& filePath, const std::string& fileName)
 //{
 //    std::vector<AnimationMesh> tempmesh = AnimationManager.GetModel().meshes;
 //    AnimGeomImported tempgeom;
@@ -282,7 +186,7 @@ void MESH_Manager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _gui
 //    return tempgeom;
 //}
 
-void MESH_Manager::CreateInstanceCube()
+void MeshManager::CreateInstanceCube()
 {
 
     Mesh newMesh;
@@ -353,72 +257,17 @@ void MESH_Manager::CreateInstanceCube()
         22, 23, 20
     };
 
-    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, -0.5f });
-    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, -0.5f });
-    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, 0.5f });
-    StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, 0.5f });
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 1);
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 3);
-    StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
-
-    //// Top Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 1);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 2);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 2);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 3);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 0);
-
-    //// Front Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 1);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, -0.5f }, 2);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, -0.5f }, 3);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 0);
-
-    //// Back Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 5);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f,  0.5f, 0.5f }, 6);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f,  0.5f, 0.5f }, 7);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 4);
-
-    //// Left Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 9);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 10);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 11);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 8);
-
-    //// Right Face
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 13);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 14);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 15);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 12);
-
-    //// Top Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, -0.5f }, 17);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, 0.5f, 0.5f }, 18);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, 0.5f }, 19);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, 0.5f, -0.5f }, 16);
-
-    //// Bottom Face
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, -0.5f }, 21);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
-    //ASSETMANAGER.StoreMesh("Cube", { 0.5f, -0.5f, 0.5f }, 22);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, 0.5f }, 23);
-    //ASSETMANAGER.StoreMesh("Cube", { -0.5f, -0.5f, -0.5f }, 20);
+    // Bean: For Nav Mesh, should change to actual default mesh asset
+    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, -0.5f });
+    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, -0.5f });
+    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, 0.5f });
+    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, 0.5f });
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 1);
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 3);
+    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
 
     newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
     newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -480,7 +329,7 @@ void MESH_Manager::CreateInstanceCube()
 }
 
 
-void MESH_Manager::CreateInstanceSphere()
+void MeshManager::CreateInstanceSphere()
 {
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
@@ -610,7 +459,7 @@ void MESH_Manager::CreateInstanceSphere()
 
 
 // THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
-unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
+unsigned int  MeshManager::InstanceSetup(InstanceProperties& prop) {
 
 
     // SRT Buffer set up
@@ -757,7 +606,7 @@ unsigned int  MESH_Manager::InstanceSetup(InstanceProperties& prop) {
 }
 
 // THIS IS THE PREVIOUS MATERIAL STUFFS -> PBR
-unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
+unsigned int  MeshManager::InstanceSetup_PBR(InstanceProperties& prop) {
 
     size_t buffersize = prop.entitySRT.size();
     // SRT Buffer set up
@@ -841,7 +690,7 @@ unsigned int  MESH_Manager::InstanceSetup_PBR(InstanceProperties& prop) {
     return prop.entitySRTbuffer;
 }
 
-void MESH_Manager::CreateInstanceLine()
+void MeshManager::CreateInstanceLine()
 {
     Mesh newMesh;
     newMesh.index = (unsigned int)(mContainer.size());
@@ -902,7 +751,7 @@ void MESH_Manager::CreateInstanceLine()
 
 }
 
-void MESH_Manager::CreateInstanceSegment3D()
+void MeshManager::CreateInstanceSegment3D()
 {
     Mesh newMesh;
     newMesh.index = (unsigned int)(mContainer.size());
@@ -967,7 +816,7 @@ void MESH_Manager::CreateInstanceSegment3D()
 
 }
 
-void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid,  InstanceProperties& prop) // vao
+void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid,  InstanceProperties& prop) // vao
 {
     
     offsetAndBoundContainer[_guid].offset = (maxpt + minpt) / 2.f;
@@ -1071,24 +920,12 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engin
     //return DebugVaoid;
 }
 
-void MESH_Manager::StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex)
-{
-    ModelVertex v;
-    v.position = mVertex;
-    mMeshesAsset[mKey].vertices.push_back(v);
-}
-
-void MESH_Manager::StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex)
-{
-    mMeshesAsset[mKey].indices.push_back(mIndex);
-}
-
-void MESH_Manager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)
+void MeshManager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)
 {
     AddMesh(pEvent->asset, pEvent->guid);
 }
 
-void MESH_Manager::CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent)
+void MeshManager::CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent)
 {
 
 }

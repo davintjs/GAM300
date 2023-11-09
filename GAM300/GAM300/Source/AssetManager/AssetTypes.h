@@ -46,9 +46,7 @@ static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 	{"Cube.geom", Engine::GUID(101)},
 	{"Sphere.geom", Engine::GUID(102)},
 	{"Capsule.geom", Engine::GUID(103)},
-	{"Line.geom", Engine::GUID(104)},
-	{"Plane.geom", Engine::GUID(105)},
-	{"Segment3D.geom", Engine::GUID(106)},
+	{"Plane.geom", Engine::GUID(104)},
 	{"Quad.geom", Engine::GUID(107)},
 
 	//Default Materials

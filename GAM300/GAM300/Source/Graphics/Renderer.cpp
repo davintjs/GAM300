@@ -19,7 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/gtx/quaternion.hpp>
 
 #include "Scene/SceneManager.h"
-#include "MeshManager.h"
+#include "MESHMANAGER.h"
 #include "Editor/EditorCamera.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
@@ -121,13 +121,13 @@ void Renderer::Update(float)
 			}*/
 
 			size_t s = static_cast<size_t>(renderer.shaderType);
-			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+			if (MESHMANAGER.vaoMap.find(renderer.meshID) == MESHMANAGER.vaoMap.end())
 				continue;
 
 	
 
-			//Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
-			GLuint vao = MeshManager.vaoMap[renderer.meshID];
+			//Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
+			GLuint vao = MESHMANAGER.vaoMap[renderer.meshID];
 			//instanceProperties[vao];
 			//instanceContainers[s][vao]; // holy shit u can do this?? this is map in a vec sia
 
@@ -234,15 +234,15 @@ void Renderer::Update(float)
 			// batch it via shader, geom, material instanced
 			// whenever things reach limit, draw
 			// means need calculate SRT here
-			Mesh* t_Mesh = MeshManager.DereferencingMesh(renderer.meshID);
+			Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
 			if (t_Mesh == nullptr)
 			{
 				continue;
 			}
 
-			if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
+			if (MESHMANAGER.vaoMap.find(renderer.meshID) == MESHMANAGER.vaoMap.end())
 				continue;
-			GLuint vao = MeshManager.vaoMap[renderer.meshID];
+			GLuint vao = MESHMANAGER.vaoMap[renderer.meshID];
 
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
@@ -307,7 +307,7 @@ void Renderer::Update(float)
 
 	}
 
-	//properties[MeshManager.vaoMap["Line"]].iter = 200;
+	//properties[MESHMANAGER.vaoMap["Line"]].iter = 200;
 	
 	if (RENDERER.enableShadows())
 	{
@@ -333,7 +333,7 @@ void Renderer::SetupGrid(const int& _num)
 	float length = _num * spacing * 0.5f;
 
 	//instanceProperties["Line"].iter = _num * 2;
-	GLuint vao = MeshManager.vaoMap[DEFAULT_ASSETS["Line.geom"]];
+	GLuint vao = MESHMANAGER.vaoMap[DEFAULT_ASSETS["Line.geom"]];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));

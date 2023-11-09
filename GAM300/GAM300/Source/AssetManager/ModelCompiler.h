@@ -65,6 +65,9 @@ private:
 		std::pair<glm::vec3, glm::vec2>& _mOffsets,
 		std::pair<glm::vec3, glm::vec2>& _mScales);
 
+	// Compression of indices to reduce custom binary custom file size
+	void CompressIndices(std::vector<std::uint16_t>&_compressedIndices, std::vector<unsigned int>& _tempInd);
+
 	// Import materials and textures of the FBX model
 	void ImportMaterialAndTextures(const aiMaterial& _material);
 
