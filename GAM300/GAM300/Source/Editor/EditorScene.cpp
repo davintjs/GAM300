@@ -26,7 +26,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "ImGuizmo.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
-#include "Graphics/MeshManager.h"
+#include "Graphics/MESHMANAGER.h"
 #include "Graphics/GraphicsHeaders.h"
 
 namespace
@@ -48,8 +48,6 @@ void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
-    ToolBar();
-
     SceneView();
 
     ImGui::PopStyleVar();
@@ -59,19 +57,14 @@ void EditorScene::Update(float dt)
 
 void EditorScene::ToolBar()
 {
-    ImGuiWindowClass window_class;
-    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
-
-    ImGui::SetNextWindowClass(&window_class);
-
     //Scene toolbar
-    if (ImGui::Begin("Scene Toolbar"))
+    if (ImGui::BeginMenuBar())
     {
-        ImGui::Dummy(ImVec2(0.0f, 3.f));
-        ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
-        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
+        ImGui::Combo("##Coord Space", &coord_selection, GizmoWorld, 2, 2);
+
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         float buttonSize = 20.f;
         ImVec2 btn = ImVec2(buttonSize, buttonSize);
@@ -85,7 +78,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
+        if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -99,8 +92,7 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 2) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("W", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
             toggled = 2;
@@ -110,7 +102,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
+        if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;
@@ -119,29 +111,33 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 4) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("R", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = ImGuizmo::SCALE;
             toggled = 4;
         }
         ImGui::PopStyleColor();
 
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(20.0f, 0.f));
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
-        //ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+        if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
 }
 
 void EditorScene::SceneView()
 {
-    windowOpened = ImGui::Begin("Scene");
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar;
+    windowOpened = ImGui::Begin("Scene", nullptr, flags);
     //Editor scene viewport
     if (windowOpened)
     {
+        ToolBar();
+
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
@@ -254,6 +250,8 @@ void EditorScene::DisplayGizmos()
             SelectedEntityEvent SelectingEntity(&currEntity);
             EVENTS.Publish(&SelectingEntity);
         }*/
+        float& intersect = EditorCam.GetIntersect();
+        float& tempIntersect = EditorCam.GetTempIntersect();
 
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
@@ -261,21 +259,20 @@ void EditorScene::DisplayGizmos()
 
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
-            Tag& tag = currentScene.Get<Tag>(entity);
-            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            //Tag& tag = currentScene.Get<Tag>(entity);
+            //PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
+            
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
-            glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -303,15 +300,13 @@ void EditorScene::DisplayGizmos()
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
 
-            //glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_min;
-            //glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.MeshName)->vertices_max;
+            //glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.MeshName)->vertices_min;
+            //glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.MeshName)->vertices_max;
             glm::vec3 mins = -scale;
             glm::vec3 maxs = scale;
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -320,6 +315,42 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                }
+            }
+        }
+
+        for (BoxCollider& bc : currentScene.GetArray<BoxCollider>())
+        {
+            Entity& entity = currentScene.Get<Entity>(bc);
+
+            if (currentScene.Has<MeshRenderer>(entity)) continue;
+            if (bc.state == DELETED) continue;
+
+            Transform& transform = currentScene.Get<Transform>(entity);
+            Tag& tag = currentScene.Get<Tag>(entity);
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::vec3 rot;
+            glm::vec3 scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_max;
+            mins *= glm::vec3(bc.x, bc.y, bc.z);
+            maxs *= glm::vec3(bc.x, bc.y, bc.z);
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
+
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
+            {
+                if (tempIntersect < intersect)
+                {
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }

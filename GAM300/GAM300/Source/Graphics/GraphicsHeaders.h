@@ -364,6 +364,8 @@ public:
 
 	void Draw(BaseCamera& _camera);
 
+	void BindLights(GLSLShader & shader);
+
 	// Drawing UI onto screenspace
 	void UIDraw_2D(BaseCamera& _camera);
 

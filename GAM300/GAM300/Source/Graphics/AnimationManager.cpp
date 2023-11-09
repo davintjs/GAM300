@@ -175,12 +175,12 @@ Bone* Animation::FindBone(const std::string& name)
     else return &(*iter);
 }
 
-void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& model)
+void Animation::ReadMissingBones(const aiAnimation* animation)
 {
     int size = animation->mNumChannels;
 
-    auto& boneInfoMap = model.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
-    int& boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Model class
+    auto& boneInfoMap = m_BoneInfoMap;//getting m_BoneInfoMap from Model class
+    int& boneCount = m_BoneCounter; //getting the m_BoneCounter from Model class
 
     //reading channels(bones engaged in an animation and their keyframes)
     for (int i = 0; i < size; i++)
@@ -196,8 +196,6 @@ void Animation::ReadMissingBones(const aiAnimation* animation, AnimationModel& m
         m_Bones.push_back(Bone(channel->mNodeName.data,
             boneInfoMap[channel->mNodeName.data].id, channel));
     }
-
-    m_BoneInfoMap_ = boneInfoMap;
 }
 
 void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
@@ -223,9 +221,21 @@ void Animation_Manager::Init()
     // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
     GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerCharacter_AnimationsAllAnimations.fbx", false);
     //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
-    allModels_ = md.animations;
+    allModels_ = md.animations[0];
    
-    mAnimationContainer.emplace("docattc", allModels_.GetAnimations());
+    mAnimationContainer.emplace("fakeguid", allModels_); //
+
+    // pretend we are loading the scene
+    std::string animguid = "fakeguid"; // emulating taking guid of anim from scene file
+    // emulating making a copy of the anim and initialising animator component -> doesnt actually do anything for now
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+    {
+        //int idx = AddAnimCopy(animguid);
+        //animator.SetAnimationIdx(idx);
+        animator.SetAnimation(animguid); // makes a copy of the anim and sets idx in animator component to access the copy
+    }
+
 }
 
 void Animation_Manager::Update(float dt)
@@ -235,11 +245,17 @@ void Animation_Manager::Update(float dt)
     {
         if (animator.playing && animator.AnimationAttached())
         {
-            animator.UpdateAnimation(dt);
+            glm::mat4 translate = glm::mat4(1.f);
+            //glm::mat4 translate = glm::translate(glm::mat4(1.f), currentScene.Get<Transform>(animator).GetTranslation());
+            animator.UpdateAnimation(dt, translate);
         }
         else if (!animator.AnimationAttached())
         {
-            animator.SetAnimation(&allModels_.GetAnimations());
+            //int idx = AddAnimCopy(mAnimationContainer["fakeguid"]);
+            //animator.SetAnimationIdx(idx);
+
+            animator.SetAnimation("fakeguid");
+            //animator.SetAnimation(&allModels_.GetAnimations());
         }
     }
 }

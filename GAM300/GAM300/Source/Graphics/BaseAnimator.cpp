@@ -28,28 +28,41 @@ void BaseAnimator::Init()
         m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
 }
 
-void BaseAnimator::SetAnimation(Animation* animation)
-{
-    m_CurrentAnimation = *animation;
+//void BaseAnimator::SetAnimation(Animation* animation)
+//{
+//
+//    //m_CurrentAnimation = *animation;
+//
+//    // Need to set to current entity's transform for either the bones or assimpnodedata
+//    // CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+//    hasAnimation = true;
+//}
 
-    // Need to set to current entity's transform for either the bones or assimpnodedata
-    // CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+void BaseAnimator::SetAnimation(/*Engine::GUID*/std::string animguid)
+{
+    // in future we can remove existing anim before adding
+    animGUID = animguid;
+    int idx = AnimationManager.AddAnimCopy(animGUID);
+    m_AnimationIdx = idx;
     hasAnimation = true;
 }
 
-void BaseAnimator::UpdateAnimation(float dt)
+void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
-    m_DeltaTime = dt;
+    //m_DeltaTime = dt;
     if (hasAnimation)
     {
+        Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+        
         m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
         m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), pTransform);
     }
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)
 {
+    Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     m_CurrentAnimation = *pAnimation;
     m_CurrentTime = 0.0f;
 }
@@ -58,6 +71,9 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
 {
     std::string nodeName = node->name;
     glm::mat4 nodeTransform = node->transformation;
+
+    //Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+    Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
     Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
 
@@ -69,7 +85,7 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
 
     glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-    auto boneInfoMap = m_CurrentAnimation.GetBoneIDMap();
+    auto boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
     if (boneInfoMap.find(nodeName) != boneInfoMap.end())
     {
         int index = boneInfoMap[nodeName].id;

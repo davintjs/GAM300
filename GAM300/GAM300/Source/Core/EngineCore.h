@@ -98,7 +98,7 @@ public:
 		//	BEHAVIORTREEBUILDER.Init();
 		//#endif
 		AUDIOMANAGER.InitAudioManager();
-		MeshManager.Init();
+		MESHMANAGER.Init();
 		TextureManager.Init();
 		AllSystems::Init();
 

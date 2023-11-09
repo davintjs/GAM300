@@ -1214,11 +1214,11 @@ private:
                         {
                             MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
 
-                            temp = MeshManager.offsetAndBoundContainer.find(mr.meshID)->second;
+                            temp = MESHMANAGER.offsetAndBoundContainer.find(mr.meshID)->second;
                         }
                         else
                         {
-                            temp = MeshManager.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
+                            temp = MESHMANAGER.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
                         }
 
                         pObject->x = temp.scalarBound.x;

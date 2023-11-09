@@ -13,7 +13,7 @@
 		b. Add holes and obstacles to the navmesh
 		c. Triangulation by ear clipping method
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
 #include "Precompiled.h"
@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "NavMeshBuilder.h"
 #include "NavMesh.h"
 #include "Scene/SceneManager.h"
+#include "Core/EventsManager.h"
 
 void NavMeshBuilder::Init()
 {
@@ -45,6 +46,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	std::vector<glm::vec3> mGroundVertices;
 	std::vector<glm::ivec3> mGroundIndices;
 
+	// Get all mesh assets
 	GetAssetsEvent<MeshAsset> e;
 	EVENTS.Publish(&e);
 
@@ -79,10 +81,10 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 
 		/*for (int i = 0; i < mesh.vertices->size(); ++i)
 		{
-			glm::vec4 temp = glm::vec4((*mesh.vertices)[i].position, 1.f);
+			glm::vec4 temp = glm::vec4(meshAsset.vertices[i].position, 1.f);
 			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
 		}
-		for (int j = 0; j < mesh.indices->size(); j += 3)
+		for (int j = 0; j < meshAsset.indices.size(); j += 3)
 		{
 			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j] + mIndexCount, (*mesh.indices)[j + 1] + mIndexCount, (*mesh.indices)[j + 2] + mIndexCount));
 		}
