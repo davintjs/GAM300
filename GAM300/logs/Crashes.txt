@@ -1,5 +1,5 @@
-[2023-11-09 13:46:45.541] [Error] [critical] 
-Caused By:	_meshVertices.size() == _oVertices.size() == _boneInfo.size()
-Info:		Both vertices vector sizes not equal for decompressing.
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\ModelDecompiler.cpp (Line: 257)
+[2023-11-09 17:07:53.455] [Error] [critical] 
+Caused By:	i < size_
+Info:		ARRAY OUT OF BOUNDS
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\SparseSet.cpp (Line: 153)
 

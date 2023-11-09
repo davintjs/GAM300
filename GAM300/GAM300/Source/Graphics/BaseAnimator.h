@@ -30,7 +30,9 @@ public:
 
 	void Init();
 
-	void SetAnimation(Animation* animation);
+	//void SetAnimation(Animation* animation);
+
+	void SetAnimation(/*Engine::GUID*/std::string animGUID);
 
 	void UpdateAnimation(float dt, glm::mat4& pTransform);
 
@@ -48,11 +50,12 @@ public:
 
 protected:
 	std::vector<glm::mat4> m_FinalBoneMatrices;
-	//Animation* m_CurrentAnimation;
-	Animation m_CurrentAnimation;
+	//Animation m_CurrentAnimation;
+	int m_AnimationIdx; // to access copy of original anim
 	float m_CurrentTime;
-	float m_DeltaTime;
-	bool hasAnimation;
+	//float m_DeltaTime;
+	bool hasAnimation; // might need to remove
+	/*Engine::GUID*/std::string animGUID; // guid of original anim
 	//maybe temp add pointer to parent of animator
 
 };
