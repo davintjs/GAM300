@@ -39,7 +39,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16971042021324461215}
   IsInstance: false
   Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
-  Material_ID: {guid: 000000000000000000000000000000c8}
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
   Albedo: [0.476280749, 0.476244509, 0.476233125, 1]
   Metallic: 1
   Roughness: 1

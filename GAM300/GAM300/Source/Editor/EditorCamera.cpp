@@ -41,11 +41,11 @@ void EditorCamera::Update(float dt)
 	intersected = FLT_MAX;
 	tempIntersect = 0.f;
 
-	// Focus on object using F key
-	FocusOnObject(dt);
-
 	EditorWindowEvent e("Scene");
 	EVENTS.Publish(&e);
+	
+	if(e.isHovered || isFocusing) // Focus on object using F key
+		FocusOnObject(dt);
 
 	if(e.isHovered || isFlying)	// Rotating and Flying
 		InputControls();
