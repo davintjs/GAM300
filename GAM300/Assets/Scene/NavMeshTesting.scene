@@ -1,4 +1,4 @@
-Serializer Version 1.1
+"%Serializer Version 1.1"
 ---
 Scene Settings:
   Name: NavMeshTesting
@@ -7,165 +7,40 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 814966311178942159
 GameObject:
-  m_EUID: 2508335683683228376
   m_IsActive: true
-  m_Name: Floor
+  m_Name: Floor1
+  m_TagString: ""
   m_Layer: 5
-  m_Position: [0, -0.349999994, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [40, 1, 50]
+  m_Component:
+    - component: {fileID: 12233018584411280593}  # Transform
+    - component: {fileID: 14965761384567921536}  # MeshRenderer
+---
+ID: 12233018584411280593
+Transform:
+  m_GameObject: {fileID: 814966311178942159}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [20, 1, 20]
+  Father: {fileID: 0}
   m_Children:
     []
-  m_Parent: 0
-  m_Components:
-    - component: {fileID: 5062268925278052045}  # Rigidbody
-    - component: {fileID: 18366606890204431064}  # MeshFilter
-    - component: {fileID: 4270502760448712130}  # MeshRenderer
-    - component: {fileID: 15591883172395388695}  # BoxCollider
 ---
-Rigidbody:
-  EUID: 2508335683683228376
-  UUID: 5062268925278052045
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
-MeshFilter:
-  EUID: 2508335683683228376
-  UUID: 18366606890204431064
----
+ID: 14965761384567921536
 MeshRenderer:
-  EUID: 2508335683683228376
-  UUID: 4270502760448712130
-  Mesh: 00000000000000000000000000000065
-  Albedo: [1, 1, 1, 1]
-  Metallic: 0.5
-  Roughness: 0.5
-  AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
----
-BoxCollider:
-  EUID: 2508335683683228376
-  UUID: 15591883172395388695
-  X: 1
-  Y: 1
-  Z: 1
----
-GameObject:
-  m_EUID: 5550770482419583040
-  m_IsActive: true
-  m_Name: Falling Cube
-  m_Layer: 6
-  m_Position: [10.3558512, 4.82818985, -2.6650393]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [5, 5, 5]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
-    - component: {fileID: 7095445641440625316}  # Rigidbody
-    - component: {fileID: 5539027295287339116}  # MeshRenderer
-    - component: {fileID: 6098074139608943075}  # BoxCollider
----
-Rigidbody:
-  EUID: 5550770482419583040
-  UUID: 7095445641440625316
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: false
-  UseGravity: true
-  Is_trigger: false
----
-MeshRenderer:
-  EUID: 5550770482419583040
-  UUID: 5539027295287339116
-  Mesh: 00000000000000000000000000000065
-  Albedo: [0.384955764, 0, 0, 0]
-  Metallic: 0.5
-  Roughness: 0.5
-  AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
----
-BoxCollider:
-  EUID: 5550770482419583040
-  UUID: 6098074139608943075
-  X: 1
-  Y: 1
-  Z: 1
----
-GameObject:
-  m_EUID: 17732743114822645152
-  m_IsActive: true
-  m_Name: Floor2
-  m_Layer: 5
-  m_Position: [40, -0.349999994, 0]
-  m_Rotation: [0, -0, 0]
-  m_Scale: [40, 1, 40]
-  m_Children:
-    []
-  m_Parent: 0
-  m_Components:
-    - component: {fileID: 10469389705548650087}  # Rigidbody
-    - component: {fileID: 18022100245030567483}  # MeshFilter
-    - component: {fileID: 10378551780185916022}  # MeshRenderer
-    - component: {fileID: 4581552212520581639}  # BoxCollider
----
-Rigidbody:
-  EUID: 17732743114822645152
-  UUID: 10469389705548650087
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
-MeshFilter:
-  EUID: 17732743114822645152
-  UUID: 18022100245030567483
----
-MeshRenderer:
-  EUID: 17732743114822645152
-  UUID: 10378551780185916022
-  Mesh: 00000000000000000000000000000065
+  m_GameObject: {fileID: 814966311178942159}
+  IsInstance: true
+  Mesh: {guid: 932ab1b1f4d25c51fe4fd8141b17c9ca}
+  Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
-  Metallic: 0.5
-  Roughness: 0.5
-  AmbientOcclusion: 0.5
-  AlbedoTexture: 00000000000000000000000000000000
-  NormalMap: 00000000000000000000000000000000
-  MetallicTexture: 00000000000000000000000000000000
-  RoughnessTexture: 00000000000000000000000000000000
-  AoTexture: 00000000000000000000000000000000
-  EmissionTexture: 00000000000000000000000000000000
----
-BoxCollider:
-  EUID: 17732743114822645152
-  UUID: 4581552212520581639
-  X: 1
-  Y: 1
-  Z: 1
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1

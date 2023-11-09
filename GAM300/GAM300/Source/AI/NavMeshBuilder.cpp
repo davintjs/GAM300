@@ -45,6 +45,9 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	std::vector<glm::vec3> mGroundVertices;
 	std::vector<glm::ivec3> mGroundIndices;
 
+	GetAssetsEvent<MeshAsset> e;
+	EVENTS.Publish(&e);
+
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
@@ -54,9 +57,27 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		}
 
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
-		const MeshFilter& mesh = MySceneManager.GetCurrentScene().Get<MeshFilter>(entity);
+		const MeshRenderer& mesh = MySceneManager.GetCurrentScene().Get<MeshRenderer>(entity);
 
-		for (int i = 0; i < mesh.vertices->size(); ++i)
+		// Mesh Asset does not exist
+		if (e.pAssets->find(mesh.meshID) == e.pAssets->end())
+		{
+			continue;
+		}
+
+		MeshAsset& meshAsset = e.pAssets->find(mesh.meshID)->second;
+
+		float topY = glm::vec4(t.GetWorldMatrix() * glm::vec4(meshAsset.boundsMax, 1.f)).y;
+		for (int i = 0; i < meshAsset.numVertices; ++i)
+		{
+			if (meshAsset.vertices[i].position.y == topY)
+			{
+				//mGroundVertices.push_back(meshAsset.vertices[i].position);
+				//mGroundIndices.push_back(glm::ivec3(meshAsset.indices[i], meshAsset.indices[i + 1], meshAsset.indices[i + 2]));
+			}
+		}
+
+		/*for (int i = 0; i < mesh.vertices->size(); ++i)
 		{
 			glm::vec4 temp = glm::vec4((*mesh.vertices)[i].position, 1.f);
 			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
@@ -65,7 +86,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		{
 			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j] + mIndexCount, (*mesh.indices)[j + 1] + mIndexCount, (*mesh.indices)[j + 2] + mIndexCount));
 		}
-		mIndexCount += 4;
+		mIndexCount += 4;*/
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);
