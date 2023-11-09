@@ -173,6 +173,9 @@ void EditorContentBrowser::Update(float dt)
                 //Open scene file logic here
                 LoadSceneEvent loadScene(path.string());
                 EVENTS.Publish(&loadScene);
+                EDITOR.History.ClearUndoStack();
+                EDITOR.History.ClearRedoStack();
+
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
 

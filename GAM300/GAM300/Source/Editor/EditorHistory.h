@@ -69,6 +69,9 @@ class HistoryManager {
 		//Clears the entire redo stack
 		void ClearRedoStack();
 
+		//Clears the entire undo stack
+		void ClearUndoStack();
+
 		//Return the reference to under
 		History& GetUndoStack() { return UndoStack; }
 

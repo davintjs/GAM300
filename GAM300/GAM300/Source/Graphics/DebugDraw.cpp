@@ -46,6 +46,9 @@ void DebugDraw::Update(float)
 	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
 	{
 		BoxCollider& bc = *it;
+
+		if (bc.state == DELETED) continue;
+
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
 

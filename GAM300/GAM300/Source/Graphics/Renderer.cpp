@@ -842,10 +842,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
 	glUniform1i(uniform9, (int)SpotLight_Sources.size());
 
-
-
-
-
 	GLint uniform10 =
 		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
 

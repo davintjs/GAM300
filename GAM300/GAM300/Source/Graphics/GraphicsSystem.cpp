@@ -228,6 +228,7 @@ void GraphicsSystem::Update(float dt)
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
+		if (camera.state == DELETED) continue;
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 		camera.TryResize(glm::vec2(Application::GetWidth(), Application::GetHeight()));
 		windowDimension = camera.GetViewportSize();
@@ -261,6 +262,7 @@ void GraphicsSystem::Update(float dt)
 		Scene& currentScene = MySceneManager.GetCurrentScene();
 		for (Camera& camera : currentScene.GetArray<Camera>())
 		{
+			if (camera.state == DELETED) continue;
 			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 			// Update camera view 

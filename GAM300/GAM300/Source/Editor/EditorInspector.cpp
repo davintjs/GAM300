@@ -1076,9 +1076,7 @@ void DisplayComponentHelper(T& component)
                 Change newchange;
                 newchange.component = &component;
                 newchange.property = popup;
-                std::cout << popup << " component deleted\n" << std::endl;
                 EDITOR.History.AddComponentChange(newchange);
-                //curr_scene.Destroy(component);
             }
         }
         else {
