@@ -14,14 +14,9 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #pragma once
-#include "Precompiled.h"
+
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
-// #include "LapSupGraphics/Compiler.h"
-// #include "LapSupGraphics/Mesh.h"
-#include "TextureManager.h"
-
-#include "../../Compiler/Mesh.h"
 
 // Bean: Should not be here and instead be in renderer system
 #include "Graphics/BaseCamera.h"

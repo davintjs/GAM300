@@ -10,26 +10,24 @@
 	This file contains the declaration of Graphics System that includes:
 	1. 
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
 
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Core/SystemInterface.h"
-#include "GraphicStructsAndClass.h"
-#include "BaseCamera.h"
-
 #include "glslshader.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <filesystem>
 
-#include "Utilities/GUID.h"
-
-#include "Model3d.h"
-//#include "glslshader.h"
+#include "GraphicStructsAndClass.h"
+#include "BaseCamera.h"
 #include "GBuffer.h"
+#include "Model3d.h"
 
+#include "Core/SystemInterface.h"
+#include "Core/Events.h"
+#include "Utilities/GUID.h"
+#include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
 
@@ -42,8 +40,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define MATERIALSYSTEM MaterialSystem::Instance()
 
 class Ray3D;
-class RaycastLine;
-class SkyBox;
 
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
