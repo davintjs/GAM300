@@ -89,9 +89,20 @@ void EditorSystem::Update(float dt)
         }
     }
 
+    if  (ImGui::IsKeyReleased(ImGuiKey_Backspace) || ImGui::IsKeyReleased(ImGuiKey_Delete)){
+        if (selectedEntity != NON_VALID_ENTITY)
+        {
+            Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+            Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+            curr_scene.Destroy(ent);
+            SelectedEntityEvent selectedEvent{ 0 };
+            EVENTS.Publish(&selectedEvent);
+        }
+    }
+
     //demo
-    /*bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
+    //bool demo = true;
+    //ImGui::ShowDemoWindow(&demo);
     //ImPlot::ShowDemoWindow(&demo);
 
     ImGui::StyleColorsDark();

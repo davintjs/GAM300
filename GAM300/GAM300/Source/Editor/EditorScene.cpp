@@ -166,16 +166,34 @@ void EditorScene::SceneView()
 
                 ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
                 Engine::GUID guid = data.guid;
+                Scene& curr_scene = MySceneManager.GetCurrentScene();
 
                 if (data.type == MESH) {
                     //Create new entity
-                    Scene& curr_scene = MySceneManager.GetCurrentScene();
                     Entity* ent = curr_scene.Add<Entity>();
                     //Add mesh renderer
                     curr_scene.Add<MeshRenderer>(*ent);
                     //Attach dragged mesh GUID from the content browser
                     curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                }
+                else if (data.type == MATERIAL) {
+                    //check which entity the mouse is current at when item is dropped
+                    Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+
+                    //if valid entity
+                    if (temp != 0){
+                        Entity& currEntity = curr_scene.Get<Entity>(temp);
+
+                        //if object does not have a mesh renderer
+                        if (!curr_scene.Has<MeshRenderer>(currEntity))
+                            curr_scene.Add<MeshRenderer>(currEntity);
+
+                        //Assign material to mesh renderer
+                        MeshRenderer& meshrenderer = curr_scene.Get<MeshRenderer>(currEntity);
+                        Change newchange(&meshrenderer, "MeshRenderer/Material_ID");
+                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, guid);
+                    }
                 }
 
                 //add other file types here

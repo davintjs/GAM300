@@ -181,9 +181,12 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
+        
+        ImGui::Dummy(ImVec2(0, 10.f));
         ImGui::Text("Filter: "); ImGui::SameLine();
         filter.Draw();
 
+        ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
         // Back button to return to parent directory
         static float padding = 15.f;
         static float iconsize = 50.f;
@@ -339,6 +342,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         }
        
         ImGui::Columns(1);
+        ImGui::EndChild();
         ImGui::EndPopup();
     }
 }
