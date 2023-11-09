@@ -24,6 +24,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "Utilities/Serializer.h"
 
+static bool buffer = false;
+
 void EditorHierarchy::Init()
 {
 	//no selected entity at start
@@ -40,10 +42,6 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 	ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
 		ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-	if (euid == selectedEntity)
-	{
-		NodeFlags |= ImGuiTreeNodeFlags_Selected;
-	}
 
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
@@ -152,6 +150,23 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::EndDragDropTarget();
 	}
 
+
+	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
+		if (newselect) {
+			ImGui::SetNextItemOpen(true);
+			newselect = false;
+		}
+
+		//set the newselect one frame later
+		if (buffer) {
+			newselect = true;
+			buffer = false;
+		}
+
+		if (euid == selectedEntity)
+			NodeFlags |= ImGuiTreeNodeFlags_Selected;
+	}
+	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
 	bool open = ImGui::TreeNodeEx(EntityName, NodeFlags);
 
@@ -201,7 +216,9 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		for (int i = 0; i < currEntity.child.size(); ++i)
 		{
 			Engine::UUID childId = currEntity.child[i];
-			DisplayEntity(childId);
+			//Display non-deleted child
+			if (MySceneManager.GetCurrentScene().Get<Entity>(childId).state != DELETED)
+				DisplayEntity(childId);
 		}
 		ImGui::TreePop();
 	}
@@ -210,6 +227,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 void EditorHierarchy::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
+
 	ImGui::Begin("Hierarchy");
 
 	//List out all entities in current scene
@@ -218,18 +236,18 @@ void EditorHierarchy::Update(float dt)
 	//Add/Delete entities using right click
 	static ImGuiTextFilter filter;
 	Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+
 	ImGui::Text("Filter: "); ImGui::SameLine();
 	filter.Draw();
+
+	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
+
 	bool sceneopen = ImGui::TreeNodeEx(curr_scene.sceneName.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
 	Scene::Layer& layer = curr_scene.layer;
 
-	
-
 	if (sceneopen)
 	{
-		
-
 		for (Engine::UUID euid : layer)
 		{
 			if (!curr_scene.Get<Transform>(euid).isChild())
@@ -237,6 +255,8 @@ void EditorHierarchy::Update(float dt)
 				//check if filter characters matches the name and filter accordingly
 				if (!filter.PassFilter(curr_scene.Get<Tag>(euid).name.c_str()))
 					continue;
+
+				if (curr_scene.Get<Entity>(euid).state == DELETED) continue;
 
 				//Recursive function to display entities in a hierarchy tree
 				DisplayEntity(euid);
@@ -275,8 +295,32 @@ void EditorHierarchy::Update(float dt)
 		{
 			if (ImGui::MenuItem("Add Entity"))
 			{
-				SelectedEntityEvent selectedEvent{ curr_scene.Add<Entity>() };
+				Change newchange;
+				newchange.entity = curr_scene.Add<Entity>();
+				newchange.action = CREATING;
+				EDITOR.History.AddEntityChange(newchange);
+				SelectedEntityEvent selectedEvent{ newchange.entity };
 				EVENTS.Publish(&selectedEvent);
+				buffer = true;
+			}
+
+			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+			auto& currEntity = curr_scene.Get<Transform>(selectedEntity);
+
+			//add child entity to current selected entity
+			if (ImGui::MenuItem("Add Child Entity")) {
+
+				Change newchange;
+				newchange.action = CREATING;
+
+				Entity* Newentity = curr_scene.Add<Entity>();
+				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
+				newtransform.SetParent(&currEntity);
+				newchange.entity = Newentity;
+				EDITOR.History.AddEntityChange(newchange);
+				SelectedEntityEvent selectedEvent{ Newentity };
+				EVENTS.Publish(&selectedEvent);
+				buffer = true;
 			}
 
 			std::string name = "Delete Entity";
@@ -284,9 +328,11 @@ void EditorHierarchy::Update(float dt)
 			{
 				if (ImGui::MenuItem(name.c_str()))
 				{
-					Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 					//Delete all children of selected entity as well
-					curr_scene.Destroy(ent);
+					//curr_scene.Destroy(ent);
+					Change newchange;
+					newchange.entity = &ent;
+					EDITOR.History.AddEntityChange(newchange);
 					SelectedEntityEvent selectedEvent{ 0 };
 					EVENTS.Publish(&selectedEvent);
 				}
@@ -299,16 +345,16 @@ void EditorHierarchy::Update(float dt)
 			ImGui::Separator();
 			if (ImGui::MenuItem("Add to Prefabs"))
 			{
-				Entity& ent = curr_scene.Get<Entity>(selectedEntity);
 				SerializePrefab(ent, curr_scene);
-				//For zac to add prefab implementation here
 			}
 
 			ImGui::EndPopup();
 		}
 
 		ImGui::TreePop();
+		
 	}
+	ImGui::EndChild();
 	ImGui::End();
 }
 

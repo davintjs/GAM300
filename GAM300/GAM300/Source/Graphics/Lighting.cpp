@@ -46,6 +46,8 @@ void Lighting::Update(float)
 
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
+		if (lightSource.state == DELETED) continue;
+
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -80,6 +82,8 @@ void Lighting::Update(float)
 		if (currentScene.Has<MeshRenderer>(entity))
 		{
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
+			if (mesh_component.state == DELETED) continue;
+
 			mesh_component.mr_Albedo = glm::vec4(Temporary.lightColor, 1.f);
 
 			mesh_component.mr_metallic = -1.f;

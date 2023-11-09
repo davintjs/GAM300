@@ -44,6 +44,4 @@ public:
 private:
 	std::vector<ISystem*> editorSystems;
 	Engine::UUID selectedEntity{0};
-
-	
 };

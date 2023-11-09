@@ -46,6 +46,9 @@ bool SerializeScene(Scene& _scene)
     // Serialize Entities & Components
     for (Engine::UUID euid : _scene.layer)
     {
+        //if entity is deleted, dont serialize
+        if (_scene.Get<Entity>(euid).state == DELETED) continue;
+
         bool serialized = SerializeEntity(out, _scene.Get<Entity>(euid), _scene);
         E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }

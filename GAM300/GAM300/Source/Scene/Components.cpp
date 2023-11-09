@@ -21,11 +21,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Graphics/MeshManager.h"
+#include "Editor/EditorHeaders.h"
 
 std::map<std::string, size_t> ComponentTypes{};
 
 bool Transform::isLeaf() {
-	return (child.size()) ? false : true;
+	size_t size = child.size();
+	for (auto& c : child) {
+		if (MySceneManager.GetCurrentScene().Get<Entity>(c).state == DELETED)
+			size--;
+	}
+	return (size) ? false : true;
 }
 
 bool Transform::isChild() {
@@ -120,6 +126,25 @@ void Transform::SetParent(Transform* newParent)
 		// Add the object to the new parent's child list
 		parentTrans.child.push_back(EUID());
 	}
+}
+
+bool Transform::isSelectedChild() {
+	if (!this->isLeaf()) {
+		auto& children = this->child;
+
+		for (auto& _child : children) {
+			if (_child == EditorHierarchy::Instance().selectedEntity) {
+				return true;
+			}
+
+			// Recursively check if the selectedEntity is a child or grandchild of this child.
+			if (MySceneManager.GetCurrentScene().Get<Transform>(_child).isSelectedChild()) {
+				return true; // Return true if found in the child or any of its descendants.
+			}
+		}
+	}
+
+	return false; 
 }
 
 
