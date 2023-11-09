@@ -166,16 +166,40 @@ void EditorScene::SceneView()
 
                 ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
                 Engine::GUID guid = data.guid;
+                Scene& curr_scene = MySceneManager.GetCurrentScene();
 
                 if (data.type == MESH) {
                     //Create new entity
-                    Scene& curr_scene = MySceneManager.GetCurrentScene();
                     Entity* ent = curr_scene.Add<Entity>();
                     //Add mesh renderer
                     curr_scene.Add<MeshRenderer>(*ent);
                     //Attach dragged mesh GUID from the content browser
                     curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
+
+                    //undo/redo for entity
+                    /*Change newchange;
+                    newchange.entity = ent;
+                    newchange.action = CREATING;
+                    EDITOR.History.AddEntityChange(newchange);*/
+                }
+                else if (data.type == MATERIAL) {
+                    //check which entity the mouse is current at when item is dropped
+                    Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+
+                    //if valid entity
+                    if (temp != 0){
+                        Entity& currEntity = curr_scene.Get<Entity>(temp);
+
+                        //if object does not have a mesh renderer
+                        if (!curr_scene.Has<MeshRenderer>(currEntity))
+                            curr_scene.Add<MeshRenderer>(currEntity);
+
+                        //Assign material to mesh renderer
+                        MeshRenderer& meshrenderer = curr_scene.Get<MeshRenderer>(currEntity);
+                        Change newchange(&meshrenderer, "MeshRenderer/Material_ID");
+                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, guid);
+                    }
                 }
 
                 //add other file types here
@@ -213,10 +237,28 @@ bool EditorScene::SelectEntity()
 void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
+
     if (SelectEntity())
     {
+        // Colour picking Version if needed
+        /*Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+        if (temp == 0)
+        {
+            SelectedEntityEvent SelectingEntity(0);
+            EVENTS.Publish(&SelectingEntity);
+        }
+        else
+        {
+            Entity& currEntity = currentScene.Get<Entity>(temp);
+
+            SelectedEntityEvent SelectingEntity(&currEntity);
+            EVENTS.Publish(&SelectingEntity);
+        }*/
+
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
+            if (renderer.state == DELETED) continue;
+
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
             Tag& tag = currentScene.Get<Tag>(entity);
@@ -227,7 +269,6 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
             glm::vec3 mins = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_min;
             glm::vec3 maxs = scale * MeshManager.DereferencingMesh(renderer.meshID)->vertices_max;
             rot = glm::radians(rot);
@@ -243,12 +284,14 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }
 
         for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
         {
+            if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
             Transform& transform = currentScene.Get<Transform>(entity);
 
@@ -279,9 +322,6 @@ void EditorScene::DisplayGizmos()
                     intersect = tempIntersect;
                 }
             }
-
-
-
         }
     }
 
@@ -289,6 +329,8 @@ void EditorScene::DisplayGizmos()
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+
+        
         Transform& trans = currentScene.Get<Transform>(entity);
         for (int i = 0; i < 3; ++i)
         {

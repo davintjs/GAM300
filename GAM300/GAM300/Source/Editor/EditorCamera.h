@@ -82,6 +82,7 @@ public:
 
 	void CallbackUpdateSceneGeometry(EditorUpdateSceneGeometryEvent* pEvent);
 
+	glm::vec2 GetScenePosition() { return scenePosition; };
 private:
 	Ray3D ray;
 	glm::vec3 targetFP;
