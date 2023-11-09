@@ -319,6 +319,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 4831385178420616568
 GameObject:
@@ -4366,6 +4367,7 @@ BoxCollider:
   X: 5
   Y: 1
   Z: 5
+  Offset: [0, 0, 0]
 ---
 ID: 9752894090014538246
 Script:
@@ -10359,6 +10361,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 5773306995602671261
 GameObject:
@@ -10400,6 +10403,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 1522253030805593136
 GameObject:
@@ -10441,6 +10445,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 2843291398863310873
 GameObject:
@@ -10482,6 +10487,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 12213298936789705544
 GameObject:
@@ -10523,6 +10529,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 10562634059839651427
 GameObject:
@@ -10564,6 +10571,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 13183037791204690436
 GameObject:
@@ -10605,6 +10613,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 2140330462846766085
 GameObject:
@@ -10646,6 +10655,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 2913411741030920107
 GameObject:
@@ -10687,6 +10697,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 3124560230585886792
 GameObject:
@@ -10728,6 +10739,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 16929087912293405670
 GameObject:
@@ -10769,6 +10781,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 4872176723683220624
 GameObject:
@@ -10810,6 +10823,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 7184842061523962735
 GameObject:
@@ -10851,6 +10865,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 10055382662224545046
 GameObject:
@@ -10892,6 +10907,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 10998208615434921590
 GameObject:
@@ -10997,6 +11013,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 13836474849813751180
 Script:
@@ -11268,6 +11285,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 8274148974106113803
 GameObject:
@@ -11309,6 +11327,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 9767478509121957085
 GameObject:
@@ -11350,6 +11369,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 9900922512643015028
 GameObject:
@@ -11391,6 +11411,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 1780636439256875433
 GameObject:
@@ -11432,6 +11453,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 17566730363593245515
 GameObject:
@@ -11473,6 +11495,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 15227400141124432999
 GameObject:
@@ -11514,6 +11537,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 17393421018475056808
 GameObject:
@@ -11555,6 +11579,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 7713270789324086732
 GameObject:
@@ -11596,6 +11621,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 7467508476936638947
 GameObject:
@@ -11637,6 +11663,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 14074077563264719233
 GameObject:
@@ -11678,6 +11705,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 2054166983896987603
 GameObject:
@@ -11719,6 +11747,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 1098662833275935246
 GameObject:
@@ -11779,6 +11808,7 @@ BoxCollider:
   X: 1
   Y: 1
   Z: 1
+  Offset: [0, 0, 0]
 ---
 ID: 8319159695061000746
 GameObject:
@@ -11821,6 +11851,7 @@ BoxCollider:
   X: 0.5
   Y: 1
   Z: 0.5
+  Offset: [0, 0, 0]
 ---
 ID: 1625195344634084191
 Script:

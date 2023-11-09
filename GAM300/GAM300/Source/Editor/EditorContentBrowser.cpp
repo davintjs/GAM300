@@ -48,6 +48,8 @@ void EditorContentBrowser::Update(float dt)
 
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
 
+    ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
+
     // Back button to return to parent directory
     if (currentDirectory != std::filesystem::path(AssetDirectory))
     {
@@ -132,13 +134,18 @@ void EditorContentBrowser::Update(float dt)
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
+            else if (ext == "material") {
+                GetAssetEvent e{ it.path() };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MATERIAL;
+            }
             else if (ext == "prefab") { //prefab files
 
-            }
-           
+            }          
             ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
             ImGui::EndDragDropSource();
-
         }
 
         ImGui::PopStyleColor();
@@ -166,6 +173,9 @@ void EditorContentBrowser::Update(float dt)
                 //Open scene file logic here
                 LoadSceneEvent loadScene(path.string());
                 EVENTS.Publish(&loadScene);
+                EDITOR.History.ClearUndoStack();
+                EDITOR.History.ClearRedoStack();
+
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
 
@@ -220,6 +230,7 @@ void EditorContentBrowser::Update(float dt)
     }
     ImGui::Columns(1);
 
+    ImGui::EndChild();
     ImGui::End();
 }
 

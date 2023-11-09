@@ -35,7 +35,7 @@
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
-    <ClCompile Include="Source\AssetManager\GeomDecompiler.cpp">
+    <ClCompile Include="Source\AssetManager\ModelDecompiler.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -288,7 +288,7 @@
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\AssetManager\AssetTypes.h" />
-    <ClInclude Include="Source\AssetManager\GeomDecompiler.h">
+    <ClInclude Include="Source\AssetManager\ModelDecompiler.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -425,6 +425,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\NormalDebugRender.frag" />
+    <None Include="Shaders\NormalDebugRender.vert" />
     <None Include="Shaders\PBR.frag">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>

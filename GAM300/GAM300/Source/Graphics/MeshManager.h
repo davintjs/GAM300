@@ -49,21 +49,18 @@ struct Mesh
 	GLenum prim;
 };
 
-#define MeshManager MESH_Manager::Instance()
+#define MESHMANAGER MeshManager::Instance()
 
-SINGLETON(MESH_Manager)
+SINGLETON(MeshManager)
 {
 
 public:
 	
 	void Init();
 
-	void GetGeomFromFiles(const std::string& filePath, const Engine::GUID& fileName);
+	MeshAsset* GetMeshAsset(const Engine::GUID& meshID);
 
 	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID& _guid);
-
-	MeshAsset& GetMeshAsset(const Engine::GUID& meshID);
-
 
 	// This is used when we are going to draw, u need to take the geom then render it
 	Mesh* DereferencingMesh(const Engine::GUID& meshID) 
@@ -84,9 +81,6 @@ public:
 	//GLuint CreateTexture(char const* Filename);
 	//Handle mesh adding here
 	void CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent);
-	// Adds mesh asset for storing
-	void StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex);
-	void StoreMeshIndex(const Engine::GUID& mKey, const int& mIndex);
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
@@ -96,9 +90,9 @@ public:
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
 	std::vector<DefaultRenderProperties>* defaultProperties;
 
-private:
+	std::unordered_map<Engine::GUID, geometryDebugData> offsetAndBoundContainer;
 
-	std::unordered_map<Engine::GUID, MeshAsset> mMeshesAsset; // File name, mesh vertices and indices (For Sean)
+private:
 
 	void CreateInstanceCube();
 	void CreateInstanceSphere();
@@ -114,6 +108,6 @@ private:
 	// Did not make this version because i realized that its all within instance properties
 	//unsigned int InstanceSetup_MAT(InstanceProperties& prop);
 
-	void debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop); // vao
+	void debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid, InstanceProperties& prop); // vao
 
 };

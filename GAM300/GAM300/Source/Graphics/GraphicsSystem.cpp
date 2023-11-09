@@ -228,6 +228,7 @@ void GraphicsSystem::Update(float dt)
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
+		if (camera.state == DELETED) continue;
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 		camera.TryResize(glm::vec2(Application::GetWidth(), Application::GetHeight()));
 		windowDimension = camera.GetViewportSize();
@@ -261,12 +262,13 @@ void GraphicsSystem::Update(float dt)
 		Scene& currentScene = MySceneManager.GetCurrentScene();
 		for (Camera& camera : currentScene.GetArray<Camera>())
 		{
+			if (camera.state == DELETED) continue;
 			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 			// Update camera view 
 			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
-			COLOURPICKER.ColorPickingUI(camera);
+			COLOURPICKER.ColorPickingUIButton(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 		}
@@ -368,7 +370,10 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	
 #ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+	{
 		DEBUGDRAW.Draw();
+
+	}
 #endif
 
 	MYSKYBOX.Draw(_camera);

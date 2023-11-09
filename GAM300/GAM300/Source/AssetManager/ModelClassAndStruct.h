@@ -30,14 +30,14 @@ struct GeomComponents
 {
 	std::vector<Geom_Mesh> meshes{};	// Individual meshes in the model, which also contains its individual vertices and indices
 	std::vector<Material> materials{};	// Total materials of the WHOLE model (One mesh uses one material only)
-	AnimationModel animations{};		// The animations contained on this model
+	std::vector<Animation> animations{};// The animations contained on this model
 };
 
 struct ModelComponents
 {
-	std::vector<MeshAsset> meshes;
-	std::vector<Material> materials;
-	AnimationModel animations{};
+	std::vector<MeshAsset> meshes;		// Individual meshes in the model in engine terms, which also contains its individual vertices and indices
+	std::vector<Material> materials;	// Total materials of the WHOLE model (One mesh uses one material only)
+	std::vector<Animation> animations{};// The animations contained on this model
 };
 
 #endif // !MODELCLASSANDSTRUCT_H

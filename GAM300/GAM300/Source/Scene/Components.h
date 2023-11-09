@@ -73,7 +73,6 @@ struct Transform : Object
 
 	//Parent's euid
 	Engine::UUID parent = 0;
-
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 
@@ -82,6 +81,8 @@ struct Transform : Object
 
 	//Check whether this is a child
 	bool isChild();
+
+	bool isSelectedChild();
 
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
@@ -150,6 +151,8 @@ struct BoxCollider : Object
 	float x = 1.0f;
 	float y = 1.0f;
 	float z = 1.0f;
+
+	Vector3 offset{ 0.f };
 	property_vtable();
 };
 
@@ -158,6 +161,7 @@ property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(x).Name("X"),
 	property_var(y).Name("Y"),
 	property_var(z).Name("Z"),
+	property_var(offset).Name("Offset"),
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
@@ -290,21 +294,6 @@ property_begin_name(Script, "Script") {
 	//property_var(fields)
 } property_vend_h(Script)
 
-
-struct MeshFilter : Object
-{
-	MeshFilter();
-
-	Engine::GUID meshId;
-	std::vector<ModelVertex>* vertices;	// Position
-	std::vector<unsigned int>* indices;	// Index
-	property_vtable();
-};
-
-property_begin_name(MeshFilter, "MeshFilter"){
-	property_parent(Object).Flags(property::flags::DONTSHOW),
-} property_vend_h(MeshFilter)
-
 struct MeshRenderer : Object
 {
 
@@ -342,7 +331,7 @@ struct MeshRenderer : Object
 
 
 	// This 2 dont delete -> Future use
-	bool isInstance = true;
+	//bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 	
 	//temporary index for current material
@@ -353,7 +342,6 @@ struct MeshRenderer : Object
 
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(isInstance).Name("IsInstance"),	
 	property_var(meshID).Name("Mesh"),
 	property_var(materialGUID).Name("Material_ID"),
 	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
@@ -499,7 +487,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, MeshFilter, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;

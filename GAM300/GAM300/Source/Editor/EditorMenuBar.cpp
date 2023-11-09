@@ -242,6 +242,8 @@ void EditorMenuBar::NewScene()
     // Load this new scene if there was a previously loaded one
     SceneChangingEvent changeScene(*createScene.scene);
     EVENTS.Publish(&changeScene);
+    EDITOR.History.ClearUndoStack();
+    EDITOR.History.ClearRedoStack();
 }
 
 void EditorMenuBar::SaveScene()
@@ -283,6 +285,8 @@ void EditorMenuBar::OpenFile()
         {
             LoadSceneEvent loadScene(Filename);
             EVENTS.Publish(&loadScene);
+            EDITOR.History.ClearUndoStack();
+            EDITOR.History.ClearRedoStack();
         }
     }
 }
