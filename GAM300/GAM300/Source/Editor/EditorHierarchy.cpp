@@ -24,6 +24,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "Utilities/Serializer.h"
 
+static bool buffer = false;
+
 void EditorHierarchy::Init()
 {
 	//no selected entity at start
@@ -148,12 +150,23 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::EndDragDropTarget();
 	}
 
-	if (euid == selectedEntity)
-	{
-		NodeFlags |= ImGuiTreeNodeFlags_Selected;
-		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	}
 
+	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
+		if (newselect) {
+			ImGui::SetNextItemOpen(true);
+			newselect = false;
+		}
+
+		//set the newselect one frame later
+		if (buffer) {
+			newselect = true;
+			buffer = false;
+		}
+
+		if (euid == selectedEntity)
+			NodeFlags |= ImGuiTreeNodeFlags_Selected;
+	}
+	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
 	bool open = ImGui::TreeNodeEx(EntityName, NodeFlags);
 
@@ -288,6 +301,7 @@ void EditorHierarchy::Update(float dt)
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ newchange.entity };
 				EVENTS.Publish(&selectedEvent);
+				buffer = true;
 			}
 
 			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
@@ -306,6 +320,7 @@ void EditorHierarchy::Update(float dt)
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
+				buffer = true;
 			}
 
 			std::string name = "Delete Entity";
