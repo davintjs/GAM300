@@ -175,7 +175,7 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
             {
                 std::visit([&](auto& Value)
                     {
-                        using T = std::decay_t<decltype(Value)>;
+                        using T1 = std::decay_t<decltype(Value)>;
 
                         // Edit name
                         auto it = Name.begin() + Name.find_last_of("/");
@@ -188,7 +188,7 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
                         }
                         else
                         {
-                            if constexpr (std::is_base_of<T,Engine::HexID>())
+                            if constexpr (std::is_base_of< Engine::HexID, T1>())
                             {
                                 out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
                                 out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
@@ -465,7 +465,7 @@ void DeserializeComponent(const DeComHelper& _helper)
                             else
                             {
                                 
-                                if constexpr (std::is_base_of<T1, Engine::HexID>())
+                                if constexpr (std::is_base_of< Engine::HexID,T1>())
                                 {
                                     if (node[name]["guid"])
                                         property::set(component, entry.first.c_str(), node[name]["guid"].as<T1>());
