@@ -313,19 +313,33 @@ private:
 using SetAllComponentsDeleteStruct = decltype(SetComponentsDeleteStruct(AllComponentTypes()));
 void SetComponentsDelete(Entity& entity, ChangeType type) { SetAllComponentsDeleteStruct obj{ entity, type}; }
 
+void SetStateRecursive(Entity& entity, STATE state, ChangeType type) {
+    entity.state = state;
+
+    auto& curr_scene = MySceneManager.GetCurrentScene();
+    auto children = curr_scene.Get<Transform>(entity).child;
+
+    for (auto& child : children) {
+        Entity& child_entity = curr_scene.Get<Entity>(child);
+        child_entity.state = state;
+        SetComponentsDelete(child_entity, type);
+        SetStateRecursive(child_entity, state, type);
+    }
+}
 
 void HistoryManager::AddEntityChange(Change& change) {
     if (change.action == DELETING) {
-        change.entity->state = DELETED;
-        Scene& curr_scene = MySceneManager.GetCurrentScene();
-        auto children = curr_scene.Get<Transform>(*change.entity).child;
+        SetStateRecursive(*change.entity, DELETED, REDO);
+        //change.entity->state = DELETED;
+        //Scene& curr_scene = MySceneManager.GetCurrentScene();
+        //auto children = curr_scene.Get<Transform>(*change.entity).child;
 
-        for (auto& child : children) {
-            Entity& ent = curr_scene.Get<Entity>(child);
-            ent.state = NORMAL;
-            //set all children component to delete too
-            SetComponentsDelete(ent, REDO);
-        }
+        //for (auto& child : children) {
+        //    Entity& ent = curr_scene.Get<Entity>(child);
+        //    ent.state = DELETED;
+        //    //set all children component to delete too
+        //    SetComponentsDelete(ent, REDO);
+        //}
 
         //set components of the entity to deleted as well
         SetComponentsDelete(*change.entity, REDO);
@@ -346,15 +360,17 @@ void HistoryManager::AmendEntity(Change& change, ChangeType type) {
             EVENTS.Publish(&selectedEvent);
         }  
         else {
-            change.entity->state = NORMAL;
-            auto children = curr_scene.Get<Transform>(*change.entity).child;
-            for (auto& child : children) {
-                Entity& ent = curr_scene.Get<Entity>(child);
-                ent.state = NORMAL;
-                //set all children component to normal too
-                SetComponentsDelete(ent, UNDO);
-            }
+            SetStateRecursive(*change.entity, NORMAL, UNDO);
+            //change.entity->state = NORMAL;
+            //auto children = curr_scene.Get<Transform>(*change.entity).child;
+            //for (auto& child : children) {
+            //    Entity& ent = curr_scene.Get<Entity>(child);
+            //    ent.state = NORMAL;
+            //    //set all children component to normal too
+            //    SetComponentsDelete(ent, UNDO);
+            //}
             
+
             SetComponentsDelete(*change.entity, UNDO);
             SelectedEntityEvent selectedEvent{ change.entity };
             EVENTS.Publish(&selectedEvent);
