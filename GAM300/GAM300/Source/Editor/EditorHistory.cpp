@@ -315,6 +315,7 @@ void SetComponentsDelete(Entity& entity, ChangeType type) { SetAllComponentsDele
 
 void SetStateRecursive(Entity& entity, STATE state, ChangeType type) {
     entity.state = state;
+    SetComponentsDelete(entity, type);
 
     auto& curr_scene = MySceneManager.GetCurrentScene();
     auto children = curr_scene.Get<Transform>(entity).child;
@@ -330,19 +331,6 @@ void SetStateRecursive(Entity& entity, STATE state, ChangeType type) {
 void HistoryManager::AddEntityChange(Change& change) {
     if (change.action == DELETING) {
         SetStateRecursive(*change.entity, DELETED, REDO);
-        //change.entity->state = DELETED;
-        //Scene& curr_scene = MySceneManager.GetCurrentScene();
-        //auto children = curr_scene.Get<Transform>(*change.entity).child;
-
-        //for (auto& child : children) {
-        //    Entity& ent = curr_scene.Get<Entity>(child);
-        //    ent.state = DELETED;
-        //    //set all children component to delete too
-        //    SetComponentsDelete(ent, REDO);
-        //}
-
-        //set components of the entity to deleted as well
-        SetComponentsDelete(*change.entity, REDO);
     }
   
     change.type = ENTITY;
@@ -361,17 +349,6 @@ void HistoryManager::AmendEntity(Change& change, ChangeType type) {
         }  
         else {
             SetStateRecursive(*change.entity, NORMAL, UNDO);
-            //change.entity->state = NORMAL;
-            //auto children = curr_scene.Get<Transform>(*change.entity).child;
-            //for (auto& child : children) {
-            //    Entity& ent = curr_scene.Get<Entity>(child);
-            //    ent.state = NORMAL;
-            //    //set all children component to normal too
-            //    SetComponentsDelete(ent, UNDO);
-            //}
-            
-
-            SetComponentsDelete(*change.entity, UNDO);
             SelectedEntityEvent selectedEvent{ change.entity };
             EVENTS.Publish(&selectedEvent);
         }
@@ -385,6 +362,7 @@ void HistoryManager::AmendEntity(Change& change, ChangeType type) {
         }
         else {
             change.entity->state = DELETING;
+            SetStateRecursive(*change.entity, DELETED, REDO);
             SetComponentsDelete(*change.entity, REDO);   
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
