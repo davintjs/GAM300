@@ -972,6 +972,7 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engin
     
     offsetAndBoundContainer[_guid].offset = (maxpt + minpt) / 2.f;
     offsetAndBoundContainer[_guid].scalarBound = (maxpt - offsetAndBoundContainer[_guid].offset) * 2.f;
+   
 
     //// find min max points for each axis
     //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
@@ -1069,6 +1070,12 @@ void MESH_Manager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engin
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
     //return DebugVaoid;
+
+    if (_guid == DEFAULT_MESH)
+    {
+        offsetAndBoundContainer[_guid].vao = prop.debugVAO;
+
+    }
 }
 
 void MESH_Manager::StoreMeshVertex(const Engine::GUID& mKey, const glm::vec3& mVertex)

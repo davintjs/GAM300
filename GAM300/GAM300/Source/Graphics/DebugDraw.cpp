@@ -82,12 +82,13 @@ void DebugDraw::Update(float)
 		}*/
 
 		//GLuint vao = MeshManager.vaoMap[renderer.meshID];
-		GLuint vao = MeshManager.vaoMap[DEFAULT_MESH];
-		InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
+		//GLuint vao = MeshManager.vaoMap[DEFAULT_MESH];
+		//InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
 
 		RigidDebug currRigidDebug;
 
-		currRigidDebug.vao = temporary.debugVAO;
+		currRigidDebug.vao = MeshManager.offsetAndBoundContainer[DEFAULT_MESH].vao;
+
 		glm::mat4 SRT = t.GetWorldMatrix();
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
 
