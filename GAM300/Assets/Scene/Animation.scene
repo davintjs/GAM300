@@ -15,8 +15,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 9951651598483564701}  # Transform
-    - component: {fileID: 15609799257596260444}  # Animator
-    - component: {fileID: 17698552145363034886}  # MeshRenderer
+    - component: {fileID: 1681047024800118161}  # MeshRenderer
 ---
 ID: 9951651598483564701
 Transform:
@@ -28,19 +27,12 @@ Transform:
   m_Children:
     []
 ---
-ID: 15609799257596260444
-Animator:
-  m_GameObject: {fileID: 16971042021324461215}
-  Animation: {guid: 0000000000000000000000000000012c}
-  Time: 0
-  Playing: false
----
-ID: 17698552145363034886
+ID: 1681047024800118161
 MeshRenderer:
   m_GameObject: {fileID: 16971042021324461215}
   Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
   Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
-  Albedo: [0.476280749, 0.476244509, 0.476233125, 1]
+  Albedo: [0, 0, 0, 0]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
@@ -60,6 +52,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 16394273166130057897}  # Transform
+    - component: {fileID: 194859960722155182}  # Animator
 ---
 ID: 16394273166130057897
 Transform:
@@ -71,6 +64,15 @@ Transform:
   m_Children:
     - {fileID: 16971042021324461215}
     - {fileID: 9738285953308870614}
+---
+ID: 194859960722155182
+Animator:
+  m_GameObject: {fileID: 8740433663814950322}
+  Animation: {guid: a68cb651f1d3bb8ac81d906066bae60c}
+  Time: 0
+  StartTime: 0
+  EndTime: 0
+  Playing: false
 ---
 ID: 1093866452432998051
 GameObject:

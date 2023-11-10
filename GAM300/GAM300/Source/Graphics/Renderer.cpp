@@ -97,6 +97,18 @@ void Renderer::Update(float)
 
 	int i = 0;
 
+	for (Animator& animator : currentScene.GetArray<Animator>())
+	{
+		if (animator.AnimationAttached() /*&& animator.m_FinalBoneMatIdx == -1*/)
+		{
+			//renderProperties.isAnimatable = true; // can remove later, should be in mesh instead
+			animator.m_FinalBoneMatIdx = (int)finalBoneMatContainer.size();
+			finalBoneMatContainer.push_back(&animator.m_FinalBoneMatrices);
+			//if ((int)finalBoneMatContainer.size() == 0) // just incase
+			//	animator.m_FinalBoneMatIdx = -1;
+		}
+	}
+
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
 		// No material instance, then just go next
@@ -147,14 +159,21 @@ void Renderer::Update(float)
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
 
-			if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			//if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
+			//{
+			/*}
+			else */if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
 			{
-				Animator& animator = currentScene.Get<Animator>(entity);
-				if (animator.AnimationAttached())
+				Entity& parententity = currentScene.Get<Entity>(transform.parent);
+				if (currentScene.Has<Animator>(parententity))
 				{
-					renderProperties.isAnimatable = true;
-					renderProperties.boneidx = (int)finalBoneMatContainer.size();
-					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
+					Animator& animator = currentScene.Get<Animator>(parententity);
+
+					if (animator.AnimationAttached() && animator.m_FinalBoneMatIdx != -1)
+					{
+						renderProperties.isAnimatable = true; // can remove later, should be in mesh instead
+						renderProperties.boneidx = animator.m_FinalBoneMatIdx; // i need to figure out how to access the parent's renderProperties....
+					}
 				}
 			}
 

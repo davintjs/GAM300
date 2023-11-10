@@ -19,7 +19,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 BaseAnimator::BaseAnimator()
 {
     m_CurrentTime = 0.0f;
+    startTime = 0.0f;
+    endTime = 0.0f;
     m_AnimationIdx = -1;
+    m_FinalBoneMatIdx = -1; 
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -31,9 +34,17 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
-    m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
-    m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
-    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), pTransform);
+    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
+
+    // crash prevention
+    endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
+    startTime = (startTime > endTime) ? endTime - 1.f : startTime;
+
+    //m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+    m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
+    m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
+
+    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)

@@ -41,8 +41,11 @@ public:
 	std::vector<glm::mat4> m_FinalBoneMatrices;
 	Engine::GUID animID{ DEFAULT_ANIM };
 	Engine::GUID prevAnimID{ DEFAULT_ANIM };
+	int m_FinalBoneMatIdx; // to access copy of original anim
 	int m_AnimationIdx; // to access copy of original anim
 	float m_CurrentTime;
+	float startTime;
+	float endTime;
 
 	property_vtable();
 };
@@ -50,6 +53,9 @@ public:
 property_begin_name(BaseAnimator, "BaseAnimator") {
 	property_var(animID).Name("Animation"),
 	property_var(m_CurrentTime).Name("Time"),
+	property_var(startTime).Name("StartTime"),
+	property_var(endTime).Name("EndTime"),
+
 }property_vend_h(BaseAnimator)
 
 #endif // !BASEANIMATOR_H
