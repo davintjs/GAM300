@@ -15,16 +15,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 #include "Precompiled.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Model3d.h"
-#include "Editor/EditorCamera.h"
-
-#include "GraphicsSystem.h"
+#include "GraphicsHeaders.h"
 #include "TextureManager.h"
-#include "MeshManager.h"
 
-//extern EditorCamera E_Camera;
+#include "Editor/EditorCamera.h"
 
 bool mesh_1, mesh_2, mesh_3, mesh_4 = false;
 

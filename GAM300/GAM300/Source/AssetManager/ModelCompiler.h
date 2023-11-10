@@ -24,18 +24,42 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <vector>
 #include <filesystem>
 
-#include "../../Compiler/BoundingBox.h"
-
 #include "assimp/scene.h"
 #include "assimp/mesh.h"
 
 #include "Core/SystemInterface.h"
 #include "AssetManager/ModelClassAndStruct.h"
 
-// Bean: Temporary
-#include "Graphics/AnimationManager.h"
-
 #define MODELCOMPILER ModelCompiler::Instance()
+
+class BoundingBox3D
+{
+public:
+	// Constructor
+	BoundingBox3D()
+	{
+		mMin.x = FLT_MAX;
+		mMin.y = FLT_MAX;
+		mMin.z = FLT_MAX;
+
+		mMax.x = -FLT_MAX;
+		mMax.y = -FLT_MAX;
+		mMax.z = -FLT_MAX;
+	}
+	BoundingBox3D(const glm::vec3& min, const glm::vec3& max) : mMin(min), mMax(max) { return; }
+
+	glm::vec3 mMin{};    // Center point
+	glm::vec3 mMax{};    // Center to corner half extents.
+};
+
+// The geom components that are extracted from the aiScene which contains the fbx/obj data
+// essentially only a portion of the data extracted from the file is needed
+struct GeomComponents
+{
+	std::vector<Geom_Mesh> meshes{};	// Individual meshes in the model, which also contains its individual vertices and indices
+	std::vector<Material> materials{};	// Total materials of the WHOLE model (One mesh uses one material only)
+	std::vector<Animation> animations{};// The animations contained on this model
+};
 
 SINGLETON(ModelCompiler)
 {
@@ -73,6 +97,12 @@ private:
 
 	// Extract bone setting from the vertices in the model for animation
 	void ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert, const aiMesh& _mesh, const aiScene& _scene);
+
+	// Read bones in the animation
+	void ReadMissingBones(const aiAnimation* _tempAnimation, Animation& _animation);
+
+	// Read the hierarchy data for the animation
+	void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
 	
 	// Serialization of the FBX model to custom binary format
 	void SerializeBinaryGeom(const std::filesystem::path& _filePath);

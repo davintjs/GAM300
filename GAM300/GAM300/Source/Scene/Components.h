@@ -21,7 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/ObjectsList.h"
 #include "Utilities/ObjectsBList.h"
 #include "Graphics/GraphicStructsAndClass.h"
-#include "Graphics/BaseAnimator.h"
+#include "Graphics/Animation/BaseAnimator.h"
 #include "Graphics/BaseCamera.h"
 #include "Scene/Object.h"
 #include <Scripting/ScriptFields.h>
@@ -191,7 +191,7 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 struct Animator : Object, BaseAnimator
 {
 	Animator();
-	//Engine::GUID m_CurrentAnimation;
+
 	bool playing;
 	// selected anim
 	//Animation* m_CurrentAnimation{};
@@ -201,7 +201,6 @@ struct Animator : Object, BaseAnimator
 property_begin_name(Animator, "Animator") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_parent(BaseAnimator),
-	//property_var(animationID).Name("Animation"),
 	property_var(playing).Name("Playing")
 } property_vend_h(Animator)
 
