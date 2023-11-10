@@ -533,9 +533,14 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
 			GlmVec3ToJoltVec3(finalPos, pos);
 
+			if (rb.is_trigger)
+				motionType = JPH::EMotionType::Kinematic;
+
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)
 				boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+
 			// Set all necessary settings for the body
 			// Friction
 			boxCreationSettings.mFriction = rb.friction;
@@ -545,6 +550,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			boxCreationSettings.mAngularVelocity = angularVel;
 			// Sensor settings 
 			boxCreationSettings.mIsSensor = rb.is_trigger;
+			if (rb.is_trigger)
+				boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+
 			boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 			boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
 			// Create the actual jolt body
@@ -766,7 +774,6 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 													JPH::Quat::sIdentity(), new JPH::CapsuleShape(0.5f * t.scale.y, t.scale.x)).Create().Get();
 	characterSetting->mShape = characterShape;
 
-
 	JPH::RVec3 pos;
 	GlmVec3ToJoltVec3(t.translation, pos);
 	JPH::Quat rot;
@@ -818,7 +825,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
 
 
-	//std::cout << "Contact Added\n";
+	std::cout << "Contact Added\n";
 }
 
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 

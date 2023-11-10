@@ -43,13 +43,16 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 namespace EngineObjectLayers {
 	inline constexpr JPH::ObjectLayer STATIC = 0;
 	inline constexpr JPH::ObjectLayer DYNAMIC = 1;
-	inline constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+	inline constexpr JPH::ObjectLayer SENSOR = 2;
+	inline constexpr JPH::ObjectLayer NUM_LAYERS = 3;
 };
 // For broadphase layers
 namespace EngineBroadPhaseLayers {
 	inline constexpr JPH::BroadPhaseLayer STATIC(0);
 	inline constexpr JPH::BroadPhaseLayer DYNAMIC(1);
-	inline constexpr unsigned int NUM_LAYERS = 2;
+	inline constexpr JPH::BroadPhaseLayer SENSOR(2);
+
+	inline constexpr unsigned int NUM_LAYERS = 3;
 };
 
  //Determines if two object layers should collide
@@ -62,6 +65,8 @@ public:
 			return obj2 == EngineObjectLayers::DYNAMIC;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
+		case EngineObjectLayers::SENSOR:
+			return obj2 == EngineObjectLayers::DYNAMIC;
 		default:
 			return false;
 
@@ -76,6 +81,8 @@ public:
 	BroadPhaseLayerInterface() {
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
 		bpLayers[EngineObjectLayers::DYNAMIC] = EngineBroadPhaseLayers::DYNAMIC;
+		bpLayers[EngineObjectLayers::SENSOR] = EngineBroadPhaseLayers::SENSOR;
+
 	}
 	// Get number of broadphase layers
 	virtual unsigned int GetNumBroadPhaseLayers() const override {
@@ -119,6 +126,8 @@ public:
 			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
+		case EngineObjectLayers::SENSOR:
+			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
 		default:
 			return false;
 		}

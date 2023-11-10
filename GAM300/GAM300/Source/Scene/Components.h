@@ -148,7 +148,7 @@ property_begin_name(AudioSource, "Audio Source") {
 
 struct BoxCollider : Object
 {
-	Vector3 dimensions;
+	Vector3 dimensions{1,1,1};
 	Vector3 offset;
 	property_vtable();
 };
