@@ -261,7 +261,7 @@ void Serialize(Material_instance& material, std::string directory)
 void Deserialize(Material_instance& material,const fs::path& path)
 {
     std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
-    PRINT(path);
+    //PRINT(path);
     YAML::Node node = data[0]["Material"];
     property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
