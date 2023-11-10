@@ -229,5 +229,7 @@
     <None Include="Shaders\BloomBlur.vert" />
     <None Include="Shaders\ColourPicking.frag" />
     <None Include="Shaders\ColourPicking.vert" />
+    <None Include="Shaders\InstancedParticle.vert" />
+    <None Include="Shaders\InstancedParticle.frag" />
   </ItemGroup>
 </Project>

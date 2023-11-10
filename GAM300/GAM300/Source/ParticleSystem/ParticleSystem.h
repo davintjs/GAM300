@@ -3,7 +3,7 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-//#define PARTICLE ParticleManager::Instance()
+#define PARTICLE ParticleManager::Instance()
 
 //class Particle
 //{
@@ -21,8 +21,9 @@ ENGINE_SYSTEM(ParticleManager){
 public:
 	void Init();
 	void Update(float dt);
+	void Render();
 	void Exit();
- 
+	std::vector<glm::mat4> particleSRT;
 
 };
 

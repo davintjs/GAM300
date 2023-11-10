@@ -90,7 +90,7 @@ public:
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
-	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
+	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO>
 	std::unordered_map<Engine::GUID, Mesh> mContainer;
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype
