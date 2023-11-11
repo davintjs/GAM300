@@ -28,6 +28,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/Scene.h"
 #include <filesystem>
 
+#include "Graphics/GraphicsHeaders.h"
+
 // Bean: May be added in the future for modularity of serialization
 //enum CLASSID
 //{
@@ -186,6 +188,19 @@ bool Deserialize(const std::filesystem::path& path, T& object)
                 if (data["guid"])
                 {
                     object.meshes.push_back(data["guid"].as<Engine::GUID>());
+                }
+            }
+        }
+
+        if (node["animations"])
+        {
+            YAML::Node animations = node["animations"];
+            for (YAML::const_iterator it = animations.begin(); it != animations.end(); ++it)
+            {
+                YAML::Node data = it->second;
+                if (data["guid"])
+                {
+                    object.animations.push_back(data["guid"].as<Engine::GUID>());
                 }
             }
         }

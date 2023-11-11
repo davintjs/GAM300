@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Graphics/GraphicsHeaders.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Core/EventsManager.h"

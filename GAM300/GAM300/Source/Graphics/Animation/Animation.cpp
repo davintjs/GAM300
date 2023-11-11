@@ -1,32 +1,22 @@
 /*!***************************************************************************************
-\file			AnimationManager.cpp
-\project
+\file			Animation.cpp
+\project		
 \author         Euphrasia Theophelia Tan Ee Mun
+\co-author      Sean Ngo
 
 \par			Course: GAM300
-\date           10/10/2023
+\date           09/11/2023
 
 \brief
-    This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the definitions of the following:
+    1. Animation for models
+    2. Keyframe animations
 
-All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-
-
 #include "Precompiled.h"
-#include "AnimationManager.h"
-#include "AssetManager/ModelCompiler.h"
 
-#include "Scene/SceneManager.h"
-
-//AnimationMesh::AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures)
-//{
-//    this->vertices = vertices;
-//    this->indices = indices;
-//    this->textures = textures;
-//
-//    // now that we have all the required data, set the vertex buffers and its attribute pointers.
-//}
+#include "Animation.h"
 
 Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
     :
@@ -173,104 +163,4 @@ Bone* Animation::FindBone(const std::string& name)
     );
     if (iter == m_Bones.end()) return nullptr;
     else return &(*iter);
-}
-
-void Animation::ReadMissingBones(const aiAnimation* animation)
-{
-    int size = animation->mNumChannels;
-
-    auto& boneInfoMap = m_BoneInfoMap;//getting m_BoneInfoMap from Model class
-    int& boneCount = m_BoneCounter; //getting the m_BoneCounter from Model class
-
-    //reading channels(bones engaged in an animation and their keyframes)
-    for (int i = 0; i < size; i++)
-    {
-        auto channel = animation->mChannels[i];
-        std::string boneName = channel->mNodeName.data;
-
-        if (boneInfoMap.find(boneName) == boneInfoMap.end())
-        {
-            boneInfoMap[boneName].id = boneCount;
-            boneCount++;
-        }
-        m_Bones.push_back(Bone(channel->mNodeName.data,
-            boneInfoMap[channel->mNodeName.data].id, channel));
-    }
-}
-
-void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
-{
-    assert(src);
-
-    dest.name = src->mName.data;
-    dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
-    dest.childrenCount = src->mNumChildren;
-
-    for (unsigned int i = 0; i < src->mNumChildren; i++)
-    {
-        AssimpNodeData newData;
-        ReadHierarchyData(newData, src->mChildren[i]);
-        dest.children.push_back(newData);
-    }
-}
-
-void Animation_Manager::Init()
-{
-    std::cout << "ANIMATION MANAGER INIT\n";
-	// we want compiler to serialise model info including the animations
-    // Bean: This should NOT be called, the model animations will be retrieved from AssetManager in the future
-    GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerCharacter_AnimationsAllAnimations.fbx", false);
-    //GeomComponents md = MODELCOMPILER.LoadModel("Assets/Models/Player/PlayerV2_Running.fbx", false);
-    allModels_ = md.animations[0];
-   
-    mAnimationContainer.emplace("fakeguid", allModels_); //
-
-    // pretend we are loading the scene
-    std::string animguid = "fakeguid"; // emulating taking guid of anim from scene file
-    // emulating making a copy of the anim and initialising animator component -> doesnt actually do anything for now
-    Scene& currentScene = MySceneManager.GetCurrentScene();
-    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    {
-        //int idx = AddAnimCopy(animguid);
-        //animator.SetAnimationIdx(idx);
-        animator.SetAnimation(animguid); // makes a copy of the anim and sets idx in animator component to access the copy
-    }
-
-}
-
-void Animation_Manager::Update(float dt)
-{
-    Scene& currentScene = MySceneManager.GetCurrentScene();
-    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
-    {
-        if (animator.playing && animator.AnimationAttached())
-        {
-            glm::mat4 translate = glm::mat4(1.f);
-            //glm::mat4 translate = glm::translate(glm::mat4(1.f), currentScene.Get<Transform>(animator).GetTranslation());
-            animator.UpdateAnimation(dt, translate);
-        }
-        else if (!animator.AnimationAttached())
-        {
-            //int idx = AddAnimCopy(mAnimationContainer["fakeguid"]);
-            //animator.SetAnimationIdx(idx);
-
-            animator.SetAnimation("fakeguid");
-            //animator.SetAnimation(&allModels_.GetAnimations());
-        }
-    }
-}
-
-void Animation_Manager::Exit()
-{
-}
-
-
-bool Animation_Manager::HasBones(MeshAsset meshAsset) {
-    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-        if ((meshAsset.vertices[0].boneIDs[i] != 0) || (meshAsset.vertices[0].weights[i] != 0.0f) )
-        {
-            return true;  // At least one non-zero element in either array
-        }
-    }
-    return false;  // All elements are zero in both arrays
 }

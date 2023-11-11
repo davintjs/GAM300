@@ -1,56 +1,26 @@
 /*!***************************************************************************************
-\file			AnimationManager.h
+\file			Animation.h
 \project
 \author         Euphrasia Theophelia Tan Ee Mun
+\co-author      Sean Ngo
 
 \par			Course: GAM300
-\date           10/10/2023
+\date           09/11/2023
 
 \brief
-    This file contains the Animation Manager and the declarations of its related functions.
+    This file contains the declarations of the following:
+    1. Animation for models
+    2. Keyframe animations
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
-#ifndef ANIMATIONMANAGER_H
-#define ANIMATIONMANAGER_H
-
-#include "../Core/SystemInterface.h"
-#include "../gli-master/gli/gli.hpp"
-#include "glslshader.h"
-
-#include "GraphicsHeaders.h"
-
-
+#ifndef ANIMATION_H
+#define ANIMATION_H
 
 #include <glm/gtx/quaternion.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-//#include "GL/glew.h"
-//#include <GLFW/glfw3.h>
-//#include "glslshader.h"
-//#include "TextureManager.h"
-
-//
-//#include "../../Compiler/Mesh.h"
-#include "../../Compiler/Mesh.h"
-
-//class AnimationMesh {
-//public:
-//    // mesh Data
-//    std::vector<ModelVertex> vertices;
-//    std::vector<unsigned int> indices;
-//    std::vector<TextureInfo> textures;
-//    GLuint _VAO;
-//
-//    // constructor
-//    AnimationMesh(std::vector<ModelVertex> vertices, std::vector<unsigned int> indices, std::vector<TextureInfo> textures);
-//
-//private:
-//
-//    // initializes all the buffer objects/arrays
-//    void setupMesh();
-//};
 
 class AssimpGLMHelpers
 {
@@ -167,67 +137,14 @@ public:
     inline std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_BoneInfoMap; }
     inline int& GetBoneCount() { return m_BoneCounter; }
 
-    void ReadMissingBones(const aiAnimation* animation); // compiler only
-
-    void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src); // compiler only
-
 protected:
     float m_Duration;
     int m_TicksPerSecond;
     std::map<std::string, glm::vec2> m_AnimationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
-    std::vector<Bone> m_Bones;
+    std::vector<Bone> m_Bones; // Bean: We need to copy this for animator 
     AssimpNodeData m_RootNode;
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
+    std::map<std::string, BoneInfo> m_BoneInfoMap; // Bean: We need to copy this for animator
     int m_BoneCounter = 0;
 };
 
-#define AnimationManager Animation_Manager::Instance()
-
-SINGLETON(Animation_Manager)
-{
-public:
-    void Init();
-    void Update(float dt);
-    void Exit();
-
-    //// used in asset manager to add anim to the anim container
-    //void AddAnimation(char const* Filename, std::string GUID);
-    void AddAnimMesh(std::pair<Engine::GUID, MeshAsset> meshAsset)//;
-    {
-        mAnimationMeshContainer.emplace(meshAsset.first, meshAsset.second);
-    }
-
-    int AddAnimCopy(std::string animguid)//;
-    {
-        int idx = mAnimationSceneContainer.size();
-        mAnimationSceneContainer.emplace(idx, mAnimationContainer[animguid]);
-        return idx;
-    }
-
-    Animation& GetAnimCopy(int idx)
-    {
-        return mAnimationSceneContainer[idx];
-    }
-
-    //// uses GUID to retrieve a texture from the texture container
-    //GLuint GetTexture(std::string GUID);
-    Animation GetModel() { return allModels_; }; //temp shld be deleted
-
-private:
-
-    //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
-    //std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation ---------------> to be used instead once compiler stuff ok
-    std::unordered_map<std::string, Animation> mAnimationContainer; // GUID, Animation
-    std::unordered_map<int, Animation> mAnimationSceneContainer; // Index, Animation -> for current anims in scene
-
-    std::unordered_map<Engine::GUID, MeshAsset> mAnimationMeshContainer; // GUID, Animation ->  temp... throw after compiler done
-
-    // can yeet these
-    GLSLShader ourShader{};
-
-    Animation allModels_;
-    //AnimationAnimator allAnimators_;
-    bool HasBones(MeshAsset meshAsset);
-
-};
-#endif // !ANIMATIONMANAGER_H
+#endif // !ANIMATION_H

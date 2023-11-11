@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
-#include "Graphics/GraphicsSystem.h"
+#include "Graphics/GraphicsHeaders.h"
 #include "PropertyConfig.h"
 #include "Utilities/Serializer.h"
 
@@ -215,6 +215,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             }
 
             ImGui::PopStyleColor();
+            ImGui::EndChild();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
             return;
@@ -294,6 +295,40 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 //render file name below icon
                 ImGui::NextColumn();
                 
+            }
+        }
+        else if(extension == ".anim")
+            //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+        {
+            // Bean: Put this publish event in the open popup in the future
+            GetAssetsEvent<AnimationAsset> e2;
+            EVENTS.Publish(&e2);
+            fs::path icon = "Assets/Icons/fileicon.dds";
+            auto iconID = GET_TEXTURE_ID(icon);
+
+            for (auto& animAsset : *e2.pAssets)
+            {
+                std::string path = animAsset.second.mFilePath.stem().string().c_str();
+
+                if (!filter.PassFilter(path.c_str()))
+                    continue;
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                ImGui::PushID(i++);
+                ImTextureID textureID = (ImTextureID)iconID;
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    Engine::GUID currentGUID = animAsset.first;
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+                }
+                ImGui::PopID();
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(path.c_str());
+
+                //render file name below icon
+                ImGui::NextColumn();
+
             }
         }
         else
@@ -1689,7 +1724,7 @@ void EditorInspector::Update(float dt)
                 EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
-            PRINT(fPath);
+            //PRINT(fPath);
             //material.name
         }
 

@@ -16,11 +16,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "BaseAnimator.h"
 #include "AnimationManager.h"
 
-void BaseAnimator::Init()
+BaseAnimator::BaseAnimator()
 {
     m_CurrentTime = 0.0f;
-    //m_CurrentAnimation = animation;
-    hasAnimation = false;
+    m_AnimationIdx = -1;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -28,36 +27,13 @@ void BaseAnimator::Init()
         m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
 }
 
-//void BaseAnimator::SetAnimation(Animation* animation)
-//{
-//
-//    //m_CurrentAnimation = *animation;
-//
-//    // Need to set to current entity's transform for either the bones or assimpnodedata
-//    // CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
-//    hasAnimation = true;
-//}
-
-void BaseAnimator::SetAnimation(/*Engine::GUID*/std::string animguid)
-{
-    // in future we can remove existing anim before adding
-    animGUID = animguid;
-    int idx = AnimationManager.AddAnimCopy(animGUID);
-    m_AnimationIdx = idx;
-    hasAnimation = true;
-}
-
 void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
-    //m_DeltaTime = dt;
-    if (hasAnimation)
-    {
-        Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
-        
-        m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
-        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
-        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), pTransform);
-    }
+    Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+
+    m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
+    m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), pTransform);
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)
@@ -109,5 +85,5 @@ std::vector<glm::mat4>* BaseAnimator::GetFinalBoneMatricesPointer()
 
 bool BaseAnimator::AnimationAttached() {
     // Check if m_CurrentAnimation is not nullptr (i.e., it's attached)
-    return hasAnimation;
+    return m_AnimationIdx != -1 && animID != DEFAULT_ANIM;
 }

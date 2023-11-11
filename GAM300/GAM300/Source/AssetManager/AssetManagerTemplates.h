@@ -58,7 +58,7 @@ struct AllAssetsGroup
 						//std::filesystem::path path = filePath;
 						//path.replace_extension(".fbx");
 						// Get all model components
-						ModelComponents mc = MODELDECOMPILER.DeserializeModel(filePath.string(), metaFile.guid);
+						ModelAsset mc = MODELDECOMPILER.DeserializeModel(filePath.string(), metaFile.guid);
 						//ModelComponents mc = MODELCOMPILER.LoadModel(path.string(), metaFile.guid);
 						// Check for existing guid within the geom meta file
 						if (mc.meshes.size() != metaFile.meshes.size())
@@ -88,6 +88,36 @@ struct AllAssetsGroup
 								
 								std::get<AssetsTable<MeshAsset>>(assets)[metaFile.meshes[i]] = std::move(mc.meshes[i]);
 								std::get<AssetsBuffer<MeshAsset>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<MeshAsset>>(assets)[metaFile.meshes[i]]));
+							}
+						}
+
+						if (mc.animations.size() != metaFile.animations.size())
+						{
+							int i = 0;
+							for (AnimationAsset& animAsset : mc.animations)
+							{
+								animAsset.mFilePath = filePath.stem();
+								animAsset.mFilePath += "_" + std::to_string(i++) + ".anim";
+
+								// Assign GUID
+								Engine::GUID guid = GetGUID(animAsset.mFilePath);
+								metaFile.animations.push_back(guid);
+
+								std::get<AssetsTable<AnimationAsset>>(assets)[guid] = std::move(animAsset);
+								std::get<AssetsBuffer<AnimationAsset>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<AnimationAsset>>(assets)[guid]));
+							}
+
+							Serialize(oldMeta, metaFile);
+						}
+						else // Has existing guid
+						{
+							for (int i = 0; i < mc.animations.size(); i++)
+							{
+								mc.animations[i].mFilePath = filePath.stem();
+								mc.animations[i].mFilePath += "_" + std::to_string(i) + ".anim";
+
+								std::get<AssetsTable<AnimationAsset>>(assets)[metaFile.animations[i]] = std::move(mc.animations[i]);
+								std::get<AssetsBuffer<AnimationAsset>>(assetsBuffer).emplace_back(std::make_pair(ASSET_LOADED, &std::get<AssetsTable<AnimationAsset>>(assets)[metaFile.animations[i]]));
 							}
 						}
 						
