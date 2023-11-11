@@ -206,6 +206,7 @@ void Renderer::Update(float)
 		DrawDepthDirectional();
 		
 		DrawDepthPoint();
+
 	}
 }
 
@@ -263,18 +264,21 @@ void Renderer::Draw(BaseCamera& _camera) {
 				DrawDebug(prop.debugVAO, (unsigned)prop.entitySRT.size());
 		}
 #endif
-		for (int i = 0; i < 30; ++i)
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::PBR);
+		shader.Use();
+		for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(i) + "]").c_str()), i);
+
 		}
-		glActiveTexture(GL_TEXTURE0 + 29);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[0].shadow);
-		if (LIGHTING.directionalLightCount)
-		{
-			glActiveTexture(GL_TEXTURE0 + 30);
-			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
-		}
+		// min is 0
+		// max is 31
+
+		
+		
+
 		DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, SHADERTYPE::PBR);
 	}
 
@@ -386,10 +390,30 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	GLSLShader& shader = SHADER.GetShader(shaderType);
 	shader.Use();
 
-	glActiveTexture(GL_TEXTURE0 + 31);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
-	glUniform1i(glGetUniformLocation(shader.GetHandle(), "PointShadowBox"), 31); // Associate samplerCube with texture unit 2
-	
+	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	{
+		int textureUnit = 10 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	}
+
+	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	{
+		int textureUnit = 20 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+
+	}
+
+	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	{
+		int textureUnit = 22 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+	}
 	
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
@@ -831,7 +855,8 @@ void Renderer::DrawDepthDirectional()
 		lightSpaceMatrix_directional = lightProjection * lightView;
 
 		glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.GetDirectionLights()[i].shadowFBO);
+		std::cout << "directional FBO: " << directional_light_stuffs.shadowFBO << "\n";
+		glBindFramebuffer(GL_FRAMEBUFFER, directional_light_stuffs.shadowFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
@@ -891,6 +916,7 @@ void Renderer::DrawDepthDirectional()
 
 void Renderer::DrawDepthSpot()
 {
+	std::cout << "spotlight count is : " << LIGHTING.spotLightCount << "\n";
 	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
 	{
 		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
@@ -905,6 +931,8 @@ void Renderer::DrawDepthSpot()
 		lightSpaceMatrix_spot = lightProjection * lightView;
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		std::cout << "FBO " << spot_light_stuffs.shadowFBO << "\n";
+		std::cout << "texture " << spot_light_stuffs.shadow << "\n";
 		glBindFramebuffer(GL_FRAMEBUFFER, spot_light_stuffs.shadowFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -940,7 +968,6 @@ void Renderer::DrawDepthSpot()
 			glBindVertexArray(0);
 		}
 
-
 		// render all instanced shadows
 		glUniform1i(uniform2, false);
 
@@ -960,7 +987,7 @@ void Renderer::DrawDepthSpot()
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		std::cout << "bam\n";
 	}
 }
 

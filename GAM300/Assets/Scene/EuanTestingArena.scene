@@ -331,9 +331,9 @@ GameObject:
 ID: 14318564224481947662
 Transform:
   m_GameObject: {fileID: 15963777357859177452}
-  Translation: [7.43650484, 7.81100464, 0.0836601257]
+  Translation: [-55.4846992, -12.6873875, 58.9244308]
   Rotation: [0, 0, 1.57079589]
-  Scale: [15, 0.999997318, 15]
+  Scale: [50, 0.999997318, 50]
   Father: {fileID: 0}
   m_Children:
     []
@@ -1224,7 +1224,7 @@ GameObject:
 ID: 8886423922557194760
 Transform:
   m_GameObject: {fileID: 4779847096160598803}
-  Translation: [-80.0081558, 34.8130455, 60.2965431]
+  Translation: [-80.0081558, 34.8263168, 60.2965431]
   Rotation: [0, 0, 0]
   Scale: [0.999989867, 0.99999243, 0.999990463]
   Father: {fileID: 0}
@@ -1342,7 +1342,44 @@ LightSource:
   lightType: 1
   lightpos: [0, 0, 0]
   Intensity: 10000
-  Direction: [-0.200000003, -0.5, -1.10000002]
+  Direction: [-0.200000003, 0.550000012, -7.25]
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [1, 1, 1]
+---
+ID: 7828822262636883673
+GameObject:
+  m_IsActive: true
+  m_Name: White Wall 1 - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5444589192843071334}  # Transform
+    - component: {fileID: 14605811113724074559}  # MeshRenderer
+---
+ID: 5444589192843071334
+Transform:
+  m_GameObject: {fileID: 7828822262636883673}
+  Translation: [7.43650484, 7.81100464, 0.0836601257]
+  Rotation: [0, 0, 1.57079589]
+  Scale: [15, 0.999997318, 15]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14605811113724074559
+MeshRenderer:
+  m_GameObject: {fileID: 7828822262636883673}
+  Mesh: {guid: 00000000000000000000000000000065}
+  Material_ID: {guid: 000000000000000000000000000000c8}
+  Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
+  Metallic: 0.5
+  Roughness: 0.5
+  AmbientOcclusion: 0.5
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1

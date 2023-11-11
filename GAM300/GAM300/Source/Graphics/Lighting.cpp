@@ -17,9 +17,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Scene/SceneManager.h"
 
-#define MAX_POINT_LIGHT 20
-#define MAX_SPOT_LIGHT 20
-#define MAX_DIRECTION_LIGHT 5
+#define MAX_POINT_LIGHT 10
+#define MAX_SPOT_LIGHT 10
+#define MAX_DIRECTION_LIGHT 2
 
 extern LightProperties spot_light_stuffs;
 extern LightProperties directional_light_stuffs;
@@ -63,8 +63,11 @@ void Lighting::Update(float)
 
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
-		if (lightSource.state == DELETED) continue;
-
+		if (lightSource.state == DELETED)
+		{
+			std::cout << "hi\n";
+			continue;
+		}
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -115,7 +118,7 @@ void Lighting::Update(float)
 
 			++spotLightCount;
 		}
-
+		//std::cout << spotLightCount << "\n";
 
 		if (currentScene.Has<MeshRenderer>(entity))
 		{
