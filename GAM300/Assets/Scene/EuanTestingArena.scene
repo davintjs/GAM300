@@ -59,7 +59,7 @@ GameObject:
 ID: 17375001972001814902
 Transform:
   m_GameObject: {fileID: 16942626329878887566}
-  Translation: [-2.44547486, 3.93360662, 0.701099932]
+  Translation: [-2.44547486, 4.24342442, 0.68703866]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
 ID: 9998473674235785834
 Transform:
   m_GameObject: {fileID: 6606253624498158492}
-  Translation: [28.802845, 8.63003159, 19.3102226]
+  Translation: [28.802845, 10.8121405, 19.3102226]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -249,7 +249,7 @@ LightSource:
   m_GameObject: {fileID: 6606253624498158492}
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 100
+  Intensity: 100000
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -734,7 +734,7 @@ GameObject:
 ID: 7048375660779944849
 Transform:
   m_GameObject: {fileID: 14079781030746446599}
-  Translation: [-25.6670952, 1.00512707, 0]
+  Translation: [-25.63801, 1.00512707, 0]
   Rotation: [0, 0, 0]
   Scale: [10, 1, 10]
   Father: {fileID: 0}
@@ -1224,7 +1224,7 @@ GameObject:
 ID: 8886423922557194760
 Transform:
   m_GameObject: {fileID: 4779847096160598803}
-  Translation: [-80.0081558, 25.8574142, 60.2965431]
+  Translation: [-80.0081558, 34.8130455, 60.2965431]
   Rotation: [0, 0, 0]
   Scale: [0.999989867, 0.99999243, 0.999990463]
   Father: {fileID: 0}
@@ -1236,10 +1236,10 @@ LightSource:
   m_GameObject: {fileID: 4779847096160598803}
   lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 5000
+  Intensity: 500000
   Direction: [0, 0, 0]
-  Inner Cutoff: 12.5
-  Outer Cutoff: 17.5
+  Inner Cutoff: 4.32999992
+  Outer Cutoff: 20.3700008
   Color: [1, 1, 1]
 ---
 ID: 17429115930215581863
@@ -1315,3 +1315,34 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 16530972090744477516
+GameObject:
+  m_IsActive: true
+  m_Name: Directional Light
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14767375099539504750}  # Transform
+    - component: {fileID: 17205742564849597215}  # LightSource
+---
+ID: 14767375099539504750
+Transform:
+  m_GameObject: {fileID: 16530972090744477516}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 17205742564849597215
+LightSource:
+  m_GameObject: {fileID: 16530972090744477516}
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 10000
+  Direction: [-0.200000003, -0.5, -1.10000002]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]

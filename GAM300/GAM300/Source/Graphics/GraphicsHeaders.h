@@ -342,6 +342,10 @@ public:
 	std::vector<LightProperties>& GetDirectionLights() { return directionLightSources; }
 	std::vector<LightProperties>& GetSpotLights() { return spotLightSources; }
 
+	unsigned int pointLightCount;
+	unsigned int directionalLightCount;
+	unsigned int spotLightCount;
+
 private:
 	LightProperties lightingSource;
 	std::vector<LightProperties> pointLightSources;

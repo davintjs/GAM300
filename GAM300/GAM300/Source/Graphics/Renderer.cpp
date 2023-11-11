@@ -45,9 +45,6 @@ unsigned int depthCubemap;
 
 //LIGHT_TYPE temporary_test4 = POINT_LIGHT;
 
-LightProperties spot_light_stuffs;
-LightProperties directional_light_stuffs;
-LightProperties point_light_stuffs;
 
 #include "GBuffer.h"
 unsigned int Renderer_quadVAO = 0;
@@ -204,18 +201,11 @@ void Renderer::Update(float)
 	
 	if (RENDERER.enableShadows())
 	{
-		if (spot_light_stuffs.inUse)
-		{
-			DrawDepthSpot();
-		}
-		if (directional_light_stuffs.inUse)
-		{
-			DrawDepthDirectional();
-		}
-		if (point_light_stuffs.inUse)
-		{
-			DrawDepthPoint();
-		}
+		DrawDepthSpot();
+		
+		DrawDepthDirectional();
+		
+		DrawDepthPoint();
 	}
 }
 
@@ -245,8 +235,6 @@ void Renderer::SetupGrid(const int& _num)
 }
 
 void Renderer::Draw(BaseCamera& _camera) {
-
-
 
 	// Instanced Rendering
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
@@ -281,15 +269,19 @@ void Renderer::Draw(BaseCamera& _camera) {
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
 		glActiveTexture(GL_TEXTURE0 + 29);
-		glBindTexture(GL_TEXTURE_2D, depthMap_S);
-		glActiveTexture(GL_TEXTURE0 + 30);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[0].shadow);
+		if (LIGHTING.directionalLightCount)
+		{
+			glActiveTexture(GL_TEXTURE0 + 30);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
+		}
 		DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, SHADERTYPE::PBR);
 	}
 
 #ifndef _BUILD
 	//Draw Debug grids
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) {
+	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) 
+	{
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
@@ -306,16 +298,18 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
-		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, depthMap);
-		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, depthMap_S);
-		glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		if (LIGHTING.directionalLightCount)
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
+		
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[0].shadow);
+		glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
 
 		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
 		shader.Use();
 
 		// PBR TEXTURES
 		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
-		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hasNormal");
+		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
 		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
 		GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
 		GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
@@ -393,7 +387,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	shader.Use();
 
 	glActiveTexture(GL_TEXTURE0 + 31);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
 	glUniform1i(glGetUniformLocation(shader.GetHandle(), "PointShadowBox"), 31); // Associate samplerCube with texture unit 2
 	
 	
@@ -439,7 +433,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
 	auto PointLight_Sources = LIGHTING.GetPointLights();
 
-	for (int i = 0; i < PointLight_Sources.size(); ++i)
+	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
 	{
 		//pointLights.colour
 		std::string point_color;
@@ -462,11 +456,11 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	GLint uniform7 =
 		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
-	glUniform1i(uniform7, (int)PointLight_Sources.size());
+	glUniform1i(uniform7, (int)LIGHTING.pointLightCount);
 
 	// DIRECTIONAL LIGHT STUFFS
 	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
-	for (int i = 0; i < DirectionLight_Sources.size(); ++i)
+	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
 	{
 
 		//directionalLights.colour
@@ -488,11 +482,11 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	GLint uniform8 =
 		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
-	glUniform1i(uniform8, (int)DirectionLight_Sources.size());
+	glUniform1i(uniform8, (int)LIGHTING.directionalLightCount);
 
 	// SPOTLIGHT STUFFS
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
-	for (int i = 0; i < SpotLight_Sources.size(); ++i)
+	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
 	{
 
 		//pointLights.position
@@ -530,7 +524,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	GLint uniform9 =
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
-	glUniform1i(uniform9, (int)SpotLight_Sources.size());
+	glUniform1i(uniform9, (int)LIGHTING.spotLightCount);
 
 	GLint uniform10 =
 		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
@@ -820,228 +814,239 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 
 void Renderer::DrawDepthDirectional()
 {
-	glEnable(GL_DEPTH_TEST);
-	//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
-	glm::mat4 lightProjection, lightView;
-	float near_plane = -100.f, far_plane = 100.f;
-
-
-	lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
-	//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
-	lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-
-	lightSpaceMatrix_directional = lightProjection * lightView;
-
-	glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
-	shader.Use();
-
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(lightSpaceMatrix_directional));
-
-	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
-
-	// render all non-instanced shadows
-	glUniform1i(uniform2, true);
-
-	for (DefaultRenderProperties prop : defaultProperties)
+	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
 	{
-		GLint uniform3_t =
-			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		LightProperties directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
 
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-		if (prop.isAnimatable)
+		glEnable(GL_DEPTH_TEST);
+		//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
+		glm::mat4 lightProjection, lightView;
+		float near_plane = -100.f, far_plane = 100.f;
+
+
+		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
+		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
+		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+
+		lightSpaceMatrix_directional = lightProjection * lightView;
+
+		glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.GetDirectionLights()[i].shadowFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
+		shader.Use();
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix_directional));
+
+		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+
+		// render all non-instanced shadows
+		glUniform1i(uniform2, true);
+
+		for (DefaultRenderProperties prop : defaultProperties)
 		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			GLint uniform3_t =
+				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+			if (prop.isAnimatable)
+			{
+				std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			}
+
+			glBindVertexArray(prop.VAO);
+			glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
 		}
 
-		glBindVertexArray(prop.VAO);
-		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+
+		// render all instanced shadows
+		glUniform1i(uniform2, false);
+
+		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+		}
+
+		shader.UnUse();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-
-
-	// render all instanced shadows
-	glUniform1i(uniform2, false);
-
-	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindVertexArray(prop.VAO);
-		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-		glBindVertexArray(0);
-	}
-
-	shader.UnUse();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 }
 
 void Renderer::DrawDepthSpot()
 {
-	glEnable(GL_DEPTH_TEST);
-	glm::mat4 lightProjection, lightView;
-
-	lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
-	lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos +
-		(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
-
-	lightSpaceMatrix_spot = lightProjection * lightView;
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO_S);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
-	shader.Use();
-
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(lightSpaceMatrix_spot));
-
-	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
-
-	// render all non-instanced shadows
-	glUniform1i(uniform2, true);
-
-	for (DefaultRenderProperties prop : defaultProperties)
+	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
 	{
-		GLint uniform3_t =
-			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
 
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-		if (prop.isAnimatable)
+		glEnable(GL_DEPTH_TEST);
+		glm::mat4 lightProjection, lightView;
+
+		lightProjection = glm::perspective<float>(glm::radians(90.f), 1.f, 0.1f, 100.f);
+		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos +
+			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
+
+		lightSpaceMatrix_spot = lightProjection * lightView;
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, spot_light_stuffs.shadowFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
+		shader.Use();
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(lightSpaceMatrix_spot));
+
+		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+
+		// render all non-instanced shadows
+		glUniform1i(uniform2, true);
+
+		for (DefaultRenderProperties prop : defaultProperties)
 		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			GLint uniform3_t =
+				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+			if (prop.isAnimatable)
+			{
+				std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			}
+
+			glBindVertexArray(prop.VAO);
+			glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
 		}
 
-		glBindVertexArray(prop.VAO);
-		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+
+		// render all instanced shadows
+		glUniform1i(uniform2, false);
+
+		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+		}
+
+		shader.UnUse();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	}
-
-
-	// render all instanced shadows
-	glUniform1i(uniform2, false);
-
-	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindVertexArray(prop.VAO);
-		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-		glBindVertexArray(0);
-	}
-
-	shader.UnUse();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-
 }
 
 void Renderer::DrawDepthPoint()
 {
-	float near_plane = 0.001f, far_plane = 1000.f;
 
-	std::vector<glm::mat4> shadowTransforms;
-
-	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthCubemapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
-	shader.Use();
-
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
-		, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
-
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "lightPos");
-	glUniform3fv(uniform1, 1,
-		glm::value_ptr(point_light_stuffs.lightpos));
-
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "far_plane");
-	glUniform1f(uniform2, far_plane);
-
-	GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "isDefault");
-
-	// render all non-instanced shadows
-	glUniform1i(uniform3, true);
-
-	for (DefaultRenderProperties prop : defaultProperties)
+	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
 	{
-		GLint uniform3_t =
-			glGetUniformLocation(shader.GetHandle(), "defaultSRT");
-		glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		LightProperties point_light_stuffs = LIGHTING.GetPointLights()[i];
 
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-		if (prop.isAnimatable)
+		float near_plane = 0.001f, far_plane = 1000.f;
+
+		std::vector<glm::mat4> shadowTransforms;
+
+		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, point_light_stuffs.shadowFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);
+		shader.Use();
+
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "shadowMatrices")
+			, 6, GL_FALSE, glm::value_ptr(shadowTransforms[0]));
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "lightPos");
+		glUniform3fv(uniform1, 1,
+			glm::value_ptr(point_light_stuffs.lightpos));
+
+		GLint uniform2 =
+			glGetUniformLocation(shader.GetHandle(), "far_plane");
+		glUniform1f(uniform2, far_plane);
+
+		GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+
+		// render all non-instanced shadows
+		glUniform1i(uniform3, true);
+
+		for (DefaultRenderProperties prop : defaultProperties)
 		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-			GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			GLint uniform3_t =
+				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+			if (prop.isAnimatable)
+			{
+				std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			}
+
+			glBindVertexArray(prop.VAO);
+			glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
 		}
 
-		glBindVertexArray(prop.VAO);
-		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+
+		// render all instanced shadows
+		glUniform1i(uniform3, false);
+
+		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			glBindVertexArray(prop.VAO);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glBindVertexArray(0);
+		}
+
+		shader.UnUse();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-
-
-	// render all instanced shadows
-	glUniform1i(uniform3, false);
-
-	for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glBindVertexArray(prop.VAO);
-		glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
-		glBindVertexArray(0);
-	}
-
-	shader.UnUse();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 }
 
 

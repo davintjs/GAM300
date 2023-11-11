@@ -125,6 +125,11 @@ struct LightProperties
 	// Used for all
 	glm::vec3 lightColor;
 	float intensity;
+
+	
+
+	unsigned int shadowFBO;
+	unsigned int shadow;
 };
 
 struct InstanceProperties
