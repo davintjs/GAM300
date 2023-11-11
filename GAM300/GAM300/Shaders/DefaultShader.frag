@@ -491,18 +491,25 @@ void main()
     float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
     for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
-        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
+
+        vec3 L = normalize(spotLights[i].position - WorldPos);
+
+        float theta = dot(L, normalize(-spotLights[i].direction)); 
     
-        if(theta > spotLights[i].innerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
+       if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
         {  
 
-         vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+            float epsilon   = spotLights[i].innerCutOff - spotLights[i].outerCutOff;
+            float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0); 
 
+//             vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+            intensity *= spotLights[i].intensity;
+            vec3 lightColourStrength =  spotLights[i].colour * intensity;
+            
 
         // calculate per-light radiance
         
-//        vec3 L = normalize(spotLights[i].position - WorldPos);
-        vec3 L = normalize(-spotLights[i].direction);
+//        vec3 L = normalize(-spotLights[i].direction);
 
 
         vec3 H = normalize(V + L);

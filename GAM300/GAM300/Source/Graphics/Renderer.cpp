@@ -438,6 +438,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
 	auto PointLight_Sources = LIGHTING.GetPointLights();
+
 	for (int i = 0; i < PointLight_Sources.size(); ++i)
 	{
 		//pointLights.colour
@@ -458,6 +459,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
 			, 1, &PointLight_Sources[i].intensity);
 	}
+
 	GLint uniform7 =
 		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
 	glUniform1i(uniform7, (int)PointLight_Sources.size());
@@ -466,6 +468,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
 	for (int i = 0; i < DirectionLight_Sources.size(); ++i)
 	{
+
 		//directionalLights.colour
 		std::string directional_color;
 		directional_color = "directionalLights[" + std::to_string(i) + "].colour";
@@ -482,6 +485,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
 			, 1, &DirectionLight_Sources[i].intensity);
 	}
+
 	GLint uniform8 =
 		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
 	glUniform1i(uniform8, (int)DirectionLight_Sources.size());

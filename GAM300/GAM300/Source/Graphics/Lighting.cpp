@@ -25,6 +25,8 @@ extern LightProperties point_light_stuffs;
 void Lighting::Init()
 {
 
+
+
 }
 
 void Lighting::Update(float)
@@ -57,23 +59,45 @@ void Lighting::Update(float)
 		Temporary.lightpos = transform.translation;
 		Temporary.lightColor = lightSource.lightingColor;
 		Temporary.intensity = lightSource.intensity;
+
+
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			pointLightSources.push_back(Temporary);
 			point_light_stuffs = Temporary;
 		}
+
+
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
+
 			Temporary.direction = lightSource.direction; // CHANGE
+
 
 			directionLightSources.push_back(Temporary);
 			directional_light_stuffs = Temporary;
 		}
+
+
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
-			Temporary.direction = glm::vec3(0.f,-1.f,0.f); // CHANGE
-			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
-			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
+			//Temporary.direction = glm::vec3(0.f,-1.f,0.f); // CHANGE
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
+			glm::vec3 rotation = transform.GetRotation();
+
+			glm::vec3 test(0.f);
+			if (test == rotation)
+			{
+				Temporary.direction = glm::vec3(0.f,-1.f,0.f);
+			}
+			else
+			{
+				Temporary.direction = rotation;
+				Temporary.direction = glm::radians(glm::normalize(Temporary.direction));
+				//Temporary.direction.y = -Temporary.direction.y;
+			}
+			Temporary.inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
+			Temporary.outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
 			spotLightSources.push_back(Temporary);
 			spot_light_stuffs = Temporary;
 		}
