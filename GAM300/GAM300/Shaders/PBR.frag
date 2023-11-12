@@ -33,6 +33,8 @@ struct DirectionalLight
     vec3 direction;
     vec3 colour;
     float intensity;
+    mat4 lightSpaceMatrix;
+
 };
 
 struct SpotLight
@@ -43,6 +45,8 @@ struct SpotLight
     float innerCutOff;
     float outerCutOff;
     float intensity;
+    mat4 lightSpaceMatrix;
+
 };
 
 //-------------------------
@@ -58,10 +62,10 @@ layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
 layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
 layout (location = 6) in vec2 frag_texture_index;
 
-layout (location = 7) in vec4 frag_pos_lightspace_D;
-
-layout (location = 8) in vec4 frag_pos_lightspace_S;
-
+//layout (location = 7) in vec4 frag_pos_lightspace_D;
+//
+//layout (location = 8) in vec4 frag_pos_lightspace_S;
+//
 
 //-------------------------
 //          GOING OUT
@@ -292,7 +296,6 @@ void main()
         }
         else
              Am_Light = false;
-
     }
     // ROUGHNESS
     if (Roughness_index < 32)
@@ -435,6 +438,8 @@ void main()
     float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < DirectionalLight_Count; ++i)
     {
+        vec4 frag_pos_lightspace_D = directionalLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
+
         int index = 20+i;
         vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
 
@@ -491,14 +496,18 @@ void main()
     }   
 
     float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
+    
     for (int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
     {
         int index = 10+i;
         vec3 L = normalize(spotLights[i].position - WorldPos);
 
         float theta  = dot(L, normalize(-spotLights[i].direction));
-//        if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
-//        {  
+        
+        if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
+        {  
+            vec4 frag_pos_lightspace_S = spotLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
+
             float epsilon   = spotLights[i].innerCutOff - spotLights[i].outerCutOff;
             float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0); 
 
@@ -566,7 +575,7 @@ void main()
         
             Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
             
-//        }   
+        }   
 
     }   
 

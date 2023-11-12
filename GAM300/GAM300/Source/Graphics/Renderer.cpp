@@ -296,6 +296,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 	//Non-Instanced Rendering
 	for (DefaultRenderProperties& prop : defaultProperties) 
 	{
+		std::cout << "we in here\n";
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
@@ -305,7 +306,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		if (LIGHTING.directionalLightCount)
 		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
 		
-		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[0].shadow);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
 		glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
 
 		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
@@ -396,6 +397,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
 		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	
 	}
 
 	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
@@ -502,6 +504,12 @@ void Renderer::BindLights(GLSLShader& shader) {
 		directional_intensity = "directionalLights[" + std::to_string(i) + "].intensity";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
 			, 1, &DirectionLight_Sources[i].intensity);
+
+		std::string directional_LSM;
+		directional_LSM = "directionalLights[" + std::to_string(i) + "].lightSpaceMatrix";
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), directional_LSM.c_str())
+			, 1, GL_FALSE, glm::value_ptr(DirectionLight_Sources[i].lightSpaceMatrix));
+
 	}
 
 	GLint uniform8 =
@@ -544,6 +552,11 @@ void Renderer::BindLights(GLSLShader& shader) {
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
 			, 1, &SpotLight_Sources[i].intensity);
 
+		std::string spot_LSM;
+		spot_LSM = "spotLights[" + std::to_string(i) + "].lightSpaceMatrix";
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_LSM.c_str())
+			, 1, GL_FALSE, glm::value_ptr(SpotLight_Sources[i].lightSpaceMatrix));
+
 	}
 
 	GLint uniform9 =
@@ -553,12 +566,12 @@ void Renderer::BindLights(GLSLShader& shader) {
 	GLint uniform10 =
 		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Directional");
 	glUniformMatrix4fv(uniform10, 1, GL_FALSE,
-		glm::value_ptr(lightSpaceMatrix_directional));
+		glm::value_ptr(DirectionLight_Sources[0].lightSpaceMatrix));
 
 	GLint uniform11 =
 		glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix_Spot");
 	glUniformMatrix4fv(uniform11, 1, GL_FALSE,
-		glm::value_ptr(lightSpaceMatrix_spot));
+		glm::value_ptr(SpotLight_Sources[0].lightSpaceMatrix));
 
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
@@ -852,10 +865,10 @@ void Renderer::DrawDepthDirectional()
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
-		lightSpaceMatrix_directional = lightProjection * lightView;
+		LIGHTING.GetDirectionLights()[i].lightSpaceMatrix = lightProjection * lightView;
+		//lightSpaceMatrix_directional = lightProjection * lightView;
 
 		glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-		std::cout << "directional FBO: " << directional_light_stuffs.shadowFBO << "\n";
 		glBindFramebuffer(GL_FRAMEBUFFER, directional_light_stuffs.shadowFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -865,7 +878,7 @@ void Renderer::DrawDepthDirectional()
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
 		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-			glm::value_ptr(lightSpaceMatrix_directional));
+			glm::value_ptr(LIGHTING.GetDirectionLights()[i].lightSpaceMatrix));
 
 		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
@@ -928,11 +941,10 @@ void Renderer::DrawDepthSpot()
 		lightView = glm::lookAt(spot_light_stuffs.lightpos, spot_light_stuffs.lightpos +
 			(spot_light_stuffs.direction * 100.f), glm::vec3(0.0, 0.0, 1.0));
 
-		lightSpaceMatrix_spot = lightProjection * lightView;
+		LIGHTING.GetSpotLights()[i].lightSpaceMatrix = lightProjection * lightView;
+		//lightSpaceMatrix_spot = lightProjection * lightView;
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		std::cout << "FBO " << spot_light_stuffs.shadowFBO << "\n";
-		std::cout << "texture " << spot_light_stuffs.shadow << "\n";
 		glBindFramebuffer(GL_FRAMEBUFFER, spot_light_stuffs.shadowFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -942,7 +954,7 @@ void Renderer::DrawDepthSpot()
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "lightSpaceMatrix");
 		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-			glm::value_ptr(lightSpaceMatrix_spot));
+			glm::value_ptr(LIGHTING.GetSpotLights()[i].lightSpaceMatrix));
 
 		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
 
@@ -987,7 +999,6 @@ void Renderer::DrawDepthSpot()
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		std::cout << "bam\n";
 	}
 }
 

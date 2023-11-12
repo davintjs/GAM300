@@ -1360,7 +1360,7 @@ GameObject:
 ID: 5444589192843071334
 Transform:
   m_GameObject: {fileID: 7828822262636883673}
-  Translation: [7.43650484, 7.81100464, 0.0836601257]
+  Translation: [7.43650532, 7.81100464, 0.0836601257]
   Rotation: [0, 0, 1.57079589]
   Scale: [15, 0.999997318, 15]
   Father: {fileID: 0}
@@ -1383,3 +1383,65 @@ MeshRenderer:
   AoTexture: {guid: 00000000000000000000000000000000}
   EmissionTexture: {guid: 00000000000000000000000000000000}
   EmissionScalar: 1
+---
+ID: 10792816678721862649
+GameObject:
+  m_IsActive: true
+  m_Name: SpotLight2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18274798813870931824}  # Transform
+    - component: {fileID: 8576882378115097282}  # LightSource
+---
+ID: 18274798813870931824
+Transform:
+  m_GameObject: {fileID: 10792816678721862649}
+  Translation: [-26.1071663, 11.0095406, 0.891824722]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8576882378115097282
+LightSource:
+  m_GameObject: {fileID: 10792816678721862649}
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 1000
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
+---
+ID: 4702480490129877219
+GameObject:
+  m_IsActive: true
+  m_Name: SpotLight 3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3531498224564417268}  # Transform
+    - component: {fileID: 13363794325155133054}  # LightSource
+---
+ID: 3531498224564417268
+Transform:
+  m_GameObject: {fileID: 4702480490129877219}
+  Translation: [0, 8.50768566, 2.19550323]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13363794325155133054
+LightSource:
+  m_GameObject: {fileID: 4702480490129877219}
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 1000
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]

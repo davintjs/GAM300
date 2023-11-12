@@ -126,7 +126,7 @@ struct LightProperties
 	glm::vec3 lightColor;
 	float intensity;
 
-	
+	glm::mat4 lightSpaceMatrix{ 1.f };
 
 	unsigned int shadowFBO;
 	unsigned int shadow;
