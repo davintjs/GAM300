@@ -296,6 +296,9 @@ void Renderer::Draw(BaseCamera& _camera) {
 	//Non-Instanced Rendering
 	for (DefaultRenderProperties& prop : defaultProperties) 
 	{
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
+		shader.Use();
+
 		std::cout << "we in here\n";
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
@@ -303,14 +306,38 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
-		if (LIGHTING.directionalLightCount)
-		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
-		
-		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
-		glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
+		// You have 6 - 9 Texture Slots
 
-		GLSLShader& shader =  SHADER.GetShader(SHADERTYPE::DEFAULT);
-		shader.Use();
+		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
+		//
+		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
+		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
+
+		for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+		{
+			int textureUnit = 10 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(i) + "]").c_str()), textureUnit);
+
+		}
+
+		for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+		{
+			int textureUnit = 20 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(10+i) + "]").c_str()), textureUnit);
+
+		}
+
+		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		{
+			int textureUnit = 22 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+		}
 
 		// PBR TEXTURES
 		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
@@ -929,7 +956,6 @@ void Renderer::DrawDepthDirectional()
 
 void Renderer::DrawDepthSpot()
 {
-	std::cout << "spotlight count is : " << LIGHTING.spotLightCount << "\n";
 	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
 	{
 		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
