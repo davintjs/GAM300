@@ -36,6 +36,7 @@ void Animation_Manager::Update(float dt)
 
         if (animator.animID != animator.prevAnimID) // This check should be in the animator itself
         {
+            PRINT("Animator ID: ", animator.UUID(), "\n");
             animator.prevAnimID = animator.animID;
             animator.m_CurrentTime = 0.f;
             if (animator.animID == DEFAULT_ANIM)

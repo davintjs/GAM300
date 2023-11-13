@@ -30,8 +30,8 @@ Transform:
 ID: 10413881243206984898
 MeshRenderer:
   m_GameObject: {fileID: 22203055554271501}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [1, 0, 0, 1]
   Metallic: 0.5
@@ -83,8 +83,8 @@ Rigidbody:
 ID: 1245608959500342360
 MeshRenderer:
   m_GameObject: {fileID: 16942626329878887566}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
   Albedo: [0, 1, 1, 1]
   Metallic: 0.300000012
@@ -144,8 +144,8 @@ Rigidbody:
 ID: 1969242286221305044
 MeshRenderer:
   m_GameObject: {fileID: 10548661867949210258}
-  IsInstance: true
   Mesh: {guid: 872b8e766b8122de16b24583fa009940}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [1, 1, 1, 0]
   Metallic: 1
@@ -205,8 +205,8 @@ Rigidbody:
 ID: 15321682287644036185
 MeshRenderer:
   m_GameObject: {fileID: 8552727112136102457}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [1, 1, 1, 1]
   Metallic: 0.5
@@ -345,8 +345,8 @@ Transform:
 ID: 844126210943487470
 MeshRenderer:
   m_GameObject: {fileID: 15963777357859177452}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0.964601755, 0.926188409, 0.926188409, 1]
   Metallic: 0.5
@@ -434,8 +434,8 @@ Transform:
 ID: 4595346986854686988
 MeshRenderer:
   m_GameObject: {fileID: 16279065018212808363}
-  IsInstance: true
   Mesh: {guid: e94faee75023fb281815cbe42e58bf46}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [1, 1, 1, 0]
   Metallic: 1
@@ -472,8 +472,8 @@ Transform:
 ID: 16758431802574197390
 MeshRenderer:
   m_GameObject: {fileID: 307508712453590974}
-  IsInstance: true
   Mesh: {guid: cda938153ab88c47f02175a2b96ca693}
+  Animator: 0
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
   Albedo: [0.915929198, 0.567389786, 0.567389786, 0]
   Metallic: 1
@@ -510,8 +510,8 @@ Transform:
 ID: 17697832970109911239
 MeshRenderer:
   m_GameObject: {fileID: 18227054109373820900}
-  IsInstance: true
   Mesh: {guid: e1fc92ced6d495a0ebddb7e0a41730a8}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0.150442481, 0.150442481, 0.150442481, 0]
   Metallic: 1
@@ -545,116 +545,6 @@ Transform:
     - {fileID: 16279065018212808363}
     - {fileID: 307508712453590974}
     - {fileID: 18227054109373820900}
----
-ID: 3922013744759173244
-GameObject:
-  m_IsActive: true
-  m_Name: Walking
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16398077445459947136}  # Transform
----
-ID: 16398077445459947136
-Transform:
-  m_GameObject: {fileID: 3922013744759173244}
-  Translation: [-166.714905, 0, 2.57966328]
-  Rotation: [0, 0, 0]
-  Scale: [0.999999702, 1, 0.999999702]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 3039885432077176929}
-    - {fileID: 17320349492478876498}
----
-ID: 3039885432077176929
-GameObject:
-  m_IsActive: true
-  m_Name: Joints
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7555697652508158948}  # Transform
-    - component: {fileID: 15471585596178963118}  # Animator
-    - component: {fileID: 14282852752810313486}  # MeshRenderer
----
-ID: 7555697652508158948
-Transform:
-  m_GameObject: {fileID: 3039885432077176929}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3922013744759173244}
-  m_Children:
-    []
----
-ID: 15471585596178963118
-Animator:
-  m_GameObject: {fileID: 3039885432077176929}
-  Time: 0
-  Playing: false
----
-ID: 14282852752810313486
-MeshRenderer:
-  m_GameObject: {fileID: 3039885432077176929}
-  IsInstance: true
-  Mesh: {guid: 6073e88e3fcd77160a08c160166523ca}
-  Material_ID: {guid: 000000000000000000000000000000c8}
-  Albedo: [0.194474518, 0.194455072, 0.194455072, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
----
-ID: 17320349492478876498
-GameObject:
-  m_IsActive: true
-  m_Name: Body
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5033619509015223193}  # Transform
-    - component: {fileID: 7825573519581379403}  # Animator
-    - component: {fileID: 17241213561142621324}  # MeshRenderer
----
-ID: 5033619509015223193
-Transform:
-  m_GameObject: {fileID: 17320349492478876498}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3922013744759173244}
-  m_Children:
-    []
----
-ID: 7825573519581379403
-Animator:
-  m_GameObject: {fileID: 17320349492478876498}
-  Time: 0
-  Playing: false
----
-ID: 17241213561142621324
-MeshRenderer:
-  m_GameObject: {fileID: 17320349492478876498}
-  IsInstance: true
-  Mesh: {guid: 2ac70bc77553b5233744c66492ecaf6c}
-  Material_ID: {guid: 000000000000000000000000000000c8}
-  Albedo: [0.629616857, 0.629553914, 0.629553914, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 12364780341127539901
 GameObject:
@@ -695,8 +585,8 @@ Rigidbody:
 ID: 16929793178803184824
 MeshRenderer:
   m_GameObject: {fileID: 12364780341127539901}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
   Albedo: [0, 1, 1, 1]
   Metallic: 0.300000012
@@ -766,8 +656,8 @@ Rigidbody:
 ID: 15277237740940870281
 MeshRenderer:
   m_GameObject: {fileID: 14079781030746446599}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -812,8 +702,8 @@ Transform:
 ID: 181822198367986973
 MeshRenderer:
   m_GameObject: {fileID: 1368727277479088206}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -852,8 +742,8 @@ Transform:
 ID: 14332743185257737967
 MeshRenderer:
   m_GameObject: {fileID: 12161748884969786337}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 4fb2f1b05837904f2f0e2bd0b9fa1c7c}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -890,8 +780,8 @@ Transform:
 ID: 12230281215496189138
 MeshRenderer:
   m_GameObject: {fileID: 11493240351139901808}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -928,8 +818,8 @@ Transform:
 ID: 8634910263098084780
 MeshRenderer:
   m_GameObject: {fileID: 15026603235610724787}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -966,8 +856,8 @@ Transform:
 ID: 10902201795659356895
 MeshRenderer:
   m_GameObject: {fileID: 790894693973544084}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -1004,8 +894,8 @@ Transform:
 ID: 15947380907170419877
 MeshRenderer:
   m_GameObject: {fileID: 15101908397029369457}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -1057,8 +947,8 @@ Rigidbody:
 ID: 15765640483283106724
 MeshRenderer:
   m_GameObject: {fileID: 8095399288714090839}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -1118,8 +1008,8 @@ Rigidbody:
 ID: 2731128527658221954
 MeshRenderer:
   m_GameObject: {fileID: 6980508937969086314}
-  IsInstance: true
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -1165,8 +1055,8 @@ Transform:
 ID: 18339573687437956966
 MeshRenderer:
   m_GameObject: {fileID: 6594294024442073731}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
+  Animator: 0
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1

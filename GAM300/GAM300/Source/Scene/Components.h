@@ -300,7 +300,6 @@ struct MeshRenderer : Object
 	//Material_instance* materialInstance;
 
 	Engine::GUID meshID{ DEFAULT_MESH };
-
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };

@@ -321,6 +321,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 {
                     Engine::GUID currentGUID = animAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+
                 }
                 ImGui::PopID();
                 ImGui::PopStyleColor();
@@ -1723,7 +1724,7 @@ void EditorInspector::Update(float dt)
                 EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
-            //PRINT(fPath);
+            PRINT(fPath);
             //material.name
         }
 
