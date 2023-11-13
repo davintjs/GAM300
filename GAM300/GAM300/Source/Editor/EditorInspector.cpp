@@ -1020,6 +1020,10 @@ void DisplayComponent(Script& script)
 
 //Display all available light types inside the system for user to choose
 void DisplayLightProperties(LightSource& source) {
+
+    Change enableshadow(&source, "LightSource/EnableShadow");
+    Display<bool>(enableshadow, "Enable Shadow", source.enableShadow);
+
     Change lighttypes(&source, "LightSource/lightType");
     DisplayLightTypes(lighttypes, source.lightType);
     

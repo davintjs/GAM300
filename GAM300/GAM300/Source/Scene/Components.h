@@ -383,7 +383,7 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(enableShadow).Name("Enable Shadow"), 
+	property_var(enableShadow).Name("EnableShadow"), 
 	property_var(lightType).Name("lightType"),
 	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
