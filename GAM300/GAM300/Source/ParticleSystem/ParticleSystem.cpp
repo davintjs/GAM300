@@ -3,7 +3,7 @@
 #include "ParticleSystem.h"
 #include "Graphics/MeshManager.h"
 #include "Scene/Components.h" 
-
+#include "Graphics/GraphicsHeaders.h"
 
 
 
@@ -26,8 +26,8 @@ void ParticleManager::Update(float dt)
 
     particleSRT.clear();
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    GLuint vao = MeshManager.DereferencingMesh(DEFAULT_ASSETS["Cube.geom"])->vaoID; // for now particles are all cubes
-    InstanceProperties& prop = MeshManager.instanceProperties->find(vao)->second;
+    GLuint vao = MESHMANAGER.DereferencingMesh(DEFAULT_ASSETS["Cube.geom"])->vaoID; // for now particles are all cubes
+    InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
 
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (particleComponent.numParticles_ >= 0) {
@@ -47,8 +47,8 @@ void ParticleManager::Update(float dt)
 void ParticleManager::Render(BaseCamera& _camera)
 {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    GLuint vao = MeshManager.DereferencingMesh(DEFAULT_ASSETS["Cube.geom"])->vaoID; // for now particles are all cubes
-    InstanceProperties& prop = MeshManager.instanceProperties->find(vao)->second;
+    GLuint vao = MESHMANAGER.DereferencingMesh(DEFAULT_ASSETS["Cube.geom"])->vaoID; // for now particles are all cubes
+    InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
         glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data());
