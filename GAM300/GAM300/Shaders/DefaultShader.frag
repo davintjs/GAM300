@@ -14,9 +14,9 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #version 450 core
 
-#define MAX_POINT_LIGHT 20
-#define MAX_SPOT_LIGHT 20
-#define MAX_DIRECTION_LIGHT 5
+#define MAX_POINT_LIGHT 10
+#define MAX_SPOT_LIGHT 10
+#define MAX_DIRECTION_LIGHT 2
 
 struct PointLight
 {
@@ -30,6 +30,8 @@ struct DirectionalLight
     vec3 direction;
     vec3 colour;
     float intensity;
+    mat4 lightSpaceMatrix;
+
 };
 
 struct SpotLight
@@ -40,6 +42,8 @@ struct SpotLight
     float innerCutOff;
     float outerCutOff;
     float intensity;
+    mat4 lightSpaceMatrix;
+
 };
 
 //-------------------------
@@ -56,9 +60,9 @@ layout (location = 1) out vec4 Blooming;
 layout (location = 0) in vec2 TexCoords;
 layout (location = 1) in vec3 WorldPos;
 layout (location = 2) in vec3 Normal;
-layout (location = 3) in vec4 frag_pos_lightspace_D;
-layout (location = 4) in vec4 frag_pos_lightspace_S;
-
+//layout (location = 3) in vec4 frag_pos_lightspace_D;
+//layout (location = 4) in vec4 frag_pos_lightspace_S;
+//
 
 //-------------------------
 //          UNIFORMS
@@ -104,9 +108,12 @@ layout (binding = 4) uniform sampler2D AoMap;
 layout (binding = 5) uniform sampler2D EmmisionMap;
 
 // Shadow textureSamples
-layout (binding = 6) uniform sampler2D ShadowMap_Directional;
-layout (binding = 7) uniform sampler2D ShadowMap_Spot;
-layout (binding = 8) uniform samplerCube ShadowCubeMap;
+//layout (binding = 6) uniform sampler2D ShadowMap_Directional;
+//layout (binding = 7) uniform sampler2D ShadowMap_Spot;
+//layout (binding = 8) uniform samplerCube ShadowCubeMap;
+uniform sampler2D ShadowMap_SpotDirectional[12];
+uniform samplerCube PointShadows[10];
+
 
 uniform bool renderShadow;
 uniform float farplane;
@@ -181,14 +188,14 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
-float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir, int index)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(ShadowMap_Directional, projCoords.xy).r; 
+    float closestDepth = texture(ShadowMap_SpotDirectional[index], projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow
@@ -204,14 +211,14 @@ float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 ligh
 }
 // ----------------------------------------------------------------------------
 
-float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
+float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir,int index)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(ShadowMap_Spot, projCoords.xy).r; 
+    float closestDepth = texture(ShadowMap_SpotDirectional[index], projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow
@@ -228,13 +235,13 @@ float ShadowCalculation_Spot(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir)
 // ----------------------------------------------------------------------------
 
 
-float ShadowCalculation_Point(vec3 lightpos)
+float ShadowCalculation_Point(vec3 lightpos,int index)
 {
 
     vec3 fragToLight = WorldPos - lightpos;
 
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(ShadowCubeMap,fragToLight).r; 
+    float closestDepth = texture(PointShadows[index],fragToLight).r; 
     // get depth of current fragment from light's perspective
     closestDepth *= farplane;  
     // check whether current frag pos is in shadow
@@ -407,7 +414,7 @@ void main()
         float NdotL = max(dot(N, L), 0.0);        
 //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 //        float shadow = ShadowCalculation_Point(pointLights[i].position); 
-        float shadow = renderShadow ? ShadowCalculation_Point(pointLights[i].position) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Point(pointLights[i].position,i) : 0.0; // add a shadows bool
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 
 
@@ -433,7 +440,9 @@ void main()
     float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
     for(int i = 0; i < DirectionalLight_Count; ++i)
     {
+        vec4 frag_pos_lightspace_D = directionalLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
 
+        int index = 10+i;
         vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
 
         // calculate per-light radiance
@@ -481,7 +490,7 @@ void main()
 
 
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance) : 0.0; // add a shadows bool
+        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance,index) : 0.0; // add a shadows bool
 
         
         
@@ -489,34 +498,38 @@ void main()
     }   
 
     float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
-    for(int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
-    {
-        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
     
-        if(theta > spotLights[i].innerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
+    for (int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
+    {
+        int index = i;
+        vec3 L = normalize(spotLights[i].position - WorldPos);
+
+        float theta  = dot(L, normalize(-spotLights[i].direction));
+        
+        if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
         {  
+            vec4 frag_pos_lightspace_S = spotLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
 
-         vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+            float epsilon   = spotLights[i].innerCutOff - spotLights[i].outerCutOff;
+            float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0); 
 
+//             vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+            intensity *= spotLights[i].intensity;
+            vec3 lightColourStrength =  spotLights[i].colour * intensity;
 
         // calculate per-light radiance
         
-//        vec3 L = normalize(spotLights[i].position - WorldPos);
-        vec3 L = normalize(-spotLights[i].direction);
+//        vec3 L = normalize(-spotLights[i].direction);
 
-
-        vec3 H = normalize(V + L);
-
-
-
-//        float distance = length(pointLights[i].position - WorldPos);
-        float distance = length(spotLights[i].position - WorldPos);
+            vec3 H = normalize(V + L);
+        
+//      float distance = length(pointLights[i].position - WorldPos);
+        
+            float distance = length(spotLights[i].position - WorldPos);
 
 
 //        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
 //        float theta = dot(camPos - WorldPos, normalize(-spotLights[i].direction)); 
-//
-//
 //
 //        float epsilon = (spotLights[i].innerCutOff - spotLights[i].outerCutOff);
 //        float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0);
@@ -526,46 +539,47 @@ void main()
 //
 
 
-        float attenuation = 1.0 / (distance * distance);
+            float attenuation = 1.0 / (distance * distance);
 
-//        vec3 radiance = spotLights[i].colour * attenuation;
-        vec3 radiance = lightColourStrength * attenuation;
+    //        vec3 radiance = spotLights[i].colour * attenuation;
+            vec3 radiance = lightColourStrength * attenuation;
         
-        // Cook-Torrance BRDF
-        float NDF = DistributionGGX(N, H, roughness);   
-        float G   = GeometrySmith(N, V, L, roughness);      
-        vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
+            // Cook-Torrance BRDF
+            float NDF = DistributionGGX(N, H, roughness);   
+            float G   = GeometrySmith(N, V, L, roughness);      
+            vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
            
-        vec3 numerator    = NDF * G * F; 
-        float denominator = totalSpotLightCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-        vec3 specular = numerator / denominator;
+            vec3 numerator    = NDF * G * F; 
+            float denominator = totalSpotLightCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+            vec3 specular = numerator / denominator;
         
-        // kS is equal to Fresnel
-        vec3 kS = F;
-        // for energy conservation, the diffuse and specular light can't
-        // be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
-        vec3 kD = vec3(1.0) - kS;
-        // multiply kD by the inverse metalness such that only non-metals 
-        // have diffuse lighting, or a linear blend if partly metal (pure metals
-        // have no diffuse light).
+            // kS is equal to Fresnel
+            vec3 kS = F;
+            // for energy conservation, the diffuse and specular light can't
+            // be above 1.0 (unless the surface emits light); to preserve this
+            // relationship the diffuse component (kD) should equal 1.0 - kS.
+            vec3 kD = vec3(1.0) - kS;
+            // multiply kD by the inverse metalness such that only non-metals 
+            // have diffuse lighting, or a linear blend if partly metal (pure metals
+            // have no diffuse light).
         
-        kD *= 1.0 - metallic;	  
+            kD *= 1.0 - metallic;	  
 
-        // scale light by NdotL
-        float NdotL = max(dot(N, L), 0.0);        
+            // scale light by NdotL
+            float NdotL = max(dot(N, L), 0.0);        
         
         
         
-//        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-        float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos) : 0.0; // add a shadows bool
+    //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
+            float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,index) : 0.0; // add a shadows bool
 
         
         
-        Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-        }    
+            Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+            
+        }   
+
     }   
-
 
 
 

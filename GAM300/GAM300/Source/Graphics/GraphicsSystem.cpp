@@ -63,7 +63,6 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
 	{
-
 		float quadVertices[] = {
 			// positions        // texture Coords
 			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
