@@ -1781,8 +1781,8 @@ void EditorInspector::Update(float dt)
         ImGui::Separator();
 
         //temp values
-        static float ScaleFloat = 0;
-        static float Duration = 50;
+        static int ScaleFloat = 0;
+        static int Duration = 50;
         static int TicksPerSec = 10;
         static std::vector<anim_state>anim_states;
         static bool openpopup = false;
@@ -1800,22 +1800,25 @@ void EditorInspector::Update(float dt)
             if (Model) {
                 ImGui::AlignTextToFramePadding();
                 ImGui::TableNextColumn();
-                ImGui::Text("Model");
+                ImGui::Text("Scale Factor");
                 ImGui::TableNextColumn();
-                ImGui::DragFloat("##scalefloat", &ScaleFloat, 0.01f);
+                ImGui::DragInt("##scalefloat", &ScaleFloat, 0.01f);
             }
             else { //Animation
                 ImGui::AlignTextToFramePadding();
                 ImGui::TableNextColumn();
                 ImGui::Text("Duration");
                 ImGui::TableNextColumn();
-                ImGui::DragFloat("##Duration", &ScaleFloat, 0.01f, ImGuiInputTextFlags_ReadOnly);
+                std::string duration = std::to_string(Duration);
+                ImGui::Text(duration.c_str());
                 ImGui::TableNextRow();
 
                 ImGui::TableNextColumn();
                 ImGui::Text("Ticks Per Second");
                 ImGui::TableNextColumn();
-                ImGui::DragInt("##tickspersec", &TicksPerSec, 0.01f, ImGuiInputTextFlags_ReadOnly);
+                //ImGui::InputInt("##tickspersec", &TicksPerSec, ImGuiInputTextFlags_ReadOnly);
+                std::string tickspersecond = std::to_string(TicksPerSec);
+                ImGui::Text(tickspersecond.c_str());
                 ImGui::TableNextRow();
 
                 ImGui::TableNextColumn();
@@ -1825,35 +1828,21 @@ void EditorInspector::Update(float dt)
                     anim_states.push_back(anim_state());
                 }
 
+                int i = 0;
                 for (auto& state : anim_states) {
+                    ImGui::PushID(i++);
                     ImGui::TableNextRow();
                     ImGui::TableNextColumn();
                     ImGui::Text("Label"); ImGui::SameLine();
                     ImGui::InputText("##Label", &state.label);
                     ImGui::TableNextColumn();
+                    ImGui::Text("Min"); ImGui::SameLine();
                     ImGui::InputFloat("##Min", &state.min_max.x);
                     ImGui::TableNextColumn();
+                    ImGui::Text("Max"); ImGui::SameLine();
                     ImGui::InputFloat("##Max", &state.min_max.y);
+                    ImGui::PopID();
                 }
-
-                /*ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
-                ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
-                if (ImGui::BeginPopup("AnimationState", win_flags)) {
-                    if (ImGui::BeginTable("Model", 2, tableflags))
-                    {
-                        ImGui::Indent();
-                        ImGui::TableSetupColumn("Text", 0, 0.4f);
-                        ImGui::TableSetupColumn("Input", 0, 0.6f);
-
-                      
-                        ImGui::EndTable();
-                    }
-
-                    if (ImGui::Button("+")) {
-                        anim_states.push_back(anim_state());
-                    }
-                    ImGui::EndPopup();
-                }*/
             }
 
             ImGui::PopStyleVar();
