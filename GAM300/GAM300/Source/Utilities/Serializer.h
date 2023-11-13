@@ -18,7 +18,7 @@
         c. Components
     3. Clone Helper for De/Serialization which copies fields for the script component
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
@@ -27,6 +27,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Properties.h"
 #include "Scene/Scene.h"
 #include <filesystem>
+
+#include "Graphics/GraphicsHeaders.h"
 
 // Bean: May be added in the future for modularity of serialization
 //enum CLASSID
@@ -352,6 +354,8 @@ private:
             if (_scene.Has<T1>(_entity))
             {
                 auto& component = _scene.Get<T1>(_entity);
+                //skip deleted components 
+                if (component.state == DELETED) return true;
                 if constexpr (!std::is_same<T1, Tag>())
                 {
                     if constexpr (SerializeReference)
@@ -372,6 +376,8 @@ private:
             auto components = _scene.GetMulti<T1>(_entity);
             for (T1* component : components)
             {
+                //skip deleted components 
+                if (component->state == DELETED)  return true;
                 if constexpr (SerializeReference)
                 {
                     if (!SerializeReferenceField(out, *component))

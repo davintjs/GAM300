@@ -29,6 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "YAMLUtils.h"
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
+#include "Scene/SceneManager.h"
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
@@ -36,9 +37,11 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 
     for (auto data : _data._transform)
     {
-        out << YAML::Flow << YAML::BeginMap;
-        out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << data;
-        out << YAML::EndMap;
+        if (MySceneManager.GetCurrentScene().Get<Entity>(data).state != DELETED) {
+            out << YAML::Flow << YAML::BeginMap;
+            out << YAML::Flow << YAML::Key << "fileID" << YAML::Value << data;
+            out << YAML::EndMap;
+        }      
     }
     
     out << YAML::EndSeq;

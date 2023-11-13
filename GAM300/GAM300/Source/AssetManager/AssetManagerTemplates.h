@@ -116,6 +116,40 @@ struct AllAssetsGroup
 					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
 				}
 			}
+
+						if (mc.meshes.size() != importer.meshes.size())
+			{
+				importer.meshes.clear();
+				//Edge case more than or less than meshes
+				for (int i = 0; i < mc.meshes.size(); ++i)
+				{
+					MeshAsset& tmpMeshAsset = mc.meshes[i];
+					tmpMeshAsset.mFilePath = filePath;
+					tmpMeshAsset.mFilePath.replace_extension("");
+					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
+					// Assign GUID
+					Engine::HexID guid{};
+					importer.meshes.push_back(guid);
+					//importer.meshes.push_back(meshAsset.mFilePath);
+					MeshAsset& newMeshAsset = meshTable[guid];
+					newMeshAsset = std::move(tmpMeshAsset);
+					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
+				}
+				Serialize(metaPath, importer);
+			}
+			else // Has existing guid
+			{
+				for (int i = 0; i < mc.animations.size(); i++)
+				{
+					MeshAsset& tmpMeshAsset = mc.meshes[i];
+					tmpMeshAsset.mFilePath = filePath;
+					tmpMeshAsset.mFilePath.replace_extension("");
+					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
+					MeshAsset& newMeshAsset = meshTable[importer.meshes[i]];
+					newMeshAsset = std::move(tmpMeshAsset);
+					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
+				}
+			}
 		}
 		buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
 		return asset;

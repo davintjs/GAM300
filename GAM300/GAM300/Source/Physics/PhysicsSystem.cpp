@@ -66,9 +66,15 @@ void PhysicsSystem::Update(float dt) {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
+
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
+
+		if (rb.state == DELETED) continue;
+
 		Entity& entity = scene.Get<Entity>(rb);
+		
+
 		Transform& t = scene.Get<Transform>(entity);
 
 
@@ -268,6 +274,9 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
 
 			Rigidbody& rb = *it;
+
+			if (rb.state == DELETED) continue;
+
 			if (rb.bid == e.bid1) {
 				rb1 = &rb;
 			}
@@ -341,6 +350,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
 		CharacterController& cc = *it;
+		if(cc.state == DELETED) continue;
 		JPH::Ref<JPH::Character> mCharacter = nullptr;
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
@@ -465,6 +475,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			
 	
 		Rigidbody& rb = *it;
+		if (rb.state == DELETED) continue;
 		Entity& entity = scene.Get<Entity>(rb);
 		
 
@@ -514,6 +525,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+			
 			Vector3 colliderScale(boxCollider.x * t.scale.x/2.f, boxCollider.y * t.scale.y/2.f, boxCollider.z * t.scale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 

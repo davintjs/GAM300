@@ -35,6 +35,16 @@ TemplatePack
     EditorPerformanceViewer
 >;
 
+//helper function to align imgui objects
+void AlignForWidth(float width, float alignment)
+{
+    //ImGuiStyle& style = ImGui::GetStyle();
+    float avail = ImGui::GetContentRegionAvail().x;
+    float off = (avail - width) * alignment;
+    if (off > 0.0f)
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+}
+
 using EditorSystems = decltype(SystemsGroup(EditorSystemsPack()));
 
 void EditorSystem::Init()
@@ -89,9 +99,26 @@ void EditorSystem::Update(float dt)
         }
     }
 
+    //Need to press ctrl before delete to avoid accidental deletion
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+        if (ImGui::IsKeyReleased(ImGuiKey_Backspace) || ImGui::IsKeyReleased(ImGuiKey_Delete)) {
+            if (selectedEntity != NON_VALID_ENTITY)
+            {
+                Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+                Entity& ent = curr_scene.Get<Entity>(selectedEntity);
+                Change newchange;
+                newchange.entity = &ent;
+                EDITOR.History.AddEntityChange(newchange);
+                //curr_scene.Destroy(ent);
+                SelectedEntityEvent selectedEvent{ 0 };
+                EVENTS.Publish(&selectedEvent);
+            }
+        }
+    }
+
     //demo
-    /*bool demo = true;
-    ImGui::ShowDemoWindow(&demo);*/
+    //bool demo = true;
+    //ImGui::ShowDemoWindow(&demo);
     //ImPlot::ShowDemoWindow(&demo);
 
     ImGui::StyleColorsDark();
@@ -109,7 +136,6 @@ void EditorSystem::Exit()
     ImGui::DestroyContext();
     ImPlot::DestroyContext();
 }
-
 
 
 /**************************************************************************/

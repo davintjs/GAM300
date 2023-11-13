@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define MODELDECOMPILER_H
 
 #include "AssetManager/ModelClassAndStruct.h"
+#include "AssetTypes.h"
 
 #define MODELDECOMPILER ModelDecompiler::Instance()
 
@@ -24,30 +25,34 @@ SINGLETON(ModelDecompiler)
 {
 public:
 	// To load Geoms from FBXs
-	ModelComponents DeserializeModel(const std::string& _filePath, const Engine::GUID<ModelAsset>& _guid);
+	ModelAsset DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid);
 	
 	// Load meshes from the FBX file
-	void DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model);
+	void DeserializeMeshes(std::ifstream& ifs, ModelAsset& _model);
 
 	// Load materials from the FBX file
-	void DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model);
+	void DeserializeMaterials(std::ifstream& ifs, ModelAsset& _model);
 
 	// Load textures from the FBX file
-	void DeserializeTextures(std::ifstream& ifs, ModelComponents& _model);
+	void DeserializeTextures(std::ifstream& ifs, ModelAsset& _model);
 
 	// Load animations from the FBX file
-	void DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model);
+	void DeserializeAnimations(std::ifstream& ifs, ModelAsset& _model);
 
 	// Load animation nodes recursively to retrieve bone data
-	void DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node);
+	void DeserializeRecursiveNode(std::ifstream& ifs, AssimpNodeData& _node);
 
-	// Decompress
+	// Decompress vertices
 	void DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 		const std::vector<Vertex>& _oVertices,
+		const std::vector<VertexBoneInfo>& _boneInfo,
 		const glm::vec3& _posCompressScale,
 		const glm::vec2& _texCompressScale,
 		const glm::vec3& _posOffset,
 		const glm::vec2& _texOffset);
+
+	//Decompress indices
+	void DecompressIndices(std::vector<unsigned int>& _meshIndices, const std::vector<std::uint16_t>& _oIndices);
 private:
 
 };

@@ -15,8 +15,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 9951651598483564701}  # Transform
-    - component: {fileID: 15609799257596260444}  # Animator
-    - component: {fileID: 17698552145363034886}  # MeshRenderer
+    - component: {fileID: 1681047024800118161}  # MeshRenderer
 ---
 ID: 9951651598483564701
 Transform:
@@ -28,19 +27,12 @@ Transform:
   m_Children:
     []
 ---
-ID: 15609799257596260444
-Animator:
-  m_GameObject: {fileID: 16971042021324461215}
-  Time: 0
-  Playing: false
----
-ID: 17698552145363034886
+ID: 1681047024800118161
 MeshRenderer:
   m_GameObject: {fileID: 16971042021324461215}
-  IsInstance: false
   Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
-  Material_ID: {guid: 000000000000000000000000000000c8}
-  Albedo: [0.476280749, 0.476244509, 0.476233125, 1]
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+  Albedo: [0, 0, 0, 0]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
@@ -60,6 +52,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 16394273166130057897}  # Transform
+    - component: {fileID: 194859960722155182}  # Animator
 ---
 ID: 16394273166130057897
 Transform:
@@ -70,6 +63,16 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 16971042021324461215}
+    - {fileID: 9738285953308870614}
+---
+ID: 194859960722155182
+Animator:
+  m_GameObject: {fileID: 8740433663814950322}
+  Animation: {guid: a68cb651f1d3bb8ac81d906066bae60c}
+  Time: 0
+  StartTime: 0
+  EndTime: 0
+  Playing: false
 ---
 ID: 1093866452432998051
 GameObject:
@@ -94,7 +97,6 @@ Transform:
 ID: 6624460600492297826
 MeshRenderer:
   m_GameObject: {fileID: 1093866452432998051}
-  IsInstance: true
   Mesh: {guid: 00000000000000000000000000000065}
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [1, 0.999899983, 0.999899983, 0]
@@ -139,3 +141,40 @@ LightSource:
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [1, 1, 1]
+---
+ID: 9738285953308870614
+GameObject:
+  m_IsActive: true
+  m_Name: Clothes
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14755234885088098530}  # Transform
+    - component: {fileID: 7596220408769191805}  # MeshRenderer
+---
+ID: 14755234885088098530
+Transform:
+  m_GameObject: {fileID: 9738285953308870614}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 8740433663814950322}
+  m_Children:
+    []
+---
+ID: 7596220408769191805
+MeshRenderer:
+  m_GameObject: {fileID: 9738285953308870614}
+  Mesh: {guid: 3ce1d2a0dac7343e3c6ef66c8e4265d6}
+  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+  Albedo: [0, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1

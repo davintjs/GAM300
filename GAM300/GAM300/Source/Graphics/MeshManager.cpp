@@ -31,6 +31,7 @@ void MeshManager::Init()
     
     CreateInstanceLine();
     CreateInstanceSegment3D();
+
 }
 
 MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID<MeshAsset>& meshID)
@@ -139,7 +140,7 @@ void MeshManager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID<MeshAs
 
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
     //PRINT("Using guid: ", _guid.ToHexString(), " for ", _meshAsset.mFilePath.stem().string(), '\n');
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, _guid, tempProp);
     instanceProperties->emplace(std::make_pair(VAO, tempProp));
 
     mContainer.emplace(_guid, newMesh);
@@ -323,7 +324,7 @@ void MeshManager::CreateInstanceCube()
     newMesh.drawCounts = 36;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, cubeGUID, tempProp);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
@@ -450,7 +451,7 @@ void MeshManager::CreateInstanceSphere()
     newMesh.vertices_max = max;
 
     //Do something about AABB
-    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, sphereGUID, tempProp);
     mContainer.emplace(sphereGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
@@ -816,8 +817,13 @@ void MeshManager::CreateInstanceSegment3D()
 
 }
 
-void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProperties& prop) // vao
+void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid,  InstanceProperties& prop) // vao
 {
+    
+    offsetAndBoundContainer[_guid].offset = (maxpt + minpt) / 2.f;
+    offsetAndBoundContainer[_guid].scalarBound = (maxpt - offsetAndBoundContainer[_guid].offset) * 2.f;
+   
+
     //// find min max points for each axis
     //glm::vec3 minpt = _geom->_vertices[0].pos, maxpt = _geom->_vertices[0].pos;
 
@@ -831,6 +837,7 @@ void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProp
     //    maxpt.y = std::max(maxpt.y, _geom->_vertices[i].pos.y);
     //    maxpt.z = std::max(maxpt.z, _geom->_vertices[i].pos.z);
     //}
+
     glm::vec3 pntAABB[8];
     std::vector<glm::ivec2> idxAABB{};
 
@@ -913,6 +920,12 @@ void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, InstanceProp
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
     //return DebugVaoid;
+
+    if (_guid == DEFAULT_MESH)
+    {
+        offsetAndBoundContainer[_guid].vao = prop.debugVAO;
+
+    }
 }
 
 void MeshManager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)

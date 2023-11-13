@@ -38,7 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 //types of files that can be dragged drop from the content browser
 enum filetype {
-    NONE, MESH, PREFAB
+    NONE, MESH, PREFAB, MATERIAL
 };
 
 //an object containing the data needed for the payload
@@ -144,7 +144,7 @@ public:
     void DisplayEntity(Engine::UUID euid);
     //void DisplayChildren(const ObjectIndex& Parent);
     Engine::UUID selectedEntity;
-
+    bool newselect = false;
     bool initLayer = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
@@ -255,9 +255,9 @@ private:
 
     BaseCamera* camera = nullptr;
     DisplayTarget displayTargets[8];
-    glm::vec2 dimension{}; // Dimensions of the viewport
-    glm::vec2 position{};  // Position of the viewport relative to the engine
-    glm::vec2 min{}, max{};     // Minimum and maximum position of the viewport
+    glm::vec2 dimension{};          // Dimensions of the viewport
+    glm::vec2 position{};           // Position of the viewport relative to the engine
+    glm::vec2 min{}, max{};         // Minimum and maximum position of the viewport
     unsigned int targetDisplay = 0;
     float padding = 4.f;
     float AspectRatio = 16.f / 9.f;
@@ -284,6 +284,7 @@ public:
     bool isAddLayerPanel;
 
     bool material_inspector;
+    bool model_inspector;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;

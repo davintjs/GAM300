@@ -18,26 +18,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include <vector>
 
-#include "AssetManager/AssetTypes.h"
+#include "GeometryMesh.h"
+#include "Graphics/Animation/Animation.h"
 
-// Bean: These are TEMPORARY
-#include "../../Compiler/Mesh.h"
-#include "Graphics/AnimationManager.h"
-
-// The geom components that are extracted from the aiScene which contains the fbx/obj data
-// essentially only a portion of the data extracted from the file is needed
-struct GeomComponents
+#define MAX_BONE_INFLUENCE 4
+struct ModelVertex
 {
-	std::vector<Geom_Mesh> meshes{};	// Individual meshes in the model, which also contains its individual vertices and indices
-	std::vector<Material> materials{};	// Total materials of the WHOLE model (One mesh uses one material only)
-	AnimationModel animations{};		// The animations contained on this model
-};
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::vec2 textureCords;
+	glm::ivec4 color;
 
-struct ModelComponents
-{
-	std::vector<MeshAsset> meshes;
-	std::vector<Material> materials;
-	AnimationModel animations{};
+	// Animation Related Properties
+	int boneIDs[MAX_BONE_INFLUENCE];
+	float weights[MAX_BONE_INFLUENCE];
 };
 
 #endif // !MODELCLASSANDSTRUCT_H

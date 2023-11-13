@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Graphics/GraphicsHeaders.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Core/EventsManager.h"
@@ -47,6 +48,8 @@ void EditorContentBrowser::Update(float dt)
     filter.Draw();
 
     ImGui::Text("Current Folder: %s", currentFolder.c_str()); ImGui::Spacing();
+
+    ImGui::BeginChild("ScrollingRegion", ImVec2(0, -20.f), false);
 
     // Back button to return to parent directory
     if (currentDirectory != std::filesystem::path(AssetDirectory))
@@ -132,13 +135,18 @@ void EditorContentBrowser::Update(float dt)
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
+            else if (ext == "material") {
+                GetAssetEvent e{ it.path() };
+                EVENTS.Publish(&e);
+                Engine::GUID currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MATERIAL;
+            }
             else if (ext == "prefab") { //prefab files
 
-            }
-           
+            }          
             ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
             ImGui::EndDragDropSource();
-
         }
 
         ImGui::PopStyleColor();
@@ -166,10 +174,13 @@ void EditorContentBrowser::Update(float dt)
                 //Open scene file logic here
                 LoadSceneEvent loadScene(path.string());
                 EVENTS.Publish(&loadScene);
+                EDITOR.History.ClearUndoStack();
+                EDITOR.History.ClearRedoStack();
+
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
 
-            //Open Scene file
+            //Open material inspector
             if ((path.string().find(".material") != std::string::npos)) {
                 //Open scene file logic here
                 GetAssetEvent<MaterialAsset> e{ path };
@@ -177,6 +188,13 @@ void EditorContentBrowser::Update(float dt)
                 selectedAss = e.guid;
                 EditorInspector::Instance().material_inspector = true;
                 ImGui::SetWindowFocus("Material");
+            }
+
+            //Open model inspector
+            if ((path.string().find(".model") != std::string::npos)) {
+                //Open scene file logic here
+                EditorInspector::Instance().model_inspector = true;
+                ImGui::SetWindowFocus("Model");
             }
         }
     
@@ -220,6 +238,7 @@ void EditorContentBrowser::Update(float dt)
     }
     ImGui::Columns(1);
 
+    ImGui::EndChild();
     ImGui::End();
 }
 

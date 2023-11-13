@@ -46,6 +46,9 @@ bool SerializeScene(Scene& _scene)
     // Serialize Entities & Components
     for (Engine::UUID euid : _scene.layer)
     {
+        //if entity is deleted, dont serialize
+        if (_scene.Get<Entity>(euid).state == DELETED) continue;
+
         bool serialized = SerializeEntity(out, _scene.Get<Entity>(euid), _scene);
         E_ASSERT(serialized, "Unable To Serialize Entity!\n");
     }
@@ -258,7 +261,7 @@ void Serialize(Material_instance& material, std::string directory)
 void Deserialize(Material_instance& material,const fs::path& path)
 {
     std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
-    PRINT(path);
+    //PRINT(path);
     YAML::Node node = data[0]["Material"];
     property::SerializeEnum(material, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {

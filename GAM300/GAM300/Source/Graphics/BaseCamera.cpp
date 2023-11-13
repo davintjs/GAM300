@@ -84,6 +84,7 @@ void BaseCamera::UpdateViewMatrix()
 void BaseCamera::UpdateProjection()
 {
 	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
+	//std::cout << "field of view : " << fieldOfView << "\n";
 }
 
 void BaseCamera::UpdateFrustum()

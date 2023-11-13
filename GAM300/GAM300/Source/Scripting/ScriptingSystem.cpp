@@ -328,6 +328,7 @@ void ScriptingSystem::ReflectFromOther(Scene& other)
 	MonoScripts& otherScripts{ mSceneScripts[other.uuid] };
 	for (auto& component : currScene.GetArray<Script>())
 	{
+		if (component.state == DELETED) continue;
 		if (otherScripts.find(component) != otherScripts.end())
 		{
 			ReflectScript(component,otherScripts[component]);
@@ -359,6 +360,8 @@ void ScriptingSystem::UpdateReferences()
 	Scene& scene = MySceneManager.GetCurrentScene();
 	for (auto& script : scene.GetArray<Script>())
 	{
+		if (script.state == DELETED) continue;
+
 		MonoObject* mS = ReflectScript(script);
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
 		for (auto& pair : scriptClass.mFields)
@@ -757,6 +760,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 	{
 		for (Script* script : scene.GetMulti<Script>(e1))
 		{
+			if (script->state == DELETED) continue;
 			//Incase collision disables gameobject
 			if (!scene.IsActive(e1))
 				break;

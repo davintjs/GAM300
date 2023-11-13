@@ -142,6 +142,14 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/ColourPicking.vert";
 	fragmentPath = shaderPath + "/ColourPicking.frag";
 	ShaderCompiler("Colour Picking SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/NormalDebugRender.vert";
+	fragmentPath = shaderPath + "/NormalDebugRender.frag";
+	ShaderCompiler("Non-Instanced Debug Draw SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/InstancedParticle.vert";
+	fragmentPath = shaderPath + "/InstancedParticle.frag";
+	ShaderCompiler("Particle SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)
@@ -182,7 +190,7 @@ void ShaderManager::ShaderCompiler(const std::string& _name, const std::string& 
 	shader.CompileLinkValidate(shdr_files);
 	PRINT(_name, "\n\n");
 
-
+	bool temp = glGetError();
 	// if linking failed
 	if (GL_FALSE == shader.IsLinked())
 	{
@@ -192,7 +200,6 @@ void ShaderManager::ShaderCompiler(const std::string& _name, const std::string& 
 		PRINT(sstr.str());
 		std::exit(EXIT_FAILURE);
 	}
-
 	shaders.push_back(shader);
 }
 

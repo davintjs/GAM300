@@ -11,39 +11,38 @@
     This file contains the definitions of the following:
     1. Loads model files and extract the meshes, material, textures and animations
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
 #include "ModelDecompiler.h"
 
-ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID<ModelAsset>& _guid)
+ModelAsset ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
 {
-    ModelComponents tempModel;
+    ModelAsset tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
 
     // Retrieve mesh assets
     DeserializeMeshes(ifs, tempModel);
 
     // Retrieve material assets
-    //DeserializeMaterials(ifs, tempModel);
+    DeserializeMaterials(ifs, tempModel);
 
     // Retrieve texture assets
     DeserializeTextures(ifs, tempModel);
 
     // Retrieve animation assets
-    /*bool hasAnimation;
+    bool hasAnimation;
     ifs.read(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
     if(hasAnimation)
-        DeserializeAnimations(ifs, tempModel);*/
-
+        DeserializeAnimations(ifs, tempModel);
 
     ifs.close();
 
     return tempModel;
 }
 
-void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelAsset& _model)
 {
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
@@ -60,10 +59,11 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
         ifs.read(reinterpret_cast<char*>(&tempVerts[0]), vertSize * sizeof(Vertex));
 
         // Indices
+        std::vector<std::uint16_t> tempInd;
         size_t indSize;
         ifs.read(reinterpret_cast<char*>(&indSize), sizeof(indSize));
-        meshAsset.indices.resize(indSize);
-        ifs.read(reinterpret_cast<char*>(&meshAsset.indices[0]), indSize * sizeof(unsigned int));
+        tempInd.resize(indSize);
+        ifs.read(reinterpret_cast<char*>(&tempInd[0]), indSize * sizeof(std::uint16_t));
 
         ifs.read(reinterpret_cast<char*>(&meshAsset.materialIndex), sizeof(meshAsset.materialIndex)); // Material Index
 
@@ -77,15 +77,24 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
 
         ifs.read(reinterpret_cast<char*>(&meshAsset.numBones), sizeof(meshAsset.numBones)); // Number of bones
 
+        std::vector<VertexBoneInfo> tempBoneInfo;
+        if (meshAsset.numBones)
+        {
+            tempBoneInfo.resize(vertSize);
+            ifs.read(reinterpret_cast<char*>(&tempBoneInfo[0]), vertSize * sizeof(VertexBoneInfo)); // Number of bones
+        }
+        
         meshAsset.vertices.resize(vertSize); // Resize our vertices vector
+        meshAsset.indices.resize(indSize);
 
         meshAsset.numVertices = (unsigned int)vertSize;
         meshAsset.numIndices = (unsigned int)indSize;
 
         // Converts Vertex to ModelVertex
+        DecompressVertices(meshAsset.vertices, tempVerts, tempBoneInfo, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
         
-        DecompressVertices(meshAsset.vertices, tempVerts, posCompressionScale, texCompressionScale, posCompressionOffset, texCompressionOffset);
-
+        // Converts unsigned short to unsigned int
+        DecompressIndices(meshAsset.indices, tempInd);
 
         glm::vec3 min(FLT_MAX);
         glm::vec3 max(FLT_MIN);
@@ -114,7 +123,7 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
     }
 }
 
-void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelAsset& _model)
 {
     size_t matSize;
     ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
@@ -139,30 +148,29 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& 
     }
 }
 
-void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelAsset& _model)
 {
 
 }
 
-void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelAsset& _model)
 {
     //size_t animationSize = pModel->animations.GetAnimations().size();
     size_t animationSize;
     ifs.read(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
+    AnimationAsset animation;
 
-    Animation& animation = _model.animations.GetAnimations();
-
-    ifs.read(reinterpret_cast<char*>(&animation.m_Duration), sizeof(animation.m_Duration));
-    ifs.read(reinterpret_cast<char*>(&animation.m_TicksPerSecond), sizeof(animation.m_TicksPerSecond));
+    ifs.read(reinterpret_cast<char*>(&animation.duration), sizeof(animation.duration));
+    ifs.read(reinterpret_cast<char*>(&animation.ticksPerSecond), sizeof(animation.ticksPerSecond));
 
     // Bones
     size_t boneSize;
     ifs.read(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
-    animation.m_Bones.resize(boneSize);
+    animation.bones.resize(boneSize);
 
     for (size_t i = 0; i < boneSize; i++)
     {
-        Bone& bone = animation.m_Bones[i];
+        Bone& bone = animation.bones[i];
         // Position
         ifs.read(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
         bone.m_Positions.resize(bone.m_NumPositions);
@@ -192,11 +200,8 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
     }
 
     // AssimpNodeData
-    AssimpNodeData& nodeData = animation.m_RootNode;
-    DeserializeRecursiveNode(ifs, _model, nodeData);
-
-    // Animation Model
-    AnimationModel& model = _model.animations;
+    AssimpNodeData& nodeData = animation.rootNode;
+    DeserializeRecursiveNode(ifs, nodeData);
 
     // Bone Info Map
     size_t boneInfoSize = 0;
@@ -213,35 +218,39 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
 
         // Value of BoneInfoMap
         BoneInfo boneInfo;
-        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(BoneInfo));
+        ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(boneInfo));
 
-        model.GetBoneInfoMap()[key] = boneInfo;
+        animation.boneInfoMap[key] = boneInfo;
     }
 
-    ifs.read(reinterpret_cast<char*>(&model.GetBoneCount()), sizeof(BoneInfo));
+    ifs.read(reinterpret_cast<char*>(&animation.boneCounter), sizeof(animation.boneCounter));
+    _model.animations.push_back(animation);
 }
 
-void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
+void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, AssimpNodeData& _node)
 {
     ifs.read(reinterpret_cast<char*>(&_node.transformation), sizeof(glm::mat4)); // Transformation
 
     size_t nameSize;
     ifs.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
     std::string name;
+    //_node.name.resize(nameSize);
     name.resize(nameSize);
     ifs.read(reinterpret_cast<char*>(&name[0]), nameSize * sizeof(char)); // Name of Node
+    _node.name = name;
 
     ifs.read(reinterpret_cast<char*>(&_node.childrenCount), sizeof(_node.childrenCount)); // Num of children
 
     _node.children.resize(_node.childrenCount);
     for (size_t i = 0; i < _node.childrenCount; i++)
     {
-        DeserializeRecursiveNode(ifs, _model, _node.children[i]);
+        DeserializeRecursiveNode(ifs, _node.children[i]);
     }
 }
 
 void ModelDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices,
 	const std::vector<Vertex>& _oVertices,
+    const std::vector<VertexBoneInfo>& _boneInfo,
 	const glm::vec3& _posCompressScale,
 	const glm::vec2& _texCompressScale,
 	const glm::vec3& _posOffset,
@@ -277,11 +286,33 @@ void ModelDecompiler::DecompressVertices(std::vector<ModelVertex>& _meshVertices
         _meshVertices[i].color.a = _oVertices[i].colorA;
 
         // Animation
-        for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+        if (!_boneInfo.empty()) // If there are boneInfos
         {
-            _meshVertices[i].boneIDs[j] = static_cast<int>(_oVertices[i].boneIDs[j]);
-            _meshVertices[i].weights[j] = (_oVertices[i].weights[j] >= 0 ? static_cast<float>(_oVertices[i].weights[j]) / 0x7FFF : static_cast<float>(_oVertices[i].weights[j]) / 0x8000);
+            E_ASSERT(_meshVertices.size() == _boneInfo.size(), "Mesh vertices and bone size not equal for decompressing.");
+            for (size_t j = 0; j < MAX_BONE_INFLUENCE; j++)
+            {
+                _meshVertices[i].boneIDs[j] = static_cast<int>(_boneInfo[i].boneIDs[j]);
+                _meshVertices[i].weights[j] = (_boneInfo[i].weights[j] >= 0 ? static_cast<float>(_boneInfo[i].weights[j]) / 0x7FFF : static_cast<float>(_boneInfo[i].weights[j]) / 0x8000);
+            }
         }
+        else
+        {
+            auto& boneId = _meshVertices[i].boneIDs;
+            auto& weights = _meshVertices[i].weights;
+
+            boneId[0] = boneId[1] = boneId[2] = boneId[3] = -1;
+            weights[0] = weights[1] = weights[2] = weights[3] = 0.f;
+        }
+    }
+}
+
+void ModelDecompiler::DecompressIndices(std::vector<unsigned int>&_meshIndices, const std::vector<std::uint16_t>&_oIndices)
+{
+    E_ASSERT(_meshIndices.size() == _oIndices.size(), "Both indices vector sizes not equal for decompressing.");
+
+    for (size_t i = 0; i < _oIndices.size(); i++)
+    {
+        _meshIndices[i] = static_cast<unsigned int>(_oIndices[i]);
     }
 }
 

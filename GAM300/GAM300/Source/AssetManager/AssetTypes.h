@@ -1,10 +1,13 @@
+#pragma once
 #include <filesystem>
 #include "Utilities/GUID.h"
 #include "Utilities/TemplatePack.h"
 #include <glm/glm.hpp>
 #include <list>
 
-#pragma once
+#include <Properties.h>
+
+#include "ModelClassAndStruct.h"
 
 #ifndef ASSET_TYPES_H
 #define ASSET_TYPES_H
@@ -14,23 +17,7 @@
 #define ASSET_LINE 3
 #define ASSET_SEG3D 4
 
-#define MAX_BONE_INFLUENCE 4
-struct ModelVertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec2 textureCords;
-	glm::ivec4 color;
-
-	// Animation Related Properties
-	int boneIDs[MAX_BONE_INFLUENCE];
-	float weights[MAX_BONE_INFLUENCE];
-};
-
-struct DefaultImporter;
-
-struct Asset
+static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 {
 	std::filesystem::path mFilePath;
 	DefaultImporter* pImporter;
@@ -42,6 +29,19 @@ struct TextureAsset : Asset{};
 struct ScriptAsset : Asset {};
 
 struct AudioAsset : Asset {};
+
+struct AnimationAsset : Asset
+{
+	std::vector<Bone> bones; // Bean: We need to copy this for animator 
+	std::map<std::string, BoneInfo> boneInfoMap; // Bean: We need to copy this for animator
+	std::map<std::string, glm::vec2> animationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
+	
+	AssimpNodeData rootNode;
+	
+	int ticksPerSecond;
+	int boneCounter;
+	float duration;
+};
 
 struct MeshAsset : Asset
 {
@@ -71,8 +71,6 @@ struct ShaderAsset : Asset
 
 struct MaterialAsset : Asset { };
 
-struct AnimationAsset : Asset {};
-
 // Asset that contains reference to all components of the model(Mesh, Material, Texture, Animations)
 // User can add this asset into the scene and it will assign the materials onto the mesh etc
 struct ModelAsset : Asset
@@ -93,6 +91,7 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".anim",	GetAssetType::E<AnimationAsset>()},
 	{".material", GetAssetType::E<MaterialAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
 };

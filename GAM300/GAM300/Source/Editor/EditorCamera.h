@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/Ray3D.h"
 #include "Graphics/BaseCamera.h"
-#include "../Core/SystemInterface.h"
+#include "Core/SystemInterface.h"
 #include "Scene/Entity.h"
 #include "Core/Events.h"
 
@@ -82,6 +82,7 @@ public:
 
 	void CallbackUpdateSceneGeometry(EditorUpdateSceneGeometryEvent* pEvent);
 
+	glm::vec2 GetScenePosition() { return scenePosition; };
 private:
 	Ray3D ray;
 	glm::vec3 targetFP;

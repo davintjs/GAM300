@@ -48,8 +48,6 @@ void EditorScene::Update(float dt)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
-    ToolBar();
-
     SceneView();
 
     ImGui::PopStyleVar();
@@ -59,19 +57,14 @@ void EditorScene::Update(float dt)
 
 void EditorScene::ToolBar()
 {
-    ImGuiWindowClass window_class;
-    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar | ImGuiDockNodeFlags_NoCloseButton | ImGuiDockNodeFlags_NoDockingOverMe | ImGuiDockNodeFlags_NoResizeY;
-
-    ImGui::SetNextWindowClass(&window_class);
-
     //Scene toolbar
-    if (ImGui::Begin("Scene Toolbar"))
+    if (ImGui::BeginMenuBar())
     {
-        ImGui::Dummy(ImVec2(0.0f, 3.f));
-        ImGui::Dummy(ImVec2(15.0f, 0.f)); ImGui::SameLine();
         ImGui::SetNextItemWidth(68.f);
-        ImGui::Combo("Coord Space", &coord_selection, GizmoWorld, 2, 2);
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(15.0f, 0.f));
+        ImGui::Combo("##Coord Space", &coord_selection, GizmoWorld, 2, 2);
+
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         float buttonSize = 20.f;
         ImVec2 btn = ImVec2(buttonSize, buttonSize);
@@ -85,7 +78,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 1) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         bool condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_Q) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("Q", btn) || condition)
+        if (ImGui::Button("Q", btn) || condition)
         {
             toggled = 1;
         }
@@ -99,8 +92,7 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 2) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("W", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
+        if (ImGui::Button("W", btn) || (ImGui::IsKeyPressed(ImGuiKey_W) && windowHovered))
         {
             GizmoType = ImGuizmo::TRANSLATE;
             toggled = 2;
@@ -110,7 +102,7 @@ void EditorScene::ToolBar()
         buttonColor = (toggled == 3) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
         condition = !EditorCam.IsFlying() && (ImGui::IsKeyPressed(ImGuiKey_E) && windowHovered);
-        ImGui::SameLine(); if (ImGui::Button("E", btn) || condition)
+        if (ImGui::Button("E", btn) || condition)
         {
             GizmoType = ImGuizmo::ROTATE;
             toggled = 3;
@@ -119,29 +111,33 @@ void EditorScene::ToolBar()
 
         buttonColor = (toggled == 4) ? toggledColor : untoggledColor;
         ImGui::PushStyleColor(ImGuiCol_Button, buttonColor); // Apply the button color
-        ImGui::SameLine(); if (ImGui::Button("R", btn)
-            || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
+        if (ImGui::Button("R", btn) || (ImGui::IsKeyPressed(ImGuiKey_R) && windowHovered))
         {
             GizmoType = ImGuizmo::SCALE;
             toggled = 4;
         }
         ImGui::PopStyleColor();
 
-        ImGui::SameLine(); ImGui::Dummy(ImVec2(20.0f, 0.f));
+        // Separator
+        ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        ImGui::SameLine(); if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
-        //ImGui::SameLine(); if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+        if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
 }
 
 void EditorScene::SceneView()
 {
-    windowOpened = ImGui::Begin("Scene");
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_MenuBar;
+    windowOpened = ImGui::Begin("Scene", nullptr, flags);
     //Editor scene viewport
     if (windowOpened)
     {
+        ToolBar();
+
         windowHovered = ImGui::IsWindowHovered();
         windowFocused = ImGui::IsWindowFocused();
         ImRect sceneRect = ImGui::GetCurrentWindow()->InnerRect;
@@ -167,15 +163,40 @@ void EditorScene::SceneView()
                 ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
                 Engine::HexID guid = data.guid;
 
+                Scene& curr_scene = MySceneManager.GetCurrentScene();
+
                 if (data.type == MESH) {
                     //Create new entity
-                    Scene& curr_scene = MySceneManager.GetCurrentScene();
                     Entity* ent = curr_scene.Add<Entity>();
                     //Add mesh renderer
                     curr_scene.Add<MeshRenderer>(*ent);
                     //Attach dragged mesh GUID from the content browser
                     curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
+
+                    //undo/redo for entity
+                    /*Change newchange;
+                    newchange.entity = ent;
+                    newchange.action = CREATING;
+                    EDITOR.History.AddEntityChange(newchange);*/
+                }
+                else if (data.type == MATERIAL) {
+                    //check which entity the mouse is current at when item is dropped
+                    Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+
+                    //if valid entity
+                    if (temp != 0){
+                        Entity& currEntity = curr_scene.Get<Entity>(temp);
+
+                        //if object does not have a mesh renderer
+                        if (!curr_scene.Has<MeshRenderer>(currEntity))
+                            curr_scene.Add<MeshRenderer>(currEntity);
+
+                        //Assign material to mesh renderer
+                        MeshRenderer& meshrenderer = curr_scene.Get<MeshRenderer>(currEntity);
+                        Change newchange(&meshrenderer, "MeshRenderer/Material_ID");
+                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, guid);
+                    }
                 }
 
                 //add other file types here
@@ -213,10 +234,30 @@ bool EditorScene::SelectEntity()
 void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
+
     if (SelectEntity())
     {
+        // Colour picking Version if needed
+        /*Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
+        if (temp == 0)
+        {
+            SelectedEntityEvent SelectingEntity(0);
+            EVENTS.Publish(&SelectingEntity);
+        }
+        else
+        {
+            Entity& currEntity = currentScene.Get<Entity>(temp);
+
+            SelectedEntityEvent SelectingEntity(&currEntity);
+            EVENTS.Publish(&SelectingEntity);
+        }*/
+        float& intersect = EditorCam.GetIntersect();
+        float& tempIntersect = EditorCam.GetTempIntersect();
+
         for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
         {
+            if (renderer.state == DELETED) continue;
+
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
             //Tag& tag = currentScene.Get<Tag>(entity);
@@ -233,8 +274,6 @@ void EditorScene::DisplayGizmos()
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -243,12 +282,14 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }
 
         for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
         {
+            if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
             Transform& transform = currentScene.Get<Transform>(entity);
 
@@ -267,8 +308,6 @@ void EditorScene::DisplayGizmos()
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
-            float& intersect = EditorCam.GetIntersect();
-            float& tempIntersect = EditorCam.GetTempIntersect();
             Ray3D temp = EditorCam.GetRay();
             if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
             {
@@ -279,9 +318,42 @@ void EditorScene::DisplayGizmos()
                     intersect = tempIntersect;
                 }
             }
+        }
 
+        for (BoxCollider& bc : currentScene.GetArray<BoxCollider>())
+        {
+            Entity& entity = currentScene.Get<Entity>(bc);
 
+            if (currentScene.Has<MeshRenderer>(entity)) continue;
+            if (bc.state == DELETED) continue;
 
+            Transform& transform = currentScene.Get<Transform>(entity);
+            Tag& tag = currentScene.Get<Tag>(entity);
+            // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
+            glm::mat4 transMatrix = transform.GetWorldMatrix();
+
+            glm::vec3 translation;
+            glm::vec3 rot;
+            glm::vec3 scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_max;
+            mins *= glm::vec3(bc.x, bc.y, bc.z);
+            maxs *= glm::vec3(bc.x, bc.y, bc.z);
+            rot = glm::radians(rot);
+            glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
+
+            Ray3D temp = EditorCam.GetRay();
+            if (temp.TestRayOBB(glm::translate(glm::mat4(1.0f), translation) * rotMat, mins, maxs, tempIntersect))
+            {
+                if (tempIntersect < intersect)
+                {
+                    SelectedEntityEvent SelectingEntity(&entity);
+                    EVENTS.Publish(&SelectingEntity);
+                    intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
+                }
+            }
         }
     }
 
@@ -289,6 +361,8 @@ void EditorScene::DisplayGizmos()
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
+
+        
         Transform& trans = currentScene.Get<Transform>(entity);
         for (int i = 0; i < 3; ++i)
         {

@@ -1,5 +1,5 @@
-[2023-11-05 15:09:29.091] [Error] [critical] 
-Caused By:	mMeshesAsset.find(meshID) != mMeshesAsset.end()
-Info:		Trying to access invalid mesh
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Graphics\MeshManager.cpp (Line: 38)
+[2023-11-10 15:03:59.921] [Error] [critical] 
+Caused By:	false
+Info:		Could not find handle!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
 

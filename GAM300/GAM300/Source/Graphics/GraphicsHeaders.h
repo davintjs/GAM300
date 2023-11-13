@@ -10,26 +10,24 @@
 	This file contains the declaration of Graphics System that includes:
 	1. 
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
 
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Core/SystemInterface.h"
-#include "GraphicStructsAndClass.h"
-#include "BaseCamera.h"
-
 #include "glslshader.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <filesystem>
 
-#include "Utilities/GUID.h"
-
-#include "Model3d.h"
-//#include "glslshader.h"
+#include "GraphicStructsAndClass.h"
+#include "BaseCamera.h"
 #include "GBuffer.h"
+#include "Model3d.h"
 
+#include "Core/SystemInterface.h"
+#include "Core/Events.h"
+#include "Utilities/GUID.h"
+#include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
 
@@ -42,8 +40,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define MATERIALSYSTEM MaterialSystem::Instance()
 
 class Ray3D;
-class RaycastLine;
-class SkyBox;
 
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
@@ -74,22 +70,20 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
-// Bean: A temp solution to access the shader
-// enum SHADERTYPE
-// {
-// 	HDR,
-// 	PBR,
-// 	TIR,// Temporary Instance Render
-// 	TDR,// Temporary Debug Instance Render
-// 	SKYBOX,
-// 	BASICLIGHT,
-// 	AFFECTEDLIGHT,
-// 	SHADOW,
-// 	POINTSHADOW,
-// 	UI_SCREEN,
-// 	UI_WORLD,
-// 	BLUR
-// };
+
+struct RigidDebug
+{
+	glm::mat4 SRT; // This has been multiplied by 
+	
+	GLuint vao;
+
+	/*
+	glm::vec3 translation;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+	glm::vec3 RigidScalar;
+	*/
+};
 
 struct Shader {
 	Shader(std::string _name, SHADERTYPE type) : name(_name), shadertype(type) {}
@@ -262,10 +256,18 @@ public:
 
 	// Initialize the skybox of the engine
 
-	void ColorPickingUI(BaseCamera & _camera);
+	void ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
+	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
+	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
-	void Draw(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
+	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
+	void DrawMeshes( GLSLShader & _shader);
+
+	glm::vec2 gameWindowPos;
+	glm::vec2 gameWindowDimension;
+	glm::vec2 editorWindowPos;
+	glm::vec2 editorWindowDimension;
 private:
 
 	// Colour Picking
@@ -291,11 +293,24 @@ public:
 
 	void DrawRay();
 
+	// Loop through all rigid bodies and get them
+	void LoopAndGetRigidBodies();
+
+	// Add into Rigid
+	void AddBoxColliderDraw(RigidDebug rigidDebugDraw);
+
+	// Reset all Physic's Rigid Body Container
+	void ResetPhysicDebugContainer();
+
+
 private:
+
 	InstanceContainer* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
+	std::vector<RigidDebug> boxColliderContainer;
+
 };
 
 ENGINE_SYSTEM(Lighting)
@@ -310,6 +325,10 @@ public:
 	std::vector<LightProperties>& GetPointLights() { return pointLightSources; }
 	std::vector<LightProperties>& GetDirectionLights() { return directionLightSources; }
 	std::vector<LightProperties>& GetSpotLights() { return spotLightSources; }
+
+	unsigned int pointLightCount;
+	unsigned int directionalLightCount;
+	unsigned int spotLightCount;
 
 private:
 	LightProperties lightingSource;
@@ -328,6 +347,8 @@ public:
 	void SetupGrid(const int& _num);
 
 	void Draw(BaseCamera& _camera);
+
+	void BindLights(GLSLShader & shader);
 
 	// Drawing UI onto screenspace
 	void UIDraw_2D(BaseCamera& _camera);
