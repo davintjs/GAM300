@@ -216,13 +216,36 @@ bool Deserialize(const std::filesystem::path& path, T& object)
         , entry.second);
     });
 
-    if constexpr (std::is_same<T,ModelImporter>())
+
+    if constexpr (std::is_same<T, ModelImporter>())
     {
         if (node["meshes"])
         {
-            Node meshes = node["meshes"];
+            YAML::Node meshes = node["meshes"];
+            for (YAML::const_iterator it = meshes.begin(); it != meshes.end(); ++it)
+            {
+                YAML::Node data = it->second;
+                if (data["guid"])
+                {
+                    Engine::HexID id = data["guid"].as<Engine::HexID>();
+                    object.meshes.emplace_back(id);
+                }
+            }
         }
-        object.meshes
+
+        if (node["animations"])
+        {
+            YAML::Node animations = node["animations"];
+            for (YAML::const_iterator it = animations.begin(); it != animations.end(); ++it)
+            {
+                YAML::Node data = it->second;
+                if (data["guid"])
+                {
+                    object.animations.emplace_back(data["guid"].as<Engine::HexID>());
+                }
+            }
+        }
+
     }
 
     //property::pack Pack;
