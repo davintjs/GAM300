@@ -68,6 +68,7 @@ enum class SHADERTYPE
 	GBUFFER,
 	COLOURPICKING,
 	FORWARDDEBUG, // Non instanced debug draw
+	PARTICLES,
 	COUNT
 };
 

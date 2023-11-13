@@ -420,6 +420,120 @@ struct Canvas : Object
 	} property_vend_h(Canvas)
 
 
+//struct ParticleComponent : Object
+//{
+//	ParticleComponent() {}
+//	int numParticles_ = 1;
+//	float particleLifetime_ = 0.0f;
+//	float particleEmissionRate_ = 0.0f; 
+//	Particle* particles_;
+//
+//	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate); 
+//	void Update(float dt);
+//	void Render();
+//	property_vtable();
+//};
+//
+//property_begin_name(ParticleComponent, "ParticleComponent")
+//{
+//	property_var(numParticles_).Name("NumberOfParticles"),
+//	property_var(particleLifetime_).Name("ParticleLifetime"),
+//	property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+//
+//} property_vend_h(ParticleComponent)
+
+struct Particle : Object
+{
+	Particle() {}
+	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
+		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+	vec3 position;
+	vec3 velocity;
+	vec3 acceleration;
+	float lifetime;
+};
+
+struct ParticleComponent : Object
+{
+	ParticleComponent() {}
+	int numParticles_ = 1;
+	float particleLifetime_ = 0.0f;
+	float particleEmissionRate_ = 0.0f;
+	//Particle* particles_;
+	std::vector<Particle> particles_;
+
+	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate);
+	void Update(float dt);
+	void Render();
+	property_vtable();
+};
+
+property_begin_name(ParticleComponent, "ParticleComponent")
+{
+	property_var(numParticles_).Name("NumberOfParticles"),
+		property_var(particleLifetime_).Name("ParticleLifetime"),
+		property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+
+} property_vend_h(ParticleComponent)
+//
+//struct Particle : Object
+//{
+//	Particle() {}
+//	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
+//		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+//	vec3 position;
+//	vec3 velocity;
+//	vec3 acceleration;
+//	float lifetime;
+//};
+
+struct Button : Object
+{
+	//char* id;
+	//int x, y, width, height; 
+	bool is_clicked;
+	////void(*on_click)(void);
+	int x, y, width, height;
+	std::string label;
+	std::function<void()> clickHandler;
+	Button(int x, int y, int width, int height, std::string label, std::function<void()> clickHandler)
+		: x(x), y(y), width(width), height(height), label(label), clickHandler(clickHandler) {}
+
+	bool isClicked(int xPos, int yPos) {
+		return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
+	}
+
+
+};
+
+struct ButtonComponent : Object
+{
+
+	int x = 10;
+	int y = 10;
+	int width = 100;
+	int height = 50;
+
+
+	void Init();
+	void Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked);
+
+	property_vtable();
+};
+
+property_begin_name(ButtonComponent, "ButtonComponent")
+{
+	property_var(x).Name("Buttonx"),
+		property_var(y).Name("Buttony"),
+		property_var(height).Name("ButtonHeight"),
+		property_var(width).Name("ButtonWidth")
+		//property_var(height).Name("ButtonHeight") 
+
+
+} property_vend_h(ButtonComponent)
+
+
+
 #pragma endregion
 
 //Group to store all single component arrays together and accessed easily without
@@ -485,7 +599,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider, ParticleComponent>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;

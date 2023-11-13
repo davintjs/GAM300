@@ -167,3 +167,67 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 	BaseCamera::Init();
 	cameraType = CAMERATYPE::GAME;
 }
+
+void ParticleComponent::Initialize(int numParticles, float particleLifetime, float particleEmissionRate)
+{
+	numParticles_ = numParticles;
+	particleLifetime_ = particleLifetime;
+	particleEmissionRate_ = particleEmissionRate;
+	//particles_.resize(numParticles_);
+	// Initialize the position, velocity, and acceleration of each particle
+	particles_.resize(numParticles_);
+	for (int i = 0; i < numParticles_; i++) {
+		particles_[i].position = glm::vec3(0.0f);
+		particles_[i].velocity = glm::vec3(0.0f);
+		particles_[i].acceleration = glm::vec3(0.0f);
+		particles_[i].lifetime = particleLifetime_;
+	}
+}
+ 
+
+void ParticleComponent::Update(float dt)
+{
+	// Update the position, velocity, and acceleration of each particle
+	for (int i = 0; i < numParticles_; i++) {
+		particles_[i].position += particles_[i].velocity * dt;
+		particles_[i].velocity += particles_[i].acceleration * dt;
+		particles_[i].lifetime -= dt;
+	}
+	// Handle particle collisions
+	// Emit new particles
+	if (particleEmissionRate_ > 0.0f) {
+		for (int i = 0; i < numParticles_; i++) {
+			if (particles_[i].lifetime <= 0.0f) {
+				particles_[i].position = glm::vec3(0.0f);
+				particles_[i].velocity = glm::vec3(0.0f);
+				particles_[i].acceleration = glm::vec3(0.0f);
+				particles_[i].lifetime = particleLifetime_;
+			}
+		}
+	}
+}
+
+void on_click_callback(void)
+{
+	printf("Button clicked!\n");
+}
+
+void ButtonComponent::Init()
+{
+	//Button* button = Button_init("button1",10, 10, 500, 500);
+	//int mouse_x = 20, mouse_y = 20;
+}
+
+void ButtonComponent::Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked)
+{
+	if (button->x <= mouse_x && mouse_x <= button->x + button->width &&
+		button->y <= mouse_y && mouse_y <= button->y + button->height) {
+		if (left_mouse_button_clicked) {
+			button->is_clicked = true;
+			//button->on_click();
+		}
+	}
+	else {
+		button->is_clicked = false;
+	}
+}

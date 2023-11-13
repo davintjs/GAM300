@@ -104,6 +104,8 @@
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\AssetManager\ModelDecompiler.cpp" />
+    <ClCompile Include="Source\ParticleSystem\ParticleSystem.cpp" />
+    <ClCompile Include="Source\UISystem\UISystem.cpp" />
     <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
     <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
   </ItemGroup>
@@ -195,6 +197,8 @@
     <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
     <ClInclude Include="Source\AssetManager\GeometryMesh.h" />
     <ClInclude Include="Source\Graphics\Animation\Animation.h" />
+    <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
+    <ClInclude Include="Source\UISystem\UISystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
@@ -230,5 +234,7 @@
     <None Include="Shaders\ColourPicking.vert" />
     <None Include="Shaders\NormalDebugRender.frag" />
     <None Include="Shaders\NormalDebugRender.vert" />
+    <None Include="Shaders\InstancedParticle.vert" />
+    <None Include="Shaders\InstancedParticle.frag" />
   </ItemGroup>
 </Project>
