@@ -149,7 +149,7 @@ bool HistoryManager::UndoChange() {
     if (!UndoStack.empty()) {
         Change undochange = UndoStack.top();
         UndoStack.pop();
-
+       
         if (undochange.type == VARIABLE) {
             property::set(*(undochange.component), undochange.property.c_str(), undochange.previousValue);
         }
@@ -332,7 +332,6 @@ void HistoryManager::AddEntityChange(Change& change) {
     if (change.action == DELETING) {
         SetStateRecursive(*change.entity, DELETED, REDO);
     }
-  
     change.type = ENTITY;
     UndoStack.push(change);
 }
