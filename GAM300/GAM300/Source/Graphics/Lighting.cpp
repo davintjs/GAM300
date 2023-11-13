@@ -63,6 +63,11 @@ void Lighting::Update(float)
 
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
+		if (!lightSource.enableShadow)
+		{
+			continue;
+
+		}
 		if (lightSource.state == DELETED)
 		{
 			std::cout << "hi\n";
