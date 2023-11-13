@@ -1,3 +1,4 @@
+#pragma once
 #include <filesystem>
 #include "Utilities/GUID.h"
 #include "Utilities/TemplatePack.h"
@@ -6,7 +7,7 @@
 
 #include <Properties.h>
 
-#pragma once
+#include "ModelClassAndStruct.h"
 
 //static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 //{
@@ -21,20 +22,6 @@
 //	{"None.mat", Engine::GUID(8)},
 //	{"None.anim", Engine::GUID(9)},
 //};
-
-#define MAX_BONE_INFLUENCE 4
-struct ModelVertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec2 textureCords;
-	glm::ivec4 color;
-
-	// Animation Related Properties
-	int boneIDs[MAX_BONE_INFLUENCE];
-	float weights[MAX_BONE_INFLUENCE];
-};
 
 static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
 {
@@ -122,6 +109,21 @@ struct AudioAsset : Asset
 	using Meta = MetaFile;
 };
 
+struct AnimationAsset : Asset
+{
+	std::vector<Bone> bones; // Bean: We need to copy this for animator 
+	std::map<std::string, BoneInfo> boneInfoMap; // Bean: We need to copy this for animator
+	std::map<std::string, glm::vec2> animationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
+	
+	AssimpNodeData rootNode;
+	
+	int ticksPerSecond;
+	int boneCounter;
+	float duration;
+
+	using Meta = MetaFile;
+};
+
 struct FolderMeta : MetaFile
 {
 	bool folderAsset{ true };
@@ -187,10 +189,14 @@ property_begin_name(ModelImporter, "ModelImporter") {
 // User can add this asset into the scene and it will assign the materials onto the mesh etc
 struct ModelAsset : Asset
 {
+	std::vector<MeshAsset> meshes;		// Individual meshes in the model in engine terms, which also contains its individual vertices and indices
+	std::vector<Material> materials;	// Total materials of the WHOLE model (One mesh uses one material only)
+	std::vector<AnimationAsset> animations{};// The animations contained on this model
+
 	using Meta = ModelImporter;
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset,Asset>;
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, AnimationAsset, ShaderAsset, MaterialAsset,Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>
@@ -204,6 +210,7 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".model",	GetAssetType::E<ModelAsset>()},
 	{".mp3",	GetAssetType::E<AudioAsset>()},
 	{".wav",	GetAssetType::E<AudioAsset>()},
+	{".anim",	GetAssetType::E<AnimationAsset>()},
 	{".material", GetAssetType::E<MaterialAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
 };

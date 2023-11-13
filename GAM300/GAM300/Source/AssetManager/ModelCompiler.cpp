@@ -98,22 +98,19 @@ GeomComponents ModelCompiler::LoadModel(const std::filesystem::path& _filePath, 
 
 void ModelCompiler::ProcessBones(const aiNode& _node, const aiScene& _scene)
 {
-	if (hasAnimation) //instead of this, pushback into my animmanager animation container
+	if (hasAnimation)
 	{
-		auto animations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
+		auto tempAnimations = _scene.mAnimations[0]; // this might need to change quite a bit since an fbx may hv > 1 anim
 		Animation& animation = pModel->animations[0];
-		animation.GetDuration() = (float)animations->mDuration;
-		animation.GetTicksPerSecond() = (int)animations->mTicksPerSecond;
-		animation.ReadHierarchyData(animation.GetRootNode(), _scene.mRootNode);
-		animation.ReadMissingBones(animations);
+		animation.GetDuration() = (float)tempAnimations->mDuration;
+		animation.GetTicksPerSecond() = (int)tempAnimations->mTicksPerSecond;
+		ReadHierarchyData(animation.GetRootNode(), _scene.mRootNode);
+		ReadMissingBones(tempAnimations, animation);
 	}
 }
 
 void ModelCompiler::ProcessNode(const aiNode& _node, const aiScene& _scene)
 {
-	BoundingBox3D mGlobalPosAABB;
-	BoundingBox3D mGlobalTexAABB;
-
 	for (unsigned int i = 0; i < _node.mNumMeshes; ++i) // Loop through _node meshes
 	{
 		aiMesh* pMesh = _scene.mMeshes[_node.mMeshes[i]];
@@ -586,6 +583,46 @@ void ModelCompiler::ExtractBoneWeightForVertices(std::vector<ModelVertex>& _vert
 				}
 			}
 		}
+	}
+}
+
+
+void ModelCompiler::ReadMissingBones(const aiAnimation* _tempAnimation, Animation& _animation)
+{
+	int size = _tempAnimation->mNumChannels;
+
+	auto& boneInfoMap = _animation.GetBoneInfoMap();//getting m_BoneInfoMap from Model class
+	int& boneCount = _animation.GetBoneCount(); //getting the m_BoneCounter from Model class
+
+	//reading channels(bones engaged in an animation and their keyframes)
+	for (int i = 0; i < size; i++)
+	{
+		auto channel = _tempAnimation->mChannels[i];
+		std::string boneName = channel->mNodeName.data;
+
+		if (boneInfoMap.find(boneName) == boneInfoMap.end())
+		{
+			boneInfoMap[boneName].id = boneCount;
+			boneCount++;
+		}
+		_animation.GetBones().push_back(Bone(channel->mNodeName.data,
+			boneInfoMap[channel->mNodeName.data].id, channel));
+	}
+}
+
+void ModelCompiler::ReadHierarchyData(AssimpNodeData& _dest, const aiNode* _src)
+{
+	E_ASSERT(_src, "Invalid node!");
+
+	_dest.name = _src->mName.data;
+	_dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(_src->mTransformation);
+	_dest.childrenCount = _src->mNumChildren;
+
+	for (unsigned int i = 0; i < _src->mNumChildren; i++)
+	{
+		AssimpNodeData newData;
+		ReadHierarchyData(newData, _src->mChildren[i]);
+		_dest.children.push_back(newData);
 	}
 }
 

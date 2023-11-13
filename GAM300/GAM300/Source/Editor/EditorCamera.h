@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Graphics/Ray3D.h"
 #include "Graphics/BaseCamera.h"
-#include "../Core/SystemInterface.h"
+#include "Core/SystemInterface.h"
 #include "Scene/Entity.h"
 #include "Core/Events.h"
 
