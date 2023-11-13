@@ -73,22 +73,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
-// Bean: A temp solution to access the shader
-// enum SHADERTYPE
-// {
-// 	HDR,
-// 	PBR,
-// 	TIR,// Temporary Instance Render
-// 	TDR,// Temporary Debug Instance Render
-// 	SKYBOX,
-// 	BASICLIGHT,
-// 	AFFECTEDLIGHT,
-// 	SHADOW,
-// 	POINTSHADOW,
-// 	UI_SCREEN,
-// 	UI_WORLD,
-// 	BLUR
-// };
 
 struct Material_instance
 {

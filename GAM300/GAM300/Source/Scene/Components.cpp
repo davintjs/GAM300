@@ -150,6 +150,7 @@ void ParticleComponent::Initialize(int numParticles, float particleLifetime, flo
 	particleEmissionRate_ = particleEmissionRate;
 	//particles_.resize(numParticles_);
 	// Initialize the position, velocity, and acceleration of each particle
+	particles_.resize(numParticles_);
 	for (int i = 0; i < numParticles_; i++) {
 		particles_[i].position = glm::vec3(0.0f);
 		particles_[i].velocity = glm::vec3(0.0f);

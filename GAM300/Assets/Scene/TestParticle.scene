@@ -1,0 +1,35 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: TestParticle
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 14989680110700367717
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1373255009547200345}  # Transform
+    - component: {fileID: 8120480805772412597}  # ParticleComponent
+---
+ID: 1373255009547200345
+Transform:
+  m_GameObject: {fileID: 14989680110700367717}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8120480805772412597
+ParticleComponent:
+  m_GameObject: {fileID: 14989680110700367717}
+  NumberOfParticles: 5
+  ParticleLifetime: 2
+  ParticleEmissionRate: 17

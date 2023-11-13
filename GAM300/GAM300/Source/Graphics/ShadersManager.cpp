@@ -103,6 +103,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/ColourPicking.vert";
 	fragmentPath = shaderPath + "/ColourPicking.frag";
 	ShaderCompiler("Colour Picking SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/InstancedParticle.vert";
+	fragmentPath = shaderPath + "/InstancedParticle.frag";
+	ShaderCompiler("Particle SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)
