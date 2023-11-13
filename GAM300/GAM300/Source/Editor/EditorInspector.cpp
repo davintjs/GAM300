@@ -1201,6 +1201,12 @@ private:
     void AddNext(Entity& entity, Scene& scene)
     {
         if constexpr (SingleComponentTypes::Has<T1>()) {
+            if (scene.Has<T1>(entity)) {
+                if (scene.Get<T1>(entity).state == DELETED) {
+                    scene.Destroy(scene.Get<T1>(entity));
+                }
+            }
+
             if (!scene.Has<T1>(entity))
             {
                
@@ -1238,6 +1244,12 @@ private:
         }
         else
         {
+            if (scene.Has<T1>(entity)) {
+                if (scene.Get<T1>(entity).state == DELETED) {
+                    scene.Destroy(scene.Get<T1>(entity));
+                }
+            }
+
             if constexpr (std::is_same_v<T1, Script>)
             {
                 GetAssetsEvent<ScriptAsset> e;

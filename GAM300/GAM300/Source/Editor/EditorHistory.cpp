@@ -148,7 +148,8 @@ bool HistoryManager::UndoChange() {
     //get most recent move
     if (!UndoStack.empty()) {
         Change undochange = UndoStack.top();
-        UndoStack.pop();
+        
+       
 
         if (undochange.type == VARIABLE) {
             property::set(*(undochange.component), undochange.property.c_str(), undochange.previousValue);

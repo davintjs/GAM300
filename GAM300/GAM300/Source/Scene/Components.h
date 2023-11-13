@@ -328,8 +328,6 @@ struct MeshRenderer : Object
 	GLuint VAO;
 	GLuint debugVAO;
 
-
-
 	// This 2 dont delete -> Future use
 	//bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
