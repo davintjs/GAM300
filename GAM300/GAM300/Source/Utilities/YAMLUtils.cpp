@@ -30,6 +30,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
 
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data)
+{
+    out << YAML::Key << "meshes" << YAML::Value << _data.meshes;
+    out << YAML::Key << "materials" << YAML::Value << _data.materials;
+    out << YAML::Key << "animations" << YAML::Value << _data.animations;
+
+    return out;
+}
+
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
     out << YAML::BeginSeq;

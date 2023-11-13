@@ -90,8 +90,6 @@ struct AllAssetsGroup
 				for (int i = 0; i < mc.meshes.size(); ++i)
 				{
 					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
 					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
 					// Assign GUID
 					Engine::HexID guid{};
@@ -108,9 +106,8 @@ struct AllAssetsGroup
 				for (int i = 0; i < mc.meshes.size(); i++)
 				{
 					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
 					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
+
 					MeshAsset& newMeshAsset = meshTable[importer.meshes[i]];
 					newMeshAsset = std::move(tmpMeshAsset);
 					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
