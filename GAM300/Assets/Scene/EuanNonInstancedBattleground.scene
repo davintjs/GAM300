@@ -180,7 +180,7 @@ LightSource:
   m_GameObject: {fileID: 4194160308159477720}
   lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 10000
+  Intensity: 100
   Direction: [0, 0, 0]
   Inner Cutoff: 30
   Outer Cutoff: 40
