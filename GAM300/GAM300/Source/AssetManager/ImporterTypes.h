@@ -16,9 +16,9 @@ property_begin_name(DefaultImporter, "") {
 
 struct ModelImporter : DefaultImporter
 {
-	std::vector<Engine::GUID<MeshAsset>> meshes;
-	std::vector<Engine::GUID<MaterialAsset>> materials;
-	std::vector<Engine::GUID<AnimationAsset>> animations;
+	std::vector<Engine::GUID<MeshAsset>> meshes{};
+	std::vector<Engine::GUID<MaterialAsset>> materials{};
+	std::vector<Engine::GUID<AnimationAsset>> animations{};
 	property_vtable();
 };
 
