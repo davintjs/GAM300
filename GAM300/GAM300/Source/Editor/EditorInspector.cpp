@@ -215,6 +215,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             }
 
             ImGui::PopStyleColor();
+            ImGui::EndChild();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
             return;
@@ -1541,6 +1542,8 @@ void EditorInspector::Init()
     IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
 }
 
+enum MODEL_STATE { MODEL, ANIMATION };
+
 void EditorInspector::Update(float dt)
 {
     UNREFERENCED_PARAMETER(dt);
@@ -1576,8 +1579,6 @@ void EditorInspector::Update(float dt)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
         
-        //auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
-
         ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -1587,6 +1588,8 @@ void EditorInspector::Update(float dt)
         ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
 
         auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
+
+        ImGui::Dummy(ImVec2(0, 10.f));
 
         if (ImGui::BeginTable("Mats", 2, tableflags))
         {
@@ -1643,18 +1646,6 @@ void EditorInspector::Update(float dt)
 
         ImGui::Separator();
 
-        //if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
-        //{
-        //    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
-        //    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-        //    MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
-        //    //Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
-        //    
-        //    Change newchange(&rend, "MeshRenderer/material");
-        //    //int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
-        //    //EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
-        //}
-
         if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
             GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
@@ -1694,6 +1685,146 @@ void EditorInspector::Update(float dt)
 
         ImGui::End();
     }
+
+    struct anim_state {
+        std::string label;
+        ImVec2 min_max; //x for min , y for max
+
+        anim_state() { label = "New state"; min_max = ImVec2(); }
+        anim_state(std::string _label, ImVec2 vec2) : label(_label), min_max(vec2) {}
+    };
+
+    if (model_inspector) {
+
+        ImGui::Begin("Model", &model_inspector);
+        ImGui::Dummy(ImVec2(0, 20.f));
+
+        ImVec2 buttonSize = { 80.f, ImGui::GetTextLineHeight() + 10.f };
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        float width = 0.0f;
+        width += buttonSize.x * 2;
+        width += style.ItemSpacing.x;
+        AlignForWidth(width);
+
+        static bool Model = true;
+
+        ImVec4 normal = ImVec4(0.6, 0.6, 0.6, 1.f);
+        ImVec4 selected = ImVec4(0.27f, 0.525f, 0.706f, 1.f);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(2, 4));
+
+        ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+            | ImGuiTableFlags_PadOuterX;
+
+
+        ImGui::PushStyleColor(ImGuiCol_Button, Model ? selected : normal); 
+        if (ImGui::Button("Model", buttonSize))
+            Model = true;
+        ImGui::SameLine();
+        ImGui::PopStyleColor();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, Model ? normal : selected);
+        if (ImGui::Button("Animation", buttonSize))
+            Model = false;
+        ImGui::PopStyleColor();
+
+        ImGui::Dummy(ImVec2(0, 10.f));
+        ImGui::Separator();
+
+        //temp values
+        static float ScaleFloat = 0;
+        static float Duration = 50;
+        static int TicksPerSec = 10;
+        static std::vector<anim_state>anim_states;
+        static bool openpopup = false;
+        if (ImGui::BeginTable("Model", 3, tableflags))
+        {
+            ImGui::Indent();
+            ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
+            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+            if (Model) {
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextColumn();
+                ImGui::Text("Model");
+                ImGui::TableNextColumn();
+                ImGui::DragFloat("##scalefloat", &ScaleFloat, 0.01f);
+            }
+            else { //Animation
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextColumn();
+                ImGui::Text("Duration");
+                ImGui::TableNextColumn();
+                ImGui::DragFloat("##Duration", &ScaleFloat, 0.01f, ImGuiInputTextFlags_ReadOnly);
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Ticks Per Second");
+                ImGui::TableNextColumn();
+                ImGui::DragInt("##tickspersec", &TicksPerSec, 0.01f, ImGuiInputTextFlags_ReadOnly);
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Animation States");
+                ImGui::TableNextColumn();
+                if (ImGui::Button("+")) {
+                    anim_states.push_back(anim_state());
+                }
+
+                for (auto& state : anim_states) {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Label"); ImGui::SameLine();
+                    ImGui::InputText("##Label", &state.label);
+                    ImGui::TableNextColumn();
+                    ImGui::InputFloat("##Min", &state.min_max.x);
+                    ImGui::TableNextColumn();
+                    ImGui::InputFloat("##Max", &state.min_max.y);
+                }
+
+                /*ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+                ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+                if (ImGui::BeginPopup("AnimationState", win_flags)) {
+                    if (ImGui::BeginTable("Model", 2, tableflags))
+                    {
+                        ImGui::Indent();
+                        ImGui::TableSetupColumn("Text", 0, 0.4f);
+                        ImGui::TableSetupColumn("Input", 0, 0.6f);
+
+                      
+                        ImGui::EndTable();
+                    }
+
+                    if (ImGui::Button("+")) {
+                        anim_states.push_back(anim_state());
+                    }
+                    ImGui::EndPopup();
+                }*/
+            }
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+
+            ImGui::Unindent();
+            ImGui::EndTable();
+        }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        
+
+        ImGui::End();
+    }
+
 
     if (isAddTagPanel) {
         AddTagPanel();

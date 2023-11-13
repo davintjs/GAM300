@@ -284,6 +284,7 @@ public:
     bool isAddLayerPanel;
 
     bool material_inspector;
+    bool model_inspector;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;
