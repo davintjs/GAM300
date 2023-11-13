@@ -138,7 +138,6 @@ void EditorSystem::Exit()
 }
 
 
-
 /**************************************************************************/
    /*!
        Implementation of the docking functionality in the Editor.

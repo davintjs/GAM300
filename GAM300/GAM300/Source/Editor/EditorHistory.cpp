@@ -332,7 +332,6 @@ void HistoryManager::AddEntityChange(Change& change) {
     if (change.action == DELETING) {
         SetStateRecursive(*change.entity, DELETED, REDO);
     }
-  
     change.type = ENTITY;
     UndoStack.push(change);
 }

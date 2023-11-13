@@ -1234,22 +1234,29 @@ private:
     template<typename T1, typename... T1s>
     void AddNext(Entity& entity, Scene& scene)
     {
-        if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (scene.Has<T1>(entity)) {
-                if (scene.Get<T1>(entity).state == DELETED) {
-                    scene.Destroy(scene.Get<T1>(entity));
-                }
-            }
+        bool old_component = false;
 
-            if (!scene.Has<T1>(entity))
+        if (scene.Has<T1>(entity)) {
+            if (scene.Get<T1>(entity).state == DELETED) {
+                  old_component = true;
+            }
+        }
+
+        if constexpr (SingleComponentTypes::Has<T1>()) {
+           
+            if (!scene.Has<T1>(entity) || old_component)
             {
                
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    T1* pObject =  scene.Add<T1>(entity);                   
+                    if (old_component)
+                        scene.Destroy(scene.Get<T1>(entity));
+
+                    T1* pObject =  scene.Add<T1>(entity);    
 
                     if constexpr (std::is_same<T1, BoxCollider>())
                     {
+
                         geometryDebugData temp;
                         if (scene.Has<MeshRenderer>(entity))
                         {
@@ -1278,12 +1285,6 @@ private:
         }
         else
         {
-            if (scene.Has<T1>(entity)) {
-                if (scene.Get<T1>(entity).state == DELETED) {
-                    scene.Destroy(scene.Get<T1>(entity));
-                }
-            }
-
             if constexpr (std::is_same_v<T1, Script>)
             {
                 GetAssetsEvent<ScriptAsset> e;
@@ -1292,7 +1293,10 @@ private:
                 for (auto& pair : *e.pAssets)
                 {
                     if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
-                    {                      
+                    {        
+                        if (old_component)
+                            scene.Destroy(scene.Get<T1>(entity));
+
                         T1* comp = scene.Add<T1>(entity, pair.first);
                         Change newchange(comp);
                         newchange.action = CREATING;
@@ -1305,6 +1309,9 @@ private:
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
+                    if (old_component)
+                        scene.Destroy(scene.Get<T1>(entity));
+
                     T1* comp = scene.Add<T1>(entity);
                     Change newchange(comp);
                     newchange.action = CREATING;
