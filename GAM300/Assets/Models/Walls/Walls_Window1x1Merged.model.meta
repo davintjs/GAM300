@@ -1,5 +1,6 @@
+guid: 8c940d4068e89190de0bba9cb8e622e8
 meshes:
-  data: 300f563e1eac9417a2ccbff85bf3e08e
-  data: cbe97ab2fa585a467717313d6bd24774
-  data: 390baf518317f16de85d9aa660e59dbc
-  data: 3de927a06a4e88c6ba80a8c935de8f90
+  data: {guid: 1cd16dfabeeb4fdedeb27de6c7a96f9d}
+  data: {guid: d1f80a2579fb879a923e9946ee311304}
+  data: {guid: abaed2ed0e6b75022caff8aec7705f53}
+  data: {guid: 849cd9aae9e206aed502e696a686f94e}
