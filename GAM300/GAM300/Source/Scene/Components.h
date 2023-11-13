@@ -300,7 +300,6 @@ struct MeshRenderer : Object
 	//Material_instance* materialInstance;
 
 	Engine::GUID meshID{ DEFAULT_MESH };
-	int animatorID = 0;
 	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
 	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
 	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
@@ -342,7 +341,6 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(meshID).Name("Mesh"),
-	property_var(animatorID).Name("Animator"),
 	property_var(materialGUID).Name("Material_ID"),
 	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
 	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),

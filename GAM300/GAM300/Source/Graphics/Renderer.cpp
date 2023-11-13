@@ -97,20 +97,20 @@ void Renderer::Update(float)
 
 	int i = 0;
 
-	static std::map<int, Engine::UUID> animatorRef;
-	int j = 1;
-	for (Animator& animator: currentScene.GetArray<Animator>())
-	{
-		// No material instance, then just go next
-		if (animator.state == DELETED) continue;
+	//static std::map<int, Engine::UUID> animatorRef;
+	//int j = 1;
+	//for (Animator& animator: currentScene.GetArray<Animator>())
+	//{
+	//	// No material instance, then just go next
+	//	if (animator.state == DELETED) continue;
 
-		if (!currentScene.IsActive(animator)) continue;
+	//	if (!currentScene.IsActive(animator)) continue;
 
-		//PRINT("Animator Id: ", animator.UUID(), " with index ", j, "\n");
-		animatorRef[j++] = animator.UUID();
+	//	//PRINT("Animator Id: ", animator.UUID(), " with index ", j, "\n");
+	//	animatorRef[j++] = animator.UUID();
 
-		finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
-	}
+	//	finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
+	//}
 
 	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
 	{
@@ -162,27 +162,16 @@ void Renderer::Update(float)
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
 
-			if (renderer.animatorID > 0 && !animatorRef.empty() && renderer.animatorID < animatorRef.size())
+			if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
 			{
-				Animator& animator = currentScene.GetByUUID<Animator>(animatorRef[renderer.animatorID]);
-				
+				Animator& animator = currentScene.Get<Animator>(entity);
 				if (animator.AnimationAttached())
 				{
 					renderProperties.isAnimatable = true;
-					renderProperties.boneidx = (int)finalBoneMatContainer.size() - 1;
+					renderProperties.boneidx = (int)finalBoneMatContainer.size();
+					finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
 				}
 			}
-
-			//if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
-			//{
-			//	Animator& animator = currentScene.Get<Animator>(entity);
-			//	if (animator.AnimationAttached())
-			//	{
-			//		renderProperties.isAnimatable = true;
-			//		renderProperties.boneidx = (int)finalBoneMatContainer.size();
-			//		finalBoneMatContainer.push_back(animator.GetFinalBoneMatricesPointer());
-			//	}
-			//}
 
 			// Debug Draw, consult team / UX on thursday
 			if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
