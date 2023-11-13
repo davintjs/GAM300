@@ -159,10 +159,7 @@ void Renderer::Update(float)
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
 
-			//if (currentScene.Has<Animator>(entity)/*!t_Mesh->no bones */)  //if have bones, animator & animation attached
-			//{
-			/*}
-			else */if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
+			if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
 			{
 				Entity& parententity = currentScene.Get<Entity>(transform.parent);
 				if (currentScene.Has<Animator>(parententity))
