@@ -31,6 +31,7 @@ void MeshManager::Init()
     
     CreateInstanceLine();
     CreateInstanceSegment3D();
+
 }
 
 MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID& meshID)

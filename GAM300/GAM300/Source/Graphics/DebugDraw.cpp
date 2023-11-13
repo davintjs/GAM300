@@ -180,11 +180,9 @@ void DebugDraw::Draw()
 
 		}
 
-	shader.UnUse();
+		shader.UnUse();
 	
-	glLineWidth(1.f);
-	prop.iter = 0;
-
+		prop.iter = 0;
 
 	}
 
@@ -205,16 +203,16 @@ void DebugDraw::Draw()
 		GLint uniform4 =
 			glGetUniformLocation(shader.GetHandle(), "SRT");
 
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 1.f, 0.f)));
 
 		for (int i = 0; i < boxColliderContainer.size(); ++i)
 		{
 			RigidDebug currRD = boxColliderContainer[i];
 			
-			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-				glm::value_ptr(EditorCam.GetProjMatrix()));
-			glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-				glm::value_ptr(EditorCam.GetViewMatrix()));
-			glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 1.f, 0.f)));
 			//glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(175.f / 255.f, 225.f / 255.f, 175.f / 255.f)));
 
 
@@ -229,7 +227,46 @@ void DebugDraw::Draw()
 		shader.UnUse();
 
 	}
+
+	if(LIGHTING.pointLightCount)
+	{
+
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::FORWARDDEBUG);
+		shader.Use();
+
+		// UNIFORM VARIABLES ----------------------------------------		
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uniform2 =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		GLint uniform3 =
+			glGetUniformLocation(shader.GetHandle(), "uColor");
+		GLint uniform4 =
+			glGetUniformLocation(shader.GetHandle(), "SRT");
+
+
+		auto pointLights = LIGHTING.GetPointLights();
+		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		{
+			// I need to make a SRT here regarding the light's stuff
+			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);
+			glm::mat4 scalar = glm::scale(glm::mat4(1.f), glm::vec3(pointLights[i].intensity/10.f));
+			
+
+			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(translation * scalar));
+			Mesh* Sphere = MESHMANAGER.DereferencingMesh(DEFAULT_ASSETS["Sphere.geom"]);
+
+			glBindVertexArray(Sphere->vaoID);
+			glDrawElements(GL_LINES, Sphere->drawCounts, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+
+		}
+		shader.UnUse();
+
+	}
 	glLineWidth(1.f);
+
+
 
 }
 
