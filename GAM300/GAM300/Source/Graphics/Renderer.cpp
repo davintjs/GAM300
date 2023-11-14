@@ -315,7 +315,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
 		shader.Use();
 
-		std::cout << "we in here\n";
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);

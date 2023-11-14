@@ -42,16 +42,25 @@ void DebugDraw::Update(float)
 	auto& rbArray = scene.GetArray<Rigidbody>();
 
 	auto& bcArray = scene.GetArray<BoxCollider>();
-
+	//std::cout << "the array size is : " << bcArray.size() << "\n";
+	int index = 0;
 	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
 	{
 		BoxCollider& bc = *it;
 
-		if (bc.state == DELETED) continue;
+		if (bc.state == DELETED)
+		{
+			//std::cout << "THIS IS THE DELETED ONE : " <<  "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
+
+			continue;
+		}
+		++index;
+		//std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
 
+		
 
 		/*geometryDebugData temp;
 		if (scene.Has<MeshRenderer>(entity))
@@ -102,7 +111,7 @@ void DebugDraw::Update(float)
 
 		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
 		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
-
+		//std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
 		SRT *= transMat * scalarMat;
 
 		currRigidDebug.SRT = SRT;
