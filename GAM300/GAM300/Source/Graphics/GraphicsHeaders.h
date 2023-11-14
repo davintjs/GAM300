@@ -10,26 +10,24 @@
 	This file contains the declaration of Graphics System that includes:
 	1. 
 
-All content � 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef GRAPHICSHEADERS_H
 #define GRAPHICSHEADERS_H
 
-#include <glm/gtc/type_ptr.hpp>
-
-#include "Core/SystemInterface.h"
-#include "GraphicStructsAndClass.h"
-#include "BaseCamera.h"
-
 #include "glslshader.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <filesystem>
 
-#include "Utilities/GUID.h"
-
-#include "Model3d.h"
-//#include "glslshader.h"
+#include "GraphicStructsAndClass.h"
+#include "BaseCamera.h"
 #include "GBuffer.h"
+#include "Model3d.h"
 
+#include "Core/SystemInterface.h"
+#include "Core/Events.h"
+#include "Utilities/GUID.h"
+#include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
 
@@ -42,8 +40,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define MATERIALSYSTEM MaterialSystem::Instance()
 
 class Ray3D;
-class RaycastLine;
-class SkyBox;
 
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
@@ -74,22 +70,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
-// Bean: A temp solution to access the shader
-// enum SHADERTYPE
-// {
-// 	HDR,
-// 	PBR,
-// 	TIR,// Temporary Instance Render
-// 	TDR,// Temporary Debug Instance Render
-// 	SKYBOX,
-// 	BASICLIGHT,
-// 	AFFECTEDLIGHT,
-// 	SHADOW,
-// 	POINTSHADOW,
-// 	UI_SCREEN,
-// 	UI_WORLD,
-// 	BLUR
-// };
 
 struct RigidDebug
 {
@@ -345,6 +325,10 @@ public:
 	std::vector<LightProperties>& GetPointLights() { return pointLightSources; }
 	std::vector<LightProperties>& GetDirectionLights() { return directionLightSources; }
 	std::vector<LightProperties>& GetSpotLights() { return spotLightSources; }
+
+	unsigned int pointLightCount;
+	unsigned int directionalLightCount;
+	unsigned int spotLightCount;
 
 private:
 	LightProperties lightingSource;

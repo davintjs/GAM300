@@ -22,6 +22,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define EDITOR EditorSystem::Instance()
 
+void AlignForWidth(float width, float alignment = 0.5f);
+
 struct Entity;
 ENGINE_SYSTEM(EditorSystem)
 {

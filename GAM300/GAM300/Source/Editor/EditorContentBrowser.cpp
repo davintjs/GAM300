@@ -15,6 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Editor.h"
 #include "EditorHeaders.h"
+#include "Graphics/GraphicsHeaders.h"
 #include "Graphics/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Core/EventsManager.h"
@@ -179,7 +180,7 @@ void EditorContentBrowser::Update(float dt)
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
 
-            //Open Scene file
+            //Open material inspector
             if ((path.string().find(".material") != std::string::npos)) {
                 //Open scene file logic here
                 GetAssetEvent e{ path };
@@ -187,6 +188,13 @@ void EditorContentBrowser::Update(float dt)
                 selectedAss = e.guid;
                 EditorInspector::Instance().material_inspector = true;
                 ImGui::SetWindowFocus("Material");
+            }
+
+            //Open model inspector
+            if ((path.string().find(".model") != std::string::npos)) {
+                //Open scene file logic here
+                EditorInspector::Instance().model_inspector = true;
+                ImGui::SetWindowFocus("Model");
             }
         }
     

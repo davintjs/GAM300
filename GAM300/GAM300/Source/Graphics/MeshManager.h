@@ -19,14 +19,13 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "glslshader.h"
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
-#include "AnimationManager.h"
+
+#include "GraphicStructsAndClass.h"
+
 #include "TextureManager.h"
 
-#include "../../Compiler/Mesh.h"
 
 #include "Model3d.h"
-
-#define MAX_BONE_INFLUENCE 4
 
 struct InstanceProperties;
 struct DefaultRenderProperties;
@@ -84,7 +83,7 @@ public:
 
 	//Handle mesh removal here
 	void CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent);
-	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO> ... for now not guid, use meshname instead
+	std::unordered_map<Engine::GUID, GLuint> vaoMap; // <GUID, VAO>
 	std::unordered_map<Engine::GUID, Mesh> mContainer;
 	InstanceContainer* instanceProperties;
 	//std::vector<InstanceContainer>* instanceContainers; // subscript represents shadertype

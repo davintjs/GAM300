@@ -253,8 +253,6 @@ struct EditorWindowEvent : IEvent
 	std::string name;
 };
 
-
-
 struct EditorPanCameraEvent : IEvent
 {
 	EditorPanCameraEvent(const bool& _pan) : isPanning{ _pan } {}

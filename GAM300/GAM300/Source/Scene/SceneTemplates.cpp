@@ -480,6 +480,7 @@ T* Scene::Add
 		ObjectCreatedEvent e = { object };
 		EVENTS.Publish(&e);
 	}
+	object->state = NORMAL;
 	return object;
 }
 

@@ -28,7 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "PropertyConfig.h"
 #include "Utilities/ThreadPool.h"
 #include "Scene/Identifiers.h"
-#include "Graphics/GraphicsSystem.h"
+#include "Graphics/GraphicsHeaders.h"
 #include "PropertyConfig.h"
 #include "Utilities/Serializer.h"
 
@@ -215,6 +215,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
             }
 
             ImGui::PopStyleColor();
+            ImGui::EndChild();
             ImGui::EndPopup();
             ImGui::CloseCurrentPopup();
             return;
@@ -294,6 +295,41 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
                 //render file name below icon
                 ImGui::NextColumn();
                 
+            }
+        }
+        else if(extension == ".anim")
+            //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+        {
+            // Bean: Put this publish event in the open popup in the future
+            GetAssetsEvent<AnimationAsset> e2;
+            EVENTS.Publish(&e2);
+            fs::path icon = "Assets/Icons/fileicon.dds";
+            auto iconID = GET_TEXTURE_ID(icon);
+
+            for (auto& animAsset : *e2.pAssets)
+            {
+                std::string path = animAsset.second.mFilePath.stem().string().c_str();
+
+                if (!filter.PassFilter(path.c_str()))
+                    continue;
+
+                //render respective file icon textures
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+                ImGui::PushID(i++);
+                ImTextureID textureID = (ImTextureID)iconID;
+                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+                {
+                    Engine::GUID currentGUID = animAsset.first;
+                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+
+                }
+                ImGui::PopID();
+                ImGui::PopStyleColor();
+                ImGui::TextWrapped(path.c_str());
+
+                //render file name below icon
+                ImGui::NextColumn();
+
             }
         }
         else
@@ -985,6 +1021,10 @@ void DisplayComponent(Script& script)
 
 //Display all available light types inside the system for user to choose
 void DisplayLightProperties(LightSource& source) {
+
+    Change enableshadow(&source, "LightSource/EnableShadow");
+    Display<bool>(enableshadow, "Enable Shadow", source.enableShadow);
+
     Change lighttypes(&source, "LightSource/lightType");
     DisplayLightTypes(lighttypes, source.lightType);
     
@@ -1199,16 +1239,29 @@ private:
     template<typename T1, typename... T1s>
     void AddNext(Entity& entity, Scene& scene)
     {
+        bool old_component = false;
+
+        if (scene.Has<T1>(entity)) {
+            if (scene.Get<T1>(entity).state == DELETED) {
+                  old_component = true;
+            }
+        }
+
         if constexpr (SingleComponentTypes::Has<T1>()) {
-            if (!scene.Has<T1>(entity))
+           
+            if (!scene.Has<T1>(entity) || old_component)
             {
                
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
-                    T1* pObject =  scene.Add<T1>(entity);                   
+                    if (old_component)
+                        scene.Destroy(scene.Get<T1>(entity));
+
+                    T1* pObject =  scene.Add<T1>(entity);    
 
                     if constexpr (std::is_same<T1, BoxCollider>())
                     {
+
                         geometryDebugData temp;
                         if (scene.Has<MeshRenderer>(entity))
                         {
@@ -1245,7 +1298,10 @@ private:
                 for (auto& pair : *e.pAssets)
                 {
                     if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
-                    {                      
+                    {        
+                        if (old_component)
+                            scene.Destroy(scene.Get<T1>(entity));
+
                         T1* comp = scene.Add<T1>(entity, pair.first);
                         Change newchange(comp);
                         newchange.action = CREATING;
@@ -1258,6 +1314,9 @@ private:
             {
                 if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                 {
+                    if (old_component)
+                        scene.Destroy(scene.Get<T1>(entity));
+
                     T1* comp = scene.Add<T1>(entity);
                     Change newchange(comp);
                     newchange.action = CREATING;
@@ -1541,6 +1600,8 @@ void EditorInspector::Init()
     IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
 }
 
+enum MODEL_STATE { MODEL, ANIMATION };
+
 void EditorInspector::Update(float dt)
 {
     UNREFERENCED_PARAMETER(dt);
@@ -1576,8 +1637,6 @@ void EditorInspector::Update(float dt)
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
         
-        //auto& material = MATERIALSYSTEM._material[SHADERTYPE::PBR][mat_id];
-
         ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
@@ -1587,6 +1646,8 @@ void EditorInspector::Update(float dt)
         ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
 
         auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
+
+        ImGui::Dummy(ImVec2(0, 10.f));
 
         if (ImGui::BeginTable("Mats", 2, tableflags))
         {
@@ -1643,18 +1704,6 @@ void EditorInspector::Update(float dt)
 
         ImGui::Separator();
 
-        //if (CENTERED_CONTROL(ImGui::Button("Duplicate Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
-        //{
-        //    Engine::UUID curr_index = EditorHierarchy::Instance().selectedEntity;
-        //    Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-        //    MeshRenderer& rend = curr_scene.Get<MeshRenderer>(curr_index);
-        //    //Material_instance& new_mat = MATERIALSYSTEM.DuplicateMaterial(material);
-        //    
-        //    Change newchange(&rend, "MeshRenderer/material");
-        //    //int new_id = (int)MATERIALSYSTEM._material[SHADERTYPE::PBR].size()-1;
-        //    //EDITOR.History.SetPropertyValue(newchange, rend.material, new_id);
-        //}
-
         if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
             GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
@@ -1694,6 +1743,135 @@ void EditorInspector::Update(float dt)
 
         ImGui::End();
     }
+
+    struct anim_state {
+        std::string label;
+        ImVec2 min_max; //x for min , y for max
+
+        anim_state() { label = "New state"; min_max = ImVec2(); }
+        anim_state(std::string _label, ImVec2 vec2) : label(_label), min_max(vec2) {}
+    };
+
+    if (model_inspector) {
+
+        ImGui::Begin("Model", &model_inspector);
+        ImGui::Dummy(ImVec2(0, 20.f));
+
+        ImVec2 buttonSize = { 80.f, ImGui::GetTextLineHeight() + 10.f };
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        float width = 0.0f;
+        width += buttonSize.x * 2;
+        width += style.ItemSpacing.x;
+        AlignForWidth(width);
+
+        static bool Model = true;
+
+        ImVec4 normal = ImVec4(0.6, 0.6, 0.6, 1.f);
+        ImVec4 selected = ImVec4(0.27f, 0.525f, 0.706f, 1.f);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(2, 4));
+
+        ImGuiWindowFlags tableflags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+            | ImGuiTableFlags_PadOuterX;
+
+
+        ImGui::PushStyleColor(ImGuiCol_Button, Model ? selected : normal); 
+        if (ImGui::Button("Model", buttonSize))
+            Model = true;
+        ImGui::SameLine();
+        ImGui::PopStyleColor();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, Model ? normal : selected);
+        if (ImGui::Button("Animation", buttonSize))
+            Model = false;
+        ImGui::PopStyleColor();
+
+        ImGui::Dummy(ImVec2(0, 10.f));
+        ImGui::Separator();
+
+        //temp values
+        static int ScaleFloat = 0;
+        static int Duration = 50;
+        static int TicksPerSec = 10;
+        static std::vector<anim_state>anim_states;
+        static bool openpopup = false;
+        if (ImGui::BeginTable("Model", 3, tableflags))
+        {
+            ImGui::Indent();
+            ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
+            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+            if (Model) {
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextColumn();
+                ImGui::Text("Scale Factor");
+                ImGui::TableNextColumn();
+                ImGui::DragInt("##scalefloat", &ScaleFloat, 0.01f);
+            }
+            else { //Animation
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextColumn();
+                ImGui::Text("Duration");
+                ImGui::TableNextColumn();
+                std::string duration = std::to_string(Duration);
+                ImGui::Text(duration.c_str());
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Ticks Per Second");
+                ImGui::TableNextColumn();
+                //ImGui::InputInt("##tickspersec", &TicksPerSec, ImGuiInputTextFlags_ReadOnly);
+                std::string tickspersecond = std::to_string(TicksPerSec);
+                ImGui::Text(tickspersecond.c_str());
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Text("Animation States");
+                ImGui::TableNextColumn();
+                if (ImGui::Button("+")) {
+                    anim_states.push_back(anim_state());
+                }
+
+                int i = 0;
+                for (auto& state : anim_states) {
+                    ImGui::PushID(i++);
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Label"); ImGui::SameLine();
+                    ImGui::InputText("##Label", &state.label);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Min"); ImGui::SameLine();
+                    ImGui::InputFloat("##Min", &state.min_max.x);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Max"); ImGui::SameLine();
+                    ImGui::InputFloat("##Max", &state.min_max.y);
+                    ImGui::PopID();
+                }
+            }
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+
+            ImGui::Unindent();
+            ImGui::EndTable();
+        }
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        
+
+        ImGui::End();
+    }
+
 
     if (isAddTagPanel) {
         AddTagPanel();

@@ -17,9 +17,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "ModelDecompiler.h"
 
-ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
+ModelAsset ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
 {
-    ModelComponents tempModel;
+    ModelAsset tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
 
     // Retrieve mesh assets
@@ -42,7 +42,7 @@ ModelComponents ModelDecompiler::DeserializeModel(const std::string& _filePath, 
     return tempModel;
 }
 
-void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelAsset& _model)
 {
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
@@ -123,7 +123,7 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelComponents& _mo
     }
 }
 
-void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelAsset& _model)
 {
     size_t matSize;
     ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
@@ -148,29 +148,29 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelComponents& 
     }
 }
 
-void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelAsset& _model)
 {
 
 }
 
-void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents& _model)
+void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelAsset& _model)
 {
     //size_t animationSize = pModel->animations.GetAnimations().size();
     size_t animationSize;
     ifs.read(reinterpret_cast<char*>(&animationSize), sizeof(animationSize));
-    Animation animation;
+    AnimationAsset animation;
 
-    ifs.read(reinterpret_cast<char*>(&animation.GetDuration()), sizeof(animation.GetDuration()));
-    ifs.read(reinterpret_cast<char*>(&animation.GetTicksPerSecond()), sizeof(animation.GetTicksPerSecond()));
+    ifs.read(reinterpret_cast<char*>(&animation.duration), sizeof(animation.duration));
+    ifs.read(reinterpret_cast<char*>(&animation.ticksPerSecond), sizeof(animation.ticksPerSecond));
 
     // Bones
     size_t boneSize;
     ifs.read(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
-    animation.GetBones().resize(boneSize);
+    animation.bones.resize(boneSize);
 
     for (size_t i = 0; i < boneSize; i++)
     {
-        Bone& bone = animation.GetBones()[i];
+        Bone& bone = animation.bones[i];
         // Position
         ifs.read(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));
         bone.m_Positions.resize(bone.m_NumPositions);
@@ -200,8 +200,8 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
     }
 
     // AssimpNodeData
-    AssimpNodeData& nodeData = animation.GetRootNode();
-    DeserializeRecursiveNode(ifs, _model, nodeData);
+    AssimpNodeData& nodeData = animation.rootNode;
+    DeserializeRecursiveNode(ifs, nodeData);
 
     // Bone Info Map
     size_t boneInfoSize = 0;
@@ -220,29 +220,31 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelComponents&
         BoneInfo boneInfo;
         ifs.read(reinterpret_cast<char*>(&boneInfo), sizeof(boneInfo));
 
-        animation.GetBoneInfoMap()[key] = boneInfo;
+        animation.boneInfoMap[key] = boneInfo;
     }
 
-    ifs.read(reinterpret_cast<char*>(&animation.GetBoneCount()), sizeof(animation.GetBoneCount()));
+    ifs.read(reinterpret_cast<char*>(&animation.boneCounter), sizeof(animation.boneCounter));
     _model.animations.push_back(animation);
 }
 
-void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, ModelComponents& _model, AssimpNodeData& _node)
+void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, AssimpNodeData& _node)
 {
     ifs.read(reinterpret_cast<char*>(&_node.transformation), sizeof(glm::mat4)); // Transformation
 
     size_t nameSize;
     ifs.read(reinterpret_cast<char*>(&nameSize), sizeof(nameSize));
     std::string name;
+    //_node.name.resize(nameSize);
     name.resize(nameSize);
     ifs.read(reinterpret_cast<char*>(&name[0]), nameSize * sizeof(char)); // Name of Node
+    _node.name = name;
 
     ifs.read(reinterpret_cast<char*>(&_node.childrenCount), sizeof(_node.childrenCount)); // Num of children
 
     _node.children.resize(_node.childrenCount);
     for (size_t i = 0; i < _node.childrenCount; i++)
     {
-        DeserializeRecursiveNode(ifs, _model, _node.children[i]);
+        DeserializeRecursiveNode(ifs, _node.children[i]);
     }
 }
 
