@@ -261,8 +261,7 @@ void EditorScene::DisplayGizmos()
 
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
-            //Tag& tag = currentScene.Get<Tag>(entity);
-            //PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
+            
             
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
@@ -270,8 +269,23 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_min;
-            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_max;
+
+            glm::vec3 mins = scale, maxs = scale;
+
+            Mesh* mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
+            if (mesh)
+            {
+                mins *= mesh->vertices_min;
+                maxs *= mesh->vertices_max;
+            }
+            else
+            {
+                Tag& tag = currentScene.Get<Tag>(entity);
+                std::string error;
+                error = "ERROR: " + tag.name + " has guid " + renderer.meshID.ToHexString() + " that does not exist! Reassign the mesh!\n";
+                E_ASSERT(false, error);
+            }
+            
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 

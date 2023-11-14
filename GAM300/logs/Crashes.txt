@@ -1,5 +1,6 @@
-[2023-11-14 21:03:09.851] [Error] [critical] 
-Caused By:	!pEvent->asset.mFilePath.empty()
-Info:		You cannot add a sub asset of empty filepath
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\AssetManager\AssetManager.cpp (Line: 238)
+[2023-11-14 21:40:16.658] [Error] [critical] 
+Caused By:	false
+Info:		ERROR: PlayerModel has guid: f78435a0fc7c773ceedfd53d911a8c45 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 286)
 

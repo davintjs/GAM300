@@ -11181,7 +11181,7 @@ ID: 16053201082888979688
 MeshRenderer:
   m_GameObject: {fileID: 10891217110292907463}
   IsInstance: true
-  Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
+  Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
   Material_ID: {guid: 000000000000000000000000000000c8}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -11887,7 +11887,7 @@ ID: 15256556308041781131
 MeshRenderer:
   m_GameObject: {fileID: 5401300559759663398}
   IsInstance: true
-  Mesh: {guid: ec56c0d5da872d55b7ab1b0a7e0f089e}
+  Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
   Material_ID: {guid: 050cb738bcb263b80153a8138c5db4b2}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
