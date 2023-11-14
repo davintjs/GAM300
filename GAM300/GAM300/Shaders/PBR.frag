@@ -26,6 +26,7 @@ struct PointLight
     vec3 position;
     vec3 colour;
     float intensity;
+    bool enableShadow;
 };
 
 struct DirectionalLight
@@ -34,7 +35,7 @@ struct DirectionalLight
     vec3 colour;
     float intensity;
     mat4 lightSpaceMatrix;
-
+    bool enableShadow;
 };
 
 struct SpotLight
@@ -46,7 +47,7 @@ struct SpotLight
     float outerCutOff;
     float intensity;
     mat4 lightSpaceMatrix;
-
+    bool enableShadow;
 };
 
 //-------------------------
@@ -412,7 +413,8 @@ void main()
         float NdotL = max(dot(N, L), 0.0);        
 //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 //        float shadow = ShadowCalculation_Point(pointLights[i].position); 
-        float shadow = renderShadow ? ShadowCalculation_Point(pointLights[i].position,i) : 0.0; // add a shadows bool
+        bool shadows = pointLights[i].enableShadow && renderShadow;
+        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position,i) : 0.0; // add a shadows bool
         Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 
 
@@ -486,9 +488,10 @@ void main()
         float NdotL = max(dot(N, L), 0.0);   
 
 
+        bool shadows = directionalLights[i].enableShadow && renderShadow;
 
 //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-        float shadow = renderShadow ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance,index) : 0.0; // add a shadows bool
+        float shadow = shadows ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance,index) : 0.0; // add a shadows bool
 
         
         
@@ -567,9 +570,10 @@ void main()
             float NdotL = max(dot(N, L), 0.0);        
         
         
-        
+            bool shadows = spotLights[i].enableShadow && renderShadow;
+
     //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-            float shadow = renderShadow ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,index) : 0.0; // add a shadows bool
+            float shadow = shadows ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,index) : 0.0; // add a shadows bool
 
         
         
