@@ -75,8 +75,9 @@ void main()
             }
             vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aVertexPosition,1.0f);
             totalPosition += localPosition * weights[i];
-       }
+        }
 
+        totalPosition.w = 1.0f;
 	    WorldPos = vec3(SRT * totalPosition);
     }
     else
