@@ -325,7 +325,7 @@ void MeshManager::CreateInstanceCube()
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, cubeGUID, tempProp);
-    ADD_SUB_ASSET(,cubeGUID);
+    //ADD_SUB_ASSET(,cubeGUID);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
