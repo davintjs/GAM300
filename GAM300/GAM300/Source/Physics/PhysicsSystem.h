@@ -217,6 +217,9 @@ public:
 	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
 
+	void DeleteBody(PhysicsComponent& bid);
+	void DeleteBody(UINT32 bid);
+
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
 	const unsigned int maxObjectPairs =					1024;

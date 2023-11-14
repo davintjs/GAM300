@@ -86,8 +86,10 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp;
 		Vector3 translation = t.GetTranslation();
+		if (scene.Has<BoxCollider>(entity))
+			translation = translation.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
 		GlmVec3ToJoltVec3(translation, tmp);
-		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
+		//bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
 
 		JPH::Quat tmpQuat;
 		Vector3 rotation = t.GetRotation();
@@ -150,6 +152,7 @@ void PhysicsSystem::Update(float dt) {
 			
 			PrePhysicsUpdate(dt);
 			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
+			step++;
 
 		}
 	}
@@ -339,6 +342,12 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	}
 
 	UpdateGameObjects();
+
+
+	//if (step > 250)
+	//	DeleteBody(ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber());
+
+
 }
 
 void PhysicsSystem::ResolveCharacterMovement() {
@@ -442,6 +451,7 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
 	//std::cout << "Physics System scene stop test\n";
+	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
 	// Clean up any characters
 	for (JPH::Ref<JPH::Character> r : characters) {
@@ -453,10 +463,11 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 
 	}
 	characters.clear();
+	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+
 
 	// Delete the current physics system, must set to nullptr
 	if (physicsSystem) {
-		//ccTest->mCharacter->RemoveFromPhysicsSystem();
 		delete ccTest;
 		ccTest = nullptr;
 		delete physicsSystem;
@@ -647,8 +658,11 @@ void PhysicsSystem::UpdateGameObjects() {
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(tmpBID);
 		JoltVec3ToGlmVec3(tmp, tmpVec);	
-		t.translation = tmpVec;
+		if (scene.Has<BoxCollider>(entity)) {
+			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3());
 
+		}
+		//t.translation = tmpVec;
 
 		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);
 		JoltQuatToGlmVec3(tmpQuat, tmpVec);
@@ -753,6 +767,82 @@ void PhysicsSystem::TestRun() {
 
 	//PopulatePhysicsWorld();
 }
+
+void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
+	if (!physicsSystem)
+		return;
+
+	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+
+	if (pc.componentType == PhysicsComponent::Type::cc) {
+
+		if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
+			ccTest->mCharacter->RemoveFromPhysicsSystem();
+			ccTest->mCharacter = nullptr;
+			PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+
+			return;
+		}
+
+
+
+		for (JPH::Ref<JPH::Character> r : characters) {
+			if (r->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
+
+				r->RemoveFromPhysicsSystem();
+				PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+
+				return;
+			}
+
+		}
+	}
+	else {
+
+		bodyInterface->RemoveBody(JPH::BodyID(pc.bid));
+
+	}
+
+	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+
+
+}
+void PhysicsSystem::DeleteBody(UINT32 bid) {
+
+	if (!physicsSystem)
+		return;
+
+	std::cout << "Deleting Body!\n";
+	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+
+	if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == bid) {
+		ccTest->mCharacter->RemoveFromPhysicsSystem();
+		bodyInterface->DestroyBody(ccTest->mCharacter->GetBodyID());
+		ccTest->mCharacter = nullptr;
+
+		std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+
+		return;
+	}
+
+
+	for (JPH::Ref<JPH::Character> r : characters) {
+		if (r->GetBodyID().GetIndexAndSequenceNumber() == bid) {
+
+			r->RemoveFromPhysicsSystem();
+			PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+
+			return;
+		}
+
+	}
+	
+
+	bodyInterface->RemoveBody(JPH::BodyID(bid));
+	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+}
+
+
 
 // Create and add a Jolt Character to a Jolt physics system using a character controller
 void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, PhysicsSystem* enginePSystem) {

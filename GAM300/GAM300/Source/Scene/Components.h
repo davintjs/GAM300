@@ -221,6 +221,8 @@ struct PhysicsComponent : Object
 	UINT32 bid{ 0 };					// Jolt Body ID
 	Type componentType{ rb };
 
+	~PhysicsComponent();
+
 };
 
 struct Rigidbody : PhysicsComponent
