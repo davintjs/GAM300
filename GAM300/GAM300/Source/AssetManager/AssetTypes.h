@@ -14,7 +14,7 @@
 #define ASSET_LINE 3
 #define ASSET_SEG3D 4
 
-#define ADD_SUB_ASSET(asset,GUID) AddSubAssetEvent sbae{asset,GUID}; EVENTS.Publish(sbae)
+#define ADD_SUB_ASSET(asset,guid) AddSubAssetEvent sbae{asset,guid}; EVENTS.Publish(&sbae)
 
 struct DefaultImporter;
 

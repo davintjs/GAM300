@@ -189,7 +189,7 @@ void MeshManager::AddMesh(const MeshAsset& _meshAsset, const Engine::GUID<MeshAs
 
 void MeshManager::CreateInstanceCube()
 {
-
+    // Create the default mesh
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
 
@@ -258,24 +258,33 @@ void MeshManager::CreateInstanceCube()
         22, 23, 20
     };
 
-    // Bean: For Nav Mesh, should change to actual default mesh asset
-    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, -0.5f });
-    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, -0.5f });
-    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { 0.5f, 0.5f, 0.5f });
-    //StoreMeshVertex(DEFAULT_ASSETS["Cube.geom"], { -0.5f, 0.5f, 0.5f });
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 1);
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 2);
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 3);
-    //StoreMeshIndex (DEFAULT_ASSETS["Cube.geom"], 0);
-
     newMesh.vertices_min = glm::vec3(-0.5f, -0.5f, -0.5f);
     newMesh.vertices_max = glm::vec3(0.5f, 0.5f, 0.5f);
 
-    // first, configure the cube's VAO (and VBO)
-    //unsigned int VBO, cubeVAO;
+    MeshAsset meshAsset;
+    ModelVertex vertex;
+    for (size_t i = 0; i < 24 * 11; i += 11)
+    {
+        vertex.position = glm::vec3(vertices[i], vertices[i + 1], vertices[i + 2]);
+        vertex.normal = glm::vec3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+        vertex.tangent = glm::vec3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
+        vertex.textureCords = glm::vec2(vertices[i + 9], vertices[i + 10]);
 
+        meshAsset.vertices.push_back(vertex);
+    }
+
+    for (size_t i = 0; i < 12 * 3; i++)
+    {
+        meshAsset.indices.push_back(indices[i]);
+    }
+
+    meshAsset.boundsMin = newMesh.vertices_min;
+    meshAsset.boundsMax = newMesh.vertices_max;
+    meshAsset.numVertices = meshAsset.vertices.size();
+    meshAsset.numIndices = meshAsset.indices.size();
+    meshAsset.numBones = 0;
+
+    // Generating VAO, VBO & EBO
     GLuint vaoid;
     GLuint vboid;
     GLuint ebo;
@@ -300,9 +309,6 @@ void MeshManager::CreateInstanceCube()
     // Texture coord
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(9 * sizeof(float)));
     glEnableVertexAttribArray(3);
-    // color coord
-    /*glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 15 * sizeof(float), (void*)(11 * sizeof(float)));
-    glEnableVertexAttribArray(4);*/
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
@@ -311,8 +317,9 @@ void MeshManager::CreateInstanceCube()
     glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
 
-    Engine::GUID<MeshAsset> cubeGUID{ vaoMap.size() + 1};
-    InstanceProperties tempProp; 
+    // Assign to properties and containers
+    Engine::GUID<MeshAsset> cubeGUID = vaoMap.size() + 1;
+    InstanceProperties tempProp;
     tempProp.VAO = vaoid;
     tempProp.drawCount = 36;
     tempProp.drawType = GL_TRIANGLES;
@@ -325,24 +332,18 @@ void MeshManager::CreateInstanceCube()
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, cubeGUID, tempProp);
-    //ADD_SUB_ASSET(,cubeGUID);
     mContainer.emplace(cubeGUID, newMesh);
+    meshAsset.mFilePath = "Cube";
+    ADD_SUB_ASSET(meshAsset, cubeGUID);
+
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
 
-
 void MeshManager::CreateInstanceSphere()
 {
+    // Create the default mesh
     Mesh newMesh;
     newMesh.index = (unsigned int)mContainer.size();
-    GLuint vaoid;
-    GLuint vboid;
-    GLuint ebo;
-
-
-    glGenVertexArrays(1, &vaoid);
-    glGenBuffers(1, &vboid);
-    glGenBuffers(1, &ebo);
 
     std::vector<glm::vec3> positions;
     std::vector<glm::vec2> uv;
@@ -401,6 +402,15 @@ void MeshManager::CreateInstanceSphere()
         oddRow = !oddRow;
     }
 
+    MeshAsset meshAsset;
+    meshAsset.indices = indices;
+    meshAsset.boundsMin = min;
+    meshAsset.boundsMax = max;
+    meshAsset.numVertices = positions.size();
+    meshAsset.numIndices = indices.size();
+    meshAsset.numBones = 0;
+
+    ModelVertex vertex;
     std::vector<float> data;
     for (unsigned int i = 0; i < positions.size(); ++i)
     {
@@ -418,7 +428,22 @@ void MeshManager::CreateInstanceSphere()
             data.push_back(uv[i].x);
             data.push_back(uv[i].y);
         }
+
+        vertex.position = positions[i];
+        vertex.normal = normals[i];
+        vertex.textureCords = uv[i];
+        meshAsset.vertices.push_back(vertex);
     }
+
+    // Generating VAO, VBO & EBO
+    GLuint vaoid;
+    GLuint vboid;
+    GLuint ebo;
+
+    glGenVertexArrays(1, &vaoid);
+    glGenBuffers(1, &vboid);
+    glGenBuffers(1, &ebo);
+
     glBindVertexArray(vaoid);
     glBindBuffer(GL_ARRAY_BUFFER, vboid);
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
@@ -432,13 +457,14 @@ void MeshManager::CreateInstanceSphere()
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 
+    // Assign to properties and containers
     InstanceProperties tempProp;
     tempProp.drawType = GL_TRIANGLE_STRIP;
     tempProp.VAO = vaoid;
-    tempProp.drawCount = (unsigned int)(indices.size()) ;
+    tempProp.drawCount = (unsigned int)(indices.size());
 
-    Engine::GUID<MeshAsset> sphereGUID{ vaoMap.size() + 1 };
-    vaoMap.emplace(std::make_pair(sphereGUID,vaoid));
+    Engine::GUID<MeshAsset> sphereGUID = vaoMap.size() + 1;
+    vaoMap.emplace(std::make_pair(sphereGUID, vaoid));
 
     //vaoMap.emplace(std::pair<std::string, GLuint>(AssetManager::Instance().GetAssetGUID("Sphere"), vaoid));
     //instanceProperties->emplace(std::pair<std::string, InstanceProperties>(std::string("Sphere"), tempProp));
@@ -451,14 +477,15 @@ void MeshManager::CreateInstanceSphere()
     newMesh.vertices_min = min;
     newMesh.vertices_max = max;
 
+    meshAsset.mFilePath = "Sphere";
     //Do something about AABB
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, sphereGUID, tempProp);
+    
+    ADD_SUB_ASSET(meshAsset,sphereGUID);
+
     mContainer.emplace(sphereGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
-
-
 }
-
 
 // THIS IS THE PREVIOUS MATERIAL STUFFS -> BLINN PHONG THINGS
 unsigned int  MeshManager::InstanceSetup(InstanceProperties& prop) {
@@ -695,6 +722,7 @@ unsigned int  MeshManager::InstanceSetup_PBR(InstanceProperties& prop) {
 void MeshManager::CreateInstanceLine()
 {
     Mesh newMesh;
+
     newMesh.index = (unsigned int)(mContainer.size());
     GLfloat vertices[] = {
         -1.f, 0.f, 0.f,   
@@ -744,10 +772,30 @@ void MeshManager::CreateInstanceLine()
     newMesh.prim = GL_LINES;
     newMesh.drawCounts = 2;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
-    //InstanceSetup_PBR(tempProp);
-    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
-    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
 
+
+    MeshAsset lineAsset;
+    int i = 0;
+    for (int i = 0; i < 2; ++i)
+    {
+        ModelVertex tmpVertex{};
+        //Read three floats
+        glm::vec3 vert{ vertices[i],vertices[i + 1],vertices[i + 2] };
+        tmpVertex.position = vert;
+        lineAsset.vertices.push_back(tmpVertex);
+        ++i;
+    }
+
+    lineAsset.boundsMax = newMesh.vertices_max;
+    lineAsset.boundsMin = newMesh.vertices_min;
+    lineAsset.indices = {0,1};
+
+    lineAsset.numVertices = 2;
+    lineAsset.numIndices = 2;
+    lineAsset.numBones = 0;
+
+    lineAsset.mFilePath = "Line";
+    ADD_SUB_ASSET(lineAsset,lineGUID);
     mContainer.emplace(lineGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 
@@ -811,6 +859,29 @@ void MeshManager::CreateInstanceSegment3D()
     newMesh.drawCounts = 2;
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
+    MeshAsset seg3DAsset;
+    for (int i = 0; i < 2; ++i)
+    {
+        ModelVertex tmpVertex{};
+        //Read three floats
+        glm::vec3 vert{ vertices[i],vertices[i + 1],vertices[i + 2] };
+        tmpVertex.position = vert;
+        seg3DAsset.vertices.push_back(tmpVertex);
+        ++i;
+    }
+
+    seg3DAsset.boundsMax = newMesh.vertices_max;
+    seg3DAsset.boundsMin = newMesh.vertices_min;
+    seg3DAsset.indices = {0,1};
+    seg3DAsset.numVertices = 2;
+    seg3DAsset.numIndices = 2;
+    seg3DAsset.numBones = 0;
+    seg3DAsset.mFilePath = "Line Segment";
+
+    //InstanceSetup_PBR(tempProp);
+    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
+    //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
+    ADD_SUB_ASSET(seg3DAsset, segGUID);
     //InstanceSetup_PBR(tempProp);
 
     mContainer.emplace(segGUID, newMesh);

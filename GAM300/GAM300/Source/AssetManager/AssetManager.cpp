@@ -234,7 +234,9 @@ void AssetManager::CallbackGetAssets(GetAssetsEvent<AssetType>* pEvent)
 template <typename AssetType>
 void AssetManager::CallbackAddSubAssetEvent(AddSubAssetEvent<AssetType>* pEvent)
 {
-	E_ASSERT(pEvent->asset.mFilePath.empty(), "You cannot add a sub asset of zero filepath length");
+	PRINT("SUB ASSET FILEPATH: ", pEvent->asset.mFilePath, '\n');
+	PRINT("GUID: ", pEvent->guid.ToHexString(), '\n');
+	E_ASSERT(!pEvent->asset.mFilePath.empty(), "You cannot add a sub asset of empty filepath");
 	AssetImporter<AssetType> importer{ pEvent->guid };
 	assets.AddSubAsset(pEvent->asset, importer);
 }
