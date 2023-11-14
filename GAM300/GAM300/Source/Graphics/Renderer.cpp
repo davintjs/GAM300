@@ -56,9 +56,6 @@ unsigned int Renderer_quadVBO_WM = 0;
 const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
-
-
-
 void Renderer::Init()
 {
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
@@ -118,6 +115,8 @@ void Renderer::Update(float)
 		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)

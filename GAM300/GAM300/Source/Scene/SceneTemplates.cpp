@@ -339,7 +339,16 @@ bool Scene::IsActive(T& object)
 	auto& arr = GetArray<T>();
 	if constexpr (std::is_same_v<T, Entity>)
 	{
-		return arr.IsActiveDense(arr.GetDenseIndex(object));
+		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
+		Transform& t = Get<Transform>(object);
+
+		if (isActive && t.parent)
+		{
+			Entity& parentEntity = Get<Entity>(t.parent);
+			return IsActive(parentEntity);
+		}
+
+		return isActive;
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())
 	{
@@ -377,7 +386,6 @@ void Scene::SetActive(const Handle& handle, bool val)
 {
 	SetActive(Get<T>(handle), val);
 }
-
 
 template <typename Component>
 bool Scene::Has(const Entity& entity)
