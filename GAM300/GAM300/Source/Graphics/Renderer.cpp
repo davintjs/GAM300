@@ -328,7 +328,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
 		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
 
-		for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 		{
 			int textureUnit = 10 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -337,7 +337,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		}
 
-		for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 		{
 			int textureUnit = 20 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -346,7 +346,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		}
 
-		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 		{
 			int textureUnit = 22 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -433,7 +433,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	GLSLShader& shader = SHADER.GetShader(shaderType);
 	shader.Use();
 
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		int textureUnit = 10 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -442,7 +442,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	
 	}
 
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		int textureUnit = 20 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -451,7 +451,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	}
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		int textureUnit = 22 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -501,7 +501,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
 	auto PointLight_Sources = LIGHTING.GetPointLights();
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		//pointLights.colour
 		std::string point_color;
@@ -528,7 +528,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	// DIRECTIONAL LIGHT STUFFS
 	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 
 		//directionalLights.colour
@@ -560,7 +560,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	// SPOTLIGHT STUFFS
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 
 		//pointLights.position
@@ -893,7 +893,7 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 
 void Renderer::DrawDepthDirectional()
 {
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		LightProperties directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
 
@@ -971,7 +971,7 @@ void Renderer::DrawDepthDirectional()
 
 void Renderer::DrawDepthSpot()
 {
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
 
@@ -1046,7 +1046,7 @@ void Renderer::DrawDepthSpot()
 void Renderer::DrawDepthPoint()
 {
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		LightProperties point_light_stuffs = LIGHTING.GetPointLights()[i];
 

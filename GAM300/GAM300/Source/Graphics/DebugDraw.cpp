@@ -42,20 +42,21 @@ void DebugDraw::Update(float)
 	auto& rbArray = scene.GetArray<Rigidbody>();
 
 	auto& bcArray = scene.GetArray<BoxCollider>();
-	//std::cout << "the array size is : " << bcArray.size() << "\n";
+	std::cout << "the array size is : " << bcArray.size() << "\n";
 	int index = 0;
-	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	//for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	for (auto& it: bcArray )
 	{
-		BoxCollider& bc = *it;
+		BoxCollider& bc = it;
 
 		if (bc.state == DELETED)
 		{
-			//std::cout << "THIS IS THE DELETED ONE : " <<  "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
+			std::cout << "THIS IS THE DELETED ONE : " <<  "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
 
 			continue;
 		}
 		++index;
-		//std::cout << "hit : " << index << "\n";
+		std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
@@ -111,7 +112,7 @@ void DebugDraw::Update(float)
 
 		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
 		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
-		//std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
+		std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
 		SRT *= transMat * scalarMat;
 
 		currRigidDebug.SRT = SRT;
@@ -255,7 +256,7 @@ void DebugDraw::Draw()
 
 
 		auto pointLights = LIGHTING.GetPointLights();
-		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 		{
 			// I need to make a SRT here regarding the light's stuff
 			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);
