@@ -195,7 +195,8 @@ void EditorScene::SceneView()
                         //Assign material to mesh renderer
                         MeshRenderer& meshrenderer = curr_scene.Get<MeshRenderer>(currEntity);
                         Change newchange(&meshrenderer, "MeshRenderer/Material_ID");
-                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, guid);
+                        Engine::GUID<MaterialAsset> matGuid = guid;
+                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, matGuid);
                     }
                 }
 
@@ -336,8 +337,8 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_min;
-            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_max;
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_max;
             mins *= glm::vec3(bc.x, bc.y, bc.z);
             maxs *= glm::vec3(bc.x, bc.y, bc.z);
             rot = glm::radians(rot);

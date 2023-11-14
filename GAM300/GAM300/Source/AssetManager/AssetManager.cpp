@@ -62,6 +62,8 @@ bool AssetManager::IsCompilable(const fs::path& path)
 	return COMPILABLE_EXTENSIONS.contains(path.extension()) && assets.IsModified(path);
 }
 
+
+
 template <typename... Ts>
 void AssetManager::SubscribeGetAssets(TemplatePack<Ts...>)
 {
@@ -70,6 +72,7 @@ void AssetManager::SubscribeGetAssets(TemplatePack<Ts...>)
 		using T = decltype(type);
 		EVENTS.Subscribe(this, &AssetManager::CallbackGetAsset<T>);
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetAssets<T>);
+		EVENTS.Subscribe(this, &AssetManager::CallbackAddSubAssetEvent<T>);
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetFilePath<T>);
 	})(Ts{}), ...);
 }
@@ -225,6 +228,15 @@ template <typename AssetType>
 void AssetManager::CallbackGetAssets(GetAssetsEvent<AssetType>* pEvent)
 {
 	pEvent->pAssets = &assets.GetAssets<AssetType>();
+}
+
+
+template <typename AssetType>
+void AssetManager::CallbackAddSubAssetEvent(AddSubAssetEvent<AssetType>* pEvent)
+{
+	E_ASSERT(pEvent->asset.mFilePath.empty(), "You cannot add a sub asset of zero filepath length");
+	AssetImporter<AssetType> importer{ pEvent->guid };
+	assets.AddSubAsset(pEvent->asset, importer);
 }
 
 void AssetManager::CallbackFileModified(FileModifiedEvent* pEvent)

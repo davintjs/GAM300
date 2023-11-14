@@ -153,6 +153,14 @@ struct GetAssetEvent: IEvent
 };
 
 template <typename T>
+struct AddSubAssetEvent : IEvent
+{
+	AddSubAssetEvent(T& _asset, Engine::GUID<T> _guid = Engine::GUID<T>{}) : asset{ _asset }, guid{ _guid } {}
+	T& asset;
+	Engine::GUID<T> guid;
+};
+
+template <typename T>
 struct GetFilePathGenericEvent : IEvent
 {
 	GetFilePathGenericEvent(const Engine::GUID<T>& _guid) : guid{ _guid } {}

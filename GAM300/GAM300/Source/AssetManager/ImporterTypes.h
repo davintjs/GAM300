@@ -6,6 +6,8 @@
 struct DefaultImporter : property::base
 {
 	Engine::HexID guid;
+	DefaultImporter(Engine::HexID _guid = {}) :guid{ _guid } {}
+
 	property_vtable();
 };
 
@@ -16,6 +18,7 @@ property_begin_name(DefaultImporter, "") {
 
 struct ModelImporter : DefaultImporter
 {
+	ModelImporter (Engine::HexID _guid = {}) : DefaultImporter::DefaultImporter(_guid){}
 	std::vector<Engine::GUID<MeshAsset>> meshes{};
 	std::vector<Engine::GUID<MaterialAsset>> materials{};
 	std::vector<Engine::GUID<AnimationAsset>> animations{};

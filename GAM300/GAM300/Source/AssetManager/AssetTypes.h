@@ -4,9 +4,6 @@
 #include "Utilities/TemplatePack.h"
 #include <glm/glm.hpp>
 #include <list>
-
-#include <Properties.h>
-
 #include "ModelClassAndStruct.h"
 
 #ifndef ASSET_TYPES_H
@@ -17,7 +14,11 @@
 #define ASSET_LINE 3
 #define ASSET_SEG3D 4
 
-static std::unordered_map<std::filesystem::path, Engine::GUID> DEFAULT_ASSETS
+#define ADD_SUB_ASSET(asset,GUID) AddSubAssetEvent sbae{asset,GUID}; EVENTS.Publish(sbae)
+
+struct DefaultImporter;
+
+struct Asset
 {
 	std::filesystem::path mFilePath;
 	DefaultImporter* pImporter;

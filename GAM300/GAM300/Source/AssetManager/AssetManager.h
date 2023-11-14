@@ -39,6 +39,12 @@ public:
 	// Get the mesh asset
 	std::unordered_map<std::string, MeshAsset>& GetMeshAsset();
 
+	template <typename T>
+	void AddSubAsset(T& asset, AssetImporter<T>& importer)
+	{
+		assets.AddSubAsset(asset, importer);
+	}
+
 	// AssetManager initialization to load assets into memory
 	void Init();
 	void Update(float dt);
@@ -62,6 +68,7 @@ private:
 	void AsyncRenameAsset(const fs::path & oldPath, const fs::path & newPath);
 	void RenameAsset(const fs::path & oldPath, const fs::path & newPath);
 
+
 	void GetAssets();
 
 	template <typename... Ts>
@@ -77,6 +84,10 @@ private:
 	// Get the table of the asset using event callbacks
 	template <typename AssetType>
 	void CallbackGetAssets(GetAssetsEvent<AssetType> *pEvent);
+
+	// Get the table of the asset using event callbacks
+	template <typename AssetType>
+	void CallbackAddSubAssetEvent(AddSubAssetEvent<AssetType>* pEvent);
 
 	// Get the Filepath of the asset using event callbacks
 	template <typename AssetType>

@@ -96,7 +96,7 @@ void DebugDraw::Update(float)
 
 		RigidDebug currRigidDebug;
 
-		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[DEFAULT_MESH].vao;
+		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
 
 		glm::mat4 SRT = t.GetWorldMatrix();
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
@@ -263,7 +263,7 @@ void DebugDraw::Draw()
 			
 
 			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(translation * scalar));
-			Mesh* Sphere = MESHMANAGER.DereferencingMesh(DEFAULT_ASSETS["Sphere.geom"]);
+			Mesh* Sphere = MESHMANAGER.DereferencingMesh(ASSET_SPHERE);
 
 			glBindVertexArray(Sphere->vaoID);
 			glDrawElements(GL_LINES, Sphere->drawCounts, GL_UNSIGNED_INT, 0);

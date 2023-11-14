@@ -325,6 +325,7 @@ void MeshManager::CreateInstanceCube()
     newMesh.SRTBufferIndex = InstanceSetup_PBR(tempProp);
 
     debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, cubeGUID, tempProp);
+    ADD_SUB_ASSET(,cubeGUID);
     mContainer.emplace(cubeGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));
 }
@@ -817,7 +818,7 @@ void MeshManager::CreateInstanceSegment3D()
 
 }
 
-void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID& _guid,  InstanceProperties& prop) // vao
+void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine::GUID<MeshAsset>& _guid,  InstanceProperties& prop) // vao
 {
     
     offsetAndBoundContainer[_guid].offset = (maxpt + minpt) / 2.f;
@@ -921,7 +922,7 @@ void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine
     glBindVertexArray(0);
     //return DebugVaoid;
 
-    if (_guid == DEFAULT_MESH)
+    if (_guid == ASSET_CUBE)
     {
         offsetAndBoundContainer[_guid].vao = prop.debugVAO;
 

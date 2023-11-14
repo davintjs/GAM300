@@ -130,13 +130,13 @@ void Lighting::Update(float)
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
 			if (mesh_component.state == DELETED) continue;
 
-			mesh_component.mr_Albedo = glm::vec4(glm::vec3(lightSource.lightingColor), 1.f);
+			//mesh_component.mr_Albedo = glm::vec4(glm::vec3(lightSource.lightingColor), 1.f);
 
 		//	mesh_component.mr_metallic = -1.f;
 		//	mesh_component.mr_roughness = -1.f;
 		//	mesh_component.ao = -1.f;
 		//	mesh_component.ao = -1.f;
-		//}
+		}
 	}
 
 

@@ -77,82 +77,22 @@ struct AllAssetsGroup
 		auto& buffer = std::get<AssetsBuffer<T>>(assetsBuffer);
 		if constexpr (std::is_same<T, ModelAsset>())
 		{
-			auto& meshTable{ std::get<AssetsTable<MeshAsset>>(assets) };
-			auto& meshBuffer = std::get<AssetsBuffer<MeshAsset>>(assetsBuffer);
-			// Get all model components, gives u temp mesh assets
-			ModelComponents mc = MODELDECOMPILER.DeserializeModel(filePath.string(), importer.guid);
-			// Check for existing guid within the geom meta file
-			//If model has more meshes than importer guids
-			if (mc.meshes.size() != importer.meshes.size())
-			{
-				importer.meshes.clear();
-				//Edge case more than or less than meshes
-				for (int i = 0; i < mc.meshes.size(); ++i)
-				{
-					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
-					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
-					// Assign GUID
-					Engine::HexID guid{};
-					importer.meshes.push_back(guid);
-					//importer.meshes.push_back(meshAsset.mFilePath);
-					MeshAsset& newMeshAsset = meshTable[guid];
-					newMeshAsset = std::move(tmpMeshAsset);
-					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
-				}
-				Serialize(metaPath, importer);
-			}
-			else // Has existing guid
-			{
-				for (int i = 0; i < mc.meshes.size(); i++)
-				{
-					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
-					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
-					MeshAsset& newMeshAsset = meshTable[importer.meshes[i]];
-					newMeshAsset = std::move(tmpMeshAsset);
-					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
-				}
-			}
-
-						if (mc.meshes.size() != importer.meshes.size())
-			{
-				importer.meshes.clear();
-				//Edge case more than or less than meshes
-				for (int i = 0; i < mc.meshes.size(); ++i)
-				{
-					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
-					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
-					// Assign GUID
-					Engine::HexID guid{};
-					importer.meshes.push_back(guid);
-					//importer.meshes.push_back(meshAsset.mFilePath);
-					MeshAsset& newMeshAsset = meshTable[guid];
-					newMeshAsset = std::move(tmpMeshAsset);
-					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
-				}
-				Serialize(metaPath, importer);
-			}
-			else // Has existing guid
-			{
-				for (int i = 0; i < mc.animations.size(); i++)
-				{
-					MeshAsset& tmpMeshAsset = mc.meshes[i];
-					tmpMeshAsset.mFilePath = filePath;
-					tmpMeshAsset.mFilePath.replace_extension("");
-					tmpMeshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
-					MeshAsset& newMeshAsset = meshTable[importer.meshes[i]];
-					newMeshAsset = std::move(tmpMeshAsset);
-					meshBuffer.emplace_back(std::make_pair(ASSET_LOADED, &newMeshAsset));
-				}
-			}
+			MODELDECOMPILER.DeserializeModel(filePath.string(), importer);
 		}
 		buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
 		return asset;
+	}
+
+	template <typename AssetType>
+	void AddSubAsset(AssetType& asset, AssetImporter<AssetType>& importer)
+	{
+		Engine::GUID<AssetType> guid = importer.guid;
+		GetImporterTable<AssetType>()[asset.mFilePath] = importer;
+		auto& table{ std::get<AssetsTable<AssetType>>(assets)};
+		
+		table[guid] = asset;
+		auto& buffer = std::get<AssetsBuffer<AssetType>>(assetsBuffer);
+		buffer.emplace_back(std::make_pair(ASSET_LOADED, &table[guid]));
 	}
 
 	void AddAsset(const std::filesystem::path& filePath)

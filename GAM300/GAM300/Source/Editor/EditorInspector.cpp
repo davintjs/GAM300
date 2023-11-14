@@ -260,7 +260,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetTyp
             //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
         {
             // Bean: Put this publish event in the open popup in the future
-            GetAssetsEvent<AnimationAsset> e2;
+            GetAssetsEvent<AssetType> e2;
             EVENTS.Publish(&e2);
             fs::path icon = "Assets/Icons/fileicon.dds";
             auto iconID = GET_TEXTURE_ID(icon);
@@ -278,7 +278,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetTyp
                 ImTextureID textureID = (ImTextureID)iconID;
                 if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
                 {
-                    Engine::GUID currentGUID = animAsset.first;
+                    Engine::GUID<AssetType> currentGUID = animAsset.first;
                     EDITOR.History.SetPropertyValue(change, guid, currentGUID);
 
                 }
@@ -1199,7 +1199,7 @@ private:
                         }
                         else
                         {
-                            temp = MESHMANAGER.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
+                            temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
                         }
 
                         pObject->x = temp.scalarBound.x;

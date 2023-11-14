@@ -68,7 +68,7 @@ namespace Engine
 		explicit GUID(const std::string& hexString) : HexID::HexID(hexString){}
 
 
-		bool operator==(const HexID& rhs) const { return HexID::operator==(rhs); }
+		bool operator==(const GUID<T>& rhs) const { return HexID::operator==(rhs); }
 	private:
 		friend std::hash<Engine::GUID<T>>;
 	};

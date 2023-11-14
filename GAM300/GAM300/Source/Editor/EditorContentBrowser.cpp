@@ -135,8 +135,9 @@ void EditorContentBrowser::Update(float dt)
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
-            else if (ext == "material") {
-                GetAssetEvent e{ it.path() };
+            else if (ext == "material") 
+            {
+                GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
                 payload.guid = currentGUID;
