@@ -60,7 +60,7 @@ void DebugDraw::Update(float)
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
 
-		
+		if (!scene.IsActive(entity) || !scene.IsActive(bc)) continue;
 
 		/*geometryDebugData temp;
 		if (scene.Has<MeshRenderer>(entity))
