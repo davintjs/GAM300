@@ -162,12 +162,14 @@ property_parent(Object).Flags(property::flags::DONTSHOW),
 struct SphereCollider : Object
 {
 	float radius = 1.0f;
+	Vector3 offset;
 	property_vtable();
 };
 
 property_begin_name(SphereCollider, "SphereCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(radius).Name("Radius")
+	property_var(radius).Name("Radius"),
+	property_var(offset).Name("Offset")
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object

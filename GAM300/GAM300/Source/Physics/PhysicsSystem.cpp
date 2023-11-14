@@ -435,6 +435,7 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	engineContactListener->pSystem = physicsSystem;
 
 	physicsSystem->SetContactListener(engineContactListener);
+	
 	// Optimise broad phase only if there is an excess amount of bodies
 	//physicsSystem->OptimizeBroadPhase();
 
@@ -452,17 +453,20 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	UNREFERENCED_PARAMETER(pEvent);
 	//std::cout << "Physics System scene stop test\n";
 	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+	std::cout << "Num characters: " << characters.size() << std::endl;
+	//Clean up any characters
+	for (JPH::Ref<JPH::Character>& r : characters) {
 
-	// Clean up any characters
-	for (JPH::Ref<JPH::Character> r : characters) {
-
-		if (r == ccTest->mCharacter)
+		if (r == nullptr)
 			continue;
 
 		r->RemoveFromPhysicsSystem();
-
+		r = nullptr;
 	}
 	characters.clear();
+
+	std::cout << "Num characters: " << characters.size() << std::endl;
+
 	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 
 
@@ -479,13 +483,15 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 }
 
 void PhysicsSystem::PopulatePhysicsWorld() {
+
+	if (!physicsSystem)
+		return;
+
 	Scene& scene = MySceneManager.GetCurrentScene();
 
-	// check entity for collider and then check what kind of fucking collider he want
+	// check entity for collider and then check what kind of collider he want
 	// Shape Setting -> Shape Result -> Shape Refc -> Body Creation Setting -> Body
 	auto& rbArray = scene.GetArray<Rigidbody>();
-	//auto& bcArray = scene.GetArray<BoxCollider>();
-	//std::cout << "Number of rigidbodies:" << rbArray.size() << std::endl;
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 			
 	
@@ -575,6 +581,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		else if (scene.Has<SphereCollider>(entity)) {
 
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
+			Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)
 				sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
@@ -631,11 +639,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		CreateJoltCharacter(*it, physicsSystem, this);
 	}
 
-
-
-
 	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
-
 
 }
 
@@ -662,6 +666,9 @@ void PhysicsSystem::UpdateGameObjects() {
 			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3());
 
 		}
+		else if (scene.Has<SphereCollider>(entity)) {
+			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3());
+		}
 		//t.translation = tmpVec;
 
 		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);
@@ -677,18 +684,25 @@ void PhysicsSystem::UpdateGameObjects() {
 	}
 
 	// Character Controllers
+	size_t idx = 0;
 	auto& ccArray = scene.GetArray<CharacterController>();
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
+
+		if (idx >= characters.size())
+			break;
+
 		CharacterController& cc = *it;
 		Entity& entity = scene.Get<Entity>(cc);
 		Transform& t = scene.Get<Transform>(entity);
 
 		JPH::BodyID tmpBID(cc.bid);
-		JPH::RVec3 tmp = ccTest->mCharacter->GetLinearVelocity();
+		JPH::RVec3 tmp = characters[idx]->GetLinearVelocity();
 		JoltVec3ToGlmVec3(tmp, cc.velocity);
 
-		tmp = ccTest->mCharacter->GetCenterOfMassPosition();
+		tmp = characters[idx]->GetCenterOfMassPosition();
 		JoltVec3ToGlmVec3(tmp, t.translation);
+
+		idx++;
 
 	}
 }
@@ -775,23 +789,20 @@ void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
 	if (pc.componentType == PhysicsComponent::Type::cc) {
+		std::cout << "getting rid of jolt character\n";
 
-		if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
-			ccTest->mCharacter->RemoveFromPhysicsSystem();
-			ccTest->mCharacter = nullptr;
-			PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+		//if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
+		//	ccTest->mCharacter->RemoveFromPhysicsSystem();
+		//	ccTest->mCharacter = nullptr;
+		//	PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
 
-			return;
-		}
+		//	return;
+		//}
 
-
-
-		for (JPH::Ref<JPH::Character> r : characters) {
+		for (JPH::Ref<JPH::Character>& r : characters) {
 			if (r->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
-
 				r->RemoveFromPhysicsSystem();
-				PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
-
+				r = nullptr;				
 				return;
 			}
 
@@ -826,10 +837,11 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	}
 
 
-	for (JPH::Ref<JPH::Character> r : characters) {
+	for (JPH::Ref<JPH::Character>& r : characters) {
 		if (r->GetBodyID().GetIndexAndSequenceNumber() == bid) {
 
 			r->RemoveFromPhysicsSystem();
+			r = nullptr;
 			PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
 
 			return;
@@ -859,10 +871,15 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	characterSetting->mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
 	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -t.scale.x);
 
-	// Character Shape (default capsule)
-	JPH::RefConst<JPH::Shape> characterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0.5f*t.scale.y + t.scale.x, 0),
-													JPH::Quat::sIdentity(), new JPH::CapsuleShape(0.5f * t.scale.y, t.scale.x)).Create().Get();
-	characterSetting->mShape = characterShape;
+	float offset = 0.5f * t.scale.y - t.scale.x / 2;
+	if (offset <= 0.0f)
+		offset = 0.1f;
+
+		// Character Shape (default capsule)
+		JPH::RefConst<JPH::Shape> characterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0, 0),
+														JPH::Quat::sIdentity(), new JPH::CapsuleShape(offset, t.scale.x/2)).Create().Get();
+		characterSetting->mShape = characterShape;
+
 
 	JPH::RVec3 pos;
 	GlmVec3ToJoltVec3(t.translation, pos);
@@ -876,10 +893,11 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 
 	character->AddToPhysicsSystem(activeStatus);
 	cc.bid = character->GetBodyID().GetIndexAndSequenceNumber();
+	cc.componentType = PhysicsComponent::Type::cc;
 	
 	// Main character = 1st character controller in scene
-	if(!enginePSystem->ccTest->mCharacter)
-		enginePSystem->ccTest->mCharacter = character;
+	//if(!enginePSystem->ccTest->mCharacter)
+	//	enginePSystem->ccTest->mCharacter = character;
 
 	enginePSystem->characters.push_back(character);
 
