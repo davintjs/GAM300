@@ -423,33 +423,37 @@ void ScriptingSystem::UnloadAppDomain()
 {
 	if (!mAppDomain)
 		return;
-	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
-	int rows = mono_table_info_get_rows(table_info);
-	for (auto& sceneScripts : mSceneScripts)
-	{
-		for (auto& scriptPair : sceneScripts.second)
-		{
-			MonoClass* _class = mono_object_get_class(scriptPair.second);
-			if (!_class || mono_class_get_parent(_class) != mScript)
-				continue;
-			MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
-			if (!vTable)
-				continue;
-			void* fieldIterator = nullptr;
-			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
-			{
-				uint32_t flags = mono_field_get_flags(field);
-				if (flags & FIELD_ATTRIBUTE_STATIC)
-				{
-					mono_field_static_set_value(vTable, field, nullptr);
-				}
-				else
-				{
-					mono_field_set_value(scriptPair.second, field, nullptr);
-				}
-			}
-		}
-	}
+	//const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+	//int rows = mono_table_info_get_rows(table_info);
+	//for (auto& sceneScripts : mSceneScripts)
+	//{
+	//	PRINT("UNLOADING: ");
+	//	for (auto& scriptPair : sceneScripts.second)
+	//	{
+	//		scriptPair.
+	//		MonoClass* _class = mono_object_get_class(scriptPair.second);
+
+	//		PRINT(mono_class_get_name(_class),'\n');
+	//		if (!_class || mono_class_get_parent(_class) != mScript)
+	//			continue;
+	//		MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
+	//		if (!vTable)
+	//			continue;
+	//		void* fieldIterator = nullptr;
+	//		while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+	//		{
+	//			uint32_t flags = mono_field_get_flags(field);
+	//			if (flags & FIELD_ATTRIBUTE_STATIC)
+	//			{
+	//				mono_field_static_set_value(vTable, field, nullptr);
+	//			}
+	//			else
+	//			{
+	//				mono_field_set_value(scriptPair.second, field, nullptr);
+	//			}
+	//		}
+	//	}
+	//}
 	mono_domain_set(mRootDomain, false);
 	#ifdef _DEBUG
 		mono_domain_unload(mAppDomain);
@@ -674,7 +678,7 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 		Object*& pObject = *(Object**)field.data;
 		if (!pObject)
 			return;
-		pObject = (Object*)((size_t)pObject - 8);
+		pObject = (Object*)((size_t)pObject - 16);
 		return;
 	}
 	//If mono object, it contains reference to type
@@ -741,7 +745,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
 		{
-			pObject = (Object*)(size_t(pObject) + 8);
+			pObject = (Object*)(size_t(pObject) + 16);
 			mono_field_set_value(instance, mClassField, pObject);
 		}
 		return;
@@ -770,7 +774,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb2) + 8;
+			size_t addr = reinterpret_cast<size_t>(&rb2) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
@@ -789,7 +793,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb1) + 8;
+			size_t addr = reinterpret_cast<size_t>(&rb1) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}

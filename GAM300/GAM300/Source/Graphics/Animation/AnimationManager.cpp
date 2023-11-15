@@ -39,7 +39,7 @@ void Animation_Manager::Update(float dt)
             PRINT("Animator ID: ", animator.UUID(), "\n");
             animator.prevAnimID = animator.animID;
             animator.m_CurrentTime = 0.f;
-            if (animator.animID == DEFAULT_ANIM)
+            if (animator.animID == 0)
                 animator.m_AnimationIdx = -1;
             else
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
@@ -58,7 +58,7 @@ void Animation_Manager::Exit()
 {
 }
 
-void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, const Engine::GUID& _guid)
+void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, const Engine::GUID<AnimationAsset>& _guid)
 {
     Animation animation;
     animation.GetBoneCount() = _animationAsset.boneCounter;

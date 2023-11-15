@@ -39,8 +39,8 @@ public:
 	bool AnimationAttached();
 
 	std::vector<glm::mat4> m_FinalBoneMatrices;
-	Engine::GUID animID{ DEFAULT_ANIM };
-	Engine::GUID prevAnimID{ DEFAULT_ANIM };
+	Engine::GUID<AnimationAsset> animID{0};
+	Engine::GUID<AnimationAsset> prevAnimID{0};
 	int m_FinalBoneMatIdx; // to access copy of original anim
 	int m_AnimationIdx; // to access copy of original anim
 	float m_CurrentTime;

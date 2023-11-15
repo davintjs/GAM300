@@ -161,7 +161,8 @@ void EditorScene::SceneView()
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
 
                 ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
-                Engine::GUID guid = data.guid;
+                Engine::HexID guid = data.guid;
+
                 Scene& curr_scene = MySceneManager.GetCurrentScene();
 
                 if (data.type == MESH) {
@@ -170,7 +171,7 @@ void EditorScene::SceneView()
                     //Add mesh renderer
                     curr_scene.Add<MeshRenderer>(*ent);
                     //Attach dragged mesh GUID from the content browser
-                    curr_scene.Get<MeshRenderer>(*ent).meshID = guid;
+                    curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
 
                     //undo/redo for entity
@@ -194,7 +195,8 @@ void EditorScene::SceneView()
                         //Assign material to mesh renderer
                         MeshRenderer& meshrenderer = curr_scene.Get<MeshRenderer>(currEntity);
                         Change newchange(&meshrenderer, "MeshRenderer/Material_ID");
-                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, guid);
+                        Engine::GUID<MaterialAsset> matGuid = guid;
+                        EDITOR.History.SetPropertyValue(newchange, curr_scene.Get<MeshRenderer>(currEntity).materialGUID, matGuid);
                     }
                 }
 
@@ -259,8 +261,7 @@ void EditorScene::DisplayGizmos()
 
             Entity& entity = currentScene.Get<Entity>(renderer);
             Transform& transform = currentScene.Get<Transform>(entity);
-            //Tag& tag = currentScene.Get<Tag>(entity);
-            //PRINT(tag.name, " has guid: ", renderer.meshID.ToHexString(), '\n');
+            
             
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
@@ -268,8 +269,23 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_min;
-            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(renderer.meshID)->vertices_max;
+
+            glm::vec3 mins = scale, maxs = scale;
+
+            Mesh* mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
+            if (mesh)
+            {
+                mins *= mesh->vertices_min;
+                maxs *= mesh->vertices_max;
+            }
+            else
+            {
+                Tag& tag = currentScene.Get<Tag>(entity);
+                std::string error;
+                error = "ERROR: " + tag.name + " has guid " + renderer.meshID.ToHexString() + " that does not exist! Reassign the mesh!\n";
+                E_ASSERT(false, error);
+            }
+            
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 
@@ -335,8 +351,8 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_min;
-            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(DEFAULT_MESH)->vertices_max;
+            glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_min;
+            glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_max;
             mins *= glm::vec3(bc.x, bc.y, bc.z);
             maxs *= glm::vec3(bc.x, bc.y, bc.z);
             rot = glm::radians(rot);

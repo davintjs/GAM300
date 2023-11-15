@@ -133,7 +133,7 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume = 1.0f;
-	Engine::GUID currentSound = DEFAULT_ASSETS["None.wav"];
+	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };
 
@@ -282,8 +282,8 @@ struct Script : Object
 	{
 		E_ASSERT(false,"INVALID CONSTRUCTOR");
 	}
-	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
-	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
+	Script(Engine::GUID<ScriptAsset> _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID<ScriptAsset> scriptId{0};
 	property_vtable();
 };
 
@@ -298,40 +298,22 @@ struct MeshRenderer : Object
 
 	// Material Instance
 	//Material_instance* materialInstance;
-
-	Engine::GUID meshID{ DEFAULT_MESH };
-	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
-	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
-	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
-	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
-	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
-
 	
 	//Materials mr_Material;
 
 	// Materials stuff below here
-	Vector4 mr_Albedo;
-	Vector4 mr_Specular;
-	Vector4 mr_Diffuse;
-	Vector4 mr_Ambient;
-	float mr_Shininess;	
-
-
-	float mr_metallic = 1.f;
-	float mr_roughness = 1.f;
-	float ao = 1.f;
-	float emission = 1.f;
 
 	GLuint VAO;
 	GLuint debugVAO;
 
 	// This 2 dont delete -> Future use
+	Engine::GUID<MeshAsset> meshID{ 0 };
+
 	//bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 	
 	//temporary index for current material
-	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
+	Engine::GUID<MaterialAsset> materialGUID{0};
 
 	property_vtable();
 };
@@ -339,18 +321,7 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(meshID).Name("Mesh"),
-	property_var(materialGUID).Name("Material_ID"),
-	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
-	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
-	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),
-	property_var(ao).Name("AmbientOcclusion").Flags(property::flags::DONTSHOW),
-	property_var(AlbedoTexture).Name("AlbedoTexture").Flags(property::flags::DONTSHOW),
-	property_var(NormalMap).Name("NormalMap").Flags(property::flags::DONTSHOW),
-	property_var(MetallicTexture).Name("MetallicTexture").Flags(property::flags::DONTSHOW),
-	property_var(RoughnessTexture).Name("RoughnessTexture").Flags(property::flags::DONTSHOW),
-	property_var(AoTexture).Name("AoTexture").Flags(property::flags::DONTSHOW),
-	property_var(EmissionTexture).Name("EmissionTexture").Flags(property::flags::DONTSHOW),
-	property_var(emission).Name("EmissionScalar").Flags(property::flags::DONTSHOW),
+	property_var(materialGUID).Name("Material_ID")
 } property_vend_h(MeshRenderer)
 
 
@@ -395,7 +366,7 @@ struct SpriteRenderer : Object
 		bool WorldSpace = true;
 		bool ColourPicked = false;
 
-		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
+		Engine::GUID<TextureAsset> SpriteTexture {0};
 
 		property_vtable()
 	};
@@ -676,7 +647,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, Engine::GUID, std::string>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

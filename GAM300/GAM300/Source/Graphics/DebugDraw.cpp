@@ -43,10 +43,11 @@ void DebugDraw::Update(float)
 
 	auto& bcArray = scene.GetArray<BoxCollider>();
 	//std::cout << "the array size is : " << bcArray.size() << "\n";
-	int index = 0;
-	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	//int index = 0;
+	//for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	for (auto& it: bcArray )
 	{
-		BoxCollider& bc = *it;
+		BoxCollider& bc = it;
 
 		if (bc.state == DELETED)
 		{
@@ -54,13 +55,13 @@ void DebugDraw::Update(float)
 
 			continue;
 		}
-		++index;
+		//++index;
 		//std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
 
-		
+		if (!scene.IsActive(entity) || !scene.IsActive(bc)) continue;
 
 		/*geometryDebugData temp;
 		if (scene.Has<MeshRenderer>(entity))
@@ -96,7 +97,7 @@ void DebugDraw::Update(float)
 
 		RigidDebug currRigidDebug;
 
-		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[DEFAULT_MESH].vao;
+		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
 
 		glm::mat4 SRT = t.GetWorldMatrix();
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
@@ -146,7 +147,7 @@ void DebugDraw::Draw()
 		}
 	}
 	;
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 	glLineWidth(4.f);
 	glPointSize(10.f);
 	// NAV MESH Draw Call
@@ -255,7 +256,7 @@ void DebugDraw::Draw()
 
 
 		auto pointLights = LIGHTING.GetPointLights();
-		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 		{
 			// I need to make a SRT here regarding the light's stuff
 			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);
@@ -263,7 +264,7 @@ void DebugDraw::Draw()
 			
 
 			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(translation * scalar));
-			Mesh* Sphere = MESHMANAGER.DereferencingMesh(DEFAULT_ASSETS["Sphere.geom"]);
+			Mesh* Sphere = MESHMANAGER.DereferencingMesh(ASSET_SPHERE);
 
 			glBindVertexArray(Sphere->vaoID);
 			glDrawElements(GL_LINES, Sphere->drawCounts, GL_UNSIGNED_INT, 0);
@@ -282,7 +283,7 @@ void DebugDraw::Draw()
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
 {
 	//auto& prop = (*properties)[DEFAULT_ASSETS["Segment3D.geom"]];
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;
@@ -304,7 +305,7 @@ void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _col
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	// Set reference to property iterator
 	unsigned int& i = prop.iter;

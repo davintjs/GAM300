@@ -30,7 +30,7 @@ Transform:
 ID: 15551509604027691718
 MeshRenderer:
   m_GameObject: {fileID: 12774767057393917132}
-  Mesh: {guid: 00000000000000000000000000000065}
+  Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: e2cc28b8749788b756a28711a8fc4d33}
   Albedo: [0, 0, 0, 0]
   Metallic: 1
@@ -67,7 +67,7 @@ Transform:
 ID: 9542762480390967986
 MeshRenderer:
   m_GameObject: {fileID: 9746499813082547477}
-  Mesh: {guid: 00000000000000000000000000000065}
+  Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
   Albedo: [0, 0, 0, 0]
   Metallic: 1

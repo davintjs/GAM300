@@ -195,6 +195,7 @@
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\AssetManager\ModelDecompiler.h" />
     <ClInclude Include="Source\AssetManager\ModelClassAndStruct.h" />
+    <ClInclude Include="Source\AssetManager\ImporterTypes.h" />
     <ClInclude Include="Source\AssetManager\GeometryMesh.h" />
     <ClInclude Include="Source\Graphics\Animation\Animation.h" />
     <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />

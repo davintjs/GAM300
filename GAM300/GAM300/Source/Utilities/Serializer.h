@@ -18,7 +18,7 @@
         c. Components
     3. Clone Helper for De/Serialization which copies fields for the script component
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #ifndef SERIALIZER_H
 #define SERIALIZER_H
@@ -76,72 +76,12 @@ void Deserialize(Material_instance& material, const fs::path& path);
 template <typename T>
 void Serialize(YAML::Emitter& out, T& object)
 {
-    if constexpr (std::is_same<T, ModelImporter>())
+    int containerIndex = 0;
+    int containerSize = 0;
+    out << YAML::BeginMap;
+    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
     {
-        out << YAML::BeginMap;
-        out << YAML::Key << "guid" << YAML::Value << object.guid;
-        out << object;
-        out << YAML::EndMap;
-    }
-    else
-    {
-        property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
-            {
-                if (!Flags.m_isDontSave)
-                {
-                    auto entry = property::entry { PropertyName, Data };
-                    fs::path name{ entry.first };
-                    std::visit([&](auto& Value)
-                        {
-                            using T1 = std::decay_t<decltype(Value)>;
-                            namespace fs = std::filesystem;
-                            std::string keyName = name.string();
-                            //Has a header
-                            if (name.parent_path().empty())
-                            {
-                                //Deserialize again somehow get the type
-                                //T1 object;
-                            }
-                            //Has no header
-                            else
-                            {
-                                keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
-                            }
-
-                            // Store Component value
-                            out << YAML::BeginMap;
-                            out << YAML::Key << keyName << YAML::Value << Value;
-                            out << YAML::EndMap;
-                        }
-                    , entry.second);
-                }
-            });
-    }
-}
-
-template <typename T>
-void Serialize(const std::filesystem::path& path, T& object)
-{
-    YAML::Emitter out;
-
-    Serialize(out, object);
-
-    std::ofstream outFile{ path };
-    outFile << out.c_str();
-    outFile.close();
-}
-
-template <typename T>
-bool Deserialize(const std::filesystem::path& path, T& object)
-{
-    namespace fs = std::filesystem;
-
-    if (!std::filesystem::exists(path))
-        return false;
-    YAML::Node node = YAML::LoadFile(path.string());
-
-    // Assign to the component
-    property::SerializeEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type)
+        if (!Flags.m_isDontSave)
         {
             auto entry = property::entry { PropertyName, Data };
             fs::path name{ entry.first };
@@ -161,33 +101,136 @@ bool Deserialize(const std::filesystem::path& path, T& object)
                     {
                         keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
                     }
-
-                    // Extract Component value
-                    if (node[keyName])
+                    // Store Component value
+                    if (keyName.ends_with("[]"))
                     {
-                        if constexpr (std::is_same<char*, T1>()) {
-                            std::string buf = node[keyName].as<std::string>();
-                            property::set(object, entry.first.c_str(), buf);
-
+                        if constexpr (std::is_same_v<T1, int>)
+                        {
+                            keyName.resize(keyName.size() - 2);
+                            out << YAML::Key << keyName << YAML::Value << YAML::BeginMap;
+                            containerSize = Value;
+                        }
+                    }
+                    else if (keyName.ends_with(']'))
+                    {
+                        keyName = "data";
+                        if constexpr (std::is_base_of_v<Engine::HexID,T1>)
+                        {
+                            out << YAML::Key << keyName << YAML::Value;
+                            out << YAML::Flow << YAML::BeginMap;
+                            out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
                         }
                         else
-                            property::set(object, entry.first.c_str(), node[keyName].as<T1>());
+                        {
+                            out << YAML::Key << keyName << YAML::Value << Value;
+                        }
+                        ++containerIndex;
+                        if (containerSize == containerIndex)
+                        {
+                            out << YAML::EndMap;
+                            containerSize = 0;
+                            containerIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        out << YAML::Key << keyName << YAML::Value << Value ;
                     }
                 }
             , entry.second);
-        });
+        }
+    });
+    out << YAML::EndMap;
+}
+
+template <typename T>
+void Serialize(const std::filesystem::path& path, T& object)
+{
+    YAML::Emitter out;
+
+    Serialize(out, object);
+
+    std::ofstream outFile{ path };
+    outFile << out.c_str();
+    outFile.close();
+}
+
+template <typename T>
+bool Deserialize(const std::filesystem::path& path, T& object)
+{
+    namespace fs = std::filesystem;
+
+    int containerIndex = 0;
+    int containerSize = 0;
+    if (!std::filesystem::exists(path))
+        return false;
+    YAML::Node node = YAML::LoadFile(path.string());
+
+
+
+
+    // Assign to the component
+    property::DisplayEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    {
+        auto entry = property::entry { PropertyName, Data };
+        fs::path name{ entry.first };
+        //PRINT(name, '\n');
+        std::visit([&](auto& Value)
+            {
+                using T1 = std::decay_t<decltype(Value)>;
+                namespace fs = std::filesystem;
+                std::string keyName = name.string();
+                //Has a header
+                if (name.parent_path().empty())
+                {
+                    //Deserialize again somehow get the type
+                    //T1 object;
+                }
+                //Has no header
+                else
+                {
+                    keyName.erase(keyName.begin(), keyName.begin() + keyName.find_last_of('/') + 1);
+                }
+
+                // Extract Component value
+                if (node[keyName])
+                {
+                    if constexpr (std::is_same<char*, T1>()) {
+                        std::string buf = node[keyName].as<std::string>();
+                        property::set(object, entry.first.c_str(), buf);
+
+                    }
+                    else
+                        property::set(object, entry.first.c_str(), node[keyName].as<T1>());
+                }
+                else if (keyName.ends_with("[]"))
+                {
+                    if constexpr (std::is_same_v<T1, int>)
+                    {
+                        //keyName.resize(keyName.size() - 2);
+                        //for (YAML::Node& childNode : node[keyName])
+                        //{
+                        //}
+                        //containerSize = node[keyName].size();
+                    }
+                }
+            }
+        , entry.second);
+    });
+
 
     if constexpr (std::is_same<T, ModelImporter>())
     {
         if (node["meshes"])
         {
             YAML::Node meshes = node["meshes"];
-            for (YAML::const_iterator it = meshes.begin(); it != meshes.end(); ++it) 
+            for (YAML::const_iterator it = meshes.begin(); it != meshes.end(); ++it)
             {
                 YAML::Node data = it->second;
                 if (data["guid"])
                 {
-                    object.meshes.push_back(data["guid"].as<Engine::GUID>());
+                    Engine::HexID id = data["guid"].as<Engine::HexID>();
+                    object.meshes.emplace_back(id);
                 }
             }
         }
@@ -200,17 +243,56 @@ bool Deserialize(const std::filesystem::path& path, T& object)
                 YAML::Node data = it->second;
                 if (data["guid"])
                 {
-                    object.animations.push_back(data["guid"].as<Engine::GUID>());
+                    object.animations.emplace_back(data["guid"].as<Engine::HexID>());
                 }
             }
         }
-        
+
     }
-    else
-    {
-        return true;
-    }
-   
+
+    //property::pack Pack;
+//property::Pack(object, Pack);
+//float LookUps = -1;         // The very first one is actually not a lookup
+//{
+//    int iPath = 0;
+//    for (const auto& E : Pack.m_lEntry)
+//    {
+//        // Mark how many pops we are making
+
+//        for (int i = 0; i < E.m_nPaths; ++i, ++iPath)
+//        {
+//            // Are we dealing with an array type?
+//            if (Pack.m_lPath[iPath].m_Index != property::lists_iterator_ends_v)
+//            {
+//                // Arrays/Lists we get them for free
+//                PRINT(Pack.m_lPath[iPath].m_Key,'\n');
+
+//                LookUps -= 1.0f;
+//            }
+//            else
+//            {
+//                PRINT(Pack.m_lPath[iPath].m_Key,'\n');
+//            }
+//        }
+
+//        // Keep track of lookups
+//        LookUps += E.m_nPaths;
+
+//        std::visit([&](auto&& Value)
+//            {
+//                using T = std::decay_t<decltype(Value)>;
+
+//                //PRINT(typeid(T).name());
+//            }
+//        , E.m_Data);
+
+
+//        // Make sure everything is align
+//        //while ((c++) != 70) printf(" ");
+//        //// next line
+//        //printf("\n");
+//    }
+//}
     return true;
 }
 

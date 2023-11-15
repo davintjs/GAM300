@@ -117,7 +117,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		GLint uniform2 =
 			glGetUniformLocation(shader.GetHandle(), "isTexture");
 
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform2, false);
 		}
