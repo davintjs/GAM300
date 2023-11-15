@@ -29,8 +29,6 @@ void DebugDraw::Init()
 	// Euan RayCasting Testing
 	raycastLine = new RaycastLine;
 	raycastLine->lineinit();
-
-	properties = &RENDERER.GetInstanceProperties();
 }
 
 void DebugDraw::Update(float)
@@ -129,6 +127,12 @@ void DebugDraw::Update(float)
 
 void DebugDraw::Draw()
 {
+	GLuint vao = MESHMANAGER.vaoMap[ASSET_SEG3D];
+	size_t s = static_cast<int>(SHADERTYPE::TDR);
+	if (RENDERER.GetInstanceContainer()[s].find(vao) == RENDERER.GetInstanceContainer()[s].cend()) { // if container does not have this vao, emplace
+		RENDERER.GetInstanceContainer()[s].emplace(std::pair(vao, RENDERER.GetInstanceProperties()[vao]));
+	}
+
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
 
 	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
@@ -145,8 +149,8 @@ void DebugDraw::Draw()
 			DrawSegment3D(tri[0], tri[2], color);
 		}
 	}
-	;
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
+	
+	auto& prop = RENDERER.GetInstanceContainer()[s][vao];
 	glLineWidth(4.f);
 	glPointSize(10.f);
 	// NAV MESH Draw Call
@@ -281,47 +285,50 @@ void DebugDraw::Draw()
 
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
 {
-	//auto& prop = (*properties)[DEFAULT_ASSETS["Segment3D.geom"]];
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
+	if (MESHMANAGER.vaoMap.find(ASSET_SEG3D) == MESHMANAGER.vaoMap.end())
+	{
+		E_ASSERT(false, "ERROR: Mesh vao does not exist!");
+	}
 
-	// Set reference to property iterator
-	unsigned int& i = prop.iter;
+	auto& prop = RENDERER.GetInstanceContainer()[static_cast<int>(SHADERTYPE::TDR)][MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	glm::vec3 direction = _segment3D.point2 - _segment3D.point1;
-	prop.entitySRT[i] = glm::mat4
+	prop.entitySRT.emplace_back(glm::mat4
 	{
 		glm::vec4(direction.x, 0.f, 0.f, 0.f),
 		glm::vec4(0.f, direction.y, 0.f, 0.f),
 		glm::vec4(0.f, 0.f, direction.z, 0.f),
 		glm::vec4(_segment3D.point1.x, _segment3D.point1.y, _segment3D.point1.z, 1.f)
-	};
+	});
 
 	// Set color of segment
-	prop.Albedo[i] = _color;
+	prop.Albedo.emplace_back(_color);
 
-	i++; // Increase instance count
+	prop.iter++; // Increase instance count
 }
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[ASSET_SEG3D]];
+	if (MESHMANAGER.vaoMap.find(ASSET_SEG3D) == MESHMANAGER.vaoMap.end())
+	{
+		E_ASSERT(false, "ERROR: Mesh vao does not exist!");
+	}
 
-	// Set reference to property iterator
-	unsigned int& i = prop.iter;
+	auto& prop = RENDERER.GetInstanceContainer()[static_cast<int>(SHADERTYPE::TDR)][MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	glm::vec3 direction = _point2 - _point1;
-	prop.entitySRT[i] = glm::mat4
+	prop.entitySRT.emplace_back(glm::mat4
 	{
 		glm::vec4(direction.x, 0.f, 0.f, 0.f),
 		glm::vec4(0.f, direction.y, 0.f, 0.f),
 		glm::vec4(0.f, 0.f, direction.z, 0.f),
 		glm::vec4(_point1.x, _point1.y, _point1.z, 1.f)
-	};
+	});
 
 	// Set color of segment
-	prop.Albedo[i] = _color;
+	prop.Albedo.emplace_back(_color);
 
-	i++; // Increase instance count
+	prop.iter++; // Increase instance count
 }
 
 void DebugDraw::DrawRay()

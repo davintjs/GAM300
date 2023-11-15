@@ -305,7 +305,7 @@ public:
 
 private:
 
-	InstanceContainer* properties;
+	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;

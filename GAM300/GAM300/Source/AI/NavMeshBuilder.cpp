@@ -43,6 +43,8 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	GetAssetsEvent<MeshAsset> e;
 	EVENTS.Publish(&e);
 
+	// Indices offset
+	static int offset = 0;
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
@@ -62,19 +64,27 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		MeshAsset& meshAsset = e.pAssets->find(mesh.meshID)->second;
 		
 		// Use this to get all top vertices
-		float topY = meshAsset.boundsMax.y;
-		float marginY = 0.001f; // Bean: Maybe need some margin error? Dont need then remove :D
+		float topY = (t.GetWorldMatrix() * glm::vec4(meshAsset.boundsMax, 1.f)).y;
 
-		// Bean: Need to recalculate to get top vertices only or check if it is a slope
-		/*for (int i = 0; i < meshAsset.vertices.size(); ++i)
+		// Calculate the world position of the mesh
+		for (int i = 0; i < meshAsset.numVertices; ++i)
 		{
-			glm::vec4 temp = glm::vec4(meshAsset.vertices[i].position, 1.f);
-			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
+			glm::vec3 tempPosition = glm::vec3(t.GetWorldMatrix() * glm::vec4(meshAsset.vertices[i].position, 1.f));
+			mGroundVertices.push_back(tempPosition);
 		}
-		for (int j = 0; j < meshAsset.indices.size(); j += 3)
+
+		// Recalculate to get top vertices only or check if it is a slope
+		auto& ind = meshAsset.indices;
+		auto& v = mGroundVertices;
+		for (int j = 0; j < meshAsset.numIndices; j += 3)
 		{
-			mGroundIndices.push_back(glm::ivec3(meshAsset.indices[j], meshAsset.indices[j + 1], meshAsset.indices[j + 2]));
-		}*/
+			if (v[ind[j] + offset].y >= topY && v[ind[j + 1] + offset].y >= topY && v[ind[j + 2] + offset].y >= topY)
+			{
+				mGroundIndices.push_back(glm::ivec3(ind[j] + offset, ind[j + 1] + offset, ind[j + 2] + offset));
+			}
+		}
+
+		offset += meshAsset.numVertices;
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);

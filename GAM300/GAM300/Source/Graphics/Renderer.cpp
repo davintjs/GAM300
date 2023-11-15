@@ -248,6 +248,8 @@ void Renderer::SetupGrid(const int& _num)
 		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixZ * scalMatrix);// [i] = transMatrixZ * scalMatrix; // z axis
 		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixX * rotMatrix * scalMatrix);//[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
 	}
+
+	instanceContainers[s][vao].iter = _num * 2;
 }
 
 void Renderer::Draw(BaseCamera& _camera) {
