@@ -423,33 +423,37 @@ void ScriptingSystem::UnloadAppDomain()
 {
 	if (!mAppDomain)
 		return;
-	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
-	int rows = mono_table_info_get_rows(table_info);
-	for (auto& sceneScripts : mSceneScripts)
-	{
-		for (auto& scriptPair : sceneScripts.second)
-		{
-			MonoClass* _class = mono_object_get_class(scriptPair.second);
-			if (!_class || mono_class_get_parent(_class) != mScript)
-				continue;
-			MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
-			if (!vTable)
-				continue;
-			void* fieldIterator = nullptr;
-			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
-			{
-				uint32_t flags = mono_field_get_flags(field);
-				if (flags & FIELD_ATTRIBUTE_STATIC)
-				{
-					mono_field_static_set_value(vTable, field, nullptr);
-				}
-				else
-				{
-					mono_field_set_value(scriptPair.second, field, nullptr);
-				}
-			}
-		}
-	}
+	//const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+	//int rows = mono_table_info_get_rows(table_info);
+	//for (auto& sceneScripts : mSceneScripts)
+	//{
+	//	PRINT("UNLOADING: ");
+	//	for (auto& scriptPair : sceneScripts.second)
+	//	{
+	//		scriptPair.
+	//		MonoClass* _class = mono_object_get_class(scriptPair.second);
+
+	//		PRINT(mono_class_get_name(_class),'\n');
+	//		if (!_class || mono_class_get_parent(_class) != mScript)
+	//			continue;
+	//		MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
+	//		if (!vTable)
+	//			continue;
+	//		void* fieldIterator = nullptr;
+	//		while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+	//		{
+	//			uint32_t flags = mono_field_get_flags(field);
+	//			if (flags & FIELD_ATTRIBUTE_STATIC)
+	//			{
+	//				mono_field_static_set_value(vTable, field, nullptr);
+	//			}
+	//			else
+	//			{
+	//				mono_field_set_value(scriptPair.second, field, nullptr);
+	//			}
+	//		}
+	//	}
+	//}
 	mono_domain_set(mRootDomain, false);
 	#ifdef _DEBUG
 		mono_domain_unload(mAppDomain);
