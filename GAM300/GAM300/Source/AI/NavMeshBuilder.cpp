@@ -44,7 +44,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	EVENTS.Publish(&e);
 
 	// Indices offset
-	static int offset = 0;
+	int offset = 0;
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
