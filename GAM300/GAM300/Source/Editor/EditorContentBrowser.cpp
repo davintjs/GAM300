@@ -129,14 +129,15 @@ void EditorContentBrowser::Update(float dt)
             payload.type = MESH;*/
             
             if (ext == "geom") { //mesh files
-                GetAssetEvent e{ it.path() };
+                GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
-            else if (ext == "material") {
-                GetAssetEvent e{ it.path() };
+            else if (ext == "material") 
+            {
+                GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
                 Engine::GUID currentGUID = e.guid;
                 payload.guid = currentGUID;
@@ -183,7 +184,7 @@ void EditorContentBrowser::Update(float dt)
             //Open material inspector
             if ((path.string().find(".material") != std::string::npos)) {
                 //Open scene file logic here
-                GetAssetEvent e{ path };
+                GetAssetEvent<MaterialAsset> e{ path };
                 EVENTS.Publish(&e);
                 selectedAss = e.guid;
                 EditorInspector::Instance().material_inspector = true;

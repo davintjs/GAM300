@@ -100,10 +100,10 @@ public:
 		//#ifndef _BUILD
 		//	BEHAVIORTREEBUILDER.Init();
 		//#endif
-		AUDIOMANAGER.InitAudioManager();
+		AllSystems::Init();
 		MESHMANAGER.Init();
 		TextureManager.Init();
-		AllSystems::Init();
+		AUDIOMANAGER.InitAudioManager();
 
 		#if defined(_BUILD)
 			InputSystem::Instance().LockCursor(true);

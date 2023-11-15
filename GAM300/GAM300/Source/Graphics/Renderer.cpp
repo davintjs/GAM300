@@ -56,9 +56,6 @@ unsigned int Renderer_quadVBO_WM = 0;
 const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
-
-
-
 void Renderer::Init()
 {
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
@@ -118,6 +115,8 @@ void Renderer::Update(float)
 		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 
 		Entity& entity = currentScene.Get<Entity>(renderer);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
@@ -233,7 +232,7 @@ void Renderer::SetupGrid(const int& _num)
 	float length = _num * spacing * 0.5f;
 
 	//instanceProperties["Line"].iter = _num * 2;
-	GLuint vao = MESHMANAGER.vaoMap[DEFAULT_ASSETS["Line.geom"]];
+	GLuint vao = MESHMANAGER.vaoMap[ASSET_LINE];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
@@ -688,7 +687,7 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -748,7 +747,7 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}
@@ -832,7 +831,7 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
-		if (Sprite.SpriteTexture == DEFAULT_ASSETS["None.dds"])
+		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);
 		}

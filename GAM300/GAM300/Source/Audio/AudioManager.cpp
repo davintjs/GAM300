@@ -76,19 +76,19 @@ void AudioManager::Update(float dt) {
 		if (nextVolume <= 0.0f) {
 			currentMusic->stop();
 			currentMusic = 0;
-			currentMusicPath = DEFAULT_ASSETS["None.wav"];
+			currentMusicPath = 0;
 			fade = FADE_NONE;
-			if (nextMusicPath != DEFAULT_ASSETS["None.wav"]) {
+			if (nextMusicPath != 0) {
 				PlayMusic(nextMusicPath);
 				fade = FADE_IN;
-				nextMusicPath = DEFAULT_ASSETS["None.wav"];
+				nextMusicPath = 0;
 			}
 		}
 		else {
 			currentMusic->setVolume(nextVolume);
 		}
 	}
-	else if (currentMusic == 0 && nextMusicPath != DEFAULT_ASSETS["None.wav"]) {
+	else if (currentMusic == 0 && nextMusicPath != 0) {
 		PlayMusic(nextMusicPath);
 	}
 	currentFX->setVolume(GetSFXVolume() * loopfxVolume);
@@ -96,7 +96,7 @@ void AudioManager::Update(float dt) {
 }
 
 
-void AudioManager::AddMusic(const std::string& path, const Engine::GUID& name) {
+void AudioManager::AddMusic(const std::string& path, const Engine::GUID<AudioAsset>& name) {
 
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC], 0, &sound);
@@ -104,7 +104,7 @@ void AudioManager::AddMusic(const std::string& path, const Engine::GUID& name) {
 	sounds[CATEGORY_MUSIC].emplace(name, sound);
 }
 
-void AudioManager::AddLoopFX(const std::string& path, const Engine::GUID name) {
+void AudioManager::AddLoopFX(const std::string& path, const Engine::GUID<AudioAsset> name) {
 
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_LOOPFX], 0, &sound);
@@ -113,7 +113,7 @@ void AudioManager::AddLoopFX(const std::string& path, const Engine::GUID name) {
 	sounds[CATEGORY_LOOPFX].emplace(name, sound);
 }
 
-void AudioManager::AddSFX(const std::string& path, const Engine::GUID name) {
+void AudioManager::AddSFX(const std::string& path, const Engine::GUID<AudioAsset> name) {
 	FMOD::Sound* sound;
 	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_SFX], 0, &sound);
 	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
@@ -121,7 +121,7 @@ void AudioManager::AddSFX(const std::string& path, const Engine::GUID name) {
 }
 
 //@kk change var name
-void AudioManager::PlayMusic(const Engine::GUID name) {
+void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name) {
 
 	if (currentMusicPath == name) {
 		groups[CATEGORY_MUSIC]->setPaused(false);
@@ -151,7 +151,7 @@ void AudioManager::PlayMusic(const Engine::GUID name) {
 
 }
 
-void AudioManager::PlayLoopFX(const Engine::GUID name, float pan, float vol,
+void AudioManager::PlayLoopFX(const Engine::GUID<AudioAsset> name, float pan, float vol,
 	float minPitch, float maxPitch) {
 
 	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
@@ -212,7 +212,7 @@ void AudioManager::PlayMusic() {
 		currentMusic->setPaused(false);
 		return;
 	}
-	if (nextMusicPath != DEFAULT_ASSETS["None.wav"])
+	if (nextMusicPath != 0)
 	{
 		currentMusicPath = nextMusicPath;
 	}
@@ -247,7 +247,7 @@ void AudioManager::PauseLoopFX() {
 	currentFX->setPaused(true);
 }
 
-void AudioManager::PlaySFX(const Engine::GUID name,
+void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	float pan,
 	float minVolume, float maxVolume,
 	float minPitch, float maxPitch)
@@ -281,13 +281,13 @@ void AudioManager::StopMusic() {
 void AudioManager::StopFX() {
 	currentFX->stop();
 	currentFX = 0;
-	currentFXPath = DEFAULT_ASSETS["None.wav"];
+	currentFXPath = 0;
 }
 
 void AudioManager::StopAllAudio() {
-	currentMusicPath = DEFAULT_ASSETS["None.wav"];
-	currentFXPath = DEFAULT_ASSETS["None.wav"];
-	nextMusicPath = DEFAULT_ASSETS["None.wav"];
+	currentMusicPath = 0;
+	currentFXPath = 0;
+	nextMusicPath = 0;
 	groups[CATEGORY_SFX]->stop();
 	groups[CATEGORY_MUSIC]->stop();
 	groups[CATEGORY_LOOPFX]->stop();
@@ -304,18 +304,18 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 	switch (static_cast<Category>(Source.current_channel))
 	{
 	case CATEGORY_SFX:
-		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		currentFXPath = 0;
 		groups[CATEGORY_SFX]->stop();
 		currentFX->stop();
 		break;
 	case CATEGORY_MUSIC:
-		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		currentFXPath = 0;
 		groups[CATEGORY_MUSIC]->stop();
 		currentMusic->stop();
 		fade = FADE_OUT;
 		break;
 	case CATEGORY_LOOPFX:
-		currentFXPath = DEFAULT_ASSETS["None.wav"];
+		currentFXPath = 0;
 		groups[CATEGORY_LOOPFX]->stop();
 		currentFX->stop();
 		break;

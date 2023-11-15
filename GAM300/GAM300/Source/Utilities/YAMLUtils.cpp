@@ -31,27 +31,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Components.h"
 #include "Scene/SceneManager.h"
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const std::vector<Engine::GUID>& _data)
-{
-    out << YAML::BeginMap;
-    for (Engine::GUID data : _data)
-    {
-        out << YAML::Key << "data" << YAML::Key << YAML::Flow << YAML::BeginMap;
-        out << YAML::Key << "guid" << YAML::Value << data << YAML::EndMap;
-    }
-    out << YAML::EndMap;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const ModelImporter& _data)
-{
-    out << YAML::Key << "meshes" << YAML::Value << _data.meshes;
-    out << YAML::Key << "materials" << YAML::Value << _data.materials;
-    out << YAML::Key << "animations" << YAML::Value << _data.animations;
-
-    return out;
-}
-
 YAML::Emitter& operator<<(YAML::Emitter& out, const Child& _data)
 {
     out << YAML::BeginSeq;
@@ -90,7 +69,7 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Vector4& v)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::GUID& v)
+YAML::Emitter& operator<<(YAML::Emitter& out, const Engine::HexID& v)
 {
     out << v.ToHexString();
     return out;

@@ -31,14 +31,14 @@ public:
 
     void Exit();
 
-    int AddAnimCopy(const Engine::GUID& animguid)//;
+    int AddAnimCopy(const Engine::GUID<AnimationAsset>& animguid)//;
     {
         int idx = (int)mAnimationSceneContainer.size();
         mAnimationSceneContainer.emplace(idx, mAnimationContainer[animguid]);
         return idx;
     }
 
-    void AddAnimation(const AnimationAsset& _animationAsset, const Engine::GUID& _guid);
+    void AddAnimation(const AnimationAsset& _animationAsset, const Engine::GUID<AnimationAsset>& _guid);
 
     Animation& GetAnimCopy(const int& idx)
     {
@@ -50,7 +50,7 @@ public:
 private:
 
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
-    std::unordered_map<Engine::GUID, Animation> mAnimationContainer; // GUID, Animation
+    std::unordered_map<Engine::GUID<AnimationAsset>, Animation> mAnimationContainer; // GUID, Animation
     std::unordered_map<int, Animation> mAnimationSceneContainer; // Index, Animation -> for current anims in scene
 };
 #endif // !ANIMATIONMANAGER_H
