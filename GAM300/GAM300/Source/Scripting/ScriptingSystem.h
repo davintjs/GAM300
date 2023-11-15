@@ -100,6 +100,53 @@ namespace DefaultMethodTypes
 	};
 }
 
+//Pass this into scripts
+template<typename T>
+struct ScriptObject
+{
+	ScriptObject(Object* object)
+	{
+		static_assert(std::is_base_of_v<Object, T>);
+		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
+	}
+
+	operator T& ()
+	{
+		return *reinterpret_cast<T*>(memoryAddress - (memOffset));
+	}
+
+	operator Object* ()
+	{
+		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
+	}
+
+private:
+	static size_t constexpr memOffset = sizeof(Object) - 16;
+	size_t memoryAddress;
+};
+
+template<>
+struct ScriptObject<Script>
+{
+	ScriptObject(Object* object)
+	{
+		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
+	}
+
+	operator Script& ()
+	{
+		return *reinterpret_cast<Script*>(memoryAddress - (memOffset));
+	}
+
+	operator Object* ()
+	{
+		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
+	}
+
+private:
+	MonoObject* script;
+};
+
 struct ScriptClass
 {
 	ScriptClass() = default;
