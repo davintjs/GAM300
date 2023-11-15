@@ -133,7 +133,8 @@ std::vector<T1*> MULTI_HANDLE::Get(Engine::UUID euid)
 	std::vector<T1*> arr;
 	for (auto& pair : entries[euid])
 	{
-		arr.push_back(pair.second);
+		if (pair.second->state != DELETED)
+			arr.push_back(pair.second);
 	}
 	return arr;
 }

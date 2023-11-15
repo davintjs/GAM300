@@ -963,6 +963,16 @@ void DisplayComponentHelper(T& component)
         if constexpr (!std::is_same<T, Transform>()) {
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
+                Entity& entity = curr_scene.Get<Entity>(component);
+                if constexpr (SingleComponentTypes::Has<T>())
+                {
+                    entity.hasComponentsBitset.set(GetType::E<T>(), false);
+                }
+                else if constexpr (MultiComponentTypes::Has<T>())
+                {
+                    if (curr_scene.GetMulti<T>(entity).size() == 1)
+                        entity.hasComponentsBitset.set(GetType::E<T>(), false);
+                }
                 Change newchange;
                 newchange.component = &component;
                 newchange.property = popup;
