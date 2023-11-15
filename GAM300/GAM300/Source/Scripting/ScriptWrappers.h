@@ -75,14 +75,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			}
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
-		addr += 8;
+		addr += 16;
 		return reinterpret_cast<void*>(addr);
 	}
 
 	static MonoString* GetTag(void* object)
 	{
 		size_t addr = reinterpret_cast<size_t>(object);
-		addr -= 8;
+		addr -= 16;
 		Object* pObject{ reinterpret_cast<Object*>(addr) };
 		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(pObject->EUID());
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
@@ -91,7 +91,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void AudioSourcePlay(AudioSource* pAudioSource)
 	{
 		size_t addr = reinterpret_cast<size_t>(pAudioSource);
-		addr -= 8;
+		addr -= 16;
 		pAudioSource = reinterpret_cast<AudioSource*>(addr);
 		AUDIOMANAGER.PlayComponent(*pAudioSource);
 	}
@@ -122,7 +122,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			}
 		}
 		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
-		addr += 8;
+		addr += 16;
 		return reinterpret_cast<void*>(addr);
 	}
 
@@ -195,7 +195,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			}
 		}
 		size_t addr = reinterpret_cast<size_t>(pObject);
-		addr -= 8;
+		addr -= 16;
 		return scene.GetActive(pair->second,reinterpret_cast<void*>(addr));
 	}
 
@@ -224,7 +224,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			}
 		}
 		size_t addr = reinterpret_cast<size_t>(pObject);
-		addr -= 8;
+		addr -= 16;
 		Scene::SetActiveHelper helper{ reinterpret_cast<void*>(addr),val };
 		return scene.SetActive(pair->second, &helper);
 	}

@@ -91,11 +91,11 @@ public class ThirdPersonController : Script
         //Handle Gravity 
         if (CC.isGrounded)
         {
-            if (pos.Count == 10)
+/*            if (pos.Count == 10)
             {
                 pos.RemoveAt(0);
             }
-            pos.Add(transform.localPosition);
+            pos.Add(transform.localPosition);*/
             //Small gravity applied when character is grounded to ensure grounded flag stays active
             VerticalVelocity = new vec3(0,-1,0) * 0.5f;
 
@@ -104,10 +104,10 @@ public class ThirdPersonController : Script
                 VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
             }
         }
-        else if (transform.localPosition.y <= -10f)
+/*        else if (transform.localPosition.y <= -10f)
         {
             transform.localPosition = pos[0];
-        }
+        }*/
         // else
         // {
         //     //Increase gravity for every frame we're not contacting the ground

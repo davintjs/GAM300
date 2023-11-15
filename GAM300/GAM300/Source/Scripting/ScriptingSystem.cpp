@@ -674,7 +674,7 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 		Object*& pObject = *(Object**)field.data;
 		if (!pObject)
 			return;
-		pObject = (Object*)((size_t)pObject - 8);
+		pObject = (Object*)((size_t)pObject - 16);
 		return;
 	}
 	//If mono object, it contains reference to type
@@ -741,7 +741,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
 		{
-			pObject = (Object*)(size_t(pObject) + 8);
+			pObject = (Object*)(size_t(pObject) + 16);
 			mono_field_set_value(instance, mClassField, pObject);
 		}
 		return;
@@ -770,7 +770,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb2) + 8;
+			size_t addr = reinterpret_cast<size_t>(&rb2) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
@@ -789,7 +789,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb1) + 8;
+			size_t addr = reinterpret_cast<size_t>(&rb1) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
