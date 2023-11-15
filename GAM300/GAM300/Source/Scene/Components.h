@@ -457,7 +457,7 @@ struct ParticleComponent : Object
 {
 	ParticleComponent() {}
 	int numParticles_ = 1;
-	float particleLifetime_ = 0.0f;
+	float particleLifetime_ = 3.0f;
 	float particleEmissionRate_ = 0.0f;
 	//Particle* particles_;
 	std::vector<Particle> particles_;

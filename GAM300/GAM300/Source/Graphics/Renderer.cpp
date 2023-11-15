@@ -300,13 +300,13 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 #ifndef _BUILD
 	//Draw Debug grids
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) 
+	/*for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) 
 	{
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
 		DrawGrid(vao, (unsigned)prop.entitySRT.size());
-	}
+	}*/
 #endif
 
 	//Non-Instanced Rendering

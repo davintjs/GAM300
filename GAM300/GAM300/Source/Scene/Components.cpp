@@ -178,7 +178,7 @@ void ParticleComponent::Initialize(int numParticles, float particleLifetime, flo
 	particles_.resize(numParticles_);
 	for (int i = 0; i < numParticles_; i++) {
 		particles_[i].position = glm::vec3(0.0f);
-		particles_[i].velocity = glm::vec3(0.0f);
+		particles_[i].velocity = glm::vec3(1.0f, 0.f, 0.f); // @kk changed this to test, pls do change back
 		particles_[i].acceleration = glm::vec3(0.0f);
 		particles_[i].lifetime = particleLifetime_;
 	}
@@ -199,8 +199,8 @@ void ParticleComponent::Update(float dt)
 		for (int i = 0; i < numParticles_; i++) {
 			if (particles_[i].lifetime <= 0.0f) {
 				particles_[i].position = glm::vec3(0.0f);
-				particles_[i].velocity = glm::vec3(0.0f);
-				particles_[i].acceleration = glm::vec3(0.0f);
+				//particles_[i].velocity = glm::vec3(0.0f); // shouldnt be 0
+				particles_[i].acceleration = glm::vec3(0.0f); // shouldnt be 0?
 				particles_[i].lifetime = particleLifetime_;
 			}
 		}

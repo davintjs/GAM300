@@ -30,16 +30,21 @@ void ParticleManager::Update(float dt)
     InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
 
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
-        if (particleComponent.numParticles_ >= 0) {
+        if (particleComponent.particles_.empty()) {
             particleComponent.Initialize(particleComponent.numParticles_, particleComponent.particleLifetime_, particleComponent.particleEmissionRate_);
         }
         particleComponent.Update(dt);
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         Transform& entityTransform = currentScene.Get<Transform>(entity);
-        Transform particleTransform = entityTransform;
+        //Transform particleTransform = entityTransform;
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
-            particleTransform.GetTranslation() += particleComponent.particles_[i].position;
-            particleSRT.emplace_back(particleTransform.GetWorldMatrix());/**/
+            //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
+            particleSRT.emplace_back(
+                entityTransform.GetWorldMatrix() +  glm::mat4(
+                                                        glm::vec4(1, 0, 0, 0), 
+                                                        glm::vec4(0, 1, 0, 0), 
+                                                        glm::vec4(0, 0, 1, 0), 
+                                                        glm::vec4(particleComponent.particles_[i].position + entityTransform.GetTranslation(), 0)));/**/
         }
     }
 }
