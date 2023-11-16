@@ -258,7 +258,7 @@ public:
 	using FieldMap = std::unordered_map<std::string, Field>;
 
 	//Script guid to script class
-	std::unordered_map<Engine::GUID, ScriptClass> scriptClassMap;
+	std::unordered_map<Engine::GUID<ScriptAsset>, ScriptClass> scriptClassMap;
 	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 	//Cached fields

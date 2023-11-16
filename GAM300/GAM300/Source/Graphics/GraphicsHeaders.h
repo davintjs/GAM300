@@ -118,12 +118,12 @@ struct Material_instance : Object
 	float			aoConstant;
 	float			emissionConstant;
 
-	Engine::GUID	albedoTexture;
-	Engine::GUID	normalMap;
-	Engine::GUID	metallicTexture;
-	Engine::GUID	roughnessTexture;
-	Engine::GUID	aoTexture;
-	Engine::GUID	emissionTexture;
+	Engine::GUID<TextureAsset>	albedoTexture;
+	Engine::GUID<TextureAsset>	normalMap;
+	Engine::GUID<TextureAsset>	metallicTexture;
+	Engine::GUID<TextureAsset>	roughnessTexture;
+	Engine::GUID<TextureAsset>	aoTexture;
+	Engine::GUID<TextureAsset>	emissionTexture;
 
 
 
@@ -180,13 +180,13 @@ public:
 	// Duplicating Material Instance
 	Material_instance& DuplicateMaterial(const Material_instance & instance);
 
-	Engine::GUID NewMaterialInstance(std::string _name = "Default Material");
+	Engine::GUID<MaterialAsset> NewMaterialInstance(std::string _name = "Default Material");
 
 	// Deleting a Material Instance
-	void deleteInstance(Engine::GUID& matGUID);
+	void deleteInstance(Engine::GUID<MaterialAsset>& matGUID);
 	
 	// Deserialize Materials 
-	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID & _guid);
+	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID<MaterialAsset> & _guid);
 
 	//MaterialAsset& GetMaterialAsset(const Engine::GUID & meshID);
 
@@ -194,11 +194,11 @@ public:
 	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
 
 	// capture Material Instance
-	Material_instance& getMaterialInstance(Engine::GUID matGUID);
+	Material_instance& getMaterialInstance(Engine::GUID<MaterialAsset> matGUID);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
-	std::unordered_map< Engine::GUID, Material_instance> _allMaterialInstances;
+	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _allMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 
@@ -305,7 +305,7 @@ public:
 
 private:
 
-	InstanceContainer* properties;
+	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -408,7 +408,7 @@ public:
 
 	gBuffer m_gBuffer;
 private:
-	std::unordered_map<Engine::GUID, InstanceProperties> properties;
+	std::unordered_map<Engine::GUID<MaterialAsset>, InstanceProperties> properties;
 	InstanceContainer instanceProperties; // <vao, properties>
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype

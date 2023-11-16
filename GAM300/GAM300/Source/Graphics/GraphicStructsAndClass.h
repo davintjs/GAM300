@@ -113,6 +113,7 @@ union Light_Type
 struct LightProperties
 {
 	bool inUse = true;
+	bool enableShadow = true;
 	// Used in point & Spot
 	glm::vec3 lightpos;
 

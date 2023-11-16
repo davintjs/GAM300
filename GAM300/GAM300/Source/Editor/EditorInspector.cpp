@@ -158,13 +158,10 @@ void DisplayType(Change& change, const char* name, char*& val)
     }
 }
 
-void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
+template<typename AssetType>
+void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetType>& guid)
 {
     static ImGuiTextFilter filter;
-    fs::path extension = fp.extension();
-    size_t extensionType = GetAssetType::E<Asset>();
-    if (AssetExtensionTypes.contains(extension))
-        extensionType = AssetExtensionTypes[extension];
 
     ImGui::SameLine();
     ImGuiWindowFlags win_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
@@ -179,6 +176,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(250.f, 300.f));
+
+
+    GetAssetsEvent<AssetType> assetsEvent{};
+    EVENTS.Publish(&assetsEvent);
 
     if (ImGui::BeginPopup("Texture", win_flags)) {
         
@@ -201,19 +202,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
         //remove texture icon
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
         size_t id = (size_t)GET_TEXTURE_ID("Assets/Icons/Cancel_Icon.dds");
-        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) {
-            for (auto& pair : DEFAULT_ASSETS)
-            {
-                if (pair.first.extension() != extension)
-                    continue;
-
-                if (pair.first.string().starts_with("None"))
-                {
-                    EDITOR.History.SetPropertyValue(change, guid, pair.second);
-                    break;
-                }
-            }
-
+        if (ImGui::ImageButton((ImTextureID)id, { iconsize, iconsize }, { 0 , 1 }, { 1 , 0 })) 
+        {
+            static Engine::GUID<AssetType> none{ 0 };
+            EDITOR.History.SetPropertyValue(change, guid, none);
             ImGui::PopStyleColor();
             ImGui::EndChild();
             ImGui::EndPopup();
@@ -227,154 +219,43 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
 
         int i = 0;
 
-        for (auto& pair : DEFAULT_ASSETS)
-        {
-            if (pair.first.extension() != extension)
-                continue;
-
-            if (pair.first.string().starts_with("None"))
-                continue;
-            
-            if (!filter.PassFilter(pair.first.string().c_str()))
-                continue;
-
-
-            fs::path icon = "Assets/Icons/fileicon.dds";
-
-            //if not png or dds file, dont show
-
-            ImGui::PushID(i++);
-
-            //render respective file icon textures
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-            ImTextureID icon_id = (ImTextureID)TextureManager.GetTexture(icon);
-            if (ImGui::ImageButton(icon_id, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-            {
-                EDITOR.History.SetPropertyValue(change, guid, pair.second);
-            }
-            ImGui::PopStyleColor();
-            ImGui::TextWrapped(pair.first.stem().string().c_str());
-
-            //render file name below icon
-            ImGui::NextColumn();
-            ImGui::PopID();
-        }
-
         //using filesystem to iterate through all folders/files inside the "/Data" directory
 
-        if (extension == ".geom")
-        //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
+        for (auto& assetPair : *assetsEvent.pAssets)
         {
-            // Bean: Put this publish event in the open popup in the future
-            GetAssetsEvent<MeshAsset> e1;
-            EVENTS.Publish(&e1);
-            fs::path icon = "Assets/Icons/fileicon.dds";
-            auto iconID = GET_TEXTURE_ID(icon);
+            const auto& path = assetPair.second.mFilePath;
 
-            for (auto& meshAsset : *e1.pAssets)
-            {                    
-                std::string path = meshAsset.second.mFilePath.stem().string().c_str();
+            if (!filter.PassFilter(path.string().c_str()))
+                continue;
+            //if (path.extension() != extension)
 
-                if (!filter.PassFilter(path.c_str()))
-                    continue;
+            //if not png or dds file, dont show
+            Engine::GUID<AssetType> currentGUID{ assetPair.first };
 
-                //render respective file icon textures
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                ImGui::PushID(i++);
-                ImTextureID textureID = (ImTextureID)iconID;
-                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-                {
-                    Engine::GUID currentGUID = meshAsset.first;
-                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-                    //PRINT("Using guid: ", currentGUID.ToHexString(), " name: ", meshAsset.second.mFilePath.stem().string(), "\n");
-                }
-                ImGui::PopID();
-                ImGui::PopStyleColor();
-                ImGui::TextWrapped(path.c_str());
-
-                //render file name below icon
-                ImGui::NextColumn();
-                
-            }
-        }
-        else if(extension == ".anim")
-            //for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
-        {
-            // Bean: Put this publish event in the open popup in the future
-            GetAssetsEvent<AnimationAsset> e2;
-            EVENTS.Publish(&e2);
-            fs::path icon = "Assets/Icons/fileicon.dds";
-            auto iconID = GET_TEXTURE_ID(icon);
-
-            for (auto& animAsset : *e2.pAssets)
+            //Draw the file / folder icon based on whether it is a directory or not
+            GLuint icon_id = defaultFileIcon;
+            if constexpr (std::is_same_v<AssetType,TextureAsset>)
             {
-                std::string path = animAsset.second.mFilePath.stem().string().c_str();
-
-                if (!filter.PassFilter(path.c_str()))
-                    continue;
-
-                //render respective file icon textures
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                ImGui::PushID(i++);
-                ImTextureID textureID = (ImTextureID)iconID;
-                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-                {
-                    Engine::GUID currentGUID = animAsset.first;
-                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-
-                }
-                ImGui::PopID();
-                ImGui::PopStyleColor();
-                ImGui::TextWrapped(path.c_str());
-
-                //render file name below icon
-                ImGui::NextColumn();
-
-            }
-        }
-        else
-        {
-            for (auto& it : std::filesystem::recursive_directory_iterator{ "Assets" })
-            {
-                const auto& path = it.path();
-                if (path.extension() != extension)
-                    continue;
-
-                if (!filter.PassFilter(path.string().c_str()))
-                    continue;
-                if (!AssetExtensionTypes.contains(path.extension()))
-                    continue;
-                if (AssetExtensionTypes[path.extension()] != extensionType)
-                    continue;
-                //if (path.extension() != extension)
-
-                GetAssetEvent e { path };
-                EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
-
-                //if not png or dds file, dont show
-
-                //Draw the file / folder icon based on whether it is a directory or not
-                GLuint icon_id = GET_TEXTURE_ID(currentGUID);
+                icon_id = GET_TEXTURE_ID(currentGUID);
                 if (icon_id == 0) {
                     icon_id = defaultFileIcon;
                 }
-
-                ImGui::PushID(i++);
-                ImTextureID textureID = (ImTextureID)icon_id;
-                //render respective file icon textures
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
-                if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
-                {
-                    EDITOR.History.SetPropertyValue(change, guid, currentGUID);
-                }
-            
-                ImGui::PopStyleColor();
-                ImGui::TextWrapped(path.stem().string().c_str());
-
-                ImGui::NextColumn();
-                ImGui::PopID();
             }
+
+            ImGui::PushID(i++);
+            ImTextureID textureID = (ImTextureID)icon_id;
+            //render respective file icon textures
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0, 0, 0, 0 });
+            if (ImGui::ImageButton(textureID, { iconsize, iconsize }, { 0 , 0 }, { 1 , 1 }))
+            {
+                EDITOR.History.SetPropertyValue(change, guid, currentGUID);
+            }
+            
+            ImGui::PopStyleColor();
+            ImGui::TextWrapped(path.stem().string().c_str());
+
+            ImGui::NextColumn();
+            ImGui::PopID();
         }
        
         ImGui::Columns(1);
@@ -383,49 +264,18 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID& guid)
     }
 }
 
-template <typename... Ts>
-fs::path DisplayGUIDHelper(TemplatePack<Ts...>, Engine::GUID& guid)
-{
-    fs::path path;
-    if (([&](auto type)
-    {
-        using T = decltype(type);
-        GetFilePathEvent<T> e{ guid };
-        EVENTS.Publish(&e);
-        if (e.filePath == "")
-            return false;
-        path = e.filePath;
-        return true;
-    }
-    (Ts{}) || ...))
-    {
-        return path;
-    }
-    return path;
-}
-
-void DisplayType(Change& change, const char* name, Engine::GUID& val)
+template <typename AssetType>
+void DisplayType(Change& change, const char* name, Engine::GUID<AssetType>& val)
 {
     static std::string idName{};
     idName = "##";
     idName += name;
     //Val is a default asset guid
-    fs::path fp;
-    for (auto& pair : DEFAULT_ASSETS)
-    {
-        if (pair.second == val)
-        {
-            fp = pair.first;
-            break;
-        }
-    }
-    if (fp.empty())
-    {
-        fp = DisplayGUIDHelper(AssetTypes(),val);
-    }
-    const std::string& pathStr = fp.stem().string();
+    GetFilePathEvent<AssetType> e{ val };
+    EVENTS.Publish(&e);
+    const std::string& pathStr = e.filePath.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
-    DisplayAssetPicker(change,fp,val);
+    DisplayAssetPicker(change,e.filePath, val);
 }
 
 
@@ -1113,6 +963,16 @@ void DisplayComponentHelper(T& component)
         if constexpr (!std::is_same<T, Transform>()) {
             if (ImGui::MenuItem("Remove Component")) {
                 //Destroy current component of current selected entity in editor
+                Entity& entity = curr_scene.Get<Entity>(component);
+                if constexpr (SingleComponentTypes::Has<T>())
+                {
+                    entity.hasComponentsBitset.set(GetType::E<T>(), false);
+                }
+                else if constexpr (MultiComponentTypes::Has<T>())
+                {
+                    if (curr_scene.GetMulti<T>(entity).size() == 1)
+                        entity.hasComponentsBitset.set(GetType::E<T>(), false);
+                }
                 Change newchange;
                 newchange.component = &component;
                 newchange.property = popup;
@@ -1271,7 +1131,7 @@ private:
                         }
                         else
                         {
-                            temp = MESHMANAGER.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
+                            temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
                         }
 
                         pObject->dimensions.x = temp.scalarBound.x;
@@ -1706,7 +1566,7 @@ void EditorInspector::Update(float dt)
 
         if (CENTERED_CONTROL(ImGui::Button("Save Material", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
         {
-            GetFilePathGenericEvent e{ EditorContentBrowser::Instance().selectedAss };
+            GetFilePathEvent<MaterialAsset> e{ EditorContentBrowser::Instance().selectedAss };
             EVENTS.Publish(&e);
             std::string fPathStr{ e.filePath.string() };
             size_t strPos = fPathStr.find_last_of("\\");
@@ -1733,7 +1593,7 @@ void EditorInspector::Update(float dt)
                 fPath += material.name.c_str();
                 fPath += ".material";
                 Serialize(material);
-                GetAssetEvent pathEvent(fPath);
+                GetAssetEvent<MaterialAsset> pathEvent(fPath);
                 EVENTS.Publish(&pathEvent);
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }

@@ -1,5 +1,6 @@
-[2023-11-10 15:03:59.921] [Error] [critical] 
+[2023-11-14 21:40:16.658] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
+Info:		ERROR: PlayerModel has guid: f78435a0fc7c773ceedfd53d911a8c45 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 286)
 

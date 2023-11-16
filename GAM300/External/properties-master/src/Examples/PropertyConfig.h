@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <Utilities/GUID.h>
+#include <AssetManager/AssetTypes.h>
 #include <Debugging/Debugger.h>
 
 using string_t = std::string;
@@ -308,7 +309,6 @@ namespace property
     constexpr editor::style_info<string_t>      edstyle<string_t>::     Default     (void)                                              noexcept { return {}; }
     constexpr editor::style_info<string_t>      edstyle<string_t>::     Button      (void)                                              noexcept { return {}; }
 #endif
-
     //--------------------------------------------------------------------------------------------
     // Settings for the property system
     //--------------------------------------------------------------------------------------------
@@ -329,7 +329,16 @@ namespace property
             , Vector3
             , Vector4
             , char*
-            , Engine::GUID                  
+            , Engine::GUID<MeshAsset>
+            , Engine::GUID<Asset>
+            , Engine::GUID<ModelAsset>
+            , Engine::GUID<TextureAsset>
+            , Engine::GUID<MaterialAsset>
+            , Engine::GUID<ShaderAsset>
+            , Engine::GUID<AudioAsset>
+            , Engine::GUID<ScriptAsset>
+            , Engine::GUID<AnimationAsset>
+            , Engine::HexID
         >;
     
         //--------------------------------------------------------------------------------------------

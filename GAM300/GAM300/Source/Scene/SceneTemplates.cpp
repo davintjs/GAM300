@@ -242,12 +242,12 @@ void Scene::Destroy(T& object)
 	if constexpr (std::is_same<T, Entity>())
 	{
 		entitiesDeletionBuffer.push_back(&object);
-		PRINT(Get<Tag>(object).name);
 		entities.SetActive((ObjectIndex)object.uuid, false);
 		
 		Transform& transform = Get<Transform>(object);
 		transform.SetParent(nullptr);
 		auto children{ transform.child };
+
 		for (auto& child : children)
 		{
 			Destroy<Entity>(Get<Entity>(child));
@@ -258,9 +258,10 @@ void Scene::Destroy(T& object)
 	{
 		componentsDeletionBuffer.GetArray<T>().push_back(&object);
 		auto& arr = singleComponentsArrays.GetArray<T>();
+
 		ObjectIndex index = arr.GetDenseIndex(object);
 		arr.SetActive(index, false);
-		entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
+		Get<Entity>(object).hasComponentsBitset.set(GetType::E<T>(), false);
 	}
 	else if constexpr (MultiComponentTypes::Has<T>())
 	{
@@ -339,7 +340,16 @@ bool Scene::IsActive(T& object)
 	auto& arr = GetArray<T>();
 	if constexpr (std::is_same_v<T, Entity>)
 	{
-		return arr.IsActiveDense(arr.GetDenseIndex(object));
+		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
+		Transform& t = Get<Transform>(object);
+
+		if (isActive && t.parent)
+		{
+			Entity& parentEntity = Get<Entity>(t.parent);
+			return IsActive(parentEntity);
+		}
+
+		return isActive;
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())
 	{
@@ -377,7 +387,6 @@ void Scene::SetActive(const Handle& handle, bool val)
 {
 	SetActive(Get<T>(handle), val);
 }
-
 
 template <typename Component>
 bool Scene::Has(const Entity& entity)
