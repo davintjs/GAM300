@@ -131,7 +131,7 @@ void EditorContentBrowser::Update(float dt)
             if (ext == "geom") { //mesh files
                 GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
@@ -139,7 +139,7 @@ void EditorContentBrowser::Update(float dt)
             {
                 GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MaterialAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MATERIAL;
             }

@@ -133,6 +133,37 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, const std::string& _
 
         ASSET.AddSubAsset(meshAsset,meshImporter);
 
+        // Bean: For testing vertices
+        /*if (meshAsset.mFilePath.stem().string().find("Floor1x1Merged") != std::string::npos)
+        {
+            std::string name = meshAsset.mFilePath.stem().string();
+            name += "vert.txt";
+            std::ofstream test(name);
+            test << "Num vertices: " << meshAsset.numVertices << "\n";
+            float topVert = meshAsset.boundsMax.y;
+            for (size_t j = 0; j < meshAsset.numVertices; j++)
+            {
+                ModelVertex& v = meshAsset.vertices[j];
+
+                if(v.position.y >= topVert)
+                    test << "Vertex " << j << ": " << v.position.x << " " << v.position.y << " " << v.position.z << "\n";
+            }
+
+            test.close();
+
+            name = meshAsset.mFilePath.stem().string();
+            name += "ind.txt";
+            test.open(name);
+            test << "Num indices: " << meshAsset.numIndices << "\n";
+            for (size_t j = 0; j < meshAsset.numIndices; j += 3)
+            {
+                auto& v = meshAsset.indices;
+                if(meshAsset.vertices[v[j]].position.y >= topVert && meshAsset.vertices[v[j + 1]].position.y >= topVert && meshAsset.vertices[v[j + 2]].position.y >= topVert)
+                    test << "Indices: " << v[j] << " " << v[j + 1] << " " << v[j + 2] << "\n";
+            }
+
+            test.close();
+        }*/
     }
 }
 
