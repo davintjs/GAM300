@@ -123,6 +123,14 @@ struct AssimpNodeData
     std::vector<AssimpNodeData> children;
 };
 
+struct AnimationState
+{
+    std::string label;
+    glm::vec2 minMax; //x for min , y for max
+
+    AnimationState() { label = "New state"; minMax = glm::vec2(); }
+    AnimationState(const std::string& _label, const glm::vec2& _vec2) : label(_label), minMax(_vec2) {}
+};
 
 class Animation
 {
@@ -131,7 +139,7 @@ public:
 
     inline float& GetDuration() { return m_Duration; }
     inline int& GetTicksPerSecond() { return m_TicksPerSecond; }
-    inline std::unordered_map<std::string, glm::vec2>& GetAnimationRange() { return m_AnimationRange; }
+    inline std::vector<AnimationState>& GetAnimationRange() { return m_AnimationRange; }
     inline std::vector<Bone>& GetBones() { return m_Bones; }
     inline AssimpNodeData& GetRootNode() { return m_RootNode; }
     inline std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_BoneInfoMap; }
@@ -140,7 +148,7 @@ public:
 protected:
     float m_Duration;
     int m_TicksPerSecond;
-    std::unordered_map<std::string, glm::vec2> m_AnimationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
+    std::vector<AnimationState> m_AnimationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
     std::vector<Bone> m_Bones; // Bean: We need to copy this for animator 
     AssimpNodeData m_RootNode;
     std::map<std::string, BoneInfo> m_BoneInfoMap; // Bean: We need to copy this for animator

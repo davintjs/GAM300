@@ -1674,7 +1674,7 @@ void EditorInspector::Update(float dt)
                 ImGui::TableNextColumn();
                 ImGui::Text("Scale Factor");
                 ImGui::TableNextColumn();
-                ImGui::DragFloat("##scalefloat", &model->scale_factor, 0.01f);
+                ImGui::DragFloat("##scalefloat", &model->scaleFactor, 0.01f);
             }
             else { //Animation         
                 auto& anims = model->animations;
@@ -1706,7 +1706,7 @@ void EditorInspector::Update(float dt)
                     ImGui::Text("Animation States");
                     ImGui::TableNextColumn();
                     if (ImGui::Button("+")) {
-                        anim_states.push_back(anim_state());
+                        anim_states.push_back(AnimationState());
                     }
 
                     int i = 0;
@@ -1718,10 +1718,10 @@ void EditorInspector::Update(float dt)
                         ImGui::InputText("##Label", &state.label);
                         ImGui::TableNextColumn();
                         ImGui::Text("Min"); ImGui::SameLine();
-                        ImGui::InputFloat("##Min", &state.min_max.x);
+                        ImGui::InputFloat("##Min", &state.minMax.x);
                         ImGui::TableNextColumn();
                         ImGui::Text("Max"); ImGui::SameLine();
-                        ImGui::InputFloat("##Max", &state.min_max.y);
+                        ImGui::InputFloat("##Max", &state.minMax.y);
                         ImGui::SameLine();
                         ImGui::TableNextColumn();
                         if (ImGui::Button("-")) {

@@ -191,15 +191,15 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, const std::string
         AssetImporter<MaterialAsset> materialImporter{};
 
         // If there is already materials in the importer reassign it
-        if (j < importer.materials.size())
-        {
-            materialImporter = { importer.materials[j] };
-        }
-        else
-        {
-            //Add to model importer guid
-            importer.materials.push_back(materialImporter.guid);
-        }
+        //if (j < importer.materials.size())
+        //{
+        //    materialImporter = { importer.materials[j] };
+        //}
+        //else
+        //{
+        //    //Add to model importer guid
+        //    importer.materials.push_back(materialImporter.guid);
+        //}
         //Uncomment this once Materials are converted to material asset
         //ASSET.AddSubAsset(std::move(meshAsset), std::move(materialImporter));
     }

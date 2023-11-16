@@ -147,9 +147,9 @@ void Serialize(YAML::Emitter& out, T& object)
         {
             out << YAML::Key << "animationStates" << YAML::Value << YAML::BeginMap;
 
-            for (auto& [name, range] : object.animationStates)
+            for (auto& state : object.animationStates)
             {
-                out << YAML::Key << name << YAML::Value << Vector2(range);
+                out << YAML::Key << state.label << YAML::Value << Vector2(state.minMax);
             }
 
             out << YAML::EndMap;
@@ -265,7 +265,7 @@ bool Deserialize(const std::filesystem::path& path, T& object)
             YAML::Node animationStates = node["animationStates"];
             for (YAML::const_iterator it = animationStates.begin(); it != animationStates.end(); ++it)
             {
-                object.animationStates.emplace(it->first.as<std::string>(), glm::vec2(it->second.as<Vector2>()));
+                object.animationStates.emplace_back(AnimationState(it->first.as<std::string>(), glm::vec2(it->second.as<Vector2>())));
             }
         }
     }
