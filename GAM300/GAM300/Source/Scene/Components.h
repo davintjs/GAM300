@@ -391,28 +391,6 @@ struct Canvas : Object
 	} property_vend_h(Canvas)
 
 
-//struct ParticleComponent : Object
-//{
-//	ParticleComponent() {}
-//	int numParticles_ = 1;
-//	float particleLifetime_ = 0.0f;
-//	float particleEmissionRate_ = 0.0f; 
-//	Particle* particles_;
-//
-//	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate); 
-//	void Update(float dt);
-//	void Render();
-//	property_vtable();
-//};
-//
-//property_begin_name(ParticleComponent, "ParticleComponent")
-//{
-//	property_var(numParticles_).Name("NumberOfParticles"),
-//	property_var(particleLifetime_).Name("ParticleLifetime"),
-//	property_var(particleEmissionRate_).Name("ParticleEmissionRate")
-//
-//} property_vend_h(ParticleComponent)
-
 struct Particle : Object
 {
 	Particle() {}
@@ -430,12 +408,8 @@ struct ParticleComponent : Object
 	int numParticles_ = 1;
 	float particleLifetime_ = 3.0f;
 	float particleEmissionRate_ = 0.0f;
-	//Particle* particles_;
 	std::vector<Particle> particles_;
 
-	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate);
-	void Update(float dt);
-	void Render();
 	property_vtable();
 };
 

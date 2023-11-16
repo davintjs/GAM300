@@ -168,45 +168,6 @@ Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 	cameraType = CAMERATYPE::GAME;
 }
 
-void ParticleComponent::Initialize(int numParticles, float particleLifetime, float particleEmissionRate)
-{
-	numParticles_ = numParticles;
-	particleLifetime_ = particleLifetime;
-	particleEmissionRate_ = particleEmissionRate;
-	//particles_.resize(numParticles_);
-	// Initialize the position, velocity, and acceleration of each particle
-	particles_.resize(numParticles_);
-	for (int i = 0; i < numParticles_; i++) {
-		particles_[i].position = glm::vec3(0.0f);
-		particles_[i].velocity = glm::vec3(1.0f, 0.f, 0.f); // @kk changed this to test, pls do change back
-		particles_[i].acceleration = glm::vec3(0.0f);
-		particles_[i].lifetime = particleLifetime_;
-	}
-}
- 
-
-void ParticleComponent::Update(float dt)
-{
-	// Update the position, velocity, and acceleration of each particle
-	for (int i = 0; i < numParticles_; i++) {
-		particles_[i].position += particles_[i].velocity * dt;
-		particles_[i].velocity += particles_[i].acceleration * dt;
-		particles_[i].lifetime -= dt;
-	}
-	// Handle particle collisions
-	// Emit new particles
-	if (particleEmissionRate_ > 0.0f) {
-		for (int i = 0; i < numParticles_; i++) {
-			if (particles_[i].lifetime <= 0.0f) {
-				particles_[i].position = glm::vec3(0.0f);
-				//particles_[i].velocity = glm::vec3(0.0f); // shouldnt be 0
-				particles_[i].acceleration = glm::vec3(0.0f); // shouldnt be 0?
-				particles_[i].lifetime = particleLifetime_;
-			}
-		}
-	}
-}
-
 void on_click_callback(void)
 {
 	printf("Button clicked!\n");
