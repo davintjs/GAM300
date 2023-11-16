@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <glm/vec2.hpp>
 #include <filesystem>
 #include <AssetManager/AssetTypes.h>
+#include <AssetManager/ImporterTypes.h>
 
 struct Entity;
 struct Scene;
@@ -150,6 +151,15 @@ struct GetAssetEvent: IEvent
 	const fs::path& filePath;
 	Engine::GUID<T> guid;
 	Asset* asset;
+};
+
+template <typename T>
+struct GetAssetByGUIDEvent : IEvent
+{
+	GetAssetByGUIDEvent(Engine::GUID<T> _guid) : guid{ _guid } {}
+	Engine::GUID<T> guid;
+	AssetImporter<T>* importer;
+	T* asset;
 };
 
 template <typename T>

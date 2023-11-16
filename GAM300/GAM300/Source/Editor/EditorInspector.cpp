@@ -1604,13 +1604,7 @@ void EditorInspector::Update(float dt)
         ImGui::End();
     }
 
-    struct anim_state {
-        std::string label;
-        ImVec2 min_max; //x for min , y for max
-
-        anim_state() { label = "New state"; min_max = ImVec2(); }
-        anim_state(std::string _label, ImVec2 vec2) : label(_label), min_max(vec2) {}
-    };
+    
 
     if (model_inspector) {
 
@@ -1637,7 +1631,7 @@ void EditorInspector::Update(float dt)
             | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
             | ImGuiTableFlags_PadOuterX;
 
-
+       
         ImGui::PushStyleColor(ImGuiCol_Button, Model ? selected : normal); 
         if (ImGui::Button("Model", buttonSize))
             Model = true;
@@ -1652,13 +1646,18 @@ void EditorInspector::Update(float dt)
         ImGui::Dummy(ImVec2(0, 10.f));
         ImGui::Separator();
 
-        //temp values
-        static int ScaleFloat = 0;
-        static int Duration = 50;
-        static int TicksPerSec = 10;
-        static std::vector<anim_state>anim_states;
-        static bool openpopup = false;
-        if (ImGui::BeginTable("Model", 3, tableflags))
+        /*for (auto& anim_guid : model->animations) {
+            GetAssetByGUIDEvent<AnimationAsset> anim{ anim_guid };
+            EVENTS.Publish(&anim);
+            anim.asset->ticksPerSecond;
+        }*/
+
+        //Get current model asset
+        GetAssetByGUIDEvent<ModelAsset> e{ EditorContentBrowser::Instance().selectedAss };
+        EVENTS.Publish(&e);
+        auto model = e.importer;
+
+        if (ImGui::BeginTable("Model", 4, tableflags))
         {
             ImGui::Indent();
             ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
@@ -1669,52 +1668,77 @@ void EditorInspector::Update(float dt)
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
+
             if (Model) {
                 ImGui::AlignTextToFramePadding();
                 ImGui::TableNextColumn();
                 ImGui::Text("Scale Factor");
                 ImGui::TableNextColumn();
-                ImGui::DragInt("##scalefloat", &ScaleFloat, 0.01f);
+                ImGui::DragFloat("##scalefloat", &model->scale_factor, 0.01f);
             }
-            else { //Animation
-                ImGui::AlignTextToFramePadding();
-                ImGui::TableNextColumn();
-                ImGui::Text("Duration");
-                ImGui::TableNextColumn();
-                std::string duration = std::to_string(Duration);
-                ImGui::Text(duration.c_str());
-                ImGui::TableNextRow();
+            else { //Animation         
+                auto& anims = model->animations;
 
-                ImGui::TableNextColumn();
-                ImGui::Text("Ticks Per Second");
-                ImGui::TableNextColumn();
-                //ImGui::InputInt("##tickspersec", &TicksPerSec, ImGuiInputTextFlags_ReadOnly);
-                std::string tickspersecond = std::to_string(TicksPerSec);
-                ImGui::Text(tickspersecond.c_str());
-                ImGui::TableNextRow();
+                //Get current (first) animation asset
+                if (!anims.empty()) {
+                    auto& anim_states = model->animationStates;
 
-                ImGui::TableNextColumn();
-                ImGui::Text("Animation States");
-                ImGui::TableNextColumn();
-                if (ImGui::Button("+")) {
-                    anim_states.push_back(anim_state());
+                    GetAssetByGUIDEvent<AnimationAsset> anim{ model->animations[0] };
+                    EVENTS.Publish(&anim);                    
+
+                    ImGui::AlignTextToFramePadding();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Duration");
+                    ImGui::TableNextColumn();
+                    int dur = (int)anim.asset->duration;
+                    std::string duration = std::to_string(dur);
+                    ImGui::Text(duration.c_str());
+                    ImGui::TableNextRow();
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Ticks Per Second");
+                    ImGui::TableNextColumn();
+                    std::string tickspersecond = std::to_string(anim.asset->ticksPerSecond);
+                    ImGui::Text(tickspersecond.c_str());
+                    ImGui::TableNextRow();
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text("Animation States");
+                    ImGui::TableNextColumn();
+                    if (ImGui::Button("+")) {
+                        anim_states.push_back(anim_state());
+                    }
+
+                    int i = 0;
+                    for (auto& state : model->animationStates) {
+                        ImGui::PushID(i);
+                        ImGui::TableNextRow();
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Label"); ImGui::SameLine();
+                        ImGui::InputText("##Label", &state.label);
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Min"); ImGui::SameLine();
+                        ImGui::InputFloat("##Min", &state.min_max.x);
+                        ImGui::TableNextColumn();
+                        ImGui::Text("Max"); ImGui::SameLine();
+                        ImGui::InputFloat("##Max", &state.min_max.y);
+                        ImGui::SameLine();
+                        ImGui::TableNextColumn();
+                        if (ImGui::Button("-")) {
+                            auto& states = model->animationStates;
+                            states.erase(states.begin() + i);
+                        }
+                        ImGui::PopID();
+                        i++;
+                    }                  
                 }
-
-                int i = 0;
-                for (auto& state : anim_states) {
-                    ImGui::PushID(i++);
+                else {
                     ImGui::TableNextRow();
                     ImGui::TableNextColumn();
-                    ImGui::Text("Label"); ImGui::SameLine();
-                    ImGui::InputText("##Label", &state.label);
-                    ImGui::TableNextColumn();
-                    ImGui::Text("Min"); ImGui::SameLine();
-                    ImGui::InputFloat("##Min", &state.min_max.x);
-                    ImGui::TableNextColumn();
-                    ImGui::Text("Max"); ImGui::SameLine();
-                    ImGui::InputFloat("##Max", &state.min_max.y);
-                    ImGui::PopID();
+                    ImGui::Text("No animation found");
                 }
+
+               
             }
 
             ImGui::PopStyleVar();
@@ -1724,6 +1748,19 @@ void EditorInspector::Update(float dt)
             ImGui::Unindent();
             ImGui::EndTable();
         }
+
+        ImGui::Separator();
+
+        if (CENTERED_CONTROL(ImGui::Button("Save Model", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing()))))
+        {
+            GetFilePathEvent<ModelAsset> modelpath{ EditorContentBrowser::Instance().selectedAss };
+            EVENTS.Publish(&modelpath);
+
+            std::string modelPath{ modelpath.filePath.string() + ".meta"};
+
+            Serialize(modelPath, *model);
+        }
+
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
 
