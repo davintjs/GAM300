@@ -285,16 +285,16 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, const std::strin
 
     animation.mFilePath = _filePath;
     animation.mFilePath.replace_extension("");
-    animation.mFilePath += "_" + std::to_string(0) + ".geom";
+    animation.mFilePath += "_" + std::to_string(0) + ".anim";
     // MESH IMPORTER ALREADY EXISTS
-    if (importer.animations.size() != 1)
+    if (importer.animations.size() >= 1)
     {
         animImporter = { importer.animations[0] };
     }
     else
     {
         //Add to model importer guid
-        importer.meshes.push_back(animImporter.guid);
+        importer.animations.push_back(animImporter.guid);
     }
     ASSET.AddSubAsset(animation, animImporter);
 }

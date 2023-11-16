@@ -174,6 +174,8 @@ void EditorScene::SceneView()
                     curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
 
+
+
                     //undo/redo for entity
                     /*Change newchange;
                     newchange.entity = ent;
