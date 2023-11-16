@@ -34,7 +34,7 @@ struct AnimationAsset : Asset
 {
 	std::vector<Bone> bones; // Bean: We need to copy this for animator 
 	std::map<std::string, BoneInfo> boneInfoMap; // Bean: We need to copy this for animator
-	std::vector<AnimationState> animationRange;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
+	std::vector<AnimationState> animationStates;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
 	
 	AssimpNodeData rootNode;
 	

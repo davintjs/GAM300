@@ -164,3 +164,14 @@ Bone* Animation::FindBone(const std::string& name)
     if (iter == m_Bones.end()) return nullptr;
     else return &(*iter);
 }
+
+AnimationState* Animation::GetAnimationState(const std::string& _state)
+{
+    for (AnimationState& state : m_AnimationStates)
+    {
+        if (!state.label.compare(_state))
+            return &state;
+    }
+
+    return nullptr;
+}

@@ -792,7 +792,7 @@ void Display_Property(T& comp) {
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            if (!Flags.m_isDontShow){
+            if (!Flags.m_isDontShow) {
                 auto entry = property::entry { PropertyName, Data };
                 std::visit([&](auto& Value) {
                     using T1 = std::decay_t<decltype(Value)>;
@@ -815,6 +815,9 @@ void Display_Property(T& comp) {
                     else {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
                     }
+
+                    
+
                     ImGui::PopID();
 
                     }

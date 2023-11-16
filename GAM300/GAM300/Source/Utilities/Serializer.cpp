@@ -229,7 +229,7 @@ void Serialize(Material_instance& material, std::string directory)
     {
         auto entry = property::entry { PropertyName, Data };
         std::string Name = entry.first;
-        if (!Flags.m_isDontSave)
+        if (!Flags.m_isDontSave || !Flags.m_isShowReadOnly)
         {
             std::visit([&](auto& Value)
                 {

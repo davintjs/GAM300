@@ -188,9 +188,10 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, const std::string
         //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
         //}
 
-        AssetImporter<MaterialAsset> materialImporter{};
+        //Uncomment this once Materials are converted to material asset
+        //AssetImporter<MaterialAsset> materialImporter{};
 
-        // If there is already materials in the importer reassign it
+        ////If there is already materials in the importer reassign it
         //if (j < importer.materials.size())
         //{
         //    materialImporter = { importer.materials[j] };
@@ -200,7 +201,6 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, const std::string
         //    //Add to model importer guid
         //    importer.materials.push_back(materialImporter.guid);
         //}
-        //Uncomment this once Materials are converted to material asset
         //ASSET.AddSubAsset(std::move(meshAsset), std::move(materialImporter));
     }
 }
@@ -282,7 +282,7 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, const std::strin
 
     ifs.read(reinterpret_cast<char*>(&animation.boneCounter), sizeof(animation.boneCounter));
 
-    animation.animationRange = importer.animationStates;
+    animation.animationStates = importer.animationStates;
 
     animation.mFilePath = _filePath;
     animation.mFilePath.replace_extension("");
