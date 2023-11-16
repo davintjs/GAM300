@@ -52,4 +52,21 @@ public class PlatformScript : Script
             }
         }
     }
+    void OnCollisionEnter(Rigidbody rb)
+    {
+        //detect the player
+        if(rb.HasComponent<ThirdPersonController>())
+        {
+            Console.WriteLine("PlayerOnPlatform");
+        }
+    }
+
+    //void OnTrigger(Collider other)
+    //{
+    //    //check if player landed on it
+    //    if(other.HasComponent<ThirdPersonController>())
+    //    {
+    //        Console.WriteLine("PlayerOnPlatform");
+    //    }
+    //}
 }

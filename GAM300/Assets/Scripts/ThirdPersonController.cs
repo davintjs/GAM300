@@ -7,6 +7,8 @@ using System;
 public class ThirdPersonController : Script
 {
     public float MoveSpeed = 5f;
+    public float currentMoveSpeed;
+    public float sprintSpeed = 30f;
     public float JumpSpeed = 3f;
     public float Gravity = 9.81f;
 
@@ -15,11 +17,12 @@ public class ThirdPersonController : Script
     public Transform CamMovePivot;
     public Transform CamPitchPivot;
     public Transform PlayerModel;
+    public Transform player;
 
     List<vec3> pos = new List<vec3>(); 
 
     private vec3 VerticalVelocity;
-    private bool IsMoving = false;
+    public bool IsMoving = false;
 
     public float RotationSpeed = 1;
 
@@ -29,6 +32,7 @@ public class ThirdPersonController : Script
     void Start()
     {
         audioSource.Play();
+        currentMoveSpeed = MoveSpeed;
     }
 
     // Update is called once per frame
@@ -48,8 +52,29 @@ public class ThirdPersonController : Script
 
         if (Input.GetKey(KeyCode.D))
             dir += (CamYawPivot.right);
+        //Jump
+        if (Input.GetKey(KeyCode.Space) && CC.isGrounded)
+        {
+            //dir += (CamYawPivot.up);
+            dir += (player.up);
+        }
 
-
+        //Sprint
+        if(Input.GetKey(KeyCode.LeftShift) && IsMoving && CC.isGrounded)
+        {
+            currentMoveSpeed = sprintSpeed;
+        }
+        else
+        {
+            currentMoveSpeed = MoveSpeed;
+        }
+        ////testing reset position
+        //if(Input.GetKey(KeyCode.Q))
+        //{
+        //    Console.WriteLine("ResetPlayerPosition");
+        //    player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
+        //    //player.localRotation = new vec3(180, 0, 0);
+        //}
         //Determine whether a movement input was given
         IsMoving = dir != vec3.Zero;
 
@@ -100,8 +125,10 @@ public class ThirdPersonController : Script
             VerticalVelocity = new vec3(0,-1,0) * 0.5f;
 
             //Jump
-            if (Input.GetKeyDown(KeyCode.Space)){
-                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed; 
+            if (Input.GetKey(KeyCode.Space))
+            {
+                VerticalVelocity = new vec3(0, 1, 0) * JumpSpeed;
+                CC.force = new vec3(0, 10, 0);
             }
         }
 /*        else if (transform.localPosition.y <= -10f)
@@ -122,7 +149,7 @@ public class ThirdPersonController : Script
 
         if (IsMoving)
             //Apply movement
-            CC.Move(PlayerModel.back * MoveSpeed + VerticalVelocity);
+            CC.Move(PlayerModel.back * currentMoveSpeed + VerticalVelocity);
     }
 
     void OnCollisionEnter(Rigidbody rb)
