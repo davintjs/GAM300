@@ -258,9 +258,10 @@ void Scene::Destroy(T& object)
 	{
 		componentsDeletionBuffer.GetArray<T>().push_back(&object);
 		auto& arr = singleComponentsArrays.GetArray<T>();
+
 		ObjectIndex index = arr.GetDenseIndex(object);
 		arr.SetActive(index, false);
-		entities.DenseSubscript(index).hasComponentsBitset.set(GetType::E<T>(), false);
+		Get<Entity>(object).hasComponentsBitset.set(GetType::E<T>(), false);
 	}
 	else if constexpr (MultiComponentTypes::Has<T>())
 	{
