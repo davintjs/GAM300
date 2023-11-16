@@ -24,6 +24,30 @@ meshes:
   data: {guid: 80539f16f26c71a03909f6c39ddf4aec}
   data: {guid: cd407c4e87d9f12affc853c655f1c330}
 materials:
-  {}
+  data: {guid: 01acc27ed4bcd67dc35d8505e07cd870}
+  data: {guid: f50062949ca38cbcdc69364504a9150b}
+  data: {guid: 09a56282acc24f6cd4820bc74acea931}
+  data: {guid: 48aa7eabf202ad892fd062e948b37fff}
+  data: {guid: dc6c6573ee56e1a46eb7a820c838e9b9}
+  data: {guid: a27f0f9c53298b0e16fd832a02790c51}
+  data: {guid: ba4476775d9b7d75044ea45f3ae1ca7c}
+  data: {guid: 073854198e98dd2acc99b611740c0d94}
+  data: {guid: dfa99a38e683cf1b4e92cf523a75c727}
+  data: {guid: dca0a764a40f6ef6a0c11226b5ac8941}
+  data: {guid: f51856b077930eb1c1e9c386138b2644}
+  data: {guid: ac7a369f6e5f7282e0546f71c49fd86b}
+  data: {guid: c6c1c4f755e6f281f24f0d3fd2654900}
+  data: {guid: 21379d46ff6b9ddab124beace2082c5b}
+  data: {guid: 1cdadef34afbcb613c7ff47d9e4a0c7d}
+  data: {guid: a43a20206027ddd335169fe820acd3d0}
+  data: {guid: 0c1476b619100bea01300be88f620faf}
+  data: {guid: 81147dd8d6dd5829dd2c4bb98636c1e2}
+  data: {guid: 554164a9be86550a5263df3b13293d77}
+  data: {guid: b7d6ce4c7b67de5fbd38d842470ae606}
+  data: {guid: 23cee48e81deaa9917708e93461faae7}
+  data: {guid: 4928e1b4cd56dfa7a113cd7710397c0d}
+  data: {guid: 1fce6a9425e46e5f379ade8a6d222264}
 animations:
   data: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+animationStates:
+  {}

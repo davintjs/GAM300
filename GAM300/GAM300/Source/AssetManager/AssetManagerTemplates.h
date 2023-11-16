@@ -78,6 +78,7 @@ struct AllAssetsGroup
 		if constexpr (std::is_same<T, ModelAsset>())
 		{
 			MODELDECOMPILER.DeserializeModel(filePath.string(), importer);
+			Serialize(metaPath, importer);
 		}
 		buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
 		return asset;

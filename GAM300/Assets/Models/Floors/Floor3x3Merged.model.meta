@@ -4,6 +4,6 @@ meshes:
   data: {guid: 7f6582b10c23373df8e3b1ea91922864}
   data: {guid: 2a9411fe2c7b355b973cb9d2d6c9c849}
 materials:
-  {}
-animations:
-  {}
+  data: {guid: f276c0159e3a46de3f668b1834cc5750}
+  data: {guid: df2bb300b2d1238d3eb11a3a6d5008ca}
+  data: {guid: a2763ecb5a665bb261bf659f21ce4f0e}

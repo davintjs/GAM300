@@ -22,6 +22,8 @@ struct ModelImporter : DefaultImporter
 	std::vector<Engine::GUID<MeshAsset>> meshes{};
 	std::vector<Engine::GUID<MaterialAsset>> materials{};
 	std::vector<Engine::GUID<AnimationAsset>> animations{};
+	std::unordered_map<std::string, glm::vec2> animationStates{};
+
 	property_vtable();
 };
 

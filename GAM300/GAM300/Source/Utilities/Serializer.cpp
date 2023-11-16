@@ -257,7 +257,6 @@ void Serialize(Material_instance& material, std::string directory)
     fout << out.c_str();
 }
 
-
 void Deserialize(Material_instance& material,const fs::path& path)
 {
     std::vector<YAML::Node> data = YAML::LoadAllFromFile(path.string());
