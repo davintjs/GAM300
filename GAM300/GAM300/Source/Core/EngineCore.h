@@ -74,7 +74,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
-		//ParticleManager,
+		ParticleManager,
 		GraphicsSystem,
 		Blackboard,
 		UISystem

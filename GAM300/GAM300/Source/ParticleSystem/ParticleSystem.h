@@ -21,9 +21,7 @@ ENGINE_SYSTEM(ParticleManager){
 public:
 	void Init();
 	void Update(float dt);
-	void Render(BaseCamera & _camera);
 	void Exit();
-	std::vector<glm::mat4> particleSRT;
 
 };
 

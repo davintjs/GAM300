@@ -15,7 +15,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
-#include "ParticleSystem/ParticleSystem.h"
+//#include "ParticleSystem/ParticleSystem.h"
+#include "ParticleRenderer.h"
 #include "Editor/EditorCamera.h"
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
@@ -34,7 +35,7 @@ TemplatePack
 	Lighting,
 	MaterialSystem,
 	Renderer,
-	ParticleManager
+	ParticleRenderer
 >;
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
@@ -365,9 +366,7 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	glEnable(GL_DEPTH_BUFFER);
 
 	RENDERER.Draw(_camera);
-	
-	PARTICLE.Render(_camera);
-
+	PARTICLERENDER.Draw(_camera);
 #ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
