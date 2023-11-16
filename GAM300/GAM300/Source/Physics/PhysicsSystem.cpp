@@ -87,9 +87,9 @@ void PhysicsSystem::Update(float dt) {
 		JPH::RVec3 tmp;
 		Vector3 translation = t.GetTranslation();
 		if (scene.Has<BoxCollider>(entity))
-			translation = translation.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
+			translation = translation.operator glm::vec3() + scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
 		GlmVec3ToJoltVec3(translation, tmp);
-		//bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
+		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::Activate);
 
 		JPH::Quat tmpQuat;
 		Vector3 rotation = t.GetRotation();
@@ -400,13 +400,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			if (groundState != JPH::Character::EGroundState::OnGround) {
-				new_velocity.SetY(0);
-			}
-			else {
-
-				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
-			}
+			new_velocity += JPH::Vec3(0, direction.GetY(), 0);
 
 
 			mCharacter->SetLinearVelocity(new_velocity);
