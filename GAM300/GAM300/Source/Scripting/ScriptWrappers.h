@@ -79,21 +79,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return reinterpret_cast<void*>(addr);
 	}
 
-	static MonoString* GetTag(void* object)
+	static MonoString* GetTag(ScriptObject<Object> pObject)
 	{
-		size_t addr = reinterpret_cast<size_t>(object);
-		addr -= 16;
-		Object* pObject{ reinterpret_cast<Object*>(addr) };
-		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(pObject->EUID());
+		Object& object = object;
+		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(object.EUID());
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
 
-	static void AudioSourcePlay(AudioSource* pAudioSource)
+	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
-		size_t addr = reinterpret_cast<size_t>(pAudioSource);
-		addr -= 16;
-		pAudioSource = reinterpret_cast<AudioSource*>(addr);
-		AUDIOMANAGER.PlayComponent(*pAudioSource);
+		AUDIOMANAGER.PlayComponent(audioSource);
 	}
 
 	//Gets object that entity has

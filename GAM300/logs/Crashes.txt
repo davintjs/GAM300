@@ -1,5 +1,6 @@
-[2023-11-17 18:03:58.384] [Error] [critical] 
-Caused By:	mClassField
-Info:		FIELD  ннннннннннннннннннннннннннннннннннннИ COULD NOT BE FOUND IN SCRIPT
-Source:		C:\Users\Kenneth\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 698)
+[2023-11-15 15:46:56.449] [Error] [critical] 
+Caused By:	false
+Info:		ERROR: Falling Cube 2 has guid 872b8e766b8122de16b24583fa009940 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 286)
 

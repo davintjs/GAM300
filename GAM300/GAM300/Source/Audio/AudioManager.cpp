@@ -365,10 +365,9 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 	// @kk rmb to delete when done
 	/*AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
 	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());*/
-	std::cout << "guid: " << pEvent->guid.ToHexString() << "\t\t sound: " << pEvent->assetPath.stem().string() << std::endl;
-	AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->guid);
-	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->guid);
-	AUDIOMANAGER.AddLoopFX(pEvent->assetPath.string(), pEvent->guid);
+	AUDIOMANAGER.AddMusic(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
+	AUDIOMANAGER.AddSFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
+	AUDIOMANAGER.AddLoopFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
 }
 
 //Handle audio removal here
