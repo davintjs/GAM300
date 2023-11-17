@@ -51,11 +51,6 @@ void AssetManager::Compile(const fs::path& path)
 		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
 		MODELCOMPILER.LoadModel(path);
 	}
-	else if (path.extension() == ".cs")
-	{
-		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(path.stem().c_str(), FileState::MODIFIED);
-		EVENTS.Publish(&scriptModifiedEvent);
-	}
 	else
 	{
 		system(command.c_str());
