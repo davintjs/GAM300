@@ -301,6 +301,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 #ifndef _BUILD
 	//Draw Debug grids
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) 
 	{
 		size_t buffersize = prop.iter;
