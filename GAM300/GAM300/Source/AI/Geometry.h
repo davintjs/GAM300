@@ -29,6 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include <vector>
 #include "glm/glm.hpp"
+#include "Pathfinder.h"
 
 class Line3D
 {
@@ -95,14 +96,7 @@ public:
     glm::vec3 point2;
 };
 
-enum class onList // For pathfinding
-{
-    NONE,
-    OPEN_LIST,
-    CLOSED_LIST
-};
-
-class Triangle3D
+class Triangle3D : public PathNode
 {
 public:
     Triangle3D(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
@@ -121,6 +115,9 @@ public:
     // Returns the normal of this triangle
     const glm::vec3 GetNormal() const;
 
+
+
+    // Checks if the triangle is a neighbour of this triangle
     bool isNeighbour(const Triangle3D& mRHS);
 
     // Add neighbour of this triangle
@@ -135,20 +132,73 @@ public:
     // Set the ID of this triangle
     void SetTriID(int id);
 
+public:
+
+    Triangle3D* GetParent()
+    {
+        return mParent;
+    }
+
+    void SetParent(Triangle3D* mRHS)
+    {
+        mParent = mRHS;
+    }
+
+    // Returns final cost of this triangle
+    const float& GetFinalCost()
+    {
+        return mFinalCost;
+    }
+
+    // Set the final cost of this triangle
+    void SetFinalCost(const float& mCost)
+    {
+        mFinalCost = mCost;
+    }
+
+    // Returns heuristic cost of this triangle
+    const float& GetHeuCost()
+    {
+        return mHeuCost;
+    }
+
+    // Set the heuristic cost of this triangle
+    void SetHeuCost(const float& mCost)
+    {
+        mHeuCost = mCost;
+    }
+
+    // Returns given cost of this triangle
+    const float& GetGivenCost()
+    {
+        return mGivenCost;
+    }
+
+    // Set the given cost of this triangle
+    void SetGivenCost(const float& mCost)
+    {
+        mGivenCost = mCost;
+    }
+
+    // Get the list state of this triangle
+    const OnList& GetList()
+    {
+        return mOnList;
+    }
+
+    // Set the list state of this triangle
+    void SetList(const OnList& mState)
+    {
+        mOnList = mState;
+    }
+
 private:
     // NavMesh stuff
     glm::vec3 mPoints[3];
-    Triangle3D* mParent;
     glm::vec3 mMidPoint;
     glm::vec3 mNormal;
     std::vector<Triangle3D*> mNeighbours;
     int mTriID = 0;
-
-    // Pathfinding stuff
-    float mFinalCost = 0.f;
-    float mHeuCost = 0.f;
-    float mGivenCost = 0.f;
-    onList mOnList = onList::NONE;
 };
 
 // Parallel check for two vectors

@@ -75,7 +75,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		float topY = (t.GetWorldMatrix() * glm::vec4(meshAsset.boundsMax, 1.f)).y;
 
 		// Calculate the world position of the mesh
-		for (int i = 0; i < meshAsset.numVertices; ++i)
+		for (unsigned int i = 0; i < meshAsset.numVertices; ++i)
 		{
 			glm::vec3 tempPosition = glm::vec3(t.GetWorldMatrix() * glm::vec4(meshAsset.vertices[i].position, 1.f));
 			mGroundVertices.push_back(tempPosition);
@@ -84,7 +84,7 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		// Recalculate to get top vertices only or check if it is a slope
 		auto& ind = meshAsset.indices;
 		auto& v = mGroundVertices;
-		for (int j = 0; j < meshAsset.numIndices; j += 3)
+		for (unsigned int j = 0; j < meshAsset.numIndices; j += 3)
 		{
 			if (v[ind[j] + offset].y >= topY && v[ind[j + 1] + offset].y >= topY && v[ind[j + 2] + offset].y >= topY)
 			{
@@ -113,9 +113,9 @@ void NavMeshBuilder::GetAllObstacles()
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
 
 		glm::vec3 obstacleBottomFace = t.translation;
-		glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).x,
-								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y,
-								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).z };
+		glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.x,
+								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.y,
+								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.z };
 		scaledVec.x *= t.scale.x;
 		scaledVec.y *= t.scale.y;
 		scaledVec.z *= t.scale.z;
@@ -742,8 +742,8 @@ void NavMeshBuilder::Exit()
 
 void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 {
-	Tag mTagRb1 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->rb1->EUID());
-	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->rb2->EUID());
+	Tag mTagRb1 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
+	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
 
 	Tag* fNavMesh;
 	Tag* fObstacle;
@@ -766,14 +766,14 @@ void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 	glm::vec3 obstacleMidPoint = MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).translation;
 
 	glm::vec3 obstacleBottomFace = obstacleMidPoint;
-	glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).x,
-							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).y,
-							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).z };
+	glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.x,
+							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.y,
+							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.z };
 	scaledVec.x *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.x;
 	scaledVec.y *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.y;
 	scaledVec.z *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.z;
 
-	obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(*fNavMesh).y * MySceneManager.GetCurrentScene().Get<Transform>(*fNavMesh).scale.y / 2.f;
+	obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(*fNavMesh).dimensions.y * MySceneManager.GetCurrentScene().Get<Transform>(*fNavMesh).scale.y / 2.f;
 
 	glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
 	glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
