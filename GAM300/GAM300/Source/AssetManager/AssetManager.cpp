@@ -39,6 +39,7 @@ static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 	{".png", "TextureCompiler.exe "},
 	{".fbx", "ModelCompiler.exe "},
 	{".obj", "ModelCompiler.exe "},
+	{".cs", "csc.exe "},
 };
 
 void AssetManager::Compile(const fs::path& path)
@@ -49,6 +50,11 @@ void AssetManager::Compile(const fs::path& path)
 	{
 		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
 		MODELCOMPILER.LoadModel(path);
+	}
+	else if (path.extension() == ".cs")
+	{
+		FileTypeModifiedEvent<FileType::SCRIPT> scriptModifiedEvent(path.stem().c_str(), FileState::MODIFIED);
+		EVENTS.Publish(&scriptModifiedEvent);
 	}
 	else
 	{

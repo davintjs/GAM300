@@ -294,12 +294,12 @@ struct AllAssetsGroup
 		//If no meta, assume modified as it is just added
 		if (!std::filesystem::exists(metaPath))
 		{
-			//GetGUID(filePath,true);
 			return true;
 		}
 		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			//GetGUID(filePath, true);
+			std::ofstream tmp(metaPath);
+			tmp.close();
 			return true;
 		}
 		return false;
