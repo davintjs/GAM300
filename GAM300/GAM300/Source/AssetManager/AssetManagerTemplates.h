@@ -298,7 +298,7 @@ struct AllAssetsGroup
 		}
 		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			std::ofstream tmp(metaPath);
+			std::ofstream tmp(metaPath, ios::app);
 			tmp.close();
 			return true;
 		}
