@@ -1,6 +1,5 @@
-[2023-11-15 15:46:56.449] [Error] [critical] 
-Caused By:	false
-Info:		ERROR: Falling Cube 2 has guid 872b8e766b8122de16b24583fa009940 that does not exist! Reassign the mesh!
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 286)
+[2023-11-17 19:31:59.314] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 236)
 

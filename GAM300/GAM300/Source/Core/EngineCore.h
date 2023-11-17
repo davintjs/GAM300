@@ -66,11 +66,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	using AllSystemsPack =
 	TemplatePack
 	<
+		AssetManager,
 		InputSystem,
 		EditorSystem,
 		SceneManager,
 		ScriptingSystem,
-		AssetManager,
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
