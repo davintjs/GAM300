@@ -15,37 +15,9 @@
 
 namespace chron = std::chrono;
 
-enum AssetState
-{
-	ASSET_LOADED,
-	ASSET_UPDATED,
-	ASSET_UNLOADED
-};
-
-template <typename T>
-using AssetsBuffer = std::vector<std::pair<AssetState, T*>>;
 
 
-template <typename T>
-constexpr auto Importer()
-{
-	if constexpr (std::is_same_v<T, ModelAsset>)
-	{
-		return ModelImporter();
-	}
-	else
-	{
-		return DefaultImporter();
-	}
-}
 
-template <typename T>
-using AssetImporter = decltype(Importer<T>());
-//
-template <typename T>
-using ImporterTable = std::unordered_map<fs::path,AssetImporter<T>>;
-//
-//
 template <typename T>
 static auto& GetImporterTable()
 {

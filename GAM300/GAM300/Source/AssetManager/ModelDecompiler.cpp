@@ -120,7 +120,7 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, const std::string& _
         meshAsset.mFilePath = _filePath;
         meshAsset.mFilePath.replace_extension("");
         meshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
-        // MESH IMPORTER ALREADY EXISTS
+        // If there is already meshes in the importer reassign it
         if (i < importer.meshes.size())
         {
             meshImporter = {importer.meshes[i]};
@@ -133,6 +133,37 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, const std::string& _
 
         ASSET.AddSubAsset(meshAsset,meshImporter);
 
+        // Bean: For testing vertices
+        /*if (meshAsset.mFilePath.stem().string().find("Floor1x1Merged") != std::string::npos)
+        {
+            std::string name = meshAsset.mFilePath.stem().string();
+            name += "vert.txt";
+            std::ofstream test(name);
+            test << "Num vertices: " << meshAsset.numVertices << "\n";
+            float topVert = meshAsset.boundsMax.y;
+            for (size_t j = 0; j < meshAsset.numVertices; j++)
+            {
+                ModelVertex& v = meshAsset.vertices[j];
+
+                if(v.position.y >= topVert)
+                    test << "Vertex " << j << ": " << v.position.x << " " << v.position.y << " " << v.position.z << "\n";
+            }
+
+            test.close();
+
+            name = meshAsset.mFilePath.stem().string();
+            name += "ind.txt";
+            test.open(name);
+            test << "Num indices: " << meshAsset.numIndices << "\n";
+            for (size_t j = 0; j < meshAsset.numIndices; j += 3)
+            {
+                auto& v = meshAsset.indices;
+                if(meshAsset.vertices[v[j]].position.y >= topVert && meshAsset.vertices[v[j + 1]].position.y >= topVert && meshAsset.vertices[v[j + 2]].position.y >= topVert)
+                    test << "Indices: " << v[j] << " " << v[j + 1] << " " << v[j + 2] << "\n";
+            }
+
+            test.close();
+        }*/
     }
 }
 
@@ -157,18 +188,19 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, const std::string
         //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
         //}
 
-        AssetImporter<MaterialAsset> materialImporter{};
-
-        if (j < importer.materials.size())
-        {
-            materialImporter = { importer.materials[j] };
-        }
-        else
-        {
-            //Add to model importer guid
-            importer.materials.push_back(materialImporter.guid);
-        }
         //Uncomment this once Materials are converted to material asset
+        //AssetImporter<MaterialAsset> materialImporter{};
+
+        ////If there is already materials in the importer reassign it
+        //if (j < importer.materials.size())
+        //{
+        //    materialImporter = { importer.materials[j] };
+        //}
+        //else
+        //{
+        //    //Add to model importer guid
+        //    importer.materials.push_back(materialImporter.guid);
+        //}
         //ASSET.AddSubAsset(std::move(meshAsset), std::move(materialImporter));
     }
 }
@@ -250,22 +282,34 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, const std::strin
 
     ifs.read(reinterpret_cast<char*>(&animation.boneCounter), sizeof(animation.boneCounter));
 
-    AssetImporter<AnimationAsset> animImporter{};
+    animation.animationStates = importer.animationStates;
 
     animation.mFilePath = _filePath;
     animation.mFilePath.replace_extension("");
     animation.mFilePath += "_" + std::to_string(0) + ".anim";
-    // MESH IMPORTER ALREADY EXISTS
-    if (importer.animations.size() != 1)
+
+    // Check if the importer animation size is the same as the model file animation size
+    if (importer.animations.size() != animationSize)
     {
+        importer.animations.clear();
+
+        // Re-add all the animations into the importer
+        for (size_t i = 0; i < animationSize; i++)
+        {
+            AssetImporter<AnimationAsset> animImporter{};
+            importer.animations.push_back(animImporter.guid);
+
+            // Bean: This will be out of this if condition when we change the animation to become a vector of animations
+            ASSET.AddSubAsset(animation, animImporter); 
+        }
+    }
+    else // If there is no animations in the importer, add this animation in
+    {
+        AssetImporter<AnimationAsset> animImporter{};
+        // Animation importer already exist so just reassign (Bean: for now its only 1 animation)
         animImporter = { importer.animations[0] };
+        ASSET.AddSubAsset(animation, animImporter);
     }
-    else
-    {
-        //Add to model importer guid
-        importer.animations.push_back(animImporter.guid);
-    }
-    ASSET.AddSubAsset(animation, animImporter);
 }
 
 void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, const std::string& _filePath, AssimpNodeData& _node)

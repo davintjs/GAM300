@@ -74,6 +74,7 @@ void AssetManager::SubscribeGetAssets(TemplatePack<Ts...>)
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetAssets<T>);
 		EVENTS.Subscribe(this, &AssetManager::CallbackAddSubAssetEvent<T>);
 		EVENTS.Subscribe(this,&AssetManager::CallbackGetFilePath<T>);
+		EVENTS.Subscribe(this, &AssetManager::CallbackGetAssetByGUID<T>);
 	})(Ts{}), ...);
 }
 
@@ -343,4 +344,12 @@ template <typename AssetType>
 void AssetManager::CallbackGetFilePath(GetFilePathEvent<AssetType>* pEvent)
 {
 	pEvent->filePath = assets.GetFilePath(pEvent->guid);
+}
+
+
+template <typename AssetType>
+void AssetManager::CallbackGetAssetByGUID(GetAssetByGUIDEvent<AssetType>* pEvent)
+{
+	pEvent->asset = &assets.GetAssets<AssetType>()[pEvent->guid];
+	pEvent->importer = &GetImporterTable<AssetType>()[pEvent->asset->mFilePath];
 }

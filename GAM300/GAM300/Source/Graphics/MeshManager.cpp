@@ -775,7 +775,7 @@ void MeshManager::CreateInstanceLine()
 
 
     MeshAsset lineAsset;
-    int i = 0;
+
     for (int i = 0; i < 2; ++i)
     {
         ModelVertex tmpVertex{};
@@ -847,6 +847,7 @@ void MeshManager::CreateInstanceSegment3D()
     tempProp.VAO = vaoid;
     tempProp.drawCount = 2;
     tempProp.drawType = GL_LINES;
+    tempProp.iter = 0;
 
     Engine::GUID<MeshAsset> segGUID{ vaoMap.size() + 1 };
 
@@ -879,10 +880,8 @@ void MeshManager::CreateInstanceSegment3D()
     seg3DAsset.mFilePath = "Line Segment";
 
     //InstanceSetup_PBR(tempProp);
-    //newMesh.SRTBufferIndex.push_back(InstanceSetup_PBR((*instanceProperties)["Line"]));
     //debugAABB_setup(newMesh.vertices_min, newMesh.vertices_max, tempProp);
     ADD_SUB_ASSET(seg3DAsset, segGUID);
-    //InstanceSetup_PBR(tempProp);
 
     mContainer.emplace(segGUID, newMesh);
     instanceProperties->emplace(std::make_pair(vaoid, tempProp));

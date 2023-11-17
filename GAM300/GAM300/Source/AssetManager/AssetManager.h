@@ -92,6 +92,9 @@ private:
 	// Get the Filepath of the asset using event callbacks
 	template <typename AssetType>
 	void CallbackGetFilePath(GetFilePathEvent<AssetType> * pEvent);
+
+	template <typename AssetType>
+	void CallbackGetAssetByGUID(GetAssetByGUIDEvent<AssetType>* pEvent);
 	
 	AllAssets assets;
 

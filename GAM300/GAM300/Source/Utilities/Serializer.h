@@ -140,6 +140,22 @@ void Serialize(YAML::Emitter& out, T& object)
             , entry.second);
         }
     });
+
+    if constexpr (std::is_same<T, ModelImporter>())
+    {
+        if (!object.animations.empty())
+        {
+            out << YAML::Key << "animationStates" << YAML::Value << YAML::BeginMap;
+
+            for (auto& state : object.animationStates)
+            {
+                out << YAML::Key << state.label << YAML::Value << Vector2(state.minMax);
+            }
+
+            out << YAML::EndMap;
+        }
+    }
+
     out << YAML::EndMap;
 }
 
@@ -165,9 +181,6 @@ bool Deserialize(const std::filesystem::path& path, T& object)
     if (!std::filesystem::exists(path))
         return false;
     YAML::Node node = YAML::LoadFile(path.string());
-
-
-
 
     // Assign to the component
     property::DisplayEnum(object, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
@@ -218,7 +231,6 @@ bool Deserialize(const std::filesystem::path& path, T& object)
         , entry.second);
     });
 
-
     if constexpr (std::is_same<T, ModelImporter>())
     {
         if (node["meshes"])
@@ -248,6 +260,14 @@ bool Deserialize(const std::filesystem::path& path, T& object)
             }
         }
 
+        if (node["animationStates"])
+        {
+            YAML::Node animationStates = node["animationStates"];
+            for (YAML::const_iterator it = animationStates.begin(); it != animationStates.end(); ++it)
+            {
+                object.animationStates.emplace_back(AnimationState(it->first.as<std::string>(), glm::vec2(it->second.as<Vector2>())));
+            }
+        }
     }
 
     //property::pack Pack;
