@@ -753,7 +753,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	mono_field_set_value(instance, mClassField, field.data);
 }
 
-void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigidbody& rb2)
+void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb1, PhysicsComponent& rb2)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
 
@@ -804,13 +804,13 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 void ScriptingSystem::CallbackCollisionEnter(ContactAddedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->rb1,*pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->pc1,*pEvent->pc1);
 }
 
 void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->rb1, *pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->pc1, *pEvent->pc1);
 }
 
 void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
