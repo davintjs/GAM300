@@ -327,7 +327,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
 		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
 
-		for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 		{
 			int textureUnit = 10 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -336,7 +336,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		}
 
-		for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 		{
 			int textureUnit = 20 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -345,7 +345,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		}
 
-		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 		{
 			int textureUnit = 22 + i;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -432,7 +432,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	GLSLShader& shader = SHADER.GetShader(shaderType);
 	shader.Use();
 
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		int textureUnit = 10 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -441,7 +441,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	
 	}
 
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		int textureUnit = 20 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -450,7 +450,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	}
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		int textureUnit = 22 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -500,8 +500,16 @@ void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
 	auto PointLight_Sources = LIGHTING.GetPointLights();
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
+
+		//pointLights.enableShadow
+		std::string point_shadow;
+		point_shadow = "pointLights[" + std::to_string(i) + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), point_shadow.c_str())
+			,  PointLight_Sources[i].enableShadow);
+
+
 		//pointLights.colour
 		std::string point_color;
 		point_color = "pointLights[" + std::to_string(i) + "].colour";
@@ -527,8 +535,13 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	// DIRECTIONAL LIGHT STUFFS
 	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
+		//directionalLights.enableShadow
+		std::string directional_shadow;
+		directional_shadow = "directionalLights[" + std::to_string(i) + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), directional_shadow.c_str())
+			, DirectionLight_Sources[i].enableShadow);
 
 		//directionalLights.colour
 		std::string directional_color;
@@ -559,20 +572,28 @@ void Renderer::BindLights(GLSLShader& shader) {
 
 	// SPOTLIGHT STUFFS
 	auto SpotLight_Sources = LIGHTING.GetSpotLights();
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
+		//directionalLights.enableShadow
+		std::string spot_shadow;
+		spot_shadow = "spotLights[" + std::to_string(i) + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), spot_shadow.c_str())
+			, SpotLight_Sources[i].enableShadow);
 
-		//pointLights.position
+
+		//spotLights.position
 		std::string spot_pos;
 		spot_pos = "spotLights[" + std::to_string(i) + "].position";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
 
+		
 		std::string spot_color;
 		spot_color = "spotLights[" + std::to_string(i) + "].colour";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
 
+		
 		std::string spot_direction;
 		spot_direction = "spotLights[" + std::to_string(i) + "].direction";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
@@ -889,13 +910,16 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 }
 
 
-
 void Renderer::DrawDepthDirectional()
 {
-	for (int i = 0; i < LIGHTING.directionalLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		LightProperties directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
-
+		
+		if (!directional_light_stuffs.enableShadow)
+		{
+			continue;
+		}
 		glEnable(GL_DEPTH_TEST);
 		//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 		glm::mat4 lightProjection, lightView;
@@ -970,10 +994,13 @@ void Renderer::DrawDepthDirectional()
 
 void Renderer::DrawDepthSpot()
 {
-	for (int i = 0; i < LIGHTING.spotLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
-
+		if (!spot_light_stuffs.enableShadow)
+		{
+			continue;
+		}
 		glEnable(GL_DEPTH_TEST);
 		glm::mat4 lightProjection, lightView;
 
@@ -1018,6 +1045,7 @@ void Renderer::DrawDepthSpot()
 			glBindVertexArray(prop.VAO);
 			glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
+
 		}
 
 		// render all instanced shadows
@@ -1045,9 +1073,13 @@ void Renderer::DrawDepthSpot()
 void Renderer::DrawDepthPoint()
 {
 
-	for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		LightProperties point_light_stuffs = LIGHTING.GetPointLights()[i];
+		if (!point_light_stuffs.enableShadow)
+		{
+			continue;
+		}
 
 		float near_plane = 0.001f, far_plane = 1000.f;
 

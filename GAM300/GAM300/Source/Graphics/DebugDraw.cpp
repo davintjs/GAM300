@@ -43,10 +43,11 @@ void DebugDraw::Update(float)
 
 	auto& bcArray = scene.GetArray<BoxCollider>();
 	//std::cout << "the array size is : " << bcArray.size() << "\n";
-	int index = 0;
-	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	//int index = 0;
+	//for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	for (auto& it: bcArray )
 	{
-		BoxCollider& bc = *it;
+		BoxCollider& bc = it;
 
 		if (bc.state == DELETED)
 		{
@@ -54,7 +55,7 @@ void DebugDraw::Update(float)
 
 			continue;
 		}
-		++index;
+		//++index;
 		//std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
@@ -255,7 +256,7 @@ void DebugDraw::Draw()
 
 
 		auto pointLights = LIGHTING.GetPointLights();
-		for (int i = 0; i < LIGHTING.pointLightCount; ++i)
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 		{
 			// I need to make a SRT here regarding the light's stuff
 			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);

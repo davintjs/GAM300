@@ -21,9 +21,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #define MAX_SPOT_LIGHT 10
 #define MAX_DIRECTION_LIGHT 2
 
-extern LightProperties spot_light_stuffs;
-extern LightProperties directional_light_stuffs;
-extern LightProperties point_light_stuffs;
+//extern LightProperties spot_light_stuffs;
+//extern LightProperties directional_light_stuffs;
+//extern LightProperties point_light_stuffs;
 
 const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
@@ -60,19 +60,14 @@ void Lighting::Update(float)
 
 	// Temporary Light stuff
 	bool haveLight = false;
-
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
-		if (!lightSource.enableShadow)
-		{
-			continue;
-
-		}
 		if (lightSource.state == DELETED)
 		{
 			std::cout << "hi\n";
 			continue;
 		}
+		
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
@@ -80,6 +75,8 @@ void Lighting::Update(float)
 
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
+
+			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.translation;
 			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
@@ -90,7 +87,7 @@ void Lighting::Update(float)
 
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
-
+			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
 			directionLightSources[directionalLightCount].lightpos = transform.translation;
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
@@ -101,6 +98,8 @@ void Lighting::Update(float)
 
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
+
+			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
 			spotLightSources[spotLightCount].lightpos = transform.translation;
 			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;

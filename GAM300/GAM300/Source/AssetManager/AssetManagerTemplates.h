@@ -78,16 +78,23 @@ struct AllAssetsGroup
 		if constexpr (std::is_same<T, ModelAsset>())
 		{
 			MODELDECOMPILER.DeserializeModel(filePath.string(), importer);
+			Serialize(metaPath, importer);
 		}
-		buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
+		else
+		{
+			buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
+		}
 		return asset;
 	}
+
+	template <typename AssetType>
 
 	template <typename AssetType>
 	void AddSubAsset(AssetType& asset, AssetImporter<AssetType>& importer)
 	{
 		Engine::GUID<AssetType> guid = importer.guid;
-		GetImporterTable<AssetType>()[asset.mFilePath] = importer;
+		ImporterTable<AssetType>& importerTable = GetImporterTable<AssetType>();
+		importerTable[asset.mFilePath] = importer;
 		auto& table{ std::get<AssetsTable<AssetType>>(assets)};
 		
 		table[guid] = asset;
@@ -275,8 +282,6 @@ struct AllAssetsGroup
 	template <typename AssetType>
 	auto& GetImporter(const std::filesystem::path& filePath, bool update = false)
 	{
-		//ImporterTable<AssetType>& importerTable{ GetImporterTable<AssetType>() };
-		//if (!importerTable.contains(filePath))
 		size_t assetType = GetAssetType(filePath);
 		std::filesystem::path metaPath = filePath;
 		metaPath += ".meta";
@@ -289,7 +294,10 @@ struct AllAssetsGroup
 			//Attempt to load into memory
 			bool success = Deserialize(metaPath, importer);
 			if (!success)
+			{
+				PRINT("Added: ", metaPath, '\n');
 				Serialize(metaPath, importer);
+			}
 			return importer;
 		}
 		return pairIt->second;
