@@ -824,6 +824,19 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 		Invoke(mNewScript, mMethod, nullptr);
 }
 
+
+void ScriptingSystem::CallbackTriggerEnter(TriggerEnterEvent* pEvent)
+{
+	SCRIPT_THREAD_EVENT(pEvent);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerEnter, *pEvent->rb1, *pEvent->rb2);
+}
+
+void ScriptingSystem::CallbackTriggerExit(TriggerRemoveEvent* pEvent)
+{
+	SCRIPT_THREAD_EVENT(pEvent);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerExit, *pEvent->rb1, *pEvent->rb2);
+}
+
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
 {
 	(void)pEvent;
@@ -998,3 +1011,4 @@ void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)
 	ran = false;
 	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
 }
+

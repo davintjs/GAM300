@@ -241,7 +241,7 @@ struct ContactRemovedEvent : IEvent
 struct TriggerEnterEvent : IEvent
 {
 	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
+	PhysicsComponent* rb1;
 	Rigidbody* rb2;
 };
 struct TriggerRemoveEvent : IEvent

@@ -266,6 +266,10 @@ public:
 
 	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
 
+	void CallbackTriggerEnter(TriggerEnterEvent * pEvent);
+
+	void CallbackTriggerExit(TriggerRemoveEvent * pEvent);
+
 	//Helper to subscribe to all objects deletion
 	template <typename... Ts>
 	void SubscribeObjectDestroyed(TemplatePack<Ts...>);
