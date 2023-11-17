@@ -828,13 +828,13 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 void ScriptingSystem::CallbackTriggerEnter(TriggerEnterEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerEnter, *pEvent->rb1, *pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerEnter, *pEvent->pc1, *pEvent->pc2);
 }
 
 void ScriptingSystem::CallbackTriggerExit(TriggerRemoveEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerExit, *pEvent->rb1, *pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerExit, *pEvent->pc1, *pEvent->pc2);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
