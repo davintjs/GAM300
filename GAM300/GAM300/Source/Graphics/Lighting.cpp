@@ -106,7 +106,6 @@ void Lighting::Update(float)
 
 			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
 			glm::vec3 rotation = transform.GetRotation();
-
 			glm::vec3 test(0.f);
 			if (test == rotation)
 			{
@@ -114,7 +113,12 @@ void Lighting::Update(float)
 			}
 			else
 			{
-				spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
+				std::cout << "rotation value is : " << rotation.x << " , " << rotation.y << " , " << rotation.z << "\n";
+				//spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
+				spotLightSources[spotLightCount].direction = glm::normalize(glm::degrees(rotation));
+				//spotLightSources[spotLightCount].direction = glm::degrees(rotation);
+				std::cout << " direction is : " << direction.x << " , " << direction.y << " , " << direction.z << "\n";
+
 			}
 
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
