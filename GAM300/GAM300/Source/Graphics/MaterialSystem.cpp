@@ -164,7 +164,7 @@ void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Eng
 void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>* pEvent)
 {
 
-	LoadMaterial(pEvent->asset, pEvent->guid);
+	LoadMaterial(pEvent->asset, pEvent->asset.importer->guid);
 
 }
 

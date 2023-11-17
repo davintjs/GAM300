@@ -125,27 +125,27 @@ private:
 	size_t memoryAddress;
 };
 
-template<>
-struct ScriptObject<Script>
-{
-	ScriptObject(Object* object)
-	{
-		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
-	}
-
-	operator Script& ()
-	{
-		return *reinterpret_cast<Script*>(memoryAddress - (memOffset));
-	}
-
-	operator Object* ()
-	{
-		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
-	}
-
-private:
-	MonoObject* script;
-};
+//template<>
+//struct ScriptObject<Script>
+//{
+//	ScriptObject(Object* object)
+//	{
+//		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
+//	}
+//
+//	operator Script& ()
+//	{
+//		return *reinterpret_cast<Script*>(memoryAddress - (memOffset));
+//	}
+//
+//	operator Object* ()
+//	{
+//		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
+//	}
+//
+//private:
+//	MonoObject* script;
+//};
 
 struct ScriptClass
 {

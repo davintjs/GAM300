@@ -190,30 +190,22 @@ struct GetFilePathEvent : IEvent
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
 {
-	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetLoadedEvent(const AssetType& _asset): asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUpdatedEvent : IEvent
 {
-	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetUpdatedEvent(const AssetType& _asset) : asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUnloadedEvent : IEvent
 {
-	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid) :
-		assetPath{ _assetPath }, guid{ _guid } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetUnloadedEvent(const AssetType& _asset) : asset{ _asset }{}
+	const AssetType& asset;
 };
 
 struct DropAssetsEvent : IEvent

@@ -17,7 +17,6 @@ namespace chron = std::chrono;
 
 
 
-
 template <typename T>
 static auto& GetImporterTable()
 {
@@ -52,14 +51,10 @@ struct AllAssetsGroup
 			MODELDECOMPILER.DeserializeModel(filePath.string(), importer);
 			Serialize(metaPath, importer);
 		}
-		else
-		{
-			buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
-		}
+		buffer.emplace_back(std::make_pair(ASSET_LOADED, &asset));
+		asset.importer = &importer;
 		return asset;
 	}
-
-	template <typename AssetType>
 
 	template <typename AssetType>
 	void AddSubAsset(AssetType& asset, AssetImporter<AssetType>& importer)
@@ -68,7 +63,7 @@ struct AllAssetsGroup
 		ImporterTable<AssetType>& importerTable = GetImporterTable<AssetType>();
 		importerTable[asset.mFilePath] = importer;
 		auto& table{ std::get<AssetsTable<AssetType>>(assets)};
-		
+		asset.importer = &importerTable[asset.mFilePath];
 		table[guid] = asset;
 		auto& buffer = std::get<AssetsBuffer<AssetType>>(assetsBuffer);
 		buffer.emplace_back(std::make_pair(ASSET_LOADED, &table[guid]));
@@ -107,10 +102,7 @@ struct AllAssetsGroup
 				{
 					Engine::GUID<T> guid = GetImporter<T>(filePath).guid;
 					T& asset{ std::get<AssetsTable<T>>(assets)[guid] };
-					T* tempAsset = new T;
-					tempAsset->mFilePath = filePath;
-					std::get<AssetsTable<T>>(assets).erase(guid);
-					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, tempAsset));
+					std::get<AssetsBuffer<T>>(assetsBuffer).emplace_back(std::make_pair(ASSET_UNLOADED, &asset));
 					return true;
 				}
 				return false;
@@ -210,33 +202,32 @@ struct AllAssetsGroup
 			for (auto& pair : buffer)
 			{
 				fs::path path{pair.second->mFilePath };
-				auto& importer = GetImporter<T>(path);
 				switch (pair.first)
 				{
 					case ASSET_LOADED:
 					{
-						AssetLoadedEvent<T> e{ path,importer.guid,*pair.second };
+						AssetLoadedEvent<T> e{*pair.second };
 						EVENTS.Publish(&e);
 						break;
 					}
 					case ASSET_UPDATED:
 					{
-						AssetUpdatedEvent<T> e{ path,importer.guid,*pair.second };
+						AssetUpdatedEvent<T> e{*pair.second };
 						EVENTS.Publish(&e);
 						break;
 					}
 					case ASSET_UNLOADED:
 					{
 						
-						AssetUnloadedEvent<T> e{ path,importer.guid};
+						AssetUnloadedEvent<T> e{*pair.second};
 						EVENTS.Publish(&e);
 						fs::path metaPath = path;
 						metaPath += ".meta";
+						std::get<AssetsTable<T>>(assets).erase(pair.second->importer->guid);
 						//Actual file does not exist
 						if (std::filesystem::exists(metaPath))
 						{
 							std::filesystem::remove(metaPath);
-							delete pair.second;
 						}
 						break;
 					}

@@ -88,5 +88,5 @@ void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, cons
 
 void Animation_Manager::CallbackAnimationAssetLoaded(AssetLoadedEvent<AnimationAsset>* pEvent)
 {
-    AddAnimation(pEvent->asset, pEvent->guid);
+    AddAnimation(pEvent->asset, pEvent->asset.importer->guid);
 }
