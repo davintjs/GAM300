@@ -38,6 +38,7 @@
     <Compile Include="Assets\Player.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />
+    <Compile Include="Assets\Scripts\RangeEnemy.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
     <Compile Include="CoreScripts\Application.cs" />

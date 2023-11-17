@@ -18,6 +18,7 @@ public class ThirdPersonController : Script
     public Transform CamPitchPivot;
     public Transform PlayerModel;
     public Transform player;
+    public GameObject playerWeaponCollider;
 
     List<vec3> pos = new List<vec3>(); 
 
@@ -28,11 +29,25 @@ public class ThirdPersonController : Script
 
     public AudioSource audioSource;
 
+    public bool IsAttacking = false;
+    public float attackTimer = 1f;
+    public float currentAttackTimer;
+
+
+    public float maxHealth = 5f;
+    public float currentHealth;
+    public bool isInvulnerable = false;
+    public float invulnerableTimer = 1f;
+    public float currentInvulnerableTimer;
     // Start is called before the first frame update
     void Start()
     {
         audioSource.Play();
         currentMoveSpeed = MoveSpeed;
+        playerWeaponCollider.SetActive(false);
+        currentAttackTimer = attackTimer;
+        currentHealth = maxHealth;
+        currentInvulnerableTimer = invulnerableTimer;
     }
 
     // Update is called once per frame
@@ -150,6 +165,58 @@ public class ThirdPersonController : Script
         if (IsMoving)
             //Apply movement
             CC.Move(PlayerModel.back * currentMoveSpeed + VerticalVelocity);
+
+
+        //attacking
+        if(Input.GetMouseDown(0) && !IsAttacking)
+        {
+            Console.WriteLine("Attack");
+            IsAttacking = true;
+            playerWeaponCollider.SetActive(true);//enable the weapon collider
+        }
+        if(IsAttacking)
+        {
+            currentAttackTimer -= Time.deltaTime;
+            if(currentAttackTimer <= 0)
+            {
+                IsAttacking = false;
+                playerWeaponCollider.SetActive(false);
+                currentAttackTimer = attackTimer;
+            }
+        }
+        //invulnerablility
+        if (isInvulnerable)
+        {
+            currentInvulnerableTimer -= Time.deltaTime;
+            if (currentInvulnerableTimer <= 0)
+            {
+                isInvulnerable = false;
+                currentInvulnerableTimer = invulnerableTimer;
+            }
+        }
+        //Testing taking damage
+        if (Input.GetKey(KeyCode.T))
+        {            
+            TakeDamage(1);
+            isInvulnerable = true;
+        }
+
+    }
+
+    void TakeDamage(int amount)
+    {
+        if(!isInvulnerable)
+        {
+            //isInvulnerable = true;
+            currentHealth -= amount;           
+        }
+        Console.WriteLine("Hit");
+
+        if (currentHealth <= 0)
+        {
+            Console.WriteLine("YouDied");
+            PlayerModel.gameObject.SetActive(false);//testing, remove this later
+        }
     }
 
     void OnCollisionEnter(Rigidbody rb)
