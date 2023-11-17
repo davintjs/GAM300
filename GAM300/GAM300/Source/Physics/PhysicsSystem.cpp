@@ -927,7 +927,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
 
 
-	std::cout << "Contact Added\n";
+	//std::cout << "Contact Added\n";
 }
 
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 

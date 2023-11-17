@@ -72,6 +72,8 @@ public class ThirdPersonController : Script
         {
             //dir += (CamYawPivot.up);
             dir += (player.up);
+            Console.WriteLine("Jump:");
+            Console.WriteLine(dir.x + "," + dir.y + "," + dir.z);
         }
 
         //Sprint

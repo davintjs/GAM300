@@ -212,7 +212,7 @@ property_begin_name(Camera, "Camera") {
 
 struct PhysicsComponent : Object 
 {
-	enum Type {
+	enum Type : UINT32 {
 		rb = 0, cc
 	};
 	UINT32 bid{ 0 };					// Jolt Body ID

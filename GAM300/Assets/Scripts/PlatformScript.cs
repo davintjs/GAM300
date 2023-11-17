@@ -52,7 +52,7 @@ public class PlatformScript : Script
             }
         }
     }
-    void OnCollisionEnter(Rigidbody rb)
+    void OnCollisionEnter(PhysicsComponent rb)
     {
         //detect the player
         if(rb.HasComponent<ThirdPersonController>())
@@ -61,12 +61,12 @@ public class PlatformScript : Script
         }
     }
 
-    //void OnTrigger(Collider other)
-    //{
-    //    //check if player landed on it
-    //    if(other.HasComponent<ThirdPersonController>())
-    //    {
-    //        Console.WriteLine("PlayerOnPlatform");
-    //    }
-    //}
+    void OnTrigger(PhysicsComponent other)
+    {
+        //check if player landed on it
+        if (other.HasComponent<ThirdPersonController>())
+        {
+            Console.WriteLine("PlayerOnPlatform");
+        }
+    }
 }
