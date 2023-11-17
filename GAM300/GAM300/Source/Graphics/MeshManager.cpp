@@ -775,7 +775,7 @@ void MeshManager::CreateInstanceLine()
 
 
     MeshAsset lineAsset;
-    int i = 0;
+
     for (int i = 0; i < 2; ++i)
     {
         ModelVertex tmpVertex{};

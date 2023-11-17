@@ -190,18 +190,13 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 
 struct Animator : Object, BaseAnimator
 {
-	Animator();
-
-	bool playing;
-	// selected anim
-	//Animation* m_CurrentAnimation{};
+	Animator() : BaseAnimator() {}
 	property_vtable();
 };
 
 property_begin_name(Animator, "Animator") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_parent(BaseAnimator),
-	property_var(playing).Name("Playing")
+	property_parent(BaseAnimator)
 } property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera

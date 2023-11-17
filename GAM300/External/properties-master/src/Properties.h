@@ -304,7 +304,8 @@ namespace property
                                 , m_isDontSave      : 1                                 // Properties with this flag wont be saved
                                 , m_isDontShow      : 1                                 // Properties with this flags wont be shown to the user
                                 , m_isReference     : 1                                 // The field is some reference like a uuid/pointer
-                                , m_isScope         : 1;                                // When Enumerating in display mode it will let the user know if it is a scope
+                                , m_isScope         : 1;                                 // When Enumerating in display mode it will let the user know if it is a scope
+                                //, m_isDontSaveYAML  : 1;
             };
 
             constexpr type      operator |  ( type X ) const noexcept { return{ m_Value |  X.m_Value }; }
