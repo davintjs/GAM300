@@ -24,7 +24,7 @@ void Texture_Manager::Init()
     std::cout << "TEXTURE MANAGER INIT\n";
 }
 
-void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID& GUID)
+void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID)
 {
     GLuint temp{};
 
@@ -236,7 +236,7 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     return Skybox_Tex;
 }
 
-GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
+GLuint Texture_Manager::GetTexture(const Engine::GUID<TextureAsset>& GUID)
 {
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
         return mTextureContainer.find(GUID)->second.second;
@@ -247,14 +247,14 @@ GLuint Texture_Manager::GetTexture(const Engine::GUID& GUID)
 
 GLuint Texture_Manager::GetTexture(const fs::path& filePath)
 {
-    GetAssetEvent e{filePath};
+    GetAssetEvent<TextureAsset> e{filePath};
     EVENTS.Publish(&e);
     return GetTexture(e.guid);
 }
 
 void Texture_Manager::CallbackTextureAssetLoaded(AssetLoadedEvent<TextureAsset>* pEvent)
 {
-     AddTexture(pEvent->assetPath.string().c_str(), pEvent->guid);
+     AddTexture(pEvent->asset.mFilePath.string().c_str(), pEvent->asset.importer->guid);
 }
 
 void Texture_Manager::CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>* pEvent)

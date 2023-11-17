@@ -19,7 +19,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 BaseAnimator::BaseAnimator()
 {
     m_CurrentTime = 0.0f;
+    startTime = 0.0f;
+    endTime = 0.0f;
     m_AnimationIdx = -1;
+    m_FinalBoneMatIdx = -1; 
+    currentState = nextState = defaultState = nullptr;
+    playing = false;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -31,9 +36,21 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
-    m_CurrentTime += m_CurrentAnimation.GetTicksPerSecond() * dt;
-    m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
-    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), pTransform);
+    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
+
+    // Change state if the current time passes the end time
+    if (m_CurrentTime >= endTime - startTime)
+        ChangeState();
+
+    // crash prevention
+    endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
+    startTime = (startTime > endTime) ? endTime - 1.f : startTime;
+
+    //m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
+    m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
+    m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
+
+    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)
@@ -41,6 +58,31 @@ void BaseAnimator::PlayAnimation(Animation* pAnimation)
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     m_CurrentAnimation = *pAnimation;
     m_CurrentTime = 0.0f;
+}
+
+void BaseAnimator::ChangeState()
+{
+    m_CurrentTime = 0.f;
+    currentState = nextState;
+    if (!currentState) // If no next state, use default state
+        currentState = defaultState; 
+
+    nextState = nullptr;
+
+    // Check that the current state exists
+    if (currentState)
+    {
+        startTime = currentState->minMax.x;
+        endTime = currentState->minMax.y;
+        stateName = currentState->label;
+        playing = true;
+    }
+    else
+    {
+        startTime = endTime = 0.f;
+        stateName = "None";
+        playing = false;
+    }
 }
 
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
@@ -73,17 +115,29 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
         CalculateBoneTransform(&node->children[i], globalTransformation);
 }
 
-std::vector<glm::mat4> BaseAnimator::GetFinalBoneMatrices()
+void BaseAnimator::SetDefaultState(const std::string& _defaultState)
 {
-    return m_FinalBoneMatrices;
+    Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+    defaultState = animation.GetAnimationState(_defaultState);
 }
 
-std::vector<glm::mat4>* BaseAnimator::GetFinalBoneMatricesPointer()
+void BaseAnimator::SetNextState(const std::string& _nextState)
 {
-    return &m_FinalBoneMatrices;
+    // Is not the same as next state
+    if (nextState == nullptr || nextState->label.compare(_nextState))
+    {
+        Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+        nextState = animation.GetAnimationState(_nextState);
+    }
+}
+
+void BaseAnimator::SetState(const std::string& _state)
+{
+    SetNextState(_state);
+    ChangeState();
 }
 
 bool BaseAnimator::AnimationAttached() {
     // Check if m_CurrentAnimation is not nullptr (i.e., it's attached)
-    return m_AnimationIdx != -1 && animID != DEFAULT_ANIM;
+    return m_AnimationIdx != -1 && animID != 0;
 }

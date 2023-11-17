@@ -133,7 +133,7 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume = 1.0f;
-	Engine::GUID currentSound = DEFAULT_ASSETS["None.wav"];
+	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };
 
@@ -148,31 +148,28 @@ property_begin_name(AudioSource, "Audio Source") {
 
 struct BoxCollider : Object
 {
-	float x = 1.0f;
-	float y = 1.0f;
-	float z = 1.0f;
-
-	Vector3 offset{ 0.f };
+	Vector3 dimensions{1,1,1};
+	Vector3 offset;
 	property_vtable();
 };
 
 property_begin_name(BoxCollider, "BoxCollider") {
 property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(x).Name("X"),
-	property_var(y).Name("Y"),
-	property_var(z).Name("Z"),
-	property_var(offset).Name("Offset"),
+	property_var(dimensions).Name("Dimensions"),
+	property_var(offset).Name("Offset")
 } property_vend_h(BoxCollider)
 
 struct SphereCollider : Object
 {
 	float radius = 1.0f;
+	Vector3 offset;
 	property_vtable();
 };
 
 property_begin_name(SphereCollider, "SphereCollider") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(radius).Name("Radius")
+	property_var(radius).Name("Radius"),
+	property_var(offset).Name("Offset")
 } property_vend_h(SphereCollider)
 
 struct CapsuleCollider : Object
@@ -190,18 +187,13 @@ property_begin_name(CapsuleCollider, "CapsuleCollider") {
 
 struct Animator : Object, BaseAnimator
 {
-	Animator();
-
-	bool playing;
-	// selected anim
-	//Animation* m_CurrentAnimation{};
+	Animator() : BaseAnimator() {}
 	property_vtable();
 };
 
 property_begin_name(Animator, "Animator") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_parent(BaseAnimator),
-	property_var(playing).Name("Playing")
+	property_parent(BaseAnimator)
 } property_vend_h(Animator)
 
 struct Camera : Object, BaseCamera
@@ -217,7 +209,20 @@ property_begin_name(Camera, "Camera") {
 	property_parent(BaseCamera)
 } property_vend_h(Camera)
 
-struct Rigidbody : Object
+
+struct PhysicsComponent : Object 
+{
+	enum Type : UINT32 {
+		rb = 0, cc
+	};
+	UINT32 bid{ 0 };					// Jolt Body ID
+	Type componentType{ rb };
+
+	~PhysicsComponent();
+
+};
+
+struct Rigidbody : PhysicsComponent
 {
 	Vector3 linearVelocity{};			//velocity of object
 	Vector3 angularVelocity{};
@@ -230,8 +235,6 @@ struct Rigidbody : Object
 	bool is_trigger = false;
 
 	property_vtable();
-	UINT32 bid{ 0 };
-	//JPH::BodyID RigidBodyID;			//Body ID 
 };
 
 property_begin_name(Rigidbody, "Rigidbody") {
@@ -247,7 +250,7 @@ property_begin_name(Rigidbody, "Rigidbody") {
 	property_var(is_trigger).Name("Is_trigger")
 } property_vend_h(Rigidbody)
 
-struct CharacterController : Object
+struct CharacterController : PhysicsComponent
 {
 	Vector3 velocity{};					// velocity of the character
 	Vector3 force{};					// forces acting on the character
@@ -259,9 +262,6 @@ struct CharacterController : Object
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	bool isGrounded = false;
 	property_vtable();
-	UINT32 bid{ 0 };
-
-//JPH::BodyID CharacterBodyID;
 };
 
 property_begin_name(CharacterController, "CharacterController") {
@@ -282,8 +282,8 @@ struct Script : Object
 	{
 		E_ASSERT(false,"INVALID CONSTRUCTOR");
 	}
-	Script(Engine::GUID _scriptId) : scriptId{ _scriptId } {}
-	Engine::GUID scriptId{DEFAULT_ASSETS["None.cs"]};
+	Script(Engine::GUID<ScriptAsset> _scriptId) : scriptId{ _scriptId } {}
+	Engine::GUID<ScriptAsset> scriptId{0};
 	property_vtable();
 };
 
@@ -298,43 +298,22 @@ struct MeshRenderer : Object
 
 	// Material Instance
 	//Material_instance* materialInstance;
-
-	Engine::GUID meshID{ DEFAULT_MESH };
-
-	Engine::GUID AlbedoTexture{DEFAULT_TEXTURE};
-	Engine::GUID NormalMap{ DEFAULT_TEXTURE };
-	Engine::GUID MetallicTexture{ DEFAULT_TEXTURE };
-	Engine::GUID RoughnessTexture{ DEFAULT_TEXTURE };
-	Engine::GUID AoTexture{ DEFAULT_TEXTURE };
-	Engine::GUID EmissionTexture{ DEFAULT_TEXTURE };
-
 	
 	//Materials mr_Material;
 
 	// Materials stuff below here
-	Vector4 mr_Albedo;
-	Vector4 mr_Specular;
-	Vector4 mr_Diffuse;
-	Vector4 mr_Ambient;
-	float mr_Shininess;	
-
-
-	float mr_metallic = 1.f;
-	float mr_roughness = 1.f;
-	float ao = 1.f;
-	float emission = 1.f;
 
 	GLuint VAO;
 	GLuint debugVAO;
 
-
-
 	// This 2 dont delete -> Future use
+	Engine::GUID<MeshAsset> meshID{ 0 };
+
 	//bool isInstance = true;
 	int shaderType = (int)SHADERTYPE::PBR;
 	
 	//temporary index for current material
-	Engine::GUID materialGUID = DEFAULT_MATERIALINSTANCE;
+	Engine::GUID<MaterialAsset> materialGUID{0};
 
 	property_vtable();
 };
@@ -342,23 +321,13 @@ struct MeshRenderer : Object
 property_begin_name(MeshRenderer, "MeshRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_var(meshID).Name("Mesh"),
-	property_var(materialGUID).Name("Material_ID"),
-	property_var(mr_Albedo).Name("Albedo").Flags(property::flags::DONTSHOW),
-	property_var(mr_metallic).Name("Metallic").Flags(property::flags::DONTSHOW),
-	property_var(mr_roughness).Name("Roughness").Flags(property::flags::DONTSHOW),
-	property_var(ao).Name("AmbientOcclusion").Flags(property::flags::DONTSHOW),
-	property_var(AlbedoTexture).Name("AlbedoTexture"),
-	property_var(NormalMap).Name("NormalMap"),
-	property_var(MetallicTexture).Name("MetallicTexture"),
-	property_var(RoughnessTexture).Name("RoughnessTexture"),
-	property_var(AoTexture).Name("AoTexture"),
-	property_var(EmissionTexture).Name("EmissionTexture"),
-	property_var(emission).Name("EmissionScalar"),
+	property_var(materialGUID).Name("Material_ID")
 } property_vend_h(MeshRenderer)
 
 
 struct LightSource : Object
 {
+	bool enableShadow = true;
 	//index for light type for serializing and de-serializing
 	int lightType = (int)SPOT_LIGHT;	
 
@@ -382,6 +351,7 @@ struct LightSource : Object
 
 	property_begin_name(LightSource, "LightSource") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(enableShadow).Name("EnableShadow"), 
 	property_var(lightType).Name("lightType"),
 	property_var(lightpos).Name("lightpos"),
 	property_var(intensity).Name("Intensity"),
@@ -396,7 +366,7 @@ struct SpriteRenderer : Object
 		bool WorldSpace = true;
 		bool ColourPicked = false;
 
-		Engine::GUID SpriteTexture {DEFAULT_ASSETS["None.dds"]};
+		Engine::GUID<TextureAsset> SpriteTexture {0};
 
 		property_vtable()
 	};
@@ -419,6 +389,120 @@ struct Canvas : Object
 			//property_var(WorldSpace).Name("World Space"),
 			//property_var(SpriteTexture).Name("SpriteTexture"),
 	} property_vend_h(Canvas)
+
+
+//struct ParticleComponent : Object
+//{
+//	ParticleComponent() {}
+//	int numParticles_ = 1;
+//	float particleLifetime_ = 0.0f;
+//	float particleEmissionRate_ = 0.0f; 
+//	Particle* particles_;
+//
+//	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate); 
+//	void Update(float dt);
+//	void Render();
+//	property_vtable();
+//};
+//
+//property_begin_name(ParticleComponent, "ParticleComponent")
+//{
+//	property_var(numParticles_).Name("NumberOfParticles"),
+//	property_var(particleLifetime_).Name("ParticleLifetime"),
+//	property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+//
+//} property_vend_h(ParticleComponent)
+
+struct Particle : Object
+{
+	Particle() {}
+	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
+		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+	vec3 position;
+	vec3 velocity;
+	vec3 acceleration;
+	float lifetime;
+};
+
+struct ParticleComponent : Object
+{
+	ParticleComponent() {}
+	int numParticles_ = 1;
+	float particleLifetime_ = 0.0f;
+	float particleEmissionRate_ = 0.0f;
+	//Particle* particles_;
+	std::vector<Particle> particles_;
+
+	void Initialize(int numParticles, float particleLifetime, float particleEmissionRate);
+	void Update(float dt);
+	void Render();
+	property_vtable();
+};
+
+property_begin_name(ParticleComponent, "ParticleComponent")
+{
+	property_var(numParticles_).Name("NumberOfParticles"),
+		property_var(particleLifetime_).Name("ParticleLifetime"),
+		property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+
+} property_vend_h(ParticleComponent)
+//
+//struct Particle : Object
+//{
+//	Particle() {}
+//	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
+//		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+//	vec3 position;
+//	vec3 velocity;
+//	vec3 acceleration;
+//	float lifetime;
+//};
+
+struct Button : Object
+{
+	//char* id;
+	//int x, y, width, height; 
+	bool is_clicked;
+	////void(*on_click)(void);
+	int x, y, width, height;
+	std::string label;
+	std::function<void()> clickHandler;
+	Button(int x, int y, int width, int height, std::string label, std::function<void()> clickHandler)
+		: x(x), y(y), width(width), height(height), label(label), clickHandler(clickHandler) {}
+
+	bool isClicked(int xPos, int yPos) {
+		return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
+	}
+
+
+};
+
+struct ButtonComponent : Object
+{
+
+	int x = 10;
+	int y = 10;
+	int width = 100;
+	int height = 50;
+
+
+	void Init();
+	void Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked);
+
+	property_vtable();
+};
+
+property_begin_name(ButtonComponent, "ButtonComponent")
+{
+	property_var(x).Name("Buttonx"),
+		property_var(y).Name("Buttony"),
+		property_var(height).Name("ButtonHeight"),
+		property_var(width).Name("ButtonWidth")
+		//property_var(height).Name("ButtonHeight") 
+
+
+} property_vend_h(ButtonComponent)
+
 
 
 #pragma endregion
@@ -486,7 +570,7 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider, ParticleComponent>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
@@ -563,7 +647,7 @@ TYPE FUNC_NAME(size_t objType, void* pObject)\
 {return FUNC_NAME##Start(AllObjectTypes(), objType,pObject);}\
 
 //Field types template pack
-using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, Engine::GUID, std::string>;
+using FieldTypes = TemplatePack<float, double, bool, char, short, int, int64_t, uint16_t, uint32_t, uint64_t, char*, Vector2, Vector3, Vector4, std::string>;
 //All field types template pack that includes all objects and field types
 using AllFieldTypes = decltype(FieldTypes::Concatenate(AllObjectTypes()));
 

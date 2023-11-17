@@ -1,0 +1,42 @@
+guid: 7b29e00dfb3f670f813a79db1b09ceec
+meshes:
+  data: {guid: facd76c892ca06703bc486d9250f32b2}
+  data: {guid: 51c800745fa5ace82c0043fbe6440bb1}
+  data: {guid: fe12ca2d907f6ee7b711f92b5ccfce11}
+  data: {guid: 3170643cc6f9c2b724b2e93c823089ac}
+  data: {guid: 7d489c9672df40b8bd03bf1e49beb22b}
+  data: {guid: abe99ba792fd9200f71106dd5a7da94c}
+  data: {guid: 1e4f9272f94cd36a73e44a7051c5faa1}
+  data: {guid: 71afb63aded095b94b8fd1e7da73d61e}
+  data: {guid: f9bec0267be074497e9e666c4b47be2f}
+  data: {guid: 5ed01f58cfec8399726abe6710f3440b}
+  data: {guid: 63d7fdd208d37c67b94dc883b159656c}
+  data: {guid: f78435a0fc7c773ceedfd53d911a8c46}
+  data: {guid: f13d8dc4f05058feda307b77ce3c66b4}
+  data: {guid: b99a39f0ecccf481da41b61d50341001}
+  data: {guid: 032cd27f6ebe9dcd0d898d1c0907381d}
+  data: {guid: b4d76bd3bf00e824bf82e33764be36ac}
+  data: {guid: 5ecc296f72354ee42867e509d3080dfa}
+  data: {guid: 861d5938beb6a94a6a94abaf09620a35}
+  data: {guid: f7306edaa96bc981ae0c22dd8fff2cdf}
+  data: {guid: 7e0cc909d0e54dda66597f5a29c886f2}
+  data: {guid: eb77db25917365c11bd21cc9ef9305b2}
+  data: {guid: 80539f16f26c71a03909f6c39ddf4aec}
+  data: {guid: cd407c4e87d9f12affc853c655f1c330}
+animations:
+  data: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+animationStates:
+  Idle: [2, 61]
+  Run: [62, 88]
+  Sprint: [89, 108]
+  Stun: [109, 129]
+  Jump: [130, 160]
+  Falling: [161, 182]
+  Attack1: [183, 228]
+  Attack2: [229, 324]
+  Attack3: [325, 420]
+  DashAttack: [421, 491]
+  Death: [492, 587]
+  Dodge: [588, 637]
+  GettingUp: [638, 866]
+  Overdrive: [867, 952]

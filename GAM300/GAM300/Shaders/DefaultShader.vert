@@ -35,9 +35,9 @@ layout(location = 13) in vec4 weights;
 layout (location = 0) out vec2 TexCoords;
 layout (location = 1) out vec3 WorldPos;
 layout (location = 2) out vec3 Normal;
-layout (location = 3) out vec4 frag_pos_lightspace_D;
-layout (location = 4) out vec4 frag_pos_lightspace_S;
-
+//layout (location = 3) out vec4 frag_pos_lightspace_D;
+//layout (location = 4) out vec4 frag_pos_lightspace_S;
+//
 //-------------------------
 //          UNIFORMS
 //-------------------------
@@ -75,8 +75,9 @@ void main()
             }
             vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aVertexPosition,1.0f);
             totalPosition += localPosition * weights[i];
-       }
+        }
 
+        totalPosition.w = 1.0f;
 	    WorldPos = vec3(SRT * totalPosition);
     }
     else
@@ -85,10 +86,10 @@ void main()
 
 	gl_Position = persp_projection * View * vec4(WorldPos,1.0);
 
-    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
-
-    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
-
+//    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
+//
+//    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
+//
 
     Normal = mat3(transpose(inverse(SRT))) * aVertexNormal;
 

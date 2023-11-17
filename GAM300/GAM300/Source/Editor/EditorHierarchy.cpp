@@ -263,7 +263,10 @@ void EditorHierarchy::Update(float dt)
 			}
 		}
 
-		ImGui::InvisibleButton("##", ImGui::GetContentRegionAvail());
+		ImVec2 buttonsize;
+		buttonsize.x = (ImGui::GetContentRegionAvail().x > 0) ? ImGui::GetContentRegionAvail().x : 0.01f;
+		buttonsize.y = (ImGui::GetContentRegionAvail().y > 0) ? ImGui::GetContentRegionAvail().y : 0.01f;
+		ImGui::InvisibleButton("##", buttonsize );
 
 		if (ImGui::BeginDragDropTarget())
 		{

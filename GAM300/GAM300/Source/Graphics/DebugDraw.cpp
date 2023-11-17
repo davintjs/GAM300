@@ -29,8 +29,6 @@ void DebugDraw::Init()
 	// Euan RayCasting Testing
 	raycastLine = new RaycastLine;
 	raycastLine->lineinit();
-
-	properties = &RENDERER.GetInstanceProperties();
 }
 
 void DebugDraw::Update(float)
@@ -42,16 +40,26 @@ void DebugDraw::Update(float)
 	auto& rbArray = scene.GetArray<Rigidbody>();
 
 	auto& bcArray = scene.GetArray<BoxCollider>();
-
-	for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	//std::cout << "the array size is : " << bcArray.size() << "\n";
+	//int index = 0;
+	//for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
+	for (auto& it: bcArray )
 	{
-		BoxCollider& bc = *it;
+		BoxCollider& bc = it;
 
-		if (bc.state == DELETED) continue;
+		if (bc.state == DELETED)
+		{
+			//std::cout << "THIS IS THE DELETED ONE : " <<  "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
+
+			continue;
+		}
+		//++index;
+		//std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
 		Entity& entity = scene.Get<Entity>(bc);
 
+		if (!scene.IsActive(entity) || !scene.IsActive(bc)) continue;
 
 		/*geometryDebugData temp;
 		if (scene.Has<MeshRenderer>(entity))
@@ -87,7 +95,7 @@ void DebugDraw::Update(float)
 
 		RigidDebug currRigidDebug;
 
-		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[DEFAULT_MESH].vao;
+		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
 
 		glm::mat4 SRT = t.GetWorldMatrix();
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
@@ -100,9 +108,9 @@ void DebugDraw::Update(float)
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), temp.scalarBound);
 		//glm::mat4 transMat = glm::translate(glm::mat4(1.f), temp.offset);
 
-		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
+		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
 		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
-
+		//std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
 		SRT *= transMat * scalarMat;
 
 		currRigidDebug.SRT = SRT;
@@ -120,6 +128,12 @@ void DebugDraw::Update(float)
 
 void DebugDraw::Draw()
 {
+	GLuint vao = MESHMANAGER.vaoMap[ASSET_SEG3D];
+	size_t s = static_cast<int>(SHADERTYPE::TDR);
+	if (RENDERER.GetInstanceContainer()[s].find(vao) == RENDERER.GetInstanceContainer()[s].cend()) { // if container does not have this vao, emplace
+		RENDERER.GetInstanceContainer()[s].emplace(std::pair(vao, RENDERER.GetInstanceProperties()[vao]));
+	}
+
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
 
 	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
@@ -136,8 +150,8 @@ void DebugDraw::Draw()
 			DrawSegment3D(tri[0], tri[2], color);
 		}
 	}
-	;
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	
+	auto& prop = RENDERER.GetInstanceContainer()[s][vao];
 	glLineWidth(4.f);
 	glPointSize(10.f);
 	// NAV MESH Draw Call
@@ -180,11 +194,9 @@ void DebugDraw::Draw()
 
 		}
 
-	shader.UnUse();
+		shader.UnUse();
 	
-	glLineWidth(1.f);
-	prop.iter = 0;
-
+		prop.iter = 0;
 
 	}
 
@@ -205,16 +217,16 @@ void DebugDraw::Draw()
 		GLint uniform4 =
 			glGetUniformLocation(shader.GetHandle(), "SRT");
 
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+			glm::value_ptr(EditorCam.GetViewMatrix()));
+		glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 1.f, 0.f)));
 
 		for (int i = 0; i < boxColliderContainer.size(); ++i)
 		{
 			RigidDebug currRD = boxColliderContainer[i];
 			
-			glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-				glm::value_ptr(EditorCam.GetProjMatrix()));
-			glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-				glm::value_ptr(EditorCam.GetViewMatrix()));
-			glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 1.f, 0.f)));
 			//glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(175.f / 255.f, 225.f / 255.f, 175.f / 255.f)));
 
 
@@ -229,53 +241,95 @@ void DebugDraw::Draw()
 		shader.UnUse();
 
 	}
+
+	if(LIGHTING.pointLightCount)
+	{
+
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::FORWARDDEBUG);
+		shader.Use();
+
+		// UNIFORM VARIABLES ----------------------------------------		
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uniform2 =
+			glGetUniformLocation(shader.GetHandle(), "View");
+		GLint uniform3 =
+			glGetUniformLocation(shader.GetHandle(), "uColor");
+		GLint uniform4 =
+			glGetUniformLocation(shader.GetHandle(), "SRT");
+
+
+		auto pointLights = LIGHTING.GetPointLights();
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
+		{
+			// I need to make a SRT here regarding the light's stuff
+			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);
+			glm::mat4 scalar = glm::scale(glm::mat4(1.f), glm::vec3(pointLights[i].intensity/10.f));
+			
+
+			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(translation * scalar));
+			Mesh* Sphere = MESHMANAGER.DereferencingMesh(ASSET_SPHERE);
+
+			glBindVertexArray(Sphere->vaoID);
+			glDrawElements(GL_LINES, Sphere->drawCounts, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+
+		}
+		shader.UnUse();
+
+	}
 	glLineWidth(1.f);
+
+
 
 }
 
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
 {
-	//auto& prop = (*properties)[DEFAULT_ASSETS["Segment3D.geom"]];
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	if (MESHMANAGER.vaoMap.find(ASSET_SEG3D) == MESHMANAGER.vaoMap.end())
+	{
+		E_ASSERT(false, "ERROR: Mesh vao does not exist!");
+	}
 
-	// Set reference to property iterator
-	unsigned int& i = prop.iter;
+	auto& prop = RENDERER.GetInstanceContainer()[static_cast<int>(SHADERTYPE::TDR)][MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	glm::vec3 direction = _segment3D.point2 - _segment3D.point1;
-	prop.entitySRT[i] = glm::mat4
+	prop.entitySRT.emplace_back(glm::mat4
 	{
 		glm::vec4(direction.x, 0.f, 0.f, 0.f),
 		glm::vec4(0.f, direction.y, 0.f, 0.f),
 		glm::vec4(0.f, 0.f, direction.z, 0.f),
 		glm::vec4(_segment3D.point1.x, _segment3D.point1.y, _segment3D.point1.z, 1.f)
-	};
+	});
 
 	// Set color of segment
-	prop.Albedo[i] = _color;
+	prop.Albedo.emplace_back(_color);
 
-	i++; // Increase instance count
+	prop.iter++; // Increase instance count
 }
 
 void DebugDraw::DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color)
 {
-	auto& prop = (*properties)[MESHMANAGER.vaoMap[DEFAULT_ASSETS["Segment3D.geom"]]];
+	if (MESHMANAGER.vaoMap.find(ASSET_SEG3D) == MESHMANAGER.vaoMap.end())
+	{
+		E_ASSERT(false, "ERROR: Mesh vao does not exist!");
+	}
 
-	// Set reference to property iterator
-	unsigned int& i = prop.iter;
+	auto& prop = RENDERER.GetInstanceContainer()[static_cast<int>(SHADERTYPE::TDR)][MESHMANAGER.vaoMap[ASSET_SEG3D]];
 
 	glm::vec3 direction = _point2 - _point1;
-	prop.entitySRT[i] = glm::mat4
+	prop.entitySRT.emplace_back(glm::mat4
 	{
 		glm::vec4(direction.x, 0.f, 0.f, 0.f),
 		glm::vec4(0.f, direction.y, 0.f, 0.f),
 		glm::vec4(0.f, 0.f, direction.z, 0.f),
 		glm::vec4(_point1.x, _point1.y, _point1.z, 1.f)
-	};
+	});
 
 	// Set color of segment
-	prop.Albedo[i] = _color;
+	prop.Albedo.emplace_back(_color);
 
-	i++; // Increase instance count
+	prop.iter++; // Increase instance count
 }
 
 void DebugDraw::DrawRay()

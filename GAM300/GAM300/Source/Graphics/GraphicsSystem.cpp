@@ -15,16 +15,14 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "GraphicsSystem.h"
 #include "GraphicsHeaders.h"
-
+#include "ParticleSystem/ParticleSystem.h"
 #include "Editor/EditorCamera.h"
 #include "Core/SystemsGroup.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 //#include "AnimationManager.h"
 #include "IOManager/InputHandler.h"
-
 #include <glm/gtx/matrix_decompose.hpp>
-
 #include "AppEntry/Application.h"
 
 using GraphicsSystemsPack =
@@ -35,7 +33,8 @@ TemplatePack
 	DebugDraw,
 	Lighting,
 	MaterialSystem,
-	Renderer
+	Renderer,
+	ParticleManager
 >;
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
@@ -64,7 +63,6 @@ void renderQuad(unsigned int& _quadVAO, unsigned int& _quadVBO)
 {
 	if (_quadVAO == 0)
 	{
-
 		float quadVertices[] = {
 			// positions        // texture Coords
 			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -237,7 +235,7 @@ void GraphicsSystem::Update(float dt)
 		// Update camera view 
 		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
-		COLOURPICKER.ColorPickingUI(camera);
+		COLOURPICKER.ColorPickingUIButton(camera);
 
 		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
@@ -368,6 +366,8 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	RENDERER.Draw(_camera);
 	
+	PARTICLE.Render(_camera);
+
 #ifndef _BUILD
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{

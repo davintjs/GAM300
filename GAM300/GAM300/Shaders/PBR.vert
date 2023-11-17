@@ -43,10 +43,10 @@ layout (location = 5) out vec4 frag_Metal_Rough_AO_Emission_constant; // Materia
 
 layout (location = 6) out vec2 frag_texture_index;
 
-layout (location = 7) out vec4 frag_pos_lightspace_D;
-
-layout (location = 8) out vec4 frag_pos_lightspace_S;
-
+//layout (location = 7) out vec4 frag_pos_lightspace_D;
+//
+//layout (location = 8) out vec4 frag_pos_lightspace_S;
+//
 
 
 
@@ -56,9 +56,9 @@ layout (location = 8) out vec4 frag_pos_lightspace_S;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
-uniform mat4 lightSpaceMatrix_Directional;
-uniform mat4 lightSpaceMatrix_Spot;
-
+//uniform mat4 lightSpaceMatrix_Directional;
+//uniform mat4 lightSpaceMatrix_Spot;
+//
 //End
 
 void main()
@@ -74,9 +74,9 @@ void main()
     
     Normal = mat3(transpose(inverse(SRT))) * aNormal;
 
-    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
-
-    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
-    
+//    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
+//
+//    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
+//    
     gl_Position =  persp_projection * View * vec4(WorldPos, 1.0);
 }

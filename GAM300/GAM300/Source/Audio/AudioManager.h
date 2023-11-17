@@ -26,7 +26,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define AUDIOMANAGER AudioManager::Instance()
 //using SoundMap = std::map<std::string, FMOD::Sound*>; //@kk delete once done
-using SoundMap = std::unordered_map<Engine::GUID, FMOD::Sound*>;
+using SoundMap = std::unordered_map<Engine::GUID<AudioAsset>, FMOD::Sound*>;
 
 SINGLETON(AudioManager) {
 private:
@@ -45,31 +45,31 @@ public:
 
 	// add music into music channel
 	//void AddMusic(const std::string& soundGUID, const std::string& name); // @kk delete once done
-	void AddMusic(const std::string& path, const Engine::GUID& soundGUID);
+	void AddMusic(const std::string& path, const Engine::GUID<AudioAsset>& soundGUID);
 
 	// add looping SFX onto LoopFX channel
 	//void AddLoopFX(const std::string& soundGUID, const std::string& name);
-	void AddLoopFX(const std::string& path, const Engine::GUID soundGUID);
+	void AddLoopFX(const std::string& path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// add SFX into SFX channel
 	//void AddSFX(const std::string& soundGUID, const std::string& name);
-	void AddSFX(const std::string& path, const Engine::GUID soundGUID);
+	void AddSFX(const std::string& path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// Play / Unpause music with the filename
 	//void PlayMusic(const std::string soundGUID);
-	void PlayMusic(Engine::GUID soundGUID);
+	void PlayMusic(Engine::GUID<AudioAsset> soundGUID);
 
 	// Unpause Music
 	void PlayMusic();
 	
 	// Play SFX with the filename on loop
 	//void PlayLoopFX(const std::string soundGUID, float pan = 0.f, float vol = 1.f);
-	void PlayLoopFX(Engine::GUID soundGUID, float pan = 0.f, float vol = 1.f,
+	void PlayLoopFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0.f, float vol = 1.f,
 		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
 	//void PlaySFX(const std::string& name, float pan = 0,
-	void PlaySFX(Engine::GUID soundGUID, float pan = 0,
+	void PlaySFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0,
 		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
 
@@ -123,9 +123,9 @@ private:
 	FMOD::Channel* currentFX{};
 	SoundMap sounds[CATEGORY_COUNT];
 	std::vector<SoundMap> soundvec;
-	Engine::GUID currentMusicPath{ DEFAULT_ASSETS["None.wav"] };
-	Engine::GUID currentFXPath{ DEFAULT_ASSETS["None.wav"] };
-	Engine::GUID nextMusicPath{ DEFAULT_ASSETS["None.wav"] };
+	Engine::GUID<AudioAsset> currentMusicPath{};
+	Engine::GUID<AudioAsset> currentFXPath{};
+	Engine::GUID<AudioAsset> nextMusicPath{};
 
 
 	FadeState fade{ FADE_NONE };

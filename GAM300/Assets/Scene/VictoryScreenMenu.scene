@@ -1,0 +1,157 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: VictoryScreenMenu
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 5255847082789301257
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4704708302287558388}  # Transform
+    - component: {fileID: 6290748605718139895}  # Camera
+---
+ID: 4704708302287558388
+Transform:
+  m_GameObject: {fileID: 5255847082789301257}
+  Translation: [0, 0, 0.349982262]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6290748605718139895
+Camera:
+  m_GameObject: {fileID: 5255847082789301257}
+  BackgroundColor: [0, 0, 0, 0]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+---
+ID: 11651427043620866289
+GameObject:
+  m_IsActive: true
+  m_Name: VictoryMenu_Canvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15419434749458504632}  # Transform
+    - component: {fileID: 2748547964756519209}  # Canvas
+    - component: {fileID: 2124126422752448800}  # Script
+---
+ID: 15419434749458504632
+Transform:
+  m_GameObject: {fileID: 11651427043620866289}
+  Translation: [0.0155261923, 0, -0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [1.66123903, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 4418236984561621579}
+    - {fileID: 15122834859859923062}
+    - {fileID: 15628350562473262138}
+---
+ID: 2748547964756519209
+Canvas:
+  m_GameObject: {fileID: 11651427043620866289}
+---
+ID: 2124126422752448800
+Script:
+  m_GameObject: {fileID: 11651427043620866289}
+  Script: {guid: 951d2373956a6a3883805d764974ea3b}
+---
+ID: 4418236984561621579
+GameObject:
+  m_IsActive: true
+  m_Name: BG_Image
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16773861268096498698}  # Transform
+    - component: {fileID: 13350653658282748155}  # SpriteRenderer
+---
+ID: 16773861268096498698
+Transform:
+  m_GameObject: {fileID: 4418236984561621579}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 13350653658282748155
+SpriteRenderer:
+  m_GameObject: {fileID: 4418236984561621579}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 15122834859859923062
+GameObject:
+  m_IsActive: true
+  m_Name: YouWin_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5205254661984323289}  # Transform
+    - component: {fileID: 8183777527831800993}  # SpriteRenderer
+---
+ID: 5205254661984323289
+Transform:
+  m_GameObject: {fileID: 15122834859859923062}
+  Translation: [0, 0.0143430941, 0.282837987]
+  Rotation: [-3.14159203, 0, 0]
+  Scale: [0.555157483, 0.387330055, 0.555157483]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 8183777527831800993
+SpriteRenderer:
+  m_GameObject: {fileID: 15122834859859923062}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 1cb081d6f3e89fdd3d70bddd557315a1}
+---
+ID: 15628350562473262138
+GameObject:
+  m_IsActive: true
+  m_Name: PressMReturn_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 445726148051528729}  # Transform
+    - component: {fileID: 5030680011077784730}  # SpriteRenderer
+---
+ID: 445726148051528729
+Transform:
+  m_GameObject: {fileID: 15628350562473262138}
+  Translation: [0, -0.404258549, 0.297466874]
+  Rotation: [-3.14159203, 0, 0]
+  Scale: [0.466178864, 0.0815102011, 0.116827995]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 5030680011077784730
+SpriteRenderer:
+  m_GameObject: {fileID: 15628350562473262138}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 55f0d68efca4f8e2fc037fc4e9b0b830}

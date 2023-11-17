@@ -10,86 +10,131 @@
 	This file contains the definitions of Graphics Lighting that includes:
 	1. Computation for the light stuffs that will be given to the eventual rendering
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
 #include "Scene/SceneManager.h"
 
-extern LightProperties spot_light_stuffs;
-extern LightProperties directional_light_stuffs;
-extern LightProperties point_light_stuffs;
+#define MAX_POINT_LIGHT 10
+#define MAX_SPOT_LIGHT 10
+#define MAX_DIRECTION_LIGHT 2
+
+//extern LightProperties spot_light_stuffs;
+//extern LightProperties directional_light_stuffs;
+//extern LightProperties point_light_stuffs;
+
+const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
 
 void Lighting::Init()
 {
+	for (int i = 0; i < MAX_POINT_LIGHT; ++i)
+	{
+		LightProperties temp_point;
+		FRAMEBUFFER.CreatePointLight(temp_point.shadowFBO, temp_point.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
+		pointLightSources.push_back(temp_point);
+
+		LightProperties temp_spot;
+		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_spot.shadowFBO, temp_spot.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
+		spotLightSources.push_back(temp_spot);
+	}
+	for (int i = 0; i < MAX_DIRECTION_LIGHT; ++i)
+	{
+		LightProperties temp_directional;
+		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_directional.shadowFBO, temp_directional.shadow, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+		directionLightSources.push_back(temp_directional);
+
+	}
 
 }
 
 void Lighting::Update(float)
 {
+	pointLightCount = 0;
+	directionalLightCount = 0;
+	spotLightCount = 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	// Temporary Light stuff
 	bool haveLight = false;
-
-	// Just resetting the light stuffs here
-	pointLightSources.clear();
-	directionLightSources.clear();
-	spotLightSources.clear();
-		// This is temporary - a further reset
-	point_light_stuffs.inUse = false;
-	directional_light_stuffs.inUse = false;
-	spot_light_stuffs.inUse = false;
-
-
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
-		if (lightSource.state == DELETED) continue;
-
+		if (lightSource.state == DELETED)
+		{
+			std::cout << "hi\n";
+			continue;
+		}
+		
 		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-		LightProperties Temporary;
 
-		Temporary.lightpos = transform.translation;
-		Temporary.lightColor = lightSource.lightingColor;
-		Temporary.intensity = lightSource.intensity;
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
-			pointLightSources.push_back(Temporary);
-			point_light_stuffs = Temporary;
+
+			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
+			pointLightSources[pointLightCount].lightpos = transform.translation;
+			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
+			pointLightSources[pointLightCount].intensity = lightSource.intensity;
+			++pointLightCount;
+
 		}
+
+
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
-			Temporary.direction = lightSource.direction; // CHANGE
+			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
+			directionLightSources[directionalLightCount].lightpos = transform.translation;
+			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
+			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
+			directionLightSources[directionalLightCount].direction = lightSource.direction;
+			++directionalLightCount;
 
-			directionLightSources.push_back(Temporary);
-			directional_light_stuffs = Temporary;
 		}
+
 		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
 		{
-			Temporary.direction = glm::vec3(0.f,-1.f,0.f); // CHANGE
-			Temporary.inner_CutOff = glm::cos(glm::radians(10.f));
-			Temporary.outer_CutOff = glm::cos(glm::radians(17.5f));
-			spotLightSources.push_back(Temporary);
-			spot_light_stuffs = Temporary;
-		}
 
+			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
+			spotLightSources[spotLightCount].lightpos = transform.translation;
+			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
+			spotLightSources[spotLightCount].intensity = lightSource.intensity;
+
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
+			glm::vec3 rotation = transform.GetRotation();
+
+			glm::vec3 test(0.f);
+			if (test == rotation)
+			{
+				spotLightSources[spotLightCount].direction = glm::vec3(0.f,-1.f,0.f);
+			}
+			else
+			{
+				spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
+			}
+
+			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
+			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
+
+			++spotLightCount;
+		}
+		//std::cout << spotLightCount << "\n";
 
 		if (currentScene.Has<MeshRenderer>(entity))
 		{
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
 			if (mesh_component.state == DELETED) continue;
 
-			mesh_component.mr_Albedo = glm::vec4(Temporary.lightColor, 1.f);
+			//mesh_component.mr_Albedo = glm::vec4(glm::vec3(lightSource.lightingColor), 1.f);
 
-			mesh_component.mr_metallic = -1.f;
-			mesh_component.mr_roughness = -1.f;
-			mesh_component.ao = -1.f;
-			mesh_component.ao = -1.f;
+		//	mesh_component.mr_metallic = -1.f;
+		//	mesh_component.mr_roughness = -1.f;
+		//	mesh_component.ao = -1.f;
+		//	mesh_component.ao = -1.f;
 		}
 	}
 

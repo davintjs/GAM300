@@ -106,16 +106,16 @@ void MaterialSystem::createPBR_NonInstanced()
 
 }
 
-Engine::GUID MaterialSystem::NewMaterialInstance(std::string _name)
+Engine::GUID<MaterialAsset> MaterialSystem::NewMaterialInstance(std::string _name)
 {
 	Material_instance defaultMaterial;
 	defaultMaterial.name = _name;
-	Engine::GUID guid = Engine::GUID();
+	Engine::GUID<MaterialAsset> guid;
 	_allMaterialInstances[guid] = defaultMaterial;
 	return guid;
 }
 
-void MaterialSystem::deleteInstance(Engine::GUID& matGUID)
+void MaterialSystem::deleteInstance(Engine::GUID<MaterialAsset>& matGUID)
 {
 	//Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -152,7 +152,7 @@ void MaterialSystem::deleteInstance(Engine::GUID& matGUID)
 
 
 
-void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Engine::GUID& _guid)
+void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Engine::GUID<MaterialAsset>& _guid)
 {
 
 	//_allMaterialInstances[_guid](Deserialize(_materialAsset.mFilePath));
@@ -164,12 +164,12 @@ void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Eng
 void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>* pEvent)
 {
 
-	LoadMaterial(pEvent->asset, pEvent->guid);
+	LoadMaterial(pEvent->asset, pEvent->asset.importer->guid);
 
 }
 
 
-Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID matGUID)
+Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsset> matGUID)
 {
 
 	static Material_instance defaultInstance;
@@ -197,12 +197,12 @@ Material_instance::Material_instance()
 	aoConstant = 1.f;
 	emissionConstant = 1.f;
 
-	albedoTexture = DEFAULT_TEXTURE;
-	normalMap = DEFAULT_TEXTURE;
-	metallicTexture = DEFAULT_TEXTURE;
-	roughnessTexture = DEFAULT_TEXTURE;
-	aoTexture = DEFAULT_TEXTURE;
-	emissionTexture = DEFAULT_TEXTURE;
+	albedoTexture = 0;
+	normalMap = 0;
+	metallicTexture = 0;
+	roughnessTexture = 0;
+	aoTexture = 0;
+	emissionTexture = 0;
 }
 
 // This is for Editor

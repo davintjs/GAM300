@@ -22,15 +22,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/TextureManager.h"
 #include "IOManager/InputSystem.h"
 
-void AlignForWidth(float width, float alignment = 0.5f)
-{
-    //ImGuiStyle& style = ImGui::GetStyle();
-    float avail = ImGui::GetContentRegionAvail().x;
-    float off = (avail - width) * alignment;
-    if (off > 0.0f)
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
-}
-
 void EditorToolBar::Init()
 {
 

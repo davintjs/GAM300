@@ -128,17 +128,18 @@ void EditorContentBrowser::Update(float dt)
             payload.payload = &currentGUID;
             payload.type = MESH;*/
             
-            if (ext == "geom") { //mesh files
-                GetAssetEvent e{ it.path() };
+            if (ext == "model") { //mesh files
+                GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
-            else if (ext == "material") {
-                GetAssetEvent e{ it.path() };
+            else if (ext == "material") 
+            {
+                GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MaterialAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MATERIAL;
             }
@@ -180,14 +181,24 @@ void EditorContentBrowser::Update(float dt)
                 EditorDebugger::Instance().AddLog("[%i]{Scene}Scene File Opened!\n", EditorDebugger::Instance().debugcounter++);
             }
 
-            //Open Scene file
+            //Open material inspector
             if ((path.string().find(".material") != std::string::npos)) {
                 //Open scene file logic here
-                GetAssetEvent e{ path };
+                GetAssetEvent<MaterialAsset> e{ path };
                 EVENTS.Publish(&e);
                 selectedAss = e.guid;
                 EditorInspector::Instance().material_inspector = true;
                 ImGui::SetWindowFocus("Material");
+            }
+
+            //Open model inspector
+            if ((path.string().find(".model") != std::string::npos)) {
+                //Open scene file logic here
+                GetAssetEvent<ModelAsset> e{ path };
+                EVENTS.Publish(&e);
+                selectedAss = e.guid;
+                EditorInspector::Instance().model_inspector = true;
+                ImGui::SetWindowFocus("Model");
             }
         }
     

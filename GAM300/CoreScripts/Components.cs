@@ -60,7 +60,7 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class Rigidbody : Component
+    public class Rigidbody : PhysicsComponent
     {
         public vec3 linearVelocity;         //velocity of object
         public vec3 angularVelocity;              //acceleration of object
@@ -74,7 +74,7 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class CharacterController : Component
+    public class CharacterController : PhysicsComponent
     {
         public vec3 velocity;
         public vec3 force;
@@ -92,6 +92,18 @@ namespace BeanFactory
             direction += dir;
         }
 
+    }
+
+    enum PhysicsBodyType : uint
+    {
+        RigidBody = 0, CharacterController
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class PhysicsComponent : Component
+    {
+        uint padding;
+        PhysicsBodyType type;
     }
 
     [StructLayout(LayoutKind.Sequential)]

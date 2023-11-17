@@ -1,5 +1,5 @@
-[2023-11-09 17:07:53.455] [Error] [critical] 
-Caused By:	i < size_
-Info:		ARRAY OUT OF BOUNDS
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\SparseSet.cpp (Line: 153)
+[2023-11-17 19:39:04.019] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 236)
 

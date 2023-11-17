@@ -52,8 +52,9 @@ void main()
                 }
                 vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aPos,1.0f);
                 totalPosition += localPosition * weights[i];
-           }
+            }
 
+            totalPosition.w = 1.0f;
 	        gl_Position = defaultSRT * totalPosition;
         }
         else

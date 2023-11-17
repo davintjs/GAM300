@@ -42,6 +42,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Debugging/DemoSystem.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/MeshManager.h"
+#include "ParticleSystem/ParticleSystem.h"
+#include "UISystem/UISystem.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 1.f;
@@ -72,8 +74,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
+		//ParticleManager,
 		GraphicsSystem,
-		Blackboard
+		Blackboard,
+		UISystem
 	>;
 #endif
 
@@ -97,10 +101,10 @@ public:
 		//#ifndef _BUILD
 		//	BEHAVIORTREEBUILDER.Init();
 		//#endif
-		AUDIOMANAGER.InitAudioManager();
+		AllSystems::Init();
 		MESHMANAGER.Init();
 		TextureManager.Init();
-		AllSystems::Init();
+		AUDIOMANAGER.InitAudioManager();
 
 		#if defined(_BUILD)
 			InputSystem::Instance().LockCursor(true);

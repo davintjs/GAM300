@@ -22,12 +22,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <glm/vec2.hpp>
 #include <filesystem>
 #include <AssetManager/AssetTypes.h>
+#include <AssetManager/ImporterTypes.h>
 
 struct Entity;
 struct Scene;
 struct Script;
 struct Field;
-struct Rigidbody;
+struct PhysicsComponent;
 struct ImGuiTextBuffer;
 
 namespace fs = std::filesystem;
@@ -143,26 +144,45 @@ struct ScriptGetFieldNamesEvent : IEvent
 
 #pragma region Asset Manager
 
+template <typename T>
 struct GetAssetEvent: IEvent
 {
 	GetAssetEvent(const fs::path& _filePath) : filePath{ _filePath } {}
 	const fs::path& filePath;
-	Engine::GUID guid;
+	Engine::GUID<T> guid;
 	Asset* asset;
 };
 
+template <typename T>
+struct GetAssetByGUIDEvent : IEvent
+{
+	GetAssetByGUIDEvent(Engine::GUID<T> _guid) : guid{ _guid } {}
+	Engine::GUID<T> guid;
+	AssetImporter<T>* importer;
+	T* asset;
+};
+
+template <typename T>
+struct AddSubAssetEvent : IEvent
+{
+	AddSubAssetEvent(T& _asset, Engine::GUID<T> _guid = Engine::GUID<T>{}) : asset{ _asset }, guid{ _guid } {}
+	T& asset;
+	Engine::GUID<T> guid;
+};
+
+template <typename T>
 struct GetFilePathGenericEvent : IEvent
 {
-	GetFilePathGenericEvent(const Engine::GUID& _guid) : guid{ _guid } {}
-	const Engine::GUID& guid;
+	GetFilePathGenericEvent(const Engine::GUID<T>& _guid) : guid{ _guid } {}
+	const Engine::GUID<T>& guid;
 	fs::path filePath;
 };
 
 template <typename AssetType>
 struct GetFilePathEvent : IEvent
 {
-	GetFilePathEvent(const Engine::GUID& _guid) : guid{ _guid } {}
-	const Engine::GUID& guid;
+	GetFilePathEvent(const Engine::GUID<AssetType>& _guid) : guid{ _guid } {}
+	const Engine::GUID<AssetType>& guid;
 	fs::path filePath;
 };
 
@@ -170,30 +190,22 @@ struct GetFilePathEvent : IEvent
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
 {
-	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset) 
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	AssetLoadedEvent(const AssetType& _asset): asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUpdatedEvent : IEvent
 {
-	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID& _guid, const AssetType& _asset)
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	AssetUpdatedEvent(const AssetType& _asset) : asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUnloadedEvent : IEvent
 {
-	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID& _guid) :
-		assetPath{ _assetPath }, guid{ _guid } {}
-	const fs::path& assetPath;
-	const Engine::GUID& guid;
+	AssetUnloadedEvent(const AssetType& _asset) : asset{ _asset }{}
+	const AssetType& asset;
 };
 
 struct DropAssetsEvent : IEvent
@@ -214,29 +226,32 @@ struct GetAssetsEvent : IEvent
 struct ContactAddedEvent : IEvent
 {
 
-	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactAddedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
 
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct ContactRemovedEvent : IEvent
 {
-	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactRemovedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 struct TriggerEnterEvent : IEvent
 {
-	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerEnterEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct TriggerRemoveEvent : IEvent
 {
-	TriggerRemoveEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerRemoveEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 #pragma region EDITOR STUFF

@@ -63,13 +63,14 @@ struct Object : property::base
 	operator Handle() const { return{ euid, uuid }; }
 
 	//State of the current object (normal / deleted)
-	int state; 
 
 	property_vtable();
 protected:
 	//Allows only scene to change ids (DANGEROUS)
 	Engine::UUID uuid;
 	Engine::UUID euid;
+public:
+	int state;
 	friend struct Scene;
 };
 

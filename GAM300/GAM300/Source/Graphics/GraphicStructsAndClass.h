@@ -20,7 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AI/Geometry.h"	// Bean: For Lines, Segments, Planes and Triangles
 
 #define EntityRenderLimit 1000
-#define EnitityInstanceLimit 200
+#define EnitityInstanceLimit 200s
 
 #define DEFAULT_MESH DEFAULT_ASSETS["Cube.geom"]
 #define DEFAULT_TEXTURE DEFAULT_ASSETS["None.dds"]
@@ -68,6 +68,7 @@ enum class SHADERTYPE
 	GBUFFER,
 	COLOURPICKING,
 	FORWARDDEBUG, // Non instanced debug draw
+	PARTICLES,
 	COUNT
 };
 
@@ -112,6 +113,7 @@ union Light_Type
 struct LightProperties
 {
 	bool inUse = true;
+	bool enableShadow = true;
 	// Used in point & Spot
 	glm::vec3 lightpos;
 
@@ -125,6 +127,11 @@ struct LightProperties
 	// Used for all
 	glm::vec3 lightColor;
 	float intensity;
+
+	glm::mat4 lightSpaceMatrix{ 1.f };
+
+	unsigned int shadowFBO;
+	unsigned int shadow;
 };
 
 struct InstanceProperties

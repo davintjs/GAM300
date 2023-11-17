@@ -10,18 +10,29 @@
 
 namespace Engine
 {
-	struct GUID
+	struct HexID
 	{
-		GUID();
-		GUID(const GUID& rhs);
-		GUID(const size_t val)
+		HexID();
+		HexID(const size_t val)
 		{
 			longInt[1] = val;
 			longInt[0] = 0;
 		}
-		explicit GUID(const std::string& hexString);
 
-		bool operator==(const GUID& rhs) const
+
+		explicit HexID(const std::string& hexString);
+
+		std::string ToHexString() const
+		{
+			std::stringstream hex;
+			hex << std::hex;
+			hex << std::setfill('0');
+			for (size_t i : longInt)
+				hex << std::setw(16) << i;
+			return hex.str();
+		}
+
+		bool operator==(const HexID& rhs) const
 		{
 			for (int i = 0; i < 2; ++i)
 			{
@@ -33,31 +44,43 @@ namespace Engine
 			return true;
 		}
 
-		GUID& operator=(const GUID& rhs)
+		HexID& operator=(const HexID& rhs)
 		{
 			memcpy(longInt, rhs.longInt, sizeof(longInt));
 			return *this;
 		}
-
-		std::string ToHexString() const
-		{
-			std::stringstream hex;
-			hex << std::hex;
-			hex << std::setfill('0');
-			for (size_t i : longInt)
-				hex << std::setw(16) << i;
-			return hex.str();
-		}
-	private:
 		size_t longInt[2];
-		friend std::hash<Engine::GUID>;
+	};
+
+	template <typename T>
+	struct GUID : HexID
+	{
+		GUID() : HexID::HexID() {}
+		GUID(const size_t val) : HexID::HexID(val){}
+		GUID(const GUID& rhs)
+		{
+			memcpy(longInt, rhs.longInt, sizeof(longInt));
+		}
+		GUID(const HexID& rhs)
+		{
+			memcpy(longInt, rhs.longInt, sizeof(longInt));
+		}
+		explicit GUID(const std::string& hexString) : HexID::HexID(hexString){}
+
+
+		bool operator==(const GUID<T>& rhs) const { return HexID::operator==(rhs); }
+	private:
+		friend std::hash<Engine::GUID<T>>;
 	};
 }
 
 namespace std 
 {
-	template <>
-	struct hash<Engine::GUID> {
-		std::size_t operator()(const Engine::GUID& obj) const;
+	template <typename T>
+	struct hash<Engine::GUID<T>> {
+		std::size_t operator()(const Engine::GUID<T>& obj) const
+		{
+			return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
+		}
 	};
 }

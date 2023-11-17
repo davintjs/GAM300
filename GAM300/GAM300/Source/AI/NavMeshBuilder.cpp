@@ -50,6 +50,8 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 	GetAssetsEvent<MeshAsset> e;
 	EVENTS.Publish(&e);
 
+	// Indices offset
+	int offset = 0;
 	for (auto& entity : MySceneManager.GetCurrentScene().GetArray<Entity>())
 	{
 		Tag& mTag = MySceneManager.GetCurrentScene().Get<Tag>(entity);
@@ -68,27 +70,29 @@ std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> NavMeshBuilder::GetAl
 		}
 
 		MeshAsset& meshAsset = e.pAssets->find(mesh.meshID)->second;
+		
+		// Use this to get all top vertices
+		float topY = (t.GetWorldMatrix() * glm::vec4(meshAsset.boundsMax, 1.f)).y;
 
-		float topY = glm::vec4(t.GetWorldMatrix() * glm::vec4(meshAsset.boundsMax, 1.f)).y;
+		// Calculate the world position of the mesh
 		for (int i = 0; i < meshAsset.numVertices; ++i)
 		{
-			if (meshAsset.vertices[i].position.y == topY)
+			glm::vec3 tempPosition = glm::vec3(t.GetWorldMatrix() * glm::vec4(meshAsset.vertices[i].position, 1.f));
+			mGroundVertices.push_back(tempPosition);
+		}
+
+		// Recalculate to get top vertices only or check if it is a slope
+		auto& ind = meshAsset.indices;
+		auto& v = mGroundVertices;
+		for (int j = 0; j < meshAsset.numIndices; j += 3)
+		{
+			if (v[ind[j] + offset].y >= topY && v[ind[j + 1] + offset].y >= topY && v[ind[j + 2] + offset].y >= topY)
 			{
-				//mGroundVertices.push_back(meshAsset.vertices[i].position);
-				//mGroundIndices.push_back(glm::ivec3(meshAsset.indices[i], meshAsset.indices[i + 1], meshAsset.indices[i + 2]));
+				mGroundIndices.push_back(glm::ivec3(ind[j] + offset, ind[j + 1] + offset, ind[j + 2] + offset));
 			}
 		}
 
-		/*for (int i = 0; i < mesh.vertices->size(); ++i)
-		{
-			glm::vec4 temp = glm::vec4(meshAsset.vertices[i].position, 1.f);
-			mGroundVertices.push_back(static_cast<glm::vec3>(t.GetWorldMatrix() * temp));
-		}
-		for (int j = 0; j < meshAsset.indices.size(); j += 3)
-		{
-			mGroundIndices.push_back(glm::ivec3((*mesh.indices)[j] + mIndexCount, (*mesh.indices)[j + 1] + mIndexCount, (*mesh.indices)[j + 2] + mIndexCount));
-		}
-		mIndexCount += 4;*/
+		offset += meshAsset.numVertices;
 	}
 
 	return std::make_pair(mGroundVertices, mGroundIndices);

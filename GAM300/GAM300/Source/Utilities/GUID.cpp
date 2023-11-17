@@ -16,18 +16,13 @@ namespace
 
 namespace Engine
 {
-	GUID::GUID()
+	HexID::HexID()
 	{
 		longInt[0] = CreateRandomNumber();
 		longInt[1] = CreateRandomNumber();
 	}
 
-	GUID::GUID(const GUID& rhs)
-	{
-		memcpy(longInt, rhs.longInt, sizeof(longInt));
-	}
-
-	GUID::GUID(const std::string& hexString)
+	HexID::HexID(const std::string& hexString)
 	{
 		if (hexString.size() == 0)
 		{
@@ -43,12 +38,4 @@ namespace Engine
 	}
 
 
-}
-
-namespace std
-{
-	std::size_t hash<Engine::GUID>::operator()(const Engine::GUID& obj) const
-	{
-		return obj.longInt[0] ^ obj.longInt[1];  // Combine the hashes
-	}
 }

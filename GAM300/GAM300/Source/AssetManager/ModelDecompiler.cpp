@@ -11,42 +11,39 @@
     This file contains the definitions of the following:
     1. Loads model files and extract the meshes, material, textures and animations
 
-All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+All content ï¿½ 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 #include "Precompiled.h"
 
 #include "ModelDecompiler.h"
+#include "AssetManager.h"
 
-ModelAsset ModelDecompiler::DeserializeModel(const std::string& _filePath, const Engine::GUID& _guid)
+void ModelDecompiler::DeserializeModel(const std::string & _filePath, ModelImporter& importer)
 {
-    ModelAsset tempModel;
     std::ifstream ifs(_filePath, std::ios::binary);
 
     // Retrieve mesh assets
-    DeserializeMeshes(ifs, tempModel);
+    DeserializeMeshes(ifs, _filePath,importer);
 
     // Retrieve material assets
-    DeserializeMaterials(ifs, tempModel);
+    DeserializeMaterials(ifs, _filePath,importer);
 
     // Retrieve texture assets
-    DeserializeTextures(ifs, tempModel);
+    DeserializeTextures(ifs, _filePath,importer);
 
     // Retrieve animation assets
     bool hasAnimation;
     ifs.read(reinterpret_cast<char*>(&hasAnimation), sizeof(hasAnimation));
     if(hasAnimation)
-        DeserializeAnimations(ifs, tempModel);
+        DeserializeAnimations(ifs, _filePath,importer);
 
     ifs.close();
-
-    return tempModel;
 }
 
-void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelAsset& _model)
+void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, const std::string& _filePath, ModelImporter& importer)
 {
     size_t meshSize;
     ifs.read(reinterpret_cast<char*>(&meshSize), sizeof(meshSize));
-
     for (int i = 0; i < meshSize; ++i)
     {
         MeshAsset meshAsset;
@@ -118,12 +115,59 @@ void ModelDecompiler::DeserializeMeshes(std::ifstream& ifs, ModelAsset& _model)
         meshAsset.boundsMin = min;
         meshAsset.boundsMax = max;
 
-        // Add this tempMesh into our tempGeom
-        _model.meshes.push_back(meshAsset);
+        AssetImporter<MeshAsset> meshImporter{};
+
+        meshAsset.mFilePath = _filePath;
+        meshAsset.mFilePath.replace_extension("");
+        meshAsset.mFilePath += "_" + std::to_string(i) + ".geom";
+        // If there is already meshes in the importer reassign it
+        if (i < importer.meshes.size())
+        {
+            meshImporter = {importer.meshes[i]};
+        }
+        else
+        {
+            //Add to model importer guid
+            importer.meshes.push_back(meshImporter.guid);
+        }
+
+        ASSET.AddSubAsset(meshAsset,meshImporter);
+
+        // Bean: For testing vertices
+        /*if (meshAsset.mFilePath.stem().string().find("Floor1x1Merged") != std::string::npos)
+        {
+            std::string name = meshAsset.mFilePath.stem().string();
+            name += "vert.txt";
+            std::ofstream test(name);
+            test << "Num vertices: " << meshAsset.numVertices << "\n";
+            float topVert = meshAsset.boundsMax.y;
+            for (size_t j = 0; j < meshAsset.numVertices; j++)
+            {
+                ModelVertex& v = meshAsset.vertices[j];
+
+                if(v.position.y >= topVert)
+                    test << "Vertex " << j << ": " << v.position.x << " " << v.position.y << " " << v.position.z << "\n";
+            }
+
+            test.close();
+
+            name = meshAsset.mFilePath.stem().string();
+            name += "ind.txt";
+            test.open(name);
+            test << "Num indices: " << meshAsset.numIndices << "\n";
+            for (size_t j = 0; j < meshAsset.numIndices; j += 3)
+            {
+                auto& v = meshAsset.indices;
+                if(meshAsset.vertices[v[j]].position.y >= topVert && meshAsset.vertices[v[j + 1]].position.y >= topVert && meshAsset.vertices[v[j + 2]].position.y >= topVert)
+                    test << "Indices: " << v[j] << " " << v[j + 1] << " " << v[j + 2] << "\n";
+            }
+
+            test.close();
+        }*/
     }
 }
 
-void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelAsset& _model)
+void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, const std::string& _filePath, ModelImporter& importer)
 {
     size_t matSize;
     ifs.read(reinterpret_cast<char*>(&matSize), sizeof(matSize));
@@ -143,17 +187,30 @@ void ModelDecompiler::DeserializeMaterials(std::ifstream& ifs, ModelAsset& _mode
         //    tempMat.textures.resize(texSize);
         //    ifs.read(reinterpret_cast<char*>(&tempMat.textures[0]), texSize * sizeof(Texture));
         //}
-    
-        _model.materials.push_back(tempMat);
+
+        //Uncomment this once Materials are converted to material asset
+        //AssetImporter<MaterialAsset> materialImporter{};
+
+        ////If there is already materials in the importer reassign it
+        //if (j < importer.materials.size())
+        //{
+        //    materialImporter = { importer.materials[j] };
+        //}
+        //else
+        //{
+        //    //Add to model importer guid
+        //    importer.materials.push_back(materialImporter.guid);
+        //}
+        //ASSET.AddSubAsset(std::move(meshAsset), std::move(materialImporter));
     }
 }
 
-void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, ModelAsset& _model)
+void ModelDecompiler::DeserializeTextures(std::ifstream& ifs, const std::string& _filePath, ModelImporter& importer)
 {
 
 }
 
-void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelAsset& _model)
+void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, const std::string& _filePath, ModelImporter& importer)
 {
     //size_t animationSize = pModel->animations.GetAnimations().size();
     size_t animationSize;
@@ -201,7 +258,7 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelAsset& _mod
 
     // AssimpNodeData
     AssimpNodeData& nodeData = animation.rootNode;
-    DeserializeRecursiveNode(ifs, nodeData);
+    DeserializeRecursiveNode(ifs, _filePath,nodeData);
 
     // Bone Info Map
     size_t boneInfoSize = 0;
@@ -224,10 +281,38 @@ void ModelDecompiler::DeserializeAnimations(std::ifstream& ifs, ModelAsset& _mod
     }
 
     ifs.read(reinterpret_cast<char*>(&animation.boneCounter), sizeof(animation.boneCounter));
-    _model.animations.push_back(animation);
+
+    animation.animationStates = importer.animationStates;
+
+    animation.mFilePath = _filePath;
+    animation.mFilePath.replace_extension("");
+    animation.mFilePath += "_" + std::to_string(0) + ".anim";
+
+    // Check if the importer animation size is the same as the model file animation size
+    if (importer.animations.size() != animationSize)
+    {
+        importer.animations.clear();
+
+        // Re-add all the animations into the importer
+        for (size_t i = 0; i < animationSize; i++)
+        {
+            AssetImporter<AnimationAsset> animImporter{};
+            importer.animations.push_back(animImporter.guid);
+
+            // Bean: This will be out of this if condition when we change the animation to become a vector of animations
+            ASSET.AddSubAsset(animation, animImporter); 
+        }
+    }
+    else // If there is no animations in the importer, add this animation in
+    {
+        AssetImporter<AnimationAsset> animImporter{};
+        // Animation importer already exist so just reassign (Bean: for now its only 1 animation)
+        animImporter = { importer.animations[0] };
+        ASSET.AddSubAsset(animation, animImporter);
+    }
 }
 
-void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, AssimpNodeData& _node)
+void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, const std::string& _filePath, AssimpNodeData& _node)
 {
     ifs.read(reinterpret_cast<char*>(&_node.transformation), sizeof(glm::mat4)); // Transformation
 
@@ -244,7 +329,7 @@ void ModelDecompiler::DeserializeRecursiveNode(std::ifstream& ifs, AssimpNodeDat
     _node.children.resize(_node.childrenCount);
     for (size_t i = 0; i < _node.childrenCount; i++)
     {
-        DeserializeRecursiveNode(ifs, _node.children[i]);
+        DeserializeRecursiveNode(ifs, _filePath, _node.children[i]);
     }
 }
 

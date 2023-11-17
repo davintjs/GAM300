@@ -70,22 +70,6 @@ void renderQuadWireMesh(unsigned int& _quadVAO, unsigned int& _quadVBO);
 bool bloom(unsigned int amount);
 
 using InstanceContainer = std::unordered_map<GLuint, InstanceProperties>; // <vao, properties>
-// Bean: A temp solution to access the shader
-// enum SHADERTYPE
-// {
-// 	HDR,
-// 	PBR,
-// 	TIR,// Temporary Instance Render
-// 	TDR,// Temporary Debug Instance Render
-// 	SKYBOX,
-// 	BASICLIGHT,
-// 	AFFECTEDLIGHT,
-// 	SHADOW,
-// 	POINTSHADOW,
-// 	UI_SCREEN,
-// 	UI_WORLD,
-// 	BLUR
-// };
 
 struct RigidDebug
 {
@@ -134,12 +118,12 @@ struct Material_instance : Object
 	float			aoConstant;
 	float			emissionConstant;
 
-	Engine::GUID	albedoTexture;
-	Engine::GUID	normalMap;
-	Engine::GUID	metallicTexture;
-	Engine::GUID	roughnessTexture;
-	Engine::GUID	aoTexture;
-	Engine::GUID	emissionTexture;
+	Engine::GUID<TextureAsset>	albedoTexture;
+	Engine::GUID<TextureAsset>	normalMap;
+	Engine::GUID<TextureAsset>	metallicTexture;
+	Engine::GUID<TextureAsset>	roughnessTexture;
+	Engine::GUID<TextureAsset>	aoTexture;
+	Engine::GUID<TextureAsset>	emissionTexture;
 
 
 
@@ -196,13 +180,13 @@ public:
 	// Duplicating Material Instance
 	Material_instance& DuplicateMaterial(const Material_instance & instance);
 
-	Engine::GUID NewMaterialInstance(std::string _name = "Default Material");
+	Engine::GUID<MaterialAsset> NewMaterialInstance(std::string _name = "Default Material");
 
 	// Deleting a Material Instance
-	void deleteInstance(Engine::GUID& matGUID);
+	void deleteInstance(Engine::GUID<MaterialAsset>& matGUID);
 	
 	// Deserialize Materials 
-	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID & _guid);
+	void LoadMaterial(const MaterialAsset & _materialAsset, const Engine::GUID<MaterialAsset> & _guid);
 
 	//MaterialAsset& GetMaterialAsset(const Engine::GUID & meshID);
 
@@ -210,11 +194,11 @@ public:
 	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
 
 	// capture Material Instance
-	Material_instance& getMaterialInstance(Engine::GUID matGUID);
+	Material_instance& getMaterialInstance(Engine::GUID<MaterialAsset> matGUID);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
-	std::unordered_map< Engine::GUID, Material_instance> _allMaterialInstances;
+	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _allMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 
@@ -276,6 +260,7 @@ public:
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
+
 	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
 	void DrawMeshes( GLSLShader & _shader);
@@ -321,7 +306,7 @@ public:
 
 private:
 
-	InstanceContainer* properties;
+	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
@@ -341,6 +326,10 @@ public:
 	std::vector<LightProperties>& GetPointLights() { return pointLightSources; }
 	std::vector<LightProperties>& GetDirectionLights() { return directionLightSources; }
 	std::vector<LightProperties>& GetSpotLights() { return spotLightSources; }
+
+	unsigned int pointLightCount;
+	unsigned int directionalLightCount;
+	unsigned int spotLightCount;
 
 private:
 	LightProperties lightingSource;
@@ -420,7 +409,7 @@ public:
 
 	gBuffer m_gBuffer;
 private:
-	std::unordered_map<Engine::GUID, InstanceProperties> properties;
+	std::unordered_map<Engine::GUID<MaterialAsset>, InstanceProperties> properties;
 	InstanceContainer instanceProperties; // <vao, properties>
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
