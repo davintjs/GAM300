@@ -12,11 +12,10 @@ void ParticleRenderer::Init() {
 }
 
 void ParticleRenderer::Update(float dt) {
-    particleSRT.clear();
+    particleSRT.clear(); // @kk not all entity should use the same container
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         Entity& entity = currentScene.Get<Entity>(particleComponent);
-        Transform& entityTransform = currentScene.Get<Transform>(entity);
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
@@ -37,7 +36,6 @@ void ParticleRenderer::Update(float dt) {
             particleSRT.emplace_back(translate * rotate * scale);
         }
     }
-    
 }
 
 void ParticleRenderer::Draw(BaseCamera& _camera) {
@@ -100,10 +98,10 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 void ParticleRenderer::SetupInstancedQuad() {
     float quadVertices[] = {
         // positions            // texture Coords
-        -1.f, -1.f,	0.f,    	0.f, 1.f,
-         1.f, -1.f,	0.f,    	1.f, 1.f,
-         1.f,  1.f,	0.f,    	1.f, 0.f,
-        -1.f,  1.f,	0.f,    	0.f, 0.f
+        -.5f, -.5f,	0.f,    	0.f, 1.f,
+         .5f, -.5f,	0.f,    	1.f, 1.f,
+         .5f,  .5f,	0.f,    	1.f, 0.f,
+        -.5f,  .5f,	0.f,    	0.f, 0.f
     };
     unsigned int indices[] = {
         0,1,2,
