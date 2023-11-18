@@ -107,7 +107,7 @@ struct ScriptObject
 	ScriptObject(Object* object)
 	{
 		static_assert(std::is_base_of_v<Object, T>);
-		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
+		memoryAddress = reinterpret_cast<size_t>(object) + memOffset;
 	}
 
 	operator T& ()
@@ -117,35 +117,30 @@ struct ScriptObject
 
 	operator Object* ()
 	{
+		if (memoryAddress == 0)
+			return nullptr;
 		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
 	}
 
+	void* operator& ()
+	{
+		return reinterpret_cast<void*>(memoryAddress);
+	}
 private:
 	static size_t constexpr memOffset = sizeof(Object) - 16;
 	size_t memoryAddress;
 };
 
-//template<>
-//struct ScriptObject<Script>
-//{
-//	ScriptObject(Object* object)
-//	{
-//		memoryAddress = reinterpret_cast<size_t>(&object) + memOffset;
-//	}
-//
-//	operator Script& ()
-//	{
-//		return *reinterpret_cast<Script*>(memoryAddress - (memOffset));
-//	}
-//
-//	operator Object* ()
-//	{
-//		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
-//	}
-//
-//private:
-//	MonoObject* script;
-//};
+template<>
+struct ScriptObject<Script>
+{
+	ScriptObject(Object* object);
+	operator Script& ();
+	operator Script* ();
+
+private:
+	MonoObject* script;
+};
 
 struct ScriptClass
 {
@@ -223,8 +218,6 @@ public:
 
 	//Sets data from field into C# field
 	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field);
-
-
 
 	void GetFieldValue(Script & script, const std::string & fieldName, Field & field);
 

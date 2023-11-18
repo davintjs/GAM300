@@ -163,6 +163,29 @@ namespace Utils
 
 #pragma endregion
 
+#pragma region ScriptObject<Script>
+ScriptObject<Script>::ScriptObject(Object* object)
+{
+	Scene& scene{MySceneManager.GetCurrentScene()};
+	script =  SCRIPTING.mSceneScripts[scene.uuid][*object];
+}
+
+ScriptObject<Script>::operator Script& ()
+{
+	Scene& scene{ MySceneManager.GetCurrentScene() };
+	Handle handle{ SCRIPTING.GetScriptHandle(script) };
+	return scene.Get<Script>(handle);
+}
+
+ScriptObject<Script>::operator Script* ()
+{
+	Scene& scene{ MySceneManager.GetCurrentScene() };
+	Handle handle{ SCRIPTING.GetScriptHandle(script) };
+	return &scene.Get<Script>(handle);
+}
+
+#pragma endregion
+
 MonoImage* ScriptingSystem::GetAssemblyImage()
 	{
 		return mAssemblyImage;
@@ -675,10 +698,8 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 	else if (field.fType < AllObjectTypes::Size())
 	{
 		mono_field_get_value(instance, mClassField, field.data);
-		Object*& pObject = *(Object**)field.data;
-		if (!pObject)
-			return;
-		pObject = (Object*)((size_t)pObject - 16);
+		ScriptObject<Object>& pObject = field.Get<ScriptObject<Object>>();
+		field.Get<Object*>() = pObject;
 		return;
 	}
 	//If mono object, it contains reference to type
@@ -745,8 +766,8 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
 		{
-			pObject = (Object*)(size_t(pObject) + 16);
-			mono_field_set_value(instance, mClassField, pObject);
+			ScriptObject<Object> sObject(pObject);
+			mono_field_set_value(instance, mClassField, &sObject);
 		}
 		return;
 	}
@@ -774,8 +795,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb2) + 16;
-			void* param{ reinterpret_cast<void*>(addr) };
+			ScriptObject<Object> object(&rb2);
+			void* param{ reinterpret_cast<void*>(&object) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
@@ -793,8 +814,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb1) + 16;
-			void* param{ reinterpret_cast<void*>(addr) };
+			ScriptObject<Object> object(&rb1);
+			void* param{ reinterpret_cast<void*>(&object) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
