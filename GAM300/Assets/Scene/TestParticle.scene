@@ -10,22 +10,29 @@ Scene Settings:
 ID: 14989680110700367717
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(1)
+  m_Name: Particle Generator
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1373255009547200345}  # Transform
+    - component: {fileID: 10644148500230948608}  # MeshRenderer
     - component: {fileID: 8120480805772412597}  # ParticleComponent
 ---
 ID: 1373255009547200345
 Transform:
   m_GameObject: {fileID: 14989680110700367717}
-  Translation: [0, 0, 0]
+  Translation: [0, 1.21712852, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.100000001, 0.100000001, 0.100000001]
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 10644148500230948608
+MeshRenderer:
+  m_GameObject: {fileID: 14989680110700367717}
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 4fb2f1b05837904f2f0e2bd0b9fa1c7c}
 ---
 ID: 8120480805772412597
 ParticleComponent:
@@ -33,3 +40,6 @@ ParticleComponent:
   NumberOfParticles: 5
   ParticleLifetime: 2
   ParticleEmissionRate: 17
+  ParticleMinScale: 0.0500000007
+  ParticleMaxScale: 0.479999989
+  ParticleScaleRate: 1.54999995

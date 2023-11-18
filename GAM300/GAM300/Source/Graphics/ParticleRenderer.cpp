@@ -17,7 +17,8 @@ void ParticleRenderer::Update(float dt) {
         Transform& entityTransform = currentScene.Get<Transform>(entity);
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
-            glm::mat4 scale = glm::mat4(1.f); // @desmond lemme know when scale is up
+            glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
+            scale[3] = glm::vec4(0, 0, 0, 1);
             glm::mat4 rotate = glm::mat4(1.f);// @desmond lemme know when rotation is up
             glm::mat4 translate = glm::mat4(
                 glm::vec4(1, 0, 0, 0),
@@ -25,7 +26,8 @@ void ParticleRenderer::Update(float dt) {
                 glm::vec4(0, 0, 1, 0),
                 glm::vec4(particleComponent.particles_[i].position, 1));/**/
 
-            particleSRT.emplace_back(scale * rotate * translate);
+            //particleSRT.emplace_back(scale * rotate * translate);
+            particleSRT.emplace_back(translate * rotate * scale);
         }
     }
     
