@@ -253,6 +253,8 @@ void Renderer::SetupGrid(const int& _num)
 }
 
 void Renderer::Draw(BaseCamera& _camera) {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Instanced Rendering
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
