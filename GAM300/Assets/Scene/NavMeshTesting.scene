@@ -1,0 +1,46 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: NavMeshTesting
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 814966311178942159
+GameObject:
+  m_IsActive: true
+  m_Name: Floor1
+  m_TagString: ""
+  m_Layer: 5
+  m_Component:
+    - component: {fileID: 12233018584411280593}  # Transform
+    - component: {fileID: 14965761384567921536}  # MeshRenderer
+---
+ID: 12233018584411280593
+Transform:
+  m_GameObject: {fileID: 814966311178942159}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [20, 1, 20]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14965761384567921536
+MeshRenderer:
+  m_GameObject: {fileID: 814966311178942159}
+  IsInstance: true
+  Mesh: {guid: 932ab1b1f4d25c51fe4fd8141b17c9ca}
+  Material_ID: {guid: 000000000000000000000000000000c8}
+  Albedo: [0, 0, 0, 0]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionScalar: 1

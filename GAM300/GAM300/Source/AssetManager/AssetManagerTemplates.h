@@ -299,7 +299,8 @@ struct AllAssetsGroup
 		}
 		if (fs::last_write_time(filePath) > fs::last_write_time(metaPath))
 		{
-			//GetGUID(filePath, true);
+			std::ofstream tmp(metaPath, std::ios::app);
+			tmp.close();
 			return true;
 		}
 		return false;

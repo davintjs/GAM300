@@ -104,18 +104,29 @@ void Lighting::Update(float)
 			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
-			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
+
+			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
 			glm::vec3 rotation = transform.GetRotation();
+			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
+
+			rot *= glm::translate(glm::mat4(1.f),direction);
+			glm::vec3 testdir = rot[3];
 
 			glm::vec3 test(0.f);
-			if (test == rotation)
+			/*if (test == rotation)
 			{
 				spotLightSources[spotLightCount].direction = glm::vec3(0.f,-1.f,0.f);
 			}
 			else
-			{
-				spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
-			}
+			{*/
+				//spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
+				//spotLightSources[spotLightCount].direction = glm::normalize(glm::degrees(rotation));
+				spotLightSources[spotLightCount].direction = glm::normalize(testdir);
+				//spotLightSources[spotLightCount].direction = glm::degrees(rotation);
+				//spotLightSources[spotLightCount].direction = glm::normalize(rotation);
+				//spotLightSources[spotLightCount].direction = rotation;
+
+			//}
 
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
 			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));

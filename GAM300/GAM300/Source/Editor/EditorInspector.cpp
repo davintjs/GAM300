@@ -1137,9 +1137,9 @@ private:
                             temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
                         }
 
-                        pObject->x = temp.scalarBound.x;
-                        pObject->y = temp.scalarBound.y;
-                        pObject->z = temp.scalarBound.z;
+                        pObject->dimensions.x = temp.scalarBound.x;
+                        pObject->dimensions.y = temp.scalarBound.y;
+                        pObject->dimensions.z = temp.scalarBound.z;
                         pObject->offset = temp.offset;
                     }
 
@@ -1456,6 +1456,7 @@ void EditorInspector::Init()
     IDENTIFIERS.physicsLayers[3] = Layer("UI");
     IDENTIFIERS.physicsLayers[4] = Layer("Water");
     IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
+    IDENTIFIERS.physicsLayers[6] = Layer("Obstacle");
 
     //create default tag
     IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
