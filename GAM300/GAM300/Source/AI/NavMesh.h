@@ -42,14 +42,11 @@ public:
 	const std::vector<unsigned int> GetIndices() const;
 
 	// Pathfinding stuff
-	bool FindPath(const glm::vec3& mStart, const glm::vec3& mEnd);
+	bool FindPath(glm::vec3& mStart, glm::vec3& mEnd);
 
 private:
 	// Add neighbour to this triangle
 	void LinkTriangles(Triangle3D* mTri1, Triangle3D* mTri2);
-
-	// Get the triangle containing the point
-	Triangle3D* TriangleContainingPoint(const glm::vec3& mPoint);
 
 	// Run time update of the navmesh
 	void UpdateNavMesh();

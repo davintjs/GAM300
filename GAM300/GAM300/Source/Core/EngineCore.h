@@ -97,7 +97,6 @@ public:
 	{
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
-		NAVMESHBUILDER.Init();
 		//#ifndef _BUILD
 		//	BEHAVIORTREEBUILDER.Init();
 		//#endif

@@ -74,6 +74,16 @@ ID: 2124126422752448800
 Script:
   m_GameObject: {fileID: 11651427043620866289}
   Script: {guid: 951d2373956a6a3883805d764974ea3b}
+  currentRestTimer: 2
+  isStartActive: true
+  restTimer: 0
+  flickerTimer: 7.41286888e-43
+  duration: 1.17920949e-17
+  timer: 7.41286888e-43
+  back: true
+  rest: false
+  bgm: {fileID: 12773935355036224696}  # Component
+  uibutton: {fileID: 1586736388842185412}  # Component
 ---
 ID: 4418236984561621579
 GameObject:
@@ -155,3 +165,81 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: 55f0d68efca4f8e2fc037fc4e9b0b830}
+---
+ID: 4826080389101304482
+GameObject:
+  m_IsActive: true
+  m_Name: Sounds
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8319623420107139277}  # Transform
+---
+ID: 8319623420107139277
+Transform:
+  m_GameObject: {fileID: 4826080389101304482}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 18376747485499058925}
+    - {fileID: 14533969767781839941}
+---
+ID: 18376747485499058925
+GameObject:
+  m_IsActive: true
+  m_Name: BGM
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3895450169950802102}  # Transform
+    - component: {fileID: 12773935355036224696}  # AudioSource
+---
+ID: 3895450169950802102
+Transform:
+  m_GameObject: {fileID: 18376747485499058925}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4826080389101304482}
+  m_Children:
+    []
+---
+ID: 12773935355036224696
+AudioSource:
+  m_GameObject: {fileID: 18376747485499058925}
+  AudioChannel: 0
+  Loop: true
+  Volume: 1
+  Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
+  Play: false
+---
+ID: 14533969767781839941
+GameObject:
+  m_IsActive: true
+  m_Name: Ui-Button
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 810750522281297347}  # Transform
+    - component: {fileID: 1586736388842185412}  # AudioSource
+---
+ID: 810750522281297347
+Transform:
+  m_GameObject: {fileID: 14533969767781839941}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4826080389101304482}
+  m_Children:
+    []
+---
+ID: 1586736388842185412
+AudioSource:
+  m_GameObject: {fileID: 14533969767781839941}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
+  Play: false

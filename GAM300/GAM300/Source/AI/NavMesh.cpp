@@ -35,27 +35,10 @@ const std::vector<unsigned int> NavMesh::GetIndices() const
 	return mIndices;
 }
 
-bool NavMesh::FindPath(const glm::vec3& mStart, const glm::vec3& mEnd)
+bool NavMesh::FindPath(glm::vec3& mStart, glm::vec3& mEnd)
 {
-	const Triangle3D* mTri1 = TriangleContainingPoint(mStart);
-	const Triangle3D* mTri2 = TriangleContainingPoint(mEnd);
-
-	if (mTri1 == nullptr || mTri2 == nullptr) // Out of bounds of navmesh triangles
-	{
-		return false;
-	}
-	else if (mTri1 == mTri2) // Start and end is same triangle
-	{
-
-	}
-
-	AStarPather pather; // Temporary
-	if (pather.ComputePath(mTri1, mTri2))
-	{
-		std::vector<glm::vec3> mPath = pather.PathPostProcess(mStart, mEnd); // The vector will contain the points that the agent will need to walk to until he reach the goal
-		return true;
-	}
-
+	UNREFERENCED_PARAMETER(mStart);
+	UNREFERENCED_PARAMETER(mEnd);
 	return false;
 }
 
@@ -63,19 +46,6 @@ void NavMesh::LinkTriangles(Triangle3D* mTri1, Triangle3D* mTri2)
 {
 	mTri1->AddNeighbour(mTri2);
 	mTri2->AddNeighbour(mTri1);
-}
-
-Triangle3D* NavMesh::TriangleContainingPoint(const glm::vec3& mPoint)
-{
-	for (auto& tri : mTriangles)
-	{
-		if (tri.ContainsPoint(mPoint))
-		{
-			return &tri;
-		}
-	}
-
-	return nullptr;
 }
 
 void NavMesh::LinkAllTriangles()

@@ -34,7 +34,7 @@ public:
 		COUNTERCLOCKWISE
 	};
 
-	Polygon3D(const std::vector<glm::vec3>& positions, const int& mRegionID);
+	Polygon3D(const std::vector<glm::vec3>& positions);
 	~Polygon3D();
 
 	// Getter functions
@@ -44,7 +44,7 @@ public:
 	const glm::vec3& GetBarycenter() const;
 
 	// Returns the orientation of the polygon
-	const Orientation& GetOrientation() const;
+	Orientation GetOrientation() const;
 
 	// Returns the points of this polygon
 	std::vector<glm::vec3>& GetPoints();
@@ -71,19 +71,23 @@ private:
 	// Generate the convex hull given the ground vertices
 	void GenerateConvexHull(const std::vector<glm::vec3>& points);
 
-	void GeneratePointsCCW(const std::vector<glm::vec3>& points);
-
 	std::vector<glm::vec3> TrimPositions(const std::vector<glm::vec3>& positions);
 
 	// Helper functions
 	// Determines if the point is on the left or on the vector
 	float PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p);
 
+	// Intersection checks
+	bool Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt);
+	bool Intersects(const Segment3D& seg1, const Segment3D& seg2, float* rt);
+	bool Intersects(const Line3D& line, const Plane3D& plane, float* rt);
+
+	// Parallel check for two vectors
+	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
+
 	// Calculation of squared distance of the vector
 	float CalculateSquaredDistance(const glm::vec3& mVec);
 
-	bool mPendingRebake = false;
-	int mRegionID = 0;
 	glm::vec3 minPoint;
 	glm::vec3 maxPoint;
 	glm::vec3 mBarycenterPoint;

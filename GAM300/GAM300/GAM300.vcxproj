@@ -25,7 +25,6 @@
     <ClCompile Include="Source\AI\LeafNodes\MoveToPosition.cpp" />
     <ClCompile Include="Source\AI\NavMesh.cpp" />
     <ClCompile Include="Source\AI\NavMeshBuilder.cpp" />
-    <ClCompile Include="Source\AI\Pathfinder.cpp" />
     <ClCompile Include="Source\AI\Polygon.cpp" />
     <ClCompile Include="Source\AppEntry\Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -289,7 +288,6 @@
     <ClInclude Include="Source\AI\NavMesh.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\NodeIncludes.h" />
-    <ClInclude Include="Source\AI\Pathfinder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
     <ClInclude Include="Source\AppEntry\Application.h" />
     <ClInclude Include="Source\AppEntry\EntryPoint.h" />
