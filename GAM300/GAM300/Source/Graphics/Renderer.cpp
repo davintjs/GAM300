@@ -261,8 +261,6 @@ void Renderer::SetupGrid(const int& _num)
 }
 
 void Renderer::Draw(BaseCamera& _camera) {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Instanced Rendering	
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
@@ -444,6 +442,8 @@ void Renderer::Draw(BaseCamera& _camera) {
 		}*/
 		transparentMap[distance] = transparentContainer[i];
 	}
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Non-Instanced Rendering
 	for (auto& pair : transparentMap)
@@ -557,6 +557,8 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		shader.UnUse();
 	}
+	glDisable(GL_BLEND);
+
 }
 
 
@@ -1117,26 +1119,15 @@ void Renderer::DrawDepthDirectional()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			std::vector <glm::mat4> SRTs;
-			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
-			{
-				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
-				{
-					SRTs.push_back(prop.entitySRT[j]);
-				}
-			}
-			if (SRTs.size() == 0)
-			{
-				continue;
-			}
+			
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
 			glBindVertexArray(0);
 		}
 
@@ -1213,26 +1204,15 @@ void Renderer::DrawDepthSpot()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			std::vector <glm::mat4> SRTs;
-			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
-			{
-				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
-				{
-					SRTs.push_back(prop.entitySRT[j]);
-				}
-			}
-			if (SRTs.size() == 0)
-			{
-				continue;
-			}
+
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
 			glBindVertexArray(0);
 		}
 
@@ -1320,26 +1300,13 @@ void Renderer::DrawDepthPoint()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			std::vector <glm::mat4> SRTs;
-			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
-			{
-				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
-				{
-					SRTs.push_back(prop.entitySRT[j]);
-				}
-			}
-			if (SRTs.size() == 0)
-			{
-				continue;
-			}
-
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
 			glBindVertexArray(0);
 		}
 
