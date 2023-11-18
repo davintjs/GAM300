@@ -232,7 +232,7 @@ void ButtonComponent::Button_update(Button* button, int mouse_x, int mouse_y, bo
 
 
 PhysicsComponent::~PhysicsComponent() {
-	std::cout << "Destruct Physics Component\n";
+	//std::cout << "Destruct Physics Component\n";
 	PhysicsSystem::Instance().DeleteBody(*this);
 }
 

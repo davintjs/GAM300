@@ -75,6 +75,24 @@ void PhysicsSystem::Update(float dt) {
 		Rigidbody& rb = *it;
 
 		if (rb.state == DELETED) continue;
+		
+		Vector3 tmpVec;
+		JPH::BodyID tmpBID(rb.bid);
+		JPH::RVec3 tmp;
+
+		if (scene.IsActive(rb) && scene.IsActive(scene.Get<Entity>(rb)))
+		{
+			if(!bodyInterface->IsActive(tmpBID))
+				bodyInterface->ActivateBody(tmpBID);
+		}
+		else {
+
+			if(bodyInterface->IsActive(tmpBID))
+				bodyInterface->DeactivateBody(tmpBID);
+
+			continue;
+		}
+		
 
 		Entity& entity = scene.Get<Entity>(rb);
 		
@@ -82,9 +100,7 @@ void PhysicsSystem::Update(float dt) {
 		Transform& t = scene.Get<Transform>(entity);
 
 
-		Vector3 tmpVec;
-		JPH::BodyID tmpBID(rb.bid);
-		JPH::RVec3 tmp;
+
 		Vector3 translation = t.GetTranslation();
 		if (scene.Has<BoxCollider>(entity))
 			translation = translation.operator glm::vec3() + scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
@@ -292,7 +308,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				//std::cout << "Trigger Enter!\n";
+				std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
@@ -446,8 +462,8 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
 	UNREFERENCED_PARAMETER(pEvent);
 	//std::cout << "Physics System scene stop test\n";
-	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
-	std::cout << "Num characters: " << characters.size() << std::endl;
+	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Num characters: " << characters.size() << std::endl;
 	//Clean up any characters
 	for (JPH::Ref<JPH::Character>& r : characters) {
 
@@ -459,9 +475,9 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	}
 	characters.clear();
 
-	std::cout << "Num characters: " << characters.size() << std::endl;
+	//std::cout << "Num characters: " << characters.size() << std::endl;
 
-	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 
 
 	// Delete the current physics system, must set to nullptr
@@ -493,11 +509,12 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (rb.state == DELETED) continue;
 		Entity& entity = scene.Get<Entity>(rb);
 		
+		// Set enabled status
+		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
+		if (!scene.IsActive(entity) || !scene.IsActive(rb)) {
+			enabledStatus = JPH::EActivation::DontActivate;
+		}
 
-		if (!scene.IsActive(entity))
-			continue;
-		if (!it.IsActive())
-			continue;
 
 
 
@@ -521,8 +538,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		JPH::RVec3 angularVel;
 		GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
 
-		// Set enabled status
-		JPH::EActivation enabledStatus = JPH::EActivation::Activate;
+
 
 		// Motion Type
 		JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
@@ -780,10 +796,10 @@ void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 	if (!physicsSystem)
 		return;
 
-	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
 	if (pc.componentType == PhysicsComponent::Type::cc) {
-		std::cout << "getting rid of jolt character\n";
+		//std::cout << "getting rid of jolt character\n";
 
 		//if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
 		//	ccTest->mCharacter->RemoveFromPhysicsSystem();
@@ -808,7 +824,7 @@ void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 
 	}
 
-	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 
 
 }
@@ -817,15 +833,15 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	if (!physicsSystem)
 		return;
 
-	std::cout << "Deleting Body!\n";
-	std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Deleting Body!\n";
+	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
 	if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == bid) {
 		ccTest->mCharacter->RemoveFromPhysicsSystem();
 		bodyInterface->DestroyBody(ccTest->mCharacter->GetBodyID());
 		ccTest->mCharacter = nullptr;
 
-		std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+		//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 
 		return;
 	}
@@ -836,7 +852,7 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 
 			r->RemoveFromPhysicsSystem();
 			r = nullptr;
-			PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+			//PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
 
 			return;
 		}
@@ -845,7 +861,7 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	
 
 	bodyInterface->RemoveBody(JPH::BodyID(bid));
-	std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 }
 
 

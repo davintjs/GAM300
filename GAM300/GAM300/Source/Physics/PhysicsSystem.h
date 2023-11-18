@@ -66,7 +66,7 @@ public:
 		case EngineObjectLayers::DYNAMIC:
 			return true;
 		case EngineObjectLayers::SENSOR:
-			return obj2 == EngineObjectLayers::DYNAMIC;
+			return obj2 == EngineObjectLayers::DYNAMIC || EngineObjectLayers::SENSOR;
 		default:
 			return false;
 
