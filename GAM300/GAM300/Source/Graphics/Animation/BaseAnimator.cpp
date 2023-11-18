@@ -25,6 +25,7 @@ BaseAnimator::BaseAnimator()
     m_FinalBoneMatIdx = -1; 
     currentState = nextState = defaultState = nullptr;
     playing = false;
+    blending = false;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -36,21 +37,46 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
+    //startTime = m_CurrentAnimation.GetAnimationRange()[0].x;
+    //endTime = m_CurrentAnimation.GetAnimationRange()[0].y;
+
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
 
     // Change state if the current time passes the end time
-    if (m_CurrentTime >= endTime - startTime)
-        ChangeState();
+    if (m_CurrentTime >= endTime - startTime)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
+    {
+        if (blending == false)
+        { 
+            ChangeState(); // need to change to move interolateanim stuff in 
+
+            if (nextState)  // might wanna move out of these 2 if statements
+                blending = true;
+        }
+        else
+            blending == false;
+
+
+        //std::cout << blendFactor << "blendfacccccc\n";
+    }
 
     // crash prevention
     endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
     startTime = (startTime > endTime) ? endTime - 1.f : startTime;
 
-    //m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation.GetDuration());
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
-    CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+    //std::cout  << currentState << "currentState " << blendFactor << "blendfac\n";
+
+    if (blending == true)/*if (nextState)*/
+    {
+        CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
+
+        // if fin blending, set m_CurrentTime == endTime
+        //curr it is immediate
+    }
+    else
+        CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
 }
 
 void BaseAnimator::PlayAnimation(Animation* pAnimation)
@@ -67,7 +93,7 @@ void BaseAnimator::ChangeState()
     if (!currentState) // If no next state, use default state
         currentState = defaultState; 
 
-    nextState = nullptr;
+    nextState = nullptr; // do this after fin blending
 
     // Check that the current state exists
     if (currentState)
@@ -90,7 +116,6 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
     std::string nodeName = node->name;
     glm::mat4 nodeTransform = node->transformation;
 
-    //Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
     Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
@@ -113,6 +138,43 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
 
     for (int i = 0; i < node->childrenCount; i++)
         CalculateBoneTransform(&node->children[i], globalTransformation);
+}
+
+void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+{
+    std::string nodeName = node->name;
+    glm::mat4 nodeTransform = node->transformation;
+
+    Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+    Animation& m_NextAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+
+    Bone* NextBone = m_NextAnimation.FindBone(nodeName);
+    Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+
+    if (Bone && NextBone)
+    {
+        // curr anim
+        Bone->Update(m_CurrentTime);
+        // next anim
+        NextBone->Update(nextState->minMax.x);
+
+        // get anim1 & anim2 xform
+        // blend them, set nodexform to blended one
+        nodeTransform = NextBone->GetLocalTransform(); // temp
+    }
+
+    glm::mat4 globalTransformation = parentTransform * nodeTransform;
+
+    auto boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
+    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+    {
+        int index = boneInfoMap[nodeName].id;
+        glm::mat4 offset = boneInfoMap[nodeName].offset;
+        m_FinalBoneMatrices[index] = globalTransformation * offset;
+    }
+
+    for (int i = 0; i < node->childrenCount; i++)
+        CalculateBlendedBoneTransform(&node->children[i], globalTransformation);
 }
 
 void BaseAnimator::SetDefaultState(const std::string& _defaultState)
@@ -141,3 +203,40 @@ bool BaseAnimator::AnimationAttached() {
     // Check if m_CurrentAnimation is not nullptr (i.e., it's attached)
     return m_AnimationIdx != -1 && animID != 0;
 }
+
+
+//void BaseAnimator::CalculateBlendFactor(float transitionDuration)
+//{
+//    // Calculate the blend factor as the ratio of elapsed time to transition duration
+//    blendFactor = glm::clamp( (m_CurrentTime - startTime) / transitionDuration, 0.0f, 1.0f);
+//}
+
+//glm::mat4 lerp(const glm::mat4& a, const glm::mat4& b, float t) {
+//    t = glm::clamp(t, 0.0f, 1.0f); // Ensure t is in the [0, 1] range
+//    return a + (b - a) * t;
+//}
+//void BaseAnimator::InterpolateAnimations(Animation& firstAnimation, Animation& secondAnimation)
+//{
+//    // Ensure that both animations have the same number of bones
+//    if (firstAnimation.GetBoneCount() != secondAnimation.GetBoneCount())
+//    {
+//        // Handle error: Animations must have the same number of bones for blending
+//        return;
+//    }
+//
+//    // Interpolate between the bone transformations of the two animations based on the blend factor
+//    for (int i = 0; i < firstAnimation.GetBoneCount(); ++i)
+//    {
+//        // Get bone transformations from the two animations
+//        glm::mat4 firstTransform = firstAnimation.GetBones()[i].GetLocalTransform();
+//        glm::mat4 secondTransform = secondAnimation.GetBones()[i].GetLocalTransform();
+//
+//        // Interpolate between the two transformations
+//        glm::mat4 interpolatedTransform = lerp(firstTransform, secondTransform, blendFactor);
+//
+//        // change existing finalbone mat instead of making new anim!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//
+//        // Update the blended animation with the interpolated transformation
+//        m_BlendedAnimation.GetBones()[i].m_LocalTransform = interpolatedTransform;
+//    }
+//}

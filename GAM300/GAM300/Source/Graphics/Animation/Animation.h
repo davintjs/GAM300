@@ -67,7 +67,7 @@ struct KeyScale
     float timeStamp;
 };
 
-class Bone
+class Bone // these store keyframe data of a bone
 {
 public:
     Bone() {};
