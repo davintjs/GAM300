@@ -39,6 +39,12 @@ public class ThirdPersonController : Script
     public bool isInvulnerable = false;
     public float invulnerableTimer = 1f;
     public float currentInvulnerableTimer;
+
+    //health bar
+    public GameObject healthBarFill;
+    vec3 initialHealthBarPos;
+    float initialHealthBarXpos;
+    float initialHealthBarXScale;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,11 +54,23 @@ public class ThirdPersonController : Script
         currentAttackTimer = attackTimer;
         currentHealth = maxHealth;
         currentInvulnerableTimer = invulnerableTimer;
+
+        initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
+        initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
+        initialHealthBarXScale = healthBarFill.GetComponent<Transform>().localScale.x;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //UpdatehealthBar();
+        //Testing taking damage
+        if (Input.GetKey(KeyCode.T))
+        {
+            TakeDamage(1);
+            Console.WriteLine("TakeDamage");
+            isInvulnerable = true;
+        }
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
         //Handle Movement Input
@@ -196,21 +214,28 @@ public class ThirdPersonController : Script
                 currentInvulnerableTimer = invulnerableTimer;
             }
         }
-        //Testing taking damage
-        if (Input.GetKey(KeyCode.T))
-        {            
-            TakeDamage(1);
-            isInvulnerable = true;
-        }
 
+    }
+
+    void UpdatehealthBar()
+    {
+        float scaleFactor = (float)currentHealth / (float)maxHealth;
+        float newXScale = initialHealthBarXScale * scaleFactor;
+        float xOffset = (initialHealthBarXScale - newXScale) * 0.5f;
+        vec3 currentPos = healthBarFill.GetComponent<Transform>().localPosition;
+        vec3 currentScale = healthBarFill.GetComponent<Transform>().localScale;
+        currentPos.x = initialHealthBarXpos - xOffset;
+        currentScale.x = newXScale;
+        healthBarFill.GetComponent<Transform>().localPosition = currentPos;
+        healthBarFill.GetComponent<Transform>().localScale = currentScale;
     }
 
     void TakeDamage(int amount)
     {
         if(!isInvulnerable)
         {
-            //isInvulnerable = true;
-            currentHealth -= amount;           
+            currentHealth -= amount;
+            UpdatehealthBar();
         }
         Console.WriteLine("Hit");
 
