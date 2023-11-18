@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "glm/glm.hpp"
 
 #include "Polygon.h"
+#include "Core/Events.h"
 
 #define NAVMESHBUILDER NavMeshBuilder::Instance()
 
@@ -33,8 +34,13 @@ public:
 	NavMeshBuilder() {};
 	~NavMeshBuilder() {};
 
+	void Init();
+
 	// Get all grounds of the current scene
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> GetAllGrounds();
+
+	// Get all obstacles of the current scene
+	void GetAllObstacles();
 
 	// NavMeshBuilder exit
 	void Exit();
@@ -43,12 +49,18 @@ public:
 	void BuildNavMesh();
 	NavMesh* CreateNavMesh();
 
+	// Rebake the navmesh
+	void Rebake();
+
 	// Getter functions
 	// Returns the region of the navmesh
 	std::vector<Polygon3D>& GetRegion();
 
 	// Returns the holes in this navmesh
 	//std::vector<Polygon3D>& GetHoles();
+
+	// Add obstacle to this navmesh
+	void AddObstacle(Polygon3D* mObstacle);
 
 	// Returns the obstacles in this navmesh
 	std::vector<Polygon3D>& GetObstacles();
@@ -65,8 +77,7 @@ private:
 	void OffsetRadius(const float& mRadius);
 	void ObstacleOffset(const float& mRadius);
 
-	// Add hole to the navmesh and editing the navmesh to accomodate the holes
-	void AddObstacle(Polygon3D* mObstacle);
+	// Add obstacle to the navmesh and editing the navmesh to accomodate the holes
 	void RemoveObstaclesFromMesh();
 
 	// Triangulation of the navmesh with ear clipping method
@@ -92,10 +103,16 @@ private:
 	// Parallel check of the two vectors
 	bool Parallel(const glm::vec3& v1, const glm::vec3& v2);
 
+	void CallbackContactAdd(ContactAddedEvent* pEvent);
+	void CallbackContactRemove(ContactRemovedEvent* pEvent);
+
+	int mObstacleCount = 0;
+	int mRegionCount = 0;
 	int mTriCount = 0;
+	int mIndexCount = 0;
 	Polygon3D* mBoundary;
 	NavMesh* mNavMesh;
 	//std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
-	std::vector<Polygon3D> mRegion;
+	std::vector<Polygon3D> mRegions; // Contains the total regions of the game
 };
