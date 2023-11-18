@@ -13121,7 +13121,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cube - Copy
   m_TagString: Untagged
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 6649742492051191017}  # Transform
     - component: {fileID: 3723063557287486421}  # Rigidbody
@@ -13131,7 +13131,7 @@ GameObject:
 ID: 6649742492051191017
 Transform:
   m_GameObject: {fileID: 11291534077837522555}
-  Translation: [58.1066437, 39.1861572, -70.6340103]
+  Translation: [58.8599663, 39.4782791, -70.6340103]
   Rotation: [0, 0, 0]
   Scale: [2.28999996, 5.02766466, 2.28999996]
   Father: {fileID: 6661078963704661251}
