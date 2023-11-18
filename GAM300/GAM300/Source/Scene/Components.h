@@ -394,12 +394,13 @@ struct Canvas : Object
 struct Particle : Object
 {
 	Particle() {}
-	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
-		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
+	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime, float scale)
+		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime), scale(scale) {}
 	vec3 position;
 	vec3 velocity;
 	vec3 acceleration;
 	float lifetime;
+	float scale; 
 };
 
 struct ParticleComponent : Object
@@ -407,7 +408,10 @@ struct ParticleComponent : Object
 	ParticleComponent() {}
 	int numParticles_ = 1;
 	float particleLifetime_ = 3.0f;
-	float particleEmissionRate_ = 0.0f;
+	float particleEmissionRate_ = 100.0f;
+	float particleMinScale_ = 0.1f;
+	float particleMaxScale_ = 1.0f;
+	float particleScaleRate_ = 0.5f;
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -417,7 +421,10 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 {
 	property_var(numParticles_).Name("NumberOfParticles"),
 		property_var(particleLifetime_).Name("ParticleLifetime"),
-		property_var(particleEmissionRate_).Name("ParticleEmissionRate")
+		property_var(particleEmissionRate_).Name("ParticleEmissionRate"),
+		property_var(particleMinScale_).Name("ParticleMinScale"),
+		property_var(particleMaxScale_).Name("ParticleMaxScale"),
+		property_var(particleScaleRate_).Name("ParticleScaleRate")
 
 } property_vend_h(ParticleComponent)
 //
