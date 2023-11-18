@@ -581,7 +581,7 @@ void ScriptingSystem::CacheScripts()
 			//POINTER
 			if (fType < AllObjectTypes::Size())
 			{
-				fieldSize = sizeof(uint64_t);
+				fieldSize = sizeof(ScriptObject<Object>);
 			}
 			else if (fType == GetFieldType::E<char*>())
 			{
@@ -890,7 +890,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		Engine::UUID euid = script.EUID();
 		Engine::UUID uuid = script.UUID();
-		void* param[] = {&scene.Get<Entity>(script),&euid,&uuid };
+		void* param[] = {&ScriptObject<Entity>(&scene.Get<Entity>(script)),&euid,&uuid};
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 3);
 		Invoke(instance, reflectComponent, param);
 		mScripts.emplace(script, instance);

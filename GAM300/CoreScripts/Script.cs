@@ -44,9 +44,13 @@ namespace BeanFactory
         private void Initialize(GameObject gameObj,UInt64 _euid, UInt64 _uuid)
         {
             _gameObject = gameObj;
+            if (_gameObject == null)
+                Console.WriteLine("Unable to find gameobject");
             euid = _euid;
             uuid = _uuid;
             _transform = InternalCalls.Get<Transform>(gameObject);
+            if (_transform == null)
+                Console.WriteLine("Unable to find transform");
         }
         public static T Instantiate<T>(T original, vec3 pos, vec3 rotation)
         {

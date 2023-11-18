@@ -57,6 +57,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Gets object that entity has
 	static void* Get(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
 	{
+		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())

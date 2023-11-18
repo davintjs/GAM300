@@ -1,5 +1,5 @@
-[2023-11-17 19:39:04.019] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 236)
+[2023-11-18 23:00:04.516] [Error] [critical] 
+Caused By:	sizeof(T) < size
+Info:		ASSIGNED SIZE:  8 OBJECT SIZE:  8
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptFields.h (Line: 72)
 
