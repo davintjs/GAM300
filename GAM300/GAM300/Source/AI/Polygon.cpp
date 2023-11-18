@@ -22,11 +22,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Polygon.h"
 
-Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
+Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionID)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
-	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
-	GenerateConvexHull(mTrimmedPos);
+	GeneratePointsCCW(positions);
+	//std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
+	//GenerateConvexHull(positions);
 	CalculateNormalBarycenter(mPoints);
 
 	minPoint = { FLT_MAX, FLT_MAX, FLT_MAX };
@@ -45,11 +46,12 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions)
 	}
 
 	mNumberOfPoints = static_cast<int>(mPoints.size());
+	mRegionID = regionID;
 }
 
 Polygon3D::~Polygon3D()
 {
-
+	
 }
 
 glm::vec3 Polygon3D::GetNormal() const
@@ -57,7 +59,7 @@ glm::vec3 Polygon3D::GetNormal() const
 	return mNormal;
 }
 
-Polygon3D::Orientation Polygon3D::GetOrientation() const
+const Polygon3D::Orientation& Polygon3D::GetOrientation() const
 {
 	return mOrientation;
 }
@@ -80,6 +82,61 @@ glm::vec3 Polygon3D::GetMaxPoint()
 glm::vec3 Polygon3D::GetMinPoint()
 {
 	return minPoint;
+}
+
+void Polygon3D::GeneratePointsCCW(const std::vector<glm::vec3>& points)
+{
+	// Get the barycenter point of the points
+	glm::vec3 _BaryCenterPoint = { 0.f, 0.f, 0.f };
+	for (const auto& p : points)
+	{
+		_BaryCenterPoint += p;
+	}
+	_BaryCenterPoint /= static_cast<int>(points.size());
+
+	// Split the points on upper semi-circle and lower semi-circle based on their z-value comparing to _BaryCenterPoint
+	std::vector<glm::vec3> mLowerSemiCircle;
+	std::vector<glm::vec3> mUpperSemiCircle;
+	for (const auto& _point : points)
+	{
+		if (_point.z <= _BaryCenterPoint.z)
+		{
+			mLowerSemiCircle.push_back(_point);
+		}
+		else
+		{
+			mUpperSemiCircle.push_back(_point);
+		}
+	}
+
+	// Reaching here we have partitioned the points in upper and lower semi-circle
+
+	// For lower semi-circle, we sort based on least x-value first, if it is tied we sort based on least z-value
+	std::sort(mLowerSemiCircle.begin(), mLowerSemiCircle.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
+		{
+			if (lhs.x == rhs.x)
+			{
+				return lhs.z < rhs.z;
+			}
+			return lhs.x < rhs.x;
+		});
+
+	// For upper semi-circle, we sort based on x-value most first, if it is tied we sort based on least z-value
+	std::sort(mUpperSemiCircle.begin(), mUpperSemiCircle.end(), [&](const glm::vec3& lhs, const glm::vec3& rhs)
+		{
+			if (lhs.x == rhs.x)
+			{
+				return lhs.z < rhs.z;
+			}
+			return lhs.x > rhs.x;
+		});
+
+	mPoints = mLowerSemiCircle;
+	for (int i = 0; i < mUpperSemiCircle.size(); ++i)
+	{
+		mPoints.push_back(mUpperSemiCircle[i]);
+	}
+
 }
 
 void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points) 
@@ -358,7 +415,7 @@ void Polygon3D::JoinPolygon(Polygon3D& polygon)
 		}
 	}
 
-	glm::vec3 tempSecondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f)); // Might need to do rounding for floating error??
+	glm::vec3 tempSecondPoint = rightVertex + (100000.f * glm::vec3(1.f, 0.f, 0.f));
 	
 	Segment3D infiniteLine(rightVertex, tempSecondPoint); // Starting from the right most vertex of the hole's polygon, extend the line infinitely to the right
 
@@ -477,31 +534,40 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 	for (int i = 0; i < mHole.GetPoints().size(); ++i)
 	{
 		int counter = 0;
-		glm::vec2 pt = glm::vec2(mHole.GetPoints()[i]);
+		glm::vec2 pt = glm::vec2(mHole.GetPoints()[i].x, mHole.GetPoints()[i].z);
 		glm::vec2 dir = glm::vec2(1000.f, 0.f); // Infinite horizontal line
 		Segment2D line(pt, pt + dir);
 
 		for (int j = 0; j < mPoints.size(); ++j)
 		{
-			glm::vec2 m1 = glm::vec2(mPoints[j]);
-			glm::vec2 m2 = glm::vec2(mPoints[(j != mPoints.size() - 1) ? j + 1 : 0]);
+			glm::vec2 m1 = glm::vec2(mPoints[j].x, mPoints[j].z);
+			glm::vec2 m2 = glm::vec2(mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].x, mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].z);
 			Segment2D polyLine(m1, m2);
 
-			if ((polyLine.point1.y < pt.y) && (polyLine.point2.y < pt.y))
+			//int yDifference1 = pt.y - polyLine.point1.y;
+			//int yDifference2 = pt.y - polyLine.point2.y;
+
+			//if ((yDifference1 > 0.1f) && (yDifference2 > 0.1f))
+			//{
+			//	continue;
+			//}
+
+			
+			//pt.y = polyLine.point1.y;
+			
+
+			/*if ((polyLine.point1.y < pt.y) && (polyLine.point2.y < pt.y))
 			{
 				continue;
 			}
 			else if ((polyLine.point1.y >= pt.y) && (polyLine.point2.y >= pt.y))
 			{
 				continue;
-			}
-			else
+			}*/
+			float intersectionTime;
+			if (Intersects(polyLine, line, &intersectionTime))
 			{
-				float intersectionTime;
-				if (Intersects(polyLine, line, &intersectionTime))
-				{
-					++counter;
-				}
+				++counter;
 			}
 		}
 
@@ -520,7 +586,7 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 	for (int i = 0; i < mHole.GetPoints().size(); ++i)
 	{
 		glm::vec3& pos = mHole.GetPoints()[i];
-		Line3D line(pos, glm::vec3(0.f, 0.f, 1.f));
+		Line3D line(pos, glm::vec3(0.f, 1.f, 0.f));
 
 		float t;
 		if (Intersects(line, plane, &t))
@@ -536,7 +602,7 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 
 void Polygon3D::SwitchOrientation()
 {
-	mOrientation == Orientation::CLOCKWISE ? Orientation::COUNTERCLOCKWISE : Orientation::CLOCKWISE; // Change the orientation
+	mOrientation = (mOrientation == Orientation::COUNTERCLOCKWISE) ? Orientation::CLOCKWISE : Orientation::COUNTERCLOCKWISE; // Change the orientation
 
 	int leftTracker = 1; // Start from 2nd index as 1st index no change
 	int rightTracker = static_cast<int>(mPoints.size()) - 1; // Start from last index
@@ -555,104 +621,6 @@ void Polygon3D::SwitchOrientation()
 float Polygon3D::PointLeftOfVecOrOnLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p)
 {
 	return (l1.x - p.x) * (l2.z - p.z) - (l1.z - p.z) * (l2.x - p.x);
-}
-
-bool Polygon3D::Intersects(const Segment2D& seg1, const Segment2D& seg2, float* rt)
-{
-	glm::vec2 EP_line1 = seg1.point2 - seg1.point1;
-	glm::vec2 EP_line2 = seg2.point2 - seg2.point1;
-	float det = EP_line1.x * EP_line2.y - EP_line2.x * EP_line1.y;
-
-	if (det == 0.f)
-	{
-		return false;
-	}
-
-	float t = (EP_line2.x * (seg1.point1.y - seg2.point1.y) + EP_line2.y * (seg2.point1.x - seg1.point1.x)) / det;
-	float u = (EP_line1.x * (seg2.point1.y - seg1.point1.y) + EP_line1.y * (seg1.point1.x - seg2.point1.x)) / (EP_line2.x * EP_line1.y - EP_line2.y * EP_line1.x);
-
-	if (rt != NULL)
-	{
-		*rt = t;
-	}
-
-	if (t >= 0.f && t <= 1.f)
-	{
-		if (u >= 0.f && u <= 1.f)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool Polygon3D::Intersects(const Segment3D& seg1, const Segment3D& seg2, float* rt)
-{
-	float A = seg1.point2.x - seg1.point1.x;
-	float B = seg2.point1.x - seg2.point2.x;
-	float C = seg2.point1.x - seg1.point1.x;
-
-	float D = seg1.point2.y - seg1.point1.y;
-	float E = seg2.point1.y - seg2.point2.y;
-	float F = seg2.point1.y - seg1.point1.y;
-
-	float t = (C * E - F * B) / (E * A - B * D);
-	float s = (D * C - A * F) / (D * B - A * E);
-
-	if (Parallel((seg1.point2 - seg1.point1), (seg2.point2 - seg2.point1)))
-	{
-		return false;
-	}
-
-	if ((0.f <= t && t <= 1.f) && (0.f <= s && s <= 1.f))
-	{
-		if (rt != NULL)
-		{
-			*rt = t;
-		}
-		return true;
-	}
-
-	return false;
-}
-
-bool Polygon3D::Intersects(const Line3D& line, const Plane3D& plane, float* rt)
-{
-	glm::vec3 P_Normal = plane.normal();
-
-	float VdotN = glm::dot(line.vector, P_Normal);
-	float MdotN = glm::dot(line.point, P_Normal);
-	if (VdotN == 0.f)
-	{
-		return false;
-	}
-
-	float t = -((MdotN + plane[3]) / VdotN);
-	if (rt != NULL)
-	{
-		*rt = t;
-	}
-
-	float Mtv = MdotN + (t * VdotN);
-	float test = Mtv + plane[3];
-	if (test != 0.f)
-	{
-		return false;
-	}
-
-	return true;
-
-}
-
-bool Polygon3D::Parallel(const glm::vec3& v1, const glm::vec3& v2)
-{
-	glm::vec3 test = glm::cross(v1, v2);
-	if ((test.x == 0) && (test.y == 0) && (test.z == 0))
-	{
-		return true;
-	}
-	return false;
 }
 
 float Polygon3D::CalculateSquaredDistance(const glm::vec3& mVec)
