@@ -815,9 +815,21 @@ void Display_Property(T& comp) {
                     }
                     else {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
-                    }
+                        if (DisplayName == "Material_ID") {
+                            ImGui::SameLine();
+                            if (ImGui::Button("Mat")) {
+                                Scene& scene = MySceneManager.GetCurrentScene();
+                                Entity& ent = scene.Get<Entity>(comp);
+                                auto& mr = scene.Get<MeshRenderer>(ent);
+                                if(!EditorInspector::Instance().material_inspector){
+                                    EditorInspector::Instance().material_inspector = true; 
+                                }
 
-                    
+                                ImGui::SetWindowFocus("Material");                                
+                                EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                            }
+                        }
+                    }
 
                     ImGui::PopID();
 
