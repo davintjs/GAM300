@@ -33,7 +33,7 @@ void ParticleManager::Update(float dt)
             for (int i = 0; i < particleComponent.numParticles_; i++) {
                 particleComponent.particles_[i].position = entityTransform.GetTranslation();
                 //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
-                particleComponent.particles_[i].direction = random.NextVector3(0.0f, 20.0f); 
+                particleComponent.particles_[i].direction = random.NextVector3(0.0f, 1.0f); 
                 particleComponent.particles_[i].velocity = glm::vec3(0.f, 1.f, 0.f);
                 particleComponent.particles_[i].acceleration = 5.0f;
                 //particleComponent.particles_[i].lifetime = particleComponent.particleLifetime_;
@@ -69,7 +69,7 @@ void ParticleManager::Update(float dt)
                     particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
                     particleComponent.particles_[i].velocity = glm::vec3(0.f, 0.f, 0.f);
                     //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
-                    particleComponent.particles_[i].direction = random.NextVector3(0.0f, 20.0f);
+                    particleComponent.particles_[i].direction = random.NextVector3(0.0f, 1.0f);
                     particleComponent.particles_[i].acceleration = 5.0f;
                     //particleComponent.particles_[i].lifetime = particleComponent.particleLifetime_; // maybe randomize lifetime also, max lifetime should be particleComponent.particleLifetime_
                     particleComponent.particles_[i].lifetime = random.NextFloat1(1.0f, particleComponent.particleLifetime_); 
