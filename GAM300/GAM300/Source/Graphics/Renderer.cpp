@@ -956,6 +956,10 @@ void Renderer::DrawDepthDirectional()
 
 		for (DefaultRenderProperties prop : defaultProperties)
 		{
+			if (prop.Albedo.a < 1.f)
+			{
+				continue;
+			}
 			GLint uniform3_t =
 				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
@@ -979,8 +983,24 @@ void Renderer::DrawDepthDirectional()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
+			std::cout << "BAM\n";
+			std::vector <glm::mat4> SRTs;
+			for (int i = 0; i < prop.Albedo.size(); ++i)
+			{
+				std::cout << "albedo value is : " << prop.Albedo[i].a << "\n";
+				if (prop.Albedo[i].a == 1.f && (prop.iter <= i))
+				{
+					
+					SRTs.push_back(prop.entitySRT[i]);
+				}
+			}
+			if (!SRTs.size())
+			{
+				continue;
+			}
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), &(SRTs[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
@@ -1034,6 +1054,10 @@ void Renderer::DrawDepthSpot()
 
 		for (DefaultRenderProperties prop : defaultProperties)
 		{
+			if (prop.Albedo.a < 1.f)
+			{
+				continue;
+			}
 			GLint uniform3_t =
 				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
@@ -1123,6 +1147,10 @@ void Renderer::DrawDepthPoint()
 
 		for (DefaultRenderProperties prop : defaultProperties)
 		{
+			if (prop.Albedo.a < 1.f)
+			{
+				continue;
+			}
 			GLint uniform3_t =
 				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
 			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
@@ -1146,6 +1174,7 @@ void Renderer::DrawDepthPoint()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
+			
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);

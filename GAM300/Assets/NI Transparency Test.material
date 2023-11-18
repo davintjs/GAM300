@@ -1,6 +1,6 @@
 Material:
-  Material Name: Transparency Test
-  Shader: 1
+  Material Name: NI Transparency Test
+  Shader: 0
   Albedo: [1, 0.889714003, 0.889714003, 0.108280241]
   Metallic: 1
   Roughness: 1
