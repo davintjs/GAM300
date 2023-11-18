@@ -338,8 +338,8 @@ struct LightSource : Object
 	Vector3 direction;
 
 	// Used only in Spot
-	float inner_CutOff;
-	float outer_CutOff;
+	float inner_CutOff = 50.f;
+	float outer_CutOff = 70.f;
 
 	// Used for all
 	float intensity = 10.f;

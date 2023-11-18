@@ -119,15 +119,12 @@ void Lighting::Update(float)
 			}
 			else
 			{*/
-				std::cout << "rotation value is : " << rotation.x << " , " << rotation.y << " , " << rotation.z << "\n";
 				//spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
 				//spotLightSources[spotLightCount].direction = glm::normalize(glm::degrees(rotation));
-				spotLightSources[spotLightCount].direction = glm::normalize(rotation * direction);
 				spotLightSources[spotLightCount].direction = glm::normalize(testdir);
 				//spotLightSources[spotLightCount].direction = glm::degrees(rotation);
 				//spotLightSources[spotLightCount].direction = glm::normalize(rotation);
 				//spotLightSources[spotLightCount].direction = rotation;
-				std::cout << " direction is : " << spotLightSources[spotLightCount].direction.x << " , " << spotLightSources[spotLightCount].direction.y << " , " << spotLightSources[spotLightCount].direction.z << "\n";
 
 			//}
 
