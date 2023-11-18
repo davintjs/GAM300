@@ -1068,7 +1068,7 @@ GameObject:
 ID: 1654935808830605234
 Transform:
   m_GameObject: {fileID: 15471109081633386315}
-  Translation: [0.0584106371, 10.8149681, 0.0048828125]
+  Translation: [0.0584106445, 10.8149681, 0.0048828125]
   Rotation: [0, 0, 0]
   Scale: [3, 3, 3]
   Father: {fileID: 0}
@@ -1079,4 +1079,4 @@ ID: 6606395580320128598
 MeshRenderer:
   m_GameObject: {fileID: 15471109081633386315}
   Mesh: {guid: 872b8e766b8122de16b24583fa009940}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 3317ca259ad46e5cd6684cba9975bd8b}

@@ -983,28 +983,26 @@ void Renderer::DrawDepthDirectional()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			std::cout << "BAM\n";
 			std::vector <glm::mat4> SRTs;
-			for (int i = 0; i < prop.Albedo.size(); ++i)
+			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
 			{
-				std::cout << "albedo value is : " << prop.Albedo[i].a << "\n";
-				if (prop.Albedo[i].a == 1.f && (prop.iter <= i))
+				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
 				{
-					
-					SRTs.push_back(prop.entitySRT[i]);
+					SRTs.push_back(prop.entitySRT[j]);
 				}
 			}
-			if (!SRTs.size())
+			if (SRTs.size() == 0)
 			{
 				continue;
 			}
+
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
-			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), &(SRTs[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
 			glBindVertexArray(0);
 		}
 
@@ -1081,12 +1079,26 @@ void Renderer::DrawDepthSpot()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
+			std::vector <glm::mat4> SRTs;
+			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
+			{
+				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
+				{
+					SRTs.push_back(prop.entitySRT[j]);
+				}
+			}
+			if (SRTs.size() == 0)
+			{
+				continue;
+			}
+
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
 			glBindVertexArray(0);
 		}
 
@@ -1174,13 +1186,26 @@ void Renderer::DrawDepthPoint()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			
+			std::vector <glm::mat4> SRTs;
+			for (int j = 0; j < (int)prop.Albedo.size(); ++j)
+			{
+				if ((prop.Albedo[j].a == 1.f) /*&& (j <= prop.iter)*/)
+				{
+					SRTs.push_back(prop.entitySRT[j]);
+				}
+			}
+			if (SRTs.size() == 0)
+			{
+				continue;
+			}
+
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			//glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(prop.VAO);
-			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, prop.iter);
+			glDrawElementsInstanced(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0, (int)SRTs.size());
 			glBindVertexArray(0);
 		}
 
