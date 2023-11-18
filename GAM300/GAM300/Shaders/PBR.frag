@@ -608,7 +608,7 @@ void main()
 if(hdr)
     color = color / (color + vec3(1.0));
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, frag_Albedo.a);
 
 //    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
 //    if(brightness > 1.0)

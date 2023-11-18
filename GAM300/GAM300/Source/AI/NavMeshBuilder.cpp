@@ -561,6 +561,14 @@ void NavMeshBuilder::InitializeGroundTriangles(std::vector<Triangle3D>& GroundTr
 		for (int j = i + 1; j < GroundTriangles.size(); ++j)
 		{
 			Triangle3D& mComparingTriangle = GroundTriangles[j];
+
+			//// If any of the lines of mCurrTriangle lies within mComparingTriangle OR mComparingTriangle lies within mCurrTriangle, they are neighbours
+			//if (mCurrTriangle.isNeighbour(mComparingTriangle))
+			//{
+			//	mCurrTriangle.AddNeighbour(&mComparingTriangle);
+			//	mComparingTriangle.AddNeighbour(&mCurrTriangle);
+			//}
+
 			int count = 0;
 			for (int k = 0; k < 3; ++k) // To traverse current triangle's points
 			{
