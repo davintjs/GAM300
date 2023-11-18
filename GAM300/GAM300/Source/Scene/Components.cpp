@@ -22,6 +22,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AssetManager/AssetManager.h"
 #include "Graphics/MeshManager.h"
 #include "Editor/EditorHeaders.h"
+#include "Physics/PhysicsSystem.h"
+
+#define MyPhysicsSystem = PhysicsSystem::Instance()
 
 std::map<std::string, size_t> ComponentTypes{};
 
@@ -157,11 +160,6 @@ void Transform::RemoveChild(Transform* t)
 	child.erase(it);
 }
 
-Animator::Animator() : BaseAnimator()
-{
-	playing = false;
-}
-
 Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 {
 	BaseCamera::Init();
@@ -231,3 +229,11 @@ void ButtonComponent::Button_update(Button* button, int mouse_x, int mouse_y, bo
 		button->is_clicked = false;
 	}
 }
+
+
+PhysicsComponent::~PhysicsComponent() {
+	std::cout << "Destruct Physics Component\n";
+	PhysicsSystem::Instance().DeleteBody(*this);
+}
+
+

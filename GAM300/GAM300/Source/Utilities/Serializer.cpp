@@ -229,7 +229,7 @@ void Serialize(Material_instance& material, std::string directory)
     {
         auto entry = property::entry { PropertyName, Data };
         std::string Name = entry.first;
-        if (!Flags.m_isDontSave)
+        if (!Flags.m_isDontSave || !Flags.m_isShowReadOnly)
         {
             std::visit([&](auto& Value)
                 {
@@ -256,7 +256,6 @@ void Serialize(Material_instance& material, std::string directory)
     std::ofstream fout(directory + material.name + ".material", std::ios::out);
     fout << out.c_str();
 }
-
 
 void Deserialize(Material_instance& material,const fs::path& path)
 {

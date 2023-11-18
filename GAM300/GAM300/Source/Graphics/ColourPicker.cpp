@@ -280,14 +280,14 @@ Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	unsigned char data[4];
 
-
+	glm::vec2 mousePosition = InputHandler::getMousePos();
 #if defined(_BUILD)
 
 	glReadPixels(mousePosition.x, mousePosition.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 #else
 
-	glm::vec2 mousePosition = InputHandler::getMousePos();
+	
 
 	mousePosition.y -= Application::GetHeight() - EditorCam.GetScenePosition().y - EditorCam.GetViewportSize().y;
 

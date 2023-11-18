@@ -128,10 +128,10 @@ void EditorContentBrowser::Update(float dt)
             payload.payload = &currentGUID;
             payload.type = MESH;*/
             
-            if (ext == "geom") { //mesh files
+            if (ext == "model") { //mesh files
                 GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MESH;
             }
@@ -139,7 +139,7 @@ void EditorContentBrowser::Update(float dt)
             {
                 GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
+                Engine::GUID<MaterialAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MATERIAL;
             }
@@ -194,6 +194,9 @@ void EditorContentBrowser::Update(float dt)
             //Open model inspector
             if ((path.string().find(".model") != std::string::npos)) {
                 //Open scene file logic here
+                GetAssetEvent<ModelAsset> e{ path };
+                EVENTS.Publish(&e);
+                selectedAss = e.guid;
                 EditorInspector::Instance().model_inspector = true;
                 ImGui::SetWindowFocus("Model");
             }

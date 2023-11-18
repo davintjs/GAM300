@@ -19,6 +19,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Core/EventsManager.h"
 #include "Scene/SceneManager.h"
 
+#include "IOManager/InputHandler.h"
+
 void Animation_Manager::Init()
 {  
     EVENTS.Subscribe(this, &Animation_Manager::CallbackAnimationAssetLoaded);
@@ -36,13 +38,25 @@ void Animation_Manager::Update(float dt)
 
         if (animator.animID != animator.prevAnimID) // This check should be in the animator itself
         {
-            PRINT("Animator ID: ", animator.UUID(), "\n");
+            //PRINT("Animator ID: ", animator.UUID(), "\n");
             animator.prevAnimID = animator.animID;
             animator.m_CurrentTime = 0.f;
             if (animator.animID == 0)
                 animator.m_AnimationIdx = -1;
             else
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
+
+            animator.SetDefaultState("Idle");
+        }
+
+        if (InputHandler::isKeyButtonPressed(GLFW_KEY_C))
+        {
+            animator.SetState("Run");
+        }
+
+        if (InputHandler::isKeyButtonPressed(GLFW_KEY_V))
+        {
+            animator.SetNextState("Sprint");
         }
 
         if (animator.playing && animator.AnimationAttached())
@@ -67,12 +81,12 @@ void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, cons
     animation.GetDuration() = _animationAsset.duration;
     animation.GetTicksPerSecond() = _animationAsset.ticksPerSecond;
     animation.GetRootNode() = _animationAsset.rootNode;
-    animation.GetAnimationRange() = _animationAsset.animationRange;
+    animation.GetAnimationStates() = _animationAsset.animationStates;
 
     mAnimationContainer[_guid] = animation;
 }
 
 void Animation_Manager::CallbackAnimationAssetLoaded(AssetLoadedEvent<AnimationAsset>* pEvent)
 {
-    AddAnimation(pEvent->asset, pEvent->guid);
+    AddAnimation(pEvent->asset, pEvent->asset.importer->guid);
 }

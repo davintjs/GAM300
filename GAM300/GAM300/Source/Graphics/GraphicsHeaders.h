@@ -260,6 +260,7 @@ public:
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
+
 	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
 	void DrawMeshes( GLSLShader & _shader);
@@ -305,7 +306,7 @@ public:
 
 private:
 
-	InstanceContainer* properties;
+	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
