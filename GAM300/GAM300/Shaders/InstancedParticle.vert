@@ -12,9 +12,14 @@ layout (location = 6) in mat4 SRT;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
+uniform bool is2D;
 
 void main()
 {
+//	if(is2D){
+//		gl_Position = persp_projection * SRT * vec4(aVertexPosition, 1.0f);
+//		return;
+//	}
 	gl_Position = persp_projection * View * SRT * vec4(aVertexPosition, 1.0f);
 	
 }

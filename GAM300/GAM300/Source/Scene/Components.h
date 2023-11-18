@@ -416,6 +416,7 @@ struct ParticleComponent : Object
 	float particleScaleRate_ = 0.5f;
 	float speed_ = 0.5f;
 
+	bool is2D = false;
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -429,7 +430,8 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleMinScale_).Name("ParticleMinScale"),
 		property_var(particleMaxScale_).Name("ParticleMaxScale"),
 		property_var(particleScaleRate_).Name("ParticleScaleRate"),
-		property_var(speed_).Name("Particle Speed")
+		property_var(speed_).Name("Particle Speed"),
+		property_var(is2D).Name("2D particle")
 
 } property_vend_h(ParticleComponent)
 //

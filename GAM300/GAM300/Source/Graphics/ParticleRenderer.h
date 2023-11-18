@@ -13,9 +13,10 @@ public:
 	void Init();
 	void Update(float dt);
 	void Draw(BaseCamera & _camera);
+	void SetupInstancedQuad();
 	void Exit();
 	std::vector<glm::mat4> particleSRT;
-
+	GLuint quadVAO{};
 };
 
 #endif

@@ -28,11 +28,11 @@ void ParticleManager::Update(float dt)
             // Initialize the position, velocity, and acceleration of each particle
             for (int i = 0; i < particleComponent.numParticles_; i++) {
                 particleComponent.particles_[i].position = entityTransform.GetTranslation();
+                particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
                 particleComponent.particles_[i].velocity = glm::vec3(0.f, 1.f, 0.f);
                 particleComponent.particles_[i].acceleration = 5.0f;
                 particleComponent.particles_[i].lifetime = particleComponent.particleLifetime_;
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
-                particleComponent.particles_[i].scale = glm::clamp(particleComponent.particles_[i].scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
                 particleComponent.particles_[i].speed = particleComponent.speed_;
             }
         }
