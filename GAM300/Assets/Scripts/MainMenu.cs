@@ -24,9 +24,14 @@ public class MainMenu : Script
     public float restTimer = 2f;
     public float currentRestTimer;
 
+    //sounds
+    public AudioSource bgm;
+    public AudioSource uiButton;
+
     void Start()
     {
         //currentRestTimer = restTimer;
+        bgm.Play();
     }
 
     void Update()
@@ -40,8 +45,9 @@ public class MainMenu : Script
 
     void goToPlay()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
+            uiButton.Play();
             SceneManager.LoadScene("LevelPlay2.scene");
         }
        

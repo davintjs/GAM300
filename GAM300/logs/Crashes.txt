@@ -1,5 +1,5 @@
-[2023-11-17 19:39:04.019] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 236)
+[2023-11-18 14:27:57.894] [Error] [critical] 
+Caused By:	false
+Info:		Could not match type:  29
+Source:		C:\Users\Azam\Desktop\tempdesktop\Digipen\3rd Year - 1st Trimester\GAM300\GAM300\GAM300\Source\Editor\EditorInspector.cpp (Line: 568)
 

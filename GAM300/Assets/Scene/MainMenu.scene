@@ -84,6 +84,8 @@ Script:
   back: false
   restTimer: 2
   currentRestTimer: 0
+  bgm: {fileID: 7262777528803266154}  # Component
+  uiButton: {fileID: 9797793205528801178}  # Component
 ---
 ID: 4418236984561621579
 GameObject:
@@ -165,3 +167,81 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: b015799a619b4c2e8262e7284a9f5b5c}
+---
+ID: 5178581895249457731
+GameObject:
+  m_IsActive: true
+  m_Name: Sounds
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16383038732828260245}  # Transform
+---
+ID: 16383038732828260245
+Transform:
+  m_GameObject: {fileID: 5178581895249457731}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 2611643551397119401}
+    - {fileID: 17182043775046795323}
+---
+ID: 2611643551397119401
+GameObject:
+  m_IsActive: true
+  m_Name: bgm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5768935546704337572}  # Transform
+    - component: {fileID: 7262777528803266154}  # AudioSource
+---
+ID: 5768935546704337572
+Transform:
+  m_GameObject: {fileID: 2611643551397119401}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5178581895249457731}
+  m_Children:
+    []
+---
+ID: 7262777528803266154
+AudioSource:
+  m_GameObject: {fileID: 2611643551397119401}
+  AudioChannel: 0
+  Loop: true
+  Volume: 1
+  Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
+  Play: false
+---
+ID: 17182043775046795323
+GameObject:
+  m_IsActive: true
+  m_Name: UI Button
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7742090709915458246}  # Transform
+    - component: {fileID: 9797793205528801178}  # AudioSource
+---
+ID: 7742090709915458246
+Transform:
+  m_GameObject: {fileID: 17182043775046795323}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5178581895249457731}
+  m_Children:
+    []
+---
+ID: 9797793205528801178
+AudioSource:
+  m_GameObject: {fileID: 17182043775046795323}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 50696a5c297f0c4fc05b789fe9b746b2}
+  Play: false

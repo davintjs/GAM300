@@ -70,6 +70,7 @@ public class ThirdPersonController : Script
         //Jump
         if (Input.GetKey(KeyCode.Space) && CC.isGrounded)
         {
+            AudioManager.instance.jumpVoice.Play();
             //dir += (CamYawPivot.up);
             dir += (player.up);
             Console.WriteLine("Jump:");
@@ -175,6 +176,9 @@ public class ThirdPersonController : Script
             Console.WriteLine("Attack");
             IsAttacking = true;
             playerWeaponCollider.SetActive(true);//enable the weapon collider
+
+            AudioManager.instance.playerSlashAttack.Play();
+            AudioManager.instance.spark.Play();
         }
         if(IsAttacking)
         {

@@ -8,10 +8,6 @@ using GlmSharp;
 
 public class VictoryMenu : Script
 {
-    public GameObject mainMenuBGImage;
-
-    public GameObject pressStartText;
-
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 
@@ -24,8 +20,13 @@ public class VictoryMenu : Script
     public float restTimer = 2f;
     public float currentRestTimer;
 
+    //sounds
+    public AudioSource bgm;
+    public AudioSource uiButton;
+
     void Start()
     {
+        bgm.Play();
         //currentRestTimer = restTimer;
     }
 
@@ -40,8 +41,9 @@ public class VictoryMenu : Script
 
     void goToMenu()
     {
-        if (Input.GetKey(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
+            uiButton.Play();
             SceneManager.LoadScene("LevelPlay2.scene");
         }
 
