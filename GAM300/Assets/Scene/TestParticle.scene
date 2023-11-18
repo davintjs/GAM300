@@ -37,9 +37,12 @@ MeshRenderer:
 ID: 8120480805772412597
 ParticleComponent:
   m_GameObject: {fileID: 14989680110700367717}
-  NumberOfParticles: 5
-  ParticleLifetime: 2
-  ParticleEmissionRate: 17
-  ParticleMinScale: 0.0500000007
-  ParticleMaxScale: 0.479999989
-  ParticleScaleRate: 1.54999995
+  Particle Texture: {guid: 144318b4babb0ecaa7db0af7eb3276f7}
+  Number Of Particles: 1
+  Particle Lifetime: 3
+  Particle Emission Rate: 100
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 1
+  Particle Scale Rate: 0.5
+  Particle Speed: 0.5
+  2D particle: false

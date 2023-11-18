@@ -17,6 +17,8 @@ public:
 	void Exit();
 	std::vector<glm::mat4> particleSRT;
 	GLuint quadVAO{};
+	GLuint quadSRTBuffer{};
+	bool hasTexture{false};
 };
 
 #endif

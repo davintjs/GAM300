@@ -408,6 +408,8 @@ struct Particle : Object
 struct ParticleComponent : Object
 {
 	ParticleComponent() {}
+	Engine::GUID<TextureAsset> ParticleTexture{ 0 };
+
 	int numParticles_ = 1;
 	float particleLifetime_ = 3.0f;
 	float particleEmissionRate_ = 100.0f;
@@ -424,12 +426,13 @@ struct ParticleComponent : Object
 
 property_begin_name(ParticleComponent, "ParticleComponent")
 {
-	property_var(numParticles_).Name("NumberOfParticles"),
-		property_var(particleLifetime_).Name("ParticleLifetime"),
-		property_var(particleEmissionRate_).Name("ParticleEmissionRate"),
-		property_var(particleMinScale_).Name("ParticleMinScale"),
-		property_var(particleMaxScale_).Name("ParticleMaxScale"),
-		property_var(particleScaleRate_).Name("ParticleScaleRate"),
+	property_var(ParticleTexture).Name("Particle Texture"),
+	property_var(numParticles_).Name("Number Of Particles"),
+		property_var(particleLifetime_).Name("Particle Lifetime"),
+		property_var(particleEmissionRate_).Name("Particle Emission Rate"),
+		property_var(particleMinScale_).Name("Particle Min Scale"),
+		property_var(particleMaxScale_).Name("Particle Max Scale"),
+		property_var(particleScaleRate_).Name("Particle Scale Rate"),
 		property_var(speed_).Name("Particle Speed"),
 		property_var(is2D).Name("2D particle")
 
