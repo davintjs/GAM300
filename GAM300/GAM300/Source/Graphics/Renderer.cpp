@@ -83,6 +83,7 @@ void Renderer::Update(float)
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
+	transparentContainer.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
 #ifndef _BUILD
 	SetupGrid(100);
@@ -176,7 +177,15 @@ void Renderer::Update(float)
 			}
 			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
 			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
-			defaultProperties.emplace_back(renderProperties);
+
+			if (renderProperties.Albedo.a != 1.f)// Is a Transparent / Translucent Object
+			{
+				transparentContainer.emplace_back(renderProperties);
+			}
+			else
+			{
+				defaultProperties.emplace_back(renderProperties);
+			}
 			++i;
 			continue;
 		} // END NON-INSTANCED RENDERING CONDITION
@@ -221,7 +230,6 @@ void Renderer::Update(float)
 		DrawDepthDirectional();
 		
 		DrawDepthPoint();
-
 	}
 }
 
@@ -256,7 +264,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Instanced Rendering
+	// Instanced Rendering	
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -346,6 +354,132 @@ void Renderer::Draw(BaseCamera& _camera) {
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
 			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(10+i) + "]").c_str()), textureUnit);
+
+		}
+
+		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
+		{
+			int textureUnit = 22 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+		}
+
+		// PBR TEXTURES
+		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
+		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
+		GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
+		GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
+		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
+
+		glUniform1i(hasTexture, prop.textureID);
+		glUniform1i(hasNormal, prop.NormalID);
+		glUniform1i(hasRoughness, prop.RoughnessID);
+		glUniform1i(hasMetallic, prop.MetallicID);
+		glUniform1i(hasAO, prop.AoID);
+		glUniform1i(hasEmission, prop.EmissionID);
+
+		// PBR CONSTANT VALUES
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
+
+		// Shadow
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
+
+
+		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
+		GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
+		GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
+		GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
+		GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
+		GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
+		GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
+		//GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
+		//GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
+		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
+		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
+
+		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
+		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
+		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
+		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
+		glUniform1f(Shininess, prop.shininess);
+		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
+
+		BindLights(shader);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
+
+		// ANIMATONS
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		if (prop.isAnimatable)
+		{
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+		}
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		shader.UnUse();
+	}
+
+	std::map<float, DefaultRenderProperties> transparentMap;
+	for (int i = 0; i < transparentContainer.size(); ++i)
+	{
+		float distance = std::abs(glm::distance(glm::vec3(transparentContainer[i].entitySRT[3]), _camera.GetCameraPosition()));
+
+		/*auto it = transparentMap.find(distance);
+		if (it != transparentMap.end())
+		{
+			distance += 0.01f;
+		}*/
+		transparentMap[distance] = transparentContainer[i];
+	}
+
+	//Non-Instanced Rendering
+	for (auto& pair : transparentMap)
+	{
+		auto& prop = pair.second;
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
+		shader.Use();
+
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		// You have 6 - 9 Texture Slots
+
+		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
+		//
+		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
+		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
+
+		for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
+		{
+			int textureUnit = 10 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(i) + "]").c_str()), textureUnit);
+
+		}
+
+		for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
+		{
+			int textureUnit = 20 + i;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(10 + i) + "]").c_str()), textureUnit);
 
 		}
 
