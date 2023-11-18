@@ -162,8 +162,7 @@ void DemoSystem::Update(float dt)
 		}
 		else // Rebaking
 		{
-			NAVMESHBUILDER.Exit(); // Clear current NavMesh
-			NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
+			NAVMESHBUILDER.Rebake();
 		}
 	}
 }
