@@ -27,7 +27,7 @@ BaseAnimator::BaseAnimator()
     playing = false;
     currBlendState = notblending;
     blendedBones = 0;
-    blendDuration = 8.f;
+    blendDuration = 50.f;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -38,9 +38,6 @@ BaseAnimator::BaseAnimator()
 void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
-
-    //startTime = m_CurrentAnimation.GetAnimationRange()[0].x;
-    //endTime = m_CurrentAnimation.GetAnimationRange()[0].y;
 
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
 
@@ -55,8 +52,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         
         if (currBlendState != blending)
         {
-            ChangeState(); // need to change to move interolateanim stuff in 
-            currBlendState = notblending;
+            ChangeState(); // need to change to move interolateanim stuff in
+            currBlendState = blending;
         }
 
     }
@@ -76,7 +73,9 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
         
         if (blendedBones == m_CurrentAnimation.GetBoneCount())
+        {
             currBlendState = blended;
+        }
     }
     else
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
@@ -150,64 +149,69 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
 
 void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
 {
-    std::string nodeName = node->name;
-    glm::mat4 nodeTransform = node->transformation;
-
-    Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
-    Animation& m_NextAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
-
-    Bone* NextBone = m_NextAnimation.FindBone(nodeName);
-    Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
-
-    if (Bone && NextBone)
+    if (nextState)
     {
-        // get anim1 xform
-        int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
-        // get anim2 xform
-        int p1Index = NextBone->GetPositionIndex(nextState->minMax.x);
-        
-        // blend factor
-        float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
-            blendDuration, m_CurrentTime);
-        std::cout /*<< animationTime << "curr, "*/ << nodeName << "bonename \n";
-        if (blendFactor >= 1.f)
+        std::string nodeName = node->name;
+        glm::mat4 nodeTransform = node->transformation;
+
+        Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+        Animation& m_NextAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+
+        Bone* NextBone = m_NextAnimation.FindBone(nodeName);
+        Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+
+        if (Bone && NextBone)
         {
-            //currBlendState = blended;
-            //return;
-            ++blendedBones;
+            // get anim1 xform
+            int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
+            // get anim2 xform
+            int p1Index = NextBone->GetPositionIndex(nextState->minMax.x);
+
+            // blend factor
+            float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
+                blendDuration, m_CurrentTime);
+
+            if (blendFactor >= 1.f)
+            {
+                ++blendedBones;
+            }
+
+            // blend them, 
+            glm::vec3 finalPosition = glm::mix(Bone->m_Positions[p0Index].position,
+                NextBone->m_Positions[p1Index].position, blendFactor);
+            glm::quat finalRotation = glm::slerp(Bone->m_Rotations[p0Index].orientation,
+                NextBone->m_Rotations[p1Index].orientation, blendFactor);
+            glm::vec3 finalScale = glm::mix(Bone->m_Scales[p0Index].scale,
+                NextBone->m_Scales[p1Index].scale, blendFactor);
+
+            finalRotation = glm::normalize(finalRotation);
+
+            glm::mat4 translation = glm::translate(glm::mat4(1.0f), finalPosition);
+            glm::mat4 rotation = glm::toMat4(finalRotation);
+            glm::mat4 scale = glm::scale(glm::mat4(1.0f), finalScale);
+
+            //set nodexform to blended one
+            //nodeTransform = NextBone->GetLocalTransform(); // temp
+            nodeTransform = translation * rotation * scale; // temp
         }
 
-        // blend them, 
-        glm::vec3 finalPosition = glm::mix(Bone->m_Positions[p0Index].position, 
-            NextBone->m_Positions[p1Index].position, blendFactor);
-        glm::quat finalRotation = glm::slerp(Bone->m_Rotations[p0Index].orientation,
-            NextBone->m_Rotations[p1Index].orientation, blendFactor);
-        glm::vec3 finalScale = glm::mix(Bone->m_Scales[p0Index].scale, 
-            NextBone->m_Scales[p1Index].scale, blendFactor);
+        glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        finalRotation = glm::normalize(finalRotation);
+        auto boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
+        if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+        {
+            int index = boneInfoMap[nodeName].id;
+            glm::mat4 offset = boneInfoMap[nodeName].offset;
+            m_FinalBoneMatrices[index] = globalTransformation * offset;
+        }
 
-        glm::mat4 translation = glm::translate(glm::mat4(1.0f), finalPosition);
-        glm::mat4 rotation = glm::toMat4(finalRotation);
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), finalScale);
-
-        //set nodexform to blended one
-        //nodeTransform = NextBone->GetLocalTransform(); // temp
-        nodeTransform = translation * rotation * scale; // temp
+        for (int i = 0; i < node->childrenCount; i++)
+            CalculateBlendedBoneTransform(&node->children[i], globalTransformation);
     }
-
-    glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-    auto boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
-    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+    else
     {
-        int index = boneInfoMap[nodeName].id;
-        glm::mat4 offset = boneInfoMap[nodeName].offset;
-        m_FinalBoneMatrices[index] = globalTransformation * offset;
+        currBlendState = blended;
     }
-
-    for (int i = 0; i < node->childrenCount; i++)
-        CalculateBlendedBoneTransform(&node->children[i], globalTransformation);
 }
 
 void BaseAnimator::SetDefaultState(const std::string& _defaultState)

@@ -90,6 +90,7 @@ Animator:
   m_GameObject: {fileID: 18147641936712422184}
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: ""
+  Next State: ""
   Time: 0
   StartTime: 0
   EndTime: 952
@@ -119,7 +120,7 @@ ID: 5764989911558262325
 MeshRenderer:
   m_GameObject: {fileID: 2395884659753370783}
   Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
-  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
 ---
 ID: 2346704007727384514
 GameObject:
