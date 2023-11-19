@@ -44,6 +44,9 @@ public:
 	// Interrupt the current state and sets another state to run
 	void SetState(const std::string& _state);
 
+	// Gets the current animation state progress
+	float GetProgress() { return m_CurrentTime / (endTime - startTime); }
+
 	AnimationState* GetCurrentState() { return currentState; }
 
 	std::vector<glm::mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }
@@ -58,6 +61,7 @@ public:
 	AnimationState* currentState;
 	AnimationState* nextState;
 	std::string stateName;
+	std::string stateNextName;
 	int m_FinalBoneMatIdx; // to access copy of original anim
 	int m_AnimationIdx; // to access copy of original anim
 	float m_CurrentTime;
@@ -72,6 +76,7 @@ public:
 property_begin_name(BaseAnimator, "BaseAnimator") {
 	property_var(animID).Name("Animation"),
 	property_var(stateName).Name("Current State").Flags(property::flags::SHOW_READONLY),
+	property_var(stateNextName).Name("Next State").Flags(property::flags::SHOW_READONLY),
 	property_var(m_CurrentTime).Name("Time"),
 	property_var(startTime).Name("StartTime"),
 	property_var(endTime).Name("EndTime"),

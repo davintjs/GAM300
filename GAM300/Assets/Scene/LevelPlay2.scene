@@ -6848,6 +6848,7 @@ Script:
   IsMoving: false
   RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
+  animator: {fileID: 6628232525372413625}  # Component
   IsAttacking: false
   attackTimer: 0.5
   currentAttackTimer: 0
@@ -6921,6 +6922,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 12723341769296608508}  # Transform
+    - component: {fileID: 6628232525372413625}  # Animator
 ---
 ID: 12723341769296608508
 Transform:
@@ -6932,6 +6934,16 @@ Transform:
   m_Children:
     - {fileID: 10891217110292907463}
     - {fileID: 17150978404869133335}
+---
+ID: 6628232525372413625
+Animator:
+  m_GameObject: {fileID: 18364898161930433210}
+  Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+  Current State: ""
+  Time: 0
+  StartTime: 0
+  EndTime: 0
+  Playing: false
 ---
 ID: 10891217110292907463
 GameObject:
@@ -6957,7 +6969,7 @@ ID: 16053201082888979688
 MeshRenderer:
   m_GameObject: {fileID: 10891217110292907463}
   Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
-  Material_ID: {guid: 000000000000000000000000000000c8}
+  Material_ID: {guid: b356700406f01cdb869f47059c1a65f5}
 ---
 ID: 15334681090738628473
 GameObject:
