@@ -286,264 +286,6 @@ Script:
   maxHealth: 3
   currentHealth: 0
 ---
-ID: 4273817804516731435
-GameObject:
-  m_IsActive: true
-  m_Name: Floor3x3
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7653015406159310301}  # Transform
-    - component: {fileID: 17864679088138702316}  # Rigidbody
-    - component: {fileID: 8772716637828078001}  # MeshRenderer
-    - component: {fileID: 1502711495091549141}  # BoxCollider
----
-ID: 7653015406159310301
-Transform:
-  m_GameObject: {fileID: 4273817804516731435}
-  Translation: [0, -3.12606144, -3.03968]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 4831385178420616568}
----
-ID: 17864679088138702316
-Rigidbody:
-  m_GameObject: {fileID: 4273817804516731435}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
-ID: 8772716637828078001
-MeshRenderer:
-  m_GameObject: {fileID: 4273817804516731435}
-  Mesh: {guid: 40ccbac3712d8bf9f798507ef4d59df0}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 1502711495091549141
-BoxCollider:
-  m_GameObject: {fileID: 4273817804516731435}
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 4831385178420616568
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12284065434142793518}  # Transform
-    - component: {fileID: 6041680933754748612}  # MeshRenderer
----
-ID: 12284065434142793518
-Transform:
-  m_GameObject: {fileID: 4831385178420616568}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4273817804516731435}
-  m_Children:
-    []
----
-ID: 6041680933754748612
-MeshRenderer:
-  m_GameObject: {fileID: 4831385178420616568}
-  Mesh: {guid: 602366b0ad56a39582a6e9441d9644cd}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 9681551289959623269
-GameObject:
-  m_IsActive: true
-  m_Name: Wall2x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2356580927637189958}  # Transform
-    - component: {fileID: 13272375965240929909}  # MeshRenderer
----
-ID: 2356580927637189958
-Transform:
-  m_GameObject: {fileID: 9681551289959623269}
-  Translation: [-5.00581741, -2.53480744, 9.71726036]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 6009133509915091607}
-    - {fileID: 9782568624274342872}
----
-ID: 13272375965240929909
-MeshRenderer:
-  m_GameObject: {fileID: 9681551289959623269}
-  Mesh: {guid: e922450dbf42abf809035062aa5f0680}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 6009133509915091607
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1199566900832353286}  # Transform
-    - component: {fileID: 4048990303413284073}  # MeshRenderer
----
-ID: 1199566900832353286
-Transform:
-  m_GameObject: {fileID: 6009133509915091607}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 9681551289959623269}
-  m_Children:
-    []
----
-ID: 4048990303413284073
-MeshRenderer:
-  m_GameObject: {fileID: 6009133509915091607}
-  Mesh: {guid: 4c8a65df7f4608d7ccf944f70b43d64c}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 9782568624274342872
-GameObject:
-  m_IsActive: true
-  m_Name: Pipe
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9096548144707930187}  # Transform
-    - component: {fileID: 4073422433971498132}  # MeshRenderer
----
-ID: 9096548144707930187
-Transform:
-  m_GameObject: {fileID: 9782568624274342872}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 9681551289959623269}
-  m_Children:
-    []
----
-ID: 4073422433971498132
-MeshRenderer:
-  m_GameObject: {fileID: 9782568624274342872}
-  Mesh: {guid: 022e8379570aa3ad7273d80ece4e8bf6}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
-ID: 17559873268884455769
-GameObject:
-  m_IsActive: true
-  m_Name: Wall2x1(1)
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13663728742117967055}  # Transform
-    - component: {fileID: 9415038663319596400}  # MeshRenderer
----
-ID: 13663728742117967055
-Transform:
-  m_GameObject: {fileID: 17559873268884455769}
-  Translation: [4.95757866, -2.53500009, 9.7698288]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 8344862159009368421}
-    - {fileID: 15140290584156344856}
----
-ID: 9415038663319596400
-MeshRenderer:
-  m_GameObject: {fileID: 17559873268884455769}
-  Mesh: {guid: e922450dbf42abf809035062aa5f0680}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 8344862159009368421
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2442033010245655372}  # Transform
-    - component: {fileID: 202377693546849967}  # MeshRenderer
----
-ID: 2442033010245655372
-Transform:
-  m_GameObject: {fileID: 8344862159009368421}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 17559873268884455769}
-  m_Children:
-    []
----
-ID: 202377693546849967
-MeshRenderer:
-  m_GameObject: {fileID: 8344862159009368421}
-  Mesh: {guid: 4c8a65df7f4608d7ccf944f70b43d64c}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 15140290584156344856
-GameObject:
-  m_IsActive: true
-  m_Name: Pipe
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4572683895663600231}  # Transform
-    - component: {fileID: 17835776281528269532}  # MeshRenderer
----
-ID: 4572683895663600231
-Transform:
-  m_GameObject: {fileID: 15140290584156344856}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 17559873268884455769}
-  m_Children:
-    []
----
-ID: 17835776281528269532
-MeshRenderer:
-  m_GameObject: {fileID: 15140290584156344856}
-  Mesh: {guid: 022e8379570aa3ad7273d80ece4e8bf6}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
-ID: 7405095129710979039
-GameObject:
-  m_IsActive: true
-  m_Name: Wall3x1(2)
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10273087109447269552}  # Transform
-    - component: {fileID: 3159898278575507026}  # MeshRenderer
----
-ID: 10273087109447269552
-Transform:
-  m_GameObject: {fileID: 7405095129710979039}
-  Translation: [-6.97678614, -2.53500009, 1.91614008]
-  Rotation: [0, -1.57079589, 0]
-  Scale: [0.999999821, 1, 0.999999821]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 14927482526739211364}
-    - {fileID: 517736107361213759}
----
-ID: 3159898278575507026
-MeshRenderer:
-  m_GameObject: {fileID: 7405095129710979039}
-  Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
 ID: 10170722549999376186
 GameObject:
   m_IsActive: true
@@ -570,85 +312,6 @@ MeshRenderer:
   m_GameObject: {fileID: 10170722549999376186}
   Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 11841820677240367090
-GameObject:
-  m_IsActive: true
-  m_Name: Wall3x1(1)
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 731958299887649745}  # Transform
-    - component: {fileID: 12847320802225609868}  # MeshRenderer
----
-ID: 731958299887649745
-Transform:
-  m_GameObject: {fileID: 11841820677240367090}
-  Translation: [0, -2.53500009, -10.8623819]
-  Rotation: [-3.14159083, 0, -3.14159083]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 5120544508943145563}
-    - {fileID: 10950757358322963045}
----
-ID: 12847320802225609868
-MeshRenderer:
-  m_GameObject: {fileID: 11841820677240367090}
-  Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 5120544508943145563
-GameObject:
-  m_IsActive: true
-  m_Name: Pipe
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5848221133397881185}  # Transform
-    - component: {fileID: 76798172460783907}  # MeshRenderer
----
-ID: 5848221133397881185
-Transform:
-  m_GameObject: {fileID: 5120544508943145563}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 11841820677240367090}
-  m_Children:
-    []
----
-ID: 76798172460783907
-MeshRenderer:
-  m_GameObject: {fileID: 5120544508943145563}
-  Mesh: {guid: 4e0d47e68d87f56bb4e1b30bed0af355}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
-ID: 10950757358322963045
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5191720378985640484}  # Transform
-    - component: {fileID: 13897033604222614634}  # MeshRenderer
----
-ID: 5191720378985640484
-Transform:
-  m_GameObject: {fileID: 10950757358322963045}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 11841820677240367090}
-  m_Children:
-    []
----
-ID: 13897033604222614634
-MeshRenderer:
-  m_GameObject: {fileID: 10950757358322963045}
-  Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 14110507054613469000
 GameObject:
@@ -700,292 +363,6 @@ ID: 12623632380939939826
 MeshRenderer:
   m_GameObject: {fileID: 588260861136365972}
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 14927482526739211364
-GameObject:
-  m_IsActive: true
-  m_Name: Pipe
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10225983058953392827}  # Transform
-    - component: {fileID: 827571719988322067}  # MeshRenderer
----
-ID: 10225983058953392827
-Transform:
-  m_GameObject: {fileID: 14927482526739211364}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7405095129710979039}
-  m_Children:
-    []
----
-ID: 827571719988322067
-MeshRenderer:
-  m_GameObject: {fileID: 14927482526739211364}
-  Mesh: {guid: 4e0d47e68d87f56bb4e1b30bed0af355}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
-ID: 517736107361213759
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14166301527902685479}  # Transform
-    - component: {fileID: 9113790283256845465}  # MeshRenderer
----
-ID: 14166301527902685479
-Transform:
-  m_GameObject: {fileID: 517736107361213759}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7405095129710979039}
-  m_Children:
-    []
----
-ID: 9113790283256845465
-MeshRenderer:
-  m_GameObject: {fileID: 517736107361213759}
-  Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 6008779432414502901
-GameObject:
-  m_IsActive: true
-  m_Name: Platform
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11266203753656337350}  # Transform
-    - component: {fileID: 2306737653148607983}  # MeshRenderer
----
-ID: 11266203753656337350
-Transform:
-  m_GameObject: {fileID: 6008779432414502901}
-  Translation: [9.94514465, -2.15179873, 4.33045816]
-  Rotation: [0, 0, 0]
-  Scale: [4.08368349, 1, 4.72986794]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 2306737653148607983
-MeshRenderer:
-  m_GameObject: {fileID: 6008779432414502901}
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}
----
-ID: 3904574232586982378
-GameObject:
-  m_IsActive: true
-  m_Name: Platform
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15731398050780529199}  # Transform
-    - component: {fileID: 1261993854130921116}  # MeshRenderer
----
-ID: 15731398050780529199
-Transform:
-  m_GameObject: {fileID: 3904574232586982378}
-  Translation: [9.99784184, -1.15674877, -9.00215547e-09]
-  Rotation: [0, 0, 0]
-  Scale: [3.91376448, 1, 3.96916008]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 1261993854130921116
-MeshRenderer:
-  m_GameObject: {fileID: 3904574232586982378}
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}
----
-ID: 50699240435227836
-GameObject:
-  m_IsActive: true
-  m_Name: Platform
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5571363201120773160}  # Transform
-    - component: {fileID: 504207601186688169}  # MeshRenderer
----
-ID: 5571363201120773160
-Transform:
-  m_GameObject: {fileID: 50699240435227836}
-  Translation: [9.96711445, -0.0768857598, -3.73257565]
-  Rotation: [0, 0, 0]
-  Scale: [3.91400003, 1, 3.9690001]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 504207601186688169
-MeshRenderer:
-  m_GameObject: {fileID: 50699240435227836}
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}
----
-ID: 11392120045747279282
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling3x3
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18173372257025883580}  # Transform
-    - component: {fileID: 12121385205082449079}  # MeshRenderer
----
-ID: 18173372257025883580
-Transform:
-  m_GameObject: {fileID: 11392120045747279282}
-  Translation: [0, 18.9979706, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 16412260223154226204}
----
-ID: 12121385205082449079
-MeshRenderer:
-  m_GameObject: {fileID: 11392120045747279282}
-  Mesh: {guid: a1270f80d9dc328e2a329a724fdb3cae}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 16412260223154226204
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18246190936239174600}  # Transform
-    - component: {fileID: 13300537263787265129}  # MeshRenderer
----
-ID: 18246190936239174600
-Transform:
-  m_GameObject: {fileID: 16412260223154226204}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 11392120045747279282}
-  m_Children:
-    []
----
-ID: 13300537263787265129
-MeshRenderer:
-  m_GameObject: {fileID: 16412260223154226204}
-  Mesh: {guid: 67dadb5a457b3df016b5da184b02fd27}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 7384394030726217419
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10682678503070728079}  # Transform
-    - component: {fileID: 16672070281143453300}  # MeshRenderer
----
-ID: 10682678503070728079
-Transform:
-  m_GameObject: {fileID: 7384394030726217419}
-  Translation: [8.8151741, 0, 22.6592903]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 17459578817892699852}
----
-ID: 16672070281143453300
-MeshRenderer:
-  m_GameObject: {fileID: 7384394030726217419}
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 17459578817892699852
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1097396030555372184}  # Transform
-    - component: {fileID: 3031897807495436837}  # MeshRenderer
----
-ID: 1097396030555372184
-Transform:
-  m_GameObject: {fileID: 17459578817892699852}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7384394030726217419}
-  m_Children:
-    []
----
-ID: 3031897807495436837
-MeshRenderer:
-  m_GameObject: {fileID: 17459578817892699852}
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 12813449283723204796
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling2x2
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14065317081249156402}  # Transform
-    - component: {fileID: 16687934388260783007}  # MeshRenderer
----
-ID: 14065317081249156402
-Transform:
-  m_GameObject: {fileID: 12813449283723204796}
-  Translation: [-0.265623808, 0, 24.0422745]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 18282261718091345243}
----
-ID: 16687934388260783007
-MeshRenderer:
-  m_GameObject: {fileID: 12813449283723204796}
-  Mesh: {guid: 32ce5b655b072070b24b8c3f0f4b63d9}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 18282261718091345243
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9613896607442207282}  # Transform
-    - component: {fileID: 11809093379155269907}  # MeshRenderer
----
-ID: 9613896607442207282
-Transform:
-  m_GameObject: {fileID: 18282261718091345243}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 12813449283723204796}
-  m_Children:
-    []
----
-ID: 11809093379155269907
-MeshRenderer:
-  m_GameObject: {fileID: 18282261718091345243}
-  Mesh: {guid: 859cef0a3efe70a364ca18a2b9ccf7af}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 6638998928647544731
@@ -1040,216 +417,6 @@ MeshRenderer:
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 1218704231604391119
-GameObject:
-  m_IsActive: true
-  m_Name: WallV2_3x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1451036294664646086}  # Transform
-    - component: {fileID: 6553851477055649409}  # MeshRenderer
----
-ID: 1451036294664646086
-Transform:
-  m_GameObject: {fileID: 1218704231604391119}
-  Translation: [3.76263833, 0, 33.7440262]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 8597632124803238378}
----
-ID: 6553851477055649409
-MeshRenderer:
-  m_GameObject: {fileID: 1218704231604391119}
-  Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 8597632124803238378
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3300939654245073274}  # Transform
-    - component: {fileID: 11123625984164611104}  # MeshRenderer
----
-ID: 3300939654245073274
-Transform:
-  m_GameObject: {fileID: 8597632124803238378}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 1218704231604391119}
-  m_Children:
-    []
----
-ID: 11123625984164611104
-MeshRenderer:
-  m_GameObject: {fileID: 8597632124803238378}
-  Mesh: {guid: da96704d7cc6d3fcf9e5f6d56d1f5bfa}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 18183796924691742405
-GameObject:
-  m_IsActive: true
-  m_Name: Wall1x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15015794965940291112}  # Transform
-    - component: {fileID: 6301762636231445463}  # MeshRenderer
----
-ID: 15015794965940291112
-Transform:
-  m_GameObject: {fileID: 18183796924691742405}
-  Translation: [-8.41873932, 0, 37.4597549]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 936317451645496203}
-    - {fileID: 8173882524295580811}
----
-ID: 6301762636231445463
-MeshRenderer:
-  m_GameObject: {fileID: 18183796924691742405}
-  Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 936317451645496203
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12261353287740470617}  # Transform
-    - component: {fileID: 17993379554309743232}  # MeshRenderer
----
-ID: 12261353287740470617
-Transform:
-  m_GameObject: {fileID: 936317451645496203}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 18183796924691742405}
-  m_Children:
-    []
----
-ID: 17993379554309743232
-MeshRenderer:
-  m_GameObject: {fileID: 936317451645496203}
-  Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 8173882524295580811
-GameObject:
-  m_IsActive: true
-  m_Name: Pipes
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13159561813168425683}  # Transform
-    - component: {fileID: 13370782404690907564}  # MeshRenderer
----
-ID: 13159561813168425683
-Transform:
-  m_GameObject: {fileID: 8173882524295580811}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 18183796924691742405}
-  m_Children:
-    []
----
-ID: 13370782404690907564
-MeshRenderer:
-  m_GameObject: {fileID: 8173882524295580811}
-  Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
-ID: 1889281796993723061
-GameObject:
-  m_IsActive: true
-  m_Name: WallV2_Window_1x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4402960402282697109}  # Transform
-    - component: {fileID: 9749144435022750080}  # MeshRenderer
----
-ID: 4402960402282697109
-Transform:
-  m_GameObject: {fileID: 1889281796993723061}
-  Translation: [7.38818169, 0, 37.3045044]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 12885237705390877414}
-    - {fileID: 3139070535927592854}
----
-ID: 9749144435022750080
-MeshRenderer:
-  m_GameObject: {fileID: 1889281796993723061}
-  Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 12885237705390877414
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8874508994383819438}  # Transform
-    - component: {fileID: 7957652600690905304}  # MeshRenderer
----
-ID: 8874508994383819438
-Transform:
-  m_GameObject: {fileID: 12885237705390877414}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 1889281796993723061}
-  m_Children:
-    []
----
-ID: 7957652600690905304
-MeshRenderer:
-  m_GameObject: {fileID: 12885237705390877414}
-  Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 3139070535927592854
-GameObject:
-  m_IsActive: true
-  m_Name: Window
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2788239352216220326}  # Transform
-    - component: {fileID: 1406956422675937266}  # MeshRenderer
----
-ID: 2788239352216220326
-Transform:
-  m_GameObject: {fileID: 3139070535927592854}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 1889281796993723061}
-  m_Children:
-    []
----
-ID: 1406956422675937266
-MeshRenderer:
-  m_GameObject: {fileID: 3139070535927592854}
-  Mesh: {guid: 1dea77ba15f1b0358511eff228ee2abb}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
----
 ID: 15888339399562958253
 GameObject:
   m_IsActive: true
@@ -1300,58 +467,6 @@ ID: 1049986695109752875
 MeshRenderer:
   m_GameObject: {fileID: 3338797733835495830}
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 9011928704258971828
-GameObject:
-  m_IsActive: true
-  m_Name: LightGlow
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2481411862854348508}  # Transform
-    - component: {fileID: 15836026922995561608}  # MeshRenderer
----
-ID: 2481411862854348508
-Transform:
-  m_GameObject: {fileID: 9011928704258971828}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 2371939472105726029}
-  m_Children:
-    []
----
-ID: 15836026922995561608
-MeshRenderer:
-  m_GameObject: {fileID: 9011928704258971828}
-  Mesh: {guid: 8bc18b8531c44f18b974482a33fbfbd3}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 946850928923243228
-GameObject:
-  m_IsActive: true
-  m_Name: Pipes
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3142183401421922976}  # Transform
-    - component: {fileID: 12266216692393194918}  # MeshRenderer
----
-ID: 3142183401421922976
-Transform:
-  m_GameObject: {fileID: 946850928923243228}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 2371939472105726029}
-  m_Children:
-    []
----
-ID: 12266216692393194918
-MeshRenderer:
-  m_GameObject: {fileID: 946850928923243228}
-  Mesh: {guid: 24ce6d0f6c97e6822bffe06dc3b7002f}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 3402404227458735166
@@ -1561,59 +676,6 @@ MeshRenderer:
   m_GameObject: {fileID: 11032129156127377953}
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 3564892894818338007
-GameObject:
-  m_IsActive: true
-  m_Name: FloorV2_0.5x0.5
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15516013381412441889}  # Transform
-    - component: {fileID: 3805231288212892752}  # MeshRenderer
----
-ID: 15516013381412441889
-Transform:
-  m_GameObject: {fileID: 3564892894818338007}
-  Translation: [-2.8851881, 0.00133660063, 15.7419214]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 2368456165181237148}
----
-ID: 3805231288212892752
-MeshRenderer:
-  m_GameObject: {fileID: 3564892894818338007}
-  Mesh: {guid: 96e2d7f7cc6bd612660e4208e0a0272c}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 2371939472105726029
-GameObject:
-  m_IsActive: true
-  m_Name: Floor1x1
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8272044183268531222}  # Transform
-    - component: {fileID: 7019780944512289955}  # MeshRenderer
----
-ID: 8272044183268531222
-Transform:
-  m_GameObject: {fileID: 2371939472105726029}
-  Translation: [14.1615181, 0, 41.2497139]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 9011928704258971828}
-    - {fileID: 946850928923243228}
----
-ID: 7019780944512289955
-MeshRenderer:
-  m_GameObject: {fileID: 2371939472105726029}
-  Mesh: {guid: 9bb4a416399175e46d335e762598b9ed}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
 ID: 13165177999647246591
 GameObject:
@@ -2239,32 +1301,6 @@ MeshRenderer:
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 2368456165181237148
-GameObject:
-  m_IsActive: true
-  m_Name: glow
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9907992077742297092}  # Transform
-    - component: {fileID: 14832046577944812342}  # MeshRenderer
----
-ID: 9907992077742297092
-Transform:
-  m_GameObject: {fileID: 2368456165181237148}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3564892894818338007}
-  m_Children:
-    []
----
-ID: 14832046577944812342
-MeshRenderer:
-  m_GameObject: {fileID: 2368456165181237148}
-  Mesh: {guid: 89cc4c290e981379bd5567c463ab76f8}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
 ID: 3663032058358516979
 GameObject:
   m_IsActive: true
@@ -2498,85 +1534,6 @@ MeshRenderer:
   m_GameObject: {fileID: 996526040047419190}
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 5823165462385507063
-GameObject:
-  m_IsActive: true
-  m_Name: Floor2x2
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14648028133389118155}  # Transform
-    - component: {fileID: 7927958080361498954}  # MeshRenderer
----
-ID: 14648028133389118155
-Transform:
-  m_GameObject: {fileID: 5823165462385507063}
-  Translation: [-1.22983265, 0, 47.2823906]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 2910359873932265438}
-    - {fileID: 2971337344755467452}
----
-ID: 7927958080361498954
-MeshRenderer:
-  m_GameObject: {fileID: 5823165462385507063}
-  Mesh: {guid: 77a9476181c35eff571c4866bee364b9}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 2910359873932265438
-GameObject:
-  m_IsActive: true
-  m_Name: Pipes
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4750354963087997391}  # Transform
-    - component: {fileID: 12466674193427249985}  # MeshRenderer
----
-ID: 4750354963087997391
-Transform:
-  m_GameObject: {fileID: 2910359873932265438}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 5823165462385507063}
-  m_Children:
-    []
----
-ID: 12466674193427249985
-MeshRenderer:
-  m_GameObject: {fileID: 2910359873932265438}
-  Mesh: {guid: d6756e021ee67db05690c9a63e307d53}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 2971337344755467452
-GameObject:
-  m_IsActive: true
-  m_Name: LightGlow
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8507953826275342546}  # Transform
-    - component: {fileID: 14228638788947215229}  # MeshRenderer
----
-ID: 8507953826275342546
-Transform:
-  m_GameObject: {fileID: 2971337344755467452}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 5823165462385507063}
-  m_Children:
-    []
----
-ID: 14228638788947215229
-MeshRenderer:
-  m_GameObject: {fileID: 2971337344755467452}
-  Mesh: {guid: 2bb579e390cb6f133426855b40e448ec}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 14576081691901275120
 GameObject:
@@ -15222,3 +14179,74 @@ AudioSource:
   Volume: 1
   Sound File: {guid: e2f9211cbeda8ddc84eeea688a2c7b0f}
   Play: false
+---
+ID: 10480691383386351295
+GameObject:
+  m_IsActive: false
+  m_Name: Dressing_Set
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1772316072049557633}  # Transform
+---
+ID: 1772316072049557633
+Transform:
+  m_GameObject: {fileID: 10480691383386351295}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 2439615339486553405}
+---
+ID: 2439615339486553405
+GameObject:
+  m_IsActive: false
+  m_Name: Bulding1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5466050030791117057}  # Transform
+    - component: {fileID: 9779448170278396162}  # MeshRenderer
+---
+ID: 5466050030791117057
+Transform:
+  m_GameObject: {fileID: 2439615339486553405}
+  Translation: [-14.6567793, 25.0277081, -62.9543571]
+  Rotation: [0, 0, 0]
+  Scale: [1.33000004, 2.1212163, 1.33000004]
+  Father: {fileID: 10480691383386351295}
+  m_Children:
+    - {fileID: 8390665702477999429}
+---
+ID: 9779448170278396162
+MeshRenderer:
+  m_GameObject: {fileID: 2439615339486553405}
+  Mesh: {guid: a2151d0422bd97dd82f9ff015789f2a1}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 8390665702477999429
+GameObject:
+  m_IsActive: false
+  m_Name: Lines
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6946033258683363064}  # Transform
+    - component: {fileID: 5225307347981100067}  # MeshRenderer
+---
+ID: 6946033258683363064
+Transform:
+  m_GameObject: {fileID: 8390665702477999429}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2439615339486553405}
+  m_Children:
+    []
+---
+ID: 5225307347981100067
+MeshRenderer:
+  m_GameObject: {fileID: 8390665702477999429}
+  Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
