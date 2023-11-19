@@ -63,8 +63,10 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
+        Console.WriteLine("Updating health bar");
         UpdatehealthBar();
 
+        Console.WriteLine("Take Damage?");
         //Testing taking damage
         if (Input.GetKey(KeyCode.T))
         {
@@ -74,6 +76,7 @@ public class ThirdPersonController : Script
         }
         //UpdatehealthBar();
 
+        Console.WriteLine("Move?");
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
         //Handle Movement Input
