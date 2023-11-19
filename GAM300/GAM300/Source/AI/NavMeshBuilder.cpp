@@ -140,7 +140,7 @@ void NavMeshBuilder::GetAllObstacles()
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	ObstacleOffset(0.2f); // Offset the diameter first before removing
+	//ObstacleOffset(0.2f); // Offset the diameter first before removing
 	RemoveObstaclesFromMesh(); // Remove holes in the boundary
 	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
