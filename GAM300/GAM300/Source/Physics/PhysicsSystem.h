@@ -209,13 +209,14 @@ public:
 	// Resolve any character controller movement
 	void ResolveCharacterMovement();
 
-	// A testing function
-	void TestRun();
-
 	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
 	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
+	// Callback function for when a rigidbody is created
+	void CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent);
+
+	void AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent);
 
 	void DeleteBody(PhysicsComponent& bid);
 	void DeleteBody(UINT32 bid);
