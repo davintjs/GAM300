@@ -1,5 +1,5 @@
-[2023-11-19 13:23:39.599] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 257)
+[2023-11-19 16:52:51.726] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  maxUpPos COULD NOT BE FOUND IN SCRIPT
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 741)
 

@@ -478,6 +478,7 @@ void ScriptingSystem::UnloadAppDomain()
 				}
 			}
 		}
+		sceneScripts.second.clear();
 	}
 
 	for (auto& pair : mSceneHandles)
@@ -586,7 +587,6 @@ void ScriptingSystem::CacheScripts()
 		//Reset fieldtype and buffer if the type was different
 		for (auto& pair : scriptClass.mFields)
 		{
-			PRINT(mono_field_get_name(pair.second), "\n");
 			int alignment{};
 			MonoType* mType = mono_field_get_type(pair.second);
 			size_t fType = Utils::monoTypeToFieldType(mType);
@@ -594,6 +594,10 @@ void ScriptingSystem::CacheScripts()
 			//POINTER
 			if (fType < AllObjectTypes::Size())
 			{
+				if (fType == GetType::E<Script>())
+				{
+					PRINT("SCRIPT: ", mono_field_get_name(pair.second), "\n");
+				}
 				fieldSize = sizeof(ScriptObject<Object>);
 			}
 			else if (fType == GetFieldType::E<char*>())
@@ -620,13 +624,14 @@ void ScriptingSystem::LoadCacheScripts()
 		FieldMap& fMap = cacheFields[script];
 		for (auto& pair : scriptClass.mFields)
 		{
-			//MonoType* mType = mono_field_get_type(pair.second);
+			//Cache fields did not store this field requested by the script (Aka newly added field)
 			if (fMap.find(pair.first) == fMap.end())
 				continue;
 			//POINTER
 			SetFieldValue(mS, pair.second, fMap[pair.first]);
 		}
 	}
+	cacheFields.clear();
 	PRINT("LOADED CACHE\n");
 }
 
@@ -664,6 +669,7 @@ MonoObject* ScriptingSystem::Invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 			MonoObject* exception = NULL;
 			PRINT("INVOKING: ", mono_class_get_name(mono_object_get_class(mObj)) , '\n');
 			PRINT("METHOD: ", mono_method_get_name(mMethod), "\n\n");
+			E_ASSERT(mono_object_get_domain(mObj) == mAppDomain,"Mono object doesn't belong to this domain");
 			MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
 			if (exception)
 			{
@@ -898,6 +904,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 	{
 		if (scriptClassMap.find(script.scriptId) == scriptClassMap.end())
 			return nullptr;
+		E_ASSERT(scriptClassMap.find(script.scriptId) != scriptClassMap.end(),"Script class does not exist!");
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		Engine::UUID euid = script.EUID();
@@ -916,6 +923,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				GetFieldValue(ref, pair.second, field);
 				if (field.fType < AllObjectTypes::Size())
 				{
+					PRINT(pair.first);
 					uint32_t flags = mono_field_get_flags(pair.second);
 					Object*& f = field.Get<Object*>();
 					if (f)
