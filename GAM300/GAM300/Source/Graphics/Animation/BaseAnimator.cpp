@@ -27,7 +27,7 @@ BaseAnimator::BaseAnimator()
     playing = false;
     currBlendState = notblending;
     blendedBones = 0;
-    blendDuration = 50.f;
+    blendDuration = 5.f;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -53,7 +53,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         if (currBlendState != blending)
         {
             ChangeState(); // need to change to move interolateanim stuff in
-            currBlendState = blending;
+            currBlendState = notblending;
         }
 
     }
