@@ -69,7 +69,12 @@ public:
 	float endTime;
 
 	bool playing;
-	bool blending;
+	int currBlendState{};
+	enum blendStates {
+		notblending,
+		blending,
+		blended
+	};
 
 	//// temp?
 	//Animation m_BlendedAnimation;

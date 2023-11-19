@@ -22,10 +22,10 @@ BaseAnimator::BaseAnimator()
     startTime = 0.0f;
     endTime = 0.0f;
     m_AnimationIdx = -1;
-    m_FinalBoneMatIdx = -1; 
+    m_FinalBoneMatIdx = -1;
     currentState = nextState = defaultState = nullptr;
     playing = false;
-    blending = false;
+    currBlendState = notblending;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -43,37 +43,38 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
 
     // Change state if the current time passes the end time
-    if (m_CurrentTime >= endTime - startTime)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
+    if (m_CurrentTime >= endTime - startTime || currBlendState == blended)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
     {
-        if (blending == false)
-        { 
-            ChangeState(); // need to change to move interolateanim stuff in 
-
-            if (nextState)  // might wanna move out of these 2 if statements
-                blending = true;
+        if (nextState && currBlendState != blended)  // might wanna move out of these 2 if statements
+        {
+            currBlendState = blending;
+            endTime += 100.f; /*blendtime*/
         }
-        else
-            blending == false;
+        
+        if (currBlendState != blending)
+        {
+            ChangeState(); // need to change to move interolateanim stuff in 
+            currBlendState = notblending;
+        }
 
-
-        //std::cout << blendFactor << "blendfacccccc\n";
     }
 
     // crash prevention
-    endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
-    startTime = (startTime > endTime) ? endTime - 1.f : startTime;
+    //endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
+    //startTime = (startTime > endTime) ? endTime - 1.f : startTime;
 
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
     //std::cout  << currentState << "currentState " << blendFactor << "blendfac\n";
 
-    if (blending == true)/*if (nextState)*/
+    if (currBlendState == blending)/*if (nextState)*/
     {
         CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
 
         // if fin blending, set m_CurrentTime == endTime
         //curr it is immediate
+        //currBlendState = blended;
     }
     else
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
@@ -91,7 +92,7 @@ void BaseAnimator::ChangeState()
     m_CurrentTime = 0.f;
     currentState = nextState;
     if (!currentState) // If no next state, use default state
-        currentState = defaultState; 
+        currentState = defaultState;
 
     nextState = nullptr; // do this after fin blending
 
@@ -154,13 +155,43 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
     if (Bone && NextBone)
     {
         // curr anim
-        Bone->Update(m_CurrentTime);
+        //Bone->Update(currentState->minMax.y);
         // next anim
-        NextBone->Update(nextState->minMax.x);
+        //NextBone->Update(nextState->minMax.x);
 
-        // get anim1 & anim2 xform
-        // blend them, set nodexform to blended one
-        nodeTransform = NextBone->GetLocalTransform(); // temp
+        // get anim1 xform
+        int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
+        // get anim2 xform
+        int p1Index = NextBone->GetPositionIndex(nextState->minMax.x);
+        
+        // blend factor
+        float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
+            100.f/*blendtime*/, m_CurrentTime);
+
+        if (blendFactor >= 1.f)
+        {
+            currBlendState = blended;
+            return;
+
+        }
+
+        // blend them, 
+        glm::vec3 finalPosition = glm::mix(Bone->m_Positions[p0Index].position, 
+            NextBone->m_Positions[p1Index].position, blendFactor);
+        glm::quat finalRotation = glm::slerp(Bone->m_Rotations[p0Index].orientation,
+            NextBone->m_Rotations[p1Index].orientation, blendFactor);
+        glm::vec3 finalScale = glm::mix(Bone->m_Scales[p0Index].scale, 
+            NextBone->m_Scales[p1Index].scale, blendFactor);
+
+        finalRotation = glm::normalize(finalRotation);
+
+        glm::mat4 translation = glm::translate(glm::mat4(1.0f), finalPosition);
+        glm::mat4 rotation = glm::toMat4(finalRotation);
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), finalScale);
+
+        //set nodexform to blended one
+        //nodeTransform = NextBone->GetLocalTransform(); // temp
+        nodeTransform = translation * rotation * scale; // temp
     }
 
     glm::mat4 globalTransformation = parentTransform * nodeTransform;

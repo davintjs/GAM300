@@ -84,6 +84,16 @@ public:
 
     int GetScaleIndex(float animationTime);
 
+    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+
+    // for blending
+    float GetBlendFactor(float lastTimeStamp, float blendTime, float animationTime);
+    float GetTimeStamp(int p0Index);
+
+    glm::vec3 GetPosition(int p0Index);
+    glm::quat GetRotation(int p0Index);
+    glm::vec3 GetScaling(int p0Index);
+
     std::vector<KeyPosition> m_Positions;
     std::vector<KeyRotation> m_Rotations;
     std::vector<KeyScale> m_Scales;
@@ -96,8 +106,6 @@ public:
     int m_ID;
 
 private:
-
-    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 
     glm::mat4 InterpolatePosition(float animationTime);
 
