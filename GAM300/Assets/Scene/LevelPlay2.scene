@@ -33,7 +33,7 @@ AudioSource:
   m_GameObject: {fileID: 11768379503594195228}
   AudioChannel: 0
   Loop: true
-  Volume: 0
+  Volume: 1
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---
@@ -6848,6 +6848,7 @@ Script:
   IsMoving: false
   RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
+  animator: {fileID: 6628232525372413625}  # Component
   IsAttacking: false
   attackTimer: 0.5
   currentAttackTimer: 0
@@ -6921,6 +6922,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 12723341769296608508}  # Transform
+    - component: {fileID: 6628232525372413625}  # Animator
 ---
 ID: 12723341769296608508
 Transform:
@@ -6932,6 +6934,16 @@ Transform:
   m_Children:
     - {fileID: 10891217110292907463}
     - {fileID: 17150978404869133335}
+---
+ID: 6628232525372413625
+Animator:
+  m_GameObject: {fileID: 18364898161930433210}
+  Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+  Current State: ""
+  Time: 0
+  StartTime: 0
+  EndTime: 0
+  Playing: false
 ---
 ID: 10891217110292907463
 GameObject:
@@ -6957,7 +6969,7 @@ ID: 16053201082888979688
 MeshRenderer:
   m_GameObject: {fileID: 10891217110292907463}
   Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
-  Material_ID: {guid: 000000000000000000000000000000c8}
+  Material_ID: {guid: b356700406f01cdb869f47059c1a65f5}
 ---
 ID: 15334681090738628473
 GameObject:
@@ -14153,9 +14165,20 @@ ID: 9267112755226816832
 Script:
   m_GameObject: {fileID: 6034621871942586701}
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
+  inRange: false
+  shootDistance: 2
   maxHealth: 3
   currentHealth: 0
-  bulletPrefab: {fileID: 18109054792201686613}  # GameObject
+  moveSpeed: 5
+  timer: 0
+  back: false
+  chaseDistance: 5
+  state: 0
+  player: {fileID: 3977294589520766028}  # Component
+  maxUpPos: {fileID: 3943745876277307351}  # Component
+  maxBottomPos: {fileID: 3964396846741779526}  # Component
+  duration: 2
+  startingPos: {fileID: 13482372997539004348}  # Component
 ---
 ID: 3943745876277307351
 GameObject:
@@ -14246,29 +14269,3 @@ BoxCollider:
   m_GameObject: {fileID: 6352300554589503554}
   Dimensions: [1, 1, 1]
   Offset: [0, 0, 0]
----
-ID: 18109054792201686613
-GameObject:
-  m_IsActive: true
-  m_Name: Bullet
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15051840743850483581}  # Transform
-    - component: {fileID: 320890188940816844}  # MeshRenderer
----
-ID: 15051840743850483581
-Transform:
-  m_GameObject: {fileID: 18109054792201686613}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 320890188940816844
-MeshRenderer:
-  m_GameObject: {fileID: 18109054792201686613}
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 00000000000000000000000000000000}
