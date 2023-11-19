@@ -2983,7 +2983,7 @@ GameObject:
     - component: {fileID: 9964798969886234645}  # Transform
     - component: {fileID: 6917582739397988655}  # Rigidbody
     - component: {fileID: 17784311625182926207}  # MeshRenderer
-    - component: {fileID: 1218450404183315828}  # BoxCollider
+    - component: {fileID: 17814300706388022134}  # BoxCollider
 ---
 ID: 9964798969886234645
 Transform:
@@ -3014,10 +3014,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 1218450404183315828
+ID: 17814300706388022134
 BoxCollider:
   m_GameObject: {fileID: 15387861300162020341}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 6847503617641207406
@@ -4511,7 +4511,7 @@ ID: 17951029250120614532
 MeshRenderer:
   m_GameObject: {fileID: 16068505130074627781}
   Mesh: {guid: 1dea77ba15f1b0358511eff228ee2abb}
-  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 3827774938432376210
 GameObject:
@@ -8718,7 +8718,7 @@ GameObject:
     - component: {fileID: 18240788417057831598}  # Transform
     - component: {fileID: 6917974927931516842}  # Rigidbody
     - component: {fileID: 4400381860038116710}  # MeshRenderer
-    - component: {fileID: 11136067237328489948}  # BoxCollider
+    - component: {fileID: 12813047486382534979}  # BoxCollider
 ---
 ID: 18240788417057831598
 Transform:
@@ -8749,10 +8749,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 11136067237328489948
+ID: 12813047486382534979
 BoxCollider:
   m_GameObject: {fileID: 2198295187909507}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 8570980724102235789
@@ -8813,7 +8813,7 @@ GameObject:
     - component: {fileID: 16277087095185393420}  # Transform
     - component: {fileID: 2777186012208678875}  # Rigidbody
     - component: {fileID: 12534184389201130374}  # MeshRenderer
-    - component: {fileID: 6807426921706957680}  # BoxCollider
+    - component: {fileID: 16591323456705116524}  # BoxCollider
 ---
 ID: 16277087095185393420
 Transform:
@@ -8845,10 +8845,10 @@ MeshRenderer:
   Mesh: {guid: 77a9476181c35eff571c4866bee364b9}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 6807426921706957680
+ID: 16591323456705116524
 BoxCollider:
   m_GameObject: {fileID: 10086278634859035792}
-  Dimensions: [1, 1, 1]
+  Dimensions: [9.99984741, 0.999984741, 9.99984741]
   Offset: [2.49992394, -7.62939453e-06, 2.49992371]
 ---
 ID: 5004005383775762862
@@ -8861,7 +8861,7 @@ GameObject:
     - component: {fileID: 15843481344161539415}  # Transform
     - component: {fileID: 1478335186704955877}  # Rigidbody
     - component: {fileID: 13023245088316973023}  # MeshRenderer
-    - component: {fileID: 5564068829628284122}  # BoxCollider
+    - component: {fileID: 532080672706645458}  # BoxCollider
 ---
 ID: 15843481344161539415
 Transform:
@@ -8893,10 +8893,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 5564068829628284122
+ID: 532080672706645458
 BoxCollider:
   m_GameObject: {fileID: 5004005383775762862}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 4698878293082924815
@@ -9418,7 +9418,7 @@ GameObject:
     - component: {fileID: 16149349861543202821}  # Transform
     - component: {fileID: 4924724959778009871}  # Rigidbody
     - component: {fileID: 13582960305351122004}  # MeshRenderer
-    - component: {fileID: 5527642139497100220}  # BoxCollider
+    - component: {fileID: 5499947352622641960}  # BoxCollider
 ---
 ID: 16149349861543202821
 Transform:
@@ -9449,10 +9449,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 5527642139497100220
+ID: 5499947352622641960
 BoxCollider:
   m_GameObject: {fileID: 17355149457603196759}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 12250960634115189973
@@ -9491,7 +9491,7 @@ GameObject:
     - component: {fileID: 9664038360602308929}  # Transform
     - component: {fileID: 9506023736909961885}  # Rigidbody
     - component: {fileID: 13795217219211764339}  # MeshRenderer
-    - component: {fileID: 4939769838206134162}  # BoxCollider
+    - component: {fileID: 14755166737304633442}  # BoxCollider
 ---
 ID: 9664038360602308929
 Transform:
@@ -9522,10 +9522,10 @@ MeshRenderer:
   Mesh: {guid: beea719ad0f13246354b7aef8464bb89}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 4939769838206134162
+ID: 14755166737304633442
 BoxCollider:
   m_GameObject: {fileID: 9605661079073390682}
-  Dimensions: [1, 1, 1]
+  Dimensions: [9.9998455, 7.99987793, 1.89762938]
   Offset: [-7.7009201e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 10834837868345684089
@@ -9564,7 +9564,7 @@ GameObject:
     - component: {fileID: 2247335709756183843}  # Transform
     - component: {fileID: 6175925133142577229}  # Rigidbody
     - component: {fileID: 13936215950710207052}  # MeshRenderer
-    - component: {fileID: 6728149778795891365}  # BoxCollider
+    - component: {fileID: 1264665590575107825}  # BoxCollider
 ---
 ID: 2247335709756183843
 Transform:
@@ -9595,10 +9595,10 @@ MeshRenderer:
   Mesh: {guid: beea719ad0f13246354b7aef8464bb89}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 6728149778795891365
+ID: 1264665590575107825
 BoxCollider:
   m_GameObject: {fileID: 3119860734494218304}
-  Dimensions: [1, 1, 1]
+  Dimensions: [9.9998455, 7.99987793, 1.89762938]
   Offset: [-7.7009201e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 11546684700882403661
@@ -9637,7 +9637,7 @@ GameObject:
     - component: {fileID: 9387744218131080525}  # Transform
     - component: {fileID: 10832666193956886078}  # Rigidbody
     - component: {fileID: 11417356158335247250}  # MeshRenderer
-    - component: {fileID: 10609716458526468314}  # BoxCollider
+    - component: {fileID: 6734460401715808972}  # BoxCollider
 ---
 ID: 9387744218131080525
 Transform:
@@ -9669,10 +9669,10 @@ MeshRenderer:
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10609716458526468314
+ID: 6734460401715808972
 BoxCollider:
   m_GameObject: {fileID: 9654120388744522591}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 14533807616142721670
@@ -9711,7 +9711,7 @@ GameObject:
     - component: {fileID: 14705932521638659462}  # Transform
     - component: {fileID: 1208441692196979005}  # Rigidbody
     - component: {fileID: 6239757730825925714}  # MeshRenderer
-    - component: {fileID: 3063583882140512190}  # BoxCollider
+    - component: {fileID: 2661706962381507253}  # BoxCollider
 ---
 ID: 14705932521638659462
 Transform:
@@ -9742,10 +9742,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 3063583882140512190
+ID: 2661706962381507253
 BoxCollider:
   m_GameObject: {fileID: 17710392961296393831}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 9909188786157298422
@@ -9810,7 +9810,7 @@ GameObject:
     - component: {fileID: 739273570755668108}  # Transform
     - component: {fileID: 17877230795647271817}  # Rigidbody
     - component: {fileID: 10200010761160117197}  # MeshRenderer
-    - component: {fileID: 5495263458200686246}  # BoxCollider
+    - component: {fileID: 10418423250342091376}  # BoxCollider
 ---
 ID: 739273570755668108
 Transform:
@@ -9842,10 +9842,10 @@ MeshRenderer:
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 5495263458200686246
+ID: 10418423250342091376
 BoxCollider:
   m_GameObject: {fileID: 16443733111411424064}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 9339730042853617092
@@ -9910,7 +9910,7 @@ GameObject:
     - component: {fileID: 11071071884305035070}  # Transform
     - component: {fileID: 2794263989352932316}  # Rigidbody
     - component: {fileID: 9948157610220602468}  # MeshRenderer
-    - component: {fileID: 11283456851138940152}  # BoxCollider
+    - component: {fileID: 5032295425414333630}  # BoxCollider
 ---
 ID: 11071071884305035070
 Transform:
@@ -9942,10 +9942,10 @@ MeshRenderer:
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 11283456851138940152
+ID: 5032295425414333630
 BoxCollider:
   m_GameObject: {fileID: 7461450554749478257}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 2448945957099902706
@@ -10010,7 +10010,7 @@ GameObject:
     - component: {fileID: 13598362859502476863}  # Transform
     - component: {fileID: 9930339537540127170}  # Rigidbody
     - component: {fileID: 1307629481633346143}  # MeshRenderer
-    - component: {fileID: 1229534990509785950}  # BoxCollider
+    - component: {fileID: 1016814257834007509}  # BoxCollider
 ---
 ID: 13598362859502476863
 Transform:
@@ -10042,10 +10042,10 @@ MeshRenderer:
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 1229534990509785950
+ID: 1016814257834007509
 BoxCollider:
   m_GameObject: {fileID: 2154411781015212883}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 7302485933239107399
@@ -10110,7 +10110,7 @@ GameObject:
     - component: {fileID: 10340214033634007450}  # Transform
     - component: {fileID: 8461449294116415676}  # Rigidbody
     - component: {fileID: 4814392372053352339}  # MeshRenderer
-    - component: {fileID: 10951440330658641085}  # BoxCollider
+    - component: {fileID: 4994248262834812249}  # BoxCollider
 ---
 ID: 10340214033634007450
 Transform:
@@ -10141,10 +10141,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10951440330658641085
+ID: 4994248262834812249
 BoxCollider:
   m_GameObject: {fileID: 15143774793850497961}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 2625801538082524949
@@ -10235,7 +10235,7 @@ GameObject:
     - component: {fileID: 13561168478702475298}  # Transform
     - component: {fileID: 5660855269872143101}  # Rigidbody
     - component: {fileID: 10733844912936887709}  # MeshRenderer
-    - component: {fileID: 3721037651757568514}  # BoxCollider
+    - component: {fileID: 13557781255835800676}  # BoxCollider
 ---
 ID: 13561168478702475298
 Transform:
@@ -10267,10 +10267,10 @@ MeshRenderer:
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 3721037651757568514
+ID: 13557781255835800676
 BoxCollider:
   m_GameObject: {fileID: 8537150813031819036}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 14196523319249137487
@@ -10361,7 +10361,7 @@ GameObject:
     - component: {fileID: 15600453836947810024}  # Transform
     - component: {fileID: 14548388142037563190}  # Rigidbody
     - component: {fileID: 12682363815590937736}  # MeshRenderer
-    - component: {fileID: 13529021317865663242}  # BoxCollider
+    - component: {fileID: 8780326236216412706}  # BoxCollider
 ---
 ID: 15600453836947810024
 Transform:
@@ -10392,10 +10392,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 13529021317865663242
+ID: 8780326236216412706
 BoxCollider:
   m_GameObject: {fileID: 17513080989440410080}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 6808686053552425987
@@ -10434,7 +10434,7 @@ GameObject:
     - component: {fileID: 5158351240829003450}  # Transform
     - component: {fileID: 4240123178230436931}  # Rigidbody
     - component: {fileID: 9384314345779330769}  # MeshRenderer
-    - component: {fileID: 18006899288849741967}  # BoxCollider
+    - component: {fileID: 7814497428072372944}  # BoxCollider
 ---
 ID: 5158351240829003450
 Transform:
@@ -10465,10 +10465,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 18006899288849741967
+ID: 7814497428072372944
 BoxCollider:
   m_GameObject: {fileID: 4021303591522537242}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 5275559808892267717
@@ -10534,7 +10534,7 @@ GameObject:
     - component: {fileID: 14492840331323358307}  # Transform
     - component: {fileID: 4396127608365616099}  # Rigidbody
     - component: {fileID: 16840710819125209966}  # MeshRenderer
-    - component: {fileID: 10712884058542507526}  # BoxCollider
+    - component: {fileID: 17346904326093195434}  # BoxCollider
 ---
 ID: 14492840331323358307
 Transform:
@@ -10565,10 +10565,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10712884058542507526
+ID: 17346904326093195434
 BoxCollider:
   m_GameObject: {fileID: 1183833295746487535}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 11846317419929638802
@@ -10607,7 +10607,7 @@ GameObject:
     - component: {fileID: 3777001793367073569}  # Transform
     - component: {fileID: 6215616230382849622}  # Rigidbody
     - component: {fileID: 14088397841353723716}  # MeshRenderer
-    - component: {fileID: 3382061278293115638}  # BoxCollider
+    - component: {fileID: 2969736958867351080}  # BoxCollider
 ---
 ID: 3777001793367073569
 Transform:
@@ -10638,10 +10638,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 3382061278293115638
+ID: 2969736958867351080
 BoxCollider:
   m_GameObject: {fileID: 680533606041003977}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 12579460161423560325
@@ -10680,7 +10680,7 @@ GameObject:
     - component: {fileID: 3989807750767584679}  # Transform
     - component: {fileID: 4858614286245535207}  # Rigidbody
     - component: {fileID: 16751575877807938989}  # MeshRenderer
-    - component: {fileID: 3391942568567825221}  # BoxCollider
+    - component: {fileID: 15873583020922882736}  # BoxCollider
 ---
 ID: 3989807750767584679
 Transform:
@@ -10711,10 +10711,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 3391942568567825221
+ID: 15873583020922882736
 BoxCollider:
   m_GameObject: {fileID: 11387215596428988714}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 344398590559892255
@@ -10753,7 +10753,7 @@ GameObject:
     - component: {fileID: 16499572529744850018}  # Transform
     - component: {fileID: 8054971365777104497}  # Rigidbody
     - component: {fileID: 8958624897483660731}  # MeshRenderer
-    - component: {fileID: 7270218040454684497}  # BoxCollider
+    - component: {fileID: 16893895463479922378}  # BoxCollider
 ---
 ID: 16499572529744850018
 Transform:
@@ -10784,10 +10784,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 7270218040454684497
+ID: 16893895463479922378
 BoxCollider:
   m_GameObject: {fileID: 5108893418192304214}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 17762993347328076430
@@ -10826,7 +10826,7 @@ GameObject:
     - component: {fileID: 16909303746363394203}  # Transform
     - component: {fileID: 2596302809577449454}  # Rigidbody
     - component: {fileID: 6445242091651286110}  # MeshRenderer
-    - component: {fileID: 13790445180762050579}  # BoxCollider
+    - component: {fileID: 17222173065281653898}  # BoxCollider
 ---
 ID: 16909303746363394203
 Transform:
@@ -10857,10 +10857,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 13790445180762050579
+ID: 17222173065281653898
 BoxCollider:
   m_GameObject: {fileID: 14305529495330412174}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 10285335413369158026
@@ -10899,7 +10899,7 @@ GameObject:
     - component: {fileID: 11638547257086855548}  # Transform
     - component: {fileID: 9591457022614991639}  # Rigidbody
     - component: {fileID: 3426429040616259949}  # MeshRenderer
-    - component: {fileID: 13535851080388857236}  # BoxCollider
+    - component: {fileID: 11656049919176176423}  # BoxCollider
 ---
 ID: 11638547257086855548
 Transform:
@@ -10930,10 +10930,10 @@ MeshRenderer:
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 13535851080388857236
+ID: 11656049919176176423
 BoxCollider:
   m_GameObject: {fileID: 4286004166280585212}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992418, 0.999984741, 4.99992371]
   Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
 ---
 ID: 5721993976633448686
@@ -11019,7 +11019,7 @@ GameObject:
     - component: {fileID: 9176755137694673518}  # Transform
     - component: {fileID: 15329207358914211496}  # Rigidbody
     - component: {fileID: 15727342222010729614}  # MeshRenderer
-    - component: {fileID: 12410532768393257085}  # BoxCollider
+    - component: {fileID: 17393126326108284899}  # BoxCollider
 ---
 ID: 9176755137694673518
 Transform:
@@ -11050,10 +11050,10 @@ MeshRenderer:
   Mesh: {guid: bff71f474bd5a1d458db80c956198466}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 12410532768393257085
+ID: 17393126326108284899
 BoxCollider:
   m_GameObject: {fileID: 17626309831940142288}
-  Dimensions: [1, 1, 1]
+  Dimensions: [19.9996948, 0.999984741, 19.9996948]
   Offset: [-2.50015259, -7.62939453e-06, 7.49984741]
 ---
 ID: 17279981065732620432
@@ -11091,7 +11091,7 @@ GameObject:
   m_Component:
     - component: {fileID: 5197056024905122317}  # Transform
     - component: {fileID: 12404497560254002636}  # MeshRenderer
-    - component: {fileID: 9624026161798942215}  # BoxCollider
+    - component: {fileID: 2709876970382966043}  # BoxCollider
 ---
 ID: 5197056024905122317
 Transform:
@@ -11110,10 +11110,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 9624026161798942215
+ID: 2709876970382966043
 BoxCollider:
   m_GameObject: {fileID: 816073881030457996}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 424135694802153200
@@ -11177,7 +11177,7 @@ GameObject:
   m_Component:
     - component: {fileID: 10329081226096115013}  # Transform
     - component: {fileID: 7208107468023811546}  # MeshRenderer
-    - component: {fileID: 14003724481248810940}  # BoxCollider
+    - component: {fileID: 716672402790211101}  # BoxCollider
 ---
 ID: 10329081226096115013
 Transform:
@@ -11196,10 +11196,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 14003724481248810940
+ID: 716672402790211101
 BoxCollider:
   m_GameObject: {fileID: 3560472331877631264}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 14474935979191972552
@@ -11263,7 +11263,7 @@ GameObject:
   m_Component:
     - component: {fileID: 18434481395616885460}  # Transform
     - component: {fileID: 6775130962979457761}  # MeshRenderer
-    - component: {fileID: 1839625442014258472}  # BoxCollider
+    - component: {fileID: 4113498570119465900}  # BoxCollider
 ---
 ID: 18434481395616885460
 Transform:
@@ -11282,10 +11282,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 1839625442014258472
+ID: 4113498570119465900
 BoxCollider:
   m_GameObject: {fileID: 5254873738293870979}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 13688322342255318490
@@ -11349,7 +11349,7 @@ GameObject:
   m_Component:
     - component: {fileID: 15789716423256202332}  # Transform
     - component: {fileID: 7675496644483352491}  # MeshRenderer
-    - component: {fileID: 4370083053724154913}  # BoxCollider
+    - component: {fileID: 3033765700113198155}  # BoxCollider
 ---
 ID: 15789716423256202332
 Transform:
@@ -11368,10 +11368,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 4370083053724154913
+ID: 3033765700113198155
 BoxCollider:
   m_GameObject: {fileID: 10415847607219727370}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 4265362791419574935
@@ -11435,7 +11435,7 @@ GameObject:
   m_Component:
     - component: {fileID: 12840486489192841851}  # Transform
     - component: {fileID: 9496568516851144180}  # MeshRenderer
-    - component: {fileID: 15564901655774662280}  # BoxCollider
+    - component: {fileID: 1413150163710550385}  # BoxCollider
 ---
 ID: 12840486489192841851
 Transform:
@@ -11454,10 +11454,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 15564901655774662280
+ID: 1413150163710550385
 BoxCollider:
   m_GameObject: {fileID: 14781847898687337329}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 13372963724130500445
@@ -11521,7 +11521,7 @@ GameObject:
   m_Component:
     - component: {fileID: 16285327541633305721}  # Transform
     - component: {fileID: 6184753784856836533}  # MeshRenderer
-    - component: {fileID: 2815009391849013001}  # BoxCollider
+    - component: {fileID: 8831570019015495225}  # BoxCollider
 ---
 ID: 16285327541633305721
 Transform:
@@ -11540,10 +11540,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 2815009391849013001
+ID: 8831570019015495225
 BoxCollider:
   m_GameObject: {fileID: 5599669513113463632}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 9281106270383082674
@@ -11607,7 +11607,7 @@ GameObject:
   m_Component:
     - component: {fileID: 1635832228741746861}  # Transform
     - component: {fileID: 4435903269906401417}  # MeshRenderer
-    - component: {fileID: 8347805581533332348}  # BoxCollider
+    - component: {fileID: 8294255839501035662}  # BoxCollider
 ---
 ID: 1635832228741746861
 Transform:
@@ -11626,10 +11626,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 8347805581533332348
+ID: 8294255839501035662
 BoxCollider:
   m_GameObject: {fileID: 10099624195442274089}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 5576626806481623907
@@ -11693,7 +11693,7 @@ GameObject:
   m_Component:
     - component: {fileID: 17911161996572300696}  # Transform
     - component: {fileID: 10833705978876982967}  # MeshRenderer
-    - component: {fileID: 14762693887390215815}  # BoxCollider
+    - component: {fileID: 13504217269805302687}  # BoxCollider
 ---
 ID: 17911161996572300696
 Transform:
@@ -11712,10 +11712,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 14762693887390215815
+ID: 13504217269805302687
 BoxCollider:
   m_GameObject: {fileID: 13151099133994233349}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 12251209254298684738
@@ -11779,7 +11779,7 @@ GameObject:
   m_Component:
     - component: {fileID: 5268724488356000945}  # Transform
     - component: {fileID: 6390699437883164406}  # MeshRenderer
-    - component: {fileID: 4696222937420557413}  # BoxCollider
+    - component: {fileID: 8682530764886798683}  # BoxCollider
 ---
 ID: 5268724488356000945
 Transform:
@@ -11798,10 +11798,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 4696222937420557413
+ID: 8682530764886798683
 BoxCollider:
   m_GameObject: {fileID: 13445367887189102256}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 7170049848045036126
@@ -11865,7 +11865,7 @@ GameObject:
   m_Component:
     - component: {fileID: 5866207282911460334}  # Transform
     - component: {fileID: 5780505544495204099}  # MeshRenderer
-    - component: {fileID: 12172043106365017523}  # BoxCollider
+    - component: {fileID: 3369151911388504000}  # BoxCollider
 ---
 ID: 5866207282911460334
 Transform:
@@ -11884,10 +11884,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 12172043106365017523
+ID: 3369151911388504000
 BoxCollider:
   m_GameObject: {fileID: 17949790532302430306}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 9789327763110413018
@@ -11951,7 +11951,7 @@ GameObject:
   m_Component:
     - component: {fileID: 11180120732778051401}  # Transform
     - component: {fileID: 7481922860864425866}  # MeshRenderer
-    - component: {fileID: 12642487692260019855}  # BoxCollider
+    - component: {fileID: 17692540597409580494}  # BoxCollider
 ---
 ID: 11180120732778051401
 Transform:
@@ -11970,10 +11970,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 12642487692260019855
+ID: 17692540597409580494
 BoxCollider:
   m_GameObject: {fileID: 6911285318009991352}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 14078584179483773236
@@ -12037,7 +12037,7 @@ GameObject:
   m_Component:
     - component: {fileID: 1815428758849170916}  # Transform
     - component: {fileID: 2537235336652723906}  # MeshRenderer
-    - component: {fileID: 13140733136490403932}  # BoxCollider
+    - component: {fileID: 469061244776843109}  # BoxCollider
 ---
 ID: 1815428758849170916
 Transform:
@@ -12056,10 +12056,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 13140733136490403932
+ID: 469061244776843109
 BoxCollider:
   m_GameObject: {fileID: 3116906526004750514}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 16626216412954335116
@@ -12123,7 +12123,7 @@ GameObject:
   m_Component:
     - component: {fileID: 6445132086971479219}  # Transform
     - component: {fileID: 7570057923360966343}  # MeshRenderer
-    - component: {fileID: 7561927483121276276}  # BoxCollider
+    - component: {fileID: 3418141072816960463}  # BoxCollider
 ---
 ID: 6445132086971479219
 Transform:
@@ -12142,10 +12142,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 7561927483121276276
+ID: 3418141072816960463
 BoxCollider:
   m_GameObject: {fileID: 13798208291858685051}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 1910714313518205623
@@ -12210,7 +12210,7 @@ GameObject:
     - component: {fileID: 15906778986435699853}  # Transform
     - component: {fileID: 15568531423146374339}  # Rigidbody
     - component: {fileID: 2026859750221747520}  # MeshRenderer
-    - component: {fileID: 7075135406297911584}  # BoxCollider
+    - component: {fileID: 17067134686418338398}  # BoxCollider
 ---
 ID: 15906778986435699853
 Transform:
@@ -12242,10 +12242,10 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 7075135406297911584
+ID: 17067134686418338398
 BoxCollider:
   m_GameObject: {fileID: 10255983232416815995}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 11821148061937335486
@@ -12310,7 +12310,7 @@ GameObject:
     - component: {fileID: 12490797786067552744}  # Transform
     - component: {fileID: 13204472819922819219}  # Rigidbody
     - component: {fileID: 12982787642282772869}  # MeshRenderer
-    - component: {fileID: 3957939609207365503}  # BoxCollider
+    - component: {fileID: 15670335137509790923}  # BoxCollider
 ---
 ID: 12490797786067552744
 Transform:
@@ -12341,10 +12341,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 3957939609207365503
+ID: 15670335137509790923
 BoxCollider:
   m_GameObject: {fileID: 1236890972593820463}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 6565269216918593238
@@ -12383,7 +12383,7 @@ GameObject:
     - component: {fileID: 2795511594487971179}  # Transform
     - component: {fileID: 10491475586284773608}  # Rigidbody
     - component: {fileID: 6282577168580606550}  # MeshRenderer
-    - component: {fileID: 4896249238878348547}  # BoxCollider
+    - component: {fileID: 13143263126176470250}  # BoxCollider
 ---
 ID: 2795511594487971179
 Transform:
@@ -12414,10 +12414,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 4896249238878348547
+ID: 13143263126176470250
 BoxCollider:
   m_GameObject: {fileID: 17107012118842780159}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 13768796978945405204
@@ -12456,7 +12456,7 @@ GameObject:
     - component: {fileID: 11875892429728836603}  # Transform
     - component: {fileID: 13722729475742736901}  # Rigidbody
     - component: {fileID: 13561428259928557852}  # MeshRenderer
-    - component: {fileID: 8788674771389232885}  # BoxCollider
+    - component: {fileID: 343226655134159360}  # BoxCollider
 ---
 ID: 11875892429728836603
 Transform:
@@ -12487,10 +12487,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 8788674771389232885
+ID: 343226655134159360
 BoxCollider:
   m_GameObject: {fileID: 1808071620702146443}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 9430656991372262778
@@ -12529,7 +12529,7 @@ GameObject:
     - component: {fileID: 13801081745547359333}  # Transform
     - component: {fileID: 15694621944093118902}  # Rigidbody
     - component: {fileID: 12005261441528970506}  # MeshRenderer
-    - component: {fileID: 16785072860960345237}  # BoxCollider
+    - component: {fileID: 16572961979319650967}  # BoxCollider
 ---
 ID: 13801081745547359333
 Transform:
@@ -12560,10 +12560,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 16785072860960345237
+ID: 16572961979319650967
 BoxCollider:
   m_GameObject: {fileID: 7238187091338650676}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 17521045435972000184
@@ -12602,7 +12602,7 @@ GameObject:
     - component: {fileID: 1545545741286097248}  # Transform
     - component: {fileID: 4311398329907499144}  # Rigidbody
     - component: {fileID: 1352177754867607949}  # MeshRenderer
-    - component: {fileID: 16562271200738654328}  # BoxCollider
+    - component: {fileID: 6154270976061640424}  # BoxCollider
 ---
 ID: 1545545741286097248
 Transform:
@@ -12633,10 +12633,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 16562271200738654328
+ID: 6154270976061640424
 BoxCollider:
   m_GameObject: {fileID: 11348232323442076186}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 14502940463278445043
@@ -12675,7 +12675,7 @@ GameObject:
     - component: {fileID: 1862240268979982825}  # Transform
     - component: {fileID: 16106297155682775220}  # Rigidbody
     - component: {fileID: 16375465264244265456}  # MeshRenderer
-    - component: {fileID: 223168585692668073}  # BoxCollider
+    - component: {fileID: 4943314206964295650}  # BoxCollider
 ---
 ID: 1862240268979982825
 Transform:
@@ -12706,10 +12706,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 223168585692668073
+ID: 4943314206964295650
 BoxCollider:
   m_GameObject: {fileID: 4368840755312913070}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 13079508926618080952
@@ -12748,7 +12748,7 @@ GameObject:
     - component: {fileID: 15255504469079728059}  # Transform
     - component: {fileID: 12555553157699690872}  # Rigidbody
     - component: {fileID: 10354951609463530764}  # MeshRenderer
-    - component: {fileID: 12204962225543780700}  # BoxCollider
+    - component: {fileID: 8527201340859495863}  # BoxCollider
 ---
 ID: 15255504469079728059
 Transform:
@@ -12779,10 +12779,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 12204962225543780700
+ID: 8527201340859495863
 BoxCollider:
   m_GameObject: {fileID: 16738375863286542569}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 13366542813927007570
@@ -12821,7 +12821,7 @@ GameObject:
     - component: {fileID: 6993839680110938567}  # Transform
     - component: {fileID: 12559109374951102612}  # Rigidbody
     - component: {fileID: 16874861154904735771}  # MeshRenderer
-    - component: {fileID: 10824316316997288145}  # BoxCollider
+    - component: {fileID: 9213327059342907121}  # BoxCollider
 ---
 ID: 6993839680110938567
 Transform:
@@ -12852,10 +12852,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10824316316997288145
+ID: 9213327059342907121
 BoxCollider:
   m_GameObject: {fileID: 17339576133974851560}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 4502199338380684447
@@ -12894,7 +12894,7 @@ GameObject:
     - component: {fileID: 11233562156085090933}  # Transform
     - component: {fileID: 1036711992088599592}  # Rigidbody
     - component: {fileID: 5195921901499604537}  # MeshRenderer
-    - component: {fileID: 9151889229070083760}  # BoxCollider
+    - component: {fileID: 8682428936501276283}  # BoxCollider
 ---
 ID: 11233562156085090933
 Transform:
@@ -12925,10 +12925,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 9151889229070083760
+ID: 8682428936501276283
 BoxCollider:
   m_GameObject: {fileID: 13087879660564319010}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 2578659977802441128
@@ -12967,7 +12967,7 @@ GameObject:
     - component: {fileID: 4900905779934671021}  # Transform
     - component: {fileID: 7198359763230159763}  # Rigidbody
     - component: {fileID: 6172495228129400962}  # MeshRenderer
-    - component: {fileID: 2241915999019640890}  # BoxCollider
+    - component: {fileID: 18124308336687638915}  # BoxCollider
 ---
 ID: 4900905779934671021
 Transform:
@@ -12998,10 +12998,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 2241915999019640890
+ID: 18124308336687638915
 BoxCollider:
   m_GameObject: {fileID: 9928531127088687855}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 16929961266483466822
@@ -13040,7 +13040,7 @@ GameObject:
     - component: {fileID: 16395873965215198433}  # Transform
     - component: {fileID: 11212202428257585734}  # Rigidbody
     - component: {fileID: 12565884649412330736}  # MeshRenderer
-    - component: {fileID: 10134335580010568630}  # BoxCollider
+    - component: {fileID: 10330931209077561930}  # BoxCollider
 ---
 ID: 16395873965215198433
 Transform:
@@ -13071,10 +13071,10 @@ MeshRenderer:
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10134335580010568630
+ID: 10330931209077561930
 BoxCollider:
   m_GameObject: {fileID: 5598533014889482316}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
 ---
 ID: 5210926074018138939
