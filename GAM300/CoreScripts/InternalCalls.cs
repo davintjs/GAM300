@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 
 using System;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
 
@@ -27,13 +28,12 @@ namespace BeanFactory
         internal extern static void PauseAllAnimation();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void PlayAllAnimation();
-
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void PlayAnimation(ulong ID);
-
+        internal extern static void PlayAnimation(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void PauseAnimation(ulong ID);
-
+        internal extern static void PauseAnimation(Animator animator);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void StopAnimation(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -41,11 +41,17 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetFrame(ulong ID, int frame);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void StopAnimation(ulong ID);
-
+        internal extern static float GetProgress(Animator animator);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool IsCurrentState(Animator animator, string state);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetDefaultState(Animator animator, string defaultState);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetState(Animator animator, string state);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetNextState(Animator animator, string state);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetAnimationColor(ulong ID, out Color color);
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetAnimationColor(ulong ID, ref Color color);
         #endregion

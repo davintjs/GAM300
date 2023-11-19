@@ -3,3 +3,5 @@ C:\Users\Kenneth\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.Core
 C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
 C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\obj\Debug\ScriptCore.csproj.SuggestedBindingRedirects.cache
 C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
+C:\Users\prawn\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
+C:\Users\prawn\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
