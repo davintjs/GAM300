@@ -446,9 +446,8 @@ void Renderer::Draw(BaseCamera& _camera) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Non-Instanced Rendering
-	for (auto& pair : transparentMap)
-	{
-		auto& prop = pair.second;
+	for (auto rit = transparentMap.rbegin(); rit != transparentMap.rend(); ++rit) {
+		auto& prop = rit->second;
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
 		shader.Use();
 
