@@ -21,7 +21,6 @@ namespace BeanFactory
 {
     public class GameObject
     {
-
         public bool activeSelf
         {
             get

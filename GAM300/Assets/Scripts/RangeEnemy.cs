@@ -8,10 +8,11 @@ public class RangeEnemy : Script
 {
     public float maxHealth = 3f;
     public float currentHealth;
-
+    public GameObject bulletPrefab;
 
     void Start()
     {
+        Instantiate(bulletPrefab,transform.localPosition,transform.localRotation);
         currentHealth = maxHealth;
     }
 

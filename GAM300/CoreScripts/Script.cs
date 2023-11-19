@@ -52,9 +52,14 @@ namespace BeanFactory
             if (_transform == null)
                 Console.WriteLine("Unable to find transform");
         }
-        public static T Instantiate<T>(T original, vec3 pos, vec3 rotation)
+        public GameObject Instantiate(GameObject gameObject, vec3 pos, vec3 rot)
         {
-            return original;
+            GameObject newGameObject;
+            InternalCalls.CloneGameObject(gameObject, out newGameObject);
+            newGameObject.transform.localPosition = pos;
+            newGameObject.transform.localRotation = rot;
+            return newGameObject;
+
         }
 
         public static void Destroy(GameObject gameObject)

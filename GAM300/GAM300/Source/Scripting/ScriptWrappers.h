@@ -55,7 +55,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void* Get(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
+	static void* Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
 	{
 		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -91,7 +91,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void* AddComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
+	static void* AddComponent(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -120,10 +120,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 
 	//Checks if entity has a component
-	static bool HasComponent(Entity* pEntity, MonoReflectionType* componentType)
+	static bool HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		return pEntity->hasComponentsBitset.test(monoComponentToType[managedType]);
+		return ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+	}
+
+	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
+	{
+		Object* obj{ pEntity };
+		out = &MySceneManager.GetCurrentScene().Clone((Entity&)pEntity);
 	}
 
 
@@ -272,6 +278,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(AddComponent);
 		Register(GetMouseDelta);
 		Register(AudioSourcePlay);
+		Register(CloneGameObject);
 		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H

@@ -667,8 +667,6 @@ MonoObject* ScriptingSystem::Invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 		try
 		{
 			MonoObject* exception = NULL;
-			PRINT("INVOKING: ", mono_class_get_name(mono_object_get_class(mObj)) , '\n');
-			PRINT("METHOD: ", mono_method_get_name(mMethod), "\n\n");
 			E_ASSERT(mono_object_get_domain(mObj) == mAppDomain,"Mono object doesn't belong to this domain");
 			MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
 			if (exception)
@@ -700,7 +698,6 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 	}
 	else if (field.fType == GetFieldType::E<Script>())
 	{
-		PRINT("SCRIPT FIELD ????\n");
 		field.typeName = mono_type_get_name(mono_field_get_type(mClassField));
 		size_t offset = field.typeName.find_last_of(".");
 		if (offset != std::string::npos)
@@ -780,7 +777,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Object*& pObject = *(Object**)field.data;
+		Object*& pObject = field.Get<Object*>();
 		//Scene& scene = MySceneManager.GetCurrentScene();
 		if (pObject == nullptr)
 			mono_field_set_value(instance, mClassField, nullptr);
@@ -923,7 +920,6 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				GetFieldValue(ref, pair.second, field);
 				if (field.fType < AllObjectTypes::Size())
 				{
-					PRINT(pair.first);
 					uint32_t flags = mono_field_get_flags(pair.second);
 					Object*& f = field.Get<Object*>();
 					if (f)

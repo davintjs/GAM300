@@ -15,7 +15,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 using System;
 using System.Runtime.CompilerServices;
-
+using GlmSharp;
 
 namespace BeanFactory
 {
@@ -64,7 +64,7 @@ namespace BeanFactory
         internal extern static bool HasComponent(GameObject gameObject, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong CloneGameObject(ulong ID);
+        public static extern void CloneGameObject(GameObject gameObject, out GameObject newGameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong InstantiateGameObject();
