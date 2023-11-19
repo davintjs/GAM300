@@ -24,10 +24,14 @@ public class ThirdPersonController : Script
 
     private vec3 VerticalVelocity;
     public bool IsMoving = false;
+    public bool IsJumping = false;
+    public bool IsInAnimation = false;
 
     public float RotationSpeed = 1;
 
     public AudioSource audioSource;
+
+    public Animator animator;
 
     public bool IsAttacking = false;
     public float attackTimer = 1f;
@@ -58,6 +62,12 @@ public class ThirdPersonController : Script
         initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
         initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
         initialHealthBarXScale = healthBarFill.GetComponent<Transform>().localScale.x;
+
+        if (gameObject.HasComponent<Animator>())
+        {
+            animator.SetDefaultState("Idle");
+            animator.Play();
+        }
     }
 
     // Update is called once per frame
@@ -88,12 +98,14 @@ public class ThirdPersonController : Script
         //Jump
         if (Input.GetKeyDown(KeyCode.Space) && CC.isGrounded)
         {
+            IsJumping = true;
             AudioManager.instance.jumpVoice.Play();
 
             //dir += (CamYawPivot.up);
             dir += (player.up);
             Console.WriteLine("Jump:");
             Console.WriteLine(dir.x + "," + dir.y + "," + dir.z);
+            animator.SetState("Jump");
         }
 
         //Sprint
@@ -220,6 +232,33 @@ public class ThirdPersonController : Script
             }
         }
 
+        IsInAnimation = true;
+        if (Input.GetKey(KeyCode.LeftShift) && IsMoving && !IsJumping && !IsAttacking)
+        {
+            animator.SetState("Sprint");
+            animator.SetNextState("Sprint");
+        }
+        else if(IsMoving && !IsJumping && !IsAttacking)
+        {
+            animator.SetState("Run");
+            animator.SetNextState("Run");
+        }
+
+        IsJumping = false;
+
+        if (!IsInAnimation)
+            animator.SetState("None");
+
+        if (Input.GetMouseDown(0) && IsAttacking)
+        {
+            IsInAnimation = true;
+            animator.SetState("Attack1");
+        }
+
+        if (!IsAttacking && !animator.IsCurrentState("Attack1") && !animator.IsCurrentState("Jump"))
+        {
+            IsInAnimation = false;
+        }
     }
 
     void UpdatehealthBar()
@@ -243,11 +282,16 @@ public class ThirdPersonController : Script
             UpdatehealthBar();
         }
         Console.WriteLine("Hit");
-
+        
         if (currentHealth <= 0)
         {
             Console.WriteLine("YouDied");
             PlayerModel.gameObject.SetActive(false);//testing, remove this later
+            animator.SetState("Death");
+        }
+        else
+        {
+            animator.SetState("Stun");
         }
     }
 
