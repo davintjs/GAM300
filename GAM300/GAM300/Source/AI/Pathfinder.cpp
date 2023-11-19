@@ -1,3 +1,23 @@
+/*!***************************************************************************************
+\file			Pathfinder.cpp
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           19/11/2023
+
+\brief
+	This file contains the definitions of the following:
+	1. PathNode class
+		a. A node of the navmesh generated for AI to find its waypoint
+	2. AStarPather class
+		a. A* pathfinding for AI to find its waypoint to goal with portaling and funneling
+		b. Calculates heuristic using euclidean method
+		c. Helper functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #include "Precompiled.h"
 #include "Geometry.h"
 

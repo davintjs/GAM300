@@ -1,3 +1,25 @@
+/*!***************************************************************************************
+\file			Pathfinder.h
+\project
+\author         Davin Tan
+
+\par			Course: GAM300
+\date           19/11/2023
+
+\brief
+	This file contains the declarations of the following:
+	1. OnList enum class
+		a. Gives us information on a PathNode current state in the priority queue
+	2. PathNode class
+		a. A node of the navmesh generated for AI to find its waypoint
+	3. AStarPather class
+		a. A* pathfinding for AI to find its waypoint to goal with portaling and funneling
+		b. Calculates heuristic using euclidean method
+		c. Helper functions
+
+All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
+******************************************************************************************/
+
 #pragma once
 
 #include <queue>
@@ -45,5 +67,4 @@ private:
 	std::priority_queue<Triangle3D*> mQueue;
 	std::vector<Triangle3D*> mTriangleWayPoint;
 	std::vector<PathNode*> mVisitedNodes;
-
 };
