@@ -21,6 +21,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
 #include "Core/Events.h"
+#include "Scene/Components.h"
 
 // Jolt includes
 #include "Jolt/Jolt.h"
