@@ -21,6 +21,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
 #include "Core/Events.h"
+#include "Scene/Components.h"
 
 // Jolt includes
 #include "Jolt/Jolt.h"
@@ -209,13 +210,14 @@ public:
 	// Resolve any character controller movement
 	void ResolveCharacterMovement();
 
-	// A testing function
-	void TestRun();
-
 	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
 	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
+	// Callback function for when a rigidbody is created
+	void CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent);
+
+	void AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent);
 
 	void DeleteBody(PhysicsComponent& bid);
 	void DeleteBody(UINT32 bid);

@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
 #include "Audio/AudioManager.h"
+#include "Graphics/Animation/BaseAnimator.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -89,6 +90,119 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+
+#pragma region ANIMATOR
+	static void PlayAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.ChangeState();
+				break;
+			}
+		}
+	}
+
+	static void PauseAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.playing = false;
+				break;
+			}
+		}
+	}
+
+	static void StopAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.m_CurrentTime = 0.f;
+				animator.playing = false;
+				break;
+			}
+		}
+	}
+
+	static float GetProgress(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+				return animator.GetProgress();
+		}
+
+		return 0.f;
+	}
+
+	static bool IsCurrentState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string state = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				if(animator.GetCurrentState())
+					return !animator.GetCurrentState()->label.compare(state);
+			}
+		}
+
+		return false;
+	}
+	
+	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string defaultState = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetDefaultState(defaultState);
+				break;
+			}
+		}
+	}
+
+	static void SetState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string state = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetState(state);
+				break;
+			}
+		}
+	}
+
+	static void SetNextState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string nextState = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetNextState(nextState);
+				break;
+			}
+		}
+	}
+#pragma endregion
+
 
 	//Gets object that entity has
 	static void* AddComponent(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
@@ -279,6 +393,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetMouseDelta);
 		Register(AudioSourcePlay);
 		Register(CloneGameObject);
+		Register(PlayAnimation);
+		Register(PauseAnimation);
+		Register(StopAnimation);
+		Register(GetProgress);
+		Register(IsCurrentState);
+		Register(SetDefaultState);
+		Register(SetState);
+		Register(SetNextState);
 		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H

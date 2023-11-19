@@ -113,6 +113,19 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class Animator : Component
+    {
+        public void Play() { InternalCalls.PlayAnimation(this); }
+        public void Pause() { InternalCalls.PauseAnimation(this); }
+        public void Stop() { InternalCalls.StopAnimation(this); }
+        public float GetProgress() { return InternalCalls.GetProgress(this); }
+        public bool IsCurrentState(string state) { return InternalCalls.IsCurrentState(this, state); }
+        public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
+        public void SetState(string state) { InternalCalls.SetState(this, state); }
+        public void SetNextState(string nextState) { InternalCalls.SetNextState(this, nextState); }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class Transform : Component
     {
         public vec3 localPosition;
