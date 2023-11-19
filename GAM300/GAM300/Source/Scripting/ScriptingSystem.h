@@ -255,6 +255,9 @@ public:
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
+	//Callback function to when a script is created
+	void CallbackLoadScene(LoadSceneEvent*pEvent);
+
 	void CallbackCollisionEnter(ContactAddedEvent* pEvent);
 
 	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
@@ -298,13 +301,18 @@ public:
 
 	//Mapping script to mono script
 	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
+
 	//Field name to field
 	using FieldMap = std::unordered_map<std::string, Field>;
+
+	using GC_Handle = uint32_t;
+	using GC_Handles = std::vector<GC_Handle>;
 
 	//Script guid to script class
 	std::unordered_map<Engine::GUID<ScriptAsset>, ScriptClass> scriptClassMap;
 	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
+	std::unordered_map<Engine::UUID, GC_Handles> mSceneHandles;
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 

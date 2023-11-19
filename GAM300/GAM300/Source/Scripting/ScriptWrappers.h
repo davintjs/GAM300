@@ -128,9 +128,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 
 	//Deletes a gameobject
-	static void DestroyGameObject(Entity* pGameObject)
+	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
-		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+		MySceneManager.GetCurrentScene().Destroy<Entity>(pEntity);
 	}
 
 	//GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
