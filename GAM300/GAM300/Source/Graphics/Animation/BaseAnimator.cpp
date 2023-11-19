@@ -91,12 +91,13 @@ void BaseAnimator::PlayAnimation(Animation* pAnimation)
 
 void BaseAnimator::ChangeState()
 {
-    m_CurrentTime = 0.f;
+    if (currentState != nextState)
+        m_CurrentTime = 0.f;
+
     currentState = nextState;
+
     if (!currentState) // If no next state, use default state
         currentState = defaultState;
-
-    nextState = nullptr; // do this after fin blending
 
     // Check that the current state exists
     if (currentState)
@@ -104,14 +105,18 @@ void BaseAnimator::ChangeState()
         startTime = currentState->minMax.x;
         endTime = currentState->minMax.y;
         stateName = currentState->label;
+        stateNextName = "None";
         playing = true;
     }
     else
     {
         startTime = endTime = 0.f;
         stateName = "None";
+        stateNextName = "None";
         playing = false;
     }
+
+    nextState = nullptr;
 }
 
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
@@ -218,6 +223,7 @@ void BaseAnimator::SetNextState(const std::string& _nextState)
     {
         Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
         nextState = animation.GetAnimationState(_nextState);
+        stateNextName = _nextState;
     }
 }
 

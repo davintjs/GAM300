@@ -198,7 +198,8 @@ void ScriptingSystem::Init()
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackApplicationExit);
 	Subscribe(&ScriptingSystem::CallbackCollisionEnter);
 	Subscribe(&ScriptingSystem::CallbackCollisionExit);
-
+	Subscribe(&ScriptingSystem::CallbackTriggerEnter);
+	Subscribe(&ScriptingSystem::CallbackTriggerExit);
 }
 
 template<class EventType>
@@ -777,6 +778,7 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			size_t addr = reinterpret_cast<size_t>(&rb2) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+			//PRINT("invoke");
 		}
 	}
 
@@ -796,6 +798,8 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			size_t addr = reinterpret_cast<size_t>(&rb1) + 16;
 			void* param{ reinterpret_cast<void*>(addr) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
+			//PRINT("invoke");
+
 		}
 	}
 }
@@ -827,6 +831,7 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 
 void ScriptingSystem::CallbackTriggerEnter(TriggerEnterEvent* pEvent)
 {
+	//PRINT("scripting trigger enter");
 	SCRIPT_THREAD_EVENT(pEvent);
 	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerEnter, *pEvent->pc1, *pEvent->pc2);
 }

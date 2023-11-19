@@ -64,7 +64,7 @@ bool valueChanged = false;
 float initialvalue = 0.f;
 float changedvalue = 0.f;
 Vector3 initialVector;
-Vector4 intialColor;
+Vector4 initialColor;
 
 template <typename T>
 void Display(const char* name, T& val);
@@ -398,8 +398,6 @@ void DisplayType(Change& change, const char* name, Vector3& val)
             initialVector.y = initialvalue;
             val = initialVector;
         }
-           
-
 
         ImGui::TableNextColumn();
         idName.back() = 'Z';
@@ -410,8 +408,6 @@ void DisplayType(Change& change, const char* name, Vector3& val)
             initialVector.z = initialvalue;
             val = initialVector;
         }
-
-       
 
         //convert rotation from degree back to radians
         if (!std::strcmp(name, "Rotation")) {
@@ -455,7 +451,7 @@ void DisplayType(Change& change, const char* name, Vector4& val)
         if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
             ischanged = true;
             if (!valueChanged)
-                intialColor = val;
+                initialColor = val;
 
             valueChanged = true;
             val = buf;
@@ -464,7 +460,12 @@ void DisplayType(Change& change, const char* name, Vector4& val)
         if (ImGui::IsItemDeactivatedAfterEdit()) {
             valueChanged = false;
             buf = val;
-            val = intialColor;
+            val = initialColor;
+
+            if (buf.w != initialColor.w) {
+                auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
+                material.shaderType = (int)SHADERTYPE::DEFAULT;
+            }
             EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
@@ -814,9 +815,21 @@ void Display_Property(T& comp) {
                     }
                     else {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
-                    }
+                        if (DisplayName == "Material_ID") {
+                            ImGui::SameLine();
+                            if (ImGui::Button("Mat")) {
+                                Scene& scene = MySceneManager.GetCurrentScene();
+                                Entity& ent = scene.Get<Entity>(comp);
+                                auto& mr = scene.Get<MeshRenderer>(ent);
+                                if(!EditorInspector::Instance().material_inspector){
+                                    EditorInspector::Instance().material_inspector = true; 
+                                }
 
-                    
+                                ImGui::SetWindowFocus("Material");                                
+                                EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                            }
+                        }
+                    }
 
                     ImGui::PopID();
 

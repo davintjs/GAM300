@@ -33,6 +33,8 @@ public class RangeEnemy : Script
 
     void OnTriggerEnter(Collider other)
     {
+        Console.WriteLine("Hit");
+
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(other.gameObject.name == "PlayerWeaponCollider")
         {
