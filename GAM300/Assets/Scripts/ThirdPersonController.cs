@@ -233,12 +233,12 @@ public class ThirdPersonController : Script
         }
 
         IsInAnimation = true;
-        if (Input.GetKey(KeyCode.LeftShift) && IsMoving && !IsJumping && !Input.GetMouseDown(0))
+        if (Input.GetKey(KeyCode.LeftShift) && IsMoving && !IsJumping && !IsAttacking)
         {
             animator.SetState("Sprint");
             animator.SetNextState("Sprint");
         }
-        else if(IsMoving && !IsJumping && !Input.GetMouseDown(0))
+        else if(IsMoving && !IsJumping && !IsAttacking)
         {
             animator.SetState("Run");
             animator.SetNextState("Run");
