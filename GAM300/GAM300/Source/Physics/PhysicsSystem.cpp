@@ -80,18 +80,16 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp;
 
-		if (scene.IsActive(rb) && scene.IsActive(scene.Get<Entity>(rb)))
-		{
-			if(!bodyInterface->IsActive(tmpBID))
-				bodyInterface->ActivateBody(tmpBID);
-		}
-		else {
+		//if (scene.IsActive(rb) && scene.IsActive(scene.Get<Entity>(rb)))
+		//{
+		//	if(!bodyInterface->IsActive(tmpBID))
+		//		bodyInterface->ActivateBody(tmpBID);
+		//}
+		//else {
 
-			if(bodyInterface->IsActive(tmpBID))
-				bodyInterface->DeactivateBody(tmpBID);
-
-			continue;
-		}
+		//	if(bodyInterface->IsActive(tmpBID))
+		//		bodyInterface->DeactivateBody(tmpBID);
+		//}
 		
 
 		Entity& entity = scene.Get<Entity>(rb);
@@ -308,7 +306,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				std::cout << "Trigger Enter!\n";
+				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
@@ -375,7 +373,8 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
 		CharacterController& cc = *it;
-		if(cc.state == DELETED) continue;
+		if (cc.state == DELETED) continue;
+		if (!scene.IsActive(cc)) continue;
 		JPH::Ref<JPH::Character> mCharacter = nullptr;
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
@@ -389,41 +388,58 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 		JPH::Vec3 direction;
 		GlmVec3ToJoltVec3(cc.direction, direction);
-		//if (cc.direction != Vector3(0, 0, 0)) {
-		//	std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
-		//}
-		//direction = direction.Normalized();
-		//std::cout << "direction:" << direction.GetX() << ',' << direction.GetY() << ',' << direction.GetZ() << std::endl;
+		JPH::Vec3 directionNormalized;
+		float length = 0.f;
 
+		if (direction != JPH::Vec3::sZero()) {
+			//std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
+			directionNormalized = direction.Normalized();
+			length = direction.Length();
+		}
+		else {
+			directionNormalized = JPH::Vec3::sZero();
+			length = 0;
+		}
+
+		//std::cout << "direction:" << direction.GetX() << ',' << direction.GetY() << ',' << direction.GetZ() << std::endl;
 		// Prevent character from going up steep slopes
 		JPH::Character::EGroundState groundState = mCharacter->GetGroundState();
 		if (groundState == JPH::Character::EGroundState::OnSteepGround
 			|| groundState == JPH::Character::EGroundState::NotSupported)
 		{
-			JPH::Vec3 normal = mCharacter->GetGroundNormal();
-			normal.SetY(0.0f);
-			float dot = normal.Dot(direction);
-			if (dot < 0.0f)
-				direction -= (dot * normal) / normal.LengthSq();
-		}
+			//if(groundState == JPH::Character::EGroundState::OnSteepGround)
+			//	PRINT("steep ground\n");
 
+			//JPH::Vec3 normal = mCharacter->GetGroundNormal();
+			//std::cout << "normal:" << normal.GetX() << ',' << normal.GetY() << ',' << normal.GetZ() << std::endl;
+
+			//normal.SetY(0.0f);
+			//float dot = normal.Dot(direction);
+			//if (dot < 0.0f)
+			//	directionNormalized -= (dot * normal) / normal.LengthSq();
+		}
 
 		// Update velocity
 		if (mCharacter->IsSupported()) {
+			PRINT("supported\n");
 			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
-			JPH::Vec3 desired_velocity = direction;
+			JPH::Vec3 desired_velocity = directionNormalized * length;
 			desired_velocity.SetY(current_velocity.GetY());
 			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 			// Jump
-			new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+			if(groundState == JPH::Character::EGroundState::OnGround)
+				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+			//std::cout << "new velocity:" << new_velocity.GetX() << ',' << new_velocity.GetY() << ',' << new_velocity.GetZ() << std::endl;
 
 
+			//PRINT("end\n");
 			mCharacter->SetLinearVelocity(new_velocity);
 		}
 
 		// Reset character controller's direction
 		cc.direction = Vector3(0, 0, 0);
+
 	}
 
 }
@@ -880,6 +896,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	characterSetting->mLayer = EngineObjectLayers::DYNAMIC;
 	characterSetting->mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
 	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -t.scale.x);
+	characterSetting->mUp = JPH::Vec3(0,1,0);
 
 	float offset = 0.5f * t.scale.y - t.scale.x / 2;
 	if (offset <= 0.0f)
@@ -900,7 +917,6 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	JPH::EActivation activeStatus = JPH::EActivation::Activate;
 	if (!scene.IsActive(cc))
 		activeStatus = JPH::EActivation::DontActivate;
-
 	character->AddToPhysicsSystem(activeStatus);
 	cc.bid = character->GetBodyID().GetIndexAndSequenceNumber();
 	cc.componentType = PhysicsComponent::Type::cc;
