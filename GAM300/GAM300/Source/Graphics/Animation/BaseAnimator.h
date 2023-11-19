@@ -67,9 +67,11 @@ public:
 	float m_CurrentTime;
 	float startTime;
 	float endTime;
+	float blendDuration;
 
 	bool playing;
 	int currBlendState{};
+	int blendedBones;
 	enum blendStates {
 		notblending,
 		blending,

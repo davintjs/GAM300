@@ -26,6 +26,8 @@ BaseAnimator::BaseAnimator()
     currentState = nextState = defaultState = nullptr;
     playing = false;
     currBlendState = notblending;
+    blendedBones = 0;
+    blendDuration = 8.f;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -48,7 +50,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         if (nextState && currBlendState != blended)  // might wanna move out of these 2 if statements
         {
             currBlendState = blending;
-            endTime += 100.f; /*blendtime*/
+            endTime += blendDuration;
         }
         
         if (currBlendState != blending)
@@ -70,11 +72,11 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 
     if (currBlendState == blending)/*if (nextState)*/
     {
+        blendedBones = 0;
         CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
-
-        // if fin blending, set m_CurrentTime == endTime
-        //curr it is immediate
-        //currBlendState = blended;
+        
+        if (blendedBones == m_CurrentAnimation.GetBoneCount())
+            currBlendState = blended;
     }
     else
         CalculateBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
@@ -154,11 +156,6 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
 
     if (Bone && NextBone)
     {
-        // curr anim
-        //Bone->Update(currentState->minMax.y);
-        // next anim
-        //NextBone->Update(nextState->minMax.x);
-
         // get anim1 xform
         int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
         // get anim2 xform
@@ -166,13 +163,13 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
         
         // blend factor
         float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
-            100.f/*blendtime*/, m_CurrentTime);
-
+            blendDuration, m_CurrentTime);
+        std::cout /*<< animationTime << "curr, "*/ << nodeName << "bonename \n";
         if (blendFactor >= 1.f)
         {
-            currBlendState = blended;
-            return;
-
+            //currBlendState = blended;
+            //return;
+            ++blendedBones;
         }
 
         // blend them, 

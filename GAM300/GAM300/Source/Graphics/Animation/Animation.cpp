@@ -141,6 +141,7 @@ float Bone::GetBlendFactor(float lastTimeStamp, float blendTime, float animation
     float blendFactor = 0.0f;
     float midWayLength = animationTime - lastTimeStamp;
     blendFactor = midWayLength / blendTime;
+    std::cout << animationTime << "curr, " << lastTimeStamp << "lastTimeStamp, " << midWayLength << "midWayLength, " << blendFactor << "blend\n";
     return blendFactor;
 }
 
