@@ -65,9 +65,10 @@ namespace BeanFactory
 
         #endregion
 
+
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool HasComponent(GameObject gameObject, Type componentType);
+        public static extern bool HasComponent(GameObject gameObject, Type componentType, out bool output);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void CloneGameObject(GameObject gameObject, out GameObject newGameObject);

@@ -80,15 +80,24 @@ namespace BeanFactory
 
         override public T GetComponent<T>()
         {
+
             if (HasComponent<T>())
             {
                 Console.WriteLine("Exists");
                 T component;
-                InternalCalls.Get(gameObject,out component);
+                InternalCalls.Get(_gameObject, out component);
                 return component;
             }
             Console.WriteLine("Component does not exist");
             return null;
+        }
+
+        override public bool HasComponent<T>()
+        {
+            Console.WriteLine("HasComponent script");
+            bool output;
+            InternalCalls.HasComponent(_gameObject, typeof(T), out output);
+            return output;
         }
 
         public Coroutine StartCoroutine(IEnumerator enumerator)

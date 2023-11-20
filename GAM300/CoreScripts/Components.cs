@@ -51,13 +51,16 @@ namespace BeanFactory
             }
         }
 
-        public bool HasComponent<T>()
+        virtual public bool HasComponent<T>()
         {
             Console.WriteLine("HasComponent");
             GameObject gameObj;
             InternalCalls.Get(this,out gameObj);
-            return InternalCalls.HasComponent(gameObj, typeof(T));
+            bool output;
+            InternalCalls.HasComponent(gameObj, typeof(T), out output);
+            return output;
         }
+
         virtual public T GetComponent<T>() where T : Component
         {
             T result;

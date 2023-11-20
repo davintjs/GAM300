@@ -242,7 +242,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 
 	//Checks if entity has a component
-	static bool HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
+	static void HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType, bool& output)
 	{
 		
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
@@ -252,12 +252,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			if (!entity)
 			{
 				PRINT("Has component when gameobject is null!\n");
-				return false;
+				output = false;
+				return;
 			}
-			return ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+			output = ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+			return;
 		}
 		PRINT(mono_type_get_name(managedType), "is invalid", '\n');
-		return false;
+		output = false;
 	}
 
 	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
