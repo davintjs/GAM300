@@ -80,7 +80,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 		if (pair->second == GetType::E<Entity>())
 		{
-			PRINT("Getting entity");
+			PRINT("Getting entity\n");
 		}
 		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
 		ScriptObject<Object> object{ pObject };
@@ -246,7 +246,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		return ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+		if (monoComponentToType.find(managedType) != monoComponentToType.end())
+		{
+			Object* entity(pEntity);
+			if (!entity)
+			{
+				PRINT("Has component when gameobject is null!\n");
+				return false;
+			}
+			return ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+		}
+		PRINT(mono_type_get_name(managedType), "is invalid", '\n');
+		return false;
 	}
 
 	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
@@ -259,7 +270,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Deletes a gameobject
 	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
-		PRINT("DESTROYING GAME OBJECT");
+		PRINT("DESTROYING GAME OBJECT\n");
 		MySceneManager.GetCurrentScene().Destroy<Entity>(pEntity);
 	}
 

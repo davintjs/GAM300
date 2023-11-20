@@ -1,6 +1,10 @@
-﻿using BeanFactory;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BeanFactory;
 using GlmSharp;
-using System;
 
 public class PlatformScript : Script
 {
@@ -50,7 +54,6 @@ public class PlatformScript : Script
     }
     void OnCollisionEnter(PhysicsComponent rb)
     {
-        Console.WriteLine("Platform collided!");
         //detect the player
         if(rb.HasComponent<ThirdPersonController>())
         {
