@@ -80,12 +80,10 @@ public class RangeEnemy : Script
                 direction.y = 0;
                 float angle = (float)Math.Atan2(direction.x, direction.z);
                 transform.localRotation = new vec3(0, angle, 0);
-                Console.WriteLine("Get rigidbody try");
                 GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
-                Console.WriteLine("Get rigidbody success");
 
                 //change to attack state once it has reach it is in range
-                if (vec3.Distance(player.localPosition, transform.localPosition) <= shootDistance)
+                if(vec3.Distance(player.localPosition, transform.localPosition) <= shootDistance)
                 {
                     state = 2;
                 }
@@ -113,7 +111,6 @@ public class RangeEnemy : Script
                 break;
             //death state
             case 3:
-                Console.WriteLine("DESTROY RANGE ENEMY");
                 Destroy(this.gameObject);
                 break;
             //return to previous position state
