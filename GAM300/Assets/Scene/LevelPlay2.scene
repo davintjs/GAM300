@@ -2029,7 +2029,7 @@ MeshRenderer:
 ID: 2427990653864604525
 BoxCollider:
   m_GameObject: {fileID: 2890281298168605979}
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.5, 1, 4.5]
   Offset: [0, 0, 0]
 ---
 ID: 9752894090014538246
@@ -6799,8 +6799,8 @@ GameObject:
 ID: 17881839783787176146
 Transform:
   m_GameObject: {fileID: 3977294589520766028}
-  Translation: [-19.5864334, 2.75296545, 21.8452168]
-  Rotation: [0, 3.14159274, 0]
+  Translation: [-19.5864334, 2.75296545, -36.0158501]
+  Rotation: [-3.14159083, 0, -3.14159083]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
@@ -6815,7 +6815,7 @@ CharacterController:
   Friction: 0.100000001
   Mass: 1
   GravityFactor: 1
-  SlopeLimit: 45
+  SlopeLimit: 60
   IsGrounded: false
 ---
 ID: 16716648517964172389
@@ -6846,6 +6846,9 @@ Script:
   playerWeaponCollider: {fileID: 17150978404869133335}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
   IsMoving: false
+  invulnerableTimer: 1
+  IsJumping: false
+  IsInAnimation: false
   RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
   animator: {fileID: 6628232525372413625}  # Component
@@ -6853,7 +6856,6 @@ Script:
   attackTimer: 0.5
   currentAttackTimer: 0
   isInvulnerable: false
-  invulnerableTimer: 1
   currentInvulnerableTimer: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
 ---
@@ -6940,6 +6942,7 @@ Animator:
   m_GameObject: {fileID: 18364898161930433210}
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: ""
+  Next State: ""
   Time: 0
   StartTime: 0
   EndTime: 0
