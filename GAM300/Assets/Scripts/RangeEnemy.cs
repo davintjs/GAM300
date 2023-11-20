@@ -101,8 +101,10 @@ public class RangeEnemy : Script
             //attack state
             case 2:
                 //spawn bullet
-                GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation) as GameObject;
-                bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
+                GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
+                //You should set the rigid body velocity here
+                bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * moveSpeed;
+                //bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
                 Console.WriteLine("ShootBullet");
                 //change to chase state once player has reach out of range
                 if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)

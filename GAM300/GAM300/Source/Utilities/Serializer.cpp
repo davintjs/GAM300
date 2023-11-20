@@ -504,7 +504,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             }
             else if constexpr (std::is_same<T, Script>())
             {
-                _scene.Add<T>(component.EUID(),component.UUID(), component.scriptId);
+                _scene.Add<T>(component.EUID(),component.UUID(),nullptr,component.scriptId);
             }
             else
             {

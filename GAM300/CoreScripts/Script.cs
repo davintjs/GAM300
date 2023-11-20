@@ -58,6 +58,9 @@ namespace BeanFactory
             InternalCalls.CloneGameObject(gameObject, out newGameObject);
             newGameObject.transform.localPosition = pos;
             newGameObject.transform.localRotation = rot;
+            Console.WriteLine("Set!");
+            Console.WriteLine(newGameObject.transform.localPosition);
+            Console.WriteLine(newGameObject.transform.localRotation);
             return newGameObject;
 
         }

@@ -115,7 +115,11 @@ void PhysicsSystem::Update(float dt) {
 
 		GlmVec3ToJoltVec3(rb.linearVelocity, tmp);
 		bodyInterface->SetLinearVelocity(tmpBID, tmp);
-		//std::cout << "velocity:" << rb.linearVelocity.x << ',' << rb.linearVelocity.y << ',' << rb.linearVelocity.z << std::endl;
+		if (scene.Get<Tag>(entity).name.starts_with("bullet"))
+		{
+			PRINT(scene.Get<Tag>(entity).name, '\n');
+			std::cout << "velocity:" << rb.linearVelocity.x << ',' << rb.linearVelocity.y << ',' << rb.linearVelocity.z << std::endl;
+		}
 		GlmVec3ToJoltVec3(rb.angularVelocity, tmp);
 		bodyInterface->SetAngularVelocity(tmpBID, tmp);
 
@@ -835,18 +839,19 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	// Set enabled status
 	JPH::EActivation enabledStatus = JPH::EActivation::Activate;
 	if (!scene.IsActive(entity) || !scene.IsActive(rb)) {
+		PRINT("DEACTIVATED!");
 		enabledStatus = JPH::EActivation::DontActivate;
 	}
-
-
-
-
 	// If no collider is attached with the rigidbody, reject gameobject
 	if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
+	{
+		PRINT("Gameobject rejected!");
 		return;
 
+	}
 	// Position, Rotation and Scale of collider
 	Transform& t = scene.Get<Transform>(entity);
+	PRINT("Initial T: ", t.translation.x,',', t.translation.y,',', t.translation.z, '\n');
 	JPH::RVec3 scale;
 	JPH::RVec3 pos;
 	Vector3 tpos = t.GetTranslation();
@@ -866,6 +871,7 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	// Motion Type
 	JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
 	if (rb.isStatic) {
+		PRINT("STATIC!\n");
 		motionType = JPH::EMotionType::Static;
 	}
 	else if (rb.isKinematic) {
@@ -883,7 +889,10 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		if (rb.is_trigger)
+		{
 			motionType = JPH::EMotionType::Kinematic;
+			PRINT("KINEMATIC TRIGGER!\n");
+		}
 
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 		if (rb.isStatic)

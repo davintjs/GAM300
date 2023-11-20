@@ -228,7 +228,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				if (offset != std::string::npos)
 					scriptName = scriptName.substr(offset + 1);
 				//Get Mono Script instead
-				return MySceneManager.GetCurrentScene().Add<Script>((Entity&)pEntity,scriptName.c_str());
+				return MySceneManager.GetCurrentScene().Add<Script>((Entity&)pEntity,nullptr,scriptName.c_str());
 			}
 			else
 			{
@@ -262,7 +262,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		output = false;
 	}
 
-	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
+	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity>& out)
 	{
 		Object* obj{ pEntity };
 		out = &MySceneManager.GetCurrentScene().Clone((Entity&)pEntity);

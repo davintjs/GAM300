@@ -1178,7 +1178,7 @@ private:
                         if (old_component)
                             scene.Destroy(scene.Get<T1>(entity));
 
-                        T1* comp = scene.Add<T1>(entity, pair.first);
+                        T1* comp = scene.Add<T1>(entity, nullptr, pair.first);
                         Change newchange(comp);
                         newchange.action = CREATING;
                         EDITOR.History.AddComponentChange(newchange);
