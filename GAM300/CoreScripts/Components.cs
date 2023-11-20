@@ -35,7 +35,6 @@ namespace BeanFactory
         {
             get
             {
-                Console.WriteLine("Get GameObject");
                 GameObject result;
                 InternalCalls.Get(this, out result);
                 return result;
@@ -53,7 +52,6 @@ namespace BeanFactory
 
         virtual public bool HasComponent<T>()
         {
-            Console.WriteLine("HasComponent");
             GameObject gameObj;
             InternalCalls.Get(this,out gameObj);
             bool output;

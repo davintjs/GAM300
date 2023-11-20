@@ -83,7 +83,6 @@ namespace BeanFactory
 
             if (HasComponent<T>())
             {
-                Console.WriteLine("Exists");
                 T component;
                 InternalCalls.Get(_gameObject, out component);
                 return component;
@@ -94,7 +93,6 @@ namespace BeanFactory
 
         override public bool HasComponent<T>()
         {
-            Console.WriteLine("HasComponent script");
             bool output;
             InternalCalls.HasComponent(_gameObject, typeof(T), out output);
             return output;
