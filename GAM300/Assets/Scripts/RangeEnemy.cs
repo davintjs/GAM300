@@ -16,6 +16,7 @@ public class RangeEnemy : Script
     public bool back = false;
     public int state;//Example 1 is walk, 2 is attack, 3 is idle etc.
     public Transform player;
+    public Transform rangeEnemyPos;
 
     //vec3 startingPos;
     public Transform maxUpPos;
@@ -24,8 +25,8 @@ public class RangeEnemy : Script
     public float duration = 2f;
     public float timer = 0f;
 
-    //public GameObject bullet;
-    //public float bulletSpeed = 3f;
+    public GameObject bullet;
+    public float bulletSpeed = 3f;
 
     void Start()
     {
@@ -99,9 +100,9 @@ public class RangeEnemy : Script
                 break;
             //attack state
             case 2:
-                ////spawn bullet
-                //GameObject bulletPrefab = Instantiate(bullet, transform.localPosition, transform.localRotation) as GameObject;
-                //bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
+                //spawn bullet
+                GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation) as GameObject;
+                bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
                 Console.WriteLine("ShootBullet");
                 //change to chase state once player has reach out of range
                 if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)
