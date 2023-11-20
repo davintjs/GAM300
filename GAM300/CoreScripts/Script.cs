@@ -48,7 +48,7 @@ namespace BeanFactory
                 Console.WriteLine("Unable to find gameobject");
             euid = _euid;
             uuid = _uuid;
-            _transform = InternalCalls.Get<Transform>(gameObject);
+            InternalCalls.Get(gameObject,out _transform);
             if (_transform == null)
                 Console.WriteLine("Unable to find transform");
         }
@@ -62,7 +62,7 @@ namespace BeanFactory
 
         }
 
-        public static void Destroy(GameObject gameObject)
+        public void Destroy(GameObject gameObject)
         {
             InternalCalls.DestroyGameObject(gameObject);
         }
@@ -80,7 +80,15 @@ namespace BeanFactory
 
         override public T GetComponent<T>()
         {
-            return InternalCalls.Get<T>(gameObject);
+            if (HasComponent<T>())
+            {
+                Console.WriteLine("Exists");
+                T component;
+                InternalCalls.Get(gameObject,out component);
+                return component;
+            }
+            Console.WriteLine("Component does not exist");
+            return null;
         }
 
         public Coroutine StartCoroutine(IEnumerator enumerator)

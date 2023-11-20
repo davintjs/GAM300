@@ -56,7 +56,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void* Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
+	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, void*& obj)
 	{
 		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -67,16 +67,24 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			{
 				//Script
 				E_ASSERT(false,"Getting scripts not implemented yet!");
-				return nullptr;
+				obj = nullptr;
+				return;
 			}
 			else
 			{
 				//Cant find
 				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
-				return nullptr;
+				obj = nullptr;
+				return;
 			}
 		}
-		return ScriptObject<Object>((MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity)));
+		if (pair->second == GetType::E<Rigidbody>())
+		{
+			PRINT("Getting rb");
+		}
+		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
+		ScriptObject<Object> object{ pObject };
+		obj = &object;
 	}
 
 	static MonoString* GetTag(ScriptObject<Object> pObject)
@@ -236,6 +244,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Checks if entity has a component
 	static bool HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType)
 	{
+		
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
 		return ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
 	}
@@ -250,6 +259,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Deletes a gameobject
 	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
+		PRINT("DESTROYING GAME OBJECT");
 		MySceneManager.GetCurrentScene().Destroy<Entity>(pEntity);
 	}
 

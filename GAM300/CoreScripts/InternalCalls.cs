@@ -76,7 +76,7 @@ namespace BeanFactory
         internal extern static ulong InstantiateGameObject();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyGameObject(GameObject gameObject);
+        public static extern void DestroyGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void DestroyComponent(Component component, Type componentType);
@@ -86,9 +86,9 @@ namespace BeanFactory
         internal static T AddComponent<T>(GameObject gameObject) { return AddComponent<T>(gameObject, typeof(T));}
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static T Get<T>(Object owner, Type objType);
+        public static extern void Get<T>(Object owner, Type objType, out T newObject);
 
-        internal static T Get<T>(Object owner) { return Get<T>(owner,typeof(T)); }
+        public static void Get<T>(Object owner, out T newObject) { Get(owner,typeof(T), out newObject); }
 
         #endregion
 
