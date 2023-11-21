@@ -24,17 +24,21 @@ public class ThirdPersonController : Script
 
     private vec3 VerticalVelocity;
     public bool IsMoving = false;
+    public bool IsJumping = false;
+    public bool IsInAnimation = false;
 
     public float RotationSpeed = 1;
 
     public AudioSource audioSource;
+
+    public Animator animator;
 
     public bool IsAttacking = false;
     public float attackTimer = 1f;
     public float currentAttackTimer;
 
 
-    public float maxHealth = 5f;
+    public float maxHealth = 4f;
     public float currentHealth;
     public bool isInvulnerable = false;
     public float invulnerableTimer = 1f;
@@ -58,12 +62,19 @@ public class ThirdPersonController : Script
         initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
         initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
         initialHealthBarXScale = healthBarFill.GetComponent<Transform>().localScale.x;
+
+        if (gameObject.HasComponent<Animator>())
+        {
+            animator.SetDefaultState("Idle");
+            animator.Play();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //UpdatehealthBar();
+        UpdatehealthBar();
+
         //Testing taking damage
         if (Input.GetKey(KeyCode.T))
         {
@@ -71,6 +82,8 @@ public class ThirdPersonController : Script
             Console.WriteLine("TakeDamage");
             isInvulnerable = true;
         }
+        //UpdatehealthBar();
+
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
         //Handle Movement Input
@@ -88,12 +101,14 @@ public class ThirdPersonController : Script
         //Jump
         if (Input.GetKeyDown(KeyCode.Space) && CC.isGrounded)
         {
+            IsJumping = true;
             AudioManager.instance.jumpVoice.Play();
 
             //dir += (CamYawPivot.up);
             dir += (player.up);
             Console.WriteLine("Jump:");
             Console.WriteLine(dir.x + "," + dir.y + "," + dir.z);
+            animator.SetState("Jump");
         }
 
         //Sprint
@@ -220,19 +235,71 @@ public class ThirdPersonController : Script
             }
         }
 
+        IsInAnimation = true;
+        if (Input.GetKey(KeyCode.LeftShift) && IsMoving && !IsJumping && !IsAttacking)
+        {
+            animator.SetState("Sprint");
+            animator.SetNextState("Sprint");
+        }
+        else if(IsMoving && !IsJumping && !IsAttacking)
+        {
+            animator.SetState("Run");
+            animator.SetNextState("Run");
+        }
+
+        IsJumping = false;
+
+        if (!IsInAnimation)
+            animator.SetState("None");
+
+        if (Input.GetMouseDown(0) && IsAttacking)
+        {
+            IsInAnimation = true;
+            animator.SetState("Attack1");
+        }
+
+        if (!IsAttacking && !animator.IsCurrentState("Attack1") && !animator.IsCurrentState("Jump"))
+        {
+            IsInAnimation = false;
+        }
     }
 
     void UpdatehealthBar()
     {
-        float scaleFactor = (float)currentHealth / (float)maxHealth;
-        float newXScale = initialHealthBarXScale * scaleFactor;
-        float xOffset = (initialHealthBarXScale - newXScale) * 0.5f;
-        vec3 currentPos = healthBarFill.GetComponent<Transform>().localPosition;
-        vec3 currentScale = healthBarFill.GetComponent<Transform>().localScale;
-        currentPos.x = initialHealthBarXpos - xOffset;
-        currentScale.x = newXScale;
-        healthBarFill.GetComponent<Transform>().localPosition = currentPos;
-        healthBarFill.GetComponent<Transform>().localScale = currentScale;
+        //NOTE: tempoary disabled, not working currently
+        //float scaleFactor = (float)currentHealth / (float)maxHealth;
+        //float newXScale = initialHealthBarXScale * scaleFactor;
+        //float xOffset = (initialHealthBarXScale - newXScale) * 0.5f;
+        //vec3 currentPos = healthBarFill.GetComponent<Transform>().localPosition;
+        //vec3 currentScale = healthBarFill.GetComponent<Transform>().localScale;
+        //currentPos.x = initialHealthBarXpos - xOffset;
+        //currentScale.x = newXScale;
+        //healthBarFill.GetComponent<Transform>().localPosition = currentPos;
+        //healthBarFill.GetComponent<Transform>().localScale = currentScale;
+
+        //hard code the health bar for now
+        if(currentHealth == 3)
+        {
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0.15f, -0.035f, 1f);
+        }
+        if (currentHealth == 2)
+        {
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0.11f, -0.035f, 1f);
+        }
+        if (currentHealth == 1)
+        {
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0.05f, -0.035f, 1f);
+        }
+        if(currentHealth <= 0)
+        {
+            Console.WriteLine("GameOver");
+            currentHealth = 0;
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0f, -0.035f, 1f);
+        }
     }
 
     void TakeDamage(int amount)
@@ -240,14 +307,19 @@ public class ThirdPersonController : Script
         if(!isInvulnerable)
         {
             currentHealth -= amount;
-            UpdatehealthBar();
+            //UpdatehealthBar();
         }
         Console.WriteLine("Hit");
-
+        
         if (currentHealth <= 0)
         {
             Console.WriteLine("YouDied");
             PlayerModel.gameObject.SetActive(false);//testing, remove this later
+            animator.SetState("Death");
+        }
+        else
+        {
+            animator.SetState("Stun");
         }
     }
 

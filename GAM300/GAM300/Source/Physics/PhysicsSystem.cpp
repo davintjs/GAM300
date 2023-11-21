@@ -44,6 +44,8 @@ void PhysicsSystem::Init()
 	// Event Subscriptions
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectCreated);
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectDestroyed);
 
 	// Register allocation hook
 	JPH::RegisterDefaultAllocator();
@@ -471,9 +473,6 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	//std::cout << "Physics System scene start test\n";
 
 }
-
-
-
 void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent) 
 {
 	UNREFERENCED_PARAMETER(pEvent);
@@ -506,6 +505,18 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	}
 
 	engineContactListener->pSystem = nullptr;
+}
+void PhysicsSystem::CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent) {
+	if (!pEvent || !pEvent->pObject)
+		return;
+	AddRigidBody(pEvent);
+}
+
+void PhysicsSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>* pEvent)
+{
+	if (!pEvent || !pEvent->pObject)
+		return;
+	DeleteBody(pEvent->pObject->bid);
 }
 
 void PhysicsSystem::PopulatePhysicsWorld() {
@@ -733,81 +744,6 @@ void PhysicsSystem::UpdateGameObjects() {
 	}
 }
 
-void PhysicsSystem::TestRun() {
-
-	ball = &MySceneManager.GetCurrentScene().GetArray<Entity>()[1];
-	ball2 = &MySceneManager.GetCurrentScene().GetArray<Entity>()[2];
-
-	// Create the JPH physics world and INIT it
-	physicsSystem = new JPH::PhysicsSystem();
-
-	// Get ptr to JPH Body interface which is used to access JPH bodies (physics objects)
-	bodyInterface = &(physicsSystem->GetBodyInterface());
-
-	// Initialize Physics World
-	physicsSystem->Init(maxObjects, maxObjectMutexes, maxObjectPairs, maxContactConstraints,
-		bpLayerInterface, objvbpLayerFilter, objectLayerPairFilter);
-
-	physicsSystem->SetContactListener(engineContactListener);
-
-
-	// Optimise broad phase only if there is an excess amount of bodies
-	//physicsSystem->OptimizeBroadPhase();
-	//std::cout << "Number of bodies before:" << physicsSystem->GetNumBodies() << std::endl;
-
-	//Creating a rigid body that will be used as a floor 
-	//For this, we create the settings for the collision volume such as the shape 
-	floorShapeSettings = new JPH::BoxShapeSettings(JPH::Vec3(300.0f, 10.0f, 300.0f));
-	//Creating the shape 
-	JPH::ShapeSettings::ShapeResult floorShapeResult = floorShapeSettings->Create();
-	floorShape = new JPH::ShapeRefC(floorShapeResult.Get()); //	Can also check for HasError() or GetError() 
-	//Creating the settings for the body itself 
-	JPH::BodyCreationSettings floorSettings(*floorShape, JPH::RVec3(0.0, 0.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Static, EngineObjectLayers::STATIC);
-	JPH::Body* floor = bodyInterface->CreateBody(floorSettings);
-	//Add it to the real world 
-	bodyInterface->AddBody(floor->GetID(), JPH::EActivation::Activate);
-
-
-	//Creating a rigid body that will be used as a floor 
-	//For this, we create the settings for the collision volume such as the shape 
-	JPH::BoxShapeSettings* bss = new JPH::BoxShapeSettings(JPH::Vec3(25.0f, 25.0f, 25.0f));
-	//Creating the shape 
-	JPH::ShapeSettings::ShapeResult boxShapeResult = bss->Create();
-	JPH::ShapeRefC* boxShape = new JPH::ShapeRefC(boxShapeResult.Get()); //	Can also check for HasError() or GetError() 
-	//Creating the settings for the body itself 
-	JPH::BodyCreationSettings boxSettings(*boxShape, JPH::RVec3(0.0, 100.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
-	JPH::Body* box = bodyInterface->CreateBody(boxSettings);
-	//Add it to the real world 
-	bodyInterface->AddBody(box->GetID(), JPH::EActivation::Activate);
-	testBallID = box->GetID();
-
-	//Creating a rigid body that will be used as a floor 
-	//For this, we create the settings for the collision volume such as the shape 
-	JPH::BoxShapeSettings* bss2 = new JPH::BoxShapeSettings(JPH::Vec3(25.0f, 25.0f, 25.0f));
-	//Creating the shape 
-	JPH::ShapeSettings::ShapeResult boxShapeResult2 = bss2->Create();
-	JPH::ShapeRefC* boxShape2 = new JPH::ShapeRefC(boxShapeResult2.Get()); //	Can also check for HasError() or GetError() 
-	//Creating the settings for the body itself 
-	JPH::BodyCreationSettings boxSettings2(*boxShape2, JPH::RVec3(0.0, 200.0, 35.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
-	JPH::Body* box2 = bodyInterface->CreateBody(boxSettings2);
-	//Add it to the real world 
-	bodyInterface->AddBody(box2->GetID(), JPH::EActivation::Activate);
-	testBallID2 = box2->GetID();
-
-
-	////Next, we add a dynamic body (ball) to test 
-	//sphereShape = new JPH::SphereShape(25.0f);
-	//JPH::BodyCreationSettings sphereSettings(sphereShape, JPH::RVec3(0.0, 100.0, 0.0), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, EngineObjectLayers::DYNAMIC);
-	//JPH::BodyID sphere_ID = bodyInterface->CreateAndAddBody(sphereSettings, JPH::EActivation::Activate);
-	////To give the body a velocity as we will be interacting with it 
-	//bodyInterface->SetLinearVelocity(sphere_ID, JPH::Vec3(0.0f, 0.0f, 0.0f));
-	//testBallID = sphere_ID;
-
-	//std::cout << "Number of bodies after:" << physicsSystem->GetNumBodies() << std::endl;
-
-	//PopulatePhysicsWorld();
-}
-
 void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 	if (!physicsSystem)
 		return;
@@ -880,6 +816,148 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 }
 
+void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
+
+	Scene& scene = MySceneManager.GetCurrentScene();	
+	
+	if (!pEvent || !pEvent->pObject)
+		return;
+	if (!physicsSystem)
+		return;
+
+	Rigidbody& rb = *(pEvent->pObject);
+
+	if (rb.state == DELETED)
+		return;
+
+	Entity& entity = scene.Get<Entity>(rb);
+
+	// Set enabled status
+	JPH::EActivation enabledStatus = JPH::EActivation::Activate;
+	if (!scene.IsActive(entity) || !scene.IsActive(rb)) {
+		enabledStatus = JPH::EActivation::DontActivate;
+	}
+
+
+
+
+	// If no collider is attached with the rigidbody, reject gameobject
+	if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
+		return;
+
+	// Position, Rotation and Scale of collider
+	Transform& t = scene.Get<Transform>(entity);
+	JPH::RVec3 scale;
+	JPH::RVec3 pos;
+	Vector3 tpos = t.GetTranslation();
+	GlmVec3ToJoltVec3(tpos, pos);
+	JPH::Quat rot;
+	Vector3 trot = t.GetRotation();
+	GlmVec3ToJoltQuat(trot, rot);
+
+	// Linear + Angular Velocity
+	JPH::RVec3 linearVel;
+	GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
+	JPH::RVec3 angularVel;
+	GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
+
+
+
+	// Motion Type
+	JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
+	if (rb.isStatic) {
+		motionType = JPH::EMotionType::Static;
+	}
+	else if (rb.isKinematic) {
+		motionType = JPH::EMotionType::Kinematic;
+	}
+
+	// Create rigidbody's collider shape
+	if (scene.Has<BoxCollider>(entity)) {
+
+		BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+		Vector3 colliderScale(boxCollider.dimensions.x * t.scale.x / 2.f, boxCollider.dimensions.y * t.scale.y / 2.f, boxCollider.dimensions.z * t.scale.z / 2.f);
+		GlmVec3ToJoltVec3(colliderScale, scale);
+
+		Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+		GlmVec3ToJoltVec3(finalPos, pos);
+
+		if (rb.is_trigger)
+			motionType = JPH::EMotionType::Kinematic;
+
+		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+		if (rb.isStatic)
+			boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+
+		// Set all necessary settings for the body
+		// Friction
+		boxCreationSettings.mFriction = rb.friction;
+		// Linear Velocity
+		boxCreationSettings.mLinearVelocity = linearVel;
+		// Angular Velocity
+		boxCreationSettings.mAngularVelocity = angularVel;
+		// Sensor settings 
+		boxCreationSettings.mIsSensor = rb.is_trigger;
+		if (rb.is_trigger)
+			boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+
+		boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+		boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
+		// Create the actual jolt body
+		JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
+		bodyInterface->AddBody(box->GetID(), enabledStatus);
+		rb.bid = box->GetID().GetIndexAndSequenceNumber();
+
+	}
+	else if (scene.Has<SphereCollider>(entity)) {
+
+		SphereCollider& sc = scene.Get<SphereCollider>(entity);
+		Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
+		GlmVec3ToJoltVec3(finalPos, pos);
+		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+		if (rb.isStatic)
+			sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+		// Set all necessary settings for the body
+		// Friction
+		sphereCreationSettings.mFriction = rb.friction;
+		// Linear Velocity
+		sphereCreationSettings.mLinearVelocity = linearVel;
+		// Angular Velocity
+		sphereCreationSettings.mAngularVelocity = angularVel;
+		// Sensor settings
+		sphereCreationSettings.mIsSensor = rb.is_trigger;
+
+		JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
+		bodyInterface->AddBody(sphere->GetID(), enabledStatus);
+		rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
+	}
+	else if (scene.Has<CapsuleCollider>(entity)) {
+
+
+		CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
+		JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+
+		if (rb.isStatic)
+			capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+		// Set all necessary settings for the body
+		// Friction
+		capsuleCreationSettings.mFriction = rb.friction;
+		// Linear Velocity
+		capsuleCreationSettings.mLinearVelocity = linearVel;
+		// Angular Velocity
+		capsuleCreationSettings.mAngularVelocity = angularVel;
+		// Sensor settings
+		capsuleCreationSettings.mIsSensor = rb.is_trigger;
+
+		JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
+		bodyInterface->AddBody(capsule->GetID(), enabledStatus);
+		rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
+	}
+
+}
 
 
 // Create and add a Jolt Character to a Jolt physics system using a character controller
@@ -985,6 +1063,9 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 	collisionResolution.back().bid1 = subShapePair.GetBody1ID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = subShapePair.GetBody2ID().GetIndexAndSequenceNumber();
 }
+
+
+
 #pragma endregion
 
 #pragma region MathConversionHelpers

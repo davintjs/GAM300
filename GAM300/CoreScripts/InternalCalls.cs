@@ -14,8 +14,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 
 using System;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-
+using GlmSharp;
 
 namespace BeanFactory
 {
@@ -27,13 +28,12 @@ namespace BeanFactory
         internal extern static void PauseAllAnimation();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void PlayAllAnimation();
-
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void PlayAnimation(ulong ID);
-
+        internal extern static void PlayAnimation(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void PauseAnimation(ulong ID);
-
+        internal extern static void PauseAnimation(Animator animator);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void StopAnimation(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -41,11 +41,17 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetFrame(ulong ID, int frame);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void StopAnimation(ulong ID);
-
+        internal extern static float GetProgress(Animator animator);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static bool IsCurrentState(Animator animator, string state);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetDefaultState(Animator animator, string defaultState);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetState(Animator animator, string state);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetNextState(Animator animator, string state);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetAnimationColor(ulong ID, out Color color);
-
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetAnimationColor(ulong ID, ref Color color);
         #endregion
@@ -59,18 +65,19 @@ namespace BeanFactory
 
         #endregion
 
+
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool HasComponent(GameObject gameObject, Type componentType);
+        public static extern bool HasComponent(GameObject gameObject, Type componentType, out bool output);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ulong CloneGameObject(ulong ID);
+        public static extern void CloneGameObject(GameObject gameObject, out GameObject newGameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static ulong InstantiateGameObject();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyGameObject(GameObject gameObject);
+        public static extern void DestroyGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void DestroyComponent(Component component, Type componentType);
@@ -80,9 +87,9 @@ namespace BeanFactory
         internal static T AddComponent<T>(GameObject gameObject) { return AddComponent<T>(gameObject, typeof(T));}
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static T Get<T>(Object owner, Type objType);
+        public static extern void Get<T>(Object owner, Type objType, out T newObject);
 
-        internal static T Get<T>(Object owner) { return Get<T>(owner,typeof(T)); }
+        public static void Get<T>(Object owner, out T newObject) { Get(owner,typeof(T), out newObject); }
 
         #endregion
 

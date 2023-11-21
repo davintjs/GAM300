@@ -54,11 +54,10 @@ struct Scene
 	template <typename T, typename... Ts>
 	void LinkReferences(ReferencesTable& storage);
 
-	void Clone(Entity& source);
+	Entity& Clone(Entity& source);
 
 	template <typename T>
 	void CopyValues(T& source, T& dest);
-
 
 	//Copy assignment
 	Scene& operator=(Scene& rhs);
