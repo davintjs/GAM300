@@ -72,7 +72,7 @@ void Scene::ClearBuffer()
 {
 	for (Entity* pEntity : entitiesDeletionBuffer)
 	{
-		layer.erase(std::find(layer.begin(), layer.end(), pEntity->euid));
+		layer.remove(pEntity->euid);
 		entities.erase(*pEntity);
 	}
 	entitiesDeletionBuffer.clear();

@@ -9,7 +9,7 @@ public class EnemyBullet : Script
 {
     void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Enemy bullet hit something");
+        Console.WriteLine("Enemy bullet hit object with tag: " + GetTag(other));
         if (GetTag(other) != "Enemy")
         {
             Console.WriteLine("Self destructed bullet");
