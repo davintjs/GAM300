@@ -1,7 +1,7 @@
 Material:
   Material Name: Glass
-  Shader: 1
-  Albedo: [1, 1, 1, 1]
+  Shader: 0
+  Albedo: [1, 1, 1, 0.089171946]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1

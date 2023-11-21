@@ -1,5 +1,5 @@
-[2023-11-17 19:39:04.019] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 236)
+[2023-11-20 09:28:55.853] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  HXä´æ COULD NOT BE FOUND IN SCRIPT
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 738)
 

@@ -44,16 +44,25 @@ namespace BeanFactory
         private void Initialize(GameObject gameObj,UInt64 _euid, UInt64 _uuid)
         {
             _gameObject = gameObj;
+            if (_gameObject == null)
+                Console.WriteLine("Unable to find gameobject");
             euid = _euid;
             uuid = _uuid;
-            _transform = InternalCalls.Get<Transform>(gameObject);
+            InternalCalls.Get(gameObject,out _transform);
+            if (_transform == null)
+                Console.WriteLine("Unable to find transform");
         }
-        public static T Instantiate<T>(T original, vec3 pos, vec3 rotation)
+        public GameObject Instantiate(GameObject gameObject, vec3 pos, vec3 rot)
         {
-            return original;
+            GameObject newGameObject;
+            InternalCalls.CloneGameObject(gameObject, out newGameObject);
+            newGameObject.transform.localPosition = pos;
+            newGameObject.transform.localRotation = rot;
+            return newGameObject;
+
         }
 
-        public static void Destroy(GameObject gameObject)
+        public void Destroy(GameObject gameObject)
         {
             InternalCalls.DestroyGameObject(gameObject);
         }
@@ -71,7 +80,22 @@ namespace BeanFactory
 
         override public T GetComponent<T>()
         {
-            return InternalCalls.Get<T>(gameObject);
+
+            if (HasComponent<T>())
+            {
+                T component;
+                InternalCalls.Get(_gameObject, out component);
+                return component;
+            }
+            Console.WriteLine("Component does not exist");
+            return null;
+        }
+
+        override public bool HasComponent<T>()
+        {
+            bool output;
+            InternalCalls.HasComponent(_gameObject, typeof(T), out output);
+            return output;
         }
 
         public Coroutine StartCoroutine(IEnumerator enumerator)

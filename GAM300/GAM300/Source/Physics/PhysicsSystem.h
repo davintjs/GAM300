@@ -216,6 +216,8 @@ public:
 	void CallbackSceneStop(SceneStopEvent* pEvent);
 	// Callback function for when a rigidbody is created
 	void CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent);
+	// Callback function for when a rigidbody is destroyed
+	void CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>*pEvent);
 
 	void AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent);
 

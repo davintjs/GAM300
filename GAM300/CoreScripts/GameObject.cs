@@ -21,7 +21,6 @@ namespace BeanFactory
 {
     public class GameObject
     {
-
         public bool activeSelf
         {
             get
@@ -45,13 +44,17 @@ namespace BeanFactory
         //Checks if a gameObject has a component by calling back to c++
         public bool HasComponent<T>()
         {
-            return InternalCalls.HasComponent(this, typeof(T));
+            bool output;
+            InternalCalls.HasComponent(this, typeof(T),out output);
+            return output;
         }
 
         //Gets a component by calling back to c++
         public T GetComponent<T>() where T : Component, new()
         {
-            return InternalCalls.Get<T>(this);
+            T component;
+            InternalCalls.Get(this, out component);
+            return component;
         }
 
         public T AddComponent<T>() where T : Component, new()
@@ -69,7 +72,9 @@ namespace BeanFactory
         {
             get
             {
-                return InternalCalls.Get<Transform>(this);
+                Transform component;
+                InternalCalls.Get(this, out component);
+                return component;
             }
         }
     }

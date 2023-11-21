@@ -26,31 +26,44 @@ namespace BeanFactory
         {
             get
             {
-                return InternalCalls.Get<Transform>(this);
+                Transform result;
+                InternalCalls.Get(this, out result);
+                return result;
             }
         }
         virtual public GameObject gameObject 
         {
             get
             {
-                return InternalCalls.Get<GameObject>(this);
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
             } 
         }
         virtual public CharacterController charactercontroller
         {
             get
             {
-                return InternalCalls.Get<CharacterController>(this);
+                CharacterController result;
+                InternalCalls.Get(this, out result);
+                return result;
             }
         }
 
-        public bool HasComponent<T>()
+        virtual public bool HasComponent<T>()
         {
-            return gameObject.HasComponent<T>();
+            GameObject gameObj;
+            InternalCalls.Get(this,out gameObj);
+            bool output;
+            InternalCalls.HasComponent(gameObj, typeof(T), out output);
+            return output;
         }
+
         virtual public T GetComponent<T>() where T : Component
         {
-            return InternalCalls.Get<T>(this);
+            T result;
+            InternalCalls.Get(this, out result);
+            return result;
         }
 
         virtual public T AddComponent<T>() where T : Component
@@ -103,7 +116,7 @@ namespace BeanFactory
     public class PhysicsComponent : Component
     {
         uint padding;
-        PhysicsBodyType type;
+        uint type;
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -45,6 +45,7 @@ void PhysicsSystem::Init()
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectCreated);
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectDestroyed);
 
 	// Register allocation hook
 	JPH::RegisterDefaultAllocator();
@@ -509,6 +510,13 @@ void PhysicsSystem::CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent)
 	if (!pEvent || !pEvent->pObject)
 		return;
 	AddRigidBody(pEvent);
+}
+
+void PhysicsSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>* pEvent)
+{
+	if (!pEvent || !pEvent->pObject)
+		return;
+	DeleteBody(pEvent->pObject->bid);
 }
 
 void PhysicsSystem::PopulatePhysicsWorld() {
@@ -1055,6 +1063,9 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 	collisionResolution.back().bid1 = subShapePair.GetBody1ID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = subShapePair.GetBody2ID().GetIndexAndSequenceNumber();
 }
+
+
+
 #pragma endregion
 
 #pragma region MathConversionHelpers
