@@ -48,9 +48,8 @@ public class MainMenu : Script
         if (Input.GetKeyDown(KeyCode.Space))
         {
             uibutton.Play();
-            SceneManager.LoadScene("LevelPlay2.scene");
+            SceneManager.LoadScene("LevelPlay2");
         }
-       
     }
 
     void selfFlicker()

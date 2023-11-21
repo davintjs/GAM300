@@ -203,6 +203,10 @@ namespace BeanFactory
             } 
         }
 
+        public void SetParent(Transform parent)
+        {
+            InternalCalls.SetTransformParent(this, parent);
+        }
     }
 
 
