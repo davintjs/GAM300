@@ -408,7 +408,9 @@ struct Particle : Object
 struct ParticleComponent : Object
 {
 	ParticleComponent() {}
-	Engine::GUID<TextureAsset> ParticleTexture{ 0 };
+	Engine::GUID<MeshAsset> meshID{ ASSET_CUBE };
+	Engine::GUID<MaterialAsset> materialGUID{ 0 };
+	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
 
 	int numParticles_ = 1;
 	float particleLifetime_ = 3.0f;
@@ -428,7 +430,9 @@ struct ParticleComponent : Object
 
 property_begin_name(ParticleComponent, "ParticleComponent")
 {
-	property_var(ParticleTexture).Name("Particle Texture"),
+	property_var(meshID).Name("Mesh"),
+	property_var(materialGUID).Name("Material"),
+	//property_var(ParticleTexture).Name("Particle Texture"),
 	property_var(numParticles_).Name("Number Of Particles"),
 		property_var(particleLifetime_).Name("Particle Lifetime"),
 		property_var(particleEmissionRate_).Name("Particle Emission Rate"),

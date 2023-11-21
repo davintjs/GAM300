@@ -40,14 +40,18 @@ void ParticleRenderer::Update(float dt) {
 
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    GLuint vao = MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vaoID; // for now particles are all cubes
-    InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
+    
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
-        hasTexture = particleComponent.ParticleTexture.longInt[0] ? true : false;
+        GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
+        GLenum prim = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->prim; // for now particles are all cubes
+        InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
+        Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(particleComponent.materialGUID);
+
+        hasTexture = currMatInstance.albedoTexture.longInt[0] ? true : false;
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(particleComponent.ParticleTexture));
+        glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(currMatInstance.albedoTexture));
 
         if (particleComponent.is2D) {
             glBindBuffer(GL_ARRAY_BUFFER, quadSRTBuffer);
@@ -67,19 +71,27 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
             glGetUniformLocation(shader.GetHandle(), "View");
         GLint campos =
             glGetUniformLocation(shader.GetHandle(), "camPos");
-        GLint _2d =
-            glGetUniformLocation(shader.GetHandle(), "is2D");
-        GLint texture =
-            glGetUniformLocation(shader.GetHandle(), "hasTexture");
-        
+        GLint AoConstant =
+            glGetUniformLocation(shader.GetHandle(), "AoConstant");
+        GLint EmissionConstant =
+            glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
+        GLint Colour =
+            glGetUniformLocation(shader.GetHandle(), "frag_Albedo");
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));
         glUniformMatrix4fv(view, 1, GL_FALSE,
             glm::value_ptr(_camera.GetViewMatrix()));
-        glUniform3fv(campos, 1,
-            glm::value_ptr(_camera.GetCameraPosition()));
+        glUniform4fv(Colour, 1, glm::value_ptr(glm::vec4(currMatInstance.albedoColour)));
+        glUniform1f(AoConstant, currMatInstance.aoConstant);
+        glUniform1f(EmissionConstant, currMatInstance.emissionConstant);
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), RENDERER.GetBloomThreshold());
+
+        GLint _2d = glGetUniformLocation(shader.GetHandle(), "is2D");
         glUniform1i(_2d, particleComponent.is2D);
-        glUniform1i(texture, hasTexture);
+        GLint boolean1 = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+        glUniform1i(boolean1, hasTexture);
+        
 
         if (particleComponent.is2D) {
             glBindVertexArray(quadVAO);
@@ -87,7 +99,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         }
         else {
             glBindVertexArray(vao);
-            glDrawElementsInstanced(GL_TRIANGLES, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
+            glDrawElementsInstanced(prim, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
         }
         glBindVertexArray(0);
 

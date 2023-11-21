@@ -21,9 +21,9 @@ GameObject:
 ID: 1373255009547200345
 Transform:
   m_GameObject: {fileID: 14989680110700367717}
-  Translation: [0, 1.21712852, 0]
+  Translation: [-3.7252903e-09, 1.21712852, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.5, 0.5, 0.5]
+  Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
   m_Children:
     []
@@ -37,12 +37,15 @@ MeshRenderer:
 ID: 8120480805772412597
 ParticleComponent:
   m_GameObject: {fileID: 14989680110700367717}
-  Particle Texture: {guid: 355e9bbf3c414b0b2d31f04ffbde083b}
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Particle Texture: {guid: 00000000000000000000000000000000}
   Number Of Particles: 20
   Particle Lifetime: 2
-  Particle Emission Rate: 100
-  Particle Min Scale: 0.100000001
-  Particle Max Scale: 0.5
-  Particle Scale Rate: 0.5
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 0.150000006
   Particle Speed: 1
-  2D particle: true
+  2D particle: false
+  Looping: true

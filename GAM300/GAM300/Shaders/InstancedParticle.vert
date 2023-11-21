@@ -11,6 +11,7 @@ layout (location = 3) in vec2 aVertexTexCoord; //UVs info
 layout (location = 6) in mat4 SRT;
 
 layout (location = 0) out vec2 texCoord;
+layout (location = 1) out vec3 WorldPos;
 
 uniform mat4 persp_projection;
 uniform mat4 View;
@@ -22,6 +23,12 @@ void main()
 //		gl_Position = persp_projection * SRT * vec4(aVertexPosition, 1.0f);
 //		return;
 //	}
-	gl_Position = persp_projection * View * SRT * vec4(aVertexPosition, 1.0f);
+	WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
+	if(is2D){
+		gl_Position = persp_projection * View * vec4(WorldPos,1.0); // pls inverse the rotation mtx
+	}else{
+		gl_Position = persp_projection * View * vec4(WorldPos,1.0);
+	}
+	//gl_Position = persp_projection * View * vec4(WorldPos,1.0);
 	texCoord = aVertexTexCoord;
 }

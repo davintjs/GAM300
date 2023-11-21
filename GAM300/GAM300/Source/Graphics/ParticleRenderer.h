@@ -18,7 +18,13 @@ public:
 	std::vector<glm::mat4> particleSRT;
 	GLuint quadVAO{};
 	GLuint quadSRTBuffer{};
+
 	bool hasTexture{false};
+	bool hasNormal{false};
+	bool hasRoughness{false};
+	bool hasMetallic{false};
+	bool hasAO{false};
+	bool hasEmission{false};
 };
 
 #endif
