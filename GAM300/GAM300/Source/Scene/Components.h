@@ -417,6 +417,8 @@ struct ParticleComponent : Object
 	float particleMaxScale_ = 1.0f;
 	float particleScaleRate_ = 0.5f;
 	float speed_ = 0.5f;
+	float desiredLifetime = 5.0f;
+	bool particleLooping = false;
 
 	bool is2D = false;
 	std::vector<Particle> particles_;
@@ -434,7 +436,8 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleMaxScale_).Name("Particle Max Scale"),
 		property_var(particleScaleRate_).Name("Particle Scale Rate"),
 		property_var(speed_).Name("Particle Speed"),
-		property_var(is2D).Name("2D particle")
+		property_var(is2D).Name("2D particle"),
+		property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
 //

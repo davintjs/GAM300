@@ -56,6 +56,7 @@ public:
 	void Update(float dt);
 	void Exit();
     std::vector<Random> random;
+    
 };
 
 #endif
