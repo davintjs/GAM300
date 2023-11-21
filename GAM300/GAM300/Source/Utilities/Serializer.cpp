@@ -482,7 +482,6 @@ void DeserializeComponent(const DeComHelper& _helper)
                 }
             , entry.second);
         });
-
     if (!_helper.linker)
     {
         // Store in entity
@@ -508,8 +507,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             }
             else
             {
-                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID());
-                *pComponent = component;
+                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID(), &component);
             }
         }
         else

@@ -345,6 +345,10 @@ bool Scene::IsActive(T& object)
 		if (isActive && t.parent)
 		{
 			Entity& parentEntity = Get<Entity>(t.parent);
+			if (&parentEntity == nullptr)
+			{
+				return false;
+			}
 			return IsActive(parentEntity);
 		}
 
