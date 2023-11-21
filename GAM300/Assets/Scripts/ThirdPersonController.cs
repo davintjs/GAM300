@@ -280,24 +280,24 @@ public class ThirdPersonController : Script
         //hard code the health bar for now
         if(currentHealth == 3)
         {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0.15f, -0.035f, 1f);
         }
         if (currentHealth == 2)
         {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0.11f, -0.035f, 1f);
         }
         if (currentHealth == 1)
         {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0.05f, -0.035f, 1f);
         }
         if(currentHealth <= 0)
         {
             Console.WriteLine("GameOver");
             currentHealth = 0;
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 1.817f);
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0f, -0.035f, 1f);
         }
     }
