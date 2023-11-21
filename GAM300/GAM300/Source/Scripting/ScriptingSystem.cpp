@@ -38,7 +38,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}};
+#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
+
+#define ACQUIRE_LOCK_IF_SCRIPT_THREAD(LockName) (if (SCRIPTING_THREAD_ID == std::this_thread::get_id()) {ACQUIRE_SCOPED_LOCK(##LockName);})
 
 #define SCRIPT_METHOD(mClass ,methodName, paramCount) DefaultMethods[DefaultMethodTypes::methodName] = mono_class_get_method_from_name(mClass, #methodName, paramCount);
 
@@ -664,24 +666,16 @@ MonoObject* ScriptingSystem::Invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 	E_ASSERT(mMethod,"MONO METHOD WAS NULLPTR");
 	if (mObj && mMethod && mAppDomain)
 	{
-		try
+		MonoObject* exception = NULL;
+		E_ASSERT(mono_object_get_domain(mObj) == mAppDomain,"Mono object doesn't belong to this domain");
+		MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
+		if (exception)
 		{
-			MonoObject* exception = NULL;
-			E_ASSERT(mono_object_get_domain(mObj) == mAppDomain,"Mono object doesn't belong to this domain");
-			MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
-			if (exception)
-			{
-				const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
-				PRINT(message, '\n');
-				//MyEventSystem->publish(new EditorConsoleLogEvent(message));
-			}
-			return obj;
+			const char* message = mono_string_to_utf8(mono_object_to_string(exception, NULL));
+			PRINT(message, '\n');
+			//MyEventSystem->publish(new EditorConsoleLogEvent(message));
 		}
-		catch (...)
-		{
-
-
-		}
+		return obj;
 	}
 	return nullptr;
 }
@@ -806,10 +800,14 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 		{
 			if (script->state == DELETED) continue;
 			//Incase collision disables gameobject
-			if (!scene.IsActive(*script))
-				continue;
+			if (!&e1 || !&e2)
+				break;
+			if (!scene.IsActive(e1))
+				break;
 			if (!scene.IsActive(e2))
 				break;
+			if (!scene.IsActive(*script))
+				continue;
 			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
@@ -820,15 +818,21 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 		}
 	}
 
-	if (scene.Has<Script>(e2) && scene.IsActive(e2))
+
+
+	if (&e2 && scene.Has<Script>(e2) && scene.IsActive(e2))
 	{
 		for (Script* script : scene.GetMulti<Script>(e2))
 		{
+			if (!&e1 || !&e2)
+				break;
 			//Incase collision disables gameobject
-			if (!scene.IsActive(*script))
-				continue;
+			if (!scene.IsActive(e2))
+				break;
 			if (!scene.IsActive(e1))
 				break;
+			if (!scene.IsActive(*script))
+				continue;
 			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
@@ -970,7 +974,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 
 void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 {
-	ACQUIRE_SCOPED_LOCK(Mono);
+	if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) ACQUIRE_SCOPED_LOCK(Mono);
 	GetFieldValue(pEvent->script,pEvent->fieldName,pEvent->field);
 }
 
@@ -983,7 +987,7 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent)
 {
-	ACQUIRE_SCOPED_LOCK(Mono);
+	if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) ACQUIRE_SCOPED_LOCK(Mono);
 	static std::vector<const char*> fieldNames;
 	pEvent->pStart = nullptr;
 	pEvent->count = 0;

@@ -1,5 +1,5 @@
-[2023-11-20 09:28:55.853] [Error] [critical] 
-Caused By:	mClassField
-Info:		FIELD  HXä´æ COULD NOT BE FOUND IN SCRIPT
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 738)
+[2023-11-21 17:00:18.216] [Error] [critical] 
+Caused By:	start
+Info:		Couldn't find index
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\ObjectsList.cpp (Line: 249)
 

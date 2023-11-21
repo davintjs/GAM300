@@ -53,13 +53,15 @@ void DebugDraw::Update(float)
 
 			continue;
 		}
+		if (!scene.IsActive(bc))
+			continue;
+		Entity& entity = scene.Get<Entity>(bc);
+
+		if (!scene.IsActive(entity)) continue;
 		//++index;
 		//std::cout << "hit : " << index << "\n";
 
 		Transform& t = scene.Get<Transform>(bc);
-		Entity& entity = scene.Get<Entity>(bc);
-
-		if (!scene.IsActive(entity) || !scene.IsActive(bc)) continue;
 
 		/*geometryDebugData temp;
 		if (scene.Has<MeshRenderer>(entity))

@@ -166,7 +166,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 			}
 		}
 	}
-
 	if constexpr (sizeof...(Ts) != 0)
 	{
 		LinkReferences<Ts...>(storage);
@@ -248,7 +247,6 @@ void Scene::Destroy(T& object)
 		Transform& transform = Get<Transform>(object);
 		transform.SetParent(nullptr);
 		auto children{ transform.child };
-
 		for (auto& child : children)
 		{
 			Destroy<Entity>(Get<Entity>(child));

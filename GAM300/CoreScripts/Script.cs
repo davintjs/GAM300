@@ -55,7 +55,9 @@ namespace BeanFactory
         public GameObject Instantiate(GameObject gameObject, vec3 pos, vec3 rot)
         {
             GameObject newGameObject;
+            Console.WriteLine("Clone start");
             InternalCalls.CloneGameObject(gameObject, out newGameObject);
+            Console.WriteLine("Clone end");
             newGameObject.transform.localPosition = pos;
             newGameObject.transform.localRotation = rot;
             return newGameObject;

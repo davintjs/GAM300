@@ -69,11 +69,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AssetManager,
 		InputSystem,
 		EditorSystem,
-		SceneManager,
 		ScriptingSystem,
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
+		SceneManager,
 		//ParticleManager,
 		GraphicsSystem,
 		Blackboard,
