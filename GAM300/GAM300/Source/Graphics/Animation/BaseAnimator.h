@@ -29,32 +29,58 @@ public:
 
 	void UpdateAnimation(float dt, glm::mat4& pTransform);
 
+	void ChangeState();
+
 	void PlayAnimation(Animation* pAnimation);
 
 	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
 
-	std::vector<glm::mat4> GetFinalBoneMatrices();
-	std::vector<glm::mat4>* GetFinalBoneMatricesPointer();
+	// Sets the default state of the animator
+	void SetDefaultState(const std::string& _defaultState);
+
+	// Sets the next state to run after the current state ends
+	void SetNextState(const std::string& _nextState);
+
+	// Interrupt the current state and sets another state to run
+	void SetState(const std::string& _state);
+
+	// Gets the current animation state progress
+	float GetProgress() { return m_CurrentTime / (endTime - startTime); }
+
+	AnimationState* GetCurrentState() { return currentState; }
+
+	std::vector<glm::mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }
+	std::vector<glm::mat4>* GetFinalBoneMatricesPointer() { return &m_FinalBoneMatrices; }
 
 	bool AnimationAttached();
 
 	std::vector<glm::mat4> m_FinalBoneMatrices;
 	Engine::GUID<AnimationAsset> animID{0};
 	Engine::GUID<AnimationAsset> prevAnimID{0};
+	AnimationState* defaultState; // Bean: Temporary
+	AnimationState* currentState;
+	AnimationState* nextState;
+	std::string stateName;
+	std::string stateNextName;
 	int m_FinalBoneMatIdx; // to access copy of original anim
 	int m_AnimationIdx; // to access copy of original anim
 	float m_CurrentTime;
 	float startTime;
 	float endTime;
 
+	bool playing;
+
 	property_vtable();
 };
 
 property_begin_name(BaseAnimator, "BaseAnimator") {
 	property_var(animID).Name("Animation"),
+	property_var(stateName).Name("Current State").Flags(property::flags::SHOW_READONLY),
+	property_var(stateNextName).Name("Next State").Flags(property::flags::SHOW_READONLY),
 	property_var(m_CurrentTime).Name("Time"),
 	property_var(startTime).Name("StartTime"),
 	property_var(endTime).Name("EndTime"),
+	property_var(playing).Name("Playing"),
 
 }property_vend_h(BaseAnimator)
 

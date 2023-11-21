@@ -26,31 +26,44 @@ namespace BeanFactory
         {
             get
             {
-                return InternalCalls.Get<Transform>(this);
+                Transform result;
+                InternalCalls.Get(this, out result);
+                return result;
             }
         }
         virtual public GameObject gameObject 
         {
             get
             {
-                return InternalCalls.Get<GameObject>(this);
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
             } 
         }
         virtual public CharacterController charactercontroller
         {
             get
             {
-                return InternalCalls.Get<CharacterController>(this);
+                CharacterController result;
+                InternalCalls.Get(this, out result);
+                return result;
             }
         }
 
-        public bool HasComponent<T>()
+        virtual public bool HasComponent<T>()
         {
-            return gameObject.HasComponent<T>();
+            GameObject gameObj;
+            InternalCalls.Get(this,out gameObj);
+            bool output;
+            InternalCalls.HasComponent(gameObj, typeof(T), out output);
+            return output;
         }
+
         virtual public T GetComponent<T>() where T : Component
         {
-            return InternalCalls.Get<T>(this);
+            T result;
+            InternalCalls.Get(this, out result);
+            return result;
         }
 
         virtual public T AddComponent<T>() where T : Component
@@ -60,7 +73,7 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class Rigidbody : Component
+    public class Rigidbody : PhysicsComponent
     {
         public vec3 linearVelocity;         //velocity of object
         public vec3 angularVelocity;              //acceleration of object
@@ -74,7 +87,7 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class CharacterController : Component
+    public class CharacterController : PhysicsComponent
     {
         public vec3 velocity;
         public vec3 force;
@@ -94,10 +107,35 @@ namespace BeanFactory
 
     }
 
+    enum PhysicsBodyType : uint
+    {
+        RigidBody = 0, CharacterController
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class PhysicsComponent : Component
+    {
+        uint padding;
+        uint type;
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public class AudioSource : Component
     {
         public void Play() { InternalCalls.AudioSourcePlay(this); }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class Animator : Component
+    {
+        public void Play() { InternalCalls.PlayAnimation(this); }
+        public void Pause() { InternalCalls.PauseAnimation(this); }
+        public void Stop() { InternalCalls.StopAnimation(this); }
+        public float GetProgress() { return InternalCalls.GetProgress(this); }
+        public bool IsCurrentState(string state) { return InternalCalls.IsCurrentState(this, state); }
+        public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
+        public void SetState(string state) { InternalCalls.SetState(this, state); }
+        public void SetNextState(string nextState) { InternalCalls.SetNextState(this, nextState); }
     }
 
     [StructLayout(LayoutKind.Sequential)]

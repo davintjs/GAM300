@@ -35,7 +35,7 @@ Scene& Scene::operator=(Scene& rhs)
 }
 
 
-void Scene::Clone(Entity& source)
+Entity& Scene::Clone(Entity& source)
 {
 	ReferencesTable references;
 	Transform& sourceTrans{ Get<Transform>(source) };
@@ -48,6 +48,7 @@ void Scene::Clone(Entity& source)
 		destTrans.parent = parent.EUID();
 	}
 	LinkReferences(references, AllComponentTypes());
+	return dest;
 }
 
 

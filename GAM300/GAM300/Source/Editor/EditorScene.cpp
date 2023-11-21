@@ -174,6 +174,8 @@ void EditorScene::SceneView()
                     curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = "New Mesh";
 
+
+
                     //undo/redo for entity
                     /*Change newchange;
                     newchange.entity = ent;
@@ -353,8 +355,8 @@ void EditorScene::DisplayGizmos()
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
             glm::vec3 mins = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_min;
             glm::vec3 maxs = scale * MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vertices_max;
-            mins *= glm::vec3(bc.x, bc.y, bc.z);
-            maxs *= glm::vec3(bc.x, bc.y, bc.z);
+            mins *= glm::vec3(bc.dimensions.x, bc.dimensions.y, bc.dimensions.z);
+            maxs *= glm::vec3(bc.dimensions.x, bc.dimensions.y, bc.dimensions.z);
             rot = glm::radians(rot);
             glm::mat4 rotMat = glm::eulerAngleXYZ(rot.x, rot.y, rot.z);
 

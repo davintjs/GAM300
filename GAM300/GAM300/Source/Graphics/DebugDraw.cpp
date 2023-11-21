@@ -108,7 +108,7 @@ void DebugDraw::Update(float)
 		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), temp.scalarBound);
 		//glm::mat4 transMat = glm::translate(glm::mat4(1.f), temp.offset);
 
-		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
+		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
 		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
 		//std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
 		SRT *= transMat * scalarMat;

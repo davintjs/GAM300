@@ -775,7 +775,7 @@ void MeshManager::CreateInstanceLine()
 
 
     MeshAsset lineAsset;
-    int i = 0;
+
     for (int i = 0; i < 2; ++i)
     {
         ModelVertex tmpVertex{};
@@ -1001,7 +1001,7 @@ void MeshManager::debugAABB_setup(glm::vec3 minpt, glm::vec3 maxpt, const Engine
 
 void MeshManager::CallbackMeshAssetLoaded(AssetLoadedEvent<MeshAsset>* pEvent)
 {
-    AddMesh(pEvent->asset, pEvent->guid);
+    AddMesh(pEvent->asset, pEvent->asset.importer->guid);
 }
 
 void MeshManager::CallbackMeshAssetUnloaded(AssetUnloadedEvent<MeshAsset>* pEvent)

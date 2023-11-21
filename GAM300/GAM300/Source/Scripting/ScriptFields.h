@@ -57,7 +57,7 @@ struct Field
 	template<typename T>
 	void operator=(const T& val)
 	{
-		E_ASSERT(sizeof(T) < size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+		E_ASSERT(sizeof(T) <= size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
 		memcpy(data, &val, sizeof(T));
 	}
 
@@ -69,7 +69,7 @@ struct Field
 	template<typename T>
 	T& Get()
 	{
-		E_ASSERT(sizeof(T) < size, "FIELD DOES NOT HAVE ENOUGH SPACE TO STORE TYPE");
+		E_ASSERT(sizeof(T) <= size, "ASSIGNED SIZE: ",size, " OBJECT SIZE: ", sizeof(T));
 		return *static_cast<T*>(data);
 	}
 

@@ -21,6 +21,7 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define PHYSICSSYSTEM_H
 #include "Core/SystemInterface.h"
 #include "Core/Events.h"
+#include "Scene/Components.h"
 
 // Jolt includes
 #include "Jolt/Jolt.h"
@@ -43,13 +44,16 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 namespace EngineObjectLayers {
 	inline constexpr JPH::ObjectLayer STATIC = 0;
 	inline constexpr JPH::ObjectLayer DYNAMIC = 1;
-	inline constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+	inline constexpr JPH::ObjectLayer SENSOR = 2;
+	inline constexpr JPH::ObjectLayer NUM_LAYERS = 3;
 };
 // For broadphase layers
 namespace EngineBroadPhaseLayers {
 	inline constexpr JPH::BroadPhaseLayer STATIC(0);
 	inline constexpr JPH::BroadPhaseLayer DYNAMIC(1);
-	inline constexpr unsigned int NUM_LAYERS = 2;
+	inline constexpr JPH::BroadPhaseLayer SENSOR(2);
+
+	inline constexpr unsigned int NUM_LAYERS = 3;
 };
 
  //Determines if two object layers should collide
@@ -62,6 +66,8 @@ public:
 			return obj2 == EngineObjectLayers::DYNAMIC;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
+		case EngineObjectLayers::SENSOR:
+			return obj2 == EngineObjectLayers::DYNAMIC;
 		default:
 			return false;
 
@@ -76,6 +82,8 @@ public:
 	BroadPhaseLayerInterface() {
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
 		bpLayers[EngineObjectLayers::DYNAMIC] = EngineBroadPhaseLayers::DYNAMIC;
+		bpLayers[EngineObjectLayers::SENSOR] = EngineBroadPhaseLayers::SENSOR;
+
 	}
 	// Get number of broadphase layers
 	virtual unsigned int GetNumBroadPhaseLayers() const override {
@@ -119,12 +127,15 @@ public:
 			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
+		case EngineObjectLayers::SENSOR:
+			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
 		default:
 			return false;
 		}
 	}
 };
 
+// Holds data that will be used to resolve any collisions filtered so that collision callbacks to the game objects involved are triggered
 struct EngineCollisionData {
 public:
 
@@ -141,8 +152,6 @@ public:
 
 
 	collisionOperation op;
-	//Vector3 body1CollisionPos;
-	//Vector3 body2CollisionPos;
 
 };
 
@@ -163,7 +172,7 @@ public:
 	std::vector<EngineCollisionData> collisionResolution;
 };
 
-#pragma region In Progress
+#pragma region Testing
 
 class CharacterControllerTest {
 public:
@@ -198,16 +207,22 @@ public:
 	// Resolve any updates after Physics Simulation but before next frame
 	void PostPhysicsUpdate();
 
-	// Resolve any character controller moves
+	// Resolve any character controller movement
 	void ResolveCharacterMovement();
-
-	// A testing function
-	void TestRun();
 
 	// Callback function for when scene preview starts
 	void CallbackSceneStart(SceneStartEvent* pEvent);
 	// Callback function for when scene preview stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
+	// Callback function for when a rigidbody is created
+	void CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent);
+	// Callback function for when a rigidbody is destroyed
+	void CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>*pEvent);
+
+	void AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent);
+
+	void DeleteBody(PhysicsComponent& bid);
+	void DeleteBody(UINT32 bid);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
@@ -241,12 +256,9 @@ public:
 	float mTime = 0.f;
 	CharacterControllerTest* ccTest =				nullptr;
 	std::vector<JPH::Ref<JPH::Character>> characters;
-	//JPH::BodyID characterID;
 	#pragma endregion
 
 };
-
-
 
 
 

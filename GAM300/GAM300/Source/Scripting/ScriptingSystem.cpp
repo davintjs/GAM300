@@ -52,7 +52,6 @@ namespace
 	MonoVTable* mTimeVtable{ nullptr };
 	MonoClassField* mTimeDtField{ nullptr };
 	MonoString* mStringBuffer{ nullptr };
-	//CollisionPRINT("LOOPIN\n");
 }
 
 namespace Utils
@@ -163,6 +162,29 @@ namespace Utils
 
 #pragma endregion
 
+#pragma region ScriptObject<Script>
+ScriptObject<Script>::ScriptObject(Object* object)
+{
+	Scene& scene{MySceneManager.GetCurrentScene()};
+	script =  SCRIPTING.mSceneScripts[scene.uuid][*object];
+}
+
+ScriptObject<Script>::operator Script& ()
+{
+	Scene& scene{ MySceneManager.GetCurrentScene() };
+	Handle handle{ SCRIPTING.GetScriptHandle(script) };
+	return scene.Get<Script>(handle);
+}
+
+ScriptObject<Script>::operator Script* ()
+{
+	Scene& scene{ MySceneManager.GetCurrentScene() };
+	Handle handle{ SCRIPTING.GetScriptHandle(script) };
+	return &scene.Get<Script>(handle);
+}
+
+#pragma endregion
+
 MonoImage* ScriptingSystem::GetAssemblyImage()
 	{
 		return mAssemblyImage;
@@ -193,12 +215,11 @@ void ScriptingSystem::Init()
 	Subscribe(&ScriptingSystem::CallbackScriptCreated);
 	SubscribeObjectDestroyed(AllObjectTypes());
 
-
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
 	EVENTS.Subscribe(this, &ScriptingSystem::CallbackApplicationExit);
 	Subscribe(&ScriptingSystem::CallbackCollisionEnter);
 	Subscribe(&ScriptingSystem::CallbackCollisionExit);
-
+	Subscribe(&ScriptingSystem::CallbackTriggerEnter);
+	Subscribe(&ScriptingSystem::CallbackTriggerExit);
 }
 
 template<class EventType>
@@ -235,6 +256,7 @@ MonoObject* ScriptingSystem::InstantiateClass(MonoClass* mClass, Args&&... args)
 	E_ASSERT(mAppDomain, "MONO APP DOMAIN NOT LOADED");
 	E_ASSERT(mClass, "MONO CLASS NOT LOADED");
 	MonoObject* tmp = mono_object_new(mAppDomain, mClass);
+	mSceneHandles[MySceneManager.GetCurrentScene().uuid].push_back(mono_gchandle_new(tmp,true));
 	mono_runtime_object_init(tmp);
 	return tmp;
 }
@@ -423,41 +445,55 @@ void ScriptingSystem::UnloadAppDomain()
 {
 	if (!mAppDomain)
 		return;
-	//const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
-	//int rows = mono_table_info_get_rows(table_info);
-	//for (auto& sceneScripts : mSceneScripts)
-	//{
-	//	PRINT("UNLOADING: ");
-	//	for (auto& scriptPair : sceneScripts.second)
-	//	{
-	//		scriptPair.
-	//		MonoClass* _class = mono_object_get_class(scriptPair.second);
+	const MonoTableInfo* table_info = mono_image_get_table_info(mAssemblyImage, MONO_TABLE_TYPEDEF);
+	int rows = mono_table_info_get_rows(table_info);
+	for (auto& sceneScripts : mSceneScripts)
+	{
+		for (auto& scriptPair : sceneScripts.second)
+		{
+			if (scriptPair.second == nullptr)
+				continue;
+			MonoClass* _class = mono_object_get_class(scriptPair.second);
+			if (!_class || mono_class_get_parent(_class) != mScript)
+				continue;
+			mono_object_get_vtable(scriptPair.second);
+			MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
+			void* sfieldIterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(mScript, &sfieldIterator))
+			{
+				mono_field_set_value(scriptPair.second, field, nullptr);
+			}
 
-	//		PRINT(mono_class_get_name(_class),'\n');
-	//		if (!_class || mono_class_get_parent(_class) != mScript)
-	//			continue;
-	//		MonoVTable* vTable = mono_class_vtable(mAppDomain, _class);
-	//		if (!vTable)
-	//			continue;
-	//		void* fieldIterator = nullptr;
-	//		while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
-	//		{
-	//			uint32_t flags = mono_field_get_flags(field);
-	//			if (flags & FIELD_ATTRIBUTE_STATIC)
-	//			{
-	//				mono_field_static_set_value(vTable, field, nullptr);
-	//			}
-	//			else
-	//			{
-	//				mono_field_set_value(scriptPair.second, field, nullptr);
-	//			}
-	//		}
-	//	}
-	//}
+			void* fieldIterator = nullptr;
+			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
+			{
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_STATIC)
+				{
+					mono_field_static_set_value(vTable, field, nullptr);
+				}
+				else
+				{
+					mono_field_set_value(scriptPair.second, field, nullptr);
+				}
+			}
+		}
+		sceneScripts.second.clear();
+	}
+
+	for (auto& pair : mSceneHandles)
+	{
+		for (GC_Handle handle : pair.second)
+		{
+			mono_gchandle_free(handle);
+		}
+	}
+	mSceneHandles.clear();
+
 	mono_domain_set(mRootDomain, false);
-	#ifdef _DEBUG
-		mono_domain_unload(mAppDomain);
-	#endif
+	PRINT("Unloading app domain\n");
+	mono_domain_unload(mAppDomain);
+	PRINT("App domain unloaded\n");
 	mAppDomain = nullptr;
 }
 
@@ -501,6 +537,7 @@ void ScriptingSystem::ThreadWork()
 			}
 			else if (logicState == LogicState::EXIT)
 			{
+				//for (GC_Handle handle : mSceneHandles)
 				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
 				logicState = LogicState::NONE;
 			}
@@ -526,7 +563,6 @@ void ScriptingSystem::ThreadWork()
 			if (MySceneManager.HasScene())
 			{
 				Scene& currScene{ MySceneManager.GetCurrentScene() };
-				mSceneScripts[currScene.uuid].clear();
 			}
 			SwapDll();
 			LoadCacheScripts();
@@ -541,6 +577,7 @@ void ScriptingSystem::ThreadWork()
 
 void ScriptingSystem::CacheScripts()
 {
+	PRINT("CACHING______________________\n");
 	Scene& currScene{ MySceneManager.GetCurrentScene() };
 	MonoScripts& mScripts = mSceneScripts[currScene.uuid];
 	for (auto& scriptPair : mScripts)
@@ -557,7 +594,11 @@ void ScriptingSystem::CacheScripts()
 			//POINTER
 			if (fType < AllObjectTypes::Size())
 			{
-				fieldSize = sizeof(uint64_t);
+				if (fType == GetType::E<Script>())
+				{
+					PRINT("SCRIPT: ", mono_field_get_name(pair.second), "\n");
+				}
+				fieldSize = sizeof(ScriptObject<Object>);
 			}
 			else if (fType == GetFieldType::E<char*>())
 			{
@@ -583,7 +624,7 @@ void ScriptingSystem::LoadCacheScripts()
 		FieldMap& fMap = cacheFields[script];
 		for (auto& pair : scriptClass.mFields)
 		{
-			//MonoType* mType = mono_field_get_type(pair.second);
+			//Cache fields did not store this field requested by the script (Aka newly added field)
 			if (fMap.find(pair.first) == fMap.end())
 				continue;
 			//POINTER
@@ -626,6 +667,7 @@ MonoObject* ScriptingSystem::Invoke(MonoObject* mObj, MonoMethod* mMethod, void*
 		try
 		{
 			MonoObject* exception = NULL;
+			E_ASSERT(mono_object_get_domain(mObj) == mAppDomain,"Mono object doesn't belong to this domain");
 			MonoObject* obj = mono_runtime_invoke(mMethod, mObj, params, &exception);
 			if (exception)
 			{
@@ -675,10 +717,8 @@ void ScriptingSystem::GetFieldValue(MonoObject* instance, MonoClassField* mClass
 	else if (field.fType < AllObjectTypes::Size())
 	{
 		mono_field_get_value(instance, mClassField, field.data);
-		Object*& pObject = *(Object**)field.data;
-		if (!pObject)
-			return;
-		pObject = (Object*)((size_t)pObject - 16);
+		ScriptObject<Object>& pObject = field.Get<ScriptObject<Object>>();
+		field.Get<Object*>() = pObject;
 		return;
 	}
 	//If mono object, it contains reference to type
@@ -737,7 +777,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 	}
 	if (field.fType < AllObjectTypes::Size())
 	{
-		Object*& pObject = *(Object**)field.data;
+		Object*& pObject = field.Get<Object*>();
 		//Scene& scene = MySceneManager.GetCurrentScene();
 		if (pObject == nullptr)
 			mono_field_set_value(instance, mClassField, nullptr);
@@ -745,15 +785,15 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 			mono_field_set_value(instance, mClassField, ReflectScript(*(Script*)pObject));
 		else
 		{
-			pObject = (Object*)(size_t(pObject) + 16);
-			mono_field_set_value(instance, mClassField, pObject);
+			ScriptObject<Object> sObject(pObject);
+			mono_field_set_value(instance, mClassField, &sObject);
 		}
 		return;
 	}
 	mono_field_set_value(instance, mClassField, field.data);
 }
 
-void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigidbody& rb2)
+void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb1, PhysicsComponent& rb2)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
 
@@ -766,16 +806,16 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 		{
 			if (script->state == DELETED) continue;
 			//Incase collision disables gameobject
-			if (!scene.IsActive(e1))
-				break;
 			if (!scene.IsActive(*script))
 				continue;
+			if (!scene.IsActive(e2))
+				break;
 			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb2) + 16;
-			void* param{ reinterpret_cast<void*>(addr) };
+			ScriptObject<Object> object(&rb2);
+			void* param{ reinterpret_cast<void*>(&object) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
@@ -785,16 +825,16 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 		for (Script* script : scene.GetMulti<Script>(e2))
 		{
 			//Incase collision disables gameobject
-			if (!scene.IsActive(e2))
-				break;
 			if (!scene.IsActive(*script))
 				continue;
+			if (!scene.IsActive(e1))
+				break;
 			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
 			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
 			if (!mMethod)
 				continue;
-			size_t addr = reinterpret_cast<size_t>(&rb1) + 16;
-			void* param{ reinterpret_cast<void*>(addr) };
+			ScriptObject<Object> object(&rb1);
+			void* param{ reinterpret_cast<void*>(&object) };
 			Invoke(mSceneScripts[scene.uuid][*script], mMethod, &param);
 		}
 	}
@@ -804,13 +844,13 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, Rigidbody& rb1, Rigi
 void ScriptingSystem::CallbackCollisionEnter(ContactAddedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->rb1,*pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->pc1,*pEvent->pc1);
 }
 
 void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->rb1, *pEvent->rb2);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->pc1, *pEvent->pc1);
 }
 
 void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
@@ -820,8 +860,22 @@ void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 	E_ASSERT(mNewScript, std::string("MONO OBJECT NOT LOADED"));
 	ScriptClass& scriptClass{ scriptClassMap[script.scriptId] };
 	MonoMethod* mMethod{ scriptClass.DefaultMethods[methodType]};
+	E_ASSERT(mono_object_isinst(mNewScript, scriptClass.mClass),"Object and class mismatch!");
 	if (mMethod)
 		Invoke(mNewScript, mMethod, nullptr);
+}
+
+
+void ScriptingSystem::CallbackTriggerEnter(TriggerEnterEvent* pEvent)
+{
+	SCRIPT_THREAD_EVENT(pEvent);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerEnter, *pEvent->pc1, *pEvent->pc2);
+}
+
+void ScriptingSystem::CallbackTriggerExit(TriggerRemoveEvent* pEvent)
+{
+	SCRIPT_THREAD_EVENT(pEvent);
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerExit, *pEvent->pc1, *pEvent->pc2);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)
@@ -847,11 +901,12 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 	{
 		if (scriptClassMap.find(script.scriptId) == scriptClassMap.end())
 			return nullptr;
+		E_ASSERT(scriptClassMap.find(script.scriptId) != scriptClassMap.end(),"Script class does not exist!");
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
 		MonoObject* instance = InstantiateClass(scriptClass.mClass);
 		Engine::UUID euid = script.EUID();
 		Engine::UUID uuid = script.UUID();
-		void* param[] = {&scene.Get<Entity>(script),&euid,&uuid };
+		void* param[] = {&ScriptObject<Entity>(&scene.Get<Entity>(script)),&euid,&uuid};
 		MonoMethod* reflectComponent = mono_class_get_method_from_name(mScript, "Initialize", 3);
 		Invoke(instance, reflectComponent, param);
 		mScripts.emplace(script, instance);
@@ -865,6 +920,7 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				GetFieldValue(ref, pair.second, field);
 				if (field.fType < AllObjectTypes::Size())
 				{
+					uint32_t flags = mono_field_get_flags(pair.second);
 					Object*& f = field.Get<Object*>();
 					if (f)
 					{
@@ -970,8 +1026,10 @@ void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
+	PRINT("SCENE CHANGED!\n");
 	UNREFERENCED_PARAMETER(pEvent);
 	while (compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
+	mSceneScripts.clear();
 }
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
@@ -986,9 +1044,14 @@ void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
 	(void)pEvent;
+	PRINT("SCENE CLEANING!\n");
 	logicState = LogicState::EXIT;
-	ran = false;
+	{
+		ACQUIRE_SCOPED_LOCK(Mono);
+		ran = false;
+	}
 	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
+	PRINT("SCENE CLEANED!\n");
 }
 
 void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)
@@ -998,3 +1061,4 @@ void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)
 	ran = false;
 	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
 }
+

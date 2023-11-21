@@ -236,7 +236,7 @@ void GraphicsSystem::Update(float dt)
 		// Update camera view 
 		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
-		COLOURPICKER.ColorPickingUI(camera);
+		COLOURPICKER.ColorPickingUIButton(camera);
 
 		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
@@ -363,7 +363,9 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
+
 	glEnable(GL_DEPTH_BUFFER);
+	MYSKYBOX.Draw(_camera);
 
 	RENDERER.Draw(_camera);
 	PARTICLERENDER.Draw(_camera);
@@ -375,7 +377,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	}
 #endif
 
-	MYSKYBOX.Draw(_camera);
 }
 
 void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
