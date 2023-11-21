@@ -72,6 +72,7 @@ public:
 	// Callback event when the current scene stops
 	void CallbackSceneStop(SceneStopEvent* pEvent);
 
+	std::string sceneToLoad;
 private:
 	std::list<Scene> loadedScenes;
 	int sceneCount = 0; // For checking how many scenes are loaded after starting

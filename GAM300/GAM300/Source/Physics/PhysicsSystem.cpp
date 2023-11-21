@@ -866,6 +866,19 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	}
 	// Position, Rotation and Scale of collider
 	Transform& t = scene.Get<Transform>(entity);
+
+	Engine::UUID parent = t.parent;
+
+	//Ensure parents are created in the scene
+	while (parent != 0)
+	{
+		if (!scene.HasHandle<Transform>({ parent,0 }))
+		{
+			return;
+		}
+		Transform& parentTrans = scene.Get<Transform>(parent);
+		parent = parentTrans.parent;
+	}
 	JPH::RVec3 scale;
 	JPH::RVec3 pos;
 	Vector3 tpos = t.GetTranslation();

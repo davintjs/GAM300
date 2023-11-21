@@ -58,7 +58,6 @@ void SceneManager::LoadScene(const std::string& _filePath)
 	SelectedEntityEvent selected{ nullptr };
 	EVENTS.Publish(&selected);
 	loadedScenes.emplace_front(_filePath);
-	sceneCount++;
 	
 	Scene& scene = GetCurrentScene();
 	SceneChangingEvent e{ scene };
@@ -115,6 +114,19 @@ void SceneManager::Update(float dt)
 	UNREFERENCED_PARAMETER(dt);
 	Scene& scene = GetCurrentScene();
 	scene.ClearBuffer();
+
+
+	if (sceneToLoad != "")
+	{
+		SceneStopEvent stopEvent{};
+		EVENTS.Publish(&stopEvent);
+		LoadSceneEvent e(sceneToLoad);
+		EVENTS.Publish(&e);
+		SceneStartEvent startEvent{};
+		EVENTS.Publish(&startEvent);
+		sceneToLoad = "";
+		++sceneCount;
+	}
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
@@ -162,7 +174,7 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 	GetCurrentScene().sceneName += " [PREVIEW]";
 	#endif _BUILD
 
-	sceneCount = 0;
+	sceneCount++;
 }
 
 void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
@@ -173,7 +185,8 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
 
-	for (size_t i = 0; i < sceneCount + 1; i++)
+	PRINT("SCENE: " , sceneCount, '\n');
+	for (int i = 0; i < sceneCount; i++)
 	{
 		loadedScenes.pop_front();
 	}

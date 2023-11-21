@@ -28,17 +28,24 @@ public class RangeEnemy : Script
     public GameObject bullet;
     public float bulletSpeed = 3f;
 
+    public Transform testSetParent;
+
     void Start()
     {
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
+        if (testSetParent != null)
+        {
+            testSetParent.SetParent(transform);
+        }
     }
 
     void Update()
     {
         if (player == null)
             return;
+
 
         //ensure the moving animation reference continues to follow the it
         //maxUpPos.localPosition.x = GetComponent<Transform>().localPosition.x;

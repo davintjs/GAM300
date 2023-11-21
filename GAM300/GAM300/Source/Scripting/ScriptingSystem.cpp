@@ -1019,11 +1019,24 @@ std::string ScriptingSystem::GetScriptName(Script& script)
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	UNREFERENCED_PARAMETER(pEvent);
-	while (mAppDomain == nullptr || compilingState != CompilingState::Wait){ ACQUIRE_SCOPED_LOCK(Mono); };
+	if (SCRIPTING_THREAD_ID != std::this_thread::get_id())
 	{
-		ACQUIRE_SCOPED_LOCK(Mono);
-		logicState = LogicState::START;
+		UNREFERENCED_PARAMETER(pEvent);
+		while (mAppDomain == nullptr || compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
+		{
+			ACQUIRE_SCOPED_LOCK(Mono);
+			logicState = LogicState::START;
+			ran = true;
+		}
+	}
+	else
+	{
+#ifdef _BUILD
+		ReflectFromOther(MySceneManager.GetPreviousScene());
+#endif
+		InvokeAllScripts(DefaultMethodTypes::Awake);
+		InvokeAllScripts(DefaultMethodTypes::Start);
+		logicState = LogicState::UPDATE;
 		ran = true;
 	}
 }
@@ -1033,7 +1046,6 @@ void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 	PRINT("SCENE CHANGED!\n");
 	UNREFERENCED_PARAMETER(pEvent);
 	while (compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
-	mSceneScripts.clear();
 }
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
@@ -1049,13 +1061,16 @@ void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
 {
 	(void)pEvent;
 	PRINT("SCENE CLEANING!\n");
-	logicState = LogicState::EXIT;
+	if (SCRIPTING_THREAD_ID != std::this_thread::get_id())
 	{
-		ACQUIRE_SCOPED_LOCK(Mono);
-		ran = false;
+		logicState = LogicState::EXIT;
+		{
+			ACQUIRE_SCOPED_LOCK(Mono);
+			ran = false;
+		}
+		while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
+		PRINT("SCENE CLEANED!\n");
 	}
-	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
-	PRINT("SCENE CLEANED!\n");
 }
 
 void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)

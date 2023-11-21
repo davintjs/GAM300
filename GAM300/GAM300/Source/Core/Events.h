@@ -29,6 +29,8 @@ struct Scene;
 struct Script;
 struct Field;
 struct PhysicsComponent;
+struct Rigidbody;
+struct CharacterController;
 struct ImGuiTextBuffer;
 
 namespace fs = std::filesystem;
@@ -102,6 +104,19 @@ struct GetSelectedEntityEvent : IEvent
 {
 	GetSelectedEntityEvent() {}
 	Entity* pEntity;
+};
+
+
+struct ReflectCharacterControllerEvent : IEvent
+{
+	ReflectCharacterControllerEvent(CharacterController& _cc) : cc{ _cc} {}
+	CharacterController& cc;
+};
+
+struct ReflectRigidbodyEvent : IEvent
+{
+	ReflectRigidbodyEvent(Rigidbody& _rb) : rb{ _rb } {}
+	Rigidbody& rb;
 };
 
 template <typename T>

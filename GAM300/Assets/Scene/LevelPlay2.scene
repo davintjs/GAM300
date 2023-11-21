@@ -6943,7 +6943,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 9.14123917
+  Time: 60.0008316
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -14152,6 +14152,7 @@ ID: 9267112755226816832
 Script:
   m_GameObject: {fileID: 6034621871942586701}
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
+  testSetParent: {fileID: 3022324051481060559}  # Component
   inRange: false
   shootDistance: 2
   maxHealth: 3
@@ -17098,3 +17099,22 @@ MeshRenderer:
   m_GameObject: {fileID: 15806906999669578782}
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 3022324051481060559
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(580)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13245062303818393022}  # Transform
+---
+ID: 13245062303818393022
+Transform:
+  m_GameObject: {fileID: 3022324051481060559}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
