@@ -74,6 +74,7 @@ public:
 
 private:
 	std::list<Scene> loadedScenes;
+	int sceneCount = 0; // For checking how many scenes are loaded after starting
 };
 
 #endif // !SCENE_MANAGER_H

@@ -210,7 +210,37 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 #pragma endregion
+	
+	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
 
+		Transform *transform, *parent = nullptr;
+		for (auto& t : currentScene.GetArray<Transform>())
+		{
+			if (t.EUID() == (*pTransform).EUID())
+				transform = &t;
+
+			if (t.EUID() == (*pParent).EUID())
+				parent = &t;
+		}
+
+		// If the parent doesnt exist, set the parent of this transform to null
+		if(transform)
+			transform->SetParent(parent);
+	}
+
+	// Load a scene
+	static void LoadScene(MonoString* mString)
+	{
+		// Bean: Not really elegant because we can only load scenes from the scene folder
+		std::string scenePath = "Assets/Scene/";
+		scenePath += mono_string_to_utf8(mString);
+		scenePath += ".scene";
+		
+		LoadSceneEvent e(scenePath);
+		EVENTS.Publish(&e);
+	}
 
 	//Gets object that entity has
 	static void* AddComponent(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
@@ -412,6 +442,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetLayerName);
 		Register(GetActive);
 		Register(SetActive);
+		Register(SetTransformParent);
+		Register(LoadScene);
 		Register(AddComponent);
 		Register(GetMouseDelta);
 		Register(AudioSourcePlay);

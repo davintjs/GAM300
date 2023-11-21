@@ -195,6 +195,11 @@ namespace BeanFactory
                 return -up;
             }
         }
+
+        public void SetParent(Transform parent)
+        {
+            InternalCalls.SetTransformParent(this, parent);
+        }
     }
 
 

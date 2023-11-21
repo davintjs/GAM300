@@ -94,7 +94,8 @@ namespace BeanFactory
         #endregion
 
         #region TRANSFORM
-
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
         #endregion
 
