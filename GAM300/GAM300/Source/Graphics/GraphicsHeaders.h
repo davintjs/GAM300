@@ -260,6 +260,7 @@ public:
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
+
 	void DrawSprites(glm::mat4 _projection, glm::mat4 _view, glm::mat4 _srt, GLSLShader& _shader);
 
 	void DrawMeshes( GLSLShader & _shader);
@@ -391,6 +392,7 @@ public:
 	InstanceContainer& GetInstanceProperties() { return instanceProperties; }
 	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
+	std::vector<DefaultRenderProperties>& GetTransparentContainer() { return transparentContainer; }
 
 	float& GetExposure() { return exposure; }
 
@@ -413,6 +415,7 @@ private:
 	std::vector<InstanceContainer> instanceContainers; // subscript represents shadertype
 	//InstanceContainer instanceContainers[size_t(SHADERTYPE::COUNT)]; // subscript represents shadertype
 	std::vector<DefaultRenderProperties> defaultProperties;
+	std::vector<DefaultRenderProperties> transparentContainer;
 	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings

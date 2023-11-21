@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
 #include "Audio/AudioManager.h"
+#include "Graphics/Animation/BaseAnimator.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -55,8 +56,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void* Get(Object* pEntity, MonoReflectionType* componentType)
+	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, void*& obj)
 	{
+		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
 		if (pair == monoComponentToType.end())
@@ -65,39 +67,153 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			{
 				//Script
 				E_ASSERT(false,"Getting scripts not implemented yet!");
-				return nullptr;
+				obj = nullptr;
+				return;
 			}
 			else
 			{
 				//Cant find
 				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
-				return nullptr;
+				obj = nullptr;
+				return;
 			}
 		}
-		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Get(pair->second, pEntity));
-		addr += 16;
-		return reinterpret_cast<void*>(addr);
+		if (pair->second == GetType::E<Entity>())
+		{
+			PRINT("Getting entity\n");
+		}
+		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
+		ScriptObject<Object> object{ pObject };
+		obj = &object;
 	}
 
-	static MonoString* GetTag(void* object)
+	static MonoString* GetTag(ScriptObject<Object> pObject)
 	{
-		size_t addr = reinterpret_cast<size_t>(object);
-		addr -= 16;
-		Object* pObject{ reinterpret_cast<Object*>(addr) };
-		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(pObject->EUID());
+		Object* object = pObject;
+		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(object->EUID());
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
 
-	static void AudioSourcePlay(AudioSource* pAudioSource)
+	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
-		size_t addr = reinterpret_cast<size_t>(pAudioSource);
-		addr -= 16;
-		pAudioSource = reinterpret_cast<AudioSource*>(addr);
-		AUDIOMANAGER.PlayComponent(*pAudioSource);
+		AUDIOMANAGER.PlayComponent(audioSource);
 	}
 
+#pragma region ANIMATOR
+	static void PlayAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.ChangeState();
+				break;
+			}
+		}
+	}
+
+	static void PauseAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.playing = false;
+				break;
+			}
+		}
+	}
+
+	static void StopAnimation(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.m_CurrentTime = 0.f;
+				animator.playing = false;
+				break;
+			}
+		}
+	}
+
+	static float GetProgress(ScriptObject<Animator> pAnimator)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+				return animator.GetProgress();
+		}
+
+		return 0.f;
+	}
+
+	static bool IsCurrentState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string state = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				if(animator.GetCurrentState())
+					return !animator.GetCurrentState()->label.compare(state);
+			}
+		}
+
+		return false;
+	}
+	
+	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string defaultState = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetDefaultState(defaultState);
+				break;
+			}
+		}
+	}
+
+	static void SetState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string state = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetState(state);
+				break;
+			}
+		}
+	}
+
+	static void SetNextState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	{
+		std::string nextState = mono_string_to_utf8(mString);
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				animator.SetNextState(nextState);
+				break;
+			}
+		}
+	}
+#pragma endregion
+
+
 	//Gets object that entity has
-	static void* AddComponent(Entity* pEntity, MonoReflectionType* componentType)
+	static void* AddComponent(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -112,7 +228,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				if (offset != std::string::npos)
 					scriptName = scriptName.substr(offset + 1);
 				//Get Mono Script instead
-				return MySceneManager.GetCurrentScene().Add<Script>(*pEntity,scriptName.c_str());
+				return MySceneManager.GetCurrentScene().Add<Script>((Entity&)pEntity,scriptName.c_str());
 			}
 			else
 			{
@@ -121,24 +237,43 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				return nullptr;
 			}
 		}
-		size_t addr = reinterpret_cast<size_t>(MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
-		addr += 16;
-		return reinterpret_cast<void*>(addr);
+		return ScriptObject<Object>((Object*)MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
 	}
 
 
 	//Checks if entity has a component
-	static bool HasComponent(Entity* pEntity, MonoReflectionType* componentType)
+	static void HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType, bool& output)
 	{
+		
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
-		return pEntity->hasComponentsBitset.test(monoComponentToType[managedType]);
+		if (monoComponentToType.find(managedType) != monoComponentToType.end())
+		{
+			Object* entity(pEntity);
+			if (!entity)
+			{
+				PRINT("Has component when gameobject is null!\n");
+				output = false;
+				return;
+			}
+			output = ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+			return;
+		}
+		PRINT(mono_type_get_name(managedType), "is invalid", '\n');
+		output = false;
+	}
+
+	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
+	{
+		Object* obj{ pEntity };
+		out = &MySceneManager.GetCurrentScene().Clone((Entity&)pEntity);
 	}
 
 
 	//Deletes a gameobject
-	static void DestroyGameObject(Entity* pGameObject)
+	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
-		MySceneManager.GetCurrentScene().Destroy(*pGameObject);
+		PRINT("DESTROYING GAME OBJECT\n");
+		MySceneManager.GetCurrentScene().Destroy<Entity>(pEntity);
 	}
 
 	//GENERIC_RECURSIVE(void, DestroyRecursive, MySceneManager.GetCurrentScene().Destroy(*(T*)pObject))
@@ -175,7 +310,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return -1;
 	}
 
-	static bool GetActive(void* pObject, MonoReflectionType* componentType)
+	static bool GetActive(ScriptObject<Object> object, MonoReflectionType* componentType)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -184,8 +319,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
 			{
-				Handle handle = SCRIPTING.GetScriptHandle((MonoObject*)pObject);
-				return scene.IsActive<Script>(handle);
+				ScriptObject<Script> script(object);
+				return scene.IsActive<Script>(script);
 			}
 			else
 			{
@@ -194,9 +329,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				return false;
 			}
 		}
-		size_t addr = reinterpret_cast<size_t>(pObject);
-		addr -= 16;
-		return scene.GetActive(pair->second,reinterpret_cast<void*>(addr));
+		return scene.GetActive(pair->second, object);
 	}
 
 	static void GetMouseDelta(Vector2& mouseDelta)
@@ -204,7 +337,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		mouseDelta = InputHandler::mouseDeltaNormalized();
 	}
 
-	static void SetActive(void* pObject, MonoReflectionType* componentType, bool val)
+	static void SetActive(ScriptObject<Object> pObject, MonoReflectionType* componentType, bool val)
 	{
 		MonoType* mType = mono_reflection_type_get_type(componentType);
 		auto pair = monoComponentToType.find(mType);
@@ -213,8 +346,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
 			{
-				Handle handle = SCRIPTING.GetScriptHandle((MonoObject*)pObject);
-				scene.SetActive<Script>(handle, val);
+				ScriptObject<Script> script(pObject);
+				scene.SetActive((Script&)script, val);
 				return;
 			}
 			else
@@ -223,9 +356,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				return;
 			}
 		}
-		size_t addr = reinterpret_cast<size_t>(pObject);
-		addr -= 16;
-		Scene::SetActiveHelper helper{ reinterpret_cast<void*>(addr),val };
+		Scene::SetActiveHelper helper{ pObject,val };
 		return scene.SetActive(pair->second, &helper);
 	}
 
@@ -284,6 +415,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(AddComponent);
 		Register(GetMouseDelta);
 		Register(AudioSourcePlay);
+		Register(CloneGameObject);
+		Register(PlayAnimation);
+		Register(PauseAnimation);
+		Register(StopAnimation);
+		Register(GetProgress);
+		Register(IsCurrentState);
+		Register(SetDefaultState);
+		Register(SetState);
+		Register(SetNextState);
 		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H

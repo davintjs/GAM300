@@ -28,7 +28,7 @@ struct Entity;
 struct Scene;
 struct Script;
 struct Field;
-struct Rigidbody;
+struct PhysicsComponent;
 struct ImGuiTextBuffer;
 
 namespace fs = std::filesystem;
@@ -190,30 +190,22 @@ struct GetFilePathEvent : IEvent
 template <typename AssetType>
 struct AssetLoadedEvent : IEvent
 {
-	AssetLoadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetLoadedEvent(const AssetType& _asset): asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUpdatedEvent : IEvent
 {
-	AssetUpdatedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid, const AssetType& _asset)
-		: assetPath{ _assetPath }, guid{ _guid }, asset{ _asset } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetUpdatedEvent(const AssetType& _asset) : asset{ _asset } {}
 	const AssetType& asset;
 };
 
 template <typename AssetType>
 struct AssetUnloadedEvent : IEvent
 {
-	AssetUnloadedEvent(const fs::path& _assetPath, const Engine::GUID<AssetType>& _guid) :
-		assetPath{ _assetPath }, guid{ _guid } {}
-	const fs::path& assetPath;
-	const Engine::GUID<AssetType>& guid;
+	AssetUnloadedEvent(const AssetType& _asset) : asset{ _asset }{}
+	const AssetType& asset;
 };
 
 struct DropAssetsEvent : IEvent
@@ -234,29 +226,32 @@ struct GetAssetsEvent : IEvent
 struct ContactAddedEvent : IEvent
 {
 
-	ContactAddedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactAddedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
 
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct ContactRemovedEvent : IEvent
 {
-	ContactRemovedEvent() : rb1{ nullptr }, rb2{ nullptr } {}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	ContactRemovedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 struct TriggerEnterEvent : IEvent
 {
-	TriggerEnterEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerEnterEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 struct TriggerRemoveEvent : IEvent
 {
-	TriggerRemoveEvent() : rb1{ nullptr }, rb2{ nullptr }{}
-	Rigidbody* rb1;
-	Rigidbody* rb2;
+	TriggerRemoveEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
 };
 
 #pragma region EDITOR STUFF

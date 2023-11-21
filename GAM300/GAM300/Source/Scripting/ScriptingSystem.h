@@ -100,6 +100,48 @@ namespace DefaultMethodTypes
 	};
 }
 
+//Pass this into scripts
+template<typename T>
+struct ScriptObject
+{
+	ScriptObject(Object* object)
+	{
+		static_assert(std::is_base_of_v<Object, T>);
+		memoryAddress = reinterpret_cast<size_t>(object) + memOffset;
+	}
+
+	operator T& ()
+	{
+		return *reinterpret_cast<T*>(memoryAddress - (memOffset));
+	}
+
+	operator Object* ()
+	{
+		if (memoryAddress == 0)
+			return nullptr;
+		return reinterpret_cast<Object*>(memoryAddress - (memOffset));
+	}
+
+	void* operator& ()
+	{
+		return reinterpret_cast<void*>(memoryAddress);
+	}
+private:
+	static size_t constexpr memOffset = sizeof(Object) - 16;
+	size_t memoryAddress;
+};
+
+template<>
+struct ScriptObject<Script>
+{
+	ScriptObject(Object* object);
+	operator Script& ();
+	operator Script* ();
+
+private:
+	MonoObject* script;
+};
+
 struct ScriptClass
 {
 	ScriptClass() = default;
@@ -177,8 +219,6 @@ public:
 	//Sets data from field into C# field
 	void SetFieldValue(MonoObject* instance, MonoClassField* mClassFiend, Field& field);
 
-
-
 	void GetFieldValue(Script & script, const std::string & fieldName, Field & field);
 
 
@@ -215,9 +255,16 @@ public:
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
 
+	//Callback function to when a script is created
+	void CallbackLoadScene(LoadSceneEvent*pEvent);
+
 	void CallbackCollisionEnter(ContactAddedEvent* pEvent);
 
 	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
+
+	void CallbackTriggerEnter(TriggerEnterEvent * pEvent);
+
+	void CallbackTriggerExit(TriggerRemoveEvent * pEvent);
 
 	//Helper to subscribe to all objects deletion
 	template <typename... Ts>
@@ -254,17 +301,22 @@ public:
 
 	//Mapping script to mono script
 	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
+
 	//Field name to field
 	using FieldMap = std::unordered_map<std::string, Field>;
+
+	using GC_Handle = uint32_t;
+	using GC_Handles = std::vector<GC_Handle>;
 
 	//Script guid to script class
 	std::unordered_map<Engine::GUID<ScriptAsset>, ScriptClass> scriptClassMap;
 	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
+	std::unordered_map<Engine::UUID, GC_Handles> mSceneHandles;
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
-	void InvokePhysicsEvent(size_t colType, Rigidbody& rb1, Rigidbody& rb2);
+	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 
 	IEvent* scriptingEvent;
 

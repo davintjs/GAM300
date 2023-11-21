@@ -39,6 +39,7 @@ static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 	{".png", "TextureCompiler.exe "},
 	{".fbx", "ModelCompiler.exe "},
 	{".obj", "ModelCompiler.exe "},
+	//{".cs", "csc.exe "},
 };
 
 void AssetManager::Compile(const fs::path& path)

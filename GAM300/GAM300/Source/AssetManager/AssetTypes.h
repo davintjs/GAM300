@@ -21,6 +21,7 @@ struct DefaultImporter;
 struct Asset
 {
 	std::filesystem::path mFilePath;
+	DefaultImporter* importer;
 };
 
 struct TextureAsset : Asset{};

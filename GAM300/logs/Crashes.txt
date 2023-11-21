@@ -1,6 +1,5 @@
-[2023-11-14 21:40:16.658] [Error] [critical] 
-Caused By:	false
-Info:		ERROR: PlayerModel has guid: f78435a0fc7c773ceedfd53d911a8c45 that does not exist! Reassign the mesh!
-
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 286)
+[2023-11-20 09:28:55.853] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  HXä´æ COULD NOT BE FOUND IN SCRIPT
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 738)
 
