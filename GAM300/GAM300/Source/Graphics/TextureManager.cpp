@@ -40,7 +40,7 @@ void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<Textur
         found = strstr(Filename, searchWord.c_str());
 
         if (found != nullptr) {
-        
+            std::cout << "entered\n";
             size_t length = found - Filename;
             char* subString = new char[length + 1];
 
@@ -50,10 +50,11 @@ void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<Textur
             subString[length] = '\0';
 
             temp = CreateSkyboxTexture(subString);
+
             E_ASSERT(temp, "Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.");
 
             delete[] subString;
-
+            std::cout << "this is the filename: " << Filename << "\n";
             mTextureContainer.emplace(GUID, std::pair(Filename, temp));
         }
     }
@@ -190,7 +191,7 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
 
 GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
 {
-    /*std::cout << "filename is : " << Filename << "\n";*/
+    std::cout << "filename is : " << Filename << "\n";
     std::string FilenameStr(Filename);
 
     std::string left = FilenameStr + "_left.dds";
