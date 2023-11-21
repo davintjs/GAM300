@@ -46,10 +46,6 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			}
 			else
 			{
-				if constexpr (std::is_same_v<T,Rigidbody>)
-				{
-					PRINT("Hello");
-				}
 				object = Add<T>(newEntityID,Engine::CreateUUID(), &component);
 			}
 			storage[GetType::E<T>()][component] = *object;
