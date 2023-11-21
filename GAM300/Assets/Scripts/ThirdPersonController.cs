@@ -323,7 +323,7 @@ public class ThirdPersonController : Script
         }
     }
 
-    void OnCollisionEnter(Rigidbody rb)
+    void OnCollisionEnter(PhysicsComponent rb)
     {
         Console.WriteLine("INTO THE UNKNOWN");
     }

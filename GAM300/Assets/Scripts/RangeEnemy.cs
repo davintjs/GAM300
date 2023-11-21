@@ -163,16 +163,15 @@ public class RangeEnemy : Script
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Hit");
+        Console.WriteLine("Enemy Triggered " + GetTag(other));
 
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if(other.gameObject.name == "PlayerWeaponCollider")
+        if(GetTag(other) == "PlayerAttack")
         {
             Console.WriteLine("Hit");
-            TakeDamage(1);
-
+            //TakeDamage(1);
         }
     }
 

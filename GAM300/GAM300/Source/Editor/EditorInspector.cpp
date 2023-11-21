@@ -1473,8 +1473,12 @@ void EditorInspector::Init()
 
     //create default tag
     IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Test"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Test2"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["PlayerAttack"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Player"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Enemy"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
+    IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
 }
 
 enum MODEL_STATE { MODEL, ANIMATION };
