@@ -848,13 +848,13 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 void ScriptingSystem::CallbackCollisionEnter(ContactAddedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->pc1,*pEvent->pc1);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionEnter,*pEvent->pc1,*pEvent->pc2);
 }
 
 void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
 {
 	SCRIPT_THREAD_EVENT(pEvent);
-	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->pc1, *pEvent->pc1);
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->pc1, *pEvent->pc2);
 }
 
 void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)

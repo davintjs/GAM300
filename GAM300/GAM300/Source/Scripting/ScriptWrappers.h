@@ -56,7 +56,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, void*& obj)
+	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, ScriptObject<Object>& obj)
 	{
 		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -78,13 +78,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				return;
 			}
 		}
-		if (pair->second == GetType::E<Entity>())
-		{
-			PRINT("Getting entity\n");
-		}
 		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
-		ScriptObject<Object> object{ pObject };
-		obj = &object;
+		obj = pObject;
 	}
 
 	static MonoString* GetTag(ScriptObject<Object> pObject)

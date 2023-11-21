@@ -311,12 +311,15 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.pc1 = pc1;
 				cae.pc2 = pc2;
+				if (cae.pc1 == cae.pc2)
+				{
+					PRINT("this aint it chief\n");
+				}
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}

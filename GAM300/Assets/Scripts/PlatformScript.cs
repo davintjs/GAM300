@@ -55,17 +55,9 @@ public class PlatformScript : Script
     void OnCollisionEnter(PhysicsComponent rb)
     {
         //detect the player
-        if(rb.HasComponent<ThirdPersonController>())
+        if (GetTag(rb) == "Player")
         {
-            Console.WriteLine("PlayerOnPlatform");
-        }
-    }
-
-    void OnTrigger(PhysicsComponent other)
-    {
-        //check if player landed on it
-        if (other.HasComponent<ThirdPersonController>())
-        {
+            CharacterController cc = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
         }
     }

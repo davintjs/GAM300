@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace BeanFactory
 {
-    public class Script : Component
+    public class Script
     {
         UInt64 euid;
         UInt64 uuid;
@@ -55,9 +55,7 @@ namespace BeanFactory
         public GameObject Instantiate(GameObject gameObject, vec3 pos, vec3 rot)
         {
             GameObject newGameObject;
-            Console.WriteLine("Clone start");
             InternalCalls.CloneGameObject(gameObject, out newGameObject);
-            Console.WriteLine("Clone end");
             newGameObject.transform.localPosition = pos;
             newGameObject.transform.localRotation = rot;
             return newGameObject;
@@ -69,36 +67,50 @@ namespace BeanFactory
             InternalCalls.DestroyGameObject(gameObject);
         }
 
-        public static void Destroy<T>(T component) where T : Component
+        public static void Destroy<T>(T component) where T : class
         {
             InternalCalls.DestroyComponent(component,typeof(T));
         }
 
-        override public Transform transform{ get{return _transform; } }
-        override public GameObject gameObject{ get { return _gameObject; }}
-
-        private Transform _transform;
-        private GameObject _gameObject;
-
-        override public T GetComponent<T>()
+        public CharacterController charactercontroller
         {
+            get
+            {
+                CharacterController result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
 
+        public bool HasComponent<T>()
+        {
+            bool output;
+            InternalCalls.HasComponent(gameObject, typeof(T), out output);
+            return output;
+        }
+
+        public T GetComponent<T>() where T : class
+        {
             if (HasComponent<T>())
             {
                 T component;
-                InternalCalls.Get(_gameObject, out component);
+                InternalCalls.Get(gameObject, out component);
                 return component;
             }
             Console.WriteLine("Component does not exist");
             return null;
         }
 
-        override public bool HasComponent<T>()
+        public T AddComponent<T>() where T : class
         {
-            bool output;
-            InternalCalls.HasComponent(_gameObject, typeof(T), out output);
-            return output;
+            return InternalCalls.AddComponent<T>(gameObject);
         }
+
+        public Transform transform{ get{return _transform; } }
+        public GameObject gameObject{ get { return _gameObject; }}
+
+        private Transform _transform;
+        private GameObject _gameObject;
 
         public Coroutine StartCoroutine(IEnumerator enumerator)
         {

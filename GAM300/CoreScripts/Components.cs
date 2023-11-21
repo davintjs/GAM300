@@ -13,6 +13,7 @@
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 ******************************************************************************************/
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using GlmSharp;
 using System;
@@ -20,58 +21,6 @@ using System;
 
 namespace BeanFactory
 {
-    public class Component
-    {
-        virtual public Transform transform 
-        {
-            get
-            {
-                Transform result;
-                InternalCalls.Get(this, out result);
-                return result;
-            }
-        }
-        virtual public GameObject gameObject 
-        {
-            get
-            {
-                GameObject result;
-                InternalCalls.Get(this, out result);
-                return result;
-            } 
-        }
-        virtual public CharacterController charactercontroller
-        {
-            get
-            {
-                CharacterController result;
-                InternalCalls.Get(this, out result);
-                return result;
-            }
-        }
-
-        virtual public bool HasComponent<T>()
-        {
-            GameObject gameObj;
-            InternalCalls.Get(this,out gameObj);
-            bool output;
-            InternalCalls.HasComponent(gameObj, typeof(T), out output);
-            return output;
-        }
-
-        virtual public T GetComponent<T>() where T : Component
-        {
-            T result;
-            InternalCalls.Get(this, out result);
-            return result;
-        }
-
-        virtual public T AddComponent<T>() where T : Component
-        {
-            return InternalCalls.AddComponent<T>(gameObject);
-        }
-    }
-
     [StructLayout(LayoutKind.Sequential)]
     public class Rigidbody : PhysicsComponent
     {
@@ -84,6 +33,16 @@ namespace BeanFactory
         public bool isKinematic = true;          //is object simulated?
         public bool useGravity = true;           //is object affected by gravity?
         public bool is_trigger = false;
+
+        new public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -104,7 +63,15 @@ namespace BeanFactory
         {
             direction += dir;
         }
-
+        new public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     enum PhysicsBodyType : uint
@@ -113,20 +80,40 @@ namespace BeanFactory
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    public class PhysicsComponent : Component
+    public class PhysicsComponent
     {
         uint padding;
         uint type;
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class AudioSource : Component
+    public class AudioSource
     {
         public void Play() { InternalCalls.AudioSourcePlay(this); }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class Animator : Component
+    public class Animator
     {
         public void Play() { InternalCalls.PlayAnimation(this); }
         public void Pause() { InternalCalls.PauseAnimation(this); }
@@ -136,10 +123,20 @@ namespace BeanFactory
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
         public void SetNextState(string nextState) { InternalCalls.SetNextState(this, nextState); }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public class Transform : Component
+    public class Transform
     {
         public vec3 localPosition;
         public vec3 localRotation;
@@ -195,6 +192,17 @@ namespace BeanFactory
                 return -up;
             }
         }
+
+        public GameObject gameObject 
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            } 
+        }
+
     }
 
 
@@ -381,9 +389,4 @@ namespace BeanFactory
             InternalCalls.StopAnimation(ID);
         }
     }*/
-
-    public class Collider : Component
-    {
-        Rigidbody rigidbody;
-    }
 }
