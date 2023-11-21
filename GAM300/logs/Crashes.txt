@@ -1,5 +1,6 @@
-[2023-11-21 17:00:18.216] [Error] [critical] 
-Caused By:	start
-Info:		Couldn't find index
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\ObjectsList.cpp (Line: 249)
+[2023-11-22 01:28:30.113] [Error] [critical] 
+Caused By:	false
+Info:		Failed to load .scene file "Assets/Scene/LevelPlay2" due to: bad file: Assets/Scene/LevelPlay2
+
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 358)
 

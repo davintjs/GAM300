@@ -231,6 +231,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		// Bean: Not really elegant because we can only load scenes from the scene folder
 		std::string scenePath = "Assets/Scene/";
 		scenePath += mono_string_to_utf8(mString);
+		scenePath += ".scene";
 
 		MySceneManager.sceneToLoad = scenePath;
 	}
