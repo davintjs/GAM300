@@ -43,13 +43,15 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static float GetProgress(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static bool IsCurrentState(Animator animator, string state);
+        internal extern static void SetProgress(Animator animator, float value);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetDefaultState(Animator animator, string defaultState);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetState(Animator animator, string state);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetNextState(Animator animator, string state);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static string GetState(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetAnimationColor(ulong ID, out Color color);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -97,6 +99,12 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetScale(Transform gameObject, ref vec3 scale);
         #endregion
 
         #region SCENE

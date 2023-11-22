@@ -119,9 +119,10 @@ namespace BeanFactory
         public void Pause() { InternalCalls.PauseAnimation(this); }
         public void Stop() { InternalCalls.StopAnimation(this); }
         public float GetProgress() { return InternalCalls.GetProgress(this); }
-        public bool IsCurrentState(string state) { return InternalCalls.IsCurrentState(this, state); }
+        public void SetProgress(float value) { InternalCalls.SetProgress(this, value); }
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
+        public string GetState() { return InternalCalls.GetState(this); }
         public void SetNextState(string nextState) { InternalCalls.SetNextState(this, nextState); }
 
         public GameObject gameObject
@@ -141,6 +142,34 @@ namespace BeanFactory
         public vec3 localPosition;
         public vec3 localRotation;
         public vec3 localScale;
+        public vec3 position
+        {
+            get
+            {
+                vec3 pos = new vec3();
+                InternalCalls.GetPosition(this, ref pos);
+                return pos;
+            }
+        }
+        public vec3 rotation
+        {
+            get
+            {
+                vec3 rot = new vec3();
+                InternalCalls.GetRotation(this, ref rot);
+                return rot;
+            }
+        }
+        public vec3 scale
+        {
+            get
+            {
+                vec3 scale = new vec3();
+                InternalCalls.GetScale(this, ref scale);
+                return scale;
+            }
+        }
+
         public vec3 forward
         {
             get
