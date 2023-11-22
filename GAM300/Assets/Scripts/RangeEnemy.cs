@@ -57,7 +57,7 @@ public class RangeEnemy : Script
         {
             //idle state
             case 0:
-                Console.WriteLine("Idle");
+                //Console.WriteLine("Idle");
                 if (!back)
                 {
                     transform.localPosition = vec3.Lerp(maxUpPos.localPosition, maxBottomPos.localPosition, timer / duration);
@@ -82,7 +82,7 @@ public class RangeEnemy : Script
                 break;
             //chase state
             case 1:
-                Console.WriteLine("Chase");
+                //Console.WriteLine("Chase");
                 //follow target
                 vec3 direction = (player.localPosition - transform.localPosition).Normalized;
                 direction.y = 0;
@@ -127,7 +127,7 @@ public class RangeEnemy : Script
                 break;
             //return to previous position state
             case 4:
-                Console.WriteLine("Return");
+                //Console.WriteLine("Return");
                 vec3 returnDirection = (startingPos.localPosition - transform.localPosition).Normalized;
                 returnDirection.y = 0;
                 float angle2 = (float)Math.Atan2(returnDirection.x, returnDirection.z);

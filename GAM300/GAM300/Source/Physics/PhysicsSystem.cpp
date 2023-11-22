@@ -135,8 +135,13 @@ void PhysicsSystem::Update(float dt) {
 		JPH::Quat rot;
 		Vector3 trot = t.GetRotation();
 		GlmVec3ToJoltQuat(trot, rot);
-		//bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
-		//bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
+
+		JPH::RVec3 velocity;
+		GlmVec3ToJoltVec3(cc.velocity, velocity);
+
+		bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
+		bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
+		bodyInterface->SetLinearVelocity(tmpBid, velocity);
 		if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
 		{
 			//std::cout << "Character " << i << " is grounded\n";
@@ -146,16 +151,6 @@ void PhysicsSystem::Update(float dt) {
 		{
 			cc.isGrounded = false;
 		}
-		Entity& entity = scene.Get<Entity>(cc);
-		Transform& te = scene.Get<Transform>(entity);
-
-
-		Vector3 tmpVec;
-		JPH::BodyID tmpBID(cc.bid);
-		//JPH::RVec3 tmp;
-		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(te.rotation, tmpQuat);
-		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
 		++j;
 	}
 	

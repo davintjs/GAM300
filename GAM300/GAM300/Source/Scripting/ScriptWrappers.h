@@ -42,7 +42,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return InputHandler::isKeyButtonPressed(keyCode);
 	}
 
-
 	static int GetScrollState()
 	{
 		return InputHandler::getMouseScrollState();

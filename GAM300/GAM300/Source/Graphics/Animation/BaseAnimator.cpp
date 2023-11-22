@@ -36,11 +36,13 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
-    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
+   
 
     // Change state if the current time passes the end time
     if (m_CurrentTime >= endTime - startTime)
         ChangeState();
+
+    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
 
     // crash prevention
     endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;

@@ -97,7 +97,7 @@ namespace BeanFactory
                 InternalCalls.Get(gameObject, out component);
                 return component;
             }
-            Console.WriteLine("Component does not exist");
+            Console.WriteLine("Component" + typeof(T) + "does not exist");
             return null;
         }
 
