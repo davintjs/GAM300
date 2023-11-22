@@ -32,6 +32,11 @@ public class RangeEnemy : Script
 
     float startPoint;
 
+
+    // HealthBar
+    public Transform hpBar;
+
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -163,6 +168,8 @@ public class RangeEnemy : Script
     {
         currentHealth -= amount;
         Console.WriteLine("Hit");
+
+        hpBar.localScale.x = (float)currentHealth/maxHealth;
 
         if(currentHealth <= 0)
         {

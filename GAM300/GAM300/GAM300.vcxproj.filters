@@ -108,6 +108,7 @@
     <ClCompile Include="Source\UISystem\UISystem.cpp" />
     <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
     <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
+    <ClCompile Include="Source\Graphics\ParticleRenderer.cpp" />
     <ClCompile Include="Source\AI\Pathfinder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +202,7 @@
     <ClInclude Include="Source\Graphics\Animation\Animation.h" />
     <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Source\UISystem\UISystem.h" />
+    <ClInclude Include="Source\Graphics\ParticleRenderer.h" />
     <ClInclude Include="Source\AI\Pathfinder.h" />
   </ItemGroup>
   <ItemGroup>

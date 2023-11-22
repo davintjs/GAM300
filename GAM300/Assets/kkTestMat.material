@@ -1,0 +1,14 @@
+Material:
+  Material Name: kkTestMat
+  Shader: 1
+  Albedo: [1, 0, 0, 1]
+  Metallic: 0.680000007
+  Roughness: 0.540000021
+  AmbientOcclusion: 0.560000002
+  Emission: 0.370000005
+  AlbedoTexture: {guid: 355e9bbf3c414b0b2d31f04ffbde083b}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

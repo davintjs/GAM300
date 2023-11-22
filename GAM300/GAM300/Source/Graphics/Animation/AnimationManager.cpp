@@ -47,6 +47,7 @@ void Animation_Manager::Update(float dt)
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
             animator.SetDefaultState("Idle");
+            animator.ChangeState();
         }
 
         if (InputHandler::isKeyButtonPressed(GLFW_KEY_C))
@@ -54,9 +55,9 @@ void Animation_Manager::Update(float dt)
             animator.SetState("Run");
         }
 
-        if (InputHandler::isKeyButtonPressed(GLFW_KEY_V))
+        if (InputHandler::isKeyButtonHolding(GLFW_KEY_V))
         {
-            animator.SetNextState("Sprint");
+            animator.SetState("Sprint");
         }
 
         if (animator.playing && animator.AnimationAttached())

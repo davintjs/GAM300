@@ -316,7 +316,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
 		DrawGrid(vao, (unsigned)prop.entitySRT.size());
-	}
+	}/**/
 #endif
 
 	//Non-Instanced Rendering

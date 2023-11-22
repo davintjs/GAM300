@@ -106,6 +106,44 @@ float Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float anima
     return scaleFactor;
 }
 
+//GetTimeStamp(GetPositionIndex(animationTime));
+float Bone::GetTimeStamp(int p0Index)
+{
+    return m_Positions[p0Index].timeStamp;
+}
+
+glm::vec3 Bone::GetPosition(int p0Index)
+{
+    if (1 == m_NumPositions)
+        return m_Positions[0].position;
+
+    return m_Positions[p0Index].position;
+}
+
+glm::quat Bone::GetRotation(int p0Index)
+{
+    if (1 == m_NumRotations)
+        return m_Rotations[0].orientation;
+
+    return m_Rotations[p0Index].orientation;
+}
+
+glm::vec3 Bone::GetScaling(int p0Index)
+{
+    if (1 == m_NumScalings)
+        return m_Scales[0].scale;
+
+    return m_Scales[p0Index].scale;
+}
+
+float Bone::GetBlendFactor(float lastTimeStamp, float blendTime, float animationTime)
+{
+    float blendFactor = 0.0f;
+    float midWayLength = animationTime - lastTimeStamp;
+    blendFactor = midWayLength / blendTime;
+    return blendFactor;
+}
+
 glm::mat4 Bone::InterpolatePosition(float animationTime)
 {
     if (1 == m_NumPositions)
@@ -136,7 +174,6 @@ glm::mat4 Bone::InterpolateRotation(float animationTime)
         , scaleFactor);
     finalRotation = glm::normalize(finalRotation);
     return glm::toMat4(finalRotation);
-
 }
 
 glm::mat4 Bone::InterpolateScaling(float animationTime)

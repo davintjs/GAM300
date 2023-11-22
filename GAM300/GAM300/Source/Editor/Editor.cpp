@@ -68,6 +68,20 @@ void EditorSystem::Init()
     EditorSystems::Init();
 }
 
+void DeleteEntity(Engine::UUID entity) {
+    if (entity != NON_VALID_ENTITY)
+    {
+        Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
+        Entity& ent = curr_scene.Get<Entity>(entity);
+        Change newchange;
+        newchange.entity = &ent;
+        EDITOR.History.AddEntityChange(newchange);
+        //curr_scene.Destroy(ent);
+        SelectedEntityEvent selectedEvent{ 0 };
+        EVENTS.Publish(&selectedEvent);
+    }
+}
+
 void EditorSystem::Update(float dt)
 {
     if (!MySceneManager.HasScene() || !MySceneManager.GetCurrentScene().HasHandle<Entity>({ selectedEntity }))
@@ -100,19 +114,12 @@ void EditorSystem::Update(float dt)
     }
 
     //Need to press ctrl before delete to avoid accidental deletion
+    if (ImGui::IsKeyReleased(ImGuiKey_Delete)) {
+        DeleteEntity(selectedEntity);
+    }
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
-        if (ImGui::IsKeyReleased(ImGuiKey_Backspace) || ImGui::IsKeyReleased(ImGuiKey_Delete)) {
-            if (selectedEntity != NON_VALID_ENTITY)
-            {
-                Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-                Entity& ent = curr_scene.Get<Entity>(selectedEntity);
-                Change newchange;
-                newchange.entity = &ent;
-                EDITOR.History.AddEntityChange(newchange);
-                //curr_scene.Destroy(ent);
-                SelectedEntityEvent selectedEvent{ 0 };
-                EVENTS.Publish(&selectedEvent);
-            }
+        if (ImGui::IsKeyReleased(ImGuiKey_Backspace)) {
+            DeleteEntity(selectedEntity);
         }
     }
 

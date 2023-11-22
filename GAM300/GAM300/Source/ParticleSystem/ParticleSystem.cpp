@@ -7,75 +7,115 @@
 
 
 
+
+
 void ParticleManager::Init()
 {
-    // Create a particle system.
-    //particleSystem = new ParticleSystem();  
-    //// Set the particle system's properties.
-    //particleSystem->Initialize(1000, 1.0f, 10.0f);
     
 }
 
 
 void ParticleManager::Update(float dt)
 {
-    // Update the particle system.
-    //particleSystem->Update(dt);
-    //// Render the particle system.
-    //particleSystem->Render();
-
-    particleSRT.clear();
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    GLuint vao = MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vaoID; // for now particles are all cubes
-    InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
-
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
-        if (particleComponent.numParticles_ >= 0) {
-            particleComponent.Initialize(particleComponent.numParticles_, particleComponent.particleLifetime_, particleComponent.particleEmissionRate_);
-        }
-        particleComponent.Update(dt);
+        
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         Transform& entityTransform = currentScene.Get<Transform>(entity);
-        Transform particleTransform = entityTransform;
-        for (int i = 0; i < particleComponent.numParticles_; ++i) {
-            particleTransform.GetTranslation() += particleComponent.particles_[i].position;
-            particleSRT.emplace_back(particleTransform.GetWorldMatrix());/**/
+        /*float elapsedTimeSinceLastEmission = dt;
+        float timeBetweenEmissions = 1.0f / particleComponent.particleEmissionRate_;*/
+        
+
+
+        if (particleComponent.particles_.size() != particleComponent.numParticles_) { // initialize
+            particleComponent.particles_.resize(particleComponent.numParticles_);
+            random.resize(particleComponent.numParticles_);
+            // Initialize the position, velocity, and acceleration of each particle
+            for (int i = 0; i < particleComponent.numParticles_; i++) {
+                particleComponent.particles_[i].position = entityTransform.GetTranslation();
+                particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
+                particleComponent.particles_[i].acceleration = 1.0f;
+                //particleComponent.particles_[i].lifetime = particleComponent.particleLifetime_;
+                particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
+                particleComponent.particles_[i].speed = particleComponent.speed_;
+            }
         }
-    }
-}
 
-void ParticleManager::Render(BaseCamera& _camera)
-{
-    Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    GLuint vao = MESHMANAGER.DereferencingMesh(ASSET_CUBE)->vaoID; // for now particles are all cubes
-    InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
-    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
-        glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data());
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //particleComponent.particleLooping = true;
 
-        GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
-        shader.Use();
+        
+        // Handle particle collisions
+        // Emit new particles
+  
+        if (particleComponent.particleEmissionRate_ > 0.0f) { // idk how emmision rate works, @desmond your turn to do this
+            for (int i = 0; i < particleComponent.numParticles_; i++) {
+                if (particleComponent.particles_[i].lifetime <= 0.0f) {
+                    // randomize vec3 direction (normalized)
+                    //      can use glm::normalize() after calculating a random direction
+                    
+                    if (particleComponent.particleLooping == true)
+                    {
+                        particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
+                        //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
+                        particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                        particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
+                        particleComponent.particles_[i].acceleration = 1.0f;
+                        particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                        particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
+                        particleComponent.particles_[i].speed = particleComponent.speed_;
+                        /*std::cout
+                            << particleComponent.particles_[i].direction.x << ", "
+                            << particleComponent.particles_[i].direction.y << ", "
+                            << particleComponent.particles_[i].direction.z << "\n";*/
+                    }
+                    else if (particleComponent.particleLooping == false)
+                    {
+                        //particleComponent.particleEmissionRate_ = particleComponent.desiredLifetime / 1.0f; 
+                        particleComponent.particleEmissionRate_ = 1.0f;
+                        particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
+                        particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                        particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
+                        particleComponent.particles_[i].acceleration = 1.0f;
+                        particleComponent.particles_[i].lifetime -= dt;
+                        particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
+                        particleComponent.particles_[i].speed = particleComponent.speed_;
+                        if (particleComponent.particles_[i].lifetime <= 0)
+                        {
+                            particleComponent.particles_[i].lifetime = 0.0f; 
+                        }
+                    }
+                    //else if (particleLooping == false)
+                    //{
+                    //    particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
+                    //    //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
+                    //    particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                    //    particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
+                    //    particleComponent.particles_[i].acceleration = 1.0f;
+                    //    particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                    //    particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
+                    //    particleComponent.particles_[i].speed = particleComponent.speed_;
+                    //}
 
-        GLint uniform1 =
-            glGetUniformLocation(shader.GetHandle(), "persp_projection");
-        GLint uniform2 =
-            glGetUniformLocation(shader.GetHandle(), "View");
-        GLint uniform3 =
-            glGetUniformLocation(shader.GetHandle(), "camPos");
+                }
+            }
+        }
 
-        glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-            glm::value_ptr(_camera.GetProjMatrix()));
-        glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-            glm::value_ptr(_camera.GetViewMatrix()));
-        glUniform3fv(uniform3, 1,
-            glm::value_ptr(_camera.GetCameraPosition()));
+        for (int i = 0; i < particleComponent.numParticles_; i++) {
 
-        glBindVertexArray(prop.VAO);
-        glDrawElementsInstanced(GL_TRIANGLES, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
-        glBindVertexArray(0);
+            // speed += acceleration * dt
+            // velocity = speed * direction
 
-        shader.UnUse();
+            particleComponent.particles_[i].speed += particleComponent.particles_[i].acceleration * dt;
+            particleComponent.particles_[i].velocity = particleComponent.particles_[i].direction * particleComponent.particles_[i].speed;
+            particleComponent.particles_[i].position += particleComponent.particles_[i].velocity * dt;
+            particleComponent.particles_[i].lifetime -= dt;
+
+            particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
+            particleComponent.particles_[i].scale = glm::clamp(particleComponent.particles_[i].scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
+
+        }
     }
 }
 
@@ -84,5 +124,7 @@ void ParticleManager::Exit()
     // Delete the particle system.
     //delete particleSystem;
 }
+
+
 
     
