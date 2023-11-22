@@ -30,6 +30,11 @@ public class RangeEnemy : Script
 
     public Transform testSetParent;
 
+
+    // HealthBar
+    public Transform hpBar;
+
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -165,6 +170,8 @@ public class RangeEnemy : Script
         currentHealth -= amount;
         Console.WriteLine("Hit");
 
+        hpBar.localScale.x = (float)currentHealth/maxHealth;
+
         if(currentHealth <= 0)
         {
             state = 3;
@@ -180,7 +187,7 @@ public class RangeEnemy : Script
         if(GetTag(other) == "PlayerAttack")
         {
             Console.WriteLine("Hit");
-            //TakeDamage(1);
+            TakeDamage(1);
         }
     }
 

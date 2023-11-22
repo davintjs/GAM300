@@ -473,8 +473,6 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	//physicsSystem->OptimizeBroadPhase();
 
 	PopulatePhysicsWorld();
-
-
 	//std::cout << "Physics System scene start test\n";
 
 }
@@ -517,7 +515,6 @@ void PhysicsSystem::CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent)
 		return;
 	AddRigidBody(pEvent);
 }
-
 void PhysicsSystem::CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>* pEvent)
 {
 	if (!pEvent || !pEvent->pObject)
