@@ -37,9 +37,9 @@ void ThreadPool::Init()
                         mTask = std::move(mTasks.front());
                         mTasks.pop();
                     }
-                    //PRINT("Thread ", i, " acquired job!\n");
+                    PRINT("Thread ", i, " acquired job!\n");
                     mTask(); // Execute the task
-                    //PRINT("Thread ", i, " finished job!\n");
+                    PRINT("Thread ", i, " finished job!\n");
                 }
                 //PRINT("Thread ",i, " exited\n");
             }

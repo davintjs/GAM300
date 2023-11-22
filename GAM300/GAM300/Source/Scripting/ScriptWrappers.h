@@ -32,6 +32,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	#define Register(METHOD) mono_add_internal_call("BeanFactory.InternalCalls::"#METHOD,METHOD)
 
+
 	//DOESNT WORK YET, Checks if key was released
 	static bool GetKeyUp(int keyCode)
 	{
@@ -189,6 +190,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Transform& t = pTransform;
 		scale = t.GetScale();
 	}
+#pragma endregion
+
+#pragma region PARTICLES
+
+	static void ParticlesPlayer(ScriptObject<ParticleComponent> particleComp)
+	{
+		ParticleComponent& p = particleComp;
+		p.particleLooping = (p.particleLooping ? false : true);
+	}
+
 #pragma endregion
 
 	
@@ -439,6 +450,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetState);
 		Register(SetNextState);
 		Register(GetState);
+
+		// Particle Component
+		Register(ParticlesPlayer);
 
 		// Tag Component
 		Register(GetTag);

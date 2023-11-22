@@ -19,6 +19,9 @@ public class RangeEnemy : Script
     public Transform rangeEnemyPos;
     public float RotationSpeed = 6f;
 
+    public ParticleComponent particle;
+
+    
     public Transform modelOffset;
 
     //vec3 startingPos;
@@ -192,6 +195,9 @@ public class RangeEnemy : Script
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(GetTag(other) == "PlayerAttack")
         {
+            particle.gameObject.transform.localPosition = transform.localPosition;
+            particle.Play();
+            Console.WriteLine("MEGAHIT");
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = transform.localPosition - otherT.localPosition;
             dir.y = 0;

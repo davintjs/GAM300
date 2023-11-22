@@ -22,6 +22,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <mutex>
 #include <condition_variable>
 #include "Core/SystemInterface.h"
+#include <Debugging/Debugger.h>
 
 constexpr int MAX_THREADS = 10;
 
@@ -32,7 +33,7 @@ constexpr int MAX_THREADS = 10;
 #define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireUniqueLock(#MUTEX_NAME); ThreadPool::Instance().Wait(lock##MUTEX_NAME,FUNC)
 
 //Scoped lock
-#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME)
+#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME); PRINT(#MUTEX_NAME, "\n")
 
 SINGLETON(ThreadPool)
 {
@@ -92,6 +93,8 @@ private:
 template <typename T>
 void ThreadPool::EnqueueTask(T&& task)
 {
+	PRINT("BEFORE ENQUEUE\n");
 	ACQUIRE_SCOPED_LOCK(Queue);
 	mTasks.emplace(std::move(task));
+	PRINT("AFTER ENQUEUE\n");
 }
