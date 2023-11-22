@@ -80,7 +80,7 @@ namespace BeanFactory
         public static extern void DestroyGameObject(GameObject gameObject);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void DestroyComponent(Component component, Type componentType);
+        internal extern static void DestroyComponent(Object component, Type componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static T AddComponent<T>(GameObject gameObject, Type componentType);
@@ -94,7 +94,8 @@ namespace BeanFactory
         #endregion
 
         #region TRANSFORM
-
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
         #endregion
 

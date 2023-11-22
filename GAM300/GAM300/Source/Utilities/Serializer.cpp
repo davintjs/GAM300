@@ -482,7 +482,6 @@ void DeserializeComponent(const DeComHelper& _helper)
                 }
             , entry.second);
         });
-
     if (!_helper.linker)
     {
         // Store in entity
@@ -504,12 +503,11 @@ void DeserializeComponent(const DeComHelper& _helper)
             }
             else if constexpr (std::is_same<T, Script>())
             {
-                _scene.Add<T>(component.EUID(),component.UUID(), component.scriptId);
+                _scene.Add<T>(component.EUID(),component.UUID(),nullptr,component.scriptId);
             }
             else
             {
-                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID());
-                *pComponent = component;
+                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID(), &component);
             }
         }
         else

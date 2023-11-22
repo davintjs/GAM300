@@ -18,6 +18,8 @@ public class PlatformScript : Script
     public float restTimer = 2f;
     public float currentRestTimer;
 
+    CharacterController player;
+
     void Start()
     {
         currentRestTimer = restTimer;
@@ -25,14 +27,24 @@ public class PlatformScript : Script
 
     void Update()
     {
+        vec3 target = transform.localPosition;
+        vec3 diff = vec3.Zero; 
         if (!back && !rest)
         {
-            transform.localPosition = vec3.Lerp(startPoint.localPosition,endPoint.localPosition , timer / duration);
+            target = vec3.Lerp(startPoint.localPosition, endPoint.localPosition, timer / duration);
+            diff = target - transform.localPosition;
         }
         else if(back && !rest)
         {
-            transform.localPosition = vec3.Lerp(endPoint.localPosition, startPoint.localPosition, timer / duration);
+            target = vec3.Lerp(endPoint.localPosition, startPoint.localPosition, timer / duration);
+            diff = target - transform.localPosition;
         }
+        transform.localPosition = target;
+        if (player != null)
+        {
+            player.Move(diff * 60f);
+        }
+
         timer += Time.deltaTime;
         if (timer >= duration)
         {
@@ -55,18 +67,20 @@ public class PlatformScript : Script
     void OnCollisionEnter(PhysicsComponent rb)
     {
         //detect the player
-        if(rb.HasComponent<ThirdPersonController>())
+        if (GetTag(rb) == "Player")
         {
+            player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
         }
     }
 
-    void OnTrigger(PhysicsComponent other)
+    void OnCollisionExit(PhysicsComponent rb)
     {
-        //check if player landed on it
-        if (other.HasComponent<ThirdPersonController>())
+        //detect the player
+        if (GetTag(rb) == "Player")
         {
-            Console.WriteLine("PlayerOnPlatform");
+            player = null;
+            Console.WriteLine("Player Exit Platform");
         }
     }
 }

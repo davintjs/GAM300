@@ -213,7 +213,7 @@ AudioSource:
   m_GameObject: {fileID: 12985200632528168917}
   AudioChannel: 0
   Loop: true
-  Volume: 1
+  Volume: 0.25
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---

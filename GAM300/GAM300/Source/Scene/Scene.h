@@ -123,7 +123,7 @@ struct Scene
 
 	//Adds an object by giving a owner to it, sharing its euid
 	template <typename T, typename Owner, typename... Args>
-	T* Add(const Owner& owner, Args&&... args);
+	T* Add(const Owner& owner,T* copy = nullptr,Args&&... args);
 
 	//Adds an object creating an entirely new one, EUID should be specified if 
 	//they are components as they should belong to an entity
@@ -132,6 +132,7 @@ struct Scene
 	(
 		Engine::UUID euid = Engine::CreateUUID(),
 		Engine::UUID uuid = Engine::CreateUUID(),
+		T* copy = nullptr,
 		Args&&... args
 	);
 

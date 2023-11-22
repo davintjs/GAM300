@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Core/FramerateController.h"
 #include "IOManager/InputHandler.h"
+#include "Utilities/ThreadPool.h"
 
 // Testing
 JPH::BodyID testBallID;
@@ -115,7 +116,6 @@ void PhysicsSystem::Update(float dt) {
 
 		GlmVec3ToJoltVec3(rb.linearVelocity, tmp);
 		bodyInterface->SetLinearVelocity(tmpBID, tmp);
-		//std::cout << "velocity:" << rb.linearVelocity.x << ',' << rb.linearVelocity.y << ',' << rb.linearVelocity.z << std::endl;
 		GlmVec3ToJoltVec3(rb.angularVelocity, tmp);
 		bodyInterface->SetAngularVelocity(tmpBID, tmp);
 
@@ -244,6 +244,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	//std::cout << "Post physics update\n";
 
 	// Handle collision events
+
+	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
 		// Find rigidbody components of the two bodies
 		PhysicsComponent* pc1 = nullptr;
@@ -251,7 +253,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		bool found = false;
 		Scene& scene = MySceneManager.GetCurrentScene();
 		auto& rbArray = scene.GetArray<Rigidbody>();
-		for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) {
+		for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) 
+		{
 
 			Rigidbody& rb = *it;
 
@@ -283,14 +286,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		}
 
 		if (!pc1 || !pc2)
-			continue;
+		continue;
 
 		// Publish the right event
 		if (e.op == EngineCollisionData::collisionOperation::added) {
 
 			bool trigger = false;
 			bool trigger2 = false;
-			
+
 			if (pc1->componentType == PhysicsComponent::Type::rb) {
 				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc1);
 				if (tmp->is_trigger)
@@ -308,12 +311,15 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				//std::cout << "Trigger Enter!\n";
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.pc1 = pc1;
 				cae.pc2 = pc2;
+				if (cae.pc1 == cae.pc2)
+				{
+					PRINT("this aint it chief\n");
+				}
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}
@@ -423,7 +429,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 
 		// Update velocity
 		if (mCharacter->IsSupported()) {
-			PRINT("supported\n");
+			//PRINT("supported\n");
 			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
 			JPH::Vec3 desired_velocity = directionNormalized * length;
 			desired_velocity.SetY(current_velocity.GetY());
@@ -588,11 +594,16 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			GlmVec3ToJoltVec3(finalPos, pos);
 
 			if (rb.is_trigger)
+			{
 				motionType = JPH::EMotionType::Kinematic;
+			}
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			
 			if (rb.isStatic)
+			{
 				boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+			}
 
 
 			// Set all necessary settings for the body
@@ -605,7 +616,10 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			// Sensor settings 
 			boxCreationSettings.mIsSensor = rb.is_trigger;
 			if (rb.is_trigger)
+			{
 				boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+				boxCreationSettings.mSensorDetectsStatic = true;
+			}
 
 			boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 			boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
@@ -691,7 +705,14 @@ void PhysicsSystem::UpdateGameObjects() {
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
+		if (rb.state == DELETED)
+			continue;
+		if (!it.IsActive())
+			continue;
 		Entity& entity = scene.Get<Entity>(rb);
+		if (!scene.IsActive(entity))
+			continue;
+
 		Transform& t = scene.Get<Transform>(entity);
 
 
@@ -788,7 +809,7 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	//std::cout << "Deleting Body!\n";
 	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
-	if (ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == bid) {
+	if (ccTest->mCharacter && ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == bid) {
 		ccTest->mCharacter->RemoveFromPhysicsSystem();
 		bodyInterface->DestroyBody(ccTest->mCharacter->GetBodyID());
 		ccTest->mCharacter = nullptr;
@@ -837,16 +858,27 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	if (!scene.IsActive(entity) || !scene.IsActive(rb)) {
 		enabledStatus = JPH::EActivation::DontActivate;
 	}
-
-
-
-
 	// If no collider is attached with the rigidbody, reject gameobject
 	if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
+	{
 		return;
 
+	}
 	// Position, Rotation and Scale of collider
 	Transform& t = scene.Get<Transform>(entity);
+
+	Engine::UUID parent = t.parent;
+
+	//Ensure parents are created in the scene
+	while (parent != 0)
+	{
+		if (!scene.HasHandle<Transform>({ parent,0 }))
+		{
+			return;
+		}
+		Transform& parentTrans = scene.Get<Transform>(parent);
+		parent = parentTrans.parent;
+	}
 	JPH::RVec3 scale;
 	JPH::RVec3 pos;
 	Vector3 tpos = t.GetTranslation();
@@ -883,7 +915,9 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		if (rb.is_trigger)
+		{
 			motionType = JPH::EMotionType::Kinematic;
+		}
 
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 		if (rb.isStatic)
@@ -900,7 +934,10 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		// Sensor settings 
 		boxCreationSettings.mIsSensor = rb.is_trigger;
 		if (rb.is_trigger)
+		{
 			boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+			boxCreationSettings.mSensorDetectsStatic = true;
+		}
 
 		boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
 		boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
@@ -1032,6 +1069,31 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
 		return;
 
+	//Scene& scene = MySceneManager.GetCurrentScene();
+
+	// Rigidbodies
+	//auto& rbArray = scene.GetArray<Rigidbody>();
+
+	//for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+	//	Rigidbody& rb = *it;
+	//	if (rb.state == DELETED)
+	//		continue;
+	//	if (!it.IsActive())
+	//		continue;
+	//	Entity& entity = scene.Get<Entity>(rb);
+	//	if (!scene.IsActive(entity))
+	//		continue;
+	//	if (body1.GetID().GetIndexAndSequenceNumber() == rb.bid)
+	//	{
+	//		PRINT("Body1 Contact Added: ", scene.Get<Tag>(rb).name);
+	//	}
+	//	else if (body2.GetID().GetIndexAndSequenceNumber() == rb.bid)
+	//	{
+	//		PRINT("Body2 Contact Added: ", scene.Get<Tag>(rb).name);
+	//	}
+	//}
+
+	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::added));
 	collisionResolution.back().bid1 = body1.GetID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
@@ -1059,6 +1121,7 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 	}
 		//std::cout << "Contact Removed\n";
 
+	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::removed));
 	collisionResolution.back().bid1 = subShapePair.GetBody1ID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = subShapePair.GetBody2ID().GetIndexAndSequenceNumber();

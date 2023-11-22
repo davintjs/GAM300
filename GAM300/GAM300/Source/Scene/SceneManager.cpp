@@ -114,6 +114,19 @@ void SceneManager::Update(float dt)
 	UNREFERENCED_PARAMETER(dt);
 	Scene& scene = GetCurrentScene();
 	scene.ClearBuffer();
+
+
+	if (sceneToLoad != "")
+	{
+		SceneStopEvent stopEvent{};
+		EVENTS.Publish(&stopEvent);
+		LoadSceneEvent e(sceneToLoad);
+		EVENTS.Publish(&e);
+		SceneStartEvent startEvent{};
+		EVENTS.Publish(&startEvent);
+		sceneToLoad = "";
+		++sceneCount;
+	}
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
@@ -160,6 +173,8 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 	//Herr
 	GetCurrentScene().sceneName += " [PREVIEW]";
 	#endif _BUILD
+
+	sceneCount++;
 }
 
 void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
@@ -170,7 +185,13 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 	SceneCleanupEvent e;
 	EVENTS.Publish(&e);
 
-	loadedScenes.pop_front();
+	PRINT("SCENE: " , sceneCount, '\n');
+	for (int i = 0; i < sceneCount; i++)
+	{
+		loadedScenes.pop_front();
+	}
+
+	sceneCount = 0;
 
 	ScenePostCleanupEvent e1;
 	EVENTS.Publish(&e1);
