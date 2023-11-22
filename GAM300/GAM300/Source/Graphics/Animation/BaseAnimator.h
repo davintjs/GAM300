@@ -56,6 +56,9 @@ public:
 	std::vector<glm::mat4>* GetFinalBoneMatricesPointer() { return &m_FinalBoneMatrices; }
 
 	bool AnimationAttached();
+	void CalculateBlendFactor(float transitionDuration);
+	void CalculateBlendedBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
+		//void InterpolateAnimations(Animation& firstAnimation, Animation& secondAnimation);
 
 	std::vector<glm::mat4> m_FinalBoneMatrices;
 	Engine::GUID<AnimationAsset> animID{0};
@@ -67,11 +70,23 @@ public:
 	std::string stateNextName;
 	int m_FinalBoneMatIdx; // to access copy of original anim
 	int m_AnimationIdx; // to access copy of original anim
+	int m_SecondAnimationIdx;
 	float m_CurrentTime;
 	float startTime;
 	float endTime;
+	float blendDuration;
 
 	bool playing;
+	int currBlendState{};
+	int blendedBones;
+	enum blendStates {
+		notblending,
+		blending,
+		blended
+	};
+
+	//// temp?
+	//Animation m_BlendedAnimation;
 
 	property_vtable();
 };

@@ -1,0 +1,143 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: theoAnimTest
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 1093866452432998051
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2629151410123732397}  # Transform
+    - component: {fileID: 6624460600492297826}  # MeshRenderer
+---
+ID: 2629151410123732397
+Transform:
+  m_GameObject: {fileID: 1093866452432998051}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [15.1787987, 0.00100000005, 15.1787987]
+  Father: {fileID: 2346704007727384514}
+  m_Children:
+    []
+---
+ID: 6624460600492297826
+MeshRenderer:
+  m_GameObject: {fileID: 1093866452432998051}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 000000000000000000000000000000c8}
+---
+ID: 14365891126363820688
+GameObject:
+  m_IsActive: true
+  m_Name: Light
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6202871815354044321}  # Transform
+    - component: {fileID: 17398114022074565735}  # LightSource
+---
+ID: 6202871815354044321
+Transform:
+  m_GameObject: {fileID: 14365891126363820688}
+  Translation: [0, 2.84804392, 1.36228895]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 17398114022074565735
+LightSource:
+  m_GameObject: {fileID: 14365891126363820688}
+  EnableShadow: true
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 10
+  Direction: [0, 0, 0]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 1, 1]
+---
+ID: 18147641936712422184
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7746186197540147185}  # Transform
+    - component: {fileID: 12276585220749896285}  # Animator
+---
+ID: 7746186197540147185
+Transform:
+  m_GameObject: {fileID: 18147641936712422184}
+  Translation: [0, 0.000413089991, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+  Father: {fileID: 2346704007727384514}
+  m_Children:
+    - {fileID: 2395884659753370783}
+---
+ID: 12276585220749896285
+Animator:
+  m_GameObject: {fileID: 18147641936712422184}
+  Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+  Current State: ""
+  Next State: ""
+  Time: 0
+  StartTime: 0
+  EndTime: 952
+  Playing: false
+---
+ID: 2395884659753370783
+GameObject:
+  m_IsActive: true
+  m_Name: Part_11_Body
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2547938304496246001}  # Transform
+    - component: {fileID: 5764989911558262325}  # MeshRenderer
+---
+ID: 2547938304496246001
+Transform:
+  m_GameObject: {fileID: 2395884659753370783}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18147641936712422184}
+  m_Children:
+    []
+---
+ID: 5764989911558262325
+MeshRenderer:
+  m_GameObject: {fileID: 2395884659753370783}
+  Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
+  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
+---
+ID: 2346704007727384514
+GameObject:
+  m_IsActive: true
+  m_Name: Parent
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5629850825464820935}  # Transform
+---
+ID: 5629850825464820935
+Transform:
+  m_GameObject: {fileID: 2346704007727384514}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 1093866452432998051}
+    - {fileID: 18147641936712422184}
