@@ -5,3 +5,5 @@ C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\obj\Debug\ScriptCore.csproj.SuggestedBi
 C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
 C:\Users\prawn\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
 C:\Users\prawn\Documents\GitHub\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache

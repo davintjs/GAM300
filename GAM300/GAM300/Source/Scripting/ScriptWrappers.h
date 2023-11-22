@@ -22,6 +22,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Identifiers.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/Animation/BaseAnimator.h"
+#include "AI/NavMesh.h"
+#include "AI/NavMeshBuilder.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -387,6 +389,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return scene.SetActive(pair->second, &helper);
 	}
 
+	// Pathfinding
+	static bool FindPath(ScriptObject<NavMeshAgent> pEnemy, glm::vec3 pDest)
+	{
+		NavMeshAgent& _player = pEnemy;
+
+		std::cout << "Destination : " << pDest.x << " " << pDest.y << " " << pDest.z << std::endl;
+		return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -454,6 +465,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetState);
 		Register(SetNextState);
 		Register(GetTag);
+		Register(FindPath);
 		Register(GetScrollState);
 	}
 #endif // !SCRIPT_WRAPPERS_H

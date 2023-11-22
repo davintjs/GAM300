@@ -388,6 +388,7 @@ struct Canvas : Object
 	} property_vend_h(Canvas)
 
 
+
 //struct ParticleComponent : Object
 //{
 //	ParticleComponent() {}
@@ -500,7 +501,17 @@ property_begin_name(ButtonComponent, "ButtonComponent")
 
 } property_vend_h(ButtonComponent)
 
+struct NavMeshAgent : Object
+	{
+		float mAgentSpeed = 0.f;
+		std::deque<glm::vec3> mPoints;
+		property_vtable();
+	};
 
+	property_begin_name(NavMeshAgent, "NavMeshAgent")
+	{
+		property_var(mAgentSpeed).Name("Agent Speed")
+	} property_vend_h(NavMeshAgent)
 
 #pragma endregion
 
@@ -568,7 +579,7 @@ private:
 
 //Template pack of components that entities can only have one of each
 //Colliders have to be before rigidbodies
-using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent, NavMeshAgent>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;

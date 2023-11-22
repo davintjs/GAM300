@@ -28,13 +28,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 class NavMesh;
 
-SINGLETON(NavMeshBuilder)
+ENGINE_RUNTIME_SYSTEM(NavMeshBuilder)
 {
 public:
 	NavMeshBuilder() {};
 	~NavMeshBuilder() {};
 
 	void Init();
+	void Update(float dt);
 
 	// Get all grounds of the current scene
 	std::pair<std::vector<glm::vec3>, std::vector<glm::ivec3>> GetAllGrounds();

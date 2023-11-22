@@ -1,0 +1,178 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: NavMeshPFTest
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 6696807521451330218
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 5
+  m_Component:
+    - component: {fileID: 15488908987253707681}  # Transform
+    - component: {fileID: 6644804900793924283}  # BoxCollider
+    - component: {fileID: 13701711871900942415}  # Rigidbody
+    - component: {fileID: 440141438424994131}  # MeshRenderer
+---
+ID: 15488908987253707681
+Transform:
+  m_GameObject: {fileID: 6696807521451330218}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [20, 1, 20]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6644804900793924283
+BoxCollider:
+  m_GameObject: {fileID: 6696807521451330218}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 13701711871900942415
+Rigidbody:
+  m_GameObject: {fileID: 6696807521451330218}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 440141438424994131
+MeshRenderer:
+  m_GameObject: {fileID: 6696807521451330218}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 3088184379416202870
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: Player
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11648166187505253997}  # Transform
+    - component: {fileID: 1040833519891976145}  # BoxCollider
+    - component: {fileID: 2155030805890386099}  # Rigidbody
+    - component: {fileID: 4386051691820933417}  # MeshRenderer
+---
+ID: 11648166187505253997
+Transform:
+  m_GameObject: {fileID: 3088184379416202870}
+  Translation: [0, 2.232162, 6.47856474]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 1040833519891976145
+BoxCollider:
+  m_GameObject: {fileID: 3088184379416202870}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 2155030805890386099
+Rigidbody:
+  m_GameObject: {fileID: 3088184379416202870}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4386051691820933417
+MeshRenderer:
+  m_GameObject: {fileID: 3088184379416202870}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 6919749487122041186
+GameObject:
+  m_IsActive: true
+  m_Name: Enemy
+  m_TagString: Enemy
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4634132187460084369}  # Transform
+    - component: {fileID: 9135379942731322435}  # BoxCollider
+    - component: {fileID: 5101548554005043818}  # Rigidbody
+    - component: {fileID: 14198302693127043279}  # MeshRenderer
+    - component: {fileID: 11782577131411590036}  # NavMeshAgent
+    - component: {fileID: 601124486226092958}  # Script
+---
+ID: 4634132187460084369
+Transform:
+  m_GameObject: {fileID: 6919749487122041186}
+  Translation: [7.4505806e-09, 2.19411182, -4.04101658]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9135379942731322435
+BoxCollider:
+  m_GameObject: {fileID: 6919749487122041186}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 5101548554005043818
+Rigidbody:
+  m_GameObject: {fileID: 6919749487122041186}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 14198302693127043279
+MeshRenderer:
+  m_GameObject: {fileID: 6919749487122041186}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: d6bd6d20e4c577aa0e5f9021eea0ba5c}
+---
+ID: 11782577131411590036
+NavMeshAgent:
+  m_GameObject: {fileID: 6919749487122041186}
+  Agent Speed: 0
+---
+ID: 601124486226092958
+Script:
+  m_GameObject: {fileID: 6919749487122041186}
+  Script: {guid: f784036538a49c6e1ed72a6bbbd5d8f4}
+  inRange: false
+  shootDistance: 3
+  maxHealth: 3
+  currentHealth: 0
+  moveSpeed: 2
+  timer: 0
+  back: false
+  chaseDistance: 30
+  state: 0
+  player: {fileID: 3088184379416202870}  # Component
+  bulletSpeed: 3
+  rangeEnemyPos: {fileID: 0}
+  maxUpPos: {fileID: 0}
+  maxBottomPos: {fileID: 0}
+  duration: 2
+  startingPos: {fileID: 0}
+  bullet: {fileID: 0}
