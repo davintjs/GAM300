@@ -263,7 +263,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Deletes a gameobject
 	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
-		PRINT("DESTROYING GAME OBJECT\n");
 		MySceneManager.GetCurrentScene().Destroy<Entity>(pEntity);
 	}
 

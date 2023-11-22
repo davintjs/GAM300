@@ -113,16 +113,24 @@ public class ThirdPersonController : Script
         }
 
         vec3 dir = GetDirection();
-        SetState("Run", dir == vec3.Zero ? false : true);
         UpdateRotation(dir);
         vec3 movement = dir * MoveSpeed;
 
         //Jump
-        if (CC.isGrounded)
+        if (CC.isGrounded && !IsAttacking)
         {
             SetState("Falling", false);
+            if (Input.GetMouseDown(0))
+            {
+                IsAttacking = true;
+                playerWeaponCollider.SetActive(true);//enable the weapon collider
+                SetState("Attack1", true);
+                AudioManager.instance.playerSlashAttack.Play();
+                AudioManager.instance.spark.Play();
+            }
+
             //JUMP
-            if (Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
                 SetState("Jump", true);
                 AudioManager.instance.jumpVoice.Play();
@@ -140,26 +148,39 @@ public class ThirdPersonController : Script
                 else
                 {
                     SetState("Sprint", false);
+                    SetState("Run", dir == vec3.Zero ? false : true);
                 }
             }
             currentAirTime = 0;
         }
         else
         {
-            if (animationManager.GetState("Jump").state)
+            if (IsAttacking)
             {
-                if (currentAirTime >= maxAirTime)
+                currentAttackTimer -= Time.deltaTime;
+                if (currentAttackTimer <= 0)
+                {
+                    IsAttacking = false;
+                    playerWeaponCollider.SetActive(false);
+                    currentAttackTimer = attackTimer;
+                }
+            }
+            else
+            {
+                if (animationManager.GetState("Jump").state)
+                {
+                    if (currentAirTime >= maxAirTime)
+                    {
+                        SetState("Falling", true);
+                    }
+                }
+                else if (currentAirTime >= maxAirTime * .5f)
                 {
                     SetState("Falling", true);
                 }
+                currentAirTime += Time.deltaTime;
+                movement += vec3.UnitY * -Gravity;
             }
-            else if (currentAirTime >= maxAirTime * .5f)
-            {
-                SetState("Falling", true);
-            }
-            currentAirTime += Time.deltaTime;
-
-            movement += vec3.UnitY * -Gravity;
         }
 
         //testing reset position
@@ -173,24 +194,7 @@ public class ThirdPersonController : Script
         CC.Move(movement);
 
         //attacking
-        if(Input.GetMouseDown(0) && !IsAttacking)
-        {
-            IsAttacking = true;
-            playerWeaponCollider.SetActive(true);//enable the weapon collider
-            SetState("Attack1", true);
-            AudioManager.instance.playerSlashAttack.Play();
-            AudioManager.instance.spark.Play();
-        }
-        if(IsAttacking)
-        {
-            currentAttackTimer -= Time.deltaTime;
-            if(currentAttackTimer <= 0)
-            {
-                IsAttacking = false;
-                playerWeaponCollider.SetActive(false);
-                currentAttackTimer = attackTimer;
-            }
-        }
+
         //invulnerablility
         if (isInvulnerable)
         {

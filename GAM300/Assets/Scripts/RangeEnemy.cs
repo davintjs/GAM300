@@ -18,9 +18,9 @@ public class RangeEnemy : Script
     public Transform player;
     public Transform rangeEnemyPos;
 
+    public Transform modelOffset;
+
     //vec3 startingPos;
-    public Transform maxUpPos;
-    public Transform maxBottomPos;
     public Transform startingPos;
     public float duration = 2f;
     public float timer = 0f;
@@ -28,17 +28,16 @@ public class RangeEnemy : Script
     public GameObject bullet;
     public float bulletSpeed = 3f;
 
-    public Transform testSetParent;
+    public float floatingY = .5f;
+
+    float startPoint;
 
     void Start()
     {
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
-        if (testSetParent != null)
-        {
-            testSetParent.SetParent(transform);
-        }
+        startPoint = modelOffset.localPosition.y;
     }
 
     void Update()
@@ -60,11 +59,11 @@ public class RangeEnemy : Script
                 //Console.WriteLine("Idle");
                 if (!back)
                 {
-                    transform.localPosition = vec3.Lerp(maxUpPos.localPosition, maxBottomPos.localPosition, timer / duration);
+                    modelOffset.localPosition = vec3.Lerp(vec3.UnitY * (-floatingY + startPoint), vec3.UnitY * (floatingY + startPoint), timer / duration);
                 }
                 else
                 {
-                    transform.localPosition = vec3.Lerp(maxBottomPos.localPosition, maxUpPos.localPosition, timer / duration);
+                    modelOffset.localPosition = vec3.Lerp(vec3.UnitY * (floatingY + startPoint), vec3.UnitY * (-floatingY + startPoint), timer / duration);
                 }
                 timer += Time.deltaTime;
                 if(timer > duration)
@@ -168,19 +167,16 @@ public class RangeEnemy : Script
         if(currentHealth <= 0)
         {
             state = 3;
-            //Destroy(this.gameObject);
         }
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Enemy Triggered " + GetTag(other));
-
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(GetTag(other) == "PlayerAttack")
         {
             Console.WriteLine("Hit");
-            //TakeDamage(1);
+            TakeDamage(1);
         }
     }
 

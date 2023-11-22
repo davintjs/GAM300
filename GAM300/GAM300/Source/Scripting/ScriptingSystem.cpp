@@ -794,6 +794,11 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 	Entity& e1 = scene.Get<Entity>(rb1.EUID());
 	Entity& e2 = scene.Get<Entity>(rb2.EUID());
 
+	if (&e1 == nullptr || &e2 == nullptr)
+	{
+		return;
+	}
+
 	if (scene.Has<Script>(e1))
 	{
 		for (Script* script : scene.GetMulti<Script>(e1))

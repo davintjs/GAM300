@@ -76,10 +76,12 @@ namespace BeanFactory
             {
                 if (animator.GetProgress() <= 0.95f)
                 {
+                    Console.WriteLine("Stalling: " +  currentState);
                     return;
                 }
                 else
                 {
+                    Console.WriteLine("Stop stalling: " + currentState);
                     currState.state = false;
                 }
                 currState = null;
@@ -118,9 +120,9 @@ namespace BeanFactory
             return animationStates[name];
         }
 
-        public AnimationState GetCurrentState()
+        public string GetCurrentState()
         {
-            return animationStates[currentState];
+            return currentState;
         }
 
     }
