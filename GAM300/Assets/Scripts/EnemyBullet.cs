@@ -9,10 +9,8 @@ public class EnemyBullet : Script
 {
     void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Enemy bullet hit object with tag: " + GetTag(other));
-        if (GetTag(other) != "Enemy")
+        if (GetTag(other) != "Enemy" && GetTag(other) != "EnemyAttack")
         {
-            Console.WriteLine("Self destructed bullet");
             Destroy(gameObject);
         }
     }

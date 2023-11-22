@@ -174,7 +174,7 @@ Transform:
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 6034621871942586701}
+  Father: {fileID: 17589645519894896830}
   m_Children:
     []
 ---
@@ -200,7 +200,7 @@ Transform:
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 6034621871942586701}
+  Father: {fileID: 17589645519894896830}
   m_Children:
     []
 ---
@@ -226,7 +226,7 @@ Transform:
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 6034621871942586701}
+  Father: {fileID: 17589645519894896830}
   m_Children:
     []
 ---
@@ -7161,7 +7161,7 @@ Script:
   Script: {guid: bd73ea774e83cb5793d6be5959fe3ede}
   player: {fileID: 3977294589520766028}  # Component
   orient: {fileID: 18364898161930433210}  # Component
-  distance: 2
+  distance: 1
 ---
 ID: 3977294589520766028
 GameObject:
@@ -7337,11 +7337,11 @@ ID: 6628232525372413625
 Animator:
   m_GameObject: {fileID: 18364898161930433210}
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
-  Current State: Run
-  Next State: Run
-  Time: 78.4640732
-  StartTime: 62
-  EndTime: 88
+  Current State: Idle
+  Next State: None
+  Time: 4.49971962
+  StartTime: 2
+  EndTime: 61
   Playing: true
 ---
 ID: 16264842088658397507
@@ -15663,6 +15663,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 17589645519894896830}
     - {fileID: 16279065018212808363}
     - {fileID: 307508712453590974}
     - {fileID: 18227054109373820900}
@@ -15671,7 +15672,7 @@ Transform:
 ID: 9504656451654388578
 BoxCollider:
   m_GameObject: {fileID: 6034621871942586701}
-  Dimensions: [1, 1, 1]
+  Dimensions: [1, 1.39999998, 1]
   Offset: [0, 0, 0]
 ---
 ID: 5033578668654550690
@@ -15683,7 +15684,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: true
+  IsKinematic: false
   UseGravity: false
   Is_trigger: false
 ---
@@ -15701,6 +15702,13 @@ Script:
   chaseDistance: 5
   state: 0
   player: {fileID: 3977294589520766028}  # Component
+  bulletSpeed: 3
+  rangeEnemyPos: {fileID: 6034621871942586701}  # Component
+  duration: 2
+  startingPos: {fileID: 13482372997539004348}  # Component
+  modelOffset: {fileID: 17589645519894896830}  # Component
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  floatingY: 0.200000003
   particle: {fileID: 0}
   maxUpPos: {fileID: 3943745876277307351}  # Component
   maxBottomPos: {fileID: 3964396846741779526}  # Component
@@ -19056,3 +19064,23 @@ ParticleComponent:
   Particle Speed: 2
   2D particle: false
   Looping: false
+ID: 17589645519894896830
+GameObject:
+  m_IsActive: true
+  m_Name: ModelOffset
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1082336531608403}  # Transform
+---
+ID: 1082336531608403
+Transform:
+  m_GameObject: {fileID: 17589645519894896830}
+  Translation: [0, 0.150000006, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6034621871942586701}
+  m_Children:
+    - {fileID: 16279065018212808363}
+    - {fileID: 307508712453590974}
+    - {fileID: 18227054109373820900}

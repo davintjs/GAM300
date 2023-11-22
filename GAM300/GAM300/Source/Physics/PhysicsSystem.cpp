@@ -83,6 +83,11 @@ void PhysicsSystem::Update(float dt) {
 		Rigidbody& rb = *it;
 
 		if (rb.state == DELETED) continue;
+		if (!it.IsActive())
+			continue;
+		Entity& entity = scene.Get<Entity>(rb);
+		if (!scene.IsActive(entity))
+			continue;
 		
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
@@ -98,9 +103,6 @@ void PhysicsSystem::Update(float dt) {
 		//	if(bodyInterface->IsActive(tmpBID))
 		//		bodyInterface->DeactivateBody(tmpBID);
 		//}
-		
-
-		Entity& entity = scene.Get<Entity>(rb);
 		
 
 		Transform& t = scene.Get<Transform>(entity);
@@ -855,8 +857,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		return;
 	if (!physicsSystem)
 		return;
-
-	PRINT("ADD RIGIDBODY EVENT\n");
 
 	Rigidbody& rb = *(pEvent->pObject);
 

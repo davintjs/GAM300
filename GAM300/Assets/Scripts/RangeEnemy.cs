@@ -20,21 +20,31 @@ public class RangeEnemy : Script
     public ParticleComponent particle;
 
     
+    public Transform modelOffset;
+
     //vec3 startingPos;
-    public Transform maxUpPos;
-    public Transform maxBottomPos;
     public Transform startingPos;
     public float duration = 2f;
     public float timer = 0f;
 
-    //public GameObject bullet;
-    //public float bulletSpeed = 3f;
+    public GameObject bullet;
+    public float bulletSpeed = 3f;
+
+    public float floatingY = .5f;
+
+    float startPoint;
+
+
+    // HealthBar
+    public Transform hpBar;
+
 
     void Start()
     {
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
+        startPoint = modelOffset.localPosition.y;
     }
 
     void Update()
@@ -55,11 +65,11 @@ public class RangeEnemy : Script
                 //Console.WriteLine("Idle");
                 if (!back)
                 {
-                    transform.localPosition = vec3.Lerp(maxUpPos.localPosition, maxBottomPos.localPosition, timer / duration);
+                    modelOffset.localPosition = vec3.Lerp(vec3.UnitY * (-floatingY + startPoint), vec3.UnitY * (floatingY + startPoint), timer / duration);
                 }
                 else
                 {
-                    transform.localPosition = vec3.Lerp(maxBottomPos.localPosition, maxUpPos.localPosition, timer / duration);
+                    modelOffset.localPosition = vec3.Lerp(vec3.UnitY * (floatingY + startPoint), vec3.UnitY * (-floatingY + startPoint), timer / duration);
                 }
                 timer += Time.deltaTime;
                 if(timer > duration)
@@ -159,14 +169,11 @@ public class RangeEnemy : Script
         if(currentHealth <= 0)
         {
             state = 3;
-            //Destroy(this.gameObject);
         }
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        //Console.WriteLine("Hit");
-
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(other.gameObject.name == "PlayerWeaponCollider")
         {
