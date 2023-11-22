@@ -1,0 +1,14 @@
+Material:
+  Material Name: MeleeEnemy_01
+  Shader: 0
+  Albedo: [1, 1, 1, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  Emission: 1
+  AlbedoTexture: {guid: d51bb512379795a97a1d09316aefba85}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: b06929fe3552b349e44a0e02012e007a}
+  RoughnessTexture: {guid: dc24a3aac024a9c9597f1e36953bc4b7}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 91b0b456122e2f2c79659388bc919450}
