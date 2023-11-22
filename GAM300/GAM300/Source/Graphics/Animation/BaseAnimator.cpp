@@ -42,20 +42,28 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
 
     // Change state if the current time passes the end time
-    if (m_CurrentTime >= endTime - startTime || currBlendState == blended)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
+    if (m_CurrentTime >= endTime - startTime)
     {
-        if (nextState && currBlendState != blended)  // might wanna move out of these 2 if statements
+        if (!nextState)
+        {
+            nextState = defaultState;
+        }
+
+        if (!currentState)
+        {
+            currentState = defaultState;
+
+            m_CurrentTime = startTime = currentState->minMax.x;
+            endTime = currentState->minMax.y;
+        }
+
+        if (currentState != nextState)
         {
             currBlendState = blending;
             endTime += blendDuration;
         }
-        
-        if (currBlendState != blending)
-        {
-            ChangeState(); // need to change to move interolateanim stuff in
+        else
             currBlendState = notblending;
-        }
-
     }
 
     // crash prevention
@@ -65,8 +73,6 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
-    //std::cout  << currentState << "currentState " << blendFactor << "blendfac\n";
-
     if (currBlendState == blending)/*if (nextState)*/
     {
         blendedBones = 0;
@@ -75,6 +81,12 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         if (blendedBones == m_CurrentAnimation.GetBoneCount())
         {
             currBlendState = blended;
+            currentState = nextState;
+
+            m_CurrentTime = startTime = currentState->minMax.x;
+            endTime = currentState->minMax.y;
+            stateName = currentState->label;
+            playing = true;
         }
     }
     else
@@ -163,7 +175,7 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
         if (Bone && NextBone)
         {
             // get anim1 xform
-            int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
+             int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
             // get anim2 xform
             int p1Index = NextBone->GetPositionIndex(nextState->minMax.x);
 
@@ -234,7 +246,7 @@ void BaseAnimator::SetNextState(const std::string& _nextState)
 void BaseAnimator::SetState(const std::string& _state)
 {
     SetNextState(_state);
-    ChangeState();
+    //ChangeState();
 }
 
 bool BaseAnimator::AnimationAttached() {
