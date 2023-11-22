@@ -105,6 +105,7 @@ public:
 		MESHMANAGER.Init();
 		TextureManager.Init();
 		AUDIOMANAGER.InitAudioManager();
+		PHYSICS.PostSubscription();
 
 		#if defined(_BUILD)
 			InputSystem::Instance().LockCursor(true);

@@ -43,7 +43,6 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 void PhysicsSystem::Init() 
 {
 	// Event Subscriptions
-	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStop);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectCreated);
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackObjectDestroyed);
@@ -66,6 +65,12 @@ void PhysicsSystem::Init()
 	// Basic contact listener
 	engineContactListener = new EngineContactListener();
 }
+
+void PhysicsSystem::PostSubscription() 
+{
+	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
+}
+
 void PhysicsSystem::Update(float dt) {
 	if (!physicsSystem)
 		return;
@@ -480,6 +485,7 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 	//std::cout << "Num characters: " << characters.size() << std::endl;
 	//Clean up any characters
+	populated = false;
 	for (JPH::Ref<JPH::Character>& r : characters) {
 
 		if (r == nullptr)
@@ -523,7 +529,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 	if (!physicsSystem)
 		return;
-
+	populated = true;
+	PRINT("POPULATE\n");
 	Scene& scene = MySceneManager.GetCurrentScene();
 
 	// check entity for collider and then check what kind of collider he want
@@ -684,7 +691,10 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		CreateJoltCharacter(*it, physicsSystem, this);
 	}
 
-	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
+
+	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+
+	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
 
 }
 
@@ -841,12 +851,15 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 
 void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
-	Scene& scene = MySceneManager.GetCurrentScene();	
-	
+	Scene& scene = MySceneManager.GetCurrentScene();
+	if (!populated)
+		return;
 	if (!pEvent || !pEvent->pObject)
 		return;
 	if (!physicsSystem)
 		return;
+
+	PRINT("ADD RIGIDBODY EVENT\n");
 
 	Rigidbody& rb = *(pEvent->pObject);
 

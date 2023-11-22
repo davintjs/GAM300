@@ -40,6 +40,8 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Jolt/Physics/Character/Character.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 
+#define PHYSICS PhysicsSystem::Instance()
+
 // Layers that objects can be in and determines which other objects it can collide with
 namespace EngineObjectLayers {
 	inline constexpr JPH::ObjectLayer STATIC = 0;
@@ -196,6 +198,8 @@ public:
 	// Clean-up duty
 	void Exit();
 
+	void PostSubscription();
+
 	// Clone any gameobject with rigidbodies, character controller into a Jolt Body for simulations
 	void PopulatePhysicsWorld();
 
@@ -233,6 +237,8 @@ public:
 
 	unsigned int step = 0;
 	float accumulatedTime = 0.f;
+
+	bool populated = false;
 
 	JPH::TempAllocatorImpl* tempAllocator =			nullptr;
 	JPH::JobSystemThreadPool* jobSystem =			nullptr;
