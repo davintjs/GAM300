@@ -56,7 +56,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 	//Gets object that entity has
-	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, void*& obj)
+	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, ScriptObject<Object>& obj)
 	{
 		Object* entityMaybe = pEntity;
 		MonoType* mType = mono_reflection_type_get_type(componentType);
@@ -78,13 +78,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				return;
 			}
 		}
-		if (pair->second == GetType::E<Entity>())
-		{
-			PRINT("Getting entity\n");
-		}
 		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
-		ScriptObject<Object> object{ pObject };
-		obj = &object;
+		obj = pObject;
 	}
 
 	static MonoString* GetTag(ScriptObject<Object> pObject)
@@ -210,7 +205,36 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 #pragma endregion
+	
+	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
+	{
+		Scene& currentScene = MySceneManager.GetCurrentScene();
 
+		Transform *transform, *parent = nullptr;
+		for (auto& t : currentScene.GetArray<Transform>())
+		{
+			if (t.EUID() == (*pTransform).EUID())
+				transform = &t;
+
+			if (t.EUID() == (*pParent).EUID())
+				parent = &t;
+		}
+
+		// If the parent doesnt exist, set the parent of this transform to null
+		if(transform)
+			transform->SetParent(parent);
+	}
+
+	// Load a scene
+	static void LoadScene(MonoString* mString)
+	{
+		// Bean: Not really elegant because we can only load scenes from the scene folder
+		std::string scenePath = "Assets/Scene/";
+		scenePath += mono_string_to_utf8(mString);
+		scenePath += ".scene";
+
+		MySceneManager.sceneToLoad = scenePath;
+	}
 
 	//Gets object that entity has
 	static void* AddComponent(ScriptObject<Object> pEntity, MonoReflectionType* componentType)
@@ -228,7 +252,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 				if (offset != std::string::npos)
 					scriptName = scriptName.substr(offset + 1);
 				//Get Mono Script instead
-				return MySceneManager.GetCurrentScene().Add<Script>((Entity&)pEntity,scriptName.c_str());
+				return MySceneManager.GetCurrentScene().Add<Script>((Entity&)pEntity,nullptr,scriptName.c_str());
 			}
 			else
 			{
@@ -262,7 +286,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		output = false;
 	}
 
-	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity> out)
+	static void CloneGameObject(ScriptObject<Entity> pEntity, ScriptObject<Entity>& out)
 	{
 		Object* obj{ pEntity };
 		out = &MySceneManager.GetCurrentScene().Clone((Entity&)pEntity);
@@ -412,6 +436,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetLayerName);
 		Register(GetActive);
 		Register(SetActive);
+		Register(SetTransformParent);
+		Register(LoadScene);
 		Register(AddComponent);
 		Register(GetMouseDelta);
 		Register(AudioSourcePlay);

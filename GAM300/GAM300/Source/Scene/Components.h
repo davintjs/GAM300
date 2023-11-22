@@ -217,9 +217,6 @@ struct PhysicsComponent : Object
 	};
 	UINT32 bid{ 0 };					// Jolt Body ID
 	Type componentType{ rb };
-
-	~PhysicsComponent();
-
 };
 
 struct Rigidbody : PhysicsComponent
@@ -568,7 +565,8 @@ private:
 
 
 //Template pack of components that entities can only have one of each
-using SingleComponentTypes = TemplatePack<Transform, Tag, Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, BoxCollider, ParticleComponent>;
+//Colliders have to be before rigidbodies
+using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;

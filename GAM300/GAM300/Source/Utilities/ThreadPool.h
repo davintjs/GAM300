@@ -32,7 +32,7 @@ constexpr int MAX_THREADS = 10;
 #define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireUniqueLock(#MUTEX_NAME); ThreadPool::Instance().Wait(lock##MUTEX_NAME,FUNC)
 
 //Scoped lock
-#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME);
+#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME)
 
 SINGLETON(ThreadPool)
 {

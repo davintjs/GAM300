@@ -24,7 +24,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Editor/EditorHeaders.h"
 #include "Physics/PhysicsSystem.h"
 
-#define MyPhysicsSystem = PhysicsSystem::Instance()
 
 std::map<std::string, size_t> ComponentTypes{};
 
@@ -190,11 +189,3 @@ void ButtonComponent::Button_update(Button* button, int mouse_x, int mouse_y, bo
 		button->is_clicked = false;
 	}
 }
-
-
-PhysicsComponent::~PhysicsComponent() {
-	//std::cout << "Destruct Physics Component\n";
-	PhysicsSystem::Instance().DeleteBody(*this);
-}
-
-

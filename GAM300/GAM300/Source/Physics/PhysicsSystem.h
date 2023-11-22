@@ -63,11 +63,11 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer obj1, JPH::ObjectLayer obj2) const override {
 		switch (obj1) {
 		case EngineObjectLayers::STATIC:
-			return obj2 == EngineObjectLayers::DYNAMIC;
+			return obj2 == EngineObjectLayers::DYNAMIC || EngineObjectLayers::SENSOR;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
 		case EngineObjectLayers::SENSOR:
-			return obj2 == EngineObjectLayers::DYNAMIC;
+			return obj2 != EngineObjectLayers::SENSOR;
 		default:
 			return false;
 
@@ -124,11 +124,11 @@ public:
 	virtual bool ShouldCollide(JPH::ObjectLayer objLayer, JPH::BroadPhaseLayer bPLayer) const override {
 		switch (objLayer) {
 		case EngineObjectLayers::STATIC:
-			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
+			return bPLayer == EngineBroadPhaseLayers::DYNAMIC || bPLayer == EngineBroadPhaseLayers::SENSOR;
 		case EngineObjectLayers::DYNAMIC:
 			return true;
 		case EngineObjectLayers::SENSOR:
-			return bPLayer == EngineBroadPhaseLayers::DYNAMIC;
+			return bPLayer != EngineBroadPhaseLayers::SENSOR;
 		default:
 			return false;
 		}

@@ -37,17 +37,18 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			{
 				object = &Get<T>(newEntityID);
 				object->child.clear();
+				CopyValues(component, *object);
 			}
 			else if constexpr (std::is_same<T, Tag>())
 			{
 				object = &Get<T>(newEntityID);
+				CopyValues(component, *object);
 			}
 			else
 			{
-				object = Add<T>(newEntityID);
+				object = Add<T>(newEntityID,Engine::CreateUUID(), &component);
 			}
 			storage[GetType::E<T>()][component] = *object;
-			CopyValues(component, *object);
 			if constexpr (std::is_same<T, Tag>())
 			{
 				object->name += " - Copy";
@@ -61,7 +62,7 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 				T* object;
 				if constexpr (std::is_same_v<T, Script>)
 				{
-					object = Add<T>(Get<Entity>(newEntityID), pComponent->scriptId);
+					object = Add<T>(Get<Entity>(newEntityID), nullptr,pComponent->scriptId);
 				}
 				else
 				{
@@ -165,7 +166,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 			}
 		}
 	}
-
 	if constexpr (sizeof...(Ts) != 0)
 	{
 		LinkReferences<Ts...>(storage);
@@ -247,7 +247,6 @@ void Scene::Destroy(T& object)
 		Transform& transform = Get<Transform>(object);
 		transform.SetParent(nullptr);
 		auto children{ transform.child };
-
 		for (auto& child : children)
 		{
 			Destroy<Entity>(Get<Entity>(child));
@@ -346,6 +345,10 @@ bool Scene::IsActive(T& object)
 		if (isActive && t.parent)
 		{
 			Entity& parentEntity = Get<Entity>(t.parent);
+			if (&parentEntity == nullptr)
+			{
+				return false;
+			}
 			return IsActive(parentEntity);
 		}
 
@@ -430,18 +433,13 @@ void Scene::EraseHandle(T& object)
 }
 
 template <typename T, typename Owner, typename... Args>
-T* Scene::Add(const Owner& owner, Args&&... args)
+T* Scene::Add(const Owner& owner,T* copy ,Args&&... args)
 {
-	return Add<T>(owner.EUID(), Engine::CreateUUID(), args...);
+	return Add<T>(owner.EUID(), Engine::CreateUUID(), copy, args...);
 }
 
 template <typename T, typename... Args>
-T* Scene::Add
-(
-	Engine::UUID euid,
-	Engine::UUID uuid,
-	Args&&... args
-)
+T* Scene::Add(Engine::UUID euid,Engine::UUID uuid,T* copy,Args&&... args)
 {
 	static_assert(AllObjectTypes::Has<T>(), "Type is not a valid scene object");
 	auto& arr = GetArray<T>();
@@ -486,6 +484,8 @@ T* Scene::Add
 	}
 	if (object)
 	{
+		if (copy)
+			CopyValues(*copy, *object);
 		ObjectCreatedEvent e = { object };
 		EVENTS.Publish(&e);
 	}
