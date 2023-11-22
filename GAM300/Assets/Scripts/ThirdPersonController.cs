@@ -124,14 +124,12 @@ public class ThirdPersonController : Script
             //JUMP
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Console.WriteLine("Jumping");
                 SetState("Jump", true);
                 AudioManager.instance.jumpVoice.Play();
                 movement += vec3.UnitY * JumpSpeed;
             }
             else
             {
-                Console.WriteLine("Stop jumping");
                 SetState("Jump", false);
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -321,6 +319,6 @@ public class ThirdPersonController : Script
 
     void OnCollisionEnter(PhysicsComponent rb)
     {
-        Console.WriteLine("INTO THE UNKNOWN");
+        Console.WriteLine("Player collided with: " + GetTag(rb));
     }
 }
