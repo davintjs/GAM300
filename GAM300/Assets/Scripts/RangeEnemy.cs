@@ -16,6 +16,8 @@ public class RangeEnemy : Script
     public bool back = false;
     public int state;//Example 1 is walk, 2 is attack, 3 is idle etc.
     public Transform player;
+    public Transform rangeEnemyPos;
+    public float RotationSpeed = 6f;
 
     public ParticleComponent particle;
 
@@ -32,15 +34,21 @@ public class RangeEnemy : Script
 
     public float floatingY = .5f;
 
+    public float maxShootCooldown = 3f;
+    float shootCooldown = 0f;
+
     float startPoint;
 
 
     // HealthBar
     public Transform hpBar;
 
+    Rigidbody rb;
+
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
@@ -52,11 +60,9 @@ public class RangeEnemy : Script
         if (player == null)
             return;
 
-        //ensure the moving animation reference continues to follow the it
-        //maxUpPos.localPosition.x = GetComponent<Transform>().localPosition.x;
-        //maxUpPos.localPosition.z = GetComponent<Transform>().localPosition.z;
-        //maxBottomPos.localPosition.x = GetComponent<Transform>().localPosition.x;
-        //maxBottomPos.localPosition.z = GetComponent<Transform>().localPosition.z;
+        vec3 direction = player.localPosition - transform.position;
+        direction.y = 0f;
+        direction = direction.NormalizedSafe;
 
         switch (state)
         {
@@ -87,35 +93,32 @@ public class RangeEnemy : Script
                 break;
             //chase state
             case 1:
-                //Console.WriteLine("Chase");
-                //follow target
-                vec3 direction = (player.localPosition - transform.localPosition).Normalized;
-                direction.y = 0;
-                float angle = (float)Math.Atan2(direction.x, direction.z);
-                transform.localRotation = new vec3(0, angle, 0);
-                GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
-
                 //change to attack state once it has reach it is in range
                 if(vec3.Distance(player.localPosition, transform.localPosition) <= shootDistance)
                 {
                     state = 2;
+                    shootCooldown = 0f;
                 }
                 //return to its starting position if player is far from its chaseDistance
                 if(vec3.Distance(player.localPosition, transform.localPosition) > chaseDistance)
                 {
                     //return back to its previous position state
-                    state = 4;
-
-                    //NOTE: temporary return to its idle state
-                    //state = 1;
+                    state = 0;
                 }
+                LookAt(direction);
+                GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
                 break;
             //attack state
             case 2:
-                ////spawn bullet
-                //GameObject bulletPrefab = Instantiate(bullet, transform.localPosition, transform.localRotation) as GameObject;
-                //bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
-                //Console.WriteLine("ShootBullet");
+                //spawn bullet or just look at player
+                shootCooldown += Time.deltaTime;
+                if (shootCooldown > maxShootCooldown)
+                {
+                    GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
+                    bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * bulletSpeed;
+                    shootCooldown = 0;
+                }
+                LookAt(direction);
                 //change to chase state once player has reach out of range
                 if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)
                 {
@@ -123,11 +126,8 @@ public class RangeEnemy : Script
                 }
                 break;
             //death state
-            case 3:
-                Destroy(this.gameObject);
-                break;
             //return to previous position state
-            case 4:
+/*            case 4:
                 //Console.WriteLine("Return");
                 vec3 returnDirection = (startingPos.localPosition - transform.localPosition).Normalized;
                 returnDirection.y = 0;
@@ -145,41 +145,64 @@ public class RangeEnemy : Script
                     //change to chase state
                     state = 1;
                 }
-                break;
+                break;*/
         }
+    }
 
-        ////player detection
-        //if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
-        //{
-        //    //change to chase state
-        //    state = 1;
-        //}
-        //else
-        //{
-        //    //return back to its previous position state
-        //    state = 4;
-        //}
+    void LookAt(vec3 dir)
+    {
+        if (dir == vec3.Zero)
+            return;
+        float angle = (float)Math.Atan2(dir.x, dir.z);
+        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
+        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+
+        // Interpolate using spherical linear interpolation (slerp)
+        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
+
+        vec3 rot = ((vec3)midQuat.EulerAngles);
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                transform.localRotation = rot;
+            }
+        }
     }
 
     void TakeDamage(int amount)
     {
         currentHealth -= amount;
-        Console.WriteLine("Hit");
-
+        hpBar.localScale.x = (float)currentHealth/maxHealth;
         if(currentHealth <= 0)
         {
-            state = 3;
+            Destroy(gameObject);
         }
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if(other.gameObject.name == "PlayerWeaponCollider")
+        if(GetTag(other) == "PlayerAttack")
         {
             particle.gameObject.transform.localPosition = transform.localPosition;
             particle.Play();
             Console.WriteLine("MEGAHIT");
+            Transform otherT = other.gameObject.GetComponent<Transform>();
+            vec3 dir = transform.localPosition - otherT.localPosition;
+            dir.y = 0;
+            dir = dir.NormalizedSafe;
+            rb.force = dir * 100f;
             TakeDamage(1);
         }
     }

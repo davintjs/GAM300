@@ -324,7 +324,7 @@ public:
 	LogicState logicState;
 	std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
-	std::atomic_bool ran;
+	bool ran;
 
 	std::map<std::type_index, IEventHandler*> events;
 	template<class EventType>

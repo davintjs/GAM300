@@ -241,7 +241,8 @@ void ScriptingSystem::Update(float dt)
 		//Sync logic thread with main thread
 		ran = false;
 		//Logic thread running because ran is set to false
-		while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
+		auto func = [this] { return ran; };
+		ACQUIRE_UNIQUE_LOCK(Mono, func);
 	}
 }
 

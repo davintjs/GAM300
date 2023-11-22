@@ -106,6 +106,7 @@ void PhysicsSystem::Update(float dt) {
 		
 
 		Transform& t = scene.Get<Transform>(entity);
+		
 
 
 
@@ -125,7 +126,9 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetLinearVelocity(tmpBID, tmp);
 		GlmVec3ToJoltVec3(rb.angularVelocity, tmp);
 		bodyInterface->SetAngularVelocity(tmpBID, tmp);
-
+		GlmVec3ToJoltVec3(rb.force, tmp);
+		bodyInterface->AddForce(tmpBID, tmp);
+		rb.force = vec3(0);
 	}
 
 	auto& ccArray = scene.GetArray<CharacterController>();
