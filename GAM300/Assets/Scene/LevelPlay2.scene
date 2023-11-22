@@ -8615,7 +8615,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: None
-  Time: 2.63485718
+  Time: 16.0359421
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -18986,40 +18986,6 @@ MeshRenderer:
   Mesh: {guid: af873c54a8488f0399d7612d7c3fb58c}
   Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}
 ---
-ID: 1383582138491610266
-GameObject:
-  m_IsActive: true
-  m_Name: HitParticles
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11988116543012598023}  # Transform
-    - component: {fileID: 6215432877287874407}  # ParticleComponent
----
-ID: 11988116543012598023
-Transform:
-  m_GameObject: {fileID: 1383582138491610266}
-  Translation: [-19.9855022, 2.59805799, 20.9618988]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 6215432877287874407
-ParticleComponent:
-  m_GameObject: {fileID: 1383582138491610266}
-  Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 4fb2f1b05837904f2f0e2bd0b9fa1c7c}
-  Number Of Particles: 10
-  Particle Lifetime: 2
-  Particle Emission Rate: 1
-  Particle Min Scale: 0.0700000003
-  Particle Max Scale: 0.100000001
-  Particle Scale Rate: 0.5
-  Particle Speed: 2
-  2D particle: false
-  Looping: false
 ID: 17589645519894896830
 GameObject:
   m_IsActive: true
