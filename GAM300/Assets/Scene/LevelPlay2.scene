@@ -7252,7 +7252,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 5.9987731
+  Time: 50.4123383
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8528,7 +8528,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 31.4990845
+  Time: 16.4125519
   StartTime: 2
   EndTime: 57
   Playing: true

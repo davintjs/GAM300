@@ -364,14 +364,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	// Pathfinding
 	static bool FindPath(ScriptObject<NavMeshAgent> pEnemy, glm::vec3 pDest)
 	{
-		NavMeshAgent& _enemy = pEnemy;
-		return NAVMESHBUILDER.GetNavMesh()->FindPath(_enemy, pDest);
-	}
+		NavMeshAgent& _player = pEnemy;
 
-	static void ResetPather(ScriptObject<NavMeshAgent> pEnemy)
-	{
-		NavMeshAgent& _enemy = pEnemy;
-		_enemy.mPather.ResetPather();
+		std::cout << "Destination : " << pDest.x << " " << pDest.y << " " << pDest.z << std::endl;
+		return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
 	}
 
 	//Register all components to mono
@@ -456,10 +452,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Tag Component
 		Register(GetTag);
-		Register(GetScrollState);
-
-		// NavMeshAgent Component
 		Register(FindPath);
-		Register(ResetPather);
+		Register(GetScrollState);
 	}
 #endif // !SCRIPT_WRAPPERS_H
