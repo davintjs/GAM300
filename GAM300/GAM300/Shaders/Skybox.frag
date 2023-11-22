@@ -22,9 +22,12 @@ uniform samplerCube skybox;
 
 void main()
 {    
+
+	const float gamma = 2.2f;
+
     FragColor = texture(skybox, TexCoords);
 
-//    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
+    FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
 
 
 //    float gamma = 2.2;
