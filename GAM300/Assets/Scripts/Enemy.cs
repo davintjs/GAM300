@@ -44,16 +44,15 @@ public class Enemy : Script
 
     }
 
-    void OnCollisionEnter(Rigidbody rb)
+    void OnCollisionEnter(PhysicsComponent component)
     {
-/*        Console.WriteLine("Enemy collided tag: " + GetTag(rb));
-        if (GetTag(rb) == "Test2")
+        if (GetTag(component) == "PlayerCollider")
         {
             Console.WriteLine("I have been attacked!");
             Health -= 1;
             if (Health <= 0)
                 Destroy(gameObject);
-        }*/
+        }
     }
 }
 

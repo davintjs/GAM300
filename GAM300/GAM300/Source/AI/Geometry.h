@@ -104,6 +104,7 @@ public:
 
     glm::vec3& operator[](unsigned int i) { return mPoints[i]; }
     const glm::vec3& operator[](unsigned int i) const { return mPoints[i]; }
+    //bool operator<(Triangle3D* rhs) { return this->mFinalCost < rhs->mFinalCost; }
 
     // Getter functions
     // Returns the neighbours of this triangle
@@ -114,8 +115,6 @@ public:
 
     // Returns the normal of this triangle
     const glm::vec3 GetNormal() const;
-
-
 
     // Checks if the triangle is a neighbour of this triangle
     bool isNeighbour(const Triangle3D& mRHS);
@@ -136,6 +135,10 @@ public:
 
     Triangle3D* GetParent()
     {
+        if (mParent == nullptr)
+        {
+            return nullptr;
+        }
         return mParent;
     }
 

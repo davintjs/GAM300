@@ -19,6 +19,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "NavMesh.h"
+#include "Scene/Components.h"
+#include "Scene/SceneManager.h"
 
 const std::vector<Triangle3D> NavMesh::GetNavMeshTriangles() const
 {
@@ -35,10 +37,13 @@ const std::vector<unsigned int> NavMesh::GetIndices() const
 	return mIndices;
 }
 
-bool NavMesh::FindPath(const glm::vec3& mStart, const glm::vec3& mEnd)
+bool NavMesh::FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd)
 {
-	const Triangle3D* mTri1 = TriangleContainingPoint(mStart);
-	const Triangle3D* mTri2 = TriangleContainingPoint(mEnd);
+	Scene& tempScene = MySceneManager.GetCurrentScene();
+	Transform& agentTransform = tempScene.Get<Transform>(mAgent);
+
+	Triangle3D* mTri1 = TriangleContainingPoint(agentTransform.GetTranslation());
+	Triangle3D* mTri2 = TriangleContainingPoint(mEnd);
 
 	if (mTri1 == nullptr || mTri2 == nullptr) // Out of bounds of navmesh triangles
 	{
@@ -46,13 +51,18 @@ bool NavMesh::FindPath(const glm::vec3& mStart, const glm::vec3& mEnd)
 	}
 	else if (mTri1 == mTri2) // Start and end is same triangle
 	{
-
+		mAgent.mPoints.push_back(mEnd - agentTransform.GetTranslation());
+		return true;
 	}
 
 	AStarPather pather; // Temporary
 	if (pather.ComputePath(mTri1, mTri2))
 	{
-		std::vector<glm::vec3> mPath = pather.PathPostProcess(mStart, mEnd); // The vector will contain the points that the agent will need to walk to until he reach the goal
+		mAgent.mPoints = pather.PathPostProcess(agentTransform.GetTranslation(), mEnd); // The vector will contain the points that the agent will need to walk to until he reach the goal
+		for (const auto& i : mAgent.mPoints)
+		{
+			std::cout << "Found Path: " << i.x << " " << i.y << " " << i.z << std::endl;
+		}
 		return true;
 	}
 

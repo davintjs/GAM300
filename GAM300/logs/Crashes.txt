@@ -1,6 +1,5 @@
-[2023-11-22 01:28:30.113] [Error] [critical] 
-Caused By:	false
-Info:		Failed to load .scene file "Assets/Scene/LevelPlay2" due to: bad file: Assets/Scene/LevelPlay2
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 358)
+[2023-11-22 14:22:28.238] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  нннннннннннннннннннннннннннннннннннн COULD NOT BE FOUND IN SCRIPT
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 732)
 

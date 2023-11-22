@@ -1,24 +1,53 @@
 #include "Precompiled.h"
+#include "Pathfinder.h"
 #include "Geometry.h"
 
-bool PathNode::operator<(const PathNode& rhs)
+void OpenList::push(Triangle3D* n) 
 {
-	return this->mFinalCost < rhs.mFinalCost;
+	nodes.emplace_back(n);
 }
 
-bool AStarPather::ComputePath(const Triangle3D*& mStart, const Triangle3D*& mEnd)
+Triangle3D* OpenList::pop() 
 {
-	while (!mQueue.empty())
+	if (nodes.empty()) 
 	{
-		Triangle3D* mParentNode = mQueue.top();
+		return nullptr;
+	}
+
+	float cheapest = FLT_MAX;
+	int count = 0;
+	for (int i = 0; i < nodes.size(); ++i) 
+	{
+		if (nodes[i]->GetFinalCost() <= cheapest) 
+		{
+			cheapest = nodes[i]->GetFinalCost();
+			count = i;
+		}
+	}
+
+	Triangle3D* cheapestNode = nodes.back();
+	std::swap(cheapestNode, nodes[count]);
+	nodes.pop_back();
+
+	return cheapestNode;
+}
+
+// A* Pathfinding
+bool AStarPather::ComputePath(Triangle3D* mStart, Triangle3D* mEnd)
+{
+	mQueue.push(mStart);
+	while (!mQueue.nodes.empty())
+	{
+		Triangle3D* mParentNode = mQueue.pop();
 
 		// Reached the end
 		if (mParentNode->GetMidPoint() == mEnd->GetMidPoint())
 		{
-			while (mParentNode != nullptr)
+			Triangle3D* temp = std::move(mParentNode);
+			while (temp != nullptr)
 			{
-				mTriangleWayPoint.insert(mTriangleWayPoint.begin(), mParentNode);
-				mParentNode = mParentNode->GetParent();
+				mTriangleWayPoint.push_front(temp);
+				temp = temp->GetParent();
 			}
 			return true;
 		}
@@ -29,7 +58,7 @@ bool AStarPather::ComputePath(const Triangle3D*& mStart, const Triangle3D*& mEnd
 		{
 			float mNewGiven = std::sqrtf(static_cast<float>(std::pow((tri->GetMidPoint().x - mParentNode->GetMidPoint().x), 2)) +
 										 static_cast<float>(std::pow((tri->GetMidPoint().y - mParentNode->GetMidPoint().y), 2)) +
-										 static_cast<float>(std::pow((tri->GetMidPoint().z + mParentNode->GetMidPoint().z), 2))) +
+										 static_cast<float>(std::pow((tri->GetMidPoint().z - mParentNode->GetMidPoint().z), 2))) +
 							  mParentNode->GetGivenCost();
 
 			float mNewHeu = CalculateHeuristic(tri, mEnd);
@@ -41,7 +70,6 @@ bool AStarPather::ComputePath(const Triangle3D*& mStart, const Triangle3D*& mEnd
 				tri->SetHeuCost(mNewHeu);
 				tri->SetGivenCost(mNewGiven);
 				tri->SetList(OnList::OPEN_LIST);
-				mVisitedNodes.push_back(tri);
 				mQueue.push(tri);
 			}
 			else if (tri->GetFinalCost() > mNewFinal)
@@ -55,25 +83,32 @@ bool AStarPather::ComputePath(const Triangle3D*& mStart, const Triangle3D*& mEnd
 					tri->SetList(OnList::OPEN_LIST);
 					mQueue.push(tri);
 				}
-				mVisitedNodes.push_back(tri);
 			}
 		}
-
-		mQueue.pop();
 	}
 
 	return false;
 }
 
-std::vector<glm::vec3> AStarPather::PathPostProcess(const glm::vec3& mStart, const glm::vec3& mEnd)
+std::deque<glm::vec3> AStarPather::PathPostProcess(const glm::vec3& mStart, const glm::vec3& mEnd)
 {
 	std::vector<std::pair<glm::vec3, glm::vec3>> portals = GetPortals(mStart, mEnd);
-	std::vector<glm::vec3> mWay = Funnel(mStart, mEnd, portals); // The vector will contain the points that the agent will need to walk to until he reach the goal
+	std::deque<glm::vec3> mWay = Funnel(mStart, mEnd, portals); // The vector will contain the points that the agent will need to walk to until he reach the goal
+	
+	// Reset the triangles
+	for (auto& i : mTriangleWayPoint)
+	{
+		i->SetParent(nullptr);
+		i->SetFinalCost(0.f);
+		i->SetGivenCost(0.f);
+		i->SetHeuCost(0.f);
+		i->SetList(OnList::NONE);
+	}
 
 	return mWay;
 }
 
-float AStarPather::CalculateHeuristic(const Triangle3D* mCurrNode, const Triangle3D*& mEnd)
+float AStarPather::CalculateHeuristic(const Triangle3D* mCurrNode, const Triangle3D* mEnd)
 {
 	return std::sqrtf(static_cast<float>(std::pow(mCurrNode->GetMidPoint().x - mEnd->GetMidPoint().x, 2)) +
 					  static_cast<float>(std::pow(mCurrNode->GetMidPoint().y - mEnd->GetMidPoint().y, 2)) +
@@ -83,6 +118,10 @@ float AStarPather::CalculateHeuristic(const Triangle3D* mCurrNode, const Triangl
 std::vector<std::pair<glm::vec3, glm::vec3>> AStarPather::GetPortals(const glm::vec3& mStart, const glm::vec3& mEnd)
 {
 	std::vector<std::pair<glm::vec3, glm::vec3>> resVec;
+	if (this->mTriangleWayPoint.size() < 2)
+	{
+		return resVec;
+	}
 
 	// First determine which is the left and right point of the first portal
 	const Triangle3D& firstTri = *(this->mTriangleWayPoint[0]);
@@ -170,9 +209,13 @@ std::vector<std::pair<glm::vec3, glm::vec3>> AStarPather::GetPortals(const glm::
 	return resVec;
 }
 
-std::vector<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::vec3& mEnd, const std::vector<std::pair<glm::vec3, glm::vec3>>& mPortals)
+std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::vec3& mEnd, const std::vector<std::pair<glm::vec3, glm::vec3>>& mPortals)
 {
-	std::vector<glm::vec3> resVec;
+	std::deque<glm::vec3> resVec;
+	if (mPortals.size() == 0)
+	{
+		return resVec;
+	}
 
 	// Create the initial left and right lines of funnel
 	glm::vec3 mCurrStart = mStart;
@@ -181,8 +224,8 @@ std::vector<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::v
 
 	int apexIndex = 0, leftIndex = 0, rightIndex = 0, mNumPoints = 0;
 
-	resVec.push_back(mStart); // Add the start point first
-	++mNumPoints;
+	//resVec.push_front(mStart); // Add the start point first
+	//++mNumPoints;
 
 	for (int i = 1; i < mPortals.size() && mNumPoints < mPortals.size(); ++i)
 	{
