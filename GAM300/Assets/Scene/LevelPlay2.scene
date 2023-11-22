@@ -7339,7 +7339,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 51.4999466
+  Time: 52.1702499
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8576,12 +8576,12 @@ Script:
 ID: 5401300559759663398
 GameObject:
   m_IsActive: true
-  m_Name: EnemyMesh
+  m_Name: MeleeEnemyModel
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8490146645422117217}  # Transform
-    - component: {fileID: 15256556308041781131}  # MeshRenderer
+    - component: {fileID: 2885720903832385260}  # Animator
 ---
 ID: 8490146645422117217
 Transform:
@@ -8591,13 +8591,23 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 8319159695061000746}
   m_Children:
-    []
+    - {fileID: 1275605244127295956}
+    - {fileID: 2192231905359452304}
+    - {fileID: 8859687773919053193}
+    - {fileID: 762649870560229923}
+    - {fileID: 6743729567856155675}
+    - {fileID: 18024480038456106563}
 ---
-ID: 15256556308041781131
-MeshRenderer:
+ID: 2885720903832385260
+Animator:
   m_GameObject: {fileID: 5401300559759663398}
-  Mesh: {guid: f78435a0fc7c773ceedfd53d911a8c46}
-  Material_ID: {guid: 050cb738bcb263b80153a8138c5db4b2}
+  Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Current State: Idle
+  Next State: None
+  Time: 44.8162422
+  StartTime: 2
+  EndTime: 57
+  Playing: false
 ---
 ID: 2198295187909507
 GameObject:
@@ -18674,3 +18684,159 @@ LightSource:
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [100, 100, 100]
+---
+ID: 1275605244127295956
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_01
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10576491346601775082}  # Transform
+    - component: {fileID: 17821761253174658721}  # MeshRenderer
+---
+ID: 10576491346601775082
+Transform:
+  m_GameObject: {fileID: 1275605244127295956}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 17821761253174658721
+MeshRenderer:
+  m_GameObject: {fileID: 1275605244127295956}
+  Mesh: {guid: 374f5a7f64d5da517d609437862f6257}
+  Material_ID: {guid: ee43a729300fe3d80bd52cda2fdd5ae7}
+---
+ID: 2192231905359452304
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_02
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9188019419656882107}  # Transform
+    - component: {fileID: 1409155337759197400}  # MeshRenderer
+---
+ID: 9188019419656882107
+Transform:
+  m_GameObject: {fileID: 2192231905359452304}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 1409155337759197400
+MeshRenderer:
+  m_GameObject: {fileID: 2192231905359452304}
+  Mesh: {guid: f4b3928ce8e5cc2383c6720ef5c7b137}
+  Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}
+---
+ID: 8859687773919053193
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_03
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 465757108114973586}  # Transform
+    - component: {fileID: 2389223610140368606}  # MeshRenderer
+---
+ID: 465757108114973586
+Transform:
+  m_GameObject: {fileID: 8859687773919053193}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 2389223610140368606
+MeshRenderer:
+  m_GameObject: {fileID: 8859687773919053193}
+  Mesh: {guid: 8529c20d580348d519ab04254e0016cf}
+  Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}
+---
+ID: 762649870560229923
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_04_Helmet
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10450433198706233515}  # Transform
+    - component: {fileID: 1315405182995491118}  # MeshRenderer
+---
+ID: 10450433198706233515
+Transform:
+  m_GameObject: {fileID: 762649870560229923}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 1315405182995491118
+MeshRenderer:
+  m_GameObject: {fileID: 762649870560229923}
+  Mesh: {guid: 3131c02c23ac35b27698f498e1a40c34}
+  Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}
+---
+ID: 6743729567856155675
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_05
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 421155074753696800}  # Transform
+    - component: {fileID: 15730760679006222841}  # MeshRenderer
+---
+ID: 421155074753696800
+Transform:
+  m_GameObject: {fileID: 6743729567856155675}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 15730760679006222841
+MeshRenderer:
+  m_GameObject: {fileID: 6743729567856155675}
+  Mesh: {guid: 8c06e1041e4c7e343eec57a50f7cd6bd}
+  Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}
+---
+ID: 18024480038456106563
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy_01_Part_06
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13070873062942308345}  # Transform
+    - component: {fileID: 17338423662392046978}  # MeshRenderer
+---
+ID: 13070873062942308345
+Transform:
+  m_GameObject: {fileID: 18024480038456106563}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5401300559759663398}
+  m_Children:
+    []
+---
+ID: 17338423662392046978
+MeshRenderer:
+  m_GameObject: {fileID: 18024480038456106563}
+  Mesh: {guid: af873c54a8488f0399d7612d7c3fb58c}
+  Material_ID: {guid: 3c67157d53e9adddfa085bdd974e66b7}

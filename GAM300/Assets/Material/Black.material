@@ -1,7 +1,7 @@
 Material:
   Material Name: Black
-  Shader: 1
-  Albedo: [0, 0, 0, 1]
+  Shader: 0
+  Albedo: [9.99999975e-05, 9.9989993e-05, 9.9989993e-05, 1]
   Metallic: 1
   Roughness: 0.200000003
   AmbientOcclusion: 1
