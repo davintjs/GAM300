@@ -93,8 +93,8 @@ private:
 template <typename T>
 void ThreadPool::EnqueueTask(T&& task)
 {
-	PRINT("BEFORE ENQUEUE\n");
+	//PRINT("BEFORE ENQUEUE\n");
 	ACQUIRE_SCOPED_LOCK(Queue);
 	mTasks.emplace(std::move(task));
-	PRINT("AFTER ENQUEUE\n");
+	//PRINT("AFTER ENQUEUE\n");
 }
