@@ -38,7 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
+#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; PRINT("Script Thread event\n"); while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
 
 #define ACQUIRE_LOCK_IF_SCRIPT_THREAD(LockName) (if (SCRIPTING_THREAD_ID == std::this_thread::get_id()) {ACQUIRE_SCOPED_LOCK(##LockName);})
 
@@ -194,6 +194,7 @@ MonoImage* ScriptingSystem::GetAssemblyImage()
 
 void ScriptingSystem::RecompileThreadWork()
 {
+	PRINT("RECOMPLING START\n");
 	compilingState = CompilingState::Compiling;
 	Utils::CompileDll();
 	compilingState = CompilingState::SwapAssembly;
@@ -552,11 +553,15 @@ void ScriptingSystem::ThreadWork()
 		//Pause timer when recompiling
 		if (timeUntilRecompile > 0)
 		{
+			PRINT("BEFORE SLEEP\n");
 			Sleep(1000);
+			PRINT("AFTER SLEEP\n");
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
 			{
+				PRINT("BEFORE THREAD ENQUEUE\n");
 				THREADS.EnqueueTask([this] {RecompileThreadWork(); });
+				PRINT("AFTER THREAD ENQUEUE\n");
 			}
 		}
 		else if (compilingState == CompilingState::SwapAssembly)
@@ -891,6 +896,7 @@ void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCR
 {
 	(void)pEvent;
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
+	PRINT("Script Modified!\n");
 }
 
 bool ScriptingSystem::IsScript(MonoClass* monoClass)

@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include <Core/EventsManager.h>
 #include <unordered_set>
 #include <string>
+#include <Debugging/Debugger.h>
 
 #include <Core/Events.h>
 
