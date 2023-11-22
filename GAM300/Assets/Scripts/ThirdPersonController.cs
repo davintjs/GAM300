@@ -163,8 +163,8 @@ public class ThirdPersonController : Script
         {
             if (IsAttacking)
             {
-                float dist = maxColliderDist * animator.GetProgress();
-                playerWeaponCollider.transform.localPosition = player.localPosition + PlayerModel.back * dist;
+                float dist = maxColliderDist * currentAttackTimer/attackTimer;
+                playerWeaponCollider.transform.localPosition = transform.localPosition + PlayerModel.back * dist;
                 playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
                 currentAttackTimer -= Time.deltaTime;
                 if (currentAttackTimer <= 0)
