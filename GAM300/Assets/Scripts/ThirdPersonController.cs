@@ -47,6 +47,7 @@ public class ThirdPersonController : Script
                 {
                     currState.state = false;
                 }
+                currState = null;
                 currentState = "";
             }
             foreach (var pair in animationStates)
@@ -55,7 +56,7 @@ public class ThirdPersonController : Script
                 {
                     if (currentState == pair.Key)
                     {
-                        if (currState.loop)
+                        if (currState != null && currState.loop)
                         {
                             animator.SetNextState(currentState);
                         }
@@ -69,6 +70,7 @@ public class ThirdPersonController : Script
             if (currentState != "")
             {
                 currentState = "";
+                animator.SetState("Idle");
             }
         }
 
@@ -154,6 +156,9 @@ public class ThirdPersonController : Script
     public float invulnerableTimer = 1f;
     public float currentInvulnerableTimer;
 
+    float maxAirTime = 1f;
+    float currentAirTime = 0;
+
     //health bar
     public GameObject healthBarFill;
     vec3 initialHealthBarPos;
@@ -169,6 +174,7 @@ public class ThirdPersonController : Script
         //Highest Precedence
         AnimationState death = animationManager.GetState("Death");
         AnimationState stun = animationManager.GetState("Stun");
+        AnimationState falling = animationManager.GetState("Falling");
         AnimationState jump = animationManager.GetState("Jump");
         AnimationState attack1 = animationManager.GetState("Attack1");
         AnimationState sprint = animationManager.GetState("Sprint");
@@ -178,9 +184,12 @@ public class ThirdPersonController : Script
         death.stall = true;
         stun.SetConditionals(false, death);
         stun.stall = true;
+        falling.SetConditionals(false, death, stun);
+        falling.loop = true;
         jump.SetConditionals(false, death,stun);
         attack1.SetConditionals(false, jump, death, stun);
         attack1.stall = true;
+        sprint.SetConditionals(true, run);
         sprint.SetConditionals(false, attack1, jump, death, stun);
         sprint.loop = true;
         run.SetConditionals(false, sprint, attack1, jump, death, stun);
@@ -209,7 +218,6 @@ public class ThirdPersonController : Script
         if (CC.velocity.y > JumpSpeed)
         {
             CC.velocity.y = JumpSpeed;
-            Console.WriteLine("Limit velocity");
         }
 
         //Testing taking damage
@@ -228,15 +236,18 @@ public class ThirdPersonController : Script
         //Jump
         if (CC.isGrounded)
         {
+            SetState("Falling", false);
             //JUMP
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                Console.WriteLine("Jumping");
                 SetState("Jump", true);
                 AudioManager.instance.jumpVoice.Play();
-                movement += player.up * JumpSpeed;
+                movement += vec3.UnitY * JumpSpeed;
             }
             else
             {
+                Console.WriteLine("Stop jumping");
                 SetState("Jump", false);
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -249,9 +260,23 @@ public class ThirdPersonController : Script
                     SetState("Sprint", false);
                 }
             }
+            currentAirTime = 0;
         }
         else
         {
+            if (animationManager.GetState("Jump").state)
+            {
+                if (currentAirTime >= maxAirTime)
+                {
+                    SetState("Falling", true);
+                }
+            }
+            else if (currentAirTime >= maxAirTime * .5f)
+            {
+                SetState("Falling", true);
+            }
+            currentAirTime += Time.deltaTime;
+
             movement += vec3.UnitY * -Gravity;
         }
 
@@ -268,7 +293,6 @@ public class ThirdPersonController : Script
         //attacking
         if(Input.GetMouseDown(0) && !IsAttacking)
         {
-            Console.WriteLine("Attack");
             IsAttacking = true;
             playerWeaponCollider.SetActive(true);//enable the weapon collider
             SetState("Attack1", true);
@@ -339,8 +363,6 @@ public class ThirdPersonController : Script
 
     void SetState(string stateName, bool value)
     {
-        if (stateName == "Jump")
-        Console.WriteLine($"{stateName} {value}");
         animationManager.GetState(stateName).state = value;
     }
     void TakeDamage(int amount)

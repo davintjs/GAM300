@@ -7304,7 +7304,7 @@ GameObject:
 ID: 12723341769296608508
 Transform:
   m_GameObject: {fileID: 18364898161930433210}
-  Translation: [0, -0.5, 0]
+  Translation: [0, -0.600000024, 0]
   Rotation: [0, 0, 0]
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 3977294589520766028}
@@ -7317,7 +7317,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 40.0005722
+  Time: 51.0002289
   StartTime: 2
   EndTime: 61
   Playing: true

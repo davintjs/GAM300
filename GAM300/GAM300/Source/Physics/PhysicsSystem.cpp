@@ -142,15 +142,15 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
 		bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
 		bodyInterface->SetLinearVelocity(tmpBid, velocity);
-		if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
-		{
-			//std::cout << "Character " << i << " is grounded\n";
-			cc.isGrounded = true;
-		}
-		else
-		{
-			cc.isGrounded = false;
-		}
+		//if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		//{
+		//	//std::cout << "Character " << i << " is grounded\n";
+		//	cc.isGrounded = true;
+		//}
+		//else
+		//{
+		//	cc.isGrounded = false;
+		//}
 		++j;
 	}
 	
@@ -395,7 +395,6 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		float length = 0.f;
 
 		if (direction != JPH::Vec3::sZero()) {
-			//std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
 			directionNormalized = direction.Normalized();
 			length = direction.Length();
 		}
@@ -754,9 +753,17 @@ void PhysicsSystem::UpdateGameObjects() {
 
 		tmp = characters[idx]->GetCenterOfMassPosition();
 		JoltVec3ToGlmVec3(tmp, t.translation);
+		if (characters[idx]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		{
+			//std::cout << "Character " << idx << " is grounded\n";
+			cc.isGrounded = true;
+		}
+		else
+		{
+			cc.isGrounded = false;
+		}
 
 		idx++;
-
 	}
 }
 
