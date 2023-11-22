@@ -27,7 +27,7 @@ animations:
   data: {guid: f1b3a33db0e1177bb89dc531d57040fd}
 animationStates:
   Idle: [2, 61]
-  Run: [61, 88]
+  Run: [62, 88]
   Sprint: [89, 108]
   Stun: [109, 129]
   Jump: [130, 160]
