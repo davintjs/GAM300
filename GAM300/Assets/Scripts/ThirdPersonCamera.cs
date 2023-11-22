@@ -18,6 +18,10 @@ public class ThirdPersonCamera : Script
     private float YawAngle = 0f;
     private float PitchAngle = 0f;
 
+    public float closestZoom = 4f;
+    public float furthestZoom = 10f;
+    public float zoomSpeed = 3f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +46,18 @@ public class ThirdPersonCamera : Script
         else if (PitchAngle < MinPitchAngle)
             PitchAngle = MinPitchAngle * 3.14f / 180f;
         CamPitchPivot.localRotation = new vec3(PitchAngle, 0f, 0f);
+
+        float zoom = -transform.localPosition.z;
+        zoom += Input.GetScroll() * zoomSpeed;
+        if (zoom < closestZoom)
+        {
+            zoom = closestZoom;
+        }
+        else if (zoom > furthestZoom)
+        {
+            zoom = furthestZoom;
+        }
+        transform.localPosition.z = -zoom;
     }
 
 }

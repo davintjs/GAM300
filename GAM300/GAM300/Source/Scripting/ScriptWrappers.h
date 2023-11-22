@@ -43,6 +43,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 
+	static int GetScrollState()
+	{
+		return InputHandler::getMouseScrollState();
+	}
+
 	static bool GetMouseDown(int mouseCode)
 	{
 		UNREFERENCED_PARAMETER(mouseCode);
@@ -292,7 +297,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		out = &MySceneManager.GetCurrentScene().Clone((Entity&)pEntity);
 	}
 
-
 	//Deletes a gameobject
 	static void DestroyGameObject(ScriptObject<Entity> pEntity)
 	{
@@ -451,5 +455,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetState);
 		Register(SetNextState);
 		Register(GetTag);
+		Register(GetScrollState);
 	}
 #endif // !SCRIPT_WRAPPERS_H
