@@ -155,6 +155,7 @@
     <ClCompile Include="Source\Graphics\Lighting.cpp" />
     <ClCompile Include="Source\Graphics\MaterialSystem.cpp" />
     <ClCompile Include="Source\Graphics\MeshManager.cpp" />
+    <ClCompile Include="Source\Graphics\ParticleRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\ShaderFileParser.cpp" />
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="Source\Graphics\GraphicsHeaders.h" />
     <ClInclude Include="Source\Graphics\GraphicStructsAndClass.h" />
     <ClInclude Include="Source\Graphics\MeshManager.h" />
+    <ClInclude Include="Source\Graphics\ParticleRenderer.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
     <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
@@ -575,7 +577,8 @@ copy "$(SolutionDir)External\freetype-2.12.1\objs\freetype.dll" "$(TargetDir)fre
 copy "$(SolutionDir)External\GLEW\include\glew32.dll" "$(TargetDir)glew32.dll" /Y
 copy "$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2019\glfw3.dll" "$(TargetDir)glfw3.dll" /Y
 copy "$(SolutionDir)External\yaml-cpp-master\build\yaml-cppd.dll" "$(TargetDir)yaml-cppd.dll" /Y
-copy "$(SolutionDir)External\Mono\mono\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y</Command>
+copy "$(SolutionDir)External\Mono\mono\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll" /Y
+copy "$(TargetDir)GAM300.exe" "$(SolutionDir)GAM300.exe" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
