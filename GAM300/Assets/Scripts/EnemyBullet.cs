@@ -9,7 +9,7 @@ public class EnemyBullet : Script
 {
     void OnTriggerEnter(PhysicsComponent other)
     {
-        if (GetTag(other) != "Enemy" && GetTag(other) != "EnemyAttack")
+        if (GetTag(other) != "Enemy" && GetTag(other) != "EnemyAttack" && GetTag(other) != "PlayerAttack")
         {
             Destroy(gameObject);
         }
