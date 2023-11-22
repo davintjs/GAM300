@@ -18,23 +18,58 @@ public class ThirdPersonCamera : Script
     private float YawAngle = 0f;
     private float PitchAngle = 0f;
 
+    public bool exitTrigger = false;
     public float closestZoom = 4f;
     public float furthestZoom = 10f;
     public float zoomSpeed = 3f;
+    public float zoom = 0f;
+    public float timer = 0f;
+    private float duration = 1.0f;
+    private float bufferTimer = 0f;
+    private float bufferDuration = 3.0f;
+    private float initialZoom;
 
     // Start is called before the first frame update
     void Start()
     {
         //Lock and hide mouse cursor
-/*        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;*/
+        /*        Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;*/
+
+        zoom = -transform.localPosition.z;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Yaw Camera Rotation
+        UpdateCameraRotation();
 
+        if (exitTrigger)
+            ResetZoom();
+
+        Zoom();
+    }
+
+    void OnTriggerEnter(PhysicsComponent other)
+    {
+        if(GetTag(other) != "PlayerCollider")
+        {
+            zoom += zoomSpeed * Time.deltaTime;
+        }
+    }
+
+    void OnTriggerExit(PhysicsComponent other)
+    {
+        if (GetTag(other) != "PlayerCollider")
+        {
+            initialZoom = zoom;
+            exitTrigger = true;
+        }
+    }
+
+    void UpdateCameraRotation()
+    {
         vec2 mouseDelta = Input.GetMouseDelta();
         YawAngle -= mouseDelta.x * YawRotSpeed * Time.deltaTime * 3.14f / 180f;
         CamYawPivot.localRotation = new vec3(0f, YawAngle, 0f);
@@ -46,8 +81,10 @@ public class ThirdPersonCamera : Script
         else if (PitchAngle < MinPitchAngle)
             PitchAngle = MinPitchAngle * 3.14f / 180f;
         CamPitchPivot.localRotation = new vec3(PitchAngle, 0f, 0f);
+    }
 
-        float zoom = -transform.localPosition.z;
+    void Zoom()
+    {
         zoom += Input.GetScroll() * zoomSpeed;
         if (zoom < closestZoom)
         {
@@ -59,5 +96,27 @@ public class ThirdPersonCamera : Script
         }
         transform.localPosition.z = -zoom;
     }
+    void ResetZoom()
+    {
+        // Give it a buffer before reseting the camera's zoom
+        bufferTimer += Time.deltaTime;
 
+        if (bufferTimer >= bufferDuration)
+        {
+            timer += Time.deltaTime;
+            zoom = Lerp(initialZoom, furthestZoom, timer, duration);
+
+            if (timer >= duration)
+            {
+                exitTrigger = false;
+                timer = bufferTimer = 0f;
+            }
+        }
+    }
+
+    float Lerp(float start, float end, float value, float duration)
+    {
+        value /= duration;
+        return (1.0f - value) * start + value * end;
+    }
 }

@@ -7123,7 +7123,7 @@ GameObject:
 ID: 9678643612693070768
 Transform:
   m_GameObject: {fileID: 17150978404869133335}
-  Translation: [0, 0, 0]
+  Translation: [-2.21195151e-09, 0, 2.18529905e-09]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -7339,7 +7339,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 52.1702499
+  Time: 40.5129585
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -7950,6 +7950,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 9384371379961103396}  # Transform
+    - component: {fileID: 2576007797236045361}  # BoxCollider
     - component: {fileID: 16773315215798417911}  # Camera
     - component: {fileID: 12100504774977972383}  # Script
 ---
@@ -7962,6 +7963,12 @@ Transform:
   Father: {fileID: 12396120015401798445}
   m_Children:
     []
+---
+ID: 2576007797236045361
+BoxCollider:
+  m_GameObject: {fileID: 15334681090738628473}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
 ---
 ID: 16773315215798417911
 Camera:
@@ -7991,9 +7998,12 @@ Script:
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
   MinPitchAngle: -85
   CamMovePivot: {fileID: 1999010381617278315}  # Component
+  exitTrigger: false
   closestZoom: 3.5
   furthestZoom: 8
   zoomSpeed: 50
+  zoom: 0
+  timer: 0
 ---
 ID: 17145839964191952887
 GameObject:
@@ -8313,7 +8323,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: true
   UseGravity: true
-  Is_trigger: false
+  Is_trigger: true
 ---
 ID: 7713270789324086732
 GameObject:
@@ -8602,9 +8612,9 @@ ID: 2885720903832385260
 Animator:
   m_GameObject: {fileID: 5401300559759663398}
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
-  Current State: Idle
-  Next State: None
-  Time: 44.8162422
+  Current State: ""
+  Next State: ""
+  Time: 0
   StartTime: 2
   EndTime: 57
   Playing: false
@@ -18637,21 +18647,29 @@ MeshRenderer:
 ID: 3022324051481060559
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(580)
+  m_Name: Particle
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13245062303818393022}  # Transform
+    - component: {fileID: 16875176546049403035}  # ParticleComponent
 ---
 ID: 13245062303818393022
 Transform:
   m_GameObject: {fileID: 3022324051481060559}
-  Translation: [0, 0, 0]
+  Translation: [1.78493547, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 16875176546049403035
+ParticleComponent:
+  m_GameObject: {fileID: 3022324051481060559}
+  NumberOfParticles: 10
+  ParticleLifetime: 1
+  ParticleEmissionRate: 1
 ---
 ID: 10110590738670396230
 GameObject:

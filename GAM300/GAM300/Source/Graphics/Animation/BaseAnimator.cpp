@@ -43,21 +43,24 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime = (m_CurrentTime >= 0.f) ? m_CurrentTime : 0.f;
 
     // Change state if the current time passes the end time
-    if (m_CurrentTime >= endTime - startTime || currBlendState == blended)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
-    {
-        if (nextState && currBlendState != blended)  // might wanna move out of these 2 if statements
-        {
-            currBlendState = blending;
-            endTime += blendDuration;
-        }
-        
-        if (currBlendState != blending)
-        {
-            ChangeState(); // need to change to move interolateanim stuff in
-            currBlendState = notblending;
-        }
+    //if (m_CurrentTime >= endTime - startTime || currBlendState == blended)// can add blend condition here instead of change state!!!!!!! -> e.g  <5sec
+    //{
+    //    if (nextState && currBlendState != blended)  // might wanna move out of these 2 if statements
+    //    {
+    //        currBlendState = blending;
+    //        endTime += blendDuration;
+    //    }
+    //    
+    //    if (currBlendState != blending)
+    //    {
+    //        ChangeState(); // need to change to move interolateanim stuff in
+    //        currBlendState = notblending;
+    //    }
 
-    }
+    //}
+
+    if (m_CurrentTime >= endTime - startTime)
+        ChangeState();
 
     // crash prevention
     //endTime = (endTime > m_CurrentAnimation.GetDuration() || endTime == 0.f) ? m_CurrentAnimation.GetDuration() : endTime;
@@ -92,9 +95,10 @@ void BaseAnimator::PlayAnimation(Animation* pAnimation)
 void BaseAnimator::ChangeState()
 {
     if (currentState != nextState)
+    {
         m_CurrentTime = 0.f;
-
-    currentState = nextState;
+        currentState = nextState;
+    }
 
     if (!currentState) // If no next state, use default state
         currentState = defaultState;
@@ -116,7 +120,7 @@ void BaseAnimator::ChangeState()
         playing = false;
     }
 
-    nextState = nullptr;
+    nextState = defaultState;
 }
 
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
