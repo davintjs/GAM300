@@ -28,6 +28,7 @@ BaseAnimator::BaseAnimator()
     currBlendState = notblending;
     blendedBones = 0;
     blendDuration = 5.f;
+    blendStartTime = 0.f;
 
     m_FinalBoneMatrices.reserve(100);
 
@@ -38,33 +39,36 @@ BaseAnimator::BaseAnimator()
 void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 {
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+    UpdateStateName();
 
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
     //m_CurrentTime = (m_CurrentTime >= 0.f) ? m_CurrentTime : 0.f;
 
     // Change state if the current time passes the end time
-    if (m_CurrentTime >= endTime - startTime)
+    if (m_CurrentTime >= endTime - startTime - blendDuration)
     {
-        if (!nextState)
-        {
-            nextState = defaultState;
-        }
-
+        // No current state, set it to default state
         if (!currentState)
         {
             currentState = defaultState;
 
-            m_CurrentTime = startTime = currentState->minMax.x;
+            startTime = currentState->minMax.x;
             endTime = currentState->minMax.y;
         }
 
-        if (currentState != nextState)
+        // Different states
+        if (nextState && currentState != nextState)
         {
             currBlendState = blending;
             endTime += blendDuration;
+            blendStartTime = m_CurrentTime;
         }
         else
+        {
             currBlendState = notblending;
+            nextState = defaultState;
+        }
+
     }
 
     // crash prevention
@@ -83,6 +87,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         {
             currBlendState = blended;
             currentState = nextState;
+            nextState = nullptr;
 
             m_CurrentTime = startTime = currentState->minMax.x;
             endTime = currentState->minMax.y;
@@ -103,61 +108,22 @@ void BaseAnimator::PlayAnimation(Animation* pAnimation)
 
 void BaseAnimator::ChangeState()
 {
-    if (currentState != nextState)
-    {
-        m_CurrentTime = 0.f;
-        currentState = nextState;
-    }
-
-    if (!currentState) // If no next state, use default state
-        currentState = defaultState;
-
-    // Check that the current state exists
-    if (currentState)
-    {
-        startTime = currentState->minMax.x;
-        endTime = currentState->minMax.y;
-        stateName = currentState->label;
-        stateNextName = "None";
-        playing = true;
-    }
-    else
-    {
-        startTime = endTime = 0.f;
-        stateName = "None";
-        stateNextName = "None";
-        playing = false;
-    }
-
-    nextState = defaultState;
-
-    // If there is a next state and the two states are different
-    //if (nextState && currentState != nextState)
+    //if (currentState != nextState)
     //{
-    //    currBlendState = blending;
-    //    endTime = startTime + m_CurrentTime + blendDuration;
-    //}
-    //else
-    //{
-    //    currBlendState = notblending;
+    //    m_CurrentTime = 0.f;
+    //    currentState = nextState;
     //}
 
     //if (!currentState) // If no next state, use default state
-    //{
     //    currentState = defaultState;
-
-    //    m_CurrentTime = startTime = currentState->minMax.x;
-    //    endTime = currentState->minMax.y;
-    //}
 
     //// Check that the current state exists
     //if (currentState)
     //{
+    //    startTime = currentState->minMax.x;
+    //    endTime = currentState->minMax.y;
     //    stateName = currentState->label;
-    //    if (nextState)
-    //        stateNextName = nextState->label;
-    //    else
-    //        stateNextName = "None";
+    //    stateNextName = "None";
     //    playing = true;
     //}
     //else
@@ -169,6 +135,41 @@ void BaseAnimator::ChangeState()
     //}
 
     //nextState = defaultState;
+
+    // If there is a next state and the two states are different
+    if (nextState && currentState != nextState)
+    {
+        currBlendState = blending;
+        endTime = startTime + m_CurrentTime + blendDuration;
+        blendStartTime = m_CurrentTime;
+    }
+    else // If both states are the same
+    {
+        currBlendState = notblending;
+    }
+
+    if (!currentState) // If no next state, use default state
+    {
+        currentState = defaultState;
+
+        m_CurrentTime = startTime = currentState->minMax.x;
+        endTime = currentState->minMax.y;
+        blendStartTime = m_CurrentTime;
+    }
+
+    if(!nextState)
+        nextState = defaultState;
+
+    // Check that the current state exists
+    if (currentState)
+    {
+        playing = true;
+    }
+    else
+    {
+        startTime = endTime = 0.f;
+        playing = false;
+    }
 }
 
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
@@ -216,7 +217,7 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
         if (Bone && NextBone)
         {
             // get anim1 xform
-             int p0Index = Bone->GetPositionIndex(currentState->minMax.y);
+             int p0Index = Bone->GetPositionIndex(blendStartTime);
             // get anim2 xform
             int p1Index = NextBone->GetPositionIndex(nextState->minMax.x);
 
@@ -287,7 +288,21 @@ void BaseAnimator::SetNextState(const std::string& _nextState)
 void BaseAnimator::SetState(const std::string& _state)
 {
     SetNextState(_state);
-    //ChangeState();
+    if(currBlendState != blending)
+        ChangeState();
+}
+
+void BaseAnimator::UpdateStateName()
+{
+    if(currentState)
+        stateName = currentState->label;
+    else
+        stateName = "None";
+
+    if (nextState)
+        stateNextName = nextState->label;
+    else
+        stateNextName = "None";
 }
 
 bool BaseAnimator::AnimationAttached() {
