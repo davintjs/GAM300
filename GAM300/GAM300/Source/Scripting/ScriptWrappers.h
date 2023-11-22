@@ -97,146 +97,95 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma region ANIMATOR
 	static void PlayAnimation(ScriptObject<Animator> pAnimator)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.ChangeState();
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.ChangeState();
 	}
 
 	static void PauseAnimation(ScriptObject<Animator> pAnimator)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.playing = false;
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.playing = false;
 	}
 
 	static void StopAnimation(ScriptObject<Animator> pAnimator)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.m_CurrentTime = 0.f;
-				animator.playing = false;
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.m_CurrentTime = 0.f;
+		animator.playing = false;
 	}
 
 	static float GetProgress(ScriptObject<Animator> pAnimator)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-				return animator.GetProgress();
-		}
-
-		return 0.f;
+		Animator& animator = pAnimator;
+		return animator.GetProgress();
 	}
 
 	static void SetProgress(ScriptObject<Animator> pAnimator, float value)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.SetProgress(value);
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.SetProgress(value);
 	}
 	
 	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
 	{
-		std::string defaultState = mono_string_to_utf8(mString);
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.SetDefaultState(defaultState);
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.SetDefaultState(mono_string_to_utf8(mString));
 	}
 
 	static void SetState(ScriptObject<Animator> pAnimator, MonoString* mString)
 	{
-		std::string state = mono_string_to_utf8(mString);
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.SetState(state);
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.SetState(mono_string_to_utf8(mString));
 	}
 
 	static void SetNextState(ScriptObject<Animator> pAnimator, MonoString* mString)
 	{
-		std::string nextState = mono_string_to_utf8(mString);
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				animator.SetNextState(nextState);
-				break;
-			}
-		}
+		Animator& animator = pAnimator;
+		animator.SetNextState(mono_string_to_utf8(mString));
 	}
 
 	static MonoString* GetState(ScriptObject<Animator> pAnimator)
 	{
-		std::string state;
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (auto& animator : currentScene.GetArray<Animator>())
-		{
-			if (animator.EUID() == (*pAnimator).EUID())
-			{
-				state = animator.GetCurrentState()->label;
-			}
-		}
-
-		return SCRIPTING.CreateMonoString(state);
+		Animator& animator = pAnimator;
+		return SCRIPTING.CreateMonoString(animator.GetCurrentState()->label);
 	}
 
 #pragma endregion
 	
+#pragma region TRANSFORM
 	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-
-		Transform *transform, *parent = nullptr;
-		for (auto& t : currentScene.GetArray<Transform>())
-		{
-			if (t.EUID() == (*pTransform).EUID())
-				transform = &t;
-
-			if (t.EUID() == (*pParent).EUID())
-				parent = &t;
-		}
+		Transform& transform = pTransform;
+		Transform& parent = pParent;
+		Object* obj = pParent;
 
 		// If the parent doesnt exist, set the parent of this transform to null
-		if(transform)
-			transform->SetParent(parent);
+		if (obj)
+			transform.SetParent(&parent);
+		else
+			transform.SetParent(nullptr);
 	}
+
+	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		position = t.GetTranslation();
+	}
+
+	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		rotation = t.GetRotation();
+	}
+
+	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		scale = t.GetScale();
+	}
+#pragma endregion
+
+	
 
 	// Load a scene
 	static void LoadScene(MonoString* mString)
@@ -449,12 +398,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetLayerName);
 		Register(GetActive);
 		Register(SetActive);
-		Register(SetTransformParent);
 		Register(LoadScene);
 		Register(AddComponent);
 		Register(GetMouseDelta);
-		Register(AudioSourcePlay);
 		Register(CloneGameObject);
+
+		// Transform Component
+		Register(SetTransformParent);
+		Register(GetPosition);
+		Register(GetRotation);
+		Register(GetScale);
+
+		// Audio Component
+		Register(AudioSourcePlay);
+
+		// Animator Component
 		Register(PlayAnimation);
 		Register(PauseAnimation);
 		Register(StopAnimation);
@@ -464,6 +422,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetState);
 		Register(SetNextState);
 		Register(GetState);
+
+		// Tag Component
 		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H

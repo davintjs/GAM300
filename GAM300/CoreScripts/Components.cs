@@ -142,6 +142,34 @@ namespace BeanFactory
         public vec3 localPosition;
         public vec3 localRotation;
         public vec3 localScale;
+        public vec3 position
+        {
+            get
+            {
+                vec3 pos = new vec3();
+                InternalCalls.GetPosition(this, ref pos);
+                return pos;
+            }
+        }
+        public vec3 rotation
+        {
+            get
+            {
+                vec3 rot = new vec3();
+                InternalCalls.GetRotation(this, ref rot);
+                return rot;
+            }
+        }
+        public vec3 scale
+        {
+            get
+            {
+                vec3 scale = new vec3();
+                InternalCalls.GetScale(this, ref scale);
+                return scale;
+            }
+        }
+
         public vec3 forward
         {
             get

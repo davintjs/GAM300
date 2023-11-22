@@ -99,6 +99,12 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetScale(Transform gameObject, ref vec3 scale);
         #endregion
 
         #region SCENE
