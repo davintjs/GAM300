@@ -69,14 +69,13 @@ public class RangeEnemy : Script
 
         if (particle_on)
         {
-            if(particle_timer > 0f)
+            if (particle_timer > 0f)
             {
                 particle_timer -= Time.deltaTime;
             }
             else
             {
-                particle.gameObject.transform.localPosition = vec3{-999, -999,-999};
-                -999f, -999f, -999f);
+                particle.gameObject.transform.localPosition = new vec3(-999, -999, -999);
                 particle_timer = 0f;
                 particle_on = false;
                 particle.Play();
