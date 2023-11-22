@@ -130,6 +130,45 @@ void BaseAnimator::ChangeState()
     }
 
     nextState = defaultState;
+
+    // If there is a next state and the two states are different
+    //if (nextState && currentState != nextState)
+    //{
+    //    currBlendState = blending;
+    //    endTime = startTime + m_CurrentTime + blendDuration;
+    //}
+    //else
+    //{
+    //    currBlendState = notblending;
+    //}
+
+    //if (!currentState) // If no next state, use default state
+    //{
+    //    currentState = defaultState;
+
+    //    m_CurrentTime = startTime = currentState->minMax.x;
+    //    endTime = currentState->minMax.y;
+    //}
+
+    //// Check that the current state exists
+    //if (currentState)
+    //{
+    //    stateName = currentState->label;
+    //    if (nextState)
+    //        stateNextName = nextState->label;
+    //    else
+    //        stateNextName = "None";
+    //    playing = true;
+    //}
+    //else
+    //{
+    //    startTime = endTime = 0.f;
+    //    stateName = "None";
+    //    stateNextName = "None";
+    //    playing = false;
+    //}
+
+    //nextState = defaultState;
 }
 
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
