@@ -94,13 +94,8 @@ private:
 };
 
 // Returns if the three points give us a front face triangle
-inline bool isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
+inline float isFrontFace(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
 {
 	float signedArea = (p2.x - p1.x) * (p3.z - p1.z) - (p3.x - p1.x) * (p2.z - p1.z);
-	signedArea *= 0.5f;
-	if (signedArea > 0.f)
-	{
-		return true;
-	}
-	return false;
+	return signedArea;
 }

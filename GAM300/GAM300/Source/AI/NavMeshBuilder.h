@@ -57,9 +57,6 @@ public:
 	// Returns the region of the navmesh
 	std::vector<Polygon3D>& GetRegion();
 
-	// Returns the holes in this navmesh
-	//std::vector<Polygon3D>& GetHoles();
-
 	// Add obstacle to this navmesh
 	void AddObstacle(Polygon3D* mObstacle);
 

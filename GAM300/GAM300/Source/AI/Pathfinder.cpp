@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "Pathfinder.h"
 #include "Geometry.h"
+#include "Polygon.h"
 
 void OpenList::push(Triangle3D* n) 
 {
@@ -114,16 +115,6 @@ std::deque<glm::vec3> AStarPather::PathPostProcess(const glm::vec3& mStart, cons
 {
 	std::vector<std::pair<glm::vec3, glm::vec3>> portals = GetPortals(mStart, mEnd);
 	std::deque<glm::vec3> mWay = Funnel(mStart, mEnd, portals); // The vector will contain the points that the agent will need to walk to until he reach the goal
-	
-	// Reset the triangles
-	for (auto& i : mTriangleWayPoint)
-	{
-		i->SetParent(nullptr);
-		i->SetFinalCost(0.f);
-		i->SetGivenCost(0.f);
-		i->SetHeuCost(0.f);
-		i->SetList(OnList::NONE);
-	}
 
 	return mWay;
 }
@@ -158,7 +149,6 @@ std::vector<std::pair<glm::vec3, glm::vec3>> AStarPather::GetPortals(const glm::
 
 	// Form a line between the start point and one of the portal edges
 	// If the other portal edge lies to the right of this line, it is right side of the channel
-	Line3D mFirstLine(firstPortal[0], firstPortal[1] - firstPortal[0]);
 	if (IsAPointLeftOfVectorOrOnTheLine(mStart, firstPortal[0], firstPortal[1]) > 0)
 	{
 		// firstPortal[1] is on the left of the line
@@ -244,17 +234,17 @@ std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::ve
 
 	int apexIndex = 0, leftIndex = 0, rightIndex = 0, mNumPoints = 0;
 
-	//resVec.push_front(mStart); // Add the start point first
-	//++mNumPoints;
+	resVec.push_front(mStart); // Add the start point first
+	++mNumPoints;
 
 	for (int i = 1; i < mPortals.size() && mNumPoints < mPortals.size(); ++i)
 	{
 		const glm::vec3& leftPoint = mPortals[i].first;
 		const glm::vec3& rightPoint = mPortals[i].second;
 
-		if (TriangleArea(mCurrStart, rightLine.point2, rightPoint) <= 0.f) // Update right vertex
+		if (isFrontFace(mCurrStart, rightLine.point2, rightPoint) <= 0.f) // Update right vertex
 		{
-			if (mCurrStart == rightLine.point2 || TriangleArea(mCurrStart, leftLine.point2, rightPoint) > 0.f)
+			if (mCurrStart == rightLine.point2 || isFrontFace(mCurrStart, leftLine.point2, rightPoint) > 0.f)
 			{
 				// Tighten the funnel
 				rightLine.point2 = rightPoint;
@@ -281,9 +271,9 @@ std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::ve
 			}
 		}
 
-		if (TriangleArea(mCurrStart, leftLine.point2, leftPoint) >= 0.f) // Update left vertex
+		if (isFrontFace(mCurrStart, leftLine.point2, leftPoint) >= 0.f) // Update left vertex
 		{
-			if (mCurrStart == leftLine.point2 || TriangleArea(mCurrStart, rightLine.point2, leftPoint) < 0.f)
+			if (mCurrStart == leftLine.point2 || isFrontFace(mCurrStart, rightLine.point2, leftPoint) < 0.f)
 			{
 				// Tighten the funnel
 				leftLine.point2 = leftPoint;
@@ -320,17 +310,30 @@ std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::ve
 	return resVec;
 }
 
-float AStarPather::IsAPointLeftOfVectorOrOnTheLine(const glm::vec3 & l1, const glm::vec3 & l2, const glm::vec3 & p)
+void AStarPather::ResetPather()
 {
-	return (l2.x - l1.x) * (p.y - l1.y) - (l2.y - l1.y) * (p.x - l1.x);
+	mQueue.nodes.clear();
+	mTriangleWayPoint.clear();
 }
 
-float AStarPather::TriangleArea(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
+float AStarPather::IsAPointLeftOfVectorOrOnTheLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p)
 {
-	const float ax = p2[0] - p1[0];
-	const float ay = p2[1] - p1[1];
-	const float bx = p3[0] - p1[0];
-	const float by = p3[1] - p1[1];
+	glm::vec3 mLineVector = l2 - l1;
+	glm::vec3 mPointVector = p - l1;
 
-	return bx * ay - ax * by;
+	glm::vec3 crossProduct = glm::cross(mLineVector, mPointVector);
+
+	return crossProduct.y;
 }
+//
+//float AStarPather::TriangleArea(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
+//{
+//	const float ax = p2[0] - p1[0];
+//	const float az = p2[2] - p1[2];
+//	const float bx = p3[0] - p1[0];
+//	const float bz = p3[2] - p1[2];
+//
+//	float ans = bx * az - ax * bz;
+//
+//	return ans;
+//}

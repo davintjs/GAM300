@@ -41,9 +41,10 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionI
 		maxPoint.x = std::max(maxPoint.x, mPoints[i].x);
 		maxPoint.y = std::max(maxPoint.y, mPoints[i].y);
 		maxPoint.z = std::max(maxPoint.z, mPoints[i].z);
-
-		glm::vec3 p = mPoints[i];
 	}
+
+	this->minPoint = minPoint;
+	this->maxPoint = maxPoint;
 
 	mNumberOfPoints = static_cast<int>(mPoints.size());
 	mRegionID = regionID;
@@ -144,7 +145,7 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 	// If already only 3 points given, return them based on front faced or back faced
 	if (points.size() == 3)
 	{
-		if (isFrontFace(points[0], points[1], points[2]))
+		if (isFrontFace(points[0], points[1], points[2]) > 0.f)
 		{
 			mPoints = points;
 			mOrientation = Orientation::COUNTERCLOCKWISE;

@@ -198,7 +198,6 @@ public:
 		//#ifndef _BUILD
 		//	BEHAVIORTREEBUILDER.Exit();
 		//#endif
-		NAVMESHBUILDER.Exit();
 	}
 
 	void CallbackSceneStart(SceneStartEvent* pEvent)
