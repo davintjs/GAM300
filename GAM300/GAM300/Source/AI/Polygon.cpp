@@ -41,9 +41,10 @@ Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionI
 		maxPoint.x = std::max(maxPoint.x, mPoints[i].x);
 		maxPoint.y = std::max(maxPoint.y, mPoints[i].y);
 		maxPoint.z = std::max(maxPoint.z, mPoints[i].z);
-
-		glm::vec3 p = mPoints[i];
 	}
+
+	this->minPoint = minPoint;
+	this->maxPoint = maxPoint;
 
 	mNumberOfPoints = static_cast<int>(mPoints.size());
 	mRegionID = regionID;

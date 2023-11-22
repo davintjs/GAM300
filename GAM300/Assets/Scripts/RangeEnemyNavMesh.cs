@@ -22,7 +22,7 @@ public class RangeEnemyNavMesh : Script
     public Transform maxUpPos;
     public Transform maxBottomPos;
     public Transform startingPos;
-    public float duration = 2f;
+    public float duration = 0.5f;
     public float timer = 0f;
 
     public GameObject bullet;
@@ -33,7 +33,6 @@ public class RangeEnemyNavMesh : Script
     void Start()
     {
         currentHealth = maxHealth;
-        //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
     }
 
@@ -44,14 +43,21 @@ public class RangeEnemyNavMesh : Script
 
         if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
         {
-            newRequest = true;
+            if (timer >= duration)
+            {
+                newRequest = true;
+                timer = 0f;
+            }
         }
 
-        if (newRequest) 
+        if (newRequest)
         {
-            InternalCalls.FindPath(GetComponent<NavMeshAgent>(), player.localPosition);
+            //GetComponent<NavMeshAgent>().ResetPath();
+            GetComponent<NavMeshAgent>().FindPath( player.localPosition);
             newRequest = false;
         }
+
+        timer += Time.deltaTime;
 
         //switch (state)
         //{

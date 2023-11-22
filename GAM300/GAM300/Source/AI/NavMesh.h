@@ -37,14 +37,10 @@ public:
 	// Returns the triangles of the navmesh
 	const std::vector<Triangle3D> GetNavMeshTriangles() const;
 
-	// Returns the points on this navmesh
-	const std::vector<glm::vec3> GetPoints() const;
-
-	// Returns the indices of this navmesh (For graphics)
-	const std::vector<unsigned int> GetIndices() const;
-
 	// Pathfinding stuff
 	bool FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd);
+
+	void ResetTriangles();
 
 private:
 	// Add neighbour to this triangle
@@ -57,6 +53,4 @@ private:
 	void UpdateNavMesh();
 
 	std::vector<Triangle3D> mTriangles;
-	std::vector<glm::vec3> mPoints;
-	std::vector<unsigned int> mIndices;
 };

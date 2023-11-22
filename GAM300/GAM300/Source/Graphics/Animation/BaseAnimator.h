@@ -43,6 +43,9 @@ public:
 
 	// Interrupt the current state and sets another state to run
 	void SetState(const std::string& _state);
+	
+	// Update the state names
+	void UpdateStateName();
 
 	// Gets the current animation state progress
 	float GetProgress() { return m_CurrentTime / (endTime - startTime); }
@@ -75,6 +78,7 @@ public:
 	float startTime;
 	float endTime;
 	float blendDuration;
+	float blendStartTime;
 
 	bool playing;
 	int currBlendState{};

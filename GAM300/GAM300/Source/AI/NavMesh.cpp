@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "NavMesh.h"
+//#include "Graphics/GraphicsHeaders.h"
 #include "Scene/Components.h"
 #include "Scene/SceneManager.h"
 
@@ -27,14 +28,16 @@ const std::vector<Triangle3D> NavMesh::GetNavMeshTriangles() const
 	return mTriangles;
 }
 
-const std::vector<glm::vec3> NavMesh::GetPoints() const
+void NavMesh::ResetTriangles()
 {
-	return mPoints;
-}
-
-const std::vector<unsigned int> NavMesh::GetIndices() const
-{
-	return mIndices;
+	for (auto& i : mTriangles)
+	{
+		i.SetParent(nullptr);
+		i.SetFinalCost(0.f);
+		i.SetGivenCost(0.f);
+		i.SetHeuCost(0.f);
+		i.SetList(OnList::NONE);
+	}
 }
 
 bool NavMesh::FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd)
@@ -42,8 +45,11 @@ bool NavMesh::FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd)
 	Scene& tempScene = MySceneManager.GetCurrentScene();
 	Transform& agentTransform = tempScene.Get<Transform>(mAgent);
 
-	Triangle3D* mTri1 = TriangleContainingPoint(agentTransform.GetTranslation());
-	Triangle3D* mTri2 = TriangleContainingPoint(mEnd);
+	glm::vec3 agentPos = agentTransform.GetTranslation();
+	glm::vec3 endDest = mEnd;
+
+	Triangle3D* mTri1 = TriangleContainingPoint(agentPos);
+	Triangle3D* mTri2 = TriangleContainingPoint(endDest);
 
 	if (mTri1 == nullptr || mTri2 == nullptr) // Out of bounds of navmesh triangles
 	{
@@ -51,17 +57,23 @@ bool NavMesh::FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd)
 	}
 	else if (mTri1 == mTri2) // Start and end is same triangle
 	{
-		mAgent.mPoints.push_back(mEnd - agentTransform.GetTranslation());
+		mAgent.mPoints.clear();
+		mAgent.mPoints.push_back(agentPos);
+		mAgent.mPoints.push_back(endDest);
 		return true;
 	}
 
-	AStarPather pather; // Temporary
-	if (pather.ComputePath(mTri1, mTri2))
+	ResetTriangles();
+	mAgent.mPather.ResetPather();
+	if (mAgent.mPather.ComputePath(mTri1, mTri2))
 	{
-		mAgent.mPoints = pather.PathPostProcess(agentTransform.GetTranslation(), mEnd); // The vector will contain the points that the agent will need to walk to until he reach the goal
-		for (const auto& i : mAgent.mPoints)
+		mAgent.mPoints = mAgent.mPather.PathPostProcess(agentPos, endDest); // The vector will contain the points that the agent will need to walk to until he reach the goal
+		for (int i = 0; i < mAgent.mPoints.size(); ++i)
 		{
-			std::cout << "Found Path: " << i.x << " " << i.y << " " << i.z << std::endl;
+			if (mAgent.mPoints[i].y != agentPos.y)
+			{
+				mAgent.mPoints[i].y = agentPos.y;
+			}
 		}
 		return true;
 	}

@@ -22,7 +22,7 @@ Transform:
   m_GameObject: {fileID: 18147641936712422184}
   Translation: [0, 0.000413089991, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+  Scale: [0.0500000007, 0.0500000007, 0.0500000007]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 16264842088658397507}
@@ -53,12 +53,12 @@ ID: 12276585220749896285
 Animator:
   m_GameObject: {fileID: 18147641936712422184}
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
-  Current State: ""
-  Next State: ""
-  Time: 0
-  StartTime: 0
-  EndTime: 952
-  Playing: false
+  Current State: Idle
+  Next State: Idle
+  Time: 47.7351494
+  StartTime: 2
+  EndTime: 61
+  Playing: true
 ---
 ID: 16264842088658397507
 GameObject:

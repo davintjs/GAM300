@@ -261,9 +261,12 @@ void EditorScene::DisplayGizmos()
         {
             if (renderer.state == DELETED) continue;
 
+            if (!currentScene.IsActive(renderer)) continue;
+
             Entity& entity = currentScene.Get<Entity>(renderer);
+            if (!currentScene.IsActive(entity)) continue;
+
             Transform& transform = currentScene.Get<Transform>(entity);
-            
             
             glm::mat4 transMatrix = transform.GetWorldMatrix();
 
@@ -340,8 +343,10 @@ void EditorScene::DisplayGizmos()
         for (BoxCollider& bc : currentScene.GetArray<BoxCollider>())
         {
             Entity& entity = currentScene.Get<Entity>(bc);
+            if (!currentScene.IsActive(entity)) continue;
 
             if (currentScene.Has<MeshRenderer>(entity)) continue;
+
             if (bc.state == DELETED) continue;
 
             Transform& transform = currentScene.Get<Transform>(entity);
@@ -378,7 +383,6 @@ void EditorScene::DisplayGizmos()
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
-
         
         Transform& trans = currentScene.Get<Transform>(entity);
         for (int i = 0; i < 3; ++i)

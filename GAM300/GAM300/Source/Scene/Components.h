@@ -500,8 +500,13 @@ property_begin_name(ButtonComponent, "ButtonComponent")
 
 struct NavMeshAgent : Object
 	{
+		NavMeshAgent()
+		{
+			mPather.ResetPather();
+		}
 		float mAgentSpeed = 0.f;
 		std::deque<glm::vec3> mPoints;
+		AStarPather mPather;
 		property_vtable();
 	};
 

@@ -38,21 +38,27 @@ void NavMeshBuilder::Update(float dt)
 	for (NavMeshAgent& i : tempScene.GetArray<NavMeshAgent>())
 	{
 		Transform& agentTransform = tempScene.Get<Transform>(i);
-		std::deque<glm::vec3>& mWay = i.mPoints;
+		std::deque<glm::vec3>& mWay = i.mPoints; // Contains the points that the enemy will need to walk through to reach player
 
 		if (!mWay.empty())
 		{
-			glm::vec3 playerdir = mWay.front() - agentTransform.GetTranslation();
-			if (length(playerdir) <= .1f) 
+			glm::vec3 enemyDir = mWay.front() - agentTransform.GetTranslation();
+			if (length(enemyDir) <= .1f)
 			{
 				mWay.pop_front();
-				return;
+				if (mWay.empty())
+				{
+					return;
+				}
+				enemyDir = mWay.front() - agentTransform.GetTranslation();
 			}
-			playerdir = glm::normalize(playerdir);
-			playerdir.y = 0;
-			float angle = static_cast<float>(atan2(playerdir.x, playerdir.z));
-			agentTransform.rotation.y = angle;
-			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = playerdir * 2.f;
+
+			// Enemy movement
+			enemyDir = glm::normalize(enemyDir);
+			enemyDir.y = 0;
+			float angle = static_cast<float>(atan2(enemyDir.x, enemyDir.z));
+			agentTransform.rotation = glm::vec3(0.f, angle, 0.f); // This one needs to be local space
+			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = enemyDir * 2.f;
 		}
 	}
 }
@@ -185,11 +191,6 @@ std::vector<Polygon3D>& NavMeshBuilder::GetRegion()
 {
 	return mRegions;
 }
-
-//std::vector<Polygon3D>& NavMeshBuilder::GetHoles()
-//{
-//	return mHoles;
-//}
 
 std::vector<Polygon3D>& NavMeshBuilder::GetObstacles()
 {

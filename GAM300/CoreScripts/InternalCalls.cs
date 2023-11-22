@@ -205,5 +205,8 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void FindPath(NavMeshAgent pEnemy, vec3 pDest);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ResetPather(NavMeshAgent pEnemy);
     }
 }

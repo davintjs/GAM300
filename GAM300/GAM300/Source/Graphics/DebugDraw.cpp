@@ -130,6 +130,7 @@ void DebugDraw::Update(float)
 
 void DebugDraw::Draw()
 {
+
 	GLuint vao = MESHMANAGER.vaoMap[ASSET_SEG3D];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (RENDERER.GetInstanceContainer()[s].find(vao) == RENDERER.GetInstanceContainer()[s].cend()) { // if container does not have this vao, emplace
@@ -150,6 +151,18 @@ void DebugDraw::Draw()
 			DrawSegment3D(tri[0], tri[1], color);
 			DrawSegment3D(tri[1], tri[2], color);
 			DrawSegment3D(tri[0], tri[2], color);
+		}
+
+		for (const auto& mAgent : MySceneManager.GetCurrentScene().GetArray<NavMeshAgent>())
+		{
+			if (mAgent.mPoints.empty())
+			{
+				continue;
+			}
+			for (int i = 0; i < mAgent.mPoints.size() - 1; ++i)
+			{
+				DrawSegment3D(mAgent.mPoints[i], mAgent.mPoints[i + 1], glm::vec4(0.f, 0.f, 0.f, 1.f));
+			}
 		}
 	}
 	

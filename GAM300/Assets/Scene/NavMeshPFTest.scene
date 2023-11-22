@@ -69,7 +69,7 @@ GameObject:
 ID: 11648166187505253997
 Transform:
   m_GameObject: {fileID: 3088184379416202870}
-  Translation: [0, 2.232162, 6.47856474]
+  Translation: [0, 1, 6.47856474]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
 ID: 4634132187460084369
 Transform:
   m_GameObject: {fileID: 6919749487122041186}
-  Translation: [7.4505806e-09, 2.19411182, -4.04101658]
+  Translation: [0, 1, -7.43982601]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -166,13 +166,108 @@ Script:
   moveSpeed: 2
   timer: 0
   back: false
-  chaseDistance: 30
+  chaseDistance: 100
   state: 0
   player: {fileID: 3088184379416202870}  # Component
   bulletSpeed: 3
   rangeEnemyPos: {fileID: 0}
+  newRequest: false
   maxUpPos: {fileID: 0}
   maxBottomPos: {fileID: 0}
-  duration: 2
+  duration: 0.5
   startingPos: {fileID: 0}
   bullet: {fileID: 0}
+---
+ID: 3965216194134604956
+GameObject:
+  m_IsActive: true
+  m_Name: Obstacle
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 12636791137372650704}  # Transform
+    - component: {fileID: 4722627512651183909}  # BoxCollider
+    - component: {fileID: 9182521544632691690}  # Rigidbody
+    - component: {fileID: 9835549834190765468}  # MeshRenderer
+---
+ID: 12636791137372650704
+Transform:
+  m_GameObject: {fileID: 3965216194134604956}
+  Translation: [0.0285186768, 0.871953368, -1.40609694]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 4722627512651183909
+BoxCollider:
+  m_GameObject: {fileID: 3965216194134604956}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 9182521544632691690
+Rigidbody:
+  m_GameObject: {fileID: 3965216194134604956}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 9835549834190765468
+MeshRenderer:
+  m_GameObject: {fileID: 3965216194134604956}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}
+---
+ID: 17900019589144902506
+GameObject:
+  m_IsActive: true
+  m_Name: Obstacle - Copy
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 9284297055193003378}  # Transform
+    - component: {fileID: 9877445282723746540}  # BoxCollider
+    - component: {fileID: 17296785876480622867}  # Rigidbody
+    - component: {fileID: 12420148447929519460}  # MeshRenderer
+---
+ID: 9284297055193003378
+Transform:
+  m_GameObject: {fileID: 17900019589144902506}
+  Translation: [0.0285186768, 0.871953368, -1.40609694]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9877445282723746540
+BoxCollider:
+  m_GameObject: {fileID: 17900019589144902506}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 17296785876480622867
+Rigidbody:
+  m_GameObject: {fileID: 17900019589144902506}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12420148447929519460
+MeshRenderer:
+  m_GameObject: {fileID: 17900019589144902506}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 1b9be114c7f6114186020c1aa6762432}

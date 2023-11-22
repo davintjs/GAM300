@@ -52,7 +52,7 @@ void Animation_Manager::Update(float dt)
 
         if (InputHandler::isKeyButtonPressed(GLFW_KEY_C))
         {
-            animator.SetState("Run");
+            animator.SetNextState("Run");
         }
 
         if (InputHandler::isKeyButtonHolding(GLFW_KEY_V))
