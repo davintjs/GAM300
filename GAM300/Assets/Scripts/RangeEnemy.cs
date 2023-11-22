@@ -16,8 +16,10 @@ public class RangeEnemy : Script
     public bool back = false;
     public int state;//Example 1 is walk, 2 is attack, 3 is idle etc.
     public Transform player;
-    public Transform rangeEnemyPos;
 
+    public ParticleComponent particle;
+
+    
     //vec3 startingPos;
     public Transform maxUpPos;
     public Transform maxBottomPos;
@@ -25,32 +27,20 @@ public class RangeEnemy : Script
     public float duration = 2f;
     public float timer = 0f;
 
-    public GameObject bullet;
-    public float bulletSpeed = 3f;
-
-    public Transform testSetParent;
-
-
-    // HealthBar
-    public Transform hpBar;
-
+    //public GameObject bullet;
+    //public float bulletSpeed = 3f;
 
     void Start()
     {
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
         state = 0;//start with idle state
-        if (testSetParent != null)
-        {
-            testSetParent.SetParent(transform);
-        }
     }
 
     void Update()
     {
         if (player == null)
             return;
-
 
         //ensure the moving animation reference continues to follow the it
         //maxUpPos.localPosition.x = GetComponent<Transform>().localPosition.x;
@@ -112,14 +102,10 @@ public class RangeEnemy : Script
                 break;
             //attack state
             case 2:
-                //spawn bullet
-                //Console.WriteLine("Shoot Start");
-                GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
-                //You should set the rigid body velocity here
-                //Console.WriteLine("Shoot Start");
-                bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * moveSpeed;
+                ////spawn bullet
+                //GameObject bulletPrefab = Instantiate(bullet, transform.localPosition, transform.localRotation) as GameObject;
                 //bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
-                //Console.WriteLine("Shoot End");
+                //Console.WriteLine("ShootBullet");
                 //change to chase state once player has reach out of range
                 if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)
                 {
@@ -170,8 +156,6 @@ public class RangeEnemy : Script
         currentHealth -= amount;
         Console.WriteLine("Hit");
 
-        hpBar.localScale.x = (float)currentHealth/maxHealth;
-
         if(currentHealth <= 0)
         {
             state = 3;
@@ -181,12 +165,14 @@ public class RangeEnemy : Script
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Enemy Triggered " + GetTag(other));
+        //Console.WriteLine("Hit");
 
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if(GetTag(other) == "PlayerAttack")
+        if(other.gameObject.name == "PlayerWeaponCollider")
         {
-            Console.WriteLine("Hit");
+            particle.gameObject.transform.localPosition = transform.localPosition;
+            particle.Play();
+            Console.WriteLine("MEGAHIT");
             TakeDamage(1);
         }
     }

@@ -177,6 +177,11 @@ namespace BeanFactory
         public static extern string GetLayerName(int layer);
         #endregion
 
+        #region PARTICLES
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ParticlesPlayer(ParticleComponent particleComp);
+        #endregion
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
 

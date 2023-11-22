@@ -113,6 +113,22 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class ParticleComponent
+    {
+        public void Play() { InternalCalls.ParticlesPlayer(this); }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class Animator
     {
         public void Play() { InternalCalls.PlayAnimation(this); }
