@@ -56,7 +56,7 @@ void Animation_Manager::Update(float dt)
 
         if (InputHandler::isKeyButtonHolding(GLFW_KEY_V))
         {
-            animator.SetNextState("Run");
+            animator.SetState("Sprint");
         }
 
         if (animator.playing && animator.AnimationAttached())
