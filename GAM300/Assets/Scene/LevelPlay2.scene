@@ -7339,7 +7339,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 51.0361176
+  Time: 36.417923
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8615,7 +8615,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: None
-  Time: 16.0359421
+  Time: 47.4174385
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -15697,17 +15697,54 @@ Script:
   timer: 0
   back: false
   hpBar: {fileID: 12310695600081325322}  # Component
+  RotationSpeed: 6
   chaseDistance: 8
   state: 0
   player: {fileID: 3977294589520766028}  # Component
   bulletSpeed: 10
   rangeEnemyPos: {fileID: 6034621871942586701}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   duration: 2
   startingPos: {fileID: 13482372997539004348}  # Component
   modelOffset: {fileID: 17589645519894896830}  # Component
   bullet: {fileID: 16905222177648308199}  # GameObject
   floatingY: 0.200000003
   maxShootCooldown: 3
+---
+ID: 17611351097031071778
+GameObject:
+  m_IsActive: true
+  m_Name: ParticleEmitter
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1697064786422148714}  # Transform
+    - component: {fileID: 14811258098067119871}  # ParticleComponent
+---
+ID: 1697064786422148714
+Transform:
+  m_GameObject: {fileID: 17611351097031071778}
+  Translation: [-20.1081982, 2.96140075, 15.7915907]
+  Rotation: [0, 0, 0]
+  Scale: [0.0318250023, 0.0318250023, 0.0318250023]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14811258098067119871
+ParticleComponent:
+  m_GameObject: {fileID: 17611351097031071778}
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 1538ea12fd13879638cb81b071448c3e}
+  Number Of Particles: 15
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.0399999991
+  Particle Max Scale: 0.0599999987
+  Particle Scale Rate: 0.699999988
+  Particle Speed: 1.20000005
+  2D particle: false
+  Looping: false
 ---
 ID: 13482372997539004348
 GameObject:

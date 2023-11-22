@@ -554,15 +554,15 @@ void ScriptingSystem::ThreadWork()
 		//Pause timer when recompiling
 		if (timeUntilRecompile > 0)
 		{
-			PRINT("BEFORE SLEEP\n");
+			//PRINT("BEFORE SLEEP\n");
 			Sleep(1000);
-			PRINT("AFTER SLEEP\n");
+			//PRINT("AFTER SLEEP\n");
 			timeUntilRecompile -= 1;
 			if (timeUntilRecompile <= 0)
 			{
-				PRINT("BEFORE THREAD ENQUEUE\n");
+				//PRINT("BEFORE THREAD ENQUEUE\n");
 				THREADS.EnqueueTask([this] {RecompileThreadWork(); });
-				PRINT("AFTER THREAD ENQUEUE\n");
+				//PRINT("AFTER THREAD ENQUEUE\n");
 			}
 		}
 		else if (compilingState == CompilingState::SwapAssembly)

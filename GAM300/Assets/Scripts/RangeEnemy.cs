@@ -45,6 +45,9 @@ public class RangeEnemy : Script
 
     Rigidbody rb;
 
+    private float particle_duration = 0.5f;
+    private float particle_timer = 0f;
+    private bool particle_on = false;
 
     void Start()
     {
@@ -63,6 +66,22 @@ public class RangeEnemy : Script
         vec3 direction = player.localPosition - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
+
+        if (particle_on)
+        {
+            if(particle_timer > 0f)
+            {
+                particle_timer -= Time.deltaTime;
+            }
+            else
+            {
+                particle.gameObject.transform.localPosition = vec3{-999, -999,-999};
+                -999f, -999f, -999f);
+                particle_timer = 0f;
+                particle_on = false;
+                particle.Play();
+            }
+        }
 
         switch (state)
         {
@@ -184,20 +203,27 @@ public class RangeEnemy : Script
     {
         currentHealth -= amount;
         hpBar.localScale.x = (float)currentHealth/maxHealth;
-        if(currentHealth <= 0)
+        //set particle transform to enemy position
+        if(currentHealth > 0)
+        {
+            particle.gameObject.transform.localPosition = transform.localPosition;
+            particle.Play();
+            particle_on = true;
+            particle_timer = particle_duration;
+        }
+        else
         {
             Destroy(gameObject);
         }
     }
+
 
     void OnTriggerEnter(PhysicsComponent other)
     {
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(GetTag(other) == "PlayerAttack")
         {
-            particle.gameObject.transform.localPosition = transform.localPosition;
-            particle.Play();
-            Console.WriteLine("MEGAHIT");
+            //Console.WriteLine("MEGAHIT");
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = transform.localPosition - otherT.localPosition;
             dir.y = 0;
