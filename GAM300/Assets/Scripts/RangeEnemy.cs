@@ -127,7 +127,7 @@ public class RangeEnemy : Script
                 break;
             //return to previous position state
             case 4:
-                Console.WriteLine("Return");
+                //Console.WriteLine("Return");
                 vec3 returnDirection = (startingPos.localPosition - transform.localPosition).Normalized;
                 returnDirection.y = 0;
                 float angle2 = (float)Math.Atan2(returnDirection.x, returnDirection.z);

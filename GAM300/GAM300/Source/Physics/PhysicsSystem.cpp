@@ -135,27 +135,22 @@ void PhysicsSystem::Update(float dt) {
 		JPH::Quat rot;
 		Vector3 trot = t.GetRotation();
 		GlmVec3ToJoltQuat(trot, rot);
-		//bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
-		//bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
-		if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
-		{
-			//std::cout << "Character " << i << " is grounded\n";
-			cc.isGrounded = true;
-		}
-		else
-		{
-			cc.isGrounded = false;
-		}
-		Entity& entity = scene.Get<Entity>(cc);
-		Transform& te = scene.Get<Transform>(entity);
 
+		JPH::RVec3 velocity;
+		GlmVec3ToJoltVec3(cc.velocity, velocity);
 
-		Vector3 tmpVec;
-		JPH::BodyID tmpBID(cc.bid);
-		//JPH::RVec3 tmp;
-		JPH::Quat tmpQuat;
-		GlmVec3ToJoltQuat(te.rotation, tmpQuat);
-		bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::Activate);
+		bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::Activate);
+		bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::Activate);
+		bodyInterface->SetLinearVelocity(tmpBid, velocity);
+		//if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		//{
+		//	//std::cout << "Character " << i << " is grounded\n";
+		//	cc.isGrounded = true;
+		//}
+		//else
+		//{
+		//	cc.isGrounded = false;
+		//}
 		++j;
 	}
 	
@@ -400,7 +395,6 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		float length = 0.f;
 
 		if (direction != JPH::Vec3::sZero()) {
-			//std::cout << "direction:" << cc.direction.x << ',' << cc.direction.y << ',' << cc.direction.z << std::endl;
 			directionNormalized = direction.Normalized();
 			length = direction.Length();
 		}
@@ -759,9 +753,17 @@ void PhysicsSystem::UpdateGameObjects() {
 
 		tmp = characters[idx]->GetCenterOfMassPosition();
 		JoltVec3ToGlmVec3(tmp, t.translation);
+		if (characters[idx]->GetGroundState() == JPH::Character::EGroundState::OnGround)
+		{
+			//std::cout << "Character " << idx << " is grounded\n";
+			cc.isGrounded = true;
+		}
+		else
+		{
+			cc.isGrounded = false;
+		}
 
 		idx++;
-
 	}
 }
 

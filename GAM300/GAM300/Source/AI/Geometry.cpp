@@ -183,13 +183,6 @@ bool Intersects(const Line3D& line, const Plane3D& plane, float* rt)
 		*rt = t;
 	}
 
-	//float Mtv = MdotN + (t * VdotN);
-	//float test = Mtv + plane[3];
-	//if (test != 0.f)
-	//{
-	//	return false;
-	//}
-
 	return true;
 
 }

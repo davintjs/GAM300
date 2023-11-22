@@ -7211,10 +7211,10 @@ Script:
   m_GameObject: {fileID: 3977294589520766028}
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   MoveSpeed: 7
-  currentMoveSpeed: 0
   JumpSpeed: 7
-  currentHealth: 0
-  sprintSpeed: 11
+  playerWeaponCollider: {fileID: 17150978404869133335}  # GameObject
+  player: {fileID: 3977294589520766028}  # Component
+  sprintModifier: 1.5
   CamYawPivot: {fileID: 6663313825132233637}  # Component
   Gravity: 9.81000042
   maxHealth: 4
@@ -7222,21 +7222,17 @@ Script:
   CC: {fileID: 15939117778428800744}  # Component
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
   PlayerModel: {fileID: 18364898161930433210}  # Component
-  playerWeaponCollider: {fileID: 17150978404869133335}  # GameObject
-  player: {fileID: 3977294589520766028}  # Component
-  IsMoving: false
-  invulnerableTimer: 1
-  IsJumping: false
-  IsInAnimation: false
   RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
-  animator: {fileID: 6628232525372413625}  # Component
   IsAttacking: false
   attackTimer: 0.5
   currentAttackTimer: 0
+  currentHealth: 0
   isInvulnerable: false
+  invulnerableTimer: 1
   currentInvulnerableTimer: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
+  animator: {fileID: 6628232525372413625}  # Component
 ---
 ID: 6663313825132233637
 GameObject:
@@ -7308,7 +7304,7 @@ GameObject:
 ID: 12723341769296608508
 Transform:
   m_GameObject: {fileID: 18364898161930433210}
-  Translation: [0, -0.5, 0]
+  Translation: [0, -0.600000024, 0]
   Rotation: [0, 0, 0]
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 3977294589520766028}
@@ -7343,7 +7339,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: None
-  Time: 14.6388235
+  Time: 51.4999466
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -7995,6 +7991,9 @@ Script:
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
   MinPitchAngle: -85
   CamMovePivot: {fileID: 1999010381617278315}  # Component
+  closestZoom: 3.5
+  furthestZoom: 8
+  zoomSpeed: 50
 ---
 ID: 17145839964191952887
 GameObject:
@@ -8538,7 +8537,7 @@ GameObject:
 ID: 1091785314174079466
 Transform:
   m_GameObject: {fileID: 8319159695061000746}
-  Translation: [42.204113, -1.47948885, -35.7614059]
+  Translation: [42.204113, -0.720080137, -35.7614059]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -8548,7 +8547,7 @@ Transform:
 ID: 9517799663831585890
 BoxCollider:
   m_GameObject: {fileID: 8319159695061000746}
-  Dimensions: [1, 1, 1]
+  Dimensions: [0.699999988, 1.20000005, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 2688728775519565296
@@ -8569,7 +8568,7 @@ Script:
   m_GameObject: {fileID: 8319159695061000746}
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
   Health: 1
-  moveSpeed: 8
+  moveSpeed: 6
   chaseDistance: 5
   player: {fileID: 3977294589520766028}  # Component
   count: 0
@@ -8587,7 +8586,7 @@ GameObject:
 ID: 8490146645422117217
 Transform:
   m_GameObject: {fileID: 5401300559759663398}
-  Translation: [0, 0, 0]
+  Translation: [0, -0.610000014, 0]
   Rotation: [0, 0, 0]
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 8319159695061000746}

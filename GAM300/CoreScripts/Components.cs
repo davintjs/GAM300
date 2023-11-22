@@ -238,188 +238,192 @@ namespace BeanFactory
         }
     }
 
-
-/*
-    public class Camera : Component
+    [StructLayout(LayoutKind.Sequential)]
+    public class NavMeshAgent
     {
+        float mAgentSpeed;
     }
-
-    public class SpriteRenderer : Component
-    {
-        public Color color
+    /*
+        public class Camera : Component
         {
-            get
-            {
-                InternalCalls.GetSpriteRendererColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetSpriteRendererColor(ID, ref value);
-            }
         }
-    }
 
-    public class BoxCollider2D : Component
-    {
-    }
-
-    public class Button : Component
-    {
-        public ButtonState state
+        public class SpriteRenderer : Component
         {
-            get { return (ButtonState)InternalCalls.GetButtonState(ID); }
-        }
-        public Color hoverColor
-        {
-            get
+            public Color color
             {
-                InternalCalls.GetButtonHoverColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetButtonHoverColor(ID, ref value);
-            }
-        }
-        public Color clickedColor
-        {
-            get
-            {
-                InternalCalls.GetButtonClickedColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetButtonClickedColor(ID, ref value);
+                get
+                {
+                    InternalCalls.GetSpriteRendererColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetSpriteRendererColor(ID, ref value);
+                }
             }
         }
 
-    }
-
-    public class Text : Component
-    {
-        public string text
+        public class BoxCollider2D : Component
         {
-            get
+        }
+
+        public class Button : Component
+        {
+            public ButtonState state
             {
-                InternalCalls.GetTextString(ID,out string text);
-                return text;
+                get { return (ButtonState)InternalCalls.GetButtonState(ID); }
             }
-            set
+            public Color hoverColor
             {
-                InternalCalls.SetTextString(ID, value);
+                get
+                {
+                    InternalCalls.GetButtonHoverColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetButtonHoverColor(ID, ref value);
+                }
+            }
+            public Color clickedColor
+            {
+                get
+                {
+                    InternalCalls.GetButtonClickedColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetButtonClickedColor(ID, ref value);
+                }
+            }
+
+        }
+
+        public class Text : Component
+        {
+            public string text
+            {
+                get
+                {
+                    InternalCalls.GetTextString(ID,out string text);
+                    return text;
+                }
+                set
+                {
+                    InternalCalls.SetTextString(ID, value);
+                }
+            }
+
+            public Color color
+            {
+                get
+                {
+                    InternalCalls.GetTextColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetTextColor(ID, ref value);
+                }
+            }
+
+        }
+
+        public class AudioSource : Component
+        {
+            public void Play()
+            {
+                InternalCalls.AudioSourcePlay(ID);
+            }
+            public void Stop()
+            {
+                InternalCalls.AudioSourceStop(ID);
+            }
+
+            public float volume
+            {
+                get
+                {
+                    return InternalCalls.AudioSourceGetVolume(ID);
+                }
+                set
+                {
+                    InternalCalls.AudioSourceSetVolume(ID,value);
+                }
             }
         }
 
-        public Color color
+        public class Image : Component
         {
-            get
+            public Color color
             {
-                InternalCalls.GetTextColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetTextColor(ID, ref value);
+                get
+                {
+                    InternalCalls.GetImageColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetImageColor(ID, ref value);
+                }
             }
         }
 
-    }
-
-    public class AudioSource : Component
-    {
-        public void Play()
-        {
-            InternalCalls.AudioSourcePlay(ID);
-        }
-        public void Stop()
-        {
-            InternalCalls.AudioSourceStop(ID);
-        }
-
-        public float volume
-        {
-            get
-            {
-                return InternalCalls.AudioSourceGetVolume(ID);
-            }
-            set
-            {
-                InternalCalls.AudioSourceSetVolume(ID,value);
-            }
-        }
-    }
-
-    public class Image : Component
-    {
-        public Color color
-        {
-            get
-            {
-                InternalCalls.GetImageColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetImageColor(ID, ref value);
-            }
-        }
-    }
-
-    public class SortingGroup : Component
-    {
-
-    }
-
-    public class Animator : Component
-    {
-        public float delay
-        {
-            get
-            {
-                return InternalCalls.GetAnimatorDelay(ID);
-            }
-            set
-            {
-                InternalCalls.SetAnimatorDelay(ID,value);
-            }
-        }
-
-        public bool play
-        {
-            set
-            {
-                if (value)
-                    InternalCalls.PlayAnimation(ID);
-                else
-                    InternalCalls.PauseAnimation(ID);
-            }
-        }
-
-        public Color color
-        {
-            get
-            {
-                InternalCalls.GetAnimationColor(ID, out Color color);
-                return color;
-            }
-            set
-            {
-                InternalCalls.SetAnimationColor(ID, ref value);
-            }
-        }
-
-
-        public void setFrame(int _frame)
+        public class SortingGroup : Component
         {
 
-            InternalCalls.SetFrame(ID, _frame);
         }
 
-        public void stop()
+        public class Animator : Component
         {
-            InternalCalls.StopAnimation(ID);
-        }
-    }*/
+            public float delay
+            {
+                get
+                {
+                    return InternalCalls.GetAnimatorDelay(ID);
+                }
+                set
+                {
+                    InternalCalls.SetAnimatorDelay(ID,value);
+                }
+            }
+
+            public bool play
+            {
+                set
+                {
+                    if (value)
+                        InternalCalls.PlayAnimation(ID);
+                    else
+                        InternalCalls.PauseAnimation(ID);
+                }
+            }
+
+            public Color color
+            {
+                get
+                {
+                    InternalCalls.GetAnimationColor(ID, out Color color);
+                    return color;
+                }
+                set
+                {
+                    InternalCalls.SetAnimationColor(ID, ref value);
+                }
+            }
+
+
+            public void setFrame(int _frame)
+            {
+
+                InternalCalls.SetFrame(ID, _frame);
+            }
+
+            public void stop()
+            {
+                InternalCalls.StopAnimation(ID);
+            }
+        }*/
 }

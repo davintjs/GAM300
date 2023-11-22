@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "NavMeshBuilder.h"
 #include "NavMesh.h"
+#include "Core/FramerateController.h"
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 
@@ -27,6 +28,33 @@ void NavMeshBuilder::Init()
 {
 	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactAdd); // For obstacle contact with floor
 	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactRemove); // For obstacle removed from floor
+}
+
+void NavMeshBuilder::Update(float dt)
+{
+	Scene& tempScene = MySceneManager.GetCurrentScene();
+
+	float fixedDt = (float)MyFrameRateController.GetFixedDt();
+	for (NavMeshAgent& i : tempScene.GetArray<NavMeshAgent>())
+	{
+		Transform& agentTransform = tempScene.Get<Transform>(i);
+		std::deque<glm::vec3>& mWay = i.mPoints;
+
+		if (!mWay.empty())
+		{
+			glm::vec3 playerdir = mWay.front() - agentTransform.GetTranslation();
+			if (length(playerdir) <= .1f) 
+			{
+				mWay.pop_front();
+				return;
+			}
+			playerdir = glm::normalize(playerdir);
+			playerdir.y = 0;
+			float angle = static_cast<float>(atan2(playerdir.x, playerdir.z));
+			agentTransform.rotation.y = angle;
+			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = playerdir * 2.f;
+		}
+	}
 }
 
 void NavMeshBuilder::BuildNavMesh()
@@ -140,7 +168,7 @@ void NavMeshBuilder::GetAllObstacles()
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	//ObstacleOffset(0.2f); // Offset the diameter first before removing
+	ObstacleOffset(0.2f); // Offset the diameter first before removing
 	RemoveObstaclesFromMesh(); // Remove holes in the boundary
 	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
