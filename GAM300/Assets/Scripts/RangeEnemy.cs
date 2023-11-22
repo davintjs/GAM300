@@ -57,7 +57,7 @@ public class RangeEnemy : Script
         {
             //idle state
             case 0:
-                Console.WriteLine("Idle");
+                //Console.WriteLine("Idle");
                 if (!back)
                 {
                     transform.localPosition = vec3.Lerp(maxUpPos.localPosition, maxBottomPos.localPosition, timer / duration);
@@ -82,7 +82,7 @@ public class RangeEnemy : Script
                 break;
             //chase state
             case 1:
-                Console.WriteLine("Chase");
+                //Console.WriteLine("Chase");
                 //follow target
                 vec3 direction = (player.localPosition - transform.localPosition).Normalized;
                 direction.y = 0;
@@ -108,13 +108,13 @@ public class RangeEnemy : Script
             //attack state
             case 2:
                 //spawn bullet
-                Console.WriteLine("Shoot Start");
+                //Console.WriteLine("Shoot Start");
                 GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
                 //You should set the rigid body velocity here
-                Console.WriteLine("Shoot Start");
+                //Console.WriteLine("Shoot Start");
                 bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * moveSpeed;
                 //bulletPrefab.transform.localPosition = new vec3(0, 0, 1) * bulletSpeed;//add movement to the bullet based on its forward direction
-                Console.WriteLine("Shoot End");
+                //Console.WriteLine("Shoot End");
                 //change to chase state once player has reach out of range
                 if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)
                 {

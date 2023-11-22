@@ -1,7 +1,7 @@
 Material:
   Material Name: Player_02
   Shader: 0
-  Albedo: [1, 0.99993062, 0.999899983, 0]
+  Albedo: [1, 1, 1, 1]
   Metallic: 0
   Roughness: 1
   AmbientOcclusion: 1

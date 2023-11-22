@@ -47,6 +47,9 @@ public:
 	// Gets the current animation state progress
 	float GetProgress() { return m_CurrentTime / (endTime - startTime); }
 
+	// Sets the current animation state progress
+	void SetProgress(const float& _value) { m_CurrentTime = _value * (endTime - startTime); }
+
 	AnimationState* GetCurrentState() { return currentState; }
 
 	std::vector<glm::mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }

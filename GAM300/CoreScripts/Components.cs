@@ -119,9 +119,10 @@ namespace BeanFactory
         public void Pause() { InternalCalls.PauseAnimation(this); }
         public void Stop() { InternalCalls.StopAnimation(this); }
         public float GetProgress() { return InternalCalls.GetProgress(this); }
-        public bool IsCurrentState(string state) { return InternalCalls.IsCurrentState(this, state); }
+        public void SetProgress(float value) { InternalCalls.SetProgress(this, value); }
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
+        public string GetState() { return InternalCalls.GetState(this); }
         public void SetNextState(string nextState) { InternalCalls.SetNextState(this, nextState); }
 
         public GameObject gameObject

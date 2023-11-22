@@ -67,6 +67,7 @@ public class ThirdPersonController : Script
         {
             animator.SetDefaultState("Idle");
             animator.Play();
+            //Console.WriteLine("This state is " + animator.GetState());
         }
     }
 
@@ -82,7 +83,6 @@ public class ThirdPersonController : Script
             Console.WriteLine("TakeDamage");
             isInvulnerable = true;
         }
-        //UpdatehealthBar();
 
         //Set velocity to 0 if no input is given
         vec3 dir = vec3.Zero;
@@ -258,7 +258,7 @@ public class ThirdPersonController : Script
             animator.SetState("Attack1");
         }
 
-        if (!IsAttacking && !animator.IsCurrentState("Attack1") && !animator.IsCurrentState("Jump"))
+        if (!IsAttacking && animator.GetState() != "Attack1" && animator.GetState() != "Jump")
         {
             IsInAnimation = false;
         }

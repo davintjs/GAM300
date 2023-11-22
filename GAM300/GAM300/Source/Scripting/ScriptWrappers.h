@@ -147,20 +147,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return 0.f;
 	}
 
-	static bool IsCurrentState(ScriptObject<Animator> pAnimator, MonoString* mString)
+	static void SetProgress(ScriptObject<Animator> pAnimator, float value)
 	{
-		std::string state = mono_string_to_utf8(mString);
 		Scene& currentScene = MySceneManager.GetCurrentScene();
 		for (auto& animator : currentScene.GetArray<Animator>())
 		{
 			if (animator.EUID() == (*pAnimator).EUID())
 			{
-				if(animator.GetCurrentState())
-					return !animator.GetCurrentState()->label.compare(state);
+				animator.SetProgress(value);
+				break;
 			}
 		}
-
-		return false;
 	}
 	
 	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
@@ -204,6 +201,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			}
 		}
 	}
+
+	static MonoString* GetState(ScriptObject<Animator> pAnimator)
+	{
+		std::string state;
+		Scene& currentScene = MySceneManager.GetCurrentScene();
+		for (auto& animator : currentScene.GetArray<Animator>())
+		{
+			if (animator.EUID() == (*pAnimator).EUID())
+			{
+				state = animator.GetCurrentState()->label;
+			}
+		}
+
+		return SCRIPTING.CreateMonoString(state);
+	}
+
 #pragma endregion
 	
 	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
@@ -446,10 +459,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(PauseAnimation);
 		Register(StopAnimation);
 		Register(GetProgress);
-		Register(IsCurrentState);
+		Register(SetProgress);
 		Register(SetDefaultState);
 		Register(SetState);
 		Register(SetNextState);
+		Register(GetState);
 		Register(GetTag);
 	}
 #endif // !SCRIPT_WRAPPERS_H
