@@ -129,6 +129,7 @@ public class ThirdPersonController : Script
                 IsAttacking = true;
                 playerWeaponCollider.SetActive(true);//enable the weapon collider
                 playerWeaponCollider.transform.localPosition = vec3.Zero;
+                currentAttackTimer = attackTimer;
                 playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
                 SetState("Attack1", true);
                 AudioManager.instance.playerSlashAttack.Play();
@@ -163,7 +164,7 @@ public class ThirdPersonController : Script
         {
             if (IsAttacking)
             {
-                float dist = maxColliderDist * currentAttackTimer/attackTimer;
+                float dist = maxColliderDist * (1 - currentAttackTimer/attackTimer);
                 playerWeaponCollider.transform.localPosition = transform.localPosition + PlayerModel.back * dist;
                 playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
                 currentAttackTimer -= Time.deltaTime;

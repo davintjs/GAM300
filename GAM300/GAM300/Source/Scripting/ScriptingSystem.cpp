@@ -38,7 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; PRINT("Script Thread event\n"); while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
+#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
 
 #define ACQUIRE_LOCK_IF_SCRIPT_THREAD(LockName) (if (SCRIPTING_THREAD_ID == std::this_thread::get_id()) {ACQUIRE_SCOPED_LOCK(##LockName);})
 
