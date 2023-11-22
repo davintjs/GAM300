@@ -77,6 +77,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//ParticleManager,
 		GraphicsSystem,
 		Blackboard,
+		NavMeshBuilder,
 		UISystem
 	>;
 #endif
@@ -155,6 +156,7 @@ public:
 				{
 					starttime = glfwGetTime();
 					//Update performance viewer every 2s
+					std::cout << typeid(*sys).name() << std::endl;
 					sys->Update(dt);
 					if (update) {
 						float timetaken = (float)(glfwGetTime() - starttime);

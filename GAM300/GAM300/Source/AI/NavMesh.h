@@ -22,6 +22,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "Geometry.h"
 
+struct NavMeshAgent;
+
 class NavMesh
 {
 public:
@@ -42,7 +44,7 @@ public:
 	const std::vector<unsigned int> GetIndices() const;
 
 	// Pathfinding stuff
-	bool FindPath(const glm::vec3& mStart, const glm::vec3& mEnd);
+	bool FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd);
 
 private:
 	// Add neighbour to this triangle
