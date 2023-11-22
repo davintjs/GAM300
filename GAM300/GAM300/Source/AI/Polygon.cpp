@@ -145,7 +145,7 @@ void Polygon3D::GenerateConvexHull(const std::vector<glm::vec3>& points)
 	// If already only 3 points given, return them based on front faced or back faced
 	if (points.size() == 3)
 	{
-		if (isFrontFace(points[0], points[1], points[2]) > 0.f)
+		if (isFrontFace(points[0], points[1], points[2]))
 		{
 			mPoints = points;
 			mOrientation = Orientation::COUNTERCLOCKWISE;

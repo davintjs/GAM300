@@ -174,7 +174,7 @@ void NavMeshBuilder::GetAllObstacles()
 
 NavMesh* NavMeshBuilder::CreateNavMesh()
 {
-	ObstacleOffset(1.f); // Offset the diameter first before removing
+	ObstacleOffset(0.2f); // Offset the diameter first before removing
 	RemoveObstaclesFromMesh(); // Remove holes in the boundary
 	NavMesh* _NavMesh = new NavMesh(Triangulate());
 
@@ -530,7 +530,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 			glm::vec3 secondPoint = vertices[i];
 			glm::vec3 thirdPoint = vertices[i + 1 == vertices.size() ? 0 : i + 1];
 
-			if (isFrontFace(firstPoint, secondPoint, thirdPoint) <= 0.f)
+			if (!isFrontFace(firstPoint, secondPoint, thirdPoint))
 			{
 				nonConvexPoints.push_back(secondPoint);
 			}
@@ -553,7 +553,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 				glm::vec3 secondPoint = vertices[i];
 				glm::vec3 thirdPoint = vertices[i + 1 == vertices.size() ? 0 : i + 1];
 
-				if (isFrontFace(firstPoint, secondPoint, thirdPoint) <= 0.f)
+				if (!isFrontFace(firstPoint, secondPoint, thirdPoint))
 				{
 					continue;
 				}
@@ -584,7 +584,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 					glm::vec3 previousPoint = firstPoint; // Our start
 					glm::vec3 nextOfPreviousPoint = secondPoint; // This is just our current point
 
-					if (isFrontFace(previousPreviousPoint, previousPoint, nextOfPreviousPoint) > 0.f) // Deleting the previous point if it is convex
+					if (isFrontFace(previousPreviousPoint, previousPoint, nextOfPreviousPoint)) // Deleting the previous point if it is convex
 					{
 						for (int j = 0; j < nonConvexPoints.size(); ++j)
 						{
@@ -600,7 +600,7 @@ std::vector<Triangle3D> NavMeshBuilder::Triangulate()
 					glm::vec3 nextPoint = thirdPoint; // Our start
 					glm::vec3 nextNextPoint = vertices[i + 2 == vertices.size() + 1 ? 1 : (i + 1 == vertices.size() ? 0 : i + 1)]; // The next next point of the current point of this loop (secondPoint)
 
-					if (isFrontFace(previousOfNextPoint, nextPoint, nextNextPoint) > 0.f) // Deleting the next point if it is convex
+					if (isFrontFace(previousOfNextPoint, nextPoint, nextNextPoint)) // Deleting the next point if it is convex
 					{
 						for (int j = 0; j < nonConvexPoints.size(); ++j)
 						{

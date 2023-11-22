@@ -242,9 +242,9 @@ std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::ve
 		const glm::vec3& leftPoint = mPortals[i].first;
 		const glm::vec3& rightPoint = mPortals[i].second;
 
-		if (isFrontFace(mCurrStart, rightLine.point2, rightPoint) <= 0.f) // Update right vertex
+		if (PortalCheck(mCurrStart, rightLine.point2, rightPoint) <= 0.f) // Update right vertex
 		{
-			if (mCurrStart == rightLine.point2 || isFrontFace(mCurrStart, leftLine.point2, rightPoint) > 0.f)
+			if (mCurrStart == rightLine.point2 || PortalCheck(mCurrStart, leftLine.point2, rightPoint) > 0.f)
 			{
 				// Tighten the funnel
 				rightLine.point2 = rightPoint;
@@ -271,9 +271,9 @@ std::deque<glm::vec3> AStarPather::Funnel(const glm::vec3& mStart, const glm::ve
 			}
 		}
 
-		if (isFrontFace(mCurrStart, leftLine.point2, leftPoint) >= 0.f) // Update left vertex
+		if (PortalCheck(mCurrStart, leftLine.point2, leftPoint) >= 0.f) // Update left vertex
 		{
-			if (mCurrStart == leftLine.point2 || isFrontFace(mCurrStart, rightLine.point2, leftPoint) < 0.f)
+			if (mCurrStart == leftLine.point2 || PortalCheck(mCurrStart, rightLine.point2, leftPoint) < 0.f)
 			{
 				// Tighten the funnel
 				leftLine.point2 = leftPoint;
