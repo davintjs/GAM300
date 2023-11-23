@@ -134,6 +134,7 @@ void Renderer::Update(float)
 
 		Transform& transform = currentScene.Get<Transform>(entity);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
+		const glm::vec3 position = transform.GetTranslation();
 
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
@@ -170,6 +171,7 @@ void Renderer::Update(float)
 
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
+			renderProperties.position = position;
 
 			if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
 			{
@@ -234,6 +236,7 @@ void Renderer::Update(float)
 		instanceContainers[s][vao].M_R_A_Texture.emplace_back(metalidx, roughidx, aoidx, emissionidx);
 		instanceContainers[s][vao].textureIndex.emplace_back(texidx, normidx);
 		instanceContainers[s][vao].entitySRT.emplace_back(worldMatrix);
+		instanceContainers[s][vao].position = position;
 		++iter;
 		++i;
 	} // END MESHRENDERER LOOP
@@ -1065,7 +1068,7 @@ void Renderer::DrawDepthDirectional()
 {
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
-		LightProperties directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
+		LightProperties& directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
 		
 		if (!directional_light_stuffs.enableShadow)
 		{
@@ -1101,7 +1104,7 @@ void Renderer::DrawDepthDirectional()
 		// render all non-instanced shadows
 		glUniform1i(uniform2, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
 			if (prop.Albedo.a < 1.f)
 			{
@@ -1130,8 +1133,6 @@ void Renderer::DrawDepthDirectional()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			
-
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
@@ -1154,11 +1155,12 @@ void Renderer::DrawDepthSpot()
 {
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
-		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
+		LightProperties& spot_light_stuffs = LIGHTING.GetSpotLights()[i];
 		if (!spot_light_stuffs.enableShadow)
 		{
 			continue;
 		}
+
 		glEnable(GL_DEPTH_TEST);
 		glm::mat4 lightProjection, lightView;
 
@@ -1186,8 +1188,12 @@ void Renderer::DrawDepthSpot()
 		// render all non-instanced shadows
 		glUniform1i(uniform2, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
+			float distance = glm::distance(prop.position, spot_light_stuffs.lightpos);
+			if (distance > spot_light_stuffs.intensity)
+				continue;
+
 			if (prop.Albedo.a < 1.f)
 			{
 				continue;
@@ -1215,7 +1221,9 @@ void Renderer::DrawDepthSpot()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-
+			float distance = glm::distance(prop.position, spot_light_stuffs.lightpos);
+			if (distance > spot_light_stuffs.intensity)
+				continue;
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -1240,7 +1248,7 @@ void Renderer::DrawDepthPoint()
 
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
-		LightProperties point_light_stuffs = LIGHTING.GetPointLights()[i];
+		LightProperties& point_light_stuffs = LIGHTING.GetPointLights()[i];
 		if (!point_light_stuffs.enableShadow)
 		{
 			continue;
@@ -1282,8 +1290,12 @@ void Renderer::DrawDepthPoint()
 		// render all non-instanced shadows
 		glUniform1i(uniform3, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
+			float distance = glm::distance(prop.position, point_light_stuffs.lightpos);
+			if (distance > point_light_stuffs.intensity * 10.f)
+				continue;
+
 			if (prop.Albedo.a < 1.f)
 			{
 				continue;
@@ -1311,6 +1323,10 @@ void Renderer::DrawDepthPoint()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
+			float distance = glm::distance(prop.position, point_light_stuffs.lightpos);
+			if (distance > point_light_stuffs.intensity * 10.f)
+				continue;
+
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());

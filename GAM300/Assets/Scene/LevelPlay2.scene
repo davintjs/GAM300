@@ -7341,7 +7341,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 4.84417391
+  Time: 40.5400581
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -19314,7 +19314,7 @@ Transform:
 ID: 1194107573959013146
 LightSource:
   m_GameObject: {fileID: 13414052106519654127}
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 1
@@ -19378,7 +19378,7 @@ Transform:
 ID: 10332750798701827478
 LightSource:
   m_GameObject: {fileID: 12255453308465698455}
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 4.1500001
@@ -19464,7 +19464,7 @@ GameObject:
 ID: 9980629945179896881
 Transform:
   m_GameObject: {fileID: 16149919952186955683}
-  Translation: [-20.0725193, 4.2396946, -34.4156952]
+  Translation: [-20.0725193, 4.43564749, -34.4156952]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19474,7 +19474,7 @@ Transform:
 ID: 12873146558931283450
 LightSource:
   m_GameObject: {fileID: 16149919952186955683}
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 1
