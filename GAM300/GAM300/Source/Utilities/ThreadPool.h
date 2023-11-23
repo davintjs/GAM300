@@ -26,14 +26,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 constexpr int MAX_THREADS = 10;
 
+enum class M_LOCK
+{
+	Mono,
+	PhysicsCollision,
+	Queue,
+	Assets
+};
+
 //Easier singleton access
 #define THREADS ThreadPool::Instance()
 
 //Conditional variable lock
-#define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireUniqueLock(#MUTEX_NAME); ThreadPool::Instance().Wait(lock##MUTEX_NAME,FUNC)
+#define ACQUIRE_UNIQUE_LOCK(MUTEX_NAME,FUNC) ThreadPool::UniqueLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireUniqueLock(M_LOCK::##MUTEX_NAME); ThreadPool::Instance().Wait(lock##MUTEX_NAME,FUNC)
 
 //Scoped lock
-#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(#MUTEX_NAME)//; PRINT(#MUTEX_NAME, "\n")
+#define ACQUIRE_SCOPED_LOCK(MUTEX_NAME) ThreadPool::ScopedLock lock##MUTEX_NAME = ThreadPool::Instance().AcquireScopedLock(M_LOCK::##MUTEX_NAME)//; PRINT(#MUTEX_NAME, "\n")
 
 SINGLETON(ThreadPool)
 {
@@ -73,19 +81,19 @@ public:
 	};
 
 	//Try to get a unique lock
-	UniqueLock AcquireUniqueLock(std::string mutexName);
+	UniqueLock AcquireUniqueLock(M_LOCK mutexName);
 
 	//Wait for a conditional variable
 	void Wait(UniqueLock& lock, std::function<bool()> pFunc);
 
 	//Try to get a scoped lock
-	ScopedLock AcquireScopedLock(std::string mutexName);
+	ScopedLock AcquireScopedLock(M_LOCK mutexName);
 
 private:
 	std::vector<std::thread> mWorkerPool; // Worker threads pool
 	std::queue<std::function<void()>> mTasks; // Queue of tasks for worker threads to complete
 
-	std::unordered_map<std::string, Mutex*> mutexes;
+	std::unordered_map<M_LOCK, Mutex*> mutexes;
 
 	bool stop {false};
 };

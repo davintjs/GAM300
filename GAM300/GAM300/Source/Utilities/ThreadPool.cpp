@@ -92,7 +92,7 @@ std::unique_lock<std::mutex>::unique_lock(_mutex.m)
 
 
 
-ThreadPool::UniqueLock ThreadPool::AcquireUniqueLock(std::string mutexName)
+ThreadPool::UniqueLock ThreadPool::AcquireUniqueLock(M_LOCK mutexName)
 {
     if (mutexes.find(mutexName) == mutexes.end())
     {
@@ -112,7 +112,7 @@ void ThreadPool::Wait(ThreadPool::UniqueLock& lock, std::function<bool()> pFunc)
 
 
 
-ThreadPool::ScopedLock ThreadPool::AcquireScopedLock(std::string mutexName)
+ThreadPool::ScopedLock ThreadPool::AcquireScopedLock(M_LOCK mutexName)
 {
     if (mutexes.find(mutexName) == mutexes.end())
     {
