@@ -28,6 +28,7 @@ void NavMeshBuilder::Init()
 {
 	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactAdd); // For obstacle contact with floor
 	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackContactRemove); // For obstacle removed from floor
+	EVENTS.Subscribe(this, &NavMeshBuilder::CallbackSceneChanged); // For baking navmesh when scene changed
 }
 
 void NavMeshBuilder::Update(float dt)
@@ -827,6 +828,17 @@ void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 void NavMeshBuilder::CallbackContactRemove(ContactRemovedEvent* pEvent)
 {
 
+}
 
-
+void NavMeshBuilder::CallbackSceneChanged(NavMeshBuildEvent* pEvent)
+{
+	if (!NAVMESHBUILDER.GetNavMesh()) // First build
+	{
+		NAVMESHBUILDER.BuildNavMesh(); // Build the NavMesh
+	}
+	else // Rebaking
+	{
+		NAVMESHBUILDER.Exit(); // Clear current NavMesh
+		NAVMESHBUILDER.BuildNavMesh(); // Rebuild NavMesh
+	}
 }

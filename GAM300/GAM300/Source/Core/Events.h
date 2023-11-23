@@ -230,6 +230,8 @@ struct DropAssetsEvent : IEvent
 	const fs::path* paths;
 };
 
+struct NavMeshBuildEvent : IEvent {};
+
 template <typename AssetType>
 struct GetAssetsEvent : IEvent
 {
@@ -240,7 +242,6 @@ struct GetAssetsEvent : IEvent
 
 struct ContactAddedEvent : IEvent
 {
-
 	ContactAddedEvent() : pc1{ nullptr }, pc2{ nullptr } {}
 
 	PhysicsComponent* pc1;

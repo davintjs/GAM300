@@ -103,6 +103,7 @@ private:
 
 	void CallbackContactAdd(ContactAddedEvent* pEvent);
 	void CallbackContactRemove(ContactRemovedEvent* pEvent);
+	void CallbackSceneChanged(NavMeshBuildEvent* pEvent);
 
 	int mObstacleCount = 0;
 	int mRegionCount = 0;

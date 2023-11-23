@@ -174,6 +174,10 @@ void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
 	GetCurrentScene().sceneName += " [PREVIEW]";
 	#endif _BUILD
 
+	// Publish navmesh build event
+	NavMeshBuildEvent e;
+	EVENTS.Publish(&e);
+
 	sceneCount++;
 }
 

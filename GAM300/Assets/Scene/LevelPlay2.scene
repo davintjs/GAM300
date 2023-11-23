@@ -2045,6 +2045,74 @@ Script:
   timer: 0.969857275
   currentRestTimer: 2
 ---
+ID: 6034621871942586701
+GameObject:
+  m_IsActive: true
+  m_Name: RangeEnemy
+  m_TagString: Enemy
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2078812242787879120}  # Transform
+    - component: {fileID: 9504656451654388578}  # BoxCollider
+    - component: {fileID: 5033578668654550690}  # Rigidbody
+    - component: {fileID: 9267112755226816832}  # Script
+---
+ID: 2078812242787879120
+Transform:
+  m_GameObject: {fileID: 6034621871942586701}
+  Translation: [46.9340897, -0.446177185, -37.867733]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 15952054123807579159}
+    - {fileID: 17589645519894896830}
+---
+ID: 9504656451654388578
+BoxCollider:
+  m_GameObject: {fileID: 6034621871942586701}
+  Dimensions: [1, 1.39999998, 1]
+  Offset: [0, 0, 0]
+---
+ID: 5033578668654550690
+Rigidbody:
+  m_GameObject: {fileID: 6034621871942586701}
+  LinearVelocity: [-4.10645526e-07, 1.16628379e-15, -4.02849707e-07]
+  AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
+---
+ID: 9267112755226816832
+Script:
+  m_GameObject: {fileID: 6034621871942586701}
+  Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
+  inRange: false
+  shootDistance: 5
+  maxHealth: 3
+  currentHealth: 3
+  moveSpeed: 0.25
+  timer: 0.740638256
+  back: false
+  hpBar: {fileID: 12310695600081325322}  # Component
+  RotationSpeed: 6
+  chaseDistance: 8
+  state: 0
+  player: {fileID: 3977294589520766028}  # Component
+  bulletSpeed: 10
+  rangeEnemyPos: {fileID: 6034621871942586701}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
+  duration: 2
+  startingPos: {fileID: 13482372997539004348}  # Component
+  modelOffset: {fileID: 17589645519894896830}  # Component
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  floatingY: 0.200000003
+  maxShootCooldown: 3
+---
 ID: 3574560937881504822
 GameObject:
   m_IsActive: true
@@ -2053,6 +2121,8 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 221216268224481331}  # Transform
+    - component: {fileID: 9407117863334368387}  # BoxCollider
+    - component: {fileID: 11494955956919997079}  # Rigidbody
     - component: {fileID: 7081653189866061289}  # MeshRenderer
 ---
 ID: 221216268224481331
@@ -2065,6 +2135,25 @@ Transform:
   m_Children:
     - {fileID: 13194487811218401331}
     - {fileID: 11502694604696187017}
+---
+ID: 9407117863334368387
+BoxCollider:
+  m_GameObject: {fileID: 3574560937881504822}
+  Dimensions: [10.7377605, 5.99990845, 0.701358795]
+  Offset: [-8.17775726e-05, 1.5, 0.100679412]
+---
+ID: 11494955956919997079
+Rigidbody:
+  m_GameObject: {fileID: 3574560937881504822}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 7081653189866061289
 MeshRenderer:
@@ -7252,7 +7341,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 49.5520134
+  Time: 53.596447
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15520,74 +15609,6 @@ Script:
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
   animator: {fileID: 6628232525372413625}  # Component
 ---
-ID: 6034621871942586701
-GameObject:
-  m_IsActive: true
-  m_Name: RangeEnemy
-  m_TagString: Enemy
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2078812242787879120}  # Transform
-    - component: {fileID: 9504656451654388578}  # BoxCollider
-    - component: {fileID: 5033578668654550690}  # Rigidbody
-    - component: {fileID: 9267112755226816832}  # Script
----
-ID: 2078812242787879120
-Transform:
-  m_GameObject: {fileID: 6034621871942586701}
-  Translation: [-19.867609, 1.19999874, 16.4199715]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 15952054123807579159}
-    - {fileID: 17589645519894896830}
----
-ID: 9504656451654388578
-BoxCollider:
-  m_GameObject: {fileID: 6034621871942586701}
-  Dimensions: [1, 1.39999998, 1]
-  Offset: [0, 0, 0]
----
-ID: 5033578668654550690
-Rigidbody:
-  m_GameObject: {fileID: 6034621871942586701}
-  LinearVelocity: [-4.10645526e-07, 1.16628379e-15, -4.02849707e-07]
-  AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: false
-  UseGravity: false
-  Is_trigger: false
----
-ID: 9267112755226816832
-Script:
-  m_GameObject: {fileID: 6034621871942586701}
-  Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 5
-  maxHealth: 3
-  currentHealth: 3
-  moveSpeed: 0.25
-  timer: 0.740638256
-  back: false
-  hpBar: {fileID: 12310695600081325322}  # Component
-  RotationSpeed: 6
-  chaseDistance: 8
-  state: 0
-  player: {fileID: 3977294589520766028}  # Component
-  bulletSpeed: 10
-  rangeEnemyPos: {fileID: 6034621871942586701}  # Component
-  particle: {fileID: 14811258098067119871}  # Component
-  duration: 2
-  startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 17589645519894896830}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  floatingY: 0.200000003
-  maxShootCooldown: 3
----
 ID: 17611351097031071778
 GameObject:
   m_IsActive: true
@@ -15601,7 +15622,7 @@ GameObject:
 ID: 1697064786422148714
 Transform:
   m_GameObject: {fileID: 17611351097031071778}
-  Translation: [-20.1081982, 2.96140075, 15.7915907]
+  Translation: [-13.1134081, -0.263694435, 15.7915907]
   Rotation: [0, 0, 0]
   Scale: [0.0318250023, 0.0318250023, 0.0318250023]
   Father: {fileID: 0}
@@ -18634,7 +18655,7 @@ ID: 60786749287966435
 Transform:
   m_GameObject: {fileID: 15952054123807579159}
   Translation: [0, 0.858827233, 0]
-  Rotation: [0, -0.748360455, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 6034621871942586701}
   m_Children:
