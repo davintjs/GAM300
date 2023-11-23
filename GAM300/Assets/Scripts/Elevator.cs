@@ -40,7 +40,7 @@ public class Elevator : Script
         //}
         
 
-        if ( moving && !stoppedPermanent)
+        if (player != null && moving && !stoppedPermanent)
         {
 
             target = vec3.Lerp(startinglocation, endPoint.localPosition, timer / duration);

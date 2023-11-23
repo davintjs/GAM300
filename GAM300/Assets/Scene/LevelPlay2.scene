@@ -7252,7 +7252,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 41.2924194
+  Time: 49.5520134
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -9467,8 +9467,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 3631756776629243254}  # Transform
-    - component: {fileID: 2661706962381507253}  # BoxCollider
-    - component: {fileID: 1208441692196979005}  # Rigidbody
     - component: {fileID: 6239757730825925714}  # MeshRenderer
 ---
 ID: 3631756776629243254
@@ -9480,25 +9478,6 @@ Transform:
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 9909188786157298422}
----
-ID: 2661706962381507253
-BoxCollider:
-  m_GameObject: {fileID: 17710392961296393831}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 1208441692196979005
-Rigidbody:
-  m_GameObject: {fileID: 17710392961296393831}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 6239757730825925714
 MeshRenderer:
@@ -15663,6 +15642,25 @@ Transform:
   m_Children:
     []
 ---
+ID: 13797028059376800602
+GameObject:
+  m_IsActive: true
+  m_Name: LiftTarget
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17749270786709711781}  # Transform
+---
+ID: 17749270786709711781
+Transform:
+  m_GameObject: {fileID: 13797028059376800602}
+  Translation: [57.5918236, 37.3709984, -35.5820198]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
 ID: 13118126822589154153
 GameObject:
   m_IsActive: true
@@ -15671,11 +15669,14 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 13807021542682802520}  # Transform
+    - component: {fileID: 1802014428092246819}  # BoxCollider
+    - component: {fileID: 10162356541670245850}  # Rigidbody
+    - component: {fileID: 4645954861773773514}  # Script
 ---
 ID: 13807021542682802520
 Transform:
   m_GameObject: {fileID: 13118126822589154153}
-  Translation: [59.8392525, -1.62097192, -35.5820198]
+  Translation: [60.9701767, -1.62097192, -35.5820198]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15684,6 +15685,37 @@ Transform:
     - {fileID: 10043862070951656136}
     - {fileID: 11164497988685149798}
     - {fileID: 14858608542651000611}
+---
+ID: 1802014428092246819
+BoxCollider:
+  m_GameObject: {fileID: 13118126822589154153}
+  Dimensions: [5, 0.100000001, 5]
+  Offset: [0, 0, 0]
+---
+ID: 10162356541670245850
+Rigidbody:
+  m_GameObject: {fileID: 13118126822589154153}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4645954861773773514
+Script:
+  m_GameObject: {fileID: 13118126822589154153}
+  Script: {guid: 3b98078bfb28c24bc457712c63ec8f52}
+  restTimer: 2
+  endPoint: {fileID: 13797028059376800602}  # Component
+  duration: 10
+  back: false
+  timer: 0
+  rest: false
+  currentRestTimer: 0
 ---
 ID: 10551036212890023191
 GameObject:
