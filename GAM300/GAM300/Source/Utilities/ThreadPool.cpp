@@ -114,11 +114,13 @@ void ThreadPool::Wait(ThreadPool::UniqueLock& lock, std::function<bool()> pFunc)
 
 ThreadPool::ScopedLock ThreadPool::AcquireScopedLock(M_LOCK mutexName)
 {
-    if (mutexes.find(mutexName) == mutexes.end())
+    auto it = mutexes.find(mutexName);
+    if (it == mutexes.end())
     {
         // Mutex doesn't exist, so create it and add it to the map
-        mutexes.emplace(mutexName, new Mutex());
+        Mutex* mut = new Mutex();
+        mutexes.emplace(mutexName, mut);
+        return ScopedLock(*mut);
     }
-    Mutex* mutex = mutexes[mutexName];
-    return ScopedLock(*mutex);
+    return ScopedLock(*it->second);
 }

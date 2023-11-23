@@ -26,17 +26,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #define DEBUG_H
 
 //Variadic template printing
-//#if defined(DEBUG) | defined(_DEBUG)
+#if defined(DEBUG) | defined(_DEBUG)
 template <typename... Args>
 inline void PRINT(Args&&... args)
 {
 	((std::cout << std::forward<Args>(args)), ...);
 }
-//#else
-//#pragma warning( disable : 4002)
-//#define PRINT(ARGS) 
+#else
+#pragma warning( disable : 4002)
+#define PRINT(ARGS) 
 
-//#endif
+#endif
 #endif // ! DEBUG_H
 
 //Easy access for debugger
