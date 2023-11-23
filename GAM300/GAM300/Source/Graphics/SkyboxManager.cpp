@@ -37,7 +37,6 @@ void SkyboxManager::Draw(BaseCamera& _camera)
 	if (skyboxTex == 0)
 	{
 		skyboxTex = TextureManager.GetTexture("Assets//Textures//SkyBox//skybox_default_top.dds");
-		std::cout << "wtf\n";
 	}
 	skyBoxModel.SkyBoxDraw(skyboxTex, _camera);
 	glDepthFunc(GL_LESS);
