@@ -38,9 +38,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #define TEXT_BUFFER_SIZE 2048
 
-#define SCRIPT_THREAD_EVENT(Event) { if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) { scriptingEvent = Event; while(scriptingEvent){ACQUIRE_SCOPED_LOCK(Mono); }; return;}}
-
-#define ACQUIRE_LOCK_IF_SCRIPT_THREAD(LockName) (if (SCRIPTING_THREAD_ID == std::this_thread::get_id()) {ACQUIRE_SCOPED_LOCK(##LockName);})
+#define SCRIPT_THREAD_EVENT(Event)\
+if (std::this_thread::get_id() != SCRIPTING_THREAD_ID)\
+{\
+	while (!ran) std::this_thread::yield();\
+	while (mAppDomain == nullptr || compilingState != CompilingState::Wait)\
+	{\
+		while (!ran) std::this_thread::yield();\
+		if (!mAppDomain)\
+			ran = false;\
+		PRINT("Cant find appdomain\n");\
+	}\
+	scriptingEvent = pEvent;\
+	ran = false;\
+	while (!ran) std::this_thread::yield();\
+	return;\
+}\
 
 #define SCRIPT_METHOD(mClass ,methodName, paramCount) DefaultMethods[DefaultMethodTypes::methodName] = mono_class_get_method_from_name(mClass, #methodName, paramCount);
 
@@ -203,26 +216,25 @@ void ScriptingSystem::RecompileThreadWork()
 
 void ScriptingSystem::Init()
 {
-	logicState = LogicState::NONE;
 	THREADS.EnqueueTask([this] {ThreadWork(); });
 	#ifndef _BUILD
 		EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptModified);
 	#endif
 	Subscribe(&ScriptingSystem::CallbackScriptSetField);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetField);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackScriptGetFieldNames);
+	Subscribe(&ScriptingSystem::CallbackScriptGetField);
+	Subscribe(&ScriptingSystem::CallbackScriptGetFieldNames);
 
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneStart);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneCleanup);
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackSceneChanging);
+	Subscribe(&ScriptingSystem::CallbackSceneStart);
+	Subscribe(&ScriptingSystem::CallbackSceneStop);
+	Subscribe(&ScriptingSystem::CallbackSceneChanging);
 	Subscribe(&ScriptingSystem::CallbackScriptCreated);
 	SubscribeObjectDestroyed(AllObjectTypes());
 
-	EVENTS.Subscribe(this, &ScriptingSystem::CallbackApplicationExit);
 	Subscribe(&ScriptingSystem::CallbackCollisionEnter);
 	Subscribe(&ScriptingSystem::CallbackCollisionExit);
 	Subscribe(&ScriptingSystem::CallbackTriggerEnter);
 	Subscribe(&ScriptingSystem::CallbackTriggerExit);
+	Subscribe(&ScriptingSystem::CallbackSceneUpdate);
 }
 
 template<class EventType>
@@ -234,16 +246,8 @@ void ScriptingSystem::Subscribe(void (ScriptingSystem::* memberFunction)(EventTy
 
 void ScriptingSystem::Update(float dt)
 {
-	if (logicState != LogicState::NONE)
-	{
-		mono_field_static_set_value(mTimeVtable,mTimeDtField,&dt);
-
-		//Sync logic thread with main thread
-		ran = false;
-		//Logic thread running because ran is set to false
-		auto func = [this] { return ran; };
-		ACQUIRE_UNIQUE_LOCK(Mono, func);
-	}
+	SceneUpdateEvent updateEvent(dt);
+	EVENTS.Publish(&updateEvent);
 }
 
 void ScriptingSystem::Exit() 
@@ -305,26 +309,6 @@ void ScriptingSystem::UpdateScriptClasses()
 				}
 			}
 		}
-		//else if (mono_class_get_parent(_class) == mono_class_from_name(mAssemblyImage, name_space, "Component"))
-		//{
-		//	if (_class == mScript)
-		//		continue;
-		//	vTable = mono_class_vtable(mAppDomain, _class);
-		//	scriptClassMap[name] = ScriptClass{ name,_class };
-		//}
-
-		//if (!vTable)
-		//	continue;
-
-		//void* fieldIterator = nullptr;
-		//while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
-		//{
-		//	uint32_t flags = mono_field_get_flags(field);
-		//	if (flags & FIELD_ATTRIBUTE_STATIC)
-		//	{
-		//		mono_field_static_set_value(vTable, field, nullptr);
-		//	}
-		//}
 	}
 }
 
@@ -345,8 +329,6 @@ MonoDomain* ScriptingSystem::CreateAppDomain()
 	std::string name{ "AppDomain" };
 	return mono_domain_create_appdomain(name.data(), nullptr);
 }
-
-
 
 void ScriptingSystem::ReflectFromOther(Scene& other)
 {
@@ -513,74 +495,34 @@ void ScriptingSystem::ThreadWork()
 
 	while (!THREADS.HasStopped())
 	{
-		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			if (scriptingEvent)
+		#ifndef _BUILD
+			if (timeUntilRecompile > 0)
 			{
-				events[typeid(*scriptingEvent)]->exec(scriptingEvent);
-				scriptingEvent = nullptr;
+				Sleep(1000);
+				timeUntilRecompile -= 1;
+				if (timeUntilRecompile <= 0)
+					THREADS.EnqueueTask([this] {RecompileThreadWork(); });
 			}
-		}
+			else if (compilingState == CompilingState::SwapAssembly)
+			{
+				CacheScripts();
+				SwapDll();
+				LoadCacheScripts();
+				compilingState = CompilingState::Wait;
+			}
+		#endif
 
-		if (logicState != LogicState::NONE)
+		if (ran)
 		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			if (ran)
-				continue;
-			if (logicState == LogicState::UPDATE)
-			{
-				InvokeAllScripts(DefaultMethodTypes::Update);
-				InvokeAllScripts(DefaultMethodTypes::LateUpdate);
-				InvokeAllScripts(DefaultMethodTypes::ExecuteCoroutines);
-			}
-			else if (logicState == LogicState::START)
-			{
-				#ifndef _BUILD
-					ReflectFromOther(MySceneManager.GetPreviousScene());
-				#endif
-				InvokeAllScripts(DefaultMethodTypes::Awake);
-				InvokeAllScripts(DefaultMethodTypes::Start);
-				logicState = LogicState::UPDATE;
-			}
-			else if (logicState == LogicState::EXIT)
-			{
-				//for (GC_Handle handle : mSceneHandles)
-				mSceneScripts.erase(MySceneManager.GetCurrentScene().uuid);
-				logicState = LogicState::NONE;
-			}
-			//FINISHED RUNNING
-			ran = true;
 			continue;
 		}
 
-		#ifndef _BUILD
-		//Pause timer when recompiling
-		if (timeUntilRecompile > 0)
+		if (scriptingEvent)
 		{
-			//PRINT("BEFORE SLEEP\n");
-			Sleep(1000);
-			//PRINT("AFTER SLEEP\n");
-			timeUntilRecompile -= 1;
-			if (timeUntilRecompile <= 0)
-			{
-				//PRINT("BEFORE THREAD ENQUEUE\n");
-				THREADS.EnqueueTask([this] {RecompileThreadWork(); });
-				//PRINT("AFTER THREAD ENQUEUE\n");
-			}
+			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
+			scriptingEvent = nullptr;
 		}
-		else if (compilingState == CompilingState::SwapAssembly)
-		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			CacheScripts();
-			if (MySceneManager.HasScene())
-			{
-				Scene& currScene{ MySceneManager.GetCurrentScene() };
-			}
-			SwapDll();
-			LoadCacheScripts();
-			compilingState = CompilingState::Wait;
-		}
-		#endif
+		ran = true;
 	}
 	UnloadAppDomain();
 	ShutdownMono();
@@ -606,10 +548,6 @@ void ScriptingSystem::CacheScripts()
 			//POINTER
 			if (fType < AllObjectTypes::Size())
 			{
-				if (fType == GetType::E<Script>())
-				{
-					PRINT("SCRIPT: ", mono_field_get_name(pair.second), "\n");
-				}
 				fieldSize = sizeof(ScriptObject<Object>);
 			}
 			else if (fType == GetFieldType::E<char*>())
@@ -901,7 +839,8 @@ void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCR
 {
 	(void)pEvent;
 	timeUntilRecompile = SECONDS_TO_RECOMPILE;
-	PRINT("Script Modified!\n");
+	PRINT("Script HAS BEEN Modified!\n");
+	PRINT(timeUntilRecompile);
 }
 
 bool ScriptingSystem::IsScript(MonoClass* monoClass)
@@ -984,13 +923,12 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 			SetFieldValue(pairIt->second, pair.second, field);
 		}
 	}
-	/*return (*pairIt).second;*/
 	return pairIt->second;
 }
 
 void ScriptingSystem::CallbackScriptGetField(ScriptGetFieldEvent* pEvent)
 {
-	if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) ACQUIRE_SCOPED_LOCK(Mono);
+	SCRIPT_THREAD_EVENT(pEvent);
 	GetFieldValue(pEvent->script,pEvent->fieldName,pEvent->field);
 }
 
@@ -1003,15 +941,11 @@ void ScriptingSystem::CallbackScriptSetField(ScriptSetFieldEvent* pEvent)
 
 void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEvent)
 {
-	if (SCRIPTING_THREAD_ID != std::this_thread::get_id()) ACQUIRE_SCOPED_LOCK(Mono);
+	SCRIPT_THREAD_EVENT(pEvent);
 	static std::vector<const char*> fieldNames;
 	pEvent->pStart = nullptr;
 	pEvent->count = 0;
 	fieldNames.clear();
-	if (mAppDomain == nullptr || mCoreAssembly == nullptr || mAssemblyImage == nullptr)
-	{
-		return;
-	}
 	Scene& scene = MySceneManager.GetCurrentScene();
 	if (mSceneScripts.find(scene.uuid) == mSceneScripts.end())
 		return;
@@ -1035,33 +969,28 @@ std::string ScriptingSystem::GetScriptName(Script& script)
 
 void ScriptingSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 {
-	if (SCRIPTING_THREAD_ID != std::this_thread::get_id())
-	{
-		UNREFERENCED_PARAMETER(pEvent);
-		while (mAppDomain == nullptr || compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
-		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			logicState = LogicState::START;
-			ran = true;
-		}
-	}
-	else
-	{
-#ifdef _BUILD
-		ReflectFromOther(MySceneManager.GetPreviousScene());
-#endif
-		InvokeAllScripts(DefaultMethodTypes::Awake);
-		InvokeAllScripts(DefaultMethodTypes::Start);
-		logicState = LogicState::UPDATE;
-		ran = true;
-	}
+	SCRIPT_THREAD_EVENT(pEvent);
+	ReflectFromOther(MySceneManager.GetPreviousScene());
+	InvokeAllScripts(DefaultMethodTypes::Awake);
+	InvokeAllScripts(DefaultMethodTypes::Start);
+	PRINT("Scene started\n");
+}
+
+
+void ScriptingSystem::CallbackSceneUpdate(SceneUpdateEvent* pEvent)
+{
+	SCRIPT_THREAD_EVENT(pEvent);
+	mono_field_static_set_value(mTimeVtable, mTimeDtField, &pEvent->dt);
+	InvokeAllScripts(DefaultMethodTypes::Update);
+	InvokeAllScripts(DefaultMethodTypes::LateUpdate);
+	InvokeAllScripts(DefaultMethodTypes::ExecuteCoroutines);
 }
 
 void ScriptingSystem::CallbackSceneChanging(SceneChangingEvent* pEvent)
 {
 	PRINT("SCENE CHANGED!\n");
 	UNREFERENCED_PARAMETER(pEvent);
-	while (compilingState != CompilingState::Wait) { ACQUIRE_SCOPED_LOCK(Mono); };
+	while (compilingState != CompilingState::Wait) { };
 }
 
 void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
@@ -1073,27 +1002,14 @@ void ScriptingSystem::CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent)
 	}
 }
 
-void ScriptingSystem::CallbackSceneCleanup(SceneCleanupEvent* pEvent)
+void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
-	(void)pEvent;
+	SCRIPT_THREAD_EVENT(pEvent);
 	PRINT("SCENE CLEANING!\n");
-	if (SCRIPTING_THREAD_ID != std::this_thread::get_id())
+	mSceneScripts.erase(pEvent->sceneID);
+	for (auto handle : mSceneHandles[pEvent->sceneID])
 	{
-		logicState = LogicState::EXIT;
-		{
-			ACQUIRE_SCOPED_LOCK(Mono);
-			ran = false;
-		}
-		while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
-		PRINT("SCENE CLEANED!\n");
+		mono_gchandle_free(handle);
 	}
+	mSceneHandles.erase(pEvent->sceneID);
 }
-
-void ScriptingSystem::CallbackApplicationExit(ApplicationExitEvent* pEvent)
-{
-	(void)pEvent;
-	logicState = LogicState::EXIT;
-	ran = false;
-	while (ran == false) { ACQUIRE_SCOPED_LOCK(Mono); };
-}
-

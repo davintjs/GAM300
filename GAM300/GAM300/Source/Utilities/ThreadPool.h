@@ -28,7 +28,6 @@ constexpr int MAX_THREADS = 10;
 
 enum class M_LOCK
 {
-	Mono,
 	PhysicsCollision,
 	Queue,
 	Assets,

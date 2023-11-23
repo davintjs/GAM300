@@ -87,7 +87,6 @@ public class ThirdPersonController : Script
 
     void Start()
     {
-        Console.WriteLine("Startt\n");
         audioSource.Play();
         playerWeaponCollider.SetActive(false);
         currentAttackTimer = attackTimer;

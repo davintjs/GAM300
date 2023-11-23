@@ -45,6 +45,10 @@ public:
 	// Save a scene with the file path
 	bool SaveScene(const std::string& _filePath = "");
 
+	void StartScene();
+
+	void StopScene();
+
 	// Check if there are scenes loaded
 	bool HasScene() { return !loadedScenes.empty(); }
 
@@ -66,11 +70,6 @@ public:
 	// Callback event to check if the scene created is a new scene
 	void CallbackIsNewScene(IsNewSceneEvent* pEvent);
 
-	// Callback event when the current scene is played
-	void CallbackSceneStart(SceneStartEvent* pEvent);
-
-	// Callback event when the current scene stops
-	void CallbackSceneStop(SceneStopEvent* pEvent);
 
 	std::string sceneToLoad;
 private:

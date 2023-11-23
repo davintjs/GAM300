@@ -88,11 +88,18 @@ struct FileModifiedEvent : IEvent
 
 struct SceneStartEvent : IEvent{};
 
-struct SceneStopEvent : IEvent {};
+struct SceneStopEvent : IEvent 
+{
+	SceneStopEvent(Engine::UUID _sceneID) : sceneID{ _sceneID } {}
+	Engine::UUID sceneID;
+};
 
-struct SceneCleanupEvent : IEvent {};
 
-struct ScenePostCleanupEvent : IEvent {};
+struct SceneUpdateEvent : IEvent
+{
+	SceneUpdateEvent(float _dt) : dt{ _dt } {}
+	float dt;
+};
 
 struct SelectedEntityEvent : IEvent
 {

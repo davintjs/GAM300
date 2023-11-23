@@ -20,7 +20,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/EventsManager.h"
 #include "Utilities/ThreadPool.h"
 #include "Graphics/TextureManager.h"
-#include "IOManager/InputSystem.h"
+#include "Scene/SceneManager.h"
 
 void EditorToolBar::Init()
 {
@@ -63,17 +63,11 @@ void EditorToolBar::Update(float dt)
     if (ImGui::ImageButton((ImTextureID)icon_id, buttonSize, { 0 , 0 }, { 1 , 1 }, 0, tintcolor)){
         if (!scene_playing)
         {
-            PRINT("SCENE START\n");
-            InputSystem::Instance().LockCursor(true);
-            SceneStartEvent startEvent{};
-            EVENTS.Publish(&startEvent);
+            MySceneManager.StartScene();
         }
         else
         {
-            InputSystem::Instance().LockCursor(false);
-            PRINT("SCENE STOP\n");
-            SceneStopEvent stopEvent{};
-            EVENTS.Publish(&stopEvent);
+            MySceneManager.StopScene();
 
         }
         scene_playing = scene_playing ? false : true;
