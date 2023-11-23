@@ -40,7 +40,9 @@ glm::mat4 lightSpaceMatrix_spot;
 unsigned int depthCubemapFBO;
 unsigned int depthCubemap;
 
-
+int numLines = 100;
+std::vector<glm::mat4> lineGrids;
+std::vector<glm::mat4> lineGrids2;
 
 
 //LIGHT_TYPE temporary_test4 = POINT_LIGHT;
@@ -67,6 +69,18 @@ void Renderer::Init()
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 
+	// For lines
+	float spacing = 1.f;
+	float length = numLines * spacing * 0.5f;
+	for (int i = 0; i < numLines; i++)
+	{
+		glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
+		glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
+		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
+		lineGrids.push_back(transMatrixZ * scalMatrix);
+		lineGrids2.push_back(transMatrixX * rotMatrix * scalMatrix);
+	}
 }
 
 void Renderer::Update(float)
@@ -86,7 +100,7 @@ void Renderer::Update(float)
 	transparentContainer.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
 #ifndef _BUILD
-	SetupGrid(100);
+	SetupGrid(numLines);
 #endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -113,12 +127,13 @@ void Renderer::Update(float)
 
 		if (MESHMANAGER.vaoMap.find(renderer.meshID) == MESHMANAGER.vaoMap.end()) continue; // no vao? go next
 	
-		Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
-
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		if (!currentScene.IsActive(entity)) continue;
 
+		Material_instance& currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+
 		Transform& transform = currentScene.Get<Transform>(entity);
+		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
 
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
@@ -129,7 +144,7 @@ void Renderer::Update(float)
 				continue;
 			}/**/
 			
-			GLuint vao = MESHMANAGER.vaoMap[renderer.meshID];
+			GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
 
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
@@ -139,7 +154,7 @@ void Renderer::Update(float)
 			renderProperties.ao = currMatInstance.aoConstant;
 			renderProperties.emission = currMatInstance.emissionConstant;
 
-			renderProperties.entitySRT = transform.GetWorldMatrix();
+			renderProperties.entitySRT = worldMatrix;
 			renderProperties.Albedo = currMatInstance.albedoColour;
 
 			renderProperties.RoughnessID = TextureManager.GetTexture(currMatInstance.roughnessTexture);
@@ -175,7 +190,7 @@ void Renderer::Update(float)
 			if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
 				instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
 			}
-			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(worldMatrix);
 			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
 
 			if (renderProperties.Albedo.a != 1.f)// Is a Transparent / Translucent Object
@@ -189,10 +204,10 @@ void Renderer::Update(float)
 			++i;
 			continue;
 		} // END NON-INSTANCED RENDERING CONDITION
-
+		
 		//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
 		size_t s = static_cast<size_t>(SHADERTYPE::PBR);
-		GLuint vao = MESHMANAGER.vaoMap[renderer.meshID];
+		GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
 
 		if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 			instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
@@ -215,10 +230,10 @@ void Renderer::Update(float)
 		aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
 		emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
 
-		instanceContainers[s][vao].M_R_A_Constant.emplace_back(glm::vec4(metal_constant, rough_constant, ao_constant, emission_constant));
-		instanceContainers[s][vao].M_R_A_Texture.emplace_back(glm::vec4(metalidx, roughidx, aoidx, emissionidx));
-		instanceContainers[s][vao].textureIndex.emplace_back(glm::vec2(texidx, normidx));
-		instanceContainers[s][vao].entitySRT.emplace_back(transform.GetWorldMatrix());
+		instanceContainers[s][vao].M_R_A_Constant.emplace_back(metal_constant, rough_constant, ao_constant, emission_constant);
+		instanceContainers[s][vao].M_R_A_Texture.emplace_back(metalidx, roughidx, aoidx, emissionidx);
+		instanceContainers[s][vao].textureIndex.emplace_back(texidx, normidx);
+		instanceContainers[s][vao].entitySRT.emplace_back(worldMatrix);
 		++iter;
 		++i;
 	} // END MESHRENDERER LOOP
@@ -235,26 +250,17 @@ void Renderer::Update(float)
 
 void Renderer::SetupGrid(const int& _num)
 {
-
-	float spacing = 1.f;
-	float length = _num * spacing * 0.5f;
-
 	//instanceProperties["Line"].iter = _num * 2;
 	GLuint vao = MESHMANAGER.vaoMap[ASSET_LINE];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 	}
-	
+
 	for (int i = 0; i < _num; i++)
 	{
-		glm::mat4 scalMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(length));
-		glm::mat4 rotMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 transMatrixZ = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, (i * spacing) - length));
-		glm::mat4 transMatrixX = glm::translate(glm::mat4(1.0f), glm::vec3((i * spacing) - length, 0.0f, 0.f));
-
-		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixZ * scalMatrix);// [i] = transMatrixZ * scalMatrix; // z axis
-		instanceContainers[s][vao].entitySRT.emplace_back(transMatrixX * rotMatrix * scalMatrix);//[i + _num] = transMatrixX * rotMatrix * scalMatrix; // x axis
+		instanceContainers[s][vao].entitySRT.emplace_back(lineGrids[i]);
+		instanceContainers[s][vao].entitySRT.emplace_back(lineGrids2[i]);
 	}
 
 	instanceContainers[s][vao].iter = _num * 2;
@@ -643,7 +649,7 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
-	auto PointLight_Sources = LIGHTING.GetPointLights();
+	auto& PointLight_Sources = LIGHTING.GetPointLights();
 
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
@@ -679,7 +685,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 	glUniform1i(uniform7, (int)LIGHTING.pointLightCount);
 
 	// DIRECTIONAL LIGHT STUFFS
-	auto DirectionLight_Sources = LIGHTING.GetDirectionLights();
+	auto& DirectionLight_Sources = LIGHTING.GetDirectionLights();
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		//directionalLights.enableShadow
@@ -716,7 +722,7 @@ void Renderer::BindLights(GLSLShader& shader) {
 	glUniform1i(uniform8, (int)LIGHTING.directionalLightCount);
 
 	// SPOTLIGHT STUFFS
-	auto SpotLight_Sources = LIGHTING.GetSpotLights();
+	auto& SpotLight_Sources = LIGHTING.GetSpotLights();
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		//directionalLights.enableShadow

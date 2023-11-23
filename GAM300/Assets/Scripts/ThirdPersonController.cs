@@ -117,7 +117,7 @@ public class ThirdPersonController : Script
 
         vec3 dir = GetDirection();
         UpdateRotation(dir);
-        vec3 movement = dir * MoveSpeed;
+        vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
         //Jump
         if (CC.isGrounded && !IsAttacking)
