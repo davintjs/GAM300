@@ -12,6 +12,12 @@ public class ThirdPersonController : Script
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
     public float Gravity = 9.81f;
+    public bool isMoving = false;
+    public bool isWalkSoundPlayed = false;
+    public bool isSprinting = false;
+    public float walkSoundTimer = 0f;
+    public float walkSoundTime = 0.5f;
+
 
     public CharacterController CC;
     public Transform CamYawPivot;
@@ -109,6 +115,31 @@ public class ThirdPersonController : Script
             CC.velocity.y = JumpSpeed;
         }
 
+        //walking sounds
+        if(isMoving && !isWalkSoundPlayed)
+        {
+            isWalkSoundPlayed = true;
+        }
+        if(isWalkSoundPlayed)
+        {
+            if(isSprinting)
+            {
+                walkSoundTime = 0.25f;
+            }
+            else
+            {
+                walkSoundTime = 0.5f;
+            }
+            walkSoundTimer += Time.deltaTime;
+            //AudioManager.instance.playerFootstep.Play();
+            if(walkSoundTimer > walkSoundTime)
+            {
+                AudioManager.instance.playerFootstep.Play();
+                isWalkSoundPlayed = false;
+                walkSoundTimer = 0;
+            }
+        }
+
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -120,8 +151,13 @@ public class ThirdPersonController : Script
         UpdateRotation(dir);
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
-        //Jump
-        if (CC.isGrounded && !IsAttacking)
+        //if player is not moving
+        if(dir == new vec3(0,0,0))
+        {
+            isMoving = false;
+        }
+            //Jump
+            if (CC.isGrounded && !IsAttacking)
         {
             SetState("Falling", false);
             if (Input.GetMouseDown(0))
@@ -134,6 +170,7 @@ public class ThirdPersonController : Script
                 SetState("Attack1", true);
                 AudioManager.instance.playerSlashAttack.Play();
                 AudioManager.instance.spark.Play();
+                AudioManager.instance.playerAttack.Play();
             }
 
             //JUMP
@@ -149,11 +186,13 @@ public class ThirdPersonController : Script
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
+                    isSprinting = true;
                     SetState("Sprint", true);
                     movement *= sprintModifier;
                 }
                 else
                 {
+                    isSprinting = false;
                     SetState("Sprint", false);
                     SetState("Run", dir == vec3.Zero ? false : true);
                 }
@@ -266,9 +305,11 @@ public class ThirdPersonController : Script
     {
         animationManager.GetState(stateName).state = value;
     }
-    void TakeDamage(int amount)
+    void TakeDamage(float amount)
     {
-        if(!isInvulnerable)
+        AudioManager.instance.playerInjured.Play();
+
+        if (!isInvulnerable)
         {
             isInvulnerable = true;
             currentInvulnerableTimer = invulnerableTimer;
@@ -293,16 +334,36 @@ public class ThirdPersonController : Script
     {
         vec3 dir = vec3.Zero;
         if (Input.GetKey(KeyCode.W))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir -= (CamYawPivot.forward);
+        }
+
 
         if (Input.GetKey(KeyCode.A))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir -= (CamYawPivot.right);
+        }
+
 
         if (Input.GetKey(KeyCode.S))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir += CamYawPivot.forward;
+        }
+
 
         if (Input.GetKey(KeyCode.D))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir += (CamYawPivot.right);
+        }
+
         return dir.NormalizedSafe;
     }
 
@@ -341,7 +402,22 @@ public class ThirdPersonController : Script
     {
         if (GetTag(rb) == "EnemyAttack")
         {
+            //AudioManager.instance.playerInjured.Play();
             TakeDamage(1);
+        }
+        if(GetTag(rb) == "PuzzleKey")
+        {
+            Console.WriteLine("Collected");
+            AudioManager.instance.itemCollected.Play();//play audio sound
+        }
+    }
+
+    void OnCollisionEnter(PhysicsComponent rb)
+    {
+        if (GetTag(rb) == "InstantDeath")
+        {
+            Console.WriteLine("InstantDeath");
+            TakeDamage(maxHealth);
         }
     }
 }
