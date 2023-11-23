@@ -346,6 +346,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
 		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
 	}
+	BindLights(shader);
 
 	//Non-Instanced Rendering
 	for (DefaultRenderProperties& prop : defaultProperties) 
@@ -414,7 +415,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glUniform1f(Shininess, prop.shininess);
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
-		BindLights(shader);
 		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
 
 		// ANIMATONS
@@ -543,7 +543,7 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glUniform1f(Shininess, prop.shininess);
 		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
-		BindLights(shader);
+		//BindLights(shader);
 		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
 
 		// ANIMATONS
