@@ -7341,7 +7341,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 4.84417391
+  Time: 17.4917755
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15704,7 +15704,7 @@ CharacterController:
   m_GameObject: {fileID: 3977294589520766028}
   Velocity: [-0.0051422324, -5.09682953e-13, 1.73219764]
   Force: [0, 0, 0]
-  Friction: 0.100000001
+  Friction: 1
   Mass: 1
   GravityFactor: 1
   SlopeLimit: 45
