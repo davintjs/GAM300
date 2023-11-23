@@ -113,7 +113,6 @@ public class ThirdPersonController : Script
         {
             TakeDamage(1);
             isInvulnerable = true;
-            UpdatehealthBar();
         }
 
         vec3 dir = GetDirection();
@@ -265,15 +264,16 @@ public class ThirdPersonController : Script
     {
         if(!isInvulnerable)
         {
+            isInvulnerable = true;
+            currentInvulnerableTimer = invulnerableTimer;
             currentHealth -= amount;
-            //UpdatehealthBar();
+            UpdatehealthBar();
         }
         Console.WriteLine("Hit");
         
         if (currentHealth <= 0)
         {
             Console.WriteLine("YouDied");
-            PlayerModel.gameObject.SetActive(false);//testing, remove this later
             SetState("Death", true);
         }
         else
@@ -331,8 +331,11 @@ public class ThirdPersonController : Script
         }
     }
 
-    void OnCollisionEnter(PhysicsComponent rb)
+    void OnTriggerEnter(PhysicsComponent rb)
     {
-        Console.WriteLine("Player collided with: " + GetTag(rb));
+        if (GetTag(rb) == "EnemyAttack")
+        {
+            TakeDamage(1);
+        }
     }
 }

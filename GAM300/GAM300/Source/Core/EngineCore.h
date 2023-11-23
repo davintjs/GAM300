@@ -70,10 +70,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		InputSystem,
 		EditorSystem,
 		ScriptingSystem,
+		ParticleManager,
 		DemoSystem,//RUN AFTER EDITOR
 		AudioSystem,
 		PhysicsSystem, //AFTER SCRIPTING
-		ParticleManager,
 		SceneManager,
 		GraphicsSystem,
 		Blackboard,
