@@ -366,7 +366,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		NavMeshAgent& _player = pEnemy;
 
-		std::cout << "Destination : " << pDest.x << " " << pDest.y << " " << pDest.z << std::endl;
 		return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
 	}
 

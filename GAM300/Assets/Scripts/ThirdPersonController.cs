@@ -20,6 +20,7 @@ public class ThirdPersonController : Script
     public Transform PlayerModel;
     public Transform player;
     public GameObject playerWeaponCollider;
+    public Transform checkpoint2;
 
     List<vec3> pos = new List<vec3>();
 
@@ -193,11 +194,16 @@ public class ThirdPersonController : Script
         }
 
         //testing reset position
-        if(Input.GetKey(KeyCode.Q))
+        if(Input.GetKey(KeyCode.P))
         {
             Console.WriteLine("ResetPlayerPosition");
             player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
             player.localRotation = vec3.Radians(new vec3(0, 180, 0));
+        }
+        if (Input.GetKey(KeyCode.L))
+        {
+            Console.WriteLine("ResetPlayerPosition");
+            player.localPosition = checkpoint2.localPosition;
         }
 
         CC.Move(movement);
