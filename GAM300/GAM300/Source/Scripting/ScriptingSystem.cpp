@@ -513,15 +513,18 @@ void ScriptingSystem::ThreadWork()
 
 	while (!THREADS.HasStopped())
 	{
-		ACQUIRE_SCOPED_LOCK(Mono);
-		if (scriptingEvent)
 		{
-			events[typeid(*scriptingEvent)]->exec(scriptingEvent);
-			scriptingEvent = nullptr;
+			ACQUIRE_SCOPED_LOCK(Mono);
+			if (scriptingEvent)
+			{
+				events[typeid(*scriptingEvent)]->exec(scriptingEvent);
+				scriptingEvent = nullptr;
+			}
 		}
 
 		if (logicState != LogicState::NONE)
 		{
+			ACQUIRE_SCOPED_LOCK(Mono);
 			if (ran)
 				continue;
 			if (logicState == LogicState::UPDATE)
@@ -567,6 +570,7 @@ void ScriptingSystem::ThreadWork()
 		}
 		else if (compilingState == CompilingState::SwapAssembly)
 		{
+			ACQUIRE_SCOPED_LOCK(Mono);
 			CacheScripts();
 			if (MySceneManager.HasScene())
 			{
