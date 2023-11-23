@@ -31,7 +31,8 @@ enum class M_LOCK
 	Mono,
 	PhysicsCollision,
 	Queue,
-	Assets
+	Assets,
+	SIZE
 };
 
 //Easier singleton access
@@ -93,7 +94,7 @@ private:
 	std::vector<std::thread> mWorkerPool; // Worker threads pool
 	std::queue<std::function<void()>> mTasks; // Queue of tasks for worker threads to complete
 
-	std::unordered_map<M_LOCK, Mutex*> mutexes;
+	Mutex mutexes[(size_t)M_LOCK::SIZE];
 
 	bool stop {false};
 };

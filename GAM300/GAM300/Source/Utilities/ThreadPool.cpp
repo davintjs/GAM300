@@ -61,12 +61,6 @@ void ThreadPool::Exit()
         CancelSynchronousIo(thread.native_handle());
 		thread.join(); // Join all threads to main thread from the worker thread pool
 	}
-
-    //Delete Mutexes
-    for (auto& pair : mutexes)
-    {
-        delete pair.second;
-    }
 }
 
 bool ThreadPool::HasStopped() const
@@ -94,13 +88,7 @@ std::unique_lock<std::mutex>::unique_lock(_mutex.m)
 
 ThreadPool::UniqueLock ThreadPool::AcquireUniqueLock(M_LOCK mutexName)
 {
-    if (mutexes.find(mutexName) == mutexes.end())
-    {
-        // Mutex doesn't exist, so create it and add it to the map
-        mutexes.emplace(mutexName, new Mutex());
-    }
-    Mutex* mutex = mutexes[mutexName];
-    return UniqueLock(*mutex);
+    return mutexes[(size_t)mutexName];
 }
 
 
@@ -114,11 +102,5 @@ void ThreadPool::Wait(ThreadPool::UniqueLock& lock, std::function<bool()> pFunc)
 
 ThreadPool::ScopedLock ThreadPool::AcquireScopedLock(M_LOCK mutexName)
 {
-    if (mutexes.find(mutexName) == mutexes.end())
-    {
-        // Mutex doesn't exist, so create it and add it to the map
-        mutexes.emplace(mutexName, new Mutex());
-    }
-    Mutex* mutex = mutexes[mutexName];
-    return ScopedLock(*mutex);
+    return mutexes[(size_t)mutexName];
 }
