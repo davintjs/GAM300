@@ -720,6 +720,7 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 
 void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb1, PhysicsComponent& rb2)
 {
+	std::cout << "Physics event!\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 
 	Entity& e1 = scene.Get<Entity>(rb1.EUID());

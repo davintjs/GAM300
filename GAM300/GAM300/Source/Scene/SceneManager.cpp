@@ -20,6 +20,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Utilities/Serializer.h"
 #include "Core/EventsManager.h"
 #include "IOManager/InputSystem.h"
+#include "Identifiers.h"
 
 namespace
 {
@@ -29,6 +30,22 @@ namespace
 
 void SceneManager::Init()
 {
+	IDENTIFIERS.physicsLayers[0] = Layer("Default");
+	IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
+	IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
+	IDENTIFIERS.physicsLayers[3] = Layer("UI");
+	IDENTIFIERS.physicsLayers[4] = Layer("Water");
+	IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
+	IDENTIFIERS.physicsLayers[6] = Layer("Obstacle");
+
+	//create default tag
+	IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["PlayerAttack"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Player"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Enemy"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
 	EVENTS.Subscribe(this, &SceneManager::CallbackCreateScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
@@ -74,6 +91,12 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 	if (loadedScenes.empty())
 	{
 		std::cout << "No Scene Loaded!\n";
+		return false;
+	}
+
+	if (sceneCount != 0)
+	{
+		PRINT("You cant save a scene in preview mode!\n");
 		return false;
 	}
 
@@ -141,6 +164,7 @@ void SceneManager::StartScene()
 	GetCurrentScene() = GetPreviousScene();
 	//Herr
 	GetCurrentScene().sceneName += " [PREVIEW]";
+	sceneCount++;
 #endif _BUILD
 
 	PRINT("SCENE START\n");
@@ -150,7 +174,6 @@ void SceneManager::StartScene()
 
 	InputSystem::Instance().LockCursor(true);
 
-	sceneCount++;
 
 	SceneStartEvent startEvent{};
 	EVENTS.Publish(&startEvent);
