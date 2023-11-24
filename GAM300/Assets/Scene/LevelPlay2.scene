@@ -2001,7 +2001,7 @@ ID: 2829531185097501613
 Transform:
   m_GameObject: {fileID: 2890281298168605979}
   Translation: [2.07125616, 2.15300012, -35.2555161]
-  Rotation: [-1.19318466e-08, 1.57045114, -1.1931852e-08]
+  Rotation: [0, 1.57045114, 0]
   Scale: [0.999999642, 1, 0.999999642]
   Father: {fileID: 0}
   m_Children:
@@ -2036,14 +2036,15 @@ ID: 9752894090014538246
 Script:
   m_GameObject: {fileID: 2890281298168605979}
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  rest: false
   startPoint: {fileID: 3141025954204935599}  # Component
+  rest: false
   restTimer: 2
   endPoint: {fileID: 7360367522461515090}  # Component
   duration: 2
-  back: false
   timer: 0.969857275
+  back: false
   currentRestTimer: 2
+  thirdPersonController: {fileID: 13523510586901288919}  # Component
 ---
 ID: 6034621871942586701
 GameObject:
@@ -7341,7 +7342,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 40.5400581
+  Time: 7.00078392
   StartTime: 2
   EndTime: 61
   Playing: true

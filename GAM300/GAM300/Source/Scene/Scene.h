@@ -74,8 +74,12 @@ struct Scene
 	T& Get(Handle& handle);
 
 	//Get an object by passing in their owner(Entity/Component)
+	template<typename T>
+	T& Get(Object* object);
+
 	template<typename T, typename Owner>
 	T& Get(Owner& object);
+
 
 	//Find an object solely by UUID(Slow)
 	template<typename T>
@@ -86,6 +90,9 @@ struct Scene
 	std::vector<T*> GetMulti(Engine::UUID euid);
 
 	//Gets an array of component pointers that belongs to given object
+	template<typename T>
+	std::vector<T*> GetMulti(Object* object);
+
 	template<typename T, typename Owner>
 	std::vector<T*> GetMulti(Owner& object);
 

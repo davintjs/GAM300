@@ -200,6 +200,12 @@ ScriptObject<Script>::operator Script* ()
 	return &scene.Get<Script>(handle);
 }
 
+
+ScriptObject<Script>::operator ScriptObject<Object>()
+{
+	return *reinterpret_cast<ScriptObject<Object>*>(this);
+}
+
 #pragma endregion
 
 MonoImage* ScriptingSystem::GetAssemblyImage()
@@ -590,6 +596,11 @@ void ScriptingSystem::SwapDll()
 	UpdateScriptClasses();
 	LoadCacheScripts();
 	compilingState = CompilingState::Wait;
+}
+
+ScriptClass& ScriptingSystem::GetScriptClass(Engine::GUID<ScriptAsset> scriptID)
+{
+	return scriptClassMap[scriptID];
 }
 
 MonoObject* ScriptingSystem::Invoke(MonoObject* mObj, MonoMethod* mMethod, void** params)
