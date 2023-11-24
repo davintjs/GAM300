@@ -26,8 +26,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
-#include "mono/metadata/tabledefs.h"
 #include <mono/jit/jit.h>
+#include <mono/metadata/attrdefs.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/exception.h>
 #include <mono/metadata/environment.h>
@@ -160,9 +160,9 @@ namespace Utils
 		{
 			std::string fieldName = mono_field_get_name(field);
 			uint32_t flags = mono_field_get_flags(field);
-			if (flags & FIELD_ATTRIBUTE_STATIC || flags & FIELD_ATTRIBUTE_NOT_SERIALIZED)
+			if (flags & MONO_FIELD_ATTR_STATIC || flags & MONO_FIELD_ATTR_NOT_SERIALIZED)
 				continue;
-			if (flags & FIELD_ATTRIBUTE_PUBLIC)
+			if (flags & MONO_FIELD_ATTR_PUBLIC)
 			{
 				MonoType* type = mono_field_get_type(field);
 				size_t fieldType = Utils::monoTypeToFieldType(type);
@@ -454,7 +454,7 @@ void ScriptingSystem::UnloadAppDomain()
 			while (MonoClassField* field = mono_class_get_fields(_class, &fieldIterator))
 			{
 				uint32_t flags = mono_field_get_flags(field);
-				if (flags & FIELD_ATTRIBUTE_STATIC)
+				if (flags & MONO_FIELD_ATTR_STATIC)
 				{
 					mono_field_static_set_value(vTable, field, nullptr);
 				}
