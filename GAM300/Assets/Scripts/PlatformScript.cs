@@ -25,7 +25,6 @@ public class PlatformScript : Script
     void Start()
     {
         Console.WriteLine("starttttttttt");
-        thirdPersonController.MoveSpeed = 1000;
         currentRestTimer = restTimer;
     }
 
