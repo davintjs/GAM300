@@ -47,15 +47,18 @@ namespace EngineObjectLayers {
 	inline constexpr JPH::ObjectLayer STATIC = 0;
 	inline constexpr JPH::ObjectLayer DYNAMIC = 1;
 	inline constexpr JPH::ObjectLayer SENSOR = 2;
-	inline constexpr JPH::ObjectLayer NUM_LAYERS = 3;
+	inline constexpr JPH::ObjectLayer KINEMATIC = 3;
+
+	inline constexpr JPH::ObjectLayer NUM_LAYERS = 4;
 };
 // For broadphase layers
 namespace EngineBroadPhaseLayers {
 	inline constexpr JPH::BroadPhaseLayer STATIC(0);
 	inline constexpr JPH::BroadPhaseLayer DYNAMIC(1);
 	inline constexpr JPH::BroadPhaseLayer SENSOR(2);
+	inline constexpr JPH::BroadPhaseLayer KINEMATIC(3);
 
-	inline constexpr unsigned int NUM_LAYERS = 3;
+	inline constexpr unsigned int NUM_LAYERS = 4;
 };
 
  //Determines if two object layers should collide
@@ -70,6 +73,8 @@ public:
 			return true;
 		case EngineObjectLayers::SENSOR:
 			return obj2 != EngineObjectLayers::SENSOR;
+		case EngineObjectLayers::KINEMATIC:
+			return obj2 == EngineObjectLayers::SENSOR;
 		default:
 			return false;
 
@@ -85,6 +90,8 @@ public:
 		bpLayers[EngineObjectLayers::STATIC] = EngineBroadPhaseLayers::STATIC;
 		bpLayers[EngineObjectLayers::DYNAMIC] = EngineBroadPhaseLayers::DYNAMIC;
 		bpLayers[EngineObjectLayers::SENSOR] = EngineBroadPhaseLayers::SENSOR;
+		bpLayers[EngineObjectLayers::KINEMATIC] = EngineBroadPhaseLayers::KINEMATIC;
+
 
 	}
 	// Get number of broadphase layers
@@ -131,6 +138,8 @@ public:
 			return true;
 		case EngineObjectLayers::SENSOR:
 			return bPLayer != EngineBroadPhaseLayers::SENSOR;
+		case EngineObjectLayers::KINEMATIC:
+			return bPLayer == EngineBroadPhaseLayers::SENSOR;
 		default:
 			return false;
 		}
