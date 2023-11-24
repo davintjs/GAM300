@@ -89,13 +89,6 @@ struct SceneStopEvent : IEvent
 	Engine::UUID sceneID;
 };
 
-
-struct SceneUpdateEvent : IEvent
-{
-	SceneUpdateEvent(float _dt) : dt{ _dt } {}
-	float dt;
-};
-
 struct SelectedEntityEvent : IEvent
 {
 	SelectedEntityEvent(Entity* _pEntity) : pEntity{ _pEntity }{}
