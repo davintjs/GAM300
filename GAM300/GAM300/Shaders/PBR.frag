@@ -188,7 +188,7 @@ float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 ligh
     // check whether current frag pos is in shadow
 
     // Max is 0.05 , Min is 0.005 -> put min as 0.0005
-    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.00005);
 
     float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
 //    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;

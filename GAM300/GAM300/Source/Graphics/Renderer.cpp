@@ -55,9 +55,6 @@ unsigned int Renderer_quadVBO = 0;
 unsigned int Renderer_quadVAO_WM = 0;
 unsigned int Renderer_quadVBO_WM = 0;
 
-const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
-
 void Renderer::Init()
 {
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
@@ -1081,7 +1078,7 @@ void Renderer::DrawDepthDirectional()
 		float near_plane = -1000.f, far_plane = 1000.f;
 
 
-		lightProjection = glm::ortho(-100.f, 100.f, -100.f, 100.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-90.f, 90.f, -90.f, 90.f, near_plane, far_plane);
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
