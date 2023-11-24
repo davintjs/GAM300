@@ -588,10 +588,11 @@ void main()
 
 
 //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-    vec3 ambient = vec3(ambience_multiplier) * albedo * ao +  emission;
+    vec3 ambient = vec3(ambience_multiplier) * albedo * ao + emission;
     
     vec3 color = ambient + Lo;
 
+//    color *= frag_Metal_Rough_AO_Emission_constant.w;
     // Done in Post Processing
 //    // HDR tonemapping
 //    color = color / (color + vec3(1.0));
@@ -599,6 +600,8 @@ void main()
 //    color = pow(color, vec3(1.0/2.2)); 
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+    brightness *= frag_Metal_Rough_AO_Emission_constant.w;
+
     if(brightness > bloomThreshold)
         Blooming = vec4(color.rgb, 1.0);
     else
