@@ -87,7 +87,6 @@ public class ThirdPersonController : Script
 
     void Start()
     {
-        Console.WriteLine("Startt\n");
         audioSource.Play();
         playerWeaponCollider.SetActive(false);
         currentAttackTimer = attackTimer;
@@ -335,6 +334,11 @@ public class ThirdPersonController : Script
                 PlayerModel.localRotation = rot;
             }
         }
+    }
+
+    public void Hello(string yes)
+    {
+        Console.WriteLine(yes);
     }
 
     void OnTriggerEnter(PhysicsComponent rb)

@@ -19,6 +19,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "SceneManager.h"
 #include "Utilities/Serializer.h"
 #include "Core/EventsManager.h"
+#include "IOManager/InputSystem.h"
+#include "Identifiers.h"
 
 namespace
 {
@@ -28,12 +30,26 @@ namespace
 
 void SceneManager::Init()
 {
+	IDENTIFIERS.physicsLayers[0] = Layer("Default");
+	IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
+	IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
+	IDENTIFIERS.physicsLayers[3] = Layer("UI");
+	IDENTIFIERS.physicsLayers[4] = Layer("Water");
+	IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
+	IDENTIFIERS.physicsLayers[6] = Layer("Obstacle");
+
+	//create default tag
+	IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["PlayerAttack"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Player"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Enemy"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
+	IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
 	EVENTS.Subscribe(this, &SceneManager::CallbackCreateScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackLoadScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackSaveScene);
 	EVENTS.Subscribe(this, &SceneManager::CallbackIsNewScene);
-	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStart);
-	EVENTS.Subscribe(this, &SceneManager::CallbackSceneStop);
 }
 
 void SceneManager::CreateScene()
@@ -78,6 +94,12 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 		return false;
 	}
 
+	if (sceneCount != 0)
+	{
+		PRINT("You cant save a scene in preview mode!\n");
+		return false;
+	}
+
 	// Get the current scene and save it
 	std::cout << "Saving Scene...\n";
 	Scene& currentScene = GetCurrentScene();
@@ -118,15 +140,43 @@ void SceneManager::Update(float dt)
 
 	if (sceneToLoad != "")
 	{
-		SceneStopEvent stopEvent{};
-		EVENTS.Publish(&stopEvent);
-		LoadSceneEvent e(sceneToLoad);
-		EVENTS.Publish(&e);
-		SceneStartEvent startEvent{};
-		EVENTS.Publish(&startEvent);
+		StopScene();
+		LoadScene(sceneToLoad);
+		StartScene();
 		sceneToLoad = "";
 		++sceneCount;
 	}
+}
+
+
+void SceneManager::StartScene()
+{
+	if (HasScene())
+	{
+		SceneChangingEvent e{ GetCurrentScene() };
+		EVENTS.Publish(&e);
+	}
+#ifndef _BUILD
+
+	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
+	// Publish scene change
+	// 
+	GetCurrentScene() = GetPreviousScene();
+	//Herr
+	GetCurrentScene().sceneName += " [PREVIEW]";
+	sceneCount++;
+#endif _BUILD
+
+	PRINT("SCENE START\n");
+	// Publish navmesh build event
+	NavMeshBuildEvent e;
+	EVENTS.Publish(&e);
+
+	InputSystem::Instance().LockCursor(true);
+
+
+	SceneStartEvent startEvent{};
+	EVENTS.Publish(&startEvent);
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)
@@ -161,35 +211,9 @@ void SceneManager::CallbackIsNewScene(IsNewSceneEvent* pEvent)
 	}
 }
 
-void SceneManager::CallbackSceneStart(SceneStartEvent* pEvent)
+void SceneManager::StopScene()
 {
-	UNREFERENCED_PARAMETER(pEvent);
-	#ifndef _BUILD
-
-	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
-	// Publish scene change
-	// 
-	GetCurrentScene() = GetPreviousScene();
-	//Herr
-	GetCurrentScene().sceneName += " [PREVIEW]";
-	#endif _BUILD
-
-	// Publish navmesh build event
-	NavMeshBuildEvent e;
-	EVENTS.Publish(&e);
-
-	sceneCount++;
-}
-
-void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
-{
-	UNREFERENCED_PARAMETER(pEvent);
-
-	// Publish scene change
-	SceneCleanupEvent e;
-	EVENTS.Publish(&e);
-
-	PRINT("SCENE: " , sceneCount, '\n');
+	Engine::UUID sceneID = GetCurrentScene().uuid;
 	for (int i = 0; i < sceneCount; i++)
 	{
 		loadedScenes.pop_front();
@@ -197,8 +221,10 @@ void SceneManager::CallbackSceneStop(SceneStopEvent* pEvent)
 
 	sceneCount = 0;
 
-	ScenePostCleanupEvent e1;
-	EVENTS.Publish(&e1);
+	InputSystem::Instance().LockCursor(false);
+	SceneStopEvent stopEvent{ sceneID };
+	EVENTS.Publish(&stopEvent);
+	PRINT("SCENE STOP\n");
 }
 
 void SceneManager::Exit()

@@ -72,18 +72,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		{
 			if (SCRIPTING.IsScript(mono_class_from_mono_type(mType)))
 			{
+				Scene& scene = MySceneManager.GetCurrentScene();
+				for (Script* pScript : scene.GetMulti<Script>((Object*)pEntity))
+				{
+					ScriptClass& scriptClass = SCRIPTING.GetScriptClass(pScript->scriptId);
+					if (mono_class_get_type(scriptClass.mClass) == mType)
+					{
+						obj = ScriptObject<Script>(pScript);
+						return;
+					}
+				}
 				//Script
-				E_ASSERT(false,"Getting scripts not implemented yet!");
 				obj = nullptr;
 				return;
 			}
-			else
-			{
-				//Cant find
-				//CONSOLE_ERROR(mono_type_get_name(mType), "is not a valid component!");
-				obj = nullptr;
-				return;
-			}
+			obj = nullptr;
+			return;
 		}
 		Object* pObject = MySceneManager.GetCurrentScene().Get(pair->second, (Object*)pEntity);
 		obj = pObject;
@@ -243,22 +247,38 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return ScriptObject<Object>((Object*)MySceneManager.GetCurrentScene().Add(pair->second, pEntity));
 	}
 
-
 	//Checks if entity has a component
 	static void HasComponent(ScriptObject<Entity> pEntity, MonoReflectionType* componentType, bool& output)
 	{
-		
 		MonoType* managedType = mono_reflection_type_get_type(componentType);
+		Object* entity(pEntity);
+		if (!entity)
+		{
+			PRINT("Has component when gameobject is null!\n");
+			output = false;
+			return;
+		}
 		if (monoComponentToType.find(managedType) != monoComponentToType.end())
 		{
-			Object* entity(pEntity);
-			if (!entity)
+			bool hasComp = ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+
+			output = hasComp;
+			return;
+		}			
+		else if (SCRIPTING.IsScript(mono_class_from_mono_type(managedType)))
+		{
+			Scene& scene = MySceneManager.GetCurrentScene();
+			for (Script* pScript : scene.GetMulti<Script>((Object*)pEntity))
 			{
-				PRINT("Has component when gameobject is null!\n");
-				output = false;
-				return;
+				ScriptClass& scriptClass = SCRIPTING.GetScriptClass(pScript->scriptId);
+				if (mono_class_get_type(scriptClass.mClass) == managedType)
+				{
+					output = true;
+					return;
+				}
 			}
-			output = ((Entity&)pEntity).hasComponentsBitset.test(monoComponentToType[managedType]);
+			//Script
+			output = false;
 			return;
 		}
 		PRINT(mono_type_get_name(managedType), "is invalid", '\n');

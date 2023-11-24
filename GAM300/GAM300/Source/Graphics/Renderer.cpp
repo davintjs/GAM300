@@ -85,15 +85,7 @@ void Renderer::Init()
 
 void Renderer::Update(float)
 {
-	// maybe no need clear every time?
-	/*for (InstanceContainer& container : instanceContainers) {
-		for (auto& [vao, prop] : container)
-		{
-			std::fill_n(prop.textureIndex, EnitityInstanceLimit, glm::vec2(0.f));
-			std::fill_n(prop.M_R_A_Texture, EnitityInstanceLimit, glm::vec4(33.f));
-			std::fill_n(prop.texture, 32, 0);
-		}
-	}*/
+
 	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
 	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
@@ -130,10 +122,15 @@ void Renderer::Update(float)
 		Entity& entity = currentScene.Get<Entity>(renderer);
 		if (!currentScene.IsActive(entity)) continue;
 
+		auto vaoIt = MESHMANAGER.vaoMap.find(renderer.meshID);
+		if (vaoIt == MESHMANAGER.vaoMap.end()) continue;
+
 		Material_instance& currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
+		
 
 		Transform& transform = currentScene.Get<Transform>(entity);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
+		const glm::vec3 position = transform.GetTranslation();
 
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
@@ -144,8 +141,8 @@ void Renderer::Update(float)
 				continue;
 			}/**/
 			
-			GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
-
+			//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
+			GLuint vao = vaoIt->second;
 			DefaultRenderProperties renderProperties;
 			renderProperties.VAO = vao;
 
@@ -170,6 +167,7 @@ void Renderer::Update(float)
 
 			renderProperties.isAnimatable = false;
 			renderProperties.boneidx = -1;
+			renderProperties.position = position;
 
 			if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
 			{
@@ -207,8 +205,8 @@ void Renderer::Update(float)
 		
 		//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
 		size_t s = static_cast<size_t>(SHADERTYPE::PBR);
-		GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
-
+		//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
+		GLuint vao = vaoIt->second;
 		if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
 			instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
 		}
@@ -234,6 +232,7 @@ void Renderer::Update(float)
 		instanceContainers[s][vao].M_R_A_Texture.emplace_back(metalidx, roughidx, aoidx, emissionidx);
 		instanceContainers[s][vao].textureIndex.emplace_back(texidx, normidx);
 		instanceContainers[s][vao].entitySRT.emplace_back(worldMatrix);
+		instanceContainers[s][vao].position = position;
 		++iter;
 		++i;
 	} // END MESHRENDERER LOOP
@@ -651,126 +650,131 @@ void Renderer::BindLights(GLSLShader& shader) {
 	// POINT LIGHT STUFFS
 	auto& PointLight_Sources = LIGHTING.GetPointLights();
 
+	unsigned int allLightsCount = std::max(std::max(LIGHTING.pointLightCount, LIGHTING.directionalLightCount), LIGHTING.spotLightCount);
+	auto& DirectionLight_Sources = LIGHTING.GetDirectionLights();
+	auto& SpotLight_Sources = LIGHTING.GetSpotLights();
+	
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
-
+		std::string istring = "pointLights[" + std::to_string(i);
 		//pointLights.enableShadow
 		std::string point_shadow;
-		point_shadow = "pointLights[" + std::to_string(i) + "].enableShadow";
+		point_shadow = istring + "].enableShadow";
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), point_shadow.c_str())
 			,  PointLight_Sources[i].enableShadow);
 
 
 		//pointLights.colour
 		std::string point_color;
-		point_color = "pointLights[" + std::to_string(i) + "].colour";
+		point_color = istring + "].colour";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 
 		//pointLights.position
 		std::string point_pos;
-		point_pos = "pointLights[" + std::to_string(i) + "].position";
+		point_pos = istring + "].position";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
 
 		//pointLights.intensity
 		std::string point_intensity;
-		point_intensity = "pointLights[" + std::to_string(i) + "].intensity";
+		point_intensity = istring + "].intensity";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
 			, 1, &PointLight_Sources[i].intensity);
 	}
 
-	GLint uniform7 =
-		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
-	glUniform1i(uniform7, (int)LIGHTING.pointLightCount);
-
 	// DIRECTIONAL LIGHT STUFFS
-	auto& DirectionLight_Sources = LIGHTING.GetDirectionLights();
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
+		std::string istring = "directionalLights[" + std::to_string(i);
+
 		//directionalLights.enableShadow
 		std::string directional_shadow;
-		directional_shadow = "directionalLights[" + std::to_string(i) + "].enableShadow";
+		directional_shadow = istring + "].enableShadow";
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), directional_shadow.c_str())
 			, DirectionLight_Sources[i].enableShadow);
 
 		//directionalLights.colour
 		std::string directional_color;
-		directional_color = "directionalLights[" + std::to_string(i) + "].colour";
+		directional_color = istring + "].colour";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_color.c_str())
 			, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
 
 		std::string directional_direction;
-		directional_direction = "directionalLights[" + std::to_string(i) + "].direction";
+		directional_direction = istring + "].direction";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
 			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
 
 		std::string directional_intensity;
-		directional_intensity = "directionalLights[" + std::to_string(i) + "].intensity";
+		directional_intensity = istring + "].intensity";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
 			, 1, &DirectionLight_Sources[i].intensity);
 
 		std::string directional_LSM;
-		directional_LSM = "directionalLights[" + std::to_string(i) + "].lightSpaceMatrix";
+		directional_LSM = istring + "].lightSpaceMatrix";
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), directional_LSM.c_str())
 			, 1, GL_FALSE, glm::value_ptr(DirectionLight_Sources[i].lightSpaceMatrix));
 
 	}
 
-	GLint uniform8 =
-		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
-	glUniform1i(uniform8, (int)LIGHTING.directionalLightCount);
-
 	// SPOTLIGHT STUFFS
-	auto& SpotLight_Sources = LIGHTING.GetSpotLights();
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
+		std::string istring = "spotLights[" + std::to_string(i);
+
 		//directionalLights.enableShadow
 		std::string spot_shadow;
-		spot_shadow = "spotLights[" + std::to_string(i) + "].enableShadow";
+		spot_shadow = istring + "].enableShadow";
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), spot_shadow.c_str())
 			, SpotLight_Sources[i].enableShadow);
 
 
 		//spotLights.position
 		std::string spot_pos;
-		spot_pos = "spotLights[" + std::to_string(i) + "].position";
+		spot_pos = istring + "].position";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
 
 		
 		std::string spot_color;
-		spot_color = "spotLights[" + std::to_string(i) + "].colour";
+		spot_color = istring + "].colour";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
 
 		
 		std::string spot_direction;
-		spot_direction = "spotLights[" + std::to_string(i) + "].direction";
+		spot_direction = istring + "].direction";
 		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].direction));
 
 		std::string spot_cutoff_inner;
-		spot_cutoff_inner = "spotLights[" + std::to_string(i) + "].innerCutOff";
+		spot_cutoff_inner = istring + "].innerCutOff";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_inner.c_str())
 			, 1, &SpotLight_Sources[i].inner_CutOff);
 
 		std::string spot_cutoff_outer;
-		spot_cutoff_outer = "spotLights[" + std::to_string(i) + "].outerCutOff";
+		spot_cutoff_outer = istring + "].outerCutOff";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
 			, 1, &SpotLight_Sources[i].outer_CutOff);
 
 		std::string spot_intensity;
-		spot_intensity = "spotLights[" + std::to_string(i) + "].intensity";
+		spot_intensity = istring + "].intensity";
 		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
 			, 1, &SpotLight_Sources[i].intensity);
 
 		std::string spot_LSM;
-		spot_LSM = "spotLights[" + std::to_string(i) + "].lightSpaceMatrix";
+		spot_LSM = istring + "].lightSpaceMatrix";
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_LSM.c_str())
 			, 1, GL_FALSE, glm::value_ptr(SpotLight_Sources[i].lightSpaceMatrix));
 
 	}
+	GLint uniform7 =
+		glGetUniformLocation(shader.GetHandle(), "PointLight_Count");
+	glUniform1i(uniform7, (int)LIGHTING.pointLightCount);
+
+	GLint uniform8 =
+		glGetUniformLocation(shader.GetHandle(), "DirectionalLight_Count");
+	glUniform1i(uniform8, (int)LIGHTING.directionalLightCount);
 
 	GLint uniform9 =
 		glGetUniformLocation(shader.GetHandle(), "SpotLight_Count");
@@ -1065,7 +1069,7 @@ void Renderer::DrawDepthDirectional()
 {
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
-		LightProperties directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
+		LightProperties& directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
 		
 		if (!directional_light_stuffs.enableShadow)
 		{
@@ -1074,10 +1078,10 @@ void Renderer::DrawDepthDirectional()
 		glEnable(GL_DEPTH_TEST);
 		//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 		glm::mat4 lightProjection, lightView;
-		float near_plane = -100.f, far_plane = 100.f;
+		float near_plane = -1000.f, far_plane = 1000.f;
 
 
-		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-100.f, 100.f, -100.f, 100.f, near_plane, far_plane);
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
@@ -1101,7 +1105,7 @@ void Renderer::DrawDepthDirectional()
 		// render all non-instanced shadows
 		glUniform1i(uniform2, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
 			if (prop.Albedo.a < 1.f)
 			{
@@ -1130,8 +1134,6 @@ void Renderer::DrawDepthDirectional()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-			
-
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
@@ -1154,11 +1156,12 @@ void Renderer::DrawDepthSpot()
 {
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
-		LightProperties spot_light_stuffs = LIGHTING.GetSpotLights()[i];
+		LightProperties& spot_light_stuffs = LIGHTING.GetSpotLights()[i];
 		if (!spot_light_stuffs.enableShadow)
 		{
 			continue;
 		}
+
 		glEnable(GL_DEPTH_TEST);
 		glm::mat4 lightProjection, lightView;
 
@@ -1186,8 +1189,12 @@ void Renderer::DrawDepthSpot()
 		// render all non-instanced shadows
 		glUniform1i(uniform2, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
+			float distance = glm::distance(prop.position, spot_light_stuffs.lightpos);
+			if (distance > spot_light_stuffs.intensity)
+				continue;
+
 			if (prop.Albedo.a < 1.f)
 			{
 				continue;
@@ -1215,7 +1222,9 @@ void Renderer::DrawDepthSpot()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
-
+			float distance = glm::distance(prop.position, spot_light_stuffs.lightpos);
+			if (distance > spot_light_stuffs.intensity)
+				continue;
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
@@ -1240,7 +1249,7 @@ void Renderer::DrawDepthPoint()
 
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
-		LightProperties point_light_stuffs = LIGHTING.GetPointLights()[i];
+		LightProperties& point_light_stuffs = LIGHTING.GetPointLights()[i];
 		if (!point_light_stuffs.enableShadow)
 		{
 			continue;
@@ -1282,8 +1291,12 @@ void Renderer::DrawDepthPoint()
 		// render all non-instanced shadows
 		glUniform1i(uniform3, true);
 
-		for (DefaultRenderProperties prop : defaultProperties)
+		for (DefaultRenderProperties& prop : defaultProperties)
 		{
+			float distance = glm::distance(prop.position, point_light_stuffs.lightpos);
+			if (distance > point_light_stuffs.intensity * 10.f)
+				continue;
+
 			if (prop.Albedo.a < 1.f)
 			{
 				continue;
@@ -1311,6 +1324,10 @@ void Renderer::DrawDepthPoint()
 
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
+			float distance = glm::distance(prop.position, point_light_stuffs.lightpos);
+			if (distance > point_light_stuffs.intensity * 10.f)
+				continue;
+
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
@@ -1351,16 +1368,26 @@ unsigned int Renderer::ReturnTextureIdx(InstanceProperties& prop, const GLuint& 
 	{
 		return 33;
 	}
+	//if (prop.textureMap.find(_id) != prop.textureMap.end()) {
+	//	return prop.textureMap[_id];
+	//}
+
+	//// Check if there are empty slots in the texture array
+	//if (prop.textureCount < 32) {
+	//	prop.texture[prop.textureCount] = _id;
+	//	prop.textureMap[_id] = prop.textureCount++;
+	//	return prop.textureCount - 1;
+	//}
 	for (unsigned int iter = 0; iter < prop.textureCount + 1; ++iter)
 	{
-		if (prop.texture[iter] == 0)
+		if (prop.texture[iter] == _id) // this happen more often in big scene
 		{
-			prop.texture[iter] = _id;
 			prop.textureCount++;
 			return iter;
 		}
-		if (prop.texture[iter] == _id)
+		if (prop.texture[iter] == 0)
 		{
+			prop.texture[iter] = _id;
 			prop.textureCount++;
 			return iter;
 		}

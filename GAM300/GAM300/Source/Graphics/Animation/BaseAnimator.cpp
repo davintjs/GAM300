@@ -27,7 +27,7 @@ BaseAnimator::BaseAnimator()
     playing = false;
     currBlendState = notblending;
     blendedBones = 0;
-    blendDuration = 5.f;
+    blendDuration = 4.f;
     blendStartTime = 0.f;
 
     m_FinalBoneMatrices.reserve(100);
@@ -67,6 +67,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         {
             currBlendState = notblending;
             nextState = defaultState;
+            startTime = currentState->minMax.x;
+            endTime = currentState->minMax.y;
         }
 
     }
@@ -77,6 +79,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
 
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
+
+    std::cout << m_CurrentTime << "\n";
 
     if (currBlendState == blending)/*if (nextState)*/
     {
@@ -140,7 +144,7 @@ void BaseAnimator::ChangeState()
     if (nextState && currentState != nextState)
     {
         currBlendState = blending;
-        endTime = startTime + m_CurrentTime + blendDuration;
+        endTime = m_CurrentTime + blendDuration;
         blendStartTime = m_CurrentTime;
     }
     else // If both states are the same
@@ -148,7 +152,7 @@ void BaseAnimator::ChangeState()
         currBlendState = notblending;
     }
 
-    if (!currentState) // If no next state, use default state
+    if (!currentState && defaultState) // If no next state, use default state
     {
         currentState = defaultState;
 
