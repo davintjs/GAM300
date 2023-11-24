@@ -153,7 +153,7 @@ struct ScriptClass
 	MonoMethod* DefaultMethods[DefaultMethodTypes::SIZE]{nullptr};
 };
 
-ENGINE_RUNTIME_SYSTEM(ScriptingSystem)
+ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
 	//Starts another thread to invoke scripting behaviour
@@ -217,10 +217,6 @@ public:
 	//Checks whether a mono class is script
 	bool IsScript(MonoClass* monoClass);
 
-	//Thread work to run update loop of logic in play mode
-	//recompile/swap assembly while in editor mode
-	void ThreadWork();
-
 	//Callback when a script file is modified to start recompilation
 	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>*pEvent);
 
@@ -241,9 +237,6 @@ public:
 
 	//Callback function when a scene is about to end
 	void CallbackSceneStop(SceneStopEvent* pEvent);
-
-	//Callback function when a scene is about to end
-	void CallbackSceneUpdate(SceneUpdateEvent * pEvent);
 
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
@@ -312,14 +305,16 @@ public:
 
 	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 
-	IEvent* scriptingEvent = nullptr;
-	std::atomic_bool ran = false;
+	//IEvent* scriptingEvent = nullptr;
+	//std::atomic_bool ran = false;
 
 	CompilingState compilingState{ CompilingState::Wait };
-	std::thread::id SCRIPTING_THREAD_ID;
+	//std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
 
-	std::map<std::type_index, IEventHandler*> events;
+	bool playMode = false;
+
+	//std::map<std::type_index, IEventHandler*> events;
 	template<class EventType>
 	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
 };

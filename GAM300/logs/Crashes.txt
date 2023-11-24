@@ -1,5 +1,5 @@
-[2023-11-24 02:14:56.932] [Error] [critical] 
-Caused By:	mNewScript
-Info:		MONO OBJECT NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 849)
+[2023-11-24 15:40:21.620] [Error] [critical] 
+Caused By:	mAppDomain
+Info:		MONO APP DOMAIN NOT LOADED
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 269)
 

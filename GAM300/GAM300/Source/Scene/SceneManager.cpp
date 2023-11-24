@@ -128,6 +128,11 @@ void SceneManager::Update(float dt)
 
 void SceneManager::StartScene()
 {
+	if (HasScene())
+	{
+		SceneChangingEvent e{ GetCurrentScene() };
+		EVENTS.Publish(&e);
+	}
 #ifndef _BUILD
 
 	loadedScenes.emplace_front(GetCurrentScene().filePath.string());
