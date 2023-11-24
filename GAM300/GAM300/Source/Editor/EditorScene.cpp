@@ -336,6 +336,7 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
                 }
             }
         }
