@@ -72,6 +72,7 @@ void PhysicsSystem::PostSubscription()
 }
 
 void PhysicsSystem::Update(float dt) {
+
 	if (!physicsSystem)
 		return;
 
@@ -221,7 +222,7 @@ void PhysicsSystem::Exit() {
 		engineContactListener = nullptr;
 	}
 
-	PRINT("CLEANING UP PHYSICS\n");
+	//PRINT("CLEANING UP PHYSICS\n");
 	// Clean up any characters
 	for (JPH::Ref<JPH::Character> r : characters) {
 
@@ -235,7 +236,6 @@ void PhysicsSystem::Exit() {
 
 	// Delete the current physics system, must set to nullptr
 	if (ccTest) {
-		//ccTest->mCharacter->RemoveFromPhysicsSystem();
 		delete ccTest;
 		ccTest = nullptr;
 	}
@@ -267,9 +267,11 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 void PhysicsSystem::PostPhysicsUpdate() {
 	//std::cout << "Post physics update\n";
 
-	// Handle collision events
+
 
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
+
+	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
 		// Find rigidbody components of the two bodies
 		PhysicsComponent* pc1 = nullptr;
@@ -335,16 +337,13 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				PRINT("Sending Trigger Enter Event\n");
+				//PRINT("Sending Trigger Enter Event\n");
 			}
 			else {
 				ContactAddedEvent cae;
 				cae.pc1 = pc1;
 				cae.pc2 = pc2;
-				if (cae.pc1 == cae.pc2)
-				{
-					PRINT("this aint it chief\n");
-				}
+
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}
@@ -369,14 +368,14 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.pc1 = pc1;
 				tre.pc2 = pc2;
 				EVENTS.Publish(&tre);
-				PRINT("Sending Trigger Remove Event\n");
+				//PRINT("Sending Trigger Remove Event\n");
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.pc1 = pc1;
 				cre.pc2 = pc2;
 				EVENTS.Publish(&cre);
-				PRINT("Sending Collision Remove Event\n");
+				//PRINT("Sending Collision Remove Event\n");
 			}
 		}
 
@@ -389,11 +388,6 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	}
 
 	UpdateGameObjects();
-
-
-	//if (step > 250)
-	//	DeleteBody(ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber());
-
 
 }
 
@@ -900,7 +894,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
 	{
 		return;
-
 	}
 	// Position, Rotation and Scale of collider
 	Transform& t = scene.Get<Transform>(entity);
@@ -930,8 +923,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
 	JPH::RVec3 angularVel;
 	GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
-
-
 
 	// Motion Type
 	JPH::EMotionType motionType = JPH::EMotionType::Dynamic;
@@ -1034,7 +1025,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
 }
 
-
 // Create and add a Jolt Character to a Jolt physics system using a character controller
 void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, PhysicsSystem* enginePSystem) {
 
@@ -1073,17 +1063,11 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	character->AddToPhysicsSystem(activeStatus);
 	cc.bid = character->GetBodyID().GetIndexAndSequenceNumber();
 	cc.componentType = PhysicsComponent::Type::cc;
-	
-	// Main character = 1st character controller in scene
-	//if(!enginePSystem->ccTest->mCharacter)
-	//	enginePSystem->ccTest->mCharacter = character;
 
 	enginePSystem->characters.push_back(character);
 
 	return;
 }
-
-
 
 #pragma region EngineContactListener
 // Contact Listeners
@@ -1140,9 +1124,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::added));
 	collisionResolution.back().bid1 = body1.GetID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
-
-
-	std::cout << "Contact Added\n";
+	//PRINT("Contact Added\n");
 }
 
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
@@ -1183,7 +1165,6 @@ void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3)
 	jVec3.SetY(gVec3.y);
 	jVec3.SetZ(gVec3.z);
 }
-
 void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	JPH::RVec3 tmp;
 	GlmVec3ToJoltVec3(gVec3, tmp);
@@ -1191,13 +1172,11 @@ void GlmVec3ToJoltQuat(Vector3& gVec3, JPH::Quat& jQuat) {
 	jQuat = JPH::Quat::sEulerAngles(tmp);
 
 }
-
 void JoltVec3ToGlmVec3(JPH::RVec3& jVec3, Vector3& gVec3) {
 	gVec3.x = jVec3.GetX();
 	gVec3.y = jVec3.GetY();
 	gVec3.z = jVec3.GetZ();
 }
-
 void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3) {
 	JPH::RVec3 tmp = jQuat.GetEulerAngles();
 	JoltVec3ToGlmVec3(tmp, gVec3);
