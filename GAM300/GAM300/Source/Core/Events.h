@@ -35,11 +35,6 @@ struct ImGuiTextBuffer;
 
 namespace fs = std::filesystem;
 
-struct ApplicationExitEvent : IEvent
-{
-	ApplicationExitEvent() {};
-};
-
 struct CreateSceneEvent : IEvent
 {
 	CreateSceneEvent(Scene* _scene) : scene(_scene) {}
@@ -88,11 +83,11 @@ struct FileModifiedEvent : IEvent
 
 struct SceneStartEvent : IEvent{};
 
-struct SceneStopEvent : IEvent {};
-
-struct SceneCleanupEvent : IEvent {};
-
-struct ScenePostCleanupEvent : IEvent {};
+struct SceneStopEvent : IEvent 
+{
+	SceneStopEvent(Engine::UUID _sceneID) : sceneID{ _sceneID } {}
+	Engine::UUID sceneID;
+};
 
 struct SelectedEntityEvent : IEvent
 {

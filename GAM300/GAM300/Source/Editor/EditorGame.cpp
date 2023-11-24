@@ -183,7 +183,7 @@ void EditorGame::CallbackSceneChange(SceneChangingEvent* pEvent)
     UpdateTargetDisplay();
 }
 
-void EditorGame::CallbackSceneStop(ScenePostCleanupEvent* pEvent)
+void EditorGame::CallbackSceneStop(SceneStopEvent* pEvent)
 {
     UpdateTargetDisplay();
 }
