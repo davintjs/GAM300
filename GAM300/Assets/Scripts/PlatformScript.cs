@@ -20,8 +20,11 @@ public class PlatformScript : Script
 
     CharacterController player;
 
+    public ThirdPersonController thirdPersonController;
+
     void Start()
     {
+        Console.WriteLine("starttttttttt");
         currentRestTimer = restTimer;
     }
 
@@ -70,6 +73,7 @@ public class PlatformScript : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
+            rb.gameObject.GetComponent<ThirdPersonController>().Hello("PLATFORM SCRIPT SAYS HIIIIIIII");
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
         }

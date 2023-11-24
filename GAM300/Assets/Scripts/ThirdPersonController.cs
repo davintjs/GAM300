@@ -336,6 +336,11 @@ public class ThirdPersonController : Script
         }
     }
 
+    public void Hello(string yes)
+    {
+        Console.WriteLine(yes);
+    }
+
     void OnTriggerEnter(PhysicsComponent rb)
     {
         if (GetTag(rb) == "EnemyAttack")
