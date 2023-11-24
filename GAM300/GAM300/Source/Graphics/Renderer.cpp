@@ -1078,10 +1078,10 @@ void Renderer::DrawDepthDirectional()
 		glEnable(GL_DEPTH_TEST);
 		//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 		glm::mat4 lightProjection, lightView;
-		float near_plane = -100.f, far_plane = 100.f;
+		float near_plane = -1000.f, far_plane = 1000.f;
 
 
-		lightProjection = glm::ortho(-50.f, 50.f, -50.f, 50.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-100.f, 100.f, -100.f, 100.f, near_plane, far_plane);
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
