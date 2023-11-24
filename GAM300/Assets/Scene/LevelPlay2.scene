@@ -2125,6 +2125,7 @@ GameObject:
     - component: {fileID: 9407117863334368387}  # BoxCollider
     - component: {fileID: 11494955956919997079}  # Rigidbody
     - component: {fileID: 7081653189866061289}  # MeshRenderer
+    - component: {fileID: 14958603805615848761}  # Script
 ---
 ID: 221216268224481331
 Transform:
@@ -2161,6 +2162,19 @@ MeshRenderer:
   m_GameObject: {fileID: 3574560937881504822}
   Mesh: {guid: 9342b47cbf5e392bb2206838dc97792f}
   Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 14958603805615848761
+Script:
+  m_GameObject: {fileID: 3574560937881504822}
+  Script: {guid: b50644b2014968068e46c4076c31b648}
+  temp: false
+  moving: false
+  floatKey: 0
+  movingTimer: 2
+  displacement: -3.79999995
+  door: {fileID: 3574560937881504822}  # Component
+  back: false
+  maxTime: 5
 ---
 ID: 6661078963704661251
 GameObject:
@@ -7342,7 +7356,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 7.00078392
+  Time: 53.2890625
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15994,7 +16008,7 @@ GameObject:
     - component: {fileID: 7261744083574205926}  # Transform
     - component: {fileID: 18050718210444388130}  # BoxCollider
     - component: {fileID: 16019788179477535928}  # Rigidbody
-    - component: {fileID: 14030792873153318403}  # Script
+    - component: {fileID: 17975302843379625558}  # Script
 ---
 ID: 7261744083574205926
 Transform:
@@ -16029,16 +16043,16 @@ Rigidbody:
   UseGravity: false
   Is_trigger: true
 ---
-ID: 14030792873153318403
+ID: 17975302843379625558
 Script:
   m_GameObject: {fileID: 18443479616549604882}
-  Script: {guid: b50644b2014968068e46c4076c31b648}
+  Script: {guid: a418d0d69b32c1faf70f08978db03549}
   temp: false
   moving: false
-  floatKey: 0.300000012
+  floatKey: 1
   movingTimer: 2
+  doorscript: {fileID: 14958603805615848761}  # Component
   displacement: -3.79999995
-  door: {fileID: 3574560937881504822}  # Component
   back: false
   maxTime: 5
 ---
