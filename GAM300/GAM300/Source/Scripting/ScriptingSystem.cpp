@@ -493,7 +493,8 @@ void ScriptingSystem::ThreadWork()
 		RecompileThreadWork();
 	}
 
-	while (!THREADS.HasStopped())
+	auto& threading = THREADS;
+	while (!threading.HasStopped())
 	{
 		#ifndef _BUILD
 			if (timeUntilRecompile > 0)
