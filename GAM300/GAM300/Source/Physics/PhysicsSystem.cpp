@@ -22,12 +22,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "IOManager/InputHandler.h"
 #include "Utilities/ThreadPool.h"
 
-// Testing
-JPH::BodyID testBallID;
-JPH::BodyID testBallID2;
-Entity* ball = nullptr;
-Entity* ball2 = nullptr;
-
 // Convert glm::Vec3 to JPH::Vec3
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3);
 // Convert glm::Vec3 to JPH::Quat
@@ -1081,7 +1075,6 @@ JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& bo
 	//std::cout << "Contact validate callback!\n";
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
-
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
 	(void)manifold;
 	(void)ioSettings;
@@ -1126,7 +1119,6 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
 	//PRINT("Contact Added\n");
 }
-
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
 {
 	(void)body1;
@@ -1138,7 +1130,6 @@ void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH
 	
 	//std::cout << "Contact persisting!\n";
 }
-
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
 	if (!pSystem)
 		return;
@@ -1154,7 +1145,6 @@ void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShape
 	collisionResolution.back().bid1 = subShapePair.GetBody1ID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = subShapePair.GetBody2ID().GetIndexAndSequenceNumber();
 }
-
 #pragma endregion
 
 #pragma region MathConversionHelpers

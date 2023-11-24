@@ -7341,7 +7341,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 49.157692
+  Time: 44.4872665
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -10012,9 +10012,9 @@ GameObject:
 ID: 12320053255655417569
 Transform:
   m_GameObject: {fileID: 4423372801228798985}
-  Translation: [64.9601135, 28.5839996, -35.7395325]
-  Rotation: [0, 1.57079589, 0]
-  Scale: [1.2867558, 1, 0.999999821]
+  Translation: [64.4014893, 28.5839996, -35.7395325]
+  Rotation: [0, 1.57079542, 0]
+  Scale: [1.28675556, 1, 0.999999642]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 1610947561634439664}
@@ -10265,7 +10265,7 @@ GameObject:
 ID: 16174162624387742268
 Transform:
   m_GameObject: {fileID: 4021303591522537242}
-  Translation: [66.5777969, 36.0960007, -34.7003021]
+  Translation: [66.5795059, 36.0960007, -34.7003021]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 17551185539749227568}
@@ -19284,7 +19284,7 @@ GameObject:
 ID: 13769964223816938039
 Transform:
   m_GameObject: {fileID: 14260613841086092935}
-  Translation: [56.6983986, 37.3709984, -35.5820198]
+  Translation: [60.9700012, 36.6357574, -35.5820198]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}

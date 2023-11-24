@@ -207,6 +207,7 @@ public:
 	// Clean-up duty
 	void Exit();
 
+	// Ensure world populates AFTER scene is deserialized
 	void PostSubscription();
 
 	// Clone any gameobject with rigidbodies, character controller into a Jolt Body for simulations
@@ -232,9 +233,12 @@ public:
 	// Callback function for when a rigidbody is destroyed
 	void CallbackObjectDestroyed(ObjectDestroyedEvent<Rigidbody>*pEvent);
 
+	// Add a rigidbody to physics world
 	void AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent);
 
+	// Delete a physics body based on Body ID from physics component
 	void DeleteBody(PhysicsComponent& bid);
+	// Delete a physics body based on Body ID
 	void DeleteBody(UINT32 bid);
 
 	const unsigned int maxObjects =						1024;
