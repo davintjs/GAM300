@@ -71,16 +71,6 @@ enum class CompilingState
 	Wait,
 };
 
-enum class LogicState
-{
-	START,
-	UPDATE,
-	EXIT,
-	CLEANUP,
-	NONE
-};
-
-
 namespace DefaultMethodTypes
 {
 	enum
@@ -227,10 +217,6 @@ public:
 	//Checks whether a mono class is script
 	bool IsScript(MonoClass* monoClass);
 
-	//Thread work to run update loop of logic in play mode
-	//recompile/swap assembly while in editor mode
-	void ThreadWork();
-
 	//Callback when a script file is modified to start recompilation
 	void CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>*pEvent);
 
@@ -250,7 +236,7 @@ public:
 	void CallbackSceneStart(SceneStartEvent* pEvent);
 
 	//Callback function when a scene is about to end
-	void CallbackSceneCleanup(SceneCleanupEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 
 	//Callback function to when a script is created
 	void CallbackScriptCreated(ObjectCreatedEvent<Script>* pEvent);
@@ -273,9 +259,6 @@ public:
 	//Callback function to when a object is deleted
 	template<typename T>
 	void CallbackObjectDestroyed(ObjectDestroyedEvent<T>* pEvent);
-
-
-	void CallbackApplicationExit(ApplicationExitEvent*pEvent);
 
 	//Get the script if it is reflected already, 
 	//else instantiate a MonoObject and store it
@@ -316,17 +299,22 @@ public:
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
 
+	bool ScriptThreadHasRan();
+
+	void SetScriptThreadRan(bool val);
+
 	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 
-	IEvent* scriptingEvent;
+	//IEvent* scriptingEvent = nullptr;
+	//std::atomic_bool ran = false;
 
 	CompilingState compilingState{ CompilingState::Wait };
-	LogicState logicState;
-	std::thread::id SCRIPTING_THREAD_ID;
+	//std::thread::id SCRIPTING_THREAD_ID;
 	float timeUntilRecompile{ 0 };
-	bool ran;
 
-	std::map<std::type_index, IEventHandler*> events;
+	bool playMode = false;
+
+	//std::map<std::type_index, IEventHandler*> events;
 	template<class EventType>
 	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
 };

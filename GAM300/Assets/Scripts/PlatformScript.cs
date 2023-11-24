@@ -66,6 +66,7 @@ public class PlatformScript : Script
     }
     void OnCollisionEnter(PhysicsComponent rb)
     {
+        Console.WriteLine("Touched something " + GetTag(rb));
         //detect the player
         if (GetTag(rb) == "Player")
         {

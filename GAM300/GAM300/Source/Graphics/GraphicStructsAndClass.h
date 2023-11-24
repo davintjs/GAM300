@@ -183,6 +183,8 @@ struct InstanceProperties
 	//glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
 	std::vector<glm::vec2> textureIndex; // (texture index, normal map index)
 
+	glm::vec3 position{};
+
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
 	unsigned int texture[32]{};// max 32 dds only
@@ -205,6 +207,8 @@ struct DefaultRenderProperties {
 	glm::vec4 Specular{};
 	glm::vec4 Diffuse{};
 	glm::vec4 Ambient{};
+
+	glm::vec3 position{};
 
 	GLuint textureID{};
 	GLuint NormalID{};
