@@ -12,8 +12,16 @@ public class AudioManager : Script
 
     //ADD A GAMEOBJECT FOR EACH SOUND
     public AudioSource playerSlashAttack;
+    public AudioSource playerInjured;
     public AudioSource jumpVoice;
     public AudioSource spark;
+    public AudioSource itemCollected;
+    public AudioSource rangeEnemyFiring;
+    public AudioSource rangeEnemyDead;
+    public AudioSource doorOpen;
+    public AudioSource elevator;
+    public AudioSource playerFootstep;
+    public AudioSource playerAttack;
 
     void Awake()
     {

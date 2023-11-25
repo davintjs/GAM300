@@ -81,6 +81,7 @@ public class Elevator : Script
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
             moving = true;
+            AudioManager.instance.elevator.Play();
         }
     }
 

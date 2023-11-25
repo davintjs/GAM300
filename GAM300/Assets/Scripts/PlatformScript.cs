@@ -19,12 +19,14 @@ public class PlatformScript : Script
     public float currentRestTimer;
 
     CharacterController player;
+    public AudioSource soundEffect;
 
     public ThirdPersonController thirdPersonController;
 
     void Start()
     {
         currentRestTimer = restTimer;
+        //soundEffect.Play();
     }
 
     void Update()

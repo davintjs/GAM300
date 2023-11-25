@@ -80,6 +80,9 @@ public class Door : Script
             Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
             //transform.localPosition.y = 100f;
             moving = true;
+            AudioManager.instance.doorOpen.Play();
+            AudioManager.instance.itemCollected.Play();
+            //Destroy(gameObject);
         }
     }
 }

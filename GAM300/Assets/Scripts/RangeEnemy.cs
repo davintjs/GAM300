@@ -49,8 +49,12 @@ public class RangeEnemy : Script
     private float particle_timer = 0f;
     private bool particle_on = false;
 
+    //audio
+    public bool playOnce = true;
+
     void Start()
     {
+        playOnce = true;
         rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;
         //startingPos = GetComponent<Transform>().localPosition;//get its starting position
@@ -132,9 +136,19 @@ public class RangeEnemy : Script
                 shootCooldown += Time.deltaTime;
                 if (shootCooldown > maxShootCooldown)
                 {
+                    if(playOnce)
+                    {
+                        playOnce = false;
+                        AudioManager.instance.rangeEnemyFiring.Play();
+                    }
+                    
                     GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
                     bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * bulletSpeed;
                     shootCooldown = 0;
+                    if(shootCooldown == 0)
+                    {
+                        playOnce = true;//reset ability to play audio
+                    }
                 }
                 LookAt(direction);
                 //change to chase state once player has reach out of range
@@ -212,6 +226,7 @@ public class RangeEnemy : Script
         }
         else
         {
+            AudioManager.instance.rangeEnemyDead.Play();
             Destroy(gameObject);
         }
     }

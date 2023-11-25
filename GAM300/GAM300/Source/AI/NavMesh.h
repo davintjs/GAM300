@@ -49,8 +49,5 @@ private:
 	// Get the triangle containing the point
 	Triangle3D* TriangleContainingPoint(const glm::vec3& mPoint);
 
-	// Run time update of the navmesh
-	void UpdateNavMesh();
-
 	std::vector<Triangle3D> mTriangles;
 };
