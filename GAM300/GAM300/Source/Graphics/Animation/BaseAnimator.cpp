@@ -23,6 +23,7 @@ BaseAnimator::BaseAnimator()
     endTime = 0.0f;
     m_AnimationIdx = -1;
     m_FinalBoneMatIdx = -1;
+    speedModifier = 1.f;
     currentState = nextState = defaultState = nullptr;
     playing = false;
     currBlendState = notblending;
@@ -41,7 +42,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     UpdateStateName();
 
-    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt) - startTime;
+    m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt * speedModifier) - startTime;
     //m_CurrentTime = (m_CurrentTime >= 0.f) ? m_CurrentTime : 0.f;
 
     // Change state if the current time passes the end time

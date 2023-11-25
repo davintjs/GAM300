@@ -829,6 +829,8 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
@@ -889,6 +891,8 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
@@ -973,6 +977,8 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
