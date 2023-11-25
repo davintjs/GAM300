@@ -103,14 +103,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
 		AudioSource& audio = audioSource;
-		if (audio.current_channel < 0 || audio.current_channel > 3)
-		{
-			PRINT("PLAYING: ", audio.UUID(), '\n');
-			for (auto& audioSrc : MySceneManager.GetCurrentScene().GetArray<AudioSource>())
-			{
-				PRINT("SCENE: ", audioSrc.UUID(), '\n');
-			}
-		}
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
 
@@ -214,8 +206,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 #pragma endregion
-
-	
 
 	// Load a scene
 	static void LoadScene(MonoString* mString)

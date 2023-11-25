@@ -689,9 +689,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	}
 
 
-	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
 
 }
 
