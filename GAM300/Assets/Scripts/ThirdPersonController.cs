@@ -27,6 +27,7 @@ public class ThirdPersonController : Script
     public Transform player;
     public GameObject playerWeaponCollider;
     public Transform checkpoint2;
+    //public InstantDeath instantDeath;
 
     List<vec3> pos = new List<vec3>();
 
@@ -61,10 +62,15 @@ public class ThirdPersonController : Script
     float initialHealthBarXScale;
 
     public Animator animator;
+    public bool startDeathAnimationCountdown = false;
+    float animationTimer = 3.18f;
+    public float currentAnimationTimer;
+
     // Start is called before the first frame update
     void InitAnimStates()
     {
         animationManager = new AnimationStateMachine(animator);
+        currentAnimationTimer = animationTimer;
 
         //Highest Precedence
         AnimationState death = animationManager.GetState("Death");
@@ -269,9 +275,19 @@ public class ThirdPersonController : Script
 
 
         animationManager.UpdateState();
+
+        //death animation timer
+        if(startDeathAnimationCountdown)
+        {
+            currentAnimationTimer -= Time.deltaTime;
+            if(currentAnimationTimer <= 0)
+            {
+                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+            }
+        }
     }
 
-    void UpdatehealthBar()
+    public void UpdatehealthBar()
     {
         //NOTE: tempoary disabled, not working currently
         //float scaleFactor = (float)currentHealth / (float)maxHealth;
@@ -304,6 +320,7 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("GameOver");
             isDead = true;
+            startDeathAnimationCountdown = true;
             currentHealth = 0;
             healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0f, -0.035f, 1f);
@@ -314,7 +331,7 @@ public class ThirdPersonController : Script
     {
         animationManager.GetState(stateName).state = value;
     }
-    void TakeDamage(float amount)
+    public void TakeDamage(float amount)
     {
         AudioManager.instance.playerInjured.Play();
 
@@ -330,7 +347,9 @@ public class ThirdPersonController : Script
         if (currentHealth <= 0)
         {
             Console.WriteLine("YouDied");
+            isDead = true;
             SetState("Death", true);
+            
         }
         else
         {
@@ -414,17 +433,19 @@ public class ThirdPersonController : Script
             //AudioManager.instance.playerInjured.Play();
             TakeDamage(1);
         }
-        if(GetTag(rb) == "PuzzleKey")
-        {
-            Console.WriteLine("Collected");
-            AudioManager.instance.itemCollected.Play();//play audio sound
-        }
+        ////Not working
+        //if(GetTag(rb) == "PuzzleKey")
+        //{
+        //    Console.WriteLine("Collected");
+        //    AudioManager.instance.itemCollected.Play();//play audio sound
+        //}
     }
 
     void OnCollisionEnter(PhysicsComponent rb)
     {
         if (GetTag(rb) == "InstantDeath")
         {
+            currentHealth = 0;
             Console.WriteLine("InstantDeath");
             TakeDamage(maxHealth);
         }

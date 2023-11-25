@@ -81,6 +81,8 @@ public class Door : Script
             //transform.localPosition.y = 100f;
             moving = true;
             AudioManager.instance.doorOpen.Play();
+            AudioManager.instance.itemCollected.Play();
+            //Destroy(gameObject);
         }
     }
 }
