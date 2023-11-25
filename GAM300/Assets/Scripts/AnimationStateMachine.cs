@@ -99,6 +99,8 @@ namespace BeanFactory
                     }
                     currentState = pair.Key;
                     animator.SetState(currentState);
+                    if (GetState(currentState).loop)
+                        animator.SetNextState(currentState);
                     return;
                 }
             }
