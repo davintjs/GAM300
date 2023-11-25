@@ -25,9 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionID)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
-	GeneratePointsCCW(positions);
-	//std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
-	//GenerateConvexHull(positions);
+	//GeneratePointsCCW(positions);
+	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
+	GenerateConvexHull(positions);
 	CalculateNormalBarycenter(mPoints);
 
 	minPoint = { FLT_MAX, FLT_MAX, FLT_MAX };
@@ -545,26 +545,6 @@ bool Polygon3D::HoleInPolygon(Polygon3D& mHole)
 			glm::vec2 m2 = glm::vec2(mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].x, mPoints[(j != mPoints.size() - 1) ? j + 1 : 0].z);
 			Segment2D polyLine(m1, m2);
 
-			//int yDifference1 = pt.y - polyLine.point1.y;
-			//int yDifference2 = pt.y - polyLine.point2.y;
-
-			//if ((yDifference1 > 0.1f) && (yDifference2 > 0.1f))
-			//{
-			//	continue;
-			//}
-
-			
-			//pt.y = polyLine.point1.y;
-			
-
-			/*if ((polyLine.point1.y < pt.y) && (polyLine.point2.y < pt.y))
-			{
-				continue;
-			}
-			else if ((polyLine.point1.y >= pt.y) && (polyLine.point2.y >= pt.y))
-			{
-				continue;
-			}*/
 			float intersectionTime;
 			if (Intersects(polyLine, line, &intersectionTime))
 			{
