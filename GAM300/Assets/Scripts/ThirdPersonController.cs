@@ -57,6 +57,7 @@ public class ThirdPersonController : Script
 
     //health bar
     public GameObject healthBarFill;
+    public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
     float initialHealthBarXScale;
@@ -156,6 +157,12 @@ public class ThirdPersonController : Script
         {
             TakeDamage(1);
             isInvulnerable = true;
+        }
+        //restart game
+        if(isDead && Input.GetKey(KeyCode.R))
+        {
+            Console.WriteLine("Restart");
+            SceneManager.LoadScene("LevelPlay2");
         }
         if(!isDead)
         {
@@ -320,6 +327,7 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("GameOver");
             isDead = true;
+            healthStaminaCanvas.SetActive(false);
             startDeathAnimationCountdown = true;
             currentHealth = 0;
             healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);

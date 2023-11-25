@@ -7369,7 +7369,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 46.8557167
+  Time: 53.4942703
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15791,6 +15791,7 @@ Script:
   currentInvulnerableTimer: 1
   colliderDist: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
+  healthStaminaCanvas: {fileID: 2866402867161245437}  # GameObject
   animator: {fileID: 6628232525372413625}  # Component
   startDeathAnimationCountdown: false
   currentAnimationTimer: 0
