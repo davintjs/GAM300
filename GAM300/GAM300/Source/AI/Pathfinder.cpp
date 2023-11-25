@@ -325,15 +325,3 @@ float AStarPather::IsAPointLeftOfVectorOrOnTheLine(const glm::vec3& l1, const gl
 
 	return crossProduct.y;
 }
-//
-//float AStarPather::TriangleArea(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
-//{
-//	const float ax = p2[0] - p1[0];
-//	const float az = p2[2] - p1[2];
-//	const float bx = p3[0] - p1[0];
-//	const float bz = p3[2] - p1[2];
-//
-//	float ans = bx * az - ax * bz;
-//
-//	return ans;
-//}
