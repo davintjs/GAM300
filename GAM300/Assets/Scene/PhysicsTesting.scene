@@ -156,7 +156,7 @@ GameObject:
 ID: 4100690231802226099
 Transform:
   m_GameObject: {fileID: 6606782747310958106}
-  Translation: [0, 1.72139239, 3.68624306]
+  Translation: [-1.28718813e-09, 1.72139239, 3.68624306]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -177,7 +177,7 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
+  IsStatic: true
   IsKinematic: false
   UseGravity: true
   Is_trigger: false

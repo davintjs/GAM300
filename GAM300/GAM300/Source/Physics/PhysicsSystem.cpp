@@ -259,11 +259,11 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 
 }
 void PhysicsSystem::PostPhysicsUpdate() {
-	//std::cout << "Post physics update\n";
 
 
 
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
+	std::cout << "Post physics update\n";
 
 	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
@@ -372,10 +372,40 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				//PRINT("Sending Collision Remove Event\n");
 			}
 		}
+		else if (e.op == EngineCollisionData::collisionOperation::persisted) {
+			bool trigger = false;
+			bool trigger2 = false;
 
+			if (pc1->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc1);
+				if (tmp->is_trigger)
+					trigger = true;
+			}
+			if (pc2->componentType == PhysicsComponent::Type::rb) {
+				Rigidbody* tmp = reinterpret_cast<Rigidbody*>(pc2);
+				if (tmp->is_trigger)
+					trigger2 = true;
+			}
+			// Trigger or Collision
+			if (trigger || trigger2) {
+				TriggerStayEvent tse;
+				tse.pc1 = pc1;
+				tse.pc2 = pc2;
+				EVENTS.Publish(&tse);
+				PRINT("Sending Trigger stay Event\n");
+
+			}
+			else {
+				ContactStayEvent cse;
+				cse.pc1 = pc1;
+				cse.pc2 = pc2;
+				EVENTS.Publish(&cse);
+				PRINT("Sending Collision stay Event\n");
+			}
+		}
 	}
 	engineContactListener->collisionResolution.clear();
-
+	
 	// Character collision tolerance
 	for (auto it = characters.begin(); it != characters.end(); ++it) {
 		(*it)->PostSimulation(0.05f);
@@ -1081,8 +1111,11 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	if (!pSystem)
 		return;
 	// If bodies already have contact, do not register another OnCollisionEnter/OnTriggerEnter
-	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
+	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID())) {
+		//std::cout << "reject added contact\n";
 		return;
+	}
+
 
 	//Scene& scene = MySceneManager.GetCurrentScene();
 
@@ -1117,26 +1150,31 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::added));
 	collisionResolution.back().bid1 = body1.GetID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
-	//PRINT("Contact Added\n");
+	//std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
 {
-	(void)body1;
-	(void)body2;
 	(void)manifold;
 	(void)ioSettings;
-	if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
-		return;	
+	//if (pSystem->WereBodiesInContact(body1.GetID(), body2.GetID()))
+	//	return;	
 	
-	//std::cout << "Contact persisting!\n";
+	//if(body1.IsSensor() || body2.IsSensor())
+		//std::cout << "Contact persisting!\n";
+
+
+	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
+	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::persisted));
+	collisionResolution.back().bid1 = body1.GetID().GetIndexAndSequenceNumber();
+	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
 }
 void EngineContactListener::OnContactRemoved(const JPH::SubShapeIDPair& subShapePair) {
 	if (!pSystem)
 		return;
 
 	// If the bodies are still touching, do not register OnCollisionExit/OnTriggerExit
-	if (!pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID())) {
-
+	if (pSystem->WereBodiesInContact(subShapePair.GetBody1ID(), subShapePair.GetBody2ID())) {
+		return;
 	}
 	//std::cout << "Contact Removed\n";
 

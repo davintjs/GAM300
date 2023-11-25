@@ -2036,14 +2036,15 @@ ID: 9752894090014538246
 Script:
   m_GameObject: {fileID: 2890281298168605979}
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  rest: false
   startPoint: {fileID: 3141025954204935599}  # Component
+  rest: false
   restTimer: 2
   endPoint: {fileID: 7360367522461515090}  # Component
   duration: 2
-  back: false
   timer: 0.969857275
+  back: false
   currentRestTimer: 2
+  thirdPersonController: {fileID: 0}
 ---
 ID: 6034621871942586701
 GameObject:
@@ -5505,7 +5506,7 @@ ID: 16980806550636336011
 MeshRenderer:
   m_GameObject: {fileID: 13628489513304251569}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 5306926712686786849
 GameObject:
@@ -5552,7 +5553,7 @@ ID: 13044379345417450330
 MeshRenderer:
   m_GameObject: {fileID: 5306926712686786849}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 12163220995285343582
 GameObject:
@@ -5599,7 +5600,7 @@ ID: 2092423322290342843
 MeshRenderer:
   m_GameObject: {fileID: 12163220995285343582}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 10737560099088550923
 GameObject:
@@ -5646,7 +5647,7 @@ ID: 13965232289840140716
 MeshRenderer:
   m_GameObject: {fileID: 10737560099088550923}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 14985801153297584028
 GameObject:
@@ -5693,7 +5694,7 @@ ID: 5308020171378002777
 MeshRenderer:
   m_GameObject: {fileID: 14985801153297584028}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 16679820463026396069
 GameObject:
@@ -5740,7 +5741,7 @@ ID: 10911231623432110550
 MeshRenderer:
   m_GameObject: {fileID: 16679820463026396069}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 1337406092572080173
 GameObject:
@@ -5787,7 +5788,7 @@ ID: 7044165235213848303
 MeshRenderer:
   m_GameObject: {fileID: 1337406092572080173}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 15497562306359327525
 GameObject:
@@ -5834,7 +5835,7 @@ ID: 12108362548940923916
 MeshRenderer:
   m_GameObject: {fileID: 15497562306359327525}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 10693858864136560723
 GameObject:
@@ -5881,7 +5882,7 @@ ID: 9100768816399576005
 MeshRenderer:
   m_GameObject: {fileID: 10693858864136560723}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 6220170757331955160
 GameObject:
@@ -5928,7 +5929,7 @@ ID: 14867392501331962693
 MeshRenderer:
   m_GameObject: {fileID: 6220170757331955160}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 15441140755906294361
 GameObject:
@@ -5975,7 +5976,7 @@ ID: 10930704056757453560
 MeshRenderer:
   m_GameObject: {fileID: 15441140755906294361}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 11991343260028015161
 GameObject:
@@ -6022,7 +6023,7 @@ ID: 5866575706883006076
 MeshRenderer:
   m_GameObject: {fileID: 11991343260028015161}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 17965350695247255286
 GameObject:
@@ -6454,7 +6455,7 @@ ID: 13775863234695052955
 MeshRenderer:
   m_GameObject: {fileID: 8077100623912244182}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 11448687346075156829
 GameObject:
@@ -7341,7 +7342,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 44.4872665
+  Time: 19.7874107
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -13653,7 +13654,7 @@ ID: 2586594631369145220
 MeshRenderer:
   m_GameObject: {fileID: 3785387649589060227}
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
 ID: 14356497665342915543
 GameObject:
@@ -19317,7 +19318,7 @@ LightSource:
   EnableShadow: false
   lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 15
+  Intensity: 0
   Direction: [0, 0, 0]
   Inner Cutoff: 10
   Outer Cutoff: 50
@@ -19336,7 +19337,7 @@ GameObject:
 ID: 9250071627966584501
 Transform:
   m_GameObject: {fileID: 15258148970884941533}
-  Translation: [-19.7395153, 6.74177074, 16.0940533]
+  Translation: [-19.7395153, 6.50518131, 16.0940533]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19346,10 +19347,10 @@ Transform:
 ID: 17023029239354869879
 LightSource:
   m_GameObject: {fileID: 15258148970884941533}
-  EnableShadow: true
+  EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 8
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -19368,7 +19369,7 @@ GameObject:
 ID: 10592381451826313751
 Transform:
   m_GameObject: {fileID: 12255453308465698455}
-  Translation: [11.952837, 6.24110174, -35.4429855]
+  Translation: [19.1157055, 5.55614853, -35.4429855]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19378,10 +19379,10 @@ Transform:
 ID: 10332750798701827478
 LightSource:
   m_GameObject: {fileID: 12255453308465698455}
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 17
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -19464,7 +19465,7 @@ GameObject:
 ID: 9980629945179896881
 Transform:
   m_GameObject: {fileID: 16149919952186955683}
-  Translation: [-20.1924496, 7.56159735, -36.6165161]
+  Translation: [-20.1924496, 7.52293921, -36.6165161]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19477,8 +19478,40 @@ LightSource:
   EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 5
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
   Color: [200, 255, 200]
+---
+ID: 18047848578679342217
+GameObject:
+  m_IsActive: true
+  m_Name: DirectionalLight
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4700641269588020503}  # Transform
+    - component: {fileID: 5561963866911114795}  # LightSource
+---
+ID: 4700641269588020503
+Transform:
+  m_GameObject: {fileID: 18047848578679342217}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.999963403, 0.999957502, 0.999984741]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5561963866911114795
+LightSource:
+  m_GameObject: {fileID: 18047848578679342217}
+  EnableShadow: true
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 2
+  Direction: [0, -2, 1.5]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [255, 255, 255]
