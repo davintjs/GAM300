@@ -24,7 +24,6 @@ public class PlatformScript : Script
 
     void Start()
     {
-        Console.WriteLine("starttttttttt");
         currentRestTimer = restTimer;
     }
 

@@ -395,6 +395,7 @@ void ScriptingSystem::InvokeAllScripts(size_t methodType)
 
 void ScriptingSystem::UpdateReferences()
 {
+	PRINT("Update References\n");
 	Scene& scene = MySceneManager.GetCurrentScene();
 	for (auto& script : scene.GetArray<Script>())
 	{
@@ -722,6 +723,10 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 		else
 		{
 			ScriptObject<Object> sObject(pObject);
+			if (field.fType == GetType::E<AudioSource>())
+			{
+				PRINT("SETTING: ", &pObject, '\n');
+			}
 			mono_field_set_value(instance, mClassField, &sObject);
 		}
 		return;
@@ -731,7 +736,6 @@ void ScriptingSystem::SetFieldValue(MonoObject* instance, MonoClassField* mClass
 
 void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb1, PhysicsComponent& rb2)
 {
-	std::cout << "Physics event!\n";
 	Scene& scene = MySceneManager.GetCurrentScene();
 
 	Entity& e1 = scene.Get<Entity>(rb1.EUID());
@@ -875,13 +879,14 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 					if (f)
 					{
 						Handle handle = { f->EUID(),f->UUID() };
-						void* pObject = scene.GetByHandle(field.fType, &handle);
+						Object* pObject = (Object*)scene.GetByHandle(field.fType, &handle);
 						field.data = &pObject;
+						if (GetType::E<AudioSource>() == field.fType)
+						{
+							PRINT("ORIGINAL: ", handle.euid, " - ", handle.uuid, '\n');
+							PRINT("FIELD STORE: ", pObject->EUID(), " - ", pObject->UUID(), '\n');
+						}
 					}
-				}
-				else if (field.fType == AllFieldTypes::Size())
-				{
-					continue;
 				}
 				SetFieldValue(instance, pair.second, field);
 			}
@@ -903,13 +908,14 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				if (f)
 				{
 					Handle handle = { f->EUID(),f->UUID() };
-					void* pObject = scene.GetByHandle(field.fType, &handle);
+					Object* pObject = (Object*)scene.GetByHandle(field.fType, &handle);
 					field.data = &pObject;
+					if (GetType::E<AudioSource>() == field.fType)
+					{
+						PRINT("ORIGINAL: ", handle.euid, " - ", handle.uuid, '\n');
+						PRINT("FIELD STORE: ", pObject->EUID(), " - ", pObject->UUID(), '\n');
+					}
 				}
-			}
-			else if (field.fType == AllFieldTypes::Size())
-			{
-				continue;
 			}
 			SetFieldValue(pairIt->second, pair.second, field);
 		}

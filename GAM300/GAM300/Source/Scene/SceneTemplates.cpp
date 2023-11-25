@@ -136,7 +136,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 				//Objects
 				if (field.fType < AllObjectTypes::Size())
 				{
-
 					Object*& pObject = *(Object**)field.data;
 					if (field.fType < MultiComponentTypes::Size())
 					{
@@ -144,8 +143,8 @@ void Scene::LinkReferences(ReferencesTable& storage)
 						{
 							Handle& newHandle = storage[field.fType][*pObject];
 							pObject = (Object*)GetByHandle(field.fType, &newHandle);
+
 							//Set to internal linkage in game object
-							//handle = storage[field.fType][handle];
 						}
 					}
 					else
