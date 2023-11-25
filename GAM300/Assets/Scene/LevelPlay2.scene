@@ -11,7 +11,7 @@ ID: 11768379503594195228
 GameObject:
   m_IsActive: true
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11982424069542032470}  # Transform
@@ -93,7 +93,7 @@ ID: 6606253624498158492
 GameObject:
   m_IsActive: true
   m_Name: LightSource
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18356289913919723263}  # Transform
@@ -125,7 +125,7 @@ ID: 4212138099454399691
 GameObject:
   m_IsActive: true
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 178297584539063747}  # Transform
@@ -151,7 +151,7 @@ ID: 2866402867161245437
 GameObject:
   m_IsActive: true
   m_Name: HealthStaminaCanvas
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15285288528075692707}  # Transform
@@ -178,7 +178,7 @@ ID: 16279065018212808363
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(11)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16051267394390159105}  # Transform
@@ -204,7 +204,7 @@ ID: 307508712453590974
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(12)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8222542379876179765}  # Transform
@@ -230,7 +230,7 @@ ID: 18227054109373820900
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(13)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15787967124082058978}  # Transform
@@ -256,7 +256,7 @@ ID: 10170722549999376186
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17045444183531846385}  # Transform
@@ -283,7 +283,7 @@ ID: 14110507054613469000
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7105482068275313552}  # Transform
@@ -309,7 +309,7 @@ ID: 588260861136365972
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2597343222150083663}  # Transform
@@ -335,7 +335,7 @@ ID: 6638998928647544731
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16733109634195863922}  # Transform
@@ -361,7 +361,7 @@ ID: 4727211310239832721
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12261133488354616483}  # Transform
@@ -387,7 +387,7 @@ ID: 15888339399562958253
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17307335035776806146}  # Transform
@@ -413,7 +413,7 @@ ID: 3338797733835495830
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12291329917925495631}  # Transform
@@ -439,7 +439,7 @@ ID: 3402404227458735166
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8085437719357042558}  # Transform
@@ -465,7 +465,7 @@ ID: 6115253184834322446
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8052257254940246841}  # Transform
@@ -491,7 +491,7 @@ ID: 14315692801423775080
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2750315928355663340}  # Transform
@@ -517,7 +517,7 @@ ID: 18071177589569759953
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2384175915694027393}  # Transform
@@ -543,7 +543,7 @@ ID: 15651863323883407047
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5662649677719778306}  # Transform
@@ -569,7 +569,7 @@ ID: 11557482832436727801
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9766639119864827228}  # Transform
@@ -595,7 +595,7 @@ ID: 5011809292540148907
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8561029817383277951}  # Transform
@@ -621,7 +621,7 @@ ID: 11032129156127377953
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 658761155777471305}  # Transform
@@ -647,7 +647,7 @@ ID: 13165177999647246591
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5055599176727884589}  # Transform
@@ -673,7 +673,7 @@ ID: 526758643633971642
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13235722160530368950}  # Transform
@@ -699,7 +699,7 @@ ID: 5483556358699784503
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17634465416700164625}  # Transform
@@ -725,7 +725,7 @@ ID: 14478924499006761920
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3030434628512102625}  # Transform
@@ -751,7 +751,7 @@ ID: 3263050363708072085
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11783951536527340043}  # Transform
@@ -777,7 +777,7 @@ ID: 4368572754963111584
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12832844484369263722}  # Transform
@@ -803,7 +803,7 @@ ID: 14036915193109390223
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5891387662700848158}  # Transform
@@ -829,7 +829,7 @@ ID: 7859172314584282114
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3830535510194488281}  # Transform
@@ -855,7 +855,7 @@ ID: 6246163782715184781
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 394707457212455929}  # Transform
@@ -881,7 +881,7 @@ ID: 9512850604577552397
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9685789277488776545}  # Transform
@@ -907,7 +907,7 @@ ID: 3826791641624184405
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10098845062864938993}  # Transform
@@ -933,7 +933,7 @@ ID: 7399019309634329478
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17388931856736497366}  # Transform
@@ -959,7 +959,7 @@ ID: 3875289601262731945
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15913631504230568825}  # Transform
@@ -985,7 +985,7 @@ ID: 6302196139992055394
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5973331274244327104}  # Transform
@@ -1011,7 +1011,7 @@ ID: 12272765588456044186
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11271386035176915663}  # Transform
@@ -1037,7 +1037,7 @@ ID: 4615018922041436064
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 383041951429146990}  # Transform
@@ -1063,7 +1063,7 @@ ID: 7534029607925810271
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8584562404686855460}  # Transform
@@ -1089,7 +1089,7 @@ ID: 14203609952028334982
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7166385542806180301}  # Transform
@@ -1115,7 +1115,7 @@ ID: 7454416025575751350
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 585961518796963470}  # Transform
@@ -1141,7 +1141,7 @@ ID: 6258148344773628143
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5238520671810309657}  # Transform
@@ -1167,7 +1167,7 @@ ID: 17613488728668006526
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14804816740645006109}  # Transform
@@ -1193,7 +1193,7 @@ ID: 12695718726366293092
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5456800703705922108}  # Transform
@@ -1219,7 +1219,7 @@ ID: 15908728268942061574
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8866534005968110900}  # Transform
@@ -1245,7 +1245,7 @@ ID: 5486736581823025508
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16253839488169719358}  # Transform
@@ -1271,7 +1271,7 @@ ID: 3663032058358516979
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_0.5x0.5
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5797068249980744927}  # Transform
@@ -1297,7 +1297,7 @@ ID: 11328877177303400997
 GameObject:
   m_IsActive: true
   m_Name: glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17749088200024395980}  # Transform
@@ -1323,7 +1323,7 @@ ID: 11328535683758388938
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_0.5x0.5
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3851119184777181201}  # Transform
@@ -1349,7 +1349,7 @@ ID: 11780219621197702421
 GameObject:
   m_IsActive: true
   m_Name: glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16245016323100157833}  # Transform
@@ -1375,7 +1375,7 @@ ID: 18428857408277762475
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15180177539568326115}  # Transform
@@ -1401,7 +1401,7 @@ ID: 14082987233478578057
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14485302156710113071}  # Transform
@@ -1427,7 +1427,7 @@ ID: 6093142931073310903
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13765710104821983305}  # Transform
@@ -1453,7 +1453,7 @@ ID: 9633392782585583304
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10627691165195543135}  # Transform
@@ -1479,7 +1479,7 @@ ID: 996526040047419190
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 88096331855006586}  # Transform
@@ -1505,7 +1505,7 @@ ID: 14576081691901275120
 GameObject:
   m_IsActive: true
   m_Name: Floor1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15853346289190348312}  # Transform
@@ -1532,7 +1532,7 @@ ID: 14969145366911205810
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13549814123809338614}  # Transform
@@ -1558,7 +1558,7 @@ ID: 14754158086681804864
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2336617845559908630}  # Transform
@@ -1584,7 +1584,7 @@ ID: 1441979967441514916
 GameObject:
   m_IsActive: true
   m_Name: Floor2x2
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6718600545066706918}  # Transform
@@ -1611,7 +1611,7 @@ ID: 7019936986939214171
 GameObject:
   m_IsActive: true
   m_Name: Floor1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4605944363089494632}  # Transform
@@ -1638,7 +1638,7 @@ ID: 412666386969666543
 GameObject:
   m_IsActive: true
   m_Name: Floor1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6813367645499307692}  # Transform
@@ -1665,7 +1665,7 @@ ID: 5333839497376246575
 GameObject:
   m_IsActive: true
   m_Name: Floor1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15927334128952291209}  # Transform
@@ -1692,7 +1692,7 @@ ID: 5924201561363285747
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1089716414705157079}  # Transform
@@ -1718,7 +1718,7 @@ ID: 9399983870194818556
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9876041646715005327}  # Transform
@@ -1744,7 +1744,7 @@ ID: 2659036219560662535
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13275676024891175298}  # Transform
@@ -1770,7 +1770,7 @@ ID: 2466648450301565446
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13382995816795228453}  # Transform
@@ -1796,7 +1796,7 @@ ID: 5030982100163591204
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9583470964740868588}  # Transform
@@ -1822,7 +1822,7 @@ ID: 6681516564155916168
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9744818481317809900}  # Transform
@@ -1848,7 +1848,7 @@ ID: 9255149746654531039
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15667044770765901888}  # Transform
@@ -1874,7 +1874,7 @@ ID: 5025623941086040110
 GameObject:
   m_IsActive: true
   m_Name: LightGlow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18015760455268174848}  # Transform
@@ -1900,7 +1900,7 @@ ID: 15387861300162020341
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17352915696606311330}  # Transform
@@ -1947,7 +1947,7 @@ ID: 6847503617641207406
 GameObject:
   m_IsActive: true
   m_Name: Level_Tutorial
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8401287336226174855}  # Transform
@@ -1966,7 +1966,7 @@ ID: 3141025954204935599
 GameObject:
   m_IsActive: true
   m_Name: PlatformStart_Tutorial
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15052924625377569806}  # Transform
@@ -1985,7 +1985,7 @@ ID: 7360367522461515090
 GameObject:
   m_IsActive: true
   m_Name: PlatformEnd_Tutorial
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12226297539960829597}  # Transform
@@ -2004,7 +2004,7 @@ ID: 2890281298168605979
 GameObject:
   m_IsActive: true
   m_Name: MovingPlatform
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2829531185097501613}  # Transform
@@ -2071,12 +2071,13 @@ Script:
   back: false
   currentRestTimer: 2
   soundEffect: {fileID: 4819807962037044359}  # Component
+  thirdPersonController: {fileID: 0}
 ---
 ID: 6034621871942586701
 GameObject:
   m_IsActive: true
   m_Name: RangeEnemy
-  m_TagString: Enemy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2078812242787879120}  # Transform
@@ -2145,7 +2146,7 @@ ID: 3574560937881504822
 GameObject:
   m_IsActive: true
   m_Name: Door
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 221216268224481331}  # Transform
@@ -2193,7 +2194,7 @@ ID: 6661078963704661251
 GameObject:
   m_IsActive: true
   m_Name: Floors
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5991985424012513891}  # Transform
@@ -2253,7 +2254,7 @@ ID: 4624265677693832930
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11625976459440514232}  # Transform
@@ -2279,7 +2280,7 @@ ID: 5883668523768127231
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7733132960138519377}  # Transform
@@ -2305,7 +2306,7 @@ ID: 679965704935366267
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17482667331840976236}  # Transform
@@ -2331,7 +2332,7 @@ ID: 4598230624212341242
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17410651230975901920}  # Transform
@@ -2357,7 +2358,7 @@ ID: 14400769786481626196
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7183182272436686030}  # Transform
@@ -2383,7 +2384,7 @@ ID: 14010762452894991866
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3705785588929115817}  # Transform
@@ -2409,7 +2410,7 @@ ID: 2164203955603766787
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16529602212720314733}  # Transform
@@ -2436,7 +2437,7 @@ ID: 11289413085982207895
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16787535431944903681}  # Transform
@@ -2462,7 +2463,7 @@ ID: 8985890843843392149
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8039053160052695479}  # Transform
@@ -2488,7 +2489,7 @@ ID: 10103032361295668060
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7109268793770712295}  # Transform
@@ -2515,7 +2516,7 @@ ID: 3873642135027148120
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15777381894653652403}  # Transform
@@ -2542,7 +2543,7 @@ ID: 151778885299011171
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2044253661381147252}  # Transform
@@ -2568,7 +2569,7 @@ ID: 150002639536303522
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6752470413717970979}  # Transform
@@ -2594,7 +2595,7 @@ ID: 16964566506227542774
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11810790478048748470}  # Transform
@@ -2620,7 +2621,7 @@ ID: 1099047308568887135
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14719239426721635848}  # Transform
@@ -2646,7 +2647,7 @@ ID: 3946649315089659856
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2226296570221783659}  # Transform
@@ -2673,7 +2674,7 @@ ID: 2114274850025115993
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15834453816564935484}  # Transform
@@ -2700,7 +2701,7 @@ ID: 1946729480665003651
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 693104433450835783}  # Transform
@@ -2727,7 +2728,7 @@ ID: 938876700341704244
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17268529233491379331}  # Transform
@@ -2753,7 +2754,7 @@ ID: 16554639123029767943
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5488028038743744129}  # Transform
@@ -2779,7 +2780,7 @@ ID: 1789060565917072663
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12054757872587667073}  # Transform
@@ -2805,7 +2806,7 @@ ID: 10164925463718054382
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1382305163226766160}  # Transform
@@ -2831,7 +2832,7 @@ ID: 7732037643818576522
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 104338024022191680}  # Transform
@@ -2857,7 +2858,7 @@ ID: 14674711971978662180
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8527913980580157057}  # Transform
@@ -2883,7 +2884,7 @@ ID: 5948663557737198633
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5534905865083388501}  # Transform
@@ -2910,7 +2911,7 @@ ID: 9056936039981504092
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10710451785336670316}  # Transform
@@ -2937,7 +2938,7 @@ ID: 6318282497111268273
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12766601946308828428}  # Transform
@@ -2964,7 +2965,7 @@ ID: 11450309923212086970
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10444426645412034933}  # Transform
@@ -2991,7 +2992,7 @@ ID: 923717218743707219
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6702328908875136324}  # Transform
@@ -3017,7 +3018,7 @@ ID: 15000611877334419440
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9981834240263094181}  # Transform
@@ -3043,7 +3044,7 @@ ID: 4615624238094437115
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8464894675964411891}  # Transform
@@ -3069,7 +3070,7 @@ ID: 3136534523641491761
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8384403180572720976}  # Transform
@@ -3095,7 +3096,7 @@ ID: 1451283987598262795
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1280443612707161707}  # Transform
@@ -3121,7 +3122,7 @@ ID: 717043571456212302
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8149436059732760321}  # Transform
@@ -3147,7 +3148,7 @@ ID: 14057661273607840305
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17600559560597989192}  # Transform
@@ -3173,7 +3174,7 @@ ID: 14832898327348123222
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14249552255073504212}  # Transform
@@ -3199,7 +3200,7 @@ ID: 16996186959079397412
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12708779879653975989}  # Transform
@@ -3225,7 +3226,7 @@ ID: 9384930060106898385
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4270431562442344017}  # Transform
@@ -3251,7 +3252,7 @@ ID: 12525360478870250786
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5712894305319539851}  # Transform
@@ -3278,7 +3279,7 @@ ID: 5539496893031169096
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12735334080018679756}  # Transform
@@ -3304,7 +3305,7 @@ ID: 15383609770173019326
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3739380083157332961}  # Transform
@@ -3330,7 +3331,7 @@ ID: 14695238490305411436
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1371904070755367556}  # Transform
@@ -3357,7 +3358,7 @@ ID: 17646657925068029592
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2508791154820394509}  # Transform
@@ -3383,7 +3384,7 @@ ID: 15796577042635324837
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16518497249978237039}  # Transform
@@ -3409,7 +3410,7 @@ ID: 16090133376231785638
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13352434369861882786}  # Transform
@@ -3435,7 +3436,7 @@ ID: 1619203534655172075
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2854588137476831107}  # Transform
@@ -3461,7 +3462,7 @@ ID: 14346825368591048217
 GameObject:
   m_IsActive: true
   m_Name: WallV2_Window_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7771040069044224786}  # Transform
@@ -3488,7 +3489,7 @@ ID: 16832907011927571488
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7353605296551141197}  # Transform
@@ -3514,7 +3515,7 @@ ID: 16068505130074627781
 GameObject:
   m_IsActive: true
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1790639905145494463}  # Transform
@@ -3540,7 +3541,7 @@ ID: 3827774938432376210
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6751028182950452831}  # Transform
@@ -3566,7 +3567,7 @@ ID: 13427243197272666654
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16498583435064013061}  # Transform
@@ -3592,7 +3593,7 @@ ID: 1848296272677763511
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13111898304038223918}  # Transform
@@ -3619,7 +3620,7 @@ ID: 13546472715897547781
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 837395760197707135}  # Transform
@@ -3645,7 +3646,7 @@ ID: 2800835739241998303
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11876365260238071877}  # Transform
@@ -3671,7 +3672,7 @@ ID: 15677967891814105168
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5734538548652354549}  # Transform
@@ -3697,7 +3698,7 @@ ID: 7872088272573019534
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17296099816641732475}  # Transform
@@ -3723,7 +3724,7 @@ ID: 11919372620919920390
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13936192825923085552}  # Transform
@@ -3749,7 +3750,7 @@ ID: 13198110296894116060
 GameObject:
   m_IsActive: true
   m_Name: Pipes
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13007828108163237385}  # Transform
@@ -3775,7 +3776,7 @@ ID: 2517327179402760582
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11964535383656779505}  # Transform
@@ -3801,7 +3802,7 @@ ID: 8243950593220928348
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12218134211111500214}  # Transform
@@ -3827,7 +3828,7 @@ ID: 5717303940666569152
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13516729210451636820}  # Transform
@@ -3853,7 +3854,7 @@ ID: 7430292715753381169
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13717687802386264604}  # Transform
@@ -3879,7 +3880,7 @@ ID: 5255397973729929574
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8674655722802023117}  # Transform
@@ -3905,7 +3906,7 @@ ID: 10874319946974764108
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1903912509383366295}  # Transform
@@ -3931,7 +3932,7 @@ ID: 12480365776180462394
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1636004256131974016}  # Transform
@@ -3957,7 +3958,7 @@ ID: 1044297866541761910
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17364729515993241024}  # Transform
@@ -3983,7 +3984,7 @@ ID: 4401620325936123533
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5251446071404503058}  # Transform
@@ -4009,7 +4010,7 @@ ID: 15154469364146551506
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12131957498389278075}  # Transform
@@ -4035,7 +4036,7 @@ ID: 12683906572327421346
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18315964947785483778}  # Transform
@@ -4061,7 +4062,7 @@ ID: 17940407745260815642
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12884743782375623822}  # Transform
@@ -4087,7 +4088,7 @@ ID: 7435428582177771618
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 145486636015989732}  # Transform
@@ -4113,7 +4114,7 @@ ID: 12849604978216602028
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5802540920515837794}  # Transform
@@ -4139,7 +4140,7 @@ ID: 1926669085205033723
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 578436776194069579}  # Transform
@@ -4165,7 +4166,7 @@ ID: 13249227408695099504
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14387953281902987523}  # Transform
@@ -4191,7 +4192,7 @@ ID: 7064689604205268886
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8480344763385340559}  # Transform
@@ -4217,7 +4218,7 @@ ID: 1881208155517057134
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5349723269896302107}  # Transform
@@ -4243,7 +4244,7 @@ ID: 8795186381500376682
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9188796425143881486}  # Transform
@@ -4270,7 +4271,7 @@ ID: 18441745157201472050
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1142528391482982250}  # Transform
@@ -4296,7 +4297,7 @@ ID: 8747546244821421955
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13512505836493402192}  # Transform
@@ -4322,7 +4323,7 @@ ID: 12515846148885956186
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15852994020001529193}  # Transform
@@ -4349,7 +4350,7 @@ ID: 16332783562423976680
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8921650561212642031}  # Transform
@@ -4376,7 +4377,7 @@ ID: 1979138639236094823
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17521910356174274934}  # Transform
@@ -4402,7 +4403,7 @@ ID: 13931507435048175428
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15974310314235059064}  # Transform
@@ -4428,7 +4429,7 @@ ID: 13409404897453966863
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15824413489703054133}  # Transform
@@ -4454,7 +4455,7 @@ ID: 8222888917149037599
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7905885320194588387}  # Transform
@@ -4480,7 +4481,7 @@ ID: 12744550468919935344
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9952465986739915888}  # Transform
@@ -4507,7 +4508,7 @@ ID: 11472546816304884763
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16592244408924773220}  # Transform
@@ -4534,7 +4535,7 @@ ID: 13786059330927736930
 GameObject:
   m_IsActive: true
   m_Name: Wall3x1(1)
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2529101943024614359}  # Transform
@@ -4561,7 +4562,7 @@ ID: 12028725256670378992
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15056581846168149729}  # Transform
@@ -4587,7 +4588,7 @@ ID: 8067605124126175538
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13220446397213477935}  # Transform
@@ -4613,7 +4614,7 @@ ID: 11818570858922787247
 GameObject:
   m_IsActive: true
   m_Name: Pipe
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6771098918106819937}  # Transform
@@ -4639,7 +4640,7 @@ ID: 3104057963124428885
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18178797796545608959}  # Transform
@@ -4665,7 +4666,7 @@ ID: 12676710172052394356
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17683574949336924623}  # Transform
@@ -4691,7 +4692,7 @@ ID: 14901049276030354487
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4349229732970914612}  # Transform
@@ -4717,7 +4718,7 @@ ID: 7813049314433227167
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10901020448374281646}  # Transform
@@ -4743,7 +4744,7 @@ ID: 12166358881111758954
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1784147856865688001}  # Transform
@@ -4769,7 +4770,7 @@ ID: 6335903736016929905
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3398422135149448628}  # Transform
@@ -4795,7 +4796,7 @@ ID: 15126859005893747461
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9379321202583410479}  # Transform
@@ -4821,7 +4822,7 @@ ID: 9277963176172794175
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3035416804189445202}  # Transform
@@ -4847,7 +4848,7 @@ ID: 10272962080531612283
 GameObject:
   m_IsActive: true
   m_Name: WallV2_3x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1942879898243734253}  # Transform
@@ -4873,7 +4874,7 @@ ID: 18225965639762819500
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15065441024612611820}  # Transform
@@ -4899,7 +4900,7 @@ ID: 13194487811218401331
 GameObject:
   m_IsActive: true
   m_Name: Number
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17918585791805283805}  # Transform
@@ -4925,7 +4926,7 @@ ID: 11502694604696187017
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3778078527537960983}  # Transform
@@ -4951,7 +4952,7 @@ ID: 1435544100673576783
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4255315724066922064}  # Transform
@@ -4977,7 +4978,7 @@ ID: 3522251891443909561
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16335249406468818181}  # Transform
@@ -5003,7 +5004,7 @@ ID: 14700994233679848133
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7641022900063918973}  # Transform
@@ -5029,7 +5030,7 @@ ID: 5805707343664439202
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13438281932113189065}  # Transform
@@ -5055,7 +5056,7 @@ ID: 9733827182305310801
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13578901225144726490}  # Transform
@@ -5081,7 +5082,7 @@ ID: 17541696418435244360
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14516431656031858236}  # Transform
@@ -5107,7 +5108,7 @@ ID: 13385808514286287486
 GameObject:
   m_IsActive: true
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7325173203142830621}  # Transform
@@ -5169,7 +5170,7 @@ ID: 12200455595545065822
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15078821750485037206}  # Transform
@@ -5195,7 +5196,7 @@ ID: 6117256319108626048
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5816842448446585862}  # Transform
@@ -5221,7 +5222,7 @@ ID: 9043507356638465315
 GameObject:
   m_IsActive: true
   m_Name: Ceiling3x3
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3403491001911420121}  # Transform
@@ -5268,7 +5269,7 @@ ID: 7824377463619409638
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5215099733464676804}  # Transform
@@ -5294,7 +5295,7 @@ ID: 8596046517715103447
 GameObject:
   m_IsActive: true
   m_Name: Ceiling3x3
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14614030364546820913}  # Transform
@@ -5341,7 +5342,7 @@ ID: 3407214947466032992
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10294438140462202545}  # Transform
@@ -5367,7 +5368,7 @@ ID: 1991442573377170129
 GameObject:
   m_IsActive: true
   m_Name: Ceiling3x3
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3384265774494814809}  # Transform
@@ -5414,7 +5415,7 @@ ID: 330246410094063455
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8361646132523670766}  # Transform
@@ -5440,7 +5441,7 @@ ID: 1249265196707790764
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3685918129490820893}  # Transform
@@ -5466,7 +5467,7 @@ ID: 5145323738276068714
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 701313200880888796}  # Transform
@@ -5492,7 +5493,7 @@ ID: 13628489513304251569
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5690468998384807538}  # Transform
@@ -5539,7 +5540,7 @@ ID: 5306926712686786849
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14886944750674053652}  # Transform
@@ -5586,7 +5587,7 @@ ID: 12163220995285343582
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1899810199086999250}  # Transform
@@ -5633,7 +5634,7 @@ ID: 10737560099088550923
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5203943916297355823}  # Transform
@@ -5680,7 +5681,7 @@ ID: 14985801153297584028
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16801863348443829180}  # Transform
@@ -5727,7 +5728,7 @@ ID: 16679820463026396069
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13458752182170518537}  # Transform
@@ -5774,7 +5775,7 @@ ID: 1337406092572080173
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13430069133923377289}  # Transform
@@ -5821,7 +5822,7 @@ ID: 15497562306359327525
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15501281828087108863}  # Transform
@@ -5868,7 +5869,7 @@ ID: 10693858864136560723
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1136774183210294404}  # Transform
@@ -5915,7 +5916,7 @@ ID: 6220170757331955160
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7948832054689078837}  # Transform
@@ -5962,7 +5963,7 @@ ID: 15441140755906294361
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3924132388007054046}  # Transform
@@ -6009,7 +6010,7 @@ ID: 11991343260028015161
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7067062735653153541}  # Transform
@@ -6056,7 +6057,7 @@ ID: 17965350695247255286
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17660948968525720105}  # Transform
@@ -6082,7 +6083,7 @@ ID: 2034444609224034131
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6458803550293682319}  # Transform
@@ -6108,7 +6109,7 @@ ID: 17036406253267819684
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9510809536696357591}  # Transform
@@ -6134,7 +6135,7 @@ ID: 6246520863902630692
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2766394780079851790}  # Transform
@@ -6160,7 +6161,7 @@ ID: 2192591855247491201
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14546361102916022508}  # Transform
@@ -6186,7 +6187,7 @@ ID: 7590648381647264316
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8780990262433079114}  # Transform
@@ -6212,7 +6213,7 @@ ID: 9112851053562257130
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8382100445199200590}  # Transform
@@ -6238,7 +6239,7 @@ ID: 3906912234658209341
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 929150489922053771}  # Transform
@@ -6264,7 +6265,7 @@ ID: 10368030307665964752
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13094906985648344998}  # Transform
@@ -6290,7 +6291,7 @@ ID: 11005694463457091282
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15488670828070676874}  # Transform
@@ -6316,7 +6317,7 @@ ID: 9819480553251960422
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13128647809103714495}  # Transform
@@ -6342,7 +6343,7 @@ ID: 12537896162991611893
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18327434297608632683}  # Transform
@@ -6368,7 +6369,7 @@ ID: 15297118125039988537
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10887412575138573993}  # Transform
@@ -6415,7 +6416,7 @@ ID: 1376916462172495383
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17176198321176858737}  # Transform
@@ -6441,7 +6442,7 @@ ID: 8077100623912244182
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11976117150051283468}  # Transform
@@ -6488,7 +6489,7 @@ ID: 11448687346075156829
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 762207933730300095}  # Transform
@@ -6535,7 +6536,7 @@ ID: 10958732700048131059
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11622139370969637151}  # Transform
@@ -6561,7 +6562,7 @@ ID: 2086631928754012218
 GameObject:
   m_IsActive: true
   m_Name: Glow
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11612584119543457122}  # Transform
@@ -6587,7 +6588,7 @@ ID: 16151418268757025182
 GameObject:
   m_IsActive: true
   m_Name: Ceilings
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9464317026481899640}  # Transform
@@ -6624,7 +6625,7 @@ ID: 14276457709232528799
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5185265074818449611}  # Transform
@@ -6664,7 +6665,7 @@ ID: 5773306995602671261
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4524848222822822600}  # Transform
@@ -6704,7 +6705,7 @@ ID: 1522253030805593136
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16309423964765082541}  # Transform
@@ -6744,7 +6745,7 @@ ID: 2843291398863310873
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18276252377694236579}  # Transform
@@ -6784,7 +6785,7 @@ ID: 12213298936789705544
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2417863140404068546}  # Transform
@@ -6824,7 +6825,7 @@ ID: 10562634059839651427
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7607611599120798004}  # Transform
@@ -6864,7 +6865,7 @@ ID: 13183037791204690436
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16884152263114340826}  # Transform
@@ -6904,7 +6905,7 @@ ID: 2140330462846766085
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11990724118226698982}  # Transform
@@ -6944,7 +6945,7 @@ ID: 2913411741030920107
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14955145910481770300}  # Transform
@@ -6984,7 +6985,7 @@ ID: 3124560230585886792
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4331437927651128295}  # Transform
@@ -7024,7 +7025,7 @@ ID: 16929087912293405670
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2758088630050040310}  # Transform
@@ -7064,7 +7065,7 @@ ID: 4872176723683220624
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10024613118955474656}  # Transform
@@ -7104,7 +7105,7 @@ ID: 7184842061523962735
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6440655793430316749}  # Transform
@@ -7144,7 +7145,7 @@ ID: 10055382662224545046
 GameObject:
   m_IsActive: true
   m_Name: Collision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17313660342583407729}  # Transform
@@ -7184,7 +7185,7 @@ ID: 10998208615434921590
 GameObject:
   m_IsActive: true
   m_Name: Collisions
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16306292498899123012}  # Transform
@@ -7228,7 +7229,7 @@ ID: 17150978404869133335
 GameObject:
   m_IsActive: true
   m_Name: PlayerWeaponCollider
-  m_TagString: PlayerAttack
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 127352606862801721}  # Transform
@@ -7268,7 +7269,7 @@ ID: 6663313825132233637
 GameObject:
   m_IsActive: true
   m_Name: CamYawPivot
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12260939983537743611}  # Transform
@@ -7287,7 +7288,7 @@ ID: 12396120015401798445
 GameObject:
   m_IsActive: true
   m_Name: CamPitchPivot
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5486978972995986398}  # Transform
@@ -7306,7 +7307,7 @@ ID: 1999010381617278315
 GameObject:
   m_IsActive: true
   m_Name: CamMovePivot
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18236078067295892990}  # Transform
@@ -7325,7 +7326,7 @@ ID: 18364898161930433210
 GameObject:
   m_IsActive: true
   m_Name: PlayerModelOffset
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9643221280456601416}  # Transform
@@ -7369,7 +7370,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 53.4942703
+  Time: 18.0891113
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -7976,7 +7977,7 @@ ID: 15334681090738628473
 GameObject:
   m_IsActive: true
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 813583600382484493}  # Transform
@@ -8039,7 +8040,7 @@ ID: 17145839964191952887
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1853816185121098824}  # Transform
@@ -8079,7 +8080,7 @@ ID: 8274148974106113803
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2054123420019278233}  # Transform
@@ -8119,7 +8120,7 @@ ID: 9767478509121957085
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9070713486267236640}  # Transform
@@ -8159,7 +8160,7 @@ ID: 9900922512643015028
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17188221134894337815}  # Transform
@@ -8199,7 +8200,7 @@ ID: 1780636439256875433
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9109114118219578077}  # Transform
@@ -8239,7 +8240,7 @@ ID: 17566730363593245515
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4022528195874901658}  # Transform
@@ -8279,7 +8280,7 @@ ID: 15227400141124432999
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7626757942982582148}  # Transform
@@ -8319,7 +8320,7 @@ ID: 17393421018475056808
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2091275922053833268}  # Transform
@@ -8353,13 +8354,13 @@ Rigidbody:
   IsStatic: true
   IsKinematic: true
   UseGravity: true
-  Is_trigger: false
+  Is_trigger: true
 ---
 ID: 7713270789324086732
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16229409762266135590}  # Transform
@@ -8399,7 +8400,7 @@ ID: 7467508476936638947
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17951135146953911630}  # Transform
@@ -8439,7 +8440,7 @@ ID: 14074077563264719233
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6502800538910936687}  # Transform
@@ -8479,7 +8480,7 @@ ID: 2054166983896987603
 GameObject:
   m_IsActive: true
   m_Name: WallCollision
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3612593179529702775}  # Transform
@@ -8574,7 +8575,7 @@ ID: 2198295187909507
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4124374819358049701}  # Transform
@@ -8621,7 +8622,7 @@ ID: 8570980724102235789
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11328475611661465898}  # Transform
@@ -8690,7 +8691,7 @@ ID: 10086278634859035792
 GameObject:
   m_IsActive: true
   m_Name: Floor2x2
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9947427636173911806}  # Transform
@@ -8738,7 +8739,7 @@ ID: 5004005383775762862
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7183141951441964638}  # Transform
@@ -8786,7 +8787,7 @@ ID: 4698878293082924815
 GameObject:
   m_IsActive: true
   m_Name: Floor2x2 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9110490015636167260}  # Transform
@@ -8813,7 +8814,7 @@ ID: 6414425657271701059
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18375755561396892310}  # Transform
@@ -8839,7 +8840,7 @@ ID: 1394028230729158666
 GameObject:
   m_IsActive: true
   m_Name: LightGlow - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1979915242456339834}  # Transform
@@ -8926,7 +8927,7 @@ ID: 16042261641342729820
 GameObject:
   m_IsActive: true
   m_Name: Glass
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11121375561118819498}  # Transform
@@ -9016,7 +9017,7 @@ ID: 7424671051085572371
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2195591374905615457}  # Transform
@@ -9043,7 +9044,7 @@ ID: 4230958715846264595
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1991031628344948889}  # Transform
@@ -9069,7 +9070,7 @@ ID: 12630588793680827410
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1333217154126995659}  # Transform
@@ -9095,7 +9096,7 @@ ID: 6576418665456915054
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17541858574218577380}  # Transform
@@ -9143,7 +9144,7 @@ ID: 14862329532290523938
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14775259949763909497}  # Transform
@@ -9169,7 +9170,7 @@ ID: 6752246053692726658
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1338042069378921209}  # Transform
@@ -9195,7 +9196,7 @@ ID: 10579895246570123756
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6747953956999620022}  # Transform
@@ -9243,7 +9244,7 @@ ID: 1613683359289405099
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12749676447277931489}  # Transform
@@ -9269,7 +9270,7 @@ ID: 12703932647996420026
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1691112575666088545}  # Transform
@@ -9295,7 +9296,7 @@ ID: 17355149457603196759
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4041802287594768959}  # Transform
@@ -9342,7 +9343,7 @@ ID: 12250960634115189973
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9016514803191964982}  # Transform
@@ -9368,7 +9369,7 @@ ID: 9605661079073390682
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17695840391874275026}  # Transform
@@ -9415,7 +9416,7 @@ ID: 10834837868345684089
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9364200929117391254}  # Transform
@@ -9441,7 +9442,7 @@ ID: 3119860734494218304
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 850248861004394285}  # Transform
@@ -9488,7 +9489,7 @@ ID: 11546684700882403661
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5664772169447923853}  # Transform
@@ -9514,7 +9515,7 @@ ID: 9654120388744522591
 GameObject:
   m_IsActive: true
   m_Name: WallsV2_Window1x1
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 376630437497303947}  # Transform
@@ -9562,7 +9563,7 @@ ID: 14533807616142721670
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8468518960560166873}  # Transform
@@ -9588,7 +9589,7 @@ ID: 17710392961296393831
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3631756776629243254}  # Transform
@@ -9614,7 +9615,7 @@ ID: 9909188786157298422
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 546942118830146197}  # Transform
@@ -9640,7 +9641,7 @@ ID: 5479077555226678865
 GameObject:
   m_IsActive: true
   m_Name: Windows
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6627104223464736536}  # Transform
@@ -9666,7 +9667,7 @@ ID: 16443733111411424064
 GameObject:
   m_IsActive: true
   m_Name: WallsV2_Window1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18049286005089416905}  # Transform
@@ -9714,7 +9715,7 @@ ID: 9339730042853617092
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1143984965902754286}  # Transform
@@ -9740,7 +9741,7 @@ ID: 8844477157591169003
 GameObject:
   m_IsActive: true
   m_Name: Windows - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16310089685456279227}  # Transform
@@ -9766,7 +9767,7 @@ ID: 7461450554749478257
 GameObject:
   m_IsActive: true
   m_Name: WallsV2_Window1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9118806305371392694}  # Transform
@@ -9814,7 +9815,7 @@ ID: 2448945957099902706
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9165477635840328691}  # Transform
@@ -9840,7 +9841,7 @@ ID: 12135532400838651550
 GameObject:
   m_IsActive: true
   m_Name: Windows - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11585658231035486562}  # Transform
@@ -9866,7 +9867,7 @@ ID: 2154411781015212883
 GameObject:
   m_IsActive: true
   m_Name: WallsV2_Window1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4163281382379478002}  # Transform
@@ -9914,7 +9915,7 @@ ID: 7302485933239107399
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18231263368894807647}  # Transform
@@ -9940,7 +9941,7 @@ ID: 10008824614181879796
 GameObject:
   m_IsActive: true
   m_Name: Windows - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2852039594668838350}  # Transform
@@ -9966,7 +9967,7 @@ ID: 15143774793850497961
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4222362606843737863}  # Transform
@@ -10013,7 +10014,7 @@ ID: 2625801538082524949
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15503574334744620179}  # Transform
@@ -10039,7 +10040,7 @@ ID: 4423372801228798985
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12320053255655417569}  # Transform
@@ -10065,7 +10066,7 @@ ID: 1610947561634439664
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5415896029763044989}  # Transform
@@ -10091,7 +10092,7 @@ ID: 8537150813031819036
 GameObject:
   m_IsActive: true
   m_Name: WallsV2_Window1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3921159959777587846}  # Transform
@@ -10139,7 +10140,7 @@ ID: 14196523319249137487
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8890489907164662352}  # Transform
@@ -10165,7 +10166,7 @@ ID: 143714802821733095
 GameObject:
   m_IsActive: true
   m_Name: Windows - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10845335339500758725}  # Transform
@@ -10191,7 +10192,7 @@ ID: 18404720669734062358
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8150065353828664225}  # Transform
@@ -10217,7 +10218,7 @@ ID: 17513080989440410080
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17668348334164830450}  # Transform
@@ -10264,7 +10265,7 @@ ID: 6808686053552425987
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14804504805319177228}  # Transform
@@ -10290,7 +10291,7 @@ ID: 4021303591522537242
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16174162624387742268}  # Transform
@@ -10337,7 +10338,7 @@ ID: 5275559808892267717
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2186457626447712344}  # Transform
@@ -10391,7 +10392,7 @@ ID: 1183833295746487535
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5378322658248599998}  # Transform
@@ -10438,7 +10439,7 @@ ID: 11846317419929638802
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17327765401966430353}  # Transform
@@ -10464,7 +10465,7 @@ ID: 680533606041003977
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 515389381084528000}  # Transform
@@ -10511,7 +10512,7 @@ ID: 12579460161423560325
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9230154984571526442}  # Transform
@@ -10537,7 +10538,7 @@ ID: 11387215596428988714
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7131745372674152117}  # Transform
@@ -10584,7 +10585,7 @@ ID: 344398590559892255
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11864391083174248933}  # Transform
@@ -10610,7 +10611,7 @@ ID: 5108893418192304214
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6022637085267945018}  # Transform
@@ -10657,7 +10658,7 @@ ID: 17762993347328076430
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14355559108164182636}  # Transform
@@ -10683,7 +10684,7 @@ ID: 14305529495330412174
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11208419343483426674}  # Transform
@@ -10730,7 +10731,7 @@ ID: 10285335413369158026
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2821432733624099185}  # Transform
@@ -10756,7 +10757,7 @@ ID: 4286004166280585212
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5387957876535001097}  # Transform
@@ -10803,7 +10804,7 @@ ID: 5721993976633448686
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8218811404850236398}  # Transform
@@ -10829,7 +10830,7 @@ ID: 13321362306684833434
 GameObject:
   m_IsActive: true
   m_Name: Glass - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10129318792386931024}  # Transform
@@ -10876,7 +10877,7 @@ ID: 17626309831940142288
 GameObject:
   m_IsActive: true
   m_Name: Floor3x3
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12197014438360791217}  # Transform
@@ -10924,7 +10925,7 @@ ID: 17279981065732620432
 GameObject:
   m_IsActive: true
   m_Name: Lines
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17054207891993337676}  # Transform
@@ -10950,7 +10951,7 @@ ID: 816073881030457996
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7362030561650920536}  # Transform
@@ -10998,7 +10999,7 @@ ID: 424135694802153200
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9352018276922882853}  # Transform
@@ -11024,7 +11025,7 @@ ID: 2963260341693372226
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12129845492333007574}  # Transform
@@ -11050,7 +11051,7 @@ ID: 3560472331877631264
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11835756676701444859}  # Transform
@@ -11061,7 +11062,7 @@ GameObject:
 ID: 11835756676701444859
 Transform:
   m_GameObject: {fileID: 3560472331877631264}
-  Translation: [56.2146111, 44.6100006, -81.6694412]
+  Translation: [56.3660011, 44.6100006, -81.6694412]
   Rotation: [0, -1.57079589, 0]
   Scale: [1.08223391, 1, 0.999998569]
   Father: {fileID: 8701853331577378169}
@@ -11072,8 +11073,8 @@ Transform:
 ID: 716672402790211101
 BoxCollider:
   m_GameObject: {fileID: 3560472331877631264}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
+  Dimensions: [26, 16, 1.25984168]
+  Offset: [0, 0, 0]
 ---
 ID: 16998258475320430456
 Rigidbody:
@@ -11098,7 +11099,7 @@ ID: 14474935979191972552
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4717872948705174135}  # Transform
@@ -11124,7 +11125,7 @@ ID: 165878797477073158
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14516107136067640832}  # Transform
@@ -11150,43 +11151,22 @@ ID: 5254873738293870979
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12711112114206104437}  # Transform
-    - component: {fileID: 4113498570119465900}  # BoxCollider
-    - component: {fileID: 10118913862695337863}  # Rigidbody
     - component: {fileID: 6775130962979457761}  # MeshRenderer
 ---
 ID: 12711112114206104437
 Transform:
   m_GameObject: {fileID: 5254873738293870979}
-  Translation: [56.2083511, 44.6103401, -89.2994995]
-  Rotation: [0, -1.57079589, 0]
-  Scale: [1.47707319, 1, 0.999998569]
+  Translation: [56.3664131, 44.6103401, -89.2994995]
+  Rotation: [0, -1.57079542, 0]
+  Scale: [1.47707295, 1, 0.999998391]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 13688322342255318490}
     - {fileID: 16883124006138906685}
----
-ID: 4113498570119465900
-BoxCollider:
-  m_GameObject: {fileID: 5254873738293870979}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 10118913862695337863
-Rigidbody:
-  m_GameObject: {fileID: 5254873738293870979}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 6775130962979457761
 MeshRenderer:
@@ -11198,7 +11178,7 @@ ID: 13688322342255318490
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9256788464080972807}  # Transform
@@ -11224,7 +11204,7 @@ ID: 16883124006138906685
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5810002936265795557}  # Transform
@@ -11250,13 +11230,10 @@ ID: 10415847607219727370
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1271777378796459873}  # Transform
-    - component: {fileID: 3033765700113198155}  # BoxCollider
-    - component: {fileID: 15814768090973101936}  # Rigidbody
-    - component: {fileID: 7675496644483352491}  # MeshRenderer
 ---
 ID: 1271777378796459873
 Transform:
@@ -11269,36 +11246,11 @@ Transform:
     - {fileID: 4265362791419574935}
     - {fileID: 9804514584892150995}
 ---
-ID: 3033765700113198155
-BoxCollider:
-  m_GameObject: {fileID: 10415847607219727370}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 15814768090973101936
-Rigidbody:
-  m_GameObject: {fileID: 10415847607219727370}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
-ID: 7675496644483352491
-MeshRenderer:
-  m_GameObject: {fileID: 10415847607219727370}
-  Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
 ID: 4265362791419574935
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11407179845601007714}  # Transform
@@ -11324,7 +11276,7 @@ ID: 9804514584892150995
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8576290897056899971}  # Transform
@@ -11350,12 +11302,10 @@ ID: 14781847898687337329
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12480027341564416567}  # Transform
-    - component: {fileID: 1413150163710550385}  # BoxCollider
-    - component: {fileID: 4720904764403829594}  # Rigidbody
     - component: {fileID: 9496568516851144180}  # MeshRenderer
 ---
 ID: 12480027341564416567
@@ -11369,25 +11319,6 @@ Transform:
     - {fileID: 13372963724130500445}
     - {fileID: 17318019145577874747}
 ---
-ID: 1413150163710550385
-BoxCollider:
-  m_GameObject: {fileID: 14781847898687337329}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 4720904764403829594
-Rigidbody:
-  m_GameObject: {fileID: 14781847898687337329}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 9496568516851144180
 MeshRenderer:
   m_GameObject: {fileID: 14781847898687337329}
@@ -11398,7 +11329,7 @@ ID: 13372963724130500445
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1950460504158610076}  # Transform
@@ -11424,7 +11355,7 @@ ID: 17318019145577874747
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10500446136802554465}  # Transform
@@ -11450,12 +11381,10 @@ ID: 5599669513113463632
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17819785663779151526}  # Transform
-    - component: {fileID: 8831570019015495225}  # BoxCollider
-    - component: {fileID: 17931865707534859029}  # Rigidbody
     - component: {fileID: 6184753784856836533}  # MeshRenderer
 ---
 ID: 17819785663779151526
@@ -11469,25 +11398,6 @@ Transform:
     - {fileID: 9281106270383082674}
     - {fileID: 12655433972071823744}
 ---
-ID: 8831570019015495225
-BoxCollider:
-  m_GameObject: {fileID: 5599669513113463632}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 17931865707534859029
-Rigidbody:
-  m_GameObject: {fileID: 5599669513113463632}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 6184753784856836533
 MeshRenderer:
   m_GameObject: {fileID: 5599669513113463632}
@@ -11498,7 +11408,7 @@ ID: 9281106270383082674
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6597496662361717118}  # Transform
@@ -11524,7 +11434,7 @@ ID: 12655433972071823744
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2823077956479314040}  # Transform
@@ -11550,43 +11460,22 @@ ID: 10099624195442274089
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13171703537770694188}  # Transform
-    - component: {fileID: 8294255839501035662}  # BoxCollider
-    - component: {fileID: 16492626655342451399}  # Rigidbody
     - component: {fileID: 4435903269906401417}  # MeshRenderer
 ---
 ID: 13171703537770694188
 Transform:
   m_GameObject: {fileID: 10099624195442274089}
-  Translation: [56.2083511, 44.6100006, -76.6448517]
+  Translation: [56.3660011, 44.6100006, -76.6448517]
   Rotation: [0, -1.57079589, 0]
   Scale: [1.47707319, 1, 0.999998569]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 5576626806481623907}
     - {fileID: 1118932754568882900}
----
-ID: 8294255839501035662
-BoxCollider:
-  m_GameObject: {fileID: 10099624195442274089}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 16492626655342451399
-Rigidbody:
-  m_GameObject: {fileID: 10099624195442274089}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 4435903269906401417
 MeshRenderer:
@@ -11598,7 +11487,7 @@ ID: 5576626806481623907
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13202364715519546800}  # Transform
@@ -11624,7 +11513,7 @@ ID: 1118932754568882900
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1373719199611916482}  # Transform
@@ -11650,7 +11539,7 @@ ID: 13151099133994233349
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8020282635699652911}  # Transform
@@ -11659,9 +11548,9 @@ GameObject:
 ID: 8020282635699652911
 Transform:
   m_GameObject: {fileID: 13151099133994233349}
-  Translation: [56.2083511, 36.6230011, -89.2994995]
-  Rotation: [0, -1.57079589, 0]
-  Scale: [1.47707319, 1, 0.999998569]
+  Translation: [56.3660011, 36.6230011, -89.2994995]
+  Rotation: [0, -1.57079542, 0]
+  Scale: [1.47707295, 1, 0.999998391]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 12251209254298684738}
@@ -11677,7 +11566,7 @@ ID: 12251209254298684738
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10091939678378136614}  # Transform
@@ -11703,7 +11592,7 @@ ID: 9322028878359966566
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6485751843036508721}  # Transform
@@ -11729,7 +11618,7 @@ ID: 13445367887189102256
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14748840283341530893}  # Transform
@@ -11738,7 +11627,7 @@ GameObject:
 ID: 14748840283341530893
 Transform:
   m_GameObject: {fileID: 13445367887189102256}
-  Translation: [56.2146111, 36.6230011, -81.6694412]
+  Translation: [56.3660011, 36.6230011, -81.6694412]
   Rotation: [0, -1.57079589, 0]
   Scale: [1.08223391, 1, 0.999998569]
   Father: {fileID: 8701853331577378169}
@@ -11756,7 +11645,7 @@ ID: 7170049848045036126
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9583107543954066390}  # Transform
@@ -11782,7 +11671,7 @@ ID: 5497788401497994693
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11558617784912190432}  # Transform
@@ -11808,43 +11697,22 @@ ID: 17949790532302430306
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3526401523303294804}  # Transform
-    - component: {fileID: 3369151911388504000}  # BoxCollider
-    - component: {fileID: 1137467288159791285}  # Rigidbody
     - component: {fileID: 5780505544495204099}  # MeshRenderer
 ---
 ID: 3526401523303294804
 Transform:
   m_GameObject: {fileID: 17949790532302430306}
-  Translation: [56.2083511, 36.6230011, -76.6448517]
+  Translation: [56.3660011, 36.6230011, -76.6448517]
   Rotation: [0, -1.57079589, 0]
   Scale: [1.47707319, 1, 0.999998569]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 9789327763110413018}
     - {fileID: 14757341024878966925}
----
-ID: 3369151911388504000
-BoxCollider:
-  m_GameObject: {fileID: 17949790532302430306}
-  Dimensions: [15.8000002, 24.3500004, 1.25984168]
-  Offset: [0, 0, 0]
----
-ID: 1137467288159791285
-Rigidbody:
-  m_GameObject: {fileID: 17949790532302430306}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 5780505544495204099
 MeshRenderer:
@@ -11856,7 +11724,7 @@ ID: 9789327763110413018
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5648455310620955844}  # Transform
@@ -11882,7 +11750,7 @@ ID: 14757341024878966925
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11827717998998552720}  # Transform
@@ -11908,12 +11776,10 @@ ID: 6911285318009991352
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12631366633752384571}  # Transform
-    - component: {fileID: 17692540597409580494}  # BoxCollider
-    - component: {fileID: 17822470927063885420}  # Rigidbody
     - component: {fileID: 7481922860864425866}  # MeshRenderer
 ---
 ID: 12631366633752384571
@@ -11927,25 +11793,6 @@ Transform:
     - {fileID: 14078584179483773236}
     - {fileID: 18080210657403884765}
 ---
-ID: 17692540597409580494
-BoxCollider:
-  m_GameObject: {fileID: 6911285318009991352}
-  Dimensions: [28.5499992, 17.6000004, 1.25984168]
-  Offset: [0, 0, 0]
----
-ID: 17822470927063885420
-Rigidbody:
-  m_GameObject: {fileID: 6911285318009991352}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 7481922860864425866
 MeshRenderer:
   m_GameObject: {fileID: 6911285318009991352}
@@ -11956,7 +11803,7 @@ ID: 14078584179483773236
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9424098338333704398}  # Transform
@@ -11982,7 +11829,7 @@ ID: 18080210657403884765
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9376263125719052719}  # Transform
@@ -12008,12 +11855,10 @@ ID: 3116906526004750514
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9645265531172006720}  # Transform
-    - component: {fileID: 469061244776843109}  # BoxCollider
-    - component: {fileID: 7238885288709890911}  # Rigidbody
     - component: {fileID: 2537235336652723906}  # MeshRenderer
 ---
 ID: 9645265531172006720
@@ -12027,25 +11872,6 @@ Transform:
     - {fileID: 16626216412954335116}
     - {fileID: 7803371772353938668}
 ---
-ID: 469061244776843109
-BoxCollider:
-  m_GameObject: {fileID: 3116906526004750514}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 7238885288709890911
-Rigidbody:
-  m_GameObject: {fileID: 3116906526004750514}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 2537235336652723906
 MeshRenderer:
   m_GameObject: {fileID: 3116906526004750514}
@@ -12056,7 +11882,7 @@ ID: 16626216412954335116
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12708906850321183068}  # Transform
@@ -12082,7 +11908,7 @@ ID: 7803371772353938668
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13592508346477449073}  # Transform
@@ -12108,12 +11934,10 @@ ID: 13798208291858685051
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17025964043516821016}  # Transform
-    - component: {fileID: 3418141072816960463}  # BoxCollider
-    - component: {fileID: 2182135988050046639}  # Rigidbody
     - component: {fileID: 7570057923360966343}  # MeshRenderer
 ---
 ID: 17025964043516821016
@@ -12127,25 +11951,6 @@ Transform:
     - {fileID: 1910714313518205623}
     - {fileID: 14727729111066155422}
 ---
-ID: 3418141072816960463
-BoxCollider:
-  m_GameObject: {fileID: 13798208291858685051}
-  Dimensions: [4.99992371, 7.99987793, 1.25984168]
-  Offset: [3.34806156, 3.99993896, -0.129940048]
----
-ID: 2182135988050046639
-Rigidbody:
-  m_GameObject: {fileID: 13798208291858685051}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 7570057923360966343
 MeshRenderer:
   m_GameObject: {fileID: 13798208291858685051}
@@ -12156,7 +11961,7 @@ ID: 1910714313518205623
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10437267074815740621}  # Transform
@@ -12182,7 +11987,7 @@ ID: 14727729111066155422
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9345972568467823263}  # Transform
@@ -12208,7 +12013,7 @@ ID: 10255983232416815995
 GameObject:
   m_IsActive: true
   m_Name: Wall1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9119523871538172158}  # Transform
@@ -12256,7 +12061,7 @@ ID: 11821148061937335486
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12751009236147781973}  # Transform
@@ -12282,7 +12087,7 @@ ID: 4461622114544859162
 GameObject:
   m_IsActive: true
   m_Name: Pipes - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6422592283277142930}  # Transform
@@ -12308,7 +12113,7 @@ ID: 1236890972593820463
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2093698589982908396}  # Transform
@@ -12355,7 +12160,7 @@ ID: 6565269216918593238
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5871983081277786379}  # Transform
@@ -12381,12 +12186,10 @@ ID: 17107012118842780159
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5037182595487077150}  # Transform
-    - component: {fileID: 13143263126176470250}  # BoxCollider
-    - component: {fileID: 10491475586284773608}  # Rigidbody
     - component: {fileID: 6282577168580606550}  # MeshRenderer
 ---
 ID: 5037182595487077150
@@ -12399,25 +12202,6 @@ Transform:
   m_Children:
     - {fileID: 13768796978945405204}
 ---
-ID: 13143263126176470250
-BoxCollider:
-  m_GameObject: {fileID: 17107012118842780159}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 10491475586284773608
-Rigidbody:
-  m_GameObject: {fileID: 17107012118842780159}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 6282577168580606550
 MeshRenderer:
   m_GameObject: {fileID: 17107012118842780159}
@@ -12428,7 +12212,7 @@ ID: 13768796978945405204
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 843438736291984768}  # Transform
@@ -12454,12 +12238,10 @@ ID: 1808071620702146443
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13658612480092591824}  # Transform
-    - component: {fileID: 343226655134159360}  # BoxCollider
-    - component: {fileID: 13722729475742736901}  # Rigidbody
     - component: {fileID: 13561428259928557852}  # MeshRenderer
 ---
 ID: 13658612480092591824
@@ -12472,25 +12254,6 @@ Transform:
   m_Children:
     - {fileID: 9430656991372262778}
 ---
-ID: 343226655134159360
-BoxCollider:
-  m_GameObject: {fileID: 1808071620702146443}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 13722729475742736901
-Rigidbody:
-  m_GameObject: {fileID: 1808071620702146443}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 13561428259928557852
 MeshRenderer:
   m_GameObject: {fileID: 1808071620702146443}
@@ -12501,7 +12264,7 @@ ID: 9430656991372262778
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8575290054450891742}  # Transform
@@ -12527,12 +12290,10 @@ ID: 7238187091338650676
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6858459083155090984}  # Transform
-    - component: {fileID: 16572961979319650967}  # BoxCollider
-    - component: {fileID: 15694621944093118902}  # Rigidbody
     - component: {fileID: 12005261441528970506}  # MeshRenderer
 ---
 ID: 6858459083155090984
@@ -12545,25 +12306,6 @@ Transform:
   m_Children:
     - {fileID: 17521045435972000184}
 ---
-ID: 16572961979319650967
-BoxCollider:
-  m_GameObject: {fileID: 7238187091338650676}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 15694621944093118902
-Rigidbody:
-  m_GameObject: {fileID: 7238187091338650676}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 12005261441528970506
 MeshRenderer:
   m_GameObject: {fileID: 7238187091338650676}
@@ -12574,7 +12316,7 @@ ID: 17521045435972000184
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14499123989069191497}  # Transform
@@ -12600,7 +12342,7 @@ ID: 11348232323442076186
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 592766905499020781}  # Transform
@@ -12647,7 +12389,7 @@ ID: 14502940463278445043
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4073779967376629624}  # Transform
@@ -12673,7 +12415,7 @@ ID: 4368840755312913070
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 216584741816806174}  # Transform
@@ -12720,7 +12462,7 @@ ID: 13079508926618080952
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7455234221898196503}  # Transform
@@ -12746,7 +12488,7 @@ ID: 16738375863286542569
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2821679056994628129}  # Transform
@@ -12793,7 +12535,7 @@ ID: 13366542813927007570
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6570688005125503238}  # Transform
@@ -12819,12 +12561,10 @@ ID: 17339576133974851560
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3853578317038860186}  # Transform
-    - component: {fileID: 9213327059342907121}  # BoxCollider
-    - component: {fileID: 12559109374951102612}  # Rigidbody
     - component: {fileID: 16874861154904735771}  # MeshRenderer
 ---
 ID: 3853578317038860186
@@ -12837,25 +12577,6 @@ Transform:
   m_Children:
     - {fileID: 4502199338380684447}
 ---
-ID: 9213327059342907121
-BoxCollider:
-  m_GameObject: {fileID: 17339576133974851560}
-  Dimensions: [29.6000004, 16.25, 1.89762938]
-  Offset: [-3.87430191e-05, 0, -1.44839287e-05]
----
-ID: 12559109374951102612
-Rigidbody:
-  m_GameObject: {fileID: 17339576133974851560}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 16874861154904735771
 MeshRenderer:
   m_GameObject: {fileID: 17339576133974851560}
@@ -12866,7 +12587,7 @@ ID: 4502199338380684447
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6950851862563755891}  # Transform
@@ -12892,12 +12613,10 @@ ID: 13087879660564319010
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3879792292887095093}  # Transform
-    - component: {fileID: 8682428936501276283}  # BoxCollider
-    - component: {fileID: 1036711992088599592}  # Rigidbody
     - component: {fileID: 5195921901499604537}  # MeshRenderer
 ---
 ID: 3879792292887095093
@@ -12910,25 +12629,6 @@ Transform:
   m_Children:
     - {fileID: 2578659977802441128}
 ---
-ID: 8682428936501276283
-BoxCollider:
-  m_GameObject: {fileID: 13087879660564319010}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 1036711992088599592
-Rigidbody:
-  m_GameObject: {fileID: 13087879660564319010}
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 5195921901499604537
 MeshRenderer:
   m_GameObject: {fileID: 13087879660564319010}
@@ -12939,7 +12639,7 @@ ID: 2578659977802441128
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3166520665400372620}  # Transform
@@ -12965,7 +12665,7 @@ ID: 9928531127088687855
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8911366995427340756}  # Transform
@@ -13012,7 +12712,7 @@ ID: 16929961266483466822
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11386266453987434406}  # Transform
@@ -13038,12 +12738,12 @@ ID: 5598533014889482316
 GameObject:
   m_IsActive: true
   m_Name: WallV2_1x1 - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3050527902908053951}  # Transform
-    - component: {fileID: 10330931209077561930}  # BoxCollider
-    - component: {fileID: 11212202428257585734}  # Rigidbody
+    - component: {fileID: 8584089722279050973}  # BoxCollider
+    - component: {fileID: 8656794198276367900}  # Rigidbody
     - component: {fileID: 12565884649412330736}  # MeshRenderer
 ---
 ID: 3050527902908053951
@@ -13056,13 +12756,13 @@ Transform:
   m_Children:
     - {fileID: 5210926074018138939}
 ---
-ID: 10330931209077561930
+ID: 8584089722279050973
 BoxCollider:
   m_GameObject: {fileID: 5598533014889482316}
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
+  Dimensions: [14.1499996, 16, 1.89762938]
+  Offset: [-3.87430191e-05, 0, -1.44839287e-05]
 ---
-ID: 11212202428257585734
+ID: 8656794198276367900
 Rigidbody:
   m_GameObject: {fileID: 5598533014889482316}
   LinearVelocity: [0, 0, 0]
@@ -13085,7 +12785,7 @@ ID: 5210926074018138939
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8908220888409008357}  # Transform
@@ -13111,7 +12811,7 @@ ID: 7453769868452659552
 GameObject:
   m_IsActive: true
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 10636894150177318485}  # Transform
@@ -13158,7 +12858,7 @@ ID: 11291534077837522555
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 12348527874528831583}  # Transform
@@ -13205,7 +12905,7 @@ ID: 9395013738099771352
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6748744239089585295}  # Transform
@@ -13252,7 +12952,7 @@ ID: 16948283871687536465
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 10106137368687943416}  # Transform
@@ -13299,7 +12999,7 @@ ID: 2911315932445254483
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 3229299445269014910}  # Transform
@@ -13346,7 +13046,7 @@ ID: 3600367705552084842
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10210652850371580737}  # Transform
@@ -13393,7 +13093,7 @@ ID: 7839655135882436990
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 3673164490901134605}  # Transform
@@ -13440,7 +13140,7 @@ ID: 17073272892004669533
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 17915870846211418873}  # Transform
@@ -13487,7 +13187,7 @@ ID: 2522392369934765704
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12376899011019563902}  # Transform
@@ -13534,7 +13234,7 @@ ID: 14385541565622269418
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10181286732055398105}  # Transform
@@ -13581,7 +13281,7 @@ ID: 737736182011398935
 GameObject:
   m_IsActive: true
   m_Name: Cube - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 6
   m_Component:
     - component: {fileID: 1242089533057837058}  # Transform
@@ -13649,7 +13349,7 @@ ID: 3785387649589060227
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2765914953814254213}  # Transform
@@ -13696,7 +13396,7 @@ ID: 14356497665342915543
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10443120791128480046}  # Transform
@@ -13722,7 +13422,7 @@ ID: 14092934376519335738
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13712382653739177491}  # Transform
@@ -13769,7 +13469,7 @@ ID: 1794775946083750869
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6257261972468885090}  # Transform
@@ -13795,7 +13495,7 @@ ID: 6114433046832618349
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8432393794896675596}  # Transform
@@ -13842,7 +13542,7 @@ ID: 2390087278609519044
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 307598350967213853}  # Transform
@@ -13868,7 +13568,7 @@ ID: 5656349068340904868
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 70985445355641952}  # Transform
@@ -13915,7 +13615,7 @@ ID: 7372011544351505783
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16260685423371450072}  # Transform
@@ -13941,7 +13641,7 @@ ID: 5620146544089966174
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12287444412313168189}  # Transform
@@ -13988,7 +13688,7 @@ ID: 5569385155626639479
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3554719018550505693}  # Transform
@@ -14014,7 +13714,7 @@ ID: 6914412646375680759
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16664269714667396507}  # Transform
@@ -14061,7 +13761,7 @@ ID: 13259568571877131111
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8427987843524034238}  # Transform
@@ -14087,7 +13787,7 @@ ID: 2960608298331768514
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 5360856606033338180}  # Transform
@@ -14134,7 +13834,7 @@ ID: 9249303171165867598
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17802633632248885685}  # Transform
@@ -14160,7 +13860,7 @@ ID: 4060621067760633829
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11082227687967604216}  # Transform
@@ -14207,7 +13907,7 @@ ID: 2764203858011775657
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16350178452053878109}  # Transform
@@ -14233,7 +13933,7 @@ ID: 7767185065212578595
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7134007253905205847}  # Transform
@@ -14280,7 +13980,7 @@ ID: 1916798143870009475
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2855282662923585222}  # Transform
@@ -14306,7 +14006,7 @@ ID: 5410628355993396102
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13977100870895132443}  # Transform
@@ -14353,7 +14053,7 @@ ID: 1758284564648050865
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1772218289408320641}  # Transform
@@ -14379,7 +14079,7 @@ ID: 14901801198090768630
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10643491690293685239}  # Transform
@@ -14426,7 +14126,7 @@ ID: 11819903582906378735
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1889022333134578093}  # Transform
@@ -14452,7 +14152,7 @@ ID: 14242016621748025125
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13484378303529217068}  # Transform
@@ -14499,7 +14199,7 @@ ID: 1411510460848068960
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 473083134679777137}  # Transform
@@ -14525,7 +14225,7 @@ ID: 10200379991897450049
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10496889160654954490}  # Transform
@@ -14572,7 +14272,7 @@ ID: 8616662498438671346
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18084646448189071625}  # Transform
@@ -14598,7 +14298,7 @@ ID: 11500666045453601179
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 515682875597489462}  # Transform
@@ -14645,7 +14345,7 @@ ID: 1756447309968196971
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 463349353942035263}  # Transform
@@ -14671,7 +14371,7 @@ ID: 7926377388103741377
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 275068810003872267}  # Transform
@@ -14718,7 +14418,7 @@ ID: 17198149245489567356
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 431739469611875090}  # Transform
@@ -14744,7 +14444,7 @@ ID: 4178068731016754182
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18409574415060151871}  # Transform
@@ -14791,7 +14491,7 @@ ID: 13509877452604674276
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12809988684611347718}  # Transform
@@ -14817,7 +14517,7 @@ ID: 15521626501906400691
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16787607416932018886}  # Transform
@@ -14864,7 +14564,7 @@ ID: 14503849665283211555
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16399979093252778995}  # Transform
@@ -14890,7 +14590,7 @@ ID: 17374434327060195124
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4119242128956882984}  # Transform
@@ -14937,7 +14637,7 @@ ID: 17547185968701206130
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6834387202387627467}  # Transform
@@ -14963,7 +14663,7 @@ ID: 883435849511948444
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6227096986441859500}  # Transform
@@ -15010,7 +14710,7 @@ ID: 866663091420343841
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2025290656354202098}  # Transform
@@ -15036,7 +14736,7 @@ ID: 844236223186479458
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1460175694924432648}  # Transform
@@ -15083,7 +14783,7 @@ ID: 16555229688038687212
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12797022734425617700}  # Transform
@@ -15109,7 +14809,7 @@ ID: 16968244135856834379
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8659513160623054033}  # Transform
@@ -15156,7 +14856,7 @@ ID: 10740552412621569899
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9431203502361240546}  # Transform
@@ -15182,7 +14882,7 @@ ID: 87465416025566901
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4128063379966251701}  # Transform
@@ -15229,7 +14929,7 @@ ID: 13627694674237271995
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10719555638774424724}  # Transform
@@ -15255,7 +14955,7 @@ ID: 3008049630033293871
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9046477815881311709}  # Transform
@@ -15302,7 +15002,7 @@ ID: 7395178916672571311
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14525996520450976307}  # Transform
@@ -15328,7 +15028,7 @@ ID: 769329147301760830
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16265358241632252191}  # Transform
@@ -15375,7 +15075,7 @@ ID: 8165140262813524124
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 973838238627269507}  # Transform
@@ -15401,7 +15101,7 @@ ID: 4377640290721114999
 GameObject:
   m_IsActive: true
   m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4629173864416319448}  # Transform
@@ -15448,7 +15148,7 @@ ID: 8154724984552472556
 GameObject:
   m_IsActive: true
   m_Name: Glow - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8414467712326381726}  # Transform
@@ -15474,7 +15174,7 @@ ID: 4490157770252088129
 GameObject:
   m_IsActive: true
   m_Name: HealthBarFill
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 1190925597282428397}  # Transform
@@ -15501,7 +15201,7 @@ ID: 3525555548824268013
 GameObject:
   m_IsActive: true
   m_Name: HealthBarBackground
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 11755855291565287921}  # Transform
@@ -15717,7 +15417,7 @@ ID: 3977294589520766028
 GameObject:
   m_IsActive: true
   m_Name: Player
-  m_TagString: Player
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 18246905878658813158}  # Transform
@@ -16407,7 +16107,7 @@ ID: 16905222177648308199
 GameObject:
   m_IsActive: true
   m_Name: bullet
-  m_TagString: EnemyAttack
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7092983223759180045}  # Transform
@@ -18753,7 +18453,7 @@ ID: 15806906999669578782
 GameObject:
   m_IsActive: true
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15808617307168063394}  # Transform
@@ -18800,7 +18500,7 @@ ID: 10110590738670396230
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2120960920705211697}  # Transform
@@ -18953,7 +18653,7 @@ ID: 14743469042376816932
 GameObject:
   m_IsActive: true
   m_Name: RangeEnemyNMPF
-  m_TagString: Enemy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8000438010584237768}  # Transform
@@ -19145,7 +18845,7 @@ ID: 11339151462311943283
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(11) - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12194917823835283732}  # Transform
@@ -19171,7 +18871,7 @@ ID: 5379946996038883785
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(12) - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3514546436826953952}  # Transform
@@ -19197,7 +18897,7 @@ ID: 10460679720610735158
 GameObject:
   m_IsActive: true
   m_Name: New GameObject(13) - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 2307030659954035911}  # Transform
@@ -19341,7 +19041,7 @@ ID: 13414052106519654127
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 8850516260179941389}  # Transform
@@ -19373,7 +19073,7 @@ ID: 15258148970884941533
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9250071627966584501}  # Transform
@@ -19405,7 +19105,7 @@ ID: 12255453308465698455
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 10592381451826313751}  # Transform
@@ -19437,7 +19137,7 @@ ID: 1978797479256161258
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6317419242230538949}  # Transform
@@ -19469,7 +19169,7 @@ ID: 541121105422146752
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12112849001586193047}  # Transform
@@ -19501,7 +19201,7 @@ ID: 16149919952186955683
 GameObject:
   m_IsActive: true
   m_Name: LightSource - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9980629945179896881}  # Transform
@@ -19765,7 +19465,7 @@ ID: 9805023284151831907
 GameObject:
   m_IsActive: true
   m_Name: FloorV2_1x1 - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3631180320421319882}  # Transform
@@ -19812,7 +19512,7 @@ ID: 7573364472142733165
 GameObject:
   m_IsActive: true
   m_Name: Lines - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 3897951129720472720}  # Transform
