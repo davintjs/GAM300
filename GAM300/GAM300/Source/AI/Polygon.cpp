@@ -25,9 +25,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 Polygon3D::Polygon3D(const std::vector<glm::vec3>& positions, const int& regionID)
 {
 	mOrientation = Orientation::COUNTERCLOCKWISE;
-	//GeneratePointsCCW(positions);
-	std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
-	GenerateConvexHull(positions);
+	GeneratePointsCCW(positions);
+	//std::vector<glm::vec3> mTrimmedPos = TrimPositions(positions); // Filter positions to edges only
+	//GenerateConvexHull(positions);
 	CalculateNormalBarycenter(mPoints);
 
 	minPoint = { FLT_MAX, FLT_MAX, FLT_MAX };
