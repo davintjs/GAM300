@@ -137,6 +137,8 @@ void Scene::LinkReferences(ReferencesTable& storage)
 				if (field.fType < AllObjectTypes::Size())
 				{
 					Object*& pObject = *(Object**)field.data;
+					if (pObject == nullptr)
+						continue;
 					if (field.fType < MultiComponentTypes::Size())
 					{
 						if (storage[field.fType].contains(*pObject))
