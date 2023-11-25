@@ -19,10 +19,14 @@ public class PlatformScript : Script
     public float currentRestTimer;
 
     CharacterController player;
+    public AudioSource soundEffect;
+
+    public ThirdPersonController thirdPersonController;
 
     void Start()
     {
         currentRestTimer = restTimer;
+        //soundEffect.Play();
     }
 
     void Update()
@@ -70,6 +74,7 @@ public class PlatformScript : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
+            rb.gameObject.GetComponent<ThirdPersonController>().Hello("PLATFORM SCRIPT SAYS HIIIIIIII");
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
         }

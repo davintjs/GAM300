@@ -56,7 +56,10 @@ public:
 	Scene& GetPreviousScene() { return *std::next(loadedScenes.begin()); }
 
 	// Get the front of the list as the current scene
-	Scene& GetCurrentScene() { return loadedScenes.front(); }
+	Scene& GetCurrentScene() 
+	{ 
+		return loadedScenes.front(); 
+	}
 	
 	// Callback event when a new scene is created
 	void CallbackCreateScene(CreateSceneEvent* pEvent);

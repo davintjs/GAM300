@@ -127,6 +127,7 @@ struct ScriptObject<Script>
 	ScriptObject(Object* object);
 	operator Script& ();
 	operator Script* ();
+	operator ScriptObject<Object>();
 
 private:
 	MonoObject* script;
@@ -211,7 +212,6 @@ public:
 
 	void GetFieldValue(Script & script, const std::string & fieldName, Field & field);
 
-
 	void SetFieldValue(Script & script, const std::string & fieldName, Field & field);
 
 	//Checks whether a mono class is script
@@ -282,6 +282,8 @@ public:
 	//Load cache back into scripts after dll is reloaded
 	void LoadCacheScripts();
 
+	ScriptClass& GetScriptClass(Engine::GUID<ScriptAsset> scriptID);
+
 	//Mapping script to mono script
 	using MonoScripts = std::unordered_map<Handle, MonoObject*>;
 
@@ -298,10 +300,6 @@ public:
 	std::unordered_map<Engine::UUID, GC_Handles> mSceneHandles;
 	//Cached fields
 	std::unordered_map<Handle, FieldMap> cacheFields;
-
-	bool ScriptThreadHasRan();
-
-	void SetScriptThreadRan(bool val);
 
 	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 

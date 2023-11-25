@@ -321,10 +321,6 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				ContactAddedEvent cae;
 				cae.pc1 = pc1;
 				cae.pc2 = pc2;
-				if (cae.pc1 == cae.pc2)
-				{
-					PRINT("this aint it chief\n");
-				}
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}
@@ -532,7 +528,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	if (!physicsSystem)
 		return;
 	populated = true;
-	PRINT("POPULATE\n");
 	Scene& scene = MySceneManager.GetCurrentScene();
 
 	// check entity for collider and then check what kind of collider he want
@@ -694,9 +689,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	}
 
 
-	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
+	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumBodies() << std::endl;
 
 }
 

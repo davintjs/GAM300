@@ -19,7 +19,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 
 #include "NavMesh.h"
-//#include "Graphics/GraphicsHeaders.h"
 #include "Scene/Components.h"
 #include "Scene/SceneManager.h"
 
@@ -131,9 +130,4 @@ void NavMesh::LinkAllTriangles()
 			}
 		}
 	}
-}
-
-void NavMesh::UpdateNavMesh()
-{
-
 }

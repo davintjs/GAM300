@@ -62,6 +62,8 @@ class Ray3D;
 
 // Graphics Settings
 
+const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+const unsigned int SHADOW_WIDTH_DIRECTIONAL = 16384, SHADOW_HEIGHT_DIRECTIONAL = 16384;
 
 
 // Graphic Functions

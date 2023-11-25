@@ -80,7 +80,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
-    std::cout << m_CurrentTime << "\n";
+    //std::cout << m_CurrentTime << "\n";
 
     if (currBlendState == blending)/*if (nextState)*/
     {

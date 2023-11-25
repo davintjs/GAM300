@@ -36,16 +36,23 @@
   <ItemGroup>
     <Compile Include="Assets\Enemy.cs" />
     <Compile Include="Assets\Player.cs" />
+    <Compile Include="Assets\Scripts\AnimationStateMachine.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
+    <Compile Include="Assets\Scripts\Elevator.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\EnemyBullet.cs" />
+    <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\InstantDeath.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />
+    <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\RangeEnemy.cs" />
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
+    <Compile Include="Assets\Scripts\VictoryMenu.cs" />
     <Compile Include="CoreScripts\Application.cs" />
     <Compile Include="CoreScripts\Collision.cs" />
     <Compile Include="CoreScripts\Components.cs" />

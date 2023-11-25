@@ -603,6 +603,8 @@ void main()
 //    color = pow(color, vec3(1.0/2.2)); 
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+    brightness *= EmissionConstant;
+
     if(brightness > bloomThreshold)
         Blooming = vec4(color.rgb, 1.0);
     else

@@ -136,16 +136,17 @@ void Scene::LinkReferences(ReferencesTable& storage)
 				//Objects
 				if (field.fType < AllObjectTypes::Size())
 				{
-
 					Object*& pObject = *(Object**)field.data;
+					if (pObject == nullptr)
+						continue;
 					if (field.fType < MultiComponentTypes::Size())
 					{
 						if (storage[field.fType].contains(*pObject))
 						{
 							Handle& newHandle = storage[field.fType][*pObject];
 							pObject = (Object*)GetByHandle(field.fType, &newHandle);
+
 							//Set to internal linkage in game object
-							//handle = storage[field.fType][handle];
 						}
 					}
 					else
@@ -207,6 +208,19 @@ T& Scene::Get(Handle& handle)
 	return Get<T>(handle.euid, handle.uuid);
 }
 
+template<typename T>
+T& Scene::Get(Object* object)
+{
+	if constexpr (MultiComponentTypes::Has<T>())
+	{
+		return *GetMulti<T>(object->euid).front();
+	}
+	else
+	{
+		return Get<T>(object->euid);
+	}
+}
+
 template<typename T, typename Owner>
 T& Scene::Get(Owner& object)
 {
@@ -229,12 +243,20 @@ std::vector<T*> Scene::GetMulti(Engine::UUID euid)
 }
 
 
+template<typename T>
+std::vector<T*> Scene::GetMulti(Object* object)
+{
+	static_assert(MultiComponentTypes::Has<T>(), "Type is not a multi component");
+	return GetMulti<T>(object->euid);
+}
+
 template<typename T, typename Owner>
 std::vector<T*> Scene::GetMulti(Owner& object)
 {
 	static_assert(MultiComponentTypes::Has<T>(), "Type is not a multi component");
 	return GetMulti<T>(object.euid);
 }
+
 
 template<typename T>
 void Scene::Destroy(T& object)

@@ -12,6 +12,12 @@ public class ThirdPersonController : Script
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
     public float Gravity = 9.81f;
+    public bool isMoving = false;
+    public bool isWalkSoundPlayed = false;
+    public bool isSprinting = false;
+    public float walkSoundTimer = 0f;
+    public float walkSoundTime = 0.5f;
+
 
     public CharacterController CC;
     public Transform CamYawPivot;
@@ -21,6 +27,7 @@ public class ThirdPersonController : Script
     public Transform player;
     public GameObject playerWeaponCollider;
     public Transform checkpoint2;
+    //public InstantDeath instantDeath;
 
     List<vec3> pos = new List<vec3>();
 
@@ -40,6 +47,7 @@ public class ThirdPersonController : Script
     public bool isInvulnerable = false;
     public float invulnerableTimer = 1f;
     public float currentInvulnerableTimer;
+    public bool isDead = false;
 
     float maxAirTime = 1f;
     float currentAirTime = 0;
@@ -49,15 +57,21 @@ public class ThirdPersonController : Script
 
     //health bar
     public GameObject healthBarFill;
+    public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
     float initialHealthBarXScale;
 
     public Animator animator;
+    public bool startDeathAnimationCountdown = false;
+    float animationTimer = 3.18f;
+    public float currentAnimationTimer;
+
     // Start is called before the first frame update
     void InitAnimStates()
     {
         animationManager = new AnimationStateMachine(animator);
+        currentAnimationTimer = animationTimer;
 
         //Highest Precedence
         AnimationState death = animationManager.GetState("Death");
@@ -108,122 +122,179 @@ public class ThirdPersonController : Script
             CC.velocity.y = JumpSpeed;
         }
 
+        //walking sounds
+        if(isMoving && !isWalkSoundPlayed)
+        {
+            isWalkSoundPlayed = true;
+        }
+        if(isWalkSoundPlayed)
+        {
+            if (isSprinting)
+            {
+                walkSoundTime = 0.25f;
+            }
+            else
+            {
+                walkSoundTime = 0.5f;
+            }
+            walkSoundTimer += Time.deltaTime;
+            //AudioManager.instance.playerFootstep.Play();
+            if(walkSoundTimer > walkSoundTime)
+            {
+                AudioManager.instance.playerFootstep.Play();
+                isWalkSoundPlayed = false;
+                walkSoundTimer = 0;
+            }
+            if(walkSoundTimer == 0)
+            {
+                AudioManager.instance.playerFootstep.Play();
+            }
+
+        }
+
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(1);
             isInvulnerable = true;
         }
-
-        vec3 dir = GetDirection();
-        UpdateRotation(dir);
-        vec3 movement = dir * MoveSpeed * Time.deltaTime;
-
-        //Jump
-        if (CC.isGrounded && !IsAttacking)
+        //restart game
+        if(isDead && Input.GetKey(KeyCode.R))
         {
-            SetState("Falling", false);
-            if (Input.GetMouseDown(0))
-            {
-                IsAttacking = true;
-                playerWeaponCollider.SetActive(true);//enable the weapon collider
-                playerWeaponCollider.transform.localPosition = vec3.Zero;
-                currentAttackTimer = attackTimer;
-                playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
-                SetState("Attack1", true);
-                AudioManager.instance.playerSlashAttack.Play();
-                AudioManager.instance.spark.Play();
-            }
+            Console.WriteLine("Restart");
+            SceneManager.LoadScene("LevelPlay2");
+        }
+        if(!isDead)
+        {
+            vec3 dir = GetDirection();
+            UpdateRotation(dir);
+            vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
-            //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space))
+            //if player is not moving
+            if (dir == new vec3(0, 0, 0))
             {
-                SetState("Jump", true);
-                AudioManager.instance.jumpVoice.Play();
-                movement += vec3.UnitY * JumpSpeed;
+                isMoving = false;
             }
-            else
+            //Jump
+            if (CC.isGrounded && !IsAttacking)
             {
-                SetState("Jump", false);
-                //SPRINT
-                if (Input.GetKey(KeyCode.LeftShift))
+                SetState("Falling", false);
+                if (Input.GetMouseDown(0) && !isDead)
                 {
-                    SetState("Sprint", true);
-                    movement *= sprintModifier;
+                    IsAttacking = true;
+                    playerWeaponCollider.SetActive(true);//enable the weapon collider
+                    playerWeaponCollider.transform.localPosition = vec3.Zero;
+                    currentAttackTimer = attackTimer;
+                    playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
+                    SetState("Attack1", true);
+                    AudioManager.instance.playerSlashAttack.Play();
+                    AudioManager.instance.spark.Play();
+                    AudioManager.instance.playerAttack.Play();
+                }
+
+                //JUMP
+                else if (Input.GetKeyDown(KeyCode.Space) && !isDead)
+                {
+                    SetState("Jump", true);
+                    AudioManager.instance.jumpVoice.Play();
+                    movement += vec3.UnitY * JumpSpeed;
                 }
                 else
                 {
-                    SetState("Sprint", false);
-                    SetState("Run", dir == vec3.Zero ? false : true);
+                    SetState("Jump", false);
+                    //SPRINT
+                    if (Input.GetKey(KeyCode.LeftShift) && !isDead)
+                    {
+                        isSprinting = true;
+                        SetState("Sprint", true);
+                        movement *= sprintModifier;
+                    }
+                    else
+                    {
+                        isSprinting = false;
+                        SetState("Sprint", false);
+                        SetState("Run", dir == vec3.Zero ? false : true);
+                    }
                 }
-            }
-            currentAirTime = 0;
-        }
-        else
-        {
-            if (IsAttacking)
-            {
-                float dist = maxColliderDist * (1 - currentAttackTimer/attackTimer);
-                playerWeaponCollider.transform.localPosition = transform.localPosition + PlayerModel.back * dist;
-                playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
-                currentAttackTimer -= Time.deltaTime;
-                if (currentAttackTimer <= 0)
-                {
-                    IsAttacking = false;
-                    playerWeaponCollider.SetActive(false);
-                    currentAttackTimer = attackTimer;
-                }
+                currentAirTime = 0;
             }
             else
             {
-                if (animationManager.GetState("Jump").state)
+                if (IsAttacking)
                 {
-                    if (currentAirTime >= maxAirTime)
+                    float dist = maxColliderDist * (1 - currentAttackTimer / attackTimer);
+                    playerWeaponCollider.transform.localPosition = transform.localPosition + PlayerModel.back * dist;
+                    playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
+                    currentAttackTimer -= Time.deltaTime;
+                    if (currentAttackTimer <= 0)
+                    {
+                        IsAttacking = false;
+                        playerWeaponCollider.SetActive(false);
+                        currentAttackTimer = attackTimer;
+                    }
+                }
+                else
+                {
+                    if (animationManager.GetState("Jump").state)
+                    {
+                        if (currentAirTime >= maxAirTime)
+                        {
+                            SetState("Falling", true);
+                        }
+                    }
+                    else if (currentAirTime >= maxAirTime * .5f)
                     {
                         SetState("Falling", true);
                     }
+                    currentAirTime += Time.deltaTime;
+                    movement += vec3.UnitY * -Gravity;
                 }
-                else if (currentAirTime >= maxAirTime * .5f)
-                {
-                    SetState("Falling", true);
-                }
-                currentAirTime += Time.deltaTime;
-                movement += vec3.UnitY * -Gravity;
             }
-        }
 
-        //testing reset position
-        if(Input.GetKey(KeyCode.P))
-        {
-            Console.WriteLine("ResetPlayerPosition");
-            player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
-            player.localRotation = vec3.Radians(new vec3(0, 180, 0));
-        }
-        if (Input.GetKey(KeyCode.L))
-        {
-            Console.WriteLine("ResetPlayerPosition");
-            player.localPosition = checkpoint2.localPosition;
-        }
-
-        CC.Move(movement);
-
-        //attacking
-
-        //invulnerablility
-        if (isInvulnerable)
-        {
-            currentInvulnerableTimer -= Time.deltaTime;
-            if (currentInvulnerableTimer <= 0)
+            //testing reset position
+            if (Input.GetKey(KeyCode.P))
             {
-                isInvulnerable = false;
-                currentInvulnerableTimer = invulnerableTimer;
+                Console.WriteLine("ResetPlayerPosition");
+                player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
+                player.localRotation = vec3.Radians(new vec3(0, 180, 0));
+            }
+            if (Input.GetKey(KeyCode.L))
+            {
+                Console.WriteLine("ResetPlayerPosition");
+                player.localPosition = checkpoint2.localPosition;
+            }
+
+            CC.Move(movement);
+
+            //attacking
+
+            //invulnerablility
+            if (isInvulnerable)
+            {
+                currentInvulnerableTimer -= Time.deltaTime;
+                if (currentInvulnerableTimer <= 0)
+                {
+                    isInvulnerable = false;
+                    currentInvulnerableTimer = invulnerableTimer;
+                }
             }
         }
+
 
         animationManager.UpdateState();
+
+        //death animation timer
+        if(startDeathAnimationCountdown)
+        {
+            currentAnimationTimer -= Time.deltaTime;
+            if(currentAnimationTimer <= 0)
+            {
+                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+            }
+        }
     }
 
-    void UpdatehealthBar()
+    public void UpdatehealthBar()
     {
         //NOTE: tempoary disabled, not working currently
         //float scaleFactor = (float)currentHealth / (float)maxHealth;
@@ -255,6 +326,9 @@ public class ThirdPersonController : Script
         if(currentHealth <= 0)
         {
             Console.WriteLine("GameOver");
+            isDead = true;
+            healthStaminaCanvas.SetActive(false);
+            startDeathAnimationCountdown = true;
             currentHealth = 0;
             healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
             healthBarFill.GetComponent<Transform>().localScale = new vec3(0f, -0.035f, 1f);
@@ -265,9 +339,11 @@ public class ThirdPersonController : Script
     {
         animationManager.GetState(stateName).state = value;
     }
-    void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
-        if(!isInvulnerable)
+        AudioManager.instance.playerInjured.Play();
+
+        if (!isInvulnerable)
         {
             isInvulnerable = true;
             currentInvulnerableTimer = invulnerableTimer;
@@ -279,7 +355,9 @@ public class ThirdPersonController : Script
         if (currentHealth <= 0)
         {
             Console.WriteLine("YouDied");
+            isDead = true;
             SetState("Death", true);
+            
         }
         else
         {
@@ -292,16 +370,36 @@ public class ThirdPersonController : Script
     {
         vec3 dir = vec3.Zero;
         if (Input.GetKey(KeyCode.W))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir -= (CamYawPivot.forward);
+        }
+
 
         if (Input.GetKey(KeyCode.A))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir -= (CamYawPivot.right);
+        }
+
 
         if (Input.GetKey(KeyCode.S))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir += CamYawPivot.forward;
+        }
+
 
         if (Input.GetKey(KeyCode.D))
+        {
+            isMoving = true;
+            //AudioManager.instance.playerFootstep.Play();
             dir += (CamYawPivot.right);
+        }
+
         return dir.NormalizedSafe;
     }
 
@@ -336,11 +434,33 @@ public class ThirdPersonController : Script
         }
     }
 
+    public void Hello(string yes)
+    {
+        Console.WriteLine(yes);
+    }
+
     void OnTriggerEnter(PhysicsComponent rb)
     {
         if (GetTag(rb) == "EnemyAttack")
         {
+            //AudioManager.instance.playerInjured.Play();
             TakeDamage(1);
+        }
+        ////Not working
+        //if(GetTag(rb) == "PuzzleKey")
+        //{
+        //    Console.WriteLine("Collected");
+        //    AudioManager.instance.itemCollected.Play();//play audio sound
+        //}
+    }
+
+    void OnCollisionEnter(PhysicsComponent rb)
+    {
+        if (GetTag(rb) == "InstantDeath")
+        {
+            currentHealth = 0;
+            Console.WriteLine("InstantDeath");
+            TakeDamage(maxHealth);
         }
     }
 }
