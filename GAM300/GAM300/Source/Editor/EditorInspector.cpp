@@ -1473,22 +1473,6 @@ void EditorInspector::Init()
 {
     isAddComponentPanel = false;
     //default layers (same as unity)
-    IDENTIFIERS.physicsLayers[0] = Layer("Default");
-    IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
-    IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
-    IDENTIFIERS.physicsLayers[3] = Layer("UI");
-    IDENTIFIERS.physicsLayers[4] = Layer("Water");
-    IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
-    IDENTIFIERS.physicsLayers[6] = Layer("Obstacle");
-
-    //create default tag
-    IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["PlayerAttack"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Player"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Enemy"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
-    IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
 }
 
 enum MODEL_STATE { MODEL, ANIMATION };

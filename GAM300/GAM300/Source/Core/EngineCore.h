@@ -111,9 +111,7 @@ public:
 		PHYSICS.PostSubscription();
 
 		#if defined(_BUILD)
-			InputSystem::Instance().LockCursor(true);
-			SceneStartEvent startEvent{};
-			EVENTS.Publish(&startEvent);
+			MySceneManager.StartScene();
 		#else
 			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);

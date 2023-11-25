@@ -25,8 +25,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //extern LightProperties directional_light_stuffs;
 //extern LightProperties point_light_stuffs;
 
-const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
 
 
 void Lighting::Init()
