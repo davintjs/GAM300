@@ -33,7 +33,7 @@ AudioSource:
   m_GameObject: {fileID: 11768379503594195228}
   AudioChannel: 0
   Loop: true
-  Volume: 0.100000001
+  Volume: 0.25
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---
@@ -2086,7 +2086,7 @@ Rigidbody:
   IsStatic: false
   IsKinematic: true
   UseGravity: false
-  Is_trigger: false
+  Is_trigger: true
 ---
 ID: 9267112755226816832
 Script:
@@ -7235,7 +7235,7 @@ Rigidbody:
   IsStatic: false
   IsKinematic: true
   UseGravity: false
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 6663313825132233637
 GameObject:
@@ -7342,7 +7342,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 19.7874107
+  Time: 52.9291458
   StartTime: 2
   EndTime: 61
   Playing: true

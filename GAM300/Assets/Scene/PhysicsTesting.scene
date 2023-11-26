@@ -109,9 +109,9 @@ GameObject:
 ID: 12480774068012120123
 Transform:
   m_GameObject: {fileID: 18194103038199101006}
-  Translation: [0, 1.35647154, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [-2.57500005, 2.03573346, 0.0048802793]
+  Rotation: [0, 0, -0.608990192]
+  Scale: [1.44419491, 1.44419408, 1.44419992]
   Father: {fileID: 0}
   m_Children:
     []
@@ -131,7 +131,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: true
   Is_trigger: false
 ---
@@ -156,7 +156,7 @@ GameObject:
 ID: 4100690231802226099
 Transform:
   m_GameObject: {fileID: 6606782747310958106}
-  Translation: [-1.28718813e-09, 1.72139239, 3.68624306]
+  Translation: [0, 1.72139239, 3.68624306]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -180,7 +180,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: false
   UseGravity: true
-  Is_trigger: false
+  Is_trigger: true
 ---
 ID: 15908972911879333389
 MeshRenderer:

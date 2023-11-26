@@ -259,7 +259,7 @@ public:
 	//Callback function for when trigger is removed
 	void CallbackTriggerExit(TriggerRemoveEvent* pEvent);
 
-	//Callback function for when existing trigger persists, one per physics update for each set of trigger
+	//Callback function for when existing trigger persists, one per physics update for each set of trigger8
 	void CallbackTriggerStay(TriggerStayEvent* pEvent);
 
 	//Helper to subscribe to all objects deletion
