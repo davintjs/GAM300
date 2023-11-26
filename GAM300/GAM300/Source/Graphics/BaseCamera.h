@@ -115,7 +115,7 @@ public:
 
 	property_vtable();
 protected:
-	glm::vec4 backgroundColor;			// Default solid color when rendering
+	Vector4 backgroundColor;			// Default solid color when rendering
 	glm::vec3 cameraPosition;			// The location of the viewer / eye (Center of the screen, 10 units away)
 	glm::vec3 focalPoint;				// The look-at point / target point where the viewer is looking (Center of screen)
 	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
@@ -156,6 +156,8 @@ protected:
 };
 
 property_begin_name(BaseCamera, "BaseCamera") {
+	property_var(backgroundColor).Name("BackgroundColor"),
+	property_var(clearFlags).Name("ClearFlags"),
 	property_var(clearFlags).Name("ClearFlags"),
 	property_var(cullingMask).Name("CullingMask"),
 	property_var(focalLength).Name("FocalLength"),

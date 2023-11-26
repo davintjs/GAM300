@@ -7,6 +7,35 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 9202772318638598359
+GameObject:
+  m_IsActive: true
+  m_Name: CombatManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5931254185596814660}  # Transform
+    - component: {fileID: 12164376346583283218}  # Script
+---
+ID: 5931254185596814660
+Transform:
+  m_GameObject: {fileID: 9202772318638598359}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12164376346583283218
+Script:
+  m_GameObject: {fileID: 9202772318638598359}
+  Script: {guid: 240ef1325945ba7654a2ccd34ac0a17b}
+  damagedShakeMag: 0.0500000007
+  damagedShakeDur: 0.300000012
+  hitShakeMag: 0.100000001
+  hitShakeDur: 0.100000001
+---
 ID: 11768379503594195228
 GameObject:
   m_IsActive: true
@@ -72,6 +101,7 @@ Transform:
     - {fileID: 11931709940185671807}
     - {fileID: 2723553382536766900}
     - {fileID: 10419665452268142691}
+    - {fileID: 8195998143091088379}
 ---
 ID: 12555400289260702052
 Script:
@@ -88,6 +118,7 @@ Script:
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
+  enemyHit: {fileID: 14492758170611173101}  # Component
 ---
 ID: 6606253624498158492
 GameObject:
@@ -7398,7 +7429,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 23.2840137
+  Time: 8.28995895
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8033,6 +8064,7 @@ ID: 16773315215798417911
 Camera:
   m_GameObject: {fileID: 15334681090738628473}
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
+  ClearFlags: "\x01"
   ClearFlags: "\x01"
   CullingMask: "\x00"
   FocalLength: 10
@@ -20488,3 +20520,32 @@ MeshRenderer:
   m_GameObject: {fileID: 9919314048084152170}
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 8195998143091088379
+GameObject:
+  m_IsActive: true
+  m_Name: enemyHit
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2131914696263170567}  # Transform
+    - component: {fileID: 14492758170611173101}  # AudioSource
+---
+ID: 2131914696263170567
+Transform:
+  m_GameObject: {fileID: 8195998143091088379}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 14492758170611173101
+AudioSource:
+  m_GameObject: {fileID: 8195998143091088379}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
+  Play: false

@@ -52,6 +52,8 @@ public class RangeEnemy : Script
     //audio
     public bool playOnce = true;
 
+    Coroutine damagedCoroutine;
+
     void Start()
     {
         playOnce = true;
@@ -214,6 +216,10 @@ public class RangeEnemy : Script
 
     void TakeDamage(int amount)
     {
+        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+        ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur*4);
+        shootCooldown -= .5f;
+        AudioManager.instance.enemyHit.Play();
         currentHealth -= amount;
         hpBar.localScale.x = (float)currentHealth/maxHealth;
         //set particle transform to enemy position
@@ -240,7 +246,11 @@ public class RangeEnemy : Script
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = otherT.back;
             dir = dir.NormalizedSafe;
-            StartCoroutine(Damaged(.5f, dir * 10));
+            if (damagedCoroutine != null)
+            {
+                StopCoroutine(damagedCoroutine);
+            }
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
             TakeDamage(1);
         }
     }
@@ -249,7 +259,7 @@ public class RangeEnemy : Script
     {
         duration /= 2;
         float startDuration = duration;
-        modelOffset.localRotation.x = glm.Radians(45f);
+        modelOffset.localRotation.x = glm.Radians(-45f);
         while (duration > 0)
         {
             rb.linearVelocity = new vec3(knockback * (duration/startDuration));
@@ -259,7 +269,7 @@ public class RangeEnemy : Script
         duration = startDuration;
         while (duration > 0)
         {
-            float val = glm.Radians(45f);
+            float val = glm.Radians(-45f);
             modelOffset.localRotation.x = glm.Lerp(0, val,duration/startDuration);
             duration -= Time.deltaTime;
             yield return new WaitForSeconds(Time.deltaTime);

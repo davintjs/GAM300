@@ -418,7 +418,8 @@ public class ThirdPersonController : Script
     public void TakeDamage(float amount)
     {
         AudioManager.instance.playerInjured.Play();
-
+        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
+        ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
         if (!isInvulnerable)
         {
             isInvulnerable = true;
@@ -426,7 +427,6 @@ public class ThirdPersonController : Script
             currentHealth -= amount;
             UpdatehealthBar();
         }
-        Console.WriteLine("Hit");
         
         if (currentHealth <= 0)
         {
@@ -500,11 +500,6 @@ public class ThirdPersonController : Script
                 PlayerModel.localRotation = rot;
             }
         }
-    }
-
-    public void Hello(string yes)
-    {
-        Console.WriteLine(yes);
     }
 
     void OnTriggerEnter(PhysicsComponent rb)

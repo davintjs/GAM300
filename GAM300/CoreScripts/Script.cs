@@ -119,7 +119,7 @@ namespace BeanFactory
             return coroutine;
         }
 
-        void StopCoroutine(Coroutine coroutine)
+        public void StopCoroutine(Coroutine coroutine)
         {
             //WARN IF coroutine is null
             coroutines.Remove(coroutine);
