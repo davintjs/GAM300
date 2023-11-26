@@ -16,7 +16,7 @@ void ParticleRenderer::Update(float dt) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         Entity& entity = currentScene.Get<Entity>(particleComponent);
-        for (int i = 0; i < particleComponent.particles_.size(); ++i) {
+        for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
             scale[3] = glm::vec4(0, 0, 0, 1);
@@ -40,7 +40,7 @@ void ParticleRenderer::Update(float dt) {
 
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    
+    int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
         GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
@@ -59,7 +59,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         else {
             glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
         }
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
@@ -104,6 +104,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glBindVertexArray(0);
 
         shader.UnUse();
+        counter += particleComponent.numParticles_;
     }
 }
 
