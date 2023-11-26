@@ -65,9 +65,14 @@ void Lighting::Update(float)
 			std::cout << "hi\n";
 			continue;
 		}
+
 		
-		haveLight = true;
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
+
+		if (!currentScene.IsActive(entity))
+			continue;
+
+		haveLight = true;
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 

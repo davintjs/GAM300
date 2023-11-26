@@ -42,5 +42,6 @@ namespace GlmSharp
 		{
 			return new vec3(m.m30,m.m31,m.m32);
 		}
+
 	}
 }

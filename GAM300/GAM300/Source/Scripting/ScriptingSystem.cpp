@@ -132,6 +132,7 @@ namespace Utils
 		SCRIPT_METHOD(mClass, Start, 0);
 		SCRIPT_METHOD(mClass, Update, 0);
 		SCRIPT_METHOD(mClass, LateUpdate, 0);
+		SCRIPT_METHOD(mScript, ExecuteCoroutines, 0);
 
 		SCRIPT_METHOD(mClass, OnCollisionEnter, 1);
 		SCRIPT_METHOD(mClass, OnCollisionStay, 1);

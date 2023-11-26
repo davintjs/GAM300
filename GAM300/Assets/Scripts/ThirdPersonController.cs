@@ -25,7 +25,11 @@ public class ThirdPersonController : Script
     public Transform CamPitchPivot;
     public Transform PlayerModel;
     public Transform player;
-    public GameObject playerWeaponCollider;
+    public GameObject attackLight;
+    public GameObject playerWeaponCollider1;
+    public GameObject playerWeaponCollider2;
+    public GameObject playerWeaponCollider3;
+    GameObject selectedWeaponCollider;
     public Transform checkpoint2;
 
     //public InstantDeath instantDeath;
@@ -40,8 +44,7 @@ public class ThirdPersonController : Script
 
     public bool IsAttacking = false;
     public float attackTimer = 1f;
-    public float currentAttackTimer;
-
+    float currentAttackTimer;
 
     public float maxHealth = 4f;
     public float currentHealth;
@@ -72,7 +75,7 @@ public class ThirdPersonController : Script
     public float attack2duration = 2f;
     public float attack3duration = 2f;
 
-    float attackDisplacement = 0f;
+    public float animCancelPercentage = 1f;
 
     int comboCount = 1;
 
@@ -126,11 +129,11 @@ public class ThirdPersonController : Script
         falling.loop = true;
         jump.SetConditionals(false, death,stun);
         attack1.SetConditionals(false, jump, death, stun);
-        attack1.stall = true;
         attack2.SetConditionals(false, jump, death, stun);
-        attack2.stall = true;
         attack3.SetConditionals(false, jump, death, stun);
-        attack3.stall = true;
+        attack1.speed = 1.5f;
+        attack2.speed = 1.5f;
+        attack3.speed = 1.5f;
         sprint.SetConditionals(true, run);
         sprint.SetConditionals(false, attack1, jump, death, stun);
         sprint.loop = true;
@@ -142,8 +145,10 @@ public class ThirdPersonController : Script
     void Start()
     {
         audioSource.Play();
-        playerWeaponCollider.SetActive(false);
-        currentAttackTimer = attackTimer;
+        playerWeaponCollider1.SetActive(false);
+        playerWeaponCollider2.SetActive(false);
+        playerWeaponCollider3.SetActive(false);
+        currentAttackTimer = 0;
         currentHealth = maxHealth;
         currentInvulnerableTimer = invulnerableTimer;
 
@@ -188,20 +193,38 @@ public class ThirdPersonController : Script
         if (IsAttacking)
         {
             dir = vec3.Zero;
-            if (currentAttackTimer / attackTimer < 0.1f)
-                movement = PlayerModel.back * attackDisplacement * Time.deltaTime;
+            if (currentAttackTimer / attackTimer < 0.2f)
+                movement = PlayerModel.back * MoveSpeed * Time.deltaTime;
             else
+            {
+                if (currentAttackTimer / attackTimer > 0.5f)
+                    attackLight.SetActive(false);
+                else if (currentAttackTimer / attackTimer > 0.3f )
+                {
+                    attackLight.SetActive(true);
+                    selectedWeaponCollider.SetActive(true);//enable the weapon collider
+                }
                 movement = vec3.Zero;
-            playerWeaponCollider.transform.localPosition = transform.localPosition + PlayerModel.back * 2f;
+            }
+            selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+            attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.localPosition);
             currentAttackTimer += Time.deltaTime;
             if (currentAttackTimer >= attackTimer)
             {
                 IsAttacking = false;
-                playerWeaponCollider.SetActive(false);
-                currentAttackTimer = attackTimer;
+                playerWeaponCollider1.SetActive(false);
+                playerWeaponCollider2.SetActive(false);
+                playerWeaponCollider3.SetActive(false);
+                for (int i = 1; i <= 3; ++i)
+                {
+                    SetState("Attack"+i, false);
+                }
+                comboCount = 1;
+                currentAttackTimer = 0f;
             }
         }
-        else if (CC.isGrounded)
+        
+        if (CC.isGrounded)
         {
             if (GetState("Falling"))
             {
@@ -209,33 +232,42 @@ public class ThirdPersonController : Script
                 AudioManager.instance.playerFootstep.Play();
             }
 
-
-
-
-            bool combo = IsAttacking && currentAttackTimer/attackTimer > .9f;
+            bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;
             if (Input.GetMouseDown(0) && (combo || !IsAttacking))
             {
-                IsAttacking = true;
-                playerWeaponCollider.SetActive(true);//enable the weapon collider
-                currentAttackTimer = 0f;
-                playerWeaponCollider.transform.localRotation = PlayerModel.localRotation;
-                SetState("Attack"+comboCount, true);
-                AudioManager.instance.playerSlashAttack.Play();
-                AudioManager.instance.spark.Play();
-                AudioManager.instance.playerAttack.Play();
-                attackDisplacement = MoveSpeed * comboCount;
                 switch (comboCount)
                 {
                     case 1:
                         attackTimer = attack1duration;
+                        selectedWeaponCollider = playerWeaponCollider1;
+                        playerWeaponCollider2.SetActive(false);
+                        playerWeaponCollider3.SetActive(false);
                         break;
                     case 2:
+                        selectedWeaponCollider = playerWeaponCollider2;
                         attackTimer = attack2duration;
+                        playerWeaponCollider1.SetActive(false);
+                        playerWeaponCollider3.SetActive(false);
                         break;
                     case 3:
+                        selectedWeaponCollider = playerWeaponCollider3;
                         attackTimer = attack3duration;
+                        playerWeaponCollider2.SetActive(false);
+                        playerWeaponCollider1.SetActive(false);
                         break;
                 }
+                IsAttacking = true;
+                currentAttackTimer = 0f;
+                Console.WriteLine("Rotation");
+                selectedWeaponCollider.transform.localRotation = new vec3(PlayerModel.localRotation);
+                for (int i = 1; i <= 3; ++i)
+                {
+                    SetState("Attack" + i, false);
+                }
+                SetState("Attack"+comboCount, true);
+                AudioManager.instance.playerSlashAttack.Play();
+                AudioManager.instance.spark.Play();
+                AudioManager.instance.playerAttack.Play();
                 ++comboCount;
                 if (comboCount > 3) { comboCount = 1; }
             }
@@ -247,22 +279,23 @@ public class ThirdPersonController : Script
                 AudioManager.instance.jumpVoice.Play();
                 movement += vec3.UnitY * JumpSpeed;
             }
-            else
+            else if (!IsAttacking)
             {
                 SetState("Jump", false);
                 //SPRINT
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (Input.GetKey(KeyCode.LeftShift) && isMoving)
                 {
                     walkSoundTime = runStepsInterval;
                     SetState("Sprint", true);
+                    SetState("Run", true);
                     movement *= sprintModifier;
                 }
                 else
                 {
                     walkSoundTime = walkStepsInterval;
                     SetState("Sprint", false);
-                    SetState("Run", isMoving);
                 }
+                SetState("Run", isMoving);
                 if (isMoving)
                     moved = isMoving;
             }
@@ -298,7 +331,7 @@ public class ThirdPersonController : Script
         if (Input.GetKey(KeyCode.L))
         {
             Console.WriteLine("ResetPlayerPosition");
-            player.localPosition = checkpoint2.localPosition;
+            player.localPosition = new vec3(checkpoint2.localPosition);
         }
 
         CC.Move(movement);

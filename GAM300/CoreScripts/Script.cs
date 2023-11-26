@@ -126,7 +126,7 @@ namespace BeanFactory
             //ERROR IF not found
         }
 
-        void ExecuteCoroutines()
+        public void ExecuteCoroutines()
         {
             foreach (Coroutine coroutine in coroutines)
             {

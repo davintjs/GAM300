@@ -237,14 +237,32 @@ public class RangeEnemy : Script
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(GetTag(other) == "PlayerAttack")
         {
-            //Console.WriteLine("MEGAHIT");
             Transform otherT = other.gameObject.GetComponent<Transform>();
-            vec3 dir = transform.localPosition - otherT.localPosition;
-            dir.y = 0;
+            vec3 dir = otherT.back;
             dir = dir.NormalizedSafe;
-            rb.force = dir * 100f;
+            StartCoroutine(Damaged(.5f, dir * 10));
             TakeDamage(1);
         }
     }
 
+    IEnumerator Damaged(float duration, vec3 knockback)
+    {
+        duration /= 2;
+        float startDuration = duration;
+        modelOffset.localRotation.x = glm.Radians(45f);
+        while (duration > 0)
+        {
+            rb.linearVelocity = new vec3(knockback * (duration/startDuration));
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        duration = startDuration;
+        while (duration > 0)
+        {
+            float val = glm.Radians(45f);
+            modelOffset.localRotation.x = glm.Lerp(0, val,duration/startDuration);
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+    }
 }
