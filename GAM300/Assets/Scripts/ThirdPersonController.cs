@@ -201,6 +201,17 @@ public class ThirdPersonController : Script
             SceneManager.LoadScene("LevelPlay2");
         }
 
+        //death animation timer
+        if (startDeathAnimationCountdown)
+        {
+            currentAnimationTimer -= Time.deltaTime;
+            if (currentAnimationTimer <= 0.2)
+            {
+                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                SceneManager.LoadScene("LevelPlay2");
+            }
+        }
+
         if (isDead) return;
 
         if (CC.velocity.y > JumpSpeed)
@@ -368,16 +379,6 @@ public class ThirdPersonController : Script
 
 
         animationManager.UpdateState();
-
-        //death animation timer
-        if(startDeathAnimationCountdown)
-        {
-            currentAnimationTimer -= Time.deltaTime;
-            if(currentAnimationTimer <= 0)
-            {
-                animator.Pause();//pause the death animation to prevent it from returning to idle animation
-            }
-        }
     }
 
     public void UpdatehealthBar()
