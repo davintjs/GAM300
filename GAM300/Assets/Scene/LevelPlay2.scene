@@ -7292,8 +7292,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
-  IsKinematic: false
+  IsStatic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -7402,7 +7402,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 15.178422
+  Time: 41.1325035
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8583,8 +8583,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
-  IsKinematic: false
+  IsStatic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -8623,8 +8623,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
-  IsKinematic: false
+  IsStatic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -18803,7 +18803,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: false
 ---
@@ -19688,7 +19688,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: false
 ---
@@ -19958,7 +19958,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: false
 ---
