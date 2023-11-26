@@ -260,6 +260,7 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 }
 void PhysicsSystem::PostPhysicsUpdate() {
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
+	//std::cout << "Post physics update\n";
 
 	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
@@ -327,7 +328,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				//PRINT("Sending Trigger Enter Event\n");
+				PRINT("Sending Trigger Enter Event\n");
 			}
 			else {
 				ContactAddedEvent cae;
@@ -357,7 +358,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.pc1 = pc1;
 				tre.pc2 = pc2;
 				EVENTS.Publish(&tre);
-				//PRINT("Sending Trigger Remove Event\n");
+				PRINT("Sending Trigger Remove Event\n");
 			}
 			else {
 				ContactRemovedEvent cre;

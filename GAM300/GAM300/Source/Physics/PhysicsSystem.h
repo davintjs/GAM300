@@ -166,7 +166,11 @@ public:
 
 };
 
+
 // Contact Listener (collision)
+// NOTE: with regards to waking/sleeping bodies while within triggers. 
+// In order to achieve the effect of trigger enter/remove when a gameobj is disabled/enabled while inside a trigger volume, the trigger volume should
+// be set as STATIC and IsTrigger = true. The other game object's rigidbody should be set to kinematic.
 class EngineContactListener : public JPH::ContactListener {
 public:
 	EngineContactListener() : pSystem{ nullptr } {}
