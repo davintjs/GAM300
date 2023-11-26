@@ -1,5 +1,5 @@
-[2023-11-24 15:40:21.620] [Error] [critical] 
-Caused By:	mAppDomain
-Info:		MONO APP DOMAIN NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 269)
+[2023-11-26 10:43:20.130] [Error] [critical] 
+Caused By:	false
+Info:		7328944263752446106  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 514)
 

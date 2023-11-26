@@ -511,7 +511,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             }
         }
         else
-            E_ASSERT(false, "Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
+            E_ASSERT(false, id ," Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
     }
     else
     {

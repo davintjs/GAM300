@@ -2077,7 +2077,7 @@ ID: 6034621871942586701
 GameObject:
   m_IsActive: true
   m_Name: RangeEnemy
-  m_TagString: ""
+  m_TagString: Enemy
   m_Layer: 0
   m_Component:
     - component: {fileID: 2078812242787879120}  # Transform
@@ -7292,8 +7292,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
-  IsKinematic: true
+  IsStatic: true
+  IsKinematic: false
   UseGravity: false
   Is_trigger: true
 ---
@@ -7402,7 +7402,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 40.8104095
+  Time: 15.178422
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8583,8 +8583,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
-  IsKinematic: true
+  IsStatic: true
+  IsKinematic: false
   UseGravity: false
   Is_trigger: true
 ---
@@ -8623,8 +8623,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
-  IsKinematic: true
+  IsStatic: true
+  IsKinematic: false
   UseGravity: false
   Is_trigger: true
 ---
@@ -15529,7 +15529,7 @@ ID: 3977294589520766028
 GameObject:
   m_IsActive: true
   m_Name: Player
-  m_TagString: ""
+  m_TagString: Player
   m_Layer: 0
   m_Component:
     - component: {fileID: 18246905878658813158}  # Transform
@@ -16222,7 +16222,7 @@ ID: 16905222177648308199
 GameObject:
   m_IsActive: true
   m_Name: bullet
-  m_TagString: ""
+  m_TagString: EnemyAttack
   m_Layer: 0
   m_Component:
     - component: {fileID: 7092983223759180045}  # Transform
@@ -19653,7 +19653,7 @@ ID: 3891207990783627763
 GameObject:
   m_IsActive: true
   m_Name: RangeEnemyNMPF - Copy
-  m_TagString: ""
+  m_TagString: Enemy
   m_Layer: 0
   m_Component:
     - component: {fileID: 2015477630408231711}  # Transform
@@ -19923,7 +19923,7 @@ ID: 16048651082753273364
 GameObject:
   m_IsActive: true
   m_Name: RangeEnemyNMPF - Copy - Copy
-  m_TagString: ""
+  m_TagString: Enemy
   m_Layer: 0
   m_Component:
     - component: {fileID: 17176937252027853359}  # Transform
@@ -20188,6 +20188,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7502625332599918066}
   Mesh: {guid: e1fc92ced6d495a0ebddb7e0a41730a8}
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
+---
 ID: 7328944263752446106
 GameObject:
   m_IsActive: true
