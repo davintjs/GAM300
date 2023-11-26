@@ -5,6 +5,7 @@ using GlmSharp;
 using System;
 public class ThirdPersonCamera : Script
 {
+    public static ThirdPersonCamera instance;
     public float YawRotSpeed = 180f;
     public float PitchRotSpeed = 180f;
     public float MaxPitchAngle = 85f;
@@ -30,6 +31,17 @@ public class ThirdPersonCamera : Script
     private float initialZoom;
 
     // Start is called before the first frame update
+    
+
+    float fov = 0;
+    private Camera camera;
+
+    void Awake()
+    {
+        camera = GetComponent<Camera>();
+        instance = this;
+        fov = camera.fieldOfView;
+    }
     void Start()
     {
         //Lock and hide mouse cursor
@@ -118,5 +130,56 @@ public class ThirdPersonCamera : Script
     {
         value /= duration;
         return (1.0f - value) * start + value * end;
+    }
+
+    public void ShakeCamera(float magnitude, float duration)
+    {
+        StartCoroutine(ShakeCoroutine(magnitude, duration));
+    }
+
+    IEnumerator ShakeCoroutine(float magnitude, float duration)
+    {
+        vec3 originalPosition = transform.localPosition;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float x = RNG.Range(-1f, 1f) * magnitude;
+            float y = RNG.Range(-1f, 1f) * magnitude;
+
+            transform.localPosition = new vec3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.localPosition = originalPosition; // Reset position after shaking
+    }
+
+    public void SetFOV(float targetFOV, float duration)
+    {
+        StartCoroutine(FOVLerp(targetFOV, duration));
+    }
+
+    IEnumerator FOVLerp(float targetFOV, float duration)
+    {
+        float elapsed = 0f;
+        float startFOV = camera.fieldOfView;
+
+        while (elapsed < duration/2)
+        {
+            camera.fieldOfView = glm.Lerp(startFOV, startFOV+targetFOV, elapsed / duration);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        while (elapsed < duration)
+        {
+            camera.fieldOfView = glm.Lerp(startFOV + targetFOV, startFOV, elapsed / duration);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        camera.fieldOfView = startFOV; // Ensure it reaches the exact target value
     }
 }

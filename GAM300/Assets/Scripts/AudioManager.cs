@@ -22,6 +22,8 @@ public class AudioManager : Script
     public AudioSource elevator;
     public AudioSource playerFootstep;
     public AudioSource playerAttack;
+    public AudioSource enemyHit;
+    public AudioSource keyCollected;
 
     void Awake()
     {

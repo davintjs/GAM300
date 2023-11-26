@@ -32,26 +32,6 @@ public class Door : Script
 
     void Update()
     {
-
-        vec3 positive = new vec3(transform.localPosition);
-        positive.y = floatKey + keyStartY;
-        vec3 negative = new vec3(transform.localPosition);
-        negative.y = -floatKey + keyStartY;
-        if (!back)
-        {
-            transform.localPosition = vec3.Lerp(negative, positive, timer / maxTime);
-        }
-        else
-        {
-            transform.localPosition = vec3.Lerp(positive, negative, timer / maxTime);
-        }
-
-        timer += Time.deltaTime;
-        if (timer >= maxTime)
-        {
-            back = !back;
-            timer = 0;
-        }
         if(moving && !temp)
         {
             //totaltime += Time.deltaTime;
@@ -78,11 +58,8 @@ public class Door : Script
         if (GetTag(rb) == "Player")
         {
             Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
-            //transform.localPosition.y = 100f;
-            moving = true;
-            AudioManager.instance.doorOpen.Play();
-            AudioManager.instance.itemCollected.Play();
-            //Destroy(gameObject);
+
         }
+
     }
 }

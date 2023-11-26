@@ -249,6 +249,13 @@ struct ContactRemovedEvent : IEvent
 	PhysicsComponent* pc1;
 	PhysicsComponent* pc2;
 };
+struct ContactStayEvent : IEvent 
+{
+	ContactStayEvent() : pc1{ nullptr }, pc2{ nullptr } {}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
+};
 
 struct TriggerEnterEvent : IEvent
 {
@@ -260,6 +267,13 @@ struct TriggerEnterEvent : IEvent
 struct TriggerRemoveEvent : IEvent
 {
 	TriggerRemoveEvent() : pc1{ nullptr }, pc2{ nullptr }{}
+
+	PhysicsComponent* pc1;
+	PhysicsComponent* pc2;
+};
+struct TriggerStayEvent : IEvent
+{
+	TriggerStayEvent() : pc1{ nullptr }, pc2{ nullptr }{}
 
 	PhysicsComponent* pc1;
 	PhysicsComponent* pc2;
