@@ -45,10 +45,6 @@ public class RangeEnemy : Script
 
     Rigidbody rb;
 
-    private float particle_duration = 0.5f;
-    private float particle_timer = 0f;
-    private bool particle_on = false;
-
     //audio
     public bool playOnce = true;
 
@@ -72,21 +68,6 @@ public class RangeEnemy : Script
         vec3 direction = player.localPosition - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
-
-        if (particle_on)
-        {
-            if (particle_timer > 0f)
-            {
-                particle_timer -= Time.deltaTime;
-            }
-            else
-            {
-                particle.gameObject.transform.localPosition = new vec3(-999, -999, -999);
-                particle_timer = 0f;
-                particle_on = false;
-                particle.Play();
-            }
-        }
 
         switch (state)
         {
@@ -221,16 +202,10 @@ public class RangeEnemy : Script
         shootCooldown -= .5f;
         AudioManager.instance.enemyHit.Play();
         currentHealth -= amount;
-        hpBar.localScale.x = (float)currentHealth/maxHealth;
+        hpBar.localScale.x = currentHealth/maxHealth;
+        CombatManager.instance.SpawnHitEffect(transform);
         //set particle transform to enemy position
-        if(currentHealth > 0)
-        {
-            particle.gameObject.transform.localPosition = transform.localPosition;
-            particle.Play();
-            particle_on = true;
-            particle_timer = particle_duration;
-        }
-        else
+        if(currentHealth <= 0)
         {
             AudioManager.instance.rangeEnemyDead.Play();
             Destroy(gameObject);

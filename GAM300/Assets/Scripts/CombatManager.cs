@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using BeanFactory;
 using GlmSharp;
 
@@ -16,6 +12,10 @@ public class CombatManager : Script
     public float hitShakeMag = 1;
     public float hitShakeDur = 1;
 
+    public float hitEffectDuration = 1f;
+
+    public GameObject hitEffect;
+
     void Awake()
     {
         if (instance != null)
@@ -26,5 +26,22 @@ public class CombatManager : Script
         {
             instance = this;
         }
+    }
+
+    public void SpawnHitEffect(Transform transform)
+    {
+        GameObject particles = Instantiate(hitEffect, transform.position, transform.rotation);
+        StartCoroutine(DestroyParticles(hitEffectDuration, particles));
+    }
+
+    IEnumerator DestroyParticles(float duration,GameObject gameObj)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        Destroy(gameObj);
     }
 }

@@ -199,11 +199,13 @@ property_begin_name(Animator, "Animator") {
 struct Camera : Object, BaseCamera
 {
 	Camera();
+	Vector4 backgroundColor{};
 	property_vtable();
 };
 
 property_begin_name(Camera, "Camera") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(backgroundColor).Name("BackgroundColor"),
 	property_parent(BaseCamera)
 } property_vend_h(Camera)
 

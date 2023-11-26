@@ -92,6 +92,7 @@ void Scene::CopyValues(T& source, T& dest)
 		//assert(Flags.m_isScope == false || PropertyName.back() == ']');
 
 	});
+
 }
 
 template <typename... Ts>

@@ -159,7 +159,7 @@ void Transform::RemoveChild(Transform* t)
 	child.erase(it);
 }
 
-Camera::Camera()
+Camera::Camera() : backgroundColor{ BaseCamera::backgroundColor }
 {
 	BaseCamera::Init();
 	cameraType = CAMERATYPE::GAME;

@@ -42,7 +42,40 @@ public class ThirdPersonController : Script
 
     AnimationStateMachine animationManager;
 
-    public bool IsAttacking = false;
+    bool _isAttacking = false;
+
+    bool IsAttacking 
+    {
+        get { return _isAttacking; }
+        set
+        {
+            _isAttacking = value;
+            currentAttackTimer = 0f;
+            for (int i = 1; i <= 3; ++i)
+            {
+                SetState("Attack" + i, false);
+            }
+            if (_isAttacking == false)
+            {
+                playerWeaponCollider1.SetActive(false);
+                playerWeaponCollider2.SetActive(false);
+                playerWeaponCollider3.SetActive(false);
+                comboCount = 1;
+                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                attackLight.SetActive(false);
+            }
+            else
+            {
+                selectedWeaponCollider.transform.localRotation = new vec3(PlayerModel.localRotation);
+                SetState("Attack" + comboCount, true);
+                AudioManager.instance.playerSlashAttack.Play();
+                AudioManager.instance.spark.Play();
+                AudioManager.instance.playerAttack.Play();
+                ++comboCount;
+                if (comboCount > 3) { comboCount = 1; }
+            }
+        }
+    }
     public float attackTimer = 1f;
     float currentAttackTimer;
 
@@ -122,9 +155,7 @@ public class ThirdPersonController : Script
         AnimationState run = animationManager.GetState("Run");
         //Lowest Precedence
 
-        death.stall = true;
         stun.SetConditionals(false, death);
-        stun.stall = true;
         falling.SetConditionals(false, death, stun);
         falling.loop = true;
         jump.SetConditionals(false, death,stun);
@@ -148,6 +179,7 @@ public class ThirdPersonController : Script
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);
+        selectedWeaponCollider = playerWeaponCollider1;
         currentAttackTimer = 0;
         currentHealth = maxHealth;
         currentInvulnerableTimer = invulnerableTimer;
@@ -168,12 +200,15 @@ public class ThirdPersonController : Script
             Console.WriteLine("Restart");
             SceneManager.LoadScene("LevelPlay2");
         }
+
         if (isDead) return;
 
         if (CC.velocity.y > JumpSpeed)
         {
             CC.velocity.y = JumpSpeed;
         }
+
+
 
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
@@ -215,19 +250,22 @@ public class ThirdPersonController : Script
             if (currentAttackTimer >= attackTimer)
             {
                 IsAttacking = false;
-                playerWeaponCollider1.SetActive(false);
-                playerWeaponCollider2.SetActive(false);
-                playerWeaponCollider3.SetActive(false);
-                for (int i = 1; i <= 3; ++i)
-                {
-                    SetState("Attack"+i, false);
-                }
-                comboCount = 1;
-                currentAttackTimer = 0f;
             }
         }
-        
-        if (CC.isGrounded)
+
+        //invulnerability
+        if (isInvulnerable)
+        {
+            currentInvulnerableTimer -= Time.deltaTime;
+            if (currentInvulnerableTimer <= 0)
+            {
+                isInvulnerable = false;
+                currentInvulnerableTimer = invulnerableTimer;
+                SetState("Stun", false);
+            }
+            return;
+        }
+        else if (CC.isGrounded)
         {
             if (GetState("Falling"))
             {
@@ -260,23 +298,10 @@ public class ThirdPersonController : Script
                         break;
                 }
                 IsAttacking = true;
-                currentAttackTimer = 0f;
-                Console.WriteLine("Rotation");
-                selectedWeaponCollider.transform.localRotation = new vec3(PlayerModel.localRotation);
-                for (int i = 1; i <= 3; ++i)
-                {
-                    SetState("Attack" + i, false);
-                }
-                SetState("Attack"+comboCount, true);
-                AudioManager.instance.playerSlashAttack.Play();
-                AudioManager.instance.spark.Play();
-                AudioManager.instance.playerAttack.Play();
-                ++comboCount;
-                if (comboCount > 3) { comboCount = 1; }
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking)
             {
                 SetState("Jump", true);
                 AudioManager.instance.jumpVoice.Play();
@@ -340,17 +365,6 @@ public class ThirdPersonController : Script
         CC.Move(movement);
 
         //attacking
-
-        //invulnerablility
-        if (isInvulnerable)
-        {
-            currentInvulnerableTimer -= Time.deltaTime;
-            if (currentInvulnerableTimer <= 0)
-            {
-                isInvulnerable = false;
-                currentInvulnerableTimer = invulnerableTimer;
-            }
-        }
 
 
         animationManager.UpdateState();
@@ -417,11 +431,12 @@ public class ThirdPersonController : Script
     }
     public void TakeDamage(float amount)
     {
-        AudioManager.instance.playerInjured.Play();
-        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
-        ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
         if (!isInvulnerable)
         {
+            IsAttacking = false;
+            AudioManager.instance.playerInjured.Play();
+            ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
+            ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
             isInvulnerable = true;
             currentInvulnerableTimer = invulnerableTimer;
             currentHealth -= amount;
@@ -433,11 +448,14 @@ public class ThirdPersonController : Script
             Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
-            
+            animationManager.UpdateState();
         }
         else
         {
             SetState("Stun", true);
+            animator.Stop();
+            animationManager.UpdateState();
+            animator.Play();
         }
     }
 

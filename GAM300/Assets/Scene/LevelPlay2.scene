@@ -33,7 +33,9 @@ Script:
   Script: {guid: 240ef1325945ba7654a2ccd34ac0a17b}
   damagedShakeMag: 0.0500000007
   damagedShakeDur: 0.300000012
+  hitEffectDuration: 1
   hitShakeMag: 0.100000001
+  hitEffect: {fileID: 17611351097031071778}  # GameObject
   hitShakeDur: 0.100000001
 ---
 ID: 11768379503594195228
@@ -7429,7 +7431,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 8.28995895
+  Time: 23.4462757
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8064,7 +8066,6 @@ ID: 16773315215798417911
 Camera:
   m_GameObject: {fileID: 15334681090738628473}
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
-  ClearFlags: "\x01"
   ClearFlags: "\x01"
   CullingMask: "\x00"
   FocalLength: 10
@@ -15563,7 +15564,7 @@ Script:
   maxColliderDist: 1.5
   PlayerModel: {fileID: 18364898161930433210}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
-  invulnerableTimer: 1
+  invulnerableTimer: 0.699999988
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   attack3duration: 1.70000005
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
@@ -15572,7 +15573,6 @@ Script:
   checkpoint2: {fileID: 13797028059376800602}  # Component
   RotationSpeed: 5
   audioSource: {fileID: 16716648517964172389}  # Component
-  IsAttacking: false
   attackTimer: 1
   currentHealth: 4
   isInvulnerable: false

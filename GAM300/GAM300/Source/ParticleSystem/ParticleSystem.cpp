@@ -18,33 +18,44 @@ void ParticleManager::Init()
 void ParticleManager::Update(float dt)
 {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
-        
+    int total = 0;
+    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>())
+    {
+        if (!currentScene.IsActive(particleComponent))
+            continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
+        total += particleComponent.numParticles_;
+    }
+    random.resize(total);
+
+    int size = 0;
+    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) 
+    {
+        if (!currentScene.IsActive(particleComponent))
+            continue;
+        Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
         Transform& entityTransform = currentScene.Get<Transform>(entity);
         /*float elapsedTimeSinceLastEmission = dt;
         float timeBetweenEmissions = 1.0f / particleComponent.particleEmissionRate_;*/
-        
-
 
         if (particleComponent.particles_.size() != particleComponent.numParticles_) { // initialize
             particleComponent.particles_.resize(particleComponent.numParticles_);
-            random.resize(particleComponent.numParticles_);
             // Initialize the position, velocity, and acceleration of each particle
             for (int i = 0; i < particleComponent.numParticles_; i++) {
                 particleComponent.particles_[i].position = entityTransform.GetTranslation();
-                particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                particleComponent.particles_[i].direction = random[size + i].NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = 1.0f;
                 //particleComponent.particles_[i].lifetime = particleComponent.particleLifetime_;
-                particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                particleComponent.particles_[i].lifetime = random[size + i].NextFloat1(0.0f, particleComponent.particleLifetime_);
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
                 particleComponent.particles_[i].speed = particleComponent.speed_;
             }
         }
-
-        //particleComponent.particleLooping = true;
-
         
         // Handle particle collisions
         // Emit new particles
@@ -59,10 +70,10 @@ void ParticleManager::Update(float dt)
                     {
                         particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
                         //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
-                        particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                        particleComponent.particles_[i].direction = random[size + i].NextVector3(-20.0f, 20.0f);
                         particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                         particleComponent.particles_[i].acceleration = 1.0f;
-                        particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                        particleComponent.particles_[i].lifetime = random[size + i].NextFloat1(0.0f, particleComponent.particleLifetime_);
                         particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
                         particleComponent.particles_[i].speed = particleComponent.speed_;
                         /*std::cout
@@ -75,7 +86,7 @@ void ParticleManager::Update(float dt)
                         //particleComponent.particleEmissionRate_ = particleComponent.desiredLifetime / 1.0f; 
                         particleComponent.particleEmissionRate_ = 1.0f;
                         particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
-                        particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                        particleComponent.particles_[i].direction = random[size + i].NextVector3(-20.0f, 20.0f);
                         particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                         particleComponent.particles_[i].acceleration = 1.0f;
                         particleComponent.particles_[i].lifetime -= dt;
@@ -90,10 +101,10 @@ void ParticleManager::Update(float dt)
                     //{
                     //    particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
                     //    //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
-                    //    particleComponent.particles_[i].direction = random[i].NextVector3(-20.0f, 20.0f);
+                    //    particleComponent.particles_[i].direction = random[size + i].NextVector3(-20.0f, 20.0f);
                     //    particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                     //    particleComponent.particles_[i].acceleration = 1.0f;
-                    //    particleComponent.particles_[i].lifetime = random[i].NextFloat1(0.0f, particleComponent.particleLifetime_);
+                    //    particleComponent.particles_[i].lifetime = random[size + i].NextFloat1(0.0f, particleComponent.particleLifetime_);
                     //    particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
                     //    particleComponent.particles_[i].speed = particleComponent.speed_;
                     //}
@@ -116,6 +127,12 @@ void ParticleManager::Update(float dt)
             particleComponent.particles_[i].scale = glm::clamp(particleComponent.particles_[i].scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
 
         }
+        size += particleComponent.numParticles_;
+    }
+
+    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>())
+    {
+        PRINT("d");
     }
 }
 

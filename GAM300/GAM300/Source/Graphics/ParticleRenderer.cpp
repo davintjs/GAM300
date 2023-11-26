@@ -14,8 +14,13 @@ void ParticleRenderer::Init() {
 void ParticleRenderer::Update(float dt) {
     particleSRT.clear(); // @kk not all entity should use the same container
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+    size_t amt = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
+
+        amt += particleComponent.particles_.size();
+        if (!currentScene.IsActive(particleComponent)) continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity)) continue;
         for (int i = 0; i < particleComponent.particles_.size(); ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
@@ -43,6 +48,9 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
     
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
+        if (!currentScene.IsActive(particleComponent)) continue;
+        Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity)) continue;
         GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
         GLenum prim = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->prim; // for now particles are all cubes
         InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
