@@ -198,15 +198,18 @@ public class ThirdPersonController : Script
             else
             {
                 if (currentAttackTimer / attackTimer > 0.5f)
+                {
+                    selectedWeaponCollider.transform.localPosition = new vec3(10000);
                     attackLight.SetActive(false);
+                }
                 else if (currentAttackTimer / attackTimer > 0.3f )
                 {
+                    selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
                     attackLight.SetActive(true);
                     selectedWeaponCollider.SetActive(true);//enable the weapon collider
                 }
                 movement = vec3.Zero;
             }
-            selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
             attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.localPosition);
             currentAttackTimer += Time.deltaTime;
             if (currentAttackTimer >= attackTimer)
