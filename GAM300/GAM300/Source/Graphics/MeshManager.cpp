@@ -280,8 +280,8 @@ void MeshManager::CreateInstanceCube()
 
     meshAsset.boundsMin = newMesh.vertices_min;
     meshAsset.boundsMax = newMesh.vertices_max;
-    meshAsset.numVertices = meshAsset.vertices.size();
-    meshAsset.numIndices = meshAsset.indices.size();
+    meshAsset.numVertices = (unsigned int)meshAsset.vertices.size();
+    meshAsset.numIndices = (unsigned int)meshAsset.indices.size();
     meshAsset.numBones = 0;
 
     // Generating VAO, VBO & EBO
@@ -406,8 +406,8 @@ void MeshManager::CreateInstanceSphere()
     meshAsset.indices = indices;
     meshAsset.boundsMin = min;
     meshAsset.boundsMax = max;
-    meshAsset.numVertices = positions.size();
-    meshAsset.numIndices = indices.size();
+    meshAsset.numVertices = (unsigned int)positions.size();
+    meshAsset.numIndices = (unsigned int)indices.size();
     meshAsset.numBones = 0;
 
     ModelVertex vertex;
