@@ -364,6 +364,15 @@ void ScriptingSystem::InvokeAllScripts(size_t methodType)
 {
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& scriptsArray = scene.GetArray<Script>();
+	if (methodType == DefaultMethodTypes::Start || methodType == DefaultMethodTypes::Awake)
+	{
+		for (auto it = scriptsArray.begin(); it != scriptsArray.end(); ++it)
+		{
+			Script& script = *it;
+			InvokeMethod(script, methodType);
+		}
+		return;
+	}
 	for (auto it = scriptsArray.begin();it != scriptsArray.end();++it)
 	{
 		if (!it.IsActive())

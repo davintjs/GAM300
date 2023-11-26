@@ -104,6 +104,7 @@ Transform:
     - {fileID: 2723553382536766900}
     - {fileID: 10419665452268142691}
     - {fileID: 8195998143091088379}
+    - {fileID: 5382915443314468010}
 ---
 ID: 12555400289260702052
 Script:
@@ -121,6 +122,7 @@ Script:
   elevator: {fileID: 2406511765798993316}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
   enemyHit: {fileID: 14492758170611173101}  # Component
+  keyCollected: {fileID: 12067369461903983448}  # Component
 ---
 ID: 6606253624498158492
 GameObject:
@@ -2174,6 +2176,7 @@ Script:
   floatingY: 0.200000003
   maxShootCooldown: 1.5
   playOnce: true
+  spawnObject: {fileID: 18443479616549604882}  # GameObject
 ---
 ID: 3574560937881504822
 GameObject:
@@ -2186,6 +2189,7 @@ GameObject:
     - component: {fileID: 9407117863334368387}  # BoxCollider
     - component: {fileID: 11494955956919997079}  # Rigidbody
     - component: {fileID: 7081653189866061289}  # MeshRenderer
+    - component: {fileID: 5812832960693624778}  # Script
 ---
 ID: 221216268224481331
 Transform:
@@ -2222,6 +2226,19 @@ MeshRenderer:
   m_GameObject: {fileID: 3574560937881504822}
   Mesh: {guid: 9342b47cbf5e392bb2206838dc97792f}
   Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 5812832960693624778
+Script:
+  m_GameObject: {fileID: 3574560937881504822}
+  Script: {guid: b50644b2014968068e46c4076c31b648}
+  temp: false
+  moving: false
+  floatKey: 1
+  movingTimer: 2
+  displacement: -3.79999995
+  door: {fileID: 3574560937881504822}  # Component
+  back: false
+  maxTime: 5
 ---
 ID: 6661078963704661251
 GameObject:
@@ -7431,7 +7448,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 23.4462757
+  Time: 9.04487991
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15822,7 +15839,7 @@ MeshRenderer:
 ---
 ID: 18443479616549604882
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: PuzzleKey
   m_TagString: ""
   m_Layer: 0
@@ -15830,12 +15847,12 @@ GameObject:
     - component: {fileID: 7261744083574205926}  # Transform
     - component: {fileID: 18050718210444388130}  # BoxCollider
     - component: {fileID: 16019788179477535928}  # Rigidbody
-    - component: {fileID: 14030792873153318403}  # Script
+    - component: {fileID: 15281357007188901707}  # Script
 ---
 ID: 7261744083574205926
 Transform:
   m_GameObject: {fileID: 18443479616549604882}
-  Translation: [44.7306404, -1.94827521, -35.6142578]
+  Translation: [44.7306404, -0.707260251, -35.6142578]
   Rotation: [0, -1.57045114, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15849,8 +15866,8 @@ Transform:
 ID: 18050718210444388130
 BoxCollider:
   m_GameObject: {fileID: 18443479616549604882}
-  Dimensions: [0.5, 1, 0.5]
-  Offset: [0, 1, -0.5]
+  Dimensions: [0.5, 0.600000024, 0.200000003]
+  Offset: [0, 0, 0]
 ---
 ID: 16019788179477535928
 Rigidbody:
@@ -15865,18 +15882,18 @@ Rigidbody:
   UseGravity: false
   Is_trigger: true
 ---
-ID: 14030792873153318403
+ID: 15281357007188901707
 Script:
   m_GameObject: {fileID: 18443479616549604882}
-  Script: {guid: b50644b2014968068e46c4076c31b648}
+  Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
   temp: false
   moving: false
-  floatKey: 0.300000012
-  movingTimer: 2
-  displacement: -3.79999995
-  door: {fileID: 3574560937881504822}  # Component
+  floatKey: 0.150000006
+  movingTimer: 0.300000012
+  doorscript: {fileID: 5812832960693624778}  # Component
+  displacement: 0.5
   back: false
-  maxTime: 5
+  maxTime: 2
 ---
 ID: 9415500495553204706
 GameObject:
@@ -15886,19 +15903,19 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 5823733516603310595}  # Transform
-    - component: {fileID: 9794426338544462851}  # MeshRenderer
+    - component: {fileID: 14442262629327613715}  # MeshRenderer
 ---
 ID: 5823733516603310595
 Transform:
   m_GameObject: {fileID: 9415500495553204706}
-  Translation: [0, 0, 0]
+  Translation: [-0.000387895852, -1.20000005, 0.5]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 18443479616549604882}
   m_Children:
     []
 ---
-ID: 9794426338544462851
+ID: 14442262629327613715
 MeshRenderer:
   m_GameObject: {fileID: 9415500495553204706}
   Mesh: {guid: 0d43fbeb68cf0b1ad4c118fb3e6dfaab}
@@ -15917,7 +15934,7 @@ GameObject:
 ID: 4902527726027728404
 Transform:
   m_GameObject: {fileID: 2023686734559323741}
-  Translation: [0, 0, 0]
+  Translation: [0, -1.20000005, 0.5]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 18443479616549604882}
@@ -15943,7 +15960,7 @@ GameObject:
 ID: 14023783464635293309
 Transform:
   m_GameObject: {fileID: 8453671636525477252}
-  Translation: [0, 0, 0]
+  Translation: [-0.000140521675, -1.20000005, 0.5]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 18443479616549604882}
@@ -15969,7 +15986,7 @@ GameObject:
 ID: 3131392641645780096
 Transform:
   m_GameObject: {fileID: 15774510023461289577}
-  Translation: [0, 0, 0]
+  Translation: [0, -1.20000005, 0.5]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 18443479616549604882}
@@ -15995,7 +16012,7 @@ GameObject:
 ID: 10759005556865772431
 Transform:
   m_GameObject: {fileID: 4383279118696925039}
-  Translation: [0, 0, 0]
+  Translation: [0, -1.20000005, 0.5]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 18443479616549604882}
@@ -20548,4 +20565,33 @@ AudioSource:
   Loop: false
   Volume: 1
   Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
+  Play: false
+---
+ID: 5382915443314468010
+GameObject:
+  m_IsActive: true
+  m_Name: keyCollected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6380692802903293290}  # Transform
+    - component: {fileID: 12067369461903983448}  # AudioSource
+---
+ID: 6380692802903293290
+Transform:
+  m_GameObject: {fileID: 5382915443314468010}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12067369461903983448
+AudioSource:
+  m_GameObject: {fileID: 5382915443314468010}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
   Play: false

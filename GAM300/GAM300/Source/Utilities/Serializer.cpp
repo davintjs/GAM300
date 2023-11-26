@@ -117,7 +117,7 @@ bool SerializeEntity(YAML::Emitter& out, Entity& _entity, Scene& _scene)
     out << YAML::Key << "ID" << YAML::Value << _entity.EUID();
     out << YAML::Key << "GameObject" << YAML::Value;
     out << YAML::BeginMap;
-    out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity);
+    out << YAML::Key << "m_IsActive" << YAML::Value << _scene.IsActive(_entity,false);
 
     // Bean: Components are placed in different conditions, maybe implement using templates?
     // Bean: Components should have its own category like Entities, and just loop thru

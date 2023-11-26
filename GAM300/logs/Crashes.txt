@@ -1,5 +1,5 @@
-[2023-11-26 10:43:20.130] [Error] [critical] 
-Caused By:	false
-Info:		7328944263752446106  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 514)
+[2023-11-26 17:35:54.165] [Error] [critical] 
+Caused By:	start
+Info:		Couldn't find index
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\ObjectsList.cpp (Line: 249)
 

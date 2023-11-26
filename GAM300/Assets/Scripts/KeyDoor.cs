@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using BeanFactory;
 using GlmSharp;
 
-public class Door : Script
+public class KeyDoor : Script
 {
     public bool moving = false;
     public bool temp = false;
     public float movingTimer = 2f;// takes 3 seconds to move the door down
     public float displacement = -3.8f;
-    public Transform door;
+    public Door doorscript;
 
     float totaltime = 0f;
     float displaced = 0f;
@@ -32,23 +32,25 @@ public class Door : Script
 
     void Update()
     {
-        if(moving && !temp)
+
+        vec3 positive = new vec3(transform.localPosition);
+        positive.y = floatKey + keyStartY;
+        vec3 negative = new vec3(transform.localPosition);
+        negative.y = -floatKey + keyStartY;
+        if (!back)
         {
-            //totaltime += Time.deltaTime;
-            float currDisplacement = displacement * (Time.deltaTime / movingTimer);
+            transform.localPosition = vec3.Lerp(negative, positive, timer / maxTime);
+        }
+        else
+        {
+            transform.localPosition = vec3.Lerp(positive, negative, timer / maxTime);
+        }
 
-            displaced += currDisplacement;
-
-            // Check to make sure i dont overshoot
-            if (Math.Abs(displaced) >= Math.Abs(displacement))
-            {
-                currDisplacement -= displacement - displaced;
-                temp = true;
-            }
-            door.localPosition.y += currDisplacement;
-
-            //transform.localPosition.y = 100f;
-            //temp = true;
+        timer += Time.deltaTime;
+        if (timer >= maxTime)
+        {
+            back = !back;
+            timer = 0;
         }
 
     }
@@ -57,9 +59,10 @@ public class Door : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
-            Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
-
+            doorscript.moving = true;
+            AudioManager.instance.keyCollected.Play();
+            AudioManager.instance.doorOpen.Play();
+            Destroy(gameObject);
         }
-
     }
 }

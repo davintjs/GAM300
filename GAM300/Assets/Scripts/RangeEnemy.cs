@@ -50,6 +50,8 @@ public class RangeEnemy : Script
 
     Coroutine damagedCoroutine;
 
+    public GameObject spawnObject;
+
     void Start()
     {
         playOnce = true;
@@ -208,6 +210,8 @@ public class RangeEnemy : Script
         if(currentHealth <= 0)
         {
             AudioManager.instance.rangeEnemyDead.Play();
+            if (spawnObject != null)
+                spawnObject.SetActive(true);
             Destroy(gameObject);
         }
     }
