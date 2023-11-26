@@ -97,7 +97,7 @@ AudioSource:
   m_GameObject: {fileID: 11768379503594195228}
   AudioChannel: 0
   Loop: true
-  Volume: 0.100000001
+  Volume: 0.699999988
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---
@@ -165,7 +165,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 18356289913919723263}  # Transform
-    - component: {fileID: 2383003823628521294}  # LightSource
 ---
 ID: 18356289913919723263
 Transform:
@@ -176,18 +175,6 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     []
----
-ID: 2383003823628521294
-LightSource:
-  m_GameObject: {fileID: 6606253624498158492}
-  EnableShadow: true
-  lightType: 0
-  lightpos: [0, 0, 0]
-  Intensity: 30
-  Direction: [0, 0, 0]
-  Inner Cutoff: 30
-  Outer Cutoff: 60
-  Color: [100, 100, 100]
 ---
 ID: 4212138099454399691
 GameObject:
@@ -7483,7 +7470,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 5.73114014
+  Time: 2.00964737
   StartTime: 2
   EndTime: 61
   Playing: true

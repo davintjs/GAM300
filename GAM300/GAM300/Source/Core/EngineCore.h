@@ -125,11 +125,11 @@ public:
 		AUDIOMANAGER.InitAudioManager();
 		PHYSICS.PostSubscription();
 
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		#if defined(_BUILD)
 			MySceneManager.StartScene();
-		#else
-			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
-			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
+			mode = ENUM_SYSTEM_RUNTIME;
 		#endif
 		update_timer = 0.f;
 		app_time = 0.f;
