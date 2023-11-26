@@ -138,6 +138,7 @@ Transform:
     - {fileID: 10419665452268142691}
     - {fileID: 8195998143091088379}
     - {fileID: 5382915443314468010}
+    - {fileID: 8310365372469502612}
 ---
 ID: 12555400289260702052
 Script:
@@ -156,6 +157,7 @@ Script:
   playerFootstep: {fileID: 6518591935153270902}  # Component
   enemyHit: {fileID: 14492758170611173101}  # Component
   keyCollected: {fileID: 12067369461903983448}  # Component
+  uiSound: {fileID: 12043367231734905459}  # Component
 ---
 ID: 6606253624498158492
 GameObject:
@@ -7470,7 +7472,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 3.54146552
+  Time: 13.5085201
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -21039,3 +21041,32 @@ Script:
   m_GameObject: {fileID: 14345828798894584708}
   Script: {guid: 73a99346dabafcd80f1945f025aef51a}
   state: 4
+---
+ID: 8310365372469502612
+GameObject:
+  m_IsActive: true
+  m_Name: uiSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14053836816538118579}  # Transform
+    - component: {fileID: 12043367231734905459}  # AudioSource
+---
+ID: 14053836816538118579
+Transform:
+  m_GameObject: {fileID: 8310365372469502612}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12043367231734905459
+AudioSource:
+  m_GameObject: {fileID: 8310365372469502612}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
+  Play: false

@@ -12,12 +12,19 @@ class Dialogue : Script
     public void OnTriggerEnter(PhysicsComponent component)
     {
         if (GetTag(component) == "Player")
+        {
+
             DialogueManager.Instance.SetState(state);
+            AudioManager.instance.uiSound.Play();
+        }
     }
 
     public void OnTriggerExit(PhysicsComponent component)
     {
         if (GetTag(component) == "Player")
+        {
             DialogueManager.Instance.Reset();
+            AudioManager.instance.uiSound.Play();
+        }
     }
 }
