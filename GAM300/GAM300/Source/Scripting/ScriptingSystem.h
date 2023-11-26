@@ -244,13 +244,23 @@ public:
 	//Callback function to when a script is created
 	void CallbackLoadScene(LoadSceneEvent*pEvent);
 
+	//Callback function for when new collision is registered
 	void CallbackCollisionEnter(ContactAddedEvent* pEvent);
 
+	//Callback function for when collision is removed
 	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
 
-	void CallbackTriggerEnter(TriggerEnterEvent * pEvent);
+	//Callback function for when existing collision persists, one per physics update for each set of collision
+	void CallbackCollisionStay(ContactStayEvent* pEvent);
 
-	void CallbackTriggerExit(TriggerRemoveEvent * pEvent);
+	//Callback function for when new trigger is registered
+	void CallbackTriggerEnter(TriggerEnterEvent* pEvent);
+
+	//Callback function for when trigger is removed
+	void CallbackTriggerExit(TriggerRemoveEvent* pEvent);
+
+	//Callback function for when existing trigger persists, one per physics update for each set of trigger
+	void CallbackTriggerStay(TriggerStayEvent* pEvent);
 
 	//Helper to subscribe to all objects deletion
 	template <typename... Ts>

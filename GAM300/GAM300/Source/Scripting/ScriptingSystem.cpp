@@ -222,8 +222,10 @@ void ScriptingSystem::Init()
 
 	Subscribe(&ScriptingSystem::CallbackCollisionEnter);
 	Subscribe(&ScriptingSystem::CallbackCollisionExit);
+	Subscribe(&ScriptingSystem::CallbackCollisionStay);
 	Subscribe(&ScriptingSystem::CallbackTriggerEnter);
 	Subscribe(&ScriptingSystem::CallbackTriggerExit);
+	Subscribe(&ScriptingSystem::CallbackTriggerStay);
 
 	InitMono();
 	SwapDll();
@@ -781,6 +783,11 @@ void ScriptingSystem::CallbackCollisionExit(ContactRemovedEvent* pEvent)
 	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionExit, *pEvent->pc1, *pEvent->pc2);
 }
 
+void ScriptingSystem::CallbackCollisionStay(ContactStayEvent* pEvent)
+{
+	InvokePhysicsEvent(DefaultMethodTypes::OnCollisionStay, *pEvent->pc1, *pEvent->pc2);
+}
+
 void ScriptingSystem::InvokeMethod(Script& script, size_t methodType)
 {
 	MonoObject* mNewScript = ReflectScript(script);
@@ -802,6 +809,11 @@ void ScriptingSystem::CallbackTriggerEnter(TriggerEnterEvent* pEvent)
 void ScriptingSystem::CallbackTriggerExit(TriggerRemoveEvent* pEvent)
 {
 	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerExit, *pEvent->pc1, *pEvent->pc2);
+}
+
+void ScriptingSystem::CallbackTriggerStay(TriggerStayEvent* pEvent)
+{
+	InvokePhysicsEvent(DefaultMethodTypes::OnTriggerStay, *pEvent->pc1, *pEvent->pc2);
 }
 
 void ScriptingSystem::CallbackScriptModified(FileTypeModifiedEvent<FileType::SCRIPT>* pEvent)

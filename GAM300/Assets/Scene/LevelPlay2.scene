@@ -92,8 +92,8 @@ Script:
 ID: 6606253624498158492
 GameObject:
   m_IsActive: true
-  m_Name: LightSource
-  m_TagString: ""
+  m_Name: Spotlight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 18356289913919723263}  # Transform
@@ -102,9 +102,9 @@ GameObject:
 ID: 18356289913919723263
 Transform:
   m_GameObject: {fileID: 6606253624498158492}
-  Translation: [41.6950302, 4.48819208, -35.4429855]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [43.3700447, 8.55661011, -35.8710365]
+  Rotation: [1.57079589, 0, 0]
+  Scale: [0.999998808, 0.999999702, 1]
   Father: {fileID: 0}
   m_Children:
     []
@@ -112,13 +112,13 @@ Transform:
 ID: 2383003823628521294
 LightSource:
   m_GameObject: {fileID: 6606253624498158492}
-  EnableShadow: false
-  lightType: 2
+  EnableShadow: true
+  lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 12.3800001
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
+  Intensity: 30
+  Direction: [0, 0, 0]
+  Inner Cutoff: 30
+  Outer Cutoff: 60
   Color: [100, 100, 100]
 ---
 ID: 4212138099454399691
@@ -2019,7 +2019,7 @@ Transform:
   m_GameObject: {fileID: 2890281298168605979}
   Translation: [2.07125616, 2.15300012, -35.2555161]
   Rotation: [0, 1.57045114, 0]
-  Scale: [0.999999642, 1, 0.999999642]
+  Scale: [0.999999702, 1, 0.999999702]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 9277963176172794175}
@@ -6453,7 +6453,7 @@ GameObject:
 ID: 11976117150051283468
 Transform:
   m_GameObject: {fileID: 8077100623912244182}
-  Translation: [-20.1538048, 8.26424408, -36.7719688]
+  Translation: [-20.1538048, 8.2774334, -36.7719688]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 16151418268757025182}
@@ -7271,9 +7271,9 @@ GameObject:
 ID: 127352606862801721
 Transform:
   m_GameObject: {fileID: 17150978404869133335}
-  Translation: [70.0930176, 37.4385147, -77.1053467]
-  Rotation: [3.14159203, -1.33832181, 3.14159203]
-  Scale: [0.999986649, 1, 0.999986649]
+  Translation: [68.6550217, 37.7953835, -77.1053467]
+  Rotation: [3.14159083, -1.33832073, 3.14159083]
+  Scale: [0.999998689, 1, 0.999998689]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 14790332214141994081}
@@ -7293,7 +7293,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -8482,7 +8482,7 @@ GameObject:
 ID: 6502800538910936687
 Transform:
   m_GameObject: {fileID: 14074077563264719233}
-  Translation: [53.1292419, 6.14544106, -35.639679]
+  Translation: [53.1292419, 6.14544106, -29.4004211]
   Rotation: [0, 0, 0]
   Scale: [1.17812896, 7.91412783, 6.97113991]
   Father: {fileID: 10998208615434921590}
@@ -10161,9 +10161,9 @@ GameObject:
 ID: 12320053255655417569
 Transform:
   m_GameObject: {fileID: 4423372801228798985}
-  Translation: [64.9601135, 28.5839996, -35.7395325]
-  Rotation: [0, 1.57079589, 0]
-  Scale: [1.2867558, 1, 0.999999821]
+  Translation: [64.4014893, 28.5839996, -35.7395325]
+  Rotation: [0, 1.57079542, 0]
+  Scale: [1.28675556, 1, 0.999999642]
   Father: {fileID: 8701853331577378169}
   m_Children:
     - {fileID: 1610947561634439664}
@@ -10414,9 +10414,9 @@ GameObject:
 ID: 16174162624387742268
 Transform:
   m_GameObject: {fileID: 4021303591522537242}
-  Translation: [61.549633, 36.0960007, -34.7003021]
-  Rotation: [0, 1.57079542, 0]
-  Scale: [0.999999464, 1, 0.999999464]
+  Translation: [66.5795059, 36.0960007, -34.7003021]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
   Father: {fileID: 17551185539749227568}
   m_Children:
     - {fileID: 5275559808892267717}
@@ -15553,7 +15553,7 @@ CharacterController:
   m_GameObject: {fileID: 3977294589520766028}
   Velocity: [-0.0051422324, -5.09682953e-13, 1.73219764]
   Force: [0, 0, 0]
-  Friction: 1
+  Friction: 0.100000001
   Mass: 1
   GravityFactor: 1
   SlopeLimit: 45
@@ -15884,7 +15884,7 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
+  IsStatic: true
   IsKinematic: false
   UseGravity: false
   Is_trigger: true
@@ -16140,8 +16140,8 @@ ID: 10377461254804549162
 Transform:
   m_GameObject: {fileID: 3014923677190018251}
   Translation: [66.105072, 36.9776459, -33.8630791]
-  Rotation: [0, 1.57045114, 0]
-  Scale: [0.999993742, 1, 0.999993384]
+  Rotation: [0, 1.57079637, 0]
+  Scale: [0.999983013, 1, 0.999983132]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 9759633140327358360}
@@ -16234,7 +16234,7 @@ GameObject:
 ID: 7092983223759180045
 Transform:
   m_GameObject: {fileID: 16905222177648308199}
-  Translation: [0, 0, -1.45130455]
+  Translation: [-1.49011612e-08, 0, -1.45130455]
   Rotation: [0, 0, 0]
   Scale: [0.600000024, 0.600000024, 0.600000024]
   Father: {fileID: 0}
@@ -16256,7 +16256,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -19145,7 +19145,7 @@ GameObject:
 ID: 13769964223816938039
 Transform:
   m_GameObject: {fileID: 14260613841086092935}
-  Translation: [56.6983986, 37.3709984, -35.5820198]
+  Translation: [60.9700012, 36.6357574, -35.5820198]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19155,8 +19155,8 @@ Transform:
 ID: 13414052106519654127
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy
-  m_TagString: ""
+  m_Name: RampLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 8850516260179941389}  # Transform
@@ -19165,9 +19165,9 @@ GameObject:
 ID: 8850516260179941389
 Transform:
   m_GameObject: {fileID: 13414052106519654127}
-  Translation: [-20.0725193, 4.2396946, 17.61586]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [-20.0725193, 7.94032764, -12.4368143]
+  Rotation: [1.353145, 0, 0]
+  Scale: [1, 0.999997854, 0.999997318]
   Father: {fileID: 0}
   m_Children:
     []
@@ -19175,20 +19175,20 @@ Transform:
 ID: 1194107573959013146
 LightSource:
   m_GameObject: {fileID: 13414052106519654127}
-  EnableShadow: true
-  lightType: 2
+  EnableShadow: false
+  lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 1
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [100, 100, 100]
+  Intensity: 0
+  Direction: [0, 0, 0]
+  Inner Cutoff: 10
+  Outer Cutoff: 50
+  Color: [200, 255, 200]
 ---
 ID: 15258148970884941533
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy
-  m_TagString: ""
+  m_Name: SpawnLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 9250071627966584501}  # Transform
@@ -19197,7 +19197,7 @@ GameObject:
 ID: 9250071627966584501
 Transform:
   m_GameObject: {fileID: 15258148970884941533}
-  Translation: [-19.7395153, 4.96108627, 25.9689445]
+  Translation: [-19.7395153, 6.50518131, 16.0940533]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19210,7 +19210,7 @@ LightSource:
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 8
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -19219,8 +19219,8 @@ LightSource:
 ID: 12255453308465698455
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy
-  m_TagString: ""
+  m_Name: PlatformLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 10592381451826313751}  # Transform
@@ -19229,7 +19229,7 @@ GameObject:
 ID: 10592381451826313751
 Transform:
   m_GameObject: {fileID: 12255453308465698455}
-  Translation: [1.38251793, 4.2396946, -35.4429855]
+  Translation: [19.1157055, 5.55614853, -35.4429855]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19242,7 +19242,7 @@ LightSource:
   EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 4.1500001
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -19251,8 +19251,8 @@ LightSource:
 ID: 1978797479256161258
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy - Copy
-  m_TagString: ""
+  m_Name: PillarsLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 6317419242230538949}  # Transform
@@ -19261,9 +19261,9 @@ GameObject:
 ID: 6317419242230538949
 Transform:
   m_GameObject: {fileID: 1978797479256161258}
-  Translation: [66.0361328, 43.7190475, -79.2699738]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [66.4787216, 51.565052, -79.0797577]
+  Rotation: [1.57079542, 0, 0]
+  Scale: [1, 0.999997973, 0.999997854]
   Father: {fileID: 0}
   m_Children:
     []
@@ -19272,19 +19272,19 @@ ID: 14334588254613883241
 LightSource:
   m_GameObject: {fileID: 1978797479256161258}
   EnableShadow: false
-  lightType: 2
+  lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 15
+  Intensity: 50
   Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
+  Inner Cutoff: 30
+  Outer Cutoff: 60
   Color: [100, 100, 100]
 ---
 ID: 541121105422146752
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy - Copy
-  m_TagString: ""
+  m_Name: LiftHandleLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 12112849001586193047}  # Transform
@@ -19293,9 +19293,9 @@ GameObject:
 ID: 12112849001586193047
 Transform:
   m_GameObject: {fileID: 541121105422146752}
-  Translation: [66.0363159, 40.3264885, -45.5038719]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [66.6812592, 44.0730171, -32.3671227]
+  Rotation: [2.28309846, 0, 0]
+  Scale: [1, 0.999742866, 0.999740243]
   Father: {fileID: 0}
   m_Children:
     []
@@ -19304,19 +19304,19 @@ ID: 2021343440525441341
 LightSource:
   m_GameObject: {fileID: 541121105422146752}
   EnableShadow: false
-  lightType: 2
+  lightType: 0
   lightpos: [0, 0, 0]
-  Intensity: 2
+  Intensity: 20
   Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
+  Inner Cutoff: 20
+  Outer Cutoff: 35
   Color: [100, 100, 100]
 ---
 ID: 16149919952186955683
 GameObject:
   m_IsActive: true
-  m_Name: LightSource - Copy - Copy
-  m_TagString: ""
+  m_Name: JunctionLight
+  m_TagString: Untagged
   m_Layer: 0
   m_Component:
     - component: {fileID: 9980629945179896881}  # Transform
@@ -19325,7 +19325,7 @@ GameObject:
 ID: 9980629945179896881
 Transform:
   m_GameObject: {fileID: 16149919952186955683}
-  Translation: [-20.0725193, 4.43564749, -34.4156952]
+  Translation: [-20.1924496, 7.52293921, -36.6165161]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -19338,11 +19338,11 @@ LightSource:
   EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 1
+  Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
+  Color: [200, 255, 200]
 ---
 ID: 263938901046208410
 GameObject:
@@ -19846,3 +19846,35 @@ MeshRenderer:
   m_GameObject: {fileID: 585853501604749385}
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 18047848578679342217
+GameObject:
+  m_IsActive: true
+  m_Name: DirectionalLight
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4700641269588020503}  # Transform
+    - component: {fileID: 5561963866911114795}  # LightSource
+---
+ID: 4700641269588020503
+Transform:
+  m_GameObject: {fileID: 18047848578679342217}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.999963403, 0.999957502, 0.999984741]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5561963866911114795
+LightSource:
+  m_GameObject: {fileID: 18047848578679342217}
+  EnableShadow: true
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 2
+  Direction: [0, -2, 1.5]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [255, 255, 255]
