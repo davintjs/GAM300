@@ -136,6 +136,8 @@ namespace BeanFactory
         public void Stop() { InternalCalls.StopAnimation(this); }
         public float GetProgress() { return InternalCalls.GetProgress(this); }
         public void SetProgress(float value) { InternalCalls.SetProgress(this, value); }
+        public float GetSpeed() { return InternalCalls.GetSpeed(this); }
+        public void SetSpeed(float value) { InternalCalls.SetSpeed(this, value); }
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
         public string GetState() { return InternalCalls.GetState(this); }
