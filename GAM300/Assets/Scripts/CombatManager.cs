@@ -31,7 +31,7 @@ public class CombatManager : Script
     public void SpawnHitEffect(Transform transform)
     {
         GameObject particles = Instantiate(hitEffect, transform.position, transform.rotation);
-        StartCoroutine(DestroyParticles(hitEffectDuration, particles));
+        StartCoroutine(DestroyParticles(hitEffectDuration/2f, particles));
     }
 
     IEnumerator DestroyParticles(float duration,GameObject gameObj)

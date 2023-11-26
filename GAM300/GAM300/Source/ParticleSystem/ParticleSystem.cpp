@@ -21,7 +21,11 @@ void ParticleManager::Update(float dt)
     int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
+        if (!currentScene.IsActive(particleComponent))
+            continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
         Transform& entityTransform = currentScene.Get<Transform>(entity);
         /*float elapsedTimeSinceLastEmission = dt;
         float timeBetweenEmissions = 1.0f / particleComponent.particleEmissionRate_;*/
