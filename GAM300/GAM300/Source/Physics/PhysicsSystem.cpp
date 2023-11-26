@@ -259,11 +259,7 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 
 }
 void PhysicsSystem::PostPhysicsUpdate() {
-
-
-
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
-	std::cout << "Post physics update\n";
 
 	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
@@ -391,7 +387,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tse.pc1 = pc1;
 				tse.pc2 = pc2;
 				EVENTS.Publish(&tse);
-				PRINT("Sending Trigger stay Event\n");
+				//PRINT("Sending Trigger stay Event\n");
 
 			}
 			else {
@@ -399,7 +395,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				cse.pc1 = pc1;
 				cse.pc2 = pc2;
 				EVENTS.Publish(&cse);
-				PRINT("Sending Collision stay Event\n");
+				//PRINT("Sending Collision stay Event\n");
 			}
 		}
 	}

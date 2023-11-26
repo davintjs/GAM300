@@ -7402,7 +7402,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 47.678791
+  Time: 22.6651459
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8584,7 +8584,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -8624,7 +8624,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
