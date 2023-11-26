@@ -1,0 +1,7 @@
+RenderShadows: true
+HDR: true
+Bloom: false
+Bloom Count: 1
+Bloom Threshold: 1
+Ambient: 1
+Exposure: 1

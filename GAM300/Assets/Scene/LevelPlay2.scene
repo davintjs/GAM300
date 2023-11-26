@@ -7472,7 +7472,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 13.5085201
+  Time: 2.00964737
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8104,13 +8104,14 @@ Camera:
   CullingMask: "\x00"
   FocalLength: 10
   NearClip: 0.100000001
-  FarClip: 10000
+  FarClip: 100
   FieldOfView: 45
   Orthographic: false
   TargetDisplay: 0
   HDR: true
   OcclusionCulling: false
   FrustumCulling: true
+  DistanceCulling: 50
 ---
 ID: 12100504774977972383
 Script:
@@ -8449,7 +8450,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: true
   UseGravity: true
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 7713270789324086732
 GameObject:
@@ -16042,6 +16043,67 @@ MeshRenderer:
   Mesh: {guid: 75338b76988e763e709d9e56ce61a1f0}
   Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
 ---
+ID: 15606294544464115370
+GameObject:
+  m_IsActive: true
+  m_Name: EndKey
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16169073693454241236}  # Transform
+    - component: {fileID: 13344218449374947007}  # BoxCollider
+    - component: {fileID: 8499411254914859218}  # Rigidbody
+    - component: {fileID: 3972681443787913159}  # LightSource
+    - component: {fileID: 10361034448844998644}  # Script
+---
+ID: 16169073693454241236
+Transform:
+  m_GameObject: {fileID: 15606294544464115370}
+  Translation: [58.8810005, 42.3637199, -85.7282639]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 17427060703044079983}
+---
+ID: 13344218449374947007
+BoxCollider:
+  m_GameObject: {fileID: 15606294544464115370}
+  Dimensions: [0.5, 0.600000024, 0.200000003]
+  Offset: [0, 0, 0]
+---
+ID: 8499411254914859218
+Rigidbody:
+  m_GameObject: {fileID: 15606294544464115370}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 3972681443787913159
+LightSource:
+  m_GameObject: {fileID: 15606294544464115370}
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 50
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 44.6500015, 1]
+---
+ID: 10361034448844998644
+Script:
+  m_GameObject: {fileID: 15606294544464115370}
+  Script: {guid: 6fe0112e2ff5dbc8519a15e42956802e}
+  gameover: false
+  mesh: {fileID: 17427060703044079983}  # GameObject
+---
 ID: 17614648089446210470
 GameObject:
   m_IsActive: true
@@ -21041,6 +21103,159 @@ Script:
   m_GameObject: {fileID: 14345828798894584708}
   Script: {guid: 73a99346dabafcd80f1945f025aef51a}
   state: 4
+---
+ID: 959105103431215607
+GameObject:
+  m_IsActive: true
+  m_Name: Key_01
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 792246768846838241}  # Transform
+    - component: {fileID: 7505471898812669091}  # MeshRenderer
+---
+ID: 792246768846838241
+Transform:
+  m_GameObject: {fileID: 959105103431215607}
+  Translation: [0, -1.20000076, 0.449996948]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17427060703044079983}
+  m_Children:
+    []
+---
+ID: 7505471898812669091
+MeshRenderer:
+  m_GameObject: {fileID: 959105103431215607}
+  Mesh: {guid: 0d43fbeb68cf0b1ad4c118fb3e6dfaab}
+  Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
+---
+ID: 5062014066240280269
+GameObject:
+  m_IsActive: true
+  m_Name: Key_02
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7970727667279971546}  # Transform
+    - component: {fileID: 1390419185072423048}  # MeshRenderer
+---
+ID: 7970727667279971546
+Transform:
+  m_GameObject: {fileID: 5062014066240280269}
+  Translation: [0, -1.20000076, 0.449996948]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17427060703044079983}
+  m_Children:
+    []
+---
+ID: 1390419185072423048
+MeshRenderer:
+  m_GameObject: {fileID: 5062014066240280269}
+  Mesh: {guid: d7cd40a2eb4c329e3cbd8ec5b9e4bb94}
+  Material_ID: {guid: f42c85bad3af18ad18bdec3dd0aa2e3f}
+---
+ID: 14852598502799343632
+GameObject:
+  m_IsActive: true
+  m_Name: Key_03
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15656137310625600188}  # Transform
+    - component: {fileID: 11580946294617576578}  # MeshRenderer
+---
+ID: 15656137310625600188
+Transform:
+  m_GameObject: {fileID: 14852598502799343632}
+  Translation: [0, -1.20000076, 0.449996948]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17427060703044079983}
+  m_Children:
+    []
+---
+ID: 11580946294617576578
+MeshRenderer:
+  m_GameObject: {fileID: 14852598502799343632}
+  Mesh: {guid: 89f1ae4042df94bc71061c4b5a1ece10}
+  Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
+---
+ID: 3267477358943233560
+GameObject:
+  m_IsActive: true
+  m_Name: Key_04
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14148332874207409011}  # Transform
+    - component: {fileID: 61178225751241593}  # MeshRenderer
+---
+ID: 14148332874207409011
+Transform:
+  m_GameObject: {fileID: 3267477358943233560}
+  Translation: [0, -1.20000076, 0.449996948]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17427060703044079983}
+  m_Children:
+    []
+---
+ID: 61178225751241593
+MeshRenderer:
+  m_GameObject: {fileID: 3267477358943233560}
+  Mesh: {guid: 3b60ae99e39e8828524d75c7943f5739}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 14933538522510985704
+GameObject:
+  m_IsActive: true
+  m_Name: Key_05
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8934425851780528090}  # Transform
+    - component: {fileID: 1514700264552305625}  # MeshRenderer
+---
+ID: 8934425851780528090
+Transform:
+  m_GameObject: {fileID: 14933538522510985704}
+  Translation: [0, -1.20000076, 0.450050354]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17427060703044079983}
+  m_Children:
+    []
+---
+ID: 1514700264552305625
+MeshRenderer:
+  m_GameObject: {fileID: 14933538522510985704}
+  Mesh: {guid: 75338b76988e763e709d9e56ce61a1f0}
+  Material_ID: {guid: 9478fc5e62fc687c7c5c1eadc899706a}
+---
+ID: 17427060703044079983
+GameObject:
+  m_IsActive: true
+  m_Name: Mesh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7466556653285046152}  # Transform
+---
+ID: 7466556653285046152
+Transform:
+  m_GameObject: {fileID: 17427060703044079983}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15606294544464115370}
+  m_Children:
+    - {fileID: 959105103431215607}
+    - {fileID: 5062014066240280269}
+    - {fileID: 14852598502799343632}
+    - {fileID: 3267477358943233560}
+    - {fileID: 14933538522510985704}
 ---
 ID: 8310365372469502612
 GameObject:

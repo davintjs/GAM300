@@ -16,17 +16,47 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "BaseCamera.h"
 #include "Framebuffer.h"
+#include "Scene/Components.h"
+
+FrustumPlane::FrustumPlane(const glm::vec3& _position, const glm::vec3& _normal)
+	: normal(glm::normalize(_normal)), distance(glm::dot(_normal, _position))
+{}
+
+bool FrustumPlane::IsOnOrForwardPlane(const glm::vec3& _position, const glm::vec3 _extents) const
+{
+	// Compute the projection interval radius of b onto L(t) = b.c + t * p.n
+	const float r = _extents.x * std::abs(normal.x) +
+		_extents.y * std::abs(normal.y) + _extents.z * std::abs(normal.z);
+
+	return -r <= GetSignedDistanceToPlane(_position);
+}
+
+float FrustumPlane::GetSignedDistanceToPlane(const glm::vec3& _point) const
+{
+	return glm::dot(normal, _point) - distance;
+}
+
+bool Frustum::CheckIfWithinFrustum(const glm::vec3& _position, const glm::vec3 _extents) const
+{
+	return (topFace.IsOnOrForwardPlane(_position, _extents) &&
+		bottomFace.IsOnOrForwardPlane(_position, _extents) &&
+		rightFace.IsOnOrForwardPlane(_position, _extents) &&
+		leftFace.IsOnOrForwardPlane(_position, _extents) &&
+		farFace.IsOnOrForwardPlane(_position, _extents) &&
+		nearFace.IsOnOrForwardPlane(_position, _extents));
+}
 
 void BaseCamera::Init()
 {
 	aspect = 16.f / 9.f;
 	fieldOfView = 45.0f;
 	nearClip = 0.1f;
-	farClip = 10000.f;
+	farClip = 100.f;
 	focalLength = 10.f;
 
 	UpdateViewMatrix();
 	UpdateProjection();
+	UpdateFrustum();
 
 	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer();
 	framebufferID = framebuffer.frameBufferObjectID;
@@ -51,6 +81,7 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 
 	UpdateViewMatrix();
 	UpdateProjection();
+	UpdateFrustum();
 
 	Framebuffer& framebuffer = FRAMEBUFFER.CreateFramebuffer(1600, 900, ATTACHMENTTYPE::COLOR, TEXTUREPARAMETERS::DEFAULT);
 	framebufferID = framebuffer.frameBufferObjectID;
@@ -65,11 +96,12 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 
 void BaseCamera::Update()
 {
-	UpdateFrustum();
-
 	UpdateViewMatrix();
 
 	UpdateProjection();
+
+	if (useFrustumCulling)
+		UpdateFrustum();
 }
 
 void BaseCamera::UpdateViewMatrix()
@@ -89,7 +121,39 @@ void BaseCamera::UpdateProjection()
 
 void BaseCamera::UpdateFrustum()
 {
+	const float radians = tanf(glm::radians(fieldOfView) * 0.5f);
+	const float farHeight = farClip * radians;
+	const float farWidth = farHeight * aspect;
+	const glm::vec3& frontMultFar = farClip * GetForwardVec();
 
+	frustum.nearFace = { cameraPosition + nearClip * GetForwardVec(), GetForwardVec() };
+	frustum.farFace = { cameraPosition + frontMultFar, -GetForwardVec() };
+	frustum.leftFace = { cameraPosition, glm::cross(glm::normalize(frontMultFar - GetRightVec() * farWidth), GetUpVec()) };
+	frustum.rightFace = { cameraPosition, glm::cross(GetUpVec(),glm::normalize(frontMultFar + GetRightVec() * farWidth)) };
+	frustum.bottomFace = { cameraPosition, glm::cross(GetRightVec(), glm::normalize(frontMultFar - GetUpVec() * farHeight)) };
+	frustum.topFace = { cameraPosition, glm::cross(glm::normalize(frontMultFar + GetUpVec() * farHeight), GetRightVec()) };
+
+	/*const float fixedDT = 0.016f;
+	static float timer = 0.f;
+	if (timer > 1.f)
+	{
+		const float radians = tanf(glm::radians(fieldOfView) * 0.5f);
+		const float farHeight = farClip * radians;
+		const float farWidth = farHeight * aspect;
+		const glm::vec3& frontMultFar = farClip * GetForwardVec();
+		const glm::vec3& camPos = GetCameraPosition();
+
+		frustum.nearFace = { camPos + nearClip * GetForwardVec(), GetForwardVec() };
+		frustum.farFace = { camPos + frontMultFar, -GetForwardVec() };
+		frustum.leftFace = { camPos, glm::cross(glm::normalize(frontMultFar - GetRightVec() * farWidth), GetUpVec()) };
+		frustum.rightFace = { camPos, glm::cross(GetUpVec(),glm::normalize(frontMultFar + GetRightVec() * farWidth)) };
+		frustum.bottomFace = { camPos, glm::cross(GetRightVec(), glm::normalize(frontMultFar - GetUpVec() * farHeight)) };
+		frustum.topFace = { camPos, glm::cross(glm::normalize(frontMultFar + GetUpVec() * farHeight), GetRightVec()) };
+
+		timer = 0.f;
+	}
+
+	timer += fixedDT;*/
 }
 
 void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation)
@@ -140,9 +204,39 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 	UpdateProjection();
 }
 
-bool BaseCamera::WithinFrustum() const
+bool BaseCamera::WithinFrustum(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max)
 {
-	return false;
+	if (!useFrustumCulling)
+		return true;
+
+	//Get global parameters
+	const glm::mat4 worldMatrix = _transform.GetWorldMatrix();
+	const glm::vec3 globalCenter = worldMatrix * glm::vec4(((_min + _max) * 0.5f), 1.f);
+	
+	// Distance Check
+	if (distanceCheck >= glm::distance(globalCenter, cameraPosition))
+		return true;
+
+	const glm::vec3 right = worldMatrix[0] * _max.x;
+	const glm::vec3 up = worldMatrix[1] * _max.y;
+	const glm::vec3 forward = -worldMatrix[2] * _max.z;
+
+	const float newIi = std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, forward));
+
+	const float newIj = std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, forward));
+
+	const float newIk = std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, forward));
+
+	const glm::vec3 globalExtents = glm::vec3(newIi, newIj, newIk);
+
+	// Frustum Culling
+	return frustum.CheckIfWithinFrustum(globalCenter, globalExtents);
 }
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)

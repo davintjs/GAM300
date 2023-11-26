@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "MESHMANAGER.h"
 #include "Editor/EditorCamera.h"
+#include "Utilities/Serializer.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
 
@@ -57,6 +58,9 @@ unsigned int Renderer_quadVBO_WM = 0;
 
 void Renderer::Init()
 {
+	// Load graphics settings
+	Deserialize("GAM300/Data/GraphicsSettings.txt", *this);
+
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
 	
@@ -89,7 +93,7 @@ void Renderer::Update(float)
 	transparentContainer.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
 #ifndef _BUILD
-	SetupGrid(numLines);
+	//SetupGrid(numLines);
 #endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -124,20 +128,34 @@ void Renderer::Update(float)
 
 		Material_instance& currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 		
-
 		Transform& transform = currentScene.Get<Transform>(entity);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
 		const glm::vec3 position = transform.GetTranslation();
 
+		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
+		if (!t_Mesh) continue;
+
+		if (frustumCulling)
+		{
+			bool withinCamera = false;
+			for (Camera& camera : currentScene.GetArray<Camera>())
+			{
+				if (camera.state == DELETED) continue;
+
+				if (!currentScene.IsActive(camera)) continue;
+
+				if (camera.WithinFrustum(transform, t_Mesh->vertices_min, t_Mesh->vertices_max))
+				{
+					withinCamera = true;
+					break;
+				}
+			}
+
+			if (!withinCamera) continue;
+		}
+
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
-
-			Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
-			if (t_Mesh == nullptr)
-			{
-				continue;
-			}/**/
-			
 			//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
 			GLuint vao = vaoIt->second;
 			DefaultRenderProperties renderProperties;
@@ -265,7 +283,8 @@ void Renderer::SetupGrid(const int& _num)
 void Renderer::Draw(BaseCamera& _camera) {
 
 	// Instanced Rendering	
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
+	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) 
+	{
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());

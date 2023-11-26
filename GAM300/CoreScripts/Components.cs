@@ -279,9 +279,7 @@ namespace BeanFactory
         vec3 cameraPosition;           // The location of the viewer / eye (Center of the screen, 10 units away)
         vec3 focalPoint;               // The look-at point / target point where the viewer is looking (Center of screen)
         vec2 dimension;                // The dimension of the camera in width and height defined in pixels
-        vec2 frustumBottom;            // The bottom left position of the frustum, for frustum culling
-        vec2 frustumTop;               // The top right position of the frustum, for frustum culling
-
+        
         int cameraType;              // Type of camera
 
         uint targetDisplay = 0;     // Target display for the camera
@@ -291,7 +289,7 @@ namespace BeanFactory
         float pitch = 0f;                  // For rotating about the x axis
         float yaw = 0f;                    // For rotating about the y axis
         float roll = 0f;                   // For rotating about the z axis
-        float frustumMargin = 5f;          // The margin in which the camera will still render objects that are outside the camera's dimension
+        float distanceCheck = 5f;          // The margin in which the camera will still render objects that are outside the camera's dimension
 
         float aspect = 0f;                 // The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)
         float nearClip = 0f;               // Distance of near clipping plane from the camera

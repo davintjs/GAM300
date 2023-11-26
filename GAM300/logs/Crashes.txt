@@ -1,6 +1,5 @@
-[2023-11-26 20:55:45.594] [Error] [critical] 
-Caused By:	false
-Info:		Failed to load .scene file "Assets/Scene/LevelPlay2.scene.scene" due to: bad file: Assets/Scene/LevelPlay2.scene.scene
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 358)
+[2023-11-26 21:27:18.887] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
 

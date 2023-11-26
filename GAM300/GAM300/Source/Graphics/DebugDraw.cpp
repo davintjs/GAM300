@@ -33,96 +33,8 @@ void DebugDraw::Init()
 
 void DebugDraw::Update(float)
 {
-	ResetPhysicDebugContainer();
-
-	Scene& scene = MySceneManager.GetCurrentScene();
-
-	auto& rbArray = scene.GetArray<Rigidbody>();
-
-	auto& bcArray = scene.GetArray<BoxCollider>();
-	//std::cout << "the array size is : " << bcArray.size() << "\n";
-	//int index = 0;
-	//for (auto it = bcArray.begin(); it != bcArray.end(); ++it)
-	for (auto& it: bcArray )
-	{
-		BoxCollider& bc = it;
-
-		if (bc.state == DELETED)
-		{
-			//std::cout << "THIS IS THE DELETED ONE : " <<  "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
-
-			continue;
-		}
-		if (!scene.IsActive(bc))
-			continue;
-		Entity& entity = scene.Get<Entity>(bc);
-
-		if (!scene.IsActive(entity)) continue;
-		//++index;
-		//std::cout << "hit : " << index << "\n";
-
-		Transform& t = scene.Get<Transform>(bc);
-
-		/*geometryDebugData temp;
-		if (scene.Has<MeshRenderer>(entity))
-		{
-			MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
-
-			temp = MeshManager.offsetAndBoundContainer.find(mr.meshID)->second;
-		}
-		else
-		{
-			temp = MeshManager.offsetAndBoundContainer.find(DEFAULT_MESH)->second;
-		}*/
-
-		/*if (scene.Has<MeshRenderer>(bc))
-		{
-
-		}
-		else
-		{
-
-		}
-		MeshRenderer& renderer = scene.Get<MeshRenderer>(bc);
-
-		if (MeshManager.vaoMap.find(renderer.meshID) == MeshManager.vaoMap.end())
-		{
-			std::cout << "hit\n";
-			continue;
-		}*/
-
-		//GLuint vao = MeshManager.vaoMap[renderer.meshID];
-		//GLuint vao = MeshManager.vaoMap[DEFAULT_MESH];
-		//InstanceProperties& temporary = MeshManager.instanceProperties->find(vao)->second;
-
-		RigidDebug currRigidDebug;
-
-		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
-
-		glm::mat4 SRT = t.GetWorldMatrix();
-		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.x, bc.y, bc.z));
-
-		//SRT *= scalarMat;
-
-		//std::cout << "scalar vals : " << temp.scalarBound.x << "\n";
-		//std::cout << "scalar offset : " << temp.offset.x << "\n";
-
-		//glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), temp.scalarBound);
-		//glm::mat4 transMat = glm::translate(glm::mat4(1.f), temp.offset);
-
-		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
-		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
-		//std::cout << "Scalar: " << bc.x << " , " << bc.y << " , " << bc.z << "\n";
-		SRT *= transMat * scalarMat;
-
-		currRigidDebug.SRT = SRT;
-		//currRigidDebug.RigidScalar = glm::vec3(bc.x, bc.y, bc.z);
-
-		DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
-	}
-
-
-
+	if (enableDebugDraw)
+		DrawBoxColliders();
 
 	if (enableRay)
 		DrawRay();
@@ -130,16 +42,61 @@ void DebugDraw::Update(float)
 
 void DebugDraw::Draw()
 {
-
+	// Must be at the top of the draw function
 	GLuint vao = MESHMANAGER.vaoMap[ASSET_SEG3D];
 	size_t s = static_cast<int>(SHADERTYPE::TDR);
 	if (RENDERER.GetInstanceContainer()[s].find(vao) == RENDERER.GetInstanceContainer()[s].cend()) { // if container does not have this vao, emplace
 		RENDERER.GetInstanceContainer()[s].emplace(std::pair(vao, RENDERER.GetInstanceProperties()[vao]));
 	}
 
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	glm::vec4 color = { 0.3f, 0.3f, 0.3f, 1.f };
+
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		if (camera.state == DELETED || !currentScene.IsActive(camera)) continue;
+
+		const glm::vec3 frontMultFar = camera.GetFarClip() * camera.GetForwardVec();
+		const glm::vec3 frontMultNear = camera.GetNearClip() * camera.GetForwardVec();
+		const glm::vec3 farCenter = camera.GetCameraPosition() + frontMultFar;
+		const glm::vec3 nearCenter = camera.GetCameraPosition() + frontMultNear;
+		
+		const float farHeight = camera.GetFarClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
+		const float farWidth = farHeight * camera.GetAspect();
+		const float nearHeight = camera.GetNearClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
+		const float nearWidth = nearHeight * camera.GetAspect();
+
+		const glm::vec3 rightVec = camera.GetRightVec(), upVec = camera.GetUpVec();
+
+		glm::vec3 farLeftTop = farCenter - rightVec * farWidth + upVec * farHeight;
+		glm::vec3 farRightTop = farCenter + rightVec * farWidth + upVec * farHeight;
+		glm::vec3 farLeftBottom = farCenter - rightVec * farWidth - upVec * farHeight;
+		glm::vec3 farRightBottom = farCenter + rightVec * farWidth - upVec * farHeight;
+
+		glm::vec3 nearLeftTop = nearCenter - rightVec * nearWidth + upVec * nearHeight;
+		glm::vec3 nearRightTop = nearCenter + rightVec * nearWidth + upVec * nearHeight;
+		glm::vec3 nearLeftBottom = nearCenter - rightVec * nearWidth - upVec * nearHeight;
+		glm::vec3 nearRightBottom = nearCenter + rightVec * nearWidth - upVec * nearHeight;
+
+		DrawSegment3D(nearLeftTop, farLeftTop, color);
+		DrawSegment3D(nearRightTop, farRightTop, color);
+		DrawSegment3D(nearLeftBottom, farLeftBottom, color);
+		DrawSegment3D(nearRightBottom, farRightBottom, color);
+
+		DrawSegment3D(farLeftTop, farLeftBottom, color);
+		DrawSegment3D(farLeftBottom, farRightBottom, color);
+		DrawSegment3D(farRightBottom, farRightTop, color);
+		DrawSegment3D(farRightTop, farLeftTop, color);
+
+		DrawSegment3D(nearLeftTop, nearLeftBottom, color);
+		DrawSegment3D(nearLeftBottom, nearRightBottom, color);
+		DrawSegment3D(nearRightBottom, nearRightTop, color);
+		DrawSegment3D(nearRightTop, nearLeftTop, color);
+	}
+
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
 
-	glm::vec4 color = { 0.3f, 1.f, 0.3f, 1.f };
+	color = { 0.3f, 1.f, 0.3f, 1.f };
 	if (navMesh)
 	{
 		for (Triangle3D triangle : navMesh->GetNavMeshTriangles())
@@ -257,7 +214,7 @@ void DebugDraw::Draw()
 
 	}
 
-	if(LIGHTING.pointLightCount)
+	if(LIGHTING.pointLightCount && enableDebugDraw)
 	{
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::FORWARDDEBUG);
@@ -295,8 +252,36 @@ void DebugDraw::Draw()
 	}
 	glLineWidth(1.f);
 
+	ResetPhysicDebugContainer();
+}
 
+void DebugDraw::DrawBoxColliders()
+{
+	Scene& scene = MySceneManager.GetCurrentScene();
+	for (BoxCollider& bc : scene.GetArray<BoxCollider>())
+	{
+		if (bc.state == DELETED) continue;
+		if (!scene.IsActive(bc)) continue;
 
+		Entity& entity = scene.Get<Entity>(bc);
+
+		if (!scene.IsActive(entity)) continue;
+
+		Transform& t = scene.Get<Transform>(bc);
+		RigidDebug currRigidDebug;
+
+		currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
+
+		glm::mat4 SRT = t.GetWorldMatrix();
+
+		glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
+		glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
+		SRT *= transMat * scalarMat;
+
+		currRigidDebug.SRT = SRT;
+
+		DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
+	}
 }
 
 void DebugDraw::DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color)
@@ -384,7 +369,7 @@ void DebugDraw::LoopAndGetRigidBodies()
 
 
 
-void DebugDraw::AddBoxColliderDraw(RigidDebug rigidDebugDraw)
+void DebugDraw::AddBoxColliderDraw(const RigidDebug& rigidDebugDraw)
 {
 	boxColliderContainer.emplace_back(rigidDebugDraw);
 }

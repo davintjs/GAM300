@@ -61,10 +61,7 @@ void Lighting::Update(float)
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
 		if (lightSource.state == DELETED)
-		{
-			std::cout << "hi\n";
 			continue;
-		}
 
 		
 		Entity& entity{ currentScene.Get<Entity>(lightSource) };
