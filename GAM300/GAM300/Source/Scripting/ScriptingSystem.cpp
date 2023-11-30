@@ -152,12 +152,31 @@ namespace Utils
 			{
 				MonoType* type = mono_field_get_type(field);
 				size_t fieldType = Utils::monoTypeToFieldType(type);
-				if (fieldType < AllFieldTypes::Size())
+				if (fieldType < FieldTypes::Size())
 				{
 					mFields[fieldName] = field;
 				}
+				else if (fieldType < AllFieldTypes::Size())
+				{
+					mReferenceFields[fieldName] = field;
+				}
 			}
 		}
+	}
+
+
+	MonoClassField* ScriptClass::GetField(const std::string& fieldName)
+	{
+		auto it = mFields.find(fieldName);
+		if (it == mFields.end())
+		{
+			it = mReferenceFields.find(fieldName);
+			if (it == mReferenceFields.end())
+			{
+				return nullptr;
+			}
+		}
+		return it->second;
 	}
 
 #pragma endregion
@@ -390,11 +409,9 @@ void ScriptingSystem::UpdateReferences()
 	Scene& scene = MySceneManager.GetCurrentScene();
 	for (auto& script : scene.GetArray<Script>())
 	{
-		if (script.state == DELETED) continue;
-
 		MonoObject* mS = ReflectScript(script);
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
-		for (auto& pair : scriptClass.mFields)
+		for (auto& pair : scriptClass.mReferenceFields)
 		{
 			size_t fType = Utils::monoTypeToFieldType(mono_field_get_type(pair.second));
 			if (fType < AllObjectTypes::Size())
@@ -520,16 +537,22 @@ void ScriptingSystem::CacheScripts()
 			size_t fType = Utils::monoTypeToFieldType(mType);
 			int fieldSize = mono_type_size(mType, &alignment);
 			//POINTER
-			if (fType < AllObjectTypes::Size())
-			{
-				fieldSize = sizeof(ScriptObject<Object>);
-			}
-			else if (fType == GetFieldType::E<char*>())
+			if (fType == GetFieldType::E<char*>())
 			{
 				fieldSize = TEXT_BUFFER_SIZE;
 			}
 			FieldMap& fMap = cacheFields[script];
 			fMap.emplace(pair.first, Field{ AllFieldTypes::Size(), (size_t)fieldSize});
+			GetFieldValue(scriptPair.second, pair.second, fMap[pair.first]);
+		}
+		for (auto& pair : scriptClass.mReferenceFields)
+		{
+			int alignment{};
+			MonoType* mType = mono_field_get_type(pair.second);
+			size_t fType = Utils::monoTypeToFieldType(mType);
+			int fieldSize = sizeof(ScriptObject<Object>);
+			FieldMap& fMap = cacheFields[script];
+			fMap.emplace(pair.first, Field{ AllFieldTypes::Size(), (size_t)fieldSize });
 			GetFieldValue(scriptPair.second, pair.second, fMap[pair.first]);
 		}
 	}
@@ -549,6 +572,14 @@ void ScriptingSystem::LoadCacheScripts()
 			continue;
 		FieldMap& fMap = cacheFields[script];
 		for (auto& pair : scriptClass.mFields)
+		{
+			//Cache fields did not store this field requested by the script (Aka newly added field)
+			if (fMap.find(pair.first) == fMap.end())
+				continue;
+			//POINTER
+			SetFieldValue(mS, pair.second, fMap[pair.first]);
+		}
+		for (auto& pair : scriptClass.mReferenceFields)
 		{
 			//Cache fields did not store this field requested by the script (Aka newly added field)
 			if (fMap.find(pair.first) == fMap.end())
@@ -660,7 +691,7 @@ void ScriptingSystem::GetFieldValue(Script& script, const std::string& fieldName
 		E_ASSERT(monoScript, "MONO OBJECT OF NOT LOADED");
 		ScriptClass& scriptClass{ scriptClassMap[script.scriptId] };
 		//Reset fieldtype and buffer if the type was different
-		MonoClassField* mClassField{ scriptClass.mFields[fieldName] };
+		MonoClassField* mClassField{ scriptClass.GetField(fieldName)};
 		E_ASSERT(mClassField, "FIELD ", fieldName, "COULD NOT BE FOUND IN SCRIPT");
 		GetFieldValue(monoScript, mClassField, field);
 	}
@@ -677,7 +708,7 @@ void ScriptingSystem::SetFieldValue(Script& script,const std::string& fieldName,
 		MonoObject* monoScript = ReflectScript(script);
 		E_ASSERT(monoScript, "MONO OBJECT OF NOT LOADED");
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
-		MonoClassField* mClassField{ scriptClass.mFields[fieldName] };
+		MonoClassField* mClassField{ scriptClass.GetField(fieldName) };
 		E_ASSERT(mClassField, "FIELD ", fieldName, "COULD NOT BE FOUND IN SCRIPT ");
 		SetFieldValue(monoScript, mClassField, field);
 	}
@@ -878,6 +909,24 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 				}
 				SetFieldValue(instance, pair.second, field);
 			}
+			for (auto& pair : scriptClass.mReferenceFields)
+			{
+				static char buffer[2048]{};
+				Field field{ AllFieldTypes::Size(),2048 ,buffer };
+				GetFieldValue(ref, pair.second, field);
+				if (field.fType < AllObjectTypes::Size())
+				{
+					uint32_t flags = mono_field_get_flags(pair.second);
+					Object*& f = field.Get<Object*>();
+					if (f)
+					{
+						Handle handle = { f->EUID(),f->UUID() };
+						Object* pObject = (Object*)scene.GetByHandle(field.fType, &handle);
+						field.Get<Object*>() = pObject;
+					}
+				}
+				SetFieldValue(instance, pair.second, field);
+			}
 		}
 		//Set back fields from previous scene
 		return instance;
@@ -886,6 +935,23 @@ MonoObject* ScriptingSystem::ReflectScript(Script& script, MonoObject* ref)
 	{
 		ScriptClass& scriptClass = scriptClassMap[script.scriptId];
 		for (auto& pair : scriptClass.mFields)
+		{
+			static char buffer[2048]{};
+			Field field{ AllFieldTypes::Size() ,2048,buffer };
+			GetFieldValue(ref, pair.second, field);
+			if (field.fType < AllObjectTypes::Size())
+			{
+				Object*& f = field.Get<Object*>();
+				if (f)
+				{
+					Handle handle = { f->EUID(),f->UUID() };
+					Object* pObject = (Object*)scene.GetByHandle(field.fType, &handle);
+					field.Get<Object*>() = pObject;
+				}
+			}
+			SetFieldValue(pairIt->second, pair.second, field);
+		}
+		for (auto& pair : scriptClass.mReferenceFields)
 		{
 			static char buffer[2048]{};
 			Field field{ AllFieldTypes::Size() ,2048,buffer };
@@ -929,6 +995,10 @@ void ScriptingSystem::CallbackScriptGetFieldNames(ScriptGetFieldNamesEvent* pEve
 	MonoScripts& mScripts = mSceneScripts[scene.uuid];
 	ScriptClass& scriptClass = scriptClassMap[pEvent->script.scriptId];
 	for (auto& pair : scriptClass.mFields)
+	{
+		fieldNames.emplace_back(pair.first.c_str());
+	}
+	for (auto& pair : scriptClass.mReferenceFields)
 	{
 		fieldNames.emplace_back(pair.first.c_str());
 	}

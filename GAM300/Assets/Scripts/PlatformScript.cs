@@ -31,6 +31,12 @@ public class PlatformScript : Script
 
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            bool val = !IsEnabled(soundEffect);
+            SetEnabled(soundEffect, val);
+            Console.WriteLine("Sound effect " + val);
+        }
         vec3 target = transform.localPosition;
         vec3 diff = vec3.Zero; 
         if (!back && !rest)
