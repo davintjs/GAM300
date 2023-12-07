@@ -400,7 +400,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				cse.pc1 = pc1;
 				cse.pc2 = pc2;
 				EVENTS.Publish(&cse);
-				PRINT("Sending Collision stay Event\n");
+				//PRINT("Sending Collision stay Event\n");
 			}
 		}
 	}
@@ -1065,15 +1065,23 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -t.scale.x);
 	characterSetting->mUp = JPH::Vec3(0,1,0);
 
-	float offset = 0.5f * t.scale.y - t.scale.x / 2;
-	if (offset <= 0.0f)
-		offset = 0.1f;
+	float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * cc.radius;
+	float offset = 0.5f * (t.scale.y * cc.height) - radius;
 
-		// Character Shape (default capsule)
-		JPH::RefConst<JPH::Shape> characterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0, 0),
-														JPH::Quat::sIdentity(), new JPH::CapsuleShape(offset, t.scale.x/2)).Create().Get();
-		characterSetting->mShape = characterShape;
-
+	// Character Shape (default capsule)
+	JPH::RefConst<JPH::Shape> capsuleCharacterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0, 0),
+													JPH::Quat::sIdentity(), new JPH::CapsuleShape(offset, radius)).Create().Get();
+	
+	JPH::RefConst<JPH::Shape> sphereCharacterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0, 0),
+													JPH::Quat::sIdentity(), new JPH::SphereShape(radius)).Create().Get();
+	if (offset <= 0.0f) {
+		characterSetting->mShape = sphereCharacterShape;
+		PRINT("character uses sphere collider\n");
+	}
+	else {
+		characterSetting->mShape = capsuleCharacterShape;
+		PRINT("character uses capsule collider\n");
+	}
 
 	JPH::RVec3 pos;
 	GlmVec3ToJoltVec3(t.translation, pos);

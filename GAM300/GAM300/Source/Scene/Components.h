@@ -258,6 +258,10 @@ struct CharacterController : PhysicsComponent
 	float gravityFactor{ 1.f };			// gravity modifier
 	float slopeLimit{ 45.f };			// the maximum angle of slope that character can traverse in degrees!
 	bool isGrounded = false;
+
+	float radius = 0.5f;				// radius of collider = radius * max(scale.x, scale.z)
+	float height = 2.f;					// determines how much to offset the sphere caps and the cylinder height
+
 	property_vtable();
 };
 
@@ -269,7 +273,9 @@ property_begin_name(CharacterController, "CharacterController") {
 	property_var(mass).Name("Mass"),
 	property_var(gravityFactor).Name("GravityFactor"),
 	property_var(slopeLimit).Name("SlopeLimit"),
-	property_var(isGrounded).Name("IsGrounded")
+	property_var(isGrounded).Name("IsGrounded"),
+	property_var(radius).Name("Radius"),
+	property_var(height).Name("Height")
 } property_vend_h(CharacterController)
 
 struct Script : Object
