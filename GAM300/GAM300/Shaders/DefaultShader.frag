@@ -323,7 +323,7 @@ void main()
     {
         roughness = RoughnessConstant;
         int rough_test = int(roughness-0.1f);
-        if(rough_test == -1)
+            if(rough_test == -1)
         {
             Am_Light = true;
         }
@@ -354,10 +354,7 @@ void main()
 
 //        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
         emission  =  texture(EmmisionMap, TexCoords).xyz; 
-        if(emission != vec3(0.f,0.f,0.f))
-        {
-            emission = vec3(1.f,0.f,0.f);
-        }
+        
     }
 
 
