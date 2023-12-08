@@ -51,6 +51,7 @@ namespace BeanFactory
         public bool stall = false;
         public bool state = false;
         public bool loop = false;
+        public float speed = 1f;
         List<AnimationState> trueConditionals = new List<AnimationState>();
         List<AnimationState> falseConditionals = new List<AnimationState>();
     }
@@ -99,6 +100,7 @@ namespace BeanFactory
                     }
                     currentState = pair.Key;
                     animator.SetState(currentState);
+                    animator.SetSpeed(pair.Value.speed);    
                     return;
                 }
             }
@@ -106,6 +108,7 @@ namespace BeanFactory
             {
                 currentState = "";
                 animator.SetState("Idle");
+                animator.SetSpeed(1f);
             }
         }
 

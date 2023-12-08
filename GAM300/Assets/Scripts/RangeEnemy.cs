@@ -45,12 +45,12 @@ public class RangeEnemy : Script
 
     Rigidbody rb;
 
-    private float particle_duration = 0.5f;
-    private float particle_timer = 0f;
-    private bool particle_on = false;
-
     //audio
     public bool playOnce = true;
+
+    Coroutine damagedCoroutine;
+
+    public GameObject spawnObject;
 
     void Start()
     {
@@ -70,21 +70,6 @@ public class RangeEnemy : Script
         vec3 direction = player.localPosition - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
-
-        if (particle_on)
-        {
-            if (particle_timer > 0f)
-            {
-                particle_timer -= Time.deltaTime;
-            }
-            else
-            {
-                particle.gameObject.transform.localPosition = new vec3(-999, -999, -999);
-                particle_timer = 0f;
-                particle_on = false;
-                particle.Play();
-            }
-        }
 
         switch (state)
         {
@@ -214,19 +199,19 @@ public class RangeEnemy : Script
 
     void TakeDamage(int amount)
     {
+        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+        ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur*4);
+        shootCooldown -= .5f;
+        AudioManager.instance.enemyHit.Play();
         currentHealth -= amount;
-        hpBar.localScale.x = (float)currentHealth/maxHealth;
+        hpBar.localScale.x = currentHealth/maxHealth;
+        CombatManager.instance.SpawnHitEffect(transform);
         //set particle transform to enemy position
-        if(currentHealth > 0)
-        {
-            particle.gameObject.transform.localPosition = transform.localPosition;
-            particle.Play();
-            particle_on = true;
-            particle_timer = particle_duration;
-        }
-        else
+        if(currentHealth <= 0)
         {
             AudioManager.instance.rangeEnemyDead.Play();
+            if (spawnObject != null)
+                spawnObject.SetActive(true);
             Destroy(gameObject);
         }
     }
@@ -237,14 +222,36 @@ public class RangeEnemy : Script
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
         if(GetTag(other) == "PlayerAttack")
         {
-            //Console.WriteLine("MEGAHIT");
             Transform otherT = other.gameObject.GetComponent<Transform>();
-            vec3 dir = transform.localPosition - otherT.localPosition;
-            dir.y = 0;
+            vec3 dir = otherT.back;
             dir = dir.NormalizedSafe;
-            rb.force = dir * 100f;
+            if (damagedCoroutine != null)
+            {
+                StopCoroutine(damagedCoroutine);
+            }
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
             TakeDamage(1);
         }
     }
 
+    IEnumerator Damaged(float duration, vec3 knockback)
+    {
+        duration /= 2;
+        float startDuration = duration;
+        modelOffset.localRotation.x = glm.Radians(-45f);
+        while (duration > 0)
+        {
+            rb.linearVelocity = new vec3(knockback * (duration/startDuration));
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        duration = startDuration;
+        while (duration > 0)
+        {
+            float val = glm.Radians(-45f);
+            modelOffset.localRotation.x = glm.Lerp(0, val,duration/startDuration);
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+    }
 }

@@ -122,8 +122,11 @@ void EditorScene::ToolBar()
         ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        if (ImGui::Checkbox("Debug Drawing", &DEBUGDRAW.IsEnabled())) {}
         //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+
+        ImGui::Dummy(ImVec2(20.f, 0.f));
+        if (ImGui::Checkbox("Frustum Culling", &RENDERER.EnableFrustumCulling())) {}
 
         ImGui::EndMenuBar();
     }
@@ -381,7 +384,7 @@ void EditorScene::DisplayGizmos()
         }
     }
 
-    // Display gizmos for selected entity
+    // Display gizmos & debug for selected entity
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
@@ -391,6 +394,20 @@ void EditorScene::DisplayGizmos()
         {
             if (fabs(trans.scale[i]) < 0.001f)
                 trans.scale[i] = 0.001f;
+        }
+
+        // Drawing box collider of selected object
+        if (currentScene.Has<BoxCollider>(entity))
+        {
+            BoxCollider& bc = currentScene.Get<BoxCollider>(entity);
+            RigidDebug currRigidDebug;
+            currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
+            glm::mat4 SRT = trans.GetWorldMatrix();
+            glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
+            glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
+            SRT *= transMat * scalarMat;
+            currRigidDebug.SRT = SRT;
+            DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
         }
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();

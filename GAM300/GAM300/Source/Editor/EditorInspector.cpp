@@ -945,7 +945,7 @@ void DisplayComponentHelper(T& component)
     ImVec4 check_color = ImGui::GetStyleColorVec4(ImGuiCol_FrameBg);
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
-    bool checkbox = curr_scene.IsActive(component);
+    bool checkbox = curr_scene.IsActive(component,false);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
     curr_scene.SetActive(component,checkbox);
@@ -1417,7 +1417,7 @@ void DisplayEntity(Entity& entity)
     ImGui::PushID((int)entity.EUID());
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    bool enabled = curr_scene.IsActive(entity);
+    bool enabled = curr_scene.IsActive(entity,false);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();

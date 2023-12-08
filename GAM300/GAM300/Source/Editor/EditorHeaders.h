@@ -238,7 +238,6 @@ public:
     bool const WindowOpened() { return windowOpened; }
     bool const WindowHovered() { return windowHovered; }
     bool const WindowFocused() { return windowFocused; }
-    bool const DebugDraw() { return debug_draw; }
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
     void CallbackSetCamera(ObjectCreatedEvent<Camera>* pEvent);
@@ -265,7 +264,6 @@ private:
     bool windowOpened = false;
     bool windowHovered = false;
     bool windowFocused = false;
-    bool debug_draw = false;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorInspector)

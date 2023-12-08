@@ -149,6 +149,9 @@ struct ScriptClass
 	MonoClass* mClass{};
 	//std::unordered_map<std::string, MonoMethod*> mMethods;
 	std::unordered_map<std::string, MonoClassField*> mFields;
+	std::unordered_map<std::string, MonoClassField*> mReferenceFields;
+
+	MonoClassField* GetField(const std::string& fieldName);
 
 	//Collision
 	MonoMethod* DefaultMethods[DefaultMethodTypes::SIZE]{nullptr};
@@ -244,13 +247,23 @@ public:
 	//Callback function to when a script is created
 	void CallbackLoadScene(LoadSceneEvent*pEvent);
 
+	//Callback function for when new collision is registered
 	void CallbackCollisionEnter(ContactAddedEvent* pEvent);
 
+	//Callback function for when collision is removed
 	void CallbackCollisionExit(ContactRemovedEvent* pEvent);
 
-	void CallbackTriggerEnter(TriggerEnterEvent * pEvent);
+	//Callback function for when existing collision persists, one per physics update for each set of collision
+	void CallbackCollisionStay(ContactStayEvent* pEvent);
 
-	void CallbackTriggerExit(TriggerRemoveEvent * pEvent);
+	//Callback function for when new trigger is registered
+	void CallbackTriggerEnter(TriggerEnterEvent* pEvent);
+
+	//Callback function for when trigger is removed
+	void CallbackTriggerExit(TriggerRemoveEvent* pEvent);
+
+	//Callback function for when existing trigger persists, one per physics update for each set of trigger8
+	void CallbackTriggerStay(TriggerStayEvent* pEvent);
 
 	//Helper to subscribe to all objects deletion
 	template <typename... Ts>
@@ -293,8 +306,13 @@ public:
 	using GC_Handle = uint32_t;
 	using GC_Handles = std::vector<GC_Handle>;
 
+	using NamedField = std::pair<std::string, Field>;
+
 	//Script guid to script class
 	std::unordered_map<Engine::GUID<ScriptAsset>, ScriptClass> scriptClassMap;
+
+	std::unordered_map<Engine::UUID, NamedField> fieldReferences;
+
 	//Scene uuid to mono scripts
 	std::unordered_map<Engine::UUID, MonoScripts> mSceneScripts;
 	std::unordered_map<Engine::UUID, GC_Handles> mSceneHandles;
@@ -303,16 +321,12 @@ public:
 
 	void InvokePhysicsEvent(size_t colType, PhysicsComponent& rb1, PhysicsComponent& rb2);
 
-	//IEvent* scriptingEvent = nullptr;
-	//std::atomic_bool ran = false;
-
 	CompilingState compilingState{ CompilingState::Wait };
-	//std::thread::id SCRIPTING_THREAD_ID;
+
 	float timeUntilRecompile{ 0 };
 
 	bool playMode = false;
 
-	//std::map<std::type_index, IEventHandler*> events;
 	template<class EventType>
 	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
 };

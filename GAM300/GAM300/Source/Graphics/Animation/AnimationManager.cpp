@@ -50,16 +50,6 @@ void Animation_Manager::Update(float dt)
             animator.ChangeState();
         }
 
-        if (InputHandler::isKeyButtonPressed(GLFW_KEY_C))
-        {
-            animator.SetNextState("Run");
-        }
-
-        if (InputHandler::isKeyButtonHolding(GLFW_KEY_V))
-        {
-            animator.SetState("Sprint");
-        }
-
         if (animator.playing && animator.AnimationAttached())
         {
             glm::mat4 translate = glm::mat4(1.f);

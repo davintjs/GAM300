@@ -31,6 +31,12 @@ public class PlatformScript : Script
 
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            bool val = !IsEnabled(soundEffect);
+            SetEnabled(soundEffect, val);
+            Console.WriteLine("Sound effect " + val);
+        }
         vec3 target = transform.localPosition;
         vec3 diff = vec3.Zero; 
         if (!back && !rest)
@@ -70,11 +76,9 @@ public class PlatformScript : Script
     }
     void OnCollisionEnter(PhysicsComponent rb)
     {
-        Console.WriteLine("Touched something " + GetTag(rb));
         //detect the player
         if (GetTag(rb) == "Player")
         {
-            rb.gameObject.GetComponent<ThirdPersonController>().Hello("PLATFORM SCRIPT SAYS HIIIIIIII");
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
         }

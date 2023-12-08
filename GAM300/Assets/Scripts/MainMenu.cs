@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BeanFactory;
 using GlmSharp;
@@ -12,6 +13,8 @@ public class MainMenu : Script
 
     public GameObject pressStartText;
 
+    public GameObject mainMenuTitle;
+
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 
@@ -20,17 +23,18 @@ public class MainMenu : Script
     public float timer = 0f;
     public bool back = false;
 
-    public bool rest = false;
-    public float restTimer = 2f;
-    public float currentRestTimer;
+    public float sizeMultiplier = 1.5f;
 
     //sounds
     public AudioSource bgm;
     public AudioSource uibutton;
 
+    vec3 startGridTextSize;
+
     void Start()
     {
         bgm.Play();
+        startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
     }
 
@@ -39,8 +43,14 @@ public class MainMenu : Script
         goToPlay();
 
         //code not working atm
-        //selfFlicker();
-        //movement();
+        selfFlicker();
+        movement();
+    }
+
+    IEnumerator LoadScene(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene("LevelPlay2");
     }
 
     void goToPlay()
@@ -48,7 +58,7 @@ public class MainMenu : Script
         if (Input.GetKeyDown(KeyCode.Space))
         {
             uibutton.Play();
-            SceneManager.LoadScene("LevelPlay2");
+            StartCoroutine(LoadScene(0.1f));
         }
     }
 
@@ -56,7 +66,7 @@ public class MainMenu : Script
     {
         flickerTimer += Time.deltaTime;
 
-        if (flickerTimer > 0.5f)
+        if (flickerTimer > duration)
         {
             flickerTimer = 0f;
             switch (isStartActive)
@@ -76,31 +86,19 @@ public class MainMenu : Script
 
     void movement()
     {
-        if (!back && !rest)
+        if (!back)
         {
-            mainMenuBGImage.transform.localPosition = vec3.Lerp(new vec3(-0.069f, 0f, 0f), new vec3(-0.072f, 0f, 0f), timer / duration);
+            mainMenuTitle.transform.localScale = vec3.Lerp(startGridTextSize, startGridTextSize * sizeMultiplier, timer / duration);
         }
-        else if (back && !rest)
+        else
         {
-            mainMenuBGImage.transform.localPosition = vec3.Lerp(new vec3(-0.072f, 0f, 0f), new vec3(-0.069f, 0f, 0f), timer / duration);
+            mainMenuTitle.transform.localScale = vec3.Lerp(startGridTextSize*sizeMultiplier, startGridTextSize, timer / duration);
         }
         timer += Time.deltaTime;
         if (timer >= duration)
         {
-            rest = true;//stops platform from moving
-            //Console.WriteLine("PlatformResting");
-        }
-        if (rest)
-        {
-            currentRestTimer -= Time.deltaTime;
-            if (currentRestTimer <= 0)
-            {
-                //Console.WriteLine("PlatformStartMoving");
-                rest = false;
-                currentRestTimer = restTimer;//rest rest timer
-                back = !back;//change to the other movement direction
-                timer = 0f;//rest movement timer
-            }
+            timer = 0f;
+            back = !back;
         }
     }
 

@@ -106,11 +106,11 @@ struct Scene
 
 	//Checks if an object is active
 	template <typename T>
-	bool IsActive(T& object);
+	bool IsActive(T& object, bool checkParents = true);
 
 	//Checks if an object is active
 	template <typename T>
-	bool IsActive(const Handle& handle);
+	bool IsActive(const Handle& handle, bool checkParents = true);
 
 	//Sets active for an object
 	template <typename T>
@@ -154,7 +154,7 @@ struct Scene
 	GENERIC_RECURSIVE(void*, Add, Add<T>(*(Entity*)pObject));
 
 	//Get active from scripts
-	GENERIC_RECURSIVE(bool, GetActive, IsActive(*(T*)pObject));
+	GENERIC_RECURSIVE(bool, GetActive, IsActive(*(T*)pObject,false));
 
 	struct SetActiveHelper
 	{
