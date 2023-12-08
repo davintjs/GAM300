@@ -128,7 +128,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					}
 
 				}
-				//if target entity is a base node (no parent)
+				//if drag entity out of a group
 				else
 				{
 					//if current entity has a parent, delink it

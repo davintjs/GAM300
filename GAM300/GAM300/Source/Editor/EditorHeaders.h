@@ -38,15 +38,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 //types of files that can be dragged drop from the content browser
 enum filetype {
-    NONE, MESH, PREFAB, MATERIAL
+    NONE, MESH, PREFAB, MATERIAL, MODELTYPE
 };
 
 //an object containing the data needed for the payload
-struct ContentBrowserPayload {
+struct ContentBrowserPayload {  
+
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
-    filetype type;
+
+    //std::string name = "";
     Engine::HexID guid;
+    filetype type;
+
 };
 
 struct BaseCamera;

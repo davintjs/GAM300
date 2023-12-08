@@ -167,21 +167,50 @@ void EditorScene::SceneView()
                 Engine::HexID guid = data.guid;
 
                 Scene& curr_scene = MySceneManager.GetCurrentScene();
+                Scene::Layer& layer = curr_scene.layer;
 
-                if (data.type == MESH) {
+                if (data.type == MODELTYPE) {
                     //Create new entity
                     Entity* ent = curr_scene.Add<Entity>();
-                    //Add mesh renderer
-                    curr_scene.Add<MeshRenderer>(*ent);
-                    //Attach dragged mesh GUID from the content browser
-                    curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
-                    curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                    Transform& parent = curr_scene.Get<Transform>(*ent);
+                    ////Add mesh renderer
+                    //curr_scene.Add<MeshRenderer>(*ent);
+                    ////Attach dragged mesh GUID from the content browser
+                    //curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
+                    curr_scene.Get<Tag>(*ent).name = "New group";
 
-                    //undo/redo for entity
-                    /*Change newchange;
-                    newchange.entity = ent;
-                    newchange.action = CREATING;
-                    EDITOR.History.AddEntityChange(newchange);*/
+                    //Get model 
+                    GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
+                    EVENTS.Publish(&e);
+
+                    auto model = e.importer;
+
+                    for (auto& mesh : model->meshes) {
+                        std::cout << mesh.ToHexString() << std::endl;
+                        Entity* new_ent = curr_scene.Add<Entity>();
+                        curr_scene.Add<MeshRenderer>(*new_ent);
+                        //Attach dragged mesh GUID from the content browser
+                        curr_scene.Get<MeshRenderer>(*new_ent).meshID = Engine::GUID<MeshAsset>(mesh);
+
+                        //parent.child.push_back(new_ent->UUID());
+                        Transform& child = curr_scene.Get<Transform>(*new_ent);
+
+                        child.SetParent(&parent);
+
+                       /* if (parent.child.size() > 0)
+                        {
+                            parent.child.pop_back();
+                            auto it = std::find(parent.child.begin(), parent.child.end(), parent.EUID());
+                            parent.child.insert(it, child.EUID());
+                        }*/
+                        
+                    }
+                    
+
+
+
+                    //create new group (parent)
+                    //create new entities for each mesh
                 }
                 else if (data.type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
