@@ -146,6 +146,7 @@ public:
     Engine::UUID selectedEntity;
     bool newselect = false;
     bool initLayer = true;
+    bool movetoitem = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 };

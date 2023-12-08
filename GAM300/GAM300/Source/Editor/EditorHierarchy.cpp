@@ -160,9 +160,12 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		}
 
 		if (euid == selectedEntity) {
-			ImGui::SetScrollHereY();  // Scroll to the current item
+			if (movetoitem) {
+				ImGui::SetScrollHereY();  // Scroll to the current item
+				movetoitem = false;
+			}
 			NodeFlags |= ImGuiTreeNodeFlags_Selected;
-		}			
+		}					
 	}
 	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
