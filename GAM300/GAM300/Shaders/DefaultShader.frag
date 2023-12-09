@@ -206,10 +206,23 @@ float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 ligh
     // Max is 0.05 , Min is 0.005 -> put min as 0.0005
     float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
 
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; 
-//    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+
+    vec2 texelSize = 1.0 / textureSize(ShadowMap_SpotDirectional[index], 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(ShadowMap_SpotDirectional[index], projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+
+//    shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
     if(projCoords.z > 1.0)
         shadow = 0.0;
+
     return shadow;
 }
 // ----------------------------------------------------------------------------
@@ -257,8 +270,11 @@ float ShadowCalculation_Point(vec3 lightpos,int index)
 //    if(projCoords.z > 1.0)
 //        shadow = 0.0;
 //
-  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
-float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
+    float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0;
+
+
+
     return shadow;
 }
 
