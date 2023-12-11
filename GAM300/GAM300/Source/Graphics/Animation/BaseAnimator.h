@@ -48,10 +48,14 @@ public:
 	void UpdateStateName();
 
 	// Gets the current animation state progress
-	float GetProgress() { return m_CurrentTime / (endTime - startTime); }
+	float GetProgress() { return m_CurrentTime / (endTime - startTime + blendDuration); }
 
 	// Sets the current animation state progress
-	void SetProgress(const float& _value) { m_CurrentTime = _value * (endTime - startTime); }
+	void SetProgress(const float& _value) { m_CurrentTime = _value * (endTime - startTime + blendDuration); }
+
+	float GetSpeed() { return speedModifier; }
+
+	void SetSpeed(const float& _value) { speedModifier = _value; }
 
 	AnimationState* GetCurrentState() { return currentState; }
 
@@ -79,6 +83,7 @@ public:
 	float endTime;
 	float blendDuration;
 	float blendStartTime;
+	float speedModifier;
 
 	bool playing;
 	int currBlendState{};

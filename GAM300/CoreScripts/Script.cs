@@ -119,14 +119,14 @@ namespace BeanFactory
             return coroutine;
         }
 
-        void StopCoroutine(Coroutine coroutine)
+        public void StopCoroutine(Coroutine coroutine)
         {
             //WARN IF coroutine is null
             coroutines.Remove(coroutine);
             //ERROR IF not found
         }
 
-        void ExecuteCoroutines()
+        public void ExecuteCoroutines()
         {
             foreach (Coroutine coroutine in coroutines)
             {
@@ -143,6 +143,16 @@ namespace BeanFactory
                 coroutines.Remove(coroutine);
             }
             endedCoroutines.Clear();
+        }
+
+        public static bool IsEnabled<T>(T component)
+        {
+            return InternalCalls.GetActive(component, typeof(T));
+        }
+
+        public static void SetEnabled<T>(T component, bool val = true)
+        {
+            InternalCalls.SetActive(component, typeof(T), val);
         }
 
         static List<Coroutine> endedCoroutines = new List<Coroutine>();

@@ -102,6 +102,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
+		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
 
@@ -135,6 +136,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		Animator& animator = pAnimator;
 		animator.SetProgress(value);
+	}
+
+	static float GetSpeed(ScriptObject<Animator> pAnimator)
+	{
+		Animator& animator = pAnimator;
+		return animator.GetSpeed();
+	}
+
+	static void SetSpeed(ScriptObject<Animator> pAnimator, float value)
+	{
+		Animator& animator = pAnimator;
+		animator.SetSpeed(value);
 	}
 	
 	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
@@ -205,8 +218,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 #pragma endregion
-
-	
 
 	// Load a scene
 	static void LoadScene(MonoString* mString)
@@ -461,6 +472,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(StopAnimation);
 		Register(GetProgress);
 		Register(SetProgress);
+		Register(GetSpeed);
+		Register(SetSpeed);
 		Register(SetDefaultState);
 		Register(SetState);
 		Register(SetNextState);

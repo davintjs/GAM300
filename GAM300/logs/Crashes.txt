@@ -1,5 +1,5 @@
-[2023-11-24 22:23:04.396] [Error] [critical] 
-Caused By:	start
-Info:		Couldn't find index
-Source:		C:\Users\desmo\Desktop\GAM300\GAM300\GAM300\Source\Utilities\ObjectsList.cpp (Line: 249)
+[2023-11-26 21:27:18.887] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
 

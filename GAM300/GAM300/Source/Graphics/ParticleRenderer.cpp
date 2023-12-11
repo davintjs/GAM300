@@ -15,7 +15,11 @@ void ParticleRenderer::Update(float dt) {
     particleSRT.clear(); // @kk not all entity should use the same container
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
+        if (!currentScene.IsActive(particleComponent))
+            continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
         for (int i = 0; i < particleComponent.particles_.size(); ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
@@ -40,9 +44,13 @@ void ParticleRenderer::Update(float dt) {
 
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    
+    int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
-        
+        if (!currentScene.IsActive(particleComponent))
+            continue;
+        Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
         GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
         GLenum prim = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->prim; // for now particles are all cubes
         InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
@@ -59,7 +67,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         else {
             glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
         }
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
@@ -104,6 +112,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glBindVertexArray(0);
 
         shader.UnUse();
+        counter += particleComponent.numParticles_;
     }
 }
 

@@ -59,10 +59,10 @@ public class KeyDoor : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
-            Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
             doorscript.moving = true;
+            AudioManager.instance.keyCollected.Play();
+            AudioManager.instance.doorOpen.Play();
             Destroy(gameObject);
-
         }
     }
 }

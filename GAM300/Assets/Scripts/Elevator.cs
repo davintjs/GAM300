@@ -81,16 +81,17 @@ public class Elevator : Script
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
             moving = true;
+            AudioManager.instance.elevator.Play();
         }
     }
 
     void OnCollisionExit(PhysicsComponent rb)
     {
-        //    //detect the player
-        //    if (GetTag(rb) == "Player")
-        //    {
-        //        player = null;
-        //        Console.WriteLine("Player Exit Platform");
-        //    }
+        //detect the player
+        if (GetTag(rb) == "Player")
+        {
+            player = null;
+            Console.WriteLine("Player Exit Platform");
+        }
     }
 }

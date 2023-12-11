@@ -74,7 +74,6 @@ private:
 	std::deque<glm::vec3> Funnel(const glm::vec3& mStart, const glm::vec3& mEnd, const std::vector<std::pair<glm::vec3, glm::vec3>>& mPortals);
 
 	float IsAPointLeftOfVectorOrOnTheLine(const glm::vec3& l1, const glm::vec3& l2, const glm::vec3& p);
-	//float TriangleArea(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
 
 	OpenList mQueue;
 	std::deque<Triangle3D*> mTriangleWayPoint;

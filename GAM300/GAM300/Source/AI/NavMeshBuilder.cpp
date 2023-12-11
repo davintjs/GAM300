@@ -58,7 +58,7 @@ void NavMeshBuilder::Update(float dt)
 			enemyDir = glm::normalize(enemyDir);
 			enemyDir.y = 0;
 			float angle = static_cast<float>(atan2(enemyDir.x, enemyDir.z));
-			agentTransform.rotation = glm::vec3(0.f, angle, 0.f); // This one needs to be local space
+			agentTransform.rotation = glm::vec3(0.f, angle, 0.f);
 			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = enemyDir * 2.f;
 		}
 	}
@@ -484,7 +484,7 @@ void NavMeshBuilder::RemoveObstaclesFromMesh()
 
 	std::sort(mObstacles.begin(), mObstacles.end(), [](Polygon3D& p1, Polygon3D& p2)
 		{
-			return p1.GetMaxPoint().y > p2.GetMaxPoint().y;
+			return p1.GetMaxPoint().z > p2.GetMaxPoint().z;
 		});
 
 	for (auto& polygon : mRegions)

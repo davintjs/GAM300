@@ -62,6 +62,8 @@ class Ray3D;
 
 // Graphics Settings
 
+const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+const unsigned int SHADOW_WIDTH_DIRECTIONAL = 16384, SHADOW_HEIGHT_DIRECTIONAL = 16384;
 
 
 // Graphic Functions
@@ -289,6 +291,8 @@ public:
 	
 	void Draw();
 
+	void DrawBoxColliders();
+
 	void DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color);
 	void DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
@@ -298,20 +302,21 @@ public:
 	void LoopAndGetRigidBodies();
 
 	// Add into Rigid
-	void AddBoxColliderDraw(RigidDebug rigidDebugDraw);
+	void AddBoxColliderDraw(const RigidDebug& rigidDebugDraw);
 
 	// Reset all Physic's Rigid Body Container
 	void ResetPhysicDebugContainer();
 
+	bool& IsEnabled() { return enableDebugDraw; }
 
 private:
 
 	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
+	std::vector<RigidDebug> boxColliderContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
-	std::vector<RigidDebug> boxColliderContainer;
-
+	bool enableDebugDraw = true;
 };
 
 ENGINE_SYSTEM(Lighting)
@@ -338,7 +343,7 @@ private:
 	std::vector<LightProperties> spotLightSources;
 };
 
-ENGINE_SYSTEM(Renderer)
+ENGINE_SYSTEM(Renderer), property::base
 {
 public:
 	void Init();
@@ -406,9 +411,13 @@ public:
 
 	bool& enableBloom() { return enablebloom; };
 
+	bool& EnableFrustumCulling() { return frustumCulling; };
+
 	float& getAmbient() { return ambient; };
 
 	gBuffer m_gBuffer;
+
+	property_vtable();
 private:
 	std::unordered_map<Engine::GUID<MaterialAsset>, InstanceProperties> properties;
 	InstanceContainer instanceProperties; // <vao, properties>
@@ -419,15 +428,25 @@ private:
 	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings
+	unsigned int bloomCount = 1;
 	float exposure = 1.f;
+	float bloomThreshold = 1.f;
+	float ambient = 1.f;
 	bool hdr = true;
 	bool renderShadow = true;
-	unsigned int bloomCount = 1;
-	float bloomThreshold = 1.f;
 	bool enablebloom;
-	float ambient = 1.f;
-
+	bool frustumCulling = true;
 };
+
+property_begin_name(Renderer, "Graphics Settings"){
+	property_var(renderShadow).Name("RenderShadows"),
+	property_var(hdr).Name("HDR"),
+	property_var(enablebloom).Name("Bloom"),
+	property_var(bloomCount).Name("Bloom Count"),
+	property_var(bloomThreshold).Name("Bloom Threshold"),
+	property_var(ambient).Name("Ambient"),
+	property_var(exposure).Name("Exposure"),
+} property_vend_h(Renderer)
 
 //ENGINE_SYSTEM(ShadowRenderer)
 //{

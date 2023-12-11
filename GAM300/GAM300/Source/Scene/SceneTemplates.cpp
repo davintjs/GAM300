@@ -92,6 +92,7 @@ void Scene::CopyValues(T& source, T& dest)
 		//assert(Flags.m_isScope == false || PropertyName.back() == ']');
 
 	});
+
 }
 
 template <typename... Ts>
@@ -136,16 +137,17 @@ void Scene::LinkReferences(ReferencesTable& storage)
 				//Objects
 				if (field.fType < AllObjectTypes::Size())
 				{
-
 					Object*& pObject = *(Object**)field.data;
+					if (pObject == nullptr)
+						continue;
 					if (field.fType < MultiComponentTypes::Size())
 					{
 						if (storage[field.fType].contains(*pObject))
 						{
 							Handle& newHandle = storage[field.fType][*pObject];
 							pObject = (Object*)GetByHandle(field.fType, &newHandle);
+
 							//Set to internal linkage in game object
-							//handle = storage[field.fType][handle];
 						}
 					}
 					else
@@ -327,7 +329,7 @@ void Scene::CloneHelper(Scene& rhs)
 		{
 			T* pObject = Add<T>(object.euid, object.uuid);
 			*pObject = object;
-			if (!rhs.IsActive(object))
+			if (!rhs.IsActive(object,false))
 			{
 				SetActive(*pObject, false);
 			}
@@ -354,7 +356,7 @@ void Scene::CloneHelper(Scene& rhs, TemplatePack<T, Ts...>)
 }
 
 template <typename T>
-bool Scene::IsActive(T& object)
+bool Scene::IsActive(T& object, bool checkParents)
 {
 	static_assert(AllObjectTypes::Has<T>(), "Type is not a valid scene object");
 	auto& arr = GetArray<T>();
@@ -363,7 +365,7 @@ bool Scene::IsActive(T& object)
 		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
 		Transform& t = Get<Transform>(object);
 
-		if (isActive && t.parent)
+		if (checkParents && isActive && t.parent)
 		{
 			Entity& parentEntity = Get<Entity>(t.parent);
 			if (&parentEntity == nullptr)
@@ -399,9 +401,9 @@ void Scene::SetActive(T& object, bool val)
 
 //Checks if an object is active
 template <typename T>
-bool Scene::IsActive(const Handle& handle)
+bool Scene::IsActive(const Handle& handle, bool checkParents)
 {
-	return IsActive(Get<T>(handle));
+	return IsActive(Get<T>(handle), checkParents);
 }
 
 
