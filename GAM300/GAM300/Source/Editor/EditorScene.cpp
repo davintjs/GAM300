@@ -177,7 +177,10 @@ void EditorScene::SceneView()
                     //curr_scene.Add<MeshRenderer>(*ent);
                     ////Attach dragged mesh GUID from the content browser
                     //curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
-                    curr_scene.Get<Tag>(*ent).name = "New group";
+                    curr_scene.Get<Tag>(*ent).name = data.name;
+                    delete[] data.name;
+                    data.name = nullptr;
+                    EditorContentBrowser::Instance().allocate = true;
 
                     //Get model 
                     GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
@@ -186,7 +189,6 @@ void EditorScene::SceneView()
                     auto model = e.importer;
 
                     for (auto& mesh : model->meshes) {
-                        std::cout << mesh.ToHexString() << std::endl;
                         Entity* new_ent = curr_scene.Add<Entity>();
                         curr_scene.Add<MeshRenderer>(*new_ent);
                         //Attach dragged mesh GUID from the content browser
@@ -205,9 +207,6 @@ void EditorScene::SceneView()
                         }*/
                         
                     }
-                    
-
-
 
                     //create new group (parent)
                     //create new entities for each mesh

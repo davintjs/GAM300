@@ -47,9 +47,9 @@ struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
 
-    //std::string name = "";
     Engine::HexID guid;
     filetype type;
+    char* name = nullptr;
 
 };
 
@@ -171,6 +171,9 @@ public:
     void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
 
     Engine::HexID selectedAss;
+
+    bool payload_set;
+
 private:
     std::filesystem::path currentDirectory;
 };

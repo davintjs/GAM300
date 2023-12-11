@@ -1677,7 +1677,7 @@ void EditorInspector::Update(float dt)
             ImGui::Indent();
             ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
             ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
-            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+            ImGui::TableSetupColumn("Input2", ImGuiTableColumnFlags_WidthFixed, 100.f);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
