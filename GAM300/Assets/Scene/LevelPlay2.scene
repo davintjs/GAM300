@@ -98,7 +98,7 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
-  Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
+  Sound File: {guid: 4626aa65c30a8cc991c8194fb81a9fa5}
   Play: false
 ---
 ID: 16513437755539554979
@@ -7454,7 +7454,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 45.4741096
+  Time: 58.3757439
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15570,7 +15570,7 @@ Script:
   animator: {fileID: 6628232525372413625}  # Component
   audioSource: {fileID: 16716648517964172389}  # Component
   MoveSpeed: 400
-  JumpSpeed: 7
+  JumpSpeed: 6
   player: {fileID: 3977294589520766028}  # Component
   sprintModifier: 1.5
   CamYawPivot: {fileID: 6663313825132233637}  # Component
@@ -18828,7 +18828,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 4.35719776
+  Time: 7.37574577
   StartTime: 2
   EndTime: 57
   Playing: true
