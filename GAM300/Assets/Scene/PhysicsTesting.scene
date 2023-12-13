@@ -130,7 +130,7 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: false
+  IsStatic: true
   IsKinematic: true
   UseGravity: true
   Is_trigger: false
@@ -144,30 +144,24 @@ MeshRenderer:
 ID: 6606782747310958106
 GameObject:
   m_IsActive: true
-  m_Name: Cube2
+  m_Name: sphere
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4100690231802226099}  # Transform
-    - component: {fileID: 18010899884453287850}  # BoxCollider
     - component: {fileID: 18061328672838792035}  # Rigidbody
     - component: {fileID: 15908972911879333389}  # MeshRenderer
+    - component: {fileID: 15641423066524871908}  # SphereCollider
 ---
 ID: 4100690231802226099
 Transform:
   m_GameObject: {fileID: 6606782747310958106}
-  Translation: [0, 1.72139239, 3.68624306]
+  Translation: [1.44002854e-09, 2.6518786, 3.68624306]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
----
-ID: 18010899884453287850
-BoxCollider:
-  m_GameObject: {fileID: 6606782747310958106}
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
 ---
 ID: 18061328672838792035
 Rigidbody:
@@ -177,13 +171,19 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
+  IsStatic: false
   IsKinematic: false
   UseGravity: true
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 15908972911879333389
 MeshRenderer:
   m_GameObject: {fileID: 6606782747310958106}
-  Mesh: {guid: 00000000000000000000000000000001}
+  Mesh: {guid: 00000000000000000000000000000002}
   Material_ID: {guid: f67b91ede3c6182c8dfc1518c73ef90b}
+---
+ID: 15641423066524871908
+SphereCollider:
+  m_GameObject: {fileID: 6606782747310958106}
+  Radius: 0.5
+  Offset: [0, 0, 0]

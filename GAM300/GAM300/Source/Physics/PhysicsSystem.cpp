@@ -675,10 +675,19 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
 
+			//std::cout << "sphere collider\n";
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
 			Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
 			GlmVec3ToJoltVec3(finalPos, pos);
-			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+
+			float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
+
+			if (rb.is_trigger)
+			{
+				motionType = JPH::EMotionType::Kinematic;
+			}
+
+			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			if (rb.isStatic)
 				sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
@@ -691,9 +700,18 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			sphereCreationSettings.mAngularVelocity = angularVel;
 			// Sensor settings
 			sphereCreationSettings.mIsSensor = rb.is_trigger;
+			if (rb.is_trigger)
+			{
+				sphereCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+				sphereCreationSettings.mSensorDetectsStatic = true;
+				sphereCreationSettings.mAllowSleeping = true;
+			}
+
+			sphereCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+			sphereCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
 
 			JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
-			bodyInterface->AddBody(sphere->GetID(),enabledStatus);
+			bodyInterface->AddBody(sphere->GetID(), enabledStatus);
 			rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
 		}
 		else if (scene.Has<CapsuleCollider>(entity)) {
@@ -1002,10 +1020,19 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	}
 	else if (scene.Has<SphereCollider>(entity)) {
 
+		std::cout << "sphere collider\n";
 		SphereCollider& sc = scene.Get<SphereCollider>(entity);
 		Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
-		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(sc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+
+		float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
+
+		if (rb.is_trigger)
+		{
+			motionType = JPH::EMotionType::Kinematic;
+		}
+
+		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape( radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 		if (rb.isStatic)
 			sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
@@ -1018,6 +1045,14 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		sphereCreationSettings.mAngularVelocity = angularVel;
 		// Sensor settings
 		sphereCreationSettings.mIsSensor = rb.is_trigger;
+		if (rb.is_trigger)
+		{
+			sphereCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+			sphereCreationSettings.mSensorDetectsStatic = true;
+		}
+
+		sphereCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+		sphereCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
 
 		JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
 		bodyInterface->AddBody(sphere->GetID(), enabledStatus);
