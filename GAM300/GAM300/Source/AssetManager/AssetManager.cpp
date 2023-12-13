@@ -32,6 +32,7 @@ static std::unordered_set<fs::path> TEMP_EXTENSIONS
 };
 // Bean: Include model compiler here temporarily, should use events instead
 #include "ModelCompiler.h"
+#include "TextureCompiler.h"
 
 static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
 {
@@ -50,6 +51,11 @@ void AssetManager::Compile(const fs::path& path)
 	{
 		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
 		MODELCOMPILER.LoadModel(path);
+	}
+	else if (path.extension() == ".png" || path.extension() == ".jpg")
+	{
+		// Bean: From TextureCompiler.h
+		//LoadTexture(path);
 	}
 	else
 	{

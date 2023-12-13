@@ -435,7 +435,7 @@ private:
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;
-	bool frustumCulling = true;
+	bool frustumCulling = false;
 };
 
 property_begin_name(Renderer, "Graphics Settings"){

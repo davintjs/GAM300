@@ -42,7 +42,7 @@
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
-    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
+    <ClCompile Include="Source\Graphics\Texture\TextureManager.cpp" />
     <ClCompile Include="Source\Editor\EditorScene.cpp" />
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\EditorContentBrowser.cpp" />
@@ -109,6 +109,7 @@
     <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Source\Graphics\ParticleRenderer.cpp" />
     <ClCompile Include="Source\AI\Pathfinder.cpp" />
+    <ClCompile Include="Source\AssetManager\TextureCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -156,7 +157,7 @@
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
-    <ClInclude Include="Source\Graphics\TextureManager.h" />
+    <ClInclude Include="Source\Graphics\Texture\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Source\UISystem\UISystem.h" />
     <ClInclude Include="Source\Graphics\ParticleRenderer.h" />
     <ClInclude Include="Source\AI\Pathfinder.h" />
+    <ClInclude Include="Source\AssetManager\TextureCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

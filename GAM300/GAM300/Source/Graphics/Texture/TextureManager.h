@@ -14,9 +14,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #pragma once
 
-#include "../Core/SystemInterface.h"
+#include "Core/SystemInterface.h"
 #include "../gli-master/gli/gli.hpp"
-#include "glslshader.h"
+#include "Graphics/glslshader.h"
 #include "Utilities/GUID.h"
 #include <Core/Events.h>
 #include <AssetManager/AssetTypes.h>

@@ -19,7 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "EditorTemplates.h"
 #include "Core/EventsManager.h"
 #include "Utilities/ThreadPool.h"
-#include "Graphics/TextureManager.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "Scene/SceneManager.h"
 
 void EditorToolBar::Init()
