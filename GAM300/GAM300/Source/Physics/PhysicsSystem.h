@@ -272,7 +272,7 @@ public:
 
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
-	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
+	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter; 
 
 
 	#pragma region Character Controller Testing

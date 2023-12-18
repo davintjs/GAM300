@@ -717,25 +717,72 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		else if (scene.Has<CapsuleCollider>(entity)) {
 
 
-			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
-			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);	
 
-			if (rb.isStatic)
-				capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+			float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * cc.radius;
+			float offset = 0.5f * (t.scale.y * cc.height) - radius;
 
-			// Set all necessary settings for the body
-			// Friction
-			capsuleCreationSettings.mFriction = rb.friction;
-			// Linear Velocity
-			capsuleCreationSettings.mLinearVelocity = linearVel;
-			// Angular Velocity
-			capsuleCreationSettings.mAngularVelocity = angularVel;
-			// Sensor settings
-			capsuleCreationSettings.mIsSensor = rb.is_trigger;
+			if (offset <= 0.f) {
+				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 
-			JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
-			bodyInterface->AddBody(capsule->GetID(), enabledStatus);
-			rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
+				if (rb.isStatic)
+					sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+
+				// Set all necessary settings for the body
+				// Friction
+				sphereCreationSettings.mFriction = rb.friction;
+				// Linear Velocity
+				sphereCreationSettings.mLinearVelocity = linearVel;
+				// Angular Velocity
+				sphereCreationSettings.mAngularVelocity = angularVel;
+				// Sensor settings
+				sphereCreationSettings.mIsSensor = rb.is_trigger;
+				if (rb.is_trigger)
+				{
+					sphereCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+					sphereCreationSettings.mSensorDetectsStatic = true;
+					sphereCreationSettings.mAllowSleeping = true;
+				}
+
+				sphereCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+				sphereCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
+
+				JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
+				bodyInterface->AddBody(sphere->GetID(), enabledStatus);
+				rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
+			}
+			else {
+				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+
+				if (rb.isStatic)
+					capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+
+
+				// Set all necessary settings for the body
+				// Friction
+				capsuleCreationSettings.mFriction = rb.friction;
+				// Linear Velocity
+				capsuleCreationSettings.mLinearVelocity = linearVel;
+				// Angular Velocity
+				capsuleCreationSettings.mAngularVelocity = angularVel;
+				// Sensor settings
+				capsuleCreationSettings.mIsSensor = rb.is_trigger;
+				if (rb.is_trigger)
+				{
+					capsuleCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+					capsuleCreationSettings.mSensorDetectsStatic = true;
+					capsuleCreationSettings.mAllowSleeping = true;
+				}
+
+				capsuleCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+				capsuleCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
+
+				JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
+				bodyInterface->AddBody(capsule->GetID(), enabledStatus);
+				rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
+			}
+
 		}
 		else {
 			continue;
@@ -753,7 +800,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	}
 
 
-	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	std::cout << "Rigido bodies:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
 	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
 
