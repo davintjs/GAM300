@@ -29,6 +29,15 @@ struct PointLight
     bool enableShadow;
 };
 
+vec3 sampleOffsetDirections[20] = vec3[]
+(
+   vec3( 1,  1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1,  1,  1), 
+   vec3( 1,  1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1,  1, -1),
+   vec3( 1,  1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1,  1,  0),
+   vec3( 1,  0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1,  0, -1),
+   vec3( 0,  1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0,  1, -1)
+); 
+
 struct DirectionalLight
 {
     vec3 direction;
@@ -261,8 +270,22 @@ float ShadowCalculation_Point(vec3 lightpos,int index)
 //    if(projCoords.z > 1.0)
 //        shadow = 0.0;
 //
-  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
-float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
+//  float bias = 0.1; // we use a much larger bias since depth is now in [near_plane, far_plane] range
+    float shadow = 0.0;
+    float bias   = 0.15;
+    int samples  = 20;
+    float viewDistance = length(camPos - WorldPos);
+//    float diskRadius = 0.05;
+    float diskRadius = (1.0 + (viewDistance / farplane)) / 25.0;
+    for(int i = 0; i < samples; ++i)
+    {
+        float closestDepth = texture(PointShadows[index], fragToLight + sampleOffsetDirections[i] * diskRadius).r;
+        closestDepth *= farplane;   // undo mapping [0;1]
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples);  
+//    float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0; 
     return shadow;
 }
 
