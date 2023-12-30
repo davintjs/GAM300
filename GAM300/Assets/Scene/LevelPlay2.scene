@@ -139,6 +139,7 @@ Transform:
     - {fileID: 8195998143091088379}
     - {fileID: 5382915443314468010}
     - {fileID: 8310365372469502612}
+    - {fileID: 4679045281971681028}
 ---
 ID: 12555400289260702052
 Script:
@@ -158,6 +159,7 @@ Script:
   enemyHit: {fileID: 14492758170611173101}  # Component
   keyCollected: {fileID: 12067369461903983448}  # Component
   uiSound: {fileID: 12043367231734905459}  # Component
+  useItem: {fileID: 8508182677235274511}  # Component
 ---
 ID: 6606253624498158492
 GameObject:
@@ -7466,7 +7468,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 2.4980464
+  Time: 5.93759918
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15542,6 +15544,7 @@ GameObject:
     - component: {fileID: 15939117778428800744}  # CharacterController
     - component: {fileID: 16716648517964172389}  # AudioSource
     - component: {fileID: 13523510586901288919}  # Script
+    - component: {fileID: 14362096387145765665}  # Script
 ---
 ID: 18246905878658813158
 Transform:
@@ -15615,6 +15618,16 @@ Script:
   attack1duration: 0.899999976
   attack2duration: 1.20000005
   animCancelPercentage: 0.600000024
+---
+ID: 14362096387145765665
+Script:
+  m_GameObject: {fileID: 3977294589520766028}
+  Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
+  thirdPersonController: {fileID: 13523510586901288919}  # Component
+  healthPackCount: 0
+  staminaPackCount: 0
+  healthPackHealValue: 2
+  maxStatPackCount: 0
 ---
 ID: 17611351097031071778
 GameObject:
@@ -18840,7 +18853,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 34.4980698
+  Time: 54.9376678
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -21878,3 +21891,138 @@ MeshRenderer:
   m_GameObject: {fileID: 4701125819171034322}
   Mesh: {guid: af873c54a8488f0399d7612d7c3fb58c}
   Material_ID: {guid: d54c5f5ae99cbfc854c3ed3b03281f11}
+---
+ID: 5485624148561562475
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPack
+  m_TagString: HealthPack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14483430449207858683}  # Transform
+    - component: {fileID: 9525585316275147854}  # BoxCollider
+    - component: {fileID: 7898574339669666260}  # Rigidbody
+    - component: {fileID: 16201793265096487611}  # MeshRenderer
+    - component: {fileID: 10630920537531246146}  # Script
+---
+ID: 14483430449207858683
+Transform:
+  m_GameObject: {fileID: 5485624148561562475}
+  Translation: [-20.0483227, 3.71076226, -35.7595711]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9525585316275147854
+BoxCollider:
+  m_GameObject: {fileID: 5485624148561562475}
+  Dimensions: [0.920932889, 0.797551394, 0.223614842]
+  Offset: [-7.01844692e-06, -0.110112622, -1.70618296e-06]
+---
+ID: 7898574339669666260
+Rigidbody:
+  m_GameObject: {fileID: 5485624148561562475}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 16201793265096487611
+MeshRenderer:
+  m_GameObject: {fileID: 5485624148561562475}
+  Mesh: {guid: ee7d7228816fd99449f80dd47ff99465}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 10630920537531246146
+Script:
+  m_GameObject: {fileID: 5485624148561562475}
+  Script: {guid: e7afae326ea5b107a947177c9036d350}
+---
+ID: 4679045281971681028
+GameObject:
+  m_IsActive: true
+  m_Name: useItem
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2509363505227465543}  # Transform
+    - component: {fileID: 8508182677235274511}  # AudioSource
+---
+ID: 2509363505227465543
+Transform:
+  m_GameObject: {fileID: 4679045281971681028}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 8508182677235274511
+AudioSource:
+  m_GameObject: {fileID: 4679045281971681028}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
+  Play: false
+---
+ID: 13181040398411404901
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPack
+  m_TagString: MaxStatPack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4613035213807394368}  # Transform
+    - component: {fileID: 16917545578926419683}  # BoxCollider
+    - component: {fileID: 3297397167941829822}  # Rigidbody
+    - component: {fileID: 2435892964183400494}  # MeshRenderer
+    - component: {fileID: 3010007240653764876}  # Script
+---
+ID: 4613035213807394368
+Transform:
+  m_GameObject: {fileID: 13181040398411404901}
+  Translation: [-20.0966702, 3.23570251, 3.79754567]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16917545578926419683
+BoxCollider:
+  m_GameObject: {fileID: 13181040398411404901}
+  Dimensions: [0.920932889, 0.797551394, 0.223614842]
+  Offset: [-7.01844692e-06, -0.110112622, -1.70618296e-06]
+---
+ID: 3297397167941829822
+Rigidbody:
+  m_GameObject: {fileID: 13181040398411404901}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 2435892964183400494
+MeshRenderer:
+  m_GameObject: {fileID: 13181040398411404901}
+  Mesh: {guid: 1618c2cac1782fbbcc81e882fe12adce}
+  Material_ID: {guid: f67b91ede3c6182c8dfc1518c73ef90b}
+---
+ID: 3010007240653764876
+Script:
+  m_GameObject: {fileID: 13181040398411404901}
+  Script: {guid: e4cb2d056ed272fd4b072e22637c7516}

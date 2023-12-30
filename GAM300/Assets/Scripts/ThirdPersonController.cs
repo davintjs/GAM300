@@ -44,6 +44,7 @@ public class ThirdPersonController : Script
 
     bool _isAttacking = false;
 
+
     bool IsAttacking 
     {
         get { return _isAttacking; }
@@ -227,6 +228,11 @@ public class ThirdPersonController : Script
             TakeDamage(1);
             isInvulnerable = true;
         }
+        //testing heal
+        if(Input.GetKeyDown(KeyCode.Y))
+        {
+            HealHealth(1);
+        }
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
@@ -395,6 +401,11 @@ public class ThirdPersonController : Script
         //healthBarFill.GetComponent<Transform>().localScale = currentScale;
 
         //hard code the health bar for now
+        if(currentHealth == maxHealth)
+        {
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.65f, 0.857f, 3f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0.2f, -0.035f, 1f);
+        }
         if(currentHealth == 3)
         {
             healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
@@ -457,6 +468,21 @@ public class ThirdPersonController : Script
             animator.Stop();
             animationManager.UpdateState();
             animator.Play();
+        }
+    }
+
+    public void HealHealth(float amount)
+    {
+        currentHealth += amount;
+        UpdatehealthBar();
+
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        if(currentHealth == maxHealth)
+        {
+            Console.WriteLine("Health is Full");
         }
     }
 
