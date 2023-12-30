@@ -1,5 +1,6 @@
-[2023-11-26 21:27:18.887] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
+[2023-12-30 14:29:04.135] [Error] [critical] 
+Caused By:	r == FMOD_OK
+Info:		Assets/Audio\Gam300MainMenu.wav  doesnt exist!
+
+Source:		C:\Users\Kenneth\Documents\GitHub\GAM300\GAM300\GAM300\Source\Audio\AudioManager.cpp (Line: 103)
 

@@ -31,6 +31,9 @@ public class Enemy : Script
     public bool startDeathAnimationCountdown = false;
     float animationTimer = 3.18f;
     public float currentAnimationTimer;
+    private Coroutine damagedCoroutine = null;
+
+    public float testing = 1f;
 
 
 
@@ -117,7 +120,7 @@ public class Enemy : Script
             {
                 StopCoroutine(damagedCoroutine);
             }
-            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
+            //damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
             TakeDamage(1);
         }
     }
