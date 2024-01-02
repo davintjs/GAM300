@@ -554,6 +554,10 @@ public class ThirdPersonController : Script
             //AudioManager.instance.playerInjured.Play();
             TakeDamage(1);
         }
+        if(GetTag(rb) == "SpinningPropeller")
+        {
+            TakeDamage(1);
+        }
         ////Not working
         //if(GetTag(rb) == "PuzzleKey")
         //{

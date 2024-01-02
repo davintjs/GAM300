@@ -7479,7 +7479,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 60.3429413
+  Time: 46.2997971
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15634,10 +15634,10 @@ ID: 14362096387145765665
 Script:
   m_GameObject: {fileID: 3977294589520766028}
   Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
-  thirdPersonController: {fileID: 13523510586901288919}  # Component
+  thirdPersonController: {fileID: 0}
   healthPackCount: 0
   staminaPackCount: 0
-  healthPackHealValue: 2
+  healthPackHealValue: 5
   maxStatPackCount: 0
 ---
 ID: 17611351097031071778
@@ -18864,7 +18864,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 2.3427496
+  Time: 33.2997284
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -22415,3 +22415,290 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
+---
+ID: 6043762608075201925
+GameObject:
+  m_IsActive: true
+  m_Name: SpinningPropeller
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12139972292941966713}  # Transform
+    - component: {fileID: 15199008099641735248}  # Script
+---
+ID: 12139972292941966713
+Transform:
+  m_GameObject: {fileID: 6043762608075201925}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 16699902853658577603}
+    - {fileID: 14500960313742346744}
+    - {fileID: 10474663426378651107}
+    - {fileID: 14146895128698520128}
+    - {fileID: 17971970285478015213}
+    - {fileID: 844405930240153672}
+---
+ID: 15199008099641735248
+Script:
+  m_GameObject: {fileID: 6043762608075201925}
+  Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
+  rotateSpeed: 0.100000001
+  rotateClockwise: true
+  rotateAntiClockwise: false
+---
+ID: 16699902853658577603
+GameObject:
+  m_IsActive: true
+  m_Name: blades
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 681312403579880912}  # Transform
+    - component: {fileID: 15061850222239219569}  # BoxCollider
+    - component: {fileID: 12878292385741179722}  # Rigidbody
+    - component: {fileID: 4233132018879919519}  # MeshRenderer
+---
+ID: 681312403579880912
+Transform:
+  m_GameObject: {fileID: 16699902853658577603}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 15061850222239219569
+BoxCollider:
+  m_GameObject: {fileID: 16699902853658577603}
+  Dimensions: [11.2387257, 11.2285442, 1.09408426]
+  Offset: [-8.41617584e-05, -8.79764557e-05, -8.37445259e-06]
+---
+ID: 12878292385741179722
+Rigidbody:
+  m_GameObject: {fileID: 16699902853658577603}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 4233132018879919519
+MeshRenderer:
+  m_GameObject: {fileID: 16699902853658577603}
+  Mesh: {guid: d7b21c230c19185c1ee9a31a5006563c}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 14500960313742346744
+GameObject:
+  m_IsActive: true
+  m_Name: core
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7314617063718293721}  # Transform
+    - component: {fileID: 7625707673653786991}  # BoxCollider
+    - component: {fileID: 14306407189457350076}  # Rigidbody
+    - component: {fileID: 1290433288943905920}  # MeshRenderer
+---
+ID: 7314617063718293721
+Transform:
+  m_GameObject: {fileID: 14500960313742346744}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 7625707673653786991
+BoxCollider:
+  m_GameObject: {fileID: 14500960313742346744}
+  Dimensions: [1.23945332, 1.23945332, 1.18910015]
+  Offset: [-9.4473362e-06, -9.4473362e-06, -9.05990601e-06]
+---
+ID: 14306407189457350076
+Rigidbody:
+  m_GameObject: {fileID: 14500960313742346744}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 1290433288943905920
+MeshRenderer:
+  m_GameObject: {fileID: 14500960313742346744}
+  Mesh: {guid: f80911da0e0422fa0477a07f93e3a870}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 10474663426378651107
+GameObject:
+  m_IsActive: true
+  m_Name: collider1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10099180424039522162}  # Transform
+    - component: {fileID: 10408441146795040191}  # BoxCollider
+    - component: {fileID: 6102903488224370739}  # Rigidbody
+---
+ID: 10099180424039522162
+Transform:
+  m_GameObject: {fileID: 10474663426378651107}
+  Translation: [-3.17600012, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 10408441146795040191
+BoxCollider:
+  m_GameObject: {fileID: 10474663426378651107}
+  Dimensions: [5, 0.5, 1]
+  Offset: [0, 0, 0]
+---
+ID: 6102903488224370739
+Rigidbody:
+  m_GameObject: {fileID: 10474663426378651107}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 14146895128698520128
+GameObject:
+  m_IsActive: true
+  m_Name: collider2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7221600831339007025}  # Transform
+    - component: {fileID: 15426649295246805913}  # BoxCollider
+    - component: {fileID: 12930440261585702711}  # Rigidbody
+---
+ID: 7221600831339007025
+Transform:
+  m_GameObject: {fileID: 14146895128698520128}
+  Translation: [0, 3.14353156, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 15426649295246805913
+BoxCollider:
+  m_GameObject: {fileID: 14146895128698520128}
+  Dimensions: [0.5, 5, 1]
+  Offset: [0, 0, 0]
+---
+ID: 12930440261585702711
+Rigidbody:
+  m_GameObject: {fileID: 14146895128698520128}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 17971970285478015213
+GameObject:
+  m_IsActive: true
+  m_Name: collider3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7346798250421128280}  # Transform
+    - component: {fileID: 11773594288787064393}  # BoxCollider
+    - component: {fileID: 4724290450996168268}  # Rigidbody
+---
+ID: 7346798250421128280
+Transform:
+  m_GameObject: {fileID: 17971970285478015213}
+  Translation: [3.17600012, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 11773594288787064393
+BoxCollider:
+  m_GameObject: {fileID: 17971970285478015213}
+  Dimensions: [5, 0.5, 1]
+  Offset: [0, 0, 0]
+---
+ID: 4724290450996168268
+Rigidbody:
+  m_GameObject: {fileID: 17971970285478015213}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 844405930240153672
+GameObject:
+  m_IsActive: true
+  m_Name: collider4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6308332247149991459}  # Transform
+    - component: {fileID: 5410658103647098096}  # BoxCollider
+    - component: {fileID: 4442386467875394187}  # Rigidbody
+---
+ID: 6308332247149991459
+Transform:
+  m_GameObject: {fileID: 844405930240153672}
+  Translation: [0, -3.14400005, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6043762608075201925}
+  m_Children:
+    []
+---
+ID: 5410658103647098096
+BoxCollider:
+  m_GameObject: {fileID: 844405930240153672}
+  Dimensions: [0.5, 5, 1]
+  Offset: [0, 0, 0]
+---
+ID: 4442386467875394187
+Rigidbody:
+  m_GameObject: {fileID: 844405930240153672}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
