@@ -203,6 +203,17 @@ Transform:
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
     - {fileID: 3827453200974574750}
+    - {fileID: 12660956963810181687}
+    - {fileID: 8603716528774636938}
+    - {fileID: 17837455119039999797}
+    - {fileID: 17344769666620842143}
+    - {fileID: 12115195871797465227}
+    - {fileID: 4720521423488205772}
+    - {fileID: 1953613848853671180}
+    - {fileID: 3925618525247661714}
+    - {fileID: 11966624967280915999}
+    - {fileID: 9691624766500435789}
+    - {fileID: 1370432261870288088}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -7468,7 +7479,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 5.93759918
+  Time: 60.3429413
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -18853,7 +18864,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 54.9376678
+  Time: 2.3427496
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -21360,7 +21371,7 @@ ID: 1795378843463505417
 Transform:
   m_GameObject: {fileID: 1313379235719837165}
   Translation: [0, 0.858827233, 0]
-  Rotation: [0, -8.74227766e-08, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 11100728099624654735}
   m_Children:
@@ -21896,7 +21907,7 @@ ID: 5485624148561562475
 GameObject:
   m_IsActive: true
   m_Name: HealthPack
-  m_TagString: HealthPack
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14483430449207858683}  # Transform
@@ -21978,7 +21989,7 @@ ID: 13181040398411404901
 GameObject:
   m_IsActive: true
   m_Name: MaxStatPack
-  m_TagString: MaxStatPack
+  m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4613035213807394368}  # Transform
@@ -22026,3 +22037,381 @@ ID: 3010007240653764876
 Script:
   m_GameObject: {fileID: 13181040398411404901}
   Script: {guid: e4cb2d056ed272fd4b072e22637c7516}
+---
+ID: 12660956963810181687
+GameObject:
+  m_IsActive: true
+  m_Name: playerIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6741521074388384309}  # Transform
+    - component: {fileID: 1519606982010244742}  # SpriteRenderer
+---
+ID: 6741521074388384309
+Transform:
+  m_GameObject: {fileID: 12660956963810181687}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [0, 0, 0]
+  Scale: [0.0799999982, -0.0799999982, 0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 1519606982010244742
+SpriteRenderer:
+  m_GameObject: {fileID: 12660956963810181687}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: ed67f80cc8530c2f1eb31d14779f6a88}
+---
+ID: 8603716528774636938
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaBackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1314039668191076128}  # Transform
+    - component: {fileID: 6156993243117896172}  # SpriteRenderer
+---
+ID: 1314039668191076128
+Transform:
+  m_GameObject: {fileID: 8603716528774636938}
+  Translation: [-0.929799974, 0.857109547, 4]
+  Rotation: [0, 0, 0]
+  Scale: [0.100000001, -0.119999997, 0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 6156993243117896172
+SpriteRenderer:
+  m_GameObject: {fileID: 8603716528774636938}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: f1e2252c9bed7adeab8c9cfea67d8e5c}
+---
+ID: 17837455119039999797
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16141717525383989037}  # Transform
+    - component: {fileID: 15833187439275913594}  # SpriteRenderer
+---
+ID: 16141717525383989037
+Transform:
+  m_GameObject: {fileID: 17837455119039999797}
+  Translation: [-0.929799974, 0.857109547, 4.5]
+  Rotation: [0, 0, 0]
+  Scale: [0.100000001, -0.119999997, 0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 15833187439275913594
+SpriteRenderer:
+  m_GameObject: {fileID: 17837455119039999797}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: e8f1b5b7e6ccf016426fb9befbdcb1cb}
+---
+ID: 17344769666620842143
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaOuterFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3099933147011238881}  # Transform
+    - component: {fileID: 1214303970905809033}  # SpriteRenderer
+---
+ID: 3099933147011238881
+Transform:
+  m_GameObject: {fileID: 17344769666620842143}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [0, 0, 0]
+  Scale: [0.100000001, -0.119999997, 0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 1214303970905809033
+SpriteRenderer:
+  m_GameObject: {fileID: 17344769666620842143}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: e94a3b58c1e9691c92035ec7508476ab}
+---
+ID: 12115195871797465227
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaCharacterFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18383208018285672524}  # Transform
+    - component: {fileID: 972436811981113598}  # SpriteRenderer
+---
+ID: 18383208018285672524
+Transform:
+  m_GameObject: {fileID: 12115195871797465227}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [0, 0, 0]
+  Scale: [0.0799999982, -0.0900000036, 0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 972436811981113598
+SpriteRenderer:
+  m_GameObject: {fileID: 12115195871797465227}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
+---
+ID: 4720521423488205772
+GameObject:
+  m_IsActive: true
+  m_Name: Overdrivebackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12859451180230906073}  # Transform
+    - component: {fileID: 15241298173543357892}  # SpriteRenderer
+---
+ID: 12859451180230906073
+Transform:
+  m_GameObject: {fileID: 4720521423488205772}
+  Translation: [-0.75, 0.790000021, 1.81727982]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, -0.0199999996, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 15241298173543357892
+SpriteRenderer:
+  m_GameObject: {fileID: 4720521423488205772}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}
+---
+ID: 1953613848853671180
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveBackFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17405891383651685792}  # Transform
+    - component: {fileID: 3599254905845664684}  # SpriteRenderer
+---
+ID: 17405891383651685792
+Transform:
+  m_GameObject: {fileID: 1953613848853671180}
+  Translation: [-0.75, 0.790000021, 2]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, -0.0199999996, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 3599254905845664684
+SpriteRenderer:
+  m_GameObject: {fileID: 1953613848853671180}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 4032521077463f2715840b35c4b4e13e}
+---
+ID: 3925618525247661714
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveFrontFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6440725200320908511}  # Transform
+    - component: {fileID: 5944911866698831055}  # SpriteRenderer
+---
+ID: 6440725200320908511
+Transform:
+  m_GameObject: {fileID: 3925618525247661714}
+  Translation: [-0.75, 0.790000021, 2.0999999]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, -0.0199999996, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 5944911866698831055
+SpriteRenderer:
+  m_GameObject: {fileID: 3925618525247661714}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 05eabcd5686e83c719e179558b23b1a3}
+---
+ID: 11966624967280915999
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11180506814816798271}  # Transform
+    - component: {fileID: 9429827192945704677}  # SpriteRenderer
+---
+ID: 11180506814816798271
+Transform:
+  m_GameObject: {fileID: 11966624967280915999}
+  Translation: [-0.899999976, -0.850000024, 2.0999999]
+  Rotation: [0, 0, 0]
+  Scale: [0.0599999987, -0.100000001, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 10673191397735378312}
+---
+ID: 9429827192945704677
+SpriteRenderer:
+  m_GameObject: {fileID: 11966624967280915999}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 10673191397735378312
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1051630031486288378}  # Transform
+    - component: {fileID: 4597313407553912148}  # SpriteRenderer
+---
+ID: 1051630031486288378
+Transform:
+  m_GameObject: {fileID: 10673191397735378312}
+  Translation: [-0.899999976, -0.850000024, 4]
+  Rotation: [0, 0, 0]
+  Scale: [0.0399999991, -0.0500000007, 1]
+  Father: {fileID: 11966624967280915999}
+  m_Children:
+    []
+---
+ID: 4597313407553912148
+SpriteRenderer:
+  m_GameObject: {fileID: 10673191397735378312}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 9691624766500435789
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2755569868383402096}  # Transform
+    - component: {fileID: 5378824823806842645}  # SpriteRenderer
+---
+ID: 2755569868383402096
+Transform:
+  m_GameObject: {fileID: 9691624766500435789}
+  Translation: [-0.75, -0.850000024, 2.0999999]
+  Rotation: [0, 0, 0]
+  Scale: [0.0599999987, -0.100000001, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 13993313988089347944}
+---
+ID: 5378824823806842645
+SpriteRenderer:
+  m_GameObject: {fileID: 9691624766500435789}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 13993313988089347944
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13691015580275777266}  # Transform
+    - component: {fileID: 4741940390945997965}  # SpriteRenderer
+---
+ID: 13691015580275777266
+Transform:
+  m_GameObject: {fileID: 13993313988089347944}
+  Translation: [-0.75, -0.850000024, 4]
+  Rotation: [0, 0, 0]
+  Scale: [0.0399999991, -0.0500000007, 1]
+  Father: {fileID: 9691624766500435789}
+  m_Children:
+    []
+---
+ID: 4741940390945997965
+SpriteRenderer:
+  m_GameObject: {fileID: 13993313988089347944}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}
+---
+ID: 1370432261870288088
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10817413614210890440}  # Transform
+    - component: {fileID: 3686822582642055789}  # SpriteRenderer
+---
+ID: 10817413614210890440
+Transform:
+  m_GameObject: {fileID: 1370432261870288088}
+  Translation: [-0.600000024, -0.850000024, 2.0999999]
+  Rotation: [0, 0, 0]
+  Scale: [0.0599999987, -0.100000001, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 12478379518054110186}
+---
+ID: 3686822582642055789
+SpriteRenderer:
+  m_GameObject: {fileID: 1370432261870288088}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 12478379518054110186
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11083728837774791348}  # Transform
+    - component: {fileID: 6445528378693974545}  # SpriteRenderer
+---
+ID: 11083728837774791348
+Transform:
+  m_GameObject: {fileID: 12478379518054110186}
+  Translation: [-0.600000024, -0.850000024, 4]
+  Rotation: [0, 0, 0]
+  Scale: [0.0399999991, -0.0500000007, 1]
+  Father: {fileID: 1370432261870288088}
+  m_Children:
+    []
+---
+ID: 6445528378693974545
+SpriteRenderer:
+  m_GameObject: {fileID: 12478379518054110186}
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
