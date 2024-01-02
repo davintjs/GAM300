@@ -299,7 +299,7 @@ float ShadowCalculation_Point(vec3 lightpos,int index)
     int samples  = 20;
     float viewDistance = length(camPos - WorldPos);
 //    float diskRadius = 0.05;
-    float diskRadius = (1.0 + (viewDistance / farplane)) / 25.0;
+    float diskRadius = (1.0 + (viewDistance / farplane)) / 50.0;
     for(int i = 0; i < samples; ++i)
     {
         float closestDepth = texture(PointShadows[index], fragToLight + sampleOffsetDirections[i] * diskRadius).r;
