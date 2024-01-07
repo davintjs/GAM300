@@ -240,5 +240,7 @@
     <None Include="Shaders\NormalDebugRender.vert" />
     <None Include="Shaders\InstancedParticle.vert" />
     <None Include="Shaders\InstancedParticle.frag" />
+    <None Include="Shaders\Trails.vert" />
+    <None Include="Shaders\Trails.frag" />
   </ItemGroup>
 </Project>

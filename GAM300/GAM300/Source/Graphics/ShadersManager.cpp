@@ -150,6 +150,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/InstancedParticle.vert";
 	fragmentPath = shaderPath + "/InstancedParticle.frag";
 	ShaderCompiler("Particle SHADER", vertexPath, fragmentPath);
+	
+	vertexPath = shaderPath + "/Trails.vert";
+	fragmentPath = shaderPath + "/Trails.frag";
+	ShaderCompiler("Trails SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

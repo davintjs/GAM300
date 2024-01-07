@@ -377,16 +377,21 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 } property_vend_h(SpriteRenderer)
 
 struct Canvas : Object
-	{
-		property_vtable()
-	};
-	property_begin_name(Canvas, "Canvas")
-	{
-		property_parent(Object).Flags(property::flags::DONTSHOW),
-			//property_var(WorldSpace).Name("World Space"),
-			//property_var(SpriteTexture).Name("SpriteTexture"),
-	} property_vend_h(Canvas)
+{
+	property_vtable()
+};
+property_begin_name(Canvas, "Canvas")
+{
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		//property_var(WorldSpace).Name("World Space"),
+		//property_var(SpriteTexture).Name("SpriteTexture"),
+} property_vend_h(Canvas)
 
+
+struct Trail {
+		unsigned int count{0};
+		std::vector<vec3> pos;
+};
 
 struct Particle : Object
 {
@@ -399,7 +404,8 @@ struct Particle : Object
 	float acceleration;
 	float lifetime;
 	float scale; 
-	float speed; 
+	float speed;
+	Trail trails;
 };
 
 struct ParticleComponent : Object
@@ -420,6 +426,7 @@ struct ParticleComponent : Object
 	bool particleLooping = false;
 
 	bool is2D = false;
+	bool trailEnabled = false;
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -438,6 +445,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleScaleRate_).Name("Particle Scale Rate"),
 		property_var(speed_).Name("Particle Speed"),
 		property_var(is2D).Name("2D particle"),
+		property_var(trailEnabled).Name("Trailing"),
 		property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)

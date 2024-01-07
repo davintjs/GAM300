@@ -467,6 +467,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\Trails.frag" />
+    <None Include="Shaders\Trails.vert" />
     <None Include="Shaders\UIScreenSpace.frag" />
     <None Include="Shaders\UIScreenSpace.vert" />
     <None Include="Shaders\UIWorldSpace.frag" />

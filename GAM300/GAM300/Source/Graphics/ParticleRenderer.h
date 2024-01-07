@@ -14,10 +14,17 @@ public:
 	void Update(float dt);
 	void Draw(BaseCamera & _camera);
 	void SetupInstancedQuad();
+	void SetupInstancedCylinder();
 	void Exit();
 	std::vector<glm::mat4> particleSRT;
+	std::vector<glm::mat4> trailSRT;
+
 	GLuint quadVAO{};
 	GLuint quadSRTBuffer{};
+
+	GLuint cylVAO{};
+	GLuint cylSRTBuffer{};
+	GLuint cylsize{};
 
 	bool hasTexture{false};
 	bool hasNormal{false};

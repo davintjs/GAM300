@@ -34,7 +34,7 @@ void DemoSystem::Init()
 	
 	//MySceneManager.LoadScene("Assets/Scene/LevelPlay.scene");
 	//MySceneManager.LoadScene("Assets/Scene/JosScene.scene");
-	MySceneManager.LoadScene("Assets/Scene/MainMenu.scene");
+	MySceneManager.LoadScene("Assets/Scene/TestParticle.scene");
 
 
 	//Entity& testEntity = *scene.Add<Entity>();

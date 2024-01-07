@@ -69,6 +69,7 @@ enum class SHADERTYPE
 	COLOURPICKING,
 	FORWARDDEBUG, // Non instanced debug draw
 	PARTICLES,
+	TRAILS,
 	COUNT
 };
 
