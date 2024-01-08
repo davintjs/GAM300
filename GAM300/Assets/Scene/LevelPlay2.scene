@@ -2121,16 +2121,16 @@ ID: 9752894090014538246
 Script:
   m_GameObject: {fileID: 2890281298168605979}
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  startPoint: {fileID: 3141025954204935599}  # Component
+  soundEffect: {fileID: 4819807962037044359}  # Component
+  thirdPersonController: {fileID: 0}
   rest: false
+  startPoint: {fileID: 3141025954204935599}  # Component
   restTimer: 2
   endPoint: {fileID: 7360367522461515090}  # Component
   duration: 2
-  timer: 0.969857275
   back: false
+  timer: 0.969857275
   currentRestTimer: 2
-  soundEffect: {fileID: 4819807962037044359}  # Component
-  thirdPersonController: {fileID: 0}
 ---
 ID: 6034621871942586701
 GameObject:
@@ -2178,6 +2178,7 @@ ID: 9267112755226816832
 Script:
   m_GameObject: {fileID: 6034621871942586701}
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
+  particle: {fileID: 14811258098067119871}  # Component
   inRange: false
   shootDistance: 8
   maxHealth: 3
@@ -2192,7 +2193,6 @@ Script:
   player: {fileID: 3977294589520766028}  # Component
   bulletSpeed: 10
   rangeEnemyPos: {fileID: 6034621871942586701}  # Component
-  particle: {fileID: 14811258098067119871}  # Component
   duration: 2
   startingPos: {fileID: 13482372997539004348}  # Component
   modelOffset: {fileID: 17589645519894896830}  # Component
@@ -7465,6 +7465,18 @@ Transform:
     - {fileID: 8213687414630165254}
     - {fileID: 9370430720745982749}
     - {fileID: 10015289015139343800}
+    - {fileID: 7875327756985110505}
+    - {fileID: 17564237777641652044}
+    - {fileID: 15881756834573859252}
+    - {fileID: 1427973116061686026}
+    - {fileID: 12547469047345913455}
+    - {fileID: 4058486311680406384}
+    - {fileID: 17346625457182302505}
+    - {fileID: 17885582196886668125}
+    - {fileID: 8255012695022383816}
+    - {fileID: 1080899779973945682}
+    - {fileID: 17661566839383576309}
+    - {fileID: 1863869085620308692}
 ---
 ID: 6628232525372413625
 Animator:
@@ -7472,7 +7484,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 46.9675751
+  Time: 11.5516415
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -7532,7 +7544,7 @@ MeshRenderer:
 ID: 4295359229441339229
 GameObject:
   m_IsActive: true
-  m_Name: Part_02_Helmet
+  m_Name: Part_02
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7766,7 +7778,7 @@ MeshRenderer:
 ID: 2395884659753370783
 GameObject:
   m_IsActive: true
-  m_Name: Part_11_Body
+  m_Name: Part_11
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7839,7 +7851,7 @@ ID: 10343155594758466266
 MeshRenderer:
   m_GameObject: {fileID: 12105897205461700437}
   Mesh: {guid: b99a39f0ecccf481da41b61d50341001}
-  Material_ID: {guid: 611621a83b71428400a10803e9ecfe6b}
+  Material_ID: {guid: b356700406f01cdb869f47059c1a65f5}
 ---
 ID: 12853936956707072711
 GameObject:
@@ -7896,7 +7908,7 @@ MeshRenderer:
 ID: 16079266307502826875
 GameObject:
   m_IsActive: true
-  m_Name: Part_16_ShoeR
+  m_Name: Part_16_Mask
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7917,12 +7929,12 @@ ID: 3766814710881806802
 MeshRenderer:
   m_GameObject: {fileID: 16079266307502826875}
   Mesh: {guid: 5ecc296f72354ee42867e509d3080dfa}
-  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
+  Material_ID: {guid: 611621a83b71428400a10803e9ecfe6b}
 ---
 ID: 16700327763208925629
 GameObject:
   m_IsActive: true
-  m_Name: Part_17_Chest
+  m_Name: Part_17
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7948,7 +7960,7 @@ MeshRenderer:
 ID: 5024091218698776115
 GameObject:
   m_IsActive: true
-  m_Name: Part_18
+  m_Name: Part_18_ShoeL
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7969,7 +7981,7 @@ ID: 17816294217058324580
 MeshRenderer:
   m_GameObject: {fileID: 5024091218698776115}
   Mesh: {guid: f7306edaa96bc981ae0c22dd8fff2cdf}
-  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+  Material_ID: {guid: b356700406f01cdb869f47059c1a65f5}
 ---
 ID: 16456504809199003505
 GameObject:
@@ -8000,7 +8012,7 @@ MeshRenderer:
 ID: 8213687414630165254
 GameObject:
   m_IsActive: true
-  m_Name: Part_20_Mask
+  m_Name: Part_20_Helmet
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -8052,7 +8064,7 @@ MeshRenderer:
 ID: 10015289015139343800
 GameObject:
   m_IsActive: true
-  m_Name: Part_22_ShoeL
+  m_Name: Part_22
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -15584,6 +15596,9 @@ ID: 13523510586901288919
 Script:
   m_GameObject: {fileID: 3977294589520766028}
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
+  CC: {fileID: 15939117778428800744}  # Component
+  animator: {fileID: 6628232525372413625}  # Component
+  audioSource: {fileID: 16716648517964172389}  # Component
   MoveSpeed: 400
   JumpSpeed: 7
   player: {fileID: 3977294589520766028}  # Component
@@ -15593,7 +15608,6 @@ Script:
   runStepsInterval: 0.300000012
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
   walkStepsInterval: 0.439999998
-  CC: {fileID: 15939117778428800744}  # Component
   maxHealth: 4
   CamMovePivot: {fileID: 1999010381617278315}  # Component
   maxColliderDist: 1.5
@@ -15607,7 +15621,6 @@ Script:
   isDead: false
   checkpoint2: {fileID: 13797028059376800602}  # Component
   RotationSpeed: 5
-  audioSource: {fileID: 16716648517964172389}  # Component
   attackTimer: 1
   currentHealth: 4
   isInvulnerable: false
@@ -15615,7 +15628,6 @@ Script:
   colliderDist: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
   healthStaminaCanvas: {fileID: 2866402867161245437}  # GameObject
-  animator: {fileID: 6628232525372413625}  # Component
   startDeathAnimationCountdown: false
   currentAnimationTimer: 0
   attack1duration: 0.899999976
@@ -15904,11 +15916,11 @@ ID: 15281357007188901707
 Script:
   m_GameObject: {fileID: 18443479616549604882}
   Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
+  doorscript: {fileID: 5812832960693624778}  # Component
   temp: false
   moving: false
   floatKey: 0.150000006
   movingTimer: 0.300000012
-  doorscript: {fileID: 5812832960693624778}  # Component
   displacement: 0.5
   back: false
   maxTime: 2
@@ -21285,3 +21297,315 @@ AudioSource:
   Volume: 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
+---
+ID: 7875327756985110505
+GameObject:
+  m_IsActive: true
+  m_Name: Part_23
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15431522381455525093}  # Transform
+    - component: {fileID: 6369636594439174532}  # MeshRenderer
+---
+ID: 15431522381455525093
+Transform:
+  m_GameObject: {fileID: 7875327756985110505}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 6369636594439174532
+MeshRenderer:
+  m_GameObject: {fileID: 7875327756985110505}
+  Mesh: {guid: dd2cf1e21dd85d31b880c3ef9421f7f0}
+  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
+---
+ID: 17564237777641652044
+GameObject:
+  m_IsActive: true
+  m_Name: Part_24
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13603182490559732771}  # Transform
+    - component: {fileID: 3193959860649313290}  # MeshRenderer
+---
+ID: 13603182490559732771
+Transform:
+  m_GameObject: {fileID: 17564237777641652044}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 3193959860649313290
+MeshRenderer:
+  m_GameObject: {fileID: 17564237777641652044}
+  Mesh: {guid: 52a3faa662525aa253a3c701f84d2c05}
+  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 15881756834573859252
+GameObject:
+  m_IsActive: true
+  m_Name: Part_25_Arms
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6067870245715122873}  # Transform
+    - component: {fileID: 17346347848274109717}  # MeshRenderer
+---
+ID: 6067870245715122873
+Transform:
+  m_GameObject: {fileID: 15881756834573859252}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 17346347848274109717
+MeshRenderer:
+  m_GameObject: {fileID: 15881756834573859252}
+  Mesh: {guid: 2fff811de92cfc4a537b46d3d01581ad}
+  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
+---
+ID: 1427973116061686026
+GameObject:
+  m_IsActive: true
+  m_Name: Part_26
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18019152411010735841}  # Transform
+    - component: {fileID: 197829305574631275}  # MeshRenderer
+---
+ID: 18019152411010735841
+Transform:
+  m_GameObject: {fileID: 1427973116061686026}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 197829305574631275
+MeshRenderer:
+  m_GameObject: {fileID: 1427973116061686026}
+  Mesh: {guid: e2801f425980b5280404c86ef3fb03a5}
+  Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
+---
+ID: 12547469047345913455
+GameObject:
+  m_IsActive: true
+  m_Name: Part_27
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4392501513786280460}  # Transform
+    - component: {fileID: 4130031999950376579}  # MeshRenderer
+---
+ID: 4392501513786280460
+Transform:
+  m_GameObject: {fileID: 12547469047345913455}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 4130031999950376579
+MeshRenderer:
+  m_GameObject: {fileID: 12547469047345913455}
+  Mesh: {guid: e4414d776342354702046a747a46f322}
+  Material_ID: {guid: 611621a83b71428400a10803e9ecfe6b}
+---
+ID: 4058486311680406384
+GameObject:
+  m_IsActive: true
+  m_Name: Part_28
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7008286232868445681}  # Transform
+    - component: {fileID: 12063506910820569480}  # MeshRenderer
+---
+ID: 7008286232868445681
+Transform:
+  m_GameObject: {fileID: 4058486311680406384}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 12063506910820569480
+MeshRenderer:
+  m_GameObject: {fileID: 4058486311680406384}
+  Mesh: {guid: e12e9f4d59f98cce76ff33a289b989b0}
+  Material_ID: {guid: 611621a83b71428400a10803e9ecfe6b}
+---
+ID: 17346625457182302505
+GameObject:
+  m_IsActive: true
+  m_Name: Part_29_Body
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9570923780260315791}  # Transform
+    - component: {fileID: 8470458841183066961}  # MeshRenderer
+---
+ID: 9570923780260315791
+Transform:
+  m_GameObject: {fileID: 17346625457182302505}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 8470458841183066961
+MeshRenderer:
+  m_GameObject: {fileID: 17346625457182302505}
+  Mesh: {guid: 04107bcc0b9be582d0e4824d607c71bc}
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+---
+ID: 17885582196886668125
+GameObject:
+  m_IsActive: true
+  m_Name: Part_30
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2773538687192444622}  # Transform
+    - component: {fileID: 629401102656644650}  # MeshRenderer
+---
+ID: 2773538687192444622
+Transform:
+  m_GameObject: {fileID: 17885582196886668125}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 629401102656644650
+MeshRenderer:
+  m_GameObject: {fileID: 17885582196886668125}
+  Mesh: {guid: 0666ec7a31800e920bbf24472e0ce1be}
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+---
+ID: 8255012695022383816
+GameObject:
+  m_IsActive: true
+  m_Name: Part_31
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17149140247334671933}  # Transform
+    - component: {fileID: 11058900786445973863}  # MeshRenderer
+---
+ID: 17149140247334671933
+Transform:
+  m_GameObject: {fileID: 8255012695022383816}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 11058900786445973863
+MeshRenderer:
+  m_GameObject: {fileID: 8255012695022383816}
+  Mesh: {guid: 3eb182129422ba948b5cf77a6588e36c}
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+---
+ID: 1080899779973945682
+GameObject:
+  m_IsActive: true
+  m_Name: Part_32
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8340420297833625967}  # Transform
+    - component: {fileID: 9973718752894219741}  # MeshRenderer
+---
+ID: 8340420297833625967
+Transform:
+  m_GameObject: {fileID: 1080899779973945682}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 9973718752894219741
+MeshRenderer:
+  m_GameObject: {fileID: 1080899779973945682}
+  Mesh: {guid: 64c61f592aad7910c880684d8b561def}
+  Material_ID: {guid: 611621a83b71428400a10803e9ecfe6b}
+---
+ID: 17661566839383576309
+GameObject:
+  m_IsActive: true
+  m_Name: Part_33
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9387670802080183935}  # Transform
+    - component: {fileID: 3135924261316959240}  # MeshRenderer
+---
+ID: 9387670802080183935
+Transform:
+  m_GameObject: {fileID: 17661566839383576309}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 3135924261316959240
+MeshRenderer:
+  m_GameObject: {fileID: 17661566839383576309}
+  Mesh: {guid: d8eae766943ef961d9d87ff2b12d980e}
+  Material_ID: {guid: a99e8389205990c5d07f281a7400fd17}
+---
+ID: 1863869085620308692
+GameObject:
+  m_IsActive: true
+  m_Name: Part_34_ShoeR
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13763726877596748255}  # Transform
+    - component: {fileID: 2918909275292788}  # MeshRenderer
+---
+ID: 13763726877596748255
+Transform:
+  m_GameObject: {fileID: 1863869085620308692}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18364898161930433210}
+  m_Children:
+    []
+---
+ID: 2918909275292788
+MeshRenderer:
+  m_GameObject: {fileID: 1863869085620308692}
+  Mesh: {guid: c995c3b63917e79a9d0291a81391438b}
+  Material_ID: {guid: b356700406f01cdb869f47059c1a65f5}
