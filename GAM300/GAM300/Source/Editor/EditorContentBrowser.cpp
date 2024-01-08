@@ -116,48 +116,47 @@ void EditorContentBrowser::Update(float dt)
 
         //Drag drop logic for content browser
         if (!it.is_directory() && ImGui::BeginDragDropSource()) {
-            if (!payload_set) {
-                payload_set = true;
-                std::string filepath = relativepath.string();
-                std::string ext = filepath;
-                std::string filename = filepath;
-                //check what extension is the file
-                ext.erase(0, ext.find_last_of(".") + 1);
-                //get name of file
-                filename.erase(0, filepath.find_last_of("\\") + 1);
-                filename.erase(filename.find_last_of("."), filename.size());
 
-                ContentBrowserPayload payload;
-                /*
-                GetAssetEvent e{ it.path() };
+            std::string filepath = relativepath.string();
+            std::string ext = filepath;
+            std::string filename = filepath;
+            //check what extension is the file
+            ext.erase(0, ext.find_last_of(".") + 1);
+            //get name of file
+            filename.erase(0, filepath.find_last_of("\\") + 1);
+            filename.erase(filename.find_last_of("."), filename.size());
+
+            ContentBrowserPayload payload;
+            /*
+            GetAssetEvent e{ it.path() };
+            EVENTS.Publish(&e);
+            Engine::GUID currentGUID = e.guid;
+            payload.payload = &currentGUID;
+            payload.type = MESH;*/
+
+            if (ext == "model") { //mesh files
+                GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
-                Engine::GUID currentGUID = e.guid;
-                payload.payload = &currentGUID;
-                payload.type = MESH;*/
+                Engine::GUID<MeshAsset> currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MODELTYPE;
 
-                if (ext == "model") { //mesh files
-                    GetAssetEvent<MeshAsset> e{ it.path() };
-                    EVENTS.Publish(&e);
-                    Engine::GUID<MeshAsset> currentGUID = e.guid;
-                    payload.guid = currentGUID;
-                    payload.type = MODELTYPE;
+                payload.name = new char[filename.size() + 1];
+                strcpy(payload.name, filename.c_str());
+            }
+            else if (ext == "material")
+            {
+                GetAssetEvent<MaterialAsset> e{ it.path() };
+                EVENTS.Publish(&e);
+                Engine::GUID<MaterialAsset> currentGUID = e.guid;
+                payload.guid = currentGUID;
+                payload.type = MATERIAL;
+            }
+            else if (ext == "prefab") { //prefab files
 
-                   /* payload.name = new char[filename.size() + 1];
-                    strcpy(payload.name, filename.c_str());*/
-                }
-                else if (ext == "material")
-                {
-                    GetAssetEvent<MaterialAsset> e{ it.path() };
-                    EVENTS.Publish(&e);
-                    Engine::GUID<MaterialAsset> currentGUID = e.guid;
-                    payload.guid = currentGUID;
-                    payload.type = MATERIAL;
-                }
-                else if (ext == "prefab") { //prefab files
+            }
+            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
 
-                }
-                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
-            }  
             ImGui::EndDragDropSource();
         }
 

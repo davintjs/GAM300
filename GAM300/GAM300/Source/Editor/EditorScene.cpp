@@ -173,14 +173,9 @@ void EditorScene::SceneView()
                     //Create new entity
                     Entity* ent = curr_scene.Add<Entity>();
                     Transform& parent = curr_scene.Get<Transform>(*ent);
-                    ////Add mesh renderer
-                    //curr_scene.Add<MeshRenderer>(*ent);
-                    ////Attach dragged mesh GUID from the content browser
-                    //curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
                     curr_scene.Get<Tag>(*ent).name = data.name;
                     delete[] data.name;
-                    data.name = nullptr;
-                    EditorContentBrowser::Instance().allocate = true;
+                    data.name = nullptr; //delete data created for the name in payload
 
                     //Get model 
                     GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
@@ -188,28 +183,19 @@ void EditorScene::SceneView()
 
                     auto model = e.importer;
 
+                    //create each submesh of the model
                     for (auto& mesh : model->meshes) {
                         Entity* new_ent = curr_scene.Add<Entity>();
                         curr_scene.Add<MeshRenderer>(*new_ent);
                         //Attach dragged mesh GUID from the content browser
                         curr_scene.Get<MeshRenderer>(*new_ent).meshID = Engine::GUID<MeshAsset>(mesh);
 
-                        //parent.child.push_back(new_ent->UUID());
                         Transform& child = curr_scene.Get<Transform>(*new_ent);
 
+                        //set the model submeshes to the parent group
                         child.SetParent(&parent);
 
-                       /* if (parent.child.size() > 0)
-                        {
-                            parent.child.pop_back();
-                            auto it = std::find(parent.child.begin(), parent.child.end(), parent.EUID());
-                            parent.child.insert(it, child.EUID());
-                        }*/
-                        
                     }
-
-                    //create new group (parent)
-                    //create new entities for each mesh
                 }
                 else if (data.type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
@@ -232,6 +218,8 @@ void EditorScene::SceneView()
                 }
 
                 //add other file types here
+
+               
             }
             ImGui::EndDragDropTarget();
         }
