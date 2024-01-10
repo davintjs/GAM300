@@ -77,7 +77,7 @@ void ParticleManager::Update(float dt)
                     vec3 noiseDirection = random.NextVector3(-20.0f, 20.0f);
                     noiseDirection = glm::normalize(noiseDirection);
                     float noise = particleComponent.noise / 100.f;
-                    particleComponent.particles_[i].direction = noise * noiseDirection + (1.f - noise) * noiseDirection;
+                    particleComponent.particles_[i].direction = noise * noiseDirection + (1.f - noise) * particleComponent.particles_[i].direction;
                     if (particleComponent.noisefrequency >= 2.f ) {
                         particleComponent.particles_[i].noiselifetime = random.NextFloat1(particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - particleComponent.particleLifetime_ / (particleComponent.noisefrequency - 1.f));
                     }

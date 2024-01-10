@@ -46,8 +46,8 @@ ParticleComponent:
   Particle Max Scale: 0.100000001
   Particle Scale Rate: 0
   Particle Speed: 10
-  Particle Noise: 20
-  Particle Noise Frequency: 20
+  Particle Noise: 50
+  Particle Noise Frequency: 50
   2D particle: false
   Trailing: true
   Looping: true
