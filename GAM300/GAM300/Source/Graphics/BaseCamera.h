@@ -64,7 +64,7 @@ public:
 	void Init();
 	
 	// Initialize the base camera with the parameters as the properties of the camera and creates a framebuffer
-	void Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength);
+	void Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _lookatDistance);
 
 	// Update the camera
 	void Update();
@@ -96,6 +96,7 @@ public:
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
 
+	void SetFocalPoint(const glm::vec3& _position);
 	glm::vec3 GetFocalPoint();
 	
 	glm::vec2& GetViewportSize() { return dimension; }
@@ -118,8 +119,8 @@ public:
 	float& GetNearClip() { return nearClip; }
 	float& GetFarClip() { return farClip; }
 	float& GetFOV() { return fieldOfView; }
-	float& GetFocalLength() { return focalLength; }
-	void SetFocalLength(const float& _length) { focalLength = _length; }
+	float& GetDistance() { return lookatDistance; }
+	void SetDistance(const float& _distance) { lookatDistance = _distance; }
 
 	glm::mat4& GetProjMatrix() { return projMatrix; }
 	glm::mat4& GetViewMatrix() { return viewMatrix; }
@@ -132,8 +133,8 @@ public:
 	property_vtable();
 protected:
 	glm::vec4 backgroundColor;			// Default solid color when rendering
-	glm::vec3 cameraPosition;			// The location of the viewer / eye (Center of the screen, 10 units away)
-	glm::vec3 focalPoint;				// The look-at point / target point where the viewer is looking (Center of screen)
+	glm::vec3 cameraPosition{};			// The location of the viewer / eye (Center of the screen, 10 units away)
+	glm::vec3 focalPoint{};				// The look-at point / target point where the viewer is looking (Center of screen)
 	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
 
 	CAMERATYPE cameraType;				// Type of camera
@@ -151,7 +152,7 @@ protected:
 	float nearClip = 0.f;				// Distance of near clipping plane from the camera
 	float farClip = 0.f;				// Distance of far clipping plane from the camera
 	float fieldOfView = 0.f;			// The vertical field of view in degrees
-	float focalLength = 0.f;			// How close is the camera to the focal point
+	float lookatDistance = 0.f;			// THe distance from the camera to the focal point
 
 	Frustum frustum;					// The frustum of the camera
 
@@ -174,7 +175,7 @@ protected:
 property_begin_name(BaseCamera, "BaseCamera") {
 	property_var(clearFlags).Name("ClearFlags"),
 	property_var(cullingMask).Name("CullingMask"),
-	property_var(focalLength).Name("FocalLength"),
+	property_var(lookatDistance).Name("LookAtDistance"),
 	property_var(nearClip).Name("NearClip"),
 	property_var(farClip).Name("FarClip"),
 	property_var(fieldOfView).Name("FieldOfView"),

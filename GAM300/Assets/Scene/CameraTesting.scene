@@ -1,0 +1,175 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: CameraTesting
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 16278920700866486295
+GameObject:
+  m_IsActive: true
+  m_Name: Main Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18257282462160694783}  # Transform
+    - component: {fileID: 1059110447585278993}  # Camera
+---
+ID: 18257282462160694783
+Transform:
+  m_GameObject: {fileID: 16278920700866486295}
+  Translation: [-0.000460775191, 1, 2]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 16118699231179159994}
+  m_Children:
+    []
+---
+ID: 1059110447585278993
+Camera:
+  m_GameObject: {fileID: 16278920700866486295}
+  BackgroundColor: [2.70094824e-06, 4.04975256e-43, 9.1635593e-07, 4.04975256e-43]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  FocalLength: 10
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 7666234419862097852
+GameObject:
+  m_IsActive: true
+  m_Name: Point Light
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5979792621602839096}  # Transform
+    - component: {fileID: 4389129801263481322}  # LightSource
+---
+ID: 5979792621602839096
+Transform:
+  m_GameObject: {fileID: 7666234419862097852}
+  Translation: [0, 0.260560811, -3.41522622]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 4389129801263481322
+LightSource:
+  m_GameObject: {fileID: 7666234419862097852}
+  EnableShadow: true
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 10
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
+---
+ID: 3861359893661797227
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16482329716124735716}  # Transform
+    - component: {fileID: 9785066182867181713}  # MeshRenderer
+---
+ID: 16482329716124735716
+Transform:
+  m_GameObject: {fileID: 3861359893661797227}
+  Translation: [0, -1.43554318, -3.24764276]
+  Rotation: [0, 0, 0]
+  Scale: [10, 0.00100000005, 10]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9785066182867181713
+MeshRenderer:
+  m_GameObject: {fileID: 3861359893661797227}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}
+---
+ID: 16129333488341075380
+GameObject:
+  m_IsActive: true
+  m_Name: Cube
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8135121923999773994}  # Transform
+    - component: {fileID: 6933131230110361704}  # MeshRenderer
+---
+ID: 8135121923999773994
+Transform:
+  m_GameObject: {fileID: 16129333488341075380}
+  Translation: [0, -0.974830389, -4.98033667]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6933131230110361704
+MeshRenderer:
+  m_GameObject: {fileID: 16129333488341075380}
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 283b4d530ddbba0170927e5c18040b4f}
+---
+ID: 16118699231179159994
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18011821016250032765}  # Transform
+---
+ID: 18011821016250032765
+Transform:
+  m_GameObject: {fileID: 16118699231179159994}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.999963641, 1, 0.999964297]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 16278920700866486295}
+    - {fileID: 12941493067179131619}
+---
+ID: 12941493067179131619
+GameObject:
+  m_IsActive: true
+  m_Name: Model
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17755630289720571287}  # Transform
+    - component: {fileID: 8852537585826848889}  # MeshRenderer
+---
+ID: 17755630289720571287
+Transform:
+  m_GameObject: {fileID: 12941493067179131619}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.5, 1, 0.5]
+  Father: {fileID: 16118699231179159994}
+  m_Children:
+    []
+---
+ID: 8852537585826848889
+MeshRenderer:
+  m_GameObject: {fileID: 12941493067179131619}
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: f67b91ede3c6182c8dfc1518c73ef90b}

@@ -93,8 +93,8 @@ private:
 	float speedModifier = 1.f;			// How fast all the cameras movements are
 	float intersected = 0.f;			// Current ray intersect
 	float tempIntersect = 0.f;	
-	float initialFL = 0.f;				// Initial Focal Point when focusing on object
-	float targetFL = 0.f;				// Target Focal Length when focusing on object
+	float initialFD = 0.f;				// Initial Focal Distance when focusing on object
+	float targetFD = 0.f;				// Target Focal Distance when focusing on object
 	float timer = 0.f;
 	const float duration = 1.f;
 	bool isPanning = false;
