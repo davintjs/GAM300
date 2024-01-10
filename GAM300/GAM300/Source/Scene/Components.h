@@ -405,6 +405,7 @@ struct Particle : Object
 	float lifetime;
 	float scale; 
 	float speed;
+	float noiselifetime;
 	Trail trails;
 };
 
@@ -423,6 +424,8 @@ struct ParticleComponent : Object
 	float particleScaleRate_ = 0.5f;
 	float speed_ = 0.5f;
 	float desiredLifetime = 5.0f;
+	float noise = 0.f;
+	float noisefrequency = 0.f;
 	bool particleLooping = false;
 
 	bool is2D = false;
@@ -444,6 +447,8 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleMaxScale_).Name("Particle Max Scale"),
 		property_var(particleScaleRate_).Name("Particle Scale Rate"),
 		property_var(speed_).Name("Particle Speed"),
+		property_var(noise).Name("Particle Noise"),
+		property_var(noisefrequency).Name("Particle Noise Frequency"),
 		property_var(is2D).Name("2D particle"),
 		property_var(trailEnabled).Name("Trailing"),
 		property_var(particleLooping).Name("Looping")
