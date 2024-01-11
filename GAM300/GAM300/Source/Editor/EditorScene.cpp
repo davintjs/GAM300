@@ -191,10 +191,14 @@ void EditorScene::SceneView()
                         curr_scene.Get<MeshRenderer>(*new_ent).meshID = Engine::GUID<MeshAsset>(mesh);
 
                         Transform& child = curr_scene.Get<Transform>(*new_ent);
+                        curr_scene.Add<Tag>(*new_ent);
+                        Tag& tag = curr_scene.Get<Tag>(*new_ent);
+                        GetAssetByGUIDEvent<MeshAsset> _mesh { mesh };
+                        EVENTS.Publish(&_mesh);
+                        tag.name = _mesh.asset->mFilePath.stem().string().c_str();
 
                         //set the model submeshes to the parent group
                         child.SetParent(&parent);
-
                     }
                 }
                 else if (data.type == MATERIAL) {

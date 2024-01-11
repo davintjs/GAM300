@@ -323,10 +323,15 @@ void EditorHierarchy::Update(float dt)
 				Entity* Newentity = curr_scene.Add<Entity>();
 				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
 				newtransform.SetParent(&currEntity);
+
 				newchange.entity = Newentity;
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
+
+				newtransform.scale = Vector3(1.f, 1.f, 1.f);
+				newtransform.translation = Vector3();
+				newtransform.rotation = Vector3();
 			}
 
 			std::string name = "Delete Entity";
