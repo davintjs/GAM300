@@ -43,6 +43,8 @@ layout (location = 5) out vec4 frag_Metal_Rough_AO_Emission_constant; // Materia
 
 layout (location = 6) out vec2 frag_texture_index;
 
+
+
 //layout (location = 7) out vec4 frag_pos_lightspace_D;
 //
 //layout (location = 8) out vec4 frag_pos_lightspace_S;
