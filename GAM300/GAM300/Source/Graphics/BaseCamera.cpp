@@ -100,7 +100,7 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 
 void BaseCamera::Update()
 {
-	static float previousLookAtDistance = lookatDistance;
+	static float previousLookAtDistance = 0.f;
 	if (previousLookAtDistance != lookatDistance)
 		focalPoint = GetFocalPoint();
 
