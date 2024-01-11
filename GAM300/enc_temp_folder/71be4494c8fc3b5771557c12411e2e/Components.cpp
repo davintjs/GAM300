@@ -105,7 +105,7 @@ void Transform::SetGlobalRotation(Vector3 newRot)
 	}
 	else
 	{
-		rotation = newRot * 3.1415927;
+		rotation = newRot;
 		worldMatrix = GetLocalMatrix();
 	}
 }

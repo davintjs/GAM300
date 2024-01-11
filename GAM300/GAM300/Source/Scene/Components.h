@@ -70,6 +70,7 @@ struct Transform : Object
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
+	glm::mat4x4 worldMatrix;
 
 	//Parent's euid
 	Engine::UUID parent = 0;
@@ -87,6 +88,15 @@ struct Transform : Object
 	// Get the translation in world space
 	glm::vec3 GetTranslation() const;
 
+	static glm::mat4 CreateTransformationMtx(vec3 translation, vec3 rotation, vec3 scale)
+	{
+		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
+
+		return glm::translate(glm::mat4(1.0f), vec3(translation)) *
+			rot *
+			glm::scale(glm::mat4(1.0f), vec3(scale));
+	}
+
 	// Get the rotation in world space
 	glm::vec3 GetRotation() const;
 
@@ -95,6 +105,12 @@ struct Transform : Object
 
 	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
+
+	void SetGlobalPosition(Vector3 newPos);
+
+	void SetGlobalRotation(Vector3 newRot);
+
+	void SetGlobalScale(Vector3 newScale);
 
 	//Get the SRT matrix in local space
 	glm::mat4 GetLocalMatrix() const;

@@ -33,7 +33,6 @@ namespace
 {
     const char* GizmoWorld[] = { "Local", "Global" };
     int GizmoType = ImGuizmo::TRANSLATE;
-    int coord_selection = 1;
 }
 
 void EditorScene::Init()
