@@ -7478,7 +7478,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 51.0952644
+  Time: 31.4655075
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15365,10 +15365,10 @@ ID: 14362096387145765665
 Script:
   m_GameObject: {fileID: 3977294589520766028}
   Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
-  thirdPersonController: {fileID: 13523510586901288919}  # Component
+  thirdPersonController: {fileID: 0}
   healthPackCount: 0
   staminaPackCount: 0
-  healthPackHealValue: 2
+  healthPackHealValue: 5
   maxStatPackCount: 0
 ---
 ID: 17611351097031071778
@@ -18489,7 +18489,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 30.0950489
+  Time: 43.4656487
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -33270,10 +33270,11 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 133046120958174289}
   m_Children:
+    - {fileID: 13798208291858685051}
     - {fileID: 13321362306684833434}
+    - {fileID: 11726690864622553591}
     - {fileID: 10041409097332207824}
     - {fileID: 1413637683838715808}
-    - {fileID: 13798208291858685051}
     - {fileID: 4231923160748701041}
     - {fileID: 11237881683982315621}
     - {fileID: 7213843962005047918}
@@ -33320,7 +33321,6 @@ Transform:
     - {fileID: 16219648090686600577}
     - {fileID: 599320624251946653}
     - {fileID: 12481154811298593206}
-    - {fileID: 11726690864622553591}
     - {fileID: 15677632586018286794}
 ---
 ID: 4229837425546075238
@@ -36569,8 +36569,8 @@ Transform:
   Scale: [1.47707129, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 10344079949262247775}
     - {fileID: 566309330822943459}
+    - {fileID: 10344079949262247775}
 ---
 ID: 5736587975920538632
 BoxCollider:
@@ -36655,8 +36655,8 @@ Transform:
   Scale: [1.47707129, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 9843174640947923205}
     - {fileID: 638390025393098730}
+    - {fileID: 9843174640947923205}
 ---
 ID: 8312634411986607356
 BoxCollider:
@@ -36741,8 +36741,8 @@ Transform:
   Scale: [1.47707129, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 6024068011414896549}
     - {fileID: 15796890934045494154}
+    - {fileID: 6024068011414896549}
 ---
 ID: 2292326404820500121
 BoxCollider:
@@ -36827,8 +36827,8 @@ Transform:
   Scale: [1.47707129, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 7375040942526461175}
     - {fileID: 9564460215547820293}
+    - {fileID: 7375040942526461175}
 ---
 ID: 12320933435044063053
 BoxCollider:
@@ -36913,8 +36913,8 @@ Transform:
   Scale: [1.47707129, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 10314325757450933848}
     - {fileID: 5208978852375628907}
+    - {fileID: 10314325757450933848}
 ---
 ID: 6596463381814305316
 BoxCollider:
@@ -37343,8 +37343,8 @@ Transform:
   Scale: [1.97427881, 0.999999225, 0.999996841]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 4719875875267371553}
     - {fileID: 5020851934011106732}
+    - {fileID: 4719875875267371553}
 ---
 ID: 6974248411715720386
 BoxCollider:
@@ -37429,8 +37429,8 @@ Transform:
   Scale: [1.8085916, 0.999999225, 0.999996305]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 3543751623385412495}
     - {fileID: 3401759046126206420}
+    - {fileID: 3543751623385412495}
 ---
 ID: 12513336714624616384
 BoxCollider:
@@ -37515,8 +37515,8 @@ Transform:
   Scale: [1.8085916, 0.999999225, 0.999996305]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 5144166209559256309}
     - {fileID: 15346956654113761744}
+    - {fileID: 5144166209559256309}
 ---
 ID: 6312138333560435100
 BoxCollider:
@@ -37601,8 +37601,8 @@ Transform:
   Scale: [1.8085916, 0.999999225, 0.999996305]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 11329696866158171859}
     - {fileID: 12335543211323479852}
+    - {fileID: 11329696866158171859}
 ---
 ID: 12502340399441964724
 BoxCollider:
@@ -37687,8 +37687,8 @@ Transform:
   Scale: [1.8085916, 0.999999225, 0.999996305]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 15938115991411097154}
     - {fileID: 17131088642852562499}
+    - {fileID: 15938115991411097154}
 ---
 ID: 17094250587781614872
 BoxCollider:
@@ -37773,8 +37773,8 @@ Transform:
   Scale: [1.8085916, 0.999999225, 0.999996305]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 6194797124936585590}
     - {fileID: 6135833564494327070}
+    - {fileID: 6194797124936585590}
 ---
 ID: 11983342016744616955
 BoxCollider:
@@ -37859,8 +37859,8 @@ Transform:
   Scale: [1.80859029, 0.999999225, 0.999995589]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 16539708760498194364}
     - {fileID: 8274504729359046135}
+    - {fileID: 16539708760498194364}
 ---
 ID: 8793135265142694096
 BoxCollider:
@@ -37945,8 +37945,8 @@ Transform:
   Scale: [1.80859029, 0.999999225, 0.999995589]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 9311379394345260557}
     - {fileID: 13715966444031739149}
+    - {fileID: 9311379394345260557}
 ---
 ID: 333401536603210844
 BoxCollider:
@@ -38031,8 +38031,8 @@ Transform:
   Scale: [1.80859029, 0.999999225, 0.999995589]
   Father: {fileID: 8931480141364914121}
   m_Children:
-    - {fileID: 2536793554106555804}
     - {fileID: 16308703671758513872}
+    - {fileID: 2536793554106555804}
 ---
 ID: 5778039604281840473
 BoxCollider:

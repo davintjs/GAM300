@@ -141,6 +141,8 @@ public class Enemy : Script
                 break;
                 
         }
+        //needed for the animation to change
+        animationManager.UpdateState();
     }
 
     void LookAt(vec3 dir)
