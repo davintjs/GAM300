@@ -2160,7 +2160,7 @@ GameObject:
 ID: 2078812242787879120
 Transform:
   m_GameObject: {fileID: 6034621871942586701}
-  Translation: [11.3495846, 3.95231795, -35.1217575]
+  Translation: [43.1374931, -0.902119517, -35.1217575]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -2209,6 +2209,7 @@ Script:
   startDeathAnimationCountdown: false
   currentAnimationTimer: 0
   testingValue: 0
+  spawnObject: {fileID: 18443479616549604882}  # GameObject
 ---
 ID: 3574560937881504822
 GameObject:
@@ -7478,7 +7479,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 37.2641068
+  Time: 30.247591
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -15331,6 +15332,7 @@ Script:
   player: {fileID: 3977294589520766028}  # Component
   sprintModifier: 1.5
   CamYawPivot: {fileID: 6663313825132233637}  # Component
+  isAtCheckpoint1: false
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   CamPitchPivot: {fileID: 12396120015401798445}  # Component
@@ -15345,19 +15347,22 @@ Script:
   attack3duration: 1.70000005
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
-  isDead: false
-  checkpoint2: {fileID: 13797028059376800602}  # Component
   RotationSpeed: 5
+  attack1duration: 0.899999976
+  isAtCheckpoint2: false
+  spawnPoint: {fileID: 13798602388106733380}  # Component
+  terminal1: {fileID: 10239403197338088721}  # Component
+  terminal2: {fileID: 12907845415082520361}  # Component
   attackTimer: 1
   currentHealth: 4
   isInvulnerable: false
   currentInvulnerableTimer: 1
+  isDead: false
   colliderDist: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
   healthStaminaCanvas: {fileID: 2866402867161245437}  # GameObject
   startDeathAnimationCountdown: false
   currentAnimationTimer: 0
-  attack1duration: 0.899999976
   attack2duration: 1.20000005
   animCancelPercentage: 0.600000024
 ---
@@ -18489,7 +18494,7 @@ Animator:
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Current State: Idle
   Next State: Idle
-  Time: 7.26407385
+  Time: 29.2470112
   StartTime: 2
   EndTime: 57
   Playing: true
@@ -42303,3 +42308,208 @@ MeshRenderer:
   m_GameObject: {fileID: 12067568611331168495}
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 10239403197338088721
+GameObject:
+  m_IsActive: true
+  m_Name: Terminal
+  m_TagString: Terminal1
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2677060210919409244}  # Transform
+    - component: {fileID: 11284489195304747706}  # BoxCollider
+    - component: {fileID: 9206095836556255734}  # Rigidbody
+---
+ID: 2677060210919409244
+Transform:
+  m_GameObject: {fileID: 10239403197338088721}
+  Translation: [-11.5737352, 2.65164804, -36.5096092]
+  Rotation: [0, -1.54895854, 0]
+  Scale: [0.999911427, 1, 0.99991107]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 15562948075197465161}
+    - {fileID: 14764595615424322734}
+---
+ID: 11284489195304747706
+BoxCollider:
+  m_GameObject: {fileID: 10239403197338088721}
+  Dimensions: [1, 1.20000005, 1]
+  Offset: [0, 0.699999988, 0]
+---
+ID: 9206095836556255734
+Rigidbody:
+  m_GameObject: {fileID: 10239403197338088721}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
+---
+ID: 15562948075197465161
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1308)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4083475397120236712}  # Transform
+    - component: {fileID: 11216421603765919212}  # MeshRenderer
+---
+ID: 4083475397120236712
+Transform:
+  m_GameObject: {fileID: 15562948075197465161}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00002754, 1, 1.00002706]
+  Father: {fileID: 10239403197338088721}
+  m_Children:
+    []
+---
+ID: 11216421603765919212
+MeshRenderer:
+  m_GameObject: {fileID: 15562948075197465161}
+  Mesh: {guid: 54ea3312f5a499707ff2b38aacc2c623}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 14764595615424322734
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1309)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15731775766012682249}  # Transform
+    - component: {fileID: 15972800431127212080}  # MeshRenderer
+---
+ID: 15731775766012682249
+Transform:
+  m_GameObject: {fileID: 14764595615424322734}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00002754, 1, 1.00002706]
+  Father: {fileID: 10239403197338088721}
+  m_Children:
+    []
+---
+ID: 15972800431127212080
+MeshRenderer:
+  m_GameObject: {fileID: 14764595615424322734}
+  Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
+  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}
+---
+ID: 13798602388106733380
+GameObject:
+  m_IsActive: true
+  m_Name: Spawnpoint
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 120929131535908806}  # Transform
+---
+ID: 120929131535908806
+Transform:
+  m_GameObject: {fileID: 13798602388106733380}
+  Translation: [-19.9092522, -2.91454124, -4.54576302]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11931344363477315440
+GameObject:
+  m_IsActive: true
+  m_Name: Terminal2
+  m_TagString: Terminal2
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9927322997862495073}  # Transform
+    - component: {fileID: 8546967355009269708}  # BoxCollider
+    - component: {fileID: 17964400136347453165}  # Rigidbody
+---
+ID: 9927322997862495073
+Transform:
+  m_GameObject: {fileID: 11931344363477315440}
+  Translation: [21.8245468, 2.65164804, -36.5096092]
+  Rotation: [0, -1.54895854, 0]
+  Scale: [0.999911427, 1, 0.99991107]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 3412261393044614546}
+    - {fileID: 6280282286412234633}
+---
+ID: 8546967355009269708
+BoxCollider:
+  m_GameObject: {fileID: 11931344363477315440}
+  Dimensions: [1, 1.20000005, 1]
+  Offset: [0, 0.699999988, 0]
+---
+ID: 17964400136347453165
+Rigidbody:
+  m_GameObject: {fileID: 11931344363477315440}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
+---
+ID: 3412261393044614546
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1308) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 345081206908782488}  # Transform
+    - component: {fileID: 5249366417715043332}  # MeshRenderer
+---
+ID: 345081206908782488
+Transform:
+  m_GameObject: {fileID: 3412261393044614546}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00002754, 1, 1.00002706]
+  Father: {fileID: 11931344363477315440}
+  m_Children:
+    []
+---
+ID: 5249366417715043332
+MeshRenderer:
+  m_GameObject: {fileID: 3412261393044614546}
+  Mesh: {guid: 54ea3312f5a499707ff2b38aacc2c623}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 6280282286412234633
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1309) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13845230118947875613}  # Transform
+    - component: {fileID: 14368609992461053153}  # MeshRenderer
+---
+ID: 13845230118947875613
+Transform:
+  m_GameObject: {fileID: 6280282286412234633}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00002754, 1, 1.00002706]
+  Father: {fileID: 11931344363477315440}
+  m_Children:
+    []
+---
+ID: 14368609992461053153
+MeshRenderer:
+  m_GameObject: {fileID: 6280282286412234633}
+  Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
+  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}

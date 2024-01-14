@@ -35,6 +35,7 @@ public class Enemy : Script
 
     public float testingValue = 0f;
 
+    public GameObject spawnObject;
 
 
     void Start()
@@ -83,7 +84,7 @@ public class Enemy : Script
         {
             //idle state
             case 0:
-                Console.WriteLine("Idle");
+                //Console.WriteLine("Idle");
                 //idle animation
                 SetState("Idle", true);
 
@@ -101,7 +102,7 @@ public class Enemy : Script
                 break;
             //chase state
             case 1:
-                Console.WriteLine("Chase");
+                //Console.WriteLine("Chase");
                 SetState("Run", true);
                 //change to attack state once it has reach it is in range
                 if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
@@ -124,7 +125,7 @@ public class Enemy : Script
                 break;
             //attack state
             case 2:
-                Console.WriteLine("Attack");
+                //Console.WriteLine("Attack");
                 //attack animation
                 SetState("Attack", true);
                 
@@ -212,8 +213,20 @@ public class Enemy : Script
 
     void TakeDamage(int amount)
     {
+        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+        ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+        AudioManager.instance.enemyHit.Play();
         currentHealth -= amount;
         hpBar.localScale.x = currentHealth / maxHealth;
+        CombatManager.instance.SpawnHitEffect(transform);
+        //set particle transform to enemy position
+        if (currentHealth <= 0)
+        {
+            AudioManager.instance.rangeEnemyDead.Play();
+            if (spawnObject != null)
+                spawnObject.SetActive(true);
+            Destroy(gameObject);
+        }
     }
 
     void Exit()
