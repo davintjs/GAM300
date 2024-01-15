@@ -47,8 +47,8 @@ public class ThirdPersonController : Script
 
     bool _isAttacking = false;
 
-    public bool isAtCheckpoint1 = false;
-    public bool isAtCheckpoint2 = false;
+    public int checkpointIndex = -1;
+    public bool isAtCheckpoint = false;
     public Transform spawnPoint;
     public Transform terminal1;
     public Transform terminal2;
@@ -222,8 +222,6 @@ public class ThirdPersonController : Script
         //    Console.WriteLine("NewCheckpoint");
         //    player.localPosition = new vec3(spawnPoint.localPosition);
         //}
-
-        CheckCheckpoint();
 
         //testing respawn
         if (Input.GetKey(KeyCode.R))
@@ -596,31 +594,6 @@ public class ThirdPersonController : Script
         }
     }
 
-    public void CheckCheckpoint()
-    {
-        if (isAtCheckpoint1)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Console.WriteLine("Checkpoint Saved");
-                AudioManager.instance.uiSound.Play();
-                //shift the spawn point to where the current termainal position where the player save
-                spawnPoint.localPosition = new vec3(terminal1.localPosition.x + 1, terminal1.localPosition.y + 1, terminal1.localPosition.z);
-                spawnPoint.localRotation = new vec3(terminal1.localRotation.x, terminal1.localRotation.y, terminal1.localRotation.z);
-            }
-        }
-        if (isAtCheckpoint2)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Console.WriteLine("Checkpoint Saved");
-                AudioManager.instance.uiSound.Play();
-                //shift the spawn point to where the current termainal position where the player save
-                spawnPoint.localPosition = new vec3(terminal2.localPosition.x + 1, terminal2.localPosition.y + 1, terminal2.localPosition.z);
-                spawnPoint.localRotation = new vec3(terminal2.localRotation.x, terminal2.localRotation.y, terminal2.localRotation.z);
-            }
-        }
-    }
 
     void OnTriggerEnter(PhysicsComponent rb)
     {
@@ -649,30 +622,10 @@ public class ThirdPersonController : Script
             Console.WriteLine("InstantDeath");
             TakeDamage(maxHealth);
         }
-        if (GetTag(rb) == "Terminal1")
-        {
-            Console.WriteLine("AtTerminal1");
-            isAtCheckpoint1 = true;
-        }
-        if (GetTag(rb) == "Terminal2")
-        {
-            Console.WriteLine("AtTerminal2");
-            isAtCheckpoint2 = true;
-        }
     }
 
     void OnCollisionExit(PhysicsComponent rb)
     {
-        if (GetTag(rb) == "Terminal1")
-        {
-            Console.WriteLine("AwayFromTerminal1");
-            isAtCheckpoint1 = false;
-        }
-        if (GetTag(rb) == "Terminal2")
-        {
-            Console.WriteLine("AwayFromTerminal2");
-            isAtCheckpoint2 = false;
-        }
 
     }
 

@@ -8,11 +8,11 @@ using GlmSharp;
 
 public class Terminal : Script
 {
-    Transform terminalPos;
+    public int index;
 
     void Start()
     {
-        terminalPos = gameObject.GetComponent<Transform>();
+
     }
 
     void Update()
@@ -26,7 +26,7 @@ public class Terminal : Script
         if (GetTag(rb) == "Player")
         {
             Console.WriteLine("AtCheckpoint");
-            ThirdPersonController.instance.isAtCheckpoint1 = true;
+            ThirdPersonController.instance.checkpointIndex = index;
             //CheckCheckpoint();
         }
 
@@ -34,16 +34,18 @@ public class Terminal : Script
 
     public void CheckCheckpoint()
     {
-        if (ThirdPersonController.instance.isAtCheckpoint1)
+        if(index == ThirdPersonController.instance.checkpointIndex)
         {
+            //save checkpoint
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Console.WriteLine("Save Checkpoint");
                 //shift the spawn point to where the current termainal position where the player save
-                ThirdPersonController.instance.spawnPoint.localPosition = new vec3(terminalPos.localPosition.x + 1, terminalPos.localPosition.y + 1, terminalPos.localPosition.z);
-                ThirdPersonController.instance.spawnPoint.localRotation = new vec3(terminalPos.localRotation.x, terminalPos.localRotation.y, terminalPos.localRotation.z);
+                ThirdPersonController.instance.spawnPoint.localPosition = new vec3(transform.position + vec3.Ones);
+                ThirdPersonController.instance.spawnPoint.localRotation = new vec3(transform.rotation);
             }
         }
+
     }
 
     void OnCollisionExit(PhysicsComponent rb)
@@ -52,7 +54,7 @@ public class Terminal : Script
         if (GetTag(rb) == "Player")
         {
             Console.WriteLine("AwayFromCheckpoint");
-            ThirdPersonController.instance.isAtCheckpoint1 = false;
+            ThirdPersonController.instance.isAtCheckpoint = false;
         }
     }
 }

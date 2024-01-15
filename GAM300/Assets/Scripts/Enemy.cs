@@ -64,7 +64,7 @@ public class Enemy : Script
         }
 
         //debugging state
-        Console.WriteLine(state);
+        //Console.WriteLine(state);
 
         //death animation timer
         if (startDeathAnimationCountdown)
