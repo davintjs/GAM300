@@ -27,6 +27,7 @@ void EditorContentBrowser::Init()
 {
     currentDirectory = AssetDirectory;
     EVENTS.Subscribe(this, &EditorContentBrowser::CallbackGetCurrentDirectory);
+    payload_set = false;
 }
 
 void EditorContentBrowser::Update(float dt)
@@ -115,10 +116,15 @@ void EditorContentBrowser::Update(float dt)
 
         //Drag drop logic for content browser
         if (!it.is_directory() && ImGui::BeginDragDropSource()) {
+
             std::string filepath = relativepath.string();
             std::string ext = filepath;
+            std::string filename = filepath;
             //check what extension is the file
             ext.erase(0, ext.find_last_of(".") + 1);
+            //get name of file
+            filename.erase(0, filepath.find_last_of("\\") + 1);
+            filename.erase(filename.find_last_of("."), filename.size());
 
             ContentBrowserPayload payload;
             /*
@@ -127,15 +133,18 @@ void EditorContentBrowser::Update(float dt)
             Engine::GUID currentGUID = e.guid;
             payload.payload = &currentGUID;
             payload.type = MESH;*/
-            
+
             if (ext == "model") { //mesh files
                 GetAssetEvent<MeshAsset> e{ it.path() };
                 EVENTS.Publish(&e);
                 Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
-                payload.type = MESH;
+                payload.type = MODELTYPE;
+
+                payload.name = new char[filename.size() + 1];
+                strcpy(payload.name, filename.c_str());
             }
-            else if (ext == "material") 
+            else if (ext == "material")
             {
                 GetAssetEvent<MaterialAsset> e{ it.path() };
                 EVENTS.Publish(&e);
@@ -145,8 +154,9 @@ void EditorContentBrowser::Update(float dt)
             }
             else if (ext == "prefab") { //prefab files
 
-            }          
+            }
             ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
+
             ImGui::EndDragDropSource();
         }
 
