@@ -104,11 +104,30 @@ namespace BeanFactory
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetPosition(Transform gameObject, ref vec3 position);
+        public static extern void SetLocalPosition(Transform gameObject, out vec3 position);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetRotation(Transform gameObject, ref vec3 rotation);
+        public static extern void SetLocalRotation(Transform gameObject, out vec3 rotation);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetScale(Transform gameObject, ref vec3 scale);
+        public static extern void SetLocalScale(Transform gameObject, out vec3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldPosition(Transform gameObject, out vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldRotation(Transform gameObject, out vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldScale(Transform gameObject, out vec3 scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalScale(Transform gameObject, ref vec3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldScale(Transform gameObject, ref vec3 scale);
         #endregion
 
         #region SCENE

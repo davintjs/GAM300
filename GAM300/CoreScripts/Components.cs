@@ -157,34 +157,90 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class Transform
     {
-        public vec3 localPosition;
-        public vec3 localRotation;
-        public vec3 localScale;
+        public vec3 localPosition
+        {
+            get
+            {
+                vec3 outVec = new vec3();
+                InternalCalls.GetLocalPosition(this, ref outVec);
+                return outVec;
+            }
+
+            set
+            {
+                InternalCalls.SetLocalPosition(this, out value);
+            }
+        }
+
+        public vec3 localRotation
+        {
+            get
+            {
+                vec3 outVec = new vec3();
+                InternalCalls.GetLocalRotation(this, ref outVec);
+                return outVec;
+            }
+
+            set
+            {
+                InternalCalls.SetLocalRotation(this, out value);
+            }
+        }
+
+        public vec3 localScale
+        {   
+            get
+            {
+                vec3 outVec = new vec3();
+                InternalCalls.GetLocalScale(this, ref outVec);
+                return outVec;
+            }
+
+            set
+            {
+                InternalCalls.SetLocalScale(this, out value);
+            }
+        }
+
         public vec3 position
         {
             get
             {
-                vec3 pos = new vec3();
-                InternalCalls.GetPosition(this, ref pos);
-                return pos;
+                vec3 outVec = new vec3();
+                InternalCalls.GetWorldPosition(this, ref outVec);
+                return outVec;
+            }
+            set
+            {
+                InternalCalls.SetWorldPosition(this, out value);
             }
         }
+
         public vec3 rotation
         {
             get
             {
-                vec3 rot = new vec3();
-                InternalCalls.GetRotation(this, ref rot);
-                return rot;
+                vec3 outVec = new vec3();
+                InternalCalls.GetWorldRotation(this, ref outVec);
+                return outVec;
+            }
+            set
+            {
+                InternalCalls.SetWorldRotation(this, out value);
             }
         }
+
         public vec3 scale
         {
             get
             {
-                vec3 scale = new vec3();
-                InternalCalls.GetScale(this, ref scale);
-                return scale;
+                vec3 outVec = new vec3();
+                InternalCalls.GetWorldScale(this, ref outVec);
+                return outVec;
+            }
+            set
+            {
+                InternalCalls.SetWorldScale(this, out value);
             }
         }
 

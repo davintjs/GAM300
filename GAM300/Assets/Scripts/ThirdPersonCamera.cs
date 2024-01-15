@@ -106,7 +106,9 @@ public class ThirdPersonCamera : Script
         {
             zoom = furthestZoom;
         }
-        transform.localPosition.z = -zoom;
+        vec3 pos = transform.localPosition;
+        pos.z = -zoom;
+        transform.position = pos;
     }
     void ResetZoom()
     {

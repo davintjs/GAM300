@@ -209,6 +209,9 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     if constexpr (std::is_same<T, Transform>())
     {
         out << YAML::Key << "m_Children" << YAML::Value << Child{ _component.child, MySceneManager.GetCurrentScene()};
+        out << YAML::Key << "Translation" << YAML::Value << _component.GetLocalTranslation();
+        out << YAML::Key << "Rotation" << YAML::Value << _component.GetLocalRotation();
+        out << YAML::Key << "Scale" << YAML::Value << _component.GetLocalScale();
     }
 
     if constexpr (std::is_same<T, Script>())
@@ -482,6 +485,7 @@ void DeserializeComponent(const DeComHelper& _helper)
                 }
             , entry.second);
         });
+    
     if (!_helper.linker)
     {
         // Store in entity
@@ -496,6 +500,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             {
                 T& transform = _scene.Get<T>(component.EUID());
                 transform = component;
+
             }
             else if constexpr (std::is_same<Tag, T>())
             {
@@ -521,6 +526,9 @@ void DeserializeComponent(const DeComHelper& _helper)
             {
                 MySceneManager.GetCurrentScene().Get<Transform>(component.parent).child.push_back(component.EUID());
             }
+            component.SetLocalPosition(node["Translation"].as<Vector3>());
+            component.SetLocalRotation(node["Rotation"].as<Vector3>());
+            component.SetLocalScale(node["Scale"].as<Vector3>());
         }
         if constexpr (std::is_same<T, Script>())
         {

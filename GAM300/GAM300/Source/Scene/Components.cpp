@@ -96,9 +96,9 @@ void Transform::SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 	translation = _translation;
 	rotation = _rotation;
 	scale = _scale;
-	Transform* tParent = GetParent();
-	if (tParent)
+	if (parent)
 	{
+		Transform* tParent = GetParent();
 		worldMatrix = tParent->GetWorldMatrix() * CreateTransformationMtx(translation, rotation, scale);
 		glm::quat worldRotQ;
 		Decompose(worldMatrix, globalPos, worldRotQ, globalScale);
@@ -120,9 +120,9 @@ void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 	globalRot = _rotation;
 	globalScale = _scale;
 	worldMatrix = CreateTransformationMtx(_translation, _rotation, _scale);
-	Transform* tParent = GetParent();
-	if (tParent)
+	if (parent)
 	{
+		Transform* tParent = GetParent();
 		glm::mat4 localMatrix = glm::inverse(tParent->GetWorldMatrix())* worldMatrix;
 		
 		Decompose(localMatrix, translation, rotationQuat, scale);
