@@ -4,6 +4,7 @@ using BeanFactory;
 using GlmSharp;
 using System;
 using System.Threading;
+using System.Resources;
 
 public class Enemy : Script
 {
@@ -16,6 +17,7 @@ public class Enemy : Script
 
     public float maxHealth = 3f;
     public float currentHealth;
+    public bool isDead = false;
     // HealthBar
     public Transform hpBar;
     public bool inRange = false;
@@ -29,7 +31,7 @@ public class Enemy : Script
     public Animator animator;
     public int state;//Example 1 is walk, 2 is attack, 3 is idle etc.
     public bool startDeathAnimationCountdown = false;
-    float animationTimer = 3.18f;
+    float animationTimer = 2.5f;
     public float currentAnimationTimer;
     private Coroutine damagedCoroutine = null;
 
@@ -37,6 +39,12 @@ public class Enemy : Script
 
     public GameObject spawnObject;
 
+    public bool isAttacking = false;
+    public bool isAttackCooldown = false;
+    float attackTimer = 0.01f;
+    float currentAttackTimer;
+    float attackCooldownTimer = 1f;
+    public float currentAttackCooldownTimer;
 
     void Start()
     {
@@ -45,6 +53,7 @@ public class Enemy : Script
         InitAnimStates();
     }
 
+   
 
     void Update()
     {
@@ -52,6 +61,60 @@ public class Enemy : Script
         {
             //SetState("Idle", true);
             return;
+        }
+
+        //debugging state
+        Console.WriteLine(state);
+
+        //death animation timer
+        if (startDeathAnimationCountdown)
+        {
+            currentAnimationTimer -= Time.deltaTime;
+            if (currentAnimationTimer <= 0.5f)
+            {
+                currentAnimationTimer = animationTimer;
+                startDeathAnimationCountdown = false;
+                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                //Respawn();
+                //SceneManager.LoadScene("LevelPlay2");
+            }
+        }
+
+        if (isDead)
+        {
+            return;
+        }
+        if(state == 2)
+        {
+            isAttacking = true;
+            if(isAttacking && !isAttackCooldown)
+            {
+                AudioManager.instance.meleeEnemyAttack.Play();
+                currentAttackTimer += Time.deltaTime;
+                if (currentAttackTimer >= attackTimer)
+                {
+                    isAttacking = false;
+                    isAttackCooldown = true;
+                    currentAttackTimer = 0f;
+                }
+            }
+            if(isAttackCooldown)
+            {
+                currentAttackCooldownTimer += Time.deltaTime;
+                if(currentAttackCooldownTimer > attackCooldownTimer)
+                {
+                    isAttackCooldown = false;
+                    currentAttackCooldownTimer = 0f;
+                }
+            }
+           
+        }
+        else if(state != 2)
+        {
+            isAttacking = false;
+            isAttackCooldown = false;
+            currentAttackCooldownTimer = 0f;
+            currentAnimationTimer = 0f;
         }
 
         ////follow target
@@ -79,69 +142,80 @@ public class Enemy : Script
         vec3 direction = player.localPosition - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
-
-        switch (state)
+        if(!isDead)
         {
-            //idle state
-            case 0:
-                //Console.WriteLine("Idle");
-                //idle animation
-                SetState("Idle", true);
+            switch (state)
+            {
+                //idle state
+                case 0:
+                    //Console.WriteLine("Idle");
+                    //idle animation
+                    SetState("Idle", true);
 
-                //player detection
-                if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
-                {
-                    
-                    if(animationManager.GetState("Idle").state)
+                    //player detection
+                    if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
                     {
-                        SetState("Idle", false);
+
+                        if (animationManager.GetState("Idle").state)
+                        {
+                            SetState("Idle", false);
+                        }
+                        //change to chase state
+                        state = 1;
                     }
-                    //change to chase state
-                    state = 1;
-                }
-                break;
-            //chase state
-            case 1:
-                //Console.WriteLine("Chase");
-                SetState("Run", true);
-                //change to attack state once it has reach it is in range
-                if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
-                {
-                    state = 2;
-                    attackCooldown = 0f;
-                }
-                //return to its starting position if player is far from its chaseDistance
-                if (vec3.Distance(player.localPosition, transform.localPosition) > chaseDistance)
-                {
-                    if (animationManager.GetState("Run").state)
+                    break;
+                //chase state
+                case 1:
+                    //Console.WriteLine("Chase");
+                    SetState("Run", true);
+                    //change to attack state once it has reach it is in range
+                    if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
                     {
-                        SetState("Run", false);
+                        state = 2;
+                        attackCooldown = 0f;
                     }
-                    //return back to its previous position state
-                    state = 0;
-                }
-                LookAt(direction);
-                GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
-                break;
-            //attack state
-            case 2:
-                //Console.WriteLine("Attack");
-                //attack animation
-                SetState("Attack", true);
-                
-                LookAt(direction);
-                //change to chase state once player has reach out of range
-                if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
-                {
-                    if (animationManager.GetState("Attack").state)
+                    //return to its starting position if player is far from its chaseDistance
+                    if (vec3.Distance(player.localPosition, transform.localPosition) > chaseDistance)
                     {
-                        SetState("Attack", false);
+                        if (animationManager.GetState("Run").state)
+                        {
+                            SetState("Run", false);
+                        }
+                        //return back to its previous position state
+                        state = 0;
                     }
-                    state = 1;
-                }
-                break;
-                
+                    LookAt(direction);
+                    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                    break;
+                //attack state
+                case 2:
+                    //Console.WriteLine("Attack");
+                    //attack animation
+                    SetState("Attack", true);
+
+                    LookAt(direction);
+                    //change to chase state once player has reach out of range
+                    if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
+                    {
+                        if (animationManager.GetState("Attack").state)
+                        {
+                            SetState("Attack", false);
+                        }
+                        state = 1;
+                    }
+                    break;
+
+                //death state
+                case 3:
+                    SetState("Death", true);
+                    animationManager.UpdateState();
+
+                    break;
+
+            }
         }
+        
+
         //needed for the animation to change
         animationManager.UpdateState();
     }
@@ -192,6 +266,7 @@ public class Enemy : Script
         AnimationState idle = animationManager.GetState("Idle");
         //Lowest Precedence
 
+        //death.SetConditionals(false, stun, attack, walk, run, idle);
         stun.SetConditionals(false, death);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
@@ -213,19 +288,29 @@ public class Enemy : Script
 
     void TakeDamage(int amount)
     {
-        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
-        ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
-        AudioManager.instance.enemyHit.Play();
-        currentHealth -= amount;
-        hpBar.localScale.x = currentHealth / maxHealth;
-        CombatManager.instance.SpawnHitEffect(transform);
+        if(!isDead)
+        {
+            ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+            ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+            AudioManager.instance.enemyHit.Play();
+            currentHealth -= amount;
+            hpBar.localScale.x = currentHealth / maxHealth;
+            CombatManager.instance.SpawnHitEffect(transform);
+        }
+
         //set particle transform to enemy position
         if (currentHealth <= 0)
         {
-            AudioManager.instance.rangeEnemyDead.Play();
+            currentHealth = 0;
+            isDead = true;
+            Console.WriteLine("EnemyDead");
+            SetState("Death", true);
+            animationManager.UpdateState();
+            startDeathAnimationCountdown = true;
+            AudioManager.instance.meleeEnemyDie.Play();
             if (spawnObject != null)
                 spawnObject.SetActive(true);
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 

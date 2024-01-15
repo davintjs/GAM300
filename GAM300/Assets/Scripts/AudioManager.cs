@@ -26,6 +26,9 @@ public class AudioManager : Script
     public AudioSource keyCollected;
     public AudioSource uiSound;
     public AudioSource useItem;
+    public AudioSource meleeEnemyDie;
+    public AudioSource meleeEnemyAttack;
+    public AudioSource meleeEnemyInjured;
 
     void Awake()
     {

@@ -603,6 +603,7 @@ public class ThirdPersonController : Script
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Console.WriteLine("Checkpoint Saved");
+                AudioManager.instance.uiSound.Play();
                 //shift the spawn point to where the current termainal position where the player save
                 spawnPoint.localPosition = new vec3(terminal1.localPosition.x + 1, terminal1.localPosition.y + 1, terminal1.localPosition.z);
                 spawnPoint.localRotation = new vec3(terminal1.localRotation.x, terminal1.localRotation.y, terminal1.localRotation.z);
@@ -613,6 +614,7 @@ public class ThirdPersonController : Script
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Console.WriteLine("Checkpoint Saved");
+                AudioManager.instance.uiSound.Play();
                 //shift the spawn point to where the current termainal position where the player save
                 spawnPoint.localPosition = new vec3(terminal2.localPosition.x + 1, terminal2.localPosition.y + 1, terminal2.localPosition.z);
                 spawnPoint.localRotation = new vec3(terminal2.localRotation.x, terminal2.localRotation.y, terminal2.localRotation.z);
