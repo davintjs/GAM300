@@ -44,7 +44,7 @@ bool NavMesh::FindPath(NavMeshAgent& mAgent, const glm::vec3& mEnd)
 	Scene& tempScene = MySceneManager.GetCurrentScene();
 	Transform& agentTransform = tempScene.Get<Transform>(mAgent);
 
-	glm::vec3 agentPos = agentTransform.GetTranslation();
+	glm::vec3 agentPos = agentTransform.GetGlobalTranslation();
 	glm::vec3 endDest = mEnd;
 
 	Triangle3D* mTri1 = TriangleContainingPoint(agentPos);

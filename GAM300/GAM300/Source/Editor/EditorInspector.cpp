@@ -795,17 +795,31 @@ void Display_Property(T& comp) {
         {
             Change newchange(&comp, "TransformationMtx");
             //Change transformChange(&comp, entry.first);
-            Vector3 pos = comp.GetTranslation();
-            Vector3 rot = comp.GetRotation();
-            Vector3 scale = comp.GetScale();
+            Vector3 pos = comp.GetGlobalTranslation();
+            Vector3 rot = comp.GetGlobalRotation();
+            Vector3 scale = comp.GetGlobalScale();
             Display(newchange, "Translation", pos);
             Display(newchange, "Rotation", rot);
             Display(newchange, "Scale", scale);
             comp.SetGlobalPosition(pos);
             comp.SetGlobalRotation(rot);
             comp.SetGlobalScale(scale);
-            return;
         }
+        else
+        {
+            Change newchange(&comp, "TransformationMtx");
+            //Change transformChange(&comp, entry.first);
+            Vector3 pos = comp.GetLocalTranslation();
+            Vector3 rot = comp.GetLocalRotation();
+            Vector3 scale = comp.GetLocalScale();
+            Display(newchange, "Translation", pos);
+            Display(newchange, "Rotation", rot);
+            Display(newchange, "Scale", scale);
+            comp.SetLocalPosition(pos);
+            comp.SetLocalRotation(rot);
+            comp.SetLocalScale(scale);
+        }
+        return;
     }
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)

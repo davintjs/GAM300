@@ -25,6 +25,16 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Physics/PhysicsSystem.h"
 
 
+namespace
+{
+	static void Decompose(glm::mat4& mat, Vector3& pos, glm::quat& rot, Vector3& scale)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(mat, (glm::vec3&)scale, rot, (glm::vec3&)pos, skew, perspective);
+	}
+}
+
 std::map<std::string, size_t> ComponentTypes{};
 
 bool Transform::isLeaf() {
@@ -43,107 +53,108 @@ bool Transform::isChild() {
 		return false;
 }
 
-glm::vec3 Transform::GetTranslation() const
-{
-	return glm::vec3(GetWorldMatrix()[3]);
-}
-
-glm::vec3 Transform::GetRotation() const
-{
-
-	//return glm::eulerAngles(glm::quat_cast(GetWorldMatrix()));
-	glm::quat rot;
-	glm::vec3 skew;
-	glm::vec4 perspective;
-	vec3 _scale;
-	vec3 _translation;
-	glm::mat4 globalTransform = GetWorldMatrix();
-	// Calculate the global transformation matrix
-	glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
-	return glm::eulerAngles(rot);
-}
-
 void Transform::SetGlobalPosition(Vector3 newPos)
 {
-	//memcpy(&worldMatrix[3], &newPos, 3);
-	glm::mat4 globalTransform = GetWorldMatrix();
-	memcpy(&globalTransform[3], &newPos, sizeof(Vector3));
-	glm::quat rot;
-	glm::vec3 skew;
-	glm::vec4 perspective;
-	vec3 _scale;
-	vec3 _translation;
-	if (parent) 
-	{
-		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
-		glm::mat4 lTransform = glm::inverse(parentTrans.GetWorldMatrix()) * globalTransform;
-		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-		//scale = _scale;
-		translation = _translation;
-		//rotation = glm::eulerAngles(rot);
-	}
-	else
-	{
-		translation = newPos;
-	}
+	SetWorldMatrix(newPos, globalRot, globalScale);
 }
 
 void Transform::SetGlobalRotation(Vector3 newRot)
 {
-	if (parent)
-	{
-		glm::quat rot;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		vec3 _scale;
-		vec3 _translation;
-		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
-		glm::mat4 lTransform = parentTrans.GetWorldMatrix();
-		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-		rotation = glm::eulerAngles(rot) - (glm::vec3)newRot;
-		worldMatrix = lTransform * GetLocalMatrix();
-	}
-	else
-	{
-		rotation = newRot * 3.1415927;
-		worldMatrix = GetLocalMatrix();
-	}
+	SetWorldMatrix(globalPos, newRot, globalScale);
 }
 
 void Transform::SetGlobalScale(Vector3 newScale)
 {
-	if (parent)
+	SetWorldMatrix(globalPos, globalRot, newScale);
+}
+
+
+void Transform::SetLocalPosition(Vector3 newPos)
+{
+	SetLocalMatrix(newPos, rotation, scale);
+}
+
+void Transform::SetLocalRotation(Vector3 newRot)
+{
+	SetLocalMatrix(translation, newRot, scale);
+}
+
+void Transform::SetLocalScale(Vector3 newScale)
+{
+	SetLocalMatrix(translation, rotation, newScale);
+}
+
+Transform* Transform::GetParent() 
+{ 
+	if (parent) 
+		return &MySceneManager.GetCurrentScene().Get<Transform>(parent); 
+	return nullptr;
+}
+
+void Transform::SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
+{
+	translation = _translation;
+	rotation = _rotation;
+	scale = _scale;
+	Transform* tParent = GetParent();
+	if (tParent)
 	{
-		glm::quat rot;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		vec3 _scale;
-		vec3 _translation;
-		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
-		glm::mat4 lTransform = parentTrans.GetWorldMatrix();
-		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-		scale = (glm::vec3)newScale / _scale;
-		worldMatrix = lTransform * GetLocalMatrix();
+		worldMatrix = tParent->GetWorldMatrix() * CreateTransformationMtx(translation, rotation, scale);
+		glm::quat worldRotQ;
+		Decompose(worldMatrix, globalPos, worldRotQ, globalScale);
+		globalRot = glm::eulerAngles(worldRotQ);
 	}
 	else
 	{
-		scale = newScale;
-		worldMatrix = GetLocalMatrix();
+		worldMatrix = CreateTransformationMtx(translation, rotation, scale);
+		globalPos = translation;
+		globalRot = rotation;
+		globalScale = scale;
 	}
+	UpdateChildrenMatrices();
 }
 
-glm::vec3 Transform::GetScale() const
+void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 {
-	if(parent)
-		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetScale() * glm::vec3(scale);
-	return scale;
+	globalPos = _translation;
+	globalRot = _rotation;
+	globalScale = _scale;
+	worldMatrix = CreateTransformationMtx(_translation, _rotation, _scale);
+	Transform* tParent = GetParent();
+	if (tParent)
+	{
+		glm::mat4 localMatrix = glm::inverse(tParent->GetWorldMatrix())* worldMatrix;
+		
+		Decompose(localMatrix, translation, rotationQuat, scale);
+		rotation = glm::eulerAngles(rotationQuat);
+	}
+	else
+	{
+		translation = globalPos;
+		rotation = globalRot;
+		scale = globalScale;
+	}
+	UpdateChildrenMatrices();
+}
+
+
+void Transform::UpdateChildrenMatrices()
+{
+	for (const auto& childID : child)
+	{
+		Transform& tChild = MySceneManager.GetCurrentScene().Get<Transform>(childID);
+		glm::mat4 childMat = worldMatrix * tChild.GetLocalMatrix();
+		Vector3 cPos;
+		glm::quat cRot;
+		Vector3 cScale;
+		Decompose(childMat,cPos,cRot,cScale);
+		tChild.SetWorldMatrix(cPos,glm::eulerAngles(cRot),cScale);
+	}
 }
 
 glm::mat4 Transform::GetWorldMatrix() const
 {
-	if (parent)
-		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetWorldMatrix() * GetLocalMatrix();
-	return GetLocalMatrix();
+	return worldMatrix;
 }
 
 glm::mat4 Transform::GetLocalMatrix() const {

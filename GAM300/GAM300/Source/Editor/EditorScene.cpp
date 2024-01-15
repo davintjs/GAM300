@@ -387,11 +387,14 @@ void EditorScene::DisplayGizmos()
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
         
         Transform& trans = currentScene.Get<Transform>(entity);
+
+        Vector3 tempScale = trans.GetLocalScale();
         for (int i = 0; i < 3; ++i)
         {
-            if (fabs(trans.scale[i]) < 0.001f)
-                trans.scale[i] = 0.001f;
+            if (fabs(tempScale[i]) < 0.001f)
+                tempScale[i] = 0.001f;
         }
+        trans.SetLocalScale(tempScale);
 
         // Drawing box collider of selected object
         if (currentScene.Has<BoxCollider>(entity))
@@ -435,24 +438,24 @@ void EditorScene::DisplayGizmos()
             glm::vec3 a_rot;
             glm::vec3 a_scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
-            trans.translation = a_translation;
-            trans.rotation = glm::radians(a_rot);
-            trans.scale = a_scale;
+            trans.SetLocalPosition(a_translation);
+            trans.SetLocalRotation(glm::radians(a_rot));
+            trans.SetLocalScale(a_scale);
         }
         else if (!firstmove) {
-            if (trans.translation != origTransform.translation) {
-                Change translate(&trans, "Transform/Translation");
-                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
-            }
-            if (trans.rotation != origTransform.rotation) {
-                Change rotate(&trans, "Transform/Rotation");
-                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
-            }
-            if (trans.scale != origTransform.scale) {
-                Change scale(&trans, "Transform/Scale");
-                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
-            }
-            firstmove = true;
+            //if (trans.GetLocalTranslation() != origTransform.GetLocalTranslation()) {
+            //    Change translate(&trans, "Transform/Translation");
+            //    EDITOR.History.SetPropertyValue(translate, origTransform.GetLocalTranslation(), trans.GetLocalTranslation());
+            //}
+            //if (trans.rotation != origTransform.rotation) {
+            //    Change rotate(&trans, "Transform/Rotation");
+            //    EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+            //}
+            //if (trans.scale != origTransform.scale) {
+            //    Change scale(&trans, "Transform/Scale");
+            //    EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+            //}
+            //firstmove = true;
         }
     }
 }

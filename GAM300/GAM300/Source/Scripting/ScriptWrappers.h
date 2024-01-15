@@ -193,19 +193,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
 	{
 		Transform& t = pTransform;
-		position = t.GetTranslation();
+		position = t.GetGlobalTranslation();
 	}
 
 	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
 	{
 		Transform& t = pTransform;
-		rotation = t.GetRotation();
+		rotation = t.GetGlobalRotation();
 	}
 
 	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
 	{
 		Transform& t = pTransform;
-		scale = t.GetScale();
+		scale = t.GetGlobalScale();
 	}
 #pragma endregion
 

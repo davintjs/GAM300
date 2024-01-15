@@ -67,11 +67,6 @@ property_begin_name(Tag, "Tag")
 //To store transform of entity
 struct Transform : Object
 {
-	Vector3 translation{};
-	Vector3 rotation{};
-	Vector3 scale{ 1 };
-	glm::mat4x4 worldMatrix;
-
 	//Parent's euid
 	Engine::UUID parent = 0;
 	//Childrens' euids
@@ -85,8 +80,7 @@ struct Transform : Object
 
 	bool isSelectedChild();
 
-	// Get the translation in world space
-	glm::vec3 GetTranslation() const;
+	Transform* GetParent();
 
 	static glm::mat4 CreateTransformationMtx(vec3 translation, vec3 rotation, vec3 scale)
 	{
@@ -97,11 +91,20 @@ struct Transform : Object
 			glm::scale(glm::mat4(1.0f), vec3(scale));
 	}
 
+	// Get the translation in world space
+	glm::vec3 GetGlobalTranslation() const { return globalPos; }
+
 	// Get the rotation in world space
-	glm::vec3 GetRotation() const;
+	glm::vec3 GetGlobalRotation() const { return globalRot; }
 
 	// Get the scale in world space
-	glm::vec3 GetScale() const;
+	glm::vec3 GetGlobalScale() const { return globalScale; }
+
+	glm::vec3 GetLocalTranslation() const { return translation; }
+
+	glm::vec3 GetLocalRotation() const { return rotation; }
+
+	glm::vec3 GetLocalScale() const { return scale; }
 
 	//Get the SRT matrix in world space, with account to parents transform
 	glm::mat4 GetWorldMatrix() const;
@@ -111,6 +114,19 @@ struct Transform : Object
 	void SetGlobalRotation(Vector3 newRot);
 
 	void SetGlobalScale(Vector3 newScale);
+
+	void SetLocalPosition(Vector3 newPos);
+
+	void SetLocalRotation(Vector3 newRot);
+
+	void SetLocalScale(Vector3 newScale);
+
+	void SetWorldMatrix(vec3 translation, vec3 rotation, vec3 scale);
+
+	void SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale);
+
+	void UpdateChildrenMatrices();
+
 
 	//Get the SRT matrix in local space
 	glm::mat4 GetLocalMatrix() const;
@@ -123,15 +139,22 @@ struct Transform : Object
 
 	//Removes a child from child vector
 	void RemoveChild(Transform* t);
+
 	property_vtable();
+	private:
+		Vector3 translation{};
+		Vector3 rotation{};
+		glm::quat rotationQuat{};
+		Vector3 scale{ 1 };
+		Vector3 globalPos{};
+		Vector3 globalRot{};
+		Vector3 globalScale{};
+		glm::mat4x4 worldMatrix;
 };
 
 property_begin_name(Transform, "Transform")
 {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(translation).Name("Translation"),
-	property_var(rotation).Name("Rotation"),
-	property_var(scale).Name("Scale"),
 	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE)
 } property_vend_h(Transform)
 
