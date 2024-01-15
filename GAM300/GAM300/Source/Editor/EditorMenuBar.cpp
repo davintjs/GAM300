@@ -21,6 +21,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/GraphicsHeaders.h"
 #include "../Utilities/PlatformUtils.h"
 #include "Utilities/ThreadPool.h"
+#include "Utilities/Serializer.h"
 
 static bool graphics_settings = false;
 
@@ -164,6 +165,7 @@ void EditorMenuBar::Update(float dt)
         ImGui::SetNextWindowSize(ImVec2(450.f, 600.f));
 
         auto hdr = &RENDERER.IsHDR();
+        bool udpateGraphics = false; 
 
         ImGui::Begin("Graphics Settings", &graphics_settings, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
@@ -173,7 +175,8 @@ void EditorMenuBar::Update(float dt)
             ImGui::TableSetupColumn("1", ImGuiTableColumnFlags_WidthFixed, ImGui::GetContentRegionAvail().x);
 
             ImGui::TableNextColumn();
-            ImGui::Checkbox("Enable HDR lighting", hdr);
+            if(ImGui::Checkbox("Enable HDR lighting", hdr))
+                udpateGraphics = true;
             ImGui::TableNextRow();
 
             if (*hdr) {
@@ -181,18 +184,21 @@ void EditorMenuBar::Update(float dt)
                 ImGui::Text("Light Exposure"); ImGui::SameLine();
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::DragFloat("##", &RENDERER.GetExposure(), 0.01f, 0.f, 5.f);
+                if (ImGui::DragFloat("##", &RENDERER.GetExposure(), 0.01f, 0.f, 5.f))
+                    udpateGraphics = true;
                 ImGui::TableNextRow();              
             }
 
             ImGui::TableNextColumn();         
             auto shadows = &RENDERER.enableShadows();
-            ImGui::Checkbox("Enable Shadows", shadows);
+            if(ImGui::Checkbox("Enable Shadows", shadows))
+                udpateGraphics = true;
             ImGui::TableNextRow();
 
             ImGui::TableNextColumn();
             auto bloom = &RENDERER.enableBloom();
-            ImGui::Checkbox("Enable Bloom", bloom);
+            if(ImGui::Checkbox("Enable Bloom", bloom))
+                udpateGraphics = true;
             if (ImGui::IsItemHovered()) ImGui::SetTooltip("Bloom count and threshold available only when Bloom Enabled");
             ImGui::TableNextRow();
 
@@ -202,14 +208,16 @@ void EditorMenuBar::Update(float dt)
                 ImGui::Text("Bloom Count"); ImGui::SameLine();
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::DragInt("##bloomcount", &bloomcount, 0.05, 1, 20);
+                if (ImGui::DragInt("##bloomcount", &bloomcount, 0.05, 1, 20))
+                    udpateGraphics = true;
                 ImGui::TableNextRow();
 
                 ImGui::TableNextColumn();
                 ImGui::Text("Bloom Threshold"); ImGui::SameLine();
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                ImGui::DragFloat("##bloomthreshold", &RENDERER.GetBloomThreshold(), 0.01f, 1.f, 10.f);
+                if (ImGui::DragFloat("##bloomthreshold", &RENDERER.GetBloomThreshold(), 0.01f, 1.f, 10.f))
+                    udpateGraphics = true;
                 ImGui::TableNextRow();
             }
 
@@ -217,7 +225,8 @@ void EditorMenuBar::Update(float dt)
             ImGui::Text("Ambient"); ImGui::SameLine();
             ImGui::TableNextColumn();
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::DragFloat("##ambient", &RENDERER.getAmbient(), 0.02f, 0.f, 20.f);
+            if (ImGui::DragFloat("##ambient", &RENDERER.getAmbient(), 0.02f, 0.f, 20.f))
+                udpateGraphics = true;
             ImGui::TableNextRow();
 
             ImGui::EndTable();
@@ -227,6 +236,12 @@ void EditorMenuBar::Update(float dt)
         ImGui::GetStyle() = origStyle;
    
         ImGui::End();
+
+        // Serialize to file
+        if (udpateGraphics)
+        {
+            Serialize("GAM300/Data/GraphicsSettings.txt", RENDERER);
+        }
     }
     
 

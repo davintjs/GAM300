@@ -24,7 +24,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "Utilities/Serializer.h"
 
-static bool buffer = false;
 
 void EditorHierarchy::Init()
 {
@@ -129,7 +128,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					}
 
 				}
-				//if target entity is a base node (no parent)
+				//if drag entity out of a group
 				else
 				{
 					//if current entity has a parent, delink it
@@ -152,27 +151,33 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 
 	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
+		
+		ImGui::SetNextItemOpen(true);
+
 		if (newselect) {
 			ImGui::SetNextItemOpen(true);
 			newselect = false;
 		}
 
-		//set the newselect one frame later
-		if (buffer) {
-			newselect = true;
-			buffer = false;
-		}
-
-		if (euid == selectedEntity)
+		if (euid == selectedEntity) {
+			if (movetoitem) {
+				ImGui::SetScrollHereY();  // Scroll to the current item
+				movetoitem = false;
+			}
 			NodeFlags |= ImGuiTreeNodeFlags_Selected;
+		}					
 	}
 	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
 	bool open = ImGui::TreeNodeEx(EntityName, NodeFlags);
 
-	//select entity from hierarchy
-	if (ImGui::IsItemClicked())
-	{
+	ImVec2 minBound = ImGui::GetItemRectMin();
+	ImVec2 maxBound = ImGui::GetItemRectMax();
+
+	minBound.x += 20; //offset the arrow button
+
+	//if user is pressing on the entity hierarchy button rather than arrow button
+	if (ImGui::IsMouseReleased(0) && ImGui::IsMouseHoveringRect(minBound, maxBound)) {
 		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
 		EVENTS.Publish(&selectedEvent);
 	}
@@ -304,7 +309,6 @@ void EditorHierarchy::Update(float dt)
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ newchange.entity };
 				EVENTS.Publish(&selectedEvent);
-				buffer = true;
 			}
 
 			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
@@ -319,11 +323,15 @@ void EditorHierarchy::Update(float dt)
 				Entity* Newentity = curr_scene.Add<Entity>();
 				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
 				newtransform.SetParent(&currEntity);
+
 				newchange.entity = Newentity;
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
-				buffer = true;
+
+				newtransform.scale = Vector3(1.f, 1.f, 1.f);
+				newtransform.translation = Vector3();
+				newtransform.rotation = Vector3();
 			}
 
 			std::string name = "Delete Entity";

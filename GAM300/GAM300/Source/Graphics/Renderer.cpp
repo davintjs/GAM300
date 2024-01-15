@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "MESHMANAGER.h"
 #include "Editor/EditorCamera.h"
+#include "Utilities/Serializer.h"
 
 // ALL THIS ARE HOPEFULLY TEMPORARY
 
@@ -55,11 +56,11 @@ unsigned int Renderer_quadVBO = 0;
 unsigned int Renderer_quadVAO_WM = 0;
 unsigned int Renderer_quadVBO_WM = 0;
 
-const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-const unsigned int SHADOW_WIDTH_DIRECTIONAL = 4096, SHADOW_HEIGHT_DIRECTIONAL = 4096;
-
 void Renderer::Init()
 {
+	// Load graphics settings
+	Deserialize("GAM300/Data/GraphicsSettings.txt", *this);
+
 	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
 	
@@ -92,7 +93,7 @@ void Renderer::Update(float)
 	transparentContainer.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
 #ifndef _BUILD
-	SetupGrid(numLines);
+	//SetupGrid(numLines);
 #endif
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -127,20 +128,34 @@ void Renderer::Update(float)
 
 		Material_instance& currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
 		
-
 		Transform& transform = currentScene.Get<Transform>(entity);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
 		const glm::vec3 position = transform.GetTranslation();
 
+		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
+		if (!t_Mesh) continue;
+
+		if (frustumCulling)
+		{
+			bool withinCamera = false;
+			for (Camera& camera : currentScene.GetArray<Camera>())
+			{
+				if (camera.state == DELETED) continue;
+
+				if (!currentScene.IsActive(camera)) continue;
+
+				if (camera.WithinFrustum(transform, t_Mesh->vertices_min, t_Mesh->vertices_max))
+				{
+					withinCamera = true;
+					break;
+				}
+			}
+
+			if (!withinCamera) continue;
+		}
+
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
-
-			Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
-			if (t_Mesh == nullptr)
-			{
-				continue;
-			}/**/
-			
 			//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
 			GLuint vao = vaoIt->second;
 			DefaultRenderProperties renderProperties;
@@ -268,7 +283,8 @@ void Renderer::SetupGrid(const int& _num)
 void Renderer::Draw(BaseCamera& _camera) {
 
 	// Instanced Rendering	
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) {
+	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) 
+	{
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
@@ -832,6 +848,8 @@ void Renderer::UIDraw_2D(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
@@ -892,6 +910,8 @@ void Renderer::UIDraw_3D(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
@@ -976,6 +996,8 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		// SRT uniform
@@ -1081,7 +1103,7 @@ void Renderer::DrawDepthDirectional()
 		float near_plane = -1000.f, far_plane = 1000.f;
 
 
-		lightProjection = glm::ortho(-100.f, 100.f, -100.f, 100.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-90.f, 90.f, -90.f, 90.f, near_plane, far_plane);
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 

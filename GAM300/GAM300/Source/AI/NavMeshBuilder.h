@@ -111,7 +111,6 @@ private:
 	int mIndexCount = 0;
 	Polygon3D* mBoundary;
 	NavMesh* mNavMesh;
-	//std::vector<Polygon3D> mHoles;
 	std::vector<Polygon3D> mObstacles;
 	std::vector<Polygon3D> mRegions; // Contains the total regions of the game
 };

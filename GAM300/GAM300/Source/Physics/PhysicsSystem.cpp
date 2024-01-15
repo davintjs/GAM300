@@ -259,9 +259,6 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 
 }
 void PhysicsSystem::PostPhysicsUpdate() {
-
-
-
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
 	//std::cout << "Post physics update\n";
 
@@ -337,7 +334,6 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				ContactAddedEvent cae;
 				cae.pc1 = pc1;
 				cae.pc2 = pc2;
-
 				EVENTS.Publish(&cae);
 				//std::cout << "Collision Enter!\n";
 			}
@@ -570,7 +566,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	if (!physicsSystem)
 		return;
 	populated = true;
-	PRINT("POPULATE\n");
 	Scene& scene = MySceneManager.GetCurrentScene();
 
 	// check entity for collider and then check what kind of collider he want
@@ -800,9 +795,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	}
 
 
-	std::cout << "Rigido bodies:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
+	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
 
 }
 

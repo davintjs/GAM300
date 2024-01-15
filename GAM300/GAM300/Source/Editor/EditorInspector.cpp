@@ -945,7 +945,7 @@ void DisplayComponentHelper(T& component)
     ImVec4 check_color = ImGui::GetStyleColorVec4(ImGuiCol_FrameBg);
     ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.1f, 0.1f, 0.3f, 1.0f)); // set color of checkbox
 
-    bool checkbox = curr_scene.IsActive(component);
+    bool checkbox = curr_scene.IsActive(component,false);
     std::string label = "##" + name;
     ImGui::Checkbox(label.c_str(), &checkbox);
     curr_scene.SetActive(component,checkbox);
@@ -972,8 +972,43 @@ void DisplayComponentHelper(T& component)
     ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
     if (ImGui::BeginPopup(popup, win_flags)) {
 
-        if (ImGui::MenuItem("Reset")) {
 
+        if (ImGui::MenuItem("Reset")) {  
+
+            property::SerializeEnum(component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+                {
+                    if (!Flags.m_isDontShow) {
+                        auto entry = property::entry { PropertyName, Data };
+                        std::visit([&](auto& Value) {
+
+                            using T1 = std::decay_t<decltype(Value)>;
+
+                            if constexpr (std::is_same <T1, std::string>()) {
+                                Value = std::string();
+                            }
+                            else if constexpr (std::is_same <T1, int>()) {
+                                Value = 0;
+                            }
+                            else if constexpr (std::is_same < T1, float>()) {
+                                Value = 0.f;
+                            }
+
+                            if constexpr (std::is_same<T1, Vector3>()) {
+                                //if scale reset to 1 instead or else 0 
+                                if (entry.first == "Transform/Scale") 
+                                    Value = Vector3(1.f, 1.f, 1.f);                             
+                                else
+                                    Value = Vector3();
+                            }
+                            }
+                        , Data);
+                        property::set(component, entry.first.c_str(), Data);
+
+                        // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                        assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                    }
+
+                });
         }
 
         if constexpr (!std::is_same<T, Transform>()) {
@@ -999,9 +1034,9 @@ void DisplayComponentHelper(T& component)
             ImGui::TextDisabled("Remove Component");
         }
 
-        if (ImGui::MenuItem("Copy Component")) {
+        /*if (ImGui::MenuItem("Copy Component")) {
 
-        }
+        }*/
 
         ImGui::EndPopup();
     }
@@ -1050,7 +1085,6 @@ void DisplayComponentHelper(T& component)
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
     }
-
 }
 
 //Template recursive function to display the components in an entity
@@ -1132,9 +1166,6 @@ private:
 
                 if (!scene.Has<T1>(entity) || old_component)
                 {
-
-
-
                     if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
                         if (old_component)
@@ -1229,10 +1260,8 @@ void AddComponentPanel(Entity& entity) {
         EditorInspector::Instance().isAddComponentPanel = false;
     }
 
-    
-
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopup("Add Component", ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
         ImGui::Text("Filter: "); ImGui::SameLine();
         Componentfilter.Draw();
         (void)AddsDisplay(entity);
@@ -1240,7 +1269,7 @@ void AddComponentPanel(Entity& entity) {
     }
 }
 
-void AddTagPanel() {
+void AddTagPanel(){
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(400, 500));
@@ -1249,9 +1278,9 @@ void AddTagPanel() {
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddTagPanel = false;
     }
+
     ImGui::OpenPopup("Tags");
     if (ImGui::BeginPopupModal("Tags", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
-
 
         Tags& tags = IDENTIFIERS.GetTags();
 
@@ -1417,7 +1446,7 @@ void DisplayEntity(Entity& entity)
     ImGui::PushID((int)entity.EUID());
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    bool enabled = curr_scene.IsActive(entity);
+    bool enabled = curr_scene.IsActive(entity,false);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
@@ -1677,7 +1706,7 @@ void EditorInspector::Update(float dt)
             ImGui::Indent();
             ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
             ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
-            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+            ImGui::TableSetupColumn("Input2", ImGuiTableColumnFlags_WidthFixed, 100.f);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));

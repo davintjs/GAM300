@@ -122,8 +122,11 @@ void EditorScene::ToolBar()
         ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        if (ImGui::Checkbox("Debug Drawing", &debug_draw)) {}
+        if (ImGui::Checkbox("Debug Drawing", &DEBUGDRAW.IsEnabled())) {}
         //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
+
+        ImGui::Dummy(ImVec2(20.f, 0.f));
+        if (ImGui::Checkbox("Frustum Culling", &RENDERER.EnableFrustumCulling())) {}
 
         ImGui::EndMenuBar();
     }
@@ -164,23 +167,39 @@ void EditorScene::SceneView()
                 Engine::HexID guid = data.guid;
 
                 Scene& curr_scene = MySceneManager.GetCurrentScene();
+                Scene::Layer& layer = curr_scene.layer;
 
-                if (data.type == MESH) {
+                if (data.type == MODELTYPE) {
                     //Create new entity
                     Entity* ent = curr_scene.Add<Entity>();
-                    //Add mesh renderer
-                    curr_scene.Add<MeshRenderer>(*ent);
-                    //Attach dragged mesh GUID from the content browser
-                    curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
-                    curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                    Transform& parent = curr_scene.Get<Transform>(*ent);
+                    curr_scene.Get<Tag>(*ent).name = data.name;
+                    delete[] data.name;
+                    data.name = nullptr; //delete data created for the name in payload
 
+                    //Get model 
+                    GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
+                    EVENTS.Publish(&e);
 
+                    auto model = e.importer;
 
-                    //undo/redo for entity
-                    /*Change newchange;
-                    newchange.entity = ent;
-                    newchange.action = CREATING;
-                    EDITOR.History.AddEntityChange(newchange);*/
+                    //create each submesh of the model
+                    for (auto& mesh : model->meshes) {
+                        Entity* new_ent = curr_scene.Add<Entity>();
+                        curr_scene.Add<MeshRenderer>(*new_ent);
+                        //Attach dragged mesh GUID from the content browser
+                        curr_scene.Get<MeshRenderer>(*new_ent).meshID = Engine::GUID<MeshAsset>(mesh);
+
+                        Transform& child = curr_scene.Get<Transform>(*new_ent);
+                        curr_scene.Add<Tag>(*new_ent);
+                        Tag& tag = curr_scene.Get<Tag>(*new_ent);
+                        GetAssetByGUIDEvent<MeshAsset> _mesh { mesh };
+                        EVENTS.Publish(&_mesh);
+                        tag.name = _mesh.asset->mFilePath.stem().string().c_str();
+
+                        //set the model submeshes to the parent group
+                        child.SetParent(&parent);
+                    }
                 }
                 else if (data.type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
@@ -203,6 +222,8 @@ void EditorScene::SceneView()
                 }
 
                 //add other file types here
+
+               
             }
             ImGui::EndDragDropTarget();
         }
@@ -303,6 +324,7 @@ void EditorScene::DisplayGizmos()
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
                     EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
@@ -336,6 +358,8 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
@@ -374,12 +398,13 @@ void EditorScene::DisplayGizmos()
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
                     EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
     }
 
-    // Display gizmos for selected entity
+    // Display gizmos & debug for selected entity
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
@@ -389,6 +414,20 @@ void EditorScene::DisplayGizmos()
         {
             if (fabs(trans.scale[i]) < 0.001f)
                 trans.scale[i] = 0.001f;
+        }
+
+        // Drawing box collider of selected object
+        if (currentScene.Has<BoxCollider>(entity))
+        {
+            BoxCollider& bc = currentScene.Get<BoxCollider>(entity);
+            RigidDebug currRigidDebug;
+            currRigidDebug.vao = MESHMANAGER.offsetAndBoundContainer[ASSET_CUBE].vao;
+            glm::mat4 SRT = trans.GetWorldMatrix();
+            glm::mat4 scalarMat = glm::scale(glm::mat4(1.f), glm::vec3(bc.dimensions));
+            glm::mat4 transMat = glm::translate(glm::mat4(1.f), glm::vec3(bc.offset));
+            SRT *= transMat * scalarMat;
+            currRigidDebug.SRT = SRT;
+            DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
         }
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();

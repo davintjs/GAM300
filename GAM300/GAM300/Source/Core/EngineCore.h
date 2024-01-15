@@ -44,6 +44,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/MeshManager.h"
 #include "ParticleSystem/ParticleSystem.h"
 #include "UISystem/UISystem.h"
+#include "Scene/Identifiers.h"
 
 #define MyEngineCore EngineCore::Instance()
 #define UPDATE_TIME 1.f;
@@ -99,6 +100,20 @@ public:
 	/**************************************************************************/
 	void Init()
 	{
+		IDENTIFIERS.physicsLayers[0] = Layer("Default");
+		IDENTIFIERS.physicsLayers[1] = Layer("TransparentFX");
+		IDENTIFIERS.physicsLayers[2] = Layer("Ignore Physics");
+		IDENTIFIERS.physicsLayers[3] = Layer("UI");
+		IDENTIFIERS.physicsLayers[4] = Layer("Water");
+		IDENTIFIERS.physicsLayers[5] = Layer("NavMesh");
+		IDENTIFIERS.physicsLayers[6] = Layer("Obstacle");
+		IDENTIFIERS.GetTags()["Untagged"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["PlayerAttack"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Player"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Enemy"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
 		//#ifndef _BUILD
@@ -110,11 +125,11 @@ public:
 		AUDIOMANAGER.InitAudioManager();
 		PHYSICS.PostSubscription();
 
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
+		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
 		#if defined(_BUILD)
 			MySceneManager.StartScene();
-		#else
-			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
-			EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
+			mode = ENUM_SYSTEM_RUNTIME;
 		#endif
 		update_timer = 0.f;
 		app_time = 0.f;

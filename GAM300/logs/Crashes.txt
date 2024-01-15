@@ -1,5 +1,5 @@
-[2023-11-24 15:40:21.620] [Error] [critical] 
-Caused By:	mAppDomain
-Info:		MONO APP DOMAIN NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 269)
+[2023-11-26 21:27:18.887] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
 

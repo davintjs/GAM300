@@ -136,6 +136,8 @@ namespace BeanFactory
         public void Stop() { InternalCalls.StopAnimation(this); }
         public float GetProgress() { return InternalCalls.GetProgress(this); }
         public void SetProgress(float value) { InternalCalls.SetProgress(this, value); }
+        public float GetSpeed() { return InternalCalls.GetSpeed(this); }
+        public void SetSpeed(float value) { InternalCalls.SetSpeed(this, value); }
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
         public string GetState() { return InternalCalls.GetState(this); }
@@ -266,6 +268,34 @@ namespace BeanFactory
             InternalCalls.ResetPather(this);
         }
         float mAgentSpeed;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class Camera
+    {
+        float padding;
+        float padding1;
+        vec4 backgroundColor;          // Default solid color when rendering
+        vec3 cameraPosition;           // The location of the viewer / eye (Center of the screen, 10 units away)
+        vec3 focalPoint;               // The look-at point / target point where the viewer is looking (Center of screen)
+        vec2 dimension;                // The dimension of the camera in width and height defined in pixels
+        
+        int cameraType;              // Type of camera
+
+        uint targetDisplay = 0;     // Target display for the camera
+
+        float width = 0f;                  // Pixel width of the camera
+        float height = 0f;                 // Pixel height of the camera
+        float pitch = 0f;                  // For rotating about the x axis
+        float yaw = 0f;                    // For rotating about the y axis
+        float roll = 0f;                   // For rotating about the z axis
+        float distanceCheck = 5f;          // The margin in which the camera will still render objects that are outside the camera's dimension
+
+        float aspect = 0f;                 // The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)
+        float nearClip = 0f;               // Distance of near clipping plane from the camera
+        float farClip = 0f;                // Distance of far clipping plane from the camera
+        public float fieldOfView = 0f;            // The vertical field of view in degrees
+        float focalLength = 0f;			// How close is the camera to the focal point
     }
     /*
         public class Camera : Component

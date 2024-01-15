@@ -74,14 +74,15 @@ ID: 2124126422752448800
 Script:
   m_GameObject: {fileID: 11651427043620866289}
   Script: {guid: 951d2373956a6a3883805d764974ea3b}
-  currentRestTimer: 2
+  duration: 0.649999976
+  mainMenuBGImage: {fileID: 0}
+  mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
+  pressStartText: {fileID: 15628350562473262138}  # GameObject
   isStartActive: true
-  restTimer: 0
   flickerTimer: 7.41286888e-43
-  duration: 1.17920949e-17
   timer: 7.41286888e-43
   back: true
-  rest: false
+  sizeMultiplier: 1.10000002
   bgm: {fileID: 12773935355036224696}  # Component
   uibutton: {fileID: 1586736388842185412}  # Component
 ---
@@ -211,7 +212,7 @@ AudioSource:
   m_GameObject: {fileID: 18376747485499058925}
   AudioChannel: 0
   Loop: true
-  Volume: 1
+  Volume: 0.699999988
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---
