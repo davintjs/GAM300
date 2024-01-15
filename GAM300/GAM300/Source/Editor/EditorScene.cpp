@@ -167,23 +167,39 @@ void EditorScene::SceneView()
                 Engine::HexID guid = data.guid;
 
                 Scene& curr_scene = MySceneManager.GetCurrentScene();
+                Scene::Layer& layer = curr_scene.layer;
 
-                if (data.type == MESH) {
+                if (data.type == MODELTYPE) {
                     //Create new entity
                     Entity* ent = curr_scene.Add<Entity>();
-                    //Add mesh renderer
-                    curr_scene.Add<MeshRenderer>(*ent);
-                    //Attach dragged mesh GUID from the content browser
-                    curr_scene.Get<MeshRenderer>(*ent).meshID = Engine::GUID<MeshAsset>(guid);
-                    curr_scene.Get<Tag>(*ent).name = "New Mesh";
+                    Transform& parent = curr_scene.Get<Transform>(*ent);
+                    curr_scene.Get<Tag>(*ent).name = data.name;
+                    delete[] data.name;
+                    data.name = nullptr; //delete data created for the name in payload
 
+                    //Get model 
+                    GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
+                    EVENTS.Publish(&e);
 
+                    auto model = e.importer;
 
-                    //undo/redo for entity
-                    /*Change newchange;
-                    newchange.entity = ent;
-                    newchange.action = CREATING;
-                    EDITOR.History.AddEntityChange(newchange);*/
+                    //create each submesh of the model
+                    for (auto& mesh : model->meshes) {
+                        Entity* new_ent = curr_scene.Add<Entity>();
+                        curr_scene.Add<MeshRenderer>(*new_ent);
+                        //Attach dragged mesh GUID from the content browser
+                        curr_scene.Get<MeshRenderer>(*new_ent).meshID = Engine::GUID<MeshAsset>(mesh);
+
+                        Transform& child = curr_scene.Get<Transform>(*new_ent);
+                        curr_scene.Add<Tag>(*new_ent);
+                        Tag& tag = curr_scene.Get<Tag>(*new_ent);
+                        GetAssetByGUIDEvent<MeshAsset> _mesh { mesh };
+                        EVENTS.Publish(&_mesh);
+                        tag.name = _mesh.asset->mFilePath.stem().string().c_str();
+
+                        //set the model submeshes to the parent group
+                        child.SetParent(&parent);
+                    }
                 }
                 else if (data.type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
@@ -206,6 +222,8 @@ void EditorScene::SceneView()
                 }
 
                 //add other file types here
+
+               
             }
             ImGui::EndDragDropTarget();
         }
@@ -306,6 +324,7 @@ void EditorScene::DisplayGizmos()
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
                     EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
@@ -339,6 +358,8 @@ void EditorScene::DisplayGizmos()
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
+                    EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
@@ -377,6 +398,7 @@ void EditorScene::DisplayGizmos()
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
                     EditorHierarchy::Instance().newselect = true;
+                    EditorHierarchy::Instance().movetoitem = true;
                 }
             }
         }
