@@ -161,6 +161,8 @@ public:
 	UINT32 bid1;
 	UINT32 bid2;
 
+	Vector3 p1;
+	Vector3 p2;
 
 	collisionOperation op;
 

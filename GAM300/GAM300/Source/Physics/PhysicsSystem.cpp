@@ -1191,7 +1191,6 @@ JPH::ValidateResult EngineContactListener::OnContactValidate(const JPH::Body& bo
 	return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
 void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) {
-	(void)manifold;
 	(void)ioSettings;
 	if (!pSystem)
 		return;
@@ -1201,7 +1200,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 		return;
 	}
 
-
+	/*DEBUG
 	//Scene& scene = MySceneManager.GetCurrentScene();
 
 	// Rigidbodies
@@ -1224,17 +1223,34 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	//	{
 	//		PRINT("Body2 Contact Added: ", scene.Get<Tag>(rb).name);
 	//	}
-	//}
+	//}*/
 
 	if (!body1.IsActive() && !body1.IsStatic() || !body2.IsActive() && !body2.IsStatic()) {
 		PRINT("no contact added as one of the bodies are sleeping\n");
 		return;
 	}
 
+	JPH::RVec3 p1 = manifold.GetWorldSpaceContactPointOn1(0);
+	JPH::RVec3 p2 = manifold.GetWorldSpaceContactPointOn2(0);
+
+	Vector3 vp1;
+	Vector3 vp2;
+
+	JoltVec3ToGlmVec3(p1, vp1);
+	JoltVec3ToGlmVec3(p2, vp2);
+
+
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
 	collisionResolution.emplace_back(EngineCollisionData(EngineCollisionData::collisionOperation::added));
 	collisionResolution.back().bid1 = body1.GetID().GetIndexAndSequenceNumber();
 	collisionResolution.back().bid2 = body2.GetID().GetIndexAndSequenceNumber();
+	collisionResolution.back().p1 = vp1;
+	collisionResolution.back().p1 = vp2;
+
+	std::cout << vp1.x << "|" << vp1.y << "|" << vp1.z << std::endl;
+	std::cout << vp2.x << "|" << vp2.y << "|" << vp2.z << std::endl;
+
+
 	//std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
