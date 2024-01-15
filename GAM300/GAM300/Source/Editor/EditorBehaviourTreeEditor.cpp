@@ -1,10 +1,10 @@
 /*!***************************************************************************************
-\file			EditorDebugger.cpp
+\file			EditorBehaviourTreeEditor.cpp
 \project
 \author         Joseph Ho
 
 \par			Course: GAM300
-\date           07/09/2023
+\date           15/01/2024
 
 \brief
     This file contains the definitions of the functions used for the Editor debugger window.
@@ -15,65 +15,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "EditorHeaders.h"
 #include "Core/EventsManager.h"
-//#include <imnodes.h>
-//
-//void EditorBehaviourTreeEditor::Init()
-//{
-//
-//}
-//
-//void EditorBehaviourTreeEditor::Update(float dt)
-//{
-//    ImGui::Begin("simple node editor");
-//
-//    ImNodes::BeginNodeEditor();
-//    ImNodes::BeginNode(1);
-//
-//    ImNodes::BeginNodeTitleBar();
-//    ImGui::TextUnformatted("simple node :)");
-//    ImNodes::EndNodeTitleBar();
-//
-//    ImNodes::BeginInputAttribute(2);
-//    ImGui::Text("input");
-//    ImNodes::EndInputAttribute();
-//
-//    ImNodes::BeginOutputAttribute(3);
-//    ImGui::Indent(40);
-//    ImGui::Text("output");
-//    ImNodes::EndOutputAttribute();
-//
-//    ImNodes::EndNode();
-//
-//    ImNodes::BeginNode(2);
-//
-//    ImNodes::BeginNodeTitleBar();
-//    ImGui::TextUnformatted("simple node 2:)");
-//    ImNodes::EndNodeTitleBar();
-//
-//    ImNodes::BeginInputAttribute(2);
-//    ImGui::Text("input");
-//    ImNodes::EndInputAttribute();
-//
-//    ImNodes::BeginOutputAttribute(3);
-//    ImGui::Indent(40);
-//    ImGui::Text("output");
-//    ImNodes::EndOutputAttribute();
-//
-//    ImNodes::EndNode();
-//
-//    ImNodes::EndNodeEditor();
-//
-//    ImGui::End();
-//    UNREFERENCED_PARAMETER(dt);
-//
-//}
-//
-//
-//void EditorBehaviourTreeEditor::Exit()
-//{
-//
-//}
-
 #include <imgui_node_editor.h>
 
 namespace ed = ax::NodeEditor;
