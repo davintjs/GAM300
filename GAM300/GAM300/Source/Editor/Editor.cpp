@@ -32,7 +32,8 @@ TemplatePack
     EditorDebugger,
     EditorHierarchy,
     EditorToolBar,
-    EditorPerformanceViewer
+    EditorPerformanceViewer,
+    EditorBehaviourTreeEditor
 >;
 
 //helper function to align imgui objects
@@ -140,8 +141,9 @@ void EditorSystem::Exit()
 
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
-    ImGui::DestroyContext();
     ImPlot::DestroyContext();
+    ImGui::DestroyContext();
+  
 }
 
 

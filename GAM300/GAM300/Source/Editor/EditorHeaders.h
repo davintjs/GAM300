@@ -345,4 +345,17 @@ public:
     std::map<std::string, ScrollingBuffer>system_plots;
 };
 
+ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
+{
+public:
+    // Initializing the Performance Viewer
+    void Init();
+
+    // Updating and displaying of the Performance Viewer
+    void Update(float dt);
+
+    // Exit the system
+    void Exit();
+};
+
 #endif // !EDITORHEADERS_H
