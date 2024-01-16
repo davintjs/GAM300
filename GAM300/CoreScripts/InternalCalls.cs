@@ -71,7 +71,6 @@ namespace BeanFactory
 
         #endregion
 
-
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool HasComponent(GameObject gameObject, Type componentType, out bool output);
@@ -181,9 +180,26 @@ namespace BeanFactory
         public static extern string GetLayerName(int layer);
         #endregion
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LockCursor(bool toggle);
+
         #region PARTICLES
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ParticlesPlayer(ParticleComponent particleComp);
+        #endregion
+
+        #region CAMERA
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetCameraTarget(Camera camera, ref vec3 position);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetRightVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetUpVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetForwardVec(Camera camera, ref vec3 temp);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

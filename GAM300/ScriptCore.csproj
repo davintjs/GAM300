@@ -43,6 +43,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnemyBullet.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
+    <Compile Include="Assets\Scripts\FreeLookCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\InstantDeath.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />

@@ -94,7 +94,7 @@ void DebugDraw::Draw()
 		DrawSegment3D(nearRightTop, nearLeftTop, color);
 
 		color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-		DrawSegment3D(camera.GetCameraPosition(), camera.GetFocalPoint(), color);
+		DrawSegment3D(camera.GetConstCameraPosition(), camera.GetConstFocalPoint(), color);
 	}
 
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();

@@ -95,9 +95,11 @@ public:
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
+	glm::vec3 GetConstCameraPosition() { return cameraPosition; }
 
 	void SetFocalPoint(const glm::vec3& _position);
 	glm::vec3 GetFocalPoint();
+	glm::vec3 GetConstFocalPoint() { return focalPoint; }
 	
 	glm::vec2& GetViewportSize() { return dimension; }
 	void SetViewportSize(const float& _width, const float& _height) { dimension = glm::vec2(_width, _height); }

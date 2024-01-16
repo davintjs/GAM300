@@ -273,6 +273,84 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class Camera
     {
+        public void LookAt(GameObject gameObject)
+        {
+            vec3 pos = gameObject.transform.position;
+            InternalCalls.SetCameraTarget(this, ref pos);
+        }
+
+        public void LookAt(vec3 position)
+        {
+            InternalCalls.SetCameraTarget(this, ref position);
+        }
+
+        public vec3 right
+        {
+            get
+            {
+                vec3 temp = new vec3();
+                InternalCalls.GetRightVec(this, ref temp);
+                return temp;
+            }
+        }
+
+        public vec3 up
+        {
+            get
+            {
+                vec3 temp = new vec3();
+                InternalCalls.GetUpVec(this, ref temp);
+                return temp;
+            }
+        }
+
+        public vec3 forward
+        {
+            get
+            {
+                vec3 temp = new vec3();
+                InternalCalls.GetForwardVec(this, ref temp);
+                return temp;
+            }
+        }
+
+        public float distance
+        {
+            get
+            {
+                return lookatDistance;
+            }
+
+            set
+            {
+                lookatDistance = value;
+            }
+        }
+
+        public vec3 targetPosition
+        {
+            get
+            {
+                return focalPoint;
+            }
+            set
+            {
+                focalPoint = value;
+            }
+        }
+
+        public vec3 position
+        {
+            get
+            {
+                return cameraPosition;
+            }
+            set
+            {
+                cameraPosition = value;
+            }
+        }
+
         float padding;
         float padding1;
         vec4 backgroundColor;          // Default solid color when rendering
@@ -291,11 +369,11 @@ namespace BeanFactory
         float roll = 0f;                   // For rotating about the z axis
         float distanceCheck = 5f;          // The margin in which the camera will still render objects that are outside the camera's dimension
 
-        float aspect = 0f;                 // The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)
-        float nearClip = 0f;               // Distance of near clipping plane from the camera
-        float farClip = 0f;                // Distance of far clipping plane from the camera
-        public float fieldOfView = 0f;            // The vertical field of view in degrees
-        float focalLength = 0f;			// How close is the camera to the focal point
+        float aspect = 0f;                  // The aspect ratio of the camera in width/height (Automatically calculated by screen's aspect ratio)
+        float nearClip = 0f;                // Distance of near clipping plane from the camera
+        float farClip = 0f;                 // Distance of far clipping plane from the camera
+        public float fieldOfView = 0f;      // The vertical field of view in degrees
+        public float lookatDistance = 0f;   // How close is the camera to the focal point
     }
     /*
         public class Camera : Component

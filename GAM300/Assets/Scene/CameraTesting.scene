@@ -15,17 +15,39 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 18257282462160694783}  # Transform
+    - component: {fileID: 10176912779457788996}  # BoxCollider
+    - component: {fileID: 3291228273636323295}  # Rigidbody
     - component: {fileID: 1059110447585278993}  # Camera
+    - component: {fileID: 7389669587234963426}  # Script
 ---
 ID: 18257282462160694783
 Transform:
   m_GameObject: {fileID: 16278920700866486295}
-  Translation: [-0.000460775191, 1, 2]
+  Translation: [-0.000460758427, 0, 2.21598315]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16118699231179159994}
+  Scale: [0.999963641, 1, 0.999964297]
+  Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 10176912779457788996
+BoxCollider:
+  m_GameObject: {fileID: 16278920700866486295}
+  Dimensions: [0.5, 0.5, 0.5]
+  Offset: [0, 0, 0]
+---
+ID: 3291228273636323295
+Rigidbody:
+  m_GameObject: {fileID: 16278920700866486295}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 0
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
 ---
 ID: 1059110447585278993
 Camera:
@@ -33,7 +55,7 @@ Camera:
   BackgroundColor: [2.70094824e-06, 4.04975256e-43, 9.1635593e-07, 4.04975256e-43]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  FocalLength: 10
+  LookAtDistance: 2.21598315
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -43,6 +65,23 @@ Camera:
   OcclusionCulling: false
   FrustumCulling: true
   DistanceCulling: 5
+---
+ID: 7389669587234963426
+Script:
+  m_GameObject: {fileID: 16278920700866486295}
+  Script: {guid: 3ef33e12f2af7ace50eb1751ead9f9d7}
+  maxPitchAngle: 170
+  yawRotSpeed: 1
+  zoomSpeed: 100
+  pitchRotSpeed: 1
+  minPitchAngle: -85
+  zoom: 1
+  initialZoom: 0
+  closestZoom: 0.5
+  furthestZoom: 6
+  invertPitch: true
+  isZooming: false
+  target: {fileID: 16118699231179159994}  # GameObject
 ---
 ID: 7666234419862097852
 GameObject:
@@ -110,17 +149,38 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 8135121923999773994}  # Transform
+    - component: {fileID: 78751327301332045}  # BoxCollider
+    - component: {fileID: 10720215249311076799}  # Rigidbody
     - component: {fileID: 6933131230110361704}  # MeshRenderer
 ---
 ID: 8135121923999773994
 Transform:
   m_GameObject: {fileID: 16129333488341075380}
-  Translation: [0, -0.974830389, -4.98033667]
+  Translation: [0, 0.0944944769, -4.98033667]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [4.22555208, 3.13614464, 1]
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 78751327301332045
+BoxCollider:
+  m_GameObject: {fileID: 16129333488341075380}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 10720215249311076799
+Rigidbody:
+  m_GameObject: {fileID: 16129333488341075380}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
 ---
 ID: 6933131230110361704
 MeshRenderer:
@@ -140,12 +200,11 @@ GameObject:
 ID: 18011821016250032765
 Transform:
   m_GameObject: {fileID: 16118699231179159994}
-  Translation: [0, 0, 0]
+  Translation: [0, -0.5, -3.15448761]
   Rotation: [0, 0, 0]
   Scale: [0.999963641, 1, 0.999964297]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 16278920700866486295}
     - {fileID: 12941493067179131619}
 ---
 ID: 12941493067179131619
@@ -161,7 +220,7 @@ GameObject:
 ID: 17755630289720571287
 Transform:
   m_GameObject: {fileID: 12941493067179131619}
-  Translation: [0, 0, 0]
+  Translation: [-0.0500000007, -0.5, 0]
   Rotation: [0, 0, 0]
   Scale: [0.5, 1, 0.5]
   Father: {fileID: 16118699231179159994}
@@ -173,3 +232,59 @@ MeshRenderer:
   m_GameObject: {fileID: 12941493067179131619}
   Mesh: {guid: 00000000000000000000000000000002}
   Material_ID: {guid: f67b91ede3c6182c8dfc1518c73ef90b}
+---
+ID: 1789157456902926470
+GameObject:
+  m_IsActive: true
+  m_Name: GameManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13190387787389243145}  # Transform
+    - component: {fileID: 12965999444121215550}  # Script
+---
+ID: 13190387787389243145
+Transform:
+  m_GameObject: {fileID: 1789157456902926470}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12965999444121215550
+Script:
+  m_GameObject: {fileID: 1789157456902926470}
+  Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
+  BGM_Source: {fileID: 15975615849785201915}  # Component
+  paused: false
+---
+ID: 17720782845642952101
+GameObject:
+  m_IsActive: true
+  m_Name: BGM
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2423091489534796435}  # Transform
+    - component: {fileID: 15975615849785201915}  # AudioSource
+---
+ID: 2423091489534796435
+Transform:
+  m_GameObject: {fileID: 17720782845642952101}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15975615849785201915
+AudioSource:
+  m_GameObject: {fileID: 17720782845642952101}
+  AudioChannel: 0
+  Loop: false
+  Volume: 1
+  Sound File: {guid: 2f171bf809d65c8fa2276a6f8cf127dc}
+  Play: false

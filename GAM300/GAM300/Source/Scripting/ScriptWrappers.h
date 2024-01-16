@@ -17,11 +17,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
 #include "IOManager/InputHandler.h"
+#include "IOManager/InputSystem.h"
 #include "Scene/SceneManager.h"
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/Animation/BaseAnimator.h"
+#include "Graphics/BaseCamera.h"
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 
@@ -100,11 +102,51 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
 
+	static void LockCursor(bool toggle)
+	{
+		InputSystem::Instance().LockCursor(toggle);
+	}
+	
+#pragma region TRANSFORM
+	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
+	{
+		Transform& transform = pTransform;
+		Transform& parent = pParent;
+		Object* obj = pParent;
+
+		// If the parent doesnt exist, set the parent of this transform to null
+		if (obj)
+			transform.SetParent(&parent);
+		else
+			transform.SetParent(nullptr);
+	}
+
+	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		position = t.GetTranslation();
+	}
+
+	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		rotation = t.GetRotation();
+	}
+
+	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		scale = t.GetScale();
+	}
+#pragma endregion
+
+#pragma region AUDIO
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+#pragma endregion
 
 #pragma region ANIMATOR
 	static void PlayAnimation(ScriptObject<Animator> pAnimator)
@@ -149,7 +191,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Animator& animator = pAnimator;
 		animator.SetSpeed(value);
 	}
-	
+
 	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
 	{
 		Animator& animator = pAnimator;
@@ -175,39 +217,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 #pragma endregion
-	
-#pragma region TRANSFORM
-	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
-	{
-		Transform& transform = pTransform;
-		Transform& parent = pParent;
-		Object* obj = pParent;
-
-		// If the parent doesnt exist, set the parent of this transform to null
-		if (obj)
-			transform.SetParent(&parent);
-		else
-			transform.SetParent(nullptr);
-	}
-
-	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
-	{
-		Transform& t = pTransform;
-		position = t.GetTranslation();
-	}
-
-	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
-	{
-		Transform& t = pTransform;
-		rotation = t.GetRotation();
-	}
-
-	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
-	{
-		Transform& t = pTransform;
-		scale = t.GetScale();
-	}
-#pragma endregion
 
 #pragma region PARTICLES
 
@@ -215,6 +224,34 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		ParticleComponent& p = particleComp;
 		p.particleLooping = (p.particleLooping ? false : true);
+	}
+
+#pragma endregion
+
+#pragma region CAMERA
+
+	static void SetCameraTarget(ScriptObject<Camera> pCamera, Vector3& position)
+	{
+		Camera& camera = pCamera;
+		camera.SetFocalPoint(position);
+	}
+
+	static void GetRightVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetRightVec();
+	}
+
+	static void GetUpVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetUpVec();
+	}
+
+	static void GetForwardVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetForwardVec();
 	}
 
 #pragma endregion
@@ -457,6 +494,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetMouseDelta);
 		Register(CloneGameObject);
 
+		// Input System
+		Register(LockCursor);
+
 		// Transform Component
 		Register(SetTransformParent);
 		Register(GetPosition);
@@ -481,6 +521,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Particle Component
 		Register(ParticlesPlayer);
+
+		// Camera Component
+		Register(SetCameraTarget);
+		Register(GetRightVec);
+		Register(GetUpVec);
+		Register(GetForwardVec);
 
 		// Tag Component
 		Register(GetTag);

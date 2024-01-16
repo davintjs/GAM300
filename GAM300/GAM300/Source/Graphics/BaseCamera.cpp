@@ -100,9 +100,9 @@ void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const floa
 
 void BaseCamera::Update()
 {
-	static float previousLookAtDistance = 0.f;
-	if (previousLookAtDistance != lookatDistance)
-		focalPoint = GetFocalPoint();
+	//static float previousLookAtDistance = 0.f;
+	//if (previousLookAtDistance != lookatDistance)
+	//	focalPoint = GetFocalPoint();
 
 	UpdateViewMatrix();
 
@@ -167,6 +167,8 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 	SetCameraPosition(_position);
 
 	SetCameraRotation(_rotation);
+
+	SetDistance(glm::length(focalPoint - cameraPosition));
 
 	Update();
 }
@@ -268,8 +270,6 @@ glm::vec3 BaseCamera::GetCameraPosition()
 void BaseCamera::SetFocalPoint(const glm::vec3& _position)
 {
 	focalPoint = _position;
-	glm::vec3 viewDirection = focalPoint - cameraPosition;
-	SetDistance(glm::length(viewDirection));
 }
 
 glm::vec3 BaseCamera::GetFocalPoint()
