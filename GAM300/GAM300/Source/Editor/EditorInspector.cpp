@@ -931,6 +931,7 @@ void DisplayLightProperties(LightSource& source) {
     else { //POINT LIGHT
         Display<Vector3>(lightpos, "Light Position", source.lightpos);
     }
+
 }
 
 //Helper function that displays all relevant fields and types in a component
@@ -1084,6 +1085,12 @@ void DisplayComponentHelper(T& component)
             }
             else if constexpr (std::is_same_v<T, LightSource>) {
                 DisplayLightProperties(component);
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();             
+                if (ImGui::Button("Bake Light")) {
+                    //Add bake function here (Euan)
+                }
             }
             else
             {
