@@ -47,10 +47,9 @@ struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
 
+    std::string name;
     Engine::HexID guid;
     filetype type;
-    char* name = nullptr;
-
 };
 
 struct BaseCamera;
@@ -291,6 +290,8 @@ public:
 
     bool material_inspector;
     bool model_inspector;
+
+    std::list<Engine::UUID>multiselectEntities;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;

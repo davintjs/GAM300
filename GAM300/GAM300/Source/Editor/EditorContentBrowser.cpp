@@ -140,9 +140,8 @@ void EditorContentBrowser::Update(float dt)
                 Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MODELTYPE;
-
-                payload.name = new char[filename.size() + 1];
-                strcpy(payload.name, filename.c_str());
+                payload.name = filename.c_str();
+                std::cout << payload.name << std::endl;
             }
             else if (ext == "material")
             {
@@ -155,8 +154,8 @@ void EditorContentBrowser::Update(float dt)
             else if (ext == "prefab") { //prefab files
 
             }
-            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, filepath.size() + 1);
 
+            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, sizeof(ContentBrowserPayload));
             ImGui::EndDragDropSource();
         }
 
