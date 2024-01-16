@@ -6,9 +6,9 @@ Material:
   Roughness: 1
   AmbientOcclusion: 1
   Emission: 1
-  AlbedoTexture: {guid: 4427d85db154efe1ece77f27845158dc}
+  AlbedoTexture: {guid: 78da8724d3a0140a6c31c66ed4cca6e5}
   NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: ae8ba44a108dcd11e3dc668b522a96ae}
-  RoughnessTexture: {guid: ca5ba457730cbe34dc69daf6b4ce10d1}
-  AoTexture: {guid: 1ba3fe667d8906dbbb332425849d7b0c}
-  EmissionTexture: {guid: 1ba3fe667d8906dbbb332425849d7b0c}
+  MetallicTexture: {guid: 5500145c065adb9ee758efaa8543e7a0}
+  RoughnessTexture: {guid: a5c24f7076737641d58cbad9e0dc3d83}
+  AoTexture: {guid: 78da8724d3a0140a6c31c66ed4cca6e5}
+  EmissionTexture: {guid: 9e8ad91de557a400990a4ef6152d6bf6}

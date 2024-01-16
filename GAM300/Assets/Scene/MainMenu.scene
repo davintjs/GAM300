@@ -33,7 +33,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  FocalLength: 10
+  LookAtDistance: 0.349982262
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45

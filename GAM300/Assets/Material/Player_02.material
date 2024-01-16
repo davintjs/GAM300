@@ -2,13 +2,13 @@ Material:
   Material Name: Player_02
   Shader: 0
   Albedo: [1, 1, 1, 1]
-  Metallic: 0
+  Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
   Emission: 0
-  AlbedoTexture: {guid: 9b21808f3d185902b2d1bdf654326856}
+  AlbedoTexture: {guid: 021d5c19b5a41ac3f8f668e37ef40393}
   NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 6bb3deb815454ac3222478a6b7a7f6d8}
-  AoTexture: {guid: 742a56f9d0d663a12c077be7c40ca6fa}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: da9dc7e3ae3f41e97440621172b9c9ba}
+  RoughnessTexture: {guid: f8d1e6291bad251891a69a5ebca5ae0b}
+  AoTexture: {guid: a017e57da03570b8c0f6396502dea97c}
+  EmissionTexture: {guid: 7b51b3b0849331bf775ad53abd62967a}
