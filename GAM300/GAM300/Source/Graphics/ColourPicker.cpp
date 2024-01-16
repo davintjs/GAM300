@@ -38,7 +38,6 @@ void ColourPicker::Init()
 
 void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 {
-	std::cout << "entering\n";
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -103,13 +102,11 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		}
 		else // Screen Space UI
 		{
-			std::cout << "in here\n";
 			projToUse = OrthoProjection;
 			viewToUse = IdentityMat;
 			srtToUse = transform.GetLocalMatrix();
 		}
 
-		std::cout << "gonna render this\n";
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -163,7 +160,6 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	std::cout << selectedID << "\n";
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
