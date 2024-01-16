@@ -4,10 +4,13 @@ using BeanFactory;
 using GlmSharp;
 using System;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Security.Policy;
 
 public class ThirdPersonController : Script
 {
+    public static ThirdPersonController instance;
     public float MoveSpeed = 5f;
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
@@ -30,7 +33,7 @@ public class ThirdPersonController : Script
     public GameObject playerWeaponCollider2;
     public GameObject playerWeaponCollider3;
     GameObject selectedWeaponCollider;
-    public Transform checkpoint2;
+    //public Transform checkpoint2;
 
     //public InstantDeath instantDeath;
 
@@ -43,6 +46,24 @@ public class ThirdPersonController : Script
     AnimationStateMachine animationManager;
 
     bool _isAttacking = false;
+
+    public int checkpointIndex = -1;
+    public bool isAtCheckpoint = false;
+    public Transform spawnPoint;
+    public Transform terminal1;
+    public Transform terminal2;
+
+    void Awake()
+    {
+        if (instance != null)
+        {
+            //Debug.LogError("More than one AudioManager in the scene.");
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     bool IsAttacking 
     {
@@ -194,11 +215,21 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
-        //restart game
+
+        ////testing spawnpoint
+        //if(Input.GetKeyDown(KeyCode.E))
+        //{
+        //    Console.WriteLine("NewCheckpoint");
+        //    player.localPosition = new vec3(spawnPoint.localPosition);
+        //}
+
+        //testing respawn
         if (Input.GetKey(KeyCode.R))
         {
-            Console.WriteLine("Restart");
-            SceneManager.LoadScene("LevelPlay2");
+            Console.WriteLine("Test Respawn");
+            player.localPosition = new vec3(spawnPoint.localPosition);
+            //player.localRotation = new vec3(spawnPoint.localRotation);
+            //SceneManager.LoadScene("LevelPlay2");
         }
 
         //death animation timer
@@ -207,8 +238,11 @@ public class ThirdPersonController : Script
             currentAnimationTimer -= Time.deltaTime;
             if (currentAnimationTimer <= 0.2)
             {
-                animator.Pause();//pause the death animation to prevent it from returning to idle animation
-                SceneManager.LoadScene("LevelPlay2");
+                currentAnimationTimer = animationTimer;
+                startDeathAnimationCountdown = false;
+                //animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                Respawn();
+                //SceneManager.LoadScene("LevelPlay2");
             }
         }
 
@@ -226,6 +260,11 @@ public class ThirdPersonController : Script
         {
             TakeDamage(1);
             isInvulnerable = true;
+        }
+        //testing heal
+        if(Input.GetKeyDown(KeyCode.Y))
+        {
+            HealHealth(1);
         }
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
@@ -360,18 +399,18 @@ public class ThirdPersonController : Script
         wasMoving = moved;
 
         UpdateRotation(dir);
-        //testing reset position
-        if (Input.GetKey(KeyCode.P))
-        {
-            Console.WriteLine("ResetPlayerPosition");
-            player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
-            player.localRotation = vec3.Radians(new vec3(0, 180, 0));
-        }
-        if (Input.GetKey(KeyCode.L))
-        {
-            Console.WriteLine("ResetPlayerPosition");
-            player.localPosition = new vec3(checkpoint2.localPosition);
-        }
+        ////testing reset position
+        //if (Input.GetKey(KeyCode.P))
+        //{
+        //    Console.WriteLine("ResetPlayerPosition");
+        //    player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
+        //    player.localRotation = vec3.Radians(new vec3(0, 180, 0));
+        //}
+        //if (Input.GetKey(KeyCode.L))
+        //{
+        //    Console.WriteLine("ResetPlayerPosition");
+        //    player.localPosition = new vec3(checkpoint2.localPosition);
+        //}
 
         CC.Move(movement);
 
@@ -381,6 +420,19 @@ public class ThirdPersonController : Script
         animationManager.UpdateState();
     }
 
+    public void Respawn()
+    {
+        Console.WriteLine("Respawn");
+        isDead = false;
+        healthStaminaCanvas.SetActive(true);
+        SetState("Death", false);
+        //animator.Play();
+        player.localPosition = new vec3(spawnPoint.localPosition);
+        HealHealth(maxHealth);
+        UpdatehealthBar();
+
+
+    }
     public void UpdatehealthBar()
     {
         //NOTE: tempoary disabled, not working currently
@@ -395,6 +447,11 @@ public class ThirdPersonController : Script
         //healthBarFill.GetComponent<Transform>().localScale = currentScale;
 
         //hard code the health bar for now
+        if(currentHealth == maxHealth)
+        {
+            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.65f, 0.857f, 3f);
+            healthBarFill.GetComponent<Transform>().localScale = new vec3(0.2f, -0.035f, 1f);
+        }
         if(currentHealth == 3)
         {
             healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
@@ -460,6 +517,22 @@ public class ThirdPersonController : Script
         }
     }
 
+    public void HealHealth(float amount)
+    {
+        currentHealth += amount;
+        UpdatehealthBar();
+
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        if(currentHealth == maxHealth)
+        {
+            Console.WriteLine("Health is Full");
+        }
+    }
+
+
     //Handle Movement Input
     vec3 GetDirection()
     {
@@ -490,7 +563,7 @@ public class ThirdPersonController : Script
         return dir.NormalizedSafe;
     }
 
-    void UpdateRotation(vec3 dir)
+    public void UpdateRotation(vec3 dir)
     {
         if (dir == vec3.Zero)
             return;
@@ -521,11 +594,16 @@ public class ThirdPersonController : Script
         }
     }
 
+
     void OnTriggerEnter(PhysicsComponent rb)
     {
         if (GetTag(rb) == "EnemyAttack")
         {
             //AudioManager.instance.playerInjured.Play();
+            TakeDamage(1);
+        }
+        if(GetTag(rb) == "SpinningPropeller")
+        {
             TakeDamage(1);
         }
         ////Not working
@@ -545,4 +623,10 @@ public class ThirdPersonController : Script
             TakeDamage(maxHealth);
         }
     }
+
+    void OnCollisionExit(PhysicsComponent rb)
+    {
+
+    }
+
 }
