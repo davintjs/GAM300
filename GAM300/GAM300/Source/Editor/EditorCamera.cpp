@@ -53,6 +53,7 @@ void EditorCamera::Update(float dt)
 	if (e.isHovered && InputHandler::getMouseScrollState() != 0) // Zooming
 		ZoomCamera();
 
+	cameraPosition = GetCameraPosition();
 	BaseCamera::Update();
 }
 
@@ -139,9 +140,9 @@ void EditorCamera::FocusOnObject(float dt)
 			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
 			targetFP = t.GetTranslation();
 			glm::vec3 scale = t.GetScale();
-			targetFL = std::max(1.f, 10.f * cbrt((scale.x * scale.y * scale.z) * 0.5f));
+			targetFD = std::max(1.f, 10.f * cbrt((scale.x * scale.y * scale.z) * 0.5f));
 			initialFP = focalPoint;
-			initialFL = focalLength;
+			initialFD = lookatDistance;
 			timer = 0.f;
 			isFocusing = true;
 		}
@@ -150,7 +151,7 @@ void EditorCamera::FocusOnObject(float dt)
 	if (timer < duration && isFocusing)
 	{
 		focalPoint = Interpolate(initialFP, targetFP, timer, duration, EASINGTYPE::BEZIER);
-		focalLength = Interpolate(initialFL, targetFL, timer, duration, EASINGTYPE::BEZIER);
+		lookatDistance = Interpolate(initialFD, targetFD, timer, duration, EASINGTYPE::BEZIER);
 		timer += dt;
 	}
 }
@@ -182,23 +183,23 @@ void EditorCamera::PanCamera(const glm::vec2& _delta)
 {
 	//std::cout << "Panning\n";
 	glm::vec2 panSpeed = GetPanSpeed();
-	focalPoint += -GetRightVec() * _delta.x * panSpeed.x * GetFocalLength();
-	focalPoint += GetUpVec() * _delta.y * panSpeed.y * GetFocalLength();
+	focalPoint += -GetRightVec() * _delta.x * panSpeed.x * GetDistance();
+	focalPoint += GetUpVec() * _delta.y * panSpeed.y * GetDistance();
 }
 
 void EditorCamera::ZoomCamera()
 {
-	focalLength -= InputHandler::getMouseScrollState() * GetZoomSpeed();
-	if (focalLength < 0.1f)
+	lookatDistance -= InputHandler::getMouseScrollState() * GetZoomSpeed();
+	if (lookatDistance < 0.1f)
 	{
 		focalPoint += GetForwardVec();
-		focalLength = 0.15f;
+		lookatDistance = 0.15f;
 	}
 }
 
 float EditorCamera::GetZoomSpeed()
 {
-	float distance = focalLength * 0.2f;
+	float distance = lookatDistance * 0.2f;
 	distance = std::max(distance, 0.f);
 	float speed = distance * distance;
 	speed = std::min(speed, 100.0f); // max speed = 100

@@ -42,7 +42,7 @@
     <ClCompile Include="Source\Editor\EditorTemplates.cpp" />
     <ClCompile Include="Source\Graphics\Framebuffer.cpp" />
     <ClCompile Include="Source\Utilities\FileWatcher.cpp" />
-    <ClCompile Include="Source\Graphics\TextureManager.cpp" />
+    <ClCompile Include="Source\Graphics\Texture\TextureManager.cpp" />
     <ClCompile Include="Source\Editor\EditorScene.cpp" />
     <ClCompile Include="Source\Editor\EditorMenuBar.cpp" />
     <ClCompile Include="Source\Editor\EditorContentBrowser.cpp" />
@@ -115,6 +115,7 @@
     <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.cpp" />
     <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Source\Graphics\Text.cpp" />
+    <ClCompile Include="Source\AssetManager\TextureCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -162,7 +163,7 @@
     <ClInclude Include="Source\Graphics\Framebuffer.h" />
     <ClInclude Include="Source\Core\FileTypes.h" />
     <ClInclude Include="Source\Utilities\FileWatcher.h" />
-    <ClInclude Include="Source\Graphics\TextureManager.h" />
+    <ClInclude Include="Source\Graphics\Texture\TextureManager.h" />
     <ClInclude Include="Source\Editor\EditorHeaders.h" />
     <ClInclude Include="Source\AI\NavMeshBuilder.h" />
     <ClInclude Include="Source\AI\Polygon.h" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.h" />
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.h" />
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="Source\AssetManager\TextureCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />

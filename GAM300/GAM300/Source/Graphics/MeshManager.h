@@ -22,7 +22,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "GraphicStructsAndClass.h"
 
-#include "TextureManager.h"
+#include "Texture/TextureManager.h"
 
 
 #include "Model3d.h"

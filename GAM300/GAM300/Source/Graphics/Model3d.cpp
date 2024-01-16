@@ -17,7 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Model3d.h"
 #include "GraphicsHeaders.h"
-#include "TextureManager.h"
+#include "Texture/TextureManager.h"
 
 #include "Editor/EditorCamera.h"
 

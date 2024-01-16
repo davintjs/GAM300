@@ -156,9 +156,6 @@ void SceneManager::StartScene()
 	NavMeshBuildEvent e;
 	EVENTS.Publish(&e);
 
-	InputSystem::Instance().LockCursor(true);
-
-
 	SceneStartEvent startEvent{};
 	EVENTS.Publish(&startEvent);
 }

@@ -85,5 +85,10 @@ namespace BeanFactory
             InternalCalls.GetGameNDC(out vec2 pos);
             return pos;
         }
+
+        public static void LockCursor(bool toggle)
+        {
+            InternalCalls.LockCursor(toggle);
+        }
     }
 }

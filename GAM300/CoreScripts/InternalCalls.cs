@@ -71,7 +71,6 @@ namespace BeanFactory
 
         #endregion
 
-
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool HasComponent(GameObject gameObject, Type componentType, out bool output);
@@ -138,7 +137,7 @@ namespace BeanFactory
         public static extern void AudioMute(bool mute);
         #endregion	
 
-        #region INPUT
+        #region INPUT_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);
 
@@ -153,6 +152,14 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetMousePosition(out GlmSharp.vec2 pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LockCursor(bool toggle);
+        #endregion
+
+        #region PHYSICS_SYSTEM
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
         #endregion
 
         #region TEXT
@@ -184,6 +191,20 @@ namespace BeanFactory
         #region PARTICLES
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ParticlesPlayer(ParticleComponent particleComp);
+        #endregion
+
+        #region CAMERA
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetCameraTarget(Camera camera, ref vec3 position);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetRightVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetUpVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetForwardVec(Camera camera, ref vec3 temp);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
