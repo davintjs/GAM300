@@ -29,8 +29,10 @@ public class EnemyHealthBar : Script
         pDir = pDir.Normalized;
         UpdateRotation(pDir);
 
-        transform.localRotation.x = 0.0f;
-        transform.localRotation.z = 0.0f;
+        vec3 rot = transform.localRotation;
+        rot.x = 0.0f;
+        rot.z = 0.0f;
+        transform.localRotation = rot;
 
     }
     void UpdateRotation(vec3 dir)

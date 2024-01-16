@@ -789,10 +789,25 @@ void DisplayShaders(Change& change, T& value) {
 //Displays all the properties of an given entity
 template <typename T>
 void Display_Property(T& comp) {
-
+    if constexpr (std::is_same_v<T, Transform>)
+    {
+        Change newchange(&comp, "TransformationMtx");
+        //Change transformChange(&comp, entry.first);
+        Vector3 pos = comp.GetLocalTranslation();
+        Vector3 rot = comp.GetLocalRotation();
+        Vector3 scale = comp.GetLocalScale();
+        Display(newchange, "Translation", pos);
+        Display(newchange, "Rotation", rot);
+        Display(newchange, "Scale", scale);
+        comp.SetLocalPosition(pos);
+        comp.SetLocalRotation(rot);
+        comp.SetLocalScale(scale);
+        return;
+    }
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
+
             if (!Flags.m_isDontShow) {
                 auto entry = property::entry { PropertyName, Data };
                 std::visit([&](auto& Value) {

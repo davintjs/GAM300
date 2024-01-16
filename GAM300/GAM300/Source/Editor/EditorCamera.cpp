@@ -138,8 +138,8 @@ void EditorCamera::FocusOnObject(float dt)
 		if (e.pEntity)
 		{
 			Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(*e.pEntity);
-			targetFP = t.GetTranslation();
-			glm::vec3 scale = t.GetScale();
+			targetFP = t.GetGlobalTranslation();
+			glm::vec3 scale = t.GetGlobalScale();
 			targetFD = std::max(1.f, 10.f * cbrt((scale.x * scale.y * scale.z) * 0.5f));
 			initialFP = focalPoint;
 			initialFD = lookatDistance;

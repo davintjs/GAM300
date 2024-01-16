@@ -130,7 +130,7 @@ void Renderer::Update(float)
 		
 		Transform& transform = currentScene.Get<Transform>(entity);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
-		const glm::vec3 position = transform.GetTranslation();
+		const glm::vec3 position = transform.GetGlobalTranslation();
 
 		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
 		if (!t_Mesh) continue;

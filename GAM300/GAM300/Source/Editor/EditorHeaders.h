@@ -195,6 +195,8 @@ public:
     
     void DisplayGizmos();
 
+    int GetCoordSelectionMode() { return coord_selection; }
+
     // Exit the system
     void Exit();
 
@@ -218,6 +220,8 @@ private:
     bool windowFocused = false;
     bool inOperation = false;
     bool debug_draw = false;
+
+    int coord_selection = 1;
 };
 
 ENGINE_EDITOR_SYSTEM(EditorGame)

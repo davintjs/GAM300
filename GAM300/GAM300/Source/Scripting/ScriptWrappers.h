@@ -122,39 +122,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 #pragma endregion
-	
-#pragma region TRANSFORM
-	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
-	{
-		Transform& transform = pTransform;
-		Transform& parent = pParent;
-		Object* obj = pParent;
-
-		// If the parent doesnt exist, set the parent of this transform to null
-		if (obj)
-			transform.SetParent(&parent);
-		else
-			transform.SetParent(nullptr);
-	}
-
-	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
-	{
-		Transform& t = pTransform;
-		position = t.GetTranslation();
-	}
-
-	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
-	{
-		Transform& t = pTransform;
-		rotation = t.GetRotation();
-	}
-
-	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
-	{
-		Transform& t = pTransform;
-		scale = t.GetScale();
-	}
-#pragma endregion
 
 #pragma region AUDIO
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
@@ -232,6 +199,93 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(animator.GetCurrentState()->label);
 	}
 
+#pragma endregion
+	
+#pragma region TRANSFORM
+	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
+	{
+		Transform& transform = pTransform;
+		Transform& parent = pParent;
+		Object* obj = pParent;
+
+		// If the parent doesnt exist, set the parent of this transform to null
+		if (obj)
+			transform.SetParent(&parent);
+		else
+			transform.SetParent(nullptr);
+	}
+
+	static void GetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		position = t.GetGlobalTranslation();
+	}
+
+	static void GetWorldRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		rotation = t.GetGlobalRotation();
+	}
+
+	static void GetWorldScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		scale = t.GetGlobalScale();
+	}
+
+	static void GetLocalPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		position = t.GetLocalTranslation();
+	}
+
+	static void GetLocalRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		rotation = t.GetLocalRotation();
+	}
+
+	static void GetLocalScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		scale = t.GetLocalScale();
+	}
+
+	static void SetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalPosition(position);
+	}
+
+	static void SetWorldRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalRotation(rotation);
+	}
+
+	static void SetWorldScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalScale(scale);
+	}
+
+	static void SetLocalPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		t.SetLocalPosition(position);
+	}
+
+	static void SetLocalRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		t.SetLocalRotation(rotation);
+	}
+
+	static void SetLocalScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		t.SetLocalScale(scale);
+	}
 #pragma endregion
 
 #pragma region PARTICLES
@@ -516,9 +570,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Transform Component
 		Register(SetTransformParent);
-		Register(GetPosition);
-		Register(GetRotation);
-		Register(GetScale);
+		Register(GetWorldPosition);
+		Register(GetWorldRotation);
+		Register(GetWorldScale);
+		Register(GetLocalPosition);
+		Register(GetLocalRotation);
+		Register(GetLocalScale);
+		Register(SetWorldPosition);
+		Register(SetWorldRotation);
+		Register(SetWorldScale);
+		Register(SetLocalPosition);
+		Register(SetLocalRotation);
+		Register(SetLocalScale);
 
 		// Audio Component
 		Register(AudioSourcePlay);

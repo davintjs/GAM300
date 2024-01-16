@@ -334,9 +334,7 @@ void EditorHierarchy::Update(float dt)
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
 
-				newtransform.scale = Vector3(1.f, 1.f, 1.f);
-				newtransform.translation = Vector3();
-				newtransform.rotation = Vector3();
+				newtransform.SetLocalMatrix(Vector3(), Vector3(), Vector3(1.f));
 			}
 
 			std::string name = "Delete Entity";

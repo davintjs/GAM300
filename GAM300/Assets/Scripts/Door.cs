@@ -45,7 +45,9 @@ public class Door : Script
                 currDisplacement -= displacement - displaced;
                 temp = true;
             }
-            door.localPosition.y += currDisplacement;
+            vec3 pos = door.localPosition;
+            pos.y += currDisplacement;
+            transform.position = pos;
 
             //transform.localPosition.y = 100f;
             //temp = true;

@@ -187,6 +187,7 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
                         if (Flags.m_isReference)
                         {
                             out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                            out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
                             out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
                         }
                         else
@@ -209,6 +210,9 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     if constexpr (std::is_same<T, Transform>())
     {
         out << YAML::Key << "m_Children" << YAML::Value << Child{ _component.child, MySceneManager.GetCurrentScene()};
+        out << YAML::Key << "Translation" << YAML::Value << _component.GetLocalTranslation();
+        out << YAML::Key << "Rotation" << YAML::Value << _component.GetLocalRotation();
+        out << YAML::Key << "Scale" << YAML::Value << _component.GetLocalScale();
     }
 
     if constexpr (std::is_same<T, Script>())
@@ -482,6 +486,7 @@ void DeserializeComponent(const DeComHelper& _helper)
                 }
             , entry.second);
         });
+    
     if (!_helper.linker)
     {
         // Store in entity
@@ -496,6 +501,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             {
                 T& transform = _scene.Get<T>(component.EUID());
                 transform = component;
+                transform.TempSetLocal(node["Translation"].as<Vector3>(), node["Rotation"].as<Vector3>(), node["Scale"].as<Vector3>());
             }
             else if constexpr (std::is_same<Tag, T>())
             {
@@ -562,6 +568,14 @@ void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data)
             //PRINT("Loading " + name + " component... \n");
             DeComHelper helper{ &node, &_scene, true };
             DeserializeComponent(ComponentTypes[name], &helper);
+        }
+    }
+
+    for (Transform& transform : _scene.GetArray<Transform>())
+    {
+        if (transform.parent == 0)
+        {
+            transform.RecalculateLocalMatrices();
         }
     }
 }

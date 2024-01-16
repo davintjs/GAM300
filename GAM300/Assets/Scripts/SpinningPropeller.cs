@@ -24,20 +24,25 @@ public class SpinningPropeller : Script
         if (rotateClockwise && !rotateAntiClockwise)
         {
             rotateAntiClockwise = false;
-            transform.localRotation = new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
+
+            vec3 rot = new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
 
             //reset rotation so it only rotates z axis
-            transform.localRotation.x = 0f;
-            transform.localRotation.y = 0f;
+            rot.x = 0f;
+            rot.y = 0f;
+
+            transform.localRotation = rot;
         }
         if (rotateAntiClockwise && !rotateClockwise)
         {
             rotateClockwise = false;
-            transform.localRotation = new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
+            vec3 rot = new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
 
             //reset rotation so it only rotates z axis
-            transform.localRotation.x = 0f;
-            transform.localRotation.y = 0f;
+            rot.x = 0f;
+            rot.y = 0f;
+
+            transform.localRotation = rot;
         }
     }
 }
