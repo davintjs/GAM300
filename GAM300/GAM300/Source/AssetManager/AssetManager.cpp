@@ -60,6 +60,11 @@ void AssetManager::Compile(const fs::path& path)
 bool AssetManager::IsCompilable(const fs::path& path)
 {
 	//Read metafile
+	//if (path.extension() == ".jpg" || path.extension() == ".png")
+	//{
+	//	return true;
+	//}
+
 	return COMPILABLE_EXTENSIONS.contains(path.extension()) && assets.IsModified(path);
 }
 
