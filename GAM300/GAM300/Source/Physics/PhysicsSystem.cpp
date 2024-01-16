@@ -772,6 +772,7 @@ void PhysicsSystem::UpdateGameObjects() {
 		else if (scene.Has<SphereCollider>(entity)) {
 			t.SetGlobalPosition(static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3()));
 		}
+		//t.SetGlobalPosition(tmpVec);
 		//t.translation = tmpVec;
 
 		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);

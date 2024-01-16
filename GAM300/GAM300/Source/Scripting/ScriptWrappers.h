@@ -122,39 +122,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	}
 
 #pragma endregion
-	
-#pragma region TRANSFORM
-	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
-	{
-		Transform& transform = pTransform;
-		Transform& parent = pParent;
-		Object* obj = pParent;
-
-		// If the parent doesnt exist, set the parent of this transform to null
-		if (obj)
-			transform.SetParent(&parent);
-		else
-			transform.SetParent(nullptr);
-	}
-
-	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
-	{
-		Transform& t = pTransform;
-		position = t.GetTranslation();
-	}
-
-	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
-	{
-		Transform& t = pTransform;
-		rotation = t.GetRotation();
-	}
-
-	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
-	{
-		Transform& t = pTransform;
-		scale = t.GetScale();
-	}
-#pragma endregion
 
 #pragma region AUDIO
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
