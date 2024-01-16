@@ -170,6 +170,19 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
 
     out << YAML::Key << "m_GameObject" << YAML::Key << YAML::Flow << YAML::BeginMap;
     out << YAML::Key << "fileID" << YAML::Value << _component.EUID() << YAML::EndMap;
+
+    if constexpr (std::is_same<T, Transform>())
+    {
+        out << YAML::Key << "Translation" << YAML::Value << _component.GetLocalTranslation();
+        out << YAML::Key << "Rotation" << YAML::Value << _component.GetLocalRotation();
+        out << YAML::Key << "Scale" << YAML::Value << _component.GetLocalScale();
+        out << YAML::Key << "Father" << YAML::Key << YAML::Flow << YAML::BeginMap;
+        out << YAML::Key << "fileID" << YAML::Value << _component.parent << YAML::EndMap;
+        out << YAML::Key << "m_Children" << YAML::Value << Child{ _component.child, MySceneManager.GetCurrentScene() };
+        out << YAML::EndMap << YAML::EndMap;
+        return true;
+    }
+
     property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
             auto entry = property::entry { PropertyName, Data };
@@ -186,7 +199,6 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
                         // Store Component value
                         if (Flags.m_isReference)
                         {
-                            out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
                             out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
                             out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
                         }
@@ -207,13 +219,6 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
             }
         });
 
-    if constexpr (std::is_same<T, Transform>())
-    {
-        out << YAML::Key << "m_Children" << YAML::Value << Child{ _component.child, MySceneManager.GetCurrentScene()};
-        out << YAML::Key << "Translation" << YAML::Value << _component.GetLocalTranslation();
-        out << YAML::Key << "Rotation" << YAML::Value << _component.GetLocalRotation();
-        out << YAML::Key << "Scale" << YAML::Value << _component.GetLocalScale();
-    }
 
     if constexpr (std::is_same<T, Script>())
         SerializeScript(out, _component);
