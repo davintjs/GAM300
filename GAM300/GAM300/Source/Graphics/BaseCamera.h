@@ -164,6 +164,7 @@ protected:
 	bool useOcclusionCulling = false;	// Bean: A feature to be implemented in the future
 	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
 	bool enableHDR = true;				// High dynamic range rendering
+	bool setFocalPoint = false;			// Is the focal point being set via script
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix

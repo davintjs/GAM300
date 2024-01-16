@@ -23,7 +23,7 @@ GameObject:
 ID: 18257282462160694783
 Transform:
   m_GameObject: {fileID: 16278920700866486295}
-  Translation: [-0.000460758427, 0, 2.21598315]
+  Translation: [0, 0, -0.15446049]
   Rotation: [0, 0, 0]
   Scale: [0.999963641, 1, 0.999964297]
   Father: {fileID: 0}
@@ -55,7 +55,7 @@ Camera:
   BackgroundColor: [2.70094824e-06, 4.04975256e-43, 9.1635593e-07, 4.04975256e-43]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 2.21598315
+  LookAtDistance: 10.0163231
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -70,18 +70,18 @@ ID: 7389669587234963426
 Script:
   m_GameObject: {fileID: 16278920700866486295}
   Script: {guid: 3ef33e12f2af7ace50eb1751ead9f9d7}
+  target: {fileID: 16118699231179159994}  # GameObject
   maxPitchAngle: 170
   yawRotSpeed: 1
-  zoomSpeed: 100
+  defaultZoom: 4
+  invertPitch: true
   pitchRotSpeed: 1
   minPitchAngle: -85
   zoom: 1
-  initialZoom: 0
-  closestZoom: 0.5
+  zoomSpeed: 50
+  zoomInSpeed: 2
+  closestZoom: 1
   furthestZoom: 6
-  invertPitch: true
-  isZooming: false
-  target: {fileID: 16118699231179159994}  # GameObject
 ---
 ID: 7666234419862097852
 GameObject:
@@ -188,25 +188,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 283b4d530ddbba0170927e5c18040b4f}
 ---
-ID: 16118699231179159994
-GameObject:
-  m_IsActive: true
-  m_Name: Player
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18011821016250032765}  # Transform
----
-ID: 18011821016250032765
-Transform:
-  m_GameObject: {fileID: 16118699231179159994}
-  Translation: [0, -0.5, -3.15448761]
-  Rotation: [0, 0, 0]
-  Scale: [0.999963641, 1, 0.999964297]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 12941493067179131619}
----
 ID: 12941493067179131619
 GameObject:
   m_IsActive: true
@@ -288,3 +269,22 @@ AudioSource:
   Volume: 1
   Sound File: {guid: 2f171bf809d65c8fa2276a6f8cf127dc}
   Play: false
+---
+ID: 16118699231179159994
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18011821016250032765}  # Transform
+---
+ID: 18011821016250032765
+Transform:
+  m_GameObject: {fileID: 16118699231179159994}
+  Translation: [0, -0.5, -3.15448761]
+  Rotation: [0, 0, 0]
+  Scale: [0.999963641, 1, 0.999964297]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 12941493067179131619}

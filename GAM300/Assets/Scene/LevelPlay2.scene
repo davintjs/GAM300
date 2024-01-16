@@ -7,6 +7,84 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 15334681090738628473
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 813583600382484493}  # Transform
+    - component: {fileID: 13289674208847301450}  # BoxCollider
+    - component: {fileID: 9602094201302816282}  # Rigidbody
+    - component: {fileID: 16773315215798417911}  # Camera
+    - component: {fileID: 12100504774977972383}  # Script
+---
+ID: 813583600382484493
+Transform:
+  m_GameObject: {fileID: 15334681090738628473}
+  Translation: [-19.8676071, 2.19999647, 24.7202797]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998331, 1, 0.999998331]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13289674208847301450
+BoxCollider:
+  m_GameObject: {fileID: 15334681090738628473}
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 9602094201302816282
+Rigidbody:
+  m_GameObject: {fileID: 15334681090738628473}
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 16773315215798417911
+Camera:
+  m_GameObject: {fileID: 15334681090738628473}
+  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  LookAtDistance: 50.6245079
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 50
+---
+ID: 12100504774977972383
+Script:
+  m_GameObject: {fileID: 15334681090738628473}
+  Script: {guid: f204530c811d06247b59f2ef14dd1085}
+  target: {fileID: 6663313825132233637}  # GameObject
+  maxPitchAngle: 170
+  yawRotSpeed: 2.20000005
+  defaultZoom: 4
+  invertPitch: true
+  pitchRotSpeed: 1
+  minPitchAngle: -85
+  zoom: 5.00000143
+  zoomSpeed: 50
+  zoomInSpeed: 10
+  closestZoom: 2
+  furthestZoom: 6
+  isZooming: false
+  timer: 0
+---
 ID: 5342434905140024301
 GameObject:
   m_IsActive: true
@@ -106,6 +184,7 @@ Script:
   m_GameObject: {fileID: 11768379503594195228}
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
   BGM_Source: {fileID: 688516125537709214}  # Component
+  paused: false
 ---
 ID: 14088906961581824457
 GameObject:
@@ -7370,7 +7449,7 @@ Rigidbody:
 ID: 6663313825132233637
 GameObject:
   m_IsActive: true
-  m_Name: CamYawPivot
+  m_Name: CameraTarget
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -7379,50 +7458,12 @@ GameObject:
 ID: 12260939983537743611
 Transform:
   m_GameObject: {fileID: 6663313825132233637}
-  Translation: [0, 0, 0]
+  Translation: [0, 0.726740837, 0.000121787118]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 3977294589520766028}
   m_Children:
-    - {fileID: 1999010381617278315}
----
-ID: 12396120015401798445
-GameObject:
-  m_IsActive: true
-  m_Name: CamPitchPivot
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5486978972995986398}  # Transform
----
-ID: 5486978972995986398
-Transform:
-  m_GameObject: {fileID: 12396120015401798445}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 1999010381617278315}
-  m_Children:
-    - {fileID: 15334681090738628473}
----
-ID: 1999010381617278315
-GameObject:
-  m_IsActive: true
-  m_Name: CamMovePivot
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18236078067295892990}  # Transform
----
-ID: 18236078067295892990
-Transform:
-  m_GameObject: {fileID: 1999010381617278315}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 6663313825132233637}
-  m_Children:
-    - {fileID: 12396120015401798445}
+    []
 ---
 ID: 18364898161930433210
 GameObject:
@@ -7484,7 +7525,7 @@ Animator:
   Animation: {guid: f1b3a33db0e1177bb89dc531d57040fd}
   Current State: Idle
   Next State: Idle
-  Time: 11.5516415
+  Time: 23.5764523
   StartTime: 2
   EndTime: 61
   Playing: true
@@ -8086,63 +8127,6 @@ MeshRenderer:
   m_GameObject: {fileID: 10015289015139343800}
   Mesh: {guid: cd407c4e87d9f12affc853c655f1c330}
   Material_ID: {guid: 6dd08aa60dd54e24819e8552a3b189f6}
----
-ID: 15334681090738628473
-GameObject:
-  m_IsActive: true
-  m_Name: Camera
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 813583600382484493}  # Transform
-    - component: {fileID: 16773315215798417911}  # Camera
-    - component: {fileID: 12100504774977972383}  # Script
----
-ID: 813583600382484493
-Transform:
-  m_GameObject: {fileID: 15334681090738628473}
-  Translation: [-1.90734863e-06, 0.999996185, -5.00000095]
-  Rotation: [-3.14159203, 0, 3.14159203]
-  Scale: [0.999999046, 1, 0.999999046]
-  Father: {fileID: 12396120015401798445}
-  m_Children:
-    []
----
-ID: 16773315215798417911
-Camera:
-  m_GameObject: {fileID: 15334681090738628473}
-  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
-  ClearFlags: "\x01"
-  CullingMask: "\x00"
-  FocalLength: 10
-  NearClip: 0.100000001
-  FarClip: 100
-  FieldOfView: 45
-  Orthographic: false
-  TargetDisplay: 0
-  HDR: true
-  OcclusionCulling: false
-  FrustumCulling: true
-  DistanceCulling: 50
----
-ID: 12100504774977972383
-Script:
-  m_GameObject: {fileID: 15334681090738628473}
-  Script: {guid: f204530c811d06247b59f2ef14dd1085}
-  MaxPitchAngle: 170
-  YawRotSpeed: 1800
-  CamYawPivot: {fileID: 6663313825132233637}  # Component
-  InvertPitch: false
-  PitchRotSpeed: 180
-  CamPitchPivot: {fileID: 12396120015401798445}  # Component
-  MinPitchAngle: -85
-  CamMovePivot: {fileID: 1999010381617278315}  # Component
-  exitTrigger: false
-  closestZoom: 3.5
-  furthestZoom: 8
-  zoomSpeed: 50
-  zoom: 5.00000143
-  timer: 0
 ---
 ID: 17145839964191952887
 GameObject:
@@ -15565,7 +15549,7 @@ ID: 18246905878658813158
 Transform:
   m_GameObject: {fileID: 3977294589520766028}
   Translation: [-19.867609, 1.19999874, 19.7202816]
-  Rotation: [-3.14159203, 0, -3.14159203]
+  Rotation: [-3.14159274, 0, -3.14159274]
   Scale: [0.999999285, 1, 0.999999285]
   Father: {fileID: 0}
   m_Children:
@@ -15599,19 +15583,16 @@ Script:
   CC: {fileID: 15939117778428800744}  # Component
   animator: {fileID: 6628232525372413625}  # Component
   audioSource: {fileID: 16716648517964172389}  # Component
+  PlayerCamera: {fileID: 15334681090738628473}  # Component
   MoveSpeed: 400
   JumpSpeed: 7
   player: {fileID: 3977294589520766028}  # Component
   sprintModifier: 1.5
-  CamYawPivot: {fileID: 6663313825132233637}  # Component
-  Gravity: 9.81000042
-  runStepsInterval: 0.300000012
-  CamPitchPivot: {fileID: 12396120015401798445}  # Component
-  walkStepsInterval: 0.439999998
-  maxHealth: 4
-  CamMovePivot: {fileID: 1999010381617278315}  # Component
   maxColliderDist: 1.5
   PlayerModel: {fileID: 18364898161930433210}  # Component
+  Gravity: 9.81000042
+  runStepsInterval: 0.300000012
+  walkStepsInterval: 0.439999998
   attackLight: {fileID: 16176702755422307341}  # GameObject
   invulnerableTimer: 0.699999988
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
@@ -15622,6 +15603,7 @@ Script:
   checkpoint2: {fileID: 13797028059376800602}  # Component
   RotationSpeed: 5
   attackTimer: 1
+  maxHealth: 4
   currentHealth: 4
   isInvulnerable: false
   currentInvulnerableTimer: 1

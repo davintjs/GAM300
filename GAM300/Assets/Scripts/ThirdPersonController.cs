@@ -20,9 +20,7 @@ public class ThirdPersonController : Script
 
 
     public CharacterController CC;
-    public Transform CamYawPivot;
-    public Transform CamMovePivot;
-    public Transform CamPitchPivot;
+    public Transform PlayerCamera;
     public Transform PlayerModel;
     public Transform player;
     public GameObject attackLight;
@@ -466,27 +464,28 @@ public class ThirdPersonController : Script
         vec3 dir = vec3.Zero;
         if (Input.GetKey(KeyCode.W))
         {
-            dir -= (CamYawPivot.forward);
+            dir -= (PlayerCamera.forward);
         }
 
 
         if (Input.GetKey(KeyCode.A))
         {
-            dir -= (CamYawPivot.right);
+            dir -= (PlayerCamera.right);
         }
 
 
         if (Input.GetKey(KeyCode.S))
         {
-            dir += CamYawPivot.forward;
+            dir += PlayerCamera.forward;
         }
 
 
         if (Input.GetKey(KeyCode.D))
         {
-            dir += (CamYawPivot.right);
+            dir += (PlayerCamera.right);
         }
 
+        dir.y = 0f;
         return dir.NormalizedSafe;
     }
 

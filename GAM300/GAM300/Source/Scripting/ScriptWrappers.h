@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Audio/AudioManager.h"
 #include "Graphics/Animation/BaseAnimator.h"
 #include "Graphics/BaseCamera.h"
+#include "Graphics/Ray3D.h"
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 
@@ -33,36 +34,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static std::unordered_map<MonoType*, size_t> monoComponentToType;
 
 	#define Register(METHOD) mono_add_internal_call("BeanFactory.InternalCalls::"#METHOD,METHOD)
-
-
-	//DOESNT WORK YET, Checks if key was released
-	static bool GetKeyUp(int keyCode)
-	{
-		return InputHandler::isKeyButtonPressed(keyCode);
-	}
-
-	//Checks if key was pressed
-	static bool GetKeyDown(int keyCode)
-	{
-		return InputHandler::isKeyButtonPressed(keyCode);
-	}
-
-	static int GetScrollState()
-	{
-		return InputHandler::getMouseScrollState();
-	}
-
-	static bool GetMouseDown(int mouseCode)
-	{
-		UNREFERENCED_PARAMETER(mouseCode);
-		return InputHandler::isMouseButtonPressed_L();
-	}
-
-	//Checks if key is held
-	static bool GetKey(int keyCode)
-	{
-		return InputHandler::isKeyButtonHolding(keyCode);
-	}
 
 	//Gets object that entity has
 	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, ScriptObject<Object>& obj)
@@ -102,10 +73,55 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
 
+#pragma region INPUT SYSTEM
+	//DOESNT WORK YET, Checks if key was released
+	static bool GetKeyUp(int keyCode)
+	{
+		return InputHandler::isKeyButtonPressed(keyCode);
+	}
+
+	//Checks if key was pressed
+	static bool GetKeyDown(int keyCode)
+	{
+		return InputHandler::isKeyButtonPressed(keyCode);
+	}
+
+	static int GetScrollState()
+	{
+		return InputHandler::getMouseScrollState();
+	}
+
+	static bool GetMouseDown(int mouseCode)
+	{
+		UNREFERENCED_PARAMETER(mouseCode);
+		return InputHandler::isMouseButtonPressed_L();
+	}
+
+	//Checks if key is held
+	static bool GetKey(int keyCode)
+	{
+		return InputHandler::isKeyButtonHolding(keyCode);
+	}
+
+	static void GetMouseDelta(Vector2& mouseDelta)
+	{
+		mouseDelta = InputHandler::mouseDeltaNormalized();
+	}
+
 	static void LockCursor(bool toggle)
 	{
 		InputSystem::Instance().LockCursor(toggle);
 	}
+#pragma endregion
+
+#pragma region PHYSICS SYSTEM
+
+	static void Raycast(Vector3& position, Vector3& direction, float& distance, bool& hit, int& mask)
+	{
+
+	}
+
+#pragma endregion
 	
 #pragma region TRANSFORM
 	static void SetTransformParent(ScriptObject<Transform> pTransform, ScriptObject<Transform> pParent)
@@ -401,10 +417,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return scene.GetActive(pair->second, object);
 	}
 
-	static void GetMouseDelta(Vector2& mouseDelta)
-	{
-		mouseDelta = InputHandler::mouseDeltaNormalized();
-	}
+	
 
 	static void SetActive(ScriptObject<Object> pObject, MonoReflectionType* componentType, bool val)
 	{
@@ -478,10 +491,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Registers all defined internal calls with mono
 	static void RegisterScriptWrappers()
 	{
-		Register(GetKey);
-		Register(GetKeyUp);
-		Register(GetKeyDown);
-		Register(GetMouseDown);
 		Register(DestroyGameObject);
 		Register(HasComponent);
 		Register(Get);
@@ -491,11 +500,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetActive);
 		Register(LoadScene);
 		Register(AddComponent);
-		Register(GetMouseDelta);
+		
 		Register(CloneGameObject);
 
 		// Input System
+		Register(GetKey);
+		Register(GetKeyUp);
+		Register(GetKeyDown);
+		Register(GetMouseDown);
+		Register(GetMouseDelta);
 		Register(LockCursor);
+
+		// Physics System
+		Register(Raycast);
 
 		// Transform Component
 		Register(SetTransformParent);

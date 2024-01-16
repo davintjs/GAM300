@@ -295,7 +295,6 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-
             glm::vec3 mins = scale, maxs = scale;
 
             Mesh* mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);

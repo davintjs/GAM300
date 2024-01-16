@@ -14,13 +14,7 @@ public class FreeLookCamera : Script
     public float pitchRotSpeed = 1f;
     public float maxPitchAngle = 170f;
     public float minPitchAngle = -85f;
-    public float zoom = 1f;
-    public float initialZoom = 0f;
-    public float zoomSpeed = 100f;
-    public float closestZoom = 1f;
-    public float furthestZoom = 6f;
     public bool invertPitch = false;
-    public bool isZooming = false;
 
     private float yawAngle;
     private float pitchAngle;
@@ -29,7 +23,20 @@ public class FreeLookCamera : Script
 
     public GameObject target;
 
-    private vec3 zoomVector;
+    public float zoom = 1f;
+    private float initialZoom = 0f;
+    public float defaultZoom = 4f;
+    public float zoomSpeed = 50f;
+    public float zoomInSpeed = 2f;
+    public float closestZoom = 1f;
+    public float furthestZoom = 10f;
+    private bool isZooming = false;
+    private bool zoomReset = false;
+
+    private float timer = 0f;
+    private float duration = 0.5f;
+    private float bufferTimer = 0f;
+    private float bufferDuration = 3.0f;
 
     void Awake()
     {
@@ -68,9 +75,9 @@ public class FreeLookCamera : Script
 
     void StartZoom()
     {
-        if(!isZooming)
-            initialZoom = zoom;
         isZooming = true;
+        zoomReset = false;
+        timer = bufferTimer = 0f;
     }
 
     void StopZoom()
@@ -80,9 +87,9 @@ public class FreeLookCamera : Script
 
     void AvoidColliders()
     {
-        if(isZooming)
+        if (isZooming)
         {
-            zoom -= Time.deltaTime;
+            zoom -= Time.deltaTime * zoomInSpeed;
             if (zoom < closestZoom)
             {
                 zoom = closestZoom;
@@ -91,11 +98,15 @@ public class FreeLookCamera : Script
             {
                 zoom = furthestZoom;
             }
+
             camera.lookatDistance = zoom;
+            initialZoom = zoom;
+            zoomReset = true;
         }
-        else if(!isZooming)
+        else if (!isZooming && zoomReset)
         {
             // Wait x seconds then attemp to return to initialZoom
+            ResetZoom();
         }
     }
 
@@ -111,6 +122,29 @@ public class FreeLookCamera : Script
             zoom = furthestZoom;
         }
         camera.lookatDistance = zoom;
+    }
+
+    void ResetZoom()
+    {
+        // Give it a buffer before reseting the camera's zoom
+        bufferTimer += Time.deltaTime;
+
+        if (bufferTimer >= bufferDuration)
+        {
+            timer += Time.deltaTime;
+            zoom = Lerp(initialZoom, defaultZoom, timer, duration);
+
+            if (timer >= duration)
+            {
+                zoomReset = false;
+                timer = bufferTimer = 0f;
+            }
+        }
+    }
+    float Lerp(float start, float end, float value, float duration)
+    {
+        value /= duration;
+        return (1.0f - value) * start + value * end;
     }
     vec3 GetDirection()
     {
@@ -158,6 +192,7 @@ public class FreeLookCamera : Script
         {
             camera.LookAt(target);
             camera.position = target.transform.position - (camera.forward * camera.distance);
+            
             transform.localPosition = camera.position;
         }
     }
@@ -169,10 +204,10 @@ public class FreeLookCamera : Script
         
         //Pitch Camera Rotation
         pitchAngle -= mouseDelta.y * (invertPitch ? -1.0f : 1.0f) * pitchRotSpeed * pitchSM * Time.deltaTime * 3.14f / 180f;
-        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
         if (pitchAngle > maxPitchAngle)
             pitchAngle = maxPitchAngle * 3.14f / 180f;
         else if (pitchAngle < minPitchAngle)
             pitchAngle = minPitchAngle * 3.14f / 180f;
+        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
     }
 }

@@ -137,7 +137,7 @@ namespace BeanFactory
         public static extern void AudioMute(bool mute);
         #endregion	
 
-        #region INPUT
+        #region INPUT_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);
 
@@ -152,6 +152,14 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetMousePosition(out GlmSharp.vec2 pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LockCursor(bool toggle);
+        #endregion
+
+        #region PHYSICS_SYSTEM
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
         #endregion
 
         #region TEXT
@@ -179,9 +187,6 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLayerName(int layer);
         #endregion
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LockCursor(bool toggle);
 
         #region PARTICLES
         [MethodImpl(MethodImplOptions.InternalCall)]
