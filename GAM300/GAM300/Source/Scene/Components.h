@@ -342,7 +342,7 @@ struct LightSource : Object
 	float intensity = 10.f;
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
-	
+	bool toRender = true; // Dirtybit 
 	property_vtable()
 };
 

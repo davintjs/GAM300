@@ -1,5 +1,6 @@
-[2023-11-26 21:27:18.887] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
+[2024-01-15 16:49:18.431] [Error] [critical] 
+Caused By:	false
+Info:		ERROR: Sphere has guid 00000000000000000000000000000066 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 294)
 

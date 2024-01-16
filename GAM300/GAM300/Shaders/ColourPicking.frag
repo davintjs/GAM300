@@ -63,7 +63,7 @@ void main()
         if(isTexture)
         {
             vec4 colour = texture(Texture, TexCoords);
-            if(colour.a <1.0)
+            if(colour.a <0.7)
             {
                 discard;
             }

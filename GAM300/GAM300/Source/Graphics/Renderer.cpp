@@ -1178,6 +1178,8 @@ void Renderer::DrawDepthSpot()
 {
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
+
+
 		LightProperties& spot_light_stuffs = LIGHTING.GetSpotLights()[i];
 		if (!spot_light_stuffs.enableShadow)
 		{
