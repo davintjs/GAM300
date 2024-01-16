@@ -38,15 +38,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 //types of files that can be dragged drop from the content browser
 enum filetype {
-    NONE, MESH, PREFAB, MATERIAL
+    NONE, MESH, PREFAB, MATERIAL, MODELTYPE
 };
 
 //an object containing the data needed for the payload
-struct ContentBrowserPayload {
+struct ContentBrowserPayload {  
+
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
-    filetype type;
+
     Engine::HexID guid;
+    filetype type;
+    char* name = nullptr;
+
 };
 
 struct BaseCamera;
@@ -146,6 +150,7 @@ public:
     Engine::UUID selectedEntity;
     bool newselect = false;
     bool initLayer = true;
+    bool movetoitem = true;
 private:
     void CallbackSelectedEntity(SelectedEntityEvent* pEvent);
 };
@@ -166,6 +171,9 @@ public:
     void CallbackGetCurrentDirectory(EditorGetCurrentDirectory* pEvent);
 
     Engine::HexID selectedAss;
+
+    bool payload_set;
+
 private:
     std::filesystem::path currentDirectory;
 };
