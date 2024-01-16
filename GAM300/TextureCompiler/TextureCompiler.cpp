@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
 	DirectX::ScratchImage bcImage;
 	hr = Compress(image.GetImages(), image.GetImageCount(),
-		image.GetMetadata(), DXGI_FORMAT_BC3_UNORM,
+		image.GetMetadata(), DXGI_FORMAT_BC1_UNORM,
 		DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
 		bcImage);
 	if (FAILED(hr)) {

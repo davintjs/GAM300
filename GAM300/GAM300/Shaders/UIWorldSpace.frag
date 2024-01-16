@@ -45,14 +45,14 @@ void main()
     if(RenderSprite)
     {
         vec4  colour = texture(Sprite, TexCoords);
-//        if(colour.a <0.7)
-//        {
-//            discard;
-//        }
-//        else
-//        {
+        if(colour.a <0.05)
+        {
+            discard;
+        }
+        else
+        {
             FragColor = colour;
-//        }
+        }
 
 
     }
