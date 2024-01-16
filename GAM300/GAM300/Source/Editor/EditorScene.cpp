@@ -174,8 +174,6 @@ void EditorScene::SceneView()
                     Entity* ent = curr_scene.Add<Entity>();
                     Transform& parent = curr_scene.Get<Transform>(*ent);
                     curr_scene.Get<Tag>(*ent).name = data.name;
-                    delete[] data.name;
-                    data.name = nullptr; //delete data created for the name in payload
 
                     //Get model 
                     GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
@@ -221,9 +219,7 @@ void EditorScene::SceneView()
                     }
                 }
 
-                //add other file types here
-
-               
+                //add other file types here              
             }
             ImGui::EndDragDropTarget();
         }
@@ -248,6 +244,9 @@ bool EditorScene::SelectEntity()
             // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
+
+            //clear all selected entities in mutliselect
+            //EditorInspector::Instance().multiselectEntities.clear();
         }
         return true;
     }
