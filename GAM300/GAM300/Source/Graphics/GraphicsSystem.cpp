@@ -233,7 +233,7 @@ void GraphicsSystem::Update(float dt)
 		windowPos = glm::vec2(0.f, 0.f);
 
 		// Update camera view 
-		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+		camera.UpdateCamera(transform->GetGlobalTranslation(), transform->GetGlobalRotation());
 
 		COLOURPICKER.ColorPickingUIButton(camera);
 
