@@ -109,6 +109,11 @@
     <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Source\Graphics\ParticleRenderer.cpp" />
     <ClCompile Include="Source\AI\Pathfinder.cpp" />
+    <ClCompile Include="Source\Editor\EditorBehaviourTreeEditor.cpp" />
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\crude_json.cpp" />
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_canvas.cpp" />
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.cpp" />
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Source\Graphics\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +209,12 @@
     <ClInclude Include="Source\UISystem\UISystem.h" />
     <ClInclude Include="Source\Graphics\ParticleRenderer.h" />
     <ClInclude Include="Source\AI\Pathfinder.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\crude_json.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_canvas.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
@@ -243,5 +254,8 @@
     <None Include="Shaders\InstancedParticle.frag" />
     <None Include="Shaders\Text.vert" />
     <None Include="Shaders\Text.frag" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_bezier_math.inl" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.inl" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.inl" />
   </ItemGroup>
 </Project>

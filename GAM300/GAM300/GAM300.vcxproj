@@ -55,9 +55,26 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\Editor\EditorBehaviourTreeEditor.cpp" />
     <ClCompile Include="Source\Editor\EditorGame.cpp" />
     <ClCompile Include="Source\Editor\EditorHistory.cpp" />
     <ClCompile Include="Source\Editor\EditorPerformanceViewer.cpp" />
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\crude_json.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_canvas.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_api.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Editor\ImGui\GraphEditor.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">NotUsing</PrecompiledHeader>
@@ -318,6 +335,12 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\crude_json.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_canvas.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.h" />
+    <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.h" />
     <ClInclude Include="Source\Graphics\Animation\Animation.h">
       <SubType>
       </SubType>
@@ -474,6 +497,9 @@
     <None Include="Shaders\UIScreenSpace.vert" />
     <None Include="Shaders\UIWorldSpace.frag" />
     <None Include="Shaders\UIWorldSpace.vert" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_bezier_math.inl" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.inl" />
+    <None Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
