@@ -1,0 +1,3 @@
+C:\Users\desmo\Desktop\GAM300\GAM300\obj\Release\ScriptCore.csproj.AssemblyReference.cache
+C:\Users\desmo\Desktop\GAM300\GAM300\obj\Release\ScriptCore.csproj.SuggestedBindingRedirects.cache
+C:\Users\desmo\Desktop\GAM300\GAM300\obj\Release\ScriptCore.csproj.CoreCompileInputs.cache
