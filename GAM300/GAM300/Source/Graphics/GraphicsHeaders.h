@@ -38,6 +38,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
 #define MATERIALSYSTEM MaterialSystem::Instance()
+#define TEXTSYSTEM TextSystem::Instance()
 
 class Ray3D;
 
@@ -447,6 +448,32 @@ property_begin_name(Renderer, "Graphics Settings"){
 	property_var(ambient).Name("Ambient"),
 	property_var(exposure).Name("Exposure"),
 } property_vend_h(Renderer)
+
+
+ENGINE_SYSTEM(TextSystem)
+{
+public:
+
+	struct Character {
+		unsigned int TextureID;  // ID handle of the glyph texture
+		glm::ivec2   Size;       // Size of glyph
+		glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+		unsigned int Advance;    // Offset to advance to next glyph
+	};
+
+	unsigned int txtVAO, txtVBO;
+	std::map<char, Character> Characters;
+
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
+	void Draw(BaseCamera& _camera);
+
+private:
+	//nth yet
+};
 
 //ENGINE_SYSTEM(ShadowRenderer)
 //{

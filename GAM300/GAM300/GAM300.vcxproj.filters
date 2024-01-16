@@ -109,6 +109,7 @@
     <ClCompile Include="Source\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Source\Graphics\ParticleRenderer.cpp" />
     <ClCompile Include="Source\AI\Pathfinder.cpp" />
+    <ClCompile Include="Source\Graphics\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -240,5 +241,7 @@
     <None Include="Shaders\NormalDebugRender.vert" />
     <None Include="Shaders\InstancedParticle.vert" />
     <None Include="Shaders\InstancedParticle.frag" />
+    <None Include="Shaders\Text.vert" />
+    <None Include="Shaders\Text.frag" />
   </ItemGroup>
 </Project>

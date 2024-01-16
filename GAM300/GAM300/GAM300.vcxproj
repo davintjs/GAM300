@@ -160,6 +160,7 @@
     <ClCompile Include="Source\Graphics\ShadersManager.cpp" />
     <ClCompile Include="Source\Graphics\Shadows.cpp" />
     <ClCompile Include="Source\Graphics\SkyboxManager.cpp" />
+    <ClCompile Include="Source\Graphics\Text.cpp" />
     <ClCompile Include="Source\Graphics\UIRenderer.cpp" />
     <ClCompile Include="Source\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Source\Scene\Identifiers.cpp" />
@@ -467,6 +468,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Shaders\Text.frag" />
+    <None Include="Shaders\Text.vert" />
     <None Include="Shaders\UIScreenSpace.frag" />
     <None Include="Shaders\UIScreenSpace.vert" />
     <None Include="Shaders\UIWorldSpace.frag" />
