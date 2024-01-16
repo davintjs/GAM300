@@ -18,6 +18,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Core/FramerateController.h"
 #define _CRTDBG_MAP_ALLOC
 
+extern "C"
+{
+	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+
 int main(int, char**) {
 
 	// Enable run-time memory check for debug builds.
