@@ -778,7 +778,7 @@ void NavMeshBuilder::Exit()
 void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 {
 	Tag mTagRb1 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
-	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
+	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc2->EUID());
 
 	Tag* fNavMesh;
 	Tag* fObstacle;

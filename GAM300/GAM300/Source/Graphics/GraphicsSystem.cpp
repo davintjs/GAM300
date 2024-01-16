@@ -35,7 +35,8 @@ TemplatePack
 	Lighting,
 	MaterialSystem,
 	Renderer,
-	ParticleRenderer
+	ParticleRenderer,
+	TextSystem
 >;
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
@@ -288,6 +289,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
+	TEXTSYSTEM.Draw(_camera);
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);

@@ -19,7 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
-#include "Graphics/TextureManager.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Scene/SceneManager.h"
 #include "AI/NavMeshBuilder.h"
@@ -34,7 +34,7 @@ void DemoSystem::Init()
 	
 	//MySceneManager.LoadScene("Assets/Scene/LevelPlay.scene");
 	//MySceneManager.LoadScene("Assets/Scene/JosScene.scene");
-	MySceneManager.LoadScene("Assets/Scene/LevelPlay2.scene");
+	MySceneManager.LoadScene("Assets/Scene/MainMenu.scene");
 
 
 	//Entity& testEntity = *scene.Add<Entity>();

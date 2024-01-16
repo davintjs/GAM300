@@ -47,10 +47,9 @@ struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
 
+    std::string name;
     Engine::HexID guid;
     filetype type;
-    char* name = nullptr;
-
 };
 
 struct BaseCamera;
@@ -296,6 +295,8 @@ public:
     bool material_inspector;
     bool model_inspector;
 
+    std::list<Engine::UUID>multiselectEntities;
+
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;
 
@@ -347,6 +348,19 @@ public:
     void Exit();
 
     std::map<std::string, ScrollingBuffer>system_plots;
+};
+
+ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
+{
+public:
+    // Initializing the Performance Viewer
+    void Init();
+
+    // Updating and displaying of the Performance Viewer
+    void Update(float dt);
+
+    // Exit the system
+    void Exit();
 };
 
 #endif // !EDITORHEADERS_H

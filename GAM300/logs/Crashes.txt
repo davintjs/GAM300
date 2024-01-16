@@ -1,6 +1,5 @@
-[2024-01-16 09:38:19.077] [Error] [critical] 
+[2024-01-16 21:27:50.977] [Error] [critical] 
 Caused By:	false
-Info:		Failed to load .scene file "Assets\Scene\LevelPlay2.scene" due to: yaml-cpp: error at line 11194, column 1014: bad file
-
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 357)
+Info:		Could not find handle!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
 
