@@ -108,7 +108,7 @@ public class ThirdPersonCamera : Script
         }
         vec3 pos = transform.localPosition;
         pos.z = -zoom;
-        transform.position = pos;
+        transform.localPosition = pos;
     }
     void ResetZoom()
     {
