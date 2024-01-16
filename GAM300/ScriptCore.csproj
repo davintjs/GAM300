@@ -38,6 +38,7 @@
     <Compile Include="Assets\Player.cs" />
     <Compile Include="Assets\Scripts\AnimationStateMachine.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\Elevator.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />

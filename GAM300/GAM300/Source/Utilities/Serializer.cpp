@@ -187,6 +187,7 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
                         if (Flags.m_isReference)
                         {
                             out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                            out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
                             out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
                         }
                         else
@@ -500,7 +501,7 @@ void DeserializeComponent(const DeComHelper& _helper)
             {
                 T& transform = _scene.Get<T>(component.EUID());
                 transform = component;
-
+                transform.TempSetLocal(node["Translation"].as<Vector3>(), node["Rotation"].as<Vector3>(), node["Scale"].as<Vector3>());
             }
             else if constexpr (std::is_same<Tag, T>())
             {
@@ -526,9 +527,6 @@ void DeserializeComponent(const DeComHelper& _helper)
             {
                 MySceneManager.GetCurrentScene().Get<Transform>(component.parent).child.push_back(component.EUID());
             }
-            component.SetLocalPosition(node["Translation"].as<Vector3>());
-            component.SetLocalRotation(node["Rotation"].as<Vector3>());
-            component.SetLocalScale(node["Scale"].as<Vector3>());
         }
         if constexpr (std::is_same<T, Script>())
         {
@@ -570,6 +568,14 @@ void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data)
             //PRINT("Loading " + name + " component... \n");
             DeComHelper helper{ &node, &_scene, true };
             DeserializeComponent(ComponentTypes[name], &helper);
+        }
+    }
+
+    for (Transform& transform : _scene.GetArray<Transform>())
+    {
+        if (transform.parent == 0)
+        {
+            transform.RecalculateLocalMatrices();
         }
     }
 }

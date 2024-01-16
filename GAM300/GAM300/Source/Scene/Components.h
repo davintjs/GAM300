@@ -127,6 +127,10 @@ struct Transform : Object
 
 	void UpdateChildrenMatrices();
 
+	void TempSetLocal(Vector3 pos, Vector3 rot, Vector3 scale);
+
+	void RecalculateLocalMatrices();
+
 
 	//Get the SRT matrix in local space
 	glm::mat4 GetLocalMatrix() const;

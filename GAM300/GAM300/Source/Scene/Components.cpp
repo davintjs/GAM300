@@ -226,6 +226,18 @@ bool Transform::isSelectedChild() {
 	return false; 
 }
 
+void Transform::TempSetLocal(Vector3 _pos, Vector3 _rot, Vector3 _scale)
+{
+	translation = _pos;
+	rotation = _rot;
+	scale = _scale;
+}
+
+void Transform::RecalculateLocalMatrices()
+{
+	SetLocalMatrix(translation,rotation,scale);
+}
+
 
 void Transform::RemoveChild(Transform* t)
 {

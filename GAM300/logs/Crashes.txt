@@ -1,6 +1,6 @@
-[2024-01-15 17:39:05.627] [Error] [critical] 
+[2024-01-16 09:38:19.077] [Error] [critical] 
 Caused By:	false
-Info:		Failed to load .scene file "Assets/Scene/Level2.scene" due to: bad file: Assets/Scene/Level2.scene
+Info:		Failed to load .scene file "Assets\Scene\LevelPlay2.scene" due to: yaml-cpp: error at line 11194, column 1014: bad file
 
-Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 361)
+Source:		C:\Users\FLESH\Desktop\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 357)
 
