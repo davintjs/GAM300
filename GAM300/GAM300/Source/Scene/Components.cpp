@@ -31,7 +31,7 @@ namespace
 	{
 		glm::vec3 skew;
 		glm::vec4 perspective;
-		glm::decompose(mat, (glm::vec3&)scale, rot, (glm::vec3&)pos, skew, perspective);
+		glm::decompose(mat, (glm::fvec3&)scale, rot, (glm::fvec3&)pos, skew, perspective);
 	}
 }
 
@@ -137,6 +137,15 @@ void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 	UpdateChildrenMatrices();
 }
 
+void Transform::UpdateWorldMatrix(glm::mat4& _world)
+{
+	glm::quat _rot;
+	Decompose(_world, globalPos, _rot, globalScale);
+	globalRot = glm::eulerAngles(_rot);
+	worldMatrix = _world;
+	UpdateChildrenMatrices();
+}
+
 
 void Transform::UpdateChildrenMatrices()
 {
@@ -144,11 +153,7 @@ void Transform::UpdateChildrenMatrices()
 	{
 		Transform& tChild = MySceneManager.GetCurrentScene().Get<Transform>(childID);
 		glm::mat4 childMat = worldMatrix * tChild.GetLocalMatrix();
-		Vector3 cPos;
-		glm::quat cRot;
-		Vector3 cScale;
-		Decompose(childMat,cPos,cRot,cScale);
-		tChild.SetWorldMatrix(cPos,glm::eulerAngles(cRot),cScale);
+		tChild.UpdateWorldMatrix(childMat);
 	}
 }
 

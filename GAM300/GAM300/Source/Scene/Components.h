@@ -127,6 +127,8 @@ struct Transform : Object
 
 	void UpdateChildrenMatrices();
 
+	void UpdateWorldMatrix(glm::mat4& _world);
+
 	void TempSetLocal(Vector3 pos, Vector3 rot, Vector3 scale);
 
 	void RecalculateLocalMatrices();

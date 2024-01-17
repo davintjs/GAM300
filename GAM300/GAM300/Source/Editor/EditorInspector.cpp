@@ -799,9 +799,7 @@ void Display_Property(T& comp) {
         Display(newchange, "Translation", pos);
         Display(newchange, "Rotation", rot);
         Display(newchange, "Scale", scale);
-        comp.SetLocalPosition(pos);
-        comp.SetLocalRotation(rot);
-        comp.SetLocalScale(scale);
+        comp.SetLocalMatrix(pos, rot, scale);
         return;
     }
     std::vector<property::entry> List;
