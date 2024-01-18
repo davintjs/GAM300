@@ -973,7 +973,6 @@ void DisplayComponentHelper(T& component)
     ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
     if (ImGui::BeginPopup(popup, win_flags)) {
 
-
         if (ImGui::MenuItem("Reset")) {  
 
             property::SerializeEnum(component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
@@ -1492,8 +1491,39 @@ void DisplayEntity(Entity& entity)
 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        
-        DisplayComponents(entity);
+        if (EditorScene::Instance().multiselectEntities.size()) {
+            ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+                | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+                | ImGuiTableFlags_PadOuterX;
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+
+            if (ImGui::BeginTable("Component", 2, winFlags))
+            {
+                ImGui::Indent();
+                ImGui::TableSetupColumn("Text", 0, 0.4f);
+                ImGui::TableSetupColumn("Input", 0, 0.6f);
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+
+                DisplayComponent(component);
+
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+
+                ImGui::Unindent();
+                ImGui::EndTable();
+            }
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+        }
+            
+        else
+            DisplayComponents(entity);
         
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {

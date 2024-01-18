@@ -244,9 +244,6 @@ bool EditorScene::SelectEntity()
             // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
-
-            //clear all selected entities in mutliselect
-            //EditorInspector::Instance().multiselectEntities.clear();
         }
         return true;
     }
@@ -318,6 +315,16 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), renderer.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(renderer.EUID());
+                        } 
+
+                        GetSelectedEntityEvent e{};
+                        EVENTS.Publish(&e);         
+                        if(e.pEntity != nullptr)
+                            multiselectEntities.push_back(e.pEntity->EUID());
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -353,6 +360,12 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), Sprite.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(Sprite.EUID());
+                        }
+                        
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -392,6 +405,11 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), bc.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(bc.EUID());
+                        }
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -476,6 +494,10 @@ void EditorScene::DisplayGizmos()
             firstmove = true;
         }
     }
+    else
+        //clear all selected entities in mutliselect
+        multiselectEntities.clear();
+
 }
 
 void EditorScene::Exit()

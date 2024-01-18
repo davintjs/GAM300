@@ -209,6 +209,10 @@ public:
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
 
+
+    std::list<Engine::UUID>multiselectEntities;
+    Transform multiTransform; 
+
 private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
     glm::vec2 scenePosition{};  // Position of the viewport relative to the engine
@@ -290,8 +294,6 @@ public:
 
     bool material_inspector;
     bool model_inspector;
-
-    std::list<Engine::UUID>multiselectEntities;
 
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;

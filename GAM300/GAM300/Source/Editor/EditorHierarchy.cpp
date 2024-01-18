@@ -149,13 +149,13 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::EndDragDropTarget();
 	}
 
-	//bool multiselect = false;
-	//std::list<Engine::UUID>& multiSel = EditorInspector::Instance().multiselectEntities;
-	//if (std::find(multiSel.begin(), multiSel.end(), euid) != multiSel.end()) {
-	//	multiselect = true;
-	//}
+	bool multiselect = false;
+	std::list<Engine::UUID>& multiSel = EditorScene::Instance().multiselectEntities;
+	if (std::find(multiSel.begin(), multiSel.end(), euid) != multiSel.end()) {
+		multiselect = true;
+	}
 
-	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
+	if (currEntity.isSelectedChild() || (euid == selectedEntity) || multiselect)  {
 		
 		ImGui::SetNextItemOpen(true);
 
@@ -170,7 +170,11 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 				movetoitem = false;
 			}
 			NodeFlags |= ImGuiTreeNodeFlags_Selected;
-		}					
+		}		
+
+		if (multiselect)
+			NodeFlags |= ImGuiTreeNodeFlags_Selected;
+
 	}
 	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
@@ -376,25 +380,10 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-	if (pEvent->pEntity) {
+	if (pEvent->pEntity)
 		selectedEntity = pEvent->pEntity->EUID();
-		/*if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
-
-			std::list<Engine::UUID>& ref = EditorInspector::Instance().multiselectEntities;
-			if (std::find(ref.begin(), ref.end(), pEvent->pEntity->EUID()) != ref.end()) {
-				std::cout << "left shift: " << pEvent->pEntity->EUID() << std::endl;
-				ref.push_back(pEvent->pEntity->EUID());
-			}
-			for (auto a : ref) {
-				std::cout << a << std::endl;
-			}
-		}*/
-	}
 	else
 		selectedEntity = NON_VALID_ENTITY;
-
-	
-	
 }
 
 void EditorHierarchy::Exit() {
