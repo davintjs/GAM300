@@ -282,6 +282,67 @@ void Renderer::SetupGrid(const int& _num)
 
 void Renderer::Draw(BaseCamera& _camera) {
 
+	GLSLShader& shader1 = SHADER.GetShader(SHADERTYPE::PBR);
+	shader1.Use();
+
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
+	{
+		int textureUnit = 10 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+
+	}
+
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
+	{
+		int textureUnit = 20 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+
+	}
+
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
+	{
+		int textureUnit = 22 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+	}
+
+	glUniform1f(glGetUniformLocation(shader1.GetHandle(), "farplane"), 1000.f);
+
+	GLint uniform1 =
+		glGetUniformLocation(shader1.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(shader1.GetHandle(), "View");
+	//GLint uniform3 =
+	//	glGetUniformLocation(shader1.GetHandle(), "lightColor");
+	//GLint uniform4 =
+	//	glGetUniformLocation(shader1.GetHandle(), "lightPos");
+	GLint uniform5 =
+		glGetUniformLocation(shader1.GetHandle(), "camPos");
+	GLint uniform6 =
+		glGetUniformLocation(shader1.GetHandle(), "hdr");
+
+	glUniform1i(uniform6, hdr);
+
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(_camera.GetProjMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(_camera.GetViewMatrix()));
+	//glUniform3fv(uniform3, 1,
+	//	glm::value_ptr(_lightSource.lightColor));
+	//glUniform3fv(uniform4, 1,
+	//	glm::value_ptr(_lightSource.lightpos));
+	glUniform3fv(uniform5, 1,
+		glm::value_ptr(_camera.GetCameraPosition()));
+
+	BindLights(shader1);
+
+	shader1.UnUse();
+
 	// Instanced Rendering	
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) 
 	{
@@ -316,17 +377,18 @@ void Renderer::Draw(BaseCamera& _camera) {
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
-			glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(i) + "]").c_str()), i);
-
 		}
-		// min is 0
-		// max is 31
-
-		
-		
+		shader.UnUse();
 
 		DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, SHADERTYPE::PBR);
 	}
+
+	shader1.Use();
+	for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
+	{
+		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(i) + "]").c_str()), i);
+	}
+	shader1.UnUse();
 
 #ifndef _BUILD
 	//Draw Debug grids
@@ -370,10 +432,29 @@ void Renderer::Draw(BaseCamera& _camera) {
 	BindLights(shader);
 
 	//Non-Instanced Rendering
+
+	GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+	GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
+	GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
+	GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
+	GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
+	GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
+
+	GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
+	GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
+	GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
+	GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
+	GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
+	GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
+	GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
+	GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
+	//GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
+	//GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
+	GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
+	GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
+
 	for (DefaultRenderProperties& prop : defaultProperties) 
 	{
-		
-
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
@@ -389,13 +470,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 
 		// PBR TEXTURES
-		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
-		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
-		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
-		GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
-		GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
-		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
-
 		glUniform1i(hasTexture, prop.textureID);
 		glUniform1i(hasNormal, prop.NormalID);
 		glUniform1i(hasRoughness, prop.RoughnessID);
@@ -411,20 +485,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 		// Shadow
 		glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
-
-
-		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
-		GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
-		GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
-		GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
-		GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
-		GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
-		GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
-		GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
-		//GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
-		//GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
-		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
-		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
 		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
 		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
@@ -598,61 +658,61 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 	GLSLShader& shader = SHADER.GetShader(shaderType);
 	shader.Use();
 
-	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
-	{
-		int textureUnit = 10 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
-	
-	}
+	//for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
+	//{
+	//	int textureUnit = 10 + i;
+	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	//
+	//}
 
-	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
-	{
-		int textureUnit = 20 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	//for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
+	//{
+	//	int textureUnit = 20 + i;
+	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
 
-	}
+	//}
 
-	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-	{
-		int textureUnit = 22 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
-	}
-	
-	glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
+	//for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
+	//{
+	//	int textureUnit = 22 + i;
+	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	//	glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+	//}
+	//
+	//glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
 
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "View");
-	//GLint uniform3 =
-	//	glGetUniformLocation(shader.GetHandle(), "lightColor");
-	//GLint uniform4 =
-	//	glGetUniformLocation(shader.GetHandle(), "lightPos");
-	GLint uniform5 =
-		glGetUniformLocation(shader.GetHandle(), "camPos");
-	GLint uniform6 =
-		glGetUniformLocation(shader.GetHandle(), "hdr");
+	//GLint uniform1 =
+	//	glGetUniformLocation(shader.GetHandle(), "persp_projection");
+	//GLint uniform2 =
+	//	glGetUniformLocation(shader.GetHandle(), "View");
+	////GLint uniform3 =
+	////	glGetUniformLocation(shader.GetHandle(), "lightColor");
+	////GLint uniform4 =
+	////	glGetUniformLocation(shader.GetHandle(), "lightPos");
+	//GLint uniform5 =
+	//	glGetUniformLocation(shader.GetHandle(), "camPos");
+	//GLint uniform6 =
+	//	glGetUniformLocation(shader.GetHandle(), "hdr");
 
-	glUniform1i(uniform6, hdr);
+	//glUniform1i(uniform6, hdr);
 
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetViewMatrix()));
-	//glUniform3fv(uniform3, 1,
-	//	glm::value_ptr(_lightSource.lightColor));
-	//glUniform3fv(uniform4, 1,
-	//	glm::value_ptr(_lightSource.lightpos));
-	glUniform3fv(uniform5, 1,
-		glm::value_ptr(_camera.GetCameraPosition()));
+	//glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+	//	glm::value_ptr(_camera.GetProjMatrix()));
+	//glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+	//	glm::value_ptr(_camera.GetViewMatrix()));
+	////glUniform3fv(uniform3, 1,
+	////	glm::value_ptr(_lightSource.lightColor));
+	////glUniform3fv(uniform4, 1,
+	////	glm::value_ptr(_lightSource.lightpos));
+	//glUniform3fv(uniform5, 1,
+	//	glm::value_ptr(_camera.GetCameraPosition()));
 
-	BindLights(shader);
+	//BindLights(shader);
 
 	glBindVertexArray(_vaoid);
 	glDrawElementsInstanced(_primType, _primCount, GL_UNSIGNED_INT, 0, _instanceCount);
@@ -670,65 +730,56 @@ void Renderer::BindLights(GLSLShader& shader) {
 	auto& DirectionLight_Sources = LIGHTING.GetDirectionLights();
 	auto& SpotLight_Sources = LIGHTING.GetSpotLights();
 	
+	std::string istring, pointLight, directionalLight, spotLight;
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
-		std::string istring = "pointLights[" + std::to_string(i);
+		istring = "pointLights[" + std::to_string(i);
 		//pointLights.enableShadow
-		std::string point_shadow;
-		point_shadow = istring + "].enableShadow";
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), point_shadow.c_str())
-			,  PointLight_Sources[i].enableShadow);
-
+		pointLight = istring + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), pointLight.c_str())
+			, PointLight_Sources[i].enableShadow);
 
 		//pointLights.colour
-		std::string point_color;
-		point_color = istring + "].colour";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_color.c_str())
+		pointLight = istring + "].colour";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), pointLight.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightColor));
 
 		//pointLights.position
-		std::string point_pos;
-		point_pos = istring + "].position";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), point_pos.c_str())
+		pointLight = istring + "].position";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), pointLight.c_str())
 			, 1, glm::value_ptr(PointLight_Sources[i].lightpos));
 
 		//pointLights.intensity
-		std::string point_intensity;
-		point_intensity = istring + "].intensity";
-		glUniform1fv(glGetUniformLocation(shader.GetHandle(), point_intensity.c_str())
+		pointLight = istring + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), pointLight.c_str())
 			, 1, &PointLight_Sources[i].intensity);
 	}
 
 	// DIRECTIONAL LIGHT STUFFS
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
-		std::string istring = "directionalLights[" + std::to_string(i);
+		istring = "directionalLights[" + std::to_string(i);
 
 		//directionalLights.enableShadow
-		std::string directional_shadow;
-		directional_shadow = istring + "].enableShadow";
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), directional_shadow.c_str())
+		directionalLight = istring + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), directionalLight.c_str())
 			, DirectionLight_Sources[i].enableShadow);
 
 		//directionalLights.colour
-		std::string directional_color;
-		directional_color = istring + "].colour";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_color.c_str())
+		directionalLight = istring + "].colour";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directionalLight.c_str())
 			, 1, glm::value_ptr(DirectionLight_Sources[i].lightColor));
 
-		std::string directional_direction;
-		directional_direction = istring + "].direction";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directional_direction.c_str())
+		directionalLight = istring + "].direction";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), directionalLight.c_str())
 			, 1, glm::value_ptr(DirectionLight_Sources[i].direction));
 
-		std::string directional_intensity;
-		directional_intensity = istring + "].intensity";
-		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directional_intensity.c_str())
+		directionalLight = istring + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), directionalLight.c_str())
 			, 1, &DirectionLight_Sources[i].intensity);
 
-		std::string directional_LSM;
-		directional_LSM = istring + "].lightSpaceMatrix";
-		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), directional_LSM.c_str())
+		directionalLight = istring + "].lightSpaceMatrix";
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), directionalLight.c_str())
 			, 1, GL_FALSE, glm::value_ptr(DirectionLight_Sources[i].lightSpaceMatrix));
 
 	}
@@ -736,51 +787,40 @@ void Renderer::BindLights(GLSLShader& shader) {
 	// SPOTLIGHT STUFFS
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
-		std::string istring = "spotLights[" + std::to_string(i);
+		istring = "spotLights[" + std::to_string(i);
 
 		//directionalLights.enableShadow
-		std::string spot_shadow;
-		spot_shadow = istring + "].enableShadow";
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), spot_shadow.c_str())
+		spotLight = istring + "].enableShadow";
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, SpotLight_Sources[i].enableShadow);
 
-
 		//spotLights.position
-		std::string spot_pos;
-		spot_pos = istring + "].position";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_pos.c_str())
+		spotLight = istring + "].position";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightpos));
 
-		
-		std::string spot_color;
-		spot_color = istring + "].colour";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_color.c_str())
+		spotLight = istring + "].colour";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].lightColor));
 
-		
-		std::string spot_direction;
-		spot_direction = istring + "].direction";
-		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spot_direction.c_str())
+		spotLight = istring + "].direction";
+		glUniform3fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, glm::value_ptr(SpotLight_Sources[i].direction));
 
-		std::string spot_cutoff_inner;
-		spot_cutoff_inner = istring + "].innerCutOff";
-		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_inner.c_str())
+		spotLight = istring + "].innerCutOff";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, &SpotLight_Sources[i].inner_CutOff);
 
-		std::string spot_cutoff_outer;
-		spot_cutoff_outer = istring + "].outerCutOff";
-		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_cutoff_outer.c_str())
+		spotLight = istring + "].outerCutOff";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, &SpotLight_Sources[i].outer_CutOff);
 
-		std::string spot_intensity;
-		spot_intensity = istring + "].intensity";
-		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spot_intensity.c_str())
+		spotLight = istring + "].intensity";
+		glUniform1fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, &SpotLight_Sources[i].intensity);
 
-		std::string spot_LSM;
-		spot_LSM = istring + "].lightSpaceMatrix";
-		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spot_LSM.c_str())
+		spotLight = istring + "].lightSpaceMatrix";
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), spotLight.c_str())
 			, 1, GL_FALSE, glm::value_ptr(SpotLight_Sources[i].lightSpaceMatrix));
 
 	}
