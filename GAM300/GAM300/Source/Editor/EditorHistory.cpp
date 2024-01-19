@@ -250,7 +250,11 @@ void HistoryManager::AmendComponent(Change& change, ChangeType type) {
         else
             change.component->state = DELETED;
     }
-        
+    
+    if (change.property.find("Transform") != std::string::npos)
+    {
+        ((Transform*)change.component)->RecalculateLocalMatrices();
+    }
 }
 
 //Helper function that displays all relevant fields and types in a component

@@ -124,7 +124,7 @@ void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 	{
 		Transform* tParent = GetParent();
 		glm::mat4 localMatrix = glm::inverse(tParent->GetWorldMatrix())* worldMatrix;
-		
+		glm::quat rotationQuat;
 		Decompose(localMatrix, translation, rotationQuat, scale);
 		rotation = glm::eulerAngles(rotationQuat);
 	}

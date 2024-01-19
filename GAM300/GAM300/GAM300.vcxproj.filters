@@ -217,6 +217,7 @@
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor.h" />
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.h" />
     <ClInclude Include="Source\AssetManager\TextureCompiler.h" />
+    <ClInclude Include="Source\Graphics\Text.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
