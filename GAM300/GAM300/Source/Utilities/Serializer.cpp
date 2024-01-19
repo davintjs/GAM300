@@ -429,12 +429,14 @@ template <typename T>
 void DeserializeComponent(const DeComHelper& _helper)
 {
     Engine::UUID uuid = (*_helper.node)["ID"].as<Engine::UUID>();
+
     T component{};
     component.UUID(uuid);
     //if constexpr (std::is_same<T, AudioSource>())
     //    PRINT("HELLO");
     YAML::Node node = (*_helper.node)[GetType::Name<T>()];
     Scene& _scene = *_helper.scene;
+    _scene.SetActive<T>();
     Engine::UUID euid = node["m_GameObject"]["fileID"].as<Engine::UUID>();
     component.EUID(euid);
     // Assign to the component
