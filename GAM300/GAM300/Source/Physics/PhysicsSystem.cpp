@@ -142,8 +142,6 @@ void PhysicsSystem::Update(float dt) {
 
 		}
 	}
-	//std::cout << "num active bodies after rigidbodies are updated: " << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << '\n';
-
 	auto& ccArray = scene.GetArray<CharacterController>();
 	int j = 0;
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
@@ -165,15 +163,6 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetPosition(tmpBid, pos, JPH::EActivation::DontActivate);
 		bodyInterface->SetRotation(tmpBid, rot, JPH::EActivation::DontActivate);
 		bodyInterface->SetLinearVelocity(tmpBid, velocity);
-		//if (characters[j]->GetGroundState() == JPH::Character::EGroundState::OnGround)
-		//{
-		//	//std::cout << "Character " << i << " is grounded\n";
-		//	cc.isGrounded = true;
-		//}
-		//else
-		//{
-		//	cc.isGrounded = false;
-		//}
 		++j;
 	}
 	
@@ -191,11 +180,6 @@ void PhysicsSystem::Update(float dt) {
 
 		}
 	}
-	
-	//}
-	//std::cout << "after physics update but before post update\n";
-	//std::cout << "DT: " << dt << std::endl;
-	//std::cout << "Physics update!\n";	
 
 	PostPhysicsUpdate();
 
@@ -328,7 +312,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc1 = pc1;
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
-				PRINT("Sending Trigger Enter Event\n");
+				//PRINT("Sending Trigger Enter Event\n");
+				std::cout << "Trigger enter\n";
 			}
 			else {
 				ContactAddedEvent cae;
@@ -400,6 +385,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 			}
 		}
 	}
+	// Clear engine collisions
 	engineContactListener->collisionResolution.clear();
 	
 	// Character collision tolerance
@@ -407,6 +393,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		(*it)->PostSimulation(0.05f);
 	}
 
+	// Update game objects to their corresponding physics bodies
 	UpdateGameObjects();
 
 }
@@ -834,7 +821,6 @@ void PhysicsSystem::UpdateGameObjects() {
 		else if (scene.Has<SphereCollider>(entity)) {
 			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3());
 		}
-		//t.translation = tmpVec;
 
 		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);
 		JoltQuatToGlmVec3(tmpQuat, tmpVec);
@@ -1017,6 +1003,9 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		motionType = JPH::EMotionType::Kinematic;
 	}
 
+	if (rb.is_trigger)
+		motionType = JPH::EMotionType::Kinematic;
+
 	// Create rigidbody's collider shape
 	if (scene.Has<BoxCollider>(entity)) {
 
@@ -1027,78 +1016,76 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
-		if (rb.is_trigger)
-		{
-			motionType = JPH::EMotionType::Kinematic;
-		}
-
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		if (rb.isStatic)
-			boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+		
+		SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
 
 
-		// Set all necessary settings for the body
-		// Friction
-		boxCreationSettings.mFriction = rb.friction;
-		// Linear Velocity
-		boxCreationSettings.mLinearVelocity = linearVel;
-		// Angular Velocity
-		boxCreationSettings.mAngularVelocity = angularVel;
-		// Sensor settings 
-		boxCreationSettings.mIsSensor = rb.is_trigger;
-		if (rb.is_trigger)
-		{
-			boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
-			boxCreationSettings.mSensorDetectsStatic = true;
-		}
+		//if (rb.isStatic)
+		//	boxCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
-		boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-		boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
-		// Create the actual jolt body
-		JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
-		bodyInterface->AddBody(box->GetID(), enabledStatus);
-		rb.bid = box->GetID().GetIndexAndSequenceNumber();
+
+		//// Set all necessary settings for the body
+		//// Friction
+		//boxCreationSettings.mFriction = rb.friction;
+		//// Linear Velocity
+		//boxCreationSettings.mLinearVelocity = linearVel;
+		//// Angular Velocity
+		//boxCreationSettings.mAngularVelocity = angularVel;
+		//// Sensor settings 
+		//boxCreationSettings.mIsSensor = rb.is_trigger;
+		//if (rb.is_trigger)
+		//{
+		//	boxCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+		//	boxCreationSettings.mSensorDetectsStatic = true;
+		//}
+
+		//boxCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+		//boxCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
+		//// Create the actual jolt body
+		//JPH::Body* box = bodyInterface->CreateBody(boxCreationSettings);
+		//bodyInterface->AddBody(box->GetID(), enabledStatus);
+		//rb.bid = box->GetID().GetIndexAndSequenceNumber();
 
 	}
 	else if (scene.Has<SphereCollider>(entity)) {
 
-		std::cout << "sphere collider\n";
+		//std::cout << "sphere collider\n";
 		SphereCollider& sc = scene.Get<SphereCollider>(entity);
 		Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
 
-		if (rb.is_trigger)
-		{
-			motionType = JPH::EMotionType::Kinematic;
-		}
 
 		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape( radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		if (rb.isStatic)
-			sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+		
+		SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+		
+		//if (rb.isStatic)
+		//	sphereCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
-		// Set all necessary settings for the body
-		// Friction
-		sphereCreationSettings.mFriction = rb.friction;
-		// Linear Velocity
-		sphereCreationSettings.mLinearVelocity = linearVel;
-		// Angular Velocity
-		sphereCreationSettings.mAngularVelocity = angularVel;
-		// Sensor settings
-		sphereCreationSettings.mIsSensor = rb.is_trigger;
-		if (rb.is_trigger)
-		{
-			sphereCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
-			sphereCreationSettings.mSensorDetectsStatic = true;
-		}
+		//// Set all necessary settings for the body
+		//// Friction
+		//sphereCreationSettings.mFriction = rb.friction;
+		//// Linear Velocity
+		//sphereCreationSettings.mLinearVelocity = linearVel;
+		//// Angular Velocity
+		//sphereCreationSettings.mAngularVelocity = angularVel;
+		//// Sensor settings
+		//sphereCreationSettings.mIsSensor = rb.is_trigger;
+		//if (rb.is_trigger)
+		//{
+		//	sphereCreationSettings.mObjectLayer = EngineObjectLayers::SENSOR;
+		//	sphereCreationSettings.mSensorDetectsStatic = true;
+		//}
 
-		sphereCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-		sphereCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
+		//sphereCreationSettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+		//sphereCreationSettings.mMassPropertiesOverride.mMass = 1.0f;
 
-		JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
-		bodyInterface->AddBody(sphere->GetID(), enabledStatus);
-		rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
+		//JPH::Body* sphere = bodyInterface->CreateBody(sphereCreationSettings);
+		//bodyInterface->AddBody(sphere->GetID(), enabledStatus);
+		//rb.bid = sphere->GetID().GetIndexAndSequenceNumber();
 	}
 	else if (scene.Has<CapsuleCollider>(entity)) {
 
@@ -1106,22 +1093,24 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 		JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 
-		if (rb.isStatic)
-			capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
+		SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+
+		//if (rb.isStatic)
+		//	capsuleCreationSettings.mObjectLayer = EngineObjectLayers::STATIC;
 
 		// Set all necessary settings for the body
 		// Friction
-		capsuleCreationSettings.mFriction = rb.friction;
+		//capsuleCreationSettings.mFriction = rb.friction;
 		// Linear Velocity
-		capsuleCreationSettings.mLinearVelocity = linearVel;
+		//capsuleCreationSettings.mLinearVelocity = linearVel;
 		// Angular Velocity
-		capsuleCreationSettings.mAngularVelocity = angularVel;
+		//capsuleCreationSettings.mAngularVelocity = angularVel;
 		// Sensor settings
-		capsuleCreationSettings.mIsSensor = rb.is_trigger;
+		//capsuleCreationSettings.mIsSensor = rb.is_trigger;
 
-		JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
-		bodyInterface->AddBody(capsule->GetID(), enabledStatus);
-		rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
+		//JPH::Body* capsule = bodyInterface->CreateBody(capsuleCreationSettings);
+		//bodyInterface->AddBody(capsule->GetID(), enabledStatus);
+		//rb.bid = capsule->GetID().GetIndexAndSequenceNumber();
 	}
 
 }
@@ -1176,6 +1165,41 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	enginePSystem->characters.push_back(character);
 
 	return;
+}
+
+void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigidbody& rb, JPH::EActivation enabledStatus) {
+	
+	// Linear + Angular Velocity
+	JPH::RVec3 linearVel;
+	GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
+	JPH::RVec3 angularVel;
+	GlmVec3ToJoltVec3(rb.angularVelocity, angularVel);
+
+	if (rb.isStatic)
+		bcs.mObjectLayer = EngineObjectLayers::STATIC;
+
+	// Set all necessary settings for the body
+	// Friction
+	bcs.mFriction = rb.friction;
+	// Linear Velocity
+	bcs.mLinearVelocity = linearVel;
+	// Angular Velocity
+	bcs.mAngularVelocity = angularVel;
+	// Sensor settings
+	bcs.mIsSensor = rb.is_trigger;
+	if (rb.is_trigger)
+	{
+		bcs.mObjectLayer = EngineObjectLayers::SENSOR;
+		bcs.mSensorDetectsStatic = true;
+	}
+
+	bcs.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+	bcs.mMassPropertiesOverride.mMass = 1.0f;
+
+
+	JPH::Body* body = bodyInterface->CreateBody(bcs);
+	bodyInterface->AddBody(body->GetID(), enabledStatus);
+	rb.bid = body->GetID().GetIndexAndSequenceNumber();
 }
 
 #pragma region EngineContactListener
@@ -1247,11 +1271,11 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	collisionResolution.back().p1 = vp1;
 	collisionResolution.back().p1 = vp2;
 
-	std::cout << vp1.x << "|" << vp1.y << "|" << vp1.z << std::endl;
-	std::cout << vp2.x << "|" << vp2.y << "|" << vp2.z << std::endl;
+	//std::cout << vp1.x << "|" << vp1.y << "|" << vp1.z << std::endl;
+	//std::cout << vp2.x << "|" << vp2.y << "|" << vp2.z << std::endl;
 
 
-	//std::cout << "Contact Added\n";
+	std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
 {

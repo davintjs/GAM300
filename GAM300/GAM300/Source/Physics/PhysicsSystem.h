@@ -222,6 +222,8 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
+	void SetBodyCreationSettings(JPH::BodyCreationSettings & bcs, Rigidbody & rb, JPH::EActivation enabledStatus);
+
 	// Resolve any updates before Physics Simulation
 	void PrePhysicsUpdate(float dt);
 	// Resolve any updates after Physics Simulation but before next frame
