@@ -171,43 +171,46 @@ bool SerializeComponent(YAML::Emitter& out, T& _component)
     out << YAML::Key << "m_GameObject" << YAML::Key << YAML::Flow << YAML::BeginMap;
     out << YAML::Key << "fileID" << YAML::Value << _component.EUID() << YAML::EndMap;
 
-
+    if constexpr (!std::is_same_v<T, Transform>)
+    {
+        out << YAML::Key << "m_IsEnabled" << YAML::Value << MySceneManager.GetCurrentScene().IsActive(_component);
+    }
 
     property::SerializeEnum(_component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    {
+        auto entry = property::entry { PropertyName, Data };
+        std::string Name = entry.first;
+        if (!Flags.m_isDontSave)
         {
-            auto entry = property::entry { PropertyName, Data };
-            std::string Name = entry.first;
-            if (!Flags.m_isDontSave)
-            {
-                std::visit([&](auto& Value)
-                    {
-                        using T1 = std::decay_t<decltype(Value)>;
+            std::visit([&](auto& Value)
+                {
+                    using T1 = std::decay_t<decltype(Value)>;
 
-                        // Edit name
-                        auto it = Name.begin() + Name.find_last_of("/");
-                        Name.erase(Name.begin(), ++it);
-                        // Store Component value
-                        if (Flags.m_isReference)
+                    // Edit name
+                    auto it = Name.begin() + Name.find_last_of("/");
+                    Name.erase(Name.begin(), ++it);
+                    // Store Component value
+                    if (Flags.m_isReference)
+                    {
+                        out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
+                        out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
+                    }
+                    else
+                    {
+                        if constexpr (std::is_base_of< Engine::HexID, T1>())
                         {
                             out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
-                            out << YAML::Key << "fileID" << YAML::Value << Value << YAML::EndMap;
+                            out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
                         }
                         else
                         {
-                            if constexpr (std::is_base_of< Engine::HexID, T1>())
-                            {
-                                out << YAML::Key << Name << YAML::Key << YAML::Flow << YAML::BeginMap;
-                                out << YAML::Key << "guid" << YAML::Value << Value << YAML::EndMap;
-                            }
-                            else
-                            {
-                                out << YAML::Key << Name << YAML::Value << Value;
-                            }
+                            out << YAML::Key << Name << YAML::Value << Value;
                         }
                     }
-                , entry.second);
-            }
-        });
+                }
+            , entry.second);
+        }
+    });
 
     if constexpr (std::is_same<T, Transform>())
     {
@@ -436,7 +439,6 @@ void DeserializeComponent(const DeComHelper& _helper)
     //    PRINT("HELLO");
     YAML::Node node = (*_helper.node)[GetType::Name<T>()];
     Scene& _scene = *_helper.scene;
-    _scene.SetActive<T>();
     Engine::UUID euid = node["m_GameObject"]["fileID"].as<Engine::UUID>();
     component.EUID(euid);
     // Assign to the component
@@ -497,11 +499,14 @@ void DeserializeComponent(const DeComHelper& _helper)
 
         if (&entity)
         {
+
+            T* pComponent{nullptr};
             // Check for Scripts
             if constexpr (std::is_same<Transform, T>())
             {
                 T& transform = _scene.Get<T>(component.EUID());
                 transform = component;
+                pComponent = &transform;
             }
             else if constexpr (std::is_same<Tag, T>())
             {
@@ -509,12 +514,15 @@ void DeserializeComponent(const DeComHelper& _helper)
             }
             else if constexpr (std::is_same<T, Script>())
             {
-                _scene.Add<T>(component.EUID(),component.UUID(),nullptr,component.scriptId);
+                pComponent = _scene.Add<T>(component.EUID(),component.UUID(),nullptr,component.scriptId);
             }
             else
             {
-                T* pComponent = _scene.Add<T>(component.EUID(), component.UUID(), &component);
+                pComponent = _scene.Add<T>(component.EUID(), component.UUID(), &component);
             }
+
+            if (node["m_IsEnabled"] && pComponent)
+                _scene.SetActive<T>(*pComponent, node["m_IsEnabled"].as<bool>());
         }
         else
             E_ASSERT(false, id ," Entity does not exist in this scene! Either the EUID provided or the scene is invalid!");
