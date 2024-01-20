@@ -79,7 +79,7 @@ void Lighting::Update(float)
 
 
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
-			pointLightSources[pointLightCount].lightpos = transform.translation;
+			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
 			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
 			++pointLightCount;
@@ -94,7 +94,7 @@ void Lighting::Update(float)
 
 
 			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
-			directionLightSources[directionalLightCount].lightpos = transform.translation;
+			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 			directionLightSources[directionalLightCount].direction = lightSource.direction;
@@ -110,13 +110,13 @@ void Lighting::Update(float)
 
 
 			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
-			spotLightSources[spotLightCount].lightpos = transform.translation;
+			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
 			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
 
 			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
-			glm::vec3 rotation = transform.GetRotation();
+			glm::vec3 rotation = transform.GetGlobalRotation();
 			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
 			rot *= glm::translate(glm::mat4(1.f),direction);

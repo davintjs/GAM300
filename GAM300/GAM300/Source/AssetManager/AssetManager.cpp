@@ -32,40 +32,40 @@ static std::unordered_set<fs::path> TEMP_EXTENSIONS
 };
 // Bean: Include model compiler here temporarily, should use events instead
 #include "ModelCompiler.h"
+#include "TextureCompiler.h"
 
-static std::unordered_map<fs::path, std::string> COMPILABLE_EXTENSIONS
+static std::vector<fs::path> COMPILABLE_EXTENSIONS
 {
-	{".jpg", "TextureCompiler.exe "},
-	{".png", "TextureCompiler.exe "},
-	{".fbx", "ModelCompiler.exe "},
-	{".obj", "ModelCompiler.exe "},
-	//{".cs", "csc.exe "},
+	{".jpg"},
+	{".png"},
+	{".fbx"},
+	{".obj"},
+	//{".cs"},
 };
 
 void AssetManager::Compile(const fs::path& path)
 {
-	std::string command = COMPILABLE_EXTENSIONS[path.extension()] + path.string();
-
 	if (path.extension() == ".fbx" || path.extension() == ".obj")
 	{
 		// Bean: Need to store all the material, shader, animation, mesh somewhere in asset manager
 		MODELCOMPILER.LoadModel(path);
 	}
-	else
+	else if (path.extension() == ".png" || path.extension() == ".jpg")
 	{
-		system(command.c_str());
+		// Bean: From TextureCompiler.h
+		LoadTexture(path);
 	}
+	//else
+	//{
+	//	system(command.c_str());
+	//}
 }
 
 bool AssetManager::IsCompilable(const fs::path& path)
 {
 	//Read metafile
-	//if (path.extension() == ".jpg" || path.extension() == ".png")
-	//{
-	//	return true;
-	//}
-
-	return COMPILABLE_EXTENSIONS.contains(path.extension()) && assets.IsModified(path);
+	return std::find(COMPILABLE_EXTENSIONS.begin(), COMPILABLE_EXTENSIONS.end(), path.extension()) != COMPILABLE_EXTENSIONS.end() 
+		&& assets.IsModified(path);
 }
 
 

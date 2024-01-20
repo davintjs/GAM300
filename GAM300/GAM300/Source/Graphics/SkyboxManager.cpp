@@ -15,7 +15,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
-#include "Graphics/TextureManager.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "Graphics/MeshManager.h"
 
 void SkyboxManager::Init()

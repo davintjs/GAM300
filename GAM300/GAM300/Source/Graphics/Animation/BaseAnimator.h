@@ -102,12 +102,12 @@ public:
 
 property_begin_name(BaseAnimator, "BaseAnimator") {
 	property_var(animID).Name("Animation"),
-	property_var(stateName).Name("Current State").Flags(property::flags::SHOW_READONLY),
-	property_var(stateNextName).Name("Next State").Flags(property::flags::SHOW_READONLY),
-	property_var(m_CurrentTime).Name("Time"),
-	property_var(startTime).Name("StartTime"),
-	property_var(endTime).Name("EndTime"),
-	property_var(playing).Name("Playing"),
+	property_var(stateName).Name("Current State").Flags(property::flags::SHOW_READONLY | property::flags::DONTSAVE),
+	property_var(stateNextName).Name("Next State").Flags(property::flags::SHOW_READONLY | property::flags::DONTSAVE),
+	property_var(m_CurrentTime).Name("Time").Flags(property::flags::DONTSAVE),
+	property_var(startTime).Name("StartTime").Flags(property::flags::DONTSAVE),
+	property_var(endTime).Name("EndTime").Flags(property::flags::DONTSAVE),
+	property_var(playing).Name("Playing").Flags(property::flags::DONTSAVE),
 
 }property_vend_h(BaseAnimator)
 

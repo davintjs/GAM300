@@ -25,6 +25,16 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Physics/PhysicsSystem.h"
 
 
+namespace
+{
+	static void Decompose(glm::mat4& mat, Vector3& pos, glm::quat& rot, Vector3& scale)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(mat, (glm::fvec3&)scale, rot, (glm::fvec3&)pos, skew, perspective);
+	}
+}
+
 std::map<std::string, size_t> ComponentTypes{};
 
 bool Transform::isLeaf() {
@@ -43,45 +53,117 @@ bool Transform::isChild() {
 		return false;
 }
 
-glm::vec3 Transform::GetTranslation() const
+void Transform::SetGlobalPosition(Vector3 newPos)
 {
-	return glm::vec3(GetWorldMatrix()[3]);
+	SetWorldMatrix(newPos, globalRot, globalScale);
 }
 
-glm::vec3 Transform::GetRotation() const
+void Transform::SetGlobalRotation(Vector3 newRot)
 {
-	//return glm::eulerAngles(glm::quat_cast(GetWorldMatrix()));
-	glm::quat rot;
-	glm::vec3 skew;
-	glm::vec4 perspective;
-	vec3 _scale;
-	vec3 _translation;
-	glm::mat4 globalTransform = GetWorldMatrix();
-	// Calculate the global transformation matrix
-	glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
-	return glm::eulerAngles(rot);
+	SetWorldMatrix(globalPos, newRot, globalScale);
 }
 
-glm::vec3 Transform::GetScale() const
+void Transform::SetGlobalScale(Vector3 newScale)
 {
-	if(parent)
-		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetScale() * glm::vec3(scale);
-	return scale;
+	SetWorldMatrix(globalPos, globalRot, newScale);
+}
+
+
+void Transform::SetLocalPosition(Vector3 newPos)
+{
+	SetLocalMatrix(newPos, rotation, scale);
+}
+
+void Transform::SetLocalRotation(Vector3 newRot)
+{
+	SetLocalMatrix(translation, newRot, scale);
+}
+
+void Transform::SetLocalScale(Vector3 newScale)
+{
+	SetLocalMatrix(translation, rotation, newScale);
+}
+
+Transform* Transform::GetParent() 
+{ 
+	if (parent) 
+		return &MySceneManager.GetCurrentScene().Get<Transform>(parent); 
+	return nullptr;
+}
+
+void Transform::SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
+{
+	translation = _translation;
+	rotation = _rotation;
+	scale = _scale;
+	if (parent)
+	{
+		Transform* tParent = GetParent();
+		worldMatrix = tParent->GetWorldMatrix() * CreateTransformationMtx(translation, rotation, scale);
+		glm::quat worldRotQ;
+		Decompose(worldMatrix, globalPos, worldRotQ, globalScale);
+		globalRot = glm::eulerAngles(worldRotQ);
+	}
+	else
+	{
+		worldMatrix = CreateTransformationMtx(translation, rotation, scale);
+		globalPos = translation;
+		globalRot = rotation;
+		globalScale = scale;
+	}
+	UpdateChildrenMatrices();
+}
+
+void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
+{
+	globalPos = _translation;
+	globalRot = _rotation;
+	globalScale = _scale;
+	worldMatrix = CreateTransformationMtx(_translation, _rotation, _scale);
+	if (parent)
+	{
+		Transform* tParent = GetParent();
+		glm::mat4 localMatrix = glm::inverse(tParent->GetWorldMatrix())* worldMatrix;
+		glm::quat rotationQuat;
+		Decompose(localMatrix, translation, rotationQuat, scale);
+		rotation = glm::eulerAngles(rotationQuat);
+	}
+	else
+	{
+		translation = globalPos;
+		rotation = globalRot;
+		scale = globalScale;
+	}
+	UpdateChildrenMatrices();
+}
+
+void Transform::UpdateWorldMatrix(glm::mat4& _world)
+{
+	glm::quat _rot;
+	Decompose(_world, globalPos, _rot, globalScale);
+	globalRot = glm::eulerAngles(_rot);
+	worldMatrix = _world;
+	UpdateChildrenMatrices();
+}
+
+
+void Transform::UpdateChildrenMatrices()
+{
+	for (const auto& childID : child)
+	{
+		Transform& tChild = MySceneManager.GetCurrentScene().Get<Transform>(childID);
+		glm::mat4 childMat = worldMatrix * tChild.GetLocalMatrix();
+		tChild.UpdateWorldMatrix(childMat);
+	}
 }
 
 glm::mat4 Transform::GetWorldMatrix() const
 {
-	if (parent)
-		return MySceneManager.GetCurrentScene().Get<Transform>(parent).GetWorldMatrix() * GetLocalMatrix();
-	return GetLocalMatrix();
+	return worldMatrix;
 }
 
 glm::mat4 Transform::GetLocalMatrix() const {
-	glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
-
-	return glm::translate(glm::mat4(1.0f), vec3(translation)) *
-		rot *
-		glm::scale(glm::mat4(1.0f), vec3(scale));
+	return CreateTransformationMtx(translation, rotation, scale);
 }
 
 bool Transform::isEntityChild(Transform& ent) {
@@ -147,6 +229,18 @@ bool Transform::isSelectedChild() {
 	}
 
 	return false; 
+}
+
+void Transform::TempSetLocal(Vector3 _pos, Vector3 _rot, Vector3 _scale)
+{
+	translation = _pos;
+	rotation = _rot;
+	scale = _scale;
+}
+
+void Transform::RecalculateLocalMatrices()
+{
+	SetLocalMatrix(translation,rotation,scale);
 }
 
 

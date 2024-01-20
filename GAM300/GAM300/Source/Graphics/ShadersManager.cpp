@@ -150,6 +150,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/InstancedParticle.vert";
 	fragmentPath = shaderPath + "/InstancedParticle.frag";
 	ShaderCompiler("Particle SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/Text.vert";
+	fragmentPath = shaderPath + "/Text.frag";
+	ShaderCompiler("Text SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

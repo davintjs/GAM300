@@ -180,7 +180,6 @@ void BaseAnimator::ChangeState()
 void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
 {
     std::string nodeName = node->name;
-    glm::mat4 nodeTransform = node->transformation;
 
     Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
 
@@ -189,21 +188,24 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
     if (Bone)
     {
         Bone->Update(m_CurrentTime);
-        nodeTransform = Bone->GetLocalTransform();
+        parentTransform *= Bone->GetLocalTransform();
+    }
+    else
+    {
+        parentTransform *= node->transformation;
     }
 
-    glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-    auto boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
-    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+    auto& boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
+    auto it = boneInfoMap.find(nodeName);
+    if (it != boneInfoMap.end())
     {
-        int index = boneInfoMap[nodeName].id;
-        glm::mat4 offset = boneInfoMap[nodeName].offset;
-        m_FinalBoneMatrices[index] = globalTransformation * offset;
+        int index = it->second.id;
+        glm::mat4 offset = it->second.offset;
+        m_FinalBoneMatrices[index] = parentTransform * offset;
     }
 
     for (int i = 0; i < node->childrenCount; i++)
-        CalculateBoneTransform(&node->children[i], globalTransformation);
+        CalculateBoneTransform(&node->children[i], parentTransform);
 }
 
 void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)

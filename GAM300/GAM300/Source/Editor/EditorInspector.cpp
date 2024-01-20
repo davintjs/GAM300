@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "EditorTemplates.h"
 #include "Scene/Components.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
 #include "PropertyConfig.h"
@@ -790,58 +791,112 @@ void DisplayShaders(Change& change, T& value) {
 template <typename T>
 void Display_Property(T& comp) {
 
-    std::vector<property::entry> List;
-    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    property::DisplayEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
-            if (!Flags.m_isDontShow) {
-                auto entry = property::entry { PropertyName, Data };
-                std::visit([&](auto& Value) {
-                    using T1 = std::decay_t<decltype(Value)>;
+            auto entry = property::entry { PropertyName, Data };
+            std::visit([&](auto& Value) {
+                using T1 = std::decay_t<decltype(Value)>;
 
-                    std::string DisplayName = entry.first;
-                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                    DisplayName.erase(DisplayName.begin(), ++it);
+                std::string DisplayName = entry.first;
+                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                DisplayName.erase(DisplayName.begin(), ++it);
 
-                    Change newchange(&comp, entry.first);
+                Change newchange(&comp, entry.first);
 
-                    ImGui::PushID(entry.first.c_str());
+                ImGui::PushID(entry.first.c_str());
 
-                    //Temporary implementation for materials
-                    if (entry.first.find("Shader") != std::string::npos) {
-                        DisplayShaders(newchange, Value);
-                    }
-                    else if (entry.first.find("AudioChannel") != std::string::npos) {
-                        DisplayAudioChannels(newchange, Value);
-                    }
-                    else {
-                        Display<T1>(newchange, DisplayName.c_str(), Value);
-                        if (DisplayName == "Material_ID") {
-                            ImGui::SameLine();
-                            if (ImGui::Button("Mat")) {
-                                Scene& scene = MySceneManager.GetCurrentScene();
-                                Entity& ent = scene.Get<Entity>(comp);
-                                auto& mr = scene.Get<MeshRenderer>(ent);
-                                if(!EditorInspector::Instance().material_inspector){
-                                    EditorInspector::Instance().material_inspector = true; 
-                                }
-
-                                ImGui::SetWindowFocus("Material");                                
-                                EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                //Temporary implementation for materials
+                if (entry.first.find("Shader") != std::string::npos) {
+                    DisplayShaders(newchange, Value);
+                }
+                else if (entry.first.find("AudioChannel") != std::string::npos) {
+                    DisplayAudioChannels(newchange, Value);
+                }
+                else {
+                    Display<T1>(newchange, DisplayName.c_str(), Value);
+                    if (DisplayName == "Material_ID") {
+                        ImGui::SameLine();
+                        if (ImGui::Button("Mat")) {
+                            Scene& scene = MySceneManager.GetCurrentScene();
+                            Entity& ent = scene.Get<Entity>(comp);
+                            auto& mr = scene.Get<MeshRenderer>(ent);
+                            if (!EditorInspector::Instance().material_inspector) {
+                                EditorInspector::Instance().material_inspector = true;
                             }
+
+                            ImGui::SetWindowFocus("Material");
+                            EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
                         }
                     }
+                }
 
-                    ImGui::PopID();
+                ImGui::PopID();
 
-                    }
-                , Data);
-                property::set(comp, entry.first.c_str(), Data);
+                }
+            , Data);
+            property::set(comp, entry.first.c_str(), Data);
 
-                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            }
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            //assert(Flags.m_isScope == false || PropertyName.back() == ']');
            
         });
+
+    if constexpr (std::is_same_v<T, Transform>)
+    {
+        comp.RecalculateLocalMatrices();
+    }
+
+    //property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    //    {
+    //        if (!Flags.m_isDontShow) {
+    //            auto entry = property::entry { PropertyName, Data };
+    //            std::visit([&](auto& Value) {
+    //                using T1 = std::decay_t<decltype(Value)>;
+
+    //                std::string DisplayName = entry.first;
+    //                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+    //                DisplayName.erase(DisplayName.begin(), ++it);
+
+    //                Change newchange(&comp, entry.first);
+
+    //                ImGui::PushID(entry.first.c_str());
+
+    //                //Temporary implementation for materials
+    //                if (entry.first.find("Shader") != std::string::npos) {
+    //                    DisplayShaders(newchange, Value);
+    //                }
+    //                else if (entry.first.find("AudioChannel") != std::string::npos) {
+    //                    DisplayAudioChannels(newchange, Value);
+    //                }
+    //                else {
+    //                    Display<T1>(newchange, DisplayName.c_str(), Value);
+    //                    if (DisplayName == "Material_ID") {
+    //                        ImGui::SameLine();
+    //                        if (ImGui::Button("Mat")) {
+    //                            Scene& scene = MySceneManager.GetCurrentScene();
+    //                            Entity& ent = scene.Get<Entity>(comp);
+    //                            auto& mr = scene.Get<MeshRenderer>(ent);
+    //                            if(!EditorInspector::Instance().material_inspector){
+    //                                EditorInspector::Instance().material_inspector = true; 
+    //                            }
+
+    //                            ImGui::SetWindowFocus("Material");                                
+    //                            EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+    //                        }
+    //                    }
+    //                }
+
+    //                ImGui::PopID();
+
+    //                }
+    //            , Data);
+    //            property::set(comp, entry.first.c_str(), Data);
+
+    //            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+    //            //assert(Flags.m_isScope == false || PropertyName.back() == ']');
+    //        }
+    //       
+    //    });
 }
 
 //Display all fields from a script component
@@ -973,8 +1028,43 @@ void DisplayComponentHelper(T& component)
     ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
     if (ImGui::BeginPopup(popup, win_flags)) {
 
-        if (ImGui::MenuItem("Reset")) {
 
+        if (ImGui::MenuItem("Reset")) {  
+
+            property::SerializeEnum(component, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+                {
+                    if (!Flags.m_isDontShow) {
+                        auto entry = property::entry { PropertyName, Data };
+                        std::visit([&](auto& Value) {
+
+                            using T1 = std::decay_t<decltype(Value)>;
+
+                            if constexpr (std::is_same <T1, std::string>()) {
+                                Value = std::string();
+                            }
+                            else if constexpr (std::is_same <T1, int>()) {
+                                Value = 0;
+                            }
+                            else if constexpr (std::is_same < T1, float>()) {
+                                Value = 0.f;
+                            }
+
+                            if constexpr (std::is_same<T1, Vector3>()) {
+                                //if scale reset to 1 instead or else 0 
+                                if (entry.first == "Transform/Scale") 
+                                    Value = Vector3(1.f, 1.f, 1.f);                             
+                                else
+                                    Value = Vector3();
+                            }
+                            }
+                        , Data);
+                        property::set(component, entry.first.c_str(), Data);
+
+                        // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+                        assert(Flags.m_isScope == false || PropertyName.back() == ']');
+                    }
+
+                });
         }
 
         if constexpr (!std::is_same<T, Transform>()) {
@@ -1000,9 +1090,9 @@ void DisplayComponentHelper(T& component)
             ImGui::TextDisabled("Remove Component");
         }
 
-        if (ImGui::MenuItem("Copy Component")) {
+        /*if (ImGui::MenuItem("Copy Component")) {
 
-        }
+        }*/
 
         ImGui::EndPopup();
     }
@@ -1057,7 +1147,6 @@ void DisplayComponentHelper(T& component)
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
     }
-
 }
 
 //Template recursive function to display the components in an entity
@@ -1124,83 +1213,59 @@ private:
     template<typename T1, typename... T1s>
     void AddNext(Entity& entity, Scene& scene)
     {
+        bool old_component = false;
 
-        if (Componentfilter.PassFilter(GetType::Name<T1>())) {
-
-            bool old_component = false;
-
-            if (scene.Has<T1>(entity)) {
-                if (scene.Get<T1>(entity).state == DELETED) {
-                    old_component = true;
-                }
+        if (scene.Has<T1>(entity)) {
+            if (scene.Get<T1>(entity).state == DELETED) {
+                old_component = true;
             }
+        }
 
-            if constexpr (SingleComponentTypes::Has<T1>()) {
+        if constexpr (!std::is_same_v<T1, Script>)
+        {
+            if (Componentfilter.PassFilter(GetType::Name<T1>())) {
+                if constexpr (SingleComponentTypes::Has<T1>()) {
 
-                if (!scene.Has<T1>(entity) || old_component)
-                {
-
-
-
-                    if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (!scene.Has<T1>(entity) || old_component)
                     {
-                        if (old_component)
-                            scene.Destroy(scene.Get<T1>(entity));
-
-                        T1* pObject = scene.Add<T1>(entity);
-
-                        if constexpr (std::is_same<T1, BoxCollider>())
-                        {
-
-                            geometryDebugData temp;
-                            if (scene.Has<MeshRenderer>(entity))
-                            {
-                                MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
-
-                                temp = MESHMANAGER.offsetAndBoundContainer.find(mr.meshID)->second;
-                            }
-                            else
-                            {
-                                temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
-                            }
-
-                            pObject->dimensions.x = temp.scalarBound.x;
-                            pObject->dimensions.y = temp.scalarBound.y;
-                            pObject->dimensions.z = temp.scalarBound.z;
-                            pObject->offset = temp.offset;
-                        }
-
-                        Change newchange(pObject);
-                        newchange.action = CREATING;
-                        EDITOR.History.AddComponentChange(newchange);
-
-                        EditorInspector::Instance().isAddComponentPanel = false;
-                    }
-                }
-            }
-            else
-            {
-                if constexpr (std::is_same_v<T1, Script>)
-                {
-                    GetAssetsEvent<ScriptAsset> e;
-                    EVENTS.Publish(&e);
-
-                    for (auto& pair : *e.pAssets)
-                    {
-                        if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                        if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                         {
                             if (old_component)
                                 scene.Destroy(scene.Get<T1>(entity));
 
-                            T1* comp = scene.Add<T1>(entity, nullptr, pair.first);
-                            Change newchange(comp);
+                            T1* pObject = scene.Add<T1>(entity);
+
+                            if constexpr (std::is_same<T1, BoxCollider>())
+                            {
+
+                                geometryDebugData temp;
+                                if (scene.Has<MeshRenderer>(entity))
+                                {
+                                    MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
+
+                                    temp = MESHMANAGER.offsetAndBoundContainer.find(mr.meshID)->second;
+                                }
+                                else
+                                {
+                                    temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
+                                }
+
+                                pObject->dimensions.x = temp.scalarBound.x;
+                                pObject->dimensions.y = temp.scalarBound.y;
+                                pObject->dimensions.z = temp.scalarBound.z;
+                                pObject->offset = temp.offset;
+                            }
+
+                            Change newchange(pObject);
                             newchange.action = CREATING;
                             EDITOR.History.AddComponentChange(newchange);
+
                             EditorInspector::Instance().isAddComponentPanel = false;
                         }
                     }
+
                 }
-                else
+                else //multicomponent
                 {
                     if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
@@ -1216,10 +1281,33 @@ private:
                 }
             }
         }
+        else { //SCRIPT
+            GetAssetsEvent<ScriptAsset> e;
+            EVENTS.Publish(&e);
+
+            for (auto& pair : *e.pAssets)
+            {
+                if (Componentfilter.PassFilter(pair.second.mFilePath.stem().string().c_str())) {
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    {
+                        if (old_component)
+                            scene.Destroy(scene.Get<T1>(entity));
+
+                        T1* comp = scene.Add<T1>(entity, nullptr, pair.first);
+                        Change newchange(comp);
+                        newchange.action = CREATING;
+                        EDITOR.History.AddComponentChange(newchange);
+                        EditorInspector::Instance().isAddComponentPanel = false;
+                    }
+                }         
+            }
+        }
+
+
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            AddNext<T1s...>(entity,scene);
+            AddNext<T1s...>(entity, scene);
         }
     }
 };
@@ -1236,10 +1324,8 @@ void AddComponentPanel(Entity& entity) {
         EditorInspector::Instance().isAddComponentPanel = false;
     }
 
-    
-
     ImGui::OpenPopup("Add Component");
-    if (ImGui::BeginPopupModal("Add Component", &EditorInspector::Instance().isAddComponentPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    if (ImGui::BeginPopup("Add Component", ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
         ImGui::Text("Filter: "); ImGui::SameLine();
         Componentfilter.Draw();
         (void)AddsDisplay(entity);
@@ -1247,7 +1333,7 @@ void AddComponentPanel(Entity& entity) {
     }
 }
 
-void AddTagPanel() {
+void AddTagPanel(){
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2(400, 500));
@@ -1256,9 +1342,9 @@ void AddTagPanel() {
     if (ImGui::IsKeyPressed(ImGuiKey_Escape)) {
         EditorInspector::Instance().isAddTagPanel = false;
     }
+
     ImGui::OpenPopup("Tags");
     if (ImGui::BeginPopupModal("Tags", &EditorInspector::Instance().isAddTagPanel, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
-
 
         Tags& tags = IDENTIFIERS.GetTags();
 
@@ -1684,7 +1770,7 @@ void EditorInspector::Update(float dt)
             ImGui::Indent();
             ImGui::TableSetupColumn("Text", ImGuiTableColumnFlags_WidthFixed, 150.f);
             ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
-            ImGui::TableSetupColumn("Input", ImGuiTableColumnFlags_WidthFixed, 100.f);
+            ImGui::TableSetupColumn("Input2", ImGuiTableColumnFlags_WidthFixed, 100.f);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));

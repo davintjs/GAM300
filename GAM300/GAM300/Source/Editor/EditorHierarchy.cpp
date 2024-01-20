@@ -24,7 +24,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "Utilities/Serializer.h"
 
-static bool buffer = false;
 
 void EditorHierarchy::Init()
 {
@@ -129,7 +128,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 					}
 
 				}
-				//if target entity is a base node (no parent)
+				//if drag entity out of a group
 				else
 				{
 					//if current entity has a parent, delink it
@@ -150,29 +149,40 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::EndDragDropTarget();
 	}
 
+	//bool multiselect = false;
+	//std::list<Engine::UUID>& multiSel = EditorInspector::Instance().multiselectEntities;
+	//if (std::find(multiSel.begin(), multiSel.end(), euid) != multiSel.end()) {
+	//	multiselect = true;
+	//}
 
 	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
+		
+		ImGui::SetNextItemOpen(true);
+
 		if (newselect) {
 			ImGui::SetNextItemOpen(true);
 			newselect = false;
 		}
 
-		//set the newselect one frame later
-		if (buffer) {
-			newselect = true;
-			buffer = false;
-		}
-
-		if (euid == selectedEntity)
+		if (euid == selectedEntity) {
+			if (movetoitem) {
+				ImGui::SetScrollHereY();  // Scroll to the current item
+				movetoitem = false;
+			}
 			NodeFlags |= ImGuiTreeNodeFlags_Selected;
+		}					
 	}
 	 
 	auto EntityName = curr_scene.Get<Tag>(euid).name.c_str();
 	bool open = ImGui::TreeNodeEx(EntityName, NodeFlags);
 
-	//select entity from hierarchy
-	if (ImGui::IsItemClicked())
-	{
+	ImVec2 minBound = ImGui::GetItemRectMin();
+	ImVec2 maxBound = ImGui::GetItemRectMax();
+
+	minBound.x += 20; //offset the arrow button
+
+	//if user is pressing on the entity hierarchy button rather than arrow button
+	if (ImGui::IsMouseReleased(0) && ImGui::IsMouseHoveringRect(minBound, maxBound)) {
 		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
 		EVENTS.Publish(&selectedEvent);
 	}
@@ -304,7 +314,6 @@ void EditorHierarchy::Update(float dt)
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ newchange.entity };
 				EVENTS.Publish(&selectedEvent);
-				buffer = true;
 			}
 
 			Entity& ent = curr_scene.Get<Entity>(selectedEntity);
@@ -319,11 +328,13 @@ void EditorHierarchy::Update(float dt)
 				Entity* Newentity = curr_scene.Add<Entity>();
 				auto& newtransform = curr_scene.Get<Transform>(*Newentity);
 				newtransform.SetParent(&currEntity);
+
 				newchange.entity = Newentity;
 				EDITOR.History.AddEntityChange(newchange);
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
-				buffer = true;
+
+				newtransform.SetLocalMatrix(Vector3(), Vector3(), Vector3(1.f));
 			}
 
 			std::string name = "Delete Entity";
@@ -363,10 +374,25 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-	if (pEvent->pEntity)
+	if (pEvent->pEntity) {
 		selectedEntity = pEvent->pEntity->EUID();
+		/*if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+
+			std::list<Engine::UUID>& ref = EditorInspector::Instance().multiselectEntities;
+			if (std::find(ref.begin(), ref.end(), pEvent->pEntity->EUID()) != ref.end()) {
+				std::cout << "left shift: " << pEvent->pEntity->EUID() << std::endl;
+				ref.push_back(pEvent->pEntity->EUID());
+			}
+			for (auto a : ref) {
+				std::cout << a << std::endl;
+			}
+		}*/
+	}
 	else
 		selectedEntity = NON_VALID_ENTITY;
+
+	
+	
 }
 
 void EditorHierarchy::Exit() {

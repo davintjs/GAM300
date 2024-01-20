@@ -38,7 +38,7 @@ void ParticleManager::Update(float dt)
             
             // Initialize the position, velocity, and acceleration of each particle
             for (int i = 0; i < particleComponent.numParticles_; i++) {
-                particleComponent.particles_[i].position = entityTransform.GetTranslation();
+                particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
                 particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = 1.0f;
@@ -62,7 +62,7 @@ void ParticleManager::Update(float dt)
                     
                     if (particleComponent.particleLooping == true)
                     {
-                        particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
+                        particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
                         //particleComponent.particles_[i].direction = glm::vec3(0.f, 1.f, 0.f); // @desmond randomize this
                         particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                         particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
@@ -79,7 +79,7 @@ void ParticleManager::Update(float dt)
                     {
                         //particleComponent.particleEmissionRate_ = particleComponent.desiredLifetime / 1.0f; 
                         particleComponent.particleEmissionRate_ = 1.0f;
-                        particleComponent.particles_[i].position = entityTransform.GetTranslation(); // to entity's position
+                        particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
                         particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                         particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                         particleComponent.particles_[i].acceleration = 1.0f;
