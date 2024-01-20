@@ -87,14 +87,14 @@ void PhysicsSystem::Update(float dt) {
 
 		Transform& t = scene.Get<Transform>(entity);
 		
-		Vector3 translation = t.GetTranslation();
+		Vector3 translation = t.GetGlobalTranslation();
 		if (scene.Has<BoxCollider>(entity))
 			translation = translation.operator glm::vec3() + scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
 		GlmVec3ToJoltVec3(translation, tmp);
 		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::DontActivate);
 
 		JPH::Quat tmpQuat;
-		Vector3 rotation = t.GetRotation();
+		Vector3 rotation = t.GetGlobalRotation();
 		GlmVec3ToJoltQuat(rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::DontActivate);
 
@@ -151,10 +151,10 @@ void PhysicsSystem::Update(float dt) {
 		Transform& t = scene.Get<Transform>(cc);
 		//JPH::RVec3 scale;
 		JPH::RVec3 pos;
-		Vector3 tpos = t.GetTranslation();
+		Vector3 tpos = t.GetGlobalTranslation();
 		GlmVec3ToJoltVec3(tpos, pos);
 		JPH::Quat rot;
-		Vector3 trot = t.GetRotation();
+		Vector3 trot = t.GetGlobalRotation();
 		GlmVec3ToJoltQuat(trot, rot);
 
 		JPH::RVec3 velocity;
@@ -574,10 +574,10 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		Transform& t = scene.Get<Transform>(entity);
 		JPH::RVec3 scale;
 		JPH::RVec3 pos;
-		Vector3 tpos = t.GetTranslation();
+		Vector3 tpos = t.GetGlobalTranslation();
 		GlmVec3ToJoltVec3(tpos, pos);
 		JPH::Quat rot;
-		Vector3 trot = t.GetRotation();
+		Vector3 trot = t.GetGlobalRotation();
 		GlmVec3ToJoltQuat(trot, rot);
 
 		// Linear + Angular Velocity
@@ -601,10 +601,12 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		if (scene.Has<BoxCollider>(entity)) {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
-			Vector3 colliderScale(boxCollider.dimensions.x * t.scale.x/2.f, boxCollider.dimensions.y * t.scale.y/2.f, boxCollider.dimensions.z * t.scale.z/2.f);
+			Vector3 tScale = t.GetGlobalScale();
+			Vector3 tPos = t.GetGlobalTranslation();
+			Vector3 colliderScale(boxCollider.dimensions.x * tScale.x/2.f, boxCollider.dimensions.y * tScale.y/2.f, boxCollider.dimensions.z * tScale.z/2.f);
 			GlmVec3ToJoltVec3(colliderScale, scale);
 
-			Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+			Vector3 finalPos(tPos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
 			GlmVec3ToJoltVec3(finalPos, pos);
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
@@ -614,9 +616,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
 
-			//std::cout << "sphere collider\n";
+			Vector3 tPos = t.GetGlobalTranslation();
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
-			Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
+			Vector3 finalPos(tPos.operator glm::vec3() + sc.offset.operator glm::vec3());
 			GlmVec3ToJoltVec3(finalPos, pos);
 
 			float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
@@ -700,16 +702,18 @@ void PhysicsSystem::UpdateGameObjects() {
 		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(tmpBID);
 		JoltVec3ToGlmVec3(tmp, tmpVec);	
 		if (scene.Has<BoxCollider>(entity)) {
-			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3());
+			t.SetGlobalPosition(static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<BoxCollider>(entity).offset.operator glm::vec3()));
 
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
-			t.translation = static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3());
+			t.SetGlobalPosition(static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3()));
 		}
+		//t.SetGlobalPosition(tmpVec);
+		//t.translation = tmpVec;
 
 		JPH::Quat tmpQuat = bodyInterface->GetRotation(tmpBID);
 		JoltQuatToGlmVec3(tmpQuat, tmpVec);
-		t.rotation = tmpVec;
+		t.SetGlobalRotation(tmpVec);
 
 		tmp = bodyInterface->GetLinearVelocity(tmpBID);
 		JoltVec3ToGlmVec3(tmp, rb.linearVelocity);
@@ -736,7 +740,9 @@ void PhysicsSystem::UpdateGameObjects() {
 		JoltVec3ToGlmVec3(tmp, cc.velocity);
 
 		tmp = characters[idx]->GetCenterOfMassPosition();
-		JoltVec3ToGlmVec3(tmp, t.translation);
+		Vector3 newPos = t.GetGlobalTranslation();
+		JoltVec3ToGlmVec3(tmp, newPos);
+		t.SetGlobalPosition(newPos);
 		if (characters[idx]->GetGroundState() == JPH::Character::EGroundState::OnGround)
 		{
 			//std::cout << "Character " << idx << " is grounded\n";
@@ -858,10 +864,10 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	}
 	JPH::RVec3 scale;
 	JPH::RVec3 pos;
-	Vector3 tpos = t.GetTranslation();
+	Vector3 tpos = t.GetGlobalTranslation();
 	GlmVec3ToJoltVec3(tpos, pos);
 	JPH::Quat rot;
-	Vector3 trot = t.GetRotation();
+	Vector3 trot = t.GetGlobalRotation();
 	GlmVec3ToJoltQuat(trot, rot);
 
 	// Linear + Angular Velocity
@@ -886,10 +892,13 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	if (scene.Has<BoxCollider>(entity)) {
 
 		BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
-		Vector3 colliderScale(boxCollider.dimensions.x * t.scale.x / 2.f, boxCollider.dimensions.y * t.scale.y / 2.f, boxCollider.dimensions.z * t.scale.z / 2.f);
+
+		Vector3 tScale = t.GetGlobalScale();
+		Vector3 tPos = t.GetGlobalTranslation();
+		Vector3 colliderScale(boxCollider.dimensions.x * tScale.x / 2.f, boxCollider.dimensions.y * tScale.y / 2.f, boxCollider.dimensions.z * tScale.z / 2.f);
 		GlmVec3ToJoltVec3(colliderScale, scale);
 
-		Vector3 finalPos(t.translation.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+		Vector3 finalPos(tPos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
@@ -899,9 +908,9 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	}
 	else if (scene.Has<SphereCollider>(entity)) {
 
-		//std::cout << "sphere collider\n";
+		Vector3 tPos = t.GetGlobalTranslation();
 		SphereCollider& sc = scene.Get<SphereCollider>(entity);
-		Vector3 finalPos(t.translation.operator glm::vec3() + sc.offset.operator glm::vec3());
+		Vector3 finalPos(tPos.operator glm::vec3() + sc.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
@@ -931,13 +940,14 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	Entity& entity = scene.Get<Entity>(cc);
 	Transform& t = scene.Get<Transform>(entity);
 
+	Vector3 tScale = t.GetGlobalScale();
 	JPH::Ref<JPH::CharacterSettings> characterSetting = new JPH::CharacterSettings;
 	characterSetting->mMass = cc.mass;
 	characterSetting->mFriction = cc.friction;
 	characterSetting->mGravityFactor = cc.gravityFactor;
 	characterSetting->mLayer = EngineObjectLayers::DYNAMIC;
 	characterSetting->mMaxSlopeAngle = (cc.slopeLimit / 180.f) * 3.14f;	// converting to radian first
-	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -t.scale.x);
+	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -tScale.x);
 	characterSetting->mUp = JPH::Vec3(0,1,0);
 
 	float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * cc.radius;
@@ -958,10 +968,15 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 		PRINT("character uses capsule collider\n");
 	}
 
+	Vector3 tPos = t.GetGlobalTranslation();
+	Vector3 tRot = t.GetGlobalRotation();
 	JPH::RVec3 pos;
-	GlmVec3ToJoltVec3(t.translation, pos);
+	GlmVec3ToJoltVec3(tPos, pos);
 	JPH::Quat rot;
-	GlmVec3ToJoltQuat(t.rotation, rot);
+	GlmVec3ToJoltQuat(tRot, rot);
+	t.SetGlobalPosition(tPos);
+	t.SetGlobalRotation(tRot);
+
 
 	JPH::Ref<JPH::Character> character = new JPH::Character(characterSetting, pos, rot, 0, psystem);
 	JPH::EActivation activeStatus = JPH::EActivation::Activate;

@@ -35,7 +35,8 @@ TemplatePack
 	Lighting,
 	MaterialSystem,
 	Renderer,
-	ParticleRenderer
+	ParticleRenderer,
+	TextSystem
 >;
 
 using GraphicsSubSystems = decltype(SystemsGroup(GraphicsSystemsPack()));
@@ -233,7 +234,7 @@ void GraphicsSystem::Update(float dt)
 		windowPos = glm::vec2(0.f, 0.f);
 
 		// Update camera view 
-		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+		camera.UpdateCamera(transform->GetGlobalTranslation(), transform->GetGlobalRotation());
 
 		COLOURPICKER.ColorPickingUIButton(camera);
 
@@ -264,8 +265,11 @@ void GraphicsSystem::Update(float dt)
 
 			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
+
+			const glm::vec3 translation = transform->GetGlobalTranslation();
+			const glm::vec3 rotation = transform->GetGlobalRotation();
 			// Update camera view 
-			camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
+			camera.UpdateCamera(translation,rotation);
 
 			COLOURPICKER.ColorPickingUIButton(camera);
 
@@ -285,6 +289,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	Draw(_camera); // call draw after update
 	RENDERER.UIDraw_3D(_camera); // call draw after update
+	TEXTSYSTEM.Draw(_camera);
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);

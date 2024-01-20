@@ -11,6 +11,8 @@ public class GameManager : Script
     static public GameManager instance;
     public AudioSource BGM_Source;
 
+    public bool paused = false;
+
     void Awake()
     {
         instance = this;
@@ -18,4 +20,27 @@ public class GameManager : Script
             BGM_Source.Play();
     }
 
+    void Start()
+    {
+        Input.LockCursor(true);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            paused = !paused;
+        }
+
+        if (paused)
+        {
+            Input.LockCursor(false);
+        }
+
+        if (!paused && Input.GetMouseDown(0))
+        {
+            Input.LockCursor(true);
+            paused = false;
+        }
+    }
 }

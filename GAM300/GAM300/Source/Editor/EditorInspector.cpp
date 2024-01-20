@@ -793,6 +793,7 @@ void Display_Property(T& comp) {
     std::vector<property::entry> List;
     property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
+
             if (!Flags.m_isDontShow) {
                 auto entry = property::entry { PropertyName, Data };
                 std::visit([&](auto& Value) {
@@ -842,6 +843,11 @@ void Display_Property(T& comp) {
             }
            
         });
+
+    if constexpr (std::is_same_v<T, Transform>)
+    {
+        comp.RecalculateLocalMatrices();
+    }
 }
 
 //Display all fields from a script component
@@ -916,6 +922,7 @@ void DisplayLightProperties(LightSource& source) {
     else { //POINT LIGHT
         Display<Vector3>(lightpos, "Light Position", source.lightpos);
     }
+
 }
 
 //Helper function that displays all relevant fields and types in a component
@@ -1069,6 +1076,12 @@ void DisplayComponentHelper(T& component)
             }
             else if constexpr (std::is_same_v<T, LightSource>) {
                 DisplayLightProperties(component);
+                ImGui::AlignTextToFramePadding();
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();             
+                if (ImGui::Button("Bake Light")) {
+                    //Add bake function here (Euan)
+                }
             }
             else
             {
@@ -1151,80 +1164,59 @@ private:
     template<typename T1, typename... T1s>
     void AddNext(Entity& entity, Scene& scene)
     {
+        bool old_component = false;
 
-        if (Componentfilter.PassFilter(GetType::Name<T1>())) {
-
-            bool old_component = false;
-
-            if (scene.Has<T1>(entity)) {
-                if (scene.Get<T1>(entity).state == DELETED) {
-                    old_component = true;
-                }
+        if (scene.Has<T1>(entity)) {
+            if (scene.Get<T1>(entity).state == DELETED) {
+                old_component = true;
             }
+        }
 
-            if constexpr (SingleComponentTypes::Has<T1>()) {
+        if constexpr (!std::is_same_v<T1, Script>)
+        {
+            if (Componentfilter.PassFilter(GetType::Name<T1>())) {
+                if constexpr (SingleComponentTypes::Has<T1>()) {
 
-                if (!scene.Has<T1>(entity) || old_component)
-                {
-                    if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    if (!scene.Has<T1>(entity) || old_component)
                     {
-                        if (old_component)
-                            scene.Destroy(scene.Get<T1>(entity));
-
-                        T1* pObject = scene.Add<T1>(entity);
-
-                        if constexpr (std::is_same<T1, BoxCollider>())
-                        {
-
-                            geometryDebugData temp;
-                            if (scene.Has<MeshRenderer>(entity))
-                            {
-                                MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
-
-                                temp = MESHMANAGER.offsetAndBoundContainer.find(mr.meshID)->second;
-                            }
-                            else
-                            {
-                                temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
-                            }
-
-                            pObject->dimensions.x = temp.scalarBound.x;
-                            pObject->dimensions.y = temp.scalarBound.y;
-                            pObject->dimensions.z = temp.scalarBound.z;
-                            pObject->offset = temp.offset;
-                        }
-
-                        Change newchange(pObject);
-                        newchange.action = CREATING;
-                        EDITOR.History.AddComponentChange(newchange);
-
-                        EditorInspector::Instance().isAddComponentPanel = false;
-                    }
-                }
-            }
-            else
-            {
-                if constexpr (std::is_same_v<T1, Script>)
-                {
-                    GetAssetsEvent<ScriptAsset> e;
-                    EVENTS.Publish(&e);
-
-                    for (auto& pair : *e.pAssets)
-                    {
-                        if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                        if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                         {
                             if (old_component)
                                 scene.Destroy(scene.Get<T1>(entity));
 
-                            T1* comp = scene.Add<T1>(entity, nullptr, pair.first);
-                            Change newchange(comp);
+                            T1* pObject = scene.Add<T1>(entity);
+
+                            if constexpr (std::is_same<T1, BoxCollider>())
+                            {
+
+                                geometryDebugData temp;
+                                if (scene.Has<MeshRenderer>(entity))
+                                {
+                                    MeshRenderer& mr = scene.Get<MeshRenderer>(entity);
+
+                                    temp = MESHMANAGER.offsetAndBoundContainer.find(mr.meshID)->second;
+                                }
+                                else
+                                {
+                                    temp = MESHMANAGER.offsetAndBoundContainer.find(ASSET_CUBE)->second;
+                                }
+
+                                pObject->dimensions.x = temp.scalarBound.x;
+                                pObject->dimensions.y = temp.scalarBound.y;
+                                pObject->dimensions.z = temp.scalarBound.z;
+                                pObject->offset = temp.offset;
+                            }
+
+                            Change newchange(pObject);
                             newchange.action = CREATING;
                             EDITOR.History.AddComponentChange(newchange);
+
                             EditorInspector::Instance().isAddComponentPanel = false;
                         }
                     }
+
                 }
-                else
+                else //multicomponent
                 {
                     if (CENTERED_CONTROL(ImGui::Button(GetType::Name<T1>(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
                     {
@@ -1240,10 +1232,33 @@ private:
                 }
             }
         }
+        else { //SCRIPT
+            GetAssetsEvent<ScriptAsset> e;
+            EVENTS.Publish(&e);
+
+            for (auto& pair : *e.pAssets)
+            {
+                if (Componentfilter.PassFilter(pair.second.mFilePath.stem().string().c_str())) {
+                    if (CENTERED_CONTROL(ImGui::Button(pair.second.mFilePath.stem().string().c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing()))))
+                    {
+                        if (old_component)
+                            scene.Destroy(scene.Get<T1>(entity));
+
+                        T1* comp = scene.Add<T1>(entity, nullptr, pair.first);
+                        Change newchange(comp);
+                        newchange.action = CREATING;
+                        EDITOR.History.AddComponentChange(newchange);
+                        EditorInspector::Instance().isAddComponentPanel = false;
+                    }
+                }         
+            }
+        }
+
+
 
         if constexpr (sizeof...(T1s) != 0)
         {
-            AddNext<T1s...>(entity,scene);
+            AddNext<T1s...>(entity, scene);
         }
     }
 };

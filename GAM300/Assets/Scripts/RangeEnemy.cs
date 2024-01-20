@@ -204,7 +204,9 @@ public class RangeEnemy : Script
         shootCooldown -= .5f;
         AudioManager.instance.enemyHit.Play();
         currentHealth -= amount;
-        hpBar.localScale.x = currentHealth/maxHealth;
+        vec3 hpScale = hpBar.localScale;
+        hpScale.x = currentHealth/maxHealth;
+        hpBar.localScale = hpScale;
         CombatManager.instance.SpawnHitEffect(transform);
         //set particle transform to enemy position
         if(currentHealth <= 0)
@@ -238,7 +240,9 @@ public class RangeEnemy : Script
     {
         duration /= 2;
         float startDuration = duration;
-        modelOffset.localRotation.x = glm.Radians(-45f);
+        vec3 newRot = modelOffset.localRotation;
+        newRot.x = glm.Radians(-45f);
+        modelOffset.localRotation = newRot;
         while (duration > 0)
         {
             rb.linearVelocity = new vec3(knockback * (duration/startDuration));
@@ -249,7 +253,8 @@ public class RangeEnemy : Script
         while (duration > 0)
         {
             float val = glm.Radians(-45f);
-            modelOffset.localRotation.x = glm.Lerp(0, val,duration/startDuration);
+            newRot.x = glm.Lerp(0, val,duration/startDuration);
+            modelOffset.localRotation = newRot;
             duration -= Time.deltaTime;
             yield return new WaitForSeconds(Time.deltaTime);
         }

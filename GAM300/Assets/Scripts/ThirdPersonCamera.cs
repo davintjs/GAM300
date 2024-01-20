@@ -6,68 +6,62 @@ using System;
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
-    public float YawRotSpeed = 180f;
-    public float PitchRotSpeed = 180f;
-    public float MaxPitchAngle = 85f;
-    public float MinPitchAngle = -85f;
-    public bool InvertPitch = false;
+    private Camera camera;
 
-    public Transform CamYawPivot;
-    public Transform CamMovePivot;
-    public Transform CamPitchPivot;
+    public float yawRotSpeed = 1f;
+    public float pitchRotSpeed = 1f;
+    public float maxPitchAngle = 170f;
+    public float minPitchAngle = -85f;
+    public bool invertPitch = false;
 
-    private float YawAngle = 0f;
-    private float PitchAngle = 0f;
+    private float yawAngle;
+    private float pitchAngle;
+    private const float yawSM = 1800f;
+    private const float pitchSM = 1800f;
 
-    public bool exitTrigger = false;
-    public float closestZoom = 4f;
+    public GameObject target;
+
+    public float zoom = 1f;
+    private float initialZoom = 0f;
+    public float defaultZoom = 4f;
+    public float zoomSpeed = 50f;
+    public float zoomInSpeed = 3f;
+    public float closestZoom = 1f;
     public float furthestZoom = 10f;
-    public float zoomSpeed = 3f;
-    public float zoom = 0f;
+    public bool isZooming = false;
+    private bool zoomReset = false;
+
     public float timer = 0f;
     private float duration = 1.0f;
     private float bufferTimer = 0f;
     private float bufferDuration = 3.0f;
-    private float initialZoom;
 
-    // Start is called before the first frame update
-    
-
-    float fov = 0;
-    private Camera camera;
+    private vec3 targetPosition;
 
     void Awake()
     {
+        targetPosition = target.transform.localPosition;
         camera = GetComponent<Camera>();
         instance = this;
-        fov = camera.fieldOfView;
-    }
-    void Start()
-    {
-        //Lock and hide mouse cursor
-        /*        Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;*/
-
-        zoom = -transform.localPosition.z;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Yaw Camera Rotation
+        Zoom();
+
+        FocusOnTarget();
+
         UpdateCameraRotation();
 
-        if (exitTrigger)
-            ResetZoom();
-
-        Zoom();
+        AvoidColliders();
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        if(GetTag(other) != "PlayerCollider")
+        if (GetTag(other) != "PlayerCollider")
         {
-            zoom += zoomSpeed * Time.deltaTime;
+            StartZoom();
         }
     }
 
@@ -75,24 +69,60 @@ public class ThirdPersonCamera : Script
     {
         if (GetTag(other) != "PlayerCollider")
         {
+            StopZoom();
+        }
+    }
+
+    void StartZoom()
+    {
+        isZooming = true;
+        zoomReset = false;
+        timer = bufferTimer = 0f;
+    }
+
+    void StopZoom()
+    {
+        isZooming = false;
+    }
+
+    void AvoidColliders()
+    {
+        if (isZooming)
+        {
+            zoom -= Time.deltaTime * zoomInSpeed;
+            if (zoom < closestZoom)
+            {
+                zoom = closestZoom;
+            }
+            else if (zoom > furthestZoom)
+            {
+                zoom = furthestZoom;
+            }
+
+            camera.lookatDistance = zoom;
             initialZoom = zoom;
-            exitTrigger = true;
+            zoomReset = true;
+        }
+        else if (!isZooming && zoomReset)
+        {
+            // Wait x seconds then attemp to return to initialZoom
+            ResetZoom();
         }
     }
 
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
-        YawAngle -= mouseDelta.x * YawRotSpeed * Time.deltaTime * 3.14f / 180f;
-        CamYawPivot.localRotation = new vec3(0f, YawAngle, 0f);
+        yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
+
         //Pitch Camera Rotation
-        PitchAngle -= mouseDelta.y * (InvertPitch ? -1.0f : 1.0f) * PitchRotSpeed * Time.deltaTime * 3.14f / 180f;
-        //Console.WriteLine("{0},{1}",mouseDelta.x, mouseDelta.y);
-        if (PitchAngle > MaxPitchAngle)
-            PitchAngle = MaxPitchAngle * 3.14f / 180f;
-        else if (PitchAngle < MinPitchAngle)
-            PitchAngle = MinPitchAngle * 3.14f / 180f;
-        CamPitchPivot.localRotation = new vec3(PitchAngle, 0f, 0f);
+        pitchAngle -= mouseDelta.y * (invertPitch ? -1.0f : 1.0f) * pitchRotSpeed * pitchSM * Time.deltaTime * 3.14f / 180f;
+        if (pitchAngle > maxPitchAngle)
+            pitchAngle = maxPitchAngle * 3.14f / 180f;
+        else if (pitchAngle < minPitchAngle)
+            pitchAngle = minPitchAngle * 3.14f / 180f;
+
+        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
     }
 
     void Zoom()
@@ -106,7 +136,7 @@ public class ThirdPersonCamera : Script
         {
             zoom = furthestZoom;
         }
-        transform.localPosition.z = -zoom;
+        camera.lookatDistance = zoom;
     }
     void ResetZoom()
     {
@@ -116,13 +146,23 @@ public class ThirdPersonCamera : Script
         if (bufferTimer >= bufferDuration)
         {
             timer += Time.deltaTime;
-            zoom = Lerp(initialZoom, furthestZoom, timer, duration);
+            zoom = Lerp(initialZoom, defaultZoom, timer, duration);
 
             if (timer >= duration)
             {
-                exitTrigger = false;
+                zoomReset = false;
                 timer = bufferTimer = 0f;
             }
+        }
+    }
+
+    void FocusOnTarget()
+    {
+        if (target != null)
+        {
+            camera.LookAt(target);
+            camera.position = target.transform.position - (camera.forward * camera.distance);
+            transform.localPosition = camera.position;
         }
     }
 

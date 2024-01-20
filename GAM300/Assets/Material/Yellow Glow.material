@@ -1,6 +1,6 @@
 Material:
   Material Name: Yellow Glow
-  Shader: 1
+  Shader: 0
   Albedo: [0.984313786, 0.976470649, 0, 1]
   Metallic: 1
   Roughness: 1

@@ -52,7 +52,9 @@ void BaseCamera::Init()
 	fieldOfView = 45.0f;
 	nearClip = 0.1f;
 	farClip = 100.f;
-	focalLength = 10.f;
+	lookatDistance = 10.f;
+	focalPoint = { 0.f, 0.f, 0.f };
+	cameraPosition = GetCameraPosition();
 
 	UpdateViewMatrix();
 	UpdateProjection();
@@ -71,13 +73,15 @@ void BaseCamera::Init()
 	bloomAttachment = FRAMEBUFFER.GetCurrentColorAttachment(framebuffer);
 }
 
-void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _focalLength)
+void BaseCamera::Init(const glm::vec2& _dimension, const float& _fov, const float& _nearClip, const float& _farClip, const float& _lookatDistance)
 {
 	aspect = 16.f / 9.f;
 	fieldOfView = _fov;
 	nearClip = _nearClip;
 	farClip = _farClip;
-	focalLength = _focalLength;
+	lookatDistance = _lookatDistance;
+	focalPoint = { 0.f, 0.f, 0.f };
+	cameraPosition = GetCameraPosition();
 
 	UpdateViewMatrix();
 	UpdateProjection();
@@ -106,8 +110,6 @@ void BaseCamera::Update()
 
 void BaseCamera::UpdateViewMatrix()
 {
-	cameraPosition = GetCameraPosition();
-
 	glm::quat Orientation = GetOrientation();
 	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
 	viewMatrix = glm::inverse(viewMatrix);
@@ -158,11 +160,18 @@ void BaseCamera::UpdateFrustum()
 
 void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation)
 {
+	if (!setFocalPoint)
+		focalPoint = GetFocalPoint();
+
 	SetCameraPosition(_position);
 
 	SetCameraRotation(_rotation);
 
+	SetDistance(glm::length(focalPoint - cameraPosition));
+
 	Update();
+
+	setFocalPoint = false;
 }
 
 void BaseCamera::TryResize(glm::vec2 _newDimension)
@@ -249,15 +258,23 @@ void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)
 {
 	cameraPosition = _position;
-	focalPoint = GetFocalPoint();
+
+	/*glm::vec3 viewDirection = focalPoint - cameraPosition;
+	SetDistance(glm::length(viewDirection));*/
 }
 
 glm::vec3 BaseCamera::GetCameraPosition()
 {
-	return focalPoint - (GetForwardVec() * GetFocalLength());
+	return focalPoint - (GetForwardVec() * GetDistance());
+}
+
+void BaseCamera::SetFocalPoint(const glm::vec3& _position)
+{
+	focalPoint = _position;
+	setFocalPoint = true;
 }
 
 glm::vec3 BaseCamera::GetFocalPoint()
 {
-	return cameraPosition + (GetForwardVec() * GetFocalLength());
+	return cameraPosition + (GetForwardVec() * GetDistance());
 }
