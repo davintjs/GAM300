@@ -70,11 +70,13 @@ void main()
             else
             {
                 FragColor = PickingColour;
+//                FragColor = vec4(1.f,0.f,0.f,1.f);
             }
         }
         else
         {
             FragColor = PickingColour;
+//            FragColor = vec4(0.f,1.f,0.f,1.f);
         }
 
     break;

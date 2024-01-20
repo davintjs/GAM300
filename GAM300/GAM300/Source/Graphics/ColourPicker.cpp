@@ -38,7 +38,6 @@ void ColourPicker::Init()
 
 void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
@@ -48,7 +47,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, colorPickFBO);
-	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::COLOURPICKING);
 	shader.Use();
 
@@ -66,12 +66,14 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	bool spriteToColourPick = false;
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
+		//std::cout << "enter\n";
 		if (Sprite.state == DELETED) continue;
 
 		if (!Sprite.ColourPicked)
 		{
 ;			continue;
 		}
+		//std::cout << "Passed\n";
 
 		spriteToColourPick = true;
 		Entity& entity = currentScene.Get<Entity>(Sprite);
@@ -96,12 +98,16 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 		if (Sprite.WorldSpace) // 3D Space UI
 		{
+			// World Space
+			std::cout << "WorldSpace\n";
 			projToUse = _camera.GetProjMatrix();
 			viewToUse = _camera.GetViewMatrix();
 			srtToUse = transform.GetWorldMatrix();
 		}
 		else // Screen Space UI
 		{
+			// Screen Space
+			std::cout << "ScreenSpace\n";
 			projToUse = OrthoProjection;
 			viewToUse = IdentityMat;
 			srtToUse = transform.GetLocalMatrix();
@@ -117,6 +123,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 		if (Sprite.SpriteTexture == 0)
 		{
+			
 			glUniform1f(uniform2, false);
 		}
 		else
@@ -134,6 +141,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	unsigned char data[4];
 
 	glm::vec2 mousepos = InputHandler::getMousePos();
+
 #if defined(_BUILD)
 
 	glReadPixels(mousepos.x, mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -157,9 +165,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 #endif // _BUILD
 
 	int selectedID = data[0] +
-		data[1] * 256 +
-		data[2] * 256 * 256;
-
+		data[1] * 255 +
+		data[2] * 255 * 255;
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
@@ -171,7 +178,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 			PRINT(entity_tag.name, "\n");
-			std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
+			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
 		/*else
 		{

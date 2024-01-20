@@ -217,6 +217,21 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+	//// Game Cameras
+	//EditorWindowEvent e1("Game");
+	//EVENTS.Publish(&e1);
+
+	//if (e1.isOpened)
+	//{
+	//	Scene& currentScene = MySceneManager.GetCurrentScene();
+	//	for (Camera& camera : currentScene.GetArray<Camera>())
+	//	{
+	//		if (camera.state == DELETED) continue;
+
+	//		COLOURPICKER.ColorPickingUIButton(camera);
+
+	//	}
+	//}
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
 	AnimationManager.Update(dt);
@@ -235,7 +250,7 @@ void GraphicsSystem::Update(float dt)
 		// Update camera view 
 		camera.UpdateCamera(transform->GetTranslation(), transform->GetRotation());
 
-		COLOURPICKER.ColorPickingUIButton(camera);
+		//COLOURPICKER.ColorPickingUIButton(camera);
 
 		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
@@ -270,6 +285,7 @@ void GraphicsSystem::Update(float dt)
 			COLOURPICKER.ColorPickingUIButton(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
+
 		}
 	}
 #endif	
