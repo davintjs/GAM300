@@ -19,12 +19,12 @@
 
 void UISystem::Init()
 {
-    UISystem UI;
-    Button myButton(10, 10, 100, 50, "Click me!", []() 
-        {
-            // Code to be executed when the button is clicked
-            std::cout << "Button clicked!" << std::endl;
-        });
+    //UISystem UI;
+    //Button myButton(10, 10, 100, 50, "Click me!", []() 
+    //    {
+    //        // Code to be executed when the button is clicked
+    //        std::cout << "Button clicked!" << std::endl;
+    //    });
 
     //UI.addButton(myButton);
 };

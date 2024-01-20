@@ -162,7 +162,6 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		data[1] * 256 +
 		data[2] * 256 * 256;
 
-	//std::cout << selectedID << "\n";
 
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
