@@ -23,6 +23,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/SceneManager.h"
 #include "EditorTemplates.h"
 #include "Scene/Components.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "Graphics/MeshManager.h"
 #include <variant>
 #include "PropertyConfig.h"
@@ -802,59 +803,108 @@ void Display_Property(T& comp) {
         comp.SetLocalMatrix(pos, rot, scale);
         return;
     }
-    std::vector<property::entry> List;
-    property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+
+    property::DisplayEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
         {
+            auto entry = property::entry { PropertyName, Data };
+            std::visit([&](auto& Value) {
+                using T1 = std::decay_t<decltype(Value)>;
 
-            if (!Flags.m_isDontShow) {
-                auto entry = property::entry { PropertyName, Data };
-                std::visit([&](auto& Value) {
-                    using T1 = std::decay_t<decltype(Value)>;
+                std::string DisplayName = entry.first;
+                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+                DisplayName.erase(DisplayName.begin(), ++it);
 
-                    std::string DisplayName = entry.first;
-                    auto it = DisplayName.begin() + DisplayName.find_last_of("/");
-                    DisplayName.erase(DisplayName.begin(), ++it);
+                Change newchange(&comp, entry.first);
 
-                    Change newchange(&comp, entry.first);
+                ImGui::PushID(entry.first.c_str());
 
-                    ImGui::PushID(entry.first.c_str());
-
-                    //Temporary implementation for materials
-                    if (entry.first.find("Shader") != std::string::npos) {
-                        DisplayShaders(newchange, Value);
-                    }
-                    else if (entry.first.find("AudioChannel") != std::string::npos) {
-                        DisplayAudioChannels(newchange, Value);
-                    }
-                    else {
-                        Display<T1>(newchange, DisplayName.c_str(), Value);
-                        if (DisplayName == "Material_ID") {
-                            ImGui::SameLine();
-                            if (ImGui::Button("Mat")) {
-                                Scene& scene = MySceneManager.GetCurrentScene();
-                                Entity& ent = scene.Get<Entity>(comp);
-                                auto& mr = scene.Get<MeshRenderer>(ent);
-                                if(!EditorInspector::Instance().material_inspector){
-                                    EditorInspector::Instance().material_inspector = true; 
-                                }
-
-                                ImGui::SetWindowFocus("Material");                                
-                                EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                //Temporary implementation for materials
+                if (entry.first.find("Shader") != std::string::npos) {
+                    DisplayShaders(newchange, Value);
+                }
+                else if (entry.first.find("AudioChannel") != std::string::npos) {
+                    DisplayAudioChannels(newchange, Value);
+                }
+                else {
+                    Display<T1>(newchange, DisplayName.c_str(), Value);
+                    if (DisplayName == "Material_ID") {
+                        ImGui::SameLine();
+                        if (ImGui::Button("Mat")) {
+                            Scene& scene = MySceneManager.GetCurrentScene();
+                            Entity& ent = scene.Get<Entity>(comp);
+                            auto& mr = scene.Get<MeshRenderer>(ent);
+                            if (!EditorInspector::Instance().material_inspector) {
+                                EditorInspector::Instance().material_inspector = true;
                             }
+
+                            ImGui::SetWindowFocus("Material");
+                            EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
                         }
                     }
+                }
 
-                    ImGui::PopID();
+                ImGui::PopID();
 
-                    }
-                , Data);
-                property::set(comp, entry.first.c_str(), Data);
+                }
+            , Data);
+            property::set(comp, entry.first.c_str(), Data);
 
-                // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
-                //assert(Flags.m_isScope == false || PropertyName.back() == ']');
-            }
+            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+            //assert(Flags.m_isScope == false || PropertyName.back() == ']');
            
         });
+
+    //property::SerializeEnum(comp, [&](std::string_view PropertyName, property::data&& Data, const property::table&, std::size_t, property::flags::type Flags)
+    //    {
+    //        if (!Flags.m_isDontShow) {
+    //            auto entry = property::entry { PropertyName, Data };
+    //            std::visit([&](auto& Value) {
+    //                using T1 = std::decay_t<decltype(Value)>;
+
+    //                std::string DisplayName = entry.first;
+    //                auto it = DisplayName.begin() + DisplayName.find_last_of("/");
+    //                DisplayName.erase(DisplayName.begin(), ++it);
+
+    //                Change newchange(&comp, entry.first);
+
+    //                ImGui::PushID(entry.first.c_str());
+
+    //                //Temporary implementation for materials
+    //                if (entry.first.find("Shader") != std::string::npos) {
+    //                    DisplayShaders(newchange, Value);
+    //                }
+    //                else if (entry.first.find("AudioChannel") != std::string::npos) {
+    //                    DisplayAudioChannels(newchange, Value);
+    //                }
+    //                else {
+    //                    Display<T1>(newchange, DisplayName.c_str(), Value);
+    //                    if (DisplayName == "Material_ID") {
+    //                        ImGui::SameLine();
+    //                        if (ImGui::Button("Mat")) {
+    //                            Scene& scene = MySceneManager.GetCurrentScene();
+    //                            Entity& ent = scene.Get<Entity>(comp);
+    //                            auto& mr = scene.Get<MeshRenderer>(ent);
+    //                            if(!EditorInspector::Instance().material_inspector){
+    //                                EditorInspector::Instance().material_inspector = true; 
+    //                            }
+
+    //                            ImGui::SetWindowFocus("Material");                                
+    //                            EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+    //                        }
+    //                    }
+    //                }
+
+    //                ImGui::PopID();
+
+    //                }
+    //            , Data);
+    //            property::set(comp, entry.first.c_str(), Data);
+
+    //            // If we are dealing with a scope that is not an array someone may have change the SerializeEnum to a DisplayEnum they only show up there.
+    //            //assert(Flags.m_isScope == false || PropertyName.back() == ']');
+    //        }
+    //       
+    //    });
 }
 
 //Display all fields from a script component

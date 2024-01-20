@@ -19,7 +19,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <glm/gtx/quaternion.hpp>
 
 #include "Scene/SceneManager.h"
-#include "MESHMANAGER.h"
+#include "MeshManager.h"
+#include "Texture/TextureManager.h"
 #include "Editor/EditorCamera.h"
 #include "Utilities/Serializer.h"
 
@@ -61,7 +62,6 @@ void Renderer::Init()
 	// Load graphics settings
 	Deserialize("GAM300/Data/GraphicsSettings.txt", *this);
 
-	//instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	m_gBuffer.Init(1600, 900);
 	
 	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO, depthMap, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
@@ -82,19 +82,30 @@ void Renderer::Init()
 		lineGrids.push_back(transMatrixZ * scalMatrix);
 		lineGrids2.push_back(transMatrixX * rotMatrix * scalMatrix);
 	}
+
+	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
+	for (auto& [guid, vao] : MESHMANAGER.vaoMap)
+	{
+		for (size_t j = 0; j < (int)SHADERTYPE::COUNT; j++)
+		{
+			instanceContainers[j].emplace(vao, instanceProperties[vao]);
+			instanceContainers[j][vao].ResizeContainers();
+		}
+	}
+	
 }
 
 void Renderer::Update(float)
 {
+	/*for (auto& container : instanceContainers)
+	{
+		container.clear();
+	}*/
 
-	instanceContainers.clear(); // clear then emplace back? coz spcific vao in specific shader?
-	instanceContainers.resize(static_cast<size_t>(SHADERTYPE::COUNT));
 	defaultProperties.clear(); // maybe no need clear everytime, see steve rabin code?
 	transparentContainer.clear(); // maybe no need clear everytime, see steve rabin code?
 	finalBoneMatContainer.clear();
-#ifndef _BUILD
-	//SetupGrid(numLines);
-#endif
+
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	int i = 0;
@@ -116,24 +127,20 @@ void Renderer::Update(float)
 		// No material instance, then just go next
 		if (renderer.state == DELETED) continue;
 
-		if (!currentScene.IsActive(renderer)) continue;
-
-		if (MESHMANAGER.vaoMap.find(renderer.meshID) == MESHMANAGER.vaoMap.end()) continue; // no vao? go next
-	
 		Entity& entity = currentScene.Get<Entity>(renderer);
-		if (!currentScene.IsActive(entity)) continue;
 
-		auto vaoIt = MESHMANAGER.vaoMap.find(renderer.meshID);
-		if (vaoIt == MESHMANAGER.vaoMap.end()) continue;
-
-		Material_instance& currMatInstance = MaterialSystem::Instance().getMaterialInstance(renderer.materialGUID);
-		
-		Transform& transform = currentScene.Get<Transform>(entity);
-		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
-		const glm::vec3 position = transform.GetGlobalTranslation();
+		if (EnableIsActive()) //Bean: Improve FPS if Disabled
+		{
+			if (!currentScene.IsActive(renderer)) continue; // Bean: IsActive is tanking fps
+			if (!currentScene.IsActive(entity)) continue; // Bean: Is there a better way ard this???
+		}
 
 		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
 		if (!t_Mesh) continue;
+
+		Transform& transform = currentScene.Get<Transform>(entity);
+		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
+		const glm::vec3 position = transform.GetGlobalTranslation();
 
 		if (frustumCulling)
 		{
@@ -154,102 +161,20 @@ void Renderer::Update(float)
 			if (!withinCamera) continue;
 		}
 
+		auto vaoIt = MESHMANAGER.vaoMap.find(renderer.meshID);
+		if (vaoIt == MESHMANAGER.vaoMap.end()) continue;
+
+		Material_instance& currMatInstance = MATERIALSYSTEM.getMaterialInstance(renderer.materialGUID);
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
-			//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
-			GLuint vao = vaoIt->second;
-			DefaultRenderProperties renderProperties;
-			renderProperties.VAO = vao;
-
-			renderProperties.metallic = currMatInstance.metallicConstant;
-			renderProperties.roughness = currMatInstance.roughnessConstant;
-			renderProperties.ao = currMatInstance.aoConstant;
-			renderProperties.emission = currMatInstance.emissionConstant;
-
-			renderProperties.entitySRT = worldMatrix;
-			renderProperties.Albedo = currMatInstance.albedoColour;
-
-			renderProperties.RoughnessID = TextureManager.GetTexture(currMatInstance.roughnessTexture);
-			renderProperties.MetallicID = TextureManager.GetTexture(currMatInstance.metallicTexture);
-			renderProperties.AoID = TextureManager.GetTexture(currMatInstance.aoTexture);
-			renderProperties.EmissionID = TextureManager.GetTexture(currMatInstance.emissionTexture);
-
-			renderProperties.textureID = TextureManager.GetTexture(currMatInstance.albedoTexture);
-			renderProperties.NormalID = TextureManager.GetTexture(currMatInstance.normalMap);
-
-			renderProperties.drawType = t_Mesh->prim;
-			renderProperties.drawCount = t_Mesh->drawCounts;
-
-			renderProperties.isAnimatable = false;
-			renderProperties.boneidx = -1;
-			renderProperties.position = position;
-
-			if (transform.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
-			{
-				Entity& parententity = currentScene.Get<Entity>(transform.parent);
-				if (currentScene.Has<Animator>(parententity))
-				{
-					Animator& animator = currentScene.Get<Animator>(parententity);
-
-					if (animator.AnimationAttached() && animator.m_FinalBoneMatIdx != -1)
-					{
-						renderProperties.isAnimatable = true; // can remove later, should be in mesh instead
-						renderProperties.boneidx = animator.m_FinalBoneMatIdx; // i need to figure out how to access the parent's renderProperties....
-					}
-				}
-			}
-
-			// Debug Draw, consult team / UX on thursday
-			if (instanceContainers[static_cast<int>(SHADERTYPE::TDR)].find(vao) == instanceContainers[static_cast<int>(SHADERTYPE::TDR)].cend()) { // if container does not have this vao, emplace
-				instanceContainers[static_cast<int>(SHADERTYPE::TDR)].emplace(std::pair(vao, instanceProperties[vao]));
-			}
-			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].entitySRT.emplace_back(worldMatrix);
-			instanceContainers[static_cast<int>(SHADERTYPE::TDR)][vao].iter++;
-
-			if (renderProperties.Albedo.a != 1.f)// Is a Transparent / Translucent Object
-			{
-				transparentContainer.emplace_back(renderProperties);
-			}
-			else
-			{
-				defaultProperties.emplace_back(renderProperties);
-			}
-			++i;
-			continue;
-		} // END NON-INSTANCED RENDERING CONDITION
-		
-		//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
-		size_t s = static_cast<size_t>(SHADERTYPE::PBR);
-		//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
-		GLuint vao = vaoIt->second;
-		if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
-			instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
+			UpdateDefaultProperties(currentScene, transform, currMatInstance, vaoIt->second, t_Mesh->prim, t_Mesh->drawCounts);
 		}
-
-		float texidx, normidx, metalidx, roughidx, aoidx, emissionidx, metal_constant, rough_constant, ao_constant, emission_constant;
-		unsigned int& iter = instanceContainers[s][vao].iter;
-
-		metal_constant = currMatInstance.metallicConstant;
-		rough_constant = currMatInstance.roughnessConstant;
-		ao_constant = currMatInstance.aoConstant;
-		emission_constant = currMatInstance.emissionConstant;
-		instanceContainers[s][vao].Albedo.emplace_back(currMatInstance.albedoColour);
-
-		texidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.albedoTexture)));
-		normidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.normalMap)));
-
-		metalidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.metallicTexture)));
-		roughidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.roughnessTexture)));
-		aoidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.aoTexture)));
-		emissionidx = float(ReturnTextureIdx(instanceContainers[s][vao], TextureManager.GetTexture(currMatInstance.emissionTexture)));
-
-		instanceContainers[s][vao].M_R_A_Constant.emplace_back(metal_constant, rough_constant, ao_constant, emission_constant);
-		instanceContainers[s][vao].M_R_A_Texture.emplace_back(metalidx, roughidx, aoidx, emissionidx);
-		instanceContainers[s][vao].textureIndex.emplace_back(texidx, normidx);
-		instanceContainers[s][vao].entitySRT.emplace_back(worldMatrix);
-		instanceContainers[s][vao].position = position;
-		++iter;
+		else
+		{
+			UpdatePBRProperties(transform, currMatInstance, vaoIt->second);
+		}
 		++i;
+		
 	} // END MESHRENDERER LOOP
 	
 	if (RENDERER.enableShadows())
@@ -262,89 +187,148 @@ void Renderer::Update(float)
 	}
 }
 
-void Renderer::SetupGrid(const int& _num)
+void Renderer::UpdateDefaultProperties(Scene& _scene, Transform& _t, Material_instance& _mat, const GLuint& _vao, const GLenum& _type, const GLuint& _count)
 {
-	//instanceProperties["Line"].iter = _num * 2;
-	GLuint vao = MESHMANAGER.vaoMap[ASSET_LINE];
-	size_t s = static_cast<int>(SHADERTYPE::TDR);
-	if (instanceContainers[s].find(vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
-		instanceContainers[s].emplace(std::pair(vao, instanceProperties[vao]));
-	}
+	//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
+	DefaultRenderProperties renderProperties;
+	renderProperties.VAO = _vao;
 
-	for (int i = 0; i < _num; i++)
+	renderProperties.metallic = _mat.metallicConstant;
+	renderProperties.roughness = _mat.roughnessConstant;
+	renderProperties.ao = _mat.aoConstant;
+	renderProperties.emission = _mat.emissionConstant;
+
+	renderProperties.entitySRT = _t.GetWorldMatrix();
+	renderProperties.Albedo = _mat.albedoColour;
+
+	renderProperties.textureID = _mat.textureID;
+	renderProperties.NormalID = _mat.normalID;
+	renderProperties.MetallicID = _mat.metallicID;
+	renderProperties.RoughnessID = _mat.roughnessID;
+	renderProperties.AoID = _mat.ambientID;
+	renderProperties.EmissionID = _mat.emissiveID;
+
+	renderProperties.drawType = _type;
+	renderProperties.drawCount = _count;
+
+	renderProperties.isAnimatable = false;
+	renderProperties.boneidx = -1;
+	renderProperties.position = _t.GetGlobalTranslation();
+
+	if (_t.parent) /*if (meshIsanimatable)*/ // if mesh can be animated + there is an animaator in its parent
 	{
-		instanceContainers[s][vao].entitySRT.emplace_back(lineGrids[i]);
-		instanceContainers[s][vao].entitySRT.emplace_back(lineGrids2[i]);
+		Entity& parententity = _scene.Get<Entity>(_t.parent);
+		if (_scene.Has<Animator>(parententity))
+		{
+			Animator& animator = _scene.Get<Animator>(parententity);
+
+			if (animator.AnimationAttached() && animator.m_FinalBoneMatIdx != -1)
+			{
+				renderProperties.isAnimatable = true; // can remove later, should be in mesh instead
+				renderProperties.boneidx = animator.m_FinalBoneMatIdx; // i need to figure out how to access the parent's renderProperties....
+			}
+		}
 	}
 
-	instanceContainers[s][vao].iter = _num * 2;
+	if (renderProperties.Albedo.a != 1.f)// Is a Transparent / Translucent Object
+	{
+		transparentContainer.emplace_back(renderProperties);
+	}
+	else
+	{
+		defaultProperties.emplace_back(renderProperties);
+	}
+}
+
+void Renderer::UpdatePBRProperties(Transform& _t, Material_instance& _mat, const GLuint& _vao)
+{
+	//if (currMatInstance.shaderType == (int)SHADERTYPE::PBR)
+	size_t s = static_cast<size_t>(SHADERTYPE::PBR);
+	//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];
+	if (instanceContainers[s].find(_vao) == instanceContainers[s].cend()) { // if container does not have this vao, emplace
+		instanceContainers[s].emplace(_vao, instanceProperties[_vao]);
+		instanceContainers[s][_vao].ResizeContainers();
+	}
+
+	float texidx, normidx, metalidx, roughidx, aoidx, emissionidx, metal_constant, rough_constant, ao_constant, emission_constant;
+	InstanceProperties& iProp = instanceContainers[s][_vao];
+	unsigned int& iter = iProp.iter;
+
+	if (iter >= iProp.maxSize)
+		iProp.ResizeContainers();
+
+	metal_constant = _mat.metallicConstant;
+	rough_constant = _mat.roughnessConstant;
+	ao_constant = _mat.aoConstant;
+	emission_constant = _mat.emissionConstant;
+	//iProp.Albedo.emplace_back(_mat.albedoColour);
+	iProp.Albedo[iter] = _mat.albedoColour;
+
+	texidx = float(ReturnTextureIdx(iProp, _mat.textureID));
+	normidx = float(ReturnTextureIdx(iProp, _mat.normalID));
+
+	metalidx = float(ReturnTextureIdx(iProp, _mat.metallicID));
+	roughidx = float(ReturnTextureIdx(iProp, _mat.roughnessID));
+	aoidx = float(ReturnTextureIdx(iProp, _mat.ambientID));
+	emissionidx = float(ReturnTextureIdx(iProp, _mat.emissiveID));
+
+	/*iProp.M_R_A_Constant.emplace_back(metal_constant, rough_constant, ao_constant, emission_constant);
+	iProp.M_R_A_Texture.emplace_back(metalidx, roughidx, aoidx, emissionidx);
+	iProp.textureIndex.emplace_back(texidx, normidx);
+	iProp.entitySRT.emplace_back(_t.GetWorldMatrix());*/
+
+	iProp.M_R_A_Constant[iter] = { metal_constant, rough_constant, ao_constant, emission_constant };
+	iProp.M_R_A_Texture[iter] = { metalidx, roughidx, aoidx, emissionidx };
+	iProp.textureIndex[iter] = { texidx, normidx };
+	iProp.entitySRT[iter] = _t.GetWorldMatrix();
+
+	iProp.position = _t.GetGlobalTranslation();
+	++iter;
 }
 
 void Renderer::Draw(BaseCamera& _camera) {
 
-	GLSLShader& shader1 = SHADER.GetShader(SHADERTYPE::PBR);
-	shader1.Use();
+	/* Draw PBR **********************************************/
+	DrawPBR(_camera);
 
-	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
+	/* Draw Default *******************************************/ 
+	DrawDefault(_camera);
+
+	glDisable(GL_BLEND);
+
+#ifndef _BUILD
+	// For Debug drawing
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
-		int textureUnit = 10 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
-
+		for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)])
+		{
+			if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+				DrawDebug(prop.debugVAO, (unsigned)prop.iter);
+		}
 	}
+#endif
+}
 
-	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
-	{
-		int textureUnit = 20 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+void Renderer::DrawPBR(BaseCamera& _camera)
+{
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::PBR);
+	shader.Use();
 
-	}
+	BindLights(shader);
 
-	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-	{
-		int textureUnit = 22 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
-	}
+	GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
+	GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
+	GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
 
-	glUniform1f(glGetUniformLocation(shader1.GetHandle(), "farplane"), 1000.f);
+	const glm::vec3 cameraPosition = _camera.GetCameraPosition();
+	glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+	glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
 
-	GLint uniform1 =
-		glGetUniformLocation(shader1.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader1.GetHandle(), "View");
-	//GLint uniform3 =
-	//	glGetUniformLocation(shader1.GetHandle(), "lightColor");
-	//GLint uniform4 =
-	//	glGetUniformLocation(shader1.GetHandle(), "lightPos");
-	GLint uniform5 =
-		glGetUniformLocation(shader1.GetHandle(), "camPos");
-	GLint uniform6 =
-		glGetUniformLocation(shader1.GetHandle(), "hdr");
-
-	glUniform1i(uniform6, hdr);
-
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(_camera.GetViewMatrix()));
-	//glUniform3fv(uniform3, 1,
-	//	glm::value_ptr(_lightSource.lightColor));
-	//glUniform3fv(uniform4, 1,
-	//	glm::value_ptr(_lightSource.lightpos));
-	glUniform3fv(uniform5, 1,
-		glm::value_ptr(_camera.GetCameraPosition()));
-
-	BindLights(shader1);
-
-	shader1.UnUse();
+	glUniform3fv(camPos, 1, glm::value_ptr(cameraPosition));
 
 	// Instanced Rendering	
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)]) 
+	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)])
 	{
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
@@ -363,75 +347,24 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		// if debug line draw
-#ifndef _BUILD
-		if (_camera.GetCameraType() == CAMERATYPE::SCENE) {
-			// FOR DEBUG DRAW
-			if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-				DrawDebug(prop.debugVAO, (unsigned)prop.entitySRT.size());
-		}
-#endif
-		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::PBR);
-		shader.Use();
 		for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, prop.texture[i]);
 		}
-		shader.UnUse();
 
-		DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, LIGHTING.GetLight(), _camera, SHADERTYPE::PBR);
+		DrawMeshes(vao, prop.iter, prop.drawCount, prop.drawType, SHADERTYPE::PBR);
 	}
 
-	shader1.Use();
-	for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
-	{
-		glUniform1i(glGetUniformLocation(shader1.GetHandle(), ("myTextureSampler[" + std::to_string(i) + "]").c_str()), i);
-	}
-	shader1.UnUse();
+	shader.UnUse();
+}
 
-#ifndef _BUILD
-	//Draw Debug grids
-	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)]) 
-	{
-		size_t buffersize = prop.iter;
-		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
-		DrawGrid(vao, (unsigned)prop.entitySRT.size());
-	}/**/
-#endif
+void Renderer::DrawDefault(BaseCamera& _camera)
+{
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
 	shader.Use();
 
-	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
-	{
-		int textureUnit = 10 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(i) + "]").c_str()), textureUnit);
-
-	}
-
-	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
-	{
-		int textureUnit = 20 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(10 + i) + "]").c_str()), textureUnit);
-
-	}
-
-	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-	{
-		int textureUnit = 22 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
-	}
 	BindLights(shader);
-
-	//Non-Instanced Rendering
 
 	GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
 	GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
@@ -453,131 +386,25 @@ void Renderer::Draw(BaseCamera& _camera) {
 	GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
 	GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
 
-	for (DefaultRenderProperties& prop : defaultProperties) 
-	{
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
-		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
-		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
-		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
-		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
-		// You have 6 - 9 Texture Slots
-
-		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
-		//
-		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
-		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
-
-
-		// PBR TEXTURES
-		glUniform1i(hasTexture, prop.textureID);
-		glUniform1i(hasNormal, prop.NormalID);
-		glUniform1i(hasRoughness, prop.RoughnessID);
-		glUniform1i(hasMetallic, prop.MetallicID);
-		glUniform1i(hasAO, prop.AoID);
-		glUniform1i(hasEmission, prop.EmissionID);
-
-		// PBR CONSTANT VALUES
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
-
-		// Shadow
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
-
-		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
-		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
-		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
-		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
-		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
-		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
-		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
-		glUniform1f(Shininess, prop.shininess);
-		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
-
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
-
-		// ANIMATONS
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
-		if (prop.isAnimatable)
-		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
-		}
-
-		glBindVertexArray(prop.VAO);
-		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-	}
-	//shader.UnUse();
-
-	std::map<float, DefaultRenderProperties> transparentMap;
-	for (int i = 0; i < transparentContainer.size(); ++i)
-	{
-		float distance = std::abs(glm::distance(glm::vec3(transparentContainer[i].entitySRT[3]), _camera.GetCameraPosition()));
-
-		/*auto it = transparentMap.find(distance);
-		if (it != transparentMap.end())
-		{
-			distance += 0.01f;
-		}*/
-		transparentMap[distance] = transparentContainer[i];
-	}
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
-	//shader.Use();
-
-	//for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
-	//{
-	//	int textureUnit = 10 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(i) + "]").c_str()), textureUnit);
-
-	//}
-
-	//for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
-	//{
-	//	int textureUnit = 20 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(10 + i) + "]").c_str()), textureUnit);
-
-	//}
-
-	//for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-	//{
-	//	int textureUnit = 22 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
-	//}
-
 	GLint Metallic = glGetUniformLocation(shader.GetHandle(), "MetalConstant");
 	GLint Roughness = glGetUniformLocation(shader.GetHandle(), "RoughnessConstant");
 	GLint AmbientOcculusion = glGetUniformLocation(shader.GetHandle(), "AoConstant");
 	GLint Emission = glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
-	GLint HighDR = glGetUniformLocation(shader.GetHandle(), "hdr");
-	GLint IsAnimation = glGetUniformLocation(shader.GetHandle(), "isAnim");
+
+	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+
+	const glm::vec3 cameraPosition = _camera.GetCameraPosition();
+	glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+	glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
+	glUniform3fv(camPos, 1, glm::value_ptr(cameraPosition));
 
 	// Shadow
 	glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
 
-	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-
-	glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
-	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
-	glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
-
-	//Non-Instanced Rendering
-	for (auto rit = transparentMap.rbegin(); rit != transparentMap.rend(); ++rit) {
-		auto& prop = rit->second;
-
+	// Default Rendering
+	for (DefaultRenderProperties& prop : defaultProperties)
+	{
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
@@ -590,7 +417,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 		//
 		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
 		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
-
 
 		// PBR TEXTURES
 		glUniform1i(hasTexture, prop.textureID);
@@ -613,11 +439,75 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
 		glUniform1f(Shininess, prop.shininess);
 
-		//BindLights(shader);
-		glUniform1i(HighDR, hdr);
+		// ANIMATONS
+		glUniform1i(hasAnim, prop.isAnimatable);
+		if (prop.isAnimatable)
+		{
+			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			glUniformMatrix4fv(FinalBoneMatrices, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+		}
+
+		glBindVertexArray(prop.VAO);
+		glDrawElements(prop.drawType, prop.drawCount, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+	}
+
+	std::map<float, DefaultRenderProperties> transparentMap;
+	for (int i = 0; i < transparentContainer.size(); ++i)
+	{
+		float distance = std::abs(glm::distance(glm::vec3(transparentContainer[i].entitySRT[3]), cameraPosition));
+
+		/*auto it = transparentMap.find(distance);
+		if (it != transparentMap.end())
+		{
+			distance += 0.01f;
+		}*/
+		transparentMap[distance] = transparentContainer[i];
+	}
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// Transparent Rendering
+	for (auto rit = transparentMap.rbegin(); rit != transparentMap.rend(); ++rit) {
+		auto& prop = rit->second;
+
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		// You have 6 - 9 Texture Slots
+
+		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
+		//
+		//glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[10].shadow);
+		//glActiveTexture(GL_TEXTURE8); glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[0].shadow);
+
+		// PBR TEXTURES
+		glUniform1i(hasTexture, prop.textureID);
+		glUniform1i(hasNormal, prop.NormalID);
+		glUniform1i(hasRoughness, prop.RoughnessID);
+		glUniform1i(hasMetallic, prop.MetallicID);
+		glUniform1i(hasAO, prop.AoID);
+		glUniform1i(hasEmission, prop.EmissionID);
+
+		// PBR CONSTANT VALUES
+		glUniform1f(Metallic, prop.metallic);
+		glUniform1f(Roughness, prop.roughness);
+		glUniform1f(AmbientOcculusion, prop.ao);
+		glUniform1f(Emission, prop.emission);
+
+		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
+		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
+		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
+		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
+		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
+		glUniform1f(Shininess, prop.shininess);
 
 		// ANIMATONS
-		glUniform1i(IsAnimation, prop.isAnimatable);
+		glUniform1i(hasAnim, prop.isAnimatable);
 		if (prop.isAnimatable)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
@@ -630,14 +520,10 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 	}
 	shader.UnUse();
-
-	glDisable(GL_BLEND);
-
 }
 
-
 void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-	const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera& _camera, SHADERTYPE shaderType)
+	const unsigned int& _primCount, GLenum _primType, SHADERTYPE shaderType)
 {
 	//testBox.instanceDraw(EntityRenderLimit);
 
@@ -645,62 +531,6 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 	GLSLShader& shader = SHADER.GetShader(shaderType);
 	shader.Use();
-
-	//for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
-	//{
-	//	int textureUnit = 10 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
-	//
-	//}
-
-	//for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
-	//{
-	//	int textureUnit = 20 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("myTextureSampler[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
-
-	//}
-
-	//for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-	//{
-	//	int textureUnit = 22 + i;
-	//	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	//	glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
-	//}
-	//
-	//glUniform1f(glGetUniformLocation(shader.GetHandle(), "farplane"), 1000.f);
-
-	//GLint uniform1 =
-	//	glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	//GLint uniform2 =
-	//	glGetUniformLocation(shader.GetHandle(), "View");
-	////GLint uniform3 =
-	////	glGetUniformLocation(shader.GetHandle(), "lightColor");
-	////GLint uniform4 =
-	////	glGetUniformLocation(shader.GetHandle(), "lightPos");
-	//GLint uniform5 =
-	//	glGetUniformLocation(shader.GetHandle(), "camPos");
-	//GLint uniform6 =
-	//	glGetUniformLocation(shader.GetHandle(), "hdr");
-
-	//glUniform1i(uniform6, hdr);
-
-	//glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-	//	glm::value_ptr(_camera.GetProjMatrix()));
-	//glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-	//	glm::value_ptr(_camera.GetViewMatrix()));
-	////glUniform3fv(uniform3, 1,
-	////	glm::value_ptr(_lightSource.lightColor));
-	////glUniform3fv(uniform4, 1,
-	////	glm::value_ptr(_lightSource.lightpos));
-	//glUniform3fv(uniform5, 1,
-	//	glm::value_ptr(_camera.GetCameraPosition()));
-
-	//BindLights(shader);
 
 	glBindVertexArray(_vaoid);
 	glDrawElementsInstanced(_primType, _primCount, GL_UNSIGNED_INT, 0, _instanceCount);
@@ -710,7 +540,32 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 }
 
 
-void Renderer::BindLights(GLSLShader& shader) {
+void Renderer::BindLights(GLSLShader& shader) 
+{
+	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
+	{
+		int textureUnit = 10 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	}
+
+	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
+	{
+		int textureUnit = 20 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
+	}
+
+	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
+	{
+		int textureUnit = 22 + i;
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
+	}
+
 	// POINT LIGHT STUFFS
 	auto& PointLight_Sources = LIGHTING.GetPointLights();
 
@@ -1056,35 +911,6 @@ void Renderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 }
 
-void Renderer::DrawGrid(const GLuint& _vaoid, const unsigned int& _instanceCount)
-{
-	glm::vec3 color{ 1.f, 1.f, 1.f };
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
-	shader.Use();
-	// UNIFORM VARIABLES ----------------------------------------
-	// Persp Projection
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(shader.GetHandle(), "uColor");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetViewMatrix()));
-	glUniform3fv(uniform3, 1, glm::value_ptr(color));
-
-	glBindVertexArray(_vaoid);
-	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
-	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
-
-	// unbind and free stuff
-	glBindVertexArray(0);
-	shader.UnUse();
-}
-
 void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCount)
 {
 	glm::vec3 color{ 1.f, 0.f, 1.f };
@@ -1099,18 +925,16 @@ void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCoun
 		glGetUniformLocation(shader.GetHandle(), "View");
 	GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "uColor");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE, 
 		glm::value_ptr(EditorCam.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
 		glm::value_ptr(EditorCam.GetViewMatrix()));
 	glUniform3fv(uniform3, 1, glm::value_ptr(color));
 
 	glBindVertexArray(_vaoid);
-	//glDrawElements(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0);
-	glDrawElementsInstanced(GL_LINES, 2 * 12, GL_UNSIGNED_INT, 0, _instanceCount);
-
-	// unbind and free stuff
+	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
 	glBindVertexArray(0);
+
 	shader.UnUse();
 }
 
@@ -1151,6 +975,9 @@ void Renderer::DrawDepthDirectional()
 			glm::value_ptr(LIGHTING.GetDirectionLights()[i].lightSpaceMatrix));
 
 		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "isDefault");
+		GLint uniform3_t = glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+		GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "isAnim");
+		GLint uniform5 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 
 		// render all non-instanced shadows
 		glUniform1i(uniform2, true);
@@ -1161,16 +988,14 @@ void Renderer::DrawDepthDirectional()
 			{
 				continue;
 			}
-			GLint uniform3_t =
-				glGetUniformLocation(shader.GetHandle(), "defaultSRT");
+			
 			glUniformMatrix4fv(uniform3_t, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 
-			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+			glUniform1i(uniform4, prop.isAnimatable);
 			if (prop.isAnimatable)
 			{
 				std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+				glUniformMatrix4fv(uniform5, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 			}
 
 			glBindVertexArray(prop.VAO);
@@ -1185,7 +1010,7 @@ void Renderer::DrawDepthDirectional()
 		for (auto& [vao, prop] : instanceContainers[static_cast<int>(SHADERTYPE::PBR)])
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.iter) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -1277,7 +1102,7 @@ void Renderer::DrawDepthSpot()
 				continue;
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.iter) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -1379,7 +1204,7 @@ void Renderer::DrawDepthPoint()
 				continue;
 
 			glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.entitySRT.size()) * sizeof(glm::mat4), &(prop.entitySRT[0]));
+			glBufferSubData(GL_ARRAY_BUFFER, 0, (prop.iter) * sizeof(glm::mat4), &(prop.entitySRT[0]));
 			//glBufferSubData(GL_ARRAY_BUFFER, 0, SRTs.size() * sizeof(glm::mat4), SRTs.data());
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
