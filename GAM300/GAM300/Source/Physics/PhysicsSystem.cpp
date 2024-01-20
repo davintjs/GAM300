@@ -616,12 +616,12 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
 
-			Vector3 tPos = t.GetGlobalTranslation();
+			Vector3 tScale = t.GetGlobalScale();
 			SphereCollider& sc = scene.Get<SphereCollider>(entity);
-			Vector3 finalPos(tPos.operator glm::vec3() + sc.offset.operator glm::vec3());
+			Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
 			GlmVec3ToJoltVec3(finalPos, pos);
 
-			float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
+			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * sc.radius;
 
 			if (rb.is_trigger)
 			{
@@ -635,10 +635,13 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		else if (scene.Has<CapsuleCollider>(entity)) {
 
 
-			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);	
+			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
+			Vector3 tScale = t.GetGlobalScale();
+			GlmVec3ToJoltVec3(tpos, pos);
 
-			float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * cc.radius;
-			float offset = 0.5f * (t.scale.y * cc.height) - radius;
+
+			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * cc.radius;
+			float offset = 0.5f * (tScale.y * cc.height) - radius;
 
 			if (offset <= 0.f) {
 				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
@@ -870,6 +873,8 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	Vector3 trot = t.GetGlobalRotation();
 	GlmVec3ToJoltQuat(trot, rot);
 
+	Vector3 tscale = t.GetGlobalScale();
+
 	// Linear + Angular Velocity
 	JPH::RVec3 linearVel;
 	GlmVec3ToJoltVec3(rb.linearVelocity, linearVel);
@@ -913,7 +918,7 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		Vector3 finalPos(tPos.operator glm::vec3() + sc.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
-		float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * sc.radius;
+		float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * sc.radius;
 
 
 		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape( radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
@@ -950,8 +955,8 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	characterSetting->mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -tScale.x);
 	characterSetting->mUp = JPH::Vec3(0,1,0);
 
-	float radius = (t.scale.x < t.scale.z ? t.scale.z : t.scale.x) * cc.radius;
-	float offset = 0.5f * (t.scale.y * cc.height) - radius;
+	float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * cc.radius;
+	float offset = 0.5f * (tScale.y * cc.height) - radius;
 
 	// Character Shape (default capsule)
 	JPH::RefConst<JPH::Shape> capsuleCharacterShape = JPH::RotatedTranslatedShapeSettings(JPH::Vec3(0, 0, 0),
