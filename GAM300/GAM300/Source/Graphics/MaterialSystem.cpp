@@ -20,11 +20,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 #include "Utilities/Serializer.h"
+#include "Texture/TextureManager.h"
 
 
 void MaterialSystem::Init()
 {
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackMaterialAssetLoaded);
+	EVENTS.Subscribe(this, &MaterialSystem::CallbackBindTexturesOnSceneLoad);
 
 	//NewMaterialInstance();
 
@@ -38,6 +40,8 @@ void MaterialSystem::Init()
 	available_shaders.push_back(Shader("Default", SHADERTYPE::DEFAULT));
 	available_shaders.push_back(Shader("PBR", SHADERTYPE::PBR));
 	
+	// Assign texture ids to the material's textures
+	BindTextureIDs();
 }
 
 void MaterialSystem::Update(float dt)
@@ -49,6 +53,19 @@ void MaterialSystem::Exit()
 {
 	// Empty by design
 
+}
+
+void MaterialSystem::BindTextureIDs()
+{
+	for (auto& [guid, instance] : _allMaterialInstances)
+	{
+		instance.textureID = TextureManager.GetTexture(instance.albedoTexture);
+		instance.normalID = TextureManager.GetTexture(instance.normalMap);
+		instance.metallicID = TextureManager.GetTexture(instance.metallicTexture);
+		instance.roughnessID = TextureManager.GetTexture(instance.roughnessTexture);
+		instance.ambientID = TextureManager.GetTexture(instance.aoTexture);
+		instance.emissiveID = TextureManager.GetTexture(instance.emissionTexture);
+	}
 }
 
 void MaterialSystem::createPBR_Instanced()
@@ -168,6 +185,10 @@ void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>
 
 }
 
+void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
+{
+	BindTextureIDs();
+}
 
 Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsset> matGUID)
 {

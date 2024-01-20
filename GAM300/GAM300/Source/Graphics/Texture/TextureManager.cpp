@@ -21,7 +21,16 @@ void Texture_Manager::Init()
 {
     EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetLoaded);
     EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetUnloaded);
-    std::cout << "TEXTURE MANAGER INIT\n";
+}
+
+void Texture_Manager::Update(float)
+{
+    // Empty by design
+}
+
+void Texture_Manager::Exit()
+{
+
 }
 
 void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID)

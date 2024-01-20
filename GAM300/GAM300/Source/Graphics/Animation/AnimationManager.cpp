@@ -47,7 +47,7 @@ void Animation_Manager::Update(float dt)
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
             animator.SetDefaultState("Idle");
-            animator.ChangeState();
+            //animator.ChangeState();
         }
 
         if (animator.playing && animator.AnimationAttached())

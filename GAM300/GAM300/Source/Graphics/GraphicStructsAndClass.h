@@ -186,12 +186,27 @@ struct InstanceProperties
 
 	glm::vec3 position{};
 
+	unsigned int maxSize = 32;
 	unsigned int drawCount = 0;
 	unsigned int iter = 0;
 	unsigned int texture[32]{};// max 32 dds only
 	unsigned int textureCount = 0;
 
 	void BatchTexture(std::string texture);
+
+	void ResizeContainers()
+	{
+		maxSize = maxSize * 2;
+		entitySRT.resize(maxSize);
+		Albedo.resize(maxSize);
+		Specular.resize(maxSize);
+		Diffuse.resize(maxSize);
+		Ambient.resize(maxSize);
+		Shininess.resize(maxSize);
+		M_R_A_Texture.resize(maxSize);
+		M_R_A_Constant.resize(maxSize);
+		textureIndex.resize(maxSize);
+	}
 };
 
 struct DefaultRenderProperties {
