@@ -10,7 +10,7 @@ public class RangeEnemy : Script
     public float maxHealth = 3f;
     public float currentHealth;
     public float moveSpeed = 2f;
-    public float chaseDistance = 5f;
+    public float chaseDistance = 8f;
     public float shootDistance = 3f;
     public bool inRange = false;
     public bool back = false;
@@ -39,6 +39,10 @@ public class RangeEnemy : Script
 
     float startPoint;
 
+    // NavMesh stuff
+    public float navMeshduration = 0.5f;
+    public float navMeshtimer = 0f;
+    public bool newRequest = false;
 
     // HealthBar
     public Transform hpBar;
@@ -94,6 +98,11 @@ public class RangeEnemy : Script
                 //player detection
                 if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
                 {
+                    if (navMeshtimer >= navMeshduration)
+                    {
+                        newRequest = true;
+                        navMeshtimer = 0f;
+                    }
                     //change to chase state
                     state = 1;
                 }
@@ -112,8 +121,22 @@ public class RangeEnemy : Script
                     //return back to its previous position state
                     state = 0;
                 }
-                LookAt(direction);
-                GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+
+                NavMeshAgent check = GetComponent<NavMeshAgent>();
+                if (check != null) // Use navmesh if is navmesh agent
+                {
+                    if (newRequest)
+                    {
+                        Console.WriteLine("Moving agent...");
+                        check.FindPath(player.localPosition);
+                        newRequest = false;
+                    }
+                }
+                else
+                {
+                    LookAt(direction);
+                    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                }
                 break;
             //attack state
             case 2:
@@ -164,6 +187,7 @@ public class RangeEnemy : Script
                 }
                 break;*/
         }
+        navMeshtimer += Time.deltaTime;
     }
 
     void LookAt(vec3 dir)

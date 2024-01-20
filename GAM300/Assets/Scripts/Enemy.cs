@@ -9,7 +9,7 @@ using System.Resources;
 public class Enemy : Script
 {
     public float moveSpeed = 2f;
-    public float chaseDistance = 5f;
+    public float chaseDistance = 10f;
     public float attackDistance = 3f;
     public float attackCooldown = 0f;
     public Transform player;
@@ -47,7 +47,7 @@ public class Enemy : Script
     public float currentAttackCooldownTimer;
 
     // NavMesh stuff
-    public float duration = 0.5f;
+    public float duration = 0.2f;
     public float timer = 0f;
     public bool newRequest = false;
 
@@ -164,11 +164,11 @@ public class Enemy : Script
                         {
                             SetState("Idle", false);
                         }
-                        if (timer >= duration)
-                        {
-                            newRequest = true;
-                            timer = 0f;
-                        }
+                        //if (timer >= duration)
+                        //{
+                        //    newRequest = true;
+                        //    timer = 0f;
+                        //}
                         //change to chase state
                         state = 1;
                     }
@@ -197,11 +197,12 @@ public class Enemy : Script
                     NavMeshAgent check = GetComponent<NavMeshAgent>();
                     if (check != null) // Use navmesh if is navmesh agent
                     {
-                        if (newRequest)
-                        {
-                            check.FindPath(player.localPosition);
-                            newRequest = false;
-                        }
+                        check.FindPath(player.localPosition);
+                        //if (newRequest)
+                        //{
+                        //    check.FindPath(player.localPosition);
+                        //    newRequest = false;
+                        //}
                     }
                     else // Default
                     {
@@ -238,7 +239,7 @@ public class Enemy : Script
             }
         }
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
 
 
         //needed for the animation to change
