@@ -46,6 +46,11 @@ public class Enemy : Script
     float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
 
+    // NavMesh stuff
+    public float duration = 0.5f;
+    public float timer = 0f;
+    public bool newRequest = false;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -155,10 +160,14 @@ public class Enemy : Script
                     //player detection
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
                     {
-
                         if (animationManager.GetState("Idle").state)
                         {
                             SetState("Idle", false);
+                        }
+                        if (timer >= duration)
+                        {
+                            newRequest = true;
+                            timer = 0f;
                         }
                         //change to chase state
                         state = 1;
@@ -184,8 +193,22 @@ public class Enemy : Script
                         //return back to its previous position state
                         state = 0;
                     }
-                    LookAt(direction);
-                    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+
+                    NavMeshAgent check = GetComponent<NavMeshAgent>();
+                    if (check != null) // Use navmesh if is navmesh agent
+                    {
+                        if (newRequest)
+                        {
+                            check.FindPath(player.localPosition);
+                            newRequest = false;
+                        }
+                    }
+                    else // Default
+                    {
+                        LookAt(direction);
+                        GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                    }
+
                     break;
                 //attack state
                 case 2:
@@ -214,7 +237,9 @@ public class Enemy : Script
 
             }
         }
-        
+
+        timer += Time.deltaTime;
+
 
         //needed for the animation to change
         animationManager.UpdateState();
