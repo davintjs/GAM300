@@ -558,6 +558,22 @@ void Renderer::Draw(BaseCamera& _camera) {
 	//	glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
 	//}
 
+	GLint Metallic = glGetUniformLocation(shader.GetHandle(), "MetalConstant");
+	GLint Roughness = glGetUniformLocation(shader.GetHandle(), "RoughnessConstant");
+	GLint AmbientOcculusion = glGetUniformLocation(shader.GetHandle(), "AoConstant");
+	GLint Emission = glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
+	GLint HighDR = glGetUniformLocation(shader.GetHandle(), "hdr");
+	GLint IsAnimation = glGetUniformLocation(shader.GetHandle(), "isAnim");
+
+	// Shadow
+	glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
+
+	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
+
+	glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+	glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+	glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
+
 	//Non-Instanced Rendering
 	for (auto rit = transparentMap.rbegin(); rit != transparentMap.rend(); ++rit) {
 		auto& prop = rit->second;
@@ -577,13 +593,6 @@ void Renderer::Draw(BaseCamera& _camera) {
 
 
 		// PBR TEXTURES
-		GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
-		GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
-		GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
-		GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
-		GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");
-		GLint hasEmission = glGetUniformLocation(shader.GetHandle(), "hasEmission");
-
 		glUniform1i(hasTexture, prop.textureID);
 		glUniform1i(hasNormal, prop.NormalID);
 		glUniform1i(hasRoughness, prop.RoughnessID);
@@ -592,48 +601,27 @@ void Renderer::Draw(BaseCamera& _camera) {
 		glUniform1i(hasEmission, prop.EmissionID);
 
 		// PBR CONSTANT VALUES
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "MetalConstant"), prop.metallic);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "RoughnessConstant"), prop.roughness);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AoConstant"), prop.ao);
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "EmissionConstant"), prop.emission);
+		glUniform1f(Metallic, prop.metallic);
+		glUniform1f(Roughness, prop.roughness);
+		glUniform1f(AmbientOcculusion, prop.ao);
+		glUniform1f(Emission, prop.emission);
 
-		// Shadow
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
-
-
-		GLint uProj = glGetUniformLocation(shader.GetHandle(), "persp_projection");
-		GLint uView = glGetUniformLocation(shader.GetHandle(), "View");
-		GLint SRT = glGetUniformLocation(shader.GetHandle(), "SRT");
-		GLint Albedo = glGetUniformLocation(shader.GetHandle(), "Albedo");
-		GLint Specular = glGetUniformLocation(shader.GetHandle(), "Specular");
-		GLint Diffuse = glGetUniformLocation(shader.GetHandle(), "Diffuse");
-		GLint Ambient = glGetUniformLocation(shader.GetHandle(), "Ambient");
-		GLint Shininess = glGetUniformLocation(shader.GetHandle(), "Shininess");
-		//GLint lightColor = glGetUniformLocation(shader.GetHandle(), "lightColor");
-		//GLint lightPos = glGetUniformLocation(shader.GetHandle(), "lightPos");
-		GLint camPos = glGetUniformLocation(shader.GetHandle(), "camPos");
-		GLint hasAnim = glGetUniformLocation(shader.GetHandle(), "isAnim");
-
-		glUniformMatrix4fv(uProj, 1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
-		glUniformMatrix4fv(uView, 1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
 		glUniform4fv(Specular, 1, glm::value_ptr(prop.Specular));
 		glUniform4fv(Diffuse, 1, glm::value_ptr(prop.Diffuse));
 		glUniform4fv(Ambient, 1, glm::value_ptr(prop.entitySRT));
 		glUniform1f(Shininess, prop.shininess);
-		glUniform3fv(camPos, 1, glm::value_ptr(_camera.GetCameraPosition()));
 
 		//BindLights(shader);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "hdr"), hdr);
+		glUniform1i(HighDR, hdr);
 
 		// ANIMATONS
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
+		glUniform1i(IsAnimation, prop.isAnimatable);
 		if (prop.isAnimatable)
 		{
 			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
-			GLint uniform13 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
-			glUniformMatrix4fv(uniform13, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
+			glUniformMatrix4fv(FinalBoneMatrices, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 
 		glBindVertexArray(prop.VAO);
