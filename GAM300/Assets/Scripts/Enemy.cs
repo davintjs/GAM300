@@ -24,6 +24,7 @@ public class Enemy : Script
     public bool back = false;
 
     public Transform meleeEnemyPos;
+    public Transform modelOffset;
     public float RotationSpeed = 6f;
 
 
@@ -37,11 +38,13 @@ public class Enemy : Script
 
     public float testingValue = 0f;
 
-    public GameObject spawnObject;
+    //public GameObject spawnObject;
+    public GameObject attackTrigger;
+    Rigidbody rb;
 
     public bool isAttacking = false;
     public bool isAttackCooldown = false;
-    float attackTimer = 0.01f;
+    float attackTimer = 0.001f;
     float currentAttackTimer;
     float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
@@ -51,10 +54,16 @@ public class Enemy : Script
     public float timer = 0f;
     public bool newRequest = false;
 
+    public bool isStunned;
+    private float stunDuration = 1.5f;
+    public float currentStunDuration;
+
     void Start()
     {
         currentHealth = maxHealth;
         state = 0;//start with idle state
+        currentStunDuration = stunDuration;
+        rb = GetComponent<Rigidbody>();
         InitAnimStates();
     }
 
@@ -89,6 +98,10 @@ public class Enemy : Script
         {
             return;
         }
+        if(isStunned)
+        {
+            state = 4;//set to stun state
+        }
         if(state == 2)
         {
             isAttacking = true;
@@ -116,6 +129,7 @@ public class Enemy : Script
         }
         else if(state != 2)
         {
+            attackTrigger.SetActive(false);
             isAttacking = false;
             isAttackCooldown = false;
             currentAttackCooldownTimer = 0f;
@@ -153,10 +167,10 @@ public class Enemy : Script
             {
                 //idle state
                 case 0:
-                    //Console.WriteLine("Idle");
+                    Console.WriteLine("Idle");
                     //idle animation
                     SetState("Idle", true);
-
+                    //attackTrigger.SetActive(false);
                     //player detection
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
                     {
@@ -175,8 +189,9 @@ public class Enemy : Script
                     break;
                 //chase state
                 case 1:
-                    //Console.WriteLine("Chase");
+                    Console.WriteLine("Chase");
                     SetState("Run", true);
+                    //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
                     {
@@ -213,27 +228,55 @@ public class Enemy : Script
                     break;
                 //attack state
                 case 2:
-                    //Console.WriteLine("Attack");
+                    Console.WriteLine("Attack");
                     //attack animation
                     SetState("Attack", true);
+                    if(attackTrigger != null)
+                    {
+                        attackTrigger.SetActive(true);
+                    }
 
                     LookAt(direction);
-                    //change to chase state once player has reach out of range
-                    if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
+                    if(!isAttacking)
                     {
-                        if (animationManager.GetState("Attack").state)
+
+                        //change to chase state once player has reach out of range
+                        if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
                         {
-                            SetState("Attack", false);
+                            if (animationManager.GetState("Attack").state)
+                            {
+                                SetState("Attack", false);
+                            }
+                            state = 1;
                         }
-                        state = 1;
                     }
+
                     break;
 
                 //death state
                 case 3:
+                    Console.WriteLine("Death");
                     SetState("Death", true);
                     animationManager.UpdateState();
 
+                    break;
+                //stun state
+                case 4:
+                    Console.WriteLine("Stunned");
+                    SetState("Stun", true);
+                    //attackTrigger.SetActive(false);
+                    currentStunDuration -= Time.deltaTime;
+                    if (currentStunDuration <= 0)
+                    {
+                        if (animationManager.GetState("Stun").state)
+                        {
+                            SetState("Stun", false);
+                        }
+                        isStunned = false;
+                        state = 0;//reset back to idle state
+                        currentStunDuration = stunDuration;
+                    }
+                    //animationManager.UpdateState();
                     break;
 
             }
@@ -293,7 +336,7 @@ public class Enemy : Script
         //Lowest Precedence
 
         //death.SetConditionals(false, stun, attack, walk, run, idle);
-        stun.SetConditionals(false, death);
+        stun.SetConditionals(false, death, attack, walk, run);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
         walk.SetConditionals(true, walk);
@@ -336,8 +379,9 @@ public class Enemy : Script
             animationManager.UpdateState();
             startDeathAnimationCountdown = true;
             AudioManager.instance.meleeEnemyDie.Play();
-            if (spawnObject != null)
-                spawnObject.SetActive(true);
+
+            //if (spawnObject != null)
+            //    spawnObject.SetActive(true);
             //Destroy(gameObject);
         }
     }
@@ -355,12 +399,37 @@ public class Enemy : Script
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = otherT.back;
             dir = dir.NormalizedSafe;
+            isStunned = true;
             if (damagedCoroutine != null)
             {
                 StopCoroutine(damagedCoroutine);
             }
-            //damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
             TakeDamage(1);
+        }
+    }
+
+    IEnumerator Damaged(float duration, vec3 knockback)
+    {
+        duration /= 2;
+        float startDuration = duration;
+        vec3 newRot = modelOffset.localRotation;
+        newRot.x = glm.Radians(-45f);
+        modelOffset.localRotation = newRot;
+        while (duration > 0)
+        {
+            rb.linearVelocity = new vec3(knockback * (duration / startDuration));
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        duration = startDuration;
+        while (duration > 0)
+        {
+            float val = glm.Radians(-45f);
+            newRot.x = glm.Lerp(0, val, duration / startDuration);
+            modelOffset.localRotation = newRot;
+            duration -= Time.deltaTime;
+            yield return new WaitForSeconds(Time.deltaTime);
         }
     }
 

@@ -43,6 +43,7 @@ public class Terminal : Script
                 //shift the spawn point to where the current termainal position where the player save
                 ThirdPersonController.instance.spawnPoint.localPosition = new vec3(transform.position + vec3.Ones);
                 ThirdPersonController.instance.spawnPoint.localRotation = new vec3(transform.rotation);
+                AudioManager.instance.uiSound.Play();
             }
         }
 
