@@ -100,7 +100,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		if (Sprite.WorldSpace) // 3D Space UI
 		{
 			// World Space
-			std::cout << "WorldSpace\n";
+			//std::cout << "WorldSpace\n";
 			projToUse = _camera.GetProjMatrix();
 			viewToUse = _camera.GetViewMatrix();
 			srtToUse = transform.GetWorldMatrix();
@@ -108,7 +108,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		else // Screen Space UI
 		{
 			// Screen Space
-			std::cout << "ScreenSpace\n";
+			//std::cout << "ScreenSpace\n";
 			projToUse = OrthoProjection;
 			viewToUse = IdentityMat;
 			srtToUse = transform.GetLocalMatrix();
@@ -179,7 +179,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 			PRINT(entity_tag.name, "\n");
-			std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
+			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
 		/*else
 		{
@@ -192,6 +192,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 }
+
+
 
 
 Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
