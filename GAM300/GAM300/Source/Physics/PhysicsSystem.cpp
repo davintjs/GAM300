@@ -579,6 +579,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		JPH::Quat rot;
 		Vector3 trot = t.GetGlobalRotation();
 		GlmVec3ToJoltQuat(trot, rot);
+		Vector3 tscale = t.GetGlobalScale();
 
 		// Linear + Angular Velocity
 		JPH::RVec3 linearVel;
@@ -596,7 +597,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			motionType = JPH::EMotionType::Kinematic;
 		}
 
-		
+		/*
 		// Create rigidbody's collider shape
 		if (scene.Has<BoxCollider>(entity)) {
 
@@ -658,8 +659,60 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		}
 		else {
 			continue;
-		}
+		}*/
 
+		// Create rigidbody's collider shape
+		if (scene.Has<BoxCollider>(entity)) {
+
+			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+
+			// Calculate collider scale
+			Vector3 colliderScale(boxCollider.dimensions.x * tscale.x / 2.f, boxCollider.dimensions.y * tscale.y / 2.f, boxCollider.dimensions.z * tscale.z / 2.f);
+			GlmVec3ToJoltVec3(colliderScale, scale);
+
+			// Account for offset to get final position of collider
+			Vector3 finalPos(tpos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
+
+			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
+
+		}
+		else if (scene.Has<SphereCollider>(entity)) {
+
+			SphereCollider& sc = scene.Get<SphereCollider>(entity);
+
+			// Calculate sphere collider radius
+			float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * sc.radius;
+
+			// Account for offset to get final position of collider
+			Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
+
+			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+
+		}
+		else if (scene.Has<CapsuleCollider>(entity)) {
+
+
+			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
+
+			float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * cc.radius;
+			float offset = 0.5f * (tscale.y * cc.height) - radius;
+			if (offset <= 0.0f) {
+				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+			}
+			else {
+				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+				SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+			}
+
+		}
+		else {
+			continue;
+		}
 
 	}
 
@@ -826,6 +879,7 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
+
 	if (!populated)
 		return;
 	if (!pEvent || !pEvent->pObject)
@@ -834,7 +888,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		return;
 
 	Rigidbody& rb = *(pEvent->pObject);
-
 	if (rb.state == DELETED)
 		return;
 
@@ -848,6 +901,7 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	// If no collider is attached with the rigidbody, reject gameobject
 	if (!scene.Has<BoxCollider>(entity) && !scene.Has<SphereCollider>(entity) && !scene.Has<CapsuleCollider>(entity))
 	{
+		PRINT("no collider is attached to this rigidbody, hence it is rejected\n");
 		return;
 	}
 	// Position, Rotation and Scale of collider
@@ -865,11 +919,15 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		Transform& parentTrans = scene.Get<Transform>(parent);
 		parent = parentTrans.parent;
 	}
+
+	// Transform
 	JPH::RVec3 scale;
 	JPH::RVec3 pos;
+	JPH::Quat rot;
+
 	Vector3 tpos = t.GetGlobalTranslation();
 	GlmVec3ToJoltVec3(tpos, pos);
-	JPH::Quat rot;
+
 	Vector3 trot = t.GetGlobalRotation();
 	GlmVec3ToJoltQuat(trot, rot);
 
@@ -889,7 +947,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	else if (rb.isKinematic) {
 		motionType = JPH::EMotionType::Kinematic;
 	}
-
 	if (rb.is_trigger)
 		motionType = JPH::EMotionType::Kinematic;
 
@@ -898,31 +955,30 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
 		BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
 
-		Vector3 tScale = t.GetGlobalScale();
-		Vector3 tPos = t.GetGlobalTranslation();
-		Vector3 colliderScale(boxCollider.dimensions.x * tScale.x / 2.f, boxCollider.dimensions.y * tScale.y / 2.f, boxCollider.dimensions.z * tScale.z / 2.f);
+		// Calculate collider scale
+		Vector3 colliderScale(boxCollider.dimensions.x * tscale.x / 2.f, boxCollider.dimensions.y * tscale.y / 2.f, boxCollider.dimensions.z * tscale.z / 2.f);
 		GlmVec3ToJoltVec3(colliderScale, scale);
 
-		Vector3 finalPos(tPos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+		// Account for offset to get final position of collider
+		Vector3 finalPos(tpos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
 		GlmVec3ToJoltVec3(finalPos, pos);
 
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		
 		SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
 
 	}
 	else if (scene.Has<SphereCollider>(entity)) {
 
-		Vector3 tPos = t.GetGlobalTranslation();
 		SphereCollider& sc = scene.Get<SphereCollider>(entity);
-		Vector3 finalPos(tPos.operator glm::vec3() + sc.offset.operator glm::vec3());
-		GlmVec3ToJoltVec3(finalPos, pos);
 
+		// Calculate sphere collider radius
 		float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * sc.radius;
 
+		// Account for offset to get final position of collider
+		Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
+		GlmVec3ToJoltVec3(finalPos, pos);
 
 		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape( radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		
 		SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
 		
 	}
@@ -930,9 +986,17 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
 
 		CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
-		JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(cc.height, cc.radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 
-		SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+		float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * cc.radius;
+		float offset = 0.5f * (tscale.y * cc.height) - radius;
+		if (offset <= 0.0f) {
+			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+		}
+		else {
+			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+		}
 
 	}
 
@@ -973,6 +1037,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 		PRINT("character uses capsule collider\n");
 	}
 
+	// Allow setting position through scripting, do not remove!!
 	Vector3 tPos = t.GetGlobalTranslation();
 	Vector3 tRot = t.GetGlobalRotation();
 	JPH::RVec3 pos;
