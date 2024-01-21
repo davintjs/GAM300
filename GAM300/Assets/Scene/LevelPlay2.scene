@@ -2371,7 +2371,7 @@ Script:
   isStunned: false
   count: 0
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
-  maxHealth: 3
+  maxHealth: 6
   isDead: false
   inRange: false
   timer: 0
@@ -14535,7 +14535,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 504.541443
+  LookAtDistance: 519.646301
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14598,7 +14598,7 @@ CharacterController:
   Force: [0, 0, 0]
   Friction: 1
   Mass: 1
-  GravityFactor: 1.85000002
+  GravityFactor: 1.89999998
   SlopeLimit: 45
   IsGrounded: true
 ---
@@ -53641,7 +53641,7 @@ GameObject:
 ID: 10697209982627004130
 Transform:
   m_GameObject: {fileID: 18082920113219845477}
-  Translation: [0, -0.699999988, 1]
+  Translation: [-1.1920929e-06, -0.700000048, 1]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15952054123807579159}

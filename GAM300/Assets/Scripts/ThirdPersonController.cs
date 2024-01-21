@@ -181,9 +181,9 @@ public class ThirdPersonController : Script
         attack1.SetConditionals(false, jump, death, stun);
         attack2.SetConditionals(false, jump, death, stun);
         attack3.SetConditionals(false, jump, death, stun);
-        attack1.speed = 1.5f;
-        attack2.speed = 1.5f;
-        attack3.speed = 1.5f;
+        attack1.speed = 2.2f;
+        attack2.speed = 2.8f;
+        attack3.speed = 3.1f;
         sprint.SetConditionals(true, run);
         sprint.SetConditionals(false, attack1, jump, death, stun);
         sprint.loop = true;
