@@ -56,11 +56,6 @@ void InputSystem::Update(float dt)
 	}
 	
 	glfwPollEvents();
-
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_ESCAPE))
-	{
-		LockCursor(false);
-	}
 	
 	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_M))
 	{

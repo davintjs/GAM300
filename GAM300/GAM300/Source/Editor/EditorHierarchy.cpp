@@ -149,6 +149,11 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::EndDragDropTarget();
 	}
 
+	//bool multiselect = false;
+	//std::list<Engine::UUID>& multiSel = EditorInspector::Instance().multiselectEntities;
+	//if (std::find(multiSel.begin(), multiSel.end(), euid) != multiSel.end()) {
+	//	multiselect = true;
+	//}
 
 	if (currEntity.isSelectedChild() || (euid == selectedEntity)) {
 		
@@ -329,9 +334,7 @@ void EditorHierarchy::Update(float dt)
 				SelectedEntityEvent selectedEvent{ Newentity };
 				EVENTS.Publish(&selectedEvent);
 
-				newtransform.scale = Vector3(1.f, 1.f, 1.f);
-				newtransform.translation = Vector3();
-				newtransform.rotation = Vector3();
+				newtransform.SetLocalMatrix(Vector3(), Vector3(), Vector3(1.f));
 			}
 
 			std::string name = "Delete Entity";
@@ -371,10 +374,25 @@ void EditorHierarchy::Update(float dt)
 
 void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
-	if (pEvent->pEntity)
+	if (pEvent->pEntity) {
 		selectedEntity = pEvent->pEntity->EUID();
+		/*if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+
+			std::list<Engine::UUID>& ref = EditorInspector::Instance().multiselectEntities;
+			if (std::find(ref.begin(), ref.end(), pEvent->pEntity->EUID()) != ref.end()) {
+				std::cout << "left shift: " << pEvent->pEntity->EUID() << std::endl;
+				ref.push_back(pEvent->pEntity->EUID());
+			}
+			for (auto a : ref) {
+				std::cout << a << std::endl;
+			}
+		}*/
+	}
 	else
 		selectedEntity = NON_VALID_ENTITY;
+
+	
+	
 }
 
 void EditorHierarchy::Exit() {

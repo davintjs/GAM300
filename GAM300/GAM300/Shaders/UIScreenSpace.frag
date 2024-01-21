@@ -38,13 +38,13 @@ uniform bool RenderSprite; // if there is a texture, this is true else false
 void main()
 {    
 
-
+	const float gamma = 2.2f;
 //    FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
 
     if(RenderSprite)
     {
         vec4  colour = texture(Sprite, TexCoords);
-        if(colour.a <0.7)
+        if(colour.a <0.05)
         {
             discard;
         }
@@ -62,5 +62,5 @@ void main()
     FragColor = vec4(1.f,1.f,1.f,1.f);
 
     }
-
+        FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
 }  

@@ -40,11 +40,11 @@ Entity& Scene::Clone(Entity& source)
 	ReferencesTable references;
 	Transform& sourceTrans{ Get<Transform>(source) };
 	Entity& dest = StoreTransformHierarchy(references, source.EUID());
+	Transform& destTrans{ Get<Transform>(dest) };
 	if (sourceTrans.parent)
 	{
 		Transform& parent{ Get<Transform>(sourceTrans.parent) };
 		parent.child.push_back(dest.EUID());
-		Transform& destTrans{ Get<Transform>(dest) };
 		destTrans.parent = parent.EUID();
 	}
 	LinkReferences(references, AllComponentTypes());
@@ -60,6 +60,7 @@ Entity& Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID en
 	storage[GetType::E<Entity>()][key] = val;
 	Transform& transform{ Get<Transform>(entityID) };
 	StoreComponentHierarchy(storage,entityID,val.EUID(),AllComponentTypes());
+	Get<Transform>(val).RecalculateLocalMatrices();
 	//Create map entry
 	for (Engine::UUID euid : transform.child)
 	{
