@@ -7398,11 +7398,11 @@ ID: 12260939983537743611
 Transform:
   m_GameObject: {fileID: 6663313825132233637}
   Translation: [-0.100004196, 0.799999952, 0]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 3.14159274, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 3977294589520766028}
   m_Children:
-    []
+    - {fileID: 15334681090738628473}
 ---
 ID: 17145839964191952887
 GameObject:
@@ -14557,10 +14557,10 @@ GameObject:
 ID: 813583600382484493
 Transform:
   m_GameObject: {fileID: 15334681090738628473}
-  Translation: [-19.8676071, 2.19999647, 24.7202797]
+  Translation: [0.100000001, 0.199996233, 5]
   Rotation: [0, 0, 0]
-  Scale: [0.999998331, 1, 0.999998331]
-  Father: {fileID: 0}
+  Scale: [0.999917507, 1, 0.99991864]
+  Father: {fileID: 6663313825132233637}
   m_Children:
     []
 ---
@@ -14587,9 +14587,9 @@ ID: 16773315215798417911
 Camera:
   m_GameObject: {fileID: 15334681090738628473}
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
-  ClearFlags: "\x01"
+  ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 102.121307
+  LookAtDistance: 3.53842163
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14605,13 +14605,14 @@ Script:
   m_GameObject: {fileID: 15334681090738628473}
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
   target: {fileID: 6663313825132233637}  # GameObject
-  maxPitchAngle: 170
+  maxPitchAngle: 45
   yawRotSpeed: 2
-  defaultZoom: 4
   invertPitch: true
   pitchRotSpeed: 1
-  minPitchAngle: -85
+  minPitchAngle: -45
   zoom: 5.00000143
+  pitchAngle: 0
+  defaultZoom: 4
   zoomSpeed: 50
   zoomInSpeed: 3
   closestZoom: 0.5
@@ -14636,8 +14637,8 @@ ID: 18246905878658813158
 Transform:
   m_GameObject: {fileID: 3977294589520766028}
   Translation: [-19.867609, 1.19999874, 19.7202816]
-  Rotation: [-3.14159203, 0, -3.14159203]
-  Scale: [0.999999285, 1, 0.999999285]
+  Rotation: [-3.14159274, 0, -3.14159274]
+  Scale: [0.999959767, 1, 0.999956191]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 6663313825132233637}
@@ -14687,7 +14688,7 @@ Script:
   isAtCheckpoint: false
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
-  RotationSpeed: 5
+  RotationSpeed: 20
   checkpointIndex: -1
   spawnPoint: {fileID: 13798602388106733380}  # Component
   terminal1: {fileID: 10239403197338088721}  # Component
@@ -17833,8 +17834,6 @@ ID: 2826765051149347733
 Animator:
   m_GameObject: {fileID: 17589645519894896830}
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
-  Current State: Idle
-  Next State: Idle
 ---
 ID: 14743469042376816932
 GameObject:
@@ -41965,9 +41964,9 @@ GameObject:
 ID: 3043253976686372483
 Transform:
   m_GameObject: {fileID: 1051037936027593321}
-  Translation: [-1.90734863e-06, -0.50000006, 1.90734863e-06]
-  Rotation: [0, 0, 0]
-  Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+  Translation: [5.34057617e-05, -0.50000006, -5.27710363e-05]
+  Rotation: [3.14159274, 0, 3.14159274]
+  Scale: [0.00999999978, 0.00999999978, 0.00999993458]
   Father: {fileID: 3977294589520766028}
   m_Children:
     - {fileID: 10961871691632621067}
@@ -42010,8 +42009,6 @@ ID: 16841312652590570249
 Animator:
   m_GameObject: {fileID: 1051037936027593321}
   Animation: {guid: c0be1abecf08f639d493afa71ad72c31}
-  Current State: Idle
-  Next State: Idle
 ---
 ID: 10961871691632621067
 GameObject:
