@@ -39,6 +39,7 @@ TemplatePack
 	Texture_Manager,
 	MaterialSystem,
 	Renderer,
+	Shadows,
 	ParticleRenderer,
 	TextSystem
 >;

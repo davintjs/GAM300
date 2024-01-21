@@ -1,5 +1,6 @@
-[2024-01-16 21:27:50.977] [Error] [critical] 
+[2024-01-21 18:19:16.777] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
+Info:		ERROR: Sphere has guid 00000000000000000000000000000066 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 335)
 

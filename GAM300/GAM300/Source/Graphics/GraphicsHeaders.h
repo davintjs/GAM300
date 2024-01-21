@@ -287,7 +287,6 @@ private:
 	// Colour Picking
 	unsigned int colorPickFBO;
 	unsigned int colorPickTex;
-
 };
 
 
@@ -354,6 +353,40 @@ private:
 	std::vector<LightProperties> spotLightSources;
 };
 
+ENGINE_SYSTEM(Shadows)
+{
+public:
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+	// Returning the Textures
+	void DirectionalShadowTex();
+	void PointShadowTex();
+	void SpotShadowTex();
+
+private:
+
+	void DrawDepthSpot();
+	void DrawDepthDirectional();
+	void DrawDepthPoint();
+
+
+	unsigned int depthMapFBO;
+	unsigned int depthMap; // Shadow Texture
+
+
+	// Shadow Mapping - Spot
+	unsigned int depthMapFBO_S;
+	unsigned int depthMap_S; // Shadow Texture
+
+
+	// Shadow Cube Mapping
+	unsigned int depthCubemapFBO;
+	unsigned int depthCubemap;
+
+};
+
 ENGINE_SYSTEM(Renderer), property::base
 {
 public:
@@ -409,7 +442,7 @@ public:
 	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 	std::vector<DefaultRenderProperties>& GetTransparentContainer() { return transparentContainer; }
-
+	std::vector<std::vector<glm::mat4>*>& GetFinalBoneContainer() { return finalBoneMatContainer; }
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }
