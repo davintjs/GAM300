@@ -40,6 +40,11 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Jolt/Physics/Character/Character.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 
+// Ray Cast
+#include "Jolt/Physics/Collision/RayCast.h"
+#include "Jolt/Physics/Collision/CastResult.h"
+#include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
+
 #define PHYSICS PhysicsSystem::Instance()
 
 // Layers that objects can be in and determines which other objects it can collide with
@@ -249,6 +254,9 @@ public:
 	// Delete a physics body based on Body ID
 	void DeleteBody(UINT32 bid);
 
+
+	void CastRay(const JPH::Vec3& origin, const JPH::Vec3& end);
+
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
 	const unsigned int maxObjectPairs =					1024;
@@ -277,6 +285,9 @@ public:
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
 	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter; 
+
+	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+
 
 
 	#pragma region Character Controller Testing

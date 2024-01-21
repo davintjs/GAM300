@@ -724,6 +724,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 		CreateJoltCharacter(*it, physicsSystem, this);
 	}
 
+	size_t numBodies = rbArray.size() + ccArray.size();
 
 	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
@@ -1095,6 +1096,18 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	bodyInterface->AddBody(body->GetID(), enabledStatus);
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
 }
+
+void PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& end) {
+	if (!physicsSystem)
+		return;
+
+	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
+	JPH::RayCast ray(origin, end);
+	bpq.CastRay(ray, collector);
+
+
+}
+
 
 #pragma region EngineContactListener
 // Contact Listeners
