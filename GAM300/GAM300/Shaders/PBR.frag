@@ -96,7 +96,7 @@ uniform bool renderShadow;
 uniform float farplane;
 
 uniform vec3 camPos;
-uniform bool hdr;
+uniform bool hdr;       
 
 // Point Light 
 uniform PointLight pointLights[MAX_POINT_LIGHT];

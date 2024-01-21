@@ -37,6 +37,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
+#define UIRENDERER UIRenderer::Instance()
 #define MATERIALSYSTEM MaterialSystem::Instance()
 #define TEXTSYSTEM TextSystem::Instance()
 
@@ -287,6 +288,20 @@ private:
 	// Colour Picking
 	unsigned int colorPickFBO;
 	unsigned int colorPickTex;
+};
+
+SINGLETON(UIRenderer)
+{
+public:
+
+
+	// Drawing UI onto screenspace
+	void UIDraw_2D(BaseCamera & _camera);
+
+	// Drawing UI onto worldspace
+	void UIDraw_3D(BaseCamera & _camera);
+	// Drawing Screenspace UI onto worldspace
+	void UIDraw_2DWorldSpace(BaseCamera & _camera);
 
 };
 
@@ -354,6 +369,35 @@ private:
 	std::vector<LightProperties> spotLightSources;
 };
 
+ENGINE_SYSTEM(Shadows)
+{
+public:
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+private:
+
+	void DrawDepthSpot();
+	void DrawDepthDirectional();
+	void DrawDepthPoint();
+
+
+	unsigned int depthMapFBO;
+	unsigned int depthMap; // Shadow Texture
+
+
+	// Shadow Mapping - Spot
+	unsigned int depthMapFBO_S;
+	unsigned int depthMap_S; // Shadow Texture
+
+
+	// Shadow Cube Mapping
+	unsigned int depthCubemapFBO;
+	unsigned int depthCubemap;
+
+};
+
 ENGINE_SYSTEM(Renderer), property::base
 {
 public:
@@ -369,14 +413,14 @@ public:
 
 	void BindLights(GLSLShader& shader);
 
-	// Drawing UI onto screenspace
-	void UIDraw_2D(BaseCamera& _camera);
+	//// Drawing UI onto screenspace
+	//void UIDraw_2D(BaseCamera& _camera);
 
-	// Drawing UI onto worldspace
-	void UIDraw_3D(BaseCamera& _camera);
+	//// Drawing UI onto worldspace
+	//void UIDraw_3D(BaseCamera& _camera);
 
-	// Drawing Screenspace UI onto worldspace
-	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+	//// Drawing Screenspace UI onto worldspace
+	//void UIDraw_2DWorldSpace(BaseCamera & _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		const unsigned int& _primCount, GLenum _primType, SHADERTYPE shaderType);
@@ -386,15 +430,6 @@ public:
 	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	// Depth draw call for directional shadows
-	void DrawDepthDirectional();
-
-	// Depth draw call for spotlight shadows
-	void DrawDepthSpot();
-
-	// Depth draw call for point shadows
-	void DrawDepthPoint();
 
 	bool Culling();
 
@@ -409,7 +444,7 @@ public:
 	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 	std::vector<DefaultRenderProperties>& GetTransparentContainer() { return transparentContainer; }
-
+	std::vector<std::vector<glm::mat4>*>& GetFinalBoneContainer() { return finalBoneMatContainer; }
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }

@@ -361,6 +361,7 @@
     <ClInclude Include="Source\Graphics\ParticleRenderer.h" />
     <ClInclude Include="Source\Graphics\Ray3D.h" />
     <ClInclude Include="Source\Graphics\ShaderFileParser.h" />
+    <ClInclude Include="Source\Graphics\Text.h" />
     <ClInclude Include="Source\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Source\Scene\HandlesTable.h" />
     <ClInclude Include="Source\Scene\Identifiers.h" />

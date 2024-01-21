@@ -146,21 +146,27 @@ struct Transform : Object
 	//Removes a child from child vector
 	void RemoveChild(Transform* t);
 
+private:
+	Vector3 translation{};
+	Vector3 rotation{};
+	Vector3 scale{ 1 };
+	Vector3 globalPos{};
+	Vector3 globalRot{};
+	Vector3 globalScale{};
+	glm::mat4x4 worldMatrix;
+
+public:
+
 	property_vtable();
-	private:
-		Vector3 translation{};
-		Vector3 rotation{};
-		glm::quat rotationQuat{};
-		Vector3 scale{ 1 };
-		Vector3 globalPos{};
-		Vector3 globalRot{};
-		Vector3 globalScale{};
-		glm::mat4x4 worldMatrix;
+
 };
 
 property_begin_name(Transform, "Transform")
 {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+	property_var(translation).Name("Translation"),
+	property_var(rotation).Name("Rotation"),
+	property_var(scale).Name("Scale"),
 	property_var(parent).Name("Father").Flags(property::flags::DONTSHOW| property::flags::REFERENCE)
 } property_vend_h(Transform)
 
@@ -387,7 +393,7 @@ struct LightSource : Object
 	float intensity = 10.f;
 	Vector3 lightingColor{ 1.f, 1.f, 1.f };
 
-	
+	bool toRender = true; // Dirtybit 
 	property_vtable()
 };
 

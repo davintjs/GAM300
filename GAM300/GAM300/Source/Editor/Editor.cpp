@@ -110,6 +110,7 @@ void EditorSystem::Update(float dt)
             if (selectedEntity)
             {
                 currScene.Clone(currScene.Get<Entity>(selectedEntity));
+                
             }
         }
     }

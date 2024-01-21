@@ -39,6 +39,7 @@ TemplatePack
 	Texture_Manager,
 	MaterialSystem,
 	Renderer,
+	Shadows,
 	ParticleRenderer,
 	TextSystem
 >;
@@ -222,6 +223,21 @@ void GraphicsSystem::Init()
 
 void GraphicsSystem::Update(float dt)
 {
+	//// Game Cameras
+	//EditorWindowEvent e1("Game");
+	//EVENTS.Publish(&e1);
+
+	//if (e1.isOpened)
+	//{
+	//	Scene& currentScene = MySceneManager.GetCurrentScene();
+	//	for (Camera& camera : currentScene.GetArray<Camera>())
+	//	{
+	//		if (camera.state == DELETED) continue;
+
+	//		COLOURPICKER.ColorPickingUIButton(camera);
+
+	//	}
+	//}
 	// All subsystem updates
 	GraphicsSubSystems::Update(dt);
 	AnimationManager.Update(dt);
@@ -240,7 +256,7 @@ void GraphicsSystem::Update(float dt)
 		// Update camera view 
 		camera.UpdateCamera(transform->GetGlobalTranslation(), transform->GetGlobalRotation());
 
-		COLOURPICKER.ColorPickingUIButton(camera);
+		//COLOURPICKER.ColorPickingUIButton(camera);
 
 		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
@@ -278,6 +294,7 @@ void GraphicsSystem::Update(float dt)
 			COLOURPICKER.ColorPickingUIButton(camera);
 
 			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
+
 		}
 	}
 #endif	
@@ -292,14 +309,14 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera); // call draw after update
-	RENDERER.UIDraw_3D(_camera); // call draw after update
+	UIRENDERER.UIDraw_3D(_camera); // call draw after update
 	TEXTSYSTEM.Draw(_camera);
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);
 	else
-		RENDERER.UIDraw_2DWorldSpace(_camera);
-
+		UIRENDERER.UIDraw_2DWorldSpace(_camera);
+	
 	FRAMEBUFFER.Unbind();
 
 	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
@@ -390,7 +407,7 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 {
 	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
-	RENDERER.UIDraw_2D(_camera);
+	UIRENDERER.UIDraw_2D(_camera);
 
 }
 

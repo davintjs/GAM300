@@ -75,6 +75,8 @@ void Lighting::Update(float)
 
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
+			// Cull
+
 
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
@@ -87,6 +89,10 @@ void Lighting::Update(float)
 
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
+			// Cull
+
+
+
 			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
 			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
@@ -96,8 +102,12 @@ void Lighting::Update(float)
 
 		}
 
-		else if (lightSource.lightType == SPOT_LIGHT)// SpotLight - WIP
+		else if (lightSource.lightType == SPOT_LIGHT)
 		{
+			// Cull
+
+
+
 
 			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
 			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
@@ -113,20 +123,8 @@ void Lighting::Update(float)
 			glm::vec3 testdir = rot[3];
 
 			glm::vec3 test(0.f);
-			/*if (test == rotation)
-			{
-				spotLightSources[spotLightCount].direction = glm::vec3(0.f,-1.f,0.f);
-			}
-			else
-			{*/
-				//spotLightSources[spotLightCount].direction = glm::radians(glm::normalize(rotation));
-				//spotLightSources[spotLightCount].direction = glm::normalize(glm::degrees(rotation));
-				spotLightSources[spotLightCount].direction = glm::normalize(testdir);
-				//spotLightSources[spotLightCount].direction = glm::degrees(rotation);
-				//spotLightSources[spotLightCount].direction = glm::normalize(rotation);
-				//spotLightSources[spotLightCount].direction = rotation;
 
-			//}
+			spotLightSources[spotLightCount].direction = glm::normalize(testdir);
 
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
 			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
@@ -139,13 +137,6 @@ void Lighting::Update(float)
 		{
 			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
 			if (mesh_component.state == DELETED) continue;
-
-			//mesh_component.mr_Albedo = glm::vec4(glm::vec3(lightSource.lightingColor), 1.f);
-
-		//	mesh_component.mr_metallic = -1.f;
-		//	mesh_component.mr_roughness = -1.f;
-		//	mesh_component.ao = -1.f;
-		//	mesh_component.ao = -1.f;
 		}
 	}
 
