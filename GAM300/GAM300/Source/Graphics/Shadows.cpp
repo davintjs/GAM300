@@ -326,15 +326,3 @@ void Shadows::DrawDepthPoint()
 	}
 }
 
-void Shadows::DirectionalShadowTex()
-{
-
-}
-void Shadows::PointShadowTex()
-{
-
-}
-void Shadows::SpotShadowTex()
-{
-
-}

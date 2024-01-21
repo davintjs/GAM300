@@ -37,6 +37,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
+#define UIRENDERER UIRenderer::Instance()
 #define MATERIALSYSTEM MaterialSystem::Instance()
 #define TEXTSYSTEM TextSystem::Instance()
 
@@ -289,6 +290,21 @@ private:
 	unsigned int colorPickTex;
 };
 
+SINGLETON(UIRenderer)
+{
+public:
+
+
+	// Drawing UI onto screenspace
+	void UIDraw_2D(BaseCamera & _camera);
+
+	// Drawing UI onto worldspace
+	void UIDraw_3D(BaseCamera & _camera);
+	// Drawing Screenspace UI onto worldspace
+	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+
+};
+
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
@@ -360,11 +376,6 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	// Returning the Textures
-	void DirectionalShadowTex();
-	void PointShadowTex();
-	void SpotShadowTex();
-
 private:
 
 	void DrawDepthSpot();
@@ -402,14 +413,14 @@ public:
 
 	void BindLights(GLSLShader& shader);
 
-	// Drawing UI onto screenspace
-	void UIDraw_2D(BaseCamera& _camera);
+	//// Drawing UI onto screenspace
+	//void UIDraw_2D(BaseCamera& _camera);
 
-	// Drawing UI onto worldspace
-	void UIDraw_3D(BaseCamera& _camera);
+	//// Drawing UI onto worldspace
+	//void UIDraw_3D(BaseCamera& _camera);
 
-	// Drawing Screenspace UI onto worldspace
-	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+	//// Drawing Screenspace UI onto worldspace
+	//void UIDraw_2DWorldSpace(BaseCamera & _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
 		const unsigned int& _primCount, GLenum _primType, SHADERTYPE shaderType);
@@ -419,15 +430,6 @@ public:
 	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	// Depth draw call for directional shadows
-	void DrawDepthDirectional();
-
-	// Depth draw call for spotlight shadows
-	void DrawDepthSpot();
-
-	// Depth draw call for point shadows
-	void DrawDepthPoint();
 
 	bool Culling();
 
