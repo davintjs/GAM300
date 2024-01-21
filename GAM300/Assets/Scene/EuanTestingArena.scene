@@ -215,6 +215,7 @@ Camera:
   HDR: true
   OcclusionCulling: false
   FrustumCulling: true
+  DistanceCulling: 5
 ---
 ID: 3250402029849808772
 GameObject:
@@ -283,7 +284,7 @@ ID: 7659592668176000466
 Transform:
   m_GameObject: {fileID: 4212138099454399691}
   Translation: [0, 138.102646, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
@@ -306,9 +307,9 @@ GameObject:
 ID: 8004829041645098527
 Transform:
   m_GameObject: {fileID: 2866402867161245437}
-  Translation: [0.00955638941, 0, 0]
+  Translation: [-0.74000001, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.100000001, 0.100000001, 1]
+  Scale: [0.5, 0.5, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -317,8 +318,8 @@ ID: 8812244467539034998
 SpriteRenderer:
   m_GameObject: {fileID: 2866402867161245437}
   World Space: false
-  Colour Picker Mode: false
-  SpriteTexture: {guid: 00000000000000000000000000000000}
+  Colour Picker Mode: true
+  SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
 ---
 ID: 16279065018212808363
 GameObject:
