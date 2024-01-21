@@ -121,11 +121,37 @@ void EditorScene::ToolBar()
         ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        if (ImGui::Checkbox("Debug Drawing", &DEBUGDRAW.IsEnabled())) {}
+        if (ImGui::Checkbox("DD", &DEBUGDRAW.IsEnabled())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Show Debug Drawing (Camera Frustum, Colliders, etc)");
+        }
+
         //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
 
-        ImGui::Dummy(ImVec2(20.f, 0.f));
-        if (ImGui::Checkbox("Frustum Culling", &RENDERER.EnableFrustumCulling())) {}
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("FC", &RENDERER.EnableFrustumCulling())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Enable Frustum Culling (Cull away GameObjects that are not within the camera)");
+        }
+
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("SAC", &DEBUGDRAW.ShowAllColliders())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Show All Colliders (Show all debug drawing of colliders)");
+        }
+
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("CIA", &RENDERER.EnableIsActive())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            std::string tooltip = "Check Is Active (Enable/Disable setting of IsActive of GameObjects)\n";
+            tooltip += "Disabling this causes the Renderer to NOT check for disabled GameObjects, \n";
+            tooltip += "it temporarily increases performance while editing the scene";
+            ImGui::SetTooltip(tooltip.c_str());
+        }
 
         ImGui::EndMenuBar();
     }
@@ -330,6 +356,7 @@ void EditorScene::DisplayGizmos()
         {
             if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
+            if (!currentScene.IsActive(entity)) continue;
             Transform& transform = currentScene.Get<Transform>(entity);
 
             // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING

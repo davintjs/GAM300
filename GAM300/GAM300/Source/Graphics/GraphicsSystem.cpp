@@ -22,6 +22,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Core/EventsManager.h"
 //#include "AnimationManager.h"
+#include "MeshManager.h"
+#include "Texture/TextureManager.h"
 #include "IOManager/InputHandler.h"
 #include <glm/gtx/matrix_decompose.hpp>
 #include "AppEntry/Application.h"
@@ -29,10 +31,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 using GraphicsSystemsPack =
 TemplatePack
 <
+	MeshManager,
 	ShaderManager,
 	FramebufferManager,
 	DebugDraw,
 	Lighting,
+	Texture_Manager,
 	MaterialSystem,
 	Renderer,
 	ParticleRenderer,
@@ -378,7 +382,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
-
 	}
 #endif
 
@@ -394,12 +397,12 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 void GraphicsSystem::PostDraw()
 {
 	//@kk clear the one with shader instead
-	/*for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
+	for (int i = 0; i < static_cast<int>(SHADERTYPE::COUNT); ++i) {
 		for (auto& [name, prop] : RENDERER.GetInstanceContainer()[i])
 		{
 			prop.iter = 0;
 		}
-	}*/
+	}
 	
 }
 
