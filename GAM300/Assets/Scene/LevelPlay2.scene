@@ -2435,7 +2435,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -14585,7 +14584,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 670.182922
+  LookAtDistance: 685.194824
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14670,6 +14669,8 @@ Script:
   CC: {fileID: 15939117778428800744}  # Component
   animator: {fileID: 16841312652590570249}  # Component
   audioSource: {fileID: 16716648517964172389}  # Component
+  currentDashAttackTimer: 0
+  attackMoveSpeed: 160
   currentDashAttackCooldown: 0
   MoveSpeed: 400
   dashAttackSpeed: 50
@@ -14683,7 +14684,6 @@ Script:
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.100000001
   walkStepsInterval: 0.439999998
-  currentDashAttackTimer: 0
   startDashCooldown: false
   dodgeTimer: 0.5
   startDeathAnimationCountdown: false
@@ -42414,7 +42414,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -42867,7 +42866,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -52525,7 +52523,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -53013,7 +53010,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -53396,7 +53392,6 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
-  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
