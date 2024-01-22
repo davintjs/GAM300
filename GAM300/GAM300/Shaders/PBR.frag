@@ -89,6 +89,7 @@ layout (location = 1) out vec4 Blooming;
 //-------------------------
 
 // The last slot is used for shadows from Directional / SpotLight currently
+// 0 -9 - Textures | 10 -19 ( Spot Shadows ) | 20 21 - (DirectionalShadows)
 layout (binding = 0) uniform sampler2D myTextureSampler[22];
 layout (binding = 22) uniform samplerCube PointShadows[10];
 //layout (binding = 31) uniform samplerCube PointShadowBox;

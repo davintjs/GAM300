@@ -513,7 +513,6 @@ void Renderer::BindLights(GLSLShader& shader)
 		int textureUnit = 10 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
 	}
 
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
@@ -521,7 +520,6 @@ void Renderer::BindLights(GLSLShader& shader)
 		int textureUnit = 20 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("ShadowMap_SpotDirectional[" + std::to_string(textureUnit) + "]").c_str()), textureUnit);
 	}
 
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
@@ -529,7 +527,6 @@ void Renderer::BindLights(GLSLShader& shader)
 		int textureUnit = 22 + i;
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
-		glUniform1i(glGetUniformLocation(shader.GetHandle(), ("PointShadows[" + std::to_string(i) + "]").c_str()), textureUnit); // Associate samplerCube with texture unit 2
 	}
 
 	// POINT LIGHT STUFFS

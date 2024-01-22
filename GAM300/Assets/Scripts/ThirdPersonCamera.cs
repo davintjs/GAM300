@@ -15,7 +15,7 @@ public class ThirdPersonCamera : Script
     public bool invertPitch = false;
 
     private float yawAngle;
-    private float pitchAngle;
+    public float pitchAngle;
     private const float yawSM = 1800f;
     private const float pitchSM = 1800f;
 
@@ -117,9 +117,9 @@ public class ThirdPersonCamera : Script
 
         //Pitch Camera Rotation
         pitchAngle -= mouseDelta.y * (invertPitch ? -1.0f : 1.0f) * pitchRotSpeed * pitchSM * Time.deltaTime * 3.14f / 180f;
-        if (pitchAngle > maxPitchAngle)
+        if (pitchAngle > maxPitchAngle * 3.14f / 180f)
             pitchAngle = maxPitchAngle * 3.14f / 180f;
-        else if (pitchAngle < minPitchAngle)
+        else if (pitchAngle < minPitchAngle * 3.14f / 180f)
             pitchAngle = minPitchAngle * 3.14f / 180f;
 
         transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
@@ -162,7 +162,7 @@ public class ThirdPersonCamera : Script
         {
             camera.LookAt(target);
             camera.position = target.transform.position - (camera.forward * camera.distance);
-            transform.localPosition = camera.position;
+            transform.position = camera.position;
         }
     }
 

@@ -1,6 +1,5 @@
-[2024-01-21 18:19:16.777] [Error] [critical] 
+[2024-01-21 13:52:39.147] [Error] [critical] 
 Caused By:	false
-Info:		ERROR: Sphere has guid 00000000000000000000000000000066 that does not exist! Reassign the mesh!
-
-Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 335)
+Info:		5235729637626766851  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 525)
 
