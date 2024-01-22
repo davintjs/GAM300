@@ -75,9 +75,13 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 ;			continue;
 		}
 		//std::cout << "Passed\n";
-
 		spriteToColourPick = true;
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity))
+		{
+			continue;
+		}
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		int temp = index + offset;
@@ -179,7 +183,6 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 			PRINT(entity_tag.name, "\n");
-			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
 		/*else
 		{
