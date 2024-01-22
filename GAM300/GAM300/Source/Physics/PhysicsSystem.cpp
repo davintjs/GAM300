@@ -1097,13 +1097,39 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
 }
 
-void PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& end) {
+void PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance) {
 	if (!physicsSystem)
 		return;
 
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
-	JPH::RayCast ray(origin, end);
+	JPH::RayCast ray(origin, direction);
 	bpq.CastRay(ray, collector);
+
+	int numHits = (int)collector.mHits.size();
+	JPH::BroadPhaseCastResult* results = collector.mHits.data();
+
+	JPH::Vec3 closestPoint;
+	float tmpDistance = std::numeric_limits<float>::min();
+
+	for (int i{ 0 }; i < numHits; ++i) {
+		JPH::Vec3 pos = ray.GetPointOnRay(results[i].mFraction);
+		float distance = (pos - ray.mOrigin).Length();
+		if (distance < maxDistance && distance > tmpDistance) {
+			closestPoint = pos;
+		}
+	}
+	
+	/*
+	1. Cast ray in direction of camera facing
+	2. Collect any hits
+	3. Find any hits that are within specified distance
+	4. Return
+		a. True/False
+		b. Position of hits?
+		c. Collection of hit closest to player?
+	* 
+	*/ 
+
 
 
 }

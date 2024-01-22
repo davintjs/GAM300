@@ -255,7 +255,7 @@ public:
 	void DeleteBody(UINT32 bid);
 
 
-	void CastRay(const JPH::Vec3& origin, const JPH::Vec3& end);
+	void CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
