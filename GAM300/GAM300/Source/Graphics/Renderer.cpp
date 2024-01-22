@@ -263,15 +263,15 @@ void Renderer::Draw(BaseCamera& _camera) {
 	glDisable(GL_BLEND);
 
 #ifndef _BUILD
-	// For Debug drawing
-	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
-	{
-		for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)])
-		{
-			if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-				DrawDebug(prop.debugVAO, (unsigned)prop.iter);
-		}
-	}
+	//// For Debug drawing
+	//if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+	//{
+	//	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)])
+	//	{
+	//		if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+	//			DrawDebug(prop.debugVAO, (unsigned)prop.iter);
+	//	}
+	//}
 #endif
 }
 
@@ -661,6 +661,71 @@ void Renderer::BindLights(GLSLShader& shader)
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
 }
 
+void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCount)
+{
+	glm::vec3 color{ 1.f, 0.f, 1.f };
+
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
+	shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "uColor");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.GetProjMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.GetViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
+
+	glBindVertexArray(_vaoid);
+	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
+	glBindVertexArray(0);
+
+	shader.UnUse();
+}
+
+unsigned int Renderer::ReturnTextureIdx(InstanceProperties& prop, const GLuint& _id)
+{
+	if (!_id)
+	{
+		return 33;
+	}
+	//if (prop.textureMap.find(_id) != prop.textureMap.end()) {
+	//	return prop.textureMap[_id];
+	//}
+
+	//// Check if there are empty slots in the texture array
+	//if (prop.textureCount < 32) {
+	//	prop.texture[prop.textureCount] = _id;
+	//	prop.textureMap[_id] = prop.textureCount++;
+	//	return prop.textureCount - 1;
+	//}
+	for (unsigned int iter = 0; iter < prop.textureCount + 1; ++iter)
+	{
+		if (prop.texture[iter] == _id) // this happen more often in big scene
+		{
+			prop.textureCount++;
+			return iter;
+		}
+		if (prop.texture[iter] == 0)
+		{
+			prop.texture[iter] = _id;
+			prop.textureCount++;
+			return iter;
+		}
+	}
+	return 33;
+}
+
+void Renderer::Exit()
+{
+
+}
+
 //void Renderer::UIDraw_2D(BaseCamera& _camera)
 //{
 //	// Setups required for all UI
@@ -871,88 +936,6 @@ void Renderer::BindLights(GLSLShader& shader)
 //	glDisable(GL_BLEND);
 //
 //}
-
-void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCount)
-{
-	glm::vec3 color{ 1.f, 0.f, 1.f };
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
-	shader.Use();
-	// UNIFORM VARIABLES ----------------------------------------
-	// Persp Projection
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(shader.GetHandle(), "uColor");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE, 
-		glm::value_ptr(EditorCam.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetViewMatrix()));
-	glUniform3fv(uniform3, 1, glm::value_ptr(color));
-
-	glBindVertexArray(_vaoid);
-	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
-	glBindVertexArray(0);
-
-	shader.UnUse();
-}
-
-
-
-bool Renderer::Culling()
-{
-	return false;
-}
-
-void Renderer::Forward()
-{
-
-}
-
-void Renderer::Deferred()
-{
-
-}
-
-unsigned int Renderer::ReturnTextureIdx(InstanceProperties& prop, const GLuint& _id)
-{
-	if (!_id)
-	{
-		return 33;
-	}
-	//if (prop.textureMap.find(_id) != prop.textureMap.end()) {
-	//	return prop.textureMap[_id];
-	//}
-
-	//// Check if there are empty slots in the texture array
-	//if (prop.textureCount < 32) {
-	//	prop.texture[prop.textureCount] = _id;
-	//	prop.textureMap[_id] = prop.textureCount++;
-	//	return prop.textureCount - 1;
-	//}
-	for (unsigned int iter = 0; iter < prop.textureCount + 1; ++iter)
-	{
-		if (prop.texture[iter] == _id) // this happen more often in big scene
-		{
-			prop.textureCount++;
-			return iter;
-		}
-		if (prop.texture[iter] == 0)
-		{
-			prop.texture[iter] = _id;
-			prop.textureCount++;
-			return iter;
-		}
-	}
-	return 33;
-}
-
-void Renderer::Exit()
-{
-
-}
 
 //void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 //{

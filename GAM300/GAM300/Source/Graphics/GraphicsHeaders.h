@@ -42,7 +42,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define TEXTSYSTEM TextSystem::Instance()
 
 class Ray3D;
-
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 //{
@@ -317,7 +316,17 @@ public:
 	
 	void Draw();
 
+	void DrawIcons();
+
 	void DrawBoxColliders();
+
+	void DrawCameraBounds(const Engine::UUID& _euid);
+	
+	void DrawLightBounds(const Engine::UUID& _euid);
+
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
 	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
@@ -342,6 +351,7 @@ public:
 private:
 	std::vector<Ray3D> rayContainer;
 	std::vector<RigidDebug> boxColliderContainer;
+	InstanceProperties* pProp;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
 	bool enableDebugDraw = true;
@@ -433,12 +443,6 @@ public:
 	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	bool Culling();
-
-	void Forward();
-
-	void Deferred();
 	
 	unsigned int ReturnTextureIdx(InstanceProperties& prop, const GLuint & _id);
 	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);

@@ -42,5 +42,5 @@ void main()
 {
     TexCoords = aTexCoords;
 
-   gl_Position = projection * view * SRT * vec4(aPos, 1.0);
+	gl_Position = projection * view * SRT * vec4(aPos, 1.0);
 }

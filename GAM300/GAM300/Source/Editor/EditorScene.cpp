@@ -432,7 +432,7 @@ void EditorScene::DisplayGizmos()
     if (EDITOR.GetSelectedEntity() != 0)
     {
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
-        
+        bool isActive = currentScene.IsActive(entity);
         Transform& trans = currentScene.Get<Transform>(entity);
 
         Vector3 tempScale = trans.GetLocalScale();
@@ -444,7 +444,7 @@ void EditorScene::DisplayGizmos()
         trans.SetLocalScale(tempScale);
 
         // Drawing box collider of selected object
-        if (currentScene.Has<BoxCollider>(entity))
+        if (currentScene.Has<BoxCollider>(entity) && isActive)
         {
             BoxCollider& bc = currentScene.Get<BoxCollider>(entity);
             RigidDebug currRigidDebug;
@@ -455,6 +455,17 @@ void EditorScene::DisplayGizmos()
             SRT *= transMat * scalarMat;
             currRigidDebug.SRT = SRT;
             DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
+        }
+
+        if (currentScene.Has<Camera>(entity) && isActive)
+        {
+            Camera& cam = currentScene.Get<Camera>(entity);
+            DEBUGDRAW.DrawCameraBounds(entity.EUID());
+        }
+
+        if (currentScene.Has<LightSource>(entity) && isActive)
+        {
+            DEBUGDRAW.DrawLightBounds(entity.EUID());
         }
 
         glm::mat4 transform_1 = trans.GetWorldMatrix();

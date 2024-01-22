@@ -14,7 +14,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #version 450 core
 
-uniform vec3 uColor;
+//-------------------------
+//          COMING IN
+//-------------------------
+layout (location = 3) in vec4 aAlbedo;
 
 out vec4 FragColor;
 
@@ -22,5 +25,5 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = vec4(uColor, 1.f);
+    FragColor = aAlbedo;
 }

@@ -25,12 +25,26 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "AI/NavMeshBuilder.h"
 #include "AI/NavMesh.h"
 #include "Scene/SceneManager.h"
+#include "Texture/TextureManager.h"
+
+namespace 
+{
+	const char* cameraIconPath = "GAM300/Data/Icons/Camera.dds";
+	const char* lightIconPath = "GAM300/Data/Icons/Light.dds";
+	const char* particleIconPath = "GAM300/Data/Icons/Particle.dds";
+	unsigned int cameraID = 0, lightID = 0, particleID = 0, vaoIcon, vboIcon;
+}
 
 void DebugDraw::Init()
 {
 	// Euan RayCasting Testing
 	raycastLine = new RaycastLine;
 	raycastLine->lineinit();
+	pProp = nullptr;
+
+	cameraID = TextureManager.CreateTexture(cameraIconPath);
+	lightID = TextureManager.CreateTexture(lightIconPath);
+	particleID = TextureManager.CreateTexture(particleIconPath);
 }
 
 void DebugDraw::Update(float)
@@ -57,75 +71,9 @@ void DebugDraw::Draw()
 	}
 
 	Scene& currentScene = MySceneManager.GetCurrentScene();
-	auto& iProp = instanceCounter[vao];
+	InstanceProperties& iProp = instanceCounter[vao];
+	pProp = &iProp;
 	glm::vec4 color = { 0.3f, 0.3f, 0.3f, 1.f };
-
-	for (Camera& camera : currentScene.GetArray<Camera>())
-	{
-		if (camera.state == DELETED || !currentScene.IsActive(camera)) continue;
-
-		const glm::vec3 frontMultFar = camera.GetFarClip() * camera.GetForwardVec();
-		const glm::vec3 frontMultNear = camera.GetNearClip() * camera.GetForwardVec();
-		const glm::vec3 farCenter = camera.GetCameraPosition() + frontMultFar;
-		const glm::vec3 nearCenter = camera.GetCameraPosition() + frontMultNear;
-		
-		const float farHeight = camera.GetFarClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
-		const float farWidth = farHeight * camera.GetAspect();
-		const float nearHeight = camera.GetNearClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
-		const float nearWidth = nearHeight * camera.GetAspect();
-
-		const glm::vec3 rightVec = camera.GetRightVec(), upVec = camera.GetUpVec();
-
-		glm::vec3 farLeftTop = farCenter - rightVec * farWidth + upVec * farHeight;
-		glm::vec3 farRightTop = farCenter + rightVec * farWidth + upVec * farHeight;
-		glm::vec3 farLeftBottom = farCenter - rightVec * farWidth - upVec * farHeight;
-		glm::vec3 farRightBottom = farCenter + rightVec * farWidth - upVec * farHeight;
-
-		glm::vec3 nearLeftTop = nearCenter - rightVec * nearWidth + upVec * nearHeight;
-		glm::vec3 nearRightTop = nearCenter + rightVec * nearWidth + upVec * nearHeight;
-		glm::vec3 nearLeftBottom = nearCenter - rightVec * nearWidth - upVec * nearHeight;
-		glm::vec3 nearRightBottom = nearCenter + rightVec * nearWidth - upVec * nearHeight;
-
-		DrawSegment3D(iProp, nearLeftTop, farLeftTop, color);
-		DrawSegment3D(iProp, nearRightTop, farRightTop, color);
-		DrawSegment3D(iProp, nearLeftBottom, farLeftBottom, color);
-		DrawSegment3D(iProp, nearRightBottom, farRightBottom, color);
-
-		DrawSegment3D(iProp, farLeftTop, farLeftBottom, color);
-		DrawSegment3D(iProp, farLeftBottom, farRightBottom, color);
-		DrawSegment3D(iProp, farRightBottom, farRightTop, color);
-		DrawSegment3D(iProp, farRightTop, farLeftTop, color);
-
-		DrawSegment3D(iProp, nearLeftTop, nearLeftBottom, color);
-		DrawSegment3D(iProp, nearLeftBottom, nearRightBottom, color);
-		DrawSegment3D(iProp, nearRightBottom, nearRightTop, color);
-		DrawSegment3D(iProp, nearRightTop, nearLeftTop, color);
-
-		color = glm::vec4(1.f, 0.f, 0.f, 1.f);
-		DrawSegment3D(iProp, camera.GetConstCameraPosition(), camera.GetConstFocalPoint(), color);
-	}
-
-	{
-		for (LightSource& lightSource : currentScene.GetArray<LightSource>())
-		{
-			Transform& t = currentScene.Get<Transform>(lightSource);
-
-			switch (lightSource.lightType)
-			{
-			case (int)LIGHT_TYPE::SPOT_LIGHT:
-
-				break;
-
-			case (int)LIGHT_TYPE::DIRECTIONAL_LIGHT:
-
-				break;
-
-			case (int)LIGHT_TYPE::POINT_LIGHT:
-				DrawCircle2D(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, lightSource.intensity);
-				break;
-			}
-		}
-	}
 
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
 
@@ -157,38 +105,40 @@ void DebugDraw::Draw()
 	}
 	
 	
-	glLineWidth(4.f);
-	glPointSize(10.f);
-	// NAV MESH Draw Call
+	glLineWidth(1.5f);
+	// Actual Debug Drawing
 	{
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
 		shader.Use();
 
 		// UNIFORM VARIABLES ----------------------------------------
 		// Persp Projection
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "persp_projection");
-		GLint uniform2 =
-			glGetUniformLocation(shader.GetHandle(), "View");
-		GLint uniform3 =
-			glGetUniformLocation(shader.GetHandle(), "uColor");
-		glUniformMatrix4fv(uniform1, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.GetProjMatrix()));
-		glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-			glm::value_ptr(EditorCam.GetViewMatrix()));
+		GLint uniform1 = glGetUniformLocation(shader.GetHandle(), "persp_projection");
+		GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "View");
+		//GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "uColor");
+		glUniformMatrix4fv(uniform1, 1, GL_FALSE, glm::value_ptr(EditorCam.GetProjMatrix()));
+		glUniformMatrix4fv(uniform2, 1, GL_FALSE, glm::value_ptr(EditorCam.GetViewMatrix()));
 
-		for (size_t i = 0; i < iProp.iter; i++)
+		glBindBuffer(GL_ARRAY_BUFFER, iProp.entitySRTbuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (iProp.iter) * sizeof(glm::mat4), iProp.entitySRT.data());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, iProp.AlbedoBuffer);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (iProp.iter) * sizeof(glm::vec4), iProp.Albedo.data());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(iProp.VAO);
+		glDrawElementsInstanced(iProp.drawType, 2, GL_UNSIGNED_INT, 0, iProp.iter);
+		glBindVertexArray(0);
+
+		/*for (size_t i = 0; i < iProp.iter; i++)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, iProp.entitySRTbuffer);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::mat4), &(iProp.entitySRT[i]));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			//glBindBuffer(GL_ARRAY_BUFFER, prop.AlbedoBuffer);
-			//glBufferSubData(GL_ARRAY_BUFFER, 0, EnitityInstanceLimit * sizeof(glm::vec4), &(prop.Albedo[0]));
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
-			// UNIFORM VARIABLES ----------------------------------------		
-			glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(iProp.Albedo[i])));
+			glBindBuffer(GL_ARRAY_BUFFER, iProp.AlbedoBuffer);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4), &(iProp.Albedo[i]));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 			glBindVertexArray(iProp.VAO);
 			glDrawElements(iProp.drawType, iProp.drawCount, GL_UNSIGNED_INT, 0);
@@ -196,8 +146,7 @@ void DebugDraw::Draw()
 			glUniform3fv(uniform3, 1, glm::value_ptr(glm::vec3(0.f, 0.f, 0.f)));
 			glDrawElements(GL_POINTS, iProp.drawCount, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
-
-		}
+		}*/
 
 		shader.UnUse();
 	
@@ -247,45 +196,86 @@ void DebugDraw::Draw()
 
 	}
 
-	if(LIGHTING.pointLightCount)
-	{
+	DrawIcons();
 
-		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::FORWARDDEBUG);
-		shader.Use();
-
-		// UNIFORM VARIABLES ----------------------------------------		
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "persp_projection");
-		GLint uniform2 =
-			glGetUniformLocation(shader.GetHandle(), "View");
-		GLint uniform3 =
-			glGetUniformLocation(shader.GetHandle(), "uColor");
-		GLint uniform4 =
-			glGetUniformLocation(shader.GetHandle(), "SRT");
-
-
-		auto pointLights = LIGHTING.GetPointLights();
-		for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
-		{
-			// I need to make a SRT here regarding the light's stuff
-			glm::mat4 translation = glm::translate(glm::mat4(1.f), pointLights[i].lightpos);
-			glm::mat4 scalar = glm::scale(glm::mat4(1.f), glm::vec3(pointLights[i].intensity/10.f));
-			
-
-			glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(translation * scalar));
-			Mesh* Sphere = MESHMANAGER.DereferencingMesh(ASSET_SPHERE);
-
-			glBindVertexArray(Sphere->vaoID);
-			glDrawElements(GL_LINES, Sphere->drawCounts, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
-		}
-		shader.UnUse();
-
-	}
 	glLineWidth(1.f);
 
 	ResetPhysicDebugContainer();
+}
+
+void LookAtRotationMatrix(glm::mat4& _rotMat, const glm::vec3& _objPos, const glm::vec3& _tarPos, const glm::vec3& _up, const glm::vec3& _right)
+{
+	// Calculate the forward vector (the direction the object is currently facing)
+	const glm::vec3 forward = glm::normalize(_tarPos - _objPos);
+
+	// Calculate the new up vector
+	glm::vec3 up = glm::cross(_right, forward);
+
+	_rotMat[0] = glm::vec4(_right, 0.0f);
+	_rotMat[1] = glm::vec4(up, 0.0f);
+	_rotMat[2] = glm::vec4(-forward, 0.0f);
+}
+
+// Gizmos/icons for components
+void DebugDraw::DrawIcons()
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_WORLD);
+	shader.Use();
+
+	GLint uniform1 = glGetUniformLocation(shader.GetHandle(), "projection");
+	GLint uniform2 = glGetUniformLocation(shader.GetHandle(), "view");
+	GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "uColor");
+	GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "SRT");
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), true);
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE, glm::value_ptr(EditorCam.GetProjMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE, glm::value_ptr(EditorCam.GetViewMatrix()));
+
+	glm::vec4 color = { 0.3f, 0.3f, 0.3f, 1.f };
+	glm::mat4 transform, rotation, scale;
+	const glm::vec3 up = EditorCam.GetUpVec(), right = EditorCam.GetRightVec(), cameraPosition = EditorCam.GetCameraPosition();
+	rotation = glm::identity<glm::mat4>();
+	scale = glm::scale(glm::mat4(1.f), glm::vec3(0.3f, 0.3f, 1.f));
+	color = glm::vec4(1.f);
+
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		if (camera.state == DELETED || !currentScene.IsActive(camera)) continue;
+
+		Transform& t = currentScene.Get<Transform>(camera);
+		LookAtRotationMatrix(rotation, t.GetGlobalTranslation(), cameraPosition, up, right);
+		transform = glm::translate(glm::mat4(1.f), t.GetGlobalTranslation()) * rotation * scale;
+		glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(transform));
+		glUniform3fv(uniform3, 1, glm::value_ptr(color));
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, cameraID);
+
+		renderQuad(vaoIcon, vboIcon);;
+	}
+
+	color = glm::vec4(255.f, 255.f, 0.f, 255.f);
+	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
+	{
+		if (!currentScene.IsActive(lightSource)) continue;
+
+		Transform& t = currentScene.Get<Transform>(lightSource);
+
+		LookAtRotationMatrix(rotation, t.GetGlobalTranslation(), cameraPosition, up, right);
+		transform = glm::translate(glm::mat4(1.f), t.GetGlobalTranslation()) * rotation * scale;
+		glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(transform));
+		glUniform3fv(uniform3, 1, glm::value_ptr(color));
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, lightID);
+
+		renderQuad(vaoIcon, vboIcon);
+	}
+
+	shader.UnUse();
+	glDisable(GL_BLEND);
 }
 
 void DebugDraw::DrawBoxColliders()
@@ -312,6 +302,149 @@ void DebugDraw::DrawBoxColliders()
 
 		DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
 	}
+}
+
+void DebugDraw::DrawCameraBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Camera& camera = currentScene.Get<Camera>(_euid);
+	auto& iProp = *pProp;
+	glm::vec4 color = glm::vec4(0.3f, 0.3f, 0.3f, 1.f);
+
+	const glm::vec3 frontMultFar = camera.GetFarClip() * camera.GetForwardVec();
+	const glm::vec3 frontMultNear = camera.GetNearClip() * camera.GetForwardVec();
+	const glm::vec3 farCenter = camera.GetCameraPosition() + frontMultFar;
+	const glm::vec3 nearCenter = camera.GetCameraPosition() + frontMultNear;
+
+	const float farHeight = camera.GetFarClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
+	const float farWidth = farHeight * camera.GetAspect();
+	const float nearHeight = camera.GetNearClip() * tanf(glm::radians(camera.GetFOV()) * 0.5f);
+	const float nearWidth = nearHeight * camera.GetAspect();
+
+	const glm::vec3 rightVec = camera.GetRightVec(), upVec = camera.GetUpVec();
+
+	glm::vec3 farLeftTop = farCenter - rightVec * farWidth + upVec * farHeight;
+	glm::vec3 farRightTop = farCenter + rightVec * farWidth + upVec * farHeight;
+	glm::vec3 farLeftBottom = farCenter - rightVec * farWidth - upVec * farHeight;
+	glm::vec3 farRightBottom = farCenter + rightVec * farWidth - upVec * farHeight;
+
+	glm::vec3 nearLeftTop = nearCenter - rightVec * nearWidth + upVec * nearHeight;
+	glm::vec3 nearRightTop = nearCenter + rightVec * nearWidth + upVec * nearHeight;
+	glm::vec3 nearLeftBottom = nearCenter - rightVec * nearWidth - upVec * nearHeight;
+	glm::vec3 nearRightBottom = nearCenter + rightVec * nearWidth - upVec * nearHeight;
+
+	DrawSegment3D(iProp, nearLeftTop, farLeftTop, color);
+	DrawSegment3D(iProp, nearRightTop, farRightTop, color);
+	DrawSegment3D(iProp, nearLeftBottom, farLeftBottom, color);
+	DrawSegment3D(iProp, nearRightBottom, farRightBottom, color);
+
+	DrawSegment3D(iProp, farLeftTop, farLeftBottom, color);
+	DrawSegment3D(iProp, farLeftBottom, farRightBottom, color);
+	DrawSegment3D(iProp, farRightBottom, farRightTop, color);
+	DrawSegment3D(iProp, farRightTop, farLeftTop, color);
+
+	DrawSegment3D(iProp, nearLeftTop, nearLeftBottom, color);
+	DrawSegment3D(iProp, nearLeftBottom, nearRightBottom, color);
+	DrawSegment3D(iProp, nearRightBottom, nearRightTop, color);
+	DrawSegment3D(iProp, nearRightTop, nearLeftTop, color);
+
+	color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+	DrawSegment3D(iProp, camera.GetConstCameraPosition(), camera.GetConstFocalPoint(), color);
+}
+
+void DebugDraw::DrawLightBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	LightSource& lightSource = currentScene.Get<LightSource>(_euid);
+	const float pi = glm::pi<float>();
+	auto& iProp = *pProp;
+	const glm::vec4 color = glm::vec4(1.f, 0.95f, 0.2f, 1.0f);
+
+	switch (lightSource.lightType)
+	{
+	case (int)LIGHT_TYPE::SPOT_LIGHT:
+		glm::vec3 rotation = t.GetGlobalRotation();
+		rotation.x += pi * 0.5f;
+		DrawSpotLight(iProp, t.GetGlobalTranslation(), rotation, color, lightSource.intensity, lightSource.inner_CutOff, lightSource.outer_CutOff);
+		break;
+
+	case (int)LIGHT_TYPE::DIRECTIONAL_LIGHT:
+		DrawDirectionalLight(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color);
+		break;
+
+	case (int)LIGHT_TYPE::POINT_LIGHT:
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, lightSource.intensity * 0.8f);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, lightSource.intensity * 0.8f);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, lightSource.intensity * 0.8f);
+
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, lightSource.intensity * 0.1f);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, lightSource.intensity * 0.1f);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, lightSource.intensity * 0.1f);
+		break;
+	}
+}
+
+void DebugDraw::DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, 
+	const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff)
+{
+	const int vCount = 4;
+	const float angle = 360.0f / vCount;
+	const float pi = glm::pi<float>();
+	float currentAngle, x, z;
+	glm::vec3 point1, point2;
+
+	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x = _range * cos(glm::radians(currentAngle));
+		z = _range * sin(glm::radians(currentAngle));
+
+		point1 = glm::vec3(x, _range, z);
+		point1 = transform * glm::vec4(point1, 1.f);
+
+		DrawSegment3D(_iProp, _center, point1, _color);
+	}
+
+	point2 = transform * glm::vec4(0.f, _range, 0.f, 1.f);
+	DrawCircle2D(*pProp, point2, _rotation, _color, _range);
+}
+
+void DebugDraw::DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color)
+{
+	const int vCount = 8;
+	const float angle = 360.0f / vCount;
+	const float radius = 0.25f;
+	float currentAngle, x, z;
+	glm::vec3 point1, point2, rotation = { _rotation.z, _rotation.x, _rotation.y };
+
+	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.z, _rotation.x, _rotation.y);
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x = radius * cos(glm::radians(currentAngle));
+		z = radius * sin(glm::radians(currentAngle));
+
+
+		point1 = glm::vec3(x, 0.f, z);
+		point2 = glm::vec3(x, 4 * radius, z);
+
+		point1 = transform * glm::vec4(point1, 1.f);
+		point2 = transform * glm::vec4(point2, 1.f);
+
+		DrawSegment3D(_iProp, point1, point2, _color);
+	}
+
+	DrawCircle2D(*pProp, _center, rotation, _color, radius);
 }
 
 void DebugDraw::DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color)
@@ -384,30 +517,30 @@ void DebugDraw::DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _cente
 {
 	const int vCount = 64;
 	const float angle = 360.0f / vCount;
-	const float radius = _radius * 0.5f;
 	float currentAngle, x1, x2, z1, z2;
 	glm::vec3 point1, point2;
 
-	glm::mat4 rotation = glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+
 
 	for (int i = 0; i < vCount; i++)
 	{
 		currentAngle = angle * i;
-		x1 = radius * cos(glm::radians(currentAngle));
-		z1 = radius * sin(glm::radians(currentAngle));
+		x1 = _radius * cos(glm::radians(currentAngle));
+		z1 = _radius * sin(glm::radians(currentAngle));
 
 		if (i + 1 >= vCount)
 			currentAngle = 0.f;
 		else
 			currentAngle = angle * (i + 1);
-		x2 = radius * cos(glm::radians(currentAngle));
-		z2 = radius * sin(glm::radians(currentAngle));
+		x2 = _radius * cos(glm::radians(currentAngle));
+		z2 = _radius * sin(glm::radians(currentAngle));
 
-		point1 = glm::vec3(x1, 0.f, z1) + _center;
-		point2 = glm::vec3(x2, 0.f, z2) + _center;
+		point1 = glm::vec3(x1, 0.f, z1);
+		point2 = glm::vec3(x2, 0.f, z2);
 
-		point1 = rotation * glm::vec4(point1, 1.f);
-		point2 = rotation * glm::vec4(point2, 1.f);
+		point1 = transform * glm::vec4(point1, 1.f);
+		point2 = transform * glm::vec4(point2, 1.f);
 
 		DrawSegment3D(_iProp, point1, point2, _color);
 	}

@@ -31,8 +31,8 @@ out vec4 FragColor;
 //-------------------------
 
 uniform sampler2D Sprite;
+uniform vec4 uColor;
 uniform bool RenderSprite; // if there is a texture, this is true else false
-
 //End
 
 void main()
@@ -40,7 +40,7 @@ void main()
 
 	const float gamma = 2.2f;
 
-//    FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
+    //FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
 
     if(RenderSprite)
     {
@@ -53,15 +53,12 @@ void main()
         {
             FragColor = colour;
         }
-
-
     }
     else
     {
-
         FragColor = vec4(1.f,0.f,0.f,1.f);
-
     }
-        FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
+
+    FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
 
 }   
