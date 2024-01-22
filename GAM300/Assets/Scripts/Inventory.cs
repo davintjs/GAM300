@@ -20,6 +20,9 @@ public class Inventory : Script
 
     void Awake()
     {
+        //to fix issue where this reference is missing in the scene
+        thirdPersonController = gameObject.GetComponent<ThirdPersonController>();
+
         if (instance != null)
         {
             //Debug.LogError("More than one AudioManager in the scene.");

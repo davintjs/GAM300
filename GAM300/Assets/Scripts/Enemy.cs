@@ -34,6 +34,7 @@ public class Enemy : Script
     public bool startDeathAnimationCountdown = false;
     float animationTimer = 2.5f;
     public float currentAnimationTimer;
+    private float currentDeathAnimationTimer = 2.8f;
     private Coroutine damagedCoroutine = null;
 
     public float testingValue = 0f;
@@ -83,10 +84,10 @@ public class Enemy : Script
         //death animation timer
         if (startDeathAnimationCountdown)
         {
-            currentAnimationTimer -= Time.deltaTime;
-            if (currentAnimationTimer <= 0.5f)
+            currentDeathAnimationTimer -= Time.deltaTime;
+            if (currentDeathAnimationTimer <= 0.5f)
             {
-                currentAnimationTimer = animationTimer;
+                currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 animator.Pause();//pause the death animation to prevent it from returning to idle animation
                 //Respawn();
@@ -189,7 +190,7 @@ public class Enemy : Script
                     break;
                 //chase state
                 case 1:
-                    Console.WriteLine("Chase");
+                    //Console.WriteLine("Chase");
                     SetState("Run", true);
                     //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
@@ -228,7 +229,7 @@ public class Enemy : Script
                     break;
                 //attack state
                 case 2:
-                    Console.WriteLine("Attack");
+                    //Console.WriteLine("Attack");
                     //attack animation
                     SetState("Attack", true);
                     if(attackTrigger != null)
@@ -257,14 +258,14 @@ public class Enemy : Script
 
                 //death state
                 case 3:
-                    Console.WriteLine("Death");
+                    //Console.WriteLine("Death");
                     SetState("Death", true);
                     animationManager.UpdateState();
 
                     break;
                 //stun state
                 case 4:
-                    Console.WriteLine("Stunned");
+                    //Console.WriteLine("Stunned");
                     SetState("Stun", true);
                     //attackTrigger.SetActive(false);
                     currentStunDuration -= Time.deltaTime;

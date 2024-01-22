@@ -2350,6 +2350,7 @@ Script:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
 ---
 ID: 6034621871942586701
 GameObject:
@@ -14583,7 +14584,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 549.824036
+  LookAtDistance: 579.962952
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -53730,3 +53731,4 @@ Script:
   m_GameObject: {fileID: 18082920113219845477}
   m_IsEnabled: false
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 0}
