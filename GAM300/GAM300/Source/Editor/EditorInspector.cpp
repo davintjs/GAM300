@@ -961,7 +961,6 @@ void DisplayLightProperties(LightSource& source) {
     Change outercutoff(&source, "LightSource/Outer Cutoff");
     if (source.lightType == (int)SPOT_LIGHT) {
         Display<Vector3>(lightpos, "Light Position", source.lightpos);
-        Display<Vector3>(lightdir, "Direction", source.direction);
         Display<float>(innercutoff, "Inner Cutoff", source.inner_CutOff);
         Display<float>(outercutoff, "Outer Cutoff", source.outer_CutOff);
     }
