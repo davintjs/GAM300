@@ -125,7 +125,7 @@ layout (binding = 5) uniform sampler2D EmmisionMap;
 //layout (binding = 7) uniform sampler2D ShadowMap_Spot;
 //layout (binding = 8) uniform samplerCube ShadowCubeMap;
 layout (binding = 10)   uniform sampler2D ShadowMap_SpotDirectional[12];
-layout (binding = 22)uniform samplerCube PointShadows[10];
+layout (binding = 22)   uniform samplerCube PointShadows[10];
 
 
 uniform bool renderShadow;
