@@ -53,15 +53,31 @@ bool Transform::isChild() {
 		return false;
 }
 
-
-void Transform::SetWorldEnabled(bool _worldEnabled)
+void Transform::EnableFlag(Flag flag)
 {
-	worldEnabled = _worldEnabled;
+	flags |= static_cast<char>(flag);
+	Scene& scene = MySceneManager.GetCurrentScene();
 	for (const auto& childID : child)
 	{
-		Transform& tChild = MySceneManager.GetCurrentScene().Get<Transform>(childID);
-		tChild.SetWorldEnabled(_worldEnabled);
+		Transform& tChild = scene.Get<Transform>(childID);
+		tChild.EnableFlag(flag);
 	}
+}
+
+void Transform::DisableFlag(Flag flag)
+{
+	flags &= ~static_cast<char>(flag);
+	Scene& scene = MySceneManager.GetCurrentScene();
+	for (const auto& childID : child)
+	{
+		Transform& tChild = scene.Get<Transform>(childID);
+		tChild.DisableFlag(flag);
+	}
+}
+
+bool Transform::GetFlag(Flag flag)
+{
+	return (static_cast<char>(flag) & flags) != 0;
 }
 
 void Transform::SetGlobalPosition(Vector3 newPos)
@@ -78,7 +94,6 @@ void Transform::SetGlobalScale(Vector3 newScale)
 {
 	SetWorldMatrix(globalPos, globalRot, newScale);
 }
-
 
 void Transform::SetLocalPosition(Vector3 newPos)
 {
@@ -122,6 +137,7 @@ void Transform::SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 		globalRot = rotation;
 		globalScale = scale;
 	}
+	EnableFlag(Flag::Modified);
 	UpdateChildrenMatrices();
 }
 
@@ -145,6 +161,7 @@ void Transform::SetWorldMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 		rotation = globalRot;
 		scale = globalScale;
 	}
+	EnableFlag(Flag::Modified);
 	UpdateChildrenMatrices();
 }
 
@@ -154,6 +171,7 @@ void Transform::UpdateWorldMatrix(glm::mat4& _world)
 	Decompose(_world, globalPos, _rot, globalScale);
 	globalRot = glm::eulerAngles(_rot);
 	worldMatrix = _world;
+	EnableFlag(Flag::Modified);
 	UpdateChildrenMatrices();
 }
 
@@ -190,36 +208,36 @@ void Transform::SetParent(Transform* newParent)
 {
 	if (newParent && newParent->EUID() == parent)
 		return;
-	glm::quat rot;
-	glm::vec3 skew;
-	glm::vec4 perspective;
-	vec3 _scale;
-	vec3 _translation;
-	glm::mat4 globalTransform = GetWorldMatrix();
+
 	// Calculate the global transformation matrix
 	if (parent) {
 		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
 		parentTrans.RemoveChild(this);
-		glm::decompose(globalTransform, _scale, rot, _translation, skew, perspective);
-		scale = _scale;
-		translation = _translation;
-		rotation = glm::eulerAngles(rot);
 	}
 
 	if (!newParent)
+	{
 		parent = 0;
+		scale = globalScale;
+		translation = globalPos;
+		rotation = globalRot;
+		//EnableFlag(Transform::Flag::WorldEnabled);
+		//EnableFlag(Transform::Flag::Modified);
+	}
 	else
+	{
 		parent = newParent->EUID();
-
-	if (parent) {
 		Transform& parentTrans = MySceneManager.GetCurrentScene().Get<Transform>(parent);
-		glm::mat4 lTransform = glm::inverse(parentTrans.GetWorldMatrix()) * globalTransform;
-		glm::decompose(lTransform, _scale, rot, _translation, skew, perspective);
-		scale = _scale;
-		translation = _translation;
-		rotation = glm::eulerAngles(rot);
-		// Add the object to the new parent's child list
+		glm::mat4 lTransform = glm::inverse(parentTrans.GetWorldMatrix()) * GetWorldMatrix();
+		glm::quat tmpRot;
+		Decompose(lTransform,translation,tmpRot,scale);
+		rotation = glm::eulerAngles(tmpRot);
 		parentTrans.child.push_back(EUID());
+		//if (parentTrans.GetFlag(Transform::Flag::WorldEnabled))
+		//	EnableFlag(Transform::Flag::WorldEnabled);
+		//else
+		//	DisableFlag(Transform::Flag::WorldEnabled);
+		//EnableFlag(Transform::Flag::Modified);
 	}
 }
 

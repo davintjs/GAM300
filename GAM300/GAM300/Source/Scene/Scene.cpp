@@ -71,6 +71,11 @@ Entity& Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID en
 
 void Scene::ClearBuffer()
 {
+	for (Transform& transform : GetArray<Transform>())
+	{
+		transform.DisableFlag(Transform::Flag::Modified);
+	}
+
 	for (Entity* pEntity : entitiesDeletionBuffer)
 	{
 		layer.remove(pEntity->euid);
