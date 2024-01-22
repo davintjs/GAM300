@@ -49,7 +49,7 @@ uniform vec3 lightPos;
 uniform vec3 camPos;
 
 
-layout (binding = 0) uniform sampler2D myTextureSampler[32];
+layout (binding = 0) uniform sampler2D ShadowMap_SpotDirectional[32];
 
 //End
 
@@ -113,7 +113,7 @@ if(Tex_index<32)
         FragColor = vec4(frag_albedo); // set all 4 vector values to 1.0
     }
 
-    vec3 colour = vec3(pow(texture(myTextureSampler[Tex_index], Tex_Coord).rgb, vec3(gamma)));
+    vec3 colour = vec3(pow(texture(ShadowMap_SpotDirectional[Tex_index], Tex_Coord).rgb, vec3(gamma)));
     
     // Initial   
     //    FragColor = vec4(lightColor * objectColor, 1.0);
@@ -158,7 +158,7 @@ if(NM_index < 32)
  // NORMAL MAPPING
 
       // obtain normal from normal map in range [0,1]
-     vec3 normal = texture(myTextureSampler[NM_index], Tex_Coord).rgb;
+     vec3 normal = texture(ShadowMap_SpotDirectional[NM_index], Tex_Coord).rgb;
 
     normal.z = normal.z == 0 ? 1 : normal.z;
 
@@ -170,8 +170,8 @@ if(NM_index < 32)
  //
      // get diffuse color
      
-     vec3 color = pow(texture(myTextureSampler[Tex_index], Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
- //    vec3 color = texture(myTextureSampler, Tex_Coord).rgb;
+     vec3 color = pow(texture(ShadowMap_SpotDirectional[Tex_index], Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+ //    vec3 color = texture(ShadowMap_SpotDirectional, Tex_Coord).rgb;
 
      // ambient
 //     vec3 ambient = 0.1 * color;
@@ -211,13 +211,13 @@ if(NM_index < 32)
 //     FragColor = vec4(lightDir, 1.0);
 //     FragColor = vec4(ambient + diffuse + speculation, 1.0);
 
-// FragColor = texture(myTextureSampler[NM_index],Tex_Coord);
+// FragColor = texture(ShadowMap_SpotDirectional[NM_index],Tex_Coord);
 
 
  }
  }
 
-// FragColor = texture(myTextureSampler,Tex_Coord);
+// FragColor = texture(ShadowMap_SpotDirectional,Tex_Coord);
 
 
 //
@@ -231,7 +231,7 @@ if(NM_index < 32)
 //vec3 color;
 //if( Tex_index < 32)
 //{
-//    color = pow(texture(myTextureSampler[Tex_index], Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+//    color = pow(texture(ShadowMap_SpotDirectional[Tex_index], Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
 //        // Probably need to blend in the frag_albedo
 //}
 //else
@@ -248,7 +248,7 @@ if(NM_index < 32)
 //{
 //// If have Normal Map
 //     // obtain normal from normal map in range [0,1]
-//    normal = texture(myTextureSampler[NM_index], Tex_Coord).rgb;
+//    normal = texture(ShadowMap_SpotDirectional[NM_index], Tex_Coord).rgb;
 //  
 ////    // transform normal vector to range [-1,1]
 //    normal = normalize(normal * 2.0 - 1.0);  // this normal is in tangent space
@@ -316,7 +316,7 @@ if(NM_index < 32)
 // --------------------------------------------------
 
 
-//        vec3 color = pow(texture(myTextureSampler, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
+//        vec3 color = pow(texture(ShadowMap_SpotDirectional, Tex_Coord).rgb, vec3(gamma)); // Undoing Gamma... i think its kind of stupid actually
 //        vec3 normal = texture(normalSampler, Tex_Coord).rgb;
 //        // ambient
 //        vec3 ambient = 0.0 * color;
@@ -353,7 +353,7 @@ if(NM_index < 32)
 //    // int index = int(texture_index.x + 0.5f); // .x is texture
 //    int index = int(texture_index.y + 0.5f);    // .y is normal map
 //    if (index < 32){
-//        result = (ambience + diffusion + speculation) * vec3(texture(myTextureSampler[index], frag_TexCoord));
+//        result = (ambience + diffusion + speculation) * vec3(texture(ShadowMap_SpotDirectional[index], frag_TexCoord));
 //    }else{
 //        result = (ambience + diffusion + speculation) * vec3(frag_albedo);
 //    }

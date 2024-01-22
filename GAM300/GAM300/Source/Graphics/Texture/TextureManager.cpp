@@ -21,7 +21,16 @@ void Texture_Manager::Init()
 {
     EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetLoaded);
     EVENTS.Subscribe(this, &Texture_Manager::CallbackTextureAssetUnloaded);
-    std::cout << "TEXTURE MANAGER INIT\n";
+}
+
+void Texture_Manager::Update(float)
+{
+    // Empty by design
+}
+
+void Texture_Manager::Exit()
+{
+
 }
 
 void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID)
@@ -73,8 +82,14 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
         return 0;
 
     gli::gl GL(gli::gl::PROFILE_GL33);
-    gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
+    gli::gl::format Format = GL.translate(Texture.format(), Texture.swizzles());
     GLenum Target = GL.translate(Texture.target());
+
+    //// New: Use BC3 (DXT3) format for alpha support
+    //Format.Internal = gli::gl::INTERNAL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+    //Format.External = gli::gl::EXTERNAL_RGBA;
+    //Format.Type = gli::gl::TYPE_UNSIGNED_BYTE;
+
     //Texture = gli::flip<gli::texture>(Texture);
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     GLuint TextureName = 0; 

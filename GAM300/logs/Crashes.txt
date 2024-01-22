@@ -1,5 +1,5 @@
-[2024-01-16 21:27:50.977] [Error] [critical] 
+[2024-01-21 13:52:39.147] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
+Info:		5235729637626766851  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 525)
 

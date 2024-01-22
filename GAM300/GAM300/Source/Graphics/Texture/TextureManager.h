@@ -28,6 +28,10 @@ SINGLETON(Texture_Manager)
 public:
 	void Init();
 
+	void Update(float dt);
+
+	void Exit();
+
 	// used in asset manager to add dds textures to the texture container
 	void AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID);
 

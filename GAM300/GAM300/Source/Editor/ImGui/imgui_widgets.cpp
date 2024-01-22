@@ -6741,7 +6741,10 @@ void ImGui::Value(const char* prefix, float v, const char* float_format)
 // - ImGuiMenuColumns [Internal]
 // - BeginMenuBar()
 // - EndMenuBar()
-// - BeginMainMenuBar()
+// - Begin
+// 
+// 
+// nuBar()
 // - EndMainMenuBar()
 // - BeginMenu()
 // - EndMenu()

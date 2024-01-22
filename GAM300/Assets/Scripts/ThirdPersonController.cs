@@ -251,8 +251,6 @@ public class ThirdPersonController : Script
             CC.velocity.y = JumpSpeed;
         }
 
-
-
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -395,7 +393,6 @@ public class ThirdPersonController : Script
             movement += vec3.UnitY * -Gravity;
         }
         wasMoving = moved;
-
         UpdateRotation(dir);
         ////testing reset position
         //if (Input.GetKey(KeyCode.P))
@@ -413,7 +410,6 @@ public class ThirdPersonController : Script
         CC.Move(movement);
 
         //attacking
-
 
         animationManager.UpdateState();
     }

@@ -34,6 +34,16 @@ void MeshManager::Init()
 
 }
 
+void MeshManager::Update(float)
+{
+    // Empty By Design
+}
+
+void MeshManager::Exit()
+{
+
+}
+
 MeshAsset* MeshManager::GetMeshAsset(const Engine::GUID<MeshAsset>& meshID)
 {
     GetAssetsEvent<MeshAsset> e;

@@ -41,7 +41,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "SystemsGroup.h"
 #include "Debugging/DemoSystem.h"
 #include "Audio/AudioManager.h"
-#include "Graphics/MeshManager.h"
 #include "ParticleSystem/ParticleSystem.h"
 #include "UISystem/UISystem.h"
 #include "Scene/Identifiers.h"
@@ -120,8 +119,6 @@ public:
 		//	BEHAVIORTREEBUILDER.Init();
 		//#endif
 		AllSystems::Init();
-		MESHMANAGER.Init();
-		TextureManager.Init();
 		AUDIOMANAGER.InitAudioManager();
 		PHYSICS.PostSubscription();
 
