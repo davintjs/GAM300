@@ -15,6 +15,7 @@ public class ThirdPersonController : Script
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
     public float dashAttackSpeed = 20f;
+    public float dodgeSpeed = 20f;
     public float Gravity = 9.81f;
     private float walkSoundTimer = 0f;
     private float walkSoundTime = 0.5f;
@@ -27,6 +28,13 @@ public class ThirdPersonController : Script
     public float dashAttackCooldown = 2f;
     public float currentDashAttackCooldown;
     public bool startDashCooldown = false;
+
+    public float dodgeTimer = 1f;
+    public float currentDodgeTimer;
+    public float dodgeCooldown = 2f;
+    public float currentDodgeCooldown;
+    public bool isDodging = false;
+    public bool startDodgeCooldown = false;
 
 
     public CharacterController CC;
@@ -203,6 +211,7 @@ public class ThirdPersonController : Script
         dashAttack.SetConditionals(false, jump, death, stun, sprint, run, attack1, attack2, attack3);
         dashAttack.speed = 2.5f;
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
+        dodge.speed = 2.5f;
         overdrive.SetConditionals(false, dashAttack, dodge, attack1, attack2, attack3, jump, death, stun);
     }
 
@@ -289,7 +298,7 @@ public class ThirdPersonController : Script
         }
 
 
-
+        //melee attack check
         if (IsAttacking)
         {
             dir = vec3.Zero;
@@ -317,6 +326,7 @@ public class ThirdPersonController : Script
                 IsAttacking = false;
             }
         }
+        //dash attack check
         if(_isDashAttacking)
         {
             startDashCooldown = true;
@@ -353,6 +363,30 @@ public class ThirdPersonController : Script
 
             }
         }
+        //dodge check
+        if(isDodging)
+        {
+            startDodgeCooldown = true;
+            CC.force = PlayerModel.back * dodgeSpeed;//dash player forward
+            movement = CC.force;//set the movement to be the dash force
+            currentDodgeTimer -= Time.deltaTime;
+            if(currentDodgeTimer <= 0)
+            {
+                movement = vec3.Zero;
+                isDodging = false;
+                currentDodgeTimer = dodgeTimer;
+            }
+        }
+        if(startDodgeCooldown)
+        {
+            currentDodgeCooldown -= Time.deltaTime;
+            if(currentDodgeCooldown <= 0)
+            {
+                SetState("Dodge", false);
+                startDodgeCooldown = false;
+                currentDodgeCooldown = dodgeCooldown;
+            }
+        }
 
         //invulnerability
         if (isInvulnerable)
@@ -382,6 +416,15 @@ public class ThirdPersonController : Script
                 SetState("Run", false);
                 SetState("Sprint", false);
                 SetState("DashAttack", true);
+            }
+            //DODGE
+            if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown)
+            {
+                Console.WriteLine("Dodging");
+                isDodging = true;
+                SetState("Run", false);
+                SetState("Sprint", false);
+                SetState("Dodge", true);
             }
 
             bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;

@@ -14584,7 +14584,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 579.962952
+  LookAtDistance: 610.066895
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14676,12 +14676,22 @@ Script:
   player: {fileID: 3977294589520766028}  # Component
   dashAttackCooldown: 1.5
   sprintModifier: 1.29999995
+  maxHealth: 4
+  dodgeSpeed: 15
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
-  walkStepsInterval: 0.439999998
   dashAttackTimer: 0.100000001
+  walkStepsInterval: 0.439999998
   currentDashAttackTimer: 0
   startDashCooldown: false
+  dodgeTimer: 0.5
+  startDeathAnimationCountdown: false
+  _isAttacking: false
+  currentDodgeTimer: 0
+  dodgeCooldown: 0.800000012
+  currentDodgeCooldown: 0
+  isDodging: false
+  startDodgeCooldown: false
   PlayerCamera: {fileID: 15334681090738628473}  # Component
   maxColliderDist: 1.5
   PlayerModel: {fileID: 1051037936027593321}  # Component
@@ -14693,8 +14703,6 @@ Script:
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
   RotationSpeed: 5
-  startDeathAnimationCountdown: false
-  _isAttacking: false
   currentInvulnerableTimer: 1
   _isDashAttacking: false
   checkpointIndex: -1
@@ -14702,7 +14710,6 @@ Script:
   terminal1: {fileID: 10239403197338088721}  # Component
   terminal2: {fileID: 11931344363477315440}  # Component
   attackTimer: 1
-  maxHealth: 4
   currentHealth: 4
   isInvulnerable: false
   isDead: false
