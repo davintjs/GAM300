@@ -29,6 +29,9 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Graphics/MESHMANAGER.h"
 #include "Graphics/GraphicsHeaders.h"
 
+Transform oldTransform;
+Transform newTransform;
+
 namespace
 {
     const char* GizmoWorld[] = { "Local", "Global" };
@@ -46,6 +49,7 @@ void EditorScene::Init()
 
 void EditorScene::Update(float dt)
 {
+    oldTransform = multiTransform;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     SceneView();
@@ -53,10 +57,34 @@ void EditorScene::Update(float dt)
     ImGui::PopStyleVar();
 
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
+
+    //update multiselect entities
+    //if (multiselectEntities.size()) {
+    //    newTransform = multiTransform;
+    //    Scene& curr_scene = MySceneManager.GetCurrentScene();
+
+    //    if (oldTransform != newTransform) {
+    //        for (auto& ent : multiselectEntities) {
+    //            Transform& t = curr_scene.Get<Transform>(ent);
+
+    //            if(newTransform.translation != oldTransform.translation)
+    //                t.translation += (newTransform.translation - oldTransform.translation);
+
+    //            if(newTransform.rotation != oldTransform.translation)
+    //                t.rotation += (newTransform.rotation - oldTransform.rotation);
+
+    //            if (newTransform.scale != oldTransform.scale) {
+    //                //t.scale += multiTransform.scale;
+    //            }
+
+    //        }
+    //    }
+    //     
+    //}
 }
 
 // Calculate the center of selected objects
-Vector3 CalculateCenterOfSelectedObjects() {
+glm::vec3 CalculateCenterOfSelectedObjects() {
     glm::vec3 center(0.0f, 0.0f, 0.0f);
 
     auto& entities = EditorScene::Instance().multiselectEntities;
@@ -67,11 +95,17 @@ Vector3 CalculateCenterOfSelectedObjects() {
     }
 
     // Divide by the number of selected objects to get the average position
-    if (!entities.empty()) {
-        center /= entities.size();
-    }
-
+    center /= static_cast<float>(entities.size());
     return center;
+}
+
+glm::mat4 GetMultiselectWorldMatrix() {
+    Transform& multiTransform = EditorScene::Instance().multiTransform;
+    glm::mat4 rot = glm::toMat4(glm::quat(vec3(multiTransform.rotation)));
+
+    return glm::translate(glm::mat4(1.0f), vec3(CalculateCenterOfSelectedObjects())) *
+        rot *
+        glm::scale(glm::mat4(1.0f), vec3(multiTransform.scale));
 }
 
 void EditorScene::ToolBar()
@@ -405,8 +439,10 @@ void EditorScene::DisplayGizmos()
 
             Transform& transform = currentScene.Get<Transform>(entity);
             Tag& tag = currentScene.Get<Tag>(entity);
+
+            glm::mat4 transMatrix;
             // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-            glm::mat4 transMatrix = transform.GetWorldMatrix();
+            transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
             glm::vec3 rot;
@@ -465,7 +501,14 @@ void EditorScene::DisplayGizmos()
             DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
         }
 
-        glm::mat4 transform_1 = trans.GetWorldMatrix();
+        glm::mat4 transform_1;
+        if (EditorScene::Instance().multiselectEntities.size() > 1)
+            transform_1 = GetMultiselectWorldMatrix();
+        else
+            transform_1 = trans.GetWorldMatrix();
+
+        glm::mat4 og_transform = transform_1;
+
 
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
@@ -489,25 +532,37 @@ void EditorScene::DisplayGizmos()
                 glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
+            
             glm::vec3 a_translation;
             glm::vec3 a_rot;
             glm::vec3 a_scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
 
+            //old values to calculate offset
+            glm::vec3 o_translation;
+            glm::vec3 o_rot;
+            glm::vec3 o_scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(og_transform), &o_translation[0], &o_rot[0], &o_scale[0]);
+
             if (multiselectEntities.size()) {
-                /*for (auto ent : multiselectEntities) {
-                    Entity& e = currentScene.Get<Entity>(ent);
-                    Transform& transform = currentScene.Get<Transform>(e);
-                    transform.translation = a_translation;
-                    transform.rotation = glm::radians(a_rot);
-                    transform.scale = a_scale;
-                }*/
+
+                for (auto& ent : multiselectEntities) {
+                    Scene& curr_scene = MySceneManager.GetCurrentScene();
+                    Transform& t = curr_scene.Get<Transform>(ent);
+                    t.translation += (a_translation - o_translation);
+                    t.rotation += (glm::radians(a_rot - o_rot));
+                    auto offset = a_scale - o_scale;
+                    offset /= 200; //hardcoded value for now
+
+                    t.scale += offset;
+                }
             }
-            else {
+            else{
                 trans.translation = a_translation;
                 trans.rotation = glm::radians(a_rot);
                 trans.scale = a_scale;
-            }      
+            }
+            
         }
         else if (!firstmove) {
             if (trans.translation != origTransform.translation) {

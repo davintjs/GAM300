@@ -76,6 +76,15 @@ struct Transform : Object
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 
+	bool operator == (const Transform& other) const {
+		if ((translation == other.translation) &&
+			(rotation == other.rotation) &&
+			(scale == other.scale)) {
+			return true;
+		}
+		return false;
+	}
+
 	//Check whether this is a leaf node
 	bool isLeaf();
 
