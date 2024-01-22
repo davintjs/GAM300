@@ -2304,7 +2304,7 @@ Script:
 ---
 ID: 12486642072026848141
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: MeleeEnemyAttackTrigger
   m_TagString: EnemyAttack
   m_Layer: 0
@@ -2328,7 +2328,7 @@ ID: 2169999402375080222
 BoxCollider:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
-  Dimensions: [1, 1, 1]
+  Dimensions: [2, 1, 2]
   Offset: [0, 0, 0]
 ---
 ID: 10978448946441949271
@@ -2435,6 +2435,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -14584,7 +14585,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 655.16449
+  LookAtDistance: 670.182922
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -42413,6 +42414,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -42865,6 +42867,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -52522,6 +52525,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -53009,6 +53013,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -53391,6 +53396,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
