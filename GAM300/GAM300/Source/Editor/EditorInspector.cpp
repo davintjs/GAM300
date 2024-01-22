@@ -1257,6 +1257,39 @@ private:
 };
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
+void DisplayMultiTransform() {
+
+    Display_Property(EditorScene::Instance().multiTransform);
+    ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+        | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+        | ImGuiTableFlags_PadOuterX;
+
+    if (ImGui::BeginTable("MultiTransform", 2, winFlags)) {
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+        ImGui::Indent();
+        ImGui::TableSetupColumn("Text", 0, 0.4f);
+        ImGui::TableSetupColumn("Input", 0, 0.6f);
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+
+        //Display_Property(EditorScene::Instance().multiTransform);
+
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+
+        ImGui::Unindent();
+        ImGui::EndTable();
+
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+    }
+}
+
 //Implementation for the panel to add a component to the current entity
 void AddComponentPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -1454,14 +1487,14 @@ void DisplayEntity(Entity& entity)
     ImGui::PushID((int)entity.EUID());
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    bool enabled = curr_scene.IsActive(entity,false);
+    bool enabled = curr_scene.IsActive(entity, false);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
 
     auto& tag = curr_scene.Get<Tag>(entity);
-    Change change (&tag, "Tag/name");
+    Change change(&tag, "Tag/name");
 
     strcpy_s(buffer, tag.name.c_str());
     ImGui::PushItemWidth(-1);
@@ -1471,20 +1504,20 @@ void DisplayEntity(Entity& entity)
     }
 
     ImGui::PopItemWidth();
-  
+
     //display tags
     DisplayTags(entity);
     ImGui::SameLine();
     ImGui::PushID(1);
-    if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
+    if (ImGui::Button("+")) { EditorInspector::Instance().isAddTagPanel = true; }
     ImGui::PopID();
     ImGui::SameLine(); ImGui::Dummy(ImVec2(22.f, 0.f)); ImGui::SameLine();
-    
+
     //display layers
     DisplayLayers(entity); ImGui::SameLine();
     if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
 
-   
+
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_ScrollY;
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
@@ -1492,47 +1525,22 @@ void DisplayEntity(Entity& entity)
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
         if (EditorScene::Instance().multiselectEntities.size()) {
-            ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
-                | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
-                | ImGuiTableFlags_PadOuterX;
-
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
-            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
-
-            if (ImGui::BeginTable("Component", 2, winFlags))
-            {
-                ImGui::Indent();
-                ImGui::TableSetupColumn("Text", 0, 0.4f);
-                ImGui::TableSetupColumn("Input", 0, 0.6f);
-                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
-
-
-                DisplayComponent(component);
-
-                ImGui::PopStyleVar();
-                ImGui::PopStyleVar();
-                ImGui::PopStyleVar();
-
-                ImGui::Unindent();
-                ImGui::EndTable();
-            }
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
+            DisplayMultiTransform();        
         }
-            
-        else
+        else {
             DisplayComponents(entity);
-        
-        ImGui::Separator();
-        if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-            EditorInspector::Instance().isAddComponentPanel = true;
+            ImGui::Separator();
+            if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
+                EditorInspector::Instance().isAddComponentPanel = true;
+            }
         }
+
+      
 
         ImGui::EndTable();
-        
+
     }
+
     ImGui::PopID();
     ImGui::PopStyleVar();
 }

@@ -474,9 +474,21 @@ void EditorScene::DisplayGizmos()
             glm::vec3 a_rot;
             glm::vec3 a_scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
-            trans.translation = a_translation;
-            trans.rotation = glm::radians(a_rot);
-            trans.scale = a_scale;
+
+            if (multiselectEntities.size()) {
+                for (auto ent : multiselectEntities) {
+                    Entity& e = currentScene.Get<Entity>(ent);
+                    Transform& transform = currentScene.Get<Transform>(e);
+                    transform.translation = a_translation;
+                    transform.rotation = glm::radians(a_rot);
+                    transform.scale = a_scale;
+                }
+            }
+            else {
+                trans.translation = a_translation;
+                trans.rotation = glm::radians(a_rot);
+                trans.scale = a_scale;
+            }      
         }
         else if (!firstmove) {
             if (trans.translation != origTransform.translation) {
