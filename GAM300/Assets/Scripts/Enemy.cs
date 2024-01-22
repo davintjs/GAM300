@@ -167,7 +167,7 @@ public class Enemy : Script
             {
                 //idle state
                 case 0:
-                    Console.WriteLine("Idle");
+                    //Console.WriteLine("Idle");
                     //idle animation
                     SetState("Idle", true);
                     //attackTrigger.SetActive(false);

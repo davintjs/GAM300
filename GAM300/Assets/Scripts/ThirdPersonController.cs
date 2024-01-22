@@ -14,12 +14,19 @@ public class ThirdPersonController : Script
     public float MoveSpeed = 5f;
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
+    public float dashAttackSpeed = 20f;
     public float Gravity = 9.81f;
     private float walkSoundTimer = 0f;
     private float walkSoundTime = 0.5f;
 
     public float runStepsInterval = 0.25f;
     public float walkStepsInterval = 0.5f;
+
+    public float dashAttackTimer = 1f;
+    public float currentDashAttackTimer;
+    public float dashAttackCooldown = 2f;
+    public float currentDashAttackCooldown;
+    public bool startDashCooldown = false;
 
 
     public CharacterController CC;
@@ -43,7 +50,8 @@ public class ThirdPersonController : Script
 
     AnimationStateMachine animationManager;
 
-    bool _isAttacking = false;
+    public bool _isAttacking = false;
+    public bool _isDashAttacking = false;
 
     public int checkpointIndex = -1;
     public bool isAtCheckpoint = false;
@@ -172,6 +180,9 @@ public class ThirdPersonController : Script
         AnimationState attack3 = animationManager.GetState("Attack3");
         AnimationState sprint = animationManager.GetState("Sprint");
         AnimationState run = animationManager.GetState("Run");
+        AnimationState dashAttack = animationManager.GetState("DashAttack");
+        AnimationState dodge = animationManager.GetState("Dodge");
+        AnimationState overdrive = animationManager.GetState("Overdrive");
         //Lowest Precedence
 
         stun.SetConditionals(false, death);
@@ -189,6 +200,10 @@ public class ThirdPersonController : Script
         sprint.loop = true;
         run.SetConditionals(false, sprint, attack1, jump, death, stun);
         run.loop = true;
+        dashAttack.SetConditionals(false, jump, death, stun, attack1, attack2, attack3);
+        dashAttack.speed = 2.5f;
+        dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
+        overdrive.SetConditionals(false, dashAttack, dodge, attack1, attack2, attack3, jump, death, stun);
     }
 
 
@@ -202,6 +217,8 @@ public class ThirdPersonController : Script
         currentAttackTimer = 0;
         currentHealth = maxHealth;
         currentInvulnerableTimer = invulnerableTimer;
+        currentDashAttackTimer = dashAttackTimer;
+        currentDashAttackCooldown = dashAttackCooldown;
 
         initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
         initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
@@ -214,12 +231,7 @@ public class ThirdPersonController : Script
     void Update()
     {
 
-        ////testing spawnpoint
-        //if(Input.GetKeyDown(KeyCode.E))
-        //{
-        //    Console.WriteLine("NewCheckpoint");
-        //    player.localPosition = new vec3(spawnPoint.localPosition);
-        //}
+
 
         //testing respawn
         if (Input.GetKey(KeyCode.R))
@@ -300,6 +312,41 @@ public class ThirdPersonController : Script
                 IsAttacking = false;
             }
         }
+        if(_isDashAttacking)
+        {
+            startDashCooldown = true;
+            CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
+
+            selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+            attackLight.SetActive(true);
+            selectedWeaponCollider.SetActive(true);//enable the weapon collider
+
+            movement = CC.force;//set the movement to be the dash force
+
+            //movement = transform.forward * dashAttackSpeed;//dash player forward
+            currentDashAttackTimer -= Time.deltaTime;
+            if(currentDashAttackTimer <= 0)
+            {
+                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                attackLight.SetActive(false);//disable weapon collider
+
+                movement = vec3.Zero;
+                _isDashAttacking = false;
+                currentDashAttackTimer = dashAttackTimer;
+                //SetState("DashAttack", false);
+            }
+        }
+        //ensure the dash attack animation is not snapped while performing dash attack
+        if(startDashCooldown)
+        {
+            currentDashAttackCooldown -= Time.deltaTime;
+            if(currentDashAttackCooldown <= 0)
+            {
+                startDashCooldown = false;
+                currentDashAttackCooldown = dashAttackCooldown;
+                SetState("DashAttack", false);
+            }
+        }
 
         //invulnerability
         if (isInvulnerable)
@@ -319,6 +366,13 @@ public class ThirdPersonController : Script
             {
                 SetState("Falling", false);
                 AudioManager.instance.playerFootstep.Play();
+            }
+            //DASH ATTACK
+            if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
+            {
+                Console.WriteLine("DashAttack");
+                _isDashAttacking = true;
+                SetState("DashAttack", true);
             }
 
             bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;
@@ -397,20 +451,10 @@ public class ThirdPersonController : Script
         wasMoving = moved;
 
         UpdateRotation(dir);
-        ////testing reset position
-        //if (Input.GetKey(KeyCode.P))
-        //{
-        //    Console.WriteLine("ResetPlayerPosition");
-        //    player.localPosition = new vec3(-19.586f, 2.753f, 21.845f);
-        //    player.localRotation = vec3.Radians(new vec3(0, 180, 0));
-        //}
-        //if (Input.GetKey(KeyCode.L))
-        //{
-        //    Console.WriteLine("ResetPlayerPosition");
-        //    player.localPosition = new vec3(checkpoint2.localPosition);
-        //}
+
 
         CC.Move(movement);
+
 
         //attacking
 
