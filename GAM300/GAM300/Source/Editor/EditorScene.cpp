@@ -55,6 +55,25 @@ void EditorScene::Update(float dt)
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
 }
 
+// Calculate the center of selected objects
+Vector3 CalculateCenterOfSelectedObjects() {
+    glm::vec3 center(0.0f, 0.0f, 0.0f);
+
+    auto& entities = EditorScene::Instance().multiselectEntities;
+    for (const auto& entity : entities) {
+        // Assuming each entity has a position component
+        Scene& curr_scene = MySceneManager.GetCurrentScene();        
+        center += curr_scene.Get<Transform>(entity).GetTranslation();
+    }
+
+    // Divide by the number of selected objects to get the average position
+    if (!entities.empty()) {
+        center /= entities.size();
+    }
+
+    return center;
+}
+
 void EditorScene::ToolBar()
 {
     //Scene toolbar
