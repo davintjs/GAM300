@@ -59,8 +59,12 @@ public class Enemy : Script
     private float stunDuration = 1.5f;
     public float currentStunDuration;
 
+    //audio
+    public bool playOnce = true;
+
     void Start()
     {
+        playOnce = true;
         currentHealth = maxHealth;
         state = 0;//start with idle state
         currentStunDuration = stunDuration;
@@ -108,7 +112,7 @@ public class Enemy : Script
             isAttacking = true;
             if(isAttacking && !isAttackCooldown)
             {
-                AudioManager.instance.meleeEnemyAttack.Play();
+                //AudioManager.instance.meleeEnemyAttack.Play();
                 currentAttackTimer += Time.deltaTime;
                 if (currentAttackTimer >= attackTimer)
                 {
@@ -124,13 +128,14 @@ public class Enemy : Script
                 {
                     if (attackTrigger != null)
                     {
+                        attackTrigger.SetActive(true);
                         attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
                         attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
                         attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
-                        attackTrigger.SetActive(true);
+                        //attackTrigger.SetActive(true);
                     }
                 }
-                if(currentAttackCooldownTimer > attackCooldownTimer)
+                if(currentAttackCooldownTimer >= attackCooldownTimer)
                 {
                     attackTrigger.SetActive(false);
                     isAttackCooldown = false;
@@ -147,20 +152,6 @@ public class Enemy : Script
             currentAttackCooldownTimer = 0f;
             currentAnimationTimer = 0f;
         }
-
-        ////follow target
-        //vec3 direction = (player.localPosition - transform.localPosition).Normalized;
-        //direction.y = 0;
-        ////double angle = Math.Atan2(direction.x, direction.z);
-        ////vec3.Distance(player.localPosition, this.transform.localPosition);
-
-        //if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
-        //{
-        //    SetState("Run", true);
-        //    float angle = (float)Math.Atan2(direction.x,direction.z);
-        //    transform.localRotation = new vec3(0,angle,0);
-        //    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
-        //}
 
         //NOTE: testing state, remove this later
         if (Input.GetKey(KeyCode.K))
@@ -181,6 +172,7 @@ public class Enemy : Script
                 case 0:
                     //Console.WriteLine("Idle");
                     //idle animation
+                    playOnce = true;//reset ability to play audio
                     SetState("Idle", true);
                     //attackTrigger.SetActive(false);
                     //player detection
@@ -203,6 +195,7 @@ public class Enemy : Script
                 case 1:
                     //Console.WriteLine("Chase");
                     SetState("Run", true);
+                    playOnce = true;//reset ability to play audio
                     //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
@@ -250,6 +243,11 @@ public class Enemy : Script
                     //    attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
                     //    attackTrigger.SetActive(true);
                     //}
+                    if (playOnce)
+                    {
+                        playOnce = false;
+                        AudioManager.instance.meleeEnemyAttack.Play();
+                    }
 
                     LookAt(direction);
                     if(!isAttacking)
