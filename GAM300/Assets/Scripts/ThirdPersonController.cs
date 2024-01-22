@@ -12,6 +12,7 @@ public class ThirdPersonController : Script
 {
     public static ThirdPersonController instance;
     public float MoveSpeed = 5f;
+    public float attackMoveSpeed = 3f;
     public float sprintModifier = 1.5f;
     public float JumpSpeed = 3f;
     public float dashAttackSpeed = 20f;
@@ -303,7 +304,7 @@ public class ThirdPersonController : Script
         {
             dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
-                movement = PlayerModel.back * MoveSpeed * Time.deltaTime;
+                movement = PlayerModel.back * attackMoveSpeed * Time.deltaTime;
             else
             {
                 if (currentAttackTimer / attackTimer > 0.5f)
