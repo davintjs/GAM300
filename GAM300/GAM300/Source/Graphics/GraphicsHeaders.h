@@ -322,6 +322,9 @@ public:
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
 	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
+	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+
 	void DrawRay();
 
 	// Loop through all rigid bodies and get them

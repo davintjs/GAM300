@@ -16,6 +16,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Precompiled.h"
 #include "GraphicsHeaders.h"
 
+#include <glm/gtx/euler_angles.hpp>
+
 #include "Core/EventsManager.h"
 #include "Editor/EditorHeaders.h"
 #include "Editor/EditorCamera.h"
@@ -101,6 +103,28 @@ void DebugDraw::Draw()
 
 		color = glm::vec4(1.f, 0.f, 0.f, 1.f);
 		DrawSegment3D(iProp, camera.GetConstCameraPosition(), camera.GetConstFocalPoint(), color);
+	}
+
+	{
+		for (LightSource& lightSource : currentScene.GetArray<LightSource>())
+		{
+			Transform& t = currentScene.Get<Transform>(lightSource);
+
+			switch (lightSource.lightType)
+			{
+			case (int)LIGHT_TYPE::SPOT_LIGHT:
+
+				break;
+
+			case (int)LIGHT_TYPE::DIRECTIONAL_LIGHT:
+
+				break;
+
+			case (int)LIGHT_TYPE::POINT_LIGHT:
+				DrawCircle2D(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, lightSource.intensity);
+				break;
+			}
+		}
 	}
 
 	auto* navMesh = NAVMESHBUILDER.GetNavMesh();
@@ -354,6 +378,44 @@ void DebugDraw::DrawSegment3D(InstanceProperties& _iProp, const glm::vec3& _poin
 	_iProp.Albedo[_iProp.iter] = _color;
 
 	_iProp.iter++; // Increase instance count
+}
+
+void DebugDraw::DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius)
+{
+	const int vCount = 64;
+	const float angle = 360.0f / vCount;
+	const float radius = _radius * 0.5f;
+	float currentAngle, x1, x2, z1, z2;
+	glm::vec3 point1, point2;
+
+	glm::mat4 rotation = glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x1 = radius * cos(glm::radians(currentAngle));
+		z1 = radius * sin(glm::radians(currentAngle));
+
+		if (i + 1 >= vCount)
+			currentAngle = 0.f;
+		else
+			currentAngle = angle * (i + 1);
+		x2 = radius * cos(glm::radians(currentAngle));
+		z2 = radius * sin(glm::radians(currentAngle));
+
+		point1 = glm::vec3(x1, 0.f, z1) + _center;
+		point2 = glm::vec3(x2, 0.f, z2) + _center;
+
+		point1 = rotation * glm::vec4(point1, 1.f);
+		point2 = rotation * glm::vec4(point2, 1.f);
+
+		DrawSegment3D(_iProp, point1, point2, _color);
+	}
+}
+
+void DebugDraw::DrawSemiCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius)
+{
+	
 }
 
 void DebugDraw::DrawRay()
