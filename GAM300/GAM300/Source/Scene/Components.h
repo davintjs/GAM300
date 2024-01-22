@@ -413,6 +413,8 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 		bool ColourPicked = false;
+		bool onHover = false;
+		bool onClick = false; 
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 

@@ -2,6 +2,11 @@
 #include "UISystem.h"
 #include "Scene/Components.h" 
 #include "Scene/SceneManager.h"
+#include "IOManager/InputHandler.h"
+#include "IOManager/InputSystem.h"
+#include "Graphics/GraphicsHeaders.h"
+#include "Graphics/GraphicsSystem.h"
+
 
 
 
@@ -37,25 +42,71 @@ void UISystem::Init()
 };
 
 
-void UISystem::HandleButtonInput(Button& button, float mouseX, float mouseY, bool mousePressed) {
-	// Check if the mouse coordinates are within the button boundaries.
-	if (mouseX >= button.x && mouseX <= button.x + button.width &&
-		mouseY >= button.y && mouseY <= button.y + button.height) {
-		// Mouse is within the button boundaries.
-
-		// If the mouse is pressed, execute the button's onClick callback.
-		if (mousePressed) {
-			button.on_click_callback();
-
-		}
-	}
-}
+//void UISystem::HandleButtonInput(Button& button, float mouseX, float mouseY, bool mousePressed) {
+//	// Check if the mouse coordinates are within the button boundaries.
+//	if (mouseX >= button.x && mouseX <= button.x + button.width &&
+//		mouseY >= button.y && mouseY <= button.y + button.height) {
+//		// Mouse is within the button boundaries.
+//
+//		// If the mouse is pressed, execute the button's onClick callback.
+//		if (mousePressed) {
+//			button.on_click_callback();
+//
+//		}
+//	}
+//}
 
 void UISystem::Update(float dt)
 {
-	UISystem UI; 
-	Button button;
-	UI.HandleButtonInput(button, 10, 10, true);
+
+
+
+	//std::cout << "test" << std::endl
+	/*Button button;
+	HandleButtonInput(button, 10, 10, true);*/
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+
+
+	// ColorpickingUIbutton - change to return the entity
+	for (Camera& camera : currentScene.GetArray<Camera>()) 
+	{
+		Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
+		if (id == 0)
+		{
+			break;
+		}
+		else
+		{
+			if (!InputHandler::isMouseButtonPressed_L())
+			{
+				return;
+				//SpriteRenderer::onHover = true;
+			}
+			else
+			{
+				std::cout << "test" << std::endl;
+			}
+		}
+		//Entity& test = currentScene.Get<Entity>();
+	}
+
+	
+	// IF ur not hovering a button
+		
+		// RETURN
+
+	// U ARE HOVERING OVER A BUTTON
+		
+		// IF mouse NEVER press -> change the texture onButtonHover()
+		
+		// IF MOUSE PRESS -> run the button functionlity onButtonClick()
+
+
+	
+	//std::cout << "test" << std::endl;
+
+
+	
 }; 
 
 //void UISystem::drawButton(Button &button)

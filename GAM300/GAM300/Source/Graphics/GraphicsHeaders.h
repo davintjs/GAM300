@@ -270,7 +270,7 @@ public:
 
 	// Initialize the skybox of the engine
 
-	void ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
+	Engine::UUID ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 

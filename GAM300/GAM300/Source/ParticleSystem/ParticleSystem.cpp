@@ -21,12 +21,12 @@ void ParticleManager::Update(float dt)
     int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
-        if (!currentScene.IsActive(particleComponent))
+        if (!currentScene.IsActive(particleComponent))      //use the same for Button 
             continue;
-        Entity& entity = currentScene.Get<Entity>(particleComponent);
+        Entity& entity = currentScene.Get<Entity>(particleComponent);   //use the same for button 
         if (!currentScene.IsActive(entity))
             continue;
-        Transform& entityTransform = currentScene.Get<Transform>(entity);
+        Transform& entityTransform = currentScene.Get<Transform>(entity);   //use the same for button 
         /*float elapsedTimeSinceLastEmission = dt;
         float timeBetweenEmissions = 1.0f / particleComponent.particleEmissionRate_;*/
         
