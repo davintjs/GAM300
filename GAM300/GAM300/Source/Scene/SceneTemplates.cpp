@@ -398,7 +398,7 @@ void Scene::SetActive(T& object, bool val)
 	if constexpr (std::is_same_v<T, Entity>)
 	{
 		Transform& trans = Get<Transform>(object);
-		trans.SetWorldEnabled(false);
+		trans.SetWorldEnabled(val);
 	}
 	GetArray<T>().SetActive(object, val);
 }
