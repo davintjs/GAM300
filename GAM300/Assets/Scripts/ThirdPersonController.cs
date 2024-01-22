@@ -200,7 +200,7 @@ public class ThirdPersonController : Script
         sprint.loop = true;
         run.SetConditionals(false, sprint, attack1, jump, death, stun);
         run.loop = true;
-        dashAttack.SetConditionals(false, jump, death, stun, attack1, attack2, attack3);
+        dashAttack.SetConditionals(false, jump, death, stun, sprint, run, attack1, attack2, attack3);
         dashAttack.speed = 2.5f;
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
         overdrive.SetConditionals(false, dashAttack, dodge, attack1, attack2, attack3, jump, death, stun);
@@ -279,9 +279,14 @@ public class ThirdPersonController : Script
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
-        bool isMoving = dir != vec3.Zero;
+        bool isMoving = dir != vec3.Zero && !_isDashAttacking;
         bool moved = false;
-        //Jump
+
+        if(!isMoving)
+        {
+            SetState("Run", false);
+            SetState("Sprint", false);
+        }
 
 
 
@@ -342,9 +347,10 @@ public class ThirdPersonController : Script
             currentDashAttackCooldown -= Time.deltaTime;
             if(currentDashAttackCooldown <= 0)
             {
+                SetState("DashAttack", false);
                 startDashCooldown = false;
                 currentDashAttackCooldown = dashAttackCooldown;
-                SetState("DashAttack", false);
+
             }
         }
 
@@ -371,7 +377,10 @@ public class ThirdPersonController : Script
             if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
             {
                 Console.WriteLine("DashAttack");
+                AudioManager.instance.playerAttack.Play();
                 _isDashAttacking = true;
+                SetState("Run", false);
+                SetState("Sprint", false);
                 SetState("DashAttack", true);
             }
 

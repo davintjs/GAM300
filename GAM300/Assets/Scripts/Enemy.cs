@@ -233,6 +233,8 @@ public class Enemy : Script
                     SetState("Attack", true);
                     if(attackTrigger != null)
                     {
+                        attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.back * 0.6f);
+                        attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
                         attackTrigger.SetActive(true);
                     }
 

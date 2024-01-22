@@ -2302,6 +2302,55 @@ Script:
   timer: 0.969857275
   currentRestTimer: 2
 ---
+ID: 12486642072026848141
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5412493946793532409}  # Transform
+    - component: {fileID: 2169999402375080222}  # BoxCollider
+    - component: {fileID: 10978448946441949271}  # Rigidbody
+    - component: {fileID: 12015256150242366394}  # Script
+---
+ID: 5412493946793532409
+Transform:
+  m_GameObject: {fileID: 12486642072026848141}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2169999402375080222
+BoxCollider:
+  m_GameObject: {fileID: 12486642072026848141}
+  m_IsEnabled: true
+  Dimensions: [4, 1, 4]
+  Offset: [0, 0, 0]
+---
+ID: 10978448946441949271
+Rigidbody:
+  m_GameObject: {fileID: 12486642072026848141}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 12015256150242366394
+Script:
+  m_GameObject: {fileID: 12486642072026848141}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+---
 ID: 6034621871942586701
 GameObject:
   m_IsActive: true
@@ -2325,7 +2374,6 @@ Transform:
   m_Children:
     - {fileID: 15952054123807579159}
     - {fileID: 17589645519894896830}
-    - {fileID: 12486642072026848141}
 ---
 ID: 9504656451654388578
 BoxCollider:
@@ -4676,7 +4724,7 @@ ID: 15852994020001529193
 Transform:
   m_GameObject: {fileID: 12515846148885956186}
   Translation: [45.3922119, 1.88734734, -27.6580009]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000012, 1, 1.00000012]
   Father: {fileID: 13385808514286287486}
   m_Children:
@@ -14535,7 +14583,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 534.740295
+  LookAtDistance: 549.824036
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14630,7 +14678,7 @@ Script:
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   walkStepsInterval: 0.439999998
-  dashAttackTimer: 0.200000003
+  dashAttackTimer: 0.100000001
   currentDashAttackTimer: 0
   startDashCooldown: false
   PlayerCamera: {fileID: 15334681090738628473}  # Component
@@ -14659,7 +14707,7 @@ Script:
   isDead: false
   colliderDist: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
-  healthStaminaCanvas: {fileID: 2866402867161245437}  # GameObject
+  healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   currentAnimationTimer: 0
   attack1duration: 0.5
   attack2duration: 0.600000024
@@ -53681,53 +53729,4 @@ ID: 3991898582499193028
 Script:
   m_GameObject: {fileID: 18082920113219845477}
   m_IsEnabled: false
-  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
----
-ID: 12486642072026848141
-GameObject:
-  m_IsActive: true
-  m_Name: MeleeEnemyAttackTrigger
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5412493946793532409}  # Transform
-    - component: {fileID: 2169999402375080222}  # BoxCollider
-    - component: {fileID: 10978448946441949271}  # Rigidbody
-    - component: {fileID: 12015256150242366394}  # Script
----
-ID: 5412493946793532409
-Transform:
-  m_GameObject: {fileID: 12486642072026848141}
-  Translation: [0.0351396799, 2.66432762e-05, 1.35346985]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 6034621871942586701}
-  m_Children:
-    []
----
-ID: 2169999402375080222
-BoxCollider:
-  m_GameObject: {fileID: 12486642072026848141}
-  m_IsEnabled: true
-  Dimensions: [2, 1, 2]
-  Offset: [0, 0, 0]
----
-ID: 10978448946441949271
-Rigidbody:
-  m_GameObject: {fileID: 12486642072026848141}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: false
-  UseGravity: false
-  Is_trigger: true
----
-ID: 12015256150242366394
-Script:
-  m_GameObject: {fileID: 12486642072026848141}
-  m_IsEnabled: true
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
