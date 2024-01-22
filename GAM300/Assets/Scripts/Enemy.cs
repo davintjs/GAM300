@@ -120,8 +120,19 @@ public class Enemy : Script
             if(isAttackCooldown)
             {
                 currentAttackCooldownTimer += Time.deltaTime;
+                if(currentAttackCooldownTimer >= 0.5f)
+                {
+                    if (attackTrigger != null)
+                    {
+                        attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
+                        attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
+                        attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
+                        attackTrigger.SetActive(true);
+                    }
+                }
                 if(currentAttackCooldownTimer > attackCooldownTimer)
                 {
+                    attackTrigger.SetActive(false);
                     isAttackCooldown = false;
                     currentAttackCooldownTimer = 0f;
                 }
@@ -130,7 +141,7 @@ public class Enemy : Script
         }
         else if(state != 2)
         {
-            attackTrigger.SetActive(false);
+            //attackTrigger.SetActive(false);
             isAttacking = false;
             isAttackCooldown = false;
             currentAttackCooldownTimer = 0f;
@@ -229,15 +240,16 @@ public class Enemy : Script
                     break;
                 //attack state
                 case 2:
-                    //Console.WriteLine("Attack");
                     //attack animation
                     SetState("Attack", true);
-                    if(attackTrigger != null)
-                    {
-                        attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.back * 0.6f);
-                        attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
-                        attackTrigger.SetActive(true);
-                    }
+                    //if(attackTrigger != null)
+                    //{
+                    //    Console.WriteLine("Attack");
+                    //    attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
+                    //    attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
+                    //    attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
+                    //    attackTrigger.SetActive(true);
+                    //}
 
                     LookAt(direction);
                     if(!isAttacking)
