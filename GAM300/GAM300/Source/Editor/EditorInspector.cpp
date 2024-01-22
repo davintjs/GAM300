@@ -1259,35 +1259,42 @@ using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void DisplayMultiTransform() {
 
-    Display_Property(EditorScene::Instance().multiTransform);
+    //Display_Property(EditorScene::Instance().multiTransform);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
+    bool windowopen = ImGui::CollapsingHeader("Group Transform", nodeFlags);
+
+
     ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
         | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
         | ImGuiTableFlags_PadOuterX;
 
-    if (ImGui::BeginTable("MultiTransform", 2, winFlags)) {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
-        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
-        ImGui::Indent();
-        ImGui::TableSetupColumn("Text", 0, 0.4f);
-        ImGui::TableSetupColumn("Input", 0, 0.6f);
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+    if (windowopen) {
+        if (ImGui::BeginTable("m_transform", 2, winFlags))
+        {
+            ImGui::Indent();
+            ImGui::TableSetupColumn("Text", 0, 0.4f);
+            ImGui::TableSetupColumn("Input", 0, 0.6f);
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
 
+            Display_Property(EditorScene::Instance().multiTransform);
 
-        //Display_Property(EditorScene::Instance().multiTransform);
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
+            ImGui::PopStyleVar();
 
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
-
-        ImGui::Unindent();
-        ImGui::EndTable();
-
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
+            ImGui::Unindent();
+            ImGui::EndTable();
+        }
     }
+
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar();
+   
 }
 
 //Implementation for the panel to add a component to the current entity
@@ -1522,21 +1529,15 @@ void DisplayEntity(Entity& entity)
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
 
+    
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        if (EditorScene::Instance().multiselectEntities.size()) {
-            DisplayMultiTransform();        
-        }
-        else {
-            DisplayComponents(entity);
-            ImGui::Separator();
-            if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
-                EditorInspector::Instance().isAddComponentPanel = true;
-            }
-        }
 
-      
-
+        DisplayComponents(entity);
+        ImGui::Separator();
+        if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
+            EditorInspector::Instance().isAddComponentPanel = true;
+        }
         ImGui::EndTable();
 
     }
@@ -1570,7 +1571,10 @@ void EditorInspector::Update(float dt)
 
     Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
     //if (curr_index != NON_VALID_ENTITY) {
-    if (&curr_entity) {
+    if (EditorScene::Instance().multiselectEntities.size() > 1) {
+        DisplayMultiTransform();
+    }
+    else if (&curr_entity) {
         ImGui::Spacing();
         std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
