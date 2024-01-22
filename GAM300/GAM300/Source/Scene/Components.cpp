@@ -53,6 +53,17 @@ bool Transform::isChild() {
 		return false;
 }
 
+
+void Transform::SetWorldEnabled(bool _worldEnabled)
+{
+	worldEnabled = _worldEnabled;
+	for (const auto& childID : child)
+	{
+		Transform& tChild = MySceneManager.GetCurrentScene().Get<Transform>(childID);
+		tChild.SetWorldEnabled(_worldEnabled);
+	}
+}
+
 void Transform::SetGlobalPosition(Vector3 newPos)
 {
 	SetWorldMatrix(newPos, globalRot, globalScale);

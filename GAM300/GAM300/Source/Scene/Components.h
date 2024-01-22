@@ -69,6 +69,11 @@ struct Transform : Object
 {
 	//Parent's euid
 	Engine::UUID parent = 0;
+
+	bool worldEnabled = true;
+
+	void SetWorldEnabled(bool _worldEnabled);
+
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 

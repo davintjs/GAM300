@@ -97,18 +97,14 @@ void Renderer::Update(float)
 		}
 	}
 
-	for (MeshRenderer& renderer : currentScene.GetArray<MeshRenderer>())
+	auto& meshArray = currentScene.GetArray<MeshRenderer>();
+	for (auto it = meshArray.begin(); it != meshArray.end(); ++it)
 	{
+		if (!it.IsActive()) continue; // Bean: IsActive is tanking fps
 		// No material instance, then just go next
-		if (renderer.state == DELETED) continue;
-
+		MeshRenderer& renderer = *it;
 		Entity& entity = currentScene.Get<Entity>(renderer);
-
-		if (EnableIsActive()) //Bean: Improve FPS if Disabled
-		{
-			if (!currentScene.IsActive(renderer)) continue; // Bean: IsActive is tanking fps
-			if (!currentScene.IsActive(entity)) continue; // Bean: Is there a better way ard this???
-		}
+		if (!currentScene.IsActive(entity)) continue; // Bean: Is there a better way ard this???
 
 		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
 		if (!t_Mesh) continue;
