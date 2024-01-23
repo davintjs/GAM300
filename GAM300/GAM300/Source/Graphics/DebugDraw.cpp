@@ -230,6 +230,7 @@ void DebugDraw::DrawIcons()
 	GLint uniform3 = glGetUniformLocation(shader.GetHandle(), "uColor");
 	GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "SRT");
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), true);
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), true);
 	glUniformMatrix4fv(uniform1, 1, GL_FALSE, glm::value_ptr(EditorCam.GetProjMatrix()));
 	glUniformMatrix4fv(uniform2, 1, GL_FALSE, glm::value_ptr(EditorCam.GetViewMatrix()));
 
@@ -248,7 +249,7 @@ void DebugDraw::DrawIcons()
 		LookAtRotationMatrix(rotation, t.GetGlobalTranslation(), cameraPosition, up, right);
 		transform = glm::translate(glm::mat4(1.f), t.GetGlobalTranslation()) * rotation * scale;
 		glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(transform));
-		glUniform3fv(uniform3, 1, glm::value_ptr(color));
+		glUniform4fv(uniform3, 1, glm::value_ptr(color));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cameraID);
@@ -256,7 +257,7 @@ void DebugDraw::DrawIcons()
 		renderQuad(vaoIcon, vboIcon);;
 	}
 
-	color = glm::vec4(255.f, 255.f, 0.f, 255.f);
+	color = glm::vec4(1.f, 1.f, 0.f, 1.f);
 	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
 	{
 		if (!currentScene.IsActive(lightSource)) continue;
@@ -266,7 +267,7 @@ void DebugDraw::DrawIcons()
 		LookAtRotationMatrix(rotation, t.GetGlobalTranslation(), cameraPosition, up, right);
 		transform = glm::translate(glm::mat4(1.f), t.GetGlobalTranslation()) * rotation * scale;
 		glUniformMatrix4fv(uniform4, 1, GL_FALSE, glm::value_ptr(transform));
-		glUniform3fv(uniform3, 1, glm::value_ptr(color));
+		glUniform4fv(uniform3, 1, glm::value_ptr(color));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, lightID);
