@@ -334,8 +334,18 @@ void DisplayType(Change& change, const char* name, float& val)
     //ImGui::DragFloat(cIdName, &val, 0.15f);
 
     float buf = val;
-   
-    if (ImGui::DragFloat(cIdName, &buf, 0.01f)) {
+
+    if (!strcmp(name, "Alpha Scalar")) { //clamp alpha scalar for sprite renderer UI
+        if (ImGui::DragFloat(cIdName, &buf, 0.001f, 0, 1.f)) {
+            if (!valueChanged) {
+                initialvalue = val;
+            }
+            valueChanged = true;
+            val = buf;
+            changedvalue = buf;
+        }
+    } 
+    else if (ImGui::DragFloat(cIdName, &buf, 0.01f)) {
         if (!valueChanged) {
             initialvalue = val;
         }
