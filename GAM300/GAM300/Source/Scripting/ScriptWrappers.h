@@ -17,11 +17,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "mono/metadata/object.h"
 #include "mono/metadata/reflection.h"
 #include "IOManager/InputHandler.h"
+#include "IOManager/InputSystem.h"
 #include "Scene/SceneManager.h"
 #include "ScriptingSystem.h"
 #include "Scene/Identifiers.h"
 #include "Audio/AudioManager.h"
 #include "Graphics/Animation/BaseAnimator.h"
+#include "Graphics/BaseCamera.h"
+#include "Graphics/Ray3D.h"
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 
@@ -31,36 +34,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static std::unordered_map<MonoType*, size_t> monoComponentToType;
 
 	#define Register(METHOD) mono_add_internal_call("BeanFactory.InternalCalls::"#METHOD,METHOD)
-
-
-	//DOESNT WORK YET, Checks if key was released
-	static bool GetKeyUp(int keyCode)
-	{
-		return InputHandler::isKeyButtonPressed(keyCode);
-	}
-
-	//Checks if key was pressed
-	static bool GetKeyDown(int keyCode)
-	{
-		return InputHandler::isKeyButtonPressed(keyCode);
-	}
-
-	static int GetScrollState()
-	{
-		return InputHandler::getMouseScrollState();
-	}
-
-	static bool GetMouseDown(int mouseCode)
-	{
-		UNREFERENCED_PARAMETER(mouseCode);
-		return InputHandler::isMouseButtonPressed_L();
-	}
-
-	//Checks if key is held
-	static bool GetKey(int keyCode)
-	{
-		return InputHandler::isKeyButtonHolding(keyCode);
-	}
 
 	//Gets object that entity has
 	static void Get(ScriptObject<Object> pEntity, MonoReflectionType* componentType, ScriptObject<Object>& obj)
@@ -100,11 +73,63 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
 
+#pragma region INPUT SYSTEM
+	//DOESNT WORK YET, Checks if key was released
+	static bool GetKeyUp(int keyCode)
+	{
+		return InputHandler::isKeyButtonPressed(keyCode);
+	}
+
+	//Checks if key was pressed
+	static bool GetKeyDown(int keyCode)
+	{
+		return InputHandler::isKeyButtonPressed(keyCode);
+	}
+
+	static int GetScrollState()
+	{
+		return InputHandler::getMouseScrollState();
+	}
+
+	static bool GetMouseDown(int mouseCode)
+	{
+		UNREFERENCED_PARAMETER(mouseCode);
+		return InputHandler::isMouseButtonPressed_L();
+	}
+
+	//Checks if key is held
+	static bool GetKey(int keyCode)
+	{
+		return InputHandler::isKeyButtonHolding(keyCode);
+	}
+
+	static void GetMouseDelta(Vector2& mouseDelta)
+	{
+		mouseDelta = InputHandler::mouseDeltaNormalized();
+	}
+
+	static void LockCursor(bool toggle)
+	{
+		InputSystem::Instance().LockCursor(toggle);
+	}
+#pragma endregion
+
+#pragma region PHYSICS SYSTEM
+
+	static void Raycast(Vector3& position, Vector3& direction, float& distance, bool& hit, int& mask)
+	{
+
+	}
+
+#pragma endregion
+
+#pragma region AUDIO
 	static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	{
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+#pragma endregion
 
 #pragma region ANIMATOR
 	static void PlayAnimation(ScriptObject<Animator> pAnimator)
@@ -149,7 +174,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Animator& animator = pAnimator;
 		animator.SetSpeed(value);
 	}
-	
+
 	static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
 	{
 		Animator& animator = pAnimator;
@@ -190,22 +215,76 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			transform.SetParent(nullptr);
 	}
 
-	static void GetPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	static void GetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
 	{
 		Transform& t = pTransform;
-		position = t.GetTranslation();
+		position = t.GetGlobalTranslation();
 	}
 
-	static void GetRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	static void GetWorldRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
 	{
 		Transform& t = pTransform;
-		rotation = t.GetRotation();
+		rotation = t.GetGlobalRotation();
 	}
 
-	static void GetScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	static void GetWorldScale(ScriptObject<Transform> pTransform, Vector3& scale)
 	{
 		Transform& t = pTransform;
-		scale = t.GetScale();
+		scale = t.GetGlobalScale();
+	}
+
+	static void GetLocalPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		position = t.GetLocalTranslation();
+	}
+
+	static void GetLocalRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		rotation = t.GetLocalRotation();
+	}
+
+	static void GetLocalScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		scale = t.GetLocalScale();
+	}
+
+	static void SetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalPosition(position);
+	}
+
+	static void SetWorldRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalRotation(rotation);
+	}
+
+	static void SetWorldScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		t.SetGlobalScale(scale);
+	}
+
+	static void SetLocalPosition(ScriptObject<Transform> pTransform, Vector3& position)
+	{
+		Transform& t = pTransform;
+		t.SetLocalPosition(position);
+	}
+
+	static void SetLocalRotation(ScriptObject<Transform> pTransform, Vector3& rotation)
+	{
+		Transform& t = pTransform;
+		t.SetLocalRotation(rotation);
+	}
+
+	static void SetLocalScale(ScriptObject<Transform> pTransform, Vector3& scale)
+	{
+		Transform& t = pTransform;
+		t.SetLocalScale(scale);
 	}
 #pragma endregion
 
@@ -215,6 +294,34 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		ParticleComponent& p = particleComp;
 		p.particleLooping = (p.particleLooping ? false : true);
+	}
+
+#pragma endregion
+
+#pragma region CAMERA
+
+	static void SetCameraTarget(ScriptObject<Camera> pCamera, Vector3& position)
+	{
+		Camera& camera = pCamera;
+		camera.SetFocalPoint(position);
+	}
+
+	static void GetRightVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetRightVec();
+	}
+
+	static void GetUpVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetUpVec();
+	}
+
+	static void GetForwardVec(ScriptObject<Camera> pCamera, Vector3& vector)
+	{
+		Camera& camera = pCamera;
+		vector = camera.GetForwardVec();
 	}
 
 #pragma endregion
@@ -364,10 +471,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return scene.GetActive(pair->second, object);
 	}
 
-	static void GetMouseDelta(Vector2& mouseDelta)
-	{
-		mouseDelta = InputHandler::mouseDeltaNormalized();
-	}
+	
 
 	static void SetActive(ScriptObject<Object> pObject, MonoReflectionType* componentType, bool val)
 	{
@@ -441,10 +545,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	//Registers all defined internal calls with mono
 	static void RegisterScriptWrappers()
 	{
-		Register(GetKey);
-		Register(GetKeyUp);
-		Register(GetKeyDown);
-		Register(GetMouseDown);
 		Register(DestroyGameObject);
 		Register(HasComponent);
 		Register(Get);
@@ -454,14 +554,34 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetActive);
 		Register(LoadScene);
 		Register(AddComponent);
-		Register(GetMouseDelta);
+		
 		Register(CloneGameObject);
+
+		// Input System
+		Register(GetKey);
+		Register(GetKeyUp);
+		Register(GetKeyDown);
+		Register(GetMouseDown);
+		Register(GetMouseDelta);
+		Register(LockCursor);
+
+		// Physics System
+		Register(Raycast);
 
 		// Transform Component
 		Register(SetTransformParent);
-		Register(GetPosition);
-		Register(GetRotation);
-		Register(GetScale);
+		Register(GetWorldPosition);
+		Register(GetWorldRotation);
+		Register(GetWorldScale);
+		Register(GetLocalPosition);
+		Register(GetLocalRotation);
+		Register(GetLocalScale);
+		Register(SetWorldPosition);
+		Register(SetWorldRotation);
+		Register(SetWorldScale);
+		Register(SetLocalPosition);
+		Register(SetLocalRotation);
+		Register(SetLocalScale);
 
 		// Audio Component
 		Register(AudioSourcePlay);
@@ -481,6 +601,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Particle Component
 		Register(ParticlesPlayer);
+
+		// Camera Component
+		Register(SetCameraTarget);
+		Register(GetRightVec);
+		Register(GetUpVec);
+		Register(GetForwardVec);
 
 		// Tag Component
 		Register(GetTag);

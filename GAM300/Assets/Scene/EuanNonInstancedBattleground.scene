@@ -30,19 +30,9 @@ Transform:
 ID: 15551509604027691718
 MeshRenderer:
   m_GameObject: {fileID: 12774767057393917132}
+  m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: e2cc28b8749788b756a28711a8fc4d33}
-  Albedo: [0, 0, 0, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 9746499813082547477
 GameObject:
@@ -67,19 +57,9 @@ Transform:
 ID: 9542762480390967986
 MeshRenderer:
   m_GameObject: {fileID: 9746499813082547477}
+  m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
-  Albedo: [0, 0, 0, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 6433893576005225322
 GameObject:
@@ -104,19 +84,9 @@ Transform:
 ID: 7395850461673424219
 MeshRenderer:
   m_GameObject: {fileID: 6433893576005225322}
-  Mesh: {guid: 00000000000000000000000000000066}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
   Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
-  Albedo: [0, 0, 0, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 1456108330640115935
 GameObject:
@@ -141,19 +111,9 @@ Transform:
 ID: 17186992239360460643
 MeshRenderer:
   m_GameObject: {fileID: 1456108330640115935}
+  m_IsEnabled: true
   Mesh: {guid: 872b8e766b8122de16b24583fa009940}
   Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
-  Albedo: [0, 0, 0, 0]
-  Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
-  NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: 00000000000000000000000000000000}
-  RoughnessTexture: {guid: 00000000000000000000000000000000}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
-  EmissionScalar: 1
 ---
 ID: 4194160308159477720
 GameObject:
@@ -178,6 +138,8 @@ Transform:
 ID: 18392682604265416157
 LightSource:
   m_GameObject: {fileID: 4194160308159477720}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 0
   lightpos: [0, 0, 0]
   Intensity: 100
@@ -209,6 +171,8 @@ Transform:
 ID: 681253136935640748
 LightSource:
   m_GameObject: {fileID: 18136757432887066677}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 0
   lightpos: [0, 0, 0]
   Intensity: 10000
@@ -240,6 +204,8 @@ Transform:
 ID: 18319010000445223663
 LightSource:
   m_GameObject: {fileID: 5108011816797219817}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 1000
@@ -271,6 +237,8 @@ Transform:
 ID: 11436060987403006728
 LightSource:
   m_GameObject: {fileID: 5114811427257356599}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 1000
@@ -302,6 +270,8 @@ Transform:
 ID: 13445363196840977405
 LightSource:
   m_GameObject: {fileID: 2728860267715928837}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
   Intensity: 100
@@ -333,6 +303,8 @@ Transform:
 ID: 10677951854348337237
 LightSource:
   m_GameObject: {fileID: 14937092499730949471}
+  m_IsEnabled: true
+  EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
   Intensity: 100

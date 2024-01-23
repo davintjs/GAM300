@@ -19,7 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scene/Scene.h"
 #include "Core/Events.h"
 #include "Core/EventsManager.h"
-#include "Graphics/TextureManager.h"
+#include "Graphics/Texture/TextureManager.h"
 #include "AssetManager/AssetManager.h"
 #include "Scene/SceneManager.h"
 #include "AI/NavMeshBuilder.h"

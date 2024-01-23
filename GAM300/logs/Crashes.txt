@@ -1,5 +1,5 @@
-[2023-11-26 21:27:18.887] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 280)
+[2024-01-21 13:52:39.147] [Error] [critical] 
+Caused By:	false
+Info:		5235729637626766851  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 525)
 

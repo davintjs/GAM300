@@ -154,6 +154,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/Trails.vert";
 	fragmentPath = shaderPath + "/Trails.frag";
 	ShaderCompiler("Trails SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/Text.vert";
+	fragmentPath = shaderPath + "/Text.frag";
+	ShaderCompiler("Text SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

@@ -71,7 +71,6 @@ namespace BeanFactory
 
         #endregion
 
-
         #region GAMEOBJECT
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool HasComponent(GameObject gameObject, Type componentType, out bool output);
@@ -104,11 +103,30 @@ namespace BeanFactory
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetPosition(Transform gameObject, ref vec3 position);
+        public static extern void SetLocalPosition(Transform gameObject, out vec3 position);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetRotation(Transform gameObject, ref vec3 rotation);
+        public static extern void SetLocalRotation(Transform gameObject, out vec3 rotation);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetScale(Transform gameObject, ref vec3 scale);
+        public static extern void SetLocalScale(Transform gameObject, out vec3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldPosition(Transform gameObject, out vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldRotation(Transform gameObject, out vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetWorldScale(Transform gameObject, out vec3 scale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetLocalScale(Transform gameObject, ref vec3 scale);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldPosition(Transform gameObject, ref vec3 position);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldRotation(Transform gameObject, ref vec3 rotation);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetWorldScale(Transform gameObject, ref vec3 scale);
         #endregion
 
         #region SCENE
@@ -138,7 +156,7 @@ namespace BeanFactory
         public static extern void AudioMute(bool mute);
         #endregion	
 
-        #region INPUT
+        #region INPUT_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool GetKey(int keyCode);
 
@@ -153,6 +171,14 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetMousePosition(out GlmSharp.vec2 pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LockCursor(bool toggle);
+        #endregion
+
+        #region PHYSICS_SYSTEM
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
         #endregion
 
         #region TEXT
@@ -184,6 +210,20 @@ namespace BeanFactory
         #region PARTICLES
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ParticlesPlayer(ParticleComponent particleComp);
+        #endregion
+
+        #region CAMERA
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetCameraTarget(Camera camera, ref vec3 position);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetRightVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetUpVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetForwardVec(Camera camera, ref vec3 temp);
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

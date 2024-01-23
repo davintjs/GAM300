@@ -43,7 +43,7 @@ void NavMeshBuilder::Update(float dt)
 
 		if (!mWay.empty())
 		{
-			glm::vec3 enemyDir = mWay.front() - agentTransform.GetTranslation();
+			glm::vec3 enemyDir = mWay.front() - agentTransform.GetGlobalTranslation();
 			if (length(enemyDir) <= .1f)
 			{
 				mWay.pop_front();
@@ -51,14 +51,14 @@ void NavMeshBuilder::Update(float dt)
 				{
 					return;
 				}
-				enemyDir = mWay.front() - agentTransform.GetTranslation();
+				enemyDir = mWay.front() - agentTransform.GetGlobalTranslation();
 			}
 
 			// Enemy movement
 			enemyDir = glm::normalize(enemyDir);
 			enemyDir.y = 0;
 			float angle = static_cast<float>(atan2(enemyDir.x, enemyDir.z));
-			agentTransform.rotation = glm::vec3(0.f, angle, 0.f);
+			agentTransform.SetGlobalRotation(Vector3(0.f, angle, 0.f));
 			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = enemyDir * 2.f;
 		}
 	}
@@ -147,15 +147,19 @@ void NavMeshBuilder::GetAllObstacles()
 		// Reaching here means this entity is an obstacle
 		const Transform& t = MySceneManager.GetCurrentScene().Get<Transform>(entity);
 
-		glm::vec3 obstacleBottomFace = t.translation;
+		glm::vec3 obstacleBottomFace = t.GetGlobalTranslation();
 		glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.x,
 								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.y,
 								MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).dimensions.z };
-		scaledVec.x *= t.scale.x;
-		scaledVec.y *= t.scale.y;
-		scaledVec.z *= t.scale.z;
 
-		obstacleBottomFace.y = t.translation.y - (scaledVec.y / 2.f);// MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y* (t.scale.y / 2.f);
+
+		Vector3 translation = t.GetGlobalTranslation();
+		Vector3 scale = t.GetGlobalScale();
+		scaledVec.x *= scale.x;
+		scaledVec.y *= scale.y;
+		scaledVec.z *= scale.z;
+
+		obstacleBottomFace.y = translation.y - (scaledVec.y / 2.f);// MySceneManager.GetCurrentScene().Get<BoxCollider>(entity).y* (t.scale.y / 2.f);
 
 		glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
 		glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };
@@ -774,7 +778,7 @@ void NavMeshBuilder::Exit()
 void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 {
 	Tag mTagRb1 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
-	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc1->EUID());
+	Tag mTagRb2 = MySceneManager.GetCurrentScene().Get<Tag>(pEvent->pc2->EUID());
 
 	Tag* fNavMesh;
 	Tag* fObstacle;
@@ -794,17 +798,20 @@ void NavMeshBuilder::CallbackContactAdd(ContactAddedEvent* pEvent)
 		return;
 	}
 
-	glm::vec3 obstacleMidPoint = MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).translation;
+	Transform& transform = MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle);
+	Vector3 scale = transform.GetGlobalScale();
+
+	glm::vec3 obstacleMidPoint = transform.GetGlobalTranslation();
 
 	glm::vec3 obstacleBottomFace = obstacleMidPoint;
 	glm::vec3 scaledVec = { MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.x,
 							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.y,
 							MySceneManager.GetCurrentScene().Get<BoxCollider>(*fObstacle).dimensions.z };
-	scaledVec.x *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.x;
-	scaledVec.y *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.y;
-	scaledVec.z *= MySceneManager.GetCurrentScene().Get<Transform>(*fObstacle).scale.z;
+	scaledVec.x *= scale.x;
+	scaledVec.y *= scale.y;
+	scaledVec.z *= scale.z;
 
-	obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(*fNavMesh).dimensions.y * MySceneManager.GetCurrentScene().Get<Transform>(*fNavMesh).scale.y / 2.f;
+	obstacleBottomFace.y = MySceneManager.GetCurrentScene().Get<BoxCollider>(*fNavMesh).dimensions.y * MySceneManager.GetCurrentScene().Get<Transform>(*fNavMesh).GetGlobalScale().y / 2.f;
 
 	glm::vec3 obstacleMinPoint = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z - (scaledVec.z / 2.f) };
 	glm::vec3 obstacleMinPointTop = { obstacleBottomFace.x - (scaledVec.x / 2.f), obstacleBottomFace.y, obstacleBottomFace.z + (scaledVec.z / 2.f) };

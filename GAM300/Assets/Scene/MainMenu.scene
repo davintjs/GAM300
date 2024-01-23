@@ -30,10 +30,11 @@ Transform:
 ID: 6290748605718139895
 Camera:
   m_GameObject: {fileID: 5255847082789301257}
+  m_IsEnabled: true
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  FocalLength: 10
+  LookAtDistance: 0.349982262
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -42,6 +43,7 @@ Camera:
   HDR: true
   OcclusionCulling: false
   FrustumCulling: true
+  DistanceCulling: 5
 ---
 ID: 11651427043620866289
 GameObject:
@@ -69,11 +71,15 @@ Transform:
 ID: 2748547964756519209
 Canvas:
   m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
 ---
 ID: 12476976089546016649
 Script:
   m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: false
   Script: {guid: 8e7ebaa15a9550485ebd22863125bac8}
+  bgm: {fileID: 15874991202848918549}  # Component
+  uibutton: {fileID: 7823455904144311016}  # Component
   duration: 0.649999976
   mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
@@ -83,8 +89,6 @@ Script:
   timer: 0
   back: false
   sizeMultiplier: 1.25
-  bgm: {fileID: 15874991202848918549}  # Component
-  uibutton: {fileID: 7823455904144311016}  # Component
 ---
 ID: 4418236984561621579
 GameObject:
@@ -109,6 +113,7 @@ Transform:
 ID: 13350653658282748155
 SpriteRenderer:
   m_GameObject: {fileID: 4418236984561621579}
+  m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
@@ -136,6 +141,7 @@ Transform:
 ID: 8183777527831800993
 SpriteRenderer:
   m_GameObject: {fileID: 15122834859859923062}
+  m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
@@ -163,6 +169,7 @@ Transform:
 ID: 5030680011077784730
 SpriteRenderer:
   m_GameObject: {fileID: 15628350562473262138}
+  m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
   SpriteTexture: {guid: b015799a619b4c2e8262e7284a9f5b5c}
@@ -210,10 +217,11 @@ Transform:
 ID: 15874991202848918549
 AudioSource:
   m_GameObject: {fileID: 12985200632528168917}
+  m_IsEnabled: true
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
-  Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
+  Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
 ID: 16470370342308864989
@@ -239,6 +247,7 @@ Transform:
 ID: 7823455904144311016
 AudioSource:
   m_GameObject: {fileID: 16470370342308864989}
+  m_IsEnabled: true
   AudioChannel: 1
   Loop: false
   Volume: 1

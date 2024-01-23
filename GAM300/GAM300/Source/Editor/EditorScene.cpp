@@ -33,7 +33,6 @@ namespace
 {
     const char* GizmoWorld[] = { "Local", "Global" };
     int GizmoType = ImGuizmo::TRANSLATE;
-    int coord_selection = 1;
 }
 
 void EditorScene::Init()
@@ -122,11 +121,37 @@ void EditorScene::ToolBar()
         ImGui::Dummy(ImVec2(20.f, 0.f));
 
         //For thoe to change to toggle debug drawing
-        if (ImGui::Checkbox("Debug Drawing", &DEBUGDRAW.IsEnabled())) {}
+        if (ImGui::Checkbox("DD", &DEBUGDRAW.IsEnabled())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Show Debug Drawing (Camera Frustum, Colliders, etc)");
+        }
+
         //if (ImGui::Checkbox("Render Shadows", &RENDERER.enableShadows())) {}
 
-        ImGui::Dummy(ImVec2(20.f, 0.f));
-        if (ImGui::Checkbox("Frustum Culling", &RENDERER.EnableFrustumCulling())) {}
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("FC", &RENDERER.EnableFrustumCulling())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Enable Frustum Culling (Cull away GameObjects that are not within the camera)");
+        }
+
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("SAC", &DEBUGDRAW.ShowAllColliders())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip("Show All Colliders (Show all debug drawing of colliders)");
+        }
+
+        ImGui::Dummy(ImVec2(10.f, 0.f));
+        if (ImGui::Checkbox("CIA", &RENDERER.EnableIsActive())) {}
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            std::string tooltip = "Check Is Active (Enable/Disable setting of IsActive of GameObjects)\n";
+            tooltip += "Disabling this causes the Renderer to NOT check for disabled GameObjects, \n";
+            tooltip += "it temporarily increases performance while editing the scene";
+            ImGui::SetTooltip(tooltip.c_str());
+        }
 
         ImGui::EndMenuBar();
     }
@@ -174,8 +199,6 @@ void EditorScene::SceneView()
                     Entity* ent = curr_scene.Add<Entity>();
                     Transform& parent = curr_scene.Get<Transform>(*ent);
                     curr_scene.Get<Tag>(*ent).name = data.name;
-                    delete[] data.name;
-                    data.name = nullptr; //delete data created for the name in payload
 
                     //Get model 
                     GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
@@ -221,9 +244,7 @@ void EditorScene::SceneView()
                     }
                 }
 
-                //add other file types here
-
-               
+                //add other file types here              
             }
             ImGui::EndDragDropTarget();
         }
@@ -248,6 +269,9 @@ bool EditorScene::SelectEntity()
             // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
+
+            //clear all selected entities in mutliselect
+            //EditorInspector::Instance().multiselectEntities.clear();
         }
         return true;
     }
@@ -295,7 +319,6 @@ void EditorScene::DisplayGizmos()
             glm::vec3 rot;
             glm::vec3 scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transMatrix), &translation[0], &rot[0], &scale[0]);
-
             glm::vec3 mins = scale, maxs = scale;
 
             Mesh* mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
@@ -333,6 +356,7 @@ void EditorScene::DisplayGizmos()
         {
             if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
+            if (!currentScene.IsActive(entity)) continue;
             Transform& transform = currentScene.Get<Transform>(entity);
 
             // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
@@ -410,11 +434,14 @@ void EditorScene::DisplayGizmos()
         Entity& entity = currentScene.Get<Entity>(EDITOR.GetSelectedEntity());
         
         Transform& trans = currentScene.Get<Transform>(entity);
+
+        Vector3 tempScale = trans.GetLocalScale();
         for (int i = 0; i < 3; ++i)
         {
-            if (fabs(trans.scale[i]) < 0.001f)
-                trans.scale[i] = 0.001f;
+            if (fabs(tempScale[i]) < 0.001f)
+                tempScale[i] = 0.001f;
         }
+        trans.SetLocalScale(tempScale);
 
         // Drawing box collider of selected object
         if (currentScene.Has<BoxCollider>(entity))
@@ -458,24 +485,24 @@ void EditorScene::DisplayGizmos()
             glm::vec3 a_rot;
             glm::vec3 a_scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
-            trans.translation = a_translation;
-            trans.rotation = glm::radians(a_rot);
-            trans.scale = a_scale;
+            trans.SetLocalPosition(a_translation);
+            trans.SetLocalRotation(glm::radians(a_rot));
+            trans.SetLocalScale(a_scale);
         }
         else if (!firstmove) {
-            if (trans.translation != origTransform.translation) {
-                Change translate(&trans, "Transform/Translation");
-                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
-            }
-            if (trans.rotation != origTransform.rotation) {
-                Change rotate(&trans, "Transform/Rotation");
-                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
-            }
-            if (trans.scale != origTransform.scale) {
-                Change scale(&trans, "Transform/Scale");
-                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
-            }
-            firstmove = true;
+            //if (trans.GetLocalTranslation() != origTransform.GetLocalTranslation()) {
+            //    Change translate(&trans, "Transform/Translation");
+            //    EDITOR.History.SetPropertyValue(translate, origTransform.GetLocalTranslation(), trans.GetLocalTranslation());
+            //}
+            //if (trans.rotation != origTransform.rotation) {
+            //    Change rotate(&trans, "Transform/Rotation");
+            //    EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+            //}
+            //if (trans.scale != origTransform.scale) {
+            //    Change scale(&trans, "Transform/Scale");
+            //    EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+            //}
+            //firstmove = true;
         }
     }
 }

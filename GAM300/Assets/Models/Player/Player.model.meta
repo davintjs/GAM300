@@ -1,42 +1,54 @@
-guid: 7b29e00dfb3f670f813a79db1b09ceec
+guid: 57842309a726977564b79cd7cad426df
 meshes:
-  data: {guid: facd76c892ca06703bc486d9250f32b2}
-  data: {guid: 51c800745fa5ace82c0043fbe6440bb1}
-  data: {guid: fe12ca2d907f6ee7b711f92b5ccfce11}
-  data: {guid: 3170643cc6f9c2b724b2e93c823089ac}
-  data: {guid: 7d489c9672df40b8bd03bf1e49beb22b}
-  data: {guid: abe99ba792fd9200f71106dd5a7da94c}
-  data: {guid: 1e4f9272f94cd36a73e44a7051c5faa1}
-  data: {guid: 71afb63aded095b94b8fd1e7da73d61e}
-  data: {guid: f9bec0267be074497e9e666c4b47be2f}
-  data: {guid: 5ed01f58cfec8399726abe6710f3440b}
-  data: {guid: 63d7fdd208d37c67b94dc883b159656c}
-  data: {guid: f78435a0fc7c773ceedfd53d911a8c46}
-  data: {guid: f13d8dc4f05058feda307b77ce3c66b4}
-  data: {guid: b99a39f0ecccf481da41b61d50341001}
-  data: {guid: 032cd27f6ebe9dcd0d898d1c0907381d}
-  data: {guid: b4d76bd3bf00e824bf82e33764be36ac}
-  data: {guid: 5ecc296f72354ee42867e509d3080dfa}
-  data: {guid: 861d5938beb6a94a6a94abaf09620a35}
-  data: {guid: f7306edaa96bc981ae0c22dd8fff2cdf}
-  data: {guid: 7e0cc909d0e54dda66597f5a29c886f2}
-  data: {guid: eb77db25917365c11bd21cc9ef9305b2}
-  data: {guid: 80539f16f26c71a03909f6c39ddf4aec}
-  data: {guid: cd407c4e87d9f12affc853c655f1c330}
+  data: {guid: db51bf5ce78238dc2e8e31bbbd2dadbb}
+  data: {guid: b65f23cf44d53c8eb4a971a802e1c64f}
+  data: {guid: a582c9e480d42ffefd5d8a6e29a3e33b}
+  data: {guid: 6cc628d54cba66871f1c58ec865a6962}
+  data: {guid: 359754680c33a911bd56dbb3530af3d4}
+  data: {guid: fa0bf50418d9faec0beb677b4fb2924b}
+  data: {guid: d6123651b710e784f62915769a04970f}
+  data: {guid: 76d23715325c3203472dd29b31f42c0d}
+  data: {guid: 2b11d43506fb1ef6674fb047c9da6554}
+  data: {guid: 781ccb21f5e0f4f46614abd4505040dc}
+  data: {guid: 573df87340d5104609d1b371298277e6}
+  data: {guid: c05a3fd3f411e6a57aa77ed85f41708b}
+  data: {guid: 9487cede3b012c0346d6f79e046e041d}
+  data: {guid: 7a594a927cff9a651e8a282f5eff1834}
+  data: {guid: 0bbfe6fcbf6aac0d6ed030b4e490b921}
+  data: {guid: 50fee6f7e7d4bd63335e9df4c9bab7a2}
+  data: {guid: 9002849ed75898c166e67aba64c68438}
+  data: {guid: 6ebec05b2f774b33445e53785bda63c3}
+  data: {guid: 075e64455c429dd5dcdb0e43ef9055c1}
+  data: {guid: 90921cb3e0b6283fe56da9099fbd79d2}
+  data: {guid: 089453e5351cbc1398937b21fccd4f07}
+  data: {guid: 3d2d29307b84ffcff5fe61e58835fbf7}
+  data: {guid: e78b7ace37d3508e776d123a9e9d8069}
+  data: {guid: a64064262d734a7b1d83a2420af64d34}
+  data: {guid: 98e08735828b8efe43b5f4462b7a02ad}
+  data: {guid: 32c5ad9105bb4a0eb3dcf9a3d2dbfcaa}
+  data: {guid: 5531286f717b2d6924f362523e4ce972}
+  data: {guid: d57b3f883f33a13c8fc76851d1999a50}
+  data: {guid: d24d1e72598e6642bc32b7e7c81b9b66}
+  data: {guid: ec55afe0b489ef21e5b23a86ea930c98}
+  data: {guid: c22a5c3946306be72910352c3d39b293}
+  data: {guid: cdbf1f0bb92af2264243d52a8921ed6f}
+  data: {guid: 8cd84b092d547218a4fc7d645619c80c}
+  data: {guid: f22eaf464ea1e4e0e6615b14e7d603ba}
+  data: {guid: d2e5d394f19d3e73476800a1f04fb062}
 animations:
-  data: {guid: f1b3a33db0e1177bb89dc531d57040fd}
+  data: {guid: c0be1abecf08f639d493afa71ad72c31}
 animationStates:
-  Idle: [2, 61]
-  Run: [62, 88]
-  Sprint: [89, 108]
+  Idle: [5, 61]
+  Run: [64, 88]
+  Sprint: [91, 108]
   Stun: [109, 129]
   Jump: [130, 160]
-  Falling: [161, 182]
-  Attack1: [183, 228]
-  Attack2: [229, 324]
+  Falling: [163, 182]
+  Attack1: [185, 228]
+  Attack2: [231, 324]
   Attack3: [325, 420]
-  DashAttack: [421, 491]
+  DashAttack: [422, 491]
   Death: [492, 587]
-  Dodge: [588, 637]
+  Dodge: [591, 637]
   GettingUp: [638, 866]
-  Overdrive: [867, 952]
+  Overdrive: [869, 952]

@@ -37,7 +37,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define DEBUGDRAW DebugDraw::Instance()
 #define LIGHTING Lighting::Instance()
 #define RENDERER Renderer::Instance()
+#define UIRENDERER UIRenderer::Instance()
 #define MATERIALSYSTEM MaterialSystem::Instance()
+#define TEXTSYSTEM TextSystem::Instance()
 
 class Ray3D;
 
@@ -127,6 +129,13 @@ struct Material_instance : Object
 	Engine::GUID<TextureAsset>	aoTexture;
 	Engine::GUID<TextureAsset>	emissionTexture;
 
+	GLuint textureID;
+	GLuint normalID;
+	GLuint metallicID;
+	GLuint roughnessID;
+	GLuint ambientID;
+	GLuint emissiveID;
+
 
 
 	// Blinn Phong - Not in use
@@ -171,6 +180,7 @@ public:
 	void Update(float dt);
 	void Exit();
 
+	void BindTextureIDs();
 
 	void createPBR_Instanced();
 
@@ -194,6 +204,8 @@ public:
 
 	// Load Material Instance
 	void CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>*pEvent);
+
+	void CallbackBindTexturesOnSceneLoad(LoadSceneEvent *pEvent);
 
 	// capture Material Instance
 	Material_instance& getMaterialInstance(Engine::GUID<MaterialAsset> matGUID);
@@ -276,6 +288,20 @@ private:
 	// Colour Picking
 	unsigned int colorPickFBO;
 	unsigned int colorPickTex;
+};
+
+SINGLETON(UIRenderer)
+{
+public:
+
+
+	// Drawing UI onto screenspace
+	void UIDraw_2D(BaseCamera & _camera);
+
+	// Drawing UI onto worldspace
+	void UIDraw_3D(BaseCamera & _camera);
+	// Drawing Screenspace UI onto worldspace
+	void UIDraw_2DWorldSpace(BaseCamera & _camera);
 
 };
 
@@ -293,8 +319,8 @@ public:
 
 	void DrawBoxColliders();
 
-	void DrawSegment3D(const Segment3D& _segment3D, const glm::vec4& _color);
-	void DrawSegment3D(const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
+	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
 	void DrawRay();
 
@@ -308,15 +334,15 @@ public:
 	void ResetPhysicDebugContainer();
 
 	bool& IsEnabled() { return enableDebugDraw; }
+	bool& ShowAllColliders() { return showAllColliders; }
 
 private:
-
-	InstanceProperties* properties;
 	std::vector<Ray3D> rayContainer;
 	std::vector<RigidDebug> boxColliderContainer;
 	RaycastLine* raycastLine;
 	bool enableRay = true;
 	bool enableDebugDraw = true;
+	bool showAllColliders = false;
 };
 
 ENGINE_SYSTEM(Lighting)
@@ -343,6 +369,35 @@ private:
 	std::vector<LightProperties> spotLightSources;
 };
 
+ENGINE_SYSTEM(Shadows)
+{
+public:
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+private:
+
+	void DrawDepthSpot();
+	void DrawDepthDirectional();
+	void DrawDepthPoint();
+
+
+	unsigned int depthMapFBO;
+	unsigned int depthMap; // Shadow Texture
+
+
+	// Shadow Mapping - Spot
+	unsigned int depthMapFBO_S;
+	unsigned int depthMap_S; // Shadow Texture
+
+
+	// Shadow Cube Mapping
+	unsigned int depthCubemapFBO;
+	unsigned int depthCubemap;
+
+};
+
 ENGINE_SYSTEM(Renderer), property::base
 {
 public:
@@ -350,40 +405,31 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void SetupGrid(const int& _num);
+	void UpdateDefaultProperties(Scene& _scene, Transform& _t, Material_instance& _mat, const GLuint& _vao, const GLenum& _type, const GLuint& _count);
+
+	void UpdatePBRProperties(Transform& _t, Material_instance& _mat, const GLuint& _vao);
 
 	void Draw(BaseCamera& _camera);
 
-	void BindLights(GLSLShader & shader);
+	void BindLights(GLSLShader& shader);
 
-	// Drawing UI onto screenspace
-	void UIDraw_2D(BaseCamera& _camera);
+	//// Drawing UI onto screenspace
+	//void UIDraw_2D(BaseCamera& _camera);
 
-	// Drawing UI onto worldspace
-	void UIDraw_3D(BaseCamera& _camera);
+	//// Drawing UI onto worldspace
+	//void UIDraw_3D(BaseCamera& _camera);
 
-	// Drawing Screenspace UI onto worldspace
-	void UIDraw_2DWorldSpace(BaseCamera & _camera);
-
+	//// Drawing Screenspace UI onto worldspace
+	//void UIDraw_2DWorldSpace(BaseCamera & _camera);
 
 	void DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCount,
-		//const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, SHADERTYPE shaderType);
-		const unsigned int& _primCount, GLenum _primType, const LightProperties& _lightSource, BaseCamera & _camera, SHADERTYPE shaderType);
-	//glm::vec4 Albe, glm::vec4 Spec, glm::vec4 Diff, glm::vec4 Ambi, float Shin);
-	//Materials Mat);
+		const unsigned int& _primCount, GLenum _primType, SHADERTYPE shaderType);
 
-	void DrawGrid(const GLuint & _vaoid, const unsigned int& _instanceCount);
+	void DrawPBR(BaseCamera& _camera);
+
+	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	// Depth draw call for directional shadows
-	void DrawDepthDirectional();
-
-	// Depth draw call for spotlight shadows
-	void DrawDepthSpot();
-
-	// Depth draw call for point shadows
-	void DrawDepthPoint();
 
 	bool Culling();
 
@@ -398,7 +444,7 @@ public:
 	std::vector<InstanceContainer>& GetInstanceContainer() { return instanceContainers; }
 	std::vector<DefaultRenderProperties>& GetDefaultProperties() { return defaultProperties; }
 	std::vector<DefaultRenderProperties>& GetTransparentContainer() { return transparentContainer; }
-
+	std::vector<std::vector<glm::mat4>*>& GetFinalBoneContainer() { return finalBoneMatContainer; }
 	float& GetExposure() { return exposure; }
 
 	bool& IsHDR() { return hdr; }
@@ -412,6 +458,8 @@ public:
 	bool& enableBloom() { return enablebloom; };
 
 	bool& EnableFrustumCulling() { return frustumCulling; };
+
+	bool& EnableIsActive() { return isActive; };
 
 	float& getAmbient() { return ambient; };
 
@@ -435,7 +483,8 @@ private:
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;
-	bool frustumCulling = true;
+	bool frustumCulling = false;
+	bool isActive = true;
 };
 
 property_begin_name(Renderer, "Graphics Settings"){
@@ -447,6 +496,32 @@ property_begin_name(Renderer, "Graphics Settings"){
 	property_var(ambient).Name("Ambient"),
 	property_var(exposure).Name("Exposure"),
 } property_vend_h(Renderer)
+
+
+ENGINE_SYSTEM(TextSystem)
+{
+public:
+
+	struct Character {
+		unsigned int TextureID;  // ID handle of the glyph texture
+		glm::ivec2   Size;       // Size of glyph
+		glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+		unsigned int Advance;    // Offset to advance to next glyph
+	};
+
+	unsigned int txtVAO, txtVBO;
+	std::map<char, Character> Characters;
+
+	void Init();
+	void Update(float dt);
+	void Exit();
+
+	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
+	void Draw(BaseCamera& _camera);
+
+private:
+	//nth yet
+};
 
 //ENGINE_SYSTEM(ShadowRenderer)
 //{

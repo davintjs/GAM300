@@ -4,7 +4,7 @@
 //#include "ParticleSystem/ParticleSystem.h"
 #include "Scene/SceneManager.h"
 #include "GraphicsHeaders.h"
-
+#include "Texture/TextureManager.h"
 
 
 void ParticleRenderer::Init() {

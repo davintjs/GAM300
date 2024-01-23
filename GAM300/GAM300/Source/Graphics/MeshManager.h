@@ -21,10 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "../../glfw-3.3.8.bin.WIN64/include/GLFW/glfw3.h"
 
 #include "GraphicStructsAndClass.h"
-
-#include "TextureManager.h"
-
-
+#include "Core/Events.h"
 #include "Model3d.h"
 
 struct InstanceProperties;
@@ -57,6 +54,10 @@ public:
 	
 	void Init();
 
+	void Update(float dt);
+
+	void Exit();
+
 	MeshAsset* GetMeshAsset(const Engine::GUID<MeshAsset>& meshID);
 
 	void AddMesh(const MeshAsset& _meshAsset, const Engine::GUID<MeshAsset>& _guid);
@@ -64,11 +65,10 @@ public:
 	// This is used when we are going to draw, u need to take the geom then render it
 	Mesh* DereferencingMesh(const Engine::GUID<MeshAsset>& meshID)
 	{ 
-		if (mContainer.find(meshID) == mContainer.end())
-		{
+		auto iter = mContainer.find(meshID);
+		if (iter == mContainer.end())
 			return nullptr;
-		}
-		return &(mContainer.find(meshID)->second);
+		return &(iter->second);
 	}// Either Geom or Vaoid
 
 	//GLuint GetVAOfromGUID(std::string GUID);
