@@ -154,6 +154,8 @@ void Renderer::Update(float)
 			if (!withinCamera) continue;
 		}
 
+
+
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
 			//GLuint& vao = MESHMANAGER.vaoMap[renderer.meshID];

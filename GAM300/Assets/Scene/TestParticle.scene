@@ -51,3 +51,33 @@ ParticleComponent:
   2D particle: false
   Trailing: true
   Looping: true
+---
+ID: 1589847083358243135
+GameObject:
+  m_IsActive: true
+  m_Name: SoundTest
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11834711623357585551}  # Transform
+    - component: {fileID: 6091472549070461199}  # AudioSource
+---
+ID: 11834711623357585551
+Transform:
+  m_GameObject: {fileID: 1589847083358243135}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6091472549070461199
+AudioSource:
+  m_GameObject: {fileID: 1589847083358243135}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade Time (s): 0
+  Sound File: {guid: c921bd0028ce6d21877c994c16ad963b}
+  Play: false

@@ -28,11 +28,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 //using SoundMap = std::map<std::string, FMOD::Sound*>; //@kk delete once done
 using SoundMap = std::unordered_map<Engine::GUID<AudioAsset>, FMOD::Sound*>;
 
+enum FadeState { FADE_NONE, FADE_IN, FADE_OUT };
+
+struct MusicBuffer{
+	FMOD::Channel* currentMusic; // 2 channels so that 2 music can cross fade
+	Engine::GUID<AudioAsset> nextMusicPath{0};
+	Engine::GUID<AudioAsset> currentMusicPath{0};
+	FadeState fade{ FADE_NONE };
+};
+
 SINGLETON(AudioManager) {
 private:
 	//static AudioManager* audioManager;
-	enum Category { CATEGORY_SFX, CATEGORY_MUSIC, CATEGORY_LOOPFX, CATEGORY_COUNT };
-	enum FadeState { FADE_NONE, FADE_IN, FADE_OUT };
+	enum Category { CATEGORY_SFX, CATEGORY_MUSIC, CATEGORY_MUSIC2, CATEGORY_LOOPFX, CATEGORY_COUNT };
 public:
 	// initialize Audio Manager
 	void InitAudioManager();
@@ -41,27 +49,27 @@ public:
 	void DestroyAudioManager();
 
 	// update music settings accordingly
-	void Update(float dt);		
+	void Update(float dt);
 
 	// add music into music channel
 	//void AddMusic(const std::string& soundGUID, const std::string& name); // @kk delete once done
-	void AddMusic(const std::string& path, const Engine::GUID<AudioAsset>& soundGUID);
+	void AddMusic(const std::string & path, const Engine::GUID<AudioAsset>&soundGUID);
 
 	// add looping SFX onto LoopFX channel
 	//void AddLoopFX(const std::string& soundGUID, const std::string& name);
-	void AddLoopFX(const std::string& path, const Engine::GUID<AudioAsset> soundGUID);
+	void AddLoopFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// add SFX into SFX channel
 	//void AddSFX(const std::string& soundGUID, const std::string& name);
-	void AddSFX(const std::string& path, const Engine::GUID<AudioAsset> soundGUID);
+	void AddSFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// Play / Unpause music with the filename
 	//void PlayMusic(const std::string soundGUID);
-	void PlayMusic(Engine::GUID<AudioAsset> soundGUID);
+	void PlayMusic(Engine::GUID<AudioAsset> soundGUID, float componentFade = 1.f);
 
 	// Unpause Music
 	void PlayMusic();
-	
+
 	// Play SFX with the filename on loop
 	//void PlayLoopFX(const std::string soundGUID, float pan = 0.f, float vol = 1.f);
 	void PlayLoopFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0.f, float vol = 1.f,
@@ -74,7 +82,7 @@ public:
 		float minPitch = -1, float maxPitch = 3);
 
 	// play from component
-	void PlayComponent(AudioSource& Source);
+	void PlayComponent(AudioSource & Source);
 
 	// stop SFX from playing
 	void StopFX();
@@ -83,7 +91,7 @@ public:
 	void StopMusic();
 
 	// stop component from playing
-	void StopAudioComponent(AudioSource& Source);
+	void StopAudioComponent(AudioSource & Source);
 
 	// stops all audio
 	void StopAllAudio();
@@ -107,33 +115,29 @@ public:
 	float RandFloat(float min, float max);
 
 	//Handle audio adding here
-	void CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent);
+	void CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>*pEvent);
 
 	//Handle audio removal here
-	void CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>* pEvent);
+	void CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>*pEvent);
 
-	void CallbackSceneStop(SceneStopEvent* pEvent);
+	void CallbackSceneStop(SceneStopEvent * pEvent);
 private:
 
 	FMOD::System* system{};
 	FMOD::ChannelGroup* master{};
 	FMOD::ChannelGroup* groups[CATEGORY_COUNT]{};
 	FMOD_MODE modes[CATEGORY_COUNT]{};
-	FMOD::Channel* currentMusic{};
+	MusicBuffer musics[2];
+	int currentMusicIdx{ 0 };
 	FMOD::Channel* currentFX{};
 	SoundMap sounds[CATEGORY_COUNT];
 	std::vector<SoundMap> soundvec;
-	Engine::GUID<AudioAsset> currentMusicPath{};
 	Engine::GUID<AudioAsset> currentFXPath{};
-	Engine::GUID<AudioAsset> nextMusicPath{};
-
-
-	FadeState fade{ FADE_NONE };
 
 	float musicVolume{ 1.f };
 	float loopfxVolume{ 1.f };
 	float fixStepTime{ .5f };
 	float stepTime{ .0f };
-
+	float fadetime{ 1.f };
 	bool enableStep{ false };
 };
