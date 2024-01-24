@@ -659,6 +659,7 @@ void Renderer::BindLights(GLSLShader& shader)
 	GLint uniform12 = glGetUniformLocation(shader.GetHandle(), "renderShadow");
 	glUniform1f(uniform12, RENDERER.enableShadows());
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
+	glUniform3fv(glGetUniformLocation(shader.GetHandle(), "ambient_tint"), 1, glm::value_ptr(RENDERER.getAmbientRGB()));
 }
 
 //void Renderer::UIDraw_2D(BaseCamera& _camera)

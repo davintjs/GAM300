@@ -463,7 +463,7 @@ public:
 
 	float& getAmbient() { return ambient; };
 
-	glm::vec3& getAmbientRBG() { return ambient_rgb; };
+	glm::vec3& getAmbientRGB() { return ambient_rgb; };
 
 	gBuffer m_gBuffer;
 

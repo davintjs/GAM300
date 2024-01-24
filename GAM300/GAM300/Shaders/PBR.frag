@@ -116,6 +116,7 @@ uniform float bloomThreshold;
 
 // ambience value
 uniform float ambience_multiplier;
+uniform vec3 ambient_tint;
 //End
 
 const float PI = 3.14159265359;
@@ -663,6 +664,7 @@ void main()
 if(hdr)
     color = color / (color + vec3(1.0));
 
+    color *= ambient_tint;
     FragColor = vec4(color, frag_Albedo.a);
 
 //    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
