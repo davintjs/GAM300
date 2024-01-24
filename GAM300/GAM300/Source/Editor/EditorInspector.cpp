@@ -380,65 +380,102 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName = "##";
     idName += name;
 
-    Vector3 buf = val;
-    if (!std::strcmp(name, "Rotation")) {
-        buf *= (180.f / PI);
-    }
-    bool changed = false;
-    if (ImGui::BeginTable("Vector3", 3, windowFlags))
-    {
-        ImGui::TableNextColumn();
-        ImGui::AlignTextToFramePadding();
-        idName += 'X';
-        ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+    if (!strcmp(name, "Color")) {
+        Vector4 buf = Vector4(val.x, val.y, val.z, 1.f);
+        ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
-        changed = DisplayType(idName.c_str(), buf.x);
-        if (changed) {
-            initialVector = val;
+        bool ischanged = false;
 
-            initialVector.x = initialvalue;
-            val = initialVector;
-        }
+        if (ImGui::ColorButton("##color", color, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
+            ImGui::OpenPopup("colorpicker");
 
-        ImGui::TableNextColumn();
-        idName.back() = 'Y';
-        ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if (!changed && DisplayType(idName.c_str(), buf.y)) {
-            changed = true;
-            initialVector = val;
-            initialVector.y = initialvalue;
-            val = initialVector;
-        }
+        if (ImGui::BeginPopup("colorpicker"))
+        {
+            if (ImGui::ColorPicker4("##picker", (float*)&buf, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
+                ischanged = true;
+                if (!valueChanged)
+                    initialColor = Vector4(val.x, val.y, val.z, 1.f);
 
-        ImGui::TableNextColumn();
-        idName.back() = 'Z';
-        ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
-        if (!changed && DisplayType(idName.c_str(), buf.z)) {
-            changed = true;
-            initialVector = val;
-            initialVector.z = initialvalue;
-            val = initialVector;
-        }
-
-        //convert rotation from degree back to radians
-        if (!std::strcmp(name, "Rotation")) {
-            buf *= (PI / 180.f);
-            val *= (PI / 180.f);
-            //Check whether value is within epsilon range (to avoid negative 0)
-            for (int i = 0; i < 3; ++i) {
-                if (std::fabs(buf[i] - 0.f) < EPSILON)
-                    buf[i] = 0;
+                valueChanged = true;
+                val = Vector3(buf.x, buf.y, buf.z);
             }
+
+            if (ImGui::IsItemDeactivatedAfterEdit()) {
+                valueChanged = false;
+                buf = Vector4(val.x, val.y, val.z, 1.f);;
+                val = Vector3(initialColor.x, initialColor.y, initialColor.z);
+
+                if (buf.w != initialColor.w) {
+                    auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
+                    material.shaderType = (int)SHADERTYPE::DEFAULT;
+                }
+                Vector3 convert = Vector3(buf.x, buf.y, buf.z);
+                EDITOR.History.SetPropertyValue(change, val, convert);
+            }
+            ImGui::EndPopup();
+        }
+    }
+    else {
+        Vector3 buf = val;
+        if (!std::strcmp(name, "Rotation")) {
+            buf *= (180.f / PI);
+        }
+        bool changed = false;
+        if (ImGui::BeginTable("Vector3", 3, windowFlags))
+        {
+            ImGui::TableNextColumn();
+            ImGui::AlignTextToFramePadding();
+            idName += 'X';
+            ImGui::Text("X"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+
+            changed = DisplayType(idName.c_str(), buf.x);
+            if (changed) {
+                initialVector = val;
+
+                initialVector.x = initialvalue;
+                val = initialVector;
+            }
+
+            ImGui::TableNextColumn();
+            idName.back() = 'Y';
+            ImGui::Text("Y"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+            if (!changed && DisplayType(idName.c_str(), buf.y)) {
+                changed = true;
+                initialVector = val;
+                initialVector.y = initialvalue;
+                val = initialVector;
+            }
+
+            ImGui::TableNextColumn();
+            idName.back() = 'Z';
+            ImGui::Text("Z"); ImGui::SameLine(); ImGui::SetNextItemWidth(-FLT_MIN);
+            if (!changed && DisplayType(idName.c_str(), buf.z)) {
+                changed = true;
+                initialVector = val;
+                initialVector.z = initialvalue;
+                val = initialVector;
+            }
+
+            //convert rotation from degree back to radians
+            if (!std::strcmp(name, "Rotation")) {
+                buf *= (PI / 180.f);
+                val *= (PI / 180.f);
+                //Check whether value is within epsilon range (to avoid negative 0)
+                for (int i = 0; i < 3; ++i) {
+                    if (std::fabs(buf[i] - 0.f) < EPSILON)
+                        buf[i] = 0;
+                }
+            }
+
+            if (!changed)
+                val = buf;
+
+            ImGui::EndTable();
         }
 
-        if (!changed)
-            val = buf;
-
-        ImGui::EndTable();
-    }
-
-    if (changed) {
-        EDITOR.History.SetPropertyValue(change, val, buf);
+        if (changed) {
+            EDITOR.History.SetPropertyValue(change, val, buf);
+        }
     }
 }
 
@@ -963,7 +1000,7 @@ void DisplayLightProperties(LightSource& source) {
     Display<float>(intensity, "Intensity", source.intensity);
 
     Change color(&source, "LightSource/Color");
-    Display<Vector4>(color, "Color", source.lightingColor);
+    Display<Vector3>(color, "Color", source.lightingColor);
 
     Change lightpos(&source, "LightSource/lightpos");
     Change lightdir(&source, "LightSource/Direction");

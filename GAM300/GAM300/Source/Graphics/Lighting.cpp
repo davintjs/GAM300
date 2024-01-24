@@ -72,9 +72,6 @@ void Lighting::Update(float)
 		haveLight = true;
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-		//convert lightingsource from 
-		glm::vec3 lighting{ lightSource.lightingColor.x, lightSource.lightingColor.y, lightSource.lightingColor.z };
-		pointLightSources[pointLightCount].lightColor = lighting;
 
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
@@ -83,7 +80,7 @@ void Lighting::Update(float)
 
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
-			pointLightSources[pointLightCount].lightColor = lighting;
+			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
 			++pointLightCount;
 
@@ -95,7 +92,7 @@ void Lighting::Update(float)
 			// Cull
 			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
 			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
-			directionLightSources[directionalLightCount].lightColor = lighting;
+			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 			directionLightSources[directionalLightCount].direction = lightSource.direction;
 			++directionalLightCount;
@@ -107,7 +104,7 @@ void Lighting::Update(float)
 			// Cull
 			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
 			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
-			spotLightSources[spotLightCount].lightColor = lighting;
+			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
 
