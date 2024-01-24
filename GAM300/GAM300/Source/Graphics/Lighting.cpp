@@ -72,6 +72,9 @@ void Lighting::Update(float)
 		haveLight = true;
 		Transform& transform = currentScene.Get<Transform>(entity);
 
+		//convert lightingsource from 
+		glm::vec3 lighting{ lightSource.lightingColor.x, lightSource.lightingColor.y, lightSource.lightingColor.z };
+		pointLightSources[pointLightCount].lightColor = lighting;
 
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
@@ -80,7 +83,7 @@ void Lighting::Update(float)
 
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
-			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
+			pointLightSources[pointLightCount].lightColor = lighting;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
 			++pointLightCount;
 
@@ -90,12 +93,9 @@ void Lighting::Update(float)
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
 			// Cull
-
-
-
 			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
 			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
-			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
+			directionLightSources[directionalLightCount].lightColor = lighting;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 			directionLightSources[directionalLightCount].direction = lightSource.direction;
 			++directionalLightCount;
@@ -105,13 +105,9 @@ void Lighting::Update(float)
 		else if (lightSource.lightType == SPOT_LIGHT)
 		{
 			// Cull
-
-
-
-
 			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
 			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
-			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
+			spotLightSources[spotLightCount].lightColor = lighting;
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
 

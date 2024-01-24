@@ -391,7 +391,7 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	Vector4 lightingColor{1.f, 1.f, 1.f, 1.f };
 
 	bool toRender = true; // Dirtybit 
 	property_vtable()

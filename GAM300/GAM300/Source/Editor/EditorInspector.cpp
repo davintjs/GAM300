@@ -963,7 +963,7 @@ void DisplayLightProperties(LightSource& source) {
     Display<float>(intensity, "Intensity", source.intensity);
 
     Change color(&source, "LightSource/Color");
-    Display<Vector3>(color, "Color", source.lightingColor);
+    Display<Vector4>(color, "Color", source.lightingColor);
 
     Change lightpos(&source, "LightSource/lightpos");
     Change lightdir(&source, "LightSource/Direction");
@@ -977,9 +977,9 @@ void DisplayLightProperties(LightSource& source) {
     else if(source.lightType == (int)DIRECTIONAL_LIGHT){
         Display<Vector3>(lightdir, "Direction", source.direction);
     }
-    else { //POINT LIGHT
-        Display<Vector3>(lightpos, "Light Position", source.lightpos);
-    }
+    //else { //POINT LIGHT
+    //    Display<Vector3>(lightpos, "Light Position", source.lightpos);
+    //}
 
 }
 
