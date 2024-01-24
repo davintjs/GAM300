@@ -135,6 +135,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		{
 			glUniform1f(uniform2, true);
 		}
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "IncludeAlpha"), Sprite.IncludeAlpha);
+
 
 		DrawSprites(projToUse, viewToUse, srtToUse, shader);
 
@@ -183,6 +185,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 			PRINT(entity_tag.name, "\n");
+			std::cout << "BAM BAM BAM\n";
 		}
 		/*else
 		{

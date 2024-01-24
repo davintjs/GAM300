@@ -413,6 +413,7 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 		bool ColourPicked = false;
+		bool IncludeAlpha = false;
 		float AlphaMultiplier = 1.f;
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
@@ -425,8 +426,9 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(WorldSpace).Name("World Space"),
 		property_var(ColourPicked).Name("Colour Picker Mode"),
-		property_var(SpriteTexture).Name("SpriteTexture"),
+		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
 		property_var(AlphaMultiplier).Name("Alpha Scalar"),
+		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
 struct Canvas : Object

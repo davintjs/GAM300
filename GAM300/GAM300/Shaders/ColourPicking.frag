@@ -32,6 +32,7 @@ out vec4 FragColor;
 
 uniform sampler2D Texture;
 uniform bool isTexture; // if there is a texture, this is true else false
+uniform bool IncludeAlpha;
 
 // 0: ColourPicking for Mesh Renderer
 // 1: ColourPicking for UI (Editor Mode)
@@ -63,7 +64,7 @@ void main()
         if(isTexture)
         {
             vec4 colour = texture(Texture, TexCoords);
-            if(colour.a <0.7)
+            if(!IncludeAlpha && (colour.a <0.7))
             {
                 discard;
             }
