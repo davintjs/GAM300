@@ -35,7 +35,7 @@ void EditorHierarchy::Init()
 //Display the entity in the hierarchy tree
 void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 {
-
+	ImGui::PushID(euid);
 	// ImGuiTreeNodeFlags_SpanAvailWidth
 
 	ImGuiTreeNodeFlags NodeFlags = ImGuiTreeNodeFlags_OpenOnArrow |
@@ -236,6 +236,7 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		}
 		ImGui::TreePop();
 	}
+	ImGui::PopID();
 }
 
 void EditorHierarchy::Update(float dt)
