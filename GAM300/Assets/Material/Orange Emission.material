@@ -1,7 +1,7 @@
 Material:
-  Material Name: Light Blue Emission
+  Material Name: Orange Emission
   Shader: 1
-  Albedo: [0, 0.952941239, 1, 1]
+  Albedo: [1, 0.346686602, 0, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
