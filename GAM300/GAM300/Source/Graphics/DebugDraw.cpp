@@ -27,12 +27,17 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Scene/SceneManager.h"
 #include "Texture/TextureManager.h"
 
-namespace 
+void LookAtRotationMatrix(glm::mat4& _rotMat, const glm::vec3& _objPos, const glm::vec3& _tarPos, const glm::vec3& _up, const glm::vec3& _right)
 {
-	const char* cameraIconPath = "GAM300/Data/Icons/Camera.dds";
-	const char* lightIconPath = "GAM300/Data/Icons/Light.dds";
-	const char* particleIconPath = "GAM300/Data/Icons/Particle.dds";
-	unsigned int cameraID = 0, lightID = 0, particleID = 0, vaoIcon, vboIcon;
+	// Calculate the forward vector (the direction the object is currently facing)
+	const glm::vec3 forward = glm::normalize(_tarPos - _objPos);
+
+	// Calculate the new up vector
+	glm::vec3 up = glm::cross(_right, forward);
+
+	_rotMat[0] = glm::vec4(_right, 0.0f);
+	_rotMat[1] = glm::vec4(up, 0.0f);
+	_rotMat[2] = glm::vec4(-forward, 0.0f);
 }
 
 void DebugDraw::Init()
@@ -42,9 +47,9 @@ void DebugDraw::Init()
 	raycastLine->lineinit();
 	pProp = nullptr;
 
-	cameraID = TextureManager.CreateTexture(cameraIconPath);
-	lightID = TextureManager.CreateTexture(lightIconPath);
-	particleID = TextureManager.CreateTexture(particleIconPath);
+	cameraID = TextureManager.CreateTexture("GAM300/Data/Icons/Camera.dds");
+	lightID = TextureManager.CreateTexture("GAM300/Data/Icons/Light.dds");
+	particleID = TextureManager.CreateTexture("GAM300/Data/Icons/Particle.dds");
 }
 
 void DebugDraw::Update(float)
@@ -103,6 +108,9 @@ void DebugDraw::Draw()
 			}
 		}
 	}
+
+	if (showAllColliders)
+		DrawCapsuleColliders();
 	
 	
 	glLineWidth(1.5f);
@@ -203,19 +211,6 @@ void DebugDraw::Draw()
 	ResetPhysicDebugContainer();
 }
 
-void LookAtRotationMatrix(glm::mat4& _rotMat, const glm::vec3& _objPos, const glm::vec3& _tarPos, const glm::vec3& _up, const glm::vec3& _right)
-{
-	// Calculate the forward vector (the direction the object is currently facing)
-	const glm::vec3 forward = glm::normalize(_tarPos - _objPos);
-
-	// Calculate the new up vector
-	glm::vec3 up = glm::cross(_right, forward);
-
-	_rotMat[0] = glm::vec4(_right, 0.0f);
-	_rotMat[1] = glm::vec4(up, 0.0f);
-	_rotMat[2] = glm::vec4(-forward, 0.0f);
-}
-
 // Gizmos/icons for components
 void DebugDraw::DrawIcons()
 {
@@ -305,6 +300,45 @@ void DebugDraw::DrawBoxColliders()
 	}
 }
 
+void DebugDraw::DrawCapsuleColliders()
+{
+	if (!pProp)
+		return;
+
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+
+	for (CapsuleCollider& capsuleCollider : scene.GetArray<CapsuleCollider>())
+	{
+		if (capsuleCollider.state == DELETED) continue;
+		if (!scene.IsActive(capsuleCollider)) continue;
+
+		Entity& entity = scene.Get<Entity>(capsuleCollider);
+
+		if (!scene.IsActive(entity)) continue;
+
+		Transform& t = scene.Get<Transform>(capsuleCollider);
+		DrawCapsuleCollider(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, capsuleCollider.radius, capsuleCollider.height);
+	}
+}
+
+void DebugDraw::DrawCapsuleBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	Entity& entity = currentScene.Get<Entity>(_euid);
+	CapsuleCollider& capsuleCollider = currentScene.Get<CapsuleCollider>(_euid);
+	const float pi = glm::pi<float>();
+	auto& iProp = *pProp;
+
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+	DrawCapsuleCollider(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, capsuleCollider.radius, capsuleCollider.height);
+}
+
 void DebugDraw::DrawCameraBounds(const Engine::UUID& _euid)
 {
 	if (!pProp)
@@ -389,6 +423,70 @@ void DebugDraw::DrawLightBounds(const Engine::UUID& _euid)
 		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, lightSource.intensity * 0.1f);
 		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, lightSource.intensity * 0.1f);
 		break;
+	}
+}
+
+void DebugDraw::DrawCapsuleCollider(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius, const float& _height)
+{
+	glm::vec3 point1, point2, rotation;
+	int vCount = 4;
+	float angle = 360.0f / vCount;
+	const float circleOffset = _height - _radius;
+	const float pi = glm::pi<float>();
+	float currentAngle, x, z;
+
+	glm::mat4 rotMatrix = glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * rotMatrix;
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x = _radius * cos(glm::radians(currentAngle));
+		z = _radius * sin(glm::radians(currentAngle));
+
+		point1 = transform * glm::vec4(x, circleOffset, z, 1.f);
+		point2 = transform * glm::vec4(x, -circleOffset, z, 1.f);
+
+		DrawSegment3D(_iProp, point1, point2, _color);
+	}
+
+	point1 = transform * glm::vec4(0.f, circleOffset, 0.f, 1.f);
+	point2 = transform * glm::vec4(0.f, -circleOffset, 0.f, 1.f);
+	DrawCircle2D(_iProp, point1, _rotation, _color, _radius);
+	DrawCircle2D(_iProp, point2, _rotation, _color, _radius);
+
+	vCount = 32;
+	angle = 180.f / vCount;
+	float x1, x2, y1, y2;
+
+	glm::mat4 transform1 = glm::translate(glm::mat4(1.f), point1) * rotMatrix;
+	glm::mat4 transform2 = glm::translate(glm::mat4(1.f), point2) * rotMatrix;
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x1 = _radius * cos(glm::radians(currentAngle));
+		y1 = _radius * sin(glm::radians(currentAngle));
+
+		currentAngle = angle * (i + 1);
+		x2 = _radius * cos(glm::radians(currentAngle));
+		y2 = _radius * sin(glm::radians(currentAngle));
+
+		point1 = transform1 * glm::vec4(x1, y1, 0.f, 1.f);
+		point2 = transform1 * glm::vec4(x2, y2, 0.f, 1.f);
+		DrawSegment3D(_iProp, point1, point2, _color);
+
+		point1 = transform1 * glm::vec4(0.f, y1, x1, 1.f);
+		point2 = transform1 * glm::vec4(0.f, y2, x2, 1.f);
+		DrawSegment3D(_iProp, point1, point2, _color);
+
+		point1 = transform2 * glm::vec4(x1, -y1, 0.f, 1.f);
+		point2 = transform2 * glm::vec4(x2, -y2, 0.f, 1.f);
+		DrawSegment3D(_iProp, point1, point2, _color);
+
+		point1 = transform2 * glm::vec4(0.f, -y1, x1, 1.f);
+		point2 = transform2 * glm::vec4(0.f, -y2, x2, 1.f);
+		DrawSegment3D(_iProp, point1, point2, _color);
 	}
 }
 
@@ -549,7 +647,27 @@ void DebugDraw::DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _cente
 
 void DebugDraw::DrawSemiCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius)
 {
-	
+	const int vCount = 32;
+	const float angle = 180.f / vCount;
+	float currentAngle, x1, x2, z1, z2;
+	glm::vec3 point1, point2;
+
+	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x1 = _radius * cos(glm::radians(currentAngle));
+		z1 = _radius * sin(glm::radians(currentAngle));
+
+		currentAngle = angle * (i + 1);
+		x2 = _radius * cos(glm::radians(currentAngle));
+		z2 = _radius * sin(glm::radians(currentAngle));
+
+		point1 = transform * glm::vec4(x1, 0.f, z1, 1.f);
+		point2 = transform * glm::vec4(x2, 0.f, z2, 1.f);
+		DrawSegment3D(_iProp, point1, point2, _color);
+	}
 }
 
 void DebugDraw::DrawRay()

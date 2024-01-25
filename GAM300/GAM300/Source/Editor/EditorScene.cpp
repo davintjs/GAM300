@@ -457,9 +457,13 @@ void EditorScene::DisplayGizmos()
             DEBUGDRAW.AddBoxColliderDraw(currRigidDebug);
         }
 
+        if (currentScene.Has<CapsuleCollider>(entity) && isActive)
+        {
+            //DEBUGDRAW.DrawCapsuleBounds(entity.EUID());
+        }
+
         if (currentScene.Has<Camera>(entity) && isActive)
         {
-            Camera& cam = currentScene.Get<Camera>(entity);
             DEBUGDRAW.DrawCameraBounds(entity.EUID());
         }
 

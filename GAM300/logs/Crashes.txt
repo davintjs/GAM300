@@ -1,5 +1,6 @@
-[2024-01-22 16:29:49.681] [Error] [critical] 
+[2024-01-25 15:52:15.666] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 125)
+Info:		ERROR: New GameObject(10) has guid 00000000000000000000000000000000 that does not exist! Reassign the mesh!
+
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 335)
 

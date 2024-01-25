@@ -113,12 +113,12 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 uniform int SpotLight_Count;
 
 // PBR Textures
-layout (binding = 0) uniform sampler2D AlbedoTexture;
-layout (binding = 1) uniform sampler2D NormalMap;
-layout (binding = 2) uniform sampler2D RoughnessMap;
-layout (binding = 3) uniform sampler2D MetallicMap;
-layout (binding = 4) uniform sampler2D AoMap;
-layout (binding = 5) uniform sampler2D EmmisionMap;
+layout (binding = 2) uniform sampler2D AlbedoTexture;
+layout (binding = 3) uniform sampler2D NormalMap;
+layout (binding = 4) uniform sampler2D RoughnessMap;
+layout (binding = 5) uniform sampler2D MetallicMap;
+layout (binding = 6) uniform sampler2D AoMap;
+layout (binding = 7) uniform sampler2D EmmisionMap;
 
 // Shadow textureSamples
 //layout (binding = 6) uniform sampler2D ShadowMap_Directional;

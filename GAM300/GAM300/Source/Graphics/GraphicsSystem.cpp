@@ -310,7 +310,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	Draw(_camera);
 	UIRENDERER.UIDraw_3D(_camera);
-	
+
 	FRAMEBUFFER.Unbind();
 
 	if (RENDERER.enableBloom())
@@ -320,6 +320,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 	}
 
+
 #if defined(_BUILD)
 	//GLsizei height = Application::GetWidth() / 16.f * 9.f;
 	//GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
@@ -328,7 +329,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	// Draw debug drawing without being affected by the bloom
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
-	glDrawBuffers(2, attachments);
 
 	TEXTSYSTEM.Draw(_camera);
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)

@@ -179,7 +179,9 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void BindTextureIDs();
+	void BindTextureIDs(Material_instance& _instance);
+
+	void BindAllTextureIDs();
 
 	void createPBR_Instanced();
 
@@ -320,9 +322,15 @@ public:
 
 	void DrawBoxColliders();
 
+	void DrawCapsuleColliders();
+
+	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
 	void DrawCameraBounds(const Engine::UUID& _euid);
 	
 	void DrawLightBounds(const Engine::UUID& _euid);
+
+	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
 
 	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
 	
@@ -353,6 +361,11 @@ private:
 	std::vector<RigidDebug> boxColliderContainer;
 	InstanceProperties* pProp;
 	RaycastLine* raycastLine;
+	unsigned int cameraID = 0;
+	unsigned int lightID = 0;
+	unsigned int particleID = 0;
+	unsigned int vaoIcon;
+	unsigned int vboIcon;
 	bool enableRay = true;
 	bool enableDebugDraw = true;
 	bool showAllColliders = false;

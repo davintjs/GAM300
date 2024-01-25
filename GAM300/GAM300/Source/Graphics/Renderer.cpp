@@ -142,6 +142,7 @@ void Renderer::Update(float)
 		Material_instance& currMatInstance = MATERIALSYSTEM.getMaterialInstance(renderer.materialGUID);
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
+			MATERIALSYSTEM.BindTextureIDs(currMatInstance);
 			UpdateDefaultProperties(currentScene, transform, currMatInstance, vaoIt->second, t_Mesh->prim, t_Mesh->drawCounts);
 		}
 		else
@@ -371,12 +372,12 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	// Default Rendering
 	for (DefaultRenderProperties& prop : defaultProperties)
 	{
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
-		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
-		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
-		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
-		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
 		// You have 6 - 9 Texture Slots
 
 		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
