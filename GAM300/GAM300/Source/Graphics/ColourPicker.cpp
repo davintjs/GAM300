@@ -178,7 +178,7 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			Engine::UUID EUID_Index = EUID_Holder[index];
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-			PRINT(entity_tag.name, "\n");
+			//PRINT(entity_tag.name, "\n");
 			toReturn = EUID_Index;
 			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
