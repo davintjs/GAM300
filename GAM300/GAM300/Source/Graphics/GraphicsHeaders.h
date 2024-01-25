@@ -502,11 +502,18 @@ ENGINE_SYSTEM(TextSystem)
 {
 public:
 
+	//struct Character {
+	//	unsigned int TextureID;  // ID handle of the glyph texture
+	//	glm::ivec2   Size;       // Size of glyph
+	//	glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+	//	unsigned int Advance;    // Offset to advance to next glyph
+	//};
+
 	struct Character {
-		unsigned int TextureID;  // ID handle of the glyph texture
-		glm::ivec2   Size;       // Size of glyph
-		glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
-		unsigned int Advance;    // Offset to advance to next glyph
+		std::vector<unsigned char> TextureData; // Store texture data
+		glm::ivec2 Size;
+		glm::ivec2 Bearing;
+		unsigned int Advance;
 	};
 
 	unsigned int txtVAO, txtVBO;
@@ -518,6 +525,9 @@ public:
 
 	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
 	void Draw(BaseCamera& _camera);
+	void GenerateFontAtlas(const char* fontPath, const char* outputPath);
+	std::map<char, Character> LoadFontAtlas(const char* inputPath);
+
 
 private:
 	//nth yet
