@@ -181,7 +181,7 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetTyp
 
     GetAssetsEvent<AssetType> assetsEvent{};
     EVENTS.Publish(&assetsEvent);
-
+    MATERIALSYSTEM.BindTextureIDs();
     if (ImGui::BeginPopup("Texture", win_flags)) {
         
         ImGui::Dummy(ImVec2(0, 10.f));
