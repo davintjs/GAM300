@@ -19,7 +19,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #define MAX_POINT_LIGHT 10
 #define MAX_SPOT_LIGHT 10
-#define MAX_DIRECTION_LIGHT 2
+#define MAX_DIRECTION_LIGHT 5
 
 //extern LightProperties spot_light_stuffs;
 //extern LightProperties directional_light_stuffs;

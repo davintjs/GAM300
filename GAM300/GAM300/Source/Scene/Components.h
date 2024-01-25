@@ -428,6 +428,23 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
 		property_var(AlphaMultiplier).Name("Alpha Scalar"),
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
