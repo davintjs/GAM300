@@ -187,6 +187,12 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 
 	//if user is pressing on the entity hierarchy button rather than arrow button
 	if (ImGui::IsMouseReleased(0) && ImGui::IsMouseHoveringRect(minBound, maxBound)) {
+		auto& mEntities = EditorScene::Instance().multiselectEntities;
+		if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+			if (std::find(mEntities.begin(), mEntities.end(), euid) == mEntities.end()) {
+				mEntities.push_back(euid);
+			}
+		}
 		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
 		EVENTS.Publish(&selectedEvent);
 	}

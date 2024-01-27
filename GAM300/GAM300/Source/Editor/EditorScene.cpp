@@ -30,7 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Graphics/GraphicsHeaders.h"
 
 Transform oldTransform;
-Transform newTransform;
+MeshRenderer oldMeshrenderer;
 
 namespace
 {
@@ -49,7 +49,6 @@ void EditorScene::Init()
 
 void EditorScene::Update(float dt)
 {
-    oldTransform = multiTransform;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 
     SceneView();
@@ -59,28 +58,42 @@ void EditorScene::Update(float dt)
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
 
     //update multiselect entities
-    //if (multiselectEntities.size()) {
-    //    newTransform = multiTransform;
-    //    Scene& curr_scene = MySceneManager.GetCurrentScene();
+    if (multiselectEntities.size()) {
 
-    //    if (oldTransform != newTransform) {
-    //        for (auto& ent : multiselectEntities) {
-    //            Transform& t = curr_scene.Get<Transform>(ent);
+        Scene& curr_scene = MySceneManager.GetCurrentScene();
+         useMeshRenderer = true;
 
-    //            if(newTransform.translation != oldTransform.translation)
-    //                t.translation += (newTransform.translation - oldTransform.translation);
+        for (auto& ent : multiselectEntities) {
+            if (!curr_scene.Has<MeshRenderer>(curr_scene.Get<Entity>(ent)))
+                useMeshRenderer = false;
+        }
 
-    //            if(newTransform.rotation != oldTransform.translation)
-    //                t.rotation += (newTransform.rotation - oldTransform.rotation);
+        if (multiTransform != oldTransform) {
+            for (auto& ent : multiselectEntities) {
 
-    //            if (newTransform.scale != oldTransform.scale) {
-    //                //t.scale += multiTransform.scale;
-    //            }
+                Transform& t = curr_scene.Get<Transform>(ent);
+                t.translation += (multiTransform.translation - oldTransform.translation);
+                t.rotation += multiTransform.rotation - oldTransform.rotation;
+                t.scale += multiTransform.scale - oldTransform.scale;
+            }
+        }
 
-    //        }
-    //    }
-    //     
-    //}
+        if (useMeshRenderer) {
+            if (multiMeshRenderer != oldMeshrenderer) {
+                for (auto& ent : multiselectEntities) {
+                    MeshRenderer& Mesh = curr_scene.Get<MeshRenderer>(ent);
+                    if (multiMeshRenderer.meshID != oldMeshrenderer.meshID) {
+                        Mesh.meshID = multiMeshRenderer.meshID;
+                    }
+                    if (multiMeshRenderer.materialGUID != oldMeshrenderer.materialGUID) {
+                        Mesh.materialGUID = multiMeshRenderer.materialGUID;
+                    }
+                }
+            }
+        }    
+    }
+
+    oldTransform = multiTransform;
 }
 
 // Calculate the center of selected objects
@@ -546,16 +559,11 @@ void EditorScene::DisplayGizmos()
 
             if (multiselectEntities.size()) {
 
-                for (auto& ent : multiselectEntities) {
-                    Scene& curr_scene = MySceneManager.GetCurrentScene();
-                    Transform& t = curr_scene.Get<Transform>(ent);
-                    t.translation += (a_translation - o_translation);
-                    t.rotation += (glm::radians(a_rot - o_rot));
-                    auto offset = a_scale - o_scale;
-                    offset /= 200; //hardcoded value for now
-
-                    t.scale += offset;
-                }
+                multiTransform.translation += (a_translation - o_translation);
+                multiTransform.rotation += (glm::radians(a_rot - o_rot));
+                auto offset = a_scale - o_scale;
+                offset /= 200; //hardcoded value for now
+                multiTransform.scale += offset;
             }
             else{
                 trans.translation = a_translation;
@@ -580,9 +588,13 @@ void EditorScene::DisplayGizmos()
             firstmove = true;
         }
     }
-    else
+    else {
         //clear all selected entities in mutliselect
         multiselectEntities.clear();
+        multiTransform = Transform();
+        multiMeshRenderer = MeshRenderer();
+    }
+        
 
 }
 

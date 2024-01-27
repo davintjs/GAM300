@@ -275,6 +275,24 @@ void DisplayType(Change& change, const char* name, Engine::GUID<AssetType>& val)
     EVENTS.Publish(&e);
     const std::string& pathStr = e.filePath.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
+
+    if (ImGui::BeginDragDropTarget()) {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+
+            ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
+            Engine::HexID guid = data.guid;
+
+            if (data.type == MATERIAL) {
+
+                //Assign material to mesh renderer
+                Engine::GUID<AssetType> matGuid = guid;
+                EDITOR.History.SetPropertyValue(change, val, matGuid);
+            }
+
+            //add other file types here              
+        }
+        ImGui::EndDragDropTarget();
+    }
     DisplayAssetPicker(change,e.filePath, val);
 }
 
@@ -817,17 +835,19 @@ void Display_Property(T& comp) {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
                         if (DisplayName == "Material_ID") {
                             ImGui::SameLine();
-                            if (ImGui::Button("Mat")) {
-                                Scene& scene = MySceneManager.GetCurrentScene();
-                                Entity& ent = scene.Get<Entity>(comp);
-                                auto& mr = scene.Get<MeshRenderer>(ent);
-                                if(!EditorInspector::Instance().material_inspector){
-                                    EditorInspector::Instance().material_inspector = true; 
-                                }
+                            if (!EditorScene::Instance().multiselectEntities.size()) {
+                                if (ImGui::Button("Mat")) {
+                                    Scene& scene = MySceneManager.GetCurrentScene();
+                                    Entity& ent = scene.Get<Entity>(comp);
+                                    auto& mr = scene.Get<MeshRenderer>(ent);
+                                    if (!EditorInspector::Instance().material_inspector) {
+                                        EditorInspector::Instance().material_inspector = true;
+                                    }
 
-                                ImGui::SetWindowFocus("Material");                                
-                                EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
-                            }
+                                    ImGui::SetWindowFocus("Material");
+                                    EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                }
+                            }                       
                         }
                     }
 
@@ -1259,42 +1279,76 @@ using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
 void DisplayMultiTransform() {
 
-    //Display_Property(EditorScene::Instance().multiTransform);
-    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
-    bool windowopen = ImGui::CollapsingHeader("Group Transform", nodeFlags);
-
-
-    ImGuiWindowFlags winFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+    ImGuiWindowFlags Flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
         | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
         | ImGuiTableFlags_PadOuterX;
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+    //Display_Property(EditorScene::Instance().multiTransform);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed
+        | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
 
-    if (windowopen) {
-        if (ImGui::BeginTable("m_transform", 2, winFlags))
-        {
-            ImGui::Indent();
-            ImGui::TableSetupColumn("Text", 0, 0.4f);
-            ImGui::TableSetupColumn("Input", 0, 0.6f);
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
-            ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+    if (ImGui::BeginTable("Multiselect_Components", 1, Flags))
+    {  
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
 
-            Display_Property(EditorScene::Instance().multiTransform);
+        ImGui::TableNextColumn();
 
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
+        bool t_open = ImGui::CollapsingHeader("Group Transform", nodeFlags);     
 
-            ImGui::Unindent();
-            ImGui::EndTable();
+        if (t_open) {
+            if (ImGui::BeginTable("m_transform", 2, Flags))
+            {
+                ImGui::Indent();
+                ImGui::TableSetupColumn("Text", 0, 0.4f);
+                ImGui::TableSetupColumn("Input", 0, 0.6f);
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+                Display_Property(EditorScene::Instance().multiTransform);
+  
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+
+                ImGui::Unindent();
+                ImGui::EndTable();
+            }
         }
-    }
 
-    ImGui::PopStyleVar();
-    ImGui::PopStyleVar();
-   
+        if (EditorScene::Instance().useMeshRenderer) {
+            ImGui::TableNextColumn();
+
+            bool m_open = ImGui::CollapsingHeader("Group Mesh Renderer", nodeFlags);
+
+            if (m_open) {
+                if (ImGui::BeginTable("m_mesh", 2, Flags))
+                {
+                    ImGui::Indent();
+                    ImGui::TableSetupColumn("Text", 0, 0.4f);
+                    ImGui::TableSetupColumn("Input", 0, 0.6f);
+                    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+                    Display_Property(EditorScene::Instance().multiMeshRenderer);
+
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+
+                    ImGui::Unindent();
+                    ImGui::EndTable();
+                }
+            }
+        }
+       
+
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+        ImGui::EndTable();
+    }
 }
 
 //Implementation for the panel to add a component to the current entity
@@ -1528,8 +1582,7 @@ void DisplayEntity(Entity& entity)
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_ScrollY;
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-
-    
+ 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
 
@@ -1570,7 +1623,7 @@ void EditorInspector::Update(float dt)
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
     Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
-    //if (curr_index != NON_VALID_ENTITY) {
+
     if (EditorScene::Instance().multiselectEntities.size() > 1) {
         DisplayMultiTransform();
     }

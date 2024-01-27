@@ -321,6 +321,14 @@ struct MeshRenderer : Object
 	//temporary index for current material
 	Engine::GUID<MaterialAsset> materialGUID{0};
 
+	bool operator == (const MeshRenderer& other) const {
+		if ((meshID == other.meshID) &&
+			(materialGUID == other.materialGUID)) {
+			return true;
+		}
+		return false;
+	}
+
 	property_vtable();
 };
 

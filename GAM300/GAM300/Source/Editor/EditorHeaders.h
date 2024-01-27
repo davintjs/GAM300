@@ -208,10 +208,11 @@ public:
     bool const DebugDraw() { return debug_draw; }
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
-
-
+    //Multiselect variables
     std::list<Engine::UUID>multiselectEntities;
     Transform multiTransform; 
+    MeshRenderer multiMeshRenderer;
+    bool useMeshRenderer = true;
 
 private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
