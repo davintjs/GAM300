@@ -21,6 +21,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Core/FramerateController.h"
 #include "IOManager/InputHandler.h"
 #include "Utilities/ThreadPool.h"
+#include "IOManager/InputSystem.h"
 
 // Convert glm::Vec3 to JPH::Vec3
 void GlmVec3ToJoltVec3(Vector3& gVec3, JPH::RVec3& jVec3);
@@ -395,6 +396,13 @@ void PhysicsSystem::PostPhysicsUpdate() {
 
 	// Update game objects to their corresponding physics bodies
 	UpdateGameObjects();
+
+
+
+	// Test raycast
+
+
+
 
 }
 
@@ -1097,9 +1105,12 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
 }
 
-void PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance) {
+JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance) {
+	
 	if (!physicsSystem)
-		return;
+		return origin;
+
+	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
 
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCast ray(origin, direction);
@@ -1108,16 +1119,22 @@ void PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction,
 	int numHits = (int)collector.mHits.size();
 	JPH::BroadPhaseCastResult* results = collector.mHits.data();
 
-	JPH::Vec3 closestPoint;
-	float tmpDistance = std::numeric_limits<float>::min();
+	JPH::Vec3 closestPointToEnd = origin;
+
+	collector.Sort();
 
 	for (int i{ 0 }; i < numHits; ++i) {
 		JPH::Vec3 pos = ray.GetPointOnRay(results[i].mFraction);
 		float distance = (pos - ray.mOrigin).Length();
-		if (distance < maxDistance && distance > tmpDistance) {
-			closestPoint = pos;
+		if (distance >= maxDistance && i >= 1) {
+
+			closestPointToEnd = ray.GetPointOnRay(results[i-1].mFraction);
+			break;
+			
 		}
 	}
+
+	return closestPointToEnd;
 	
 	/*
 	1. Cast ray in direction of camera facing
