@@ -148,6 +148,7 @@ Transform:
     - {fileID: 5713504039664526619}
     - {fileID: 1444839062839968456}
     - {fileID: 3873369559540028830}
+    - {fileID: 16052600457545288926}
 ---
 ID: 12555400289260702052
 Script:
@@ -172,6 +173,7 @@ Script:
   useItem: {fileID: 8508182677235274511}  # Component
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  playerOverdrive: {fileID: 4330194544441596099}  # Component
 ---
 ID: 6606253624498158492
 GameObject:
@@ -2435,6 +2437,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -14543,7 +14546,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 760.16571
+  LookAtDistance: 790.116943
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14562,17 +14565,60 @@ Script:
   target: {fileID: 6663313825132233637}  # GameObject
   maxPitchAngle: 170
   yawRotSpeed: 2
-  defaultZoom: 4
   invertPitch: true
   pitchRotSpeed: 1
   minPitchAngle: -85
   zoom: 5.00000143
+  pitchAngle: 0
+  defaultZoom: 4
   zoomSpeed: 50
   zoomInSpeed: 3
   closestZoom: 0.5
   furthestZoom: 6
   isZooming: false
   timer: 0
+---
+ID: 6669890113452856865
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveCollider
+  m_TagString: PlayerAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6927322750178525837}  # Transform
+    - component: {fileID: 7256963670896431468}  # BoxCollider
+    - component: {fileID: 10611958364909359659}  # Rigidbody
+---
+ID: 6927322750178525837
+Transform:
+  m_GameObject: {fileID: 6669890113452856865}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.999999285, 1, 0.999999285]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 7256963670896431468
+BoxCollider:
+  m_GameObject: {fileID: 6669890113452856865}
+  m_IsEnabled: true
+  Dimensions: [5, 5, 5]
+  Offset: [0, 0, 0]
+---
+ID: 10611958364909359659
+Rigidbody:
+  m_GameObject: {fileID: 6669890113452856865}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
 ---
 ID: 3977294589520766028
 GameObject:
@@ -14632,30 +14678,40 @@ Script:
   attackMoveSpeed: 160
   currentDashAttackCooldown: 0
   MoveSpeed: 400
+  overDriveCooldown: 6
   dashAttackSpeed: 50
   JumpSpeed: 7
   player: {fileID: 3977294589520766028}  # Component
-  dashAttackCooldown: 1.5
+  dashAttackCooldown: 0.899999976
   sprintModifier: 1.29999995
   maxHealth: 4
   dodgeSpeed: 15
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
-  dashAttackTimer: 0.100000001
+  dashAttackTimer: 0.899999976
   walkStepsInterval: 0.439999998
   startDashCooldown: false
+  currentOverdriveCooldown: 0
   dodgeTimer: 0.5
   startDeathAnimationCountdown: false
   _isAttacking: false
   currentDodgeTimer: 0
+  currentOverdriveTimer: 0
   dodgeCooldown: 0.800000012
+  _isOverdrive: false
   currentDodgeCooldown: 0
   isDodging: false
   startDodgeCooldown: false
+  currentInvulnerableTimer: 1
+  _isDashAttacking: false
+  overdriveTimer: 2
+  isInvulnerable: false
+  startOverdriveCooldown: false
   PlayerCamera: {fileID: 15334681090738628473}  # Component
   maxColliderDist: 1.5
   PlayerModel: {fileID: 1051037936027593321}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
+  overDriveCollider: {fileID: 6669890113452856865}  # GameObject
   invulnerableTimer: 0.699999988
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   attack3duration: 0.699999988
@@ -14663,15 +14719,12 @@ Script:
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
   RotationSpeed: 5
-  currentInvulnerableTimer: 1
-  _isDashAttacking: false
   checkpointIndex: -1
   spawnPoint: {fileID: 13798602388106733380}  # Component
   terminal1: {fileID: 10239403197338088721}  # Component
   terminal2: {fileID: 11931344363477315440}  # Component
   attackTimer: 1
   currentHealth: 4
-  isInvulnerable: false
   isDead: false
   colliderDist: 0
   healthBarFill: {fileID: 4490157770252088129}  # GameObject
@@ -26701,6 +26754,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 11109738255017894302}
   m_Children:
+    - {fileID: 14569996102403013533}
     - {fileID: 1080660618113458325}
     - {fileID: 11340355759710627062}
     - {fileID: 12328681099168403288}
@@ -26733,7 +26787,6 @@ Transform:
     - {fileID: 3134541848558806400}
     - {fileID: 16885612658138875481}
     - {fileID: 1625326132157721714}
-    - {fileID: 14569996102403013533}
     - {fileID: 10515598389169986147}
     - {fileID: 17470487323546290938}
     - {fileID: 17945298821191919563}
@@ -42247,6 +42300,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -42699,6 +42753,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -52356,6 +52411,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -52843,6 +52899,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -53225,6 +53282,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -55825,8 +55883,8 @@ Transform:
   Scale: [1.47707212, 1, 0.999997854]
   Father: {fileID: 7678390499556097130}
   m_Children:
-    - {fileID: 724754582998866142}
     - {fileID: 9082553885328310315}
+    - {fileID: 724754582998866142}
 ---
 ID: 14043851193742178124
 MeshRenderer:
@@ -56421,11 +56479,11 @@ Transform:
   Scale: [0.999999106, 1, 0.999999106]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 3792379081559450001}
-    - {fileID: 1618956451295309417}
-    - {fileID: 8911291350254169182}
     - {fileID: 16323744263865723333}
+    - {fileID: 1618956451295309417}
     - {fileID: 15645817687573404352}
+    - {fileID: 8911291350254169182}
+    - {fileID: 3792379081559450001}
 ---
 ID: 13873540531170958795
 BoxCollider:
@@ -57013,3 +57071,33 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 16052600457545288926
+GameObject:
+  m_IsActive: true
+  m_Name: playerOverdrive
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5287081828516019792}  # Transform
+    - component: {fileID: 4330194544441596099}  # AudioSource
+---
+ID: 5287081828516019792
+Transform:
+  m_GameObject: {fileID: 16052600457545288926}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 4330194544441596099
+AudioSource:
+  m_GameObject: {fileID: 16052600457545288926}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
+  Play: false

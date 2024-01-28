@@ -24,11 +24,12 @@ public class ThirdPersonController : Script
     public float runStepsInterval = 0.25f;
     public float walkStepsInterval = 0.5f;
 
-    public float dashAttackTimer = 1f;
+    public float dashAttackTimer = 0.9f;
     public float currentDashAttackTimer;
-    public float dashAttackCooldown = 2f;
+    public float dashAttackCooldown = 0.9f;
     public float currentDashAttackCooldown;
     public bool startDashCooldown = false;
+
 
     public float dodgeTimer = 1f;
     public float currentDodgeTimer;
@@ -37,12 +38,19 @@ public class ThirdPersonController : Script
     public bool isDodging = false;
     public bool startDodgeCooldown = false;
 
+    public float overdriveTimer = 2f;
+    public float currentOverdriveTimer;
+    public float overDriveCooldown = 6f;
+    public float currentOverdriveCooldown;
+    public bool startOverdriveCooldown = false;
+
 
     public CharacterController CC;
     public Transform PlayerCamera;
     public Transform PlayerModel;
     public Transform player;
     public GameObject attackLight;
+    public GameObject overDriveCollider;
     public GameObject playerWeaponCollider1;
     public GameObject playerWeaponCollider2;
     public GameObject playerWeaponCollider3;
@@ -61,6 +69,7 @@ public class ThirdPersonController : Script
 
     public bool _isAttacking = false;
     public bool _isDashAttacking = false;
+    public bool _isOverdrive = false;
 
     public int checkpointIndex = -1;
     public bool isAtCheckpoint = false;
@@ -229,6 +238,8 @@ public class ThirdPersonController : Script
         currentInvulnerableTimer = invulnerableTimer;
         currentDashAttackTimer = dashAttackTimer;
         currentDashAttackCooldown = dashAttackCooldown;
+        currentOverdriveTimer = overdriveTimer;
+        currentOverdriveCooldown = overDriveCooldown;
 
         initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
         initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
@@ -300,6 +311,7 @@ public class ThirdPersonController : Script
         //melee attack check
         if (IsAttacking)
         {
+            SetState("DashAttack", false);
             dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
                 movement = PlayerModel.back * attackMoveSpeed * Time.deltaTime;
@@ -329,25 +341,43 @@ public class ThirdPersonController : Script
         if(_isDashAttacking)
         {
             startDashCooldown = true;
-            CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
+            //CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
 
-            selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
-            attackLight.SetActive(true);
-            selectedWeaponCollider.SetActive(true);//enable the weapon collider
+            //selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+            //attackLight.SetActive(true);
+            //selectedWeaponCollider.SetActive(true);//enable the weapon collider
 
-            movement = CC.force;//set the movement to be the dash force
+            //movement = CC.force;//set the movement to be the dash force
 
             //movement = transform.forward * dashAttackSpeed;//dash player forward
             currentDashAttackTimer -= Time.deltaTime;
-            if(currentDashAttackTimer <= 0)
+
+            if(currentDashAttackTimer > 0.5f)
             {
+                CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
+
+                selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+                attackLight.SetActive(true);
+                selectedWeaponCollider.SetActive(true);//enable the weapon collider
+
+                movement = CC.force;//set the movement to be the dash force
+            }
+            if(currentDashAttackTimer <= 0.5f)
+            {
+                movement = vec3.Zero;
                 selectedWeaponCollider.transform.localPosition = new vec3(10000);
                 attackLight.SetActive(false);//disable weapon collider
+            }
+            if(currentDashAttackTimer <= 0)
+            {
+                SetState("DashAttack", false);
+                //selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                //attackLight.SetActive(false);//disable weapon collider
 
-                movement = vec3.Zero;
+                //movement = vec3.Zero;
                 _isDashAttacking = false;
                 currentDashAttackTimer = dashAttackTimer;
-                //SetState("DashAttack", false);
+
             }
         }
         //ensure the dash attack animation is not snapped while performing dash attack
@@ -356,7 +386,7 @@ public class ThirdPersonController : Script
             currentDashAttackCooldown -= Time.deltaTime;
             if(currentDashAttackCooldown <= 0)
             {
-                SetState("DashAttack", false);
+                //SetState("DashAttack", false);
                 startDashCooldown = false;
                 currentDashAttackCooldown = dashAttackCooldown;
 
@@ -386,6 +416,33 @@ public class ThirdPersonController : Script
                 currentDodgeCooldown = dodgeCooldown;
             }
         }
+        //overdrive check
+        if(_isOverdrive)
+        {
+            isMoving = false;
+            startOverdriveCooldown = true;
+            currentOverdriveTimer -= Time.deltaTime;
+            overDriveCollider.transform.localPosition = new vec3(transform.localPosition);
+            overDriveCollider.SetActive(true);
+            if(currentOverdriveTimer <= 0)
+            {
+                SetState("Overdrive", false);
+                overDriveCollider.transform.localPosition = new vec3(10000);
+                overDriveCollider.SetActive(false);
+                _isOverdrive = false;
+                currentOverdriveTimer = overdriveTimer;
+            }
+        }
+        if(startOverdriveCooldown)
+        {
+            currentOverdriveCooldown -= Time.deltaTime;
+            if(currentOverdriveCooldown <= 0)
+            {
+                //SetState("Overdrive", false);
+                startOverdriveCooldown = false;
+                currentOverdriveCooldown = overDriveCooldown;
+            }
+        }
 
         //invulnerability
         if (isInvulnerable)
@@ -407,7 +464,8 @@ public class ThirdPersonController : Script
                 AudioManager.instance.playerFootstep.Play();
             }
             //DASH ATTACK
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
+            //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
+            if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !startDashCooldown)
             {
                 Console.WriteLine("DashAttack");
                 AudioManager.instance.playerAttack.Play();
@@ -417,13 +475,25 @@ public class ThirdPersonController : Script
                 SetState("DashAttack", true);
             }
             //DODGE
-            if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown)
+            if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown && !_isOverdrive)
             {
                 Console.WriteLine("Dodging");
                 isDodging = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
                 SetState("Dodge", true);
+            }
+            //OVERDRIVE
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown)
+            {
+                AudioManager.instance.playerOverdrive.Play();
+                Console.WriteLine("Overdrive");
+                _isOverdrive = true;
+                SetState("Run", false);
+                SetState("Sprint", false);
+                SetState("Dodge", false);;
+                SetState("Overdrive", true);
+
             }
 
             bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;
@@ -454,7 +524,7 @@ public class ThirdPersonController : Script
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking)
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
                 SetState("Jump", true);
                 AudioManager.instance.jumpVoice.Play();
@@ -628,28 +698,32 @@ public class ThirdPersonController : Script
     vec3 GetDirection()
     {
         vec3 dir = vec3.Zero;
-        if (Input.GetKey(KeyCode.W))
+        if(!_isOverdrive && !isDodging && !_isDashAttacking)
         {
-            dir -= (PlayerCamera.forward);
+            if (Input.GetKey(KeyCode.W))
+            {
+                dir -= (PlayerCamera.forward);
+            }
+
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                dir -= (PlayerCamera.right);
+            }
+
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                dir += PlayerCamera.forward;
+            }
+
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                dir += (PlayerCamera.right);
+            }
         }
-
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            dir -= (PlayerCamera.right);
-        }
-
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            dir += PlayerCamera.forward;
-        }
-
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            dir += (PlayerCamera.right);
-        }
+       
 
         dir.y = 0f;
         return dir.NormalizedSafe;

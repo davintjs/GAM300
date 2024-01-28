@@ -29,6 +29,7 @@ public class AudioManager : Script
     public AudioSource meleeEnemyDie;
     public AudioSource meleeEnemyAttack;
     public AudioSource meleeEnemyInjured;
+    public AudioSource playerOverdrive;
 
     void Awake()
     {
