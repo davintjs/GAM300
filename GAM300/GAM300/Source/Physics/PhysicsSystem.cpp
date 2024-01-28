@@ -238,7 +238,11 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-
+	// Test raycast
+	if (InputHandler::isKeyButtonPressed(GLFW_KEY_T)) {
+		std::cout << "Casting Ray\n";
+		JPH::Vec3 pt = CastRay(JPH::Vec3(0, -50, 0), JPH::Vec3(0,300,0), 100.f);
+	}
 	// Resolve any character controller movement from scripting system
 	ResolveCharacterMovement();
 
@@ -398,12 +402,6 @@ void PhysicsSystem::PostPhysicsUpdate() {
 	UpdateGameObjects();
 
 
-
-	// Test raycast
-
-
-
-
 }
 
 void PhysicsSystem::ResolveCharacterMovement() {
@@ -504,7 +502,7 @@ void PhysicsSystem::CallbackSceneStart(SceneStartEvent* pEvent)
 	physicsSystem->SetContactListener(engineContactListener);
 	
 	// Optimise broad phase only if there is an excess amount of bodies
-	//physicsSystem->OptimizeBroadPhase();
+	physicsSystem->OptimizeBroadPhase();
 
 	PopulatePhysicsWorld();
 	//std::cout << "Physics System scene start test\n";
@@ -734,9 +732,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 	size_t numBodies = rbArray.size() + ccArray.size();
 
-	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
+	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
 
 }
 
@@ -1103,6 +1101,7 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	JPH::Body* body = bodyInterface->CreateBody(bcs);
 	bodyInterface->AddBody(body->GetID(), enabledStatus);
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
+	std::cout << "add\n";
 }
 
 JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance) {
@@ -1111,12 +1110,13 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 		return origin;
 
 	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
-
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCast ray(origin, direction);
 	bpq.CastRay(ray, collector);
+	
 
 	int numHits = (int)collector.mHits.size();
+	std::cout << "Number of hits on raycast: " << numHits << std::endl;
 	JPH::BroadPhaseCastResult* results = collector.mHits.data();
 
 	JPH::Vec3 closestPointToEnd = origin;
@@ -1124,15 +1124,25 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 	collector.Sort();
 
 	for (int i{ 0 }; i < numHits; ++i) {
-		JPH::Vec3 pos = ray.GetPointOnRay(results[i].mFraction);
-		float distance = (pos - ray.mOrigin).Length();
+		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
+		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
+
+		float distance = (pt - ray.mOrigin).Length();
 		if (distance >= maxDistance && i >= 1) {
 
 			closestPointToEnd = ray.GetPointOnRay(results[i-1].mFraction);
 			break;
 			
 		}
+
+		if (i == numHits - 1) {
+			closestPointToEnd = ray.GetPointOnRay(results[i].mFraction);
+			break;
+		}
 	}
+	std::cout << "Closest pt: " << closestPointToEnd.GetX() << '|' 
+									<< closestPointToEnd.GetY() << '|' 
+									<< closestPointToEnd.GetZ() << std::endl;
 
 	return closestPointToEnd;
 	
