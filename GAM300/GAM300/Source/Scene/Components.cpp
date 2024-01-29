@@ -233,10 +233,12 @@ void Transform::SetParent(Transform* newParent)
 		Decompose(lTransform,translation,tmpRot,scale);
 		rotation = glm::eulerAngles(tmpRot);
 		parentTrans.child.push_back(EUID());
-		//if (parentTrans.GetFlag(Transform::Flag::WorldEnabled))
-		//	EnableFlag(Transform::Flag::WorldEnabled);
-		//else
-		//	DisableFlag(Transform::Flag::WorldEnabled);
+		bool worldEnabled = parentTrans.GetFlag(Transform::Flag::WorldEnabled);
+		if (worldEnabled)
+			parentTrans.EnableFlag(Transform::Flag::WorldEnabled);
+		else
+			parentTrans.DisableFlag(Transform::Flag::WorldEnabled);
+			
 		//EnableFlag(Transform::Flag::Modified);
 	}
 }
