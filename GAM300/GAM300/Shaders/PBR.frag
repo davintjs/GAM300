@@ -405,7 +405,6 @@ void main()
         emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
     }
 
-
     
     if(Am_Light)
     {
@@ -413,7 +412,11 @@ void main()
         return;
     }
 
-    if(emission == vec3(0.f))
+    bool isemission = (frag_Metal_Rough_AO_Emission_constant.w != 1.f);
+    
+    // If no emission Texture 
+    // && emission scalar == 1 ( I WANT TO CHANGE THIS, I AM WAITING TO ASK JOSEPH OKAY!)
+    if(emission == vec3(0.f) && !isemission)
     {
         vec3 N ;
         if (NM_index < 32)
@@ -506,46 +509,46 @@ void main()
 //        ++PointShadowIndex;
 
 
-vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
+        vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
 
-// Calculate per-light radiance
-vec3 L = normalize(pointLights[i].position - WorldPos);
-vec3 H = normalize(L);  // Use light direction as the halfway vector
+        // Calculate per-light radiance
+        vec3 L = normalize(pointLights[i].position - WorldPos);
+        vec3 H = normalize(L);  // Use light direction as the halfway vector
 
-float distance = length(pointLights[i].position - WorldPos);
-float attenuation = 1.0 / (distance * distance);
-vec3 radiance = lightColourStrength * attenuation;
+        float distance = length(pointLights[i].position - WorldPos);
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = lightColourStrength * attenuation;
 
-// Cook-Torrance BRDF
-float NDF = DistributionGGX(N, H, roughness);
-float G = GeometrySmith_New(N, L, roughness);  // Simplify the geometry term
-vec3 F = vec3(0.04);  // Use a constant value for Fresnel (Schlick approximation)
+        // Cook-Torrance BRDF
+        float NDF = DistributionGGX(N, H, roughness);
+        float G = GeometrySmith_New(N, L, roughness);  // Simplify the geometry term
+        vec3 F = vec3(0.04);  // Use a constant value for Fresnel (Schlick approximation)
 
-vec3 numerator = NDF * G * F;
-float denominator = max(4.0 * max(dot(N, L), 0.0), 0.001);  // Adjust for denominator
-vec3 specular = numerator / denominator;
+        vec3 numerator = NDF * G * F;
+        float denominator = max(4.0 * max(dot(N, L), 0.0), 0.001);  // Adjust for denominator
+        vec3 specular = numerator / denominator;
 
-// kS is equal to Fresnel
-vec3 kS = F;
-// for energy conservation, the diffuse and specular light can't
-// be above 1.0 (unless the surface emits light); to preserve this
-// relationship the diffuse component (kD) should equal 1.0 - kS.
-vec3 kD = vec3(1.0) - kS;
-// multiply kD by the inverse metalness such that only non-metals 
-// have diffuse lighting, or a linear blend if partly metal (pure metals
-// have no diffuse light).
-kD *= 1.0 - metallic;
+        // kS is equal to Fresnel
+        vec3 kS = F;
+        // for energy conservation, the diffuse and specular light can't
+        // be above 1.0 (unless the surface emits light); to preserve this
+        // relationship the diffuse component (kD) should equal 1.0 - kS.
+        vec3 kD = vec3(1.0) - kS;
+        // multiply kD by the inverse metalness such that only non-metals 
+        // have diffuse lighting, or a linear blend if partly metal (pure metals
+        // have no diffuse light).
+        kD *= 1.0 - metallic;
 
-// scale light by NdotL
-float NdotL = max(dot(N, L), 0.0);
-bool shadows = pointLights[i].enableShadow && renderShadow;
-float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
+        // scale light by NdotL
+        float NdotL = max(dot(N, L), 0.0);
+        bool shadows = pointLights[i].enableShadow && renderShadow;
+        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
 
-Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);
 
 
-if (shadows)
-    ++PointShadowIndex;
+        if (shadows)
+            ++PointShadowIndex;
 
 
 
@@ -829,7 +832,14 @@ if (shadows)
     }
     else
     {
-        color = emission;
+        color = albedo;
+        float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+        brightness *= frag_Metal_Rough_AO_Emission_constant.w;
+
+        if(brightness > bloomThreshold)
+        Blooming = vec4(color.rgb, 1.0);
+    else
+        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
     }
 
 //    color *= frag_Metal_Rough_AO_Emission_constant.w;
@@ -837,15 +847,17 @@ if (shadows)
 //    // HDR tonemapping
 //    color = color / (color + vec3(1.0));
 //    // gamma correct
-//    color = pow(color, vec3(1.0/2.2)); 
+    color = pow(color, vec3(1.0/2.2)); 
 
-    float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-    brightness *= frag_Metal_Rough_AO_Emission_constant.w;
 
-    if(brightness > bloomThreshold)
-        Blooming = vec4(color.rgb, 1.0);
-    else
-        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
+
+//    float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+//    brightness *= frag_Metal_Rough_AO_Emission_constant.w;
+//
+//    if(brightness > bloomThreshold)
+//        Blooming = vec4(color.rgb, 1.0);
+//    else
+//        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
 
 
 if(hdr)
