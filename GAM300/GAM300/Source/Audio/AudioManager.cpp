@@ -63,7 +63,7 @@ void AudioManager::Update(float dt) {
 		if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_IN) {
 			float volume;
 			musicBuffer.currentMusic->getVolume(&volume);
-			float nextVolume = volume + dt / fadetime;
+			float nextVolume = volume + dt / musicBuffer.fadetime;
 			if (nextVolume >= musicVolume || nextVolume <= -musicVolume) {
 				musicBuffer.currentMusic->setVolume(musicVolume);
 				musicBuffer.fade = FADE_NONE;
@@ -75,7 +75,7 @@ void AudioManager::Update(float dt) {
 		else if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_OUT) {
 			float volume;
 			musicBuffer.currentMusic->getVolume(&volume);
-			float nextVolume = volume - dt / fadetime;
+			float nextVolume = volume - dt / musicBuffer.fadetime;
 			musicBuffer.currentMusic->setVolume(nextVolume);
 
 			if (nextVolume <= 0.0f) {
@@ -144,7 +144,7 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	}
 	// if != name
 	// If a Music is playing stop them and set this as the next Music
-	fadetime = componentFade;
+	musics[currentMusicIdx].fadetime = componentFade;
 	if (musics[currentMusicIdx].currentMusic != 0) {
 
 		if (musics[currentMusicIdx].fade == FADE_OUT && musics[currentMusicIdx].nextMusicPath != name) {
@@ -311,9 +311,11 @@ void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	channel->setPaused(false);/**/
 }
 
-void AudioManager::StopMusic() {
+void AudioManager::StopMusic(float fadetime) {
 	if (musics[currentMusicIdx].currentMusic != 0) {
 		musics[currentMusicIdx].fade = FADE_OUT;
+		musics[currentMusicIdx].nextMusicPath = 0;
+		musics[currentMusicIdx].fadetime = fadetime;
 	}
 }
 void AudioManager::StopFX() {

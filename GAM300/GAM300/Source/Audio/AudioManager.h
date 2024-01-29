@@ -35,6 +35,7 @@ struct MusicBuffer{
 	Engine::GUID<AudioAsset> nextMusicPath{0};
 	Engine::GUID<AudioAsset> currentMusicPath{0};
 	FadeState fade{ FADE_NONE };
+	float fadetime = 1.f;
 };
 
 SINGLETON(AudioManager) {
@@ -88,7 +89,7 @@ public:
 	void StopFX();
 
 	// stop current music
-	void StopMusic();
+	void StopMusic(float fadetime = 1.f);
 
 	// stop component from playing
 	void StopAudioComponent(AudioSource & Source);
