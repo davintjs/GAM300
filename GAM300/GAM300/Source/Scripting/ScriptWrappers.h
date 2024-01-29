@@ -129,6 +129,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+
 #pragma endregion
 
 #pragma region ANIMATOR

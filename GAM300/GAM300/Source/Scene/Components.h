@@ -189,7 +189,7 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume{1.f};
-	float fadetime{0.f};
+	float fadetime{1.f};
 	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };

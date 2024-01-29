@@ -147,8 +147,7 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	fadetime = componentFade;
 	if (musics[currentMusicIdx].currentMusic != 0) {
 
-
-		if (musics[currentMusicIdx].fade == FADE_OUT && musics[currentMusicIdx].nextMusicPath == 0) {
+		if (musics[currentMusicIdx].fade == FADE_OUT && musics[currentMusicIdx].nextMusicPath != name) {
 
 			currentMusicIdx ^= 1;
 			// Find the Music in the corresponding sound map
@@ -168,9 +167,6 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 		}
 
 		musics[currentMusicIdx].fade = FADE_OUT;
-		/*currentMusicIdx ^= 1;
-		musics[currentMusicIdx].fade = FADE_OUT;*/
-		//AudioManager::StopMusic();
 		musics[currentMusicIdx].nextMusicPath = name;
 		return;
 	}
@@ -263,7 +259,9 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	{
 	case 0: // Music
 		Source.play = true;
-		musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
+		//musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
+		groups[CATEGORY_MUSIC]->setVolume(1.f);
+		groups[CATEGORY_MUSIC2]->setVolume(1.f);
 		PlayMusic(Source.currentSound);
 		break;
 	case 1: // SFX
@@ -340,8 +338,8 @@ void AudioManager::StopAllAudio() {
 	musics[0].currentMusic->stop();
 	musics[1].currentMusic->stop();
 	currentFX->stop();
-	musics[1].fade = FADE_OUT;
 	musics[0].fade = FADE_OUT;
+	musics[1].fade = FADE_OUT;
 }
 
 void AudioManager::StopAudioComponent(AudioSource& Source) {
@@ -357,8 +355,9 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 		break;
 	case CATEGORY_MUSIC:
 		currentFXPath = 0;
-		groups[CATEGORY_MUSIC]->stop();
-		musics[currentMusicIdx].currentMusic->stop();
+		//groups[CATEGORY_MUSIC]->stop();
+		//musics[currentMusicIdx].currentMusic->stop();
+		fadetime = Source.fadetime;
 		musics[currentMusicIdx].fade = FADE_OUT;
 		break;
 	case CATEGORY_LOOPFX:
@@ -381,6 +380,7 @@ void AudioManager::SetSFXVolume(float volume) {
 
 void AudioManager::SetMusicVolume(float volume) {
 	groups[CATEGORY_MUSIC]->setVolume(1.f);
+	groups[CATEGORY_MUSIC2]->setVolume(1.f);
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }
