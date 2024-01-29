@@ -50,7 +50,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define TEXTSYSTEM TextSystem::Instance()
 
 class Ray3D;
-
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 //{
@@ -188,7 +187,9 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void BindTextureIDs();
+	void BindTextureIDs(Material_instance& _instance);
+
+	void BindAllTextureIDs();
 
 	void createPBR_Instanced();
 
@@ -325,10 +326,29 @@ public:
 	
 	void Draw();
 
+	void DrawIcons();
+
 	void DrawBoxColliders();
+
+	void DrawCapsuleColliders();
+
+	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
+	void DrawCameraBounds(const Engine::UUID& _euid);
+	
+	void DrawLightBounds(const Engine::UUID& _euid);
+
+	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
+
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
 	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+
+	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
 
 	void DrawRay();
 
@@ -347,7 +367,13 @@ public:
 private:
 	std::vector<Ray3D> rayContainer;
 	std::vector<RigidDebug> boxColliderContainer;
+	InstanceProperties* pProp;
 	RaycastLine* raycastLine;
+	unsigned int cameraID = 0;
+	unsigned int lightID = 0;
+	unsigned int particleID = 0;
+	unsigned int vaoIcon;
+	unsigned int vboIcon;
 	bool enableRay = true;
 	bool enableDebugDraw = true;
 	bool showAllColliders = false;
@@ -440,12 +466,6 @@ public:
 	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	bool Culling();
-
-	void Forward();
-
-	void Deferred();
 	
 	unsigned int ReturnTextureIdx(InstanceProperties& prop, const GLuint & _id);
 	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);

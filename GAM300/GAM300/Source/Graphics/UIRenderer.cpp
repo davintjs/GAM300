@@ -175,6 +175,7 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), false);
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
 	{

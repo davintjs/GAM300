@@ -34,10 +34,10 @@ TemplatePack
 	MeshManager,
 	ShaderManager,
 	FramebufferManager,
-	DebugDraw,
-	Lighting,
 	Texture_Manager,
 	MaterialSystem,
+	DebugDraw,
+	Lighting,
 	Renderer,
 	Shadows,
 	ParticleRenderer,
@@ -308,41 +308,43 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	unsigned int attachments[2] = { _camera.GetHDRAttachment(), _camera.GetBloomAttachment() };
 	glDrawBuffers(2, attachments);
 
-	Draw(_camera); // call draw after update
-	UIRENDERER.UIDraw_3D(_camera); // call draw after update
-	TEXTSYSTEM.Draw(_camera);
+	Draw(_camera);
+	UIRENDERER.UIDraw_3D(_camera);
 
-	if (_camera.GetCameraType() == CAMERATYPE::GAME)
-		Draw_Screen(_camera);
-	else
-		UIRENDERER.UIDraw_2DWorldSpace(_camera);
-	
 	FRAMEBUFFER.Unbind();
 
-	/*if (InputHandler::isKeyButtonPressed(GLFW_KEY_B))
-	{
-		blooming = !blooming;
-	}
-	bool index = false;
-	if (blooming)
-	{*/
 	if (RENDERER.enableBloom())
 	{
 		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
-
 	}
 
-	//}
 
 #if defined(_BUILD)
 	//GLsizei height = Application::GetWidth() / 16.f * 9.f;
 	//GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
 	glViewport(0, 0, Application::GetWidth(), Application::GetHeight());
 #else
+
+	// Draw debug drawing without being affected by the bloom
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+
+	TEXTSYSTEM.Draw(_camera);
+	if (_camera.GetCameraType() == CAMERATYPE::GAME)
+		UIRENDERER.UIDraw_2D(_camera);
+	else
+		UIRENDERER.UIDraw_2DWorldSpace(_camera);
+
+	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+	{
+		DEBUGDRAW.Draw();
+	}
+	FRAMEBUFFER.Unbind();
+
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
 	glDrawBuffer(_camera.GetAttachment());
+
 #endif
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -385,8 +387,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	
 }
 
-void GraphicsSystem::Draw(BaseCamera& _camera) {
-
+void GraphicsSystem::Draw(BaseCamera& _camera) 
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
@@ -395,20 +397,6 @@ void GraphicsSystem::Draw(BaseCamera& _camera) {
 
 	RENDERER.Draw(_camera);
 	PARTICLERENDER.Draw(_camera);
-#ifndef _BUILD
-	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
-	{
-		DEBUGDRAW.Draw();
-	}
-#endif
-
-}
-
-void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
-{
-	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
-	UIRENDERER.UIDraw_2D(_camera);
-
 }
 
 void GraphicsSystem::PostDraw()

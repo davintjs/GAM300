@@ -181,7 +181,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetTyp
 
     GetAssetsEvent<AssetType> assetsEvent{};
     EVENTS.Publish(&assetsEvent);
-    MATERIALSYSTEM.BindTextureIDs();
+
+    // Bean: Ideally should only call this function when assigning a material onto a mesh
+    MATERIALSYSTEM.BindAllTextureIDs();
+
     if (ImGui::BeginPopup("Texture", win_flags)) {
         
         ImGui::Dummy(ImVec2(0, 10.f));
@@ -515,6 +518,7 @@ void DisplayType(Change& change, const char* name, Vector4& val)
                 auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
                 material.shaderType = (int)SHADERTYPE::DEFAULT;
             }
+
             EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
