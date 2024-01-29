@@ -1,7 +1,7 @@
 RenderShadows: true
-HDR: true
-Bloom: true
-Bloom Count: 1
-Bloom Threshold: 4.78000021
-Ambient: 1
-Exposure: 1.80999994
+HDR: false
+Bloom: false
+Bloom Count: 5
+Bloom Threshold: 0.300000012
+Ambient: 0.75
+Exposure: 0.800000012
