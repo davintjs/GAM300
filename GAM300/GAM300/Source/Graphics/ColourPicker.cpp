@@ -37,7 +37,7 @@ void ColourPicker::Init()
 	FRAMEBUFFER.CreateColorPicking(colorPickFBO, colorPickTex);
 }
 
-void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
+Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 {
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -174,7 +174,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	int selectedID = data[0] +
 		data[1] * 255 +
 		data[2] * 255 * 255;
-
+	Engine::UUID toReturn = 0;
 	if (spriteToColourPick && (selectedID > 0) && (selectedID != 13421772) )
 	{
 		index = selectedID - offset;
@@ -184,8 +184,9 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			Engine::UUID EUID_Index = EUID_Holder[index];
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-			PRINT(entity_tag.name, "\n");
-			std::cout << "BAM BAM BAM\n";
+			//PRINT(entity_tag.name, "\n");
+			toReturn = EUID_Index;
+			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
 		/*else
 		{
@@ -196,7 +197,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	return toReturn;
 }
 
 

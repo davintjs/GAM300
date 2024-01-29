@@ -330,6 +330,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma endregion
 
+#pragma region SPRITERENDERER
+	static bool IsButtonClicked(ScriptObject<SpriteRenderer> spriteRenderer)
+	{
+		SpriteRenderer& sr = spriteRenderer;
+		return sr.onClick;
+	}
+
+
+#pragma endregion
+
 	// Load a scene
 	static void LoadScene(MonoString* mString)
 	{
@@ -617,5 +627,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetTag);
 		Register(FindPath);
 		Register(GetScrollState);
+
+		// SpriteRenderer Component
+		Register(IsButtonClicked);
 	}
 #endif // !SCRIPT_WRAPPERS_H

@@ -465,6 +465,8 @@ struct SpriteRenderer : Object
 		bool ColourPicked = false;
 		bool IncludeAlpha = false;
 		float AlphaMultiplier = 1.f;
+		bool onHover = false;
+		bool onClick = false; 
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 
@@ -592,6 +594,7 @@ struct Button : Object
 {
 	//char* id;
 	//int x, y, width, height; 
+	Button() {}
 	bool is_clicked;
 	////void(*on_click)(void);
 	int x, y, width, height;
@@ -604,6 +607,12 @@ struct Button : Object
 		return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
 	}
 
+	bool on_click_callback(void)
+	{
+		printf("Button clicked!\n");
+		return 0;
+	}
+
 
 };
 
@@ -614,7 +623,7 @@ struct ButtonComponent : Object
 	int y = 10;
 	int width = 100;
 	int height = 50;
-
+	std::vector<Button> button_;
 
 	void Init();
 	void Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked);

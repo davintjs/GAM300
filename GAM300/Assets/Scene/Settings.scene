@@ -1,0 +1,231 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: HowToPlay
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 7305319039410813174
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4864774252226257722}  # Transform
+    - component: {fileID: 2199169755166096751}  # Camera
+---
+ID: 4864774252226257722
+Transform:
+  m_GameObject: {fileID: 7305319039410813174}
+  Translation: [0, 0, 0.728640199]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2199169755166096751
+Camera:
+  m_GameObject: {fileID: 7305319039410813174}
+  m_IsEnabled: true
+  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
+  ClearFlags: "\x00"
+  CullingMask: "\x00"
+  LookAtDistance: 7.81407881
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 17065559468612678914
+GameObject:
+  m_IsActive: true
+  m_Name: SettingsCanvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11736666798754351607}  # Transform
+    - component: {fileID: 4442105592620540233}  # Canvas
+    - component: {fileID: 1228686682287022030}  # Script
+---
+ID: 11736666798754351607
+Transform:
+  m_GameObject: {fileID: 17065559468612678914}
+  Translation: [0.0160000008, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.60844898, 0.972704649, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 9386478579826465449}
+    - {fileID: 12690634969259096449}
+    - {fileID: 1497825775628923368}
+    - {fileID: 4580145406200005427}
+    - {fileID: 13236326914152460117}
+---
+ID: 4442105592620540233
+Canvas:
+  m_GameObject: {fileID: 17065559468612678914}
+  m_IsEnabled: true
+---
+ID: 1228686682287022030
+Script:
+  m_GameObject: {fileID: 17065559468612678914}
+  m_IsEnabled: true
+  Script: {guid: 2ea11ccf97287329911603c97e51758b}
+  duration: 2
+  mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
+  pressStartText: {fileID: 1497825775628923368}  # GameObject
+  timer: 0
+  back: false
+  backButton: {fileID: 13236326914152460117}  # GameObject
+  isStartActive: true
+  flickerTimer: 0
+  sizeMultiplier: 1.5
+---
+ID: 9386478579826465449
+GameObject:
+  m_IsActive: true
+  m_Name: SettingsImage
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10434548019950719823}  # Transform
+    - component: {fileID: 6685538826684972588}  # SpriteRenderer
+---
+ID: 10434548019950719823
+Transform:
+  m_GameObject: {fileID: 9386478579826465449}
+  Translation: [-0.0382067561, 0, -0.492439002]
+  Rotation: [0, 0, 0]
+  Scale: [0.602047026, 1, 0.999977291]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 6685538826684972588
+SpriteRenderer:
+  m_GameObject: {fileID: 9386478579826465449}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 12690634969259096449
+GameObject:
+  m_IsActive: true
+  m_Name: MasterVolumeText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7029561702410403906}  # Transform
+    - component: {fileID: 7448372013639392296}  # SpriteRenderer
+---
+ID: 7029561702410403906
+Transform:
+  m_GameObject: {fileID: 12690634969259096449}
+  Translation: [-0.207906902, 0.112772055, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0788944513, 0.0641236007, 0.999989867]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 7448372013639392296
+SpriteRenderer:
+  m_GameObject: {fileID: 12690634969259096449}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 1497825775628923368
+GameObject:
+  m_IsActive: true
+  m_Name: BgmText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15388810202921298389}  # Transform
+    - component: {fileID: 2960197508114597038}  # SpriteRenderer
+---
+ID: 15388810202921298389
+Transform:
+  m_GameObject: {fileID: 1497825775628923368}
+  Translation: [-0.206111997, -0.0066492334, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0825265124, 0.0650342181, 0.999982297]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 2960197508114597038
+SpriteRenderer:
+  m_GameObject: {fileID: 1497825775628923368}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 4580145406200005427
+GameObject:
+  m_IsActive: true
+  m_Name: SfxText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18409390317228816037}  # Transform
+    - component: {fileID: 12106833203929159624}  # SpriteRenderer
+---
+ID: 18409390317228816037
+Transform:
+  m_GameObject: {fileID: 4580145406200005427}
+  Translation: [-0.204542458, -0.129541427, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0846519098, 0.0588557497, 0.999965072]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 12106833203929159624
+SpriteRenderer:
+  m_GameObject: {fileID: 4580145406200005427}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 13236326914152460117
+GameObject:
+  m_IsActive: true
+  m_Name: BackButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4585798291201254240}  # Transform
+    - component: {fileID: 15272266936174703665}  # SpriteRenderer
+---
+ID: 4585798291201254240
+Transform:
+  m_GameObject: {fileID: 13236326914152460117}
+  Translation: [0.246978551, -0.251867503, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0580132939, 0.0405557826, 0.999975741]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 15272266936174703665
+SpriteRenderer:
+  m_GameObject: {fileID: 13236326914152460117}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}

@@ -66,7 +66,10 @@ Transform:
   m_Children:
     - {fileID: 4418236984561621579}
     - {fileID: 15122834859859923062}
-    - {fileID: 15628350562473262138}
+    - {fileID: 5144980746915515514}
+    - {fileID: 15413680003274128894}
+    - {fileID: 11997381317790178123}
+    - {fileID: 7360009555949792780}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -76,18 +79,19 @@ Canvas:
 ID: 12476976089546016649
 Script:
   m_GameObject: {fileID: 11651427043620866289}
-  m_IsEnabled: false
+  m_IsEnabled: true
   Script: {guid: 8e7ebaa15a9550485ebd22863125bac8}
   bgm: {fileID: 15874991202848918549}  # Component
   uibutton: {fileID: 7823455904144311016}  # Component
   duration: 0.649999976
   mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
+  startButton: {fileID: 5144980746915515514}  # GameObject
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
-  pressStartText: {fileID: 15628350562473262138}  # GameObject
+  pressStartText: {fileID: 5144980746915515514}  # GameObject
   isStartActive: true
   flickerTimer: 0
-  timer: 0
   back: false
+  timer: 0
   sizeMultiplier: 1.25
 ---
 ID: 4418236984561621579
@@ -103,9 +107,9 @@ GameObject:
 ID: 16773861268096498698
 Transform:
   m_GameObject: {fileID: 4418236984561621579}
-  Translation: [0, 0, 0]
+  Translation: [0, 0.0338769555, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.579589069, 0.420963109, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -114,7 +118,7 @@ ID: 13350653658282748155
 SpriteRenderer:
   m_GameObject: {fileID: 4418236984561621579}
   m_IsEnabled: true
-  World Space: false
+  World Space: true
   Colour Picker Mode: false
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
@@ -131,9 +135,9 @@ GameObject:
 ID: 5205254661984323289
 Transform:
   m_GameObject: {fileID: 15122834859859923062}
-  Translation: [0, 0.0668307245, 0.282837987]
+  Translation: [-0.182228804, -0.0684457868, 0.282837987]
   Rotation: [-3.14159083, 0, 0]
-  Scale: [0.700000167, 0.5, 0.804576039]
+  Scale: [0.214249328, 0.155912593, 0.804576039]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -142,37 +146,9 @@ ID: 8183777527831800993
 SpriteRenderer:
   m_GameObject: {fileID: 15122834859859923062}
   m_IsEnabled: true
-  World Space: false
+  World Space: true
   Colour Picker Mode: false
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
----
-ID: 15628350562473262138
-GameObject:
-  m_IsActive: true
-  m_Name: PressSpace_Text
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 445726148051528729}  # Transform
-    - component: {fileID: 5030680011077784730}  # SpriteRenderer
----
-ID: 445726148051528729
-Transform:
-  m_GameObject: {fileID: 15628350562473262138}
-  Translation: [0, -0.404258549, 0.297466874]
-  Rotation: [-3.14159203, 0, 0]
-  Scale: [0.400000006, 0.0700000003, 0.116827995]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
-ID: 5030680011077784730
-SpriteRenderer:
-  m_GameObject: {fileID: 15628350562473262138}
-  m_IsEnabled: true
-  World Space: false
-  Colour Picker Mode: false
-  SpriteTexture: {guid: b015799a619b4c2e8262e7284a9f5b5c}
 ---
 ID: 2581623557328585861
 GameObject:
@@ -253,3 +229,115 @@ AudioSource:
   Volume: 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
+---
+ID: 5144980746915515514
+GameObject:
+  m_IsActive: true
+  m_Name: PlayButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9737574517565939108}  # Transform
+    - component: {fileID: 8787861963102089585}  # SpriteRenderer
+---
+ID: 9737574517565939108
+Transform:
+  m_GameObject: {fileID: 5144980746915515514}
+  Translation: [0.193283617, 0.223620534, 0.342291594]
+  Rotation: [0, 0, 0]
+  Scale: [0.137546957, 0.0770835429, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 8787861963102089585
+SpriteRenderer:
+  m_GameObject: {fileID: 5144980746915515514}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 15413680003274128894
+GameObject:
+  m_IsActive: true
+  m_Name: HowToPlayButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9896614275649064532}  # Transform
+    - component: {fileID: 12546639874184648046}  # SpriteRenderer
+---
+ID: 9896614275649064532
+Transform:
+  m_GameObject: {fileID: 15413680003274128894}
+  Translation: [0.194829226, 0.0508204103, 0.342000008]
+  Rotation: [0, 0, 0]
+  Scale: [0.133781284, 0.0790112317, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 12546639874184648046
+SpriteRenderer:
+  m_GameObject: {fileID: 15413680003274128894}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  SpriteTexture: {guid: f1713e69eedaef315483f2edc460f734}
+---
+ID: 11997381317790178123
+GameObject:
+  m_IsActive: true
+  m_Name: SettingsButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1850640387793568597}  # Transform
+    - component: {fileID: 10863135329541942688}  # SpriteRenderer
+---
+ID: 1850640387793568597
+Transform:
+  m_GameObject: {fileID: 11997381317790178123}
+  Translation: [0.190674901, -0.123776853, 0.371843338]
+  Rotation: [0, 0, 0]
+  Scale: [0.129922643, 0.0763007998, 2.08999991]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 10863135329541942688
+SpriteRenderer:
+  m_GameObject: {fileID: 11997381317790178123}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 7360009555949792780
+GameObject:
+  m_IsActive: true
+  m_Name: ExitButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12705835085396231503}  # Transform
+    - component: {fileID: 5968777689254699825}  # SpriteRenderer
+---
+ID: 12705835085396231503
+Transform:
+  m_GameObject: {fileID: 7360009555949792780}
+  Translation: [0.193000063, -0.273844808, 0.372000039]
+  Rotation: [0, 0, 0]
+  Scale: [0.130556554, 0.0696697533, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 5968777689254699825
+SpriteRenderer:
+  m_GameObject: {fileID: 7360009555949792780}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}

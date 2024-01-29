@@ -228,6 +228,12 @@ namespace BeanFactory
         public static extern void GetForwardVec(Camera camera, ref vec3 temp);
         #endregion
 
+        #region SPRITERENDERER
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
+
+        #endregion
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
 
