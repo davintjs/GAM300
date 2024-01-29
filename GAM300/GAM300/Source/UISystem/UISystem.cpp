@@ -37,6 +37,7 @@ void UISystem::Update(float dt)
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 
+
 	// ColorpickingUIbutton - change to return the entity
 	for (Camera& camera : currentScene.GetArray<Camera>()) 
 	{
@@ -55,8 +56,11 @@ void UISystem::Update(float dt)
 			else
 			{
 				//SpriteRenderer::ColourPicked = true;
-
+				
 				std::cout << "buttonClicked" << std::endl;
+				SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
+				//StartCoroutine(LoadScene(0.1f));
+
 			}
 		}
 		//Entity& test = currentScene.Get<Entity>();
