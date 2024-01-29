@@ -1109,11 +1109,21 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 	if (!physicsSystem)
 		return origin;
 
+	// TODO:
+	/*
+	* Normalise direction first then apply distance?
+	* then no need to check for other stuff just get the 2nd last contact pt?
+	*/
+
+
 	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+
+
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
+	JPH::RayCastSettings rcs;
+	rcs.mBackFaceMode = JPH::EBackFaceMode::CollideWithBackFaces;
 	JPH::RayCast ray(origin, direction);
 	bpq.CastRay(ray, collector);
-	
 
 	int numHits = (int)collector.mHits.size();
 	std::cout << "Number of hits on raycast: " << numHits << std::endl;
@@ -1127,6 +1137,7 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
 		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
 
+		// Find 1st contact pt outside of max distance
 		float distance = (pt - ray.mOrigin).Length();
 		if (distance >= maxDistance && i >= 1) {
 
@@ -1146,19 +1157,6 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 
 	return closestPointToEnd;
 	
-	/*
-	1. Cast ray in direction of camera facing
-	2. Collect any hits
-	3. Find any hits that are within specified distance
-	4. Return
-		a. True/False
-		b. Position of hits?
-		c. Collection of hit closest to player?
-	* 
-	*/ 
-
-
-
 }
 
 
