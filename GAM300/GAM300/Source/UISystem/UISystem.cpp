@@ -37,7 +37,6 @@ void UISystem::Update(float dt)
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 
-
 	// ColorpickingUIbutton - change to return the entity
 	for (Camera& camera : currentScene.GetArray<Camera>()) 
 	{
@@ -49,7 +48,8 @@ void UISystem::Update(float dt)
 			{
 				if (!InputHandler::isMouseButtonPressed_L())
 				{
-					sr.onHover = true;
+					sr.onHover = false;
+					//std::cout << "buttonHover" << std::endl;
 					return;
 					//SpriteRenderer::onHover = true;
 				}
@@ -59,11 +59,10 @@ void UISystem::Update(float dt)
 
 					//sr.ColourPicked = true;
 					std::cout << "buttonClicked" << std::endl;
+					std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
 					sr.onClick = true;
 
 					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
-					//StartCoroutine(LoadScene(0.1f));
-
 				}
 
 			}

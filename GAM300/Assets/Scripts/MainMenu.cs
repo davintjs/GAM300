@@ -15,7 +15,7 @@ public class MainMenu : Script
 
     public GameObject mainMenuTitle;
 
-    public SpriteRenderer startButton;
+    public GameObject startButton;
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -31,6 +31,8 @@ public class MainMenu : Script
     public AudioSource bgm;
     public AudioSource uibutton;
 
+    private SpriteRenderer sr;
+
     vec3 startGridTextSize;
 
     void Start()
@@ -38,24 +40,29 @@ public class MainMenu : Script
         bgm.Play();
         startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
+
+        if (startButton.HasComponent<SpriteRenderer>())
+            sr = startButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         // Get refto Button
-        if (startButton.IsButtonClicked())
+        if (sr.IsButtonClicked())
         {
-            LoadScene(1.0f);
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("LevelPlay2");
+
         }
 
         // Check if button state is clicked
 
         // Do something(Load)
-
         goToPlay();
 
         //code not working atm
-        selfFlicker();
+        //selfFlicker();
         movement();
     }
 
