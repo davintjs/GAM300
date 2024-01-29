@@ -21,7 +21,7 @@ using GlmSharp;
 
 namespace GlmSharp
 {
-    public static partial class vec4
+    public partial struct vec4
     {
         static public vec4 red = new vec4(1f, 0f, 0f, 1f);
         static public vec4 white = new vec4(1f, 1f, 1f, 1f);
