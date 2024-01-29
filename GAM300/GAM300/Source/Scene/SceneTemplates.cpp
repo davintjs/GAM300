@@ -371,8 +371,7 @@ bool Scene::IsActive(T& object, bool checkParents)
 
 		if (checkParents && isActive && t.parent)
 		{
-			Transform& t = Get<Transform>(object);
-			return t.worldEnabled;
+			return t.GetFlag(Transform::Flag::WorldEnabled);
 		}
 
 		return isActive;
@@ -398,7 +397,10 @@ void Scene::SetActive(T& object, bool val)
 	if constexpr (std::is_same_v<T, Entity>)
 	{
 		Transform& trans = Get<Transform>(object);
-		trans.SetWorldEnabled(val);
+		if (val)
+			trans.EnableFlag(Transform::Flag::WorldEnabled);
+		else
+			trans.DisableFlag(Transform::Flag::WorldEnabled);
 	}
 	GetArray<T>().SetActive(object, val);
 }

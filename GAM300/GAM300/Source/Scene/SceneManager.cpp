@@ -119,6 +119,7 @@ void SceneManager::Update(float dt)
 {
 	UNREFERENCED_PARAMETER(dt);
 	Scene& scene = GetCurrentScene();
+
 	scene.ClearBuffer();
 
 

@@ -75,9 +75,13 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 ;			continue;
 		}
 		//std::cout << "Passed\n";
-
 		spriteToColourPick = true;
 		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity))
+		{
+			continue;
+		}
+
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		int temp = index + offset;
@@ -131,6 +135,8 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		{
 			glUniform1f(uniform2, true);
 		}
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "IncludeAlpha"), Sprite.IncludeAlpha);
+
 
 		DrawSprites(projToUse, viewToUse, srtToUse, shader);
 
@@ -179,7 +185,7 @@ void ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
 			PRINT(entity_tag.name, "\n");
-			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
+			std::cout << "BAM BAM BAM\n";
 		}
 		/*else
 		{
@@ -340,6 +346,7 @@ Engine::UUID ColourPicker::ColorPickingMeshs(BaseCamera& _camera)
 	return 0;
 
 }
+
 void ColourPicker::DrawSprites(glm::mat4 _projection , glm::mat4 _view , glm::mat4 _srt , GLSLShader& _shader)
 {
 	glUniformMatrix4fv(glGetUniformLocation(_shader.GetHandle(), "projection"),

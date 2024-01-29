@@ -70,9 +70,16 @@ struct Transform : Object
 	//Parent's euid
 	Engine::UUID parent = 0;
 
-	bool worldEnabled = true;
+	enum class Flag : char
+	{
+		WorldEnabled = 0x01,
+		Modified = 0x02,
+	};
 
-	void SetWorldEnabled(bool _worldEnabled);
+	char flags = (char)Flag::WorldEnabled;
+	void EnableFlag(Flag flag);
+	void DisableFlag(Flag flag);
+	bool GetFlag(Flag flag);
 
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
@@ -398,7 +405,7 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	Vector3 lightingColor{1.f, 1.f, 1.f };
 
 	bool toRender = true; // Dirtybit 
 	property_vtable()
@@ -420,6 +427,8 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 		bool ColourPicked = false;
+		bool IncludeAlpha = false;
+		float AlphaMultiplier = 1.f;
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 
@@ -431,6 +440,25 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(WorldSpace).Name("World Space"),
 		property_var(ColourPicked).Name("Colour Picker Mode"),
+		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
+		property_var(AlphaMultiplier).Name("Alpha Scalar"),
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 

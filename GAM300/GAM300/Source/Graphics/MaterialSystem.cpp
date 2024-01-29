@@ -192,7 +192,7 @@ void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
 
 Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsset> matGUID)
 {
-
+	//return *(Material_instance*)(nullptr);
 	static Material_instance defaultInstance;
 
 	auto iter = _allMaterialInstances.find(matGUID);

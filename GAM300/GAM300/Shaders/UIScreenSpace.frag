@@ -32,6 +32,7 @@ out vec4 FragColor;
 
 uniform sampler2D Sprite;
 uniform bool RenderSprite; // if there is a texture, this is true else false
+uniform float AlphaScaler;
 
 //End
 
@@ -59,8 +60,9 @@ void main()
     else
     {
 
-    FragColor = vec4(1.f,1.f,1.f,1.f);
+     FragColor = vec4(1.f,1.f,1.f,1.f);
 
     }
+        FragColor.a *= AlphaScaler;
         FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
 }  
