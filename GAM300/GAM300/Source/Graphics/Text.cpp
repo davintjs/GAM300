@@ -1,13 +1,14 @@
 #include <Precompiled.h>
 #include "GraphicsHeaders.h"
 #include <ft2build.h>
+#include "Scene/SceneManager.h"
 #include FT_FREETYPE_H
 
 void TextSystem::Init()
 {
-	GenerateFontAtlas("Assets/Fonts/opensansbold.ttf", "atlas.bin");
-	Characters.empty();
-	LoadFontAtlas("atlas.bin");
+	GenerateFontAtlas("Assets/Fonts/opensansbold.ttf", "atlas.bin"); // compiler thing need to move
+	Characters.empty(); // probably can yeet after moving the abv
+	LoadFontAtlas("atlas.bin"); // decompile
 
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -257,7 +258,12 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 void TextSystem::Draw(BaseCamera& _camera)
 {
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-	RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) {
+		RenderText(txtshader, text.text, text.x, text.y, text.scale, glm::vec3(text.r, text.g, text.b), _camera);
+	}
+	
+	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
 }
 
 

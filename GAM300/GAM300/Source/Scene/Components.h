@@ -259,6 +259,25 @@ property_begin_name(Animator, "Animator") {
 	property_parent(BaseAnimator)
 } property_vend_h(Animator)
 
+struct TextRenderer : Object
+{
+	std::string text = "Default Text";
+	float x = 0.f, y = 0.f, scale = 1.f; // need to find out  how to link with existing obj srt
+	float r = 0.5, g = 0.8f, b = 0.2f;
+	property_vtable();
+};
+
+property_begin_name(TextRenderer, "TextRenderer") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(text).Name("Text"),
+		property_var(x).Name("X-axis Position"),
+		property_var(y).Name("Y-axis Position"),
+		property_var(scale).Name("Scale"),
+		property_var(r).Name("Color R"),
+		property_var(g).Name("Color G"),
+		property_var(b).Name("Color B")
+} property_vend_h(TextRenderer)
+
 struct Camera : Object, BaseCamera
 {
 	Camera();
@@ -644,7 +663,7 @@ private:
 
 //Template pack of components that entities can only have one of each
 //Colliders have to be before rigidbodies
-using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent, NavMeshAgent>;
+using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent, NavMeshAgent, TextRenderer>;
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
