@@ -31,7 +31,7 @@ public class MainMenu : Script
     public AudioSource bgm;
     public AudioSource uibutton;
 
-    private SpriteRenderer sr;
+    private SpriteRenderer startButtonRenderer;
 
     vec3 startGridTextSize;
 
@@ -42,13 +42,13 @@ public class MainMenu : Script
         //currentRestTimer = restTimer;
 
         if (startButton.HasComponent<SpriteRenderer>())
-            sr = startButton.GetComponent<SpriteRenderer>();
+            startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         // Get refto Button
-        if (sr.IsButtonClicked())
+        if (startButtonRenderer != null && startButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");

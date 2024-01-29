@@ -185,5 +185,5 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 void TextSystem::Draw(BaseCamera& _camera)
 {
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-	RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
+	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
 }
