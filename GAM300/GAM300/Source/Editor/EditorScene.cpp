@@ -607,18 +607,18 @@ void EditorScene::DisplayGizmos()
 
             if (multiselectEntities.size()) {
 
-                glm::vec3 translation = multiTransform.GetGlobalTranslation() + (a_translation - o_translation);
-                glm::vec3 rotation = multiTransform.GetGlobalRotation() + (glm::radians(a_rot - o_rot));
+                glm::vec3 translation = multiTransform.GetLocalTranslation() + (a_translation - o_translation);
+                glm::vec3 rotation = multiTransform.GetLocalRotation() + (glm::radians(a_rot - o_rot));
                 auto offset = a_scale - o_scale;
                 offset /= 200; //hardcoded value for now
-                glm::vec3 scale = multiTransform.GetGlobalScale() + offset;
-                multiTransform.SetWorldMatrix(translation, rotation, scale);
+                glm::vec3 scale = multiTransform.GetLocalScale() + offset;
+                multiTransform.SetLocalMatrix(translation, rotation, scale);
                 //multiTransform.translation += (a_translation - o_translation);
                 //multiTransform.rotation += (glm::radians(a_rot - o_rot));
                 //multiTransform.scale += offset;
             }
             else{
-                trans.SetWorldMatrix(a_translation, glm::radians(a_rot), a_scale);
+                trans.SetLocalMatrix(a_translation, glm::radians(a_rot), a_scale);
                 /*trans.translation = a_translation;
                 trans.rotation = glm::radians(a_rot);
                 trans.scale = a_scale;*/
