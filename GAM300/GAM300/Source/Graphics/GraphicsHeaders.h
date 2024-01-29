@@ -31,6 +31,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
 
+#define MAX_POINT_LIGHT 20
+#define MAX_SPOT_LIGHT 20
+#define MAX_DIRECTION_LIGHT 5
+
+#define MAX_POINT_LIGHT_SHADOW 10
+#define MAX_SPOT_LIGHT_SHADOW 10
+#define MAX_DIRECTION_LIGHT_SHADOW 2
+
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define COLOURPICKER ColourPicker::Instance()
@@ -362,6 +370,8 @@ public:
 	unsigned int directionalLightCount;
 	unsigned int spotLightCount;
 
+	std::vector<std::pair<unsigned int, unsigned int>> directionalLightFBO;
+
 private:
 	LightProperties lightingSource;
 	std::vector<LightProperties> pointLightSources;
@@ -463,6 +473,8 @@ public:
 
 	float& getAmbient() { return ambient; };
 
+	glm::vec3& getAmbientRGB() { return ambient_rgb; };
+
 	gBuffer m_gBuffer;
 
 	property_vtable();
@@ -480,6 +492,7 @@ private:
 	float exposure = 1.f;
 	float bloomThreshold = 1.f;
 	float ambient = 1.f;
+	glm::vec3 ambient_rgb = glm::vec3(1.f, 1.f, 1.f); //white
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;

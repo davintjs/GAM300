@@ -2,6 +2,6 @@ RenderShadows: true
 HDR: true
 Bloom: true
 Bloom Count: 1
-Bloom Threshold: 4.80999994
-Ambient: 0.620000005
-Exposure: 1.78999996
+Bloom Threshold: 4.78000021
+Ambient: 1
+Exposure: 1.80999994

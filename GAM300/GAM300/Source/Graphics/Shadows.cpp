@@ -25,9 +25,6 @@ void Shadows::Init()
 	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO_S, depthMap_S, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
-
-
-
 }
 
 void Shadows::Update(float dt)
@@ -140,6 +137,7 @@ void Shadows::DrawDepthSpot()
 
 void Shadows::DrawDepthDirectional()
 {
+	unsigned index = 0;
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
 		LightProperties& directional_light_stuffs = LIGHTING.GetDirectionLights()[i];
@@ -160,8 +158,11 @@ void Shadows::DrawDepthDirectional()
 		LIGHTING.GetDirectionLights()[i].lightSpaceMatrix = lightProjection * lightView;
 		//lightSpaceMatrix_directional = lightProjection * lightView;
 
+		if (index > MAX_DIRECTION_LIGHT_SHADOW - 1)
+			continue;
+
 		glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-		glBindFramebuffer(GL_FRAMEBUFFER, directional_light_stuffs.shadowFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.directionalLightFBO[index++].first);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);

@@ -17,19 +17,19 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene/SceneManager.h"
 
-#define MAX_POINT_LIGHT 10
-#define MAX_SPOT_LIGHT 10
-#define MAX_DIRECTION_LIGHT 2
-
 //extern LightProperties spot_light_stuffs;
 //extern LightProperties directional_light_stuffs;
 //extern LightProperties point_light_stuffs;
 
-
-
 void Lighting::Init()
 {
-	for (int i = 0; i < MAX_POINT_LIGHT; ++i)
+	unsigned int shadowFBO, textureID;
+	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+	directionalLightFBO.push_back({ shadowFBO, textureID });
+	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+	directionalLightFBO.push_back({ shadowFBO, textureID });
+	
+	for (int i = 0; i < MAX_POINT_LIGHT_SHADOW; ++i)
 	{
 		LightProperties temp_point;
 		FRAMEBUFFER.CreatePointLight(temp_point.shadowFBO, temp_point.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -39,10 +39,9 @@ void Lighting::Init()
 		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_spot.shadowFBO, temp_spot.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
 		spotLightSources.push_back(temp_spot);
 	}
-	for (int i = 0; i < MAX_DIRECTION_LIGHT; ++i)
+	for (int i = 0; i < MAX_DIRECTION_LIGHT_SHADOW; ++i)
 	{
 		LightProperties temp_directional;
-		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_directional.shadowFBO, temp_directional.shadow, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
 		directionLightSources.push_back(temp_directional);
 
 	}
@@ -77,7 +76,6 @@ void Lighting::Update(float)
 		{
 			// Cull
 
-
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
 			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
@@ -90,14 +88,22 @@ void Lighting::Update(float)
 		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
 		{
 			// Cull
-
-
-
 			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
 			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
-			directionLightSources[directionalLightCount].direction = lightSource.direction;
+
+			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 rotation = transform.GetGlobalRotation();
+			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
+
+			rot *= glm::translate(glm::mat4(1.f), direction);
+			glm::vec3 testdir = rot[3];
+
+			glm::vec3 test(0.f);
+
+			directionLightSources[directionalLightCount].direction = glm::normalize(testdir);
+
 			++directionalLightCount;
 
 		}
@@ -105,10 +111,6 @@ void Lighting::Update(float)
 		else if (lightSource.lightType == SPOT_LIGHT)
 		{
 			// Cull
-
-
-
-
 			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
 			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
 			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
