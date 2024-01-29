@@ -15,6 +15,8 @@ public class MainMenu : Script
 
     public GameObject mainMenuTitle;
 
+    public SpriteRenderer startButton;
+
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 
@@ -40,6 +42,16 @@ public class MainMenu : Script
 
     void Update()
     {
+        // Get refto Button
+        if (startButton.IsButtonClicked())
+        {
+            LoadScene(1.0f);
+        }
+
+        // Check if button state is clicked
+
+        // Do something(Load)
+
         goToPlay();
 
         //code not working atm
