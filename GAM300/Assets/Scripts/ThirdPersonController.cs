@@ -163,6 +163,11 @@ public class ThirdPersonController : Script
     public float dashAttackStamina = 30f;
     public float overDriveStamina = 40f;
 
+    //overdrive bar
+    //public float maxOverdrive = 10f;
+    //public float currentOverdrive = 0;
+    //public GameObject overDriveBar
+
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
     float animationTimer = 3.18f;
@@ -247,6 +252,92 @@ public class ThirdPersonController : Script
 
     void Start()
     {
+        //reference check
+        if(PlayerCamera == null)
+        {
+            Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
+            return;
+        }
+        if(PlayerModel == null)
+        {
+            Console.WriteLine("Missing PlayerModel reference in ThirdPersonController script");
+            return;
+        }
+        if(player == null)
+        {
+            Console.WriteLine("Missing player reference in ThirdPersonController script");
+            return;
+        }
+        if(attackLight == null)
+        {
+            Console.WriteLine("Missing attack light reference in ThirdPersonController script");
+            return;
+        }
+        if(overDriveCollider == null)
+        {
+            Console.WriteLine("Missing overDriveCollider reference in ThirdPersonController script");
+            return;
+        }
+        if(playerWeaponCollider1 == null)
+        {
+            Console.WriteLine("Missing playerWeaponCollider1 reference in ThirdPersonController script");
+            return;
+        }
+        if(playerWeaponCollider2 == null)
+        {
+            Console.WriteLine("Missing playerWeaponCollider2 reference in ThirdPersonController script");
+            return;
+        }
+        if(playerWeaponCollider3 == null)
+        {
+            Console.WriteLine("Missing playerWeaponCollider3 reference in ThirdPersonController script");
+            return;
+        }
+        if(audioSource == null)
+        {
+            Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
+            return;
+        }
+        if(spawnPoint == null)
+        {
+            Console.WriteLine("Missing SpawnPoint reference in ThirdPersonController script");
+            return;
+        }
+        if(terminal1 == null)
+        {
+            Console.WriteLine("Missing terminal1 reference in ThirdPersonController script");
+            return;
+        }
+        if(terminal2 == null)
+        {
+            Console.WriteLine("Missing terminal2 reference in ThirdPersonController script");
+            return;
+        }
+        if(healthBarFill == null)
+        {
+            Console.WriteLine("Missing healthBarFill reference in ThirdPersonController script");
+            return;
+        }
+        if(healthStaminaCanvas == null)
+        {
+            Console.WriteLine("Missing healthStaminaCanvas reference in ThirdPersonController script");
+            return;
+        }
+        if(staminaBarFill == null)
+        {
+            Console.WriteLine("Missing staminaBarFill reference in ThirdPersonController script");
+            return;
+        }
+        if(staminaBarPos == null)
+        {
+            Console.WriteLine("Missing staminaBarPos reference in ThirdPersonController script");
+        }
+        if(animator == null)
+        {
+            Console.WriteLine("Missing animator reference in ThirdPersonController script");
+        }
+
+
         audioSource.Play();
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);

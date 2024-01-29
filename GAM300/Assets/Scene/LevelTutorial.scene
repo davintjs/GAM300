@@ -7,6 +7,48 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 17412142376824622519
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveCollider
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11119408544420369734}  # Transform
+    - component: {fileID: 3090479593467542015}  # BoxCollider
+    - component: {fileID: 3304181054750821361}  # Rigidbody
+---
+ID: 11119408544420369734
+Transform:
+  m_GameObject: {fileID: 17412142376824622519}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.999999285, 1, 0.999999285]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3090479593467542015
+BoxCollider:
+  m_GameObject: {fileID: 17412142376824622519}
+  m_IsEnabled: true
+  Dimensions: [5, 5, 5]
+  Offset: [0, 0, 0]
+---
+ID: 3304181054750821361
+Rigidbody:
+  m_GameObject: {fileID: 17412142376824622519}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
 ID: 5342434905140024301
 GameObject:
   m_IsActive: true
@@ -172,6 +214,7 @@ Script:
   useItem: {fileID: 8508182677235274511}  # Component
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  playerOverdrive: {fileID: 0}
 ---
 ID: 6606253624498158492
 GameObject:
@@ -226,6 +269,8 @@ Transform:
     - {fileID: 11966624967280915999}
     - {fileID: 9691624766500435789}
     - {fileID: 1370432261870288088}
+    - {fileID: 6364420056334471666}
+    - {fileID: 744309730467464853}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -2353,6 +2398,7 @@ Script:
   isAttacking: false
   isAttackCooldown: false
   currentAttackCooldownTimer: 0
+  playOnce: true
   newRequest: false
   currentStunDuration: 0
 ---
@@ -12607,7 +12653,7 @@ MeshRenderer:
 ID: 4490157770252088129
 GameObject:
   m_IsActive: true
-  m_Name: HealthBarFill
+  m_Name: staminaBarFill
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -12617,9 +12663,9 @@ GameObject:
 ID: 1190925597282428397
 Transform:
   m_GameObject: {fileID: 4490157770252088129}
-  Translation: [-0.650000036, 0.857109547, 3]
-  Rotation: [3.14158487, -0, 3.1415925]
-  Scale: [-0.200000003, -0.0350000001, -1]
+  Translation: [-0.751999974, 0.796000004, 3]
+  Rotation: [3.14159274, 0, 0]
+  Scale: [0.100000001, 0.0250000004, 0.999999523]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -12630,7 +12676,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
-  SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
+  SpriteTexture: {guid: b531347e23ddc645f011247c1cf2d80b}
 ---
 ID: 3525555548824268013
 GameObject:
@@ -12843,7 +12889,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 625.106812
+  LookAtDistance: 685.194824
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12862,11 +12908,12 @@ Script:
   target: {fileID: 6663313825132233637}  # GameObject
   maxPitchAngle: 170
   yawRotSpeed: 2
-  defaultZoom: 4
   invertPitch: true
   pitchRotSpeed: 1
   minPitchAngle: -85
   zoom: 5.00000143
+  pitchAngle: 0
+  defaultZoom: 4
   zoomSpeed: 50
   zoomInSpeed: 3
   closestZoom: 0.5
@@ -12928,14 +12975,15 @@ Script:
   CC: {fileID: 15939117778428800744}  # Component
   animator: {fileID: 16841312652590570249}  # Component
   audioSource: {fileID: 16716648517964172389}  # Component
-  currentDashAttackTimer: 0
   attackMoveSpeed: 3
+  currentDashAttackTimer: 0
   currentDashAttackCooldown: 0
   MoveSpeed: 400
+  overDriveCooldown: 6
   dashAttackSpeed: 50
   JumpSpeed: 7
-  player: {fileID: 3977294589520766028}  # Component
   dashAttackCooldown: 1.5
+  player: {fileID: 3977294589520766028}  # Component
   sprintModifier: 1.29999995
   maxHealth: 4
   dodgeSpeed: 20
@@ -12943,42 +12991,60 @@ Script:
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.100000001
   walkStepsInterval: 0.439999998
+  overDriveStamina: 40
+  sprintStamina: 0.5
   startDashCooldown: false
+  currentOverdriveCooldown: 0
   dodgeTimer: 1
-  startDeathAnimationCountdown: false
   _isAttacking: false
   currentDodgeTimer: 0
   dodgeCooldown: 2
+  currentOverdriveTimer: 0
+  _isOverdrive: false
   currentDodgeCooldown: 0
+  currentStamina: 0
   isDodging: false
   startDodgeCooldown: false
+  currentInvulnerableTimer: 1
+  _isDashAttacking: false
+  overdriveTimer: 2
+  isInvulnerable: false
+  startOverdriveCooldown: false
   PlayerCamera: {fileID: 15334681090738628473}  # Component
-  maxColliderDist: 1.5
   PlayerModel: {fileID: 1051037936027593321}  # Component
+  maxColliderDist: 1.5
   attackLight: {fileID: 16176702755422307341}  # GameObject
+  overDriveCollider: {fileID: 17412142376824622519}  # GameObject
   invulnerableTimer: 0.699999988
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
-  attack3duration: 0.699999988
   isAtCheckpoint: false
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
+  maxStamina: 100
   RotationSpeed: 5
-  currentInvulnerableTimer: 1
-  _isDashAttacking: false
   checkpointIndex: -1
   spawnPoint: {fileID: 13798602388106733380}  # Component
   terminal1: {fileID: 10239403197338088721}  # Component
   terminal2: {fileID: 11931344363477315440}  # Component
   attackTimer: 1
   currentHealth: 4
-  isInvulnerable: false
   isDead: false
   colliderDist: 0
-  healthBarFill: {fileID: 4490157770252088129}  # GameObject
+  healthBarFill: {fileID: 6364420056334471666}  # GameObject
+  regenRate: 60
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  staminaBarFill: {fileID: 4490157770252088129}  # GameObject
+  staminaBarPos: {fileID: 744309730467464853}  # Component
+  timeBeforeRegen: 1.5
+  dashAttackStamina: 30
+  jumpStamina: 10
+  attackStamina: 10
+  dodgeStamina: 20
+  startDeathAnimationCountdown: false
   currentAnimationTimer: 0
   attack1duration: 0.5
   attack2duration: 0.600000024
+  attack3duration: 0.699999988
   animCancelPercentage: 0.600000024
 ---
 ID: 14362096387145765665
@@ -17379,7 +17445,7 @@ ID: 6741521074388384309
 Transform:
   m_GameObject: {fileID: 12660956963810181687}
   Translation: [-0.929799974, 0.857109547, 5]
-  Rotation: [3.14158487, -5.42101086e-20, 3.1415925]
+  Rotation: [3.14158487, 0, 3.14159274]
   Scale: [-0.0799999982, -0.0799999982, -0.100000001]
   Father: {fileID: 4212138099454399691}
   m_Children:
@@ -17518,7 +17584,7 @@ GameObject:
 ID: 12859451180230906073
 Transform:
   m_GameObject: {fileID: 4720521423488205772}
-  Translation: [-0.75, 0.789999962, 1.81727982]
+  Translation: [-0.75, 0.75, 1.81727982]
   Rotation: [3.14158487, 0, 3.14159274]
   Scale: [-0.150000006, -0.0199999996, -1]
   Father: {fileID: 4212138099454399691}
@@ -17546,8 +17612,8 @@ GameObject:
 ID: 17405891383651685792
 Transform:
   m_GameObject: {fileID: 1953613848853671180}
-  Translation: [-0.75, 0.789999962, 2]
-  Rotation: [3.14158487, -5.42101086e-20, 3.1415925]
+  Translation: [-0.75, 0.75, 2]
+  Rotation: [3.14159274, 0, 3.14159274]
   Scale: [-0.150000006, -0.0199999996, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
@@ -17574,8 +17640,8 @@ GameObject:
 ID: 6440725200320908511
 Transform:
   m_GameObject: {fileID: 3925618525247661714}
-  Translation: [-0.75, 0.789999962, 2.0999999]
-  Rotation: [3.14158487, 0, 3.14159274]
+  Translation: [-0.75, 0.749682188, 2.0999999]
+  Rotation: [3.14159274, 0, 3.14159274]
   Scale: [-0.150000006, -0.0199999996, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
@@ -20008,3 +20074,50 @@ Script:
   m_IsEnabled: false
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
   playerController: {fileID: 0}
+---
+ID: 6364420056334471666
+GameObject:
+  m_IsActive: true
+  m_Name: HealthBarFill
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5321138544487017227}  # Transform
+    - component: {fileID: 8440356775401254834}  # SpriteRenderer
+---
+ID: 5321138544487017227
+Transform:
+  m_GameObject: {fileID: 6364420056334471666}
+  Translation: [-0.650000036, 0.857109547, 3]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.200000003, -0.0350000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 8440356775401254834
+SpriteRenderer:
+  m_GameObject: {fileID: 6364420056334471666}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
+---
+ID: 744309730467464853
+GameObject:
+  m_IsActive: true
+  m_Name: staminaBarPos
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12626457545720230316}  # Transform
+---
+ID: 12626457545720230316
+Transform:
+  m_GameObject: {fileID: 744309730467464853}
+  Translation: [-0.857777238, 0.816972971, 1.93912086e-08]
+  Rotation: [0, 0, 0]
+  Scale: [0.286999941, 0.100000001, 0.999999762]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
