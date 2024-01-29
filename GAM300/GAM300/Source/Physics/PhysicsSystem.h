@@ -40,6 +40,11 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Jolt/Physics/Character/Character.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 
+// Ray Cast
+#include "Jolt/Physics/Collision/RayCast.h"
+#include "Jolt/Physics/Collision/CastResult.h"
+#include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
+
 #define PHYSICS PhysicsSystem::Instance()
 
 // Layers that objects can be in and determines which other objects it can collide with
@@ -161,11 +166,22 @@ public:
 	UINT32 bid1;
 	UINT32 bid2;
 
+	Vector3 p1;
+	Vector3 p2;
 
 	collisionOperation op;
 
 };
+struct EngineRayCastResult {
 
+	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : tag{ tag }, point { pt }, hit{ hasHit }{}
+
+	Tag tag;
+	Vector3 point;
+	bool hit;
+
+
+};
 
 // Contact Listener (collision)
 // NOTE: with regards to waking/sleeping bodies while within triggers. 
@@ -220,6 +236,8 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
+	void SetBodyCreationSettings(JPH::BodyCreationSettings & bcs, Rigidbody & rb, JPH::EActivation enabledStatus);
+
 	// Resolve any updates before Physics Simulation
 	void PrePhysicsUpdate(float dt);
 	// Resolve any updates after Physics Simulation but before next frame
@@ -244,6 +262,9 @@ public:
 	void DeleteBody(PhysicsComponent& bid);
 	// Delete a physics body based on Body ID
 	void DeleteBody(UINT32 bid);
+
+
+	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& maxDistance);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
@@ -272,7 +293,7 @@ public:
 
 	BroadPhaseLayerInterface bpLayerInterface;
 	ObjectLayerPairFilter objectLayerPairFilter;
-	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter;
+	ObjectvsBroadPhaseLayerFilter objvbpLayerFilter; 
 
 
 	#pragma region Character Controller Testing
