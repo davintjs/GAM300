@@ -521,6 +521,7 @@ public:
 
 	unsigned int txtVAO, txtVBO;
 	std::map<char, Character> Characters;
+	//std::map<std::string, std::map<char, Character>> fonts;
 
 	void Init();
 	void Update(float dt);
@@ -528,8 +529,7 @@ public:
 
 	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
 	void Draw(BaseCamera& _camera);
-	void GenerateFontAtlas(const char* fontPath, const char* outputPath);
-	void LoadFontAtlas(const char* inputPath);
+	void LoadFontAtlas(const std::filesystem::path& inputPath);
 
 
 private:

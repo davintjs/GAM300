@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -36,6 +36,7 @@
     </ClCompile>
     <ClCompile Include="Source\AppEntry\EntryPoint.cpp" />
     <ClCompile Include="Source\AssetManager\AssetManager.cpp" />
+    <ClCompile Include="Source\AssetManager\FontCompiler.cpp" />
     <ClCompile Include="Source\AssetManager\ModelDecompiler.cpp">
       <SubType>
       </SubType>
@@ -315,6 +316,7 @@
     <ClInclude Include="Source\AssetManager\AssetManager.h" />
     <ClInclude Include="Source\AssetManager\AssetManagerTemplates.h" />
     <ClInclude Include="Source\AssetManager\AssetTypes.h" />
+    <ClInclude Include="Source\AssetManager\FontCompiler.h" />
     <ClInclude Include="Source\AssetManager\ImporterTypes.h" />
     <ClInclude Include="Source\AssetManager\GeometryMesh.h" />
     <ClInclude Include="Source\AssetManager\ModelDecompiler.h">
@@ -526,7 +528,8 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
-    <VCToolsVersion>14.37.32822</VCToolsVersion>
+    <VCToolsVersion>
+    </VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
