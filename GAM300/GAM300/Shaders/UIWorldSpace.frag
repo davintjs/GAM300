@@ -65,7 +65,6 @@ void main()
         FragColor = vec4(1.f,0.f,0.f,1.f);
     }
 
-    }
         FragColor.a *= AlphaScaler;
         FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
 

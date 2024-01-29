@@ -428,7 +428,7 @@ void DebugDraw::DrawLightBounds(const Engine::UUID& _euid)
 
 void DebugDraw::DrawCapsuleCollider(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius, const float& _height)
 {
-	glm::vec3 point1, point2, rotation;
+	glm::vec3 point1, point2;
 	int vCount = 4;
 	float angle = 360.0f / vCount;
 	const float circleOffset = _height - _radius;
