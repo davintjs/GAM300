@@ -216,25 +216,6 @@ Script:
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
   playerOverdrive: {fileID: 0}
 ---
-ID: 6606253624498158492
-GameObject:
-  m_IsActive: true
-  m_Name: Spotlight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18356289913919723263}  # Transform
----
-ID: 18356289913919723263
-Transform:
-  m_GameObject: {fileID: 6606253624498158492}
-  Translation: [43.3700447, 8.55661011, -35.8710365]
-  Rotation: [1.57079589, 0, 0]
-  Scale: [0.999998808, 0.999999702, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
 ID: 4212138099454399691
 GameObject:
   m_IsActive: true
@@ -303,6 +284,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
 ---
 ID: 16279065018212808363
@@ -5592,168 +5575,6 @@ MeshRenderer:
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
   Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
-ID: 9043507356638465315
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling3x3
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3403491001911420121}  # Transform
-    - component: {fileID: 13034692082273592737}  # MeshRenderer
----
-ID: 3403491001911420121
-Transform:
-  m_GameObject: {fileID: 9043507356638465315}
-  Translation: [3.66223335, 9.22854233, -33.5922127]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16151418268757025182}
-  m_Children:
-    - {fileID: 7824377463619409638}
----
-ID: 13034692082273592737
-MeshRenderer:
-  m_GameObject: {fileID: 9043507356638465315}
-  m_IsEnabled: true
-  Mesh: {guid: a1270f80d9dc328e2a329a724fdb3cae}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 7824377463619409638
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5215099733464676804}  # Transform
-    - component: {fileID: 9972276519279086545}  # MeshRenderer
----
-ID: 5215099733464676804
-Transform:
-  m_GameObject: {fileID: 7824377463619409638}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 9043507356638465315}
-  m_Children:
-    []
----
-ID: 9972276519279086545
-MeshRenderer:
-  m_GameObject: {fileID: 7824377463619409638}
-  m_IsEnabled: true
-  Mesh: {guid: 67dadb5a457b3df016b5da184b02fd27}
-  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
----
-ID: 8596046517715103447
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling3x3
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14614030364546820913}  # Transform
-    - component: {fileID: 17703826035134841612}  # MeshRenderer
----
-ID: 14614030364546820913
-Transform:
-  m_GameObject: {fileID: 8596046517715103447}
-  Translation: [23.3710938, 9.22854233, -33.5922127]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16151418268757025182}
-  m_Children:
-    - {fileID: 3407214947466032992}
----
-ID: 17703826035134841612
-MeshRenderer:
-  m_GameObject: {fileID: 8596046517715103447}
-  m_IsEnabled: true
-  Mesh: {guid: a1270f80d9dc328e2a329a724fdb3cae}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 3407214947466032992
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10294438140462202545}  # Transform
-    - component: {fileID: 9715677136242727289}  # MeshRenderer
----
-ID: 10294438140462202545
-Transform:
-  m_GameObject: {fileID: 3407214947466032992}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 8596046517715103447}
-  m_Children:
-    []
----
-ID: 9715677136242727289
-MeshRenderer:
-  m_GameObject: {fileID: 3407214947466032992}
-  m_IsEnabled: true
-  Mesh: {guid: 67dadb5a457b3df016b5da184b02fd27}
-  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
----
-ID: 1991442573377170129
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling3x3
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3384265774494814809}  # Transform
-    - component: {fileID: 1021160115717289273}  # MeshRenderer
----
-ID: 3384265774494814809
-Transform:
-  m_GameObject: {fileID: 1991442573377170129}
-  Translation: [43.1551514, 9.22854233, -33.5922127]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16151418268757025182}
-  m_Children:
-    - {fileID: 330246410094063455}
----
-ID: 1021160115717289273
-MeshRenderer:
-  m_GameObject: {fileID: 1991442573377170129}
-  m_IsEnabled: true
-  Mesh: {guid: a1270f80d9dc328e2a329a724fdb3cae}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 330246410094063455
-GameObject:
-  m_IsActive: true
-  m_Name: Lines
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8361646132523670766}  # Transform
-    - component: {fileID: 3902402815409301609}  # MeshRenderer
----
-ID: 8361646132523670766
-Transform:
-  m_GameObject: {fileID: 330246410094063455}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 1991442573377170129}
-  m_Children:
-    []
----
-ID: 3902402815409301609
-MeshRenderer:
-  m_GameObject: {fileID: 330246410094063455}
-  m_IsEnabled: true
-  Mesh: {guid: 67dadb5a457b3df016b5da184b02fd27}
-  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
----
 ID: 1249265196707790764
 GameObject:
   m_IsActive: true
@@ -6635,9 +6456,6 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 5366351962377905659}
   m_Children:
-    - {fileID: 9043507356638465315}
-    - {fileID: 8596046517715103447}
-    - {fileID: 1991442573377170129}
     - {fileID: 13628489513304251569}
     - {fileID: 5306926712686786849}
     - {fileID: 12163220995285343582}
@@ -12676,6 +12494,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: b531347e23ddc645f011247c1cf2d80b}
 ---
 ID: 3525555548824268013
@@ -12704,6 +12524,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: b9dcab9e8bd76d6ce1bfa6bad0e324d8}
 ---
 ID: 8065358626952296561
@@ -12889,7 +12711,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 730.194092
+  LookAtDistance: 775.143799
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -15833,39 +15655,6 @@ Transform:
   m_Children:
     []
 ---
-ID: 13414052106519654127
-GameObject:
-  m_IsActive: true
-  m_Name: RampLight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8850516260179941389}  # Transform
-    - component: {fileID: 1194107573959013146}  # LightSource
----
-ID: 8850516260179941389
-Transform:
-  m_GameObject: {fileID: 13414052106519654127}
-  Translation: [-20.0725193, 7.94032764, -12.4368143]
-  Rotation: [1.353145, 0, 0]
-  Scale: [1, 0.999997854, 0.999997318]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 1194107573959013146
-LightSource:
-  m_GameObject: {fileID: 13414052106519654127}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 0
-  lightpos: [0, 0, 0]
-  Intensity: 0
-  Direction: [0, 0, 0]
-  Inner Cutoff: 10
-  Outer Cutoff: 50
-  Color: [200, 255, 200]
----
 ID: 15258148970884941533
 GameObject:
   m_IsActive: true
@@ -15879,7 +15668,7 @@ GameObject:
 ID: 9250071627966584501
 Transform:
   m_GameObject: {fileID: 15258148970884941533}
-  Translation: [-19.7395153, 6.50518131, 16.0940533]
+  Translation: [-20.1665516, 4.81392384, 7.44998932]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15893,11 +15682,11 @@ LightSource:
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 2.5
+  Intensity: 34
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
+  Color: [1, 0.999899983, 0.999899983]
 ---
 ID: 12255453308465698455
 GameObject:
@@ -15923,79 +15712,13 @@ ID: 10332750798701827478
 LightSource:
   m_GameObject: {fileID: 12255453308465698455}
   m_IsEnabled: true
-  EnableShadow: true
+  EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 2.5
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
----
-ID: 1978797479256161258
-GameObject:
-  m_IsActive: true
-  m_Name: PillarsLight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6317419242230538949}  # Transform
-    - component: {fileID: 14334588254613883241}  # LightSource
----
-ID: 6317419242230538949
-Transform:
-  m_GameObject: {fileID: 1978797479256161258}
-  Translation: [66.4787216, 51.565052, -79.0797577]
-  Rotation: [1.57079542, 0, 0]
-  Scale: [1, 0.999997973, 0.999997854]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 14334588254613883241
-LightSource:
-  m_GameObject: {fileID: 1978797479256161258}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 0
-  lightpos: [0, 0, 0]
-  Intensity: 50
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 30
-  Outer Cutoff: 60
-  Color: [100, 100, 100]
----
-ID: 541121105422146752
-GameObject:
-  m_IsActive: true
-  m_Name: LiftHandleLight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12112849001586193047}  # Transform
-    - component: {fileID: 2021343440525441341}  # LightSource
----
-ID: 12112849001586193047
-Transform:
-  m_GameObject: {fileID: 541121105422146752}
-  Translation: [66.6812592, 44.0730171, -32.3671227]
-  Rotation: [2.28309846, 0, 0]
-  Scale: [1, 0.999742866, 0.999740243]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 2021343440525441341
-LightSource:
-  m_GameObject: {fileID: 541121105422146752}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 0
-  lightpos: [0, 0, 0]
-  Intensity: 20
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 20
-  Outer Cutoff: 35
   Color: [100, 100, 100]
 ---
 ID: 16149919952186955683
@@ -16011,7 +15734,7 @@ GameObject:
 ID: 9980629945179896881
 Transform:
   m_GameObject: {fileID: 16149919952186955683}
-  Translation: [-20.1924496, 7.52293921, -36.6165161]
+  Translation: [-20.0492249, 2.76795888, -35.9148026]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -16022,14 +15745,14 @@ ID: 12873146558931283450
 LightSource:
   m_GameObject: {fileID: 16149919952186955683}
   m_IsEnabled: true
-  EnableShadow: true
+  EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 2.5
+  Intensity: 150
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [200, 255, 200]
+  Color: [0.999899983, 1, 0.999905229]
 ---
 ID: 263938901046208410
 GameObject:
@@ -16566,7 +16289,7 @@ ID: 4700641269588020503
 Transform:
   m_GameObject: {fileID: 18047848578679342217}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [0, 1.57079637, -1.57079637]
   Scale: [0.999963403, 0.999957502, 0.999984741]
   Father: {fileID: 0}
   m_Children:
@@ -16576,11 +16299,11 @@ ID: 5561963866911114795
 LightSource:
   m_GameObject: {fileID: 18047848578679342217}
   m_IsEnabled: true
-  EnableShadow: true
+  EnableShadow: false
   lightType: 1
   lightpos: [0, 0, 0]
-  Intensity: 2
-  Direction: [0, -2, 1.5]
+  Intensity: 1
+  Direction: [0, 0, 0]
   Inner Cutoff: 50
   Outer Cutoff: 70
   Color: [255, 255, 255]
@@ -16753,6 +16476,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: e310cfb163a2014181faa3229530b5ed}
 ---
 ID: 16740076942321656330
@@ -16781,6 +16506,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: f09c087da8a5a8295f5fc419dbaec1c9}
 ---
 ID: 3827453200974574750
@@ -16834,6 +16561,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 8389a067b7fead603aa8391a4cf5d163}
 ---
 ID: 7012372586903751207
@@ -16862,6 +16591,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: ef98ccf5ac02e5c8417c7412241d2f6e}
 ---
 ID: 1397792527501854904
@@ -16890,6 +16621,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 78368b7cbb512fd0999fde1c1182da82}
 ---
 ID: 6586543693501608855
@@ -16918,6 +16651,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: d36d7d1d7b35a1558ad23201dff9994d}
 ---
 ID: 7835293411479101006
@@ -16946,6 +16681,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 34f6cdd41fef9ef80bf3a3814384202f}
 ---
 ID: 15243324590400962737
@@ -16974,6 +16711,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 2c86b31c6fd13537742a42c83a8b516a}
 ---
 ID: 4986514914259003447
@@ -17457,6 +17196,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: ed67f80cc8530c2f1eb31d14779f6a88}
 ---
 ID: 8603716528774636938
@@ -17485,6 +17226,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: f1e2252c9bed7adeab8c9cfea67d8e5c}
 ---
 ID: 17837455119039999797
@@ -17513,6 +17256,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: e8f1b5b7e6ccf016426fb9befbdcb1cb}
 ---
 ID: 17344769666620842143
@@ -17541,6 +17286,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: e94a3b58c1e9691c92035ec7508476ab}
 ---
 ID: 12115195871797465227
@@ -17569,6 +17316,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
 ---
 ID: 4720521423488205772
@@ -17597,6 +17346,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}
 ---
 ID: 1953613848853671180
@@ -17625,6 +17376,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 4032521077463f2715840b35c4b4e13e}
 ---
 ID: 3925618525247661714
@@ -17653,6 +17406,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 05eabcd5686e83c719e179558b23b1a3}
 ---
 ID: 11966624967280915999
@@ -17681,6 +17436,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 10673191397735378312
@@ -17709,6 +17466,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
 ---
 ID: 9691624766500435789
@@ -17737,6 +17496,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 13993313988089347944
@@ -17765,6 +17526,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}
 ---
 ID: 1370432261870288088
@@ -17793,6 +17556,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 12478379518054110186
@@ -17821,6 +17586,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
 ---
 ID: 6043762608075201925
@@ -20101,6 +19868,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
 ---
 ID: 744309730467464853
@@ -20121,3 +19890,218 @@ Transform:
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
+---
+ID: 7840101573053260112
+GameObject:
+  m_IsActive: true
+  m_Name: Ceiiling
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9808483051571038728}  # Transform
+    - component: {fileID: 6901208413313779876}  # BoxCollider
+    - component: {fileID: 11954602951159279093}  # Rigidbody
+    - component: {fileID: 7835632905331259936}  # MeshRenderer
+---
+ID: 9808483051571038728
+Transform:
+  m_GameObject: {fileID: 7840101573053260112}
+  Translation: [22.4295712, 9.59046555, -35.7559128]
+  Rotation: [0, 0, 0]
+  Scale: [60.7518311, 1, 15.6295767]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6901208413313779876
+BoxCollider:
+  m_GameObject: {fileID: 7840101573053260112}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 11954602951159279093
+Rigidbody:
+  m_GameObject: {fileID: 7840101573053260112}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 7835632905331259936
+MeshRenderer:
+  m_GameObject: {fileID: 7840101573053260112}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 10142776041819286173
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLight - Copy
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15053351632834978083}  # Transform
+    - component: {fileID: 12438290877144817004}  # LightSource
+---
+ID: 15053351632834978083
+Transform:
+  m_GameObject: {fileID: 10142776041819286173}
+  Translation: [-20.1665516, 4.80159092, 18.2277012]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12438290877144817004
+LightSource:
+  m_GameObject: {fileID: 10142776041819286173}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 34.5699997
+  Direction: [-0.200000003, -0.649999976, 0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 0.999899983, 0.999899983]
+---
+ID: 9920204187131301003
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLight - Copy - Copy
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13460999324741313014}  # Transform
+    - component: {fileID: 3585654171205390185}  # LightSource
+---
+ID: 13460999324741313014
+Transform:
+  m_GameObject: {fileID: 9920204187131301003}
+  Translation: [-20.1665516, 4.80159092, -1.56301534]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3585654171205390185
+LightSource:
+  m_GameObject: {fileID: 9920204187131301003}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 34.5699997
+  Direction: [-0.200000003, -0.649999976, 0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 0.999899983, 0.999899983]
+---
+ID: 4523280386986073943
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLight - Copy - Copy - Copy
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8781818261918192370}  # Transform
+    - component: {fileID: 12569900376626086894}  # LightSource
+---
+ID: 8781818261918192370
+Transform:
+  m_GameObject: {fileID: 4523280386986073943}
+  Translation: [-20.1665516, 4.80159092, -9.53971577]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12569900376626086894
+LightSource:
+  m_GameObject: {fileID: 4523280386986073943}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 34.5699997
+  Direction: [-0.200000003, -0.649999976, 0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 0.999899983, 0.999899983]
+---
+ID: 2493546269884580952
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLight - Copy - Copy - Copy - Copy
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17774096125714128315}  # Transform
+    - component: {fileID: 9660818073227121405}  # LightSource
+---
+ID: 17774096125714128315
+Transform:
+  m_GameObject: {fileID: 2493546269884580952}
+  Translation: [-20.1665516, 4.80159092, -21.5249729]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9660818073227121405
+LightSource:
+  m_GameObject: {fileID: 2493546269884580952}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 34.5699997
+  Direction: [-0.200000003, -0.649999976, 0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 0.999899983, 0.999899983]
+---
+ID: 4969303899380256241
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLight - Copy - Copy - Copy - Copy - Copy
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11478192865824543651}  # Transform
+    - component: {fileID: 11568051898548929711}  # LightSource
+---
+ID: 11478192865824543651
+Transform:
+  m_GameObject: {fileID: 4969303899380256241}
+  Translation: [-20.1665516, 4.80159092, -15.9206886]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11568051898548929711
+LightSource:
+  m_GameObject: {fileID: 4969303899380256241}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 34.5699997
+  Direction: [-0.200000003, -0.649999976, 0.300000012]
+  Inner Cutoff: 0
+  Outer Cutoff: 0
+  Color: [1, 0.999899983, 0.999899983]

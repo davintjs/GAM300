@@ -360,6 +360,10 @@ bool Scene::IsActive(T& object, bool checkParents)
 {
 	static_assert(AllObjectTypes::Has<T>(), "Type is not a valid scene object");
 	auto& arr = GetArray<T>();
+
+	if (object.state == DELETED)
+		return false;
+
 	if constexpr (std::is_same_v<T, Entity>)
 	{
 		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
@@ -367,12 +371,7 @@ bool Scene::IsActive(T& object, bool checkParents)
 
 		if (checkParents && isActive && t.parent)
 		{
-			Entity& parentEntity = Get<Entity>(t.parent);
-			if (&parentEntity == nullptr)
-			{
-				return false;
-			}
-			return IsActive(parentEntity);
+			return t.GetFlag(Transform::Flag::WorldEnabled);
 		}
 
 		return isActive;
@@ -395,6 +394,14 @@ bool Scene::IsActive(T& object, bool checkParents)
 template <typename T>
 void Scene::SetActive(T& object, bool val)
 {
+	if constexpr (std::is_same_v<T, Entity>)
+	{
+		Transform& trans = Get<Transform>(object);
+		if (val)
+			trans.EnableFlag(Transform::Flag::WorldEnabled);
+		else
+			trans.DisableFlag(Transform::Flag::WorldEnabled);
+	}
 	GetArray<T>().SetActive(object, val);
 }
 
