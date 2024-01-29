@@ -238,11 +238,11 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-	// Test raycast
-	if (InputHandler::isKeyButtonPressed(GLFW_KEY_T)) {
-		std::cout << "Casting Ray\n";
-		JPH::Vec3 pt = CastRay(JPH::Vec3(0, -50, 0), JPH::Vec3(0,300,0), 100.f);
-	}
+	//// Test raycast
+	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_T)) {
+	//	std::cout << "Casting Ray\n";
+	//	JPH::Vec3 pt = CastRay(JPH::Vec3(0, -50, 0), JPH::Vec3(0,300,0), 100.f);
+	//}
 	// Resolve any character controller movement from scripting system
 	ResolveCharacterMovement();
 
@@ -1104,10 +1104,13 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	std::cout << "add\n";
 }
 
-JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance) {
+EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
 	
+	Vector3 tmp;
+	JoltVec3ToGlmVec3(origin, tmp);
+
 	if (!physicsSystem)
-		return origin;
+		return EngineRayCastResult(Tag(), tmp, false);
 
 	// TODO:
 	/*
@@ -1116,25 +1119,50 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 	*/
 
 
-	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
-
+	//JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+	JPH::AllHitCollisionCollector <JPH::RayCastBodyCollector> collector;
 
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCastSettings rcs;
 	rcs.mBackFaceMode = JPH::EBackFaceMode::CollideWithBackFaces;
-	JPH::RayCast ray(origin, direction);
+	JPH::RayCast ray(origin, direction * distance);
 	bpq.CastRay(ray, collector);
+	if(!collector.HadHit())
+		return EngineRayCastResult(Tag(), tmp, false);
+	size_t numHits = (int)collector.mHits.size();
+	std::cout << "Number of hits on raycast: " << numHits << std::endl;	
 
-	int numHits = (int)collector.mHits.size();
-	std::cout << "Number of hits on raycast: " << numHits << std::endl;
+
+	
+
 	JPH::BroadPhaseCastResult* results = collector.mHits.data();
 
-	JPH::Vec3 closestPointToEnd = origin;
+	size_t idx{ 0 };
+	if (numHits != 1) {
+		idx = numHits - 1;
+	}
 
-	collector.Sort();
+	UINT32 bid = results[idx].mBodyID.GetIndexAndSequenceNumber();
+	Tag tag;
+	Vector3 hitPt;
+	JPH::RVec3 v = ray.GetPointOnRay(results[idx].mFraction);
+	JoltVec3ToGlmVec3(v, hitPt);
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& rbArray = scene.GetArray<Rigidbody>();
+	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+		Rigidbody& rb = *it;
+		if (rb.bid == bid) {
+			tag = scene.Get<Tag>(rb);
+			break;
+		}
+	}
 
+	//collector.Sort();
+	/*
 	for (int i{ 0 }; i < numHits; ++i) {
+		
 		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
+		
 		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
 
 		// Find 1st contact pt outside of max distance
@@ -1150,12 +1178,12 @@ JPH::Vec3 PhysicsSystem::CastRay(const JPH::Vec3& origin, const JPH::Vec3& direc
 			closestPointToEnd = ray.GetPointOnRay(results[i].mFraction);
 			break;
 		}
-	}
-	std::cout << "Closest pt: " << closestPointToEnd.GetX() << '|' 
-									<< closestPointToEnd.GetY() << '|' 
-									<< closestPointToEnd.GetZ() << std::endl;
+	}*/
+	std::cout << "Closest pt: " << hitPt.x << '|' 
+									<< hitPt.y << '|' 
+									<< hitPt.z << std::endl;
 
-	return closestPointToEnd;
+	return EngineRayCastResult(tag, hitPt, true);
 	
 }
 

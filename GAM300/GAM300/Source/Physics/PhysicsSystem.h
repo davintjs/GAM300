@@ -172,7 +172,16 @@ public:
 	collisionOperation op;
 
 };
+struct EngineRayCastResult {
 
+	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : tag{ tag }, point { pt }, hit{ hasHit }{}
+
+	Tag tag;
+	Vector3 point;
+	bool hit;
+
+
+};
 
 // Contact Listener (collision)
 // NOTE: with regards to waking/sleeping bodies while within triggers. 
@@ -255,7 +264,7 @@ public:
 	void DeleteBody(UINT32 bid);
 
 
-	JPH::Vec3 CastRay(const JPH::Vec3& origin, const JPH::Vec3& direction, const float& maxDistance);
+	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& maxDistance);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
