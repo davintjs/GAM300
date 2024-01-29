@@ -229,6 +229,25 @@ void EditorMenuBar::Update(float dt)
                 udpateGraphics = true;
             ImGui::TableNextRow();
 
+            ImGui::TableNextColumn();
+            ImGui::Text("Ambient RGB"); ImGui::SameLine();
+            glm:vec3& color = RENDERER.getAmbientRGB();
+            ImVec4 colorVec4 = ImVec4(color.x, color.y, color.z, 1.0f);
+            ImGui::TableNextColumn();
+            if (ImGui::ColorButton("##color", colorVec4, 0, ImVec2(ImGui::GetContentRegionAvail().x, 20.f)))
+                ImGui::OpenPopup("colorpicker2");
+
+            if (ImGui::BeginPopup("colorpicker2"))
+            {
+                if (ImGui::ColorPicker3("##picker", (float*)&colorVec4, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel)) {
+                    color = glm::vec3(colorVec4.x, colorVec4.y, colorVec4.z);
+                }
+       
+                ImGui::EndPopup();
+            }
+
+            ImGui::TableNextRow();
+
             ImGui::EndTable();
         }
 

@@ -25,9 +25,6 @@ void Shadows::Init()
 	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO_S, depthMap_S, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
-
-
-
 }
 
 void Shadows::Update(float dt)
