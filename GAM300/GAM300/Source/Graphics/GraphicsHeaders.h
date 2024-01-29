@@ -526,7 +526,7 @@ public:
 	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
 	void Draw(BaseCamera& _camera);
 	void GenerateFontAtlas(const char* fontPath, const char* outputPath);
-	std::map<char, Character> LoadFontAtlas(const char* inputPath);
+	void LoadFontAtlas(const char* inputPath);
 
 
 private:

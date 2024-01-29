@@ -310,7 +310,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	Draw(_camera); // call draw after update
 	UIRENDERER.UIDraw_3D(_camera); // call draw after update
-	TEXTSYSTEM.Draw(_camera);
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 		Draw_Screen(_camera);
@@ -408,7 +407,7 @@ void GraphicsSystem::Draw_Screen(BaseCamera& _camera)
 {
 	// IDK if this is gonna be the final iteration, but it will loop through all the sprites 1 by 1 to render
 	UIRENDERER.UIDraw_2D(_camera);
-
+	TEXTSYSTEM.Draw(_camera);
 }
 
 void GraphicsSystem::PostDraw()

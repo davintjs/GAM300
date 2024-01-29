@@ -7,7 +7,6 @@
 void TextSystem::Init()
 {
 	GenerateFontAtlas("Assets/Fonts/opensansbold.ttf", "atlas.bin"); // compiler thing need to move
-	Characters.empty(); // probably can yeet after moving the abv
 	LoadFontAtlas("atlas.bin"); // decompile
 
 	//glEnable(GL_BLEND);
@@ -218,12 +217,13 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 		float maxsize = std::max(xpos, ypos) + std::max(w, h);
 		maxsize *= 2.f;
 
-		// Generate OpenGL texture from the loaded texture data
+		// Generate OpenGL texture from the loaded texture data ->> can optimise so it doesnt get texture every frame
 		GLuint texture;
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
 		glGenerateMipmap(GL_TEXTURE_2D);
+
 
 		// Update content of VBO memory with the new vertices
 		float vertices[4][4] = {
@@ -280,12 +280,12 @@ void TextSystem::GenerateFontAtlas(const char* fontPath, const char* outputPath)
 	}
 
 	FT_Face face;
-	if (FT_New_Face(ft, "Assets/Fonts/opensansbold.ttf", 0, &face))
+	if (FT_New_Face(ft, fontPath, 0, &face))
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 	}
 	else {
-		FT_Set_Pixel_Sizes(face, 0, 48);
+		FT_Set_Pixel_Sizes(face, 0, 96);
 		if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 		{
 			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
@@ -293,10 +293,12 @@ void TextSystem::GenerateFontAtlas(const char* fontPath, const char* outputPath)
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 
 
-		//std::map<char, Character> Characters;
+		std::map<char, Character> tempCharacters;
 
 		for (unsigned char c = 0; c < 128; c++) {
-			// existing code to load character glyph, generate texture, and store in Characters map// load character glyph 
+			// load character glyph, generate texture, and store in Characters map
+			
+			// load character glyph 
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 			{
 				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
@@ -335,35 +337,35 @@ void TextSystem::GenerateFontAtlas(const char* fontPath, const char* outputPath)
 				face->glyph->advance.x
 			};
 
-			Characters.insert(std::pair<char, Character>(c, character));
+			tempCharacters.insert(std::pair<char, Character>(c, character));
 		}
 		glBindTexture(GL_TEXTURE_2D, 0); //??
+
+		// Save Characters map to binary file
+		std::ofstream outFile(outputPath, std::ios::binary);
+		for (const auto& pair : tempCharacters) {
+			outFile.write(reinterpret_cast<const char*>(&pair.first), sizeof(char));
+			outFile.write(reinterpret_cast<const char*>(&pair.second.Size), sizeof(glm::ivec2));
+			outFile.write(reinterpret_cast<const char*>(&pair.second.Bearing), sizeof(glm::ivec2));
+			outFile.write(reinterpret_cast<const char*>(&pair.second.Advance), sizeof(unsigned int));
+			outFile.write(reinterpret_cast<const char*>(pair.second.TextureData.data()), pair.second.TextureData.size());
+		}
+		outFile.close();
+
 	}
 	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
-
-	// Save Characters map to binary file
-	std::ofstream outFile(outputPath, std::ios::binary);
-	for (const auto& pair : Characters) {
-		outFile.write(reinterpret_cast<const char*>(&pair.first), sizeof(char));
-		outFile.write(reinterpret_cast<const char*>(&pair.second.Size), sizeof(glm::ivec2));
-		outFile.write(reinterpret_cast<const char*>(&pair.second.Bearing), sizeof(glm::ivec2));
-		outFile.write(reinterpret_cast<const char*>(&pair.second.Advance), sizeof(unsigned int));
-		outFile.write(reinterpret_cast<const char*>(pair.second.TextureData.data()), pair.second.TextureData.size());
-	}
-	outFile.close();
 }
 
 // Function to load font atlas from binary file
-std::map<char, TextSystem::Character> TextSystem::LoadFontAtlas(const char* inputPath) {
-	std::map<char, Character> Characters;
+void TextSystem::LoadFontAtlas(const char* inputPath) {
+	//std::map<char, Character> Characters;
 
 	std::ifstream inFile(inputPath, std::ios::binary);
 	if (!inFile.is_open()) {
 		std::cerr << "Failed to open font atlas file" << std::endl;
-		// Handle error appropriately
-		return Characters;
+		return;
 	}
 
 	char c;
@@ -373,19 +375,12 @@ std::map<char, TextSystem::Character> TextSystem::LoadFontAtlas(const char* inpu
 		inFile.read(reinterpret_cast<char*>(&character.Bearing), sizeof(glm::ivec2)) &&
 		inFile.read(reinterpret_cast<char*>(&character.Advance), sizeof(unsigned int))) {
 
-		// Read texture data size
-		std::streamsize dataSize = inFile.tellg();
-		inFile.seekg(0, std::ios::end);
-		dataSize = inFile.tellg() - dataSize;
-		inFile.seekg(-(std::streamoff)dataSize, std::ios::cur);
-
 		// Read texture data
-		character.TextureData.resize(dataSize);
-		inFile.read(reinterpret_cast<char*>(character.TextureData.data()), dataSize);
+		character.TextureData.resize(character.Size.x * character.Size.y);
+		inFile.read(reinterpret_cast<char*>(character.TextureData.data()), character.TextureData.size());
 
-		Characters[c] = character;
+		Characters.insert(std::pair<char, Character>(c, character));
 	}
 
 	inFile.close();
-	return Characters;
 }
