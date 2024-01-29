@@ -376,17 +376,7 @@ void EditorHierarchy::CallbackSelectedEntity(SelectedEntityEvent* pEvent)
 {
 	if (pEvent->pEntity) {
 		selectedEntity = pEvent->pEntity->EUID();
-		/*if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
 
-			std::list<Engine::UUID>& ref = EditorInspector::Instance().multiselectEntities;
-			if (std::find(ref.begin(), ref.end(), pEvent->pEntity->EUID()) != ref.end()) {
-				std::cout << "left shift: " << pEvent->pEntity->EUID() << std::endl;
-				ref.push_back(pEvent->pEntity->EUID());
-			}
-			for (auto a : ref) {
-				std::cout << a << std::endl;
-			}
-		}*/
 	}
 	else
 		selectedEntity = NON_VALID_ENTITY;

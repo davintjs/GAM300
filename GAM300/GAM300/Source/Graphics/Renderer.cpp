@@ -504,25 +504,35 @@ void Renderer::DrawMeshes(const GLuint& _vaoid, const unsigned int& _instanceCou
 
 void Renderer::BindLights(GLSLShader& shader) 
 {
+	int offset = 0;
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
-		int textureUnit = 10 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+		if (LIGHTING.GetSpotLights()[i].enableShadow)
+		{
+			int textureUnit = 10 + offset++;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+		}
 	}
-
+	offset = 0;
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
-		int textureUnit = 20 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+		if (LIGHTING.GetDirectionLights()[i].enableShadow)
+		{
+			int textureUnit = 20 + offset++;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+		}
 	}
-
+	offset = 0;
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
-		int textureUnit = 22 + i;
-		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+		if (LIGHTING.GetPointLights()[i].enableShadow)
+		{
+			int textureUnit = 22 + offset++;
+			glActiveTexture(GL_TEXTURE0 + textureUnit);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+		}
 	}
 
 	// POINT LIGHT STUFFS
@@ -655,6 +665,7 @@ void Renderer::BindLights(GLSLShader& shader)
 	GLint uniform12 = glGetUniformLocation(shader.GetHandle(), "renderShadow");
 	glUniform1f(uniform12, RENDERER.enableShadows());
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
+	glUniform3fv(glGetUniformLocation(shader.GetHandle(), "ambient_tint"), 1, glm::value_ptr(RENDERER.getAmbientRGB()));
 }
 
 //void Renderer::UIDraw_2D(BaseCamera& _camera)

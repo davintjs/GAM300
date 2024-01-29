@@ -19,7 +19,10 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 //-------------------------
 #define MAX_POINT_LIGHT 10
 #define MAX_SPOT_LIGHT 10
-#define MAX_DIRECTION_LIGHT 2
+#define MAX_DIRECTION_LIGHT 5
+
+#define DIRECTIONAL_SHADOW_INDEX_OFFSET 20
+#define SPOT_SHADOW_INDEX_OFFSET 10
 
 struct PointLight
 {
@@ -116,6 +119,7 @@ uniform float bloomThreshold;
 
 // ambience value
 uniform float ambience_multiplier;
+uniform vec3 ambient_tint;
 //End
 
 const float PI = 3.14159265359;
@@ -423,7 +427,7 @@ void main()
         vec3 Lo = vec3(0.0);
 
 
-
+        int PointShadowIndex = 0;
         float totalPointCount = PointLight_Count; // this is to use at the denominator which uses floats
         for(int i = 0; i < PointLight_Count; ++i)
         {
@@ -462,7 +466,8 @@ void main()
     //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     //        float shadow = ShadowCalculation_Point(pointLights[i].position); 
             bool shadows = pointLights[i].enableShadow && renderShadow;
-            float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position,i) : 0.0; // add a shadows bool
+            
+            float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position,PointShadowIndex) : 0.0; // add a shadows bool
             Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
 
 
@@ -479,18 +484,19 @@ void main()
     //        FragColor = vec4(vec3(closestDepth / farplane), 1.0);
     //        return;
 
-
+            if(shadows)
+                ++PointShadowIndex;
 
         }   
    
 
-
+        int DirectionalShadowIndex = 0;
         float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
         for(int i = 0; i < DirectionalLight_Count; ++i)
         {
             vec4 frag_pos_lightspace_D = directionalLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
 
-            int index = 20+i;
+            
             vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
 
             // calculate per-light radiance
@@ -539,18 +545,23 @@ void main()
             bool shadows = directionalLights[i].enableShadow && renderShadow;
 
     //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-            float shadow = shadows ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, -directionalLights[i].direction * distance,index) : 0.0; // add a shadows bool
+            float shadow = shadows ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, 
+            -directionalLights[i].direction * distance,DIRECTIONAL_SHADOW_INDEX_OFFSET + DirectionalShadowIndex) : 0.0; // add a shadows bool
 
         
         
             Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+            
+            if(shadows)
+                ++DirectionalShadowIndex;
+
         }   
 
+
+        int SpotShadowIndex = 0;
         float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
-    
         for (int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
         {
-            int index = 10+i;
             vec3 L = normalize(spotLights[i].position - WorldPos);
 
             float theta  = dot(L, normalize(-spotLights[i].direction));
@@ -621,12 +632,12 @@ void main()
                 bool shadows = spotLights[i].enableShadow && renderShadow;
 
         //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-                float shadow = shadows ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,index) : 0.0; // add a shadows bool
-
-        
+                float shadow = shadows ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,SPOT_SHADOW_INDEX_OFFSET + SpotShadowIndex) : 0.0; // add a shadows bool
         
                 Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
             
+                if(shadows)
+                    ++SpotShadowIndex;
             }   
 
         }   
@@ -663,6 +674,7 @@ void main()
 if(hdr)
     color = color / (color + vec3(1.0));
 
+    color *= ambient_tint;
     FragColor = vec4(color, frag_Albedo.a);
 
 //    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
