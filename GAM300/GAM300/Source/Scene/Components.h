@@ -70,9 +70,16 @@ struct Transform : Object
 	//Parent's euid
 	Engine::UUID parent = 0;
 
-	bool worldEnabled = true;
+	enum class Flag : char
+	{
+		WorldEnabled = 0x01,
+		Modified = 0x02,
+	};
 
-	void SetWorldEnabled(bool _worldEnabled);
+	char flags = (char)Flag::WorldEnabled;
+	void EnableFlag(Flag flag);
+	void DisableFlag(Flag flag);
+	bool GetFlag(Flag flag);
 
 	//Childrens' euids
 	std::vector<Engine::UUID> child;

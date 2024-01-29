@@ -485,24 +485,36 @@ void EditorScene::DisplayGizmos()
             glm::vec3 a_rot;
             glm::vec3 a_scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
-            trans.SetLocalPosition(a_translation);
-            trans.SetLocalRotation(glm::radians(a_rot));
-            trans.SetLocalScale(a_scale);
+            trans.SetLocalMatrix(a_translation,a_rot,a_scale);
         }
-        else if (!firstmove) {
-            //if (trans.GetLocalTranslation() != origTransform.GetLocalTranslation()) {
-            //    Change translate(&trans, "Transform/Translation");
-            //    EDITOR.History.SetPropertyValue(translate, origTransform.GetLocalTranslation(), trans.GetLocalTranslation());
-            //}
-            //if (trans.rotation != origTransform.rotation) {
-            //    Change rotate(&trans, "Transform/Rotation");
-            //    EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
-            //}
-            //if (trans.scale != origTransform.scale) {
-            //    Change scale(&trans, "Transform/Scale");
-            //    EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
-            //}
-            //firstmove = true;
+        else if (!firstmove) 
+        {
+            property::DisplayEnum(trans, [&](std::string_view PropertyName, property::data&& Data, const property::table& table, std::size_t, property::flags::type Flags)
+            {
+                auto entry = property::entry { PropertyName, Data };
+                std::visit([&](auto& Value) 
+                {
+                    using T1 = std::decay_t<decltype(Value)>;
+
+                    if constexpr (std::is_same_v<T1, Vector3>)
+                    {
+                        property::data tempData = property::get(table, &origTransform, entry.first.c_str());
+                        std::visit([&](auto& Value2)
+                        {
+                            using T2 = std::decay_t<decltype(Value2)>;
+                            if constexpr (std::is_same_v<T1, T2>)
+                            {
+                                if ((glm::vec3)Value == (glm::vec3)Value2)
+                                    return;
+                                Change change(&trans, entry.first);
+                                EDITOR.History.SetPropertyValue(change, Value2, Value);
+                            }
+                        }, tempData);
+                    }
+                }, Data);
+            });
+
+            firstmove = true;
         }
     }
 }

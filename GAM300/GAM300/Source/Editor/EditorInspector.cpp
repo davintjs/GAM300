@@ -344,7 +344,8 @@ void DisplayType(Change& change, const char* name, float& val)
         changedvalue = buf;
     }
 
-    if (ImGui::IsItemDeactivatedAfterEdit()) {
+    if (ImGui::IsItemDeactivatedAfterEdit()) 
+    {
         valueChanged = false;
         val = initialvalue;
         EDITOR.History.SetPropertyValue(change, val, changedvalue);
