@@ -44,6 +44,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
+	
 
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
@@ -65,7 +66,8 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(transform.GetLocalMatrix()));
-
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
+			Sprite.AlphaMultiplier);
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
@@ -117,6 +119,8 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 		{
 			continue;
 		}
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
+			Sprite.AlphaMultiplier);
 
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
@@ -177,6 +181,7 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		if (currCanvas.state == DELETED) continue;
 		Entity& entity = currentScene.Get<Entity>(currCanvas);
 		Transform& transform = currentScene.Get<Transform>(entity);
+
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));

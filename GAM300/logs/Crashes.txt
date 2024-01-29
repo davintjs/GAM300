@@ -1,5 +1,6 @@
-[2024-01-21 13:52:39.147] [Error] [critical] 
+[2024-01-25 19:49:01.791] [Error] [critical] 
 Caused By:	false
-Info:		5235729637626766851  Entity does not exist in this scene! Either the EUID provided or the scene is invalid!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 525)
+Info:		Failed to load .scene file "Assets/Scene/EuanNonInstancedBattleground.scene.scene" due to: bad file: Assets/Scene/EuanNonInstancedBattleground.scene.scene
+
+Source:		C:\Users\GS75\OneDrive\Desktop\BeanFactory\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 364)
 

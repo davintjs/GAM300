@@ -422,7 +422,7 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	Vector3 lightingColor{1.f, 1.f, 1.f };
 
 	bool toRender = true; // Dirtybit 
 	property_vtable()
@@ -444,6 +444,8 @@ struct SpriteRenderer : Object
 	{
 		bool WorldSpace = true;
 		bool ColourPicked = false;
+		bool IncludeAlpha = false;
+		float AlphaMultiplier = 1.f;
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 
@@ -455,6 +457,25 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 		property_var(WorldSpace).Name("World Space"),
 		property_var(ColourPicked).Name("Colour Picker Mode"),
+		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
+		property_var(AlphaMultiplier).Name("Alpha Scalar"),
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 

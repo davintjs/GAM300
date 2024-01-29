@@ -463,6 +463,8 @@ public:
 
 	float& getAmbient() { return ambient; };
 
+	glm::vec3& getAmbientRGB() { return ambient_rgb; };
+
 	gBuffer m_gBuffer;
 
 	property_vtable();
@@ -480,6 +482,7 @@ private:
 	float exposure = 1.f;
 	float bloomThreshold = 1.f;
 	float ambient = 1.f;
+	glm::vec3 ambient_rgb = glm::vec3(1.f, 1.f, 1.f); //white
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;
