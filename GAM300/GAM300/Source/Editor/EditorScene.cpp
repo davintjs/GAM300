@@ -71,9 +71,12 @@ void EditorScene::Update(float dt)
             for (auto& ent : multiselectEntities) {
 
                 Transform& t = curr_scene.Get<Transform>(ent);
-                t.translation += (multiTransform.translation - oldTransform.translation);
-                t.rotation += multiTransform.rotation - oldTransform.rotation;
-                t.scale += multiTransform.scale - oldTransform.scale;
+                t.SetGlobalPosition(t.GetGlobalTranslation() + (multiTransform.GetGlobalTranslation() - oldTransform.GetGlobalTranslation()));
+                t.SetGlobalRotation(t.GetGlobalRotation() + multiTransform.GetGlobalRotation() - oldTransform.GetGlobalRotation());
+                t.SetGlobalScale(t.GetGlobalScale() + multiTransform.GetGlobalScale() - oldTransform.GetGlobalScale());
+                //t.translation += (multiTransform.translation - oldTransform.translation);
+                //t.rotation += multiTransform.rotation - oldTransform.rotation;
+                //t.scale += multiTransform.scale - oldTransform.scale;
             }
         }
 
@@ -103,7 +106,7 @@ glm::vec3 CalculateCenterOfSelectedObjects() {
     for (const auto& entity : entities) {
         // Assuming each entity has a position component
         Scene& curr_scene = MySceneManager.GetCurrentScene();        
-        center += curr_scene.Get<Transform>(entity).GetTranslation();
+        center += curr_scene.Get<Transform>(entity).GetGlobalTranslation();
     }
 
     // Divide by the number of selected objects to get the average position
@@ -113,11 +116,11 @@ glm::vec3 CalculateCenterOfSelectedObjects() {
 
 glm::mat4 GetMultiselectWorldMatrix() {
     Transform& multiTransform = EditorScene::Instance().multiTransform;
-    glm::mat4 rot = glm::toMat4(glm::quat(vec3(multiTransform.rotation)));
+    glm::mat4 rot = glm::toMat4(glm::quat(vec3(multiTransform.GetGlobalRotation())));
 
     return glm::translate(glm::mat4(1.0f), vec3(CalculateCenterOfSelectedObjects())) *
         rot *
-        glm::scale(glm::mat4(1.0f), vec3(multiTransform.scale));
+        glm::scale(glm::mat4(1.0f), vec3(multiTransform.GetGlobalScale()));
 }
 
 void EditorScene::ToolBar()
@@ -589,8 +592,12 @@ void EditorScene::DisplayGizmos()
                 glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
-            
 
+            glm::vec3 a_translation;
+            glm::vec3 a_rot;
+            glm::vec3 a_scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
+            //trans.SetLocalMatrix(a_translation, a_rot, a_scale);
 
             //old values to calculate offset
             glm::vec3 o_translation;
@@ -600,31 +607,51 @@ void EditorScene::DisplayGizmos()
 
             if (multiselectEntities.size()) {
 
-                multiTransform.translation += (a_translation - o_translation);
-                multiTransform.rotation += (glm::radians(a_rot - o_rot));
+                glm::vec3 translation = multiTransform.GetGlobalTranslation() + (a_translation - o_translation);
+                glm::vec3 rotation = multiTransform.GetGlobalRotation() + (glm::radians(a_rot - o_rot));
                 auto offset = a_scale - o_scale;
                 offset /= 200; //hardcoded value for now
-                multiTransform.scale += offset;
+                glm::vec3 scale = multiTransform.GetGlobalScale() + offset;
+                multiTransform.SetWorldMatrix(translation, rotation, scale);
+                //multiTransform.translation += (a_translation - o_translation);
+                //multiTransform.rotation += (glm::radians(a_rot - o_rot));
+                //multiTransform.scale += offset;
             }
             else{
-                trans.translation = a_translation;
+                trans.SetWorldMatrix(a_translation, glm::radians(a_rot), a_scale);
+                /*trans.translation = a_translation;
                 trans.rotation = glm::radians(a_rot);
-                trans.scale = a_scale;
+                trans.scale = a_scale;*/
             }
             
         }
         else if (!firstmove) {
-            if (trans.translation != origTransform.translation) {
+            if (trans.GetGlobalTranslation() != origTransform.GetGlobalTranslation()) {
                 Change translate(&trans, "Transform/Translation");
-                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+                //EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+                glm::vec3 origTrans = origTransform.GetGlobalTranslation();
+                glm::vec3 transTrans = trans.GetGlobalTranslation();
+                EDITOR.History.SetPropertyValue(translate, origTrans, transTrans);
+                origTransform.SetGlobalPosition(origTrans);
+                trans.SetGlobalPosition(transTrans);
             }
-            if (trans.rotation != origTransform.rotation) {
+            if (trans.GetGlobalRotation() != origTransform.GetGlobalRotation()) {
                 Change rotate(&trans, "Transform/Rotation");
-                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+                //EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+                glm::vec3 origRot = origTransform.GetGlobalRotation();
+                glm::vec3 transRot = trans.GetGlobalRotation();
+                EDITOR.History.SetPropertyValue(rotate, origRot, transRot);
+                origTransform.SetGlobalRotation(origRot);
+                trans.SetGlobalRotation(transRot);
             }
-            if (trans.scale != origTransform.scale) {
+            if (trans.GetGlobalScale() != origTransform.GetGlobalScale()) {
                 Change scale(&trans, "Transform/Scale");
-                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+                //EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+                glm::vec3 origScale = origTransform.GetGlobalScale();
+                glm::vec3 transScale = trans.GetGlobalScale();
+                EDITOR.History.SetPropertyValue(scale, origScale, transScale);
+                origTransform.SetGlobalScale(origScale);
+                trans.SetGlobalScale(transScale);
             }
             firstmove = true;
         }
