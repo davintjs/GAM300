@@ -138,6 +138,8 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(AudioSource audioSource);
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void StopMusic(float fadetime);
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

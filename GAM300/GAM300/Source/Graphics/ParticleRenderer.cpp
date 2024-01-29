@@ -8,11 +8,13 @@
 
 
 void ParticleRenderer::Init() {
-    SetupInstancedQuad();
+    SetupInstancedQuad(); // for 2D particles
+    SetupInstancedCylinder(); // for cylinder trails
 }
 
 void ParticleRenderer::Update(float dt) {
     particleSRT.clear(); // @kk not all entity should use the same container
+    trailSRT.clear();
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (!currentScene.IsActive(particleComponent))
@@ -38,6 +40,34 @@ void ParticleRenderer::Update(float dt) {
 
             //particleSRT.emplace_back(scale * rotate * translate);
             particleSRT.emplace_back(translate * rotate * scale);
+
+            // update trail
+            for (int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
+                glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1];
+                float trailScale = glm::length(trailVector);
+                glm::mat4 trailScaleMatrix = glm::mat4( 
+                    glm::vec4(.1f, 0, 0, 0),
+                    //glm::vec4(0, 1, 0, 0),
+                    glm::vec4(0, trailScale, 0, 0),
+                    glm::vec4(0, 0, .1f, 0),
+                    glm::vec4(0, 0, 0, 1));
+                trailVector = glm::normalize(trailVector);
+                glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));
+                glm::vec3 newZ = glm::cross(newX, trailVector);
+                glm::mat4 trailRotationMatrix = glm::mat4(
+                    glm::vec4(newX, 0), 
+                    glm::vec4(trailVector, 0), 
+                    glm::vec4(newZ, 0), 
+                    glm::vec4(0, 0, 0, 1));
+                glm::mat4 trailTranslateMatrix = glm::mat4(
+                    glm::vec4(1, 0, 0, 0),
+                    glm::vec4(0, 1, 0, 0),
+                    glm::vec4(0, 0, 1, 0),
+                    glm::vec4(particleComponent.particles_[i].trails.pos[j - 1], 1));
+                //trailSRT.emplace_back(trailScaleMatrix * trailRotationMatrix * trailTranslateMatrix);
+                trailSRT.emplace_back(trailTranslateMatrix * trailRotationMatrix * trailScaleMatrix);
+            }
+
         }
     }
 }
@@ -112,8 +142,130 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glBindVertexArray(0);
 
         shader.UnUse();
+        GLSLShader trailshader = SHADER.GetShader(SHADERTYPE::TRAILS);
+        glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (trailSRT.size()) * sizeof(glm::mat4), trailSRT.data());
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        trailshader.Use();
+        perspective = glGetUniformLocation(trailshader.GetHandle(), "persp_projection");
+        view = glGetUniformLocation(trailshader.GetHandle(), "View");
+        glUniformMatrix4fv(perspective, 1, GL_FALSE,
+            glm::value_ptr(_camera.GetProjMatrix()));
+        glUniformMatrix4fv(view, 1, GL_FALSE,
+            glm::value_ptr(_camera.GetViewMatrix()));
+        glBindVertexArray(cylVAO);
+        glDrawElementsInstanced(GL_TRIANGLE_STRIP, cylsize, GL_UNSIGNED_INT, 0, trailSRT.size());
+        glBindVertexArray(0);
+
+        trailshader.UnUse();
         counter += particleComponent.numParticles_;
+
     }
+}
+
+
+void ParticleRenderer::SetupInstancedCylinder() {
+    float radius = 0.5f;  // Adjust as needed
+    float height = 1.0f;  // Adjust as needed
+    int slices = 20;      // Number of segments around the cylinder
+
+    std::vector<glm::vec3> vertices;
+
+    // Bottom base center vertex
+    vertices.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+
+    // Vertices around the bottom base
+    for (int i = 0; i < slices; i++) {
+        float angle = 2 * 3.1415926 * i / slices;
+        vertices.push_back(glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle)));
+    }
+
+    // Top base center vertex
+    vertices.push_back(glm::vec3(0.0f, height, 0.0f));
+
+    // Vertices around the top base (same as bottom, but at height)
+    for (int i = 0; i < slices; i++) {
+        vertices.push_back(vertices[i + 1] + glm::vec3(0.0f, height, 0.0f));
+    }
+    // Indices for drawing the cylinder using triangle strips
+    std::vector<unsigned int> indices;
+
+    // Bottom base
+    for (int i = 0; i < slices; i++) {
+        indices.push_back(0);
+        indices.push_back(i + 1);
+        indices.push_back(i + 2);
+    }
+    indices.push_back(0);
+    indices.push_back(slices + 1);
+    indices.push_back(1);
+
+    // Top base
+    for (int i = 0; i < slices; i++) {
+        indices.push_back(slices + 2);
+        indices.push_back(slices + i + 3);
+        indices.push_back(slices + i + 2);
+    }
+    indices.push_back(slices + 2);
+    indices.push_back(slices * 2 + 2);
+    indices.push_back(slices + 3);
+
+    // Side
+    for (int i = 0; i < slices; i++) {
+        indices.push_back(i + 1);
+        indices.push_back(slices + i + 2);
+        indices.push_back(slices + i + 3);
+        indices.push_back(i + 1);
+        indices.push_back(slices + i + 3);
+        indices.push_back(i + 2);
+    }
+    cylsize = indices.size();
+
+    GLuint VBO, ebo;
+    glGenVertexArrays(1, &cylVAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &ebo);
+
+    glBindVertexArray(cylVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, cylsize * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(0); // unbind vao
+    glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // unbind ebo
+    //GL_TRIANGLE_STRIP
+
+
+    // instance rendering setup
+    glGenBuffers(1, &cylSRTBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), trailSRT.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(cylVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(7);
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+    glEnableVertexAttribArray(8);
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glEnableVertexAttribArray(9);
+    glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
+    glVertexAttribDivisor(9, 1);
+    glBindVertexArray(0);
+
 }
 
 void ParticleRenderer::SetupInstancedQuad() {
@@ -172,7 +324,6 @@ void ParticleRenderer::SetupInstancedQuad() {
     glVertexAttribDivisor(8, 1);
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
-
 }
 
 void ParticleRenderer::Exit() {

@@ -129,6 +129,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+	static void StopMusic(float fade = 1.f) {
+		AUDIOMANAGER.StopMusic(fade);
+	}
+
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -585,6 +589,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Audio Component
 		Register(AudioSourcePlay);
+		Register(StopMusic);
 
 		// Animator Component
 		Register(PlayAnimation);

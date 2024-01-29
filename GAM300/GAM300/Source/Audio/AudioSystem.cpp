@@ -40,13 +40,13 @@ void AudioSystem::Update(float dt) {
 			}
 		}
 		/**/
-		AUDIOMANAGER.PauseMusic();
+		//AUDIOMANAGER.PauseMusic();
 		AUDIOMANAGER.PauseLoopFX();
 		// update music settings
 		if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
 			// music should auto loop
 			AUDIOMANAGER.SetMusicVolume(audio.volume);
-			AUDIOMANAGER.PlayMusic(audio.currentSound);
+			AUDIOMANAGER.PlayMusic(audio.currentSound, audio.fadetime);
 		}
 
 		// update SFX settings
