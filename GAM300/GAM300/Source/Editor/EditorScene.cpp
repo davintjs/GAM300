@@ -29,6 +29,9 @@ All content © 2023 DigiPen Institute of Technology Singapore.All rights reserve
 #include "Graphics/MESHMANAGER.h"
 #include "Graphics/GraphicsHeaders.h"
 
+Transform oldTransform;
+MeshRenderer oldMeshrenderer;
+
 namespace
 {
     const char* GizmoWorld[] = { "Local", "Global" };
@@ -52,6 +55,69 @@ void EditorScene::Update(float dt)
     ImGui::PopStyleVar();
 
     inOperation = ImGuizmo::IsOver() && EditorHierarchy::Instance().selectedEntity != NON_VALID_ENTITY;
+
+    //update multiselect entities
+    if (multiselectEntities.size()) {
+
+        Scene& curr_scene = MySceneManager.GetCurrentScene();
+         useMeshRenderer = true;
+
+        for (auto& ent : multiselectEntities) {
+            if (!curr_scene.Has<MeshRenderer>(curr_scene.Get<Entity>(ent)))
+                useMeshRenderer = false;
+        }
+
+        if (multiTransform != oldTransform) {
+            for (auto& ent : multiselectEntities) {
+
+                Transform& t = curr_scene.Get<Transform>(ent);
+                t.translation += (multiTransform.translation - oldTransform.translation);
+                t.rotation += multiTransform.rotation - oldTransform.rotation;
+                t.scale += multiTransform.scale - oldTransform.scale;
+            }
+        }
+
+        if (useMeshRenderer) {
+            if (multiMeshRenderer != oldMeshrenderer) {
+                for (auto& ent : multiselectEntities) {
+                    MeshRenderer& Mesh = curr_scene.Get<MeshRenderer>(ent);
+                    if (multiMeshRenderer.meshID != oldMeshrenderer.meshID) {
+                        Mesh.meshID = multiMeshRenderer.meshID;
+                    }
+                    if (multiMeshRenderer.materialGUID != oldMeshrenderer.materialGUID) {
+                        Mesh.materialGUID = multiMeshRenderer.materialGUID;
+                    }
+                }
+            }
+        }    
+    }
+
+    oldTransform = multiTransform;
+}
+
+// Calculate the center of selected objects
+glm::vec3 CalculateCenterOfSelectedObjects() {
+    glm::vec3 center(0.0f, 0.0f, 0.0f);
+
+    auto& entities = EditorScene::Instance().multiselectEntities;
+    for (const auto& entity : entities) {
+        // Assuming each entity has a position component
+        Scene& curr_scene = MySceneManager.GetCurrentScene();        
+        center += curr_scene.Get<Transform>(entity).GetTranslation();
+    }
+
+    // Divide by the number of selected objects to get the average position
+    center /= static_cast<float>(entities.size());
+    return center;
+}
+
+glm::mat4 GetMultiselectWorldMatrix() {
+    Transform& multiTransform = EditorScene::Instance().multiTransform;
+    glm::mat4 rot = glm::toMat4(glm::quat(vec3(multiTransform.rotation)));
+
+    return glm::translate(glm::mat4(1.0f), vec3(CalculateCenterOfSelectedObjects())) *
+        rot *
+        glm::scale(glm::mat4(1.0f), vec3(multiTransform.scale));
 }
 
 void EditorScene::ToolBar()
@@ -269,9 +335,6 @@ bool EditorScene::SelectEntity()
             // This means that u double clicked, wanted to select something, but THERE ISNT ANYTHING
             SelectedEntityEvent selectedEvent{ 0 };
             EVENTS.Publish(&selectedEvent);
-
-            //clear all selected entities in mutliselect
-            //EditorInspector::Instance().multiselectEntities.clear();
         }
         return true;
     }
@@ -343,6 +406,16 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), renderer.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(renderer.EUID());
+                        } 
+
+                        GetSelectedEntityEvent e{};
+                        EVENTS.Publish(&e);         
+                        if(e.pEntity != nullptr)
+                            multiselectEntities.push_back(e.pEntity->EUID());
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -379,6 +452,12 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), Sprite.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(Sprite.EUID());
+                        }
+                        
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -399,8 +478,10 @@ void EditorScene::DisplayGizmos()
 
             Transform& transform = currentScene.Get<Transform>(entity);
             Tag& tag = currentScene.Get<Tag>(entity);
+
+            glm::mat4 transMatrix;
             // I am putting it here temporarily, maybe this should move to some editor area :MOUSE PICKING
-            glm::mat4 transMatrix = transform.GetWorldMatrix();
+            transMatrix = transform.GetWorldMatrix();
 
             glm::vec3 translation;
             glm::vec3 rot;
@@ -418,6 +499,11 @@ void EditorScene::DisplayGizmos()
             {
                 if (tempIntersect < intersect)
                 {
+                    if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) {
+                        if (std::find(multiselectEntities.begin(), multiselectEntities.end(), bc.EUID()) == multiselectEntities.end()) {
+                            multiselectEntities.push_back(bc.EUID());
+                        }
+                    }
                     SelectedEntityEvent SelectingEntity(&entity);
                     EVENTS.Publish(&SelectingEntity);
                     intersect = tempIntersect;
@@ -472,7 +558,14 @@ void EditorScene::DisplayGizmos()
             DEBUGDRAW.DrawLightBounds(entity.EUID());
         }
 
-        glm::mat4 transform_1 = trans.GetWorldMatrix();
+        glm::mat4 transform_1;
+        if (EditorScene::Instance().multiselectEntities.size() > 1)
+            transform_1 = GetMultiselectWorldMatrix();
+        else
+            transform_1 = trans.GetWorldMatrix();
+
+        glm::mat4 og_transform = transform_1;
+
 
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
@@ -496,42 +589,54 @@ void EditorScene::DisplayGizmos()
                 glm::mat4 parentTransform = parentTrans.GetWorldMatrix();
                 transform_1 = glm::inverse(parentTransform) * transform_1;
             }
-            glm::vec3 a_translation;
-            glm::vec3 a_rot;
-            glm::vec3 a_scale;
-            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform_1), &a_translation[0], &a_rot[0], &a_scale[0]);
-            trans.SetLocalMatrix(a_translation,a_rot,a_scale);
+            
+
+
+            //old values to calculate offset
+            glm::vec3 o_translation;
+            glm::vec3 o_rot;
+            glm::vec3 o_scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(og_transform), &o_translation[0], &o_rot[0], &o_scale[0]);
+
+            if (multiselectEntities.size()) {
+
+                multiTransform.translation += (a_translation - o_translation);
+                multiTransform.rotation += (glm::radians(a_rot - o_rot));
+                auto offset = a_scale - o_scale;
+                offset /= 200; //hardcoded value for now
+                multiTransform.scale += offset;
+            }
+            else{
+                trans.translation = a_translation;
+                trans.rotation = glm::radians(a_rot);
+                trans.scale = a_scale;
+            }
+            
         }
-        else if (!firstmove) 
-        {
-            property::DisplayEnum(trans, [&](std::string_view PropertyName, property::data&& Data, const property::table& table, std::size_t, property::flags::type Flags)
-            {
-                auto entry = property::entry { PropertyName, Data };
-                std::visit([&](auto& Value) 
-                {
-                    using T1 = std::decay_t<decltype(Value)>;
-
-                    if constexpr (std::is_same_v<T1, Vector3>)
-                    {
-                        property::data tempData = property::get(table, &origTransform, entry.first.c_str());
-                        std::visit([&](auto& Value2)
-                        {
-                            using T2 = std::decay_t<decltype(Value2)>;
-                            if constexpr (std::is_same_v<T1, T2>)
-                            {
-                                if ((glm::vec3)Value == (glm::vec3)Value2)
-                                    return;
-                                Change change(&trans, entry.first);
-                                EDITOR.History.SetPropertyValue(change, Value2, Value);
-                            }
-                        }, tempData);
-                    }
-                }, Data);
-            });
-
+        else if (!firstmove) {
+            if (trans.translation != origTransform.translation) {
+                Change translate(&trans, "Transform/Translation");
+                EDITOR.History.SetPropertyValue(translate, origTransform.translation, trans.translation);
+            }
+            if (trans.rotation != origTransform.rotation) {
+                Change rotate(&trans, "Transform/Rotation");
+                EDITOR.History.SetPropertyValue(rotate, origTransform.rotation, trans.rotation);
+            }
+            if (trans.scale != origTransform.scale) {
+                Change scale(&trans, "Transform/Scale");
+                EDITOR.History.SetPropertyValue(scale, origTransform.scale, trans.scale);
+            }
             firstmove = true;
         }
     }
+    else {
+        //clear all selected entities in mutliselect
+        multiselectEntities.clear();
+        multiTransform = Transform();
+        multiMeshRenderer = MeshRenderer();
+    }
+        
+
 }
 
 void EditorScene::Exit()

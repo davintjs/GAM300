@@ -31,6 +31,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Utilities/SparseSet.h"
 #include "Scene/Entity.h"
 #include "Core/Events.h"
+#include <imgui_node_editor.h>
 
 #define NON_VALID_ENTITY 0
 #define GET_TEXTURE_ID(filepath) TextureManager.GetTexture(filepath);
@@ -210,6 +211,11 @@ public:
     bool const DebugDraw() { return debug_draw; }
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
+    //Multiselect variables
+    std::list<Engine::UUID>multiselectEntities;
+    Transform multiTransform; 
+    MeshRenderer multiMeshRenderer;
+    bool useMeshRenderer = true;
 
 private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
@@ -295,8 +301,6 @@ public:
     bool material_inspector;
     bool model_inspector;
 
-    std::list<Engine::UUID>multiselectEntities;
-
     //std::vector<layer> Layers;
     //std::vector<std::string> Tags;
 
@@ -350,17 +354,80 @@ public:
     std::map<std::string, ScrollingBuffer>system_plots;
 };
 
+namespace ed = ax::NodeEditor;
+
+
 ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
 {
-public:
-    // Initializing the Performance Viewer
-    void Init();
+    public:
+        // Initializing the Performance Viewer
+        void Init();
 
-    // Updating and displaying of the Performance Viewer
-    void Update(float dt);
+        // Updating and displaying of the Performance Viewer
+        void Update(float dt);
 
-    // Exit the system
-    void Exit();
+        // Exit the system
+        void Exit();
+
+        enum class NodeType {
+            ControlFlow,
+            Decorator,
+            Leaf
+        };
+
+        struct Node {
+            int id;
+            NodeType type;
+            ImVec2 position;
+            std::string filename;
+            ed::PinId inputPinId;  // Add pin IDs as needed
+            ed::PinId outputPinId;
+
+            Node(int& _id, NodeType _type, std::string _filename, const ImVec2& _position)
+                : id(_id), type(_type), filename(_filename), position(_position), inputPinId(0), outputPinId(0) {}
+        };
+
+        struct ControlFlowNode : public Node {
+            ControlFlowNode(int& id, std::string _filename, const ImVec2& position)
+                : Node(id, NodeType::ControlFlow, _filename, position) {
+                inputPinId = id++;
+                outputPinId = id++;
+            }
+        };
+
+        struct DecoratorNode : public Node {
+            DecoratorNode(int& id, std::string _filename, const ImVec2& position)
+                : Node(id, NodeType::Decorator, _filename, position) {
+                inputPinId = id++;
+                outputPinId = id++;
+            }
+        };
+
+        struct LeafNode : public Node {
+            LeafNode(int& id, std::string _filename, const ImVec2& position)
+                : Node(id, NodeType::Leaf, _filename, position) {
+                inputPinId = id++;
+                outputPinId = id++;
+            }
+        };
+
+        struct LinkInfo {
+            ed::LinkId Id;
+            ed::PinId InputId;
+            ed::PinId OutputId;
+        };
+
+    private:
+        
+        int uniqueId = 1;
+        ed::EditorContext* m_Context = nullptr;
+        bool m_FirstFrame = true;
+        ImVector<LinkInfo> m_Links;
+        int m_NextLinkId = 100;
+        std::vector<Node> m_Nodes;
+
+        Node CreateNode(int& id, NodeType type, const std::string & filename, const ImVec2 & position);
+        void DrawNode(Node& node);
 };
 
 #endif // !EDITORHEADERS_H

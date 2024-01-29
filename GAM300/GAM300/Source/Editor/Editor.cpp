@@ -93,7 +93,7 @@ void EditorSystem::Update(float dt)
     EditorSystems::Update(dt);
 
     //macros for undo and redo functionality
-    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
+     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
         if (ImGui::IsKeyPressed(ImGuiKey_Z, false))
             History.UndoChange();    
     }
@@ -117,11 +117,27 @@ void EditorSystem::Update(float dt)
 
     //Need to press ctrl before delete to avoid accidental deletion
     if (ImGui::IsKeyReleased(ImGuiKey_Delete)) {
-        DeleteEntity(selectedEntity);
+        auto& multiSel = EditorScene::Instance().multiselectEntities;
+        if (multiSel.size()) {
+            for (auto ent : multiSel) {
+                DeleteEntity(ent);
+            }
+            multiSel.clear();
+        }
+        else
+            DeleteEntity(selectedEntity);
     }
     if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) {
         if (ImGui::IsKeyReleased(ImGuiKey_Backspace)) {
-            DeleteEntity(selectedEntity);
+            auto& multiSel = EditorScene::Instance().multiselectEntities;
+            if (multiSel.size()) {
+                for (auto ent : multiSel) {
+                    DeleteEntity(ent);
+                }
+                multiSel.clear();
+            }
+            else
+                DeleteEntity(selectedEntity);
         }
     }
 

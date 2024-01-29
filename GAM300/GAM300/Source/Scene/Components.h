@@ -84,6 +84,15 @@ struct Transform : Object
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 
+	bool operator == (const Transform& other) const {
+		if ((translation == other.translation) &&
+			(rotation == other.rotation) &&
+			(scale == other.scale)) {
+			return true;
+		}
+		return false;
+	}
+
 	//Check whether this is a leaf node
 	bool isLeaf();
 
@@ -393,6 +402,14 @@ struct MeshRenderer : Object
 	
 	//temporary index for current material
 	Engine::GUID<MaterialAsset> materialGUID{0};
+
+	bool operator == (const MeshRenderer& other) const {
+		if ((meshID == other.meshID) &&
+			(materialGUID == other.materialGUID)) {
+			return true;
+		}
+		return false;
+	}
 
 	property_vtable();
 };
