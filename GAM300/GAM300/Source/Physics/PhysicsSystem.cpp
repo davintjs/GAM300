@@ -35,6 +35,14 @@ void JoltQuatToGlmVec3(JPH::Quat& jQuat, Vector3& gVec3);
 // Create a Jolt character
 void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, PhysicsSystem* enginePSystem);
 
+namespace
+{
+	glm::mat4 GetBoxColliderMat(Transform& transform ,BoxCollider& boxCol)
+	{
+		 return transform.GetWorldMatrix() * Transform::CreateTransformationMtx(boxCol.offset, vec3(0), (glm::vec3)boxCol.dimensions /2.f);
+	}
+}
+
 void PhysicsSystem::Init() 
 {
 	// Event Subscriptions
@@ -87,15 +95,25 @@ void PhysicsSystem::Update(float dt) {
 		JPH::RVec3 tmp;
 
 		Transform& t = scene.Get<Transform>(entity);
-		
-		Vector3 translation = t.GetGlobalTranslation();
-		if (scene.Has<BoxCollider>(entity))
-			translation = translation.operator glm::vec3() + scene.Get<BoxCollider>(entity).offset.operator glm::vec3();
-		GlmVec3ToJoltVec3(translation, tmp);
-		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::DontActivate);
+
 
 		JPH::Quat tmpQuat;
 		Vector3 rotation = t.GetGlobalRotation();
+
+		glm::quat rot;
+
+		Vector3 scale = t.GetGlobalRotation();
+		
+		Vector3 translation = t.GetGlobalTranslation();
+		if (scene.Has<BoxCollider>(entity))
+		{
+			glm::mat4 boxTransMtx = GetBoxColliderMat(t, scene.Get<BoxCollider>(t));
+			Transform::Decompose(boxTransMtx, (Vector3&)translation, rot, (Vector3&)scale);
+			rotation = glm::eulerAngles(rot);
+		}
+		GlmVec3ToJoltVec3(translation, tmp);
+		bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::DontActivate);
+
 		GlmVec3ToJoltQuat(rotation, tmpQuat);
 		bodyInterface->SetRotation(tmpBID, tmpQuat,JPH::EActivation::DontActivate);
 
@@ -672,13 +690,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
 
-			// Calculate collider scale
-			Vector3 colliderScale(boxCollider.dimensions.x * tscale.x / 2.f, boxCollider.dimensions.y * tscale.y / 2.f, boxCollider.dimensions.z * tscale.z / 2.f);
-			GlmVec3ToJoltVec3(colliderScale, scale);
+			glm::mat4 boxTransMtx = GetBoxColliderMat(t, boxCollider);
 
-			// Account for offset to get final position of collider
-			Vector3 finalPos(tpos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
-			GlmVec3ToJoltVec3(finalPos, pos);
+			Transform::Decompose(boxTransMtx, (Vector3&)pos, (glm::quat&)rot, (Vector3&)scale);
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
@@ -962,13 +976,9 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 
 		BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
 
-		// Calculate collider scale
-		Vector3 colliderScale(boxCollider.dimensions.x * tscale.x / 2.f, boxCollider.dimensions.y * tscale.y / 2.f, boxCollider.dimensions.z * tscale.z / 2.f);
-		GlmVec3ToJoltVec3(colliderScale, scale);
+		glm::mat4 boxTransMtx = GetBoxColliderMat(t, boxCollider);
 
-		// Account for offset to get final position of collider
-		Vector3 finalPos(tpos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
-		GlmVec3ToJoltVec3(finalPos, pos);
+		Transform::Decompose(boxTransMtx, (Vector3&)pos, (glm::quat&)rot, (Vector3&)scale);
 
 		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 		SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);

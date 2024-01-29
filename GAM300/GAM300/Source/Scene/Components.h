@@ -32,6 +32,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Core/Events.h>
 #include <Properties.h>
 #include "Debugging/Debugger.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 
 constexpr size_t MAX_ENTITIES{ 5 };
@@ -101,6 +103,13 @@ struct Transform : Object
 		return glm::translate(glm::mat4(1.0f), vec3(translation)) *
 			rot *
 			glm::scale(glm::mat4(1.0f), vec3(scale));
+	}
+
+	static void Decompose(glm::mat4& mat, Vector3& pos, glm::quat& rot, Vector3& scale)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(mat, (glm::fvec3&)scale, rot, (glm::fvec3&)pos, skew, perspective);
 	}
 
 	// Get the translation in world space
