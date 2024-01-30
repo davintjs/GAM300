@@ -143,6 +143,7 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  Fade Time (s): 1
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -2229,6 +2230,7 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 0.0500000007
+  Fade Time (s): 1
   Sound File: {guid: cd2394834a42ce1444157eaca8004a78}
   Play: false
 ---
@@ -3033,7 +3035,7 @@ ID: 5488028038743744129
 Transform:
   m_GameObject: {fileID: 16554639123029767943}
   Translation: [0, 0, 0]
-  Rotation: [0, -0.000345230132, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000012, 1, 1.00000012]
   Father: {fileID: 2114274850025115993}
   m_Children:
@@ -12555,6 +12557,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 4bdfa959f8e2dc7ae0d617c8e6620ad8}
   Play: false
 ---
@@ -12585,6 +12588,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 5e16beacb1259528db74e50fb01bad43}
   Play: false
 ---
@@ -12615,6 +12619,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: e2f9211cbeda8ddc84eeea688a2c7b0f}
   Play: false
 ---
@@ -12711,7 +12716,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 775.143799
+  LookAtDistance: 849.964172
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12778,6 +12783,8 @@ CharacterController:
   GravityFactor: 1.89999998
   SlopeLimit: 45
   IsGrounded: true
+  Radius: 0.5
+  Height: 2
 ---
 ID: 16716648517964172389
 AudioSource:
@@ -12786,6 +12793,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 000000000000000000000000000001f4}
   Play: false
 ---
@@ -12913,7 +12921,10 @@ ParticleComponent:
   Particle Max Scale: 0.0599999987
   Particle Scale Rate: 0.699999988
   Particle Speed: 4
+  Particle Noise: 0
+  Particle Noise Frequency: 0
   2D particle: false
+  Trailing: false
   Looping: false
 ---
 ID: 13482372997539004348
@@ -15366,39 +15377,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 10110590738670396230
-GameObject:
-  m_IsActive: true
-  m_Name: LightSource - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2120960920705211697}  # Transform
-    - component: {fileID: 16821202709218263828}  # LightSource
----
-ID: 2120960920705211697
-Transform:
-  m_GameObject: {fileID: 10110590738670396230}
-  Translation: [66.0363159, 40.3264885, -61.3983307]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 16821202709218263828
-LightSource:
-  m_GameObject: {fileID: 10110590738670396230}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 2
-  lightpos: [0, 0, 0]
-  Intensity: 2
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [100, 100, 100]
----
 ID: 15952054123807579159
 GameObject:
   m_IsActive: true
@@ -15668,7 +15646,7 @@ GameObject:
 ID: 9250071627966584501
 Transform:
   m_GameObject: {fileID: 15258148970884941533}
-  Translation: [-20.1665516, 4.81392384, 7.44998932]
+  Translation: [-20.1713734, 3.32432532, 4.72971821]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15701,9 +15679,9 @@ GameObject:
 ID: 10592381451826313751
 Transform:
   m_GameObject: {fileID: 12255453308465698455}
-  Translation: [19.1157055, 5.55614853, -35.4429855]
+  Translation: [45.6425247, 4.10618305, -34.9848824]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.00100000005, 0.00100000005, 0.00100000005]
   Father: {fileID: 0}
   m_Children:
     []
@@ -15715,44 +15693,11 @@ LightSource:
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 2.5
+  Intensity: 1000
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 0
   Outer Cutoff: 0
-  Color: [100, 100, 100]
----
-ID: 16149919952186955683
-GameObject:
-  m_IsActive: true
-  m_Name: JunctionLight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9980629945179896881}  # Transform
-    - component: {fileID: 12873146558931283450}  # LightSource
----
-ID: 9980629945179896881
-Transform:
-  m_GameObject: {fileID: 16149919952186955683}
-  Translation: [-20.0492249, 2.76795888, -35.9148026]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 12873146558931283450
-LightSource:
-  m_GameObject: {fileID: 16149919952186955683}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 2
-  lightpos: [0, 0, 0]
-  Intensity: 150
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [0.999899983, 1, 0.999905229]
+  Color: [0.722266138, 0.241775185, 0.278648883]
 ---
 ID: 263938901046208410
 GameObject:
@@ -15781,6 +15726,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
   Play: false
 ---
@@ -15811,6 +15757,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: eda674df517607f98c64da16ea040919}
   Play: false
 ---
@@ -15841,6 +15788,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 06f54883e9bc513507a05a5298dba06f}
   Play: false
 ---
@@ -15871,6 +15819,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 42dcb3de127c7dba6b7c233d0d648a80}
   Play: false
 ---
@@ -15901,6 +15850,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: e163082ab73fa95c5d0a07c82df6920c}
   Play: false
 ---
@@ -15931,6 +15881,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: c4f9a933d2103f414ffbc861e92d5bb1}
   Play: false
 ---
@@ -15961,6 +15912,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 7ea8fb553399a4eba3df2a0d19e0a815}
   Play: false
 ---
@@ -15991,6 +15943,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: f4bb7a459a14c3256accf4e34b46c4d0}
   Play: false
 ---
@@ -16299,10 +16252,10 @@ ID: 5561963866911114795
 LightSource:
   m_GameObject: {fileID: 18047848578679342217}
   m_IsEnabled: true
-  EnableShadow: false
+  EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
-  Intensity: 1
+  Intensity: 5
   Direction: [0, 0, 0]
   Inner Cutoff: 50
   Outer Cutoff: 70
@@ -16417,6 +16370,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
   Play: false
 ---
@@ -16447,6 +16401,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
   Play: false
 ---
@@ -16942,6 +16897,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
 ---
@@ -17110,6 +17066,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
   Play: false
 ---
@@ -18581,6 +18538,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 9f8df03759bd025de40156229fe387ec}
   Play: false
 ---
@@ -18611,6 +18569,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: a10a36512cec8fd5daf9c70f6aebdd9f}
   Play: false
 ---
@@ -18641,6 +18600,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 6dfc6a4ff8d5e37c5b303cc3350fe00d}
   Play: false
 ---
@@ -18718,7 +18678,7 @@ ID: 11049303657581079974
 Transform:
   m_GameObject: {fileID: 10961871691632621067}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18745,7 +18705,7 @@ ID: 1794912969409379438
 Transform:
   m_GameObject: {fileID: 1416022780549018924}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18772,7 +18732,7 @@ ID: 9246169083099059692
 Transform:
   m_GameObject: {fileID: 16060661290853765390}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18799,7 +18759,7 @@ ID: 11130261028068795108
 Transform:
   m_GameObject: {fileID: 2692778080824034299}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18826,7 +18786,7 @@ ID: 16017547117932174780
 Transform:
   m_GameObject: {fileID: 11169966922895333578}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18853,7 +18813,7 @@ ID: 6414522453769689961
 Transform:
   m_GameObject: {fileID: 10684160497335445843}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18880,7 +18840,7 @@ ID: 7260617793372111376
 Transform:
   m_GameObject: {fileID: 8544240979410411575}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18907,7 +18867,7 @@ ID: 9242330825357041697
 Transform:
   m_GameObject: {fileID: 7519300397303989235}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -18934,7 +18894,7 @@ ID: 6934693623341174007
 Transform:
   m_GameObject: {fileID: 15563943519181655396}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19069,7 +19029,7 @@ ID: 17920260734287536530
 Transform:
   m_GameObject: {fileID: 1813237819695690946}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19096,7 +19056,7 @@ ID: 81172293203609554
 Transform:
   m_GameObject: {fileID: 12358992120678844385}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19123,7 +19083,7 @@ ID: 4144984423306409393
 Transform:
   m_GameObject: {fileID: 8906815346667952649}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19150,7 +19110,7 @@ ID: 9760045086437914311
 Transform:
   m_GameObject: {fileID: 5804807466755303755}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19204,7 +19164,7 @@ ID: 10201897465774321462
 Transform:
   m_GameObject: {fileID: 7830226553809567975}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19231,7 +19191,7 @@ ID: 8235639944526391985
 Transform:
   m_GameObject: {fileID: 15536192812714060124}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19258,7 +19218,7 @@ ID: 1289741140917096189
 Transform:
   m_GameObject: {fileID: 2011230155112750903}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19285,7 +19245,7 @@ ID: 9959829010747623419
 Transform:
   m_GameObject: {fileID: 9278855532392783210}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19393,7 +19353,7 @@ ID: 7919425083704922224
 Transform:
   m_GameObject: {fileID: 2047966729586850848}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19501,7 +19461,7 @@ ID: 3767198018138796413
 Transform:
   m_GameObject: {fileID: 15034068729599642123}
   Translation: [0, 0, 0.000244140625]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 1051037936027593321}
   m_Children:
@@ -19941,167 +19901,266 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
-ID: 10142776041819286173
+ID: 6426854790396339902
 GameObject:
   m_IsActive: true
-  m_Name: SpawnLight - Copy
-  m_TagString: Untagged
+  m_Name: JunctionLight - Copy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 15053351632834978083}  # Transform
-    - component: {fileID: 12438290877144817004}  # LightSource
+    - component: {fileID: 8527269539634757412}  # Transform
+    - component: {fileID: 324992952663417969}  # LightSource
 ---
-ID: 15053351632834978083
+ID: 8527269539634757412
 Transform:
-  m_GameObject: {fileID: 10142776041819286173}
-  Translation: [-20.1665516, 4.80159092, 18.2277012]
+  m_GameObject: {fileID: 6426854790396339902}
+  Translation: [-5.62343311, 8.6647377, -41.6817818]
+  Rotation: [-2.49494815, -4.5108037, 3.12588477]
+  Scale: [0.999975145, 0.999825418, 0.999867678]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 324992952663417969
+LightSource:
+  m_GameObject: {fileID: 6426854790396339902}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 1000
+  Direction: [0, 0, 0]
+  Inner Cutoff: 20
+  Outer Cutoff: 30
+  Color: [1, 1, 1]
+---
+ID: 547103495630516153
+GameObject:
+  m_IsActive: true
+  m_Name: JunctionLight - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15384111677739230962}  # Transform
+    - component: {fileID: 13678278977428367835}  # LightSource
+---
+ID: 15384111677739230962
+Transform:
+  m_GameObject: {fileID: 547103495630516153}
+  Translation: [-5.62343311, 8.6647377, -29.0757484]
+  Rotation: [0.678060353, -4.31232452, 0.28012532]
+  Scale: [0.999955058, 0.999821544, 0.999848664]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13678278977428367835
+LightSource:
+  m_GameObject: {fileID: 547103495630516153}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 1300
+  Direction: [0, 0, 0]
+  Inner Cutoff: 20
+  Outer Cutoff: 30
+  Color: [1, 1, 1]
+---
+ID: 10399169332019241184
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLightPoint
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5410626941940607585}  # Transform
+    - component: {fileID: 13492015606596459801}  # LightSource
+---
+ID: 5410626941940607585
+Transform:
+  m_GameObject: {fileID: 10399169332019241184}
+  Translation: [-19.822876, 3.58457541, 18.7908535]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 12438290877144817004
+ID: 13492015606596459801
 LightSource:
-  m_GameObject: {fileID: 10142776041819286173}
+  m_GameObject: {fileID: 10399169332019241184}
   m_IsEnabled: true
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 34.5699997
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [1, 0.999899983, 0.999899983]
+  Intensity: 20
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
 ---
-ID: 9920204187131301003
+ID: 6922706196787572614
 GameObject:
   m_IsActive: true
-  m_Name: SpawnLight - Copy - Copy
-  m_TagString: Untagged
+  m_Name: SpawnLightPoint - Copy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 13460999324741313014}  # Transform
-    - component: {fileID: 3585654171205390185}  # LightSource
+    - component: {fileID: 13569132803493533048}  # Transform
+    - component: {fileID: 10516980419524724945}  # LightSource
 ---
-ID: 13460999324741313014
+ID: 13569132803493533048
 Transform:
-  m_GameObject: {fileID: 9920204187131301003}
-  Translation: [-20.1665516, 4.80159092, -1.56301534]
+  m_GameObject: {fileID: 6922706196787572614}
+  Translation: [-19.822876, 3.58457541, 12.8408566]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 3585654171205390185
+ID: 10516980419524724945
 LightSource:
-  m_GameObject: {fileID: 9920204187131301003}
+  m_GameObject: {fileID: 6922706196787572614}
   m_IsEnabled: true
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 34.5699997
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [1, 0.999899983, 0.999899983]
+  Intensity: 20
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
 ---
-ID: 4523280386986073943
+ID: 8316824181512727885
 GameObject:
   m_IsActive: true
-  m_Name: SpawnLight - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_Name: SpawnLightPoint - Copy - Copy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 8781818261918192370}  # Transform
-    - component: {fileID: 12569900376626086894}  # LightSource
+    - component: {fileID: 15070601637834108873}  # Transform
+    - component: {fileID: 10141647265227443192}  # LightSource
 ---
-ID: 8781818261918192370
+ID: 15070601637834108873
 Transform:
-  m_GameObject: {fileID: 4523280386986073943}
-  Translation: [-20.1665516, 4.80159092, -9.53971577]
+  m_GameObject: {fileID: 8316824181512727885}
+  Translation: [-19.822876, 3.58457541, -1.88046348]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 12569900376626086894
+ID: 10141647265227443192
 LightSource:
-  m_GameObject: {fileID: 4523280386986073943}
+  m_GameObject: {fileID: 8316824181512727885}
   m_IsEnabled: true
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 34.5699997
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [1, 0.999899983, 0.999899983]
+  Intensity: 20
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
 ---
-ID: 2493546269884580952
+ID: 5349334078668640543
 GameObject:
   m_IsActive: true
-  m_Name: SpawnLight - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_Name: SpawnLightPoint - Copy - Copy - Copy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 17774096125714128315}  # Transform
-    - component: {fileID: 9660818073227121405}  # LightSource
+    - component: {fileID: 604256993121662198}  # Transform
+    - component: {fileID: 5260155954368856010}  # LightSource
 ---
-ID: 17774096125714128315
+ID: 604256993121662198
 Transform:
-  m_GameObject: {fileID: 2493546269884580952}
-  Translation: [-20.1665516, 4.80159092, -21.5249729]
+  m_GameObject: {fileID: 5349334078668640543}
+  Translation: [-19.822876, 4.5265274, -10.5084524]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 9660818073227121405
+ID: 5260155954368856010
 LightSource:
-  m_GameObject: {fileID: 2493546269884580952}
+  m_GameObject: {fileID: 5349334078668640543}
   m_IsEnabled: true
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 34.5699997
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [1, 0.999899983, 0.999899983]
+  Intensity: 20
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
 ---
-ID: 4969303899380256241
+ID: 5979440769217300797
 GameObject:
   m_IsActive: true
-  m_Name: SpawnLight - Copy - Copy - Copy - Copy - Copy
-  m_TagString: Untagged
+  m_Name: SpawnLightPoint - Copy - Copy - Copy - Copy
+  m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 11478192865824543651}  # Transform
-    - component: {fileID: 11568051898548929711}  # LightSource
+    - component: {fileID: 6095894669879261599}  # Transform
+    - component: {fileID: 17501203981931344056}  # LightSource
 ---
-ID: 11478192865824543651
+ID: 6095894669879261599
 Transform:
-  m_GameObject: {fileID: 4969303899380256241}
-  Translation: [-20.1665516, 4.80159092, -15.9206886]
+  m_GameObject: {fileID: 5979440769217300797}
+  Translation: [-19.822876, 4.5265274, -18.5487995]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 11568051898548929711
+ID: 17501203981931344056
 LightSource:
-  m_GameObject: {fileID: 4969303899380256241}
+  m_GameObject: {fileID: 5979440769217300797}
   m_IsEnabled: true
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 34.5699997
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [1, 0.999899983, 0.999899983]
+  Intensity: 20
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
+---
+ID: 14616624958701408098
+GameObject:
+  m_IsActive: true
+  m_Name: SpawnLightPoint - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12422059693960201731}  # Transform
+    - component: {fileID: 9923218827931738533}  # LightSource
+---
+ID: 12422059693960201731
+Transform:
+  m_GameObject: {fileID: 14616624958701408098}
+  Translation: [-20.0087852, 7.10635328, -36.0337753]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9923218827931738533
+LightSource:
+  m_GameObject: {fileID: 14616624958701408098}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 350
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [0.284752041, 0.68121624, 0.293500453]
