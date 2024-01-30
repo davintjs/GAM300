@@ -23,6 +23,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 void Lighting::Init()
 {
+
 	// Initalizing Shadow FBOs
 
 	unsigned int shadowFBO, textureID;
@@ -35,14 +36,12 @@ void Lighting::Init()
 	{
 		FRAMEBUFFER.CreatePointLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
 		pointLightFBO.push_back({ shadowFBO, textureID });
-
 	}
 
 	for (int i = 0; i < MAX_SPOT_LIGHT_SHADOW; ++i)
 	{
 		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
 		spotLightFBO.push_back({ shadowFBO, textureID });
-
 	}
 
 
