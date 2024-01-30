@@ -418,10 +418,10 @@ void main()
              Am_Light = false;
     }
 
-
+    bool hasEmissionMap =false;
     if (hasEmission != 0)
     {
-
+        hasEmissionMap = true;
 //        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
         emission  =  texture(EmmisionMap, TexCoords).xyz; 
         
@@ -434,8 +434,10 @@ void main()
         FragColor = vec4(Albedo.xyz,1.f);// CHANGE
         return;
     }
+    bool isEmission =  (EmissionConstant !=  1.f); 
+    bool toBloom = false;
 
-    if(emission == vec3(0.f))
+    if(!hasEmissionMap && !isEmission)
     {
 
         vec3 N ;
@@ -668,7 +670,12 @@ void main()
     }
     else
     {
-        color = emission;
+        toBloom = true;
+
+        if (hasEmissionMap)
+            color = emission;
+        else
+            color = albedo;
     }
     // Done in Post Processing
 //    // HDR tonemapping
@@ -679,7 +686,8 @@ void main()
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
     brightness *= EmissionConstant;
 
-    if(brightness > bloomThreshold)
+    if( (brightness > bloomThreshold) && toBloom)
+
         Blooming = vec4(color.rgb, 1.0);
     else
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);
