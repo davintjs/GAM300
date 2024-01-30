@@ -60,6 +60,18 @@ namespace
 	{
 		return transform.GetWorldMatrix() * GetColliderLocalTransform<T>(col);
 	}
+
+	template <typename T>
+	glm::mat4 GetColliderLocalOffset(T& col)
+	{
+		return Transform::CreateTransformationMtx(col.offset, vec3(0), vec3(1));
+	}
+
+	template <typename T>
+	glm::mat4 GetColliderGlobalOffset(Transform& transform, T& col)
+	{
+		return transform.GetWorldMatrix() * GetColliderLocalOffset<T>(col);
+	}
 }
 
 void PhysicsSystem::Init() 
@@ -124,9 +136,9 @@ void PhysicsSystem::Update(float dt) {
 		Vector3 scale = t.GetGlobalRotation();
 		
 		Vector3 translation = t.GetGlobalTranslation();
-		if (scene.Has<BoxCollider>(entity))
+		if (scene.Has<BoxCollider>(entity) && t.GetFlag(Transform::Flag::Modified))
 		{
-			glm::mat4 boxTransMtx = GetColliderGlobalTransform(t, scene.Get<BoxCollider>(t));
+			glm::mat4 boxTransMtx = GetColliderGlobalOffset(t, scene.Get<BoxCollider>(t));
 			Transform::Decompose(boxTransMtx, (Vector3&)translation, rot, (Vector3&)scale);
 			rotation = glm::eulerAngles(rot);
 			GlmVec3ToJoltVec3(translation, tmp);
@@ -794,29 +806,35 @@ void PhysicsSystem::UpdateGameObjects() {
 		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
 		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(tmpBID);
-		JPH::RMat44 bodyWorldMtx = bodyInterface->GetWorldTransform(tmpBID);
 
 		JoltVec3ToGlmVec3(tmp, tmpVec);	
 		if (scene.Has<BoxCollider>(entity)) {
 			BoxCollider& boxCol = scene.Get<BoxCollider>(entity);
 
-			glm::mat4 mtx = Transform::CreateTransformationMtx(boxCol.offset, vec3(0), vec3(1.f));
+			Vector3 globalScale = t.GetGlobalScale();
+
+			glm::mat4 mtx = Transform::CreateTransformationMtx((glm::vec3)boxCol.offset, vec3(0), vec3(1,1,1));
 
 			Vector3 pos;
 			glm::quat rot;
+			Vector3 rotEuler;
 			Vector3 scale;
 
-			bodyWorldMtx.Decompose((JPH::Vec3&)scale);
+			//Get physics body position and rotation
+			JPH::Vec3 bodyPos; JPH::Quat bodyRot;
+			bodyInterface->GetPositionAndRotation(tmpBID, bodyPos, bodyRot);
+			JPH::Vec3 bodyRotEuler = bodyRot.GetEulerAngles();
 
-			JPH::Vec3 tmpScale(1.f / scale.x, 1.f / scale.y, 1.f / scale.z);
+			JoltVec3ToGlmVec3(bodyPos, pos);
+			JoltVec3ToGlmVec3(bodyRotEuler, rotEuler);
 
-			bodyWorldMtx = bodyWorldMtx.sScale(tmpScale);
+			//Create a transformation matrix of the pivot
+			glm::mat4 bodyMtx = Transform::CreateTransformationMtx(pos, rotEuler, globalScale);
 
-			glm::mat4 worldMtx = reinterpret_cast<glm::mat4&>(bodyWorldMtx) * glm::inverse(mtx);
 
+			glm::mat4 entityMtx = bodyMtx * glm::inverse(mtx);
 
-			Transform::Decompose(worldMtx, pos, rot, scale);
-
+			Transform::Decompose(entityMtx, pos, rot, scale);
 
 			t.SetWorldMatrix(pos, glm::eulerAngles(rot), t.GetGlobalScale());
 		}
