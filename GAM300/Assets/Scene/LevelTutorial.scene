@@ -5259,7 +5259,7 @@ ID: 17918585791805283805
 Transform:
   m_GameObject: {fileID: 13194487811218401331}
   Translation: [0, 0, 0]
-  Rotation: [0, 0.00029449939, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.99999994, 1, 1]
   Father: {fileID: 3574560937881504822}
   m_Children:
@@ -5286,7 +5286,7 @@ ID: 3778078527537960983
 Transform:
   m_GameObject: {fileID: 11502694604696187017}
   Translation: [0, 0, 0.000232696533]
-  Rotation: [0, 0.00029449939, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.99999994, 1, 1]
   Father: {fileID: 3574560937881504822}
   m_Children:
@@ -12716,7 +12716,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 849.964172
+  LookAtDistance: 879.862854
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -16255,11 +16255,11 @@ LightSource:
   EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
-  Intensity: 5
+  Intensity: 500
   Direction: [0, 0, 0]
   Inner Cutoff: 50
   Outer Cutoff: 70
-  Color: [255, 255, 255]
+  Color: [0.997445047, 0.996063113, 1]
 ---
 ID: 3137428173896908051
 GameObject:
