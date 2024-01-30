@@ -11,8 +11,6 @@ public class MainMenu : Script
 {
     public GameObject mainMenuBGImage;
 
-    public GameObject pressStartText;
-
     public GameObject mainMenuTitle;
 
     public GameObject startButton;
@@ -81,27 +79,6 @@ public class MainMenu : Script
         }
     }
 
-    void selfFlicker()
-    {
-        flickerTimer += Time.deltaTime;
-
-        if (flickerTimer > duration)
-        {
-            flickerTimer = 0f;
-            switch (isStartActive)
-            {
-                case true:
-                    pressStartText.SetActive(false);
-                    isStartActive = false;
-                    break;
-                case false:
-                    pressStartText.SetActive(true);
-                    isStartActive = true;
-                    break;
-            }
-
-        }
-    }
 
     void movement()
     {

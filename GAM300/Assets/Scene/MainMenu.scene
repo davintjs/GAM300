@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 9.30003548
+  LookAtDistance: 0.349982262
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -87,11 +87,10 @@ Script:
   mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
   startButton: {fileID: 5144980746915515514}  # GameObject
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
-  pressStartText: {fileID: 5144980746915515514}  # GameObject
   isStartActive: true
   flickerTimer: 0
-  back: false
   timer: 0
+  back: false
   sizeMultiplier: 1.25
 ---
 ID: 4418236984561621579
@@ -120,6 +119,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
 ID: 15122834859859923062
@@ -148,6 +149,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
 ---
 ID: 2581623557328585861
@@ -197,6 +200,7 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  Fade Time (s): 1
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -227,6 +231,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  Fade Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
 ---
@@ -256,6 +261,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
 ---
 ID: 15413680003274128894
@@ -284,6 +291,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: f1713e69eedaef315483f2edc460f734}
 ---
 ID: 11997381317790178123
@@ -312,6 +321,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
 ---
 ID: 7360009555949792780
@@ -340,4 +351,6 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}

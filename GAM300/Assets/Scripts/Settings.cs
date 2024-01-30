@@ -11,8 +11,6 @@ public class Settings : Script
 {
     public GameObject mainMenuBGImage;
 
-    public GameObject pressStartText;
-
     public GameObject backButton;
 
     public bool isStartActive = true;

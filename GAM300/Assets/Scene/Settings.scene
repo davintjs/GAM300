@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 7.81407881
+  LookAtDistance: 1.45728099
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -82,9 +82,8 @@ Script:
   Script: {guid: 2ea11ccf97287329911603c97e51758b}
   duration: 2
   mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
-  pressStartText: {fileID: 1497825775628923368}  # GameObject
-  timer: 0
   back: false
+  timer: 0
   backButton: {fileID: 13236326914152460117}  # GameObject
   isStartActive: true
   flickerTimer: 0
@@ -116,6 +115,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
 ID: 12690634969259096449
@@ -144,6 +145,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
 ---
 ID: 1497825775628923368
@@ -172,6 +175,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
 ---
 ID: 4580145406200005427
@@ -200,6 +205,8 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
 ---
 ID: 13236326914152460117
@@ -228,4 +235,6 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
