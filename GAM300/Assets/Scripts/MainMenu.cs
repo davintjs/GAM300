@@ -15,6 +15,11 @@ public class MainMenu : Script
 
     public GameObject startButton;
 
+    public GameObject settingsButton; 
+
+    public GameObject HTPButton; 
+
+
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 
@@ -31,6 +36,10 @@ public class MainMenu : Script
 
     private SpriteRenderer startButtonRenderer;
 
+    private SpriteRenderer settingsButtonRenderer;
+
+    private SpriteRenderer HTPButtonRenderer;
+
     vec3 startGridTextSize;
 
     void Start()
@@ -39,8 +48,25 @@ public class MainMenu : Script
         startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
 
+        //Play Button
         if (startButton.HasComponent<SpriteRenderer>())
+        {
             startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
+        }
+        //Settings Button
+        if (settingsButton.HasComponent<SpriteRenderer>())
+        {
+            settingsButtonRenderer = settingsButton.GetComponent<SpriteRenderer>();
+        }
+        //HTP Button
+        if (HTPButton.HasComponent<SpriteRenderer>())
+        {
+            HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
+        }
+        
+
+
+            
     }
 
     void Update()
@@ -51,6 +77,22 @@ public class MainMenu : Script
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
             SceneManager.LoadScene("LevelPlay2");
+
+        }
+
+        if (settingsButtonRenderer != null && settingsButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("Settings");
+
+        }
+
+        if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("HowToPlay");
 
         }
 

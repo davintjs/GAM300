@@ -70,6 +70,10 @@ Transform:
     - {fileID: 15413680003274128894}
     - {fileID: 11997381317790178123}
     - {fileID: 7360009555949792780}
+    - {fileID: 1861137327625472716}
+    - {fileID: 5370238613876965468}
+    - {fileID: 1860974719948889420}
+    - {fileID: 9677528432916775765}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -87,10 +91,12 @@ Script:
   mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
   startButton: {fileID: 5144980746915515514}  # GameObject
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
-  isStartActive: true
   flickerTimer: 0
-  timer: 0
+  settingsButton: {fileID: 11997381317790178123}  # GameObject
+  HTPButton: {fileID: 15413680003274128894}  # GameObject
+  isStartActive: true
   back: false
+  timer: 0
   sizeMultiplier: 1.25
 ---
 ID: 4418236984561621579
@@ -354,3 +360,131 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 1861137327625472716
+GameObject:
+  m_IsActive: true
+  m_Name: PlayText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6223285407874859502}  # Transform
+    - component: {fileID: 7822389284963935025}  # TextRenderer
+---
+ID: 6223285407874859502
+Transform:
+  m_GameObject: {fileID: 1861137327625472716}
+  Translation: [0.0743322298, 0, 0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [0.601960361, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 7822389284963935025
+TextRenderer:
+  m_GameObject: {fileID: 1861137327625472716}
+  m_IsEnabled: true
+  Text: Play
+  X-axis Position: 0.349999994
+  Y-axis Position: 0.569999993
+  Scale: 1.66999996
+  Color R: 1.87
+  Color G: 1.22000003
+  Color B: 1.22000003
+---
+ID: 5370238613876965468
+GameObject:
+  m_IsActive: true
+  m_Name: SettingsText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4791662680457265884}  # Transform
+    - component: {fileID: 1903107403939202071}  # TextRenderer
+---
+ID: 4791662680457265884
+Transform:
+  m_GameObject: {fileID: 5370238613876965468}
+  Translation: [-0.00934615266, 0, 0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [0.601960361, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 1903107403939202071
+TextRenderer:
+  m_GameObject: {fileID: 5370238613876965468}
+  m_IsEnabled: true
+  Text: Settings
+  X-axis Position: 0.270000011
+  Y-axis Position: -0.389999986
+  Scale: 1.36000001
+  Color R: 1.87
+  Color G: 1.22000003
+  Color B: 1.22000003
+---
+ID: 1860974719948889420
+GameObject:
+  m_IsActive: true
+  m_Name: HowToPlayText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18334142471590138614}  # Transform
+    - component: {fileID: 17269400027806068069}  # TextRenderer
+---
+ID: 18334142471590138614
+Transform:
+  m_GameObject: {fileID: 1860974719948889420}
+  Translation: [-0.00934615266, 0, 0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [0.601960361, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 17269400027806068069
+TextRenderer:
+  m_GameObject: {fileID: 1860974719948889420}
+  m_IsEnabled: true
+  Text: How To Play
+  X-axis Position: 0.25999999
+  Y-axis Position: 0.109999999
+  Scale: 0.930000007
+  Color R: 1.87
+  Color G: 1.22000003
+  Color B: 1.22000003
+---
+ID: 9677528432916775765
+GameObject:
+  m_IsActive: true
+  m_Name: ExitText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1780384815644991642}  # Transform
+    - component: {fileID: 3376750449066450418}  # TextRenderer
+---
+ID: 1780384815644991642
+Transform:
+  m_GameObject: {fileID: 9677528432916775765}
+  Translation: [-0.00934615266, 0, 0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [0.601960361, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 3376750449066450418
+TextRenderer:
+  m_GameObject: {fileID: 9677528432916775765}
+  m_IsEnabled: true
+  Text: Exit
+  X-axis Position: 0.409999996
+  Y-axis Position: -0.819999993
+  Scale: 1.48000002
+  Color R: 1.87
+  Color G: 1.22000003
+  Color B: 1.22000003
