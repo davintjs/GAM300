@@ -46,6 +46,7 @@ void Shadows::Exit()
 
 void Shadows::DrawDepthSpot()
 {
+	unsigned index = 0;
 	for (int i = 0; i < (int)LIGHTING.spotLightCount; ++i)
 	{
 		LightProperties& spot_light_stuffs = LIGHTING.GetSpotLights()[i];
@@ -64,7 +65,7 @@ void Shadows::DrawDepthSpot()
 		//lightSpaceMatrix_spot = lightProjection * lightView;
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, spot_light_stuffs.shadowFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.spotLightFBO[index++].first);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::SHADOW);
@@ -228,6 +229,7 @@ void Shadows::DrawDepthDirectional()
 
 void Shadows::DrawDepthPoint()
 {
+	unsigned index = 0;
 	for (int i = 0; i < (int)LIGHTING.pointLightCount; ++i)
 	{
 		LightProperties& point_light_stuffs = LIGHTING.GetPointLights()[i];
@@ -249,7 +251,7 @@ void Shadows::DrawDepthPoint()
 		shadowTransforms.push_back(shadowProj * glm::lookAt(point_light_stuffs.lightpos, point_light_stuffs.lightpos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, point_light_stuffs.shadowFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.pointLightFBO[index++].first);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::POINTSHADOW);

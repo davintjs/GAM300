@@ -14,9 +14,13 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #version 450 core
 
-#define MAX_POINT_LIGHT 10
-#define MAX_SPOT_LIGHT 10
+#define MAX_POINT_LIGHT 20
+#define MAX_SPOT_LIGHT 20
 #define MAX_DIRECTION_LIGHT 5
+
+#define MAX_POINT_LIGHT_SHADOW 10
+#define MAX_SPOT_LIGHT_SHADOW 10
+#define MAX_DIRECTIONAL_LIGHT_SHADOW 10
 
 #define DIRECTIONAL_SHADOW_INDEX_OFFSET 10
 #define SPOT_SHADOW_INDEX_OFFSET 0
@@ -510,8 +514,11 @@ void main()
 
 
             if (shadows)
-                ++PointShadowIndex;
+            {
 
+                ++PointShadowIndex;
+                PointShadowIndex %= MAX_POINT_LIGHT_SHADOW;
+             }
 
         }   
    
@@ -575,7 +582,11 @@ void main()
 
             Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
             if(shadows)
+            {
                 ++DirectionalShadowIndex;
+                DirectionalShadowIndex %= MAX_DIRECTIONAL_LIGHT_SHADOW;
+
+            }
 
         }   
 
@@ -660,7 +671,10 @@ void main()
                 Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
                 
                 if(shadows)
+                {
                     ++SpotShadowIndex;
+                    SpotShadowIndex %= MAX_SPOT_LIGHT_SHADOW;
+                }
 
             }   
 

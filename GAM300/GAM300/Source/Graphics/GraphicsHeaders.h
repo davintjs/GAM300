@@ -399,6 +399,8 @@ public:
 	unsigned int spotLightCount;
 
 	std::vector<std::pair<unsigned int, unsigned int>> directionalLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> spotLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> pointLightFBO;
 
 private:
 	LightProperties lightingSource;
