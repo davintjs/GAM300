@@ -170,7 +170,9 @@ void Renderer::UpdateDefaultProperties(Scene& _scene, Transform& _t, Material_in
 	renderProperties.RoughnessID = _mat.roughnessID;
 	renderProperties.AoID = _mat.ambientID;
 	renderProperties.EmissionID = _mat.emissiveID;
-
+	
+	renderProperties.isEmission = _mat.isEmission;
+	
 	renderProperties.drawType = _type;
 	renderProperties.drawCount = _count;
 
@@ -354,6 +356,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	GLint AmbientOcculusion = glGetUniformLocation(shader.GetHandle(), "AoConstant");
 	GLint Emission = glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
 
+	GLint isEmission = glGetUniformLocation(shader.GetHandle(), "isEmission");
+
 	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 
 	const glm::vec3 cameraPosition = _camera.GetCameraPosition();
@@ -388,6 +392,12 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
+
+		if (prop.isEmission)
+		{
+			std::cout << "there is \n";
+		}
+		glUniform1f(isEmission, prop.isEmission);
 
 		// PBR CONSTANT VALUES
 		glUniform1f(Metallic, prop.metallic);
@@ -461,6 +471,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1f(Roughness, prop.roughness);
 		glUniform1f(AmbientOcculusion, prop.ao);
 		glUniform1f(Emission, prop.emission);
+		glUniform1f(isEmission, prop.isEmission);
 
 		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));

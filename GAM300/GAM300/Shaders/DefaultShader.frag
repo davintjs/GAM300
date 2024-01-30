@@ -100,6 +100,8 @@ uniform float RoughnessConstant;
 uniform float AoConstant;
 uniform float EmissionConstant;
 
+uniform bool isEmission;
+
 uniform int hasTexture;
 uniform int hasNormal;
 uniform int hasRoughness;
@@ -434,12 +436,16 @@ void main()
         FragColor = vec4(Albedo.xyz,1.f);// CHANGE
         return;
     }
-    bool isEmission =  (EmissionConstant !=  1.f); 
     bool toBloom = false;
 
-    if(!hasEmissionMap && !isEmission)
+    if(!hasEmissionMap)
     {
+        if(isEmission)
+        {
+            toBloom = true;
+        }
 
+        
         vec3 N ;
         if (hasNormal != 0)
         {
@@ -671,11 +677,8 @@ void main()
     else
     {
         toBloom = true;
-
-        if (hasEmissionMap)
             color = emission;
-        else
-            color = albedo;
+
     }
     // Done in Post Processing
 //    // HDR tonemapping

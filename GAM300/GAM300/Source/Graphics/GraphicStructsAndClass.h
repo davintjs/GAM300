@@ -218,6 +218,8 @@ struct DefaultRenderProperties {
 	float roughness{};
 	float ao{};
 	float emission{};
+	
+	bool isEmission = false;
 
 	glm::mat4 entitySRT{};
 	glm::vec4 Albedo{};
