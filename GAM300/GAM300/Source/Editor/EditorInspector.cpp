@@ -1852,7 +1852,6 @@ void EditorInspector::Update(float dt)
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
             PRINT(fPath);
-            //material.name
         }
 
         ImGui::End();
