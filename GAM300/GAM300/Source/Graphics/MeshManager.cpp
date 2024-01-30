@@ -595,11 +595,11 @@ unsigned int  MeshManager::InstanceSetup(InstanceProperties& prop) {
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), &(prop.textureIndex[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), &(prop.textureIndex_isEmission[0]), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);
-    glVertexAttribPointer(15, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribPointer(15, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
     glVertexAttribDivisor(15, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -717,11 +717,11 @@ unsigned int  MeshManager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), prop.textureIndex.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec3), prop.textureIndex_isEmission.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(15);
-    glVertexAttribPointer(15, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribPointer(15, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
     glVertexAttribDivisor(15, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

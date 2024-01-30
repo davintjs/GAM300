@@ -73,7 +73,7 @@ layout (location = 2) in vec3 Normal;
 layout (location = 3) in vec4 frag_Albedo;
 layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
 layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
-layout (location = 6) in vec2 frag_texture_index;
+layout (location = 6) in vec3 frag_texture_index_isEmission;
 
 //layout (location = 7) in vec4 frag_pos_lightspace_D;
 //
@@ -309,8 +309,8 @@ float ShadowCalculation_Point(vec3 lightpos,int index)
 void main()
 {		
     vec3 color;
-    int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
-    int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
+    int Tex_index = int(frag_texture_index_isEmission.x + 0.5f); // .x is texture
+    int NM_index = int(frag_texture_index_isEmission.y + 0.5f);    // .y is normal map
 
     int Metallic_index = int(frag_Metal_Rough_AO_Emission_index.x + 0.01f); // .x is metallic texture
     int Roughness_index = int(frag_Metal_Rough_AO_Emission_index.y + 0.01f);    // .y is roughness texture
@@ -415,11 +415,8 @@ void main()
     }
     
     bool toBloom = false;
-    bool isEmission = false;
-    if(frag_Metal_Rough_AO_Emission_constant.w  != 1.0)
-    {
-        isEmission = true;
-    }
+    bool isEmission = (frag_texture_index_isEmission.z != 0);
+    
     if( !hasEmissionMap)
     {
         if(isEmission)
@@ -803,9 +800,9 @@ void main()
 
     if( (brightness > bloomThreshold) && toBloom)
         Blooming = vec4(color.rgb, 1.0);
-//    else
-//        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
-//
+    else
+        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
+
 
 if(hdr)
     color = color / (color + vec3(1.0));

@@ -1,6 +1,6 @@
 RenderShadows: true
 HDR: true
-Bloom: true
+Bloom: false
 Bloom Count: 10
 Bloom Threshold: 0
 Ambient: 0.439999998

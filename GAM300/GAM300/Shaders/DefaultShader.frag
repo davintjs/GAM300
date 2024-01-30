@@ -677,8 +677,7 @@ void main()
     else
     {
         toBloom = true;
-            color = emission;
-
+        color = emission;
     }
     // Done in Post Processing
 //    // HDR tonemapping

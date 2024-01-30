@@ -244,7 +244,7 @@ void Renderer::UpdatePBRProperties(Transform& _t, Material_instance& _mat, const
 
 	iProp.M_R_A_Constant[iter] = { metal_constant, rough_constant, ao_constant, emission_constant };
 	iProp.M_R_A_Texture[iter] = { metalidx, roughidx, aoidx, emissionidx };
-	iProp.textureIndex[iter] = { texidx, normidx };
+	iProp.textureIndex_isEmission[iter] = { texidx, normidx, _mat.isEmission };
 	iProp.entitySRT[iter] = _t.GetWorldMatrix();
 
 	iProp.position = _t.GetGlobalTranslation();
@@ -309,7 +309,7 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec4), prop.M_R_A_Constant.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec3), prop.textureIndex_isEmission.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
@@ -393,10 +393,6 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
 
-		if (prop.isEmission)
-		{
-			std::cout << "there is \n";
-		}
 		glUniform1f(isEmission, prop.isEmission);
 
 		// PBR CONSTANT VALUES
