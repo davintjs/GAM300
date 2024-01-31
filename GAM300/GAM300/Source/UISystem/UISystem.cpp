@@ -1,37 +1,93 @@
 #include "Precompiled.h"
 #include "UISystem.h"
+#include "Scene/Components.h" 
+#include "Scene/SceneManager.h"
+#include "IOManager/InputHandler.h"
+#include "IOManager/InputSystem.h"
+#include "Graphics/GraphicsHeaders.h"
+#include "Graphics/GraphicsSystem.h"
 
-
-//Button* Button_init(const char* id, int x, int y, int width, int height /*void (*on_click)(void)*/)
-//{
-//	Button* button = (Button*)malloc(sizeof(Button));
-//	button->id = (char*)malloc(strlen(id) + 1);
-//	strcpy(button->id, id);
-//	button->x = x;
-//	button->y = y;
-//	button->width = width;
-//	button->height = height;
-//	button->is_clicked = false;
-//	//button->on_click = on_click;
-//	//return button;
-//}
 
 
 void UISystem::Init()
 {
-    UISystem UI;
-    Button myButton(10, 10, 100, 50, "Click me!", []() 
-        {
-            // Code to be executed when the button is clicked
-            std::cout << "Button clicked!" << std::endl;
-        });
+    //UISystem UI;
+    //Button myButton(10, 10, 100, 50, "Click me!", []() 
+    //    {
+    //        // Code to be executed when the button is clicked
+    //        std::cout << "Button clicked!" << std::endl;
+    //    });
 
     //UI.addButton(myButton);
+
+
+
 };
+
+
 
 void UISystem::Update(float dt)
 {
 
+
+
+	//std::cout << "test" << std::endl
+	/*Button button;
+	HandleButtonInput(button, 10, 10, true);*/
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+
+
+	// ColorpickingUIbutton - change to return the entity
+	for (Camera& camera : currentScene.GetArray<Camera>()) 
+	{
+		Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
+
+		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
+		{
+			if (sr.EUID() == id)
+			{
+				if (!InputHandler::isMouseButtonPressed_L())
+				{
+					sr.onHover = false;
+					//std::cout << "buttonHover" << std::endl;
+					return;
+					//SpriteRenderer::onHover = true;
+				}
+				else
+				{
+					//SpriteRenderer::ColourPicked = true;
+
+					//sr.ColourPicked = true;
+					std::cout << "buttonClicked" << std::endl;
+					std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
+					sr.onClick = true;
+
+					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
+				}
+
+			}
+		}
+	
+		//Entity& test = currentScene.Get<Entity>();
+	}
+
+	
+	// IF ur not hovering a button
+		
+		// RETURN
+
+	// U ARE HOVERING OVER A BUTTON
+		
+		// IF mouse NEVER press -> change the texture onButtonHover()
+		
+		// IF MOUSE PRESS -> run the button functionlity onButtonClick()
+
+
+	
+	//std::cout << "test" << std::endl;
+
+
+	
 }; 
 
 //void UISystem::drawButton(Button &button)

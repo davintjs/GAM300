@@ -17,19 +17,19 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Scene/SceneManager.h"
 
-#define MAX_POINT_LIGHT 10
-#define MAX_SPOT_LIGHT 10
-#define MAX_DIRECTION_LIGHT 5
-
 //extern LightProperties spot_light_stuffs;
 //extern LightProperties directional_light_stuffs;
 //extern LightProperties point_light_stuffs;
 
-
-
 void Lighting::Init()
 {
-	for (int i = 0; i < MAX_POINT_LIGHT; ++i)
+	unsigned int shadowFBO, textureID;
+	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+	directionalLightFBO.push_back({ shadowFBO, textureID });
+	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+	directionalLightFBO.push_back({ shadowFBO, textureID });
+	
+	for (int i = 0; i < MAX_POINT_LIGHT_SHADOW; ++i)
 	{
 		LightProperties temp_point;
 		FRAMEBUFFER.CreatePointLight(temp_point.shadowFBO, temp_point.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -39,10 +39,9 @@ void Lighting::Init()
 		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_spot.shadowFBO, temp_spot.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
 		spotLightSources.push_back(temp_spot);
 	}
-	for (int i = 0; i < MAX_DIRECTION_LIGHT; ++i)
+	for (int i = 0; i < MAX_DIRECTION_LIGHT_SHADOW; ++i)
 	{
 		LightProperties temp_directional;
-		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_directional.shadowFBO, temp_directional.shadow, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
 		directionLightSources.push_back(temp_directional);
 
 	}

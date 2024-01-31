@@ -73,7 +73,7 @@ layout (location = 2) in vec3 Normal;
 layout (location = 3) in vec4 frag_Albedo;
 layout (location = 4) in vec4 frag_Metal_Rough_AO_Emission_index;
 layout (location = 5) in vec4 frag_Metal_Rough_AO_Emission_constant;
-layout (location = 6) in vec2 frag_texture_index;
+layout (location = 6) in vec3 frag_texture_index_isEmission;
 
 //layout (location = 7) in vec4 frag_pos_lightspace_D;
 //
@@ -189,6 +189,18 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 }
 // ----------------------------------------------------------------------------
 
+float GeometrySmith_New(vec3 N, vec3 L, float roughness)
+{
+    float NdotL = max(dot(N, L), 0.0);
+    
+    // GGX (Trowbridge-Reitz) distribution
+    float k = (roughness * roughness) / 2.0;
+    
+    float GGXV = NdotL / (NdotL * (1.0 - k) + k);
+
+    return GGXV;
+}
+
 float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 lightDir,int index)
 {
     // perform perspective divide
@@ -297,8 +309,8 @@ float ShadowCalculation_Point(vec3 lightpos,int index)
 void main()
 {		
     vec3 color;
-    int Tex_index = int(frag_texture_index.x + 0.5f); // .x is texture
-    int NM_index = int(frag_texture_index.y + 0.5f);    // .y is normal map
+    int Tex_index = int(frag_texture_index_isEmission.x + 0.5f); // .x is texture
+    int NM_index = int(frag_texture_index_isEmission.y + 0.5f);    // .y is normal map
 
     int Metallic_index = int(frag_Metal_Rough_AO_Emission_index.x + 0.01f); // .x is metallic texture
     int Roughness_index = int(frag_Metal_Rough_AO_Emission_index.y + 0.01f);    // .y is roughness texture
@@ -387,9 +399,10 @@ void main()
              Am_Light = false;
     }
 
-
+    bool hasEmissionMap = false;
     if (Emission_index < 32)
     {
+        hasEmissionMap = true;
         emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
     }
 
@@ -400,9 +413,17 @@ void main()
         FragColor = vec4(frag_Albedo.xyz,1.f);// CHANGE
         return;
     }
-
-    if(emission == vec3(0.f))
+    
+    bool toBloom = false;
+    bool isEmission = (frag_texture_index_isEmission.z != 0);
+    
+    if( !hasEmissionMap)
     {
+        if(isEmission)
+        {
+            toBloom = true;
+        }
+
         vec3 N ;
         if (NM_index < 32)
         {
@@ -412,9 +433,6 @@ void main()
         {
             N = normalize(Normal);
         }
-
-    
-   
 
         vec3 V = normalize(camPos - WorldPos);
 
@@ -431,62 +449,173 @@ void main()
         float totalPointCount = PointLight_Count; // this is to use at the denominator which uses floats
         for(int i = 0; i < PointLight_Count; ++i)
         {
-            vec3 lightColourStrength =  pointLights[i].colour * pointLights[i].intensity;
-            // calculate per-light radiance
-            vec3 L = normalize(pointLights[i].position - WorldPos);
-            vec3 H = normalize(V + L);
-            float distance = length(pointLights[i].position - WorldPos);
-            float attenuation = 1.0 / (distance * distance);
-    //        vec3 radiance = pointLights[i].colour * attenuation;
-            vec3 radiance = lightColourStrength * attenuation;
-
-            // Cook-Torrance BRDF
-            float NDF = DistributionGGX(N, H, roughness);   
-            float G   = GeometrySmith(N, V, L, roughness);      
-            vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
-           
-            vec3 numerator    = NDF * G * F; 
-            float denominator = totalPointCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-            vec3 specular = numerator / denominator;
         
-            // kS is equal to Fresnel
-            vec3 kS = F;
-            // for energy conservation, the diffuse and specular light can't
-            // be above 1.0 (unless the surface emits light); to preserve this
-            // relationship the diffuse component (kD) should equal 1.0 - kS.
-            vec3 kD = vec3(1.0) - kS;
-            // multiply kD by the inverse metalness such that only non-metals 
-            // have diffuse lighting, or a linear blend if partly metal (pure metals
-            // have no diffuse light).
-        
-            kD *= 1.0 - metallic;	  
+        /*
+        vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
 
-            // scale light by NdotL
-            float NdotL = max(dot(N, L), 0.0);        
-    //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-    //        float shadow = ShadowCalculation_Point(pointLights[i].position); 
-            bool shadows = pointLights[i].enableShadow && renderShadow;
-            
-            float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position,PointShadowIndex) : 0.0; // add a shadows bool
-            Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        // calculate per-light radiance
+        vec3 L = normalize(pointLights[i].position - WorldPos);
+        float distance = length(pointLights[i].position - WorldPos);
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = lightColourStrength * attenuation;
+
+        // Lambertian Reflection (Diffuse)
+        float NdotL = max(dot(N, L), 0.0);
+        vec3 diffuse = (albedo / PI) * radiance * NdotL;
+
+        // No specular reflection in the simplified model
+
+        // Apply shadow (if enabled)
+        bool shadows = pointLights[i].enableShadow && renderShadow;
+        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
+
+        Lo += diffuse * (1.0 - shadow);
+        // If you want to include specular reflection in a non-PBR way, you can add it here
+        // Lo += specular * (1.0 - shadow);
+
+        if (shadows)
+            ++PointShadowIndex; 
+        */
+
+//  vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
+//
+//    // Calculate per-light radiance
+//    vec3 L = normalize(pointLights[i].position - WorldPos);
+//    vec3 V = normalize(L - WorldPos); // Use a virtual camera position relative to the light
+//    vec3 H = normalize(V+L); // Use a virtual camera position relative to the light
+//
+//    float distance = length(pointLights[i].position - WorldPos);
+//    float attenuation = 1.0 / (distance * distance);
+//    vec3 radiance = lightColourStrength * attenuation;
+//    float NdotV = max(dot(N, V), 0.0);
+//    float NdotL = max(dot(N, L), 0.0);
+//
+//    // Cook-Torrance BRDF (simplified for non-camera-relative)
+//    float NDF = DistributionGGX(N, H, roughness);
+//    float G = GeometrySchlickGGX(NdotV, roughness) * GeometrySchlickGGX(NdotL, roughness);
+//    vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+//
+//    vec3 numerator = NDF * G * F;
+//    float denominator = max(4.0 * NdotL * NdotV, 0.001); // Adjust for denominator to prevent division by zero
+//    vec3 specular = numerator / denominator;
+//
+//    // Lambertian Reflection (Diffuse)
+//    vec3 diffuse = (albedo / PI) * radiance * NdotL;
+//
+//    // Apply shadow (if enabled)
+//    bool shadows = pointLights[i].enableShadow && renderShadow;
+//    float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
+//
+//    Lo += (diffuse + specular) * (1.0 - shadow);
+//
+//    if (shadows)
+//        ++PointShadowIndex;
 
 
-            // test to render the depth map
+        vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
 
-    //        vec3 fragToLight = WorldPos - pointLights[i].position;
-    //
-    //        // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    //        float closestDepth = texture(PointShadowBox,fragToLight).r; 
-    //        // get depth of current fragment from light's perspective
-    //        closestDepth *= farplane;  
-    //        // check whether current frag pos is in shadow
-    //        float currentDepth = length(fragToLight);
-    //        FragColor = vec4(vec3(closestDepth / farplane), 1.0);
-    //        return;
+        // Calculate per-light radiance
+        vec3 L = normalize(pointLights[i].position - WorldPos);
+        vec3 H = normalize(L);  // Use light direction as the halfway vector
 
-            if(shadows)
-                ++PointShadowIndex;
+        float distance = length(pointLights[i].position - WorldPos);
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = lightColourStrength * attenuation;
 
+        // Cook-Torrance BRDF
+        float NDF = DistributionGGX(N, H, roughness);
+        float G = GeometrySmith_New(N, L, roughness);  // Simplify the geometry term
+        vec3 F = vec3(0.04);  // Use a constant value for Fresnel (Schlick approximation)
+
+        vec3 numerator = NDF * G * F;
+        float denominator = max(4.0 * max(dot(N, L), 0.0), 0.001);  // Adjust for denominator
+        vec3 specular = numerator / denominator;
+
+        // kS is equal to Fresnel
+        vec3 kS = F;
+        // for energy conservation, the diffuse and specular light can't
+        // be above 1.0 (unless the surface emits light); to preserve this
+        // relationship the diffuse component (kD) should equal 1.0 - kS.
+        vec3 kD = vec3(1.0) - kS;
+        // multiply kD by the inverse metalness such that only non-metals 
+        // have diffuse lighting, or a linear blend if partly metal (pure metals
+        // have no diffuse light).
+        kD *= 1.0 - metallic;
+
+        // scale light by NdotL
+        float NdotL = max(dot(N, L), 0.0);
+        bool shadows = pointLights[i].enableShadow && renderShadow;
+        float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
+
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);
+
+
+        if (shadows)
+            ++PointShadowIndex;
+
+
+
+
+//            vec3 lightColourStrength =  pointLights[i].colour * pointLights[i].intensity;
+//            // calculate per-light radiance
+//            vec3 L = normalize(pointLights[i].position - WorldPos);
+//            vec3 temp_V = abs(V);
+////            vec3 H = normalize(V+L);
+//            vec3 H = normalize(temp_V + L);
+////            vec3 H = normalize(L);
+//            float distance = length(pointLights[i].position - WorldPos);
+//            
+//            float attenuation = 1.0 / (distance * distance);
+//    //        vec3 radiance = pointLights[i].colour * attenuation;
+//            vec3 radiance = lightColourStrength * attenuation;
+//
+//            // Cook-Torrance BRDF
+//            float NDF = DistributionGGX(N, H, roughness);   
+//            float G   = GeometrySmith(N, temp_V, L, roughness);      
+//            vec3 F    = fresnelSchlick(max(dot(H, temp_V), 0.0), F0);
+//           
+//            vec3 numerator    = NDF * G * F; 
+//            float denominator = totalPointCount * max(dot(N, temp_V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+//            vec3 specular = numerator / denominator;
+//        
+//            // kS is equal to Fresnel
+//            vec3 kS = F;
+//            // for energy conservation, the diffuse and specular light can't
+//            // be above 1.0 (unless the surface emits light); to preserve this
+//            // relationship the diffuse component (kD) should equal 1.0 - kS.
+//            vec3 kD = vec3(1.0) - kS;
+//            // multiply kD by the inverse metalness such that only non-metals 
+//            // have diffuse lighting, or a linear blend if partly metal (pure metals
+//            // have no diffuse light).
+//        
+//            kD *= 1.0 - metallic;	  
+//
+//            // scale light by NdotL
+//            float NdotL = max(dot(N, L), 0.0);        
+//    //        Lo += ( kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+//    //        float shadow = ShadowCalculation_Point(pointLights[i].position); 
+//            bool shadows = pointLights[i].enableShadow && renderShadow;
+//            
+//            float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position,PointShadowIndex) : 0.0; // add a shadows bool
+//            Lo += ( kD * albedo / PI + specular) * radiance *( NdotL * (1.f - shadow) );  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+////            Lo += ( kD * albedo / PI + specular)* radiance * NdotL;
+////            Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);
+//            // test to render the depth map
+//
+//    //        vec3 fragToLight = WorldPos - pointLights[i].position;
+//    //
+//    //        // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+//    //        float closestDepth = texture(PointShadowBox,fragToLight).r; 
+//    //        // get depth of current fragment from light's perspective
+//    //        closestDepth *= farplane;  
+//    //        // check whether current frag pos is in shadow
+//    //        float currentDepth = length(fragToLight);
+//    //        FragColor = vec4(vec3(closestDepth / farplane), 1.0);
+//    //        return;
+//
+//            if(shadows)
+//                ++PointShadowIndex;
+//
         }   
    
 
@@ -643,17 +772,20 @@ void main()
         }   
 
 
-
-
-
         vec3 ambient = vec3(ambience_multiplier) * albedo * ao + emission;
         color = ambient + Lo;
-    
+            
+//        else
+//        {
+//         toBloom = true;
+//         color = albedo;
+//        }
     }
     else
     {
-        color = emission;
-    }
+        toBloom = true;
+         color = emission;
+     }
 
 //    color *= frag_Metal_Rough_AO_Emission_constant.w;
     // Done in Post Processing
@@ -661,11 +793,12 @@ void main()
 //    color = color / (color + vec3(1.0));
 //    // gamma correct
 //    color = pow(color, vec3(1.0/2.2)); 
+//    toBloom = false;
 
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
     brightness *= frag_Metal_Rough_AO_Emission_constant.w;
 
-    if(brightness > bloomThreshold)
+    if( (brightness > bloomThreshold) && toBloom)
         Blooming = vec4(color.rgb, 1.0);
     else
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);
@@ -674,7 +807,10 @@ void main()
 if(hdr)
     color = color / (color + vec3(1.0));
 
-    color *= ambient_tint;
+    if( !hasEmissionMap && !isEmission)
+    {
+        color *= ambient_tint;
+    }
     FragColor = vec4(color, frag_Albedo.a);
 
 //    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));

@@ -181,7 +181,10 @@ void DisplayAssetPicker(Change& change,const fs::path& fp, Engine::GUID<AssetTyp
 
     GetAssetsEvent<AssetType> assetsEvent{};
     EVENTS.Publish(&assetsEvent);
-    MATERIALSYSTEM.BindTextureIDs();
+
+    // Bean: Ideally should only call this function when assigning a material onto a mesh
+    MATERIALSYSTEM.BindAllTextureIDs();
+
     if (ImGui::BeginPopup("Texture", win_flags)) {
         
         ImGui::Dummy(ImVec2(0, 10.f));
@@ -276,6 +279,24 @@ void DisplayType(Change& change, const char* name, Engine::GUID<AssetType>& val)
     EVENTS.Publish(&e);
     const std::string& pathStr = e.filePath.stem().string();
     ImGui::InputText(idName.c_str(), (char*)pathStr.c_str(), pathStr.size(), ImGuiInputTextFlags_ReadOnly);
+
+    if (ImGui::BeginDragDropTarget()) {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+
+            ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
+            Engine::HexID guid = data.guid;
+
+            if (data.type == MATERIAL) {
+
+                //Assign material to mesh renderer
+                Engine::GUID<AssetType> matGuid = guid;
+                EDITOR.History.SetPropertyValue(change, val, matGuid);
+            }
+
+            //add other file types here              
+        }
+        ImGui::EndDragDropTarget();
+    }
     DisplayAssetPicker(change,e.filePath, val);
 }
 
@@ -515,6 +536,7 @@ void DisplayType(Change& change, const char* name, Vector4& val)
                 auto& material = MATERIALSYSTEM.getMaterialInstance(EditorContentBrowser::Instance().selectedAss);
                 material.shaderType = (int)SHADERTYPE::DEFAULT;
             }
+
             EDITOR.History.SetPropertyValue(change, val, buf);
         }
         ImGui::EndPopup();
@@ -853,30 +875,32 @@ void Display_Property(T& comp) {
 
                 ImGui::PushID(entry.first.c_str());
 
-                //Temporary implementation for materials
-                if (entry.first.find("Shader") != std::string::npos) {
-                    DisplayShaders(newchange, Value);
-                }
-                else if (entry.first.find("AudioChannel") != std::string::npos) {
-                    DisplayAudioChannels(newchange, Value);
-                }
-                else {
-                    Display<T1>(newchange, DisplayName.c_str(), Value);
-                    if (DisplayName == "Material_ID") {
-                        ImGui::SameLine();
-                        if (ImGui::Button("Mat")) {
-                            Scene& scene = MySceneManager.GetCurrentScene();
-                            Entity& ent = scene.Get<Entity>(comp);
-                            auto& mr = scene.Get<MeshRenderer>(ent);
-                            if (!EditorInspector::Instance().material_inspector) {
-                                EditorInspector::Instance().material_inspector = true;
-                            }
+                    //Temporary implementation for materials
+                    if (entry.first.find("Shader") != std::string::npos) {
+                        DisplayShaders(newchange, Value);
+                    }
+                    else if (entry.first.find("AudioChannel") != std::string::npos) {
+                        DisplayAudioChannels(newchange, Value);
+                    }
+                    else {
+                        Display<T1>(newchange, DisplayName.c_str(), Value);
+                        if (DisplayName == "Material_ID") {
+                            ImGui::SameLine();
+                            if (!EditorScene::Instance().multiselectEntities.size()) {
+                                if (ImGui::Button("Mat")) {
+                                    Scene& scene = MySceneManager.GetCurrentScene();
+                                    Entity& ent = scene.Get<Entity>(comp);
+                                    auto& mr = scene.Get<MeshRenderer>(ent);
+                                    if (!EditorInspector::Instance().material_inspector) {
+                                        EditorInspector::Instance().material_inspector = true;
+                                    }
 
-                            ImGui::SetWindowFocus("Material");
-                            EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                    ImGui::SetWindowFocus("Material");
+                                    EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                }
+                            }                       
                         }
                     }
-                }
 
                 ImGui::PopID();
 
@@ -1074,7 +1098,6 @@ void DisplayComponentHelper(T& component)
     //Component Settings window
     ImGui::SetNextWindowSize(ImVec2(150.f, 180.f));
     if (ImGui::BeginPopup(popup, win_flags)) {
-
 
         if (ImGui::MenuItem("Reset")) {  
 
@@ -1360,6 +1383,80 @@ private:
 };
 using AddsDisplay = decltype(AddsStruct(DisplayableComponentTypes()));
 
+void DisplayMultiTransform() {
+
+    ImGuiWindowFlags Flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+        | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_SizingStretchProp
+        | ImGuiTableFlags_PadOuterX;
+
+    //Display_Property(EditorScene::Instance().multiTransform);
+    ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed
+        | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+    if (ImGui::BeginTable("Multiselect_Components", 1, Flags))
+    {  
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(6, 2));
+
+        ImGui::TableNextColumn();
+
+        bool t_open = ImGui::CollapsingHeader("Group Transform", nodeFlags);     
+
+        if (t_open) {
+            if (ImGui::BeginTable("m_transform", 2, Flags))
+            {
+                ImGui::Indent();
+                ImGui::TableSetupColumn("Text", 0, 0.4f);
+                ImGui::TableSetupColumn("Input", 0, 0.6f);
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+                Display_Property(EditorScene::Instance().multiTransform);
+  
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+
+                ImGui::Unindent();
+                ImGui::EndTable();
+            }
+        }
+
+        if (EditorScene::Instance().useMeshRenderer) {
+            ImGui::TableNextColumn();
+
+            bool m_open = ImGui::CollapsingHeader("Group Mesh Renderer", nodeFlags);
+
+            if (m_open) {
+                if (ImGui::BeginTable("m_mesh", 2, Flags))
+                {
+                    ImGui::Indent();
+                    ImGui::TableSetupColumn("Text", 0, 0.4f);
+                    ImGui::TableSetupColumn("Input", 0, 0.6f);
+                    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 0));
+                    ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4, 0));
+
+                    Display_Property(EditorScene::Instance().multiMeshRenderer);
+
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+                    ImGui::PopStyleVar();
+
+                    ImGui::Unindent();
+                    ImGui::EndTable();
+                }
+            }
+        }
+       
+
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+        ImGui::EndTable();
+    }
+}
+
 //Implementation for the panel to add a component to the current entity
 void AddComponentPanel(Entity& entity) {
     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
@@ -1557,14 +1654,14 @@ void DisplayEntity(Entity& entity)
     ImGui::PushID((int)entity.EUID());
 
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
-    bool enabled = curr_scene.IsActive(entity,false);
+    bool enabled = curr_scene.IsActive(entity, false);
     ImGui::Checkbox("##Active", &enabled);
     curr_scene.SetActive(entity, enabled);
     ImGui::SameLine();
     static char buffer[256];
 
     auto& tag = curr_scene.Get<Tag>(entity);
-    Change change (&tag, "Tag/name");
+    Change change(&tag, "Tag/name");
 
     strcpy_s(buffer, tag.name.c_str());
     ImGui::PushItemWidth(-1);
@@ -1574,37 +1671,36 @@ void DisplayEntity(Entity& entity)
     }
 
     ImGui::PopItemWidth();
-  
+
     //display tags
     DisplayTags(entity);
     ImGui::SameLine();
     ImGui::PushID(1);
-    if(ImGui::Button("+")){ EditorInspector::Instance().isAddTagPanel = true; }
+    if (ImGui::Button("+")) { EditorInspector::Instance().isAddTagPanel = true; }
     ImGui::PopID();
     ImGui::SameLine(); ImGui::Dummy(ImVec2(22.f, 0.f)); ImGui::SameLine();
-    
+
     //display layers
     DisplayLayers(entity); ImGui::SameLine();
     if (ImGui::Button("+")) { EditorInspector::Instance().isAddLayerPanel = true; }
 
-   
+
     ImGuiTableFlags tableFlags = ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_ScrollY;
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.f);
-
+ 
     if (ImGui::BeginTable("Components", 1, tableFlags))
     {
-        
+
         DisplayComponents(entity);
-        
         ImGui::Separator();
         if (CENTERED_CONTROL(ImGui::Button("Add Component", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, ImGui::GetTextLineHeightWithSpacing())))) {
             EditorInspector::Instance().isAddComponentPanel = true;
         }
-
         ImGui::EndTable();
-        
+
     }
+
     ImGui::PopID();
     ImGui::PopStyleVar();
 }
@@ -1633,8 +1729,11 @@ void EditorInspector::Update(float dt)
     Scene& curr_scene = SceneManager::Instance().GetCurrentScene();
 
     Entity& curr_entity = curr_scene.Get<Entity>(curr_index);
-    //if (curr_index != NON_VALID_ENTITY) {
-    if (&curr_entity) {
+
+    if (EditorScene::Instance().multiselectEntities.size() > 1) {
+        DisplayMultiTransform();
+    }
+    else if (&curr_entity) {
         ImGui::Spacing();
         std::string Header = "Current Entity: " + curr_scene.Get<Tag>(curr_index).name;
         ImGui::Text(Header.c_str()); ImGui::Spacing(); ImGui::Separator();
@@ -1753,7 +1852,6 @@ void EditorInspector::Update(float dt)
                 EditorContentBrowser::Instance().selectedAss = e.guid;
             }
             PRINT(fPath);
-            //material.name
         }
 
         ImGui::End();

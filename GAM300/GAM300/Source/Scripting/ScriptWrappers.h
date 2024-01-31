@@ -129,6 +129,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+	static void StopMusic(float fade = 1.f) {
+		AUDIOMANAGER.StopMusic(fade);
+	}
+
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -323,6 +327,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Camera& camera = pCamera;
 		vector = camera.GetForwardVec();
 	}
+
+#pragma endregion
+
+#pragma region SPRITERENDERER
+	static bool IsButtonClicked(ScriptObject<SpriteRenderer> spriteRenderer)
+	{
+		SpriteRenderer& sr = spriteRenderer;
+		return sr.onClick;
+	}
+
 
 #pragma endregion
 
@@ -585,6 +599,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Audio Component
 		Register(AudioSourcePlay);
+		Register(StopMusic);
 
 		// Animator Component
 		Register(PlayAnimation);
@@ -612,5 +627,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetTag);
 		Register(FindPath);
 		Register(GetScrollState);
+
+		// SpriteRenderer Component
+		Register(IsButtonClicked);
 	}
 #endif // !SCRIPT_WRAPPERS_H

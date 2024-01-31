@@ -69,6 +69,7 @@ enum class SHADERTYPE
 	COLOURPICKING,
 	FORWARDDEBUG, // Non instanced debug draw
 	PARTICLES,
+	TRAILS,
 	TEXT,
 	COUNT
 };
@@ -182,7 +183,8 @@ struct InstanceProperties
 
 	unsigned int textureIndexBuffer;
 	//glm::vec2 textureIndex[EnitityInstanceLimit]; // (texture index, normal map index)
-	std::vector<glm::vec2> textureIndex; // (texture index, normal map index)
+
+	std::vector<glm::vec3> textureIndex_isEmission; // (texture index, normal map index) Third value is if emission
 
 	glm::vec3 position{};
 
@@ -205,7 +207,7 @@ struct InstanceProperties
 		Shininess.resize(maxSize);
 		M_R_A_Texture.resize(maxSize);
 		M_R_A_Constant.resize(maxSize);
-		textureIndex.resize(maxSize);
+		textureIndex_isEmission.resize(maxSize);
 	}
 };
 
@@ -217,6 +219,8 @@ struct DefaultRenderProperties {
 	float roughness{};
 	float ao{};
 	float emission{};
+	
+	bool isEmission = false;
 
 	glm::mat4 entitySRT{};
 	glm::vec4 Albedo{};

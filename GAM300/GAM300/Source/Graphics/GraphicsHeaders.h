@@ -31,6 +31,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
 
+#define MAX_POINT_LIGHT 20
+#define MAX_SPOT_LIGHT 20
+#define MAX_DIRECTION_LIGHT 5
+
+#define MAX_POINT_LIGHT_SHADOW 10
+#define MAX_SPOT_LIGHT_SHADOW 10
+#define MAX_DIRECTION_LIGHT_SHADOW 2
+
 #define SHADER ShaderManager::Instance()
 #define MYSKYBOX SkyboxManager::Instance()
 #define COLOURPICKER ColourPicker::Instance()
@@ -42,7 +50,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define TEXTSYSTEM TextSystem::Instance()
 
 class Ray3D;
-
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
 //{
@@ -114,13 +121,14 @@ struct Material_instance : Object
 	//      PBR VARIABLES
 	//-------------------------
 
-
 	std::string		name;
 	Vector4			albedoColour;// This is pretty much used in all types of shaders
 	float			metallicConstant;
 	float			roughnessConstant;
 	float			aoConstant;
 	float			emissionConstant;
+
+	bool isEmission = false;
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -161,6 +169,7 @@ property_begin_name(Material_instance, "Material_Instance") {
 		property_var(metallicConstant).Name("Metallic"),
 		property_var(roughnessConstant).Name("Roughness"),
 		property_var(aoConstant).Name("AmbientOcclusion"),
+		property_var(isEmission).Name("Is Emission"),
 		property_var(emissionConstant).Name("Emission"),
 		property_var(albedoTexture).Name("AlbedoTexture"),
 		property_var(normalMap).Name("NormalMap"),
@@ -180,7 +189,9 @@ public:
 	void Update(float dt);
 	void Exit();
 
-	void BindTextureIDs();
+	void BindTextureIDs(Material_instance& _instance);
+
+	void BindAllTextureIDs();
 
 	void createPBR_Instanced();
 
@@ -270,7 +281,7 @@ public:
 
 	// Initialize the skybox of the engine
 
-	void ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
+	Engine::UUID ColorPickingUIButton(BaseCamera & _camera); // For buttons (mapped to texture if there is)
 	void ColorPickingUIEditor(BaseCamera & _camera); // For all UI elements, 
 	Engine::UUID ColorPickingMeshs(BaseCamera & _camera);
 
@@ -317,10 +328,29 @@ public:
 	
 	void Draw();
 
+	void DrawIcons();
+
 	void DrawBoxColliders();
+
+	void DrawCapsuleColliders();
+
+	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
+	void DrawCameraBounds(const Engine::UUID& _euid);
+	
+	void DrawLightBounds(const Engine::UUID& _euid);
+
+	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
+
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
 	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+
+	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
 
 	void DrawRay();
 
@@ -339,7 +369,13 @@ public:
 private:
 	std::vector<Ray3D> rayContainer;
 	std::vector<RigidDebug> boxColliderContainer;
+	InstanceProperties* pProp;
 	RaycastLine* raycastLine;
+	unsigned int cameraID = 0;
+	unsigned int lightID = 0;
+	unsigned int particleID = 0;
+	unsigned int vaoIcon;
+	unsigned int vboIcon;
 	bool enableRay = true;
 	bool enableDebugDraw = true;
 	bool showAllColliders = false;
@@ -361,6 +397,8 @@ public:
 	unsigned int pointLightCount;
 	unsigned int directionalLightCount;
 	unsigned int spotLightCount;
+
+	std::vector<std::pair<unsigned int, unsigned int>> directionalLightFBO;
 
 private:
 	LightProperties lightingSource;
@@ -430,12 +468,6 @@ public:
 	void DrawDefault(BaseCamera& _camera);
 
 	void DrawDebug(const GLuint & _vaoid, const unsigned int& _instanceCount);
-
-	bool Culling();
-
-	void Forward();
-
-	void Deferred();
 	
 	unsigned int ReturnTextureIdx(InstanceProperties& prop, const GLuint & _id);
 	//unsigned int ReturnTextureIdx(const std::string & _meshName, const GLuint & _id);

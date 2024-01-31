@@ -1,11 +1,11 @@
 Material:
-  Material Name: Dark Blue material
+  Material Name: Orange Emission
   Shader: 1
-  Albedo: [0, 0, 0.0235294141, 1]
+  Albedo: [1, 0.346686602, 0, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
-  Emission: 1
+  Emission: 1000
   AlbedoTexture: {guid: 00000000000000000000000000000000}
   NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: 00000000000000000000000000000000}

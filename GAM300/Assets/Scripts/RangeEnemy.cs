@@ -68,6 +68,8 @@ public class RangeEnemy : Script
 
     void Update()
     {
+
+
         if (player == null)
             return;
 

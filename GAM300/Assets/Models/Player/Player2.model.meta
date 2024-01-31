@@ -1,0 +1,10 @@
+guid: 98a02460afcc50afad8e3e8be1d1be13
+meshes:
+  data: {guid: ebb5612243fba3e7977ec1bc50be2e17}
+  data: {guid: 2d30fc45cdc5d3ab893fdeb324e24ebd}
+  data: {guid: 7520f80b4ed70ca5ac4d7edeb4863096}
+  data: {guid: aa9b5094941dc33282f3d566520ca1cd}
+animations:
+  data: {guid: 8d7902dc9a2f4732a131a2f2d86a5264}
+animationStates:
+  Idle: [1, 30]

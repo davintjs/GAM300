@@ -127,12 +127,6 @@ void EditorContentBrowser::Update(float dt)
             filename.erase(filename.find_last_of("."), filename.size());
 
             ContentBrowserPayload payload;
-            /*
-            GetAssetEvent e{ it.path() };
-            EVENTS.Publish(&e);
-            Engine::GUID currentGUID = e.guid;
-            payload.payload = &currentGUID;
-            payload.type = MESH;*/
 
             if (ext == "model") { //mesh files
                 GetAssetEvent<MeshAsset> e{ it.path() };
@@ -140,8 +134,7 @@ void EditorContentBrowser::Update(float dt)
                 Engine::GUID<MeshAsset> currentGUID = e.guid;
                 payload.guid = currentGUID;
                 payload.type = MODELTYPE;
-                payload.name = filename.c_str();
-                std::cout << payload.name << std::endl;
+                payload.name = filename;
             }
             else if (ext == "material")
             {

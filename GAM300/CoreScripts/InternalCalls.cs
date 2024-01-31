@@ -138,6 +138,8 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(AudioSource audioSource);
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void StopMusic(float fadetime);
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -224,6 +226,12 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetForwardVec(Camera camera, ref vec3 temp);
+        #endregion
+
+        #region SPRITERENDERER
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
+
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
