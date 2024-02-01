@@ -59,6 +59,9 @@ void EditorScene::Update(float dt)
     //update multiselect entities
     if (multiselectEntities.size()) {
 
+        if (ImGui::IsKeyReleased(ImGuiKey_Escape))
+            ClearMultiselect();
+        
         Scene& curr_scene = MySceneManager.GetCurrentScene();
          useMeshRenderer = true;
 
@@ -345,6 +348,12 @@ bool EditorScene::SelectEntity()
     return false;
 }
 
+void EditorScene::ClearMultiselect() {
+    multiselectEntities.clear();
+    multiTransform = Transform();
+    multiMeshRenderer = MeshRenderer();
+}
+
 void EditorScene::DisplayGizmos()
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
@@ -413,6 +422,9 @@ void EditorScene::DisplayGizmos()
                         if (std::find(multiselectEntities.begin(), multiselectEntities.end(), renderer.EUID()) == multiselectEntities.end()) {
                             multiselectEntities.push_back(renderer.EUID());
                         } 
+                        else {
+                            ClearMultiselect();
+                        }
 
                         GetSelectedEntityEvent e{};
                         EVENTS.Publish(&e);         
@@ -657,10 +669,7 @@ void EditorScene::DisplayGizmos()
         }
     }
     else {
-        //clear all selected entities in mutliselect
-        multiselectEntities.clear();
-        multiTransform = Transform();
-        multiMeshRenderer = MeshRenderer();
+        ClearMultiselect();
     }
         
 

@@ -77,6 +77,8 @@ public class ThirdPersonController : Script
     public Transform terminal1;
     public Transform terminal2;
 
+    public MeshRenderer doorTestMesh;
+
     void Awake()
     {
         if (instance != null)
@@ -252,8 +254,10 @@ public class ThirdPersonController : Script
 
     void Start()
     {
+        //Material mat = doorTestMesh.material;
+        //mat.color = vec4.Ones;
         //reference check
-        if(PlayerCamera == null)
+        if (PlayerCamera == null)
         {
             Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
             return;
