@@ -1,10 +1,11 @@
 Material:
   Material Name: Gun Metal Black material
-  Shader: 0
+  Shader: 1
   Albedo: [0.00784313772, 0.00784313772, 0.00784313772, 1]
-  Metallic: 1.26999998
-  Roughness: 1.39999998
+  Metallic: 1
+  Roughness: 1
   AmbientOcclusion: 1
+  Is Emission: false
   Emission: 1
   AlbedoTexture: {guid: 00000000000000000000000000000000}
   NormalMap: {guid: 00000000000000000000000000000000}
