@@ -1,10 +1,10 @@
-guid: 98a02460afcc50afad8e3e8be1d1be13
+guid: 813240ea4c689714d9895b145865cc9e
 meshes:
-  data: {guid: ebb5612243fba3e7977ec1bc50be2e17}
-  data: {guid: 2d30fc45cdc5d3ab893fdeb324e24ebd}
-  data: {guid: 7520f80b4ed70ca5ac4d7edeb4863096}
-  data: {guid: aa9b5094941dc33282f3d566520ca1cd}
+  data: {guid: c61d57a01899786a435e0b253e279b3e}
+  data: {guid: 75ce49aabf138c17adf653c2f3a1a134}
+  data: {guid: 9bfae31d5c3817274e77d769e7b7b91b}
+  data: {guid: 0130e272684546fbc85ff254ff5b1306}
 animations:
-  data: {guid: 8d7902dc9a2f4732a131a2f2d86a5264}
+  data: {guid: d9fa9816c6ff9cd3e63c6895b85750a8}
 animationStates:
-  Idle: [1, 30]
+  Idle: [0, 31]
