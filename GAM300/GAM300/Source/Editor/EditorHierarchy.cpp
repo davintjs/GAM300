@@ -193,6 +193,10 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 				mEntities.push_back(euid);
 			}
 		}
+		else {
+			EditorScene::Instance().ClearMultiselect();
+
+		}
 		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
 		EVENTS.Publish(&selectedEvent);
 	}
