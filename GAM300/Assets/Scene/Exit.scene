@@ -54,7 +54,7 @@ GameObject:
   m_Component:
     - component: {fileID: 11736666798754351607}  # Transform
     - component: {fileID: 4442105592620540233}  # Canvas
-    - component: {fileID: 1228686682287022030}  # Script
+    - component: {fileID: 7838827213294232427}  # Script
 ---
 ID: 11736666798754351607
 Transform:
@@ -76,7 +76,7 @@ Canvas:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
 ---
-ID: 1228686682287022030
+ID: 7838827213294232427
 Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
@@ -144,9 +144,9 @@ ID: 17923271576364070975
 TextRenderer:
   m_GameObject: {fileID: 12690634969259096449}
   m_IsEnabled: true
-  Text: Master Volume
-  X-axis Position: -0.920000017
-  Y-axis Position: 0.319999993
+  Text: Yes
+  X-axis Position: -0.430000007
+  Y-axis Position: -0.230000004
   Scale: 1
   Color R: 1.87
   Color G: 1.22000003
@@ -160,7 +160,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 15388810202921298389}  # Transform
-    - component: {fileID: 1594056506594008907}  # TextRenderer
 ---
 ID: 15388810202921298389
 Transform:
@@ -172,18 +171,6 @@ Transform:
   m_Children:
     []
 ---
-ID: 1594056506594008907
-TextRenderer:
-  m_GameObject: {fileID: 1497825775628923368}
-  m_IsEnabled: true
-  Text: BGM Volume
-  X-axis Position: -0.889999986
-  Y-axis Position: -0.0500000007
-  Scale: 1
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
----
 ID: 4580145406200005427
 GameObject:
   m_IsActive: true
@@ -192,7 +179,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 18409390317228816037}  # Transform
-    - component: {fileID: 9769306262495974476}  # TextRenderer
 ---
 ID: 18409390317228816037
 Transform:
@@ -203,18 +189,6 @@ Transform:
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
----
-ID: 9769306262495974476
-TextRenderer:
-  m_GameObject: {fileID: 4580145406200005427}
-  m_IsEnabled: true
-  Text: SFX Volume
-  X-axis Position: -0.899999976
-  Y-axis Position: -0.430000007
-  Scale: 1
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
 ---
 ID: 13236326914152460117
 GameObject:
@@ -230,9 +204,9 @@ GameObject:
 ID: 4585798291201254240
 Transform:
   m_GameObject: {fileID: 13236326914152460117}
-  Translation: [0.246978551, -0.251867503, 0]
+  Translation: [0.0762278214, -0.0645369813, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.0580132939, 0.0405557826, 0.999975741]
+  Scale: [0.0382311828, 0.0405558087, 0.999916375]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -251,10 +225,10 @@ ID: 2245107699418231631
 TextRenderer:
   m_GameObject: {fileID: 13236326914152460117}
   m_IsEnabled: true
-  Text: Back
-  X-axis Position: 0.649999976
-  Y-axis Position: -0.839999974
-  Scale: 1
+  Text: No
+  X-axis Position: 0.189999998
+  Y-axis Position: -0.239999995
+  Scale: 0.980000019
   Color R: 1.87
   Color G: 1.22000003
   Color B: 1.22000003
@@ -262,7 +236,7 @@ TextRenderer:
 ID: 15290233428529554524
 GameObject:
   m_IsActive: true
-  m_Name: SettingsTitle
+  m_Name: ExitTitle
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -283,100 +257,10 @@ ID: 1929880018281593265
 TextRenderer:
   m_GameObject: {fileID: 15290233428529554524}
   m_IsEnabled: true
-  Text: Settings
-  X-axis Position: -0.939999998
-  Y-axis Position: 0.639999986
-  Scale: 2.61999989
+  Text: Are you sure you want to quit?
+  X-axis Position: -0.839999974
+  Y-axis Position: 0.189999998
+  Scale: 1.19000006
   Color R: 2.91000009
   Color G: 2.06999993
   Color B: 1.54999995
----
-ID: 6712040991204226818
-GameObject:
-  m_IsActive: true
-  m_Name: MasterVolumeBtn
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9546360096953557667}  # Transform
-    - component: {fileID: 5492143360034791177}  # SpriteRenderer
----
-ID: 9546360096953557667
-Transform:
-  m_GameObject: {fileID: 6712040991204226818}
-  Translation: [0.00929951295, 0.109243572, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.0770056024, 0.0487462506, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 5492143360034791177
-SpriteRenderer:
-  m_GameObject: {fileID: 6712040991204226818}
-  m_IsEnabled: true
-  World Space: true
-  Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
----
-ID: 5631298785341950928
-GameObject:
-  m_IsActive: true
-  m_Name: BGMvolumeBtn
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16706962569924402114}  # Transform
-    - component: {fileID: 16362687019528758833}  # SpriteRenderer
----
-ID: 16706962569924402114
-Transform:
-  m_GameObject: {fileID: 5631298785341950928}
-  Translation: [0.0130522363, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.0771809444, 0.0473241955, 0.00100000005]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 16362687019528758833
-SpriteRenderer:
-  m_GameObject: {fileID: 5631298785341950928}
-  m_IsEnabled: true
-  World Space: true
-  Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
----
-ID: 5206565024310472992
-GameObject:
-  m_IsActive: true
-  m_Name: SFXvolumeBtn
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4218217362104238699}  # Transform
-    - component: {fileID: 3921344302224865802}  # SpriteRenderer
----
-ID: 4218217362104238699
-Transform:
-  m_GameObject: {fileID: 5206565024310472992}
-  Translation: [0.0147475991, -0.114253215, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.0765916705, 0.0501304865, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 3921344302224865802
-SpriteRenderer:
-  m_GameObject: {fileID: 5206565024310472992}
-  m_IsEnabled: true
-  World Space: true
-  Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}

@@ -19,6 +19,9 @@ public class MainMenu : Script
 
     public GameObject HTPButton; 
 
+    public GameObject ExitButton; 
+
+
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -39,6 +42,9 @@ public class MainMenu : Script
     private SpriteRenderer settingsButtonRenderer;
 
     private SpriteRenderer HTPButtonRenderer;
+
+    private SpriteRenderer ExitButtonRenderer;
+
 
     vec3 startGridTextSize;
 
@@ -63,7 +69,11 @@ public class MainMenu : Script
         {
             HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
         }
-        
+        //Exit Button
+        if (ExitButton.HasComponent<SpriteRenderer>())
+        {
+            ExitButtonRenderer = ExitButton.GetComponent<SpriteRenderer>();
+        }
 
 
             
@@ -93,6 +103,14 @@ public class MainMenu : Script
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
             SceneManager.LoadScene("HowToPlay");
+
+        }
+
+        if (ExitButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("Exit");
 
         }
 
