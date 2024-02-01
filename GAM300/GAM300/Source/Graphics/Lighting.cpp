@@ -94,16 +94,13 @@ void Lighting::Update(float)
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 
-			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
 			glm::vec3 rotation = transform.GetGlobalRotation();
 			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
 			rot *= glm::translate(glm::mat4(1.f), direction);
-			glm::vec3 testdir = rot[3];
 
-			glm::vec3 test(0.f);
-
-			directionLightSources[directionalLightCount].direction = glm::normalize(testdir);
+			directionLightSources[directionalLightCount].direction = glm::normalize(rot[3]);
 
 			// Replace the first light if the count is more than the engines max available lights
 			directionalLightCount = (directionalLightCount >= MAX_DIRECTION_LIGHT - 1) ? 0 : directionalLightCount + 1;
@@ -119,16 +116,13 @@ void Lighting::Update(float)
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
 
-			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
 			glm::vec3 rotation = transform.GetGlobalRotation();
 			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
 			rot *= glm::translate(glm::mat4(1.f),direction);
-			glm::vec3 testdir = rot[3];
 
-			glm::vec3 test(0.f);
-
-			spotLightSources[spotLightCount].direction = glm::normalize(testdir);
+			spotLightSources[spotLightCount].direction = glm::normalize(rot[3]);
 
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
 			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));

@@ -348,15 +348,17 @@ public:
 
 	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
 
-	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
 	
-	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
-	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+	void DrawSegment3D(InstanceProperties& _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
-	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
-	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec3& _center, const glm::vec4& _color, const float& _radius);
+	
+	void DrawSemiCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
 
 	void DrawRay();
 
