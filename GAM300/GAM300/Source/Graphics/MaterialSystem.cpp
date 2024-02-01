@@ -178,7 +178,6 @@ void MaterialSystem::deleteInstance(Engine::GUID<MaterialAsset>& matGUID)
 }
 
 
-
 void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Engine::GUID<MaterialAsset>& _guid)
 {
 
@@ -186,7 +185,6 @@ void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Eng
 	Deserialize(_allMaterialInstances[_guid], _materialAsset.mFilePath);
 
 }
-
 
 void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>* pEvent)
 {
@@ -200,9 +198,15 @@ void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
 	BindAllTextureIDs();
 }
 
+Engine::GUID<MaterialAsset> MaterialSystem::InstantiateRuntimeMaterial(Material_instance& mat)
+{
+	auto ret = _runtimeMaterialInstances.insert(std::make_pair(Engine::GUID<MaterialAsset>(), mat));
+	auto it = ret.first;
+	return it->first;
+}
+
 Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsset> matGUID)
 {
-	//return *(Material_instance*)(nullptr);
 	static Material_instance defaultInstance;
 
 	auto iter = _allMaterialInstances.find(matGUID);
@@ -212,11 +216,16 @@ Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsse
 		return iter->second;
 	}
 
+	iter = _runtimeMaterialInstances.find(matGUID);
+
+	if (iter != _runtimeMaterialInstances.end())
+	{
+		return iter->second;
+	}
+
 	return defaultInstance;
 
 }
-
-
 
 Material_instance::Material_instance()
 {

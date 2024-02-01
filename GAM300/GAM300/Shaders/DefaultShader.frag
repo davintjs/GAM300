@@ -14,9 +14,13 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #version 450 core
 
-#define MAX_POINT_LIGHT 10
-#define MAX_SPOT_LIGHT 10
+#define MAX_POINT_LIGHT 20
+#define MAX_SPOT_LIGHT 20
 #define MAX_DIRECTION_LIGHT 5
+
+#define MAX_POINT_LIGHT_SHADOW 10
+#define MAX_SPOT_LIGHT_SHADOW 10
+#define MAX_DIRECTIONAL_LIGHT_SHADOW 10
 
 #define DIRECTIONAL_SHADOW_INDEX_OFFSET 10
 #define SPOT_SHADOW_INDEX_OFFSET 0
@@ -440,198 +444,125 @@ void main()
 
     if(!hasEmissionMap)
     {
-        if(isEmission)
+        if( Albedo.a < 1.f)
         {
-            toBloom = true;
-        }
-
-        
-        vec3 N ;
-        if (hasNormal != 0)
-        {
-            N = getNormalFromMap();
+            color = vec3(ambience_multiplier) * albedo * ao + emission ;
+            
         }
         else
         {
-            N = normalize(Normal);
-        }
+
+            if(isEmission)
+            {
+                toBloom = true;
+            }   
+        
+            vec3 N ;
+            if (hasNormal != 0)
+            {
+                N = getNormalFromMap();
+            }
+            else
+            {
+                N = normalize(Normal);
+            }
 
 
 
-        vec3 V = normalize(camPos - WorldPos);
+            vec3 V = normalize(camPos - WorldPos);
 
-        // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
-        // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
-        vec3 F0 = vec3(0.04); 
-        F0 = mix(F0, albedo, metallic);
-        // reflectance equation
-        vec3 Lo = vec3(0.0);
+            // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
+            // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
+            vec3 F0 = vec3(0.04); 
+            F0 = mix(F0, albedo, metallic);
+            // reflectance equation
+            vec3 Lo = vec3(0.0);
 
-        int PointShadowIndex = 0;
-        float totalPointCount = PointLight_Count; // this is to use at the denominator which uses floats
-        for(int i = 0; i < PointLight_Count; ++i)
-        {
-           vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
+            int PointShadowIndex = 0;
+            float totalPointCount = PointLight_Count; // this is to use at the denominator which uses floats
+            for(int i = 0; i < PointLight_Count; ++i)
+            {
+               vec3 lightColourStrength = pointLights[i].colour * pointLights[i].intensity;
 
-            // Calculate per-light radiance
-            vec3 L = normalize(pointLights[i].position - WorldPos);
-            vec3 H = normalize(L);  // Use light direction as the halfway vector
+                // Calculate per-light radiance
+                vec3 L = normalize(pointLights[i].position - WorldPos);
+                vec3 H = normalize(L);  // Use light direction as the halfway vector
 
-            float distance = length(pointLights[i].position - WorldPos);
-            float attenuation = 1.0 / (distance * distance);
-            vec3 radiance = lightColourStrength * attenuation;
+                float distance = length(pointLights[i].position - WorldPos);
+                float attenuation = 1.0 / (distance * distance);
+                vec3 radiance = lightColourStrength * attenuation;
 
-            // Cook-Torrance BRDF
-            float NDF = DistributionGGX(N, H, roughness);
-            float G = GeometrySmith_New(N, L, roughness);  // Simplify the geometry term
-            vec3 F = vec3(0.04);  // Use a constant value for Fresnel (Schlick approximation)
+                // Cook-Torrance BRDF
+                float NDF = DistributionGGX(N, H, roughness);
+                float G = GeometrySmith_New(N, L, roughness);  // Simplify the geometry term
+                vec3 F = vec3(0.04);  // Use a constant value for Fresnel (Schlick approximation)
 
-            vec3 numerator = NDF * G * F;
-            float denominator = max(4.0 * max(dot(N, L), 0.0), 0.001);  // Adjust for denominator
-            vec3 specular = numerator / denominator;
+                vec3 numerator = NDF * G * F;
+                float denominator = max(4.0 * max(dot(N, L), 0.0), 0.001);  // Adjust for denominator
+                vec3 specular = numerator / denominator;
 
-            // kS is equal to Fresnel
-            vec3 kS = F;
-            // for energy conservation, the diffuse and specular light can't
-            // be above 1.0 (unless the surface emits light); to preserve this
-            // relationship the diffuse component (kD) should equal 1.0 - kS.
-            vec3 kD = vec3(1.0) - kS;
-            // multiply kD by the inverse metalness such that only non-metals 
-            // have diffuse lighting, or a linear blend if partly metal (pure metals
-            // have no diffuse light).
-            kD *= 1.0 - metallic;
+                // kS is equal to Fresnel
+                vec3 kS = F;
+                // for energy conservation, the diffuse and specular light can't
+                // be above 1.0 (unless the surface emits light); to preserve this
+                // relationship the diffuse component (kD) should equal 1.0 - kS.
+                vec3 kD = vec3(1.0) - kS;
+                // multiply kD by the inverse metalness such that only non-metals 
+                // have diffuse lighting, or a linear blend if partly metal (pure metals
+                // have no diffuse light).
+                kD *= 1.0 - metallic;
 
-            // scale light by NdotL
-            float NdotL = max(dot(N, L), 0.0);
-            bool shadows = pointLights[i].enableShadow && renderShadow;
-            float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
+                // scale light by NdotL
+                float NdotL = max(dot(N, L), 0.0);
+                bool shadows = pointLights[i].enableShadow && renderShadow;
+                float shadow = shadows ? ShadowCalculation_Point(pointLights[i].position, PointShadowIndex) : 0.0;
 
-            Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);
-
-
-            if (shadows)
-                ++PointShadowIndex;
+                Lo += (kD * albedo / PI + specular) * radiance * NdotL * (1.0 - shadow);
 
 
-        }   
+                if (shadows)
+                {
+
+                    ++PointShadowIndex;
+                    PointShadowIndex %= MAX_POINT_LIGHT_SHADOW;
+                 }
+
+            }   
    
 
-        int DirectionalShadowIndex = 0;
-        float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
-        for(int i = 0; i < DirectionalLight_Count; ++i)
-        {
-            vec4 frag_pos_lightspace_D = directionalLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
+            int DirectionalShadowIndex = 0;
+            float totalDirectionalCount = DirectionalLight_Count; // this is to use at the denominator which uses floats
+            for(int i = 0; i < DirectionalLight_Count; ++i)
+            {
+                vec4 frag_pos_lightspace_D = directionalLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
 
-            vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
+                vec3 lightColourStrength =  directionalLights[i].colour * directionalLights[i].intensity;
 
-            // calculate per-light radiance
+                // calculate per-light radiance
         
-    //        vec3 L = normalize(pointLights[i].position - WorldPos);
-            vec3 L = normalize(-directionalLights[i].direction);
+        //        vec3 L = normalize(pointLights[i].position - WorldPos);
+                vec3 L = normalize(-directionalLights[i].direction);
 
-
-            vec3 H = normalize(V + L);
-
-
-
-    //        float distance = length(pointLights[i].position - WorldPos);
-            float distance = 10.f;
-        
-        
-            float attenuation = 1.0 / (distance * distance);
-    //        vec3 radiance = directionalLights[i].colour * attenuation;
-            vec3 radiance = lightColourStrength * attenuation;
-
-            // Cook-Torrance BRDF
-            float NDF = DistributionGGX(N, H, roughness);   
-            float G   = GeometrySmith(N, V, L, roughness);      
-            vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
-           
-            vec3 numerator    = NDF * G * F; 
-            float denominator = totalDirectionalCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-            vec3 specular = numerator / denominator;
-        
-            // kS is equal to Fresnel
-            vec3 kS = F;
-            // for energy conservation, the diffuse and specular light can't
-            // be above 1.0 (unless the surface emits light); to preserve this
-            // relationship the diffuse component (kD) should equal 1.0 - kS.
-            vec3 kD = vec3(1.0) - kS;
-            // multiply kD by the inverse metalness such that only non-metals 
-            // have diffuse lighting, or a linear blend if partly metal (pure metals
-            // have no diffuse light).
-        
-            kD *= 1.0 - metallic;	  
-
-            // scale light by NdotL
-            float NdotL = max(dot(N, L), 0.0);   
-
-
-            bool shadows = directionalLights[i].enableShadow && renderShadow;
-
-    //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
-            float shadow = shadows ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, 
-            -directionalLights[i].direction * distance,DIRECTIONAL_SHADOW_INDEX_OFFSET + DirectionalShadowIndex) : 0.0; // add a shadows bool
-
-            Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-            if(shadows)
-                ++DirectionalShadowIndex;
-
-        }   
-
-        int SpotShadowIndex = 0;
-        float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
-        for (int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
-        {
-            vec3 L = normalize(spotLights[i].position - WorldPos);
-
-            float theta  = dot(L, normalize(-spotLights[i].direction));
-        
-            if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
-            {  
-                vec4 frag_pos_lightspace_S = spotLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
-
-                float epsilon   = spotLights[i].innerCutOff - spotLights[i].outerCutOff;
-                float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0); 
-
-    //             vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
-                intensity *= spotLights[i].intensity;
-                vec3 lightColourStrength =  spotLights[i].colour * intensity;
-
-            // calculate per-light radiance
-        
-    //        vec3 L = normalize(-spotLights[i].direction);
 
                 vec3 H = normalize(V + L);
+
+
+
+        //        float distance = length(pointLights[i].position - WorldPos);
+                float distance = 10.f;
         
-    //      float distance = length(pointLights[i].position - WorldPos);
         
-                float distance = length(spotLights[i].position - WorldPos);
-
-
-    //        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
-    //        float theta = dot(camPos - WorldPos, normalize(-spotLights[i].direction)); 
-    //
-    //        float epsilon = (spotLights[i].innerCutOff - spotLights[i].outerCutOff);
-    //        float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0);
-    //
-    //        float attentuation = smoothstep(spotLights[i].outerCutOff,spotLights[i].innerCutOff,theta);
-    //        vec3 radiance = spotLights[i].colour * vec3(intensity);
-    //
-
-
                 float attenuation = 1.0 / (distance * distance);
-
-        //        vec3 radiance = spotLights[i].colour * attenuation;
+        //        vec3 radiance = directionalLights[i].colour * attenuation;
                 vec3 radiance = lightColourStrength * attenuation;
-        
+
                 // Cook-Torrance BRDF
                 float NDF = DistributionGGX(N, H, roughness);   
                 float G   = GeometrySmith(N, V, L, roughness);      
                 vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
            
                 vec3 numerator    = NDF * G * F; 
-                float denominator = totalSpotLightCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+                float denominator = totalDirectionalCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
                 vec3 specular = numerator / denominator;
         
                 // kS is equal to Fresnel
@@ -647,33 +578,125 @@ void main()
                 kD *= 1.0 - metallic;	  
 
                 // scale light by NdotL
-                float NdotL = max(dot(N, L), 0.0);        
-        
-        
-                 bool shadows = spotLights[i].enableShadow && renderShadow;
+                float NdotL = max(dot(N, L), 0.0);   
 
-        //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
-                float shadow = shadows ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,SPOT_SHADOW_INDEX_OFFSET + SpotShadowIndex) : 0.0; // add a shadows bool
 
-        
-        
+                bool shadows = directionalLights[i].enableShadow && renderShadow;
+
+        //        float shadow = ShadowCalculation(frag_pos_lightspace,N, -directionalLights[i].direction * distance); 
+                float shadow = shadows ? ShadowCalculation_Directional(frag_pos_lightspace_D,N, 
+                -directionalLights[i].direction * distance,DIRECTIONAL_SHADOW_INDEX_OFFSET + DirectionalShadowIndex) : 0.0; // add a shadows bool
+
                 Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-                
                 if(shadows)
-                    ++SpotShadowIndex;
+                {
+                    ++DirectionalShadowIndex;
+                    DirectionalShadowIndex %= MAX_DIRECTIONAL_LIGHT_SHADOW;
+
+                }
 
             }   
 
-        }   
+            int SpotShadowIndex = 0;
+            float totalSpotLightCount = SpotLight_Count; // this is to use at the denominator which uses floats 
+            for (int i = 0; i < SpotLight_Count; ++i)// CHANGE WIP THE POSITION IS ALL FUCKED BECUASE ITS OFF THE CAM
+            {
+                vec3 L = normalize(spotLights[i].position - WorldPos);
+
+                float theta  = dot(L, normalize(-spotLights[i].direction));
+        
+                if(theta > spotLights[i].outerCutOff) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
+                {  
+                    vec4 frag_pos_lightspace_S = spotLights[i].lightSpaceMatrix * vec4(WorldPos,1.0);
+
+                    float epsilon   = spotLights[i].innerCutOff - spotLights[i].outerCutOff;
+                    float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0); 
+
+        //             vec3 lightColourStrength =  spotLights[i].colour * spotLights[i].intensity;
+                    intensity *= spotLights[i].intensity;
+                    vec3 lightColourStrength =  spotLights[i].colour * intensity;
+
+                // calculate per-light radiance
+        
+        //        vec3 L = normalize(-spotLights[i].direction);
+
+                    vec3 H = normalize(V + L);
+        
+        //      float distance = length(pointLights[i].position - WorldPos);
+        
+                    float distance = length(spotLights[i].position - WorldPos);
+
+
+        //        float theta = dot(spotLights[i].position - WorldPos, normalize(-spotLights[i].direction)); 
+        //        float theta = dot(camPos - WorldPos, normalize(-spotLights[i].direction)); 
+        //
+        //        float epsilon = (spotLights[i].innerCutOff - spotLights[i].outerCutOff);
+        //        float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0);
+        //
+        //        float attentuation = smoothstep(spotLights[i].outerCutOff,spotLights[i].innerCutOff,theta);
+        //        vec3 radiance = spotLights[i].colour * vec3(intensity);
+        //
+
+
+                    float attenuation = 1.0 / (distance * distance);
+
+            //        vec3 radiance = spotLights[i].colour * attenuation;
+                    vec3 radiance = lightColourStrength * attenuation;
+        
+                    // Cook-Torrance BRDF
+                    float NDF = DistributionGGX(N, H, roughness);   
+                    float G   = GeometrySmith(N, V, L, roughness);      
+                    vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
+           
+                    vec3 numerator    = NDF * G * F; 
+                    float denominator = totalSpotLightCount * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+                    vec3 specular = numerator / denominator;
+        
+                    // kS is equal to Fresnel
+                    vec3 kS = F;
+                    // for energy conservation, the diffuse and specular light can't
+                    // be above 1.0 (unless the surface emits light); to preserve this
+                    // relationship the diffuse component (kD) should equal 1.0 - kS.
+                    vec3 kD = vec3(1.0) - kS;
+                    // multiply kD by the inverse metalness such that only non-metals 
+                    // have diffuse lighting, or a linear blend if partly metal (pure metals
+                    // have no diffuse light).
+        
+                    kD *= 1.0 - metallic;	  
+
+                    // scale light by NdotL
+                    float NdotL = max(dot(N, L), 0.0);        
+        
+        
+                     bool shadows = spotLights[i].enableShadow && renderShadow;
+
+            //        float shadow = ShadowCalculation(frag_pos_lightspace,N, spotLights[i].position - WorldPos); 
+                    float shadow = shadows ? ShadowCalculation_Spot(frag_pos_lightspace_S,N, spotLights[i].position - WorldPos,SPOT_SHADOW_INDEX_OFFSET + SpotShadowIndex) : 0.0; // add a shadows bool
+
+        
+        
+                    Lo += ( kD * albedo / PI + specular) * radiance * NdotL * (1.f - shadow);  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+                
+                    if(shadows)
+                    {
+                        ++SpotShadowIndex;
+                        SpotShadowIndex %= MAX_SPOT_LIGHT_SHADOW;
+                    }
+
+                }   
+
+            }   
 
 
 
 
-    //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
-        vec3 ambient = vec3(ambience_multiplier) * albedo * ao + emission ;
+        //    vec3 ambient = vec3(0.1) * albedo * ao + ( emission* 1000.f);
+            vec3 ambient = vec3(ambience_multiplier) * albedo * ao + emission ;
     
-        color = ambient + Lo;
+            color = ambient + Lo;
+        }
     }
+
     else
     {
         toBloom = true;
