@@ -46,10 +46,10 @@ void ParticleRenderer::Update(float dt) {
                 glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1];
                 float trailScale = glm::length(trailVector);
                 glm::mat4 trailScaleMatrix = glm::mat4( 
-                    glm::vec4(.1f, 0, 0, 0),
+                    glm::vec4(.05f, 0, 0, 0),
                     //glm::vec4(0, 1, 0, 0),
                     glm::vec4(0, trailScale, 0, 0),
-                    glm::vec4(0, 0, .1f, 0),
+                    glm::vec4(0, 0, .05f, 0),
                     glm::vec4(0, 0, 0, 1));
                 trailVector = glm::normalize(trailVector);
                 glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));

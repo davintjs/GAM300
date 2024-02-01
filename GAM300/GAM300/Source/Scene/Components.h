@@ -560,6 +560,7 @@ struct ParticleComponent : Object
 
 	bool is2D = false;
 	bool trailEnabled = false;
+	bool isLocalSpace = false;
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -570,18 +571,19 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(meshID).Name("Mesh"),
 	property_var(materialGUID).Name("Material"),
 	//property_var(ParticleTexture).Name("Particle Texture"),
+	property_var(isLocalSpace).Name("Local Space"),
 	property_var(numParticles_).Name("Number Of Particles"),
-		property_var(particleLifetime_).Name("Particle Lifetime"),
-		property_var(particleEmissionRate_).Name("Particle Emission Rate"),
-		property_var(particleMinScale_).Name("Particle Min Scale"),
-		property_var(particleMaxScale_).Name("Particle Max Scale"),
-		property_var(particleScaleRate_).Name("Particle Scale Rate"),
-		property_var(speed_).Name("Particle Speed"),
-		property_var(noise).Name("Particle Noise"),
-		property_var(noisefrequency).Name("Particle Noise Frequency"),
-		property_var(is2D).Name("2D particle"),
-		property_var(trailEnabled).Name("Trailing"),
-		property_var(particleLooping).Name("Looping")
+	property_var(particleLifetime_).Name("Particle Lifetime"),
+	property_var(particleEmissionRate_).Name("Particle Emission Rate"),
+	property_var(particleMinScale_).Name("Particle Min Scale"),
+	property_var(particleMaxScale_).Name("Particle Max Scale"),
+	property_var(particleScaleRate_).Name("Particle Scale Rate"),
+	property_var(speed_).Name("Particle Speed"),
+	property_var(noise).Name("Particle Noise"),
+	property_var(noisefrequency).Name("Particle Noise Frequency"),
+	property_var(is2D).Name("2D particle"),
+	property_var(trailEnabled).Name("Trailing"),
+	property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
 //

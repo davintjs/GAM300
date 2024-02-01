@@ -16,7 +16,6 @@ void ParticleManager::Init()
 void ParticleManager::Update(float dt)
 {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    //int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
         if (!currentScene.IsActive(particleComponent))      //use the same for Button 
@@ -25,13 +24,17 @@ void ParticleManager::Update(float dt)
         if (!currentScene.IsActive(entity))
             continue;
         Transform& entityTransform = currentScene.Get<Transform>(entity);
+        Transform& entityTransformParent = currentScene.Get<Transform>(entityTransform.parent);
 
         if (particleComponent.particles_.size() != particleComponent.numParticles_) { // initialize or resize
             particleComponent.particles_.resize(particleComponent.numParticles_);
 
             // Initialize the position, velocity, and acceleration of each particle
             for (int i = 0; i < particleComponent.numParticles_; i++) {
-                particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
+
+                particleComponent.particles_[i].position = particleComponent.isLocalSpace ? vec3{0.f,0.f,0.f} : entityTransform.GetGlobalTranslation();
+
+                //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
                 particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = 1.0f;
@@ -43,17 +46,14 @@ void ParticleManager::Update(float dt)
             }
         }
 
-        
-        // Handle particle collisions
-        // Emit new particles
-  
-        if (particleComponent.particleEmissionRate_ > 0.0f) { // idk how emmision rate works, @desmond your turn to do this
+        if (particleComponent.particleEmissionRate_ > 0.0f) {
             for (int i = 0; i < particleComponent.numParticles_; i++) {
-                if (particleComponent.particles_[i].lifetime <= 0.0f) {
+                if (particleComponent.particles_[i].lifetime <= 0.0f) { // when particle dies, reset
                     particleComponent.particles_[i].trails.pos.clear();
                     particleComponent.particles_[i].trails.count = 0;
+                    particleComponent.particles_[i].position = particleComponent.isLocalSpace ? vec3{ 0.f,0.f,0.f } : entityTransform.GetGlobalTranslation();
 
-                    particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
+                    //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
                     particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                     particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                     particleComponent.particles_[i].acceleration = 1.0f;
@@ -69,13 +69,11 @@ void ParticleManager::Update(float dt)
                 }
             }
         }
-        //}
 
         for (int i = 0; i < particleComponent.numParticles_; i++) { // update particles
 
             // speed += acceleration * dt
             // velocity = speed * direction
-
 
             if (particleComponent.noise > 1.f) {
                 if (particleComponent.particles_[i].noiselifetime <= 0.f) {
@@ -99,34 +97,35 @@ void ParticleManager::Update(float dt)
             particleComponent.particles_[i].lifetime -= dt;
             particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
             particleComponent.particles_[i].scale = glm::clamp(particleComponent.particles_[i].scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
+            vec3 particlePos = particleComponent.particles_[i].position;
+            if (particleComponent.isLocalSpace) {
+                particlePos += entityTransform.GetGlobalTranslation();
+            }
 
             if (!particleComponent.trailEnabled) {
                 continue;
             }
             if (1 >= particleComponent.particles_[i].trails.count) {
                 ++particleComponent.particles_[i].trails.count;
-                particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
+                particleComponent.particles_[i].trails.pos.emplace_back(particlePos);
             }
             else {
                 // check if in the same ray
                 
-                glm::vec3 currPoint = particleComponent.particles_[i].position;
+                glm::vec3 currPoint = particlePos;
                 glm::vec3 endPoint = particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 1 ];
                 glm::vec3 startPoint = particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 2 ];
 
                 if (isParallel(endPoint - startPoint, currPoint - startPoint)) {
                     //endPoint = currPoint;
-                    particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 1] = particleComponent.particles_[i].position;
+                    particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 1] = particlePos;
                 }
                 else {
                     particleComponent.particles_[i].trails.pos.emplace_back(currPoint);
                     particleComponent.particles_[i].trails.count++;
                 }
             }
-
         }
-
-        //counter += particleComponent.numParticles_;
     }
 }
 
