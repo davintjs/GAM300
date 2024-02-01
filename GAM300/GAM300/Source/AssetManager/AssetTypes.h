@@ -78,7 +78,10 @@ struct ModelAsset : Asset
 {
 };
 
-using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset, AnimationAsset,Asset>;
+struct FontAsset : Asset { };
+
+
+using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset, AnimationAsset, FontAsset, Asset>;
 using GetAssetType = decltype(GetTypeGroup(AssetTypes()));
 
 template <typename AssetType>
@@ -95,6 +98,7 @@ static std::unordered_map<std::filesystem::path, size_t> AssetExtensionTypes =
 	{".anim",	GetAssetType::E<AnimationAsset>()},
 	{".material", GetAssetType::E<MaterialAsset>()},
 	{".shader", GetAssetType::E<ShaderAsset>()},
+	{".font", GetAssetType::E<FontAsset>()},
 };
 
 #endif

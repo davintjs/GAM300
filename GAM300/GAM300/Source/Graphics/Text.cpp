@@ -6,7 +6,8 @@
 
 void TextSystem::Init()
 {
-	LoadFontAtlas("Assets/Fonts/opensansbold.bin"); // decompile
+	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
+	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
 
 
 	glGenVertexArrays(1, &txtVAO);
@@ -31,7 +32,7 @@ void TextSystem::Exit()
 	// Empty by design
 }
 
-void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera)
+void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
 {
 
 	scale *= 0.001f; // hack bc it too big
@@ -51,13 +52,13 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
 	for (const char& c : text) {
-		Character ch = Characters.at(c);  // Use .at() to ensure the character exists in the map
+		Character ch = mFontContainer.at(_guid).at(c);  // Use .at() to ensure the character exists in the map
 
 		float xpos = x + ch.Bearing.x * scale;
 		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
 
 		float w = ch.Size.x * scale;
-		float h = ch.Size.y * scale;
+		float h = ch.Size.y * scale * 2.f;
 
 		float maxsize = std::max(xpos, ypos) + std::max(w, h);
 		maxsize *= 2.f;
@@ -105,15 +106,17 @@ void TextSystem::Draw(BaseCamera& _camera)
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) {
-		RenderText(txtshader, text.text, text.x, text.y, text.scale, glm::vec3(text.r, text.g, text.b), _camera);
+		//get gameobj xform x y z, the curr xy is offsets, try and add alignment, do scale as in x and y diff ability to scsale
+		// priority, add alpha, decompiler, integrate into ui
+		RenderText(txtshader, text.text, text.x, text.y, text.fontSize, glm::vec3(text.r, text.g, text.b), _camera, );
 	}
 	
 	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
 }
 
 // Function to load font atlas from binary file
-void TextSystem::LoadFontAtlas(const std::filesystem::path& inputPath) {
-	//std::map<char, Character> Characters;
+void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid) {
+	std::map<char, Character> Characters;
 
 	std::ifstream inFile(inputPath, std::ios::binary);
 	if (!inFile.is_open()) {
@@ -135,6 +138,12 @@ void TextSystem::LoadFontAtlas(const std::filesystem::path& inputPath) {
 		Characters.insert(std::pair<char, Character>(c, character));
 	}
 	//Characters.insert(std::pair<std::string, std::map<char, Character>>(c, haracter));
+	mFontContainer.insert(std::make_pair(_guid, Characters));
 
 	inFile.close();
+}
+
+void TextSystem::CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent)
+{
+	AddFont(pEvent->asset.mFilePath, pEvent->asset.importer->guid);
 }

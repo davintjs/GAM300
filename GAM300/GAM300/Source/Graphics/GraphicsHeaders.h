@@ -560,16 +560,19 @@ public:
 	};
 
 	unsigned int txtVAO, txtVBO;
-	std::map<char, Character> Characters;
-	//std::map<std::string, std::map<char, Character>> fonts;
+	using FontCharacters = std::map<char, Character>;
+	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+
 
 	void Init();
 	void Update(float dt);
 	void Exit();
 
-	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
+	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid);
 	void Draw(BaseCamera& _camera);
-	void LoadFontAtlas(const std::filesystem::path& inputPath);
+	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
+
+	void CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent);
 
 
 private:
