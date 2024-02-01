@@ -170,7 +170,9 @@ void Renderer::UpdateDefaultProperties(Scene& _scene, Transform& _t, Material_in
 	renderProperties.RoughnessID = _mat.roughnessID;
 	renderProperties.AoID = _mat.ambientID;
 	renderProperties.EmissionID = _mat.emissiveID;
-
+	
+	renderProperties.isEmission = _mat.isEmission;
+	
 	renderProperties.drawType = _type;
 	renderProperties.drawCount = _count;
 
@@ -242,7 +244,7 @@ void Renderer::UpdatePBRProperties(Transform& _t, Material_instance& _mat, const
 
 	iProp.M_R_A_Constant[iter] = { metal_constant, rough_constant, ao_constant, emission_constant };
 	iProp.M_R_A_Texture[iter] = { metalidx, roughidx, aoidx, emissionidx };
-	iProp.textureIndex[iter] = { texidx, normidx };
+	iProp.textureIndex_isEmission[iter] = { texidx, normidx, _mat.isEmission };
 	iProp.entitySRT[iter] = _t.GetWorldMatrix();
 
 	iProp.position = _t.GetGlobalTranslation();
@@ -307,7 +309,7 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec4), prop.M_R_A_Constant.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec3), prop.textureIndex_isEmission.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
@@ -354,6 +356,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	GLint AmbientOcculusion = glGetUniformLocation(shader.GetHandle(), "AoConstant");
 	GLint Emission = glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
 
+	GLint isEmission = glGetUniformLocation(shader.GetHandle(), "isEmission");
+
 	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 
 	const glm::vec3 cameraPosition = _camera.GetCameraPosition();
@@ -388,6 +392,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
+
+		glUniform1f(isEmission, prop.isEmission);
 
 		// PBR CONSTANT VALUES
 		glUniform1f(Metallic, prop.metallic);
@@ -461,6 +467,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1f(Roughness, prop.roughness);
 		glUniform1f(AmbientOcculusion, prop.ao);
 		glUniform1f(Emission, prop.emission);
+		glUniform1f(isEmission, prop.isEmission);
 
 		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
@@ -510,9 +517,10 @@ void Renderer::BindLights(GLSLShader& shader)
 	{
 		if (LIGHTING.GetSpotLights()[i].enableShadow)
 		{
-			int textureUnit = 10 + offset++;
+			int textureUnit = 10 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
-			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.spotLightFBO[offset].second);
+			offset = (offset >= MAX_SPOT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
@@ -523,7 +531,7 @@ void Renderer::BindLights(GLSLShader& shader)
 			int textureUnit = 20 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_2D, LIGHTING.directionalLightFBO[offset].second);
-			++offset;
+			offset = (offset >= MAX_DIRECTION_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
@@ -531,9 +539,10 @@ void Renderer::BindLights(GLSLShader& shader)
 	{
 		if (LIGHTING.GetPointLights()[i].enableShadow)
 		{
-			int textureUnit = 22 + offset++;
+			int textureUnit = 22 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.pointLightFBO[offset].second);
+			offset = (offset >= MAX_POINT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 

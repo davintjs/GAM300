@@ -214,6 +214,7 @@ void DebugDraw::Draw()
 // Gizmos/icons for components
 void DebugDraw::DrawIcons()
 {
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -249,7 +250,7 @@ void DebugDraw::DrawIcons()
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cameraID);
 
-		renderQuad(vaoIcon, vboIcon);;
+		renderQuad(vaoIcon, vboIcon);
 	}
 
 	color = glm::vec4(1.f, 1.f, 0.f, 1.f);

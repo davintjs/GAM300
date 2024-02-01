@@ -104,7 +104,7 @@ struct Shader {
 
 struct Material_instance : Object
 {
-					// Var name   // Data Storage
+	// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
 	Material_instance();
@@ -121,13 +121,14 @@ struct Material_instance : Object
 	//      PBR VARIABLES
 	//-------------------------
 
-
 	std::string		name;
 	Vector4			albedoColour;// This is pretty much used in all types of shaders
 	float			metallicConstant;
 	float			roughnessConstant;
 	float			aoConstant;
 	float			emissionConstant;
+
+	bool isEmission = false;
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -142,8 +143,6 @@ struct Material_instance : Object
 	GLuint roughnessID;
 	GLuint ambientID;
 	GLuint emissiveID;
-
-
 
 	// Blinn Phong - Not in use
 
@@ -168,6 +167,7 @@ property_begin_name(Material_instance, "Material_Instance") {
 		property_var(metallicConstant).Name("Metallic"),
 		property_var(roughnessConstant).Name("Roughness"),
 		property_var(aoConstant).Name("AmbientOcclusion"),
+		property_var(isEmission).Name("Is Emission"),
 		property_var(emissionConstant).Name("Emission"),
 		property_var(albedoTexture).Name("AlbedoTexture"),
 		property_var(normalMap).Name("NormalMap"),
@@ -203,6 +203,8 @@ public:
 
 	Engine::GUID<MaterialAsset> NewMaterialInstance(std::string _name = "Default Material");
 
+	Engine::GUID<MaterialAsset> InstantiateRuntimeMaterial(Material_instance & mat);
+
 	// Deleting a Material Instance
 	void deleteInstance(Engine::GUID<MaterialAsset>& matGUID);
 	
@@ -222,6 +224,9 @@ public:
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
 	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _allMaterialInstances;
+
+	//Materials generated at runtime as designer set a value to a material
+	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _runtimeMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 
@@ -397,6 +402,8 @@ public:
 	unsigned int spotLightCount;
 
 	std::vector<std::pair<unsigned int, unsigned int>> directionalLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> spotLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> pointLightFBO;
 
 private:
 	LightProperties lightingSource;
