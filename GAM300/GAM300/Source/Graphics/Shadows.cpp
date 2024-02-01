@@ -29,14 +29,35 @@ void Shadows::Init()
 
 void Shadows::Update(float dt)
 {
+#if defined(_BUILD)
 	if (RENDERER.enableShadows())
 	{
 		DrawDepthSpot();
-
 		DrawDepthDirectional();
-
 		DrawDepthPoint();
 	}
+#else
+	// This helps performance by only updating certains light type per frame
+	static int delay = 0;
+	if (RENDERER.enableShadows())
+	{
+		if (delay == 0)
+		{
+			DrawDepthSpot();
+		}
+		else if (delay == 1)
+		{
+			DrawDepthDirectional();
+		}
+		else if (delay == 2)
+		{
+			DrawDepthPoint();
+		}
+
+		delay = (delay > 1) ? 0 : ++delay;
+	}
+#endif
+	
 }
 
 void Shadows::Exit()
