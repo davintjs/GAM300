@@ -7109,7 +7109,7 @@ ID: 12260939983537743611
 Transform:
   m_GameObject: {fileID: 6663313825132233637}
   Translation: [-0.100004196, 0.799999952, 0]
-  Rotation: [0, 2.71050543e-20, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 3977294589520766028}
   m_Children:
@@ -12716,7 +12716,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 879.862854
+  LookAtDistance: 894.806458
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12783,8 +12783,8 @@ CharacterController:
   GravityFactor: 1.89999998
   SlopeLimit: 45
   IsGrounded: true
-  Radius: 0.5
-  Height: 2
+  Radius: 0.400000006
+  Height: 1
 ---
 ID: 16716648517964172389
 AudioSource:
