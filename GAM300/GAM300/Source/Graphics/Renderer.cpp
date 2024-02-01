@@ -520,7 +520,7 @@ void Renderer::BindLights(GLSLShader& shader)
 			int textureUnit = 10 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_2D, LIGHTING.spotLightFBO[offset].second);
-			++offset;
+			offset = (offset >= MAX_SPOT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
@@ -542,7 +542,7 @@ void Renderer::BindLights(GLSLShader& shader)
 			int textureUnit = 22 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.pointLightFBO[offset].second);
-			++offset;
+			offset = (offset >= MAX_POINT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 

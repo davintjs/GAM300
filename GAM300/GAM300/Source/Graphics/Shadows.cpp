@@ -75,6 +75,10 @@ void Shadows::DrawDepthSpot()
 		{
 			continue;
 		}
+
+		if (index > MAX_SPOT_LIGHT_SHADOW - 1)
+			continue;
+
 		glEnable(GL_DEPTH_TEST);
 		glm::mat4 lightProjection, lightView;
 
@@ -168,6 +172,10 @@ void Shadows::DrawDepthDirectional()
 		{
 			continue;
 		}
+
+		if (index > MAX_DIRECTION_LIGHT_SHADOW - 1)
+			continue;
+
 		glEnable(GL_DEPTH_TEST);
 		//glm::vec3 lightPos(-0.2f, -1.0f, -0.3f); // This suppouse to be the actual light direction
 		glm::mat4 lightProjection, lightView;
@@ -179,9 +187,6 @@ void Shadows::DrawDepthDirectional()
 
 		LIGHTING.GetDirectionLights()[i].lightSpaceMatrix = lightProjection * lightView;
 		//lightSpaceMatrix_directional = lightProjection * lightView;
-
-		if (index > MAX_DIRECTION_LIGHT_SHADOW - 1)
-			continue;
 
 		glViewport(0, 0, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
 		glBindFramebuffer(GL_FRAMEBUFFER, LIGHTING.directionalLightFBO[index++].first);
@@ -258,6 +263,9 @@ void Shadows::DrawDepthPoint()
 		{
 			continue;
 		}
+
+		if (index > MAX_POINT_LIGHT_SHADOW - 1)
+			continue;
 
 		float near_plane = 0.001f, far_plane = 1000.f;
 

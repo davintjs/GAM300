@@ -23,15 +23,9 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 void Lighting::Init()
 {
-
 	// Initalizing Shadow FBOs
-
 	unsigned int shadowFBO, textureID;
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-	directionalLightFBO.push_back({ shadowFBO, textureID });
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-	directionalLightFBO.push_back({ shadowFBO, textureID });
-	
+
 	for (int i = 0; i < MAX_POINT_LIGHT_SHADOW; ++i)
 	{
 		FRAMEBUFFER.CreatePointLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -43,24 +37,16 @@ void Lighting::Init()
 		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
 		spotLightFBO.push_back({ shadowFBO, textureID });
 	}
-	for (int i = 0; i < MAX_DIRECTION_LIGHT; ++i)
+
+	for (int i = 0; i < MAX_DIRECTION_LIGHT_SHADOW; ++i)
 	{
-		LightProperties temp_directional;
-		directionLightSources.push_back(temp_directional);
+		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+		directionalLightFBO.push_back({ shadowFBO, textureID });
 	}
 
-	for (int i = 0; i < MAX_POINT_LIGHT; ++i)
-	{
-		LightProperties temp_point;
-		pointLightSources.push_back(temp_point);
-	}
-
-	for (int i = 0; i < MAX_SPOT_LIGHT_SHADOW; ++i)
-	{
-		LightProperties temp_spot;
-		spotLightSources.push_back(temp_spot);
-	}
-
+	directionLightSources.resize(MAX_DIRECTION_LIGHT);
+	pointLightSources.resize(MAX_POINT_LIGHT);
+	spotLightSources.resize(MAX_SPOT_LIGHT);
 }
 
 void Lighting::Update(float)

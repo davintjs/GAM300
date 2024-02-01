@@ -128,8 +128,8 @@ GameObject:
 ID: 2878146112973775066
 Transform:
   m_GameObject: {fileID: 4194160308159477720}
-  Translation: [-2.30620813, 9.19803238, -0.244698763]
-  Rotation: [0.753109574, 0, 0]
+  Translation: [-2.30620813, 17.0928783, -8.20888901]
+  Rotation: [0.753109455, 0, 0]
   Scale: [1, 0.99999994, 0.99999994]
   Father: {fileID: 0}
   m_Children:
@@ -139,7 +139,7 @@ ID: 18392682604265416157
 LightSource:
   m_GameObject: {fileID: 4194160308159477720}
   m_IsEnabled: true
-  EnableShadow: false
+  EnableShadow: true
   lightType: 0
   lightpos: [0, 0, 0]
   Intensity: 50000
@@ -205,7 +205,7 @@ ID: 18319010000445223663
 LightSource:
   m_GameObject: {fileID: 5108011816797219817}
   m_IsEnabled: true
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
   Intensity: 500
@@ -238,10 +238,10 @@ ID: 11436060987403006728
 LightSource:
   m_GameObject: {fileID: 5114811427257356599}
   m_IsEnabled: true
-  EnableShadow: false
+  EnableShadow: true
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 100
+  Intensity: 20000
   Direction: [0, 0, 0]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -261,7 +261,7 @@ ID: 17379774855826916466
 Transform:
   m_GameObject: {fileID: 2728860267715928837}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [1.57079637, 0, -0.463384897]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
@@ -274,7 +274,7 @@ LightSource:
   EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
-  Intensity: 50
+  Intensity: 10
   Direction: [9.99999975e-05, -1, 0]
   Inner Cutoff: 0
   Outer Cutoff: 0
@@ -304,7 +304,7 @@ ID: 10677951854348337237
 LightSource:
   m_GameObject: {fileID: 14937092499730949471}
   m_IsEnabled: true
-  EnableShadow: false
+  EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
   Intensity: 100
@@ -326,7 +326,7 @@ GameObject:
 ID: 15801637274853005646
 Transform:
   m_GameObject: {fileID: 15421010782870126306}
-  Translation: [0, 0, 0]
+  Translation: [4.74405289, 13.4394751, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -338,9 +338,9 @@ LightSource:
   m_GameObject: {fileID: 15421010782870126306}
   m_IsEnabled: true
   EnableShadow: true
-  lightType: 1
+  lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 500
+  Intensity: 50
   Direction: [-0.899999976, -1, 0]
   Inner Cutoff: 50
   Outer Cutoff: 70
