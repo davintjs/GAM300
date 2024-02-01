@@ -353,6 +353,7 @@ namespace property
             , Engine::GUID<AudioAsset>
             , Engine::GUID<ScriptAsset>
             , Engine::GUID<AnimationAsset>
+            , Engine::GUID<FontAsset>
             , Engine::HexID
         >;
     

@@ -285,7 +285,7 @@ struct TextRenderer : Object
 	std::string text = "Default Text";
 	float x = 0.f, y = 0.f, fontSize = 1.f; // need to find out  how to link with existing obj srt
 	float r = 0.5, g = 0.8f, b = 0.2f;
-	Engine::GUID<FontAsset> gguid{0};
+	Engine::GUID<FontAsset> guid{0};
 	property_vtable();
 };
 
@@ -298,7 +298,7 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
 		property_var(b).Name("Color B"),
-		property_var(gguid).Name("Font")
+		property_var(guid).Name("Font")
 } property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
