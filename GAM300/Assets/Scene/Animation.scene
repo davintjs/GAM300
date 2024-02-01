@@ -107,7 +107,7 @@ LightSource:
 ---
 ID: 7278896098943077020
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Player2
   m_TagString: ""
   m_Layer: 0
@@ -156,4 +156,141 @@ MeshRenderer:
   m_GameObject: {fileID: 15118346801646115598}
   m_IsEnabled: true
   Mesh: {guid: c61d57a01899786a435e0b253e279b3e}
+  Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
+---
+ID: 11289786814467357635
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1017866867192714597}  # Transform
+    - component: {fileID: 1373307668570689223}  # Animator
+---
+ID: 1017866867192714597
+Transform:
+  m_GameObject: {fileID: 11289786814467357635}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.100000001, 0.100000001, 0.100000001]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 250968141993582043}
+    - {fileID: 9122455897266858576}
+    - {fileID: 14118445936154198128}
+    - {fileID: 18289191772345318403}
+---
+ID: 1373307668570689223
+Animator:
+  m_GameObject: {fileID: 11289786814467357635}
+  m_IsEnabled: true
+  Animation: {guid: 00000000000000000000000000000000}
+---
+ID: 250968141993582043
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV4_0
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 109664702076389784}  # Transform
+    - component: {fileID: 3127854722043394112}  # MeshRenderer
+---
+ID: 109664702076389784
+Transform:
+  m_GameObject: {fileID: 250968141993582043}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11289786814467357635}
+  m_Children:
+    []
+---
+ID: 3127854722043394112
+MeshRenderer:
+  m_GameObject: {fileID: 250968141993582043}
+  m_IsEnabled: true
+  Mesh: {guid: 4fdb146f4f152736b201676b0683cd2b}
+  Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
+---
+ID: 9122455897266858576
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV4_1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17424980851164017726}  # Transform
+    - component: {fileID: 1275304335517590024}  # MeshRenderer
+---
+ID: 17424980851164017726
+Transform:
+  m_GameObject: {fileID: 9122455897266858576}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11289786814467357635}
+  m_Children:
+    []
+---
+ID: 1275304335517590024
+MeshRenderer:
+  m_GameObject: {fileID: 9122455897266858576}
+  m_IsEnabled: true
+  Mesh: {guid: ec94c7b4ce7416fd6b76be4c1ba2c278}
+  Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
+---
+ID: 14118445936154198128
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV4_2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12795127430800127955}  # Transform
+    - component: {fileID: 2702057413463909506}  # MeshRenderer
+---
+ID: 12795127430800127955
+Transform:
+  m_GameObject: {fileID: 14118445936154198128}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11289786814467357635}
+  m_Children:
+    []
+---
+ID: 2702057413463909506
+MeshRenderer:
+  m_GameObject: {fileID: 14118445936154198128}
+  m_IsEnabled: true
+  Mesh: {guid: f5706a8fa9d49ce1544c01aafd2b12c8}
+  Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}
+---
+ID: 18289191772345318403
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV4_3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2935986934365967286}  # Transform
+    - component: {fileID: 10187119033409307690}  # MeshRenderer
+---
+ID: 2935986934365967286
+Transform:
+  m_GameObject: {fileID: 18289191772345318403}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11289786814467357635}
+  m_Children:
+    []
+---
+ID: 10187119033409307690
+MeshRenderer:
+  m_GameObject: {fileID: 18289191772345318403}
+  m_IsEnabled: true
+  Mesh: {guid: 68331c4ea357ec429886e2d50eeb1057}
   Material_ID: {guid: 36ba4457727cc81136e59785e79a86e4}

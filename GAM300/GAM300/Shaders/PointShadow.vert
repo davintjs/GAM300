@@ -54,7 +54,6 @@ void main()
                 totalPosition += localPosition * weights[i];
             }
 
-            totalPosition.w = 1.0f;
 	        gl_Position = defaultSRT * totalPosition;
         }
         else
