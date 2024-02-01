@@ -24,6 +24,12 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 struct Entity : Object
 {
 	std::bitset<AllComponentTypes::Size()> hasComponentsBitset;
+
+	template <typename Component>
+	bool HasComponent()
+	{
+		return hasComponentsBitset.test(GetType::E<Component>());
+	}
 	property_vtable();
 };
 

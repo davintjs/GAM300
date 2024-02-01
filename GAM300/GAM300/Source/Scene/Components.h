@@ -248,6 +248,7 @@ struct CapsuleCollider : Object
 {
 	float height = 1.0f;
 	float radius = 1.0f;
+	Vector3 offset;
 	property_vtable();
 };
 
@@ -455,23 +456,6 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
 		property_var(AlphaMultiplier).Name("Alpha Scalar"),
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
@@ -680,10 +664,31 @@ private:
 
 //Template pack of components that entities can only have one of each
 //Colliders have to be before rigidbodies
-using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent, NavMeshAgent>;
+using ColliderComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider>;
+
+using ExclusionColliders = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, CharacterController>;
+
+using ExclusionPhysics = TemplatePack<Rigidbody, CharacterController>;
+
+using SingleComponentTypes = decltype(
+	TemplatePack
+	<
+		Transform,
+		Tag,
+		Rigidbody, 
+		Animator, 
+		Camera, 
+		MeshRenderer, 
+		CharacterController, 
+		LightSource , 
+		SpriteRenderer, 
+		Canvas, 
+		ParticleComponent, 
+		NavMeshAgent
+	>::Concatenate(ColliderComponentTypes()));
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));
