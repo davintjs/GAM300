@@ -104,7 +104,7 @@ struct Shader {
 
 struct Material_instance : Object
 {
-					// Var name   // Data Storage
+	// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
 	Material_instance();
@@ -143,8 +143,6 @@ struct Material_instance : Object
 	GLuint roughnessID;
 	GLuint ambientID;
 	GLuint emissiveID;
-
-
 
 	// Blinn Phong - Not in use
 
@@ -205,6 +203,8 @@ public:
 
 	Engine::GUID<MaterialAsset> NewMaterialInstance(std::string _name = "Default Material");
 
+	Engine::GUID<MaterialAsset> InstantiateRuntimeMaterial(Material_instance & mat);
+
 	// Deleting a Material Instance
 	void deleteInstance(Engine::GUID<MaterialAsset>& matGUID);
 	
@@ -224,6 +224,9 @@ public:
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
 	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _allMaterialInstances;
+
+	//Materials generated at runtime as designer set a value to a material
+	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _runtimeMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 

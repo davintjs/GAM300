@@ -55,9 +55,6 @@ namespace
 		return Transform::CreateTransformationMtx(sphereCol.offset, vec3(0), vec3(1));
 	}
 
-
-
-
 	template <typename T>
 	glm::mat4 GetColliderGlobalTransform(Transform& transform, T& col)
 	{
@@ -70,68 +67,10 @@ namespace
 		return Transform::CreateTransformationMtx(col.offset, vec3(0), vec3(1));
 	}
 
-	template <typename T, typename... Ts>
-	glm::mat4 GetColliderLocalOffset(Scene& scene, Entity& entity)
-	{
-		if (entity.HasComponent<T>())
-		{
-			return GetColliderLocalOffset<T>(scene.Get<T>(entity));
-		}
-
-		if constexpr (sizeof...(Ts) != 0)
-			GetColliderLocalOffset<Ts...>(scene, entity);
-	}
-
-	template <typename... Ts>
-	glm::mat4 GetColliderLocalOffset(Scene& scene, Entity& entity, TemplatePack<Ts...>)
-	{
-		return GetColliderLocalOffset<Ts...>(scene, entity);
-	}
-
-	glm::mat4 GetColliderLocalOffset(Scene& scene, Entity& entity)
-	{
-		return GetColliderLocalOffset(scene, entity, ColliderComponentTypes());
-	}
-
 	template <typename T>
 	glm::mat4 GetColliderGlobalOffset(Transform& transform, T& col)
 	{
 		return transform.GetWorldMatrix() * GetColliderLocalOffset<T>(col);
-	}
-
-	template <typename T,typename... Ts>
-	static void UpdateBodyTransform(Scene& scene, Entity& entity,Transform& t,JPH::BodyID bid,JPH::BodyInterface* bodyInterface)
-	{
-		//Iterate through collider types
-		if (entity.HasComponent<T>())
-		{
-			glm::mat4 transMtx = GetColliderGlobalOffset(t, scene.Get<T>(t));
-			JPH::Vec3 translation;
-			JPH::Quat rot;
-			Vector3 scale;
-			Transform::Decompose(transMtx, (Vector3&)translation, (glm::quat&)rot, (Vector3&)scale);
-			bodyInterface->SetPositionAndRotation(bid, translation, rot, JPH::EActivation::DontActivate);
-			return;
-		}
-
-
-		if constexpr (sizeof...(Ts) != 0)
-			UpdateBodyTransform<Ts...>(scene, entity, t, bid, bodyInterface);
-	}
-
-	template <typename... Ts>
-	static void UpdateBodyTransform(Scene& scene, Entity& entity, Transform& t, JPH::BodyID bid, JPH::BodyInterface* bodyInterface, TemplatePack<Ts...>)
-	{
-		UpdateBodyTransform<Ts...>(scene, entity, t, bid, bodyInterface);
-	}
-
-	inline static void UpdateBodyTransform(Scene& scene, Entity& entity, JPH::BodyID bid, JPH::BodyInterface* bodyInterface)
-	{
-		Transform& t = scene.Get<Transform>(entity);
-		//If unmodified, do nothing
-		if (!t.GetFlag(Transform::Flag::Modified))
-			return;
-		UpdateBodyTransform(scene, entity, t, bid, bodyInterface, ColliderComponentTypes());
 	}
 }
 
@@ -178,18 +117,45 @@ void PhysicsSystem::Update(float dt) {
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
 
-		if (!it.IsActive()) continue;
+		if (rb.state == DELETED) continue;
+
 		Entity& entity = scene.Get<Entity>(rb);
-		if (!scene.IsActive(entity))
-			continue;
-
+		
+		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
+		JPH::RVec3 tmp;
 
-		UpdateBodyTransform(scene, entity, tmpBID, bodyInterface);
+		Transform& t = scene.Get<Transform>(entity);
 
-		bodyInterface->SetLinearVelocity(tmpBID, (JPH::Vec3&)rb.linearVelocity);
-		bodyInterface->SetAngularVelocity(tmpBID, (JPH::Vec3&)rb.angularVelocity);
-		bodyInterface->AddForce(tmpBID, (JPH::Vec3&)rb.force);
+
+		JPH::Quat tmpQuat;
+		Vector3 rotation = t.GetGlobalRotation();
+
+		glm::quat rot;
+
+		Vector3 scale = t.GetGlobalRotation();
+		
+		Vector3 translation = t.GetGlobalTranslation();
+		if (scene.Has<BoxCollider>(entity) && t.GetFlag(Transform::Flag::Modified))
+		{
+			std::cout << "MODIFIED!\n" ;
+			glm::mat4 boxTransMtx = GetColliderGlobalOffset(t, scene.Get<BoxCollider>(t));
+			Transform::Decompose(boxTransMtx, (Vector3&)translation, rot, (Vector3&)scale);
+			rotation = glm::eulerAngles(rot);
+			GlmVec3ToJoltVec3(translation, tmp);
+			bodyInterface->SetPosition(tmpBID, tmp, JPH::EActivation::DontActivate);
+
+			GlmVec3ToJoltQuat(rotation, tmpQuat);
+			bodyInterface->SetRotation(tmpBID, tmpQuat, JPH::EActivation::DontActivate);
+		}
+
+
+		GlmVec3ToJoltVec3(rb.linearVelocity, tmp);
+		bodyInterface->SetLinearVelocity(tmpBID, tmp);
+		GlmVec3ToJoltVec3(rb.angularVelocity, tmp);
+		bodyInterface->SetAngularVelocity(tmpBID, tmp);
+		GlmVec3ToJoltVec3(rb.force, tmp);
+		bodyInterface->AddForce(tmpBID, tmp);
 		rb.force = vec3(0);
 
 		// Update awake/sleep state of bodies depending
@@ -207,6 +173,7 @@ void PhysicsSystem::Update(float dt) {
 				}
 
 			}
+
 		}
 		else {
 			JPH::BodyLockWrite lock(physicsSystem->GetBodyLockInterface(), tmpBID);
@@ -401,6 +368,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tee.pc2 = pc2;
 				EVENTS.Publish(&tee);
 				//PRINT("Sending Trigger Enter Event\n");
+				std::cout << "Trigger enter\n";
 			}
 			else {
 				ContactAddedEvent cae;
@@ -809,9 +777,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 	size_t numBodies = rbArray.size() + ccArray.size();
 
-	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
+	std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
 
 }
 
@@ -825,37 +793,61 @@ void PhysicsSystem::UpdateGameObjects() {
 	// Rigidbodies
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+		Rigidbody& rb = *it;
+		if (rb.state == DELETED)
+			continue;
 		if (!it.IsActive())
 			continue;
-		Rigidbody& rb = *it;
 		Entity& entity = scene.Get<Entity>(rb);
 		if (!scene.IsActive(entity))
 			continue;
 
 		Transform& t = scene.Get<Transform>(entity);
 
+		Vector3 tmpVec;
 		JPH::BodyID tmpBID(rb.bid);
+		JPH::RVec3 tmp = bodyInterface->GetCenterOfMassPosition(tmpBID);
 
-		Vector3 pos;
-		glm::quat rot;
-		Vector3 scale;
+		JoltVec3ToGlmVec3(tmp, tmpVec);	
+		if (scene.Has<BoxCollider>(entity)) {
+			BoxCollider& boxCol = scene.Get<BoxCollider>(entity);
 
-		//Get physics body position and rotation
-		bodyInterface->GetPositionAndRotation(tmpBID, (JPH::Vec3&)pos, (JPH::Quat&)rot);
+			//Local matrix of box col offset
+			glm::mat4 mtx = GetColliderLocalOffset(boxCol);
 
-		Vector3 rotEuler = glm::eulerAngles(rot);
+			Vector3 pos;
+			glm::quat rot;
+			Vector3 rotEuler;
+			Vector3 scale;
 
-		glm::mat4 bodyMtx = Transform::CreateTransformationMtx(pos, rotEuler, t.GetGlobalScale());
+			//Get physics body position and rotation
+			JPH::Vec3 bodyPos; JPH::Quat bodyRot;
+			bodyInterface->GetPositionAndRotation(tmpBID, bodyPos, bodyRot);
+			JPH::Vec3 bodyRotEuler = bodyRot.GetEulerAngles();
 
-		glm::mat4 mtx = GetColliderLocalOffset(scene,entity);
+			JoltVec3ToGlmVec3(bodyPos, pos);
+			JoltVec3ToGlmVec3(bodyRotEuler, rotEuler);
 
-		glm::mat4 entityMtx = bodyMtx * glm::inverse(mtx);
+			//Create a transformation matrix of the pivot
+			glm::mat4 bodyMtx = Transform::CreateTransformationMtx(pos, rotEuler, t.GetGlobalScale());
 
-		Transform::Decompose(entityMtx, pos, rot, scale);
 
-		t.SetWorldMatrix(pos, glm::eulerAngles(rot), t.GetGlobalScale());
+			glm::mat4 entityMtx = bodyMtx * glm::inverse(mtx);
 
-		bodyInterface->GetLinearAndAngularVelocity(tmpBID,(JPH::Vec3&)rb.linearVelocity,(JPH::Vec3&)rb.angularVelocity);
+			Transform::Decompose(entityMtx, pos, rot, scale);
+
+			t.SetWorldMatrix(pos, glm::eulerAngles(rot), t.GetGlobalScale());
+		}
+		else if (scene.Has<SphereCollider>(entity)) {
+			t.SetGlobalPosition(static_cast<Vector3>(tmpVec.operator glm::vec3() - scene.Get<SphereCollider>(entity).offset.operator glm::vec3()));
+		}
+
+		tmp = bodyInterface->GetLinearVelocity(tmpBID);
+		JoltVec3ToGlmVec3(tmp, rb.linearVelocity);
+
+		tmp = bodyInterface->GetAngularVelocity(tmpBID);
+		JoltVec3ToGlmVec3(tmp, rb.angularVelocity);
+
 	}
 
 	// Character Controllers
