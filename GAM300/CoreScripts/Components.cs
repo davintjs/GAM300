@@ -440,6 +440,28 @@ namespace BeanFactory
         public float fieldOfView = 0f;      // The vertical field of view in degrees
         public float lookatDistance = 0f;   // How close is the camera to the focal point
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class MeshRenderer
+    {
+        UInt32 VAO;
+        UInt32 debugVAO;
+        AssetID meshID;
+        Int32 shaderType;
+        AssetID materialID;
+
+        public Material material
+        {
+            get 
+            {
+                Material mat = new Material();
+                InternalCalls.GetMaterial(this, ref mat);
+                mat.meshRenderer = this;
+                return mat;
+            }
+        }
+    }
+
     /*
         public class Camera : Component
         {
