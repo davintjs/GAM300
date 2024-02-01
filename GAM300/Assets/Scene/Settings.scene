@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 7.81407881
+  LookAtDistance: 1.45728099
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -290,3 +290,93 @@ TextRenderer:
   Color R: 2.91000009
   Color G: 2.06999993
   Color B: 1.54999995
+---
+ID: 6712040991204226818
+GameObject:
+  m_IsActive: true
+  m_Name: MasterVolumeBtn
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9546360096953557667}  # Transform
+    - component: {fileID: 5492143360034791177}  # SpriteRenderer
+---
+ID: 9546360096953557667
+Transform:
+  m_GameObject: {fileID: 6712040991204226818}
+  Translation: [0.00929951295, 0.109243572, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0770056024, 0.0487462506, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5492143360034791177
+SpriteRenderer:
+  m_GameObject: {fileID: 6712040991204226818}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 5631298785341950928
+GameObject:
+  m_IsActive: true
+  m_Name: BGMvolumeBtn
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16706962569924402114}  # Transform
+    - component: {fileID: 16362687019528758833}  # SpriteRenderer
+---
+ID: 16706962569924402114
+Transform:
+  m_GameObject: {fileID: 5631298785341950928}
+  Translation: [0.0130522363, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0771809444, 0.0473241955, 0.00100000005]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16362687019528758833
+SpriteRenderer:
+  m_GameObject: {fileID: 5631298785341950928}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 5206565024310472992
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(11)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4218217362104238699}  # Transform
+    - component: {fileID: 3921344302224865802}  # SpriteRenderer
+---
+ID: 4218217362104238699
+Transform:
+  m_GameObject: {fileID: 5206565024310472992}
+  Translation: [0.0147475991, -0.114253215, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.0765916705, 0.0501304865, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3921344302224865802
+SpriteRenderer:
+  m_GameObject: {fileID: 5206565024310472992}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
