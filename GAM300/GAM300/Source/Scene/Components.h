@@ -86,6 +86,15 @@ struct Transform : Object
 	//Childrens' euids
 	std::vector<Engine::UUID> child;
 
+	bool operator == (const Transform& other) const {
+		if ((translation == other.translation) &&
+			(rotation == other.rotation) &&
+			(scale == other.scale)) {
+			return true;
+		}
+		return false;
+	}
+
 	//Check whether this is a leaf node
 	bool isLeaf();
 
@@ -204,7 +213,8 @@ struct AudioSource : Object
 	};
 	bool loop = false;
 	bool play = false;
-	float volume = 1.0f;
+	float volume{1.f};
+	float fadetime{1.f};
 	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };
@@ -214,6 +224,7 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(fadetime).Name("Fade Time (s)"),
 		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
@@ -268,6 +279,25 @@ property_begin_name(Animator, "Animator") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
 	property_parent(BaseAnimator)
 } property_vend_h(Animator)
+
+struct TextRenderer : Object
+{
+	std::string text = "Default Text";
+	float x = 0.f, y = 0.f, scale = 1.f; // need to find out  how to link with existing obj srt
+	float r = 0.5, g = 0.8f, b = 0.2f;
+	property_vtable();
+};
+
+property_begin_name(TextRenderer, "TextRenderer") {
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(text).Name("Text"),
+		property_var(x).Name("X-axis Position"),
+		property_var(y).Name("Y-axis Position"),
+		property_var(scale).Name("Scale"),
+		property_var(r).Name("Color R"),
+		property_var(g).Name("Color G"),
+		property_var(b).Name("Color B")
+} property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
 {
@@ -391,6 +421,14 @@ struct MeshRenderer : Object
 	//temporary index for current material
 	Engine::GUID<MaterialAsset> materialGUID{0};
 
+	bool operator == (const MeshRenderer& other) const {
+		if ((meshID == other.meshID) &&
+			(materialGUID == other.materialGUID)) {
+			return true;
+		}
+		return false;
+	}
+
 	property_vtable();
 };
 
@@ -443,6 +481,8 @@ struct SpriteRenderer : Object
 		bool ColourPicked = false;
 		bool IncludeAlpha = false;
 		float AlphaMultiplier = 1.f;
+		bool onHover = false;
+		bool onClick = false; 
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 
@@ -460,16 +500,21 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 } property_vend_h(SpriteRenderer)
 
 struct Canvas : Object
-	{
-		property_vtable()
-	};
-	property_begin_name(Canvas, "Canvas")
-	{
-		property_parent(Object).Flags(property::flags::DONTSHOW),
-			//property_var(WorldSpace).Name("World Space"),
-			//property_var(SpriteTexture).Name("SpriteTexture"),
-	} property_vend_h(Canvas)
+{
+	property_vtable()
+};
+property_begin_name(Canvas, "Canvas")
+{
+	property_parent(Object).Flags(property::flags::DONTSHOW),
+		//property_var(WorldSpace).Name("World Space"),
+		//property_var(SpriteTexture).Name("SpriteTexture"),
+} property_vend_h(Canvas)
 
+
+struct Trail {
+		unsigned int count{0};
+		std::vector<vec3> pos;
+};
 
 struct Particle : Object
 {
@@ -482,7 +527,9 @@ struct Particle : Object
 	float acceleration;
 	float lifetime;
 	float scale; 
-	float speed; 
+	float speed;
+	float noiselifetime;
+	Trail trails;
 };
 
 struct ParticleComponent : Object
@@ -500,9 +547,12 @@ struct ParticleComponent : Object
 	float particleScaleRate_ = 0.5f;
 	float speed_ = 0.5f;
 	float desiredLifetime = 5.0f;
+	float noise = 0.f;
+	float noisefrequency = 0.f;
 	bool particleLooping = false;
 
 	bool is2D = false;
+	bool trailEnabled = false;
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -520,7 +570,10 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 		property_var(particleMaxScale_).Name("Particle Max Scale"),
 		property_var(particleScaleRate_).Name("Particle Scale Rate"),
 		property_var(speed_).Name("Particle Speed"),
+		property_var(noise).Name("Particle Noise"),
+		property_var(noisefrequency).Name("Particle Noise Frequency"),
 		property_var(is2D).Name("2D particle"),
+		property_var(trailEnabled).Name("Trailing"),
 		property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
@@ -540,6 +593,7 @@ struct Button : Object
 {
 	//char* id;
 	//int x, y, width, height; 
+	Button() {}
 	bool is_clicked;
 	////void(*on_click)(void);
 	int x, y, width, height;
@@ -552,6 +606,12 @@ struct Button : Object
 		return (xPos >= x && xPos <= x + width && yPos >= y && yPos <= y + height);
 	}
 
+	bool on_click_callback(void)
+	{
+		printf("Button clicked!\n");
+		return 0;
+	}
+
 
 };
 
@@ -562,7 +622,7 @@ struct ButtonComponent : Object
 	int y = 10;
 	int width = 100;
 	int height = 50;
-
+	std::vector<Button> button_;
 
 	void Init();
 	void Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked);
@@ -684,7 +744,8 @@ using SingleComponentTypes = decltype(
 		SpriteRenderer, 
 		Canvas, 
 		ParticleComponent, 
-		NavMeshAgent
+		NavMeshAgent,
+		TextRenderer
 	>::Concatenate(ColliderComponentTypes()));
 
 //Template pack of components that entities can only have multiple of each

@@ -175,6 +175,7 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), false);
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
 	{
@@ -221,6 +222,9 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
+			Sprite.AlphaMultiplier);
 		if (Sprite.SpriteTexture == 0)
 		{
 			glUniform1f(uniform1, false);

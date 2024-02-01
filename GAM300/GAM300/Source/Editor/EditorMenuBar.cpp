@@ -251,7 +251,6 @@ void EditorMenuBar::Update(float dt)
             ImGui::EndTable();
         }
 
-    
         ImGui::GetStyle() = origStyle;
    
         ImGui::End();

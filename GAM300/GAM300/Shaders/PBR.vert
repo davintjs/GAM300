@@ -27,7 +27,7 @@ layout (location = 6) in mat4 SRT;
 layout (location = 10) in vec4 Albedo;
 layout (location = 11) in vec4 Metal_Rough_AO_Emission_index; // Texture Index
 layout (location = 12) in vec4 Metal_Rough_AO_Emission_constant; // Material Instance Constants
-layout (location = 15) in vec2 texture_index;
+layout (location = 15) in vec3 textureIndex_isEmission;
 
 
 //-------------------------
@@ -41,7 +41,7 @@ layout (location = 3) out vec4 frag_Albedo;
 layout (location = 4) out vec4 frag_Metal_Rough_AO_Emission_index; // Texture Index
 layout (location = 5) out vec4 frag_Metal_Rough_AO_Emission_constant; // Material Instance Constants
 
-layout (location = 6) out vec2 frag_texture_index;
+layout (location = 6) out vec3 frag_texture_index_isEmission;
 
 
 
@@ -71,7 +71,7 @@ void main()
     frag_Albedo = Albedo;
     frag_Metal_Rough_AO_Emission_index = Metal_Rough_AO_Emission_index;
     frag_Metal_Rough_AO_Emission_constant = Metal_Rough_AO_Emission_constant;
-    frag_texture_index = texture_index;
+    frag_texture_index_isEmission = textureIndex_isEmission;
 
     
     Normal = mat3(transpose(inverse(SRT))) * aNormal;

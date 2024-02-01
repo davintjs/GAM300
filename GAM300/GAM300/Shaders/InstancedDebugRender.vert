@@ -13,9 +13,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 ******************************************************************************************/
 
 #version 450 core
+//-------------------------
+//          COMING IN
+//-------------------------
 layout (location = 0) in vec3 aVertexPosition;
-
 layout (location = 6) in mat4 SRT;
+layout (location = 10) in vec4 aAlbedo;
+
+//-------------------------
+//          GOING OUT
+//-------------------------
+layout (location = 3) out vec4 vAlbedo;
+
 
 uniform mat4 persp_projection;
 uniform mat4 View;
@@ -24,7 +33,7 @@ uniform mat4 View;
 
 void main()
 {
-	//vColor = aVertexColor;
+	vAlbedo = aAlbedo;
 	gl_Position = persp_projection * View * SRT * vec4(aVertexPosition, 1.0f);
 
 } 

@@ -313,6 +313,15 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class SpriteRenderer
+    {
+        public bool IsButtonClicked()
+        {
+            return InternalCalls.IsButtonClicked(this);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class NavMeshAgent
     {
         public void FindPath(vec3 pDest)

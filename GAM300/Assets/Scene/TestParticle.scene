@@ -39,13 +39,45 @@ ParticleComponent:
   m_GameObject: {fileID: 14989680110700367717}
   Mesh: {guid: 00000000000000000000000000000002}
   Material: {guid: 86a0c5b256888901f84595d211b97767}
-  Particle Texture: {guid: 00000000000000000000000000000000}
   Number Of Particles: 20
-  Particle Lifetime: 2
-  Particle Emission Rate: 1
+  Particle Lifetime: 0.5
+  Particle Emission Rate: 0.5
   Particle Min Scale: 0
-  Particle Max Scale: 0.200000003
-  Particle Scale Rate: 0.150000006
-  Particle Speed: 1
+  Particle Max Scale: 0.100000001
+  Particle Scale Rate: 0
+  Particle Speed: 10
+  Particle Noise: 50
+  Particle Noise Frequency: 50
   2D particle: false
+  Trailing: true
   Looping: true
+---
+ID: 1589847083358243135
+GameObject:
+  m_IsActive: true
+  m_Name: SoundTest
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11834711623357585551}  # Transform
+    - component: {fileID: 6091472549070461199}  # AudioSource
+---
+ID: 11834711623357585551
+Transform:
+  m_GameObject: {fileID: 1589847083358243135}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6091472549070461199
+AudioSource:
+  m_GameObject: {fileID: 1589847083358243135}
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade Time (s): 0
+  Sound File: {guid: c921bd0028ce6d21877c994c16ad963b}
+  Play: false

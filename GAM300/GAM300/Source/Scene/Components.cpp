@@ -288,22 +288,23 @@ void on_click_callback(void)
 	printf("Button clicked!\n");
 }
 
-void ButtonComponent::Init()
-{
-	//Button* button = Button_init("button1",10, 10, 500, 500);
-	//int mouse_x = 20, mouse_y = 20;
-}
+//void ButtonComponent::Init()
+//{
+//	//Button* button = Button_init("button1",10, 10, 500, 500);
+//	//int mouse_x = 20, mouse_y = 20;
+//}
 
 void ButtonComponent::Button_update(Button* button, int mouse_x, int mouse_y, bool left_mouse_button_clicked)
 {
-	if (button->x <= mouse_x && mouse_x <= button->x + button->width &&
-		button->y <= mouse_y && mouse_y <= button->y + button->height) {
-		if (left_mouse_button_clicked) {
-			button->is_clicked = true;
-			//button->on_click();
-		}
-	}
-	else {
-		button->is_clicked = false;
-	}
+	//if (button->x <= mouse_x && mouse_x <= button->x + button->width &&
+	//	button->y <= mouse_y && mouse_y <= button->y + button->height) {
+	//	if (left_mouse_button_clicked) {
+	//		button->is_clicked = true;
+	//		printf("Button clicked!\n");
+	//	}
+	//}
+	//else {
+	//	button->is_clicked = false;
+	//}
+
 }

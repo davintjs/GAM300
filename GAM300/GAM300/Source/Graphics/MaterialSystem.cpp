@@ -41,7 +41,7 @@ void MaterialSystem::Init()
 	available_shaders.push_back(Shader("PBR", SHADERTYPE::PBR));
 	
 	// Assign texture ids to the material's textures
-	BindTextureIDs();
+	BindAllTextureIDs();
 }
 
 void MaterialSystem::Update(float dt)
@@ -55,7 +55,17 @@ void MaterialSystem::Exit()
 
 }
 
-void MaterialSystem::BindTextureIDs()
+void MaterialSystem::BindTextureIDs(Material_instance& _instance)
+{
+	_instance.textureID = TextureManager.GetTexture(_instance.albedoTexture);
+	_instance.normalID = TextureManager.GetTexture(_instance.normalMap);
+	_instance.metallicID = TextureManager.GetTexture(_instance.metallicTexture);
+	_instance.roughnessID = TextureManager.GetTexture(_instance.roughnessTexture);
+	_instance.ambientID = TextureManager.GetTexture(_instance.aoTexture);
+	_instance.emissiveID = TextureManager.GetTexture(_instance.emissionTexture);
+}
+
+void MaterialSystem::BindAllTextureIDs()
 {
 	for (auto& [guid, instance] : _allMaterialInstances)
 	{
@@ -185,7 +195,7 @@ void MaterialSystem::CallbackMaterialAssetLoaded(AssetLoadedEvent<MaterialAsset>
 
 void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
 {
-	BindTextureIDs();
+	BindAllTextureIDs();
 }
 
 Engine::GUID<MaterialAsset> MaterialSystem::InstantiateRuntimeMaterial(Material_instance& mat)

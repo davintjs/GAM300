@@ -138,6 +138,7 @@ void Renderer::Update(float)
 		Material_instance& currMatInstance = MATERIALSYSTEM.getMaterialInstance(renderer.materialGUID);
 		if (currMatInstance.shaderType == (int)SHADERTYPE::DEFAULT)
 		{
+			MATERIALSYSTEM.BindTextureIDs(currMatInstance);
 			UpdateDefaultProperties(currentScene, transform, currMatInstance, vaoIt->second, t_Mesh->prim, t_Mesh->drawCounts);
 		}
 		else
@@ -169,7 +170,9 @@ void Renderer::UpdateDefaultProperties(Scene& _scene, Transform& _t, Material_in
 	renderProperties.RoughnessID = _mat.roughnessID;
 	renderProperties.AoID = _mat.ambientID;
 	renderProperties.EmissionID = _mat.emissiveID;
-
+	
+	renderProperties.isEmission = _mat.isEmission;
+	
 	renderProperties.drawType = _type;
 	renderProperties.drawCount = _count;
 
@@ -241,7 +244,7 @@ void Renderer::UpdatePBRProperties(Transform& _t, Material_instance& _mat, const
 
 	iProp.M_R_A_Constant[iter] = { metal_constant, rough_constant, ao_constant, emission_constant };
 	iProp.M_R_A_Texture[iter] = { metalidx, roughidx, aoidx, emissionidx };
-	iProp.textureIndex[iter] = { texidx, normidx };
+	iProp.textureIndex_isEmission[iter] = { texidx, normidx, _mat.isEmission };
 	iProp.entitySRT[iter] = _t.GetWorldMatrix();
 
 	iProp.position = _t.GetGlobalTranslation();
@@ -259,15 +262,15 @@ void Renderer::Draw(BaseCamera& _camera) {
 	glDisable(GL_BLEND);
 
 #ifndef _BUILD
-	// For Debug drawing
-	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
-	{
-		for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)])
-		{
-			if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
-				DrawDebug(prop.debugVAO, (unsigned)prop.iter);
-		}
-	}
+	//// For Debug drawing
+	//if (_camera.GetCameraType() == CAMERATYPE::SCENE)
+	//{
+	//	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::TDR)])
+	//	{
+	//		if (EditorScene::Instance().DebugDraw() && prop.debugVAO)
+	//			DrawDebug(prop.debugVAO, (unsigned)prop.iter);
+	//	}
+	//}
 #endif
 }
 
@@ -306,7 +309,7 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec4), prop.M_R_A_Constant.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, prop.textureIndexBuffer);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec2), prop.textureIndex.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec3), prop.textureIndex_isEmission.data());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		for (int i = 0; i < 10; ++i) // this should be up till 10 for now... hehe
@@ -353,6 +356,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	GLint AmbientOcculusion = glGetUniformLocation(shader.GetHandle(), "AoConstant");
 	GLint Emission = glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
 
+	GLint isEmission = glGetUniformLocation(shader.GetHandle(), "isEmission");
+
 	GLint FinalBoneMatrices = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 
 	const glm::vec3 cameraPosition = _camera.GetCameraPosition();
@@ -367,12 +372,12 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	// Default Rendering
 	for (DefaultRenderProperties& prop : defaultProperties)
 	{
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
-		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
-		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
-		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
-		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
 		// You have 6 - 9 Texture Slots
 
 		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
@@ -387,6 +392,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasMetallic, prop.MetallicID);
 		glUniform1i(hasAO, prop.AoID);
 		glUniform1i(hasEmission, prop.EmissionID);
+
+		glUniform1f(isEmission, prop.isEmission);
 
 		// PBR CONSTANT VALUES
 		glUniform1f(Metallic, prop.metallic);
@@ -460,6 +467,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1f(Roughness, prop.roughness);
 		glUniform1f(AmbientOcculusion, prop.ao);
 		glUniform1f(Emission, prop.emission);
+		glUniform1f(isEmission, prop.isEmission);
 
 		glUniformMatrix4fv(SRT, 1, GL_FALSE, glm::value_ptr(prop.entitySRT));
 		glUniform4fv(Albedo, 1, glm::value_ptr(prop.Albedo));
@@ -519,9 +527,10 @@ void Renderer::BindLights(GLSLShader& shader)
 	{
 		if (LIGHTING.GetDirectionLights()[i].enableShadow)
 		{
-			int textureUnit = 20 + offset++;
+			int textureUnit = 20 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
-			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[i].shadow);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.directionalLightFBO[offset].second);
+			++offset;
 		}
 	}
 	offset = 0;
@@ -666,6 +675,71 @@ void Renderer::BindLights(GLSLShader& shader)
 	glUniform1f(uniform12, RENDERER.enableShadows());
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
 	glUniform3fv(glGetUniformLocation(shader.GetHandle(), "ambient_tint"), 1, glm::value_ptr(RENDERER.getAmbientRGB()));
+}
+
+void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCount)
+{
+	glm::vec3 color{ 1.f, 0.f, 1.f };
+
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
+	shader.Use();
+	// UNIFORM VARIABLES ----------------------------------------
+	// Persp Projection
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "persp_projection");
+	GLint uniform2 =
+		glGetUniformLocation(shader.GetHandle(), "View");
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "uColor");
+	glUniformMatrix4fv(uniform1, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.GetProjMatrix()));
+	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
+		glm::value_ptr(EditorCam.GetViewMatrix()));
+	glUniform3fv(uniform3, 1, glm::value_ptr(color));
+
+	glBindVertexArray(_vaoid);
+	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
+	glBindVertexArray(0);
+
+	shader.UnUse();
+}
+
+unsigned int Renderer::ReturnTextureIdx(InstanceProperties& prop, const GLuint& _id)
+{
+	if (!_id)
+	{
+		return 33;
+	}
+	//if (prop.textureMap.find(_id) != prop.textureMap.end()) {
+	//	return prop.textureMap[_id];
+	//}
+
+	//// Check if there are empty slots in the texture array
+	//if (prop.textureCount < 32) {
+	//	prop.texture[prop.textureCount] = _id;
+	//	prop.textureMap[_id] = prop.textureCount++;
+	//	return prop.textureCount - 1;
+	//}
+	for (unsigned int iter = 0; iter < prop.textureCount + 1; ++iter)
+	{
+		if (prop.texture[iter] == _id) // this happen more often in big scene
+		{
+			prop.textureCount++;
+			return iter;
+		}
+		if (prop.texture[iter] == 0)
+		{
+			prop.texture[iter] = _id;
+			prop.textureCount++;
+			return iter;
+		}
+	}
+	return 33;
+}
+
+void Renderer::Exit()
+{
+
 }
 
 //void Renderer::UIDraw_2D(BaseCamera& _camera)
@@ -878,88 +952,6 @@ void Renderer::BindLights(GLSLShader& shader)
 //	glDisable(GL_BLEND);
 //
 //}
-
-void Renderer::DrawDebug(const GLuint& _vaoid, const unsigned int& _instanceCount)
-{
-	glm::vec3 color{ 1.f, 0.f, 1.f };
-
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::TDR);
-	shader.Use();
-	// UNIFORM VARIABLES ----------------------------------------
-	// Persp Projection
-	GLint uniform1 =
-		glGetUniformLocation(shader.GetHandle(), "persp_projection");
-	GLint uniform2 =
-		glGetUniformLocation(shader.GetHandle(), "View");
-	GLint uniform3 =
-		glGetUniformLocation(shader.GetHandle(), "uColor");
-	glUniformMatrix4fv(uniform1, 1, GL_FALSE, 
-		glm::value_ptr(EditorCam.GetProjMatrix()));
-	glUniformMatrix4fv(uniform2, 1, GL_FALSE,
-		glm::value_ptr(EditorCam.GetViewMatrix()));
-	glUniform3fv(uniform3, 1, glm::value_ptr(color));
-
-	glBindVertexArray(_vaoid);
-	glDrawElementsInstanced(GL_LINES, 2, GL_UNSIGNED_INT, 0, _instanceCount);
-	glBindVertexArray(0);
-
-	shader.UnUse();
-}
-
-
-
-bool Renderer::Culling()
-{
-	return false;
-}
-
-void Renderer::Forward()
-{
-
-}
-
-void Renderer::Deferred()
-{
-
-}
-
-unsigned int Renderer::ReturnTextureIdx(InstanceProperties& prop, const GLuint& _id)
-{
-	if (!_id)
-	{
-		return 33;
-	}
-	//if (prop.textureMap.find(_id) != prop.textureMap.end()) {
-	//	return prop.textureMap[_id];
-	//}
-
-	//// Check if there are empty slots in the texture array
-	//if (prop.textureCount < 32) {
-	//	prop.texture[prop.textureCount] = _id;
-	//	prop.textureMap[_id] = prop.textureCount++;
-	//	return prop.textureCount - 1;
-	//}
-	for (unsigned int iter = 0; iter < prop.textureCount + 1; ++iter)
-	{
-		if (prop.texture[iter] == _id) // this happen more often in big scene
-		{
-			prop.textureCount++;
-			return iter;
-		}
-		if (prop.texture[iter] == 0)
-		{
-			prop.texture[iter] = _id;
-			prop.textureCount++;
-			return iter;
-		}
-	}
-	return 33;
-}
-
-void Renderer::Exit()
-{
-
-}
 
 //void Renderer::DrawDepth(LIGHT_TYPE temporary_test)
 //{
