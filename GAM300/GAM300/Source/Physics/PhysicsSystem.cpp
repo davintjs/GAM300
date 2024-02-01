@@ -836,14 +836,21 @@ void PhysicsSystem::UpdateGameObjects() {
 
 		JPH::BodyID tmpBID(rb.bid);
 
-		Vector3 pos;
-		glm::quat rot;
+		JPH::Vec3 jphPos;
+		JPH::Quat jphRot;
 		Vector3 scale;
 
 		//Get physics body position and rotation
-		bodyInterface->GetPositionAndRotation(tmpBID, (JPH::Vec3&)pos, (JPH::Quat&)rot);
+		bodyInterface->GetPositionAndRotation(tmpBID, jphPos, jphRot);
 
-		Vector3 rotEuler = glm::eulerAngles(rot);
+		JPH::Vec3 jphRotEuler = jphRot.GetEulerAngles();
+
+		Vector3 pos;
+		Vector3 rotEuler;
+		glm::quat rot;
+
+		JoltVec3ToGlmVec3(jphPos, pos);
+		JoltVec3ToGlmVec3(jphRotEuler, rotEuler);
 
 		glm::mat4 bodyMtx = Transform::CreateTransformationMtx(pos, rotEuler, t.GetGlobalScale());
 
@@ -853,9 +860,14 @@ void PhysicsSystem::UpdateGameObjects() {
 
 		Transform::Decompose(entityMtx, pos, rot, scale);
 
-		t.SetWorldMatrix(pos, glm::eulerAngles(rot), t.GetGlobalScale());
+		t.SetWorldMatrix(pos, rotEuler, t.GetGlobalScale());
 
-		bodyInterface->GetLinearAndAngularVelocity(tmpBID,(JPH::Vec3&)rb.linearVelocity,(JPH::Vec3&)rb.angularVelocity);
+		JPH::Vec3 angVel;
+		JPH::Vec3 lineVel;
+		bodyInterface->GetLinearAndAngularVelocity(tmpBID,lineVel, angVel);
+
+		JoltVec3ToGlmVec3(lineVel, rb.linearVelocity);
+		JoltVec3ToGlmVec3(angVel, rb.angularVelocity);
 	}
 
 	// Character Controllers

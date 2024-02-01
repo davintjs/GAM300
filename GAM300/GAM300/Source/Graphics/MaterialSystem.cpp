@@ -200,7 +200,9 @@ void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
 
 Engine::GUID<MaterialAsset> MaterialSystem::InstantiateRuntimeMaterial(Material_instance& mat)
 {
-	auto ret = _runtimeMaterialInstances.insert(std::make_pair(Engine::GUID<MaterialAsset>(), mat));
+	Material_instance tmpMat;
+	tmpMat = mat;
+	auto ret = _runtimeMaterialInstances.insert(std::make_pair(Engine::GUID<MaterialAsset>(), tmpMat));
 	auto it = ret.first;
 	return it->first;
 }
@@ -263,6 +265,30 @@ Material_instance::Material_instance(const Material_instance& other)
 	roughnessTexture = other.roughnessTexture;
 	aoTexture = other.aoTexture;
 	emissionTexture = other.emissionTexture;
+}
+
+Material_instance& Material_instance::operator = (const Material_instance& rhs)
+{
+	albedoColour = rhs.albedoColour;
+	metallicConstant = rhs.metallicConstant;
+	roughnessConstant = rhs.roughnessConstant;
+	aoConstant = rhs.aoConstant;
+	emissionConstant = rhs.emissionConstant;
+	albedoTexture = rhs.albedoTexture;
+	normalMap = rhs.normalMap;
+	metallicTexture = rhs.metallicTexture;
+	roughnessTexture = rhs.roughnessTexture;
+	aoTexture = rhs.aoTexture;
+	emissionTexture = rhs.emissionTexture;
+
+	textureID = TextureManager.GetTexture(albedoTexture);
+	normalID = TextureManager.GetTexture(normalMap);
+	metallicID = TextureManager.GetTexture(metallicTexture);
+	roughnessID = TextureManager.GetTexture(roughnessTexture);
+	ambientID = TextureManager.GetTexture(aoTexture);
+	emissiveID = TextureManager.GetTexture(emissionTexture);
+
+	return *this;
 }
 
 Material_instance& Material_instance::Duplicate_MaterialInstance(const Material_instance& other)
