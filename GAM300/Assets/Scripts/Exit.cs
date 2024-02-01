@@ -29,7 +29,7 @@ public class Exit : Script
 
     private SpriteRenderer backButtonRenderer;
 
-    vec3 startGridTextSize;
+    //vec3 startGridTextSize;
 
     void Start()
     {

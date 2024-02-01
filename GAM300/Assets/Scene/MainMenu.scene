@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 0.349981308
+  LookAtDistance: 9.30003643
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -83,7 +83,6 @@ Script:
   Script: {guid: 8e7ebaa15a9550485ebd22863125bac8}
   bgm: {fileID: 15874991202848918549}  # Component
   uibutton: {fileID: 7823455904144311016}  # Component
-  duration: 0.649999976
   mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
   startButton: {fileID: 5144980746915515514}  # GameObject
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
@@ -91,6 +90,8 @@ Script:
   settingsButton: {fileID: 11997381317790178123}  # GameObject
   HTPButton: {fileID: 15413680003274128894}  # GameObject
   isStartActive: true
+  ExitButton: {fileID: 7360009555949792780}  # GameObject
+  duration: 0.649999976
   back: false
   timer: 0
   sizeMultiplier: 1.25
