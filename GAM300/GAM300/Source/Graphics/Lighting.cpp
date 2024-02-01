@@ -43,10 +43,7 @@ void Lighting::Init()
 		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
 		spotLightFBO.push_back({ shadowFBO, textureID });
 	}
-
-
-	// Initalizing Light Properties - LIGHT
-	for (int i = 0; i < MAX_DIRECTION_LIGHT_SHADOW; ++i)
+	for (int i = 0; i < MAX_DIRECTION_LIGHT; ++i)
 	{
 		LightProperties temp_directional;
 		directionLightSources.push_back(temp_directional);
@@ -93,13 +90,13 @@ void Lighting::Update(float)
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			// Cull
-
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
 			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
-			++pointLightCount;
 
+			// Replace the first light if the count is more than the engines max available lights
+			pointLightCount = (pointLightCount >= MAX_POINT_LIGHT - 1) ? 0 : pointLightCount + 1;
 		}
 
 
@@ -122,7 +119,8 @@ void Lighting::Update(float)
 
 			directionLightSources[directionalLightCount].direction = glm::normalize(testdir);
 
-			++directionalLightCount;
+			// Replace the first light if the count is more than the engines max available lights
+			directionalLightCount = (directionalLightCount >= MAX_DIRECTION_LIGHT - 1) ? 0 : directionalLightCount + 1;
 
 		}
 
@@ -149,7 +147,8 @@ void Lighting::Update(float)
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
 			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
 
-			++spotLightCount;
+			// Replace the first light if the count is more than the engines max available lights
+			spotLightCount = (spotLightCount >= MAX_SPOT_LIGHT - 1) ? 0 : spotLightCount + 1;
 		}
 		//std::cout << spotLightCount << "\n";
 

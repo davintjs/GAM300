@@ -1,12 +1,12 @@
 Material:
-  Material Name: NI - GREEN
+  Material Name: Default Checker
   Shader: 0
-  Albedo: [0.319544435, 0.866709471, 0.407090902, 1]
+  Albedo: [0.649325073, 0.649389982, 0.649335504, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
   Emission: 1
-  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  AlbedoTexture: {guid: c18712d06aba1974c88b76437504e89b}
   NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: 00000000000000000000000000000000}
   RoughnessTexture: {guid: 00000000000000000000000000000000}

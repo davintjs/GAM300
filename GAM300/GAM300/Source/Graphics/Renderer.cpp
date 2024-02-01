@@ -531,7 +531,7 @@ void Renderer::BindLights(GLSLShader& shader)
 			int textureUnit = 20 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_2D, LIGHTING.directionalLightFBO[offset].second);
-			++offset;
+			offset = (offset >= MAX_DIRECTION_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
