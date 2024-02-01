@@ -8,7 +8,7 @@ void TextSystem::Init()
 {
 	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
 	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
-
+	
 
 	glGenVertexArrays(1, &txtVAO);
 	glGenBuffers(1, &txtVBO);
@@ -34,7 +34,6 @@ void TextSystem::Exit()
 
 void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
 {
-
 	scale *= 0.001f; // hack bc it too big
 
 	glEnable(GL_BLEND);
@@ -108,7 +107,8 @@ void TextSystem::Draw(BaseCamera& _camera)
 	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) {
 		//get gameobj xform x y z, the curr xy is offsets, try and add alignment, do scale as in x and y diff ability to scsale
 		// priority, add alpha, decompiler, integrate into ui
-		RenderText(txtshader, text.text, text.x, text.y, text.fontSize, glm::vec3(text.r, text.g, text.b), _camera, );
+		if (text.guid != 0)
+			RenderText(txtshader, text.text, text.x, text.y, text.fontSize, glm::vec3(text.r, text.g, text.b), _camera, text.guid);
 	}
 	
 	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
@@ -117,8 +117,10 @@ void TextSystem::Draw(BaseCamera& _camera)
 // Function to load font atlas from binary file
 void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid) {
 	std::map<char, Character> Characters;
+	std::string path = inputPath.string();
+	std::replace(path.begin(), path.end(), '\\', '/');
 
-	std::ifstream inFile(inputPath, std::ios::binary);
+	std::ifstream inFile(path, std::ios::binary);
 	if (!inFile.is_open()) {
 		std::cerr << "Failed to open font atlas file" << std::endl;
 		return;

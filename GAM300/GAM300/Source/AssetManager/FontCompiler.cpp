@@ -95,8 +95,7 @@ void LoadFont(const std::filesystem::path& _filePath) {
 
 		//const char* outputPath = "Assets/Fonts/opensansbold.bin";
 		std::filesystem::path ttfPath{ _filePath };
-		ttfPath.replace_extension(".bin");
-		std::cout << "oi wtf" << ttfPath << std::endl;
+		ttfPath.replace_extension("font");
 
 		// Save Characters map to binary file
 		std::ofstream outFile(ttfPath, std::ios::binary);
