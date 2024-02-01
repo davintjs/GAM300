@@ -120,15 +120,11 @@ struct Material_instance : Object
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-
-	std::string		name;
 	Vector4			albedoColour;// This is pretty much used in all types of shaders
 	float			metallicConstant;
 	float			roughnessConstant;
 	float			aoConstant;
 	float			emissionConstant;
-
-	bool isEmission = false;
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -137,12 +133,19 @@ struct Material_instance : Object
 	Engine::GUID<TextureAsset>	aoTexture;
 	Engine::GUID<TextureAsset>	emissionTexture;
 
+	bool isEmission = false;
+	bool isVariant = false;
+
 	GLuint textureID;
 	GLuint normalID;
 	GLuint metallicID;
 	GLuint roughnessID;
 	GLuint ambientID;
 	GLuint emissiveID;
+
+	std::string	name;
+
+	Material_instance& operator = (const Material_instance& rhs);
 
 	// Blinn Phong - Not in use
 

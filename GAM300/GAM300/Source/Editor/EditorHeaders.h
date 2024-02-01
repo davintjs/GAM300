@@ -211,6 +211,8 @@ public:
     bool const DebugDraw() { return debug_draw; }
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
+    void ClearMultiselect();
+
     //Multiselect variables
     std::list<Engine::UUID>multiselectEntities;
     Transform multiTransform; 
