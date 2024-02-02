@@ -110,7 +110,7 @@ namespace
 			JPH::Quat rot;
 			Vector3 scale;
 			Transform::Decompose(transMtx, (Vector3&)translation, (glm::quat&)rot, (Vector3&)scale);
-			bodyInterface->SetPositionAndRotation(bid, translation, rot, JPH::EActivation::DontActivate);
+			bodyInterface->SetPositionAndRotation(bid, translation, rot, JPH::EActivation::Activate);
 			return;
 		}
 
@@ -176,12 +176,16 @@ void PhysicsSystem::Update(float dt) {
 	auto& rbArray = scene.GetArray<Rigidbody>();
 
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
+		if (!it.IsActive())
+		{
+			continue;
+		}
 		Rigidbody& rb = *it;
-
-		if (!it.IsActive()) continue;
 		Entity& entity = scene.Get<Entity>(rb);
 		if (!scene.IsActive(entity))
+		{
 			continue;
+		}
 
 		JPH::BodyID tmpBID(rb.bid);
 
@@ -203,9 +207,7 @@ void PhysicsSystem::Update(float dt) {
 				if (!body.IsActive() && !body.IsStatic()) {
 					lock.ReleaseLock();
 					bodyInterface->ActivateBody(tmpBID);
-
 				}
-
 			}
 		}
 		else {
