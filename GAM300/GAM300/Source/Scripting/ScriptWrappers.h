@@ -27,6 +27,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/Ray3D.h"
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
+#include "Physics/PhysicsSystem.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -116,9 +117,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma region PHYSICS SYSTEM
 
-	static void Raycast(Vector3& position, Vector3& direction, float& distance, bool& hit, int& mask)
+	static EngineRayCastResult Raycast(Vector3& position, Vector3& direction, float& distance)
 	{
+		// jDirection MUST be normalized
+		JPH::RVec3 jPosition = JPH::RVec3::sZero();
+		JPH::RVec3 jDirection = JPH::RVec3::sZero();
 
+		jPosition.SetX(position.x);
+		jPosition.SetY(position.y);
+		jPosition.SetZ(position.z);
+
+		jDirection.SetX(direction.x);
+		jDirection.SetY(direction.y);
+		jDirection.SetZ(direction.z);
+
+		EngineRayCastResult ercr = PHYSICS.CastRay(jPosition, jDirection, distance);
+		return ercr;
 	}
 
 #pragma endregion

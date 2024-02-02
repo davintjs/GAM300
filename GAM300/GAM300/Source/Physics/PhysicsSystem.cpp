@@ -1172,13 +1172,13 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	std::cout << "add\n";
 }
 
-EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
+EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3& direction, const float& distance) {
 	
 	Vector3 tmp;
 	JoltVec3ToGlmVec3(origin, tmp);
 
 	if (!physicsSystem)
-		return EngineRayCastResult(Tag(), tmp, false);
+		return EngineRayCastResult(nullptr, tmp, false);
 
 	// TODO:
 	/*
@@ -1196,11 +1196,9 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	JPH::RayCast ray(origin, direction * distance);
 	bpq.CastRay(ray, collector);
 	if(!collector.HadHit())
-		return EngineRayCastResult(Tag(), tmp, false);
+		return EngineRayCastResult(nullptr, tmp, false);
 	size_t numHits = (int)collector.mHits.size();
 	std::cout << "Number of hits on raycast: " << numHits << std::endl;	
-
-
 	
 
 	JPH::BroadPhaseCastResult* results = collector.mHits.data();
@@ -1211,7 +1209,6 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	}
 
 	UINT32 bid = results[idx].mBodyID.GetIndexAndSequenceNumber();
-	Tag tag;
 	Vector3 hitPt;
 	JPH::RVec3 v = ray.GetPointOnRay(results[idx].mFraction);
 	JoltVec3ToGlmVec3(v, hitPt);
@@ -1220,8 +1217,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		Rigidbody& rb = *it;
 		if (rb.bid == bid) {
-			tag = scene.Get<Tag>(rb);
-			break;
+			return EngineRayCastResult(&scene.Get<Entity>(rb), hitPt, true);
 		}
 	}
 
@@ -1251,7 +1247,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 									<< hitPt.y << '|' 
 									<< hitPt.z << std::endl;
 
-	return EngineRayCastResult(tag, hitPt, true);
+	return EngineRayCastResult(nullptr, hitPt, true);
 	
 }
 

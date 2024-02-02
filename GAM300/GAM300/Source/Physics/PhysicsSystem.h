@@ -174,9 +174,9 @@ public:
 };
 struct EngineRayCastResult {
 
-	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : tag{ tag }, point { pt }, hit{ hasHit }{}
+	EngineRayCastResult(Entity* obj, Vector3 pt, bool hasHit) : gameobject{ obj }, point { pt }, hit{ hasHit }{}
 
-	Tag tag;
+	ScriptObject<Entity> gameobject;
 	Vector3 point;
 	bool hit;
 
@@ -264,7 +264,7 @@ public:
 	void DeleteBody(UINT32 bid);
 
 
-	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& maxDistance);
+	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::RVec3& direction, const float& maxDistance);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;

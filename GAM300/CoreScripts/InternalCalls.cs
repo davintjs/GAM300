@@ -180,7 +180,7 @@ namespace BeanFactory
 
         #region PHYSICS_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
+        public static extern RayCastResult Raycast(vec3 position, vec3 direction, float distance);
         #endregion
 
         #region TEXT
