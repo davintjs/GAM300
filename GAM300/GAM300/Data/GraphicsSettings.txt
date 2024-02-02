@@ -3,5 +3,5 @@ HDR: false
 Bloom: true
 Bloom Count: 1
 Bloom Threshold: 0
-Ambient: 1
+Ambient: 0.00999999978
 Exposure: 0.800000012
