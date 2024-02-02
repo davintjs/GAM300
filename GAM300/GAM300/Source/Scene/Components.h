@@ -177,13 +177,13 @@ struct Transform : Object
 	void RemoveChild(Transform* t);
 
 private:
+	glm::mat4x4 worldMatrix;
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
 	Vector3 globalPos{};
 	Vector3 globalRot{};
 	Vector3 globalScale{};
-	glm::mat4x4 worldMatrix;
 
 public:
 
