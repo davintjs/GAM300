@@ -1,0 +1,225 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: LoadingScreen
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 5255847082789301257
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4704708302287558388}  # Transform
+    - component: {fileID: 6290748605718139895}  # Camera
+---
+ID: 4704708302287558388
+Transform:
+  m_GameObject: {fileID: 5255847082789301257}
+  Translation: [0.0341724604, -0.0301439464, 1.361678]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6290748605718139895
+Camera:
+  m_GameObject: {fileID: 5255847082789301257}
+  m_IsEnabled: true
+  BackgroundColor: [0, 0, 0, 0]
+  ClearFlags: "\x00"
+  CullingMask: "\x00"
+  LookAtDistance: 7.2765193
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 11651427043620866289
+GameObject:
+  m_IsActive: true
+  m_Name: LoadingScreenCanvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15419434749458504632}  # Transform
+    - component: {fileID: 2748547964756519209}  # Canvas
+---
+ID: 15419434749458504632
+Transform:
+  m_GameObject: {fileID: 11651427043620866289}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 4418236984561621579}
+    - {fileID: 15122834859859923062}
+    - {fileID: 14443443795723982887}
+    - {fileID: 16293798592844223540}
+    - {fileID: 11003882171245847636}
+---
+ID: 2748547964756519209
+Canvas:
+  m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
+---
+ID: 4418236984561621579
+GameObject:
+  m_IsActive: true
+  m_Name: LoadingLevelBackground
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16773861268096498698}  # Transform
+    - component: {fileID: 13350653658282748155}  # SpriteRenderer
+---
+ID: 16773861268096498698
+Transform:
+  m_GameObject: {fileID: 4418236984561621579}
+  Translation: [0.0413189083, -0.0300165415, 0.0475693494]
+  Rotation: [0, 0, 3.14159083]
+  Scale: [1.02958524, 0.601269364, 0.89040184]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 13350653658282748155
+SpriteRenderer:
+  m_GameObject: {fileID: 4418236984561621579}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: b08f688109dd431930b77456d6a48a43}
+---
+ID: 15122834859859923062
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Level_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5205254661984323289}  # Transform
+    - component: {fileID: 8183777527831800993}  # SpriteRenderer
+---
+ID: 5205254661984323289
+Transform:
+  m_GameObject: {fileID: 15122834859859923062}
+  Translation: [0.704325497, -0.462145597, 0.0978737473]
+  Rotation: [-3.14159083, 0, 0]
+  Scale: [0.236767575, 0.11488425, 0.592852175]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 8183777527831800993
+SpriteRenderer:
+  m_GameObject: {fileID: 15122834859859923062}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 25605b003ff8223be92fcaba05fc98d1}
+---
+ID: 14443443795723982887
+GameObject:
+  m_IsActive: true
+  m_Name: TheGRID_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11705331697095973194}  # Transform
+    - component: {fileID: 4610221658161510026}  # SpriteRenderer
+---
+ID: 11705331697095973194
+Transform:
+  m_GameObject: {fileID: 14443443795723982887}
+  Translation: [-0.448109716, 0.352496624, 0.269803703]
+  Rotation: [-3.14159083, 0, 0]
+  Scale: [0.356465191, 0.161743701, 0.834667027]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 4610221658161510026
+SpriteRenderer:
+  m_GameObject: {fileID: 14443443795723982887}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 0.899999976
+  SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
+---
+ID: 16293798592844223540
+GameObject:
+  m_IsActive: true
+  m_Name: LoadingTutorialBackgroud
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18431765212954842495}  # Transform
+    - component: {fileID: 17690011447832337578}  # SpriteRenderer
+---
+ID: 18431765212954842495
+Transform:
+  m_GameObject: {fileID: 16293798592844223540}
+  Translation: [0, -0.180574983, 0.0454417691]
+  Rotation: [0, 0, -3.14159083]
+  Scale: [1.02153456, 0.71029222, 0.71029222]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 17690011447832337578
+SpriteRenderer:
+  m_GameObject: {fileID: 16293798592844223540}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: dd5946e813470a4bf6de0e561bee8136}
+---
+ID: 11003882171245847636
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Tutorial_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5059618897602400407}  # Transform
+    - component: {fileID: 17289207788925785274}  # SpriteRenderer
+---
+ID: 5059618897602400407
+Transform:
+  m_GameObject: {fileID: 11003882171245847636}
+  Translation: [0.711743712, -0.462145597, 0.103346996]
+  Rotation: [-3.14159083, 0, 0]
+  Scale: [0.236767575, 0.11488425, 0.592852175]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 17289207788925785274
+SpriteRenderer:
+  m_GameObject: {fileID: 11003882171245847636}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 2f06a817efc264d62e4e216339d1ad27}
