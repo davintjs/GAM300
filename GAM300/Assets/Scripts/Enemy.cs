@@ -41,6 +41,7 @@ public class Enemy : Script
 
     //public GameObject spawnObject;
     public GameObject attackTrigger;
+    public Transform parentTransform;
     Rigidbody rb;
 
     public bool isAttacking = false;
@@ -147,7 +148,7 @@ public class Enemy : Script
         }
         else if(state != 2)
         {
-            //attackTrigger.SetActive(false);
+            attackTrigger.SetActive(false);
             isAttacking = false;
             isAttackCooldown = false;
             currentAttackCooldownTimer = 0f;

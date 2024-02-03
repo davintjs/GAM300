@@ -12709,7 +12709,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1058.96765
+  LookAtDistance: 1073.87402
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -15398,7 +15398,6 @@ Transform:
   m_Children:
     - {fileID: 12642420772951399868}
     - {fileID: 12310695600081325322}
-    - {fileID: 18082920113219845477}
 ---
 ID: 17336470745185530560
 Script:
@@ -19780,56 +19779,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 18082920113219845477
-GameObject:
-  m_IsActive: true
-  m_Name: AttackTrigger
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10697209982627004130}  # Transform
-    - component: {fileID: 7973238739540239964}  # Rigidbody
-    - component: {fileID: 17055927208789937515}  # BoxCollider
-    - component: {fileID: 3991898582499193028}  # Script
----
-ID: 10697209982627004130
-Transform:
-  m_GameObject: {fileID: 18082920113219845477}
-  Translation: [-1.1920929e-06, -0.700000048, 1]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 15952054123807579159}
-  m_Children:
-    []
----
-ID: 7973238739540239964
-Rigidbody:
-  m_GameObject: {fileID: 18082920113219845477}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 17055927208789937515
-BoxCollider:
-  m_GameObject: {fileID: 18082920113219845477}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 3991898582499193028
-Script:
-  m_GameObject: {fileID: 18082920113219845477}
-  m_IsEnabled: true
-  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
-  playerController: {fileID: 0}
 ---
 ID: 6364420056334471666
 GameObject:
