@@ -141,6 +141,7 @@ public class ThirdPersonController : Script
 
     //health bar
     public GameObject healthBarFill;
+    public Transform healthBar;
     public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
@@ -150,6 +151,7 @@ public class ThirdPersonController : Script
     public float maxStamina = 100f;
     public float currentStamina;
     public GameObject staminaBarFill;
+    public Transform staminaBar;
     public Transform staminaBarPos;
     private Coroutine regen;
     public float timeBeforeRegen = 1.5f;
@@ -729,63 +731,70 @@ public class ThirdPersonController : Script
     }
     public void UpdatehealthBar()
     {
-        //NOTE: tempoary disabled, not working currently
-        //float scaleFactor = (float)currentHealth / (float)maxHealth;
-        //float newXScale = initialHealthBarXScale * scaleFactor;
-        //float xOffset = (initialHealthBarXScale - newXScale) * 0.5f;
-        //vec3 currentPos = healthBarFill.GetComponent<Transform>().localPosition;
-        //vec3 currentScale = healthBarFill.GetComponent<Transform>().localScale;
-        //currentPos.x = initialHealthBarXpos - xOffset;
-        //currentScale.x = newXScale;
-        //healthBarFill.GetComponent<Transform>().localPosition = currentPos;
-        //healthBarFill.GetComponent<Transform>().localScale = currentScale;
+        ////hard code the health bar for now
+        //if(currentHealth == maxHealth)
+        //{
+        //    healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.65f, 0.857f, 3f);
+        //    healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.2f, -0.035f, -1f);
+        //}
+        //if(currentHealth == 3)
+        //{
+        //    healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
+        //    healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.15f, -0.035f, -1f);
+        //}
+        //if (currentHealth == 2)
+        //{
+        //    healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 3f);
+        //    healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.11f, -0.035f, -1f);
+        //}
+        //if (currentHealth == 1)
+        //{
+        //    healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
+        //    healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.05f, -0.035f, -1f);
+        //}
+        //if(currentHealth <= 0)
+        //{
+        //    Console.WriteLine("GameOver");
+        //    isDead = true;
+        //    healthStaminaCanvas.SetActive(false);
+        //    startDeathAnimationCountdown = true;
+        //    currentHealth = 0;
+        //    healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
+        //    healthBarFill.GetComponent<Transform>().localScale = new vec3(-0f, -0.035f, -1f);
+        //}
 
-        //hard code the health bar for now
-        if(currentHealth == maxHealth)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.65f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.2f, -0.035f, -1f);
-        }
-        if(currentHealth == 3)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.15f, -0.035f, -1f);
-        }
-        if (currentHealth == 2)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.11f, -0.035f, -1f);
-        }
-        if (currentHealth == 1)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.05f, -0.035f, -1f);
-        }
-        if(currentHealth <= 0)
+        vec3 hpScale = healthBar.localScale;
+        hpScale.x = currentHealth / maxHealth;
+        healthBar.localScale = hpScale;
+        if (currentHealth <= 0)
         {
             Console.WriteLine("GameOver");
             isDead = true;
             healthStaminaCanvas.SetActive(false);
             startDeathAnimationCountdown = true;
             currentHealth = 0;
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0f, -0.035f, -1f);
+            //healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
+            //healthBarFill.GetComponent<Transform>().localScale = new vec3(-0f, -0.035f, -1f);
         }
     }
 
     public void UpdateStaminaBar()
     {
 
-        float scaleFactor = (float)currentStamina / (float)maxStamina;
-        float newXScale = initialStaminaBarXScale * scaleFactor;
-        float xOffset = (initialStaminaBarXScale - newXScale) * 0.5f;
-        //vec3 currentPos = staminaBarFill.GetComponent<Transform>().localPosition;
-        vec3 currentPos = staminaBarPos.localPosition;
-        vec3 currentScale = staminaBarFill.GetComponent<Transform>().localScale;
-        currentPos.x = initialStaminaBarXpos - xOffset;
-        currentScale.x = newXScale;
-        staminaBarFill.GetComponent<Transform>().localPosition = currentPos;
-        staminaBarFill.GetComponent<Transform>().localScale = currentScale;
+        //float scaleFactor = (float)currentStamina / (float)maxStamina;
+        //float newXScale = initialStaminaBarXScale * scaleFactor;
+        //float xOffset = (initialStaminaBarXScale - newXScale) * 0.5f;
+        ////vec3 currentPos = staminaBarFill.GetComponent<Transform>().localPosition;
+        //vec3 currentPos = staminaBarPos.localPosition;
+        //vec3 currentScale = staminaBarFill.GetComponent<Transform>().localScale;
+        //currentPos.x = initialStaminaBarXpos - xOffset;
+        //currentScale.x = newXScale;
+        //staminaBarFill.GetComponent<Transform>().localPosition = currentPos;
+        //staminaBarFill.GetComponent<Transform>().localScale = currentScale;
+
+        vec3 staminaScale = staminaBar.localScale;
+        staminaScale.x = currentStamina / maxStamina;
+        staminaBar.localScale = staminaScale;
     }
 
     public float UseStamina(float amount)
