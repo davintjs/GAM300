@@ -45,6 +45,25 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 	
+	const Transform* canvasTransform{ nullptr };
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		if (currCanvas.state == DELETED) continue;
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		canvasTransform = &currentScene.Get<Transform>(entity);
+		continue;
+	}
+
+	if(!canvasTransform)
+	{
+		return;
+	}
+
+	glm::mat4 canvasMatrix = glm::inverse( canvasTransform->GetWorldMatrix());
+
+	//canvasMatrix = glm::inverse()
+
 
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
@@ -65,7 +84,9 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetLocalMatrix()));
+			1, GL_FALSE, glm::value_ptr(
+				canvasMatrix * transform.GetWorldMatrix() )
+		);
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
 			Sprite.AlphaMultiplier);
 		// Setting bool to see if there is a sprite to render
