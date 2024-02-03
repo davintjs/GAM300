@@ -726,6 +726,8 @@ private:
 //Colliders have to be before rigidbodies
 using ColliderComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider>;
 
+using PhysicsTypes = decltype(ColliderComponentTypes::Concatenate(TemplatePack<Rigidbody, CharacterController>()));
+
 using ExclusionColliders = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, CharacterController>;
 
 using ExclusionPhysics = TemplatePack<Rigidbody, CharacterController>;
@@ -735,18 +737,16 @@ using SingleComponentTypes = decltype(
 	<
 		Transform,
 		Tag,
-		Rigidbody, 
 		Animator, 
 		Camera, 
 		MeshRenderer, 
-		CharacterController, 
 		LightSource , 
 		SpriteRenderer, 
 		Canvas, 
 		ParticleComponent, 
 		NavMeshAgent,
 		TextRenderer
-	>::Concatenate(ColliderComponentTypes()));
+	>::Concatenate(PhysicsTypes()));
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<AudioSource, Script>;
