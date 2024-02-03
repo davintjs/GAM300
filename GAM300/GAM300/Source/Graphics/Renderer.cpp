@@ -517,9 +517,10 @@ void Renderer::BindLights(GLSLShader& shader)
 	{
 		if (LIGHTING.GetSpotLights()[i].enableShadow)
 		{
-			int textureUnit = 10 + offset++;
+			int textureUnit = 10 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
-			glBindTexture(GL_TEXTURE_2D, LIGHTING.GetSpotLights()[i].shadow);
+			glBindTexture(GL_TEXTURE_2D, LIGHTING.spotLightFBO[offset].second);
+			offset = (offset >= MAX_SPOT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
@@ -530,7 +531,7 @@ void Renderer::BindLights(GLSLShader& shader)
 			int textureUnit = 20 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
 			glBindTexture(GL_TEXTURE_2D, LIGHTING.directionalLightFBO[offset].second);
-			++offset;
+			offset = (offset >= MAX_DIRECTION_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 	offset = 0;
@@ -538,9 +539,10 @@ void Renderer::BindLights(GLSLShader& shader)
 	{
 		if (LIGHTING.GetPointLights()[i].enableShadow)
 		{
-			int textureUnit = 22 + offset++;
+			int textureUnit = 22 + offset;
 			glActiveTexture(GL_TEXTURE0 + textureUnit);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.GetPointLights()[i].shadow);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, LIGHTING.pointLightFBO[offset].second);
+			offset = (offset >= MAX_POINT_LIGHT_SHADOW - 1) ? 0 : offset + 1;
 		}
 	}
 

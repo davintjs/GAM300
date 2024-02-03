@@ -71,7 +71,7 @@ struct Scene
 
 	//Get an object by handle
 	template<typename T>
-	T& Get(Handle& handle);
+	T& Get(const Handle& handle);
 
 	//Get an object by passing in their owner(Entity/Component)
 	template<typename T>

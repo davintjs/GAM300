@@ -57,9 +57,9 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static string GetState(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetAnimationColor(ulong ID, out Color color);
+        public static extern void GetAnimationColor(ulong ID, out vec4 color);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetAnimationColor(ulong ID, ref Color color);
+        internal extern static void SetAnimationColor(ulong ID, ref vec4 color);
         #endregion
 
         #region COMPONENT
@@ -202,10 +202,10 @@ namespace BeanFactory
         internal extern static void SetTextString(ulong compID,string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetTextColor(ulong ID, out Color color);
+        public static extern void GetTextColor(ulong ID, out vec4 color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextColor(ulong ID, ref Color color);
+        internal extern static void SetTextColor(ulong ID, ref vec4 color);
         #endregion
 
         #region IDENTIFIERS
@@ -242,6 +242,15 @@ namespace BeanFactory
         #region SPRITERENDERER
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
+
+        #endregion
+
+        #region MESH_RENDERER
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetMaterial(MeshRenderer meshRenderer, ref Material mat);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMaterial(MeshRenderer meshRenderer, Material mat);
 
         #endregion
 

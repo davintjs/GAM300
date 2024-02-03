@@ -23,29 +23,30 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 void Lighting::Init()
 {
+	// Initalizing Shadow FBOs
 	unsigned int shadowFBO, textureID;
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-	directionalLightFBO.push_back({ shadowFBO, textureID });
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
-	directionalLightFBO.push_back({ shadowFBO, textureID });
-	
+
 	for (int i = 0; i < MAX_POINT_LIGHT_SHADOW; ++i)
 	{
-		LightProperties temp_point;
-		FRAMEBUFFER.CreatePointLight(temp_point.shadowFBO, temp_point.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
-		pointLightSources.push_back(temp_point);
-
-		LightProperties temp_spot;
-		FRAMEBUFFER.CreateDirectionalAndSpotLight(temp_spot.shadowFBO, temp_spot.shadow, SHADOW_WIDTH, SHADOW_HEIGHT);
-		spotLightSources.push_back(temp_spot);
+		FRAMEBUFFER.CreatePointLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
+		pointLightFBO.push_back({ shadowFBO, textureID });
 	}
+
+	for (int i = 0; i < MAX_SPOT_LIGHT_SHADOW; ++i)
+	{
+		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH, SHADOW_HEIGHT);
+		spotLightFBO.push_back({ shadowFBO, textureID });
+	}
+
 	for (int i = 0; i < MAX_DIRECTION_LIGHT_SHADOW; ++i)
 	{
-		LightProperties temp_directional;
-		directionLightSources.push_back(temp_directional);
-
+		FRAMEBUFFER.CreateDirectionalAndSpotLight(shadowFBO, textureID, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+		directionalLightFBO.push_back({ shadowFBO, textureID });
 	}
 
+	directionLightSources.resize(MAX_DIRECTION_LIGHT);
+	pointLightSources.resize(MAX_POINT_LIGHT);
+	spotLightSources.resize(MAX_SPOT_LIGHT);
 }
 
 void Lighting::Update(float)
@@ -75,13 +76,13 @@ void Lighting::Update(float)
 		if (lightSource.lightType == POINT_LIGHT)// Point Light
 		{
 			// Cull
-
 			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
 			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
 			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
 			pointLightSources[pointLightCount].intensity = lightSource.intensity;
-			++pointLightCount;
 
+			// Replace the first light if the count is more than the engines max available lights
+			pointLightCount = (pointLightCount >= MAX_POINT_LIGHT - 1) ? 0 : pointLightCount + 1;
 		}
 
 
@@ -93,18 +94,16 @@ void Lighting::Update(float)
 			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
 			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 
-			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
 			glm::vec3 rotation = transform.GetGlobalRotation();
 			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
 			rot *= glm::translate(glm::mat4(1.f), direction);
-			glm::vec3 testdir = rot[3];
 
-			glm::vec3 test(0.f);
+			directionLightSources[directionalLightCount].direction = glm::normalize(rot[3]);
 
-			directionLightSources[directionalLightCount].direction = glm::normalize(testdir);
-
-			++directionalLightCount;
+			// Replace the first light if the count is more than the engines max available lights
+			directionalLightCount = (directionalLightCount >= MAX_DIRECTION_LIGHT - 1) ? 0 : directionalLightCount + 1;
 
 		}
 
@@ -117,21 +116,19 @@ void Lighting::Update(float)
 			spotLightSources[spotLightCount].intensity = lightSource.intensity;
 
 
-			glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
+			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
 			glm::vec3 rotation = transform.GetGlobalRotation();
 			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
 			rot *= glm::translate(glm::mat4(1.f),direction);
-			glm::vec3 testdir = rot[3];
 
-			glm::vec3 test(0.f);
-
-			spotLightSources[spotLightCount].direction = glm::normalize(testdir);
+			spotLightSources[spotLightCount].direction = glm::normalize(rot[3]);
 
 			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
 			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
 
-			++spotLightCount;
+			// Replace the first light if the count is more than the engines max available lights
+			spotLightCount = (spotLightCount >= MAX_SPOT_LIGHT - 1) ? 0 : spotLightCount + 1;
 		}
 		//std::cout << spotLightCount << "\n";
 

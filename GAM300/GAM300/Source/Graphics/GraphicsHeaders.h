@@ -104,7 +104,7 @@ struct Shader {
 
 struct Material_instance : Object
 {
-					// Var name   // Data Storage
+	// Var name   // Data Storage
 	//std::unordered_map<std::string, Field> variables;// Everything inside here is the variables
 
 	Material_instance();
@@ -120,15 +120,11 @@ struct Material_instance : Object
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-
-	std::string		name;
 	Vector4			albedoColour;// This is pretty much used in all types of shaders
 	float			metallicConstant;
 	float			roughnessConstant;
 	float			aoConstant;
 	float			emissionConstant;
-
-	bool isEmission = false;
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -137,6 +133,9 @@ struct Material_instance : Object
 	Engine::GUID<TextureAsset>	aoTexture;
 	Engine::GUID<TextureAsset>	emissionTexture;
 
+	bool isEmission = false;
+	bool isVariant = false;
+
 	GLuint textureID;
 	GLuint normalID;
 	GLuint metallicID;
@@ -144,7 +143,9 @@ struct Material_instance : Object
 	GLuint ambientID;
 	GLuint emissiveID;
 
+	std::string	name;
 
+	Material_instance& operator = (const Material_instance& rhs);
 
 	// Blinn Phong - Not in use
 
@@ -205,6 +206,8 @@ public:
 
 	Engine::GUID<MaterialAsset> NewMaterialInstance(std::string _name = "Default Material");
 
+	Engine::GUID<MaterialAsset> InstantiateRuntimeMaterial(Material_instance & mat);
+
 	// Deleting a Material Instance
 	void deleteInstance(Engine::GUID<MaterialAsset>& matGUID);
 	
@@ -224,6 +227,9 @@ public:
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 
 	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _allMaterialInstances;
+
+	//Materials generated at runtime as designer set a value to a material
+	std::unordered_map< Engine::GUID<MaterialAsset>, Material_instance> _runtimeMaterialInstances;
 
 	std::vector<Shader>available_shaders;
 
@@ -342,15 +348,17 @@ public:
 
 	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
 
-	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
 	
-	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
-	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+	void DrawSegment3D(InstanceProperties& _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
-	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
-	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec3& _center, const glm::vec4& _color, const float& _radius);
+	
+	void DrawSemiCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
 
 	void DrawRay();
 
@@ -399,6 +407,8 @@ public:
 	unsigned int spotLightCount;
 
 	std::vector<std::pair<unsigned int, unsigned int>> directionalLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> spotLightFBO;
+	std::vector<std::pair<unsigned int, unsigned int>> pointLightFBO;
 
 private:
 	LightProperties lightingSource;

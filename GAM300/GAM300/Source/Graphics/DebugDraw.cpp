@@ -214,6 +214,7 @@ void DebugDraw::Draw()
 // Gizmos/icons for components
 void DebugDraw::DrawIcons()
 {
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
@@ -249,7 +250,7 @@ void DebugDraw::DrawIcons()
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cameraID);
 
-		renderQuad(vaoIcon, vboIcon);;
+		renderQuad(vaoIcon, vboIcon);
 	}
 
 	color = glm::vec4(1.f, 1.f, 0.f, 1.f);
@@ -270,6 +271,7 @@ void DebugDraw::DrawIcons()
 		renderQuad(vaoIcon, vboIcon);
 	}
 
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
 	shader.UnUse();
 	glDisable(GL_BLEND);
 }
@@ -405,13 +407,11 @@ void DebugDraw::DrawLightBounds(const Engine::UUID& _euid)
 	switch (lightSource.lightType)
 	{
 	case (int)LIGHT_TYPE::SPOT_LIGHT:
-		glm::vec3 rotation = t.GetGlobalRotation();
-		rotation.x += pi * 0.5f;
-		DrawSpotLight(iProp, t.GetGlobalTranslation(), rotation, color, lightSource.intensity, lightSource.inner_CutOff, lightSource.outer_CutOff);
+		DrawSpotLight(iProp, t.GetWorldMatrix(), color, lightSource.intensity, lightSource.inner_CutOff, lightSource.outer_CutOff);
 		break;
 
 	case (int)LIGHT_TYPE::DIRECTIONAL_LIGHT:
-		DrawDirectionalLight(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color);
+		DrawDirectionalLight(iProp, t.GetWorldMatrix(), color);
 		break;
 
 	case (int)LIGHT_TYPE::POINT_LIGHT:
@@ -490,16 +490,15 @@ void DebugDraw::DrawCapsuleCollider(InstanceProperties& _iProp, const glm::vec3&
 	}
 }
 
-void DebugDraw::DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, 
-	const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff)
+void DebugDraw::DrawSpotLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff)
 {
-	const int vCount = 4;
-	const float angle = 360.0f / vCount;
+	int vCount = 4;
+	float angle = 360.0f / vCount;
 	const float pi = glm::pi<float>();
 	float currentAngle, x, z;
 	glm::vec3 point1, point2;
 
-	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.x, _rotation.y, _rotation.z);
+	const glm::vec3 center = _t[3];
 
 	for (int i = 0; i < vCount; i++)
 	{
@@ -507,25 +506,22 @@ void DebugDraw::DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _cent
 		x = _range * cos(glm::radians(currentAngle));
 		z = _range * sin(glm::radians(currentAngle));
 
-		point1 = glm::vec3(x, _range, z);
-		point1 = transform * glm::vec4(point1, 1.f);
+		point1 = _t * glm::vec4(x, -_range, z, 1.f);
 
-		DrawSegment3D(_iProp, _center, point1, _color);
+		DrawSegment3D(_iProp, center, point1, _color);
 	}
 
-	point2 = transform * glm::vec4(0.f, _range, 0.f, 1.f);
-	DrawCircle2D(*pProp, point2, _rotation, _color, _range);
+	point2 = glm::vec4(0.f, -_range, 0.f, 1.f);
+	DrawCircle2D(*pProp, _t, point2, _color, _range);
 }
 
-void DebugDraw::DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color)
+void DebugDraw::DrawDirectionalLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color)
 {
 	const int vCount = 8;
 	const float angle = 360.0f / vCount;
 	const float radius = 0.25f;
 	float currentAngle, x, z;
-	glm::vec3 point1, point2, rotation = { _rotation.z, _rotation.x, _rotation.y };
-
-	glm::mat4 transform = glm::translate(glm::mat4(1.f), _center) * glm::eulerAngleXYZ(_rotation.z, _rotation.x, _rotation.y);
+	glm::vec3 point1, point2;
 
 	for (int i = 0; i < vCount; i++)
 	{
@@ -535,15 +531,15 @@ void DebugDraw::DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3
 
 
 		point1 = glm::vec3(x, 0.f, z);
-		point2 = glm::vec3(x, 4 * radius, z);
+		point2 = glm::vec3(x, -4 * radius, z);
 
-		point1 = transform * glm::vec4(point1, 1.f);
-		point2 = transform * glm::vec4(point2, 1.f);
+		point1 = _t * glm::vec4(point1, 1.f);
+		point2 = _t * glm::vec4(point2, 1.f);
 
 		DrawSegment3D(_iProp, point1, point2, _color);
 	}
 
-	DrawCircle2D(*pProp, _center, rotation, _color, radius);
+	DrawCircle2D(*pProp, _t, glm::vec3(0.f, 0.f, 0.f), _color, radius);
 }
 
 void DebugDraw::DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color)
@@ -640,6 +636,36 @@ void DebugDraw::DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _cente
 
 		point1 = transform * glm::vec4(point1, 1.f);
 		point2 = transform * glm::vec4(point2, 1.f);
+
+		DrawSegment3D(_iProp, point1, point2, _color);
+	}
+}
+
+void DebugDraw::DrawCircle2D(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec3& _center, const glm::vec4& _color, const float& _radius)
+{
+	const int vCount = 64;
+	const float angle = 360.0f / vCount;
+	float currentAngle, x1, x2, z1, z2;
+	glm::vec3 point1, point2;
+
+	for (int i = 0; i < vCount; i++)
+	{
+		currentAngle = angle * i;
+		x1 = _radius * cos(glm::radians(currentAngle));
+		z1 = _radius * sin(glm::radians(currentAngle));
+
+		if (i + 1 >= vCount)
+			currentAngle = 0.f;
+		else
+			currentAngle = angle * (i + 1);
+		x2 = _radius * cos(glm::radians(currentAngle));
+		z2 = _radius * sin(glm::radians(currentAngle));
+
+		point1 = _center + glm::vec3(x1, 0.f, z1);
+		point2 = _center + glm::vec3(x2, 0.f, z2);
+
+		point1 = _t * glm::vec4(point1, 1.f);
+		point2 = _t * glm::vec4(point2, 1.f);
 
 		DrawSegment3D(_iProp, point1, point2, _color);
 	}

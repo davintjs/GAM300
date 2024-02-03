@@ -4,8 +4,9 @@ Material:
   Albedo: [0.184313729, 0.184313729, 0.184313729, 1]
   Metallic: 1
   Roughness: 1
-  AmbientOcclusion: 1
-  Emission: 1
+  AmbientOcclusion: 100
+  Is Emission: true
+  Emission: 50
   AlbedoTexture: {guid: 00000000000000000000000000000000}
   NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: 00000000000000000000000000000000}

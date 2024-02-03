@@ -27,6 +27,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/Ray3D.h"
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
+#include "Graphics/GraphicsHeaders.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -314,6 +315,32 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma endregion
 
+#pragma region MESH_RENDERER
+
+	static void GetMaterial(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance>  mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = mat;
+		matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+	}
+
+	static void SetMaterial(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance> mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+		Material_instance& newinstance = mat;
+		if (!matInstance.isVariant)
+		{
+			mr.materialGUID = MATERIALSYSTEM.InstantiateRuntimeMaterial(mat);
+		}
+		else
+		{
+			matInstance = mat;
+		}
+	}
+
+#pragma endregion
+
 #pragma region CAMERA
 
 	static void SetCameraTarget(ScriptObject<Camera> pCamera, Vector3& position)
@@ -593,6 +620,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Physics System
 		Register(Raycast);
+
+		//Mesh Renderer
+		Register(GetMaterial);
+		Register(SetMaterial);
 
 		// Transform Component
 		Register(SetTransformParent);

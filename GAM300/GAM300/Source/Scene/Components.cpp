@@ -15,8 +15,6 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 #include "Precompiled.h"
 #include "Components.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Scene/SceneManager.h"
 #include "AssetManager/AssetManager.h"
@@ -27,12 +25,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 
 namespace
 {
-	static void Decompose(glm::mat4& mat, Vector3& pos, glm::quat& rot, Vector3& scale)
-	{
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(mat, (glm::fvec3&)scale, rot, (glm::fvec3&)pos, skew, perspective);
-	}
+
 }
 
 std::map<std::string, size_t> ComponentTypes{};
@@ -233,10 +226,12 @@ void Transform::SetParent(Transform* newParent)
 		Decompose(lTransform,translation,tmpRot,scale);
 		rotation = glm::eulerAngles(tmpRot);
 		parentTrans.child.push_back(EUID());
-		//if (parentTrans.GetFlag(Transform::Flag::WorldEnabled))
-		//	EnableFlag(Transform::Flag::WorldEnabled);
-		//else
-		//	DisableFlag(Transform::Flag::WorldEnabled);
+		bool worldEnabled = parentTrans.GetFlag(Transform::Flag::WorldEnabled);
+		if (worldEnabled)
+			parentTrans.EnableFlag(Transform::Flag::WorldEnabled);
+		else
+			parentTrans.DisableFlag(Transform::Flag::WorldEnabled);
+			
 		//EnableFlag(Transform::Flag::Modified);
 	}
 }

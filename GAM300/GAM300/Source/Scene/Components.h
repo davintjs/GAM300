@@ -32,6 +32,8 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include <Core/Events.h>
 #include <Properties.h>
 #include "Debugging/Debugger.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 
 constexpr size_t MAX_ENTITIES{ 5 };
@@ -112,6 +114,13 @@ struct Transform : Object
 			glm::scale(glm::mat4(1.0f), vec3(scale));
 	}
 
+	static void Decompose(glm::mat4& mat, Vector3& pos, glm::quat& rot, Vector3& scale)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(mat, (glm::fvec3&)scale, rot, (glm::fvec3&)pos, skew, perspective);
+	}
+
 	// Get the translation in world space
 	glm::vec3 GetGlobalTranslation() const { return globalPos; }
 
@@ -168,13 +177,13 @@ struct Transform : Object
 	void RemoveChild(Transform* t);
 
 private:
+	glm::mat4x4 worldMatrix;
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
 	Vector3 globalPos{};
 	Vector3 globalRot{};
 	Vector3 globalScale{};
-	glm::mat4x4 worldMatrix;
 
 public:
 
@@ -250,6 +259,7 @@ struct CapsuleCollider : Object
 {
 	float height = 1.0f;
 	float radius = 1.0f;
+	Vector3 offset;
 	property_vtable();
 };
 
@@ -486,23 +496,6 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
 		property_var(AlphaMultiplier).Name("Alpha Scalar"),
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		property_var(SpriteTexture).Name("SpriteTexture"),
 } property_vend_h(SpriteRenderer)
 
@@ -733,10 +726,32 @@ private:
 
 //Template pack of components that entities can only have one of each
 //Colliders have to be before rigidbodies
-using SingleComponentTypes = TemplatePack<Transform, Tag, BoxCollider,Rigidbody, Animator, Camera, MeshRenderer, CharacterController, LightSource , SpriteRenderer, Canvas, ParticleComponent, NavMeshAgent, TextRenderer>;
+using ColliderComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider>;
+
+using ExclusionColliders = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, CharacterController>;
+
+using ExclusionPhysics = TemplatePack<Rigidbody, CharacterController>;
+
+using SingleComponentTypes = decltype(
+	TemplatePack
+	<
+		Transform,
+		Tag,
+		Rigidbody, 
+		Animator, 
+		Camera, 
+		MeshRenderer, 
+		CharacterController, 
+		LightSource , 
+		SpriteRenderer, 
+		Canvas, 
+		ParticleComponent, 
+		NavMeshAgent,
+		TextRenderer
+	>::Concatenate(ColliderComponentTypes()));
 
 //Template pack of components that entities can only have multiple of each
-using MultiComponentTypes = TemplatePack<SphereCollider, CapsuleCollider, AudioSource, Script>;
+using MultiComponentTypes = TemplatePack<AudioSource, Script>;
 
 //SingleComponentsGroup initialized with template pack to know the component types
 using SingleComponentsArrays = decltype(SingleComponentsGroup(SingleComponentTypes()));

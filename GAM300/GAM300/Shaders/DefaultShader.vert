@@ -61,9 +61,9 @@ void main()
 {
     TexCoords = aVertexTexCoord;
 
+    vec4 totalPosition = vec4(0.0f);
     if (isAnim)
     {    
-        vec4 totalPosition = vec4(0.0f);
         for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
         {
             if(boneIds[i] == -1) 
@@ -77,14 +77,16 @@ void main()
             totalPosition += localPosition * weights[i];
         }
 
-        totalPosition.w = 1.0f;
+        //totalPosition.w = 1.0f;
 	    WorldPos = vec3(SRT * totalPosition);
     }
     else
+    {
 	    WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
+        totalPosition = vec4(aVertexPosition, 1.0f);
+    }
         
-
-	gl_Position = persp_projection * View * vec4(WorldPos,1.0);
+	gl_Position = persp_projection * View * SRT * totalPosition;
 
 //    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
 //
