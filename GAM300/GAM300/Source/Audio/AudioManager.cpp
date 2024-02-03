@@ -262,7 +262,7 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 		//musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
 		groups[CATEGORY_MUSIC]->setVolume(Source.volume);
 		groups[CATEGORY_MUSIC2]->setVolume(Source.volume);
-		PlayMusic(Source.currentSound);
+		PlayMusic(Source.currentSound, Source.fadetime);
 		break;
 	case 1: // SFX
 		if (SFXEnabled()) {
@@ -367,7 +367,6 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 		currentFXPath = 0;
 		//groups[CATEGORY_MUSIC]->stop();
 		//musics[currentMusicIdx].currentMusic->stop();
-		fadetime = Source.fadetime;
 		musics[currentMusicIdx].fade = FADE_OUT;
 		break;
 	case CATEGORY_LOOPFX:

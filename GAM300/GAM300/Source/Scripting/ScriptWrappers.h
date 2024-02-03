@@ -152,7 +152,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
-
 #pragma endregion
 
 #pragma region ANIMATOR

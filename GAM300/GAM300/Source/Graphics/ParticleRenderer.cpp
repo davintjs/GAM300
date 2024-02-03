@@ -42,8 +42,8 @@ void ParticleRenderer::Update(float dt) {
             particleSRT.emplace_back(translate * rotate * scale);
 
             // update trail
-            for (int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
-                glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1];
+            for (unsigned int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
+                glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1u];
                 float trailScale = glm::length(trailVector);
                 glm::mat4 trailScaleMatrix = glm::mat4( 
                     glm::vec4(.05f, 0, 0, 0),
@@ -155,7 +155,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glUniformMatrix4fv(view, 1, GL_FALSE,
             glm::value_ptr(_camera.GetViewMatrix()));
         glBindVertexArray(cylVAO);
-        glDrawElementsInstanced(GL_TRIANGLE_STRIP, cylsize, GL_UNSIGNED_INT, 0, trailSRT.size());
+        glDrawElementsInstanced(GL_TRIANGLE_STRIP, (GLsizei)cylsize, GL_UNSIGNED_INT, 0, (GLsizei)trailSRT.size());
         glBindVertexArray(0);
 
         trailshader.UnUse();
@@ -177,7 +177,7 @@ void ParticleRenderer::SetupInstancedCylinder() {
 
     // Vertices around the bottom base
     for (int i = 0; i < slices; i++) {
-        float angle = 2 * 3.1415926 * i / slices;
+        float angle = 2 * 3.1415926f * i / slices;
         vertices.push_back(glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle)));
     }
 
@@ -220,7 +220,7 @@ void ParticleRenderer::SetupInstancedCylinder() {
         indices.push_back(slices + i + 3);
         indices.push_back(i + 2);
     }
-    cylsize = indices.size();
+    cylsize = (GLuint)indices.size();
 
     GLuint VBO, ebo;
     glGenVertexArrays(1, &cylVAO);
