@@ -189,8 +189,6 @@ void PhysicsSystem::UpdateJoltTransforms()
 			continue;
 		}
 
-		std::cout << "RB: " << scene.Get<Tag>(rb).name << '\n';
-
 		JPH::BodyID tmpBID(rb.bid);
 
 		UpdateBodyTransform(scene, entity, tmpBID, bodyInterface);
