@@ -260,20 +260,22 @@ void EditorScene::SceneView()
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
 
-                ContentBrowserPayload data = *(const ContentBrowserPayload*)payload->Data;
-                Engine::HexID guid = data.guid;
+                ContentBrowserPayload* data = static_cast<ContentBrowserPayload*>(payload->Data);
+                Engine::HexID guid = data->guid;
 
                 Scene& curr_scene = MySceneManager.GetCurrentScene();
                 Scene::Layer& layer = curr_scene.layer;
 
-                if (data.type == MODELTYPE) {
+                if (data->type == MODELTYPE) {
                     //Create new entity
                     Entity* ent = curr_scene.Add<Entity>();
                     Transform& parent = curr_scene.Get<Transform>(*ent);
-                    curr_scene.Get<Tag>(*ent).name = data.name;
+                    curr_scene.Get<Tag>(*ent).name = data->name;
+
+                    free(data->name);
 
                     //Get model 
-                    GetAssetByGUIDEvent<ModelAsset> e{ data.guid };
+                    GetAssetByGUIDEvent<ModelAsset> e{ data->guid };
                     EVENTS.Publish(&e);
 
                     auto model = e.importer;
@@ -296,7 +298,7 @@ void EditorScene::SceneView()
                         child.SetParent(&parent);
                     }
                 }
-                else if (data.type == MATERIAL) {
+                else if (data->type == MATERIAL) {
                     //check which entity the mouse is current at when item is dropped
                     Engine::UUID temp = COLOURPICKER.ColorPickingMeshs(EditorCam);
 
@@ -316,6 +318,7 @@ void EditorScene::SceneView()
                     }
                 }
 
+               
                 //add other file types here              
             }
             ImGui::EndDragDropTarget();

@@ -295,7 +295,7 @@ void EditorBehaviourTreeEditor::DrawNode(Node& node) {
     ImGui::Text("<- Input");
     ed::EndPin();
 
-    AddSpacing(10.f);
+    AddSpacing(5.f);
 
     ed::BeginPin(node.outputPinId, ed::PinKind::Output);
     ImGui::Text("Output ->");

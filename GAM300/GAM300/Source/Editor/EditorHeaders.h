@@ -49,9 +49,9 @@ struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
 
-    std::string name;
     Engine::HexID guid;
     filetype type;
+    char* name;
 };
 
 struct BaseCamera;
@@ -173,7 +173,7 @@ public:
 
     Engine::HexID selectedAss;
 
-    bool payload_set;
+    bool setPayload;
 
 private:
     std::filesystem::path currentDirectory;
@@ -219,6 +219,7 @@ public:
     Transform multiTransform; 
     MeshRenderer multiMeshRenderer;
     bool useMeshRenderer = true;
+
 
 private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
