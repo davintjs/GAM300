@@ -151,6 +151,9 @@ namespace BeanFactory
         public static extern void EnableSFX(bool toggle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMasterVolume(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

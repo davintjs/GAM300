@@ -130,6 +130,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+
+	static void SetMasterVolume(bool toggle) { // toggle for now, change to float when ready
+		AUDIOMANAGER.SetMasterVolume(float(toggle));
+	}
+
 	static void StopMusic(float fade = 1.f) {
 		AUDIOMANAGER.StopMusic(fade);
 	}
@@ -146,6 +151,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			AUDIOMANAGER.PauseLoopFX();
 		}
 	}
+
+
 #pragma endregion
 
 #pragma region ANIMATOR
