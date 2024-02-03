@@ -38,28 +38,33 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 namespace
 {
 	template <typename T>
-	glm::mat4 GetColliderLocalTransform(T& col)
+	glm::mat4 GetColliderLocalTransform(const T& col)
 	{
 		return glm::mat4();
 	}
 
 	template <>
-	glm::mat4 GetColliderLocalTransform<BoxCollider>(BoxCollider& boxCol)
+	glm::mat4 GetColliderLocalTransform<BoxCollider>(const BoxCollider& boxCol)
 	{
 		return Transform::CreateTransformationMtx(boxCol.offset, vec3(0), (glm::vec3)boxCol.dimensions/2.f);
 	}
 
 	template <>
-	glm::mat4 GetColliderLocalTransform<SphereCollider>(SphereCollider& sphereCol)
+	glm::mat4 GetColliderLocalTransform<SphereCollider>(const SphereCollider& sphereCol)
 	{
-		return Transform::CreateTransformationMtx(sphereCol.offset, vec3(0), vec3(1));
+		return Transform::CreateTransformationMtx(sphereCol.offset, vec3(0), vec3(sphereCol.radius));
+	}
+
+	template <>
+	glm::mat4 GetColliderLocalTransform<CapsuleCollider>(const CapsuleCollider& capsuleCol)
+	{
+		return Transform::CreateTransformationMtx(vec3(0), vec3(0), vec3(capsuleCol.radius));
 	}
 
 
 
-
 	template <typename T>
-	glm::mat4 GetColliderGlobalTransform(Transform& transform, T& col)
+	glm::mat4 GetColliderGlobalTransform(const Transform& transform, const  T& col)
 	{
 		return transform.GetWorldMatrix() * GetColliderLocalTransform<T>(col);
 	}
@@ -133,6 +138,7 @@ namespace
 			return;
 		UpdateBodyTransform(scene, entity, t, bid, bodyInterface, ColliderComponentTypes());
 	}
+
 }
 
 void PhysicsSystem::Init() 
@@ -166,15 +172,11 @@ void PhysicsSystem::PostSubscription()
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 }
 
-void PhysicsSystem::Update(float dt) {
 
-	if (!physicsSystem)
-		return;
-
-	// Update positions, linear velocity of bodies so that any scripting logic is applied for the physics simulation
+void PhysicsSystem::UpdateJoltTransforms()
+{
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
-
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		if (!it.IsActive())
 		{
@@ -215,19 +217,16 @@ void PhysicsSystem::Update(float dt) {
 			if (lock.Succeeded())
 			{
 				const JPH::Body& body = lock.GetBody();
-
 				if (body.IsActive() && !body.IsStatic()) {
-					//PRINT("deactivating a body\n");
 					lock.ReleaseLock();
 					bodyInterface->DeactivateBody(tmpBID);
-					//std::cout << "num active bodies: " << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << '\n';
-
 				}
 
 			}
 
 		}
 	}
+
 	auto& ccArray = scene.GetArray<CharacterController>();
 	int j = 0;
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
@@ -235,7 +234,6 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBid{ cc.bid };
 
 		Transform& t = scene.Get<Transform>(cc);
-		//JPH::RVec3 scale;
 		JPH::RVec3 pos;
 		Vector3 tpos = t.GetGlobalTranslation();
 		GlmVec3ToJoltVec3(tpos, pos);
@@ -251,6 +249,15 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetLinearVelocity(tmpBid, velocity);
 		++j;
 	}
+}
+
+
+void PhysicsSystem::Update(float dt) {
+
+	if (!physicsSystem)
+		return;
+
+	UpdateJoltTransforms();
 	
 	// Fixed time steps
 	if (physicsSystem) {
@@ -258,17 +265,13 @@ void PhysicsSystem::Update(float dt) {
 		float fixedDt = (float)MyFrameRateController.GetFixedDt();
 		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
 		{
-
 			PrePhysicsUpdate(dt);
 			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
 			step++;
-			//std::cout << "num active bodies after update: " << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << '\n';
-
 		}
 	}
 
 	PostPhysicsUpdate();
-
 }
 void PhysicsSystem::Exit() {
 
@@ -1014,17 +1017,15 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	}
 
 	// Transform
-	JPH::RVec3 scale;
-	JPH::RVec3 pos;
-	JPH::Quat rot;
+	Vector3 scale;
+	Vector3 pos;
+	Vector3 rot;
+	glm::quat rotQuat;
 
-	Vector3 tpos = t.GetGlobalTranslation();
-	GlmVec3ToJoltVec3(tpos, pos);
+	JPH::Vec3 jphScale;
+	JPH::Vec3 jphPos;
+	JPH::Quat jphRot;
 
-	Vector3 trot = t.GetGlobalRotation();
-	GlmVec3ToJoltQuat(trot, rot);
-
-	Vector3 tscale = t.GetGlobalScale();
 
 	// Linear + Angular Velocity
 	JPH::RVec3 linearVel;
@@ -1043,52 +1044,49 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	if (rb.is_trigger)
 		motionType = JPH::EMotionType::Kinematic;
 
+	JPH::ConvexShape * shape = nullptr;
+	glm::mat4 transMtx{};
+
 	// Create rigidbody's collider shape
 	if (scene.Has<BoxCollider>(entity)) {
-
 		BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
 
-		glm::mat4 boxTransMtx = GetColliderGlobalTransform(t, boxCollider);
+		transMtx = GetColliderGlobalTransform(t, boxCollider);
 
-		Transform::Decompose(boxTransMtx, (Vector3&)pos, (glm::quat&)rot, (Vector3&)scale);
+		Transform::Decompose(transMtx, pos, rotQuat, scale);
+		GlmVec3ToJoltVec3(scale, jphScale);
 
-		JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
-
+		shape = new JPH::BoxShape(jphScale);
 	}
 	else if (scene.Has<SphereCollider>(entity)) {
-
 		SphereCollider& sc = scene.Get<SphereCollider>(entity);
 
-		// Calculate sphere collider radius
-		float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * sc.radius;
+		transMtx = GetColliderGlobalTransform(t, sc);
 
-		// Account for offset to get final position of collider
-		Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
-		GlmVec3ToJoltVec3(finalPos, pos);
+		Transform::Decompose(transMtx, pos, rotQuat, scale);
+		GlmVec3ToJoltVec3(scale, jphScale);
 
-		JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape( radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-		SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
-		
+		shape = new JPH::SphereShape(jphScale[jphScale.GetLowestComponentIndex()]);
 	}
 	else if (scene.Has<CapsuleCollider>(entity)) {
-
-
 		CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 
-		float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * cc.radius;
-		float offset = 0.5f * (tscale.y * cc.height) - radius;
-		if (offset <= 0.0f) {
-			JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
-		}
-		else {
-			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
-		}
+		transMtx = GetColliderGlobalTransform(t, cc);
 
+		Transform::Decompose(transMtx, pos, rotQuat, scale);
+		GlmVec3ToJoltVec3(scale, jphScale);
+
+		float radius = jphScale[jphScale.GetLowestComponentIndex()];
+		float offset = 0.5f * (jphScale.GetY() * cc.height) - radius;
+		if (offset <= 0.0f)
+			shape = new JPH::CapsuleShape(offset, radius);
+		else
+			shape = new JPH::SphereShape(radius);
 	}
-
+	GlmVec3ToJoltVec3(pos, jphPos);
+	GlmVec3ToJoltQuat(rot, jphRot);
+	JPH::BodyCreationSettings bodyCreationSettings(shape, jphPos, jphRot, motionType, EngineObjectLayers::DYNAMIC);
+	SetBodyCreationSettings(bodyCreationSettings, rb, enabledStatus);
 }
 
 // Create and add a Jolt Character to a Jolt physics system using a character controller
@@ -1183,7 +1181,7 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	JPH::Body* body = bodyInterface->CreateBody(bcs);
 	bodyInterface->AddBody(body->GetID(), enabledStatus);
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
-	std::cout << "add\n";
+	//std::cout << "add\n";
 }
 
 EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
@@ -1343,7 +1341,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	//std::cout << vp2.x << "|" << vp2.y << "|" << vp2.z << std::endl;
 
 
-	std::cout << "Contact Added\n";
+	//std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
 {
