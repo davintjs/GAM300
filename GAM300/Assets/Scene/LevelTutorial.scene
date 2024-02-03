@@ -236,7 +236,7 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 2866402867161245437}
-    - {fileID: 4490157770252088129}
+    - {fileID: 9228689185262017297}
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
     - {fileID: 3827453200974574750}
@@ -249,10 +249,12 @@ Transform:
     - {fileID: 1953613848853671180}
     - {fileID: 3925618525247661714}
     - {fileID: 11966624967280915999}
+    - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
+    - {fileID: 13993313988089347944}
     - {fileID: 1370432261870288088}
-    - {fileID: 6364420056334471666}
-    - {fileID: 744309730467464853}
+    - {fileID: 12478379518054110186}
+    - {fileID: 14449198235318879022}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -422,7 +424,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4727211310239832721}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15888339399562958253
 GameObject:
@@ -476,7 +478,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3338797733835495830}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3402404227458735166
 GameObject:
@@ -503,7 +505,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3402404227458735166}
   m_IsEnabled: true
   Mesh: {guid: d6756e021ee67db05690c9a63e307d53}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6115253184834322446
 GameObject:
@@ -638,7 +640,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11557482832436727801}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5011809292540148907
 GameObject:
@@ -665,7 +667,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5011809292540148907}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11032129156127377953
 GameObject:
@@ -692,7 +694,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11032129156127377953}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 13165177999647246591
 GameObject:
@@ -1112,7 +1114,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3875289601262731945}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6302196139992055394
 GameObject:
@@ -1139,7 +1141,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6302196139992055394}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12272765588456044186
 GameObject:
@@ -1166,7 +1168,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12272765588456044186}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4615018922041436064
 GameObject:
@@ -1193,7 +1195,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4615018922041436064}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7534029607925810271
 GameObject:
@@ -1220,7 +1222,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7534029607925810271}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14203609952028334982
 GameObject:
@@ -1247,7 +1249,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14203609952028334982}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7454416025575751350
 GameObject:
@@ -1274,7 +1276,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7454416025575751350}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6258148344773628143
 GameObject:
@@ -1301,7 +1303,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6258148344773628143}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17613488728668006526
 GameObject:
@@ -1328,7 +1330,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17613488728668006526}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12695718726366293092
 GameObject:
@@ -1355,7 +1357,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12695718726366293092}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15908728268942061574
 GameObject:
@@ -1382,7 +1384,7 @@ MeshRenderer:
   m_GameObject: {fileID: 15908728268942061574}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5486736581823025508
 GameObject:
@@ -1409,7 +1411,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5486736581823025508}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3663032058358516979
 GameObject:
@@ -1463,7 +1465,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11328877177303400997}
   m_IsEnabled: true
   Mesh: {guid: 89cc4c290e981379bd5567c463ab76f8}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11328535683758388938
 GameObject:
@@ -1517,7 +1519,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11780219621197702421}
   m_IsEnabled: true
   Mesh: {guid: 89cc4c290e981379bd5567c463ab76f8}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 18428857408277762475
 GameObject:
@@ -1734,7 +1736,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14754158086681804864}
   m_IsEnabled: true
   Mesh: {guid: 24ce6d0f6c97e6822bffe06dc3b7002f}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1441979967441514916
 GameObject:
@@ -1900,7 +1902,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9399983870194818556}
   m_IsEnabled: true
   Mesh: {guid: 24ce6d0f6c97e6822bffe06dc3b7002f}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2659036219560662535
 GameObject:
@@ -1981,7 +1983,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5030982100163591204}
   m_IsEnabled: true
   Mesh: {guid: 24ce6d0f6c97e6822bffe06dc3b7002f}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6681516564155916168
 GameObject:
@@ -2008,7 +2010,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6681516564155916168}
   m_IsEnabled: true
   Mesh: {guid: 24ce6d0f6c97e6822bffe06dc3b7002f}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9255149746654531039
 GameObject:
@@ -2035,7 +2037,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9255149746654531039}
   m_IsEnabled: true
   Mesh: {guid: d6756e021ee67db05690c9a63e307d53}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5025623941086040110
 GameObject:
@@ -2113,6 +2115,25 @@ BoxCollider:
   m_IsEnabled: true
   Dimensions: [4.99992275, 7.99987793, 1.89762938]
   Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
+---
+ID: 9228689185262017297
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7703386193870090189}  # Transform
+---
+ID: 7703386193870090189
+Transform:
+  m_GameObject: {fileID: 9228689185262017297}
+  Translation: [-0.74000001, 0.802999973, 1]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 744309730467464853}
 ---
 ID: 6847503617641207406
 GameObject:
@@ -2385,6 +2406,7 @@ Script:
   modelOffset: {fileID: 17589645519894896830}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 2826765051149347733}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 3574560937881504822
@@ -2527,7 +2549,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4624265677693832930}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5883668523768127231
 GameObject:
@@ -2554,7 +2576,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5883668523768127231}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 679965704935366267
 GameObject:
@@ -2581,7 +2603,7 @@ MeshRenderer:
   m_GameObject: {fileID: 679965704935366267}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4598230624212341242
 GameObject:
@@ -2608,7 +2630,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4598230624212341242}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14400769786481626196
 GameObject:
@@ -2635,7 +2657,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14400769786481626196}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14010762452894991866
 GameObject:
@@ -2662,7 +2684,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14010762452894991866}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2164203955603766787
 GameObject:
@@ -2744,7 +2766,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8985890843843392149}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10103032361295668060
 GameObject:
@@ -2881,7 +2903,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16964566506227542774}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1099047308568887135
 GameObject:
@@ -2908,7 +2930,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1099047308568887135}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3946649315089659856
 GameObject:
@@ -3100,7 +3122,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10164925463718054382}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7732037643818576522
 GameObject:
@@ -3127,7 +3149,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7732037643818576522}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14674711971978662180
 GameObject:
@@ -3154,7 +3176,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14674711971978662180}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5948663557737198633
 GameObject:
@@ -3401,7 +3423,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1451283987598262795}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 717043571456212302
 GameObject:
@@ -3428,7 +3450,7 @@ MeshRenderer:
   m_GameObject: {fileID: 717043571456212302}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14057661273607840305
 GameObject:
@@ -3455,7 +3477,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14057661273607840305}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14832898327348123222
 GameObject:
@@ -3482,7 +3504,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14832898327348123222}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 16996186959079397412
 GameObject:
@@ -3536,7 +3558,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9384930060106898385}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12525360478870250786
 GameObject:
@@ -3591,7 +3613,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5539496893031169096}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15383609770173019326
 GameObject:
@@ -3673,7 +3695,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17646657925068029592}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15796577042635324837
 GameObject:
@@ -3689,7 +3711,7 @@ ID: 16518497249978237039
 Transform:
   m_GameObject: {fileID: 15796577042635324837}
   Translation: [0, 0, 0]
-  Rotation: [0, -0.000345230103, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.99999994, 1, 0.99999994]
   Father: {fileID: 14695238490305411436}
   m_Children:
@@ -3754,7 +3776,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1619203534655172075}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14346825368591048217
 GameObject:
@@ -3809,7 +3831,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16832907011927571488}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 16068505130074627781
 GameObject:
@@ -3890,7 +3912,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13427243197272666654}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1848296272677763511
 GameObject:
@@ -3945,7 +3967,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13546472715897547781}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2800835739241998303
 GameObject:
@@ -3961,7 +3983,7 @@ ID: 11876365260238071877
 Transform:
   m_GameObject: {fileID: 2800835739241998303}
   Translation: [-9.53674316e-07, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000012, 1, 1.00000012]
   Father: {fileID: 1848296272677763511}
   m_Children:
@@ -4026,7 +4048,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7872088272573019534}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11919372620919920390
 GameObject:
@@ -4053,7 +4075,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11919372620919920390}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 13198110296894116060
 GameObject:
@@ -4134,7 +4156,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8243950593220928348}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5717303940666569152
 GameObject:
@@ -4215,7 +4237,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5255397973729929574}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10874319946974764108
 GameObject:
@@ -4242,7 +4264,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10874319946974764108}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12480365776180462394
 GameObject:
@@ -4296,7 +4318,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1044297866541761910}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4401620325936123533
 GameObject:
@@ -4377,7 +4399,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12683906572327421346}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17940407745260815642
 GameObject:
@@ -4404,7 +4426,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17940407745260815642}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7435428582177771618
 GameObject:
@@ -4512,7 +4534,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13249227408695099504}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7064689604205268886
 GameObject:
@@ -4539,7 +4561,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7064689604205268886}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1881208155517057134
 GameObject:
@@ -4566,7 +4588,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1881208155517057134}
   m_IsEnabled: true
   Mesh: {guid: 76b2454cf08ecd5d7b849ef964b77140}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8795186381500376682
 GameObject:
@@ -4648,7 +4670,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8747546244821421955}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12515846148885956186
 GameObject:
@@ -4785,7 +4807,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13409404897453966863}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8222888917149037599
 GameObject:
@@ -4812,7 +4834,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8222888917149037599}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12744550468919935344
 GameObject:
@@ -5004,7 +5026,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3104057963124428885}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12676710172052394356
 GameObject:
@@ -5031,7 +5053,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12676710172052394356}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14901049276030354487
 GameObject:
@@ -5058,7 +5080,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14901049276030354487}
   m_IsEnabled: true
   Mesh: {guid: d7c10369f4462d47fd7f392588e5a92b}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7813049314433227167
 GameObject:
@@ -5112,7 +5134,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12166358881111758954}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6335903736016929905
 GameObject:
@@ -5166,7 +5188,7 @@ MeshRenderer:
   m_GameObject: {fileID: 15126859005893747461}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9277963176172794175
 GameObject:
@@ -5351,7 +5373,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3522251891443909561}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14700994233679848133
 GameObject:
@@ -5459,7 +5481,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17541696418435244360}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 13385808514286287486
 GameObject:
@@ -5575,7 +5597,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6117256319108626048}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1249265196707790764
 GameObject:
@@ -5629,7 +5651,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5145323738276068714}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 13628489513304251569
 GameObject:
@@ -5980,7 +6002,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17965350695247255286}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2034444609224034131
 GameObject:
@@ -6007,7 +6029,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2034444609224034131}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17036406253267819684
 GameObject:
@@ -6034,7 +6056,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17036406253267819684}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6246520863902630692
 GameObject:
@@ -6061,7 +6083,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6246520863902630692}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2192591855247491201
 GameObject:
@@ -6088,7 +6110,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2192591855247491201}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7590648381647264316
 GameObject:
@@ -6115,7 +6137,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7590648381647264316}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9112851053562257130
 GameObject:
@@ -6142,7 +6164,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9112851053562257130}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3906912234658209341
 GameObject:
@@ -6169,7 +6191,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3906912234658209341}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10368030307665964752
 GameObject:
@@ -6196,7 +6218,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10368030307665964752}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11005694463457091282
 GameObject:
@@ -6223,7 +6245,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11005694463457091282}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9819480553251960422
 GameObject:
@@ -6250,7 +6272,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9819480553251960422}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12537896162991611893
 GameObject:
@@ -6277,7 +6299,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12537896162991611893}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15297118125039988537
 GameObject:
@@ -6331,7 +6353,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1376916462172495383}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8077100623912244182
 GameObject:
@@ -6412,7 +6434,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10958732700048131059}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2086631928754012218
 GameObject:
@@ -6439,7 +6461,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2086631928754012218}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 16151418268757025182
 GameObject:
@@ -6699,9 +6721,9 @@ GameObject:
 ID: 11990724118226698982
 Transform:
   m_GameObject: {fileID: 2140330462846766085}
-  Translation: [-20.0256901, -0.446582794, -23.623518]
-  Rotation: [0.286845922, 0, 0]
-  Scale: [4.74365282, 0.999997854, 8.68052292]
+  Translation: [-20.1366978, -0.446582794, -23.623518]
+  Rotation: [0.286845952, 0, 0]
+  Scale: [4.74365282, 0.999997795, 8.68052292]
   Father: {fileID: 10998208615434921590}
   m_Children:
     []
@@ -6992,7 +7014,7 @@ ID: 16306292498899123012
 Transform:
   m_GameObject: {fileID: 10998208615434921590}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5366351962377905659}
   m_Children:
@@ -7993,7 +8015,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6414425657271701059}
   m_IsEnabled: true
   Mesh: {guid: d6756e021ee67db05690c9a63e307d53}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1394028230729158666
 GameObject:
@@ -8035,7 +8057,7 @@ ID: 11740609942162734084
 Transform:
   m_GameObject: {fileID: 8701853331577378169}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5342341385656655212}
   m_Children:
@@ -8205,7 +8227,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4230958715846264595}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12630588793680827410
 GameObject:
@@ -8310,7 +8332,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14862329532290523938}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6752246053692726658
 GameObject:
@@ -8415,7 +8437,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1613683359289405099}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12703932647996420026
 GameObject:
@@ -8496,7 +8518,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12250960634115189973}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9605661079073390682
 GameObject:
@@ -8573,7 +8595,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10834837868345684089}
   m_IsEnabled: true
   Mesh: {guid: 504aa52eb20be542c9a493ccdc50cdc4}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3119860734494218304
 GameObject:
@@ -8650,7 +8672,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11546684700882403661}
   m_IsEnabled: true
   Mesh: {guid: 504aa52eb20be542c9a493ccdc50cdc4}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9654120388744522591
 GameObject:
@@ -8728,7 +8750,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14533807616142721670}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17710392961296393831
 GameObject:
@@ -8782,7 +8804,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9909188786157298422}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5479077555226678865
 GameObject:
@@ -8887,7 +8909,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9339730042853617092}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8844477157591169003
 GameObject:
@@ -8992,7 +9014,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2448945957099902706}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12135532400838651550
 GameObject:
@@ -9097,7 +9119,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7302485933239107399}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10008824614181879796
 GameObject:
@@ -9178,7 +9200,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2625801538082524949}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4423372801228798985
 GameObject:
@@ -9232,7 +9254,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1610947561634439664}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8537150813031819036
 GameObject:
@@ -9310,7 +9332,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14196523319249137487}
   m_IsEnabled: true
   Mesh: {guid: 83feb8d9b6fe1560487cf4c033fdc492}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 143714802821733095
 GameObject:
@@ -9364,7 +9386,7 @@ MeshRenderer:
   m_GameObject: {fileID: 18404720669734062358}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17513080989440410080
 GameObject:
@@ -9441,7 +9463,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6808686053552425987}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4021303591522537242
 GameObject:
@@ -9495,7 +9517,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5275559808892267717}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17551185539749227568
 GameObject:
@@ -9577,7 +9599,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11846317419929638802}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 680533606041003977
 GameObject:
@@ -9631,7 +9653,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12579460161423560325}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11387215596428988714
 GameObject:
@@ -9685,7 +9707,7 @@ MeshRenderer:
   m_GameObject: {fileID: 344398590559892255}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5108893418192304214
 GameObject:
@@ -9739,7 +9761,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17762993347328076430}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14305529495330412174
 GameObject:
@@ -9793,7 +9815,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10285335413369158026}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 816073881030457996
 GameObject:
@@ -9875,7 +9897,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2963260341693372226}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3560472331877631264
 GameObject:
@@ -9919,7 +9941,7 @@ ID: 4717872948705174135
 Transform:
   m_GameObject: {fileID: 14474935979191972552}
   Translation: [0, -7.62939453e-06, 3.81469727e-06]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000131, 1, 1.00000119]
   Father: {fileID: 3560472331877631264}
   m_Children:
@@ -9957,7 +9979,7 @@ MeshRenderer:
   m_GameObject: {fileID: 165878797477073158}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5254873738293870979
 GameObject:
@@ -10039,7 +10061,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16883124006138906685}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10415847607219727370
 GameObject:
@@ -10140,7 +10162,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17318019145577874747}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5599669513113463632
 GameObject:
@@ -10222,7 +10244,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12655433972071823744}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10099624195442274089
 GameObject:
@@ -10304,7 +10326,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1118932754568882900}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17949790532302430306
 GameObject:
@@ -10386,7 +10408,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14757341024878966925}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6911285318009991352
 GameObject:
@@ -10468,7 +10490,7 @@ MeshRenderer:
   m_GameObject: {fileID: 18080210657403884765}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10255983232416815995
 GameObject:
@@ -10546,7 +10568,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11821148061937335486}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4461622114544859162
 GameObject:
@@ -10650,7 +10672,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6565269216918593238}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1808071620702146443
 GameObject:
@@ -10704,7 +10726,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9430656991372262778}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7238187091338650676
 GameObject:
@@ -10758,7 +10780,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17521045435972000184}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11348232323442076186
 GameObject:
@@ -10812,7 +10834,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14502940463278445043}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4368840755312913070
 GameObject:
@@ -10866,7 +10888,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13079508926618080952}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 16738375863286542569
 GameObject:
@@ -10920,7 +10942,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13366542813927007570}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 13087879660564319010
 GameObject:
@@ -10974,7 +10996,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2578659977802441128}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9928531127088687855
 GameObject:
@@ -11028,7 +11050,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16929961266483466822}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5598533014889482316
 GameObject:
@@ -11082,7 +11104,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5210926074018138939}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5342341385656655212
 GameObject:
@@ -11157,7 +11179,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14356497665342915543}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14092934376519335738
 GameObject:
@@ -11211,7 +11233,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1794775946083750869}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6114433046832618349
 GameObject:
@@ -11238,7 +11260,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6114433046832618349}
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2390087278609519044
 GameObject:
@@ -11319,7 +11341,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7372011544351505783}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5620146544089966174
 GameObject:
@@ -11373,7 +11395,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5569385155626639479}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6914412646375680759
 GameObject:
@@ -11427,7 +11449,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13259568571877131111}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2960608298331768514
 GameObject:
@@ -11481,7 +11503,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9249303171165867598}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4060621067760633829
 GameObject:
@@ -11535,7 +11557,7 @@ MeshRenderer:
   m_GameObject: {fileID: 2764203858011775657}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7767185065212578595
 GameObject:
@@ -11589,7 +11611,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1916798143870009475}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14901801198090768630
 GameObject:
@@ -11643,7 +11665,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11819903582906378735}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14242016621748025125
 GameObject:
@@ -11697,7 +11719,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1411510460848068960}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10200379991897450049
 GameObject:
@@ -11751,7 +11773,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8616662498438671346}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11500666045453601179
 GameObject:
@@ -11805,7 +11827,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1756447309968196971}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7926377388103741377
 GameObject:
@@ -11859,7 +11881,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17198149245489567356}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4178068731016754182
 GameObject:
@@ -11913,7 +11935,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13509877452604674276}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15521626501906400691
 GameObject:
@@ -11967,7 +11989,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14503849665283211555}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17374434327060195124
 GameObject:
@@ -12021,7 +12043,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17547185968701206130}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 883435849511948444
 GameObject:
@@ -12075,7 +12097,7 @@ MeshRenderer:
   m_GameObject: {fileID: 866663091420343841}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 844236223186479458
 GameObject:
@@ -12129,7 +12151,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16555229688038687212}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 16968244135856834379
 GameObject:
@@ -12183,7 +12205,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10740552412621569899}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 87465416025566901
 GameObject:
@@ -12237,7 +12259,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13627694674237271995}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 3008049630033293871
 GameObject:
@@ -12314,7 +12336,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7395178916672571311}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 769329147301760830
 GameObject:
@@ -12391,7 +12413,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8165140262813524124}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4377640290721114999
 GameObject:
@@ -12468,7 +12490,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8154724984552472556}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4490157770252088129
 GameObject:
@@ -12483,10 +12505,10 @@ GameObject:
 ID: 1190925597282428397
 Transform:
   m_GameObject: {fileID: 4490157770252088129}
-  Translation: [-0.760999978, 0.796000004, 4]
-  Rotation: [3.12413883, 0, 0]
-  Scale: [0.100000001, 0.0249992516, 0.999963701]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0.118000001, 0, 1]
+  Rotation: [3.13984704, 0, 0]
+  Scale: [0.138999999, 0.0250000004, 1.00011444]
+  Father: {fileID: 744309730467464853}
   m_Children:
     []
 ---
@@ -12709,7 +12731,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1073.87402
+  LookAtDistance: 1133.47473
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12807,12 +12829,12 @@ Script:
   currentDashAttackCooldown: 0
   MoveSpeed: 400
   overDriveCooldown: 6
-  dashAttackSpeed: 50
+  dashAttackSpeed: 10
   JumpSpeed: 7
   dashAttackCooldown: 1.5
   sprintModifier: 1.29999995
   maxHealth: 4
-  dodgeSpeed: 5
+  dodgeSpeed: 10
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.100000001
@@ -12850,9 +12872,9 @@ Script:
   maxColliderDist: 1.5
   timeBeforeRegen: 1
   regenRate: 60
-  dashAttackStamina: 30
-  jumpStamina: 10
-  attackStamina: 0
+  dashAttackStamina: 15
+  jumpStamina: 0
+  attackStamina: 5
   attack2duration: 0.600000024
   dodgeStamina: 20
   currentAnimationTimer: 0
@@ -12861,6 +12883,7 @@ Script:
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   CC: {fileID: 15939117778428800744}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
+  staminaBar: {fileID: 744309730467464853}  # Component
   PlayerCamera: {fileID: 15334681090738628473}  # Component
   overDriveCollider: {fileID: 17412142376824622519}  # GameObject
   PlayerModel: {fileID: 1051037936027593321}  # Component
@@ -12873,6 +12896,7 @@ Script:
   terminal2: {fileID: 11931344363477315440}  # Component
   doorTestMesh: {fileID: 0}
   healthBarFill: {fileID: 6364420056334471666}  # GameObject
+  healthBar: {fileID: 4225260783100130983}  # Component
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   staminaBarFill: {fileID: 4490157770252088129}  # GameObject
   staminaBarPos: {fileID: 744309730467464853}  # Component
@@ -13066,7 +13090,7 @@ ID: 11229029187053974678
 Transform:
   m_GameObject: {fileID: 10043862070951656136}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 13118126822589154153}
   m_Children:
@@ -13104,7 +13128,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11164497988685149798}
   m_IsEnabled: true
   Mesh: {guid: 3b4c597fc167a68d46ae8b834cc02307}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 14858608542651000611
 GameObject:
@@ -13131,7 +13155,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14858608542651000611}
   m_IsEnabled: true
   Mesh: {guid: 5f004afd6c295555153140656c9a8ab8}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 18443479616549604882
 GameObject:
@@ -13634,7 +13658,7 @@ MeshRenderer:
   m_GameObject: {fileID: 12489966576459697476}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11346677329052306199
 GameObject:
@@ -13742,7 +13766,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16355899810807534577}
   m_IsEnabled: true
   Mesh: {guid: 433305f7c6c7befb6a89fc2c06a08532}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 18032197038813803347
 GameObject:
@@ -13796,7 +13820,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16497199996454477727}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 1457302352973908956
 GameObject:
@@ -13850,7 +13874,7 @@ MeshRenderer:
   m_GameObject: {fileID: 18419017708627794884}
   m_IsEnabled: true
   Mesh: {guid: c93627cadc98c63888410256c6a4adf7}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10374873119616508039
 GameObject:
@@ -13906,7 +13930,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11734927061447585129}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15866016608993052740
 GameObject:
@@ -14016,7 +14040,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16077048242391263753}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 2554549885490669963
 GameObject:
@@ -14126,7 +14150,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14633329488941313652}
   m_IsEnabled: true
   Mesh: {guid: 90759790cdd87592d6bb368e542f5d82}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11320110582193661742
 GameObject:
@@ -14234,7 +14258,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11082420942022127595}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4034790136601962726
 GameObject:
@@ -14288,7 +14312,7 @@ MeshRenderer:
   m_GameObject: {fileID: 18047199262373870486}
   m_IsEnabled: true
   Mesh: {guid: 433305f7c6c7befb6a89fc2c06a08532}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 4083434654028900783
 GameObject:
@@ -14342,7 +14366,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5292792070286950095}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15803862437894805536
 GameObject:
@@ -14398,7 +14422,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11902319183017781760}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11014431307198402702
 GameObject:
@@ -14508,7 +14532,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3026632935117380111}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7388636982969088130
 GameObject:
@@ -14618,7 +14642,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1112314313441685916}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 9604560452830552932
 GameObject:
@@ -14726,7 +14750,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11700771055975113384}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8711568828132575625
 GameObject:
@@ -14780,7 +14804,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17764381736425595775}
   m_IsEnabled: true
   Mesh: {guid: 433305f7c6c7befb6a89fc2c06a08532}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 18303507833945810789
 GameObject:
@@ -14836,7 +14860,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9126969737838046265}
   m_IsEnabled: true
   Mesh: {guid: 90759790cdd87592d6bb368e542f5d82}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 164357253506110261
 GameObject:
@@ -14946,7 +14970,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16628375251533664646}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15344517626993614731
 GameObject:
@@ -15054,7 +15078,7 @@ MeshRenderer:
   m_GameObject: {fileID: 15043363743367100084}
   m_IsEnabled: true
   Mesh: {guid: 433305f7c6c7befb6a89fc2c06a08532}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8899720525091409013
 GameObject:
@@ -15108,7 +15132,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9118899799606365793}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15481636715623365390
 GameObject:
@@ -15162,7 +15186,7 @@ MeshRenderer:
   m_GameObject: {fileID: 118113333493905260}
   m_IsEnabled: true
   Mesh: {guid: 433305f7c6c7befb6a89fc2c06a08532}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12400305330607838571
 GameObject:
@@ -15218,7 +15242,7 @@ MeshRenderer:
   m_GameObject: {fileID: 15211679148070233033}
   m_IsEnabled: true
   Mesh: {guid: ca3cff267ecdd811335b5583a67e188d}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 17512257194448831569
 GameObject:
@@ -15234,7 +15258,7 @@ ID: 7810380001880227918
 Transform:
   m_GameObject: {fileID: 17512257194448831569}
   Translation: [7.62939453e-06, 0, -3.81469727e-06]
-  Rotation: [9.09494702e-13, 2.98023188e-08, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000012, 1, 1]
   Father: {fileID: 12400305330607838571}
   m_Children:
@@ -15326,7 +15350,7 @@ MeshRenderer:
   m_GameObject: {fileID: 10302430747708327776}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15806906999669578782
 GameObject:
@@ -15535,7 +15559,7 @@ Transform:
 ---
 ID: 13205461523405376336
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627)
   m_TagString: ""
   m_Layer: 0
@@ -15562,7 +15586,7 @@ MeshRenderer:
 ---
 ID: 17254093529953705875
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628)
   m_TagString: ""
   m_Layer: 0
@@ -15589,7 +15613,7 @@ MeshRenderer:
 ---
 ID: 16415768293130856210
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629)
   m_TagString: ""
   m_Layer: 0
@@ -16022,7 +16046,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7573364472142733165}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 7328944263752446106
 GameObject:
@@ -16047,7 +16071,7 @@ Transform:
 ---
 ID: 8370415163675668691
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16074,7 +16098,7 @@ MeshRenderer:
 ---
 ID: 9670403625460596022
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16101,7 +16125,7 @@ MeshRenderer:
 ---
 ID: 6360561650707867498
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16149,7 +16173,7 @@ Transform:
 ---
 ID: 5270388731237124701
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16176,7 +16200,7 @@ MeshRenderer:
 ---
 ID: 5716258948522411767
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16203,7 +16227,7 @@ MeshRenderer:
 ---
 ID: 585853501604749385
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -16303,7 +16327,7 @@ ID: 3556475773884428838
 Transform:
   m_GameObject: {fileID: 13087167792306809151}
   Translation: [0, -3.81469727e-06, 7.62939453e-06]
-  Rotation: [0, 0.000373620336, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000107, 1, 1.00000107]
   Father: {fileID: 3137428173896908051}
   m_Children:
@@ -16341,7 +16365,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1040729380011544908}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8195998143091088379
 GameObject:
@@ -16448,8 +16472,8 @@ GameObject:
 ID: 13373188585270318738
 Transform:
   m_GameObject: {fileID: 16740076942321656330}
-  Translation: [0, -0.850000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.5, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16503,8 +16527,8 @@ GameObject:
 ID: 6625356397320967961
 Transform:
   m_GameObject: {fileID: 11733672071644877139}
-  Translation: [0, -0.850000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.349999994, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16533,8 +16557,8 @@ GameObject:
 ID: 7476295874243819059
 Transform:
   m_GameObject: {fileID: 7012372586903751207}
-  Translation: [0, -0.850000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.25, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16563,8 +16587,8 @@ GameObject:
 ID: 17425439136219415660
 Transform:
   m_GameObject: {fileID: 1397792527501854904}
-  Translation: [0, -0.850000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.550000012, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16593,8 +16617,8 @@ GameObject:
 ID: 17869955248320907728
 Transform:
   m_GameObject: {fileID: 6586543693501608855}
-  Translation: [0, -0.850000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.550000012, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16623,8 +16647,8 @@ GameObject:
 ID: 6106577147750693818
 Transform:
   m_GameObject: {fileID: 7835293411479101006}
-  Translation: [0, -0.600000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.600000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.150000006, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -16653,8 +16677,8 @@ GameObject:
 ID: 10071358079469959902
 Transform:
   m_GameObject: {fileID: 15243324590400962737}
-  Translation: [0, -0.600000083, 0]
-  Rotation: [-3.14158487, 1.51788304e-18, 3.1415925]
+  Translation: [0, -0.600000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
   Scale: [-0.150000006, -0.0750000104, -0.25000003]
   Father: {fileID: 3827453200974574750}
   m_Children:
@@ -17228,9 +17252,9 @@ GameObject:
 ID: 16141717525383989037
 Transform:
   m_GameObject: {fileID: 17837455119039999797}
-  Translation: [-0.929799974, 0.857109547, 4.5]
-  Rotation: [3.14158487, 0, 3.14159274]
-  Scale: [-0.100000001, -0.120000005, -0.100000001]
+  Translation: [-0.929800034, 0.857109308, 4.5]
+  Rotation: [3.14158487, 0, -3.14159274]
+  Scale: [-0.0999999419, -0.120000005, -0.0999999344]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -17413,7 +17437,7 @@ Transform:
   Scale: [-0.0599999987, -0.100000001, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    - {fileID: 10673191397735378312}
+    []
 ---
 ID: 9429827192945704677
 SpriteRenderer:
@@ -17438,10 +17462,10 @@ GameObject:
 ID: 1051630031486288378
 Transform:
   m_GameObject: {fileID: 10673191397735378312}
-  Translation: [-0.900000572, -0.850000381, 6]
-  Rotation: [-3.14159274, 0, -3.14159274]
-  Scale: [-0.0399999991, -0.0500000007, -1]
-  Father: {fileID: 11966624967280915999}
+  Translation: [-0.893999994, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
   m_Children:
     []
 ---
@@ -17473,7 +17497,7 @@ Transform:
   Scale: [-0.0599999987, -0.100000001, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    - {fileID: 13993313988089347944}
+    []
 ---
 ID: 5378824823806842645
 SpriteRenderer:
@@ -17498,10 +17522,10 @@ GameObject:
 ID: 13691015580275777266
 Transform:
   m_GameObject: {fileID: 13993313988089347944}
-  Translation: [-0.75, -0.850000381, 6]
-  Rotation: [-3.14159274, 0, -3.14159274]
-  Scale: [-0.0399999991, -0.0500000007, -1]
-  Father: {fileID: 9691624766500435789}
+  Translation: [-0.748000026, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
   m_Children:
     []
 ---
@@ -17533,7 +17557,7 @@ Transform:
   Scale: [-0.0599999987, -0.100000001, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    - {fileID: 12478379518054110186}
+    []
 ---
 ID: 3686822582642055789
 SpriteRenderer:
@@ -17558,10 +17582,10 @@ GameObject:
 ID: 11083728837774791348
 Transform:
   m_GameObject: {fileID: 12478379518054110186}
-  Translation: [-0.600000381, -0.850000381, 6]
-  Rotation: [-3.14159274, 0, -3.14159274]
-  Scale: [-0.0399999991, -0.0500000007, -1]
-  Father: {fileID: 1370432261870288088}
+  Translation: [-0.600000024, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
   m_Children:
     []
 ---
@@ -17878,7 +17902,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9786157899763930318}
   m_IsEnabled: true
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 11236218761983007884
 GameObject:
@@ -17932,7 +17956,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1200561481499501026}
   m_IsEnabled: true
   Mesh: {guid: 7f6582b10c23373df8e3b1ea91922864}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12686675622707682081
 GameObject:
@@ -18095,7 +18119,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3040527939281749576}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 998622392607963897
 GameObject:
@@ -18149,7 +18173,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8836070440545840966}
   m_IsEnabled: true
   Mesh: {guid: ea20fb5504a821eb87b7dcf7f9ade998}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 5720587768149192616
 GameObject:
@@ -18231,7 +18255,7 @@ MeshRenderer:
   m_GameObject: {fileID: 4687130536825772764}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 12021609195616173519
 GameObject:
@@ -18308,7 +18332,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9636744355076846022}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 10239403197338088721
 GameObject:
@@ -19724,7 +19748,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7352175204428460860}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 15854388602861755
 GameObject:
@@ -19778,7 +19802,7 @@ MeshRenderer:
   m_GameObject: {fileID: 17177361763512194849}
   m_IsEnabled: true
   Mesh: {guid: 642c6b65437cd93480ad5e1f710c6d96}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 6364420056334471666
 GameObject:
@@ -19793,10 +19817,10 @@ GameObject:
 ID: 5321138544487017227
 Transform:
   m_GameObject: {fileID: 6364420056334471666}
-  Translation: [-0.650000036, 0.857109547, 3]
-  Rotation: [3.14158487, 0, 3.14159274]
-  Scale: [-0.200000003, -0.0350000001, -1]
-  Father: {fileID: 4212138099454399691}
+  Translation: [33.743, 0, 3]
+  Rotation: [3.14158463, 0, 0]
+  Scale: [32, 3.1500001, 1]
+  Father: {fileID: 4225260783100130983}
   m_Children:
     []
 ---
@@ -19822,12 +19846,12 @@ GameObject:
 ID: 12626457545720230316
 Transform:
   m_GameObject: {fileID: 744309730467464853}
-  Translation: [-0.864000022, 0.796000004, 1.93912086e-08]
+  Translation: [-0.119999997, -0.0070002079, 1]
   Rotation: [0, 0, 0]
-  Scale: [0.286999941, 0.100000001, 0.999999762]
-  Father: {fileID: 4212138099454399691}
+  Scale: [1, 1, 0.999999762]
+  Father: {fileID: 9228689185262017297}
   m_Children:
-    []
+    - {fileID: 4490157770252088129}
 ---
 ID: 7840101573053260112
 GameObject:
@@ -20142,3 +20166,41 @@ LightSource:
   Inner Cutoff: 50
   Outer Cutoff: 70
   Color: [0.999899983, 1, 0.999902189]
+---
+ID: 14449198235318879022
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerHealthBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7317771943282133288}  # Transform
+---
+ID: 7317771943282133288
+Transform:
+  m_GameObject: {fileID: 14449198235318879022}
+  Translation: [-0.680000007, 0.850000024, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.00600000005, 0.0109999999, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 4225260783100130983}
+---
+ID: 4225260783100130983
+GameObject:
+  m_IsActive: true
+  m_Name: playerHealthBarPos
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12135476171363096551}  # Transform
+---
+ID: 12135476171363096551
+Transform:
+  m_GameObject: {fileID: 4225260783100130983}
+  Translation: [-28.3920002, 0.828999996, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14449198235318879022}
+  m_Children:
+    - {fileID: 6364420056334471666}
