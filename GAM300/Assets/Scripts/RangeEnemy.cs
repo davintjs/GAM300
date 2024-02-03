@@ -98,7 +98,7 @@ public class RangeEnemy : Script
                 }
 
                 //player detection
-                if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
+                if (vec3.Distance(player.position, transform.position) <= chaseDistance)
                 {
                     if (navMeshtimer >= navMeshduration)
                     {
@@ -112,13 +112,13 @@ public class RangeEnemy : Script
             //chase state
             case 1:
                 //change to attack state once it has reach it is in range
-                if(vec3.Distance(player.localPosition, transform.localPosition) <= shootDistance)
+                if(vec3.Distance(player.position, transform.position) <= shootDistance)
                 {
                     state = 2;
                     shootCooldown = 0f;
                 }
                 //return to its starting position if player is far from its chaseDistance
-                if(vec3.Distance(player.localPosition, transform.localPosition) > chaseDistance)
+                if(vec3.Distance(player.position, transform.position) > chaseDistance)
                 {
                     //return back to its previous position state
                     state = 0;
@@ -152,7 +152,7 @@ public class RangeEnemy : Script
                         AudioManager.instance.rangeEnemyFiring.Play();
                     }
                     
-                    GameObject bulletPrefab = Instantiate(bullet, rangeEnemyPos.localPosition, rangeEnemyPos.localRotation);
+                    GameObject bulletPrefab = Instantiate(bullet, modelOffset.position, transform.rotation);
                     bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * bulletSpeed;
                     shootCooldown = 0;
                     if(shootCooldown == 0)
@@ -162,7 +162,7 @@ public class RangeEnemy : Script
                 }
                 LookAt(direction);
                 //change to chase state once player has reach out of range
-                if (vec3.Distance(player.localPosition, transform.localPosition) > shootDistance)
+                if (vec3.Distance(player.position, transform.position) > shootDistance)
                 {
                     state = 1;
                 }
@@ -198,7 +198,7 @@ public class RangeEnemy : Script
             return;
         float angle = (float)Math.Atan2(dir.x, dir.z);
         quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
-        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+        quat oldQuat = glm.FromEulerToQuat(transform.rotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
@@ -218,7 +218,7 @@ public class RangeEnemy : Script
             }
             if (!isNan)
             {
-                transform.localRotation = rot;
+                transform.rotation = rot;
             }
         }
     }
