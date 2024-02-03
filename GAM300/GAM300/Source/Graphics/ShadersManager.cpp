@@ -158,6 +158,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/Text.vert";
 	fragmentPath = shaderPath + "/Text.frag";
 	ShaderCompiler("Text SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/TextWorld.vert";
+	fragmentPath = shaderPath + "/TextWorld.frag";
+	ShaderCompiler("Text WORLD space SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

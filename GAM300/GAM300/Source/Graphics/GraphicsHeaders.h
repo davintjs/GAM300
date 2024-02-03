@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
+#include "Scene/Components.h"
 
 #define MAX_POINT_LIGHT 20
 #define MAX_SPOT_LIGHT 20
@@ -569,6 +570,13 @@ public:
 	void Exit();
 
 	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid);
+
+	void RenderTextFromString(TextRenderer const& text);
+
+	void RenderText_ScreenSpace(BaseCamera& _camera);
+	//void RenderText_ScreeninWorldSpace(BaseCamera& _camera);
+	void RenderText_WorldSpace(BaseCamera& _camera);
+
 	void Draw(BaseCamera& _camera);
 	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
 

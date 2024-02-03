@@ -183,7 +183,6 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 		Entity& entity = currentScene.Get<Entity>(currCanvas);
 		Transform& transform = currentScene.Get<Transform>(entity);
 
-
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
 

@@ -498,6 +498,8 @@
     </None>
     <None Include="Shaders\Text.frag" />
     <None Include="Shaders\Text.vert" />
+    <None Include="Shaders\TextWorld.frag" />
+    <None Include="Shaders\TextWorld.vert" />
     <None Include="Shaders\UIScreenSpace.frag" />
     <None Include="Shaders\UIScreenSpace.vert" />
     <None Include="Shaders\UIWorldSpace.frag" />
