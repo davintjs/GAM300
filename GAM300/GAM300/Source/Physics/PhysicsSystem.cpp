@@ -110,7 +110,7 @@ namespace
 			JPH::Quat rot;
 			Vector3 scale;
 			Transform::Decompose(transMtx, (Vector3&)translation, (glm::quat&)rot, (Vector3&)scale);
-			bodyInterface->SetPositionAndRotation(bid, translation, rot, JPH::EActivation::Activate);
+			bodyInterface->SetPositionAndRotation(bid, translation, rot, JPH::EActivation::DontActivate);
 			return;
 		}
 
