@@ -24,26 +24,20 @@ public class SpinningPropeller : Script
         if (rotateClockwise && !rotateAntiClockwise)
         {
             rotateAntiClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
+            //GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
+            vec3 rot = transform.localRotation + new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
 
             //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
 
-            //transform.localRotation = rot;
+            transform.localRotation = rot;
         }
         if (rotateAntiClockwise && !rotateClockwise)
         {
             rotateClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
+            //GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
+            vec3 rot = transform.localRotation + new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
 
-            //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
-
-            //transform.localRotation = rot;
+            transform.localRotation = rot;
         }
     }
 }

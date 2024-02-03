@@ -138,6 +138,7 @@ namespace
 			return;
 		UpdateBodyTransform(scene, entity, t, bid, bodyInterface, ColliderComponentTypes());
 	}
+
 }
 
 void PhysicsSystem::Init() 
@@ -171,15 +172,11 @@ void PhysicsSystem::PostSubscription()
 	EVENTS.Subscribe(this, &PhysicsSystem::CallbackSceneStart);
 }
 
-void PhysicsSystem::Update(float dt) {
 
-	if (!physicsSystem)
-		return;
-
-	// Update positions, linear velocity of bodies so that any scripting logic is applied for the physics simulation
+void PhysicsSystem::UpdateJoltTransforms()
+{
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
-
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
 		if (!it.IsActive())
 		{
@@ -191,6 +188,8 @@ void PhysicsSystem::Update(float dt) {
 		{
 			continue;
 		}
+
+		std::cout << "RB: " << scene.Get<Tag>(rb).name << '\n';
 
 		JPH::BodyID tmpBID(rb.bid);
 
@@ -220,19 +219,16 @@ void PhysicsSystem::Update(float dt) {
 			if (lock.Succeeded())
 			{
 				const JPH::Body& body = lock.GetBody();
-
 				if (body.IsActive() && !body.IsStatic()) {
-					//PRINT("deactivating a body\n");
 					lock.ReleaseLock();
 					bodyInterface->DeactivateBody(tmpBID);
-					//std::cout << "num active bodies: " << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << '\n';
-
 				}
 
 			}
 
 		}
 	}
+
 	auto& ccArray = scene.GetArray<CharacterController>();
 	int j = 0;
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
@@ -240,7 +236,6 @@ void PhysicsSystem::Update(float dt) {
 		JPH::BodyID tmpBid{ cc.bid };
 
 		Transform& t = scene.Get<Transform>(cc);
-		//JPH::RVec3 scale;
 		JPH::RVec3 pos;
 		Vector3 tpos = t.GetGlobalTranslation();
 		GlmVec3ToJoltVec3(tpos, pos);
@@ -256,6 +251,15 @@ void PhysicsSystem::Update(float dt) {
 		bodyInterface->SetLinearVelocity(tmpBid, velocity);
 		++j;
 	}
+}
+
+
+void PhysicsSystem::Update(float dt) {
+
+	if (!physicsSystem)
+		return;
+
+	UpdateJoltTransforms();
 	
 	// Fixed time steps
 	if (physicsSystem) {
@@ -263,17 +267,13 @@ void PhysicsSystem::Update(float dt) {
 		float fixedDt = (float)MyFrameRateController.GetFixedDt();
 		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
 		{
-
 			PrePhysicsUpdate(dt);
 			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
 			step++;
-			//std::cout << "num active bodies after update: " << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << '\n';
-
 		}
 	}
 
 	PostPhysicsUpdate();
-
 }
 void PhysicsSystem::Exit() {
 
@@ -1183,7 +1183,7 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	JPH::Body* body = bodyInterface->CreateBody(bcs);
 	bodyInterface->AddBody(body->GetID(), enabledStatus);
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
-	std::cout << "add\n";
+	//std::cout << "add\n";
 }
 
 EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
@@ -1343,7 +1343,7 @@ void EngineContactListener::OnContactAdded(const JPH::Body& body1, const JPH::Bo
 	//std::cout << vp2.x << "|" << vp2.y << "|" << vp2.z << std::endl;
 
 
-	std::cout << "Contact Added\n";
+	//std::cout << "Contact Added\n";
 }
 void EngineContactListener::OnContactPersisted(const JPH::Body& body1, const JPH::Body& body2, const JPH::ContactManifold& manifold, JPH::ContactSettings& ioSettings) 
 {

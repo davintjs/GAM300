@@ -76,6 +76,7 @@ struct MaterialAsset : Asset { };
 // User can add this asset into the scene and it will assign the materials onto the mesh etc
 struct ModelAsset : Asset
 {
+
 };
 
 using AssetTypes = TemplatePack<ModelAsset, MeshAsset, TextureAsset, ScriptAsset, AudioAsset, ShaderAsset, MaterialAsset, AnimationAsset,Asset>;
