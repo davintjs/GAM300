@@ -89,6 +89,7 @@ public class Enemy : Script
         //death animation timer
         if (startDeathAnimationCountdown)
         {
+            SetEnabled(GetComponent<Rigidbody>(), false);
             currentDeathAnimationTimer -= Time.deltaTime;
             if (currentDeathAnimationTimer <= 0.5f)
             {
