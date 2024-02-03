@@ -2267,7 +2267,7 @@ Transform:
   m_GameObject: {fileID: 12486642072026848141}
   Translation: [45.7749634, -0.651587069, -35.1261559]
   Rotation: [-3.14159226, -1.54447591, -3.14159226]
-  Scale: [0.99998486, 1, 0.99998498]
+  Scale: [1, 1, 0.99998498]
   Father: {fileID: 0}
   m_Children:
     []
@@ -2290,7 +2290,7 @@ ID: 2169999402375080222
 BoxCollider:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
-  Dimensions: [4, 1, 4]
+  Dimensions: [1, 1, 1]
   Offset: [0, 0, 0]
 ---
 ID: 12015256150242366394
@@ -12709,7 +12709,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 984.394775
+  LookAtDistance: 1014.2323
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12812,7 +12812,7 @@ Script:
   dashAttackCooldown: 1.5
   sprintModifier: 1.29999995
   maxHealth: 4
-  dodgeSpeed: 20
+  dodgeSpeed: 5
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.100000001
@@ -19827,7 +19827,7 @@ BoxCollider:
 ID: 3991898582499193028
 Script:
   m_GameObject: {fileID: 18082920113219845477}
-  m_IsEnabled: false
+  m_IsEnabled: true
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
   playerController: {fileID: 0}
 ---
