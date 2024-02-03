@@ -94,6 +94,7 @@ public class Enemy : Script
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                gameObject.SetActive(false);
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
             }
@@ -386,6 +387,11 @@ public class Enemy : Script
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            vec3 hpScale = hpBar.localScale;
+            hpScale.x = currentHealth / maxHealth;
+            hpScale.y = currentHealth / maxHealth;
+            hpScale.z = currentHealth / maxHealth;
+            hpBar.localScale = hpScale;
             isDead = true;
             Console.WriteLine("EnemyDead");
             SetState("Death", true);
