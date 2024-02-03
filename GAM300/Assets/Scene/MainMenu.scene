@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 9.30003643
+  LookAtDistance: 0.349981308
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -66,10 +66,7 @@ Transform:
   m_Children:
     - {fileID: 4418236984561621579}
     - {fileID: 15122834859859923062}
-    - {fileID: 1861137327625472716}
     - {fileID: 5370238613876965468}
-    - {fileID: 1860974719948889420}
-    - {fileID: 9677528432916775765}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -165,14 +162,13 @@ GameObject:
   m_Component:
     - component: {fileID: 9737574517565939108}  # Transform
     - component: {fileID: 8787861963102089585}  # SpriteRenderer
-    - component: {fileID: 1311971545795332894}  # TextRenderer
 ---
 ID: 9737574517565939108
 Transform:
   m_GameObject: {fileID: 5144980746915515514}
-  Translation: [0.336616486, 0.223620534, -0.503376842]
-  Rotation: [0, 0, 0]
-  Scale: [0.228498369, 0.0770835429, 1]
+  Translation: [0.281383872, 0.177159086, -0.399975479]
+  Rotation: [-3.02772522, -0.592227638, 0]
+  Scale: [0.228461951, 0.0769790709, 0.998805046]
   Father: {fileID: 0}
   m_Children:
     []
@@ -183,21 +179,9 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
----
-ID: 1311971545795332894
-TextRenderer:
-  m_GameObject: {fileID: 5144980746915515514}
-  m_IsEnabled: true
-  Text: Play
-  X-axis Position: 0.349999994
-  Y-axis Position: 0.579999983
-  Scale: 1.66999996
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
+  SpriteTexture: {guid: 09c6bf963ea6cc412f5b9197c588acf6}
 ---
 ID: 15413680003274128894
 GameObject:
@@ -212,9 +196,9 @@ GameObject:
 ID: 9896614275649064532
 Transform:
   m_GameObject: {fileID: 15413680003274128894}
-  Translation: [0.339184105, 0.0508204103, -0.532936752]
-  Rotation: [0, 0.0145767899, 0]
-  Scale: [0.222260967, 0.0790112317, 0.250468314]
+  Translation: [0.339184105, 0.0633870065, -0.532936752]
+  Rotation: [-2.9149971, -0.733536839, 0]
+  Scale: [0.222230464, 0.0789608955, 0.998914957]
   Father: {fileID: 0}
   m_Children:
     []
@@ -225,9 +209,9 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
-  SpriteTexture: {guid: f1713e69eedaef315483f2edc460f734}
+  SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
 ID: 11997381317790178123
 GameObject:
@@ -242,9 +226,9 @@ GameObject:
 ID: 1850640387793568597
 Transform:
   m_GameObject: {fileID: 11997381317790178123}
-  Translation: [0.332282782, -0.123776853, -0.503093421]
-  Rotation: [0, 0, 0]
-  Scale: [0.215832561, 0.0763007998, 2.08999991]
+  Translation: [0.332282782, -0.0731539875, -0.503093421]
+  Rotation: [3.13970661, -0.612505019, 0.0634045824]
+  Scale: [0.21580632, 0.0761954561, 2.08734274]
   Father: {fileID: 0}
   m_Children:
     []
@@ -255,9 +239,9 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+  SpriteTexture: {guid: 9d5ca54110e8c8feb8e8edd7193210be}
 ---
 ID: 7360009555949792780
 GameObject:
@@ -272,9 +256,9 @@ GameObject:
 ID: 12705835085396231503
 Transform:
   m_GameObject: {fileID: 7360009555949792780}
-  Translation: [0.336145431, -0.273844808, -0.502936721]
-  Rotation: [0, 0, 0]
-  Scale: [0.216885641, 0.0696697533, 1]
+  Translation: [0.336145431, -0.211273417, -0.502936721]
+  Rotation: [-3.3919425, -0.715584993, 0.141371682]
+  Scale: [0.216883838, 0.0696007162, 0.999012709]
   Father: {fileID: 0}
   m_Children:
     []
@@ -285,9 +269,9 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+  SpriteTexture: {guid: 13cc4bf4e9905a9d2d9fa16d77598bc3}
 ---
 ID: 2581623557328585861
 GameObject:
@@ -371,25 +355,6 @@ AudioSource:
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
 ---
-ID: 1861137327625472716
-GameObject:
-  m_IsActive: true
-  m_Name: PlayText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6223285407874859502}  # Transform
----
-ID: 6223285407874859502
-Transform:
-  m_GameObject: {fileID: 1861137327625472716}
-  Translation: [0.0743322298, 0, 0.874936759]
-  Rotation: [0, 0, 0]
-  Scale: [0.601960361, 1, 1]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
 ID: 5370238613876965468
 GameObject:
   m_IsActive: true
@@ -398,7 +363,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 4791662680457265884}  # Transform
-    - component: {fileID: 1903107403939202071}  # TextRenderer
 ---
 ID: 4791662680457265884
 Transform:
@@ -409,79 +373,3 @@ Transform:
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
----
-ID: 1903107403939202071
-TextRenderer:
-  m_GameObject: {fileID: 5370238613876965468}
-  m_IsEnabled: true
-  Text: Settings
-  X-axis Position: 0.270000011
-  Y-axis Position: -0.389999986
-  Scale: 1.36000001
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
----
-ID: 1860974719948889420
-GameObject:
-  m_IsActive: true
-  m_Name: HowToPlayText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18334142471590138614}  # Transform
-    - component: {fileID: 17269400027806068069}  # TextRenderer
----
-ID: 18334142471590138614
-Transform:
-  m_GameObject: {fileID: 1860974719948889420}
-  Translation: [-0.00934615266, 0, 0.874936759]
-  Rotation: [0, 0, 0]
-  Scale: [0.601960361, 1, 1]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
-ID: 17269400027806068069
-TextRenderer:
-  m_GameObject: {fileID: 1860974719948889420}
-  m_IsEnabled: true
-  Text: How To Play
-  X-axis Position: 0.25999999
-  Y-axis Position: 0.109999999
-  Scale: 0.930000007
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
----
-ID: 9677528432916775765
-GameObject:
-  m_IsActive: true
-  m_Name: ExitText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1780384815644991642}  # Transform
-    - component: {fileID: 3376750449066450418}  # TextRenderer
----
-ID: 1780384815644991642
-Transform:
-  m_GameObject: {fileID: 9677528432916775765}
-  Translation: [-0.00934615266, 0, 0.874936759]
-  Rotation: [0, 0, 0]
-  Scale: [0.601960361, 1, 1]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
-ID: 3376750449066450418
-TextRenderer:
-  m_GameObject: {fileID: 9677528432916775765}
-  m_IsEnabled: true
-  Text: Exit
-  X-axis Position: 0.409999996
-  Y-axis Position: -0.819999993
-  Scale: 1.48000002
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003

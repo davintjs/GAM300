@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 0.539197862
+  LookAtDistance: 9.0097332
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -129,7 +129,6 @@ GameObject:
   m_Component:
     - component: {fileID: 5205254661984323289}  # Transform
     - component: {fileID: 9730442298845151196}  # SpriteRenderer
-    - component: {fileID: 17987157577719877626}  # TextRenderer
 ---
 ID: 5205254661984323289
 Transform:
@@ -149,19 +148,7 @@ SpriteRenderer:
   Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
----
-ID: 17987157577719877626
-TextRenderer:
-  m_GameObject: {fileID: 15122834859859923062}
-  m_IsEnabled: true
-  Text: Back
-  X-axis Position: 0.709999979
-  Y-axis Position: -0.870000005
-  Scale: 0.829999983
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
+  SpriteTexture: {guid: ed56c386d40abda3ef9b4b7c8a3f126e}
 ---
 ID: 15628350562473262138
 GameObject:

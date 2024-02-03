@@ -11,7 +11,9 @@ public class Exit : Script
 {
     public GameObject mainMenuBGImage;
 
-    public GameObject backButton;
+    public GameObject noButton;
+
+    public GameObject yesButton; 
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -27,7 +29,8 @@ public class Exit : Script
     //public AudioSource bgm;
     //public AudioSource uibutton;
 
-    private SpriteRenderer backButtonRenderer;
+    private SpriteRenderer noButtonRenderer;
+    private SpriteRenderer yesButtonRenderer; 
 
     //vec3 startGridTextSize;
 
@@ -37,18 +40,30 @@ public class Exit : Script
         //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
 
-        if (backButton.HasComponent<SpriteRenderer>())
-            backButtonRenderer = backButton.GetComponent<SpriteRenderer>();
+        if (noButton.HasComponent<SpriteRenderer>())
+            noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
+
+        if (yesButton.HasComponent<SpriteRenderer>())
+            yesButtonRenderer = yesButton.GetComponent<SpriteRenderer>();
+
     }
 
     void Update()
     {
         // Get refto Button
-        if (backButtonRenderer != null && backButtonRenderer.IsButtonClicked())
+        if (noButtonRenderer != null && noButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
             SceneManager.LoadScene("MainMenu");
+
+        }
+
+        if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            Application.Exit();
 
         }
     }
