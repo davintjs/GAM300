@@ -115,16 +115,11 @@ struct Material_instance : Object
 	// To make Copies
 	Material_instance& Duplicate_MaterialInstance(const Material_instance& other);
 
-	int shaderType = (int)SHADERTYPE::PBR;
 
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
-	Vector4			albedoColour;// This is pretty much used in all types of shaders
-	float			metallicConstant;
-	float			roughnessConstant;
-	float			aoConstant;
-	float			emissionConstant;
+
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -132,6 +127,15 @@ struct Material_instance : Object
 	Engine::GUID<TextureAsset>	roughnessTexture;
 	Engine::GUID<TextureAsset>	aoTexture;
 	Engine::GUID<TextureAsset>	emissionTexture;
+
+	Vector4			albedoColour;// This is pretty much used in all types of shaders
+
+	int shaderType = (int)SHADERTYPE::PBR;
+
+	float			metallicConstant;
+	float			roughnessConstant;
+	float			aoConstant;
+	float			emissionConstant;
 
 	bool isEmission = false;
 	bool isVariant = false;
@@ -234,6 +238,8 @@ public:
 	std::vector<Shader>available_shaders;
 
 private:
+
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 };

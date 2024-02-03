@@ -455,7 +455,7 @@ namespace BeanFactory
             get 
             {
                 Material mat = new Material();
-                InternalCalls.GetMaterial(this, ref mat);
+                InternalCalls.GetMaterial(this, mat);
                 mat.meshRenderer = this;
                 return mat;
             }

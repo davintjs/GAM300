@@ -316,7 +316,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		MeshRenderer& mr = meshRenderer;
 		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
-		Material_instance& newinstance = mat;
+		Material_instance& newInstance = mat;
 		if (!matInstance.isVariant)
 		{
 			mr.materialGUID = MATERIALSYSTEM.InstantiateRuntimeMaterial(mat);
