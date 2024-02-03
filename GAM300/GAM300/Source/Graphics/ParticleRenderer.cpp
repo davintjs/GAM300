@@ -46,13 +46,16 @@ void ParticleRenderer::Update(float dt) {
                 glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1u];
                 float trailScale = glm::length(trailVector);
                 glm::mat4 trailScaleMatrix = glm::mat4( 
-                    glm::vec4(.05f, 0, 0, 0),
+                    glm::vec4(.1f, 0, 0, 0),
                     //glm::vec4(0, 1, 0, 0),
                     glm::vec4(0, trailScale, 0, 0),
-                    glm::vec4(0, 0, .05f, 0),
+                    glm::vec4(0, 0, .1f, 0),
                     glm::vec4(0, 0, 0, 1));
                 trailVector = glm::normalize(trailVector);
                 glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));
+                if (glm::length(newX) == 0) {
+                    newX = vec3(.5f, 0.f, 0.f);
+                }
                 glm::vec3 newZ = glm::cross(newX, trailVector);
                 glm::mat4 trailRotationMatrix = glm::mat4(
                     glm::vec4(newX, 0), 
@@ -168,7 +171,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 void ParticleRenderer::SetupInstancedCylinder() {
     float radius = 0.5f;  // Adjust as needed
     float height = 1.0f;  // Adjust as needed
-    int slices = 20;      // Number of segments around the cylinder
+    int slices = 6;      // Number of segments around the cylinder
 
     std::vector<glm::vec3> vertices;
 
