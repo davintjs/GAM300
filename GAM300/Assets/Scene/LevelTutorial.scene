@@ -248,12 +248,12 @@ Transform:
     - {fileID: 4720521423488205772}
     - {fileID: 1953613848853671180}
     - {fileID: 3925618525247661714}
-    - {fileID: 10673191397735378312}
     - {fileID: 11966624967280915999}
-    - {fileID: 13993313988089347944}
+    - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
-    - {fileID: 12478379518054110186}
+    - {fileID: 13993313988089347944}
     - {fileID: 1370432261870288088}
+    - {fileID: 12478379518054110186}
     - {fileID: 14449198235318879022}
 ---
 ID: 13547543225942679706
@@ -12731,7 +12731,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1103.6792
+  LookAtDistance: 1118.57812
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12829,12 +12829,12 @@ Script:
   currentDashAttackCooldown: 0
   MoveSpeed: 400
   overDriveCooldown: 6
-  dashAttackSpeed: 50
+  dashAttackSpeed: 10
   JumpSpeed: 7
   dashAttackCooldown: 1.5
   sprintModifier: 1.29999995
   maxHealth: 4
-  dodgeSpeed: 5
+  dodgeSpeed: 10
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.100000001
@@ -12872,9 +12872,9 @@ Script:
   maxColliderDist: 1.5
   timeBeforeRegen: 1
   regenRate: 60
-  dashAttackStamina: 30
-  jumpStamina: 10
-  attackStamina: 0
+  dashAttackStamina: 15
+  jumpStamina: 0
+  attackStamina: 5
   attack2duration: 0.600000024
   dodgeStamina: 20
   currentAnimationTimer: 0

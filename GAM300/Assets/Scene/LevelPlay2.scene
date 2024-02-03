@@ -214,7 +214,6 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 2866402867161245437}
-    - {fileID: 17033157074617951400}
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
     - {fileID: 3827453200974574750}
@@ -226,13 +225,14 @@ Transform:
     - {fileID: 4720521423488205772}
     - {fileID: 1953613848853671180}
     - {fileID: 3925618525247661714}
-    - {fileID: 10673191397735378312}
     - {fileID: 11966624967280915999}
-    - {fileID: 13993313988089347944}
+    - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
-    - {fileID: 12478379518054110186}
+    - {fileID: 13993313988089347944}
     - {fileID: 1370432261870288088}
+    - {fileID: 12478379518054110186}
     - {fileID: 15115753960540565494}
+    - {fileID: 17033157074617951400}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -2447,6 +2447,7 @@ Script:
   modelOffset: {fileID: 17589645519894896830}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 2826765051149347733}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 3574560937881504822
@@ -2576,6 +2577,7 @@ Transform:
     - {fileID: 10266636446231664446}
     - {fileID: 6504583156593662196}
     - {fileID: 10437383555467728460}
+    - {fileID: 18122301746744952}
 ---
 ID: 4624265677693832930
 GameObject:
@@ -7274,9 +7276,9 @@ GameObject:
 ID: 16204800754304224962
 Transform:
   m_GameObject: {fileID: 16176702755422307341}
-  Translation: [70.8189392, 37.949688, -76.7908173]
+  Translation: [70.8189392, 29.7941284, -76.7908173]
   Rotation: [3.14159203, -1.33832181, 3.14159203]
-  Scale: [0.999985039, 1.00000012, 0.999985039]
+  Scale: [0.999981761, 1.00000012, 0.99998194]
   Father: {fileID: 0}
   m_Children:
     []
@@ -7308,9 +7310,9 @@ GameObject:
 ID: 127352606862801721
 Transform:
   m_GameObject: {fileID: 17150978404869133335}
-  Translation: [68.6550217, 37.7953835, -77.1053467]
-  Rotation: [3.14159083, -1.33832073, 3.14159083]
-  Scale: [0.999998689, 1, 0.999998689]
+  Translation: [68.6550217, 32.6116066, -77.1053467]
+  Rotation: [3.14159083, -1.33832085, 3.14159083]
+  Scale: [0.999996662, 1, 0.999998271]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 14790332214141994081}
@@ -7873,7 +7875,7 @@ GameObject:
 ID: 12043303004412789833
 Transform:
   m_GameObject: {fileID: 9126212843899289109}
-  Translation: [67.0619507, 37.076004, -77.1053467]
+  Translation: [67.0619507, 31.4752522, -77.1053467]
   Rotation: [0, 0, 0]
   Scale: [0.999999523, 1, 0.999999523]
   Father: {fileID: 0}
@@ -7915,9 +7917,9 @@ GameObject:
 ID: 13578791677455827938
 Transform:
   m_GameObject: {fileID: 7640003431994965172}
-  Translation: [68.6550217, 37.076004, -77.1053467]
+  Translation: [68.6550217, 30.4899502, -77.1053467]
   Rotation: [3.14159203, -1.33832181, 3.14159203]
-  Scale: [0.999999166, 1, 1]
+  Scale: [0.999996006, 1, 0.999996424]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 10893071549809871378}
@@ -8350,6 +8352,7 @@ Transform:
     - {fileID: 15419199225098277952}
     - {fileID: 12783513891982554032}
     - {fileID: 18405210002441658138}
+    - {fileID: 9603438574311347953}
 ---
 ID: 16042261641342729820
 GameObject:
@@ -12129,7 +12132,7 @@ GameObject:
 ID: 10636894150177318485
 Transform:
   m_GameObject: {fileID: 7453769868452659552}
-  Translation: [58.8812256, 39.3036385, -85.5964737]
+  Translation: [58.8812256, 39.2368851, -85.5964737]
   Rotation: [0, 0, 0]
   Scale: [2.57729268, 5.25411654, 2.70640063]
   Father: {fileID: 6661078963704661251}
@@ -12179,9 +12182,9 @@ GameObject:
 ID: 12348527874528831583
 Transform:
   m_GameObject: {fileID: 11291534077837522555}
-  Translation: [60.1243668, 39.0562782, -70.3997955]
+  Translation: [60.1243668, 38.9551697, -70.3997955]
   Rotation: [0, 0, 0]
-  Scale: [2.28999996, 4.34785366, 2.75691295]
+  Scale: [2.28999996, 4.71888018, 2.75691295]
   Father: {fileID: 6661078963704661251}
   m_Children:
     []
@@ -12279,7 +12282,7 @@ GameObject:
 ID: 10106137368687943416
 Transform:
   m_GameObject: {fileID: 16948283871687536465}
-  Translation: [66.1177979, 39.1183243, -74.354538]
+  Translation: [66.1177979, 38.8767357, -74.354538]
   Rotation: [0, 0, 0]
   Scale: [2.14676905, 4.57775211, 2.13987184]
   Father: {fileID: 6661078963704661251}
@@ -12329,7 +12332,7 @@ GameObject:
 ID: 3229299445269014910
 Transform:
   m_GameObject: {fileID: 2911315932445254483}
-  Translation: [59.6512947, 40.3179207, -80.3720856]
+  Translation: [59.6512947, 40.1159477, -80.3720856]
   Rotation: [0, 0, 0]
   Scale: [2.14676905, 6.99801731, 2.70640063]
   Father: {fileID: 6661078963704661251}
@@ -14569,7 +14572,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 939.615601
+  LookAtDistance: 969.471558
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14709,12 +14712,12 @@ Script:
   currentDashAttackCooldown: 0
   MoveSpeed: 400
   overDriveCooldown: 6
-  dashAttackSpeed: 50
+  dashAttackSpeed: 10
   JumpSpeed: 7
   dashAttackCooldown: 0.899999976
   sprintModifier: 1.29999995
   maxHealth: 4
-  dodgeSpeed: 15
+  dodgeSpeed: 10
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
   dashAttackTimer: 0.899999976
@@ -14750,11 +14753,11 @@ Script:
   isDead: false
   colliderDist: 0
   maxColliderDist: 1.5
-  timeBeforeRegen: 1.5
+  timeBeforeRegen: 1
   regenRate: 60
-  dashAttackStamina: 30
-  jumpStamina: 10
-  attackStamina: 10
+  dashAttackStamina: 15
+  jumpStamina: 0
+  attackStamina: 5
   attack2duration: 0.600000024
   dodgeStamina: 20
   currentAnimationTimer: 0
@@ -15249,7 +15252,7 @@ GameObject:
 ID: 16169073693454241236
 Transform:
   m_GameObject: {fileID: 15606294544464115370}
-  Translation: [58.8810005, 42.3637199, -85.7282639]
+  Translation: [66.3888702, 37.6836891, -113.93679]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -18061,7 +18064,7 @@ Transform:
 ---
 ID: 13205461523405376336
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627)
   m_TagString: ""
   m_Layer: 0
@@ -18088,7 +18091,7 @@ MeshRenderer:
 ---
 ID: 17254093529953705875
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628)
   m_TagString: ""
   m_Layer: 0
@@ -18115,7 +18118,7 @@ MeshRenderer:
 ---
 ID: 16415768293130856210
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629)
   m_TagString: ""
   m_Layer: 0
@@ -18705,7 +18708,7 @@ Transform:
 ---
 ID: 8370415163675668691
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -18732,7 +18735,7 @@ MeshRenderer:
 ---
 ID: 9670403625460596022
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -18759,7 +18762,7 @@ MeshRenderer:
 ---
 ID: 6360561650707867498
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629) - Copy
   m_TagString: ""
   m_Layer: 0
@@ -18807,7 +18810,7 @@ Transform:
 ---
 ID: 5270388731237124701
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(627) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -18834,7 +18837,7 @@ MeshRenderer:
 ---
 ID: 5716258948522411767
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(629) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -18861,7 +18864,7 @@ MeshRenderer:
 ---
 ID: 585853501604749385
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: New GameObject(628) - Copy - Copy
   m_TagString: ""
   m_Layer: 0
@@ -21542,9 +21545,9 @@ GameObject:
 ID: 9488525474531031979
 Transform:
   m_GameObject: {fileID: 12686675622707682081}
-  Translation: [63.5418549, 40.5590515, -54.269558]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [28.6197472, 8.06349945, 1.13020039]
+  Translation: [63.5418549, 40.5590515, -36.4361954]
+  Rotation: [-3.14159226, 1.57045102, 0]
+  Scale: [7.22948408, 8.06359673, 1.13019955]
   Father: {fileID: 8701853331577378169}
   m_Children:
     []
@@ -42489,6 +42492,7 @@ Script:
   modelOffset: {fileID: 5297853854918785373}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 13665857943017219500}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 18081422161438025274
@@ -42942,6 +42946,7 @@ Script:
   modelOffset: {fileID: 17325133999229751987}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 13228710214417602934}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 13563546279246814984
@@ -52600,6 +52605,7 @@ Script:
   modelOffset: {fileID: 15854025124422445040}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 6855815549624212754}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 13435116622849676552
@@ -53088,6 +53094,7 @@ Script:
   modelOffset: {fileID: 9983597563396382479}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 15490750772518730921}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 17338308076949455477
@@ -53471,6 +53478,7 @@ Script:
   modelOffset: {fileID: 17261915835989698389}  # Component
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 5495014875330859233}  # Component
+  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
 ---
 ID: 1220841439833587161
@@ -55817,7 +55825,7 @@ GameObject:
 ID: 8611773292126307630
 Transform:
   m_GameObject: {fileID: 9549773503206654148}
-  Translation: [71.3542175, 37.2487717, -85.0380325]
+  Translation: [71.3542175, 37.1220055, -85.0380325]
   Rotation: [0, 0, 0]
   Scale: [1.46614742, 1.0442456, 2.70640063]
   Father: {fileID: 6661078963704661251}
@@ -55867,7 +55875,7 @@ GameObject:
 ID: 2242996261120177452
 Transform:
   m_GameObject: {fileID: 5005808939848077509}
-  Translation: [74.6978683, 37.9752769, -85.0380325]
+  Translation: [74.6978683, 37.8423996, -85.0380325]
   Rotation: [0, 0, 0]
   Scale: [2.85908961, 2.5068624, 2.70640063]
   Father: {fileID: 6661078963704661251}
@@ -55917,9 +55925,9 @@ GameObject:
 ID: 17131318036348326671
 Transform:
   m_GameObject: {fileID: 10266636446231664446}
-  Translation: [58.1066437, 39.5121155, -70.3889771]
+  Translation: [58.1066437, 39.3185196, -70.3889771]
   Rotation: [0, 0, 0]
-  Scale: [2.28999996, 5.02766466, 2.79907107]
+  Scale: [2.28999996, 5.36100674, 2.79907107]
   Father: {fileID: 6661078963704661251}
   m_Children:
     []
@@ -55967,7 +55975,7 @@ GameObject:
 ID: 17826234221708530845
 Transform:
   m_GameObject: {fileID: 6504583156593662196}
-  Translation: [72.6379395, 37.5434647, -85.0380325]
+  Translation: [72.6379395, 37.4238472, -85.0380325]
   Rotation: [0, 0, 0]
   Scale: [1.46614742, 1.64490867, 2.70640063]
   Father: {fileID: 6661078963704661251}
@@ -56017,9 +56025,9 @@ GameObject:
 ID: 14000080322285256031
 Transform:
   m_GameObject: {fileID: 10437383555467728460}
-  Translation: [74.3629303, 39.705761, -81.5661469]
+  Translation: [74.3629303, 40.4112587, -80.7586365]
   Rotation: [0, 0, 0]
-  Scale: [4.06409645, 0.451895267, 2.70640063]
+  Scale: [4.06409645, 0.982005119, 2.70640063]
   Father: {fileID: 6661078963704661251}
   m_Children:
     []
@@ -58546,3 +58554,103 @@ Transform:
   Father: {fileID: 17033157074617951400}
   m_Children:
     - {fileID: 18315212324025487925}
+---
+ID: 9603438574311347953
+GameObject:
+  m_IsActive: true
+  m_Name: Glass - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8004023312689144819}  # Transform
+    - component: {fileID: 10066741296639601749}  # Rigidbody
+    - component: {fileID: 1044119880492177644}  # MeshRenderer
+    - component: {fileID: 3885710997740875694}  # BoxCollider
+---
+ID: 8004023312689144819
+Transform:
+  m_GameObject: {fileID: 9603438574311347953}
+  Translation: [63.5418549, 40.5590515, -54.269558]
+  Rotation: [0, 1.57045102, 0]
+  Scale: [28.6197472, 8.06349945, 1.13020039]
+  Father: {fileID: 8701853331577378169}
+  m_Children:
+    []
+---
+ID: 10066741296639601749
+Rigidbody:
+  m_GameObject: {fileID: 9603438574311347953}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 1044119880492177644
+MeshRenderer:
+  m_GameObject: {fileID: 9603438574311347953}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 3885710997740875694
+BoxCollider:
+  m_GameObject: {fileID: 9603438574311347953}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 18122301746744952
+GameObject:
+  m_IsActive: true
+  m_Name: Cube - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3650530826004725527}  # Transform
+    - component: {fileID: 2648571061219835383}  # Rigidbody
+    - component: {fileID: 12945484146468609671}  # MeshRenderer
+    - component: {fileID: 15947363827201044956}  # BoxCollider
+---
+ID: 3650530826004725527
+Transform:
+  m_GameObject: {fileID: 18122301746744952}
+  Translation: [74.3629303, 39.751873, -82.4737167]
+  Rotation: [0, 0, 0]
+  Scale: [4.06409645, 0.713497341, 2.70640063]
+  Father: {fileID: 6661078963704661251}
+  m_Children:
+    []
+---
+ID: 2648571061219835383
+Rigidbody:
+  m_GameObject: {fileID: 18122301746744952}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12945484146468609671
+MeshRenderer:
+  m_GameObject: {fileID: 18122301746744952}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 15947363827201044956
+BoxCollider:
+  m_GameObject: {fileID: 18122301746744952}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
