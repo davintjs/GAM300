@@ -236,7 +236,7 @@ namespace BeanFactory
 
         #region MESH_RENDERER
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetMaterial(MeshRenderer meshRenderer, ref Material mat);
+        public static extern void GetMaterial(MeshRenderer meshRenderer, Material mat);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMaterial(MeshRenderer meshRenderer, Material mat);
