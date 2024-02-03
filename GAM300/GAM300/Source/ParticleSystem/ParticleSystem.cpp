@@ -75,14 +75,14 @@ void ParticleManager::Update(float dt)
             // speed += acceleration * dt
             // velocity = speed * direction
 
-            if (particleComponent.noise > 1.f) {
+            if (particleComponent.noiseMovement > 1.f) {
                 if (particleComponent.particles_[i].noiselifetime <= 0.f) {
                     vec3 noiseDirection = random.NextVector3(-20.0f, 20.0f);
                     noiseDirection = glm::normalize(noiseDirection);
-                    float noise = particleComponent.noise / 100.f;
-                    particleComponent.particles_[i].direction = noise * noiseDirection + (1.f - noise) * particleComponent.particles_[i].direction;
+                    float noise = particleComponent.noiseMovement / 100.f;
+                    particleComponent.particles_[i].direction = glm::normalize(noise * noiseDirection + (1.f - noise) * particleComponent.particles_[i].direction);
                     if (particleComponent.noisefrequency >= 2.f ) {
-                        particleComponent.particles_[i].noiselifetime = random.NextFloat1(particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - particleComponent.particleLifetime_ / (particleComponent.noisefrequency - 1.f));
+                        particleComponent.particles_[i].noiselifetime = random.NextFloat1(10.f * particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ -  10.f * particleComponent.particleLifetime_ / (particleComponent.noisefrequency - 1.f)) / 10.f;
                     }
                     else {
                         particleComponent.particles_[i].noiselifetime = particleComponent.particleLifetime_;
@@ -105,6 +105,9 @@ void ParticleManager::Update(float dt)
             if (!particleComponent.trailEnabled) {
                 continue;
             }
+            if (particleComponent.trailSize < 1) {
+                particleComponent.trailSize = 1;
+            }
             if (1 >= particleComponent.particles_[i].trails.count) {
                 ++particleComponent.particles_[i].trails.count;
                 particleComponent.particles_[i].trails.pos.emplace_back(particlePos);
@@ -125,6 +128,10 @@ void ParticleManager::Update(float dt)
                     particleComponent.particles_[i].trails.count++;
                 }
             }
+            if (particleComponent.particles_[i].trails.count > (unsigned)particleComponent.trailSize) {
+                particleComponent.particles_[i].trails.count--;
+                particleComponent.particles_[i].trails.pos.pop_front();
+            }
         }
     }
 }
@@ -138,8 +145,11 @@ void ParticleManager::Exit()
 bool isParallel(const glm::vec3& v1, const glm::vec3& v2)
 {
     glm::vec3 test = glm::cross(v1, v2);
-    if ((test.x < 0.01f) && (test.y < 0.01f) && (test.z < 0.01f) &&
-        (test.x > -0.01f) && (test.y > -0.01f) && (test.z > -0.01f))
+    //test.length();
+    /*if ((test.x < 0.01f) && (test.y < 0.01f) && (test.z < 0.01f) &&
+        (test.x > -0.01f) && (test.y > -0.01f) && (test.z > -0.01f))*/
+    //std::cout << glm::length(test) << std::endl;
+    if (glm::length(test) < 0.00001f)
     {
         return true;
     }
