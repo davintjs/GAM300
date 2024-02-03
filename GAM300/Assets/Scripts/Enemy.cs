@@ -41,6 +41,7 @@ public class Enemy : Script
 
     //public GameObject spawnObject;
     public GameObject attackTrigger;
+    public Transform parentTransform;
     Rigidbody rb;
 
     public bool isAttacking = false;
@@ -94,6 +95,7 @@ public class Enemy : Script
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                gameObject.SetActive(false);
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
             }
@@ -146,7 +148,7 @@ public class Enemy : Script
         }
         else if(state != 2)
         {
-            //attackTrigger.SetActive(false);
+            attackTrigger.SetActive(false);
             isAttacking = false;
             isAttackCooldown = false;
             currentAttackCooldownTimer = 0f;
@@ -386,6 +388,11 @@ public class Enemy : Script
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            vec3 hpScale = hpBar.localScale;
+            hpScale.x = currentHealth / maxHealth;
+            hpScale.y = currentHealth / maxHealth;
+            hpScale.z = currentHealth / maxHealth;
+            hpBar.localScale = hpScale;
             isDead = true;
             Console.WriteLine("EnemyDead");
             SetState("Death", true);
