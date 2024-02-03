@@ -133,6 +133,18 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AUDIOMANAGER.StopMusic(fade);
 	}
 
+	static void PauseMusic() {
+		AUDIOMANAGER.PauseMusic();
+	}
+	static void ResumeMusic() {
+		AUDIOMANAGER.PlayMusic();
+	}
+	static void EnableSFX(bool toggle) {
+		AUDIOMANAGER.EnableSFX(toggle);
+		if (!toggle) {
+			AUDIOMANAGER.PauseLoopFX();
+		}
+	}
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -600,6 +612,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		// Audio Component
 		Register(AudioSourcePlay);
 		Register(StopMusic);
+		Register(PauseMusic);
+		Register(ResumeMusic);
+		Register(EnableSFX);
 
 		// Animator Component
 		Register(PlayAnimation);

@@ -50,7 +50,7 @@ void AudioSystem::Update(float dt) {
 		}
 
 		// update SFX settings
-		if (audio.current_channel == (int)AudioSource::Channel::SFX) {
+		if (audio.current_channel == (int)AudioSource::Channel::SFX && AUDIOMANAGER.SFXEnabled()) {
 			//no loop
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			if (audio.loop) {
