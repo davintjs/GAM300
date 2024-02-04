@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 1.45728099
+  LookAtDistance: 7.81407881
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -145,7 +145,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: bd551c264f51691f045698a21952516a}
 ---
@@ -175,7 +175,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 512a41424fe3757f75000347c6fad08d}
 ---

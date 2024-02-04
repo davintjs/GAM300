@@ -125,6 +125,9 @@ public:
 
 	void EnableSFX(bool toggle);
 
+	void PauseComponent(AudioSource& source);
+
+
 	bool SFXEnabled() { return enableSFX; }
 private:
 

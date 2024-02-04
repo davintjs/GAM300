@@ -286,6 +286,10 @@ void AudioManager::PauseLoopFX() {
 	currentFX->setPaused(true);
 }
 
+void AudioManager::PauseComponent(AudioSource& source) {
+	source.play = false;
+}
+
 void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	float pan,
 	float minVolume, float maxVolume,
@@ -388,8 +392,8 @@ void AudioManager::SetSFXVolume(float volume) {
 }
 
 void AudioManager::SetMusicVolume(float volume) {
-	groups[CATEGORY_MUSIC]->setVolume(1.f);
-	groups[CATEGORY_MUSIC2]->setVolume(1.f);
+	//groups[CATEGORY_MUSIC]->setVolume(1.f);
+	//groups[CATEGORY_MUSIC2]->setVolume(1.f);
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }

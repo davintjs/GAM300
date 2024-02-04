@@ -27,6 +27,7 @@ public class Settings : Script
     public float duration = 2f;
     public float timer = 0f;
     public bool back = false;
+    public bool test = false;
 
     public float sizeMultiplier = 1.5f;
 
@@ -48,17 +49,14 @@ public class Settings : Script
         //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
 
+        bgm.Play();
+        test = true;
+
+
         if (backButton.HasComponent<SpriteRenderer>())
             backButtonRenderer = backButton.GetComponent<SpriteRenderer>();
-
         if (masterVolumeButton.HasComponent<SpriteRenderer>())
             masterVolumeButtonRenderer = masterVolumeButton.GetComponent<SpriteRenderer>();
-
-        if (bgmVolumeButton.HasComponent<SpriteRenderer>())
-            bgmVolumeButtonRenderer = bgmVolumeButton.GetComponent<SpriteRenderer>();
-
-        if (sfxVolumeButton.HasComponent<SpriteRenderer>())
-            sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -69,17 +67,27 @@ public class Settings : Script
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
             SceneManager.LoadScene("MainMenu");
-
         }
-
         if (masterVolumeButtonRenderer != null && masterVolumeButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);
-            Console.WriteLine("Music");
-            //AudioManager.instance.uiSound.Pause();
-            //MainMenu.bgm.StopMusic();
+            Console.WriteLine("Scene");
+            //InternalCalls.PauseMusic();
+            //bgm.Pause();
+            //SceneManager.LoadScene("MainMenu");
+            if(test == true)
+            {
+                bgm.Pause();
+                test = false;
+            }
+            else{
+                bgm.Play();
+                test = true;
 
+            }
         }
+   
+
 
         // Check if button state is clicked
 
