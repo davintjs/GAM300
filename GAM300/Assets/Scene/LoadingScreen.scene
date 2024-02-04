@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [9.99762997e-05, 9.99762997e-05, 9.99999975e-05, 2.95718369e-38]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 426.103333
+  LookAtDistance: 669.876038
   NearClip: 10
   FarClip: 100
   FieldOfView: 37.5
@@ -85,7 +85,7 @@ ID: 5804924798355049200
 Transform:
   m_GameObject: {fileID: 9966499903466674557}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0.748745978]
+  Rotation: [0, 0, -10.8672934]
   Scale: [0.200000003, 0.200000003, 1]
   Father: {fileID: 8332670441493396773}
   m_Children:
