@@ -13,6 +13,13 @@ public class Settings : Script
 
     public GameObject backButton;
 
+    public GameObject masterVolumeButton;
+
+    public GameObject bgmVolumeButton;
+
+    public GameObject sfxVolumeButton;
+
+
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 
@@ -24,10 +31,14 @@ public class Settings : Script
     public float sizeMultiplier = 1.5f;
 
     //sounds
-    //public AudioSource bgm;
+    public AudioSource bgm;
     //public AudioSource uibutton;
 
     private SpriteRenderer backButtonRenderer;
+    private SpriteRenderer masterVolumeButtonRenderer;
+    private SpriteRenderer bgmVolumeButtonRenderer;
+    private SpriteRenderer sfxVolumeButtonRenderer;
+
 
     vec3 startGridTextSize;
 
@@ -39,6 +50,15 @@ public class Settings : Script
 
         if (backButton.HasComponent<SpriteRenderer>())
             backButtonRenderer = backButton.GetComponent<SpriteRenderer>();
+
+        if (masterVolumeButton.HasComponent<SpriteRenderer>())
+            masterVolumeButtonRenderer = masterVolumeButton.GetComponent<SpriteRenderer>();
+
+        if (bgmVolumeButton.HasComponent<SpriteRenderer>())
+            bgmVolumeButtonRenderer = bgmVolumeButton.GetComponent<SpriteRenderer>();
+
+        if (sfxVolumeButton.HasComponent<SpriteRenderer>())
+            sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -49,6 +69,15 @@ public class Settings : Script
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
             SceneManager.LoadScene("MainMenu");
+
+        }
+
+        if (masterVolumeButtonRenderer != null && masterVolumeButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Music");
+            //AudioManager.instance.uiSound.Pause();
+            //MainMenu.bgm.StopMusic();
 
         }
 
