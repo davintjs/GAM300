@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 9.0097332
+  LookAtDistance: 0.554089308
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -81,14 +81,14 @@ Script:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
   Script: {guid: a72da4ff4d8909e9409d75131b127ed3}
-  duration: 2
-  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
-  back: false
-  timer: 0
-  backButton: {fileID: 15122834859859923062}  # GameObject
   isStartActive: true
   flickerTimer: 0
+  duration: 2
+  back: false
+  timer: 0
   sizeMultiplier: 1.5
+  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
+  backButton: {fileID: 15122834859859923062}  # GameObject
 ---
 ID: 4418236984561621579
 GameObject:

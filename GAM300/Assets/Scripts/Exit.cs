@@ -63,7 +63,7 @@ public class Exit : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            Application.Exit();
+            //Application.Exit();
 
         }
     }
