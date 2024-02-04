@@ -101,8 +101,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Fade In Time (s): 2
+  Fade Out Time (s): 5
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -10981,7 +10981,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 874.056396
+  LookAtDistance: 752.231567
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -11218,6 +11218,7 @@ Script:
   staminaPackCount: 0
   healthPackHealValue: 5
   maxStatPackCount: 0
+  staminaPackValue: 50
   thirdPersonController: {fileID: 0}
 ---
 ID: 17611351097031071778
@@ -14876,7 +14877,7 @@ ID: 4700641269588020503
 Transform:
   m_GameObject: {fileID: 18047848578679342217}
   Translation: [0, 12.5846453, 0]
-  Rotation: [0, 1.57079542, 0]
+  Rotation: [0, 1.57079542, 0.0174532924]
   Scale: [0.999962866, 0.999957502, 0.999984145]
   Father: {fileID: 0}
   m_Children:
@@ -15816,7 +15817,7 @@ GameObject:
 ID: 14483430449207858683
 Transform:
   m_GameObject: {fileID: 5485624148561562475}
-  Translation: [-12.3145475, 3.71076226, -12.1882401]
+  Translation: [60.2660294, 37.734787, -76.6549225]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15892,7 +15893,7 @@ AudioSource:
 ID: 13181040398411404901
 GameObject:
   m_IsActive: true
-  m_Name: MaxStatPack
+  m_Name: StaminaPack
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -15900,12 +15901,12 @@ GameObject:
     - component: {fileID: 2435892964183400494}  # MeshRenderer
     - component: {fileID: 16917545578926419683}  # BoxCollider
     - component: {fileID: 3297397167941829822}  # Rigidbody
-    - component: {fileID: 3010007240653764876}  # Script
+    - component: {fileID: 17033640004054647204}  # Script
 ---
 ID: 4613035213807394368
 Transform:
   m_GameObject: {fileID: 13181040398411404901}
-  Translation: [-20.0966702, 3.23592925, 3.79754567]
+  Translation: [66.80336, 37.7251015, -70.8174744]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -15917,7 +15918,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13181040398411404901}
   m_IsEnabled: true
   Mesh: {guid: 1618c2cac1782fbbcc81e882fe12adce}
-  Material_ID: {guid: f67b91ede3c6182c8dfc1518c73ef90b}
+  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
 ---
 ID: 16917545578926419683
 BoxCollider:
@@ -15940,11 +15941,11 @@ Rigidbody:
   UseGravity: false
   Is_trigger: true
 ---
-ID: 3010007240653764876
+ID: 17033640004054647204
 Script:
   m_GameObject: {fileID: 13181040398411404901}
   m_IsEnabled: true
-  Script: {guid: e4cb2d056ed272fd4b072e22637c7516}
+  Script: {guid: 0d50433ba253abc8ce5c2f812bb23db0}
 ---
 ID: 12660956963810181687
 GameObject:
@@ -56653,3 +56654,206 @@ LightSource:
   Inner Cutoff: 80
   Outer Cutoff: 500
   Color: [1, 1, 1]
+---
+ID: 1845828409332507245
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14887426919528468005}  # Transform
+    - component: {fileID: 2276662308485600598}  # MeshRenderer
+    - component: {fileID: 14135046604328662405}  # BoxCollider
+    - component: {fileID: 17414766929321666941}  # Rigidbody
+    - component: {fileID: 11766838836625417619}  # Script
+---
+ID: 14887426919528468005
+Transform:
+  m_GameObject: {fileID: 1845828409332507245}
+  Translation: [69.6302567, 37.7251015, -73.6830826]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2276662308485600598
+MeshRenderer:
+  m_GameObject: {fileID: 1845828409332507245}
+  m_IsEnabled: true
+  Mesh: {guid: 1618c2cac1782fbbcc81e882fe12adce}
+  Material_ID: {guid: 6e3306c936e577820868e231e4a0c025}
+---
+ID: 14135046604328662405
+BoxCollider:
+  m_GameObject: {fileID: 1845828409332507245}
+  m_IsEnabled: true
+  Dimensions: [0.920932889, 0.797551394, 0.223614842]
+  Offset: [-7.01844692e-06, -0.110112622, -1.70618296e-06]
+---
+ID: 17414766929321666941
+Rigidbody:
+  m_GameObject: {fileID: 1845828409332507245}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 11766838836625417619
+Script:
+  m_GameObject: {fileID: 1845828409332507245}
+  m_IsEnabled: true
+  Script: {guid: e4cb2d056ed272fd4b072e22637c7516}
+---
+ID: 16307648946800477436
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4510224941171925014}  # Transform
+---
+ID: 4510224941171925014
+Transform:
+  m_GameObject: {fileID: 16307648946800477436}
+  Translation: [66.3274994, 37.3709984, -45.4675827]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5690401456870844020
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13455737955764195381}  # Transform
+---
+ID: 13455737955764195381
+Transform:
+  m_GameObject: {fileID: 5690401456870844020}
+  Translation: [151.170639, 37.3709984, -59.131382]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3520596444848005558
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13391212185643974938}  # Transform
+---
+ID: 13391212185643974938
+Transform:
+  m_GameObject: {fileID: 3520596444848005558}
+  Translation: [105.032837, 36.3427162, -90.9587173]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16874761357063168674
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 855381827491488986}  # Transform
+---
+ID: 855381827491488986
+Transform:
+  m_GameObject: {fileID: 16874761357063168674}
+  Translation: [66.5033035, 35.9828224, -150.985336]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 846519838180547857
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7124094875133113107}  # Transform
+---
+ID: 7124094875133113107
+Transform:
+  m_GameObject: {fileID: 846519838180547857}
+  Translation: [52.8473358, 37.3709984, -77.3507996]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 4976388688774069869
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9727648026438134175}  # Transform
+---
+ID: 9727648026438134175
+Transform:
+  m_GameObject: {fileID: 4976388688774069869}
+  Translation: [66.4966125, 39.7792931, -113.931007]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5018748616658097044
+GameObject:
+  m_IsActive: true
+  m_Name: Cheats
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6962065896865258938}  # Transform
+    - component: {fileID: 8351204528202500194}  # Script
+---
+ID: 6962065896865258938
+Transform:
+  m_GameObject: {fileID: 5018748616658097044}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8351204528202500194
+Script:
+  m_GameObject: {fileID: 5018748616658097044}
+  m_IsEnabled: true
+  Script: {guid: ad03811cdc24fd8d9823824dfccb524d}
+  tp1: {fileID: 16307648946800477436}  # Component
+  tp2: {fileID: 5690401456870844020}  # Component
+  tp3: {fileID: 3520596444848005558}  # Component
+  tp4: {fileID: 16874761357063168674}  # Component
+  tp5: {fileID: 846519838180547857}  # Component
+  tp6: {fileID: 4976388688774069869}  # Component
