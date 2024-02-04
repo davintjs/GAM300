@@ -735,9 +735,14 @@ public class ThirdPersonController : Script
 
     }
 
-    public void restoreStamina(int staminaPackAmount)
+    public void restoreStamina(float staminaPackAmount)
     {
         currentStamina += staminaPackAmount;
+        if (currentStamina > maxStamina)
+        {
+            currentStamina = maxStamina;
+        }
+
         UpdateStaminaBar();
     }
 

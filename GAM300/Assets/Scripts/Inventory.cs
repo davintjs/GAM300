@@ -15,9 +15,9 @@ public class Inventory : Script
     public int healthPackCount;
     public int staminaPackCount;
     public int maxStatPackCount;
-
+    public float staminaPackValue = 100f;
     public float healthPackHealValue = 5f;
-    public int staminaPackValue = 50;
+    
 
     void Awake()
     {
@@ -37,7 +37,15 @@ public class Inventory : Script
     void Update()
     {
         thePacks();
-       
+        //theCheats();
+    }
+
+    //(CHEAT) Adds one of eah pack count.
+    void theCheats()
+    {
+        healthPackCount++;
+        staminaPackCount++;
+        maxStatPackCount++;
     }
 
     void thePacks()
@@ -70,6 +78,8 @@ public class Inventory : Script
             AudioManager.instance.useItem.Play();
             thirdPersonController.HealHealth(thirdPersonController.maxHealth);
             thirdPersonController.UpdatehealthBar();
+            thirdPersonController.restoreStamina(thirdPersonController.maxStamina);
+            thirdPersonController.UpdateStaminaBar();
         }
     }
 
