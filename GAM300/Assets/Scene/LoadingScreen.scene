@@ -7,37 +7,37 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
-ID: 10637676919798581019
+ID: 5255847082789301257
 GameObject:
   m_IsActive: true
   m_Name: Camera
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 11485492046573428774}  # Transform
-    - component: {fileID: 9534120035191793293}  # Camera
+    - component: {fileID: 4704708302287558388}  # Transform
+    - component: {fileID: 6290748605718139895}  # Camera
 ---
-ID: 11485492046573428774
+ID: 4704708302287558388
 Transform:
-  m_GameObject: {fileID: 10637676919798581019}
-  Translation: [0, 0, 253.77272]
+  m_GameObject: {fileID: 5255847082789301257}
+  Translation: [0.0341724604, -0.0301439464, 1.361678]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 9534120035191793293
+ID: 6290748605718139895
 Camera:
-  m_GameObject: {fileID: 10637676919798581019}
+  m_GameObject: {fileID: 5255847082789301257}
   m_IsEnabled: true
-  BackgroundColor: [9.99762997e-05, 9.99762997e-05, 9.99999975e-05, 2.95718369e-38]
+  BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 426.103333
-  NearClip: 10
-  FarClip: 100
-  FieldOfView: 37.5
+  LookAtDistance: 7.27589941
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
   Orthographic: false
   TargetDisplay: 0
   HDR: true
@@ -45,65 +45,181 @@ Camera:
   FrustumCulling: true
   DistanceCulling: 5
 ---
-ID: 8332670441493396773
+ID: 11651427043620866289
 GameObject:
   m_IsActive: true
-  m_Name: Canvas
+  m_Name: LoadingScreenCanvas
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 14306201150541980259}  # Transform
-    - component: {fileID: 15381843064994890317}  # Canvas
+    - component: {fileID: 15419434749458504632}  # Transform
+    - component: {fileID: 2748547964756519209}  # Canvas
 ---
-ID: 14306201150541980259
+ID: 15419434749458504632
 Transform:
-  m_GameObject: {fileID: 8332670441493396773}
-  Translation: [0, 0, -53.5474243]
+  m_GameObject: {fileID: 11651427043620866289}
+  Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 9966499903466674557}
+    - {fileID: 4418236984561621579}
+    - {fileID: 15122834859859923062}
+    - {fileID: 14443443795723982887}
+    - {fileID: 16293798592844223540}
+    - {fileID: 11003882171245847636}
 ---
-ID: 15381843064994890317
+ID: 2748547964756519209
 Canvas:
-  m_GameObject: {fileID: 8332670441493396773}
+  m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
 ---
-ID: 9966499903466674557
+ID: 4418236984561621579
 GameObject:
   m_IsActive: true
-  m_Name: LoadingIcon
+  m_Name: LoadingLevelBackground
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 5804924798355049200}  # Transform
-    - component: {fileID: 15466409073051722656}  # SpriteRenderer
-    - component: {fileID: 9366876314999949660}  # Script
+    - component: {fileID: 16773861268096498698}  # Transform
+    - component: {fileID: 13350653658282748155}  # SpriteRenderer
 ---
-ID: 5804924798355049200
+ID: 16773861268096498698
 Transform:
-  m_GameObject: {fileID: 9966499903466674557}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0.748745978]
-  Scale: [0.200000003, 0.200000003, 1]
-  Father: {fileID: 8332670441493396773}
+  m_GameObject: {fileID: 4418236984561621579}
+  Translation: [0.0413188934, -0.0723874718, 0.0475693494]
+  Rotation: [0, 0, 3.14159083]
+  Scale: [1.02958524, 0.601269364, 0.89040184]
+  Father: {fileID: 11651427043620866289}
   m_Children:
     []
 ---
-ID: 15466409073051722656
+ID: 13350653658282748155
 SpriteRenderer:
-  m_GameObject: {fileID: 9966499903466674557}
+  m_GameObject: {fileID: 4418236984561621579}
   m_IsEnabled: true
-  World Space: false
+  World Space: true
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 85f0b67827a2c39de2a6584506b07b39}
+  SpriteTexture: {guid: b08f688109dd431930b77456d6a48a43}
 ---
-ID: 9366876314999949660
-Script:
-  m_GameObject: {fileID: 9966499903466674557}
+ID: 15122834859859923062
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Level_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5205254661984323289}  # Transform
+    - component: {fileID: 8183777527831800993}  # SpriteRenderer
+---
+ID: 5205254661984323289
+Transform:
+  m_GameObject: {fileID: 15122834859859923062}
+  Translation: [0.682727039, -0.462145597, 0.0978737473]
+  Rotation: [-3.14159083, -0, 0]
+  Scale: [0.185415089, 0.0635305047, 0.541499674]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 8183777527831800993
+SpriteRenderer:
+  m_GameObject: {fileID: 15122834859859923062}
   m_IsEnabled: true
-  Script: {guid: 145753d475c38b450f4aa5f909a9f77c}
-  speed: 4
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 25605b003ff8223be92fcaba05fc98d1}
+---
+ID: 14443443795723982887
+GameObject:
+  m_IsActive: true
+  m_Name: TheGRID_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11705331697095973194}  # Transform
+    - component: {fileID: 4610221658161510026}  # SpriteRenderer
+---
+ID: 11705331697095973194
+Transform:
+  m_GameObject: {fileID: 14443443795723982887}
+  Translation: [-0.423279375, 0.328455806, 0.269803703]
+  Rotation: [-3.14159083, 0, 0]
+  Scale: [0.364773482, 0.152039081, 0.784587026]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 4610221658161510026
+SpriteRenderer:
+  m_GameObject: {fileID: 14443443795723982887}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 0.899999976
+  SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
+---
+ID: 16293798592844223540
+GameObject:
+  m_IsActive: true
+  m_Name: LoadingTutorialBackgroud
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18431765212954842495}  # Transform
+    - component: {fileID: 17690011447832337578}  # SpriteRenderer
+---
+ID: 18431765212954842495
+Transform:
+  m_GameObject: {fileID: 16293798592844223540}
+  Translation: [0, -0.180574983, 0.0736375451]
+  Rotation: [0, 0, -3.14159083]
+  Scale: [1.02153456, 0.71029222, 0.71029222]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 17690011447832337578
+SpriteRenderer:
+  m_GameObject: {fileID: 16293798592844223540}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: dd5946e813470a4bf6de0e561bee8136}
+---
+ID: 11003882171245847636
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Tutorial_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5059618897602400407}  # Transform
+    - component: {fileID: 17289207788925785274}  # SpriteRenderer
+---
+ID: 5059618897602400407
+Transform:
+  m_GameObject: {fileID: 11003882171245847636}
+  Translation: [0.690145254, -0.462145597, 0.103346996]
+  Rotation: [-3.14159083, -0, 0]
+  Scale: [0.185415089, 0.0635305047, 0.541499674]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 17289207788925785274
+SpriteRenderer:
+  m_GameObject: {fileID: 11003882171245847636}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 2f06a817efc264d62e4e216339d1ad27}

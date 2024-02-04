@@ -25,6 +25,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 static bool graphics_settings = false;
 
+#define BT EditorBehaviourTreeEditor::Instance()
+
 void EditorMenuBar::Init()
 {
 
@@ -151,6 +153,16 @@ void EditorMenuBar::Update(float dt)
                 graphics_settings = true;
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Tools"))
+        {
+            if (ImGui::MenuItem("Behaviour Tree Editor")) {
+                BT.editorOpen = true;
+                BT.m_Context = ed::CreateEditor();
+            }
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMainMenuBar();
     }
 

@@ -1,6 +1,5 @@
-[2024-02-01 14:22:26.444] [Error] [critical] 
-Caused By:	false
-Info:		ERROR: Player2_1 has guid 67180f7ad6a48e21ba1381fa539d56a6 that does not exist! Reassign the mesh!
-
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Editor\EditorScene.cpp (Line: 401)
+[2024-02-02 14:03:56.852] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 299)
 
