@@ -30,6 +30,8 @@ void TextSystem::Update(float dt)
 void TextSystem::Exit()
 {
 	// Empty by design
+
+	//glDeleteTextures(1, &texture);
 }
 
 void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
@@ -58,10 +60,7 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 
 		float w = ch.Size.x * scale;
 		float h = ch.Size.y * scale * 2.f;
-
-		float maxsize = std::max(xpos, ypos) + std::max(w, h);
-		maxsize *= 2.f;
-
+		
 		// Generate OpenGL texture from the loaded texture data ->> can optimise so it doesnt get texture every frame
 		GLuint texture;
 		glGenTextures(1, &texture);
@@ -103,17 +102,6 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 void TextSystem::Draw(BaseCamera& _camera)
 {
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) {
-		//get gameobj xform x y z, the curr xy is offsets, try and add alignment, do scale as in x and y diff ability to scsale
-		// priority, add alpha, decompiler, integrate into ui
-		
-		// if (text.guid != 0)
-			//RenderText(txtshader, text.text, text.x, text.y, text.fontSize, glm::vec3(text.r, text.g, text.b), _camera, text.guid);
-	}
-	
-	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
-
 
 	RenderText_WorldSpace(_camera);
 	//RenderText_ScreeninWorldSpace(_camera);
@@ -247,26 +235,28 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 
 void TextSystem::RenderTextFromString(TextRenderer const& text)
 {
+	// Clear previous data
+	allVertices.clear();
+	allTextures.clear();
 
 	float xoffset = text.x;
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
-		float xpos = xoffset + ch.Bearing.x * text.fontSize;
-		float ypos = text.y - (ch.Size.y - ch.Bearing.y) * text.fontSize;
+		float xpos = xoffset + ch.Bearing.x * (text.fontSize * 0.001f);
+		float ypos = text.y - (ch.Size.y - ch.Bearing.y) * (text.fontSize * 0.001f);
 
-		float w = ch.Size.x * text.fontSize;
-		float h = ch.Size.y * text.fontSize * 2.f;
+		float w = ch.Size.x * (text.fontSize * 0.001f);
+		float h = ch.Size.y * (text.fontSize * 0.001f) * 2.f;
 
-		float maxsize = std::max(xpos, ypos) + std::max(w, h);
-		maxsize *= 2.f;
+		if (!ch.Texture)
+		{
+			glGenTextures(1, &ch.Texture);
+			glBindTexture(GL_TEXTURE_2D, ch.Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
+			glGenerateMipmap(GL_TEXTURE_2D);
 
-		// Generate OpenGL texture from the loaded texture data ->> can optimise so it doesnt get texture every frame
-		GLuint texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
-		glGenerateMipmap(GL_TEXTURE_2D);
+		}
 
 		// Update content of VBO memory with the new vertices
 		float vertices[4][4] = {
@@ -276,23 +266,27 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 			{ xpos + w, ypos + h,   1.0f, 0.0f }
 		};
 
-		glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		// Use the new texture for rendering
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		// Render quad
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-		// Delete the generated texture when it's no longer needed
-		glDeleteTextures(1, &texture);
+		for (int i = 0; i < 4; ++i) {
+			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
+		}
+		allTextures.push_back(ch.Texture);
 
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		xoffset += (ch.Advance >> 6) * text.fontSize; // bitshift by 6 to get value in pixels (2^6 = 64)
+		xoffset += (ch.Advance >> 6) * (text.fontSize * 0.001f); // bitshift by 6 to get value in pixels (2^6 = 64)
 
 	}
+
+	// Update content of VBO memory with the new vertices and texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
+	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Use the new texture for rendering
+	for (size_t i = 0; i < allTextures.size(); ++i) {
+		glBindTexture(GL_TEXTURE_2D, allTextures[i]);
+		glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
+	}
+
 }
 
 

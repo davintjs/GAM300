@@ -295,7 +295,7 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(text).Name("Text"),
 		property_var(x).Name("X-axis Offset"),
 		property_var(y).Name("Y-axis Offset"),
-		property_var(fontSize).Name("Scale"),
+		property_var(fontSize).Name("Font Size"),
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
 		property_var(b).Name("Color B"),

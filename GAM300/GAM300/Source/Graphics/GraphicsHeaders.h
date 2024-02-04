@@ -558,11 +558,16 @@ public:
 		glm::ivec2 Size;
 		glm::ivec2 Bearing;
 		unsigned int Advance;
+		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+
+	std::vector<float> allVertices;
+	std::vector<GLuint> allTextures;
+
 
 
 	void Init();
