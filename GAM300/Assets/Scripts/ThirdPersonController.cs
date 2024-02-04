@@ -108,12 +108,12 @@ public class ThirdPersonController : Script
                 playerWeaponCollider2.SetActive(false);
                 playerWeaponCollider3.SetActive(false);
                 comboCount = 1;
-                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                selectedWeaponCollider.transform.position = new vec3(10000);
                 attackLight.SetActive(false);
             }
             else
             {
-                selectedWeaponCollider.transform.localRotation = new vec3(PlayerModel.localRotation);
+                selectedWeaponCollider.transform.rotation = new vec3(PlayerModel.rotation);
                 SetState("Attack" + comboCount, true);
                 AudioManager.instance.playerSlashAttack.Play();
                 AudioManager.instance.spark.Play();
@@ -435,23 +435,23 @@ public class ThirdPersonController : Script
             SetState("DashAttack", false);
             dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
-                movement = PlayerModel.back * attackMoveSpeed * Time.deltaTime;
+                movement = PlayerModel.forward * attackMoveSpeed * Time.deltaTime;
             else
             {
                 if (currentAttackTimer / attackTimer > 0.5f)
                 {
-                    selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                    selectedWeaponCollider.transform.position = new vec3(10000);
                     attackLight.SetActive(false);
                 }
                 else if (currentAttackTimer / attackTimer > 0.3f )
                 {
-                    selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+                    selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                     attackLight.SetActive(true);
                     selectedWeaponCollider.SetActive(true);//enable the weapon collider
                 }
                 movement = vec3.Zero;
             }
-            attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.localPosition);
+            attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.position);
             currentAttackTimer += Time.deltaTime;
             if (currentAttackTimer >= attackTimer)
             {
@@ -477,7 +477,7 @@ public class ThirdPersonController : Script
             {
                 CC.force = PlayerModel.forward * dashAttackSpeed;//dash player forward
 
-                selectedWeaponCollider.transform.localPosition = new vec3(transform.position + PlayerModel.forward * 0.6f);
+                selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                 attackLight.SetActive(true);
                 selectedWeaponCollider.SetActive(true);//enable the weapon collider
 
