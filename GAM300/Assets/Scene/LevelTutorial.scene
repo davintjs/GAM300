@@ -193,6 +193,7 @@ Transform:
     - {fileID: 5713504039664526619}
     - {fileID: 1444839062839968456}
     - {fileID: 3873369559540028830}
+    - {fileID: 136000361820737134}
 ---
 ID: 12555400289260702052
 Script:
@@ -217,7 +218,7 @@ Script:
   useItem: {fileID: 8508182677235274511}  # Component
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
-  playerOverdrive: {fileID: 0}
+  playerOverdrive: {fileID: 364832269269254888}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -12725,7 +12726,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1361.70776
+  LookAtDistance: 1376.57007
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -17656,8 +17657,6 @@ Script:
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
   rotateSpeed: 0.100000001
   rotateClockwise: true
-  originalRotation: true
-  rotateAntiClockwise: false
 ---
 ID: 14500960313742346744
 GameObject:
@@ -19319,3 +19318,35 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 12597e24af252df94929ea556633fff1}
   Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 136000361820737134
+GameObject:
+  m_IsActive: true
+  m_Name: playerOverdrive
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2791728166745302073}  # Transform
+    - component: {fileID: 364832269269254888}  # AudioSource
+---
+ID: 2791728166745302073
+Transform:
+  m_GameObject: {fileID: 136000361820737134}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 364832269269254888
+AudioSource:
+  m_GameObject: {fileID: 136000361820737134}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
+  Play: false
