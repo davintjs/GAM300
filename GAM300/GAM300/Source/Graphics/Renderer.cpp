@@ -143,6 +143,7 @@ void Renderer::Update(float)
 		}
 		else
 		{
+			MATERIALSYSTEM.BindTextureIDs(currMatInstance);
 			UpdatePBRProperties(transform, currMatInstance, vaoIt->second);
 		}
 		++i;
