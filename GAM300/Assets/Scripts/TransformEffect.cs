@@ -22,7 +22,9 @@ public class TransformEffect : Script
     vec3 finalRot;
     vec3 finalScale;
 
-    void Start()
+    public bool finished = false;
+
+    public void Start()
     {    
         startPos = transform.localPosition;
         startRot = transform.localRotation;
@@ -45,6 +47,10 @@ public class TransformEffect : Script
             transform.localRotation = vec3.Lerp(startRot, finalRot, timer / duration);
             transform.localScale = vec3.Lerp(startScale, finalScale, timer / duration);
             timer += Time.deltaTime;
+        }
+        else
+        {
+            finished = true;
         }
     }
 }

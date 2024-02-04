@@ -351,8 +351,7 @@ public class Enemy : Script
         AnimationState idle = animationManager.GetState("Idle");
         //Lowest Precedence
 
-        //death.SetConditionals(false, stun, attack, walk, run, idle);
-        stun.SetConditionals(false, death, attack, walk, run);
+        stun.SetConditionals(false, death);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
         walk.SetConditionals(true, walk);
@@ -434,9 +433,6 @@ public class Enemy : Script
     {
         duration /= 2;
         float startDuration = duration;
-        vec3 newRot = modelOffset.rotation;
-        newRot.x = glm.Radians(-45f);
-        modelOffset.rotation = newRot;
         while (duration > 0)
         {
             rb.linearVelocity = new vec3(knockback * (duration / startDuration));
@@ -447,8 +443,6 @@ public class Enemy : Script
         while (duration > 0)
         {
             float val = glm.Radians(-45f);
-            newRot.x = glm.Lerp(0, val, duration / startDuration);
-            modelOffset.rotation = newRot;
             duration -= Time.deltaTime;
             yield return new WaitForSeconds(Time.deltaTime);
         }

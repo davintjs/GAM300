@@ -101,8 +101,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
-  Fade In Time (s): 2
-  Fade Out Time (s): 1
+  Fade In Time (s): 10
+  Fade Out Time (s): 5
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -10982,7 +10982,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 515.490845
+  LookAtDistance: 477.362213
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45

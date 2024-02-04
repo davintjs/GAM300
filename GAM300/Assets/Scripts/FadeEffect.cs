@@ -25,12 +25,14 @@ public class FadeEffect : Script
 
     public bool inAndOut = false;
 
+    public bool finished = false;
+
     //If currently inverted
     bool inverted = false;
 
     public bool start = true;
 
-    void Start()
+    public void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
@@ -55,6 +57,7 @@ public class FadeEffect : Script
                 inverted = false;
                 if (blink)
                     spriteRenderer.alpha = 1;
+                finished = true;
             }
             else
             {
@@ -71,6 +74,11 @@ public class FadeEffect : Script
                 {
                     timer = outDuration;
                     inverted = true;
+                    
+                }
+                else
+                {
+                    finished = true;
                 }
                 if (blink)
                     spriteRenderer.alpha = 0;

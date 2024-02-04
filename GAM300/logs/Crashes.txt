@@ -1,6 +1,5 @@
-[2024-02-05 00:12:30.186] [Error] [critical] 
-Caused By:	false
-Info:		Failed to load .scene file "Assets/Scene/LoadingScene.scene" due to: bad file: Assets/Scene/LoadingScene.scene
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 364)
+[2024-02-05 05:01:05.863] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 301)
 

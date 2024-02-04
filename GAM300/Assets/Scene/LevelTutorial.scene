@@ -143,8 +143,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Fade In Time (s): 10
+  Fade Out Time (s): 5
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -12726,7 +12726,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1406.29028
+  LookAtDistance: 1436.00464
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12937,7 +12937,7 @@ GameObject:
 ID: 1697064786422148714
 Transform:
   m_GameObject: {fileID: 17611351097031071778}
-  Translation: [-13.1134081, -0.263694435, 15.7915907]
+  Translation: [-13.0474634, -0.044242654, 15.7915907]
   Rotation: [0, 0, 0]
   Scale: [0.0318250023, 0.0318250023, 0.0318250023]
   Father: {fileID: 0}
@@ -12949,23 +12949,23 @@ ParticleComponent:
   m_GameObject: {fileID: 17611351097031071778}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material: {guid: b57036938cee3e06aad1785f03361791}
   Local Space: false
-  Particle Direction: [0, 0, 0]
-  Angle of Direction: 30
-  Number Of Particles: 16
+  Particle Direction: [6.1500001, 1.5, 0]
+  Angle of Direction: 34.1199989
+  Number Of Particles: 356
   Particle Lifetime: 0.300000012
   Particle Emission Rate: 1
   Particle Min Scale: 0.0299999993
-  Particle Max Scale: 0.0599999987
-  Particle Scale Rate: 0.699999988
-  Particle Speed: 4
-  Particle Noise Movement Percentage: 0
-  Particle Noise Frequency: 0
+  Particle Max Scale: 0.0199999996
+  Particle Scale Rate: 1
+  Particle Speed: 2
+  Particle Noise Movement Percentage: 4.98999977
+  Particle Noise Frequency: 4.42999983
   2D particle: false
-  Trailing: false
-  Trail Size: 0
-  Looping: false
+  Trailing: true
+  Trail Size: 66
+  Looping: true
 ---
 ID: 13482372997539004348
 GameObject:

@@ -57,7 +57,7 @@ class SceneTransitionTrigger : Script
         {
             fadeOut = true;
             timer = 0;
-            InternalCalls.StopMusic(fadeDuration*1.5f);
+            InternalCalls.StopMusic(fadeDuration*2f);
         }
     }
 }
