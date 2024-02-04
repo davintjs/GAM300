@@ -67,6 +67,22 @@ namespace BeanFactory
         public Texture ambientOcclusionTexture { get { return _ambientOcclusionTexture; } set { _ambientOcclusionTexture = value; PropertyChangedCallBack(); } }
         public Texture emissionTexture { get { return _emissionTexture; } set { _emissionTexture = value; PropertyChangedCallBack(); } }
 
+        public void Set(Material rhs)
+        {
+            _color = rhs.color;
+            _albedoTexture = rhs.albedoTexture;
+            _normalMapTexture = rhs.normalMapTexture;
+            _metallicTexture = rhs.metallicTexture;
+            _roughnessTexture = rhs.roughnessTexture;
+            _ambientOcclusionTexture = rhs.ambientOcclusionTexture;
+            _emissionTexture = rhs.emissionTexture;
+            shaderType = rhs.shaderType;
+            _metallic = rhs.metallic;
+            _roughness = rhs.roughness;
+            _ambientOcclusion = rhs.ambientOcclusion;
+            _emission = rhs.emission;
+        }
+
         public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; PropertyChangedCallBack(); } }
 
         public MeshRenderer _meshRenderer;

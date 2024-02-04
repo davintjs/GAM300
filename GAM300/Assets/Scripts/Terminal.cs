@@ -58,11 +58,9 @@ public class Terminal : Script
                 Console.WriteLine("Save Checkpoint");
                 //change glow of terminal
                 Material mat = terminalglowMesh.material;
-                //mat = glowMat;
-                //mat.meshRenderer = glowObjectReference.GetComponent<MeshRenderer>();
-                //mat.color = new vec4(glowMat.color);
+                mat.Set(glowMat);
+                mat.color = new vec4(glowMat.color);
 
-                mat.color = new vec4(colors, 1);
                 //mat.metallic = metallic;
 
                 //shift the spawn point to where the current termainal position where the player save
