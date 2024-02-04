@@ -47,8 +47,13 @@ void Animation_Manager::Update(float dt)
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
             animator.SetDefaultState("Idle");
-            //animator.ChangeState();
+            animator.ChangeState();
         }
+
+        /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
+        {
+            animator.SetState("Run");
+        }*/
 
         if (animator.playing && animator.AnimationAttached())
         {
