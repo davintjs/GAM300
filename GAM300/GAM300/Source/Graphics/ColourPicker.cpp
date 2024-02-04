@@ -39,7 +39,7 @@ void ColourPicker::Init()
 
 Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 {
-	return 0;
+	//return 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);

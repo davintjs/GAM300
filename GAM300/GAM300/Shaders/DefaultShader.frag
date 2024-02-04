@@ -427,9 +427,11 @@ void main()
     bool hasEmissionMap =false;
     if (hasEmission != 0)
     {
-        hasEmissionMap = true;
 //        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
         emission  =  texture(EmmisionMap, TexCoords).xyz; 
+        
+        if(emission != vec3(0.f,0.f,0.f))
+            hasEmissionMap = true;
         
     }
 
