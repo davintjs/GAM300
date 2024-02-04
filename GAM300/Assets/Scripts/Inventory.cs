@@ -17,6 +17,7 @@ public class Inventory : Script
     public int maxStatPackCount;
 
     public float healthPackHealValue = 5f;
+    public int staminaPackValue = 50;
 
     void Awake()
     {
@@ -35,7 +36,14 @@ public class Inventory : Script
 
     void Update()
     {
-        if(healthPackCount > 0 && Input.GetKey(KeyCode.D1))
+        thePacks();
+       
+    }
+
+    void thePacks()
+    {
+        //HEALTH PACK - RESTORES HEALTH
+        if (healthPackCount > 0 && Input.GetKey(KeyCode.D1))
         {
             healthPackCount -= 1;
             Console.WriteLine("Use Health Pack");
@@ -44,7 +52,18 @@ public class Inventory : Script
             thirdPersonController.UpdatehealthBar();
         }
 
-        if(maxStatPackCount > 0 && Input.GetKey(KeyCode.D2))
+        //STAMINA PACK - RESTORE STAMINA
+        if (staminaPackCount > 0 && Input.GetKey(KeyCode.D2))
+        {
+            staminaPackCount -= 1;
+            Console.WriteLine("Use Stamina Pack");
+            AudioManager.instance.useItem.Play();
+            thirdPersonController.restoreStamina(staminaPackValue);
+            thirdPersonController.UpdateStaminaBar();
+        }
+
+        //MAXSTAT PACK - RESTORE HEALTH AND STAMINA
+        if (maxStatPackCount > 0 && Input.GetKey(KeyCode.D3))
         {
             maxStatPackCount -= 1;
             Console.WriteLine("Use MaxStat Pack");

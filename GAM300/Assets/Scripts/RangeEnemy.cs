@@ -251,7 +251,7 @@ public class RangeEnemy : Script
         if(GetTag(other) == "PlayerAttack")
         {
             Transform otherT = other.gameObject.GetComponent<Transform>();
-            vec3 dir = otherT.back;
+            vec3 dir = otherT.forward;
             dir = dir.NormalizedSafe;
             if (damagedCoroutine != null)
             {

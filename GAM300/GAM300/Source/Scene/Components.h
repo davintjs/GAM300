@@ -214,7 +214,8 @@ struct AudioSource : Object
 	bool loop = false;
 	bool play = false;
 	float volume{1.f};
-	float fadetime{1.f};
+	float fadeInTime{1.f};
+	float fadeOutTime{1.f};
 	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };
@@ -224,7 +225,8 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
-		property_var(fadetime).Name("Fade Time (s)"),
+		property_var(fadeInTime).Name("Fade In Time (s)"),
+		property_var(fadeOutTime).Name("Fade Out Time (s)"),
 		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
@@ -524,7 +526,7 @@ struct Particle : Object
 	vec3 position;
 	vec3 velocity;
 	vec3 direction;
-	float acceleration;
+	float acceleration{0.f};
 	float lifetime;
 	float scale; 
 	float speed;

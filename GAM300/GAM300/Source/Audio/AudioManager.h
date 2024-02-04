@@ -66,7 +66,7 @@ public:
 
 	// Play / Unpause music with the filename
 	//void PlayMusic(const std::string soundGUID);
-	void PlayMusic(Engine::GUID<AudioAsset> soundGUID, float componentFade = 1.f);
+	void PlayMusic(Engine::GUID<AudioAsset> soundGUID, float componentFadeOut = 1.f, float componentFadeIn = 1.f);
 
 	// Unpause Music
 	void PlayMusic();
@@ -92,7 +92,7 @@ public:
 	void StopMusic(float fadetime = 1.f);
 
 	// stop component from playing
-	void StopAudioComponent(AudioSource & Source);
+	void StopAudioComponent(AudioSource & source);
 
 	// stops all audio
 	void StopAllAudio();
@@ -110,6 +110,7 @@ public:
 	float GetMusicVolume();
 	void SetSFXVolume(float volume);
 	void SetMusicVolume(float volume);
+	void SetMusicFade(AudioSource & source, float fadeOut, float fadeIn);
 	// Functions for volume settings end
 
 	// Generate random float number

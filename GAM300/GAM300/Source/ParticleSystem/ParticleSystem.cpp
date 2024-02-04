@@ -84,7 +84,7 @@ void ParticleManager::Update(float dt)
                 if (particle.noiselifetime <= 0.f) {
 
                     if (enableDirection && 
-                        (glm::dot(glm::normalize(particle.position - origin), glm::normalize(vec3(particleComponent.direction))) <= cosf((particleComponent.angle * 3.1415926) / 180.f))) {
+                        (glm::dot(glm::normalize(particle.position - origin), glm::normalize(vec3(particleComponent.direction))) <= cosf((particleComponent.angle * 3.1415926f) / 180.f))) {
                         particle.direction = vec3(particleComponent.direction);
                     }
                     else {

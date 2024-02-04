@@ -14,6 +14,7 @@ public class Terminal : Script
     public MeshRenderer terminalglowMesh;
     public MeshRenderer glowMesh;
     public Material glowMat;
+    public bool interaced = false;
 
     void Start()
     {
@@ -44,6 +45,8 @@ public class Terminal : Script
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
             //CheckCheckpoint();
+
+            ThirdPersonController.instance.isAtCheckpoint = true;
         }
 
     }
@@ -53,7 +56,7 @@ public class Terminal : Script
         if(index == ThirdPersonController.instance.checkpointIndex)
         {
             //save checkpoint
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && ThirdPersonController.instance.isAtCheckpoint == true)
             {
                 Console.WriteLine("Save Checkpoint");
                 //change glow of terminal

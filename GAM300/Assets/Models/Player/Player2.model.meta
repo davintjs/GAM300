@@ -1,10 +1,20 @@
-guid: 813240ea4c689714d9895b145865cc9e
+guid: d3980ec5fe76069ec1db098e9faea152
 meshes:
-  data: {guid: c61d57a01899786a435e0b253e279b3e}
-  data: {guid: 75ce49aabf138c17adf653c2f3a1a134}
-  data: {guid: 9bfae31d5c3817274e77d769e7b7b91b}
-  data: {guid: 0130e272684546fbc85ff254ff5b1306}
+  data: {guid: 12597e24af252df94929ea556633fff1}
 animations:
-  data: {guid: d9fa9816c6ff9cd3e63c6895b85750a8}
+  data: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
 animationStates:
-  Idle: [0, 31]
+  Idle: [4, 60]
+  Run: [62, 88]
+  Sprint: [89, 108]
+  Stun: [109, 129]
+  Jump: [130, 160]
+  Falling: [163, 182]
+  Attack1: [185, 228]
+  Attack2: [231, 324]
+  Attack3: [325, 420]
+  DashAttack: [422, 491]
+  Death: [492, 587]
+  Dodge: [591, 637]
+  GettingUp: [638, 866]
+  Overdrive: [869, 952]

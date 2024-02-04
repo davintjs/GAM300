@@ -3,8 +3,8 @@ Material:
   Shader: 0
   Albedo: [1, 0, 0, 1]
   Metallic: 1
-  Roughness: 1
-  AmbientOcclusion: 50
+  Roughness: 0.330000013
+  AmbientOcclusion: 3
   Is Emission: true
   Emission: 1
   AlbedoTexture: {guid: 00000000000000000000000000000000}
