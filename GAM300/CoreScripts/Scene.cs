@@ -22,9 +22,9 @@ namespace BeanFactory
 {
     public static class SceneManager
     {
-        public static void LoadScene(string sceneName)
+        public static void LoadScene(string sceneName, bool loadDirect = false)
         {
-            InternalCalls.LoadScene(sceneName);
+            InternalCalls.LoadScene(sceneName, loadDirect);
         }
 
         public static void LoadNext()

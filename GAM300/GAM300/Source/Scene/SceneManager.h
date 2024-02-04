@@ -44,7 +44,6 @@ public:
 
 	void LoadNext()
 	{
-		std::cout << "Loaded\n";
 		loaded = true;
 	}
 

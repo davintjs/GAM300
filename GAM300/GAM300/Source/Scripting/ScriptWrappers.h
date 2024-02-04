@@ -394,7 +394,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma endregion
 
 	// Load a scene
-	static void LoadScene(MonoString* mString)
+	static void LoadScene(MonoString* mString, bool loadDirect)
 	{
 		// Bean: Not really elegant because we can only load scenes from the scene folder
 		// Zach: kek
@@ -403,6 +403,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		scenePath += ".scene";
 
 		MySceneManager.sceneToLoad = scenePath;
+		if (loadDirect)
+			MySceneManager.LoadNext();
 	}
 
 	static void LoadNext()

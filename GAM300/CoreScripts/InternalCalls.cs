@@ -131,7 +131,7 @@ namespace BeanFactory
 
         #region SCENE
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LoadScene(string sceneName);
+        public static extern void LoadScene(string sceneName, bool loadDirect);
         #endregion
 
         #region AUDIO_SOURCE

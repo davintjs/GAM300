@@ -102,7 +102,7 @@ AudioSource:
   Loop: true
   Volume: 0.699999988
   Fade In Time (s): 2
-  Fade Out Time (s): 5
+  Fade Out Time (s): 1
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
 ---
@@ -216,6 +216,7 @@ Transform:
     - {fileID: 12478379518054110186}
     - {fileID: 15115753960540565494}
     - {fileID: 17033157074617951400}
+    - {fileID: 17866851235588629267}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -10579,7 +10580,7 @@ ID: 2429932456632985597
 Transform:
   m_GameObject: {fileID: 8065358626952296561}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -10981,7 +10982,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 554.084229
+  LookAtDistance: 515.490845
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -11481,11 +11482,12 @@ GameObject:
     - component: {fileID: 13344218449374947007}  # BoxCollider
     - component: {fileID: 8499411254914859218}  # Rigidbody
     - component: {fileID: 10361034448844998644}  # Script
+    - component: {fileID: 290685620503076803}  # Script
 ---
 ID: 16169073693454241236
 Transform:
   m_GameObject: {fileID: 15606294544464115370}
-  Translation: [66.3888702, 37.6836891, -113.93679]
+  Translation: [66.3910751, 37.6842041, -113.929695]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -11531,8 +11533,16 @@ Script:
   m_GameObject: {fileID: 15606294544464115370}
   m_IsEnabled: true
   Script: {guid: 6fe0112e2ff5dbc8519a15e42956802e}
-  gameover: false
   mesh: {fileID: 17427060703044079983}  # GameObject
+---
+ID: 290685620503076803
+Script:
+  m_GameObject: {fileID: 15606294544464115370}
+  m_IsEnabled: true
+  Script: {guid: 03efcb3e5ae6648610a87d35ebb74208}
+  sceneIndex: 1
+  fadeDuration: 4
+  fadeBlackSR: {fileID: 2293742353939863974}  # Component
 ---
 ID: 17614648089446210470
 GameObject:
@@ -14436,7 +14446,7 @@ ID: 13811611442745766600
 Transform:
   m_GameObject: {fileID: 1704405459447429049}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -14468,7 +14478,7 @@ ID: 17431661257437165654
 Transform:
   m_GameObject: {fileID: 7505235272623281090}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -14500,7 +14510,7 @@ ID: 9155072371493984954
 Transform:
   m_GameObject: {fileID: 11931709940185671807}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -14532,7 +14542,7 @@ ID: 8100482910037792098
 Transform:
   m_GameObject: {fileID: 2723553382536766900}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -14564,7 +14574,7 @@ ID: 6832024306486094958
 Transform:
   m_GameObject: {fileID: 10419665452268142691}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -15047,7 +15057,7 @@ ID: 6380692802903293290
 Transform:
   m_GameObject: {fileID: 5382915443314468010}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -15502,7 +15512,7 @@ ID: 14053836816538118579
 Transform:
   m_GameObject: {fileID: 8310365372469502612}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -15872,7 +15882,7 @@ ID: 2509363505227465543
 Transform:
   m_GameObject: {fileID: 4679045281971681028}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -57782,3 +57792,33 @@ Rigidbody:
   IsKinematic: true
   UseGravity: false
   Is_trigger: true
+---
+ID: 17866851235588629267
+GameObject:
+  m_IsActive: true
+  m_Name: FadeBlack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7042426106851415746}  # Transform
+    - component: {fileID: 2293742353939863974}  # SpriteRenderer
+---
+ID: 7042426106851415746
+Transform:
+  m_GameObject: {fileID: 17866851235588629267}
+  Translation: [0, 0, 9]
+  Rotation: [3.14158463, 0, -3.14159274]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 2293742353939863974
+SpriteRenderer:
+  m_GameObject: {fileID: 17866851235588629267}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}

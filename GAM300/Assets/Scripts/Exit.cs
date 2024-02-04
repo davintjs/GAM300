@@ -55,15 +55,14 @@ public class Exit : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu");
-
+            SceneManager.LoadScene("MainMenu", true);
         }
 
         if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            //Application.Exit();
+            //Application.Quit();
 
         }
     }

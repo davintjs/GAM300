@@ -94,7 +94,7 @@ public class MainMenu : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("Settings");
+            SceneManager.LoadScene("Settings", true);
 
         }
 
@@ -102,7 +102,7 @@ public class MainMenu : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("HowToPlay");
+            SceneManager.LoadScene("HowToPlay",true);
 
         }
 
@@ -110,7 +110,7 @@ public class MainMenu : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("Exit");
+            SceneManager.LoadScene("Exit", true);
 
         }
 

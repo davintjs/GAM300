@@ -48,7 +48,7 @@ public class HowToPlay : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("MainMenu", true);
 
         }
 

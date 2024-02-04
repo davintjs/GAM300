@@ -82,6 +82,7 @@ public class Elevator : Script
             Console.WriteLine("PlayerOnPlatform");
             moving = true;
             AudioManager.instance.elevator.Play();
+
         }
     }
 
