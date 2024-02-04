@@ -10981,7 +10981,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 833.259521
+  LookAtDistance: 792.64502
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -56711,3 +56711,149 @@ Script:
   m_GameObject: {fileID: 1845828409332507245}
   m_IsEnabled: true
   Script: {guid: e4cb2d056ed272fd4b072e22637c7516}
+---
+ID: 16307648946800477436
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4510224941171925014}  # Transform
+---
+ID: 4510224941171925014
+Transform:
+  m_GameObject: {fileID: 16307648946800477436}
+  Translation: [66.3274994, 37.3709984, -45.4675827]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5690401456870844020
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13455737955764195381}  # Transform
+---
+ID: 13455737955764195381
+Transform:
+  m_GameObject: {fileID: 5690401456870844020}
+  Translation: [151.170639, 37.3709984, -59.131382]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3520596444848005558
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13391212185643974938}  # Transform
+---
+ID: 13391212185643974938
+Transform:
+  m_GameObject: {fileID: 3520596444848005558}
+  Translation: [105.032837, 36.3427162, -90.9587173]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16874761357063168674
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 855381827491488986}  # Transform
+---
+ID: 855381827491488986
+Transform:
+  m_GameObject: {fileID: 16874761357063168674}
+  Translation: [66.5033035, 35.9828224, -150.985336]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 846519838180547857
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7124094875133113107}  # Transform
+---
+ID: 7124094875133113107
+Transform:
+  m_GameObject: {fileID: 846519838180547857}
+  Translation: [52.8473358, 37.3709984, -77.3507996]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 4976388688774069869
+GameObject:
+  m_IsActive: true
+  m_Name: CheatTP6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9727648026438134175}  # Transform
+---
+ID: 9727648026438134175
+Transform:
+  m_GameObject: {fileID: 4976388688774069869}
+  Translation: [66.4966125, 39.7792931, -113.931007]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5018748616658097044
+GameObject:
+  m_IsActive: true
+  m_Name: Cheats
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6962065896865258938}  # Transform
+    - component: {fileID: 8351204528202500194}  # Script
+---
+ID: 6962065896865258938
+Transform:
+  m_GameObject: {fileID: 5018748616658097044}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8351204528202500194
+Script:
+  m_GameObject: {fileID: 5018748616658097044}
+  m_IsEnabled: true
+  Script: {guid: ad03811cdc24fd8d9823824dfccb524d}
+  tp1: {fileID: 16307648946800477436}  # Component
+  tp2: {fileID: 5690401456870844020}  # Component
+  tp3: {fileID: 3520596444848005558}  # Component
+  tp4: {fileID: 16874761357063168674}  # Component
+  tp5: {fileID: 846519838180547857}  # Component
+  tp6: {fileID: 4976388688774069869}  # Component
