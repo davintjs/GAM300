@@ -154,6 +154,7 @@ vec3 getNormalFromMap()
     vec3 normal = texture(NormalMap, TexCoords).xyz;
     normal.z = normal.z == 0 ? 1 : normal.z;
 
+//    normal.y = 1.0-normal.y;
     vec3 tangentNormal = (normal * 2.0) - 1.0;
 
     // transform normal vector to range [-1,1]
