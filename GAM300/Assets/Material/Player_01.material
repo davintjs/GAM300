@@ -12,4 +12,4 @@ Material:
   MetallicTexture: {guid: ea664b9c2dbe7dac843982884b9c7d73}
   RoughnessTexture: {guid: 010d260b89c858091e0120ca511080a3}
   AoTexture: {guid: 53c431953373939d846c452c3536a526}
-  EmissionTexture: {guid: 3dd11f0e8949fe0062a35c5db4c361e0}
+  EmissionTexture: {guid: 00000000000000000000000000000000}
