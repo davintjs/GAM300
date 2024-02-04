@@ -1,7 +1,7 @@
 Material:
-  Material Name: RedMaterial
-  Shader: 0
-  Albedo: [1, 0, 0, 1]
+  Material Name: Neon Pink
+  Shader: 1
+  Albedo: [1, 0.0627451017, 0.941176534, 1]
   Metallic: 1
   Roughness: 0.330000013
   AmbientOcclusion: 3

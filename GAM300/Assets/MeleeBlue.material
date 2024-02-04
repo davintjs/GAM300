@@ -1,11 +1,11 @@
 Material:
-  Material Name: RedMaterial
+  Material Name: MeleeBlue
   Shader: 0
-  Albedo: [1, 0, 0, 1]
+  Albedo: [0.121568635, 0.31764707, 1, 1]
   Metallic: 1
-  Roughness: 0.330000013
-  AmbientOcclusion: 3
-  Is Emission: true
+  Roughness: 1
+  AmbientOcclusion: 1
+  Is Emission: false
   Emission: 1
   AlbedoTexture: {guid: 00000000000000000000000000000000}
   NormalMap: {guid: 00000000000000000000000000000000}
