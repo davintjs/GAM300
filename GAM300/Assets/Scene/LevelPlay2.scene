@@ -10981,7 +10981,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 752.231567
+  LookAtDistance: 712.041016
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -16367,10 +16367,29 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
 ---
+ID: 11890626706069023286
+GameObject:
+  m_IsActive: true
+  m_Name: SpinningPropellor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3530341635574436926}  # Transform
+---
+ID: 3530341635574436926
+Transform:
+  m_GameObject: {fileID: 11890626706069023286}
+  Translation: [66.8006287, 41.5047226, -52.4253578]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999547, 1, 0.999995947]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 6043762608075201925}
+---
 ID: 6043762608075201925
 GameObject:
   m_IsActive: true
-  m_Name: SpinningPropeller
+  m_Name: PropellerPivot
   m_TagString: EnemyAttack
   m_Layer: 0
   m_Component:
@@ -16382,10 +16401,10 @@ GameObject:
 ID: 12139972292941966713
 Transform:
   m_GameObject: {fileID: 6043762608075201925}
-  Translation: [76.6132278, 41.5047226, -52.4253578]
+  Translation: [0, 0, 1.13699843e-06]
   Rotation: [0, 0, 0]
-  Scale: [0.99999547, 1, 0.999995947]
-  Father: {fileID: 0}
+  Scale: [1, 1, 1]
+  Father: {fileID: 11890626706069023286}
   m_Children:
     - {fileID: 16699902853658577603}
     - {fileID: 14500960313742346744}
@@ -16422,8 +16441,6 @@ Script:
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
   rotateSpeed: 0.100000001
   rotateClockwise: true
-  originalRotation: true
-  rotateAntiClockwise: false
 ---
 ID: 16699902853658577603
 GameObject:
@@ -35965,10 +35982,10 @@ GameObject:
 ID: 120929131535908806
 Transform:
   m_GameObject: {fileID: 13798602388106733380}
-  Translation: [66.3537216, 37.7129745, -39.6642876]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
+  Translation: [-10.259552, -3.79174805, 12.7611227]
+  Rotation: [0, -0, 0]
+  Scale: [1.00000453, 1, 1.00000405]
+  Father: {fileID: 7607152712204131261}
   m_Children:
     []
 ---
@@ -55772,286 +55789,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
----
-ID: 7822509692763125868
-GameObject:
-  m_IsActive: true
-  m_Name: SpinningPropeller - Copy
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11020344380990647277}  # Transform
-    - component: {fileID: 10380864769974465959}  # BoxCollider
-    - component: {fileID: 17033741378998876911}  # Rigidbody
-    - component: {fileID: 16378118670181527810}  # Script
----
-ID: 11020344380990647277
-Transform:
-  m_GameObject: {fileID: 7822509692763125868}
-  Translation: [76.6132278, 41.5047226, -44.3622971]
-  Rotation: [0, -1.57079637, 0]
-  Scale: [0.999934375, 1, 0.999933124]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 164610197668181579}
-    - {fileID: 14658581798936413626}
-    - {fileID: 17321257185566153290}
-    - {fileID: 5726084718375991769}
-    - {fileID: 3534158019816578948}
-    - {fileID: 3538082033187744621}
----
-ID: 10380864769974465959
-BoxCollider:
-  m_GameObject: {fileID: 7822509692763125868}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 17033741378998876911
-Rigidbody:
-  m_GameObject: {fileID: 7822509692763125868}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 16378118670181527810
-Script:
-  m_GameObject: {fileID: 7822509692763125868}
-  m_IsEnabled: true
-  Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 1
-  rotateClockwise: true
-  originalRotation: false
-  rotateAntiClockwise: false
----
-ID: 164610197668181579
-GameObject:
-  m_IsActive: true
-  m_Name: blades - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7935599835655455122}  # Transform
-    - component: {fileID: 8730880226664560788}  # MeshRenderer
----
-ID: 7935599835655455122
-Transform:
-  m_GameObject: {fileID: 164610197668181579}
-  Translation: [-6.19888351e-06, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.999999166, 1.00000012, 0.999999225]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 8730880226664560788
-MeshRenderer:
-  m_GameObject: {fileID: 164610197668181579}
-  m_IsEnabled: true
-  Mesh: {guid: d7b21c230c19185c1ee9a31a5006563c}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 14658581798936413626
-GameObject:
-  m_IsActive: true
-  m_Name: core - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17466162865058221125}  # Transform
-    - component: {fileID: 531662566992045744}  # MeshRenderer
----
-ID: 17466162865058221125
-Transform:
-  m_GameObject: {fileID: 14658581798936413626}
-  Translation: [0, 0, 1.13699843e-06]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 531662566992045744
-MeshRenderer:
-  m_GameObject: {fileID: 14658581798936413626}
-  m_IsEnabled: true
-  Mesh: {guid: f80911da0e0422fa0477a07f93e3a870}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 17321257185566153290
-GameObject:
-  m_IsActive: true
-  m_Name: collider1 - Copy
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7356214689511169381}  # Transform
-    - component: {fileID: 7623218614816776873}  # BoxCollider
-    - component: {fileID: 16239850583760458205}  # Rigidbody
----
-ID: 7356214689511169381
-Transform:
-  m_GameObject: {fileID: 17321257185566153290}
-  Translation: [-3.17600012, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 7623218614816776873
-BoxCollider:
-  m_GameObject: {fileID: 17321257185566153290}
-  m_IsEnabled: true
-  Dimensions: [5, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 16239850583760458205
-Rigidbody:
-  m_GameObject: {fileID: 17321257185566153290}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 5726084718375991769
-GameObject:
-  m_IsActive: true
-  m_Name: collider2 - Copy
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16024908804254420694}  # Transform
-    - component: {fileID: 12198215313302557957}  # BoxCollider
-    - component: {fileID: 14903291786834407277}  # Rigidbody
----
-ID: 16024908804254420694
-Transform:
-  m_GameObject: {fileID: 5726084718375991769}
-  Translation: [0, 3.14353156, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 12198215313302557957
-BoxCollider:
-  m_GameObject: {fileID: 5726084718375991769}
-  m_IsEnabled: true
-  Dimensions: [1, 5, 1]
-  Offset: [0, 0, 0]
----
-ID: 14903291786834407277
-Rigidbody:
-  m_GameObject: {fileID: 5726084718375991769}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 3534158019816578948
-GameObject:
-  m_IsActive: true
-  m_Name: collider3 - Copy
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16114601221961292354}  # Transform
-    - component: {fileID: 12199141903511517772}  # BoxCollider
-    - component: {fileID: 11625183954836690779}  # Rigidbody
----
-ID: 16114601221961292354
-Transform:
-  m_GameObject: {fileID: 3534158019816578948}
-  Translation: [3.17600012, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 12199141903511517772
-BoxCollider:
-  m_GameObject: {fileID: 3534158019816578948}
-  m_IsEnabled: true
-  Dimensions: [6, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 11625183954836690779
-Rigidbody:
-  m_GameObject: {fileID: 3534158019816578948}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 3538082033187744621
-GameObject:
-  m_IsActive: true
-  m_Name: collider4 - Copy
-  m_TagString: EnemyAttack
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18017836322761725255}  # Transform
-    - component: {fileID: 7416788245310993462}  # BoxCollider
-    - component: {fileID: 12232209372399339539}  # Rigidbody
----
-ID: 18017836322761725255
-Transform:
-  m_GameObject: {fileID: 3538082033187744621}
-  Translation: [0, -3.14400101, 1.13699843e-06]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7822509692763125868}
-  m_Children:
-    []
----
-ID: 7416788245310993462
-BoxCollider:
-  m_GameObject: {fileID: 3538082033187744621}
-  m_IsEnabled: true
-  Dimensions: [1, 6, 1]
-  Offset: [0, 0, 0]
----
-ID: 12232209372399339539
-Rigidbody:
-  m_GameObject: {fileID: 3538082033187744621}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
 ---
 ID: 3187203319805926689
 GameObject:
