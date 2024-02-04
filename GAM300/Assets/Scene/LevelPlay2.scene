@@ -14723,7 +14723,7 @@ Script:
   dashAttackTimer: 0.899999976
   walkStepsInterval: 0.439999998
   overDriveStamina: 40
-  sprintStamina: 0.5
+  sprintStamina: 0.25
   startDashCooldown: false
   currentOverdriveCooldown: 0
   dodgeTimer: 0.5
@@ -14759,7 +14759,7 @@ Script:
   jumpStamina: 0
   attackStamina: 0
   attack2duration: 0.600000024
-  dodgeStamina: 20
+  dodgeStamina: 10
   currentAnimationTimer: 0
   attack1duration: 0.5
   animCancelPercentage: 0.600000024

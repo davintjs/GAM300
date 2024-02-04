@@ -12717,7 +12717,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1178.151
+  LookAtDistance: 1193.03882
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12840,7 +12840,7 @@ Script:
   dashAttackTimer: 0.100000001
   walkStepsInterval: 0.439999998
   overDriveStamina: 40
-  sprintStamina: 0.5
+  sprintStamina: 0.25
   startDashCooldown: false
   currentOverdriveCooldown: 0
   dodgeTimer: 1
@@ -12876,7 +12876,7 @@ Script:
   jumpStamina: 0
   attackStamina: 5
   attack2duration: 0.600000024
-  dodgeStamina: 20
+  dodgeStamina: 10
   currentAnimationTimer: 0
   attack1duration: 0.5
   animCancelPercentage: 0.600000024
