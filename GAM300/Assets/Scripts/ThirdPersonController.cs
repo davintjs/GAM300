@@ -734,6 +734,13 @@ public class ThirdPersonController : Script
 
 
     }
+
+    public void restoreStamina(int staminaPackAmount)
+    {
+        currentStamina += staminaPackAmount;
+        UpdateStaminaBar();
+    }
+
     public void UpdatehealthBar()
     {
 
