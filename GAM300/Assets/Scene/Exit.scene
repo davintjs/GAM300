@@ -1,0 +1,212 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: HowToPlay
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 7305319039410813174
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4864774252226257722}  # Transform
+    - component: {fileID: 2199169755166096751}  # Camera
+---
+ID: 4864774252226257722
+Transform:
+  m_GameObject: {fileID: 7305319039410813174}
+  Translation: [0, 0, 0.728640199]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2199169755166096751
+Camera:
+  m_GameObject: {fileID: 7305319039410813174}
+  m_IsEnabled: true
+  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
+  ClearFlags: "\x00"
+  CullingMask: "\x00"
+  LookAtDistance: 7.81407881
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 17065559468612678914
+GameObject:
+  m_IsActive: true
+  m_Name: SettingsCanvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11736666798754351607}  # Transform
+    - component: {fileID: 4442105592620540233}  # Canvas
+    - component: {fileID: 9536886847942146669}  # Script
+---
+ID: 11736666798754351607
+Transform:
+  m_GameObject: {fileID: 17065559468612678914}
+  Translation: [0.0160000008, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.60844898, 0.972704649, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 9386478579826465449}
+    - {fileID: 12690634969259096449}
+    - {fileID: 13236326914152460117}
+    - {fileID: 15290233428529554524}
+---
+ID: 4442105592620540233
+Canvas:
+  m_GameObject: {fileID: 17065559468612678914}
+  m_IsEnabled: true
+---
+ID: 9536886847942146669
+Script:
+  m_GameObject: {fileID: 17065559468612678914}
+  m_IsEnabled: true
+  Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
+  isStartActive: true
+  flickerTimer: 0
+  duration: 2
+  back: false
+  timer: 0
+  sizeMultiplier: 1.5
+  mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
+  noButton: {fileID: 13236326914152460117}  # GameObject
+  yesButton: {fileID: 12690634969259096449}  # GameObject
+---
+ID: 9386478579826465449
+GameObject:
+  m_IsActive: true
+  m_Name: ExitImage
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10434548019950719823}  # Transform
+    - component: {fileID: 6685538826684972588}  # SpriteRenderer
+---
+ID: 10434548019950719823
+Transform:
+  m_GameObject: {fileID: 9386478579826465449}
+  Translation: [-0.0382067561, 0, -0.492439002]
+  Rotation: [0, 0, 0]
+  Scale: [0.602047026, 1, 0.999977291]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 6685538826684972588
+SpriteRenderer:
+  m_GameObject: {fileID: 9386478579826465449}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 12690634969259096449
+GameObject:
+  m_IsActive: true
+  m_Name: Yesbutton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7029561702410403906}  # Transform
+    - component: {fileID: 10194207354943163215}  # SpriteRenderer
+---
+ID: 7029561702410403906
+Transform:
+  m_GameObject: {fileID: 12690634969259096449}
+  Translation: [-0.107464127, -0.0499872416, 0.131215349]
+  Rotation: [-3.13925648, -0.09978576, 0.0135172568]
+  Scale: [0.0741347447, 0.0428141095, 0.144865379]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 10194207354943163215
+SpriteRenderer:
+  m_GameObject: {fileID: 12690634969259096449}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: bd551c264f51691f045698a21952516a}
+---
+ID: 13236326914152460117
+GameObject:
+  m_IsActive: true
+  m_Name: noButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4585798291201254240}  # Transform
+    - component: {fileID: 15272266936174703665}  # SpriteRenderer
+---
+ID: 4585798291201254240
+Transform:
+  m_GameObject: {fileID: 13236326914152460117}
+  Translation: [0.0782189146, -0.064494364, -0.00125762285]
+  Rotation: [-3.61283159, -0.0131946886, 0]
+  Scale: [0.0767442062, 0.0571210235, 1.73605609]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 15272266936174703665
+SpriteRenderer:
+  m_GameObject: {fileID: 13236326914152460117}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 512a41424fe3757f75000347c6fad08d}
+---
+ID: 15290233428529554524
+GameObject:
+  m_IsActive: true
+  m_Name: ExitTitle
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3837679008896948487}  # Transform
+    - component: {fileID: 1929880018281593265}  # TextRenderer
+---
+ID: 3837679008896948487
+Transform:
+  m_GameObject: {fileID: 15290233428529554524}
+  Translation: [-0.00994747225, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.621717036, 1.02806139, 1]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 1929880018281593265
+TextRenderer:
+  m_GameObject: {fileID: 15290233428529554524}
+  m_IsEnabled: true
+  Text: Are you sure you want to quit?
+  X-axis Position: -0.839999974
+  Y-axis Position: 0.189999998
+  Scale: 1.19000006
+  Color R: 2.91000009
+  Color G: 2.06999993
+  Color B: 1.54999995

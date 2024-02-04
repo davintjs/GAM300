@@ -173,6 +173,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioMute(bool mute);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseComponent(AudioSource audioSource);
         #endregion	
 
         #region INPUT_SYSTEM

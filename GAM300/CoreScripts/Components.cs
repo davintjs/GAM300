@@ -101,6 +101,8 @@ namespace BeanFactory
     {
         public void Play() { InternalCalls.AudioSourcePlay(this); }
 
+        public void Pause() { InternalCalls.PauseComponent(this); }
+
         public GameObject gameObject
         {
             get
