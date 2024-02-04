@@ -475,9 +475,9 @@ public class ThirdPersonController : Script
 
             if(currentDashAttackTimer > 0.5f)
             {
-                CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
+                CC.force = PlayerModel.forward * dashAttackSpeed;//dash player forward
 
-                selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+                selectedWeaponCollider.transform.localPosition = new vec3(transform.position + PlayerModel.forward * 0.6f);
                 attackLight.SetActive(true);
                 selectedWeaponCollider.SetActive(true);//enable the weapon collider
 
@@ -486,7 +486,7 @@ public class ThirdPersonController : Script
             if(currentDashAttackTimer <= 0.5f)
             {
                 movement = vec3.Zero;
-                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                selectedWeaponCollider.transform.position = new vec3(10000);
                 attackLight.SetActive(false);//disable weapon collider
             }
             if(currentDashAttackTimer <= 0)
@@ -517,7 +517,7 @@ public class ThirdPersonController : Script
         if(isDodging)
         {
             startDodgeCooldown = true;
-            CC.force = PlayerModel.back * dodgeSpeed;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
             if(currentDodgeTimer <= 0)
@@ -614,7 +614,9 @@ public class ThirdPersonController : Script
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && currentStamina >= overDriveStamina)
             {
                 AudioManager.instance.playerOverdrive.Play();
-                UseStamina(overDriveStamina);
+
+                //Overdrive doesn't need stamina to use
+                //UseStamina(overDriveStamina);
                 Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
@@ -625,9 +627,10 @@ public class ThirdPersonController : Script
             }
 
             bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;
-            if (Input.GetMouseDown(0) && (combo || !IsAttacking) && currentStamina >= attackStamina)
+            if (Input.GetMouseDown(0) && (combo || !IsAttacking))
             {
-                UseStamina(attackStamina);
+                //Normal attacks won't use stamina.
+                //UseStamina(attackStamina);
 
                 switch (comboCount)
                 {
@@ -654,10 +657,12 @@ public class ThirdPersonController : Script
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking && currentStamina >= jumpStamina)
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
                 SetState("Jump", true);
-                UseStamina(jumpStamina);
+                
+                //Jump will not require stamina
+                //UseStamina(jumpStamina);
                 AudioManager.instance.jumpVoice.Play();
                 movement += vec3.UnitY * JumpSpeed;
             }

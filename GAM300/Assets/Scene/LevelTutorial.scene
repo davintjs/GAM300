@@ -12717,7 +12717,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1163.26111
+  LookAtDistance: 1178.151
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
