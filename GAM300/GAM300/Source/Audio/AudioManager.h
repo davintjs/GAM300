@@ -122,6 +122,10 @@ public:
 	void CallbackAudioAssetUnloaded(AssetUnloadedEvent<AudioAsset>*pEvent);
 
 	void CallbackSceneStop(SceneStopEvent * pEvent);
+
+	void EnableSFX(bool toggle);
+
+	bool SFXEnabled() { return enableSFX; }
 private:
 
 	FMOD::System* system{};
@@ -139,6 +143,6 @@ private:
 	float loopfxVolume{ 1.f };
 	float fixStepTime{ .5f };
 	float stepTime{ .0f };
-	float fadetime{ 1.f };
+	bool enableSFX{ true };
 	bool enableStep{ false };
 };

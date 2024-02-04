@@ -137,8 +137,22 @@ namespace BeanFactory
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(AudioSource audioSource);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void StopMusic(float fadetime);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ResumeMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void EnableSFX(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMasterVolume(bool toggle);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
