@@ -12,38 +12,67 @@ public class SpinningPropeller : Script
     public bool rotateClockwise = true;
     public bool rotateAntiClockwise = false;
 
+    public bool originalRotation = true;
+
+    vec3 tempTransform;
 
     void Start()
     {
-
+        tempTransform = transform.up;
     }
 
     void Update()
     {
 
-        if (rotateClockwise && !rotateAntiClockwise)
+        rotation();
+    }
+
+    void rotation()
+    {
+        if (originalRotation == true)
         {
-            rotateAntiClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
+            //ORIGINAL ROTATION
+            if (rotateClockwise && !rotateAntiClockwise)
+            {
+                rotateAntiClockwise = false;
+                //GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
+                vec3 rot = transform.rotation + new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
 
-            //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
+                //reset rotation so it only rotates z axis
 
-            //transform.localRotation = rot;
+                transform.rotation = rot;
+            }
+            if (rotateAntiClockwise && !rotateClockwise)
+            {
+                rotateClockwise = false;
+                //GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
+                vec3 rot = transform.rotation + new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
+
+                transform.rotation = rot;
+            }
         }
-        if (rotateAntiClockwise && !rotateClockwise)
+
+        if (originalRotation == false)
         {
-            rotateClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
+            //ORIGINAL ROTATION
+            if (rotateClockwise && !rotateAntiClockwise)
+            {
+                rotateAntiClockwise = false;
+                //GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
+                vec3 rot = transform.rotation + tempTransform * Time.deltaTime * rotateSpeed;
 
-            //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
+                //reset rotation so it only rotates z axis
 
-            //transform.localRotation = rot;
+                transform.rotation = rot;
+            }
+            if (rotateAntiClockwise && !rotateClockwise)
+            {
+                rotateClockwise = false;
+                //GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
+                vec3 rot = transform.rotation + tempTransform * Time.deltaTime * -rotateSpeed;
+
+                transform.rotation = rot;
+            }
         }
     }
 }

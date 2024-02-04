@@ -59,8 +59,8 @@ Entity& Scene::StoreTransformHierarchy(ReferencesTable& storage, Engine::UUID en
 	Entity& val = *Add<Entity>();
 	storage[GetType::E<Entity>()][key] = val;
 	Transform& transform{ Get<Transform>(entityID) };
-	StoreComponentHierarchy(storage,entityID,val.EUID(),AllComponentTypes());
 	Get<Transform>(val).RecalculateLocalMatrices();
+	StoreComponentHierarchy(storage,entityID,val.EUID(),AllComponentTypes());
 	//Create map entry
 	for (Engine::UUID euid : transform.child)
 	{

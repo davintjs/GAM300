@@ -38,7 +38,7 @@ meshes:
 animations:
   data: {guid: c0be1abecf08f639d493afa71ad72c31}
 animationStates:
-  Idle: [5, 61]
+  Idle: [4, 60]
   Run: [64, 88]
   Sprint: [91, 108]
   Stun: [109, 129]

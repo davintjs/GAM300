@@ -5,18 +5,6 @@
 
 #define PARTICLE ParticleManager::Instance()
 
-//class Particle
-//{
-//public: 
-//	Particle() {}
-//	Particle(const vec3& position, const vec3& velocity, const vec3& acceleration, float lifetime)
-//		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime) {}
-//	vec3 position;
-//	vec3 velocity;
-//	vec3 acceleration;
-//	float lifetime;
-//};
-
 class Random
 {
 public:

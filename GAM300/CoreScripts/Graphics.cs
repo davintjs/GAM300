@@ -39,7 +39,21 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class Material
     {
-        private int shaderType;
+        Texture _albedoTexture;
+        Texture _normalMapTexture;
+        Texture _metallicTexture;
+        Texture _roughnessTexture;
+        Texture _ambientOcclusionTexture;
+        Texture _emissionTexture;
+        vec4 _color = new vec4(1,2,3,4);
+        int shaderType = 1;
+        float _metallic = 2;
+        float _roughness =3 ;
+        float _ambientOcclusion = 4;
+        float _emission = 5;
+
+        bool isEmission;
+        bool isVariant;
 
         public vec4 color { get { return _color; } set { _color = value; PropertyChangedCallBack(); } }
         public float metallic { get { return _metallic; } set { _metallic = value; PropertyChangedCallBack(); } }
@@ -52,26 +66,13 @@ namespace BeanFactory
         public Texture roughnessTexture { get { return _roughnessTexture; } set { _roughnessTexture = value; PropertyChangedCallBack(); } }
         public Texture ambientOcclusionTexture { get { return _ambientOcclusionTexture; } set { _ambientOcclusionTexture = value; PropertyChangedCallBack(); } }
         public Texture emissionTexture { get { return _emissionTexture; } set { _emissionTexture = value; PropertyChangedCallBack(); } }
-        vec4 _color;
-        float _metallic;
-        float _roughness;
-        float _ambientOcclusion;
-        float _emission;
-        Texture _albedoTexture;
-        Texture _normalMapTexture;
-        Texture _metallicTexture;
-        Texture _roughnessTexture;
-        Texture _ambientOcclusionTexture;
-        Texture _emissionTexture;
 
-        bool isEmission;
-        bool isVariant;
+        public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; PropertyChangedCallBack(); } }
 
-        public MeshRenderer meshRenderer;
+        public MeshRenderer _meshRenderer;
 
         void PropertyChangedCallBack()
         {
-            Console.WriteLine("Here3");
             isVariant = true;
             InternalCalls.SetMaterial(meshRenderer, this);
         }

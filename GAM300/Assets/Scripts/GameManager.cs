@@ -10,6 +10,7 @@ public class GameManager : Script
 {
     static public GameManager instance;
     public AudioSource BGM_Source;
+    public float fadeTime = 1f;
 
     public bool paused = false;
 
@@ -41,6 +42,11 @@ public class GameManager : Script
         {
             Input.LockCursor(true);
             paused = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            InternalCalls.StopMusic(fadeTime);
         }
     }
 }

@@ -204,7 +204,7 @@ T& Scene::Get(Engine::UUID euid, Engine::UUID uuid)
 
 
 template<typename T>
-T& Scene::Get(Handle& handle)
+T& Scene::Get(const Handle& handle)
 {
 	return Get<T>(handle.euid, handle.uuid);
 }

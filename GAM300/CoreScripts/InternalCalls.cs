@@ -137,8 +137,22 @@ namespace BeanFactory
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(AudioSource audioSource);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void StopMusic(float fadetime);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ResumeMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void EnableSFX(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMasterVolume(bool toggle);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
@@ -236,7 +250,7 @@ namespace BeanFactory
 
         #region MESH_RENDERER
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetMaterial(MeshRenderer meshRenderer, ref Material mat);
+        public static extern void GetMaterial(MeshRenderer meshRenderer, Material mat);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMaterial(MeshRenderer meshRenderer, Material mat);

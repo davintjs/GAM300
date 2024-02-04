@@ -248,7 +248,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(0,0,1));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -264,7 +264,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(1, 0, 0));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -282,7 +282,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(0, 1, 0));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -455,7 +455,7 @@ namespace BeanFactory
             get 
             {
                 Material mat = new Material();
-                InternalCalls.GetMaterial(this, ref mat);
+                InternalCalls.GetMaterial(this, mat);
                 mat.meshRenderer = this;
                 return mat;
             }

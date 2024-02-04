@@ -177,13 +177,13 @@ struct Transform : Object
 	void RemoveChild(Transform* t);
 
 private:
+	glm::mat4x4 worldMatrix;
 	Vector3 translation{};
 	Vector3 rotation{};
 	Vector3 scale{ 1 };
 	Vector3 globalPos{};
 	Vector3 globalRot{};
 	Vector3 globalScale{};
-	glm::mat4x4 worldMatrix;
 
 public:
 
@@ -513,7 +513,7 @@ property_begin_name(Canvas, "Canvas")
 
 struct Trail {
 		unsigned int count{0};
-		std::vector<vec3> pos;
+		std::deque<vec3> pos;
 };
 
 struct Particle : Object
@@ -539,20 +539,26 @@ struct ParticleComponent : Object
 	Engine::GUID<MaterialAsset> materialGUID{ 0 };
 	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
 
-	int numParticles_ = 1;
-	float particleLifetime_ = 3.0f;
-	float particleEmissionRate_ = 100.0f;
-	float particleMinScale_ = 0.1f;
-	float particleMaxScale_ = 1.0f;
-	float particleScaleRate_ = 0.5f;
-	float speed_ = 0.5f;
-	float desiredLifetime = 5.0f;
-	float noise = 0.f;
-	float noisefrequency = 0.f;
-	bool particleLooping = false;
+	bool particleLooping{ false };
+	bool is2D{ false };
+	bool trailEnabled{ false };
+	bool isLocalSpace{ false };
 
-	bool is2D = false;
-	bool trailEnabled = false;
+	int numParticles_{ 1 };
+	int trailSize{ 0 };
+
+	float angle{ 30.f }; // for directional particles
+	float particleLifetime_{ 3.0f };
+	float particleEmissionRate_{ 100.0f };
+	float particleMinScale_{ 0.1f };
+	float particleMaxScale_{ 1.0f };
+	float particleScaleRate_{ 0.5f };
+	float speed_{ 0.5f };
+	float desiredLifetime{ 5.0f };
+	float noiseMovement{ 0.f };
+	float noisefrequency{ 0.f };
+
+	Vector3 direction{0.f,0.f,0.f};
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -563,18 +569,22 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(meshID).Name("Mesh"),
 	property_var(materialGUID).Name("Material"),
 	//property_var(ParticleTexture).Name("Particle Texture"),
+	property_var(isLocalSpace).Name("Local Space"),
+	property_var(direction).Name("Particle Direction"),
+	property_var(angle).Name("Angle of Direction"),
 	property_var(numParticles_).Name("Number Of Particles"),
-		property_var(particleLifetime_).Name("Particle Lifetime"),
-		property_var(particleEmissionRate_).Name("Particle Emission Rate"),
-		property_var(particleMinScale_).Name("Particle Min Scale"),
-		property_var(particleMaxScale_).Name("Particle Max Scale"),
-		property_var(particleScaleRate_).Name("Particle Scale Rate"),
-		property_var(speed_).Name("Particle Speed"),
-		property_var(noise).Name("Particle Noise"),
-		property_var(noisefrequency).Name("Particle Noise Frequency"),
-		property_var(is2D).Name("2D particle"),
-		property_var(trailEnabled).Name("Trailing"),
-		property_var(particleLooping).Name("Looping")
+	property_var(particleLifetime_).Name("Particle Lifetime"),
+	property_var(particleEmissionRate_).Name("Particle Emission Rate"),
+	property_var(particleMinScale_).Name("Particle Min Scale"),
+	property_var(particleMaxScale_).Name("Particle Max Scale"),
+	property_var(particleScaleRate_).Name("Particle Scale Rate"),
+	property_var(speed_).Name("Particle Speed"),
+	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
+	property_var(noisefrequency).Name("Particle Noise Frequency"),
+	property_var(is2D).Name("2D particle"),
+	property_var(trailEnabled).Name("Trailing"),
+	property_var(trailSize).Name("Trail Size"),
+	property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
 //
@@ -726,6 +736,8 @@ private:
 //Colliders have to be before rigidbodies
 using ColliderComponentTypes = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider>;
 
+using PhysicsTypes = decltype(ColliderComponentTypes::Concatenate(TemplatePack<Rigidbody, CharacterController>()));
+
 using ExclusionColliders = TemplatePack<BoxCollider, SphereCollider, CapsuleCollider, CharacterController>;
 
 using ExclusionPhysics = TemplatePack<Rigidbody, CharacterController>;
@@ -735,18 +747,16 @@ using SingleComponentTypes = decltype(
 	<
 		Transform,
 		Tag,
-		Rigidbody, 
 		Animator, 
 		Camera, 
 		MeshRenderer, 
-		CharacterController, 
 		LightSource , 
 		SpriteRenderer, 
 		Canvas, 
 		ParticleComponent, 
 		NavMeshAgent,
 		TextRenderer
-	>::Concatenate(ColliderComponentTypes()));
+	>::Concatenate(PhysicsTypes()));
 
 //Template pack of components that entities can only have multiple of each
 using MultiComponentTypes = TemplatePack<AudioSource, Script>;

@@ -130,8 +130,26 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+
+	static void SetMasterVolume(bool toggle) { // toggle for now, change to float when ready
+		AUDIOMANAGER.SetMasterVolume(float(toggle));
+	}
+
 	static void StopMusic(float fade = 1.f) {
 		AUDIOMANAGER.StopMusic(fade);
+	}
+
+	static void PauseMusic() {
+		AUDIOMANAGER.PauseMusic();
+	}
+	static void ResumeMusic() {
+		AUDIOMANAGER.PlayMusic();
+	}
+	static void EnableSFX(bool toggle) {
+		AUDIOMANAGER.EnableSFX(toggle);
+		if (!toggle) {
+			AUDIOMANAGER.PauseLoopFX();
+		}
 	}
 
 #pragma endregion
@@ -316,7 +334,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	{
 		MeshRenderer& mr = meshRenderer;
 		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
-		Material_instance& newinstance = mat;
+		Material_instance& newInstance = mat;
 		if (!matInstance.isVariant)
 		{
 			mr.materialGUID = MATERIALSYSTEM.InstantiateRuntimeMaterial(mat);
@@ -631,6 +649,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		// Audio Component
 		Register(AudioSourcePlay);
 		Register(StopMusic);
+		Register(PauseMusic);
+		Register(ResumeMusic);
+		Register(EnableSFX);
 
 		// Animator Component
 		Register(PlayAnimation);
