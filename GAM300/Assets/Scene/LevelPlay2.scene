@@ -10352,14 +10352,12 @@ GameObject:
   m_Component:
     - component: {fileID: 9046477815881311709}  # Transform
     - component: {fileID: 9542430590160078326}  # MeshRenderer
-    - component: {fileID: 7302726955986758444}  # BoxCollider
-    - component: {fileID: 9378322894492900253}  # Rigidbody
 ---
 ID: 9046477815881311709
 Transform:
   m_GameObject: {fileID: 3008049630033293871}
   Translation: [73.9469223, 51.5784035, -71.5348434]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 13881035960641182372}
   m_Children:
@@ -10371,27 +10369,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 7302726955986758444
-BoxCollider:
-  m_GameObject: {fileID: 3008049630033293871}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 0.999984741, 4.99992371]
-  Offset: [-3.87430191e-05, -7.62939453e-06, -3.81469727e-05]
----
-ID: 9378322894492900253
-Rigidbody:
-  m_GameObject: {fileID: 3008049630033293871}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 7395178916672571311
 GameObject:
@@ -10429,14 +10406,12 @@ GameObject:
   m_Component:
     - component: {fileID: 16265358241632252191}  # Transform
     - component: {fileID: 10067748269697266546}  # MeshRenderer
-    - component: {fileID: 8400467697219697188}  # BoxCollider
-    - component: {fileID: 4108248490325291991}  # Rigidbody
 ---
 ID: 16265358241632252191
 Transform:
   m_GameObject: {fileID: 769329147301760830}
   Translation: [73.9469223, 51.5784035, -76.5329132]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 13881035960641182372}
   m_Children:
@@ -10448,27 +10423,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8400467697219697188
-BoxCollider:
-  m_GameObject: {fileID: 769329147301760830}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 0.999984741, 4.99992371]
-  Offset: [-3.87430191e-05, -7.62939453e-06, -3.81469727e-05]
----
-ID: 4108248490325291991
-Rigidbody:
-  m_GameObject: {fileID: 769329147301760830}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 8165140262813524124
 GameObject:
@@ -10506,14 +10460,12 @@ GameObject:
   m_Component:
     - component: {fileID: 4629173864416319448}  # Transform
     - component: {fileID: 1946791206056705908}  # MeshRenderer
-    - component: {fileID: 14002198049281842820}  # BoxCollider
-    - component: {fileID: 13914530022626133235}  # Rigidbody
 ---
 ID: 4629173864416319448
 Transform:
   m_GameObject: {fileID: 4377640290721114999}
   Translation: [73.9469223, 51.5784035, -81.4988098]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 13881035960641182372}
   m_Children:
@@ -10525,27 +10477,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 14002198049281842820
-BoxCollider:
-  m_GameObject: {fileID: 4377640290721114999}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 0.999984741, 4.99992371]
-  Offset: [-3.87430191e-05, -7.62939453e-06, -3.81469727e-05]
----
-ID: 13914530022626133235
-Rigidbody:
-  m_GameObject: {fileID: 4377640290721114999}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 8154724984552472556
 GameObject:
@@ -11050,7 +10981,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1038.76917
+  LookAtDistance: 997.387451
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -18070,8 +18001,6 @@ GameObject:
   m_Component:
     - component: {fileID: 8908522388220171156}  # Transform
     - component: {fileID: 12814697704151873702}  # MeshRenderer
-    - component: {fileID: 7711807169037194239}  # BoxCollider
-    - component: {fileID: 6071107534509518951}  # Rigidbody
 ---
 ID: 8908522388220171156
 Transform:
@@ -18090,27 +18019,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
-ID: 7711807169037194239
-BoxCollider:
-  m_GameObject: {fileID: 15814976675507609397}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 6071107534509518951
-Rigidbody:
-  m_GameObject: {fileID: 15814976675507609397}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 12275392909573142287
 GameObject:
   m_IsActive: true
@@ -18120,14 +18028,12 @@ GameObject:
   m_Component:
     - component: {fileID: 13308331553282895907}  # Transform
     - component: {fileID: 16310582204024871489}  # MeshRenderer
-    - component: {fileID: 5131314554016356415}  # BoxCollider
-    - component: {fileID: 11418475994575490416}  # Rigidbody
 ---
 ID: 13308331553282895907
 Transform:
   m_GameObject: {fileID: 12275392909573142287}
   Translation: [66.5922775, 52.0369987, -110.169998]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [9.20799351, 14.448, 0.462771714]
   Father: {fileID: 7678390499556097130}
   m_Children:
@@ -18139,27 +18045,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 5131314554016356415
-BoxCollider:
-  m_GameObject: {fileID: 12275392909573142287}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 11418475994575490416
-Rigidbody:
-  m_GameObject: {fileID: 12275392909573142287}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 4860492294782199299
 GameObject:
@@ -19792,14 +19677,12 @@ GameObject:
   m_Component:
     - component: {fileID: 4265772746756042245}  # Transform
     - component: {fileID: 1761321315378953361}  # MeshRenderer
-    - component: {fileID: 8119582711854157393}  # BoxCollider
-    - component: {fileID: 14040752403374061864}  # Rigidbody
 ---
 ID: 4265772746756042245
 Transform:
   m_GameObject: {fileID: 9710547743582431157}
   Translation: [66.5922775, 52.0369987, -117.454224]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [9.20799351, 14.448, 0.462771714]
   Father: {fileID: 7678390499556097130}
   m_Children:
@@ -19812,27 +19695,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
-ID: 8119582711854157393
-BoxCollider:
-  m_GameObject: {fileID: 9710547743582431157}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 14040752403374061864
-Rigidbody:
-  m_GameObject: {fileID: 9710547743582431157}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 8306617173574119445
 GameObject:
   m_IsActive: true
@@ -19842,15 +19704,13 @@ GameObject:
   m_Component:
     - component: {fileID: 5046450854895304245}  # Transform
     - component: {fileID: 18347712667048551734}  # MeshRenderer
-    - component: {fileID: 16706524677721978214}  # BoxCollider
-    - component: {fileID: 11753938376159598522}  # Rigidbody
 ---
 ID: 5046450854895304245
 Transform:
   m_GameObject: {fileID: 8306617173574119445}
   Translation: [71.0109863, 52.0372124, -113.776291]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [7.84891462, 14.4478188, 0.462800056]
+  Rotation: [0, 1.57045066, 0]
+  Scale: [7.84891415, 14.4478188, 0.462800026]
   Father: {fileID: 7678390499556097130}
   m_Children:
     []
@@ -19861,27 +19721,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 16706524677721978214
-BoxCollider:
-  m_GameObject: {fileID: 8306617173574119445}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 11753938376159598522
-Rigidbody:
-  m_GameObject: {fileID: 8306617173574119445}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 12319591078379837515
 GameObject:
@@ -34803,14 +34642,12 @@ GameObject:
   m_Component:
     - component: {fileID: 15481984350459554149}  # Transform
     - component: {fileID: 18301665970478514082}  # MeshRenderer
-    - component: {fileID: 6165073573653003756}  # BoxCollider
-    - component: {fileID: 11772709848510503102}  # Rigidbody
 ---
 ID: 15481984350459554149
 Transform:
   m_GameObject: {fileID: 12021609195616173519}
   Translation: [66.4860077, 44.5946083, -65.1825485]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1.05583441]
   Father: {fileID: 13881035960641182372}
   m_Children:
@@ -34822,27 +34659,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 6165073573653003756
-BoxCollider:
-  m_GameObject: {fileID: 12021609195616173519}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 0.999984741, 4.99992371]
-  Offset: [-3.87430191e-05, -7.62939453e-06, -3.81469727e-05]
----
-ID: 11772709848510503102
-Rigidbody:
-  m_GameObject: {fileID: 12021609195616173519}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 9636744355076846022
 GameObject:
@@ -35744,8 +35560,6 @@ GameObject:
   m_Component:
     - component: {fileID: 11613258977398535381}  # Transform
     - component: {fileID: 3379646641346376085}  # MeshRenderer
-    - component: {fileID: 498486076044308956}  # BoxCollider
-    - component: {fileID: 10747849674138465794}  # Rigidbody
 ---
 ID: 11613258977398535381
 Transform:
@@ -35763,27 +35577,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 498486076044308956
-BoxCollider:
-  m_GameObject: {fileID: 16831897617425902748}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 10747849674138465794
-Rigidbody:
-  m_GameObject: {fileID: 16831897617425902748}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 12169902349396236392
 GameObject:
@@ -35821,14 +35614,12 @@ GameObject:
   m_Component:
     - component: {fileID: 13762501877431921199}  # Transform
     - component: {fileID: 10422676698591628176}  # MeshRenderer
-    - component: {fileID: 2597057922475594773}  # BoxCollider
-    - component: {fileID: 16618993450304941382}  # Rigidbody
 ---
 ID: 13762501877431921199
 Transform:
   m_GameObject: {fileID: 9888360715229708791}
   Translation: [117.127739, 44.5946083, -59.6243362]
-  Rotation: [-3.1280241, 4.54747351e-13, 3.14075184]
+  Rotation: [-3.1280241, 0, 3.14075184]
   Scale: [2.48014808, 0.999999523, 1.645239]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -35840,27 +35631,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 2597057922475594773
-BoxCollider:
-  m_GameObject: {fileID: 9888360715229708791}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 16618993450304941382
-Rigidbody:
-  m_GameObject: {fileID: 9888360715229708791}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 3184981452534413305
 GameObject:
@@ -35898,14 +35668,12 @@ GameObject:
   m_Component:
     - component: {fileID: 8581978794005981271}  # Transform
     - component: {fileID: 4859255071446166588}  # MeshRenderer
-    - component: {fileID: 9741839805224614537}  # BoxCollider
-    - component: {fileID: 13071164969557527349}  # Rigidbody
 ---
 ID: 8581978794005981271
 Transform:
   m_GameObject: {fileID: 4647821222003295801}
   Translation: [117.316368, 44.5946083, -55.9966278]
-  Rotation: [-3.1280241, 4.54747351e-13, 3.14075184]
+  Rotation: [-3.1280241, 0, 3.14075184]
   Scale: [2.45414877, 0.999999523, 1.6451087]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -35917,27 +35685,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 9741839805224614537
-BoxCollider:
-  m_GameObject: {fileID: 4647821222003295801}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 13071164969557527349
-Rigidbody:
-  m_GameObject: {fileID: 4647821222003295801}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 10170948950788224293
 GameObject:
@@ -35975,14 +35722,12 @@ GameObject:
   m_Component:
     - component: {fileID: 6048074035200895713}  # Transform
     - component: {fileID: 14439366782423720162}  # MeshRenderer
-    - component: {fileID: 6306804728501322281}  # BoxCollider
-    - component: {fileID: 1834115608455701442}  # Rigidbody
 ---
 ID: 6048074035200895713
 Transform:
   m_GameObject: {fileID: 14530963517423599258}
   Translation: [108.20813, 45.001503, -93.3490829]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.967246115, 1.08243537, 7.22934818]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -35995,27 +35740,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 6306804728501322281
-BoxCollider:
-  m_GameObject: {fileID: 14530963517423599258}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 1834115608455701442
-Rigidbody:
-  m_GameObject: {fileID: 14530963517423599258}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 12063930547166420334
 GameObject:
   m_IsActive: true
@@ -36025,14 +35749,12 @@ GameObject:
   m_Component:
     - component: {fileID: 12442054543659371841}  # Transform
     - component: {fileID: 16377878345316195782}  # MeshRenderer
-    - component: {fileID: 745335543913301427}  # BoxCollider
-    - component: {fileID: 10992416702405683898}  # Rigidbody
 ---
 ID: 12442054543659371841
 Transform:
   m_GameObject: {fileID: 12063930547166420334}
   Translation: [134.77124, 45.001503, -84.7783356]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [38.6723518, 1.08243537, 25.760519]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -36045,27 +35767,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 745335543913301427
-BoxCollider:
-  m_GameObject: {fileID: 12063930547166420334}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 10992416702405683898
-Rigidbody:
-  m_GameObject: {fileID: 12063930547166420334}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 4564814394631188680
 GameObject:
   m_IsActive: true
@@ -36075,14 +35776,12 @@ GameObject:
   m_Component:
     - component: {fileID: 6175770838519222331}  # Transform
     - component: {fileID: 12468461789728037009}  # MeshRenderer
-    - component: {fileID: 17867357324345598048}  # BoxCollider
-    - component: {fileID: 10456752713953899083}  # Rigidbody
 ---
 ID: 6175770838519222331
 Transform:
   m_GameObject: {fileID: 4564814394631188680}
   Translation: [134.77124, 45.001503, -66.0514221]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [38.6723518, 1.08243537, 11.8784142]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -36094,27 +35793,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 17867357324345598048
-BoxCollider:
-  m_GameObject: {fileID: 4564814394631188680}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 10456752713953899083
-Rigidbody:
-  m_GameObject: {fileID: 4564814394631188680}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 1422300484349407729
 GameObject:
@@ -36175,14 +35853,12 @@ GameObject:
   m_Component:
     - component: {fileID: 11342431451592791845}  # Transform
     - component: {fileID: 10257386606336612049}  # MeshRenderer
-    - component: {fileID: 16438934712390020207}  # BoxCollider
-    - component: {fileID: 9194558948741097755}  # Rigidbody
 ---
 ID: 11342431451592791845
 Transform:
   m_GameObject: {fileID: 15937578311048913301}
   Translation: [112.179428, 45.001503, -83.07827]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [7.17443991, 1.08243537, 30.5740299]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -36195,27 +35871,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 16438934712390020207
-BoxCollider:
-  m_GameObject: {fileID: 15937578311048913301}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 9194558948741097755
-Rigidbody:
-  m_GameObject: {fileID: 15937578311048913301}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 13819779575747758941
 GameObject:
   m_IsActive: true
@@ -36225,14 +35880,12 @@ GameObject:
   m_Component:
     - component: {fileID: 16760512839567382421}  # Transform
     - component: {fileID: 39039167423266853}  # MeshRenderer
-    - component: {fileID: 7244458882122981991}  # BoxCollider
-    - component: {fileID: 13602549468675006795}  # Rigidbody
 ---
 ID: 16760512839567382421
 Transform:
   m_GameObject: {fileID: 13819779575747758941}
   Translation: [113.778107, 45.001503, -66.1473694]
-  Rotation: [0, -0.7020033, 0]
+  Rotation: [0, -0.70200336, 0]
   Scale: [9.74595356, 1.08243537, 4.75202036]
   Father: {fileID: 952121716206972440}
   m_Children:
@@ -36245,27 +35898,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 7244458882122981991
-BoxCollider:
-  m_GameObject: {fileID: 13819779575747758941}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 13602549468675006795
-Rigidbody:
-  m_GameObject: {fileID: 13819779575747758941}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 16295360212562242357
 GameObject:
   m_IsActive: true
@@ -36275,8 +35907,6 @@ GameObject:
   m_Component:
     - component: {fileID: 3182620384409587885}  # Transform
     - component: {fileID: 6660769216500049827}  # MeshRenderer
-    - component: {fileID: 4830780720333182222}  # BoxCollider
-    - component: {fileID: 13427031150261595222}  # Rigidbody
 ---
 ID: 3182620384409587885
 Transform:
@@ -36295,27 +35925,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 4830780720333182222
-BoxCollider:
-  m_GameObject: {fileID: 16295360212562242357}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 13427031150261595222
-Rigidbody:
-  m_GameObject: {fileID: 16295360212562242357}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 12067568611331168495
 GameObject:
   m_IsActive: true
@@ -36325,8 +35934,6 @@ GameObject:
   m_Component:
     - component: {fileID: 868647107223296057}  # Transform
     - component: {fileID: 12255311572104050714}  # MeshRenderer
-    - component: {fileID: 10032789677779075953}  # BoxCollider
-    - component: {fileID: 17803334150211926461}  # Rigidbody
 ---
 ID: 868647107223296057
 Transform:
@@ -36344,27 +35951,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 10032789677779075953
-BoxCollider:
-  m_GameObject: {fileID: 12067568611331168495}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 17803334150211926461
-Rigidbody:
-  m_GameObject: {fileID: 12067568611331168495}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 13798602388106733380
 GameObject:
@@ -38637,8 +38223,6 @@ GameObject:
   m_Component:
     - component: {fileID: 15558215953958091734}  # Transform
     - component: {fileID: 639250306295569420}  # MeshRenderer
-    - component: {fileID: 16144767812760632761}  # BoxCollider
-    - component: {fileID: 9915259185238000397}  # Rigidbody
 ---
 ID: 15558215953958091734
 Transform:
@@ -38656,27 +38240,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 16144767812760632761
-BoxCollider:
-  m_GameObject: {fileID: 7985734796248280150}
-  m_IsEnabled: true
-  Dimensions: [4.99992418, 0.999984741, 4.99992371]
-  Offset: [-3.79085541e-05, -7.62939453e-06, -3.81469727e-05]
----
-ID: 9915259185238000397
-Rigidbody:
-  m_GameObject: {fileID: 7985734796248280150}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 1143669745563481763
 GameObject:

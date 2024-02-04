@@ -48,7 +48,7 @@ public class Enemy : Script
     public bool isAttackCooldown = false;
     float attackTimer = 0.001f;
     float currentAttackTimer;
-    float attackCooldownTimer = 1f;
+    public float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
 
     // NavMesh stuff
@@ -57,7 +57,7 @@ public class Enemy : Script
     public bool newRequest = false;
 
     public bool isStunned;
-    private float stunDuration = 1.5f;
+    public float stunDuration = 1.5f;
     public float currentStunDuration;
 
     //audio
@@ -157,11 +157,11 @@ public class Enemy : Script
         }
 
         //NOTE: testing state, remove this later
-        if (Input.GetKey(KeyCode.K))
-        {
-            Console.WriteLine("TestingState");
+        //if (Input.GetKey(KeyCode.K))
+        //{
+            //Console.WriteLine("TestingState");
             //SetState("Run", true);
-        }
+        //}
 
 
         vec3 direction = player.localPosition - transform.position;
@@ -395,7 +395,7 @@ public class Enemy : Script
             hpScale.z = currentHealth / maxHealth;
             hpBar.localScale = hpScale;
             isDead = true;
-            Console.WriteLine("EnemyDead");
+            //Console.WriteLine("EnemyDead");
             SetState("Death", true);
             animationManager.UpdateState();
             startDeathAnimationCountdown = true;

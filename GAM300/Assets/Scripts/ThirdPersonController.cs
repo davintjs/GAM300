@@ -378,7 +378,7 @@ public class ThirdPersonController : Script
         //testing respawn
         if (Input.GetKey(KeyCode.R))
         {
-            Console.WriteLine("Test Respawn");
+            //Console.WriteLine("Test Respawn");
             player.localPosition = new vec3(spawnPoint.localPosition);
             //player.localRotation = new vec3(spawnPoint.localRotation);
             //SceneManager.LoadScene("LevelPlay2");
@@ -592,7 +592,7 @@ public class ThirdPersonController : Script
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
             if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
-                Console.WriteLine("DashAttack");
+                //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
                 AudioManager.instance.playerAttack.Play();
                 _isDashAttacking = true;
@@ -603,7 +603,7 @@ public class ThirdPersonController : Script
             //DODGE
             if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
             {
-                Console.WriteLine("Dodging");
+                //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
                 SetState("Run", false);
@@ -617,7 +617,7 @@ public class ThirdPersonController : Script
 
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
-                Console.WriteLine("Overdrive");
+                //Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
@@ -720,7 +720,7 @@ public class ThirdPersonController : Script
 
     public void Respawn()
     {
-        Console.WriteLine("Respawn");
+        //Console.WriteLine("Respawn");
         isDead = false;
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
@@ -742,7 +742,7 @@ public class ThirdPersonController : Script
         healthBar.localScale = hpScale;
         if (currentHealth <= 0)
         {
-            Console.WriteLine("GameOver");
+            //Console.WriteLine("GameOver");
             isDead = true;
             healthStaminaCanvas.SetActive(false);
             startDeathAnimationCountdown = true;
@@ -782,7 +782,7 @@ public class ThirdPersonController : Script
             if (currentStamina - amount <= 0)
             {
                 //Debug.Log("Not enough stamina");
-                Console.WriteLine("Not enough stamina");
+                //Console.WriteLine("Not enough stamina");
                 UpdateStaminaBar();
             }
 
@@ -792,7 +792,7 @@ public class ThirdPersonController : Script
         else
         {
             //Debug.Log("Not enough stamina");
-            Console.WriteLine("Not enough stamina");
+            //Console.WriteLine("Not enough stamina");
             UpdateStaminaBar();
 
         }
@@ -803,7 +803,7 @@ public class ThirdPersonController : Script
     //gradually regenerate stamina 
     private IEnumerator RegenStamina()
     {
-        Console.WriteLine("Regenerate Stamina");
+        //Console.WriteLine("Regenerate Stamina");
         yield return new WaitForSeconds(timeBeforeRegen);
 
         regenRate = 60f;
@@ -866,7 +866,7 @@ public class ThirdPersonController : Script
         
         if (currentHealth <= 0)
         {
-            Console.WriteLine("YouDied");
+            //Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
             animationManager.UpdateState();
@@ -891,7 +891,7 @@ public class ThirdPersonController : Script
         }
         if(currentHealth == maxHealth)
         {
-            Console.WriteLine("Health is Full");
+            //Console.WriteLine("Health is Full");
         }
     }
 
