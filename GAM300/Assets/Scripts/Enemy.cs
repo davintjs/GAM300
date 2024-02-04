@@ -134,7 +134,7 @@ public class Enemy : Script
                         attackTrigger.SetActive(true);
                         attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
                         attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
-                        attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
+                        attackTrigger.transform.rotation = new vec3(modelOffset.rotation);
                         //attackTrigger.SetActive(true);
                     }
                 }
@@ -311,7 +311,7 @@ public class Enemy : Script
             return;
         float angle = (float)Math.Atan2(dir.x, dir.z);
         quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
-        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+        quat oldQuat = glm.FromEulerToQuat(transform.rotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
@@ -331,7 +331,7 @@ public class Enemy : Script
             }
             if (!isNan)
             {
-                transform.localRotation = rot;
+                transform.rotation = rot;
             }
         }
     }
@@ -434,9 +434,9 @@ public class Enemy : Script
     {
         duration /= 2;
         float startDuration = duration;
-        vec3 newRot = modelOffset.localRotation;
+        vec3 newRot = modelOffset.rotation;
         newRot.x = glm.Radians(-45f);
-        modelOffset.localRotation = newRot;
+        modelOffset.rotation = newRot;
         while (duration > 0)
         {
             rb.linearVelocity = new vec3(knockback * (duration / startDuration));
@@ -448,7 +448,7 @@ public class Enemy : Script
         {
             float val = glm.Radians(-45f);
             newRot.x = glm.Lerp(0, val, duration / startDuration);
-            modelOffset.localRotation = newRot;
+            modelOffset.rotation = newRot;
             duration -= Time.deltaTime;
             yield return new WaitForSeconds(Time.deltaTime);
         }
