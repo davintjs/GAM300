@@ -14559,7 +14559,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1163.58875
+  LookAtDistance: 1121.87817
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -41165,7 +41165,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 13665857943017219500}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 13608063128582373505}  # GameObject
 ---
 ID: 18081422161438025274
 GameObject:
@@ -41584,7 +41584,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 13228710214417602934}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 8737543050631908055}  # GameObject
 ---
 ID: 13563546279246814984
 GameObject:
@@ -51243,7 +51243,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 6855815549624212754}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 8752970089702699583}  # GameObject
 ---
 ID: 13435116622849676552
 GameObject:
@@ -51732,7 +51732,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 15490750772518730921}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 2036189163671800282}  # GameObject
 ---
 ID: 17338308076949455477
 GameObject:
@@ -52116,7 +52116,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 5495014875330859233}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 1859320014956264795}  # GameObject
 ---
 ID: 1220841439833587161
 GameObject:
@@ -57377,7 +57377,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 16160518655398847886}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 12702401490049601225}  # GameObject
 ---
 ID: 8194879675306407408
 GameObject:
@@ -57761,7 +57761,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 8176351043890245559}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 9873304508655296805}  # GameObject
 ---
 ID: 13277852543598371328
 GameObject:
@@ -58180,7 +58180,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 10665564993928072593}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 11728886119229421634}  # GameObject
 ---
 ID: 2032404763252090284
 GameObject:
@@ -58599,7 +58599,7 @@ Script:
   meleeEnemyPos: {fileID: 0}
   animator: {fileID: 7677904935606688006}  # Component
   parentTransform: {fileID: 0}
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  attackTrigger: {fileID: 11431698503551896276}  # GameObject
 ---
 ID: 10180225711759476473
 GameObject:
@@ -61110,3 +61110,453 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 12597e24af252df94929ea556633fff1}
   Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 13608063128582373505
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12996141425806031039}  # Transform
+    - component: {fileID: 16108243399380526292}  # BoxCollider
+    - component: {fileID: 2790735772102063034}  # Rigidbody
+    - component: {fileID: 14939137360742643017}  # Script
+---
+ID: 12996141425806031039
+Transform:
+  m_GameObject: {fileID: 13608063128582373505}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16108243399380526292
+BoxCollider:
+  m_GameObject: {fileID: 13608063128582373505}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 2790735772102063034
+Rigidbody:
+  m_GameObject: {fileID: 13608063128582373505}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 14939137360742643017
+Script:
+  m_GameObject: {fileID: 13608063128582373505}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 8737543050631908055
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7464953899766388339}  # Transform
+    - component: {fileID: 7879984351043138175}  # BoxCollider
+    - component: {fileID: 18025557957597526913}  # Rigidbody
+    - component: {fileID: 6538289987311347968}  # Script
+---
+ID: 7464953899766388339
+Transform:
+  m_GameObject: {fileID: 8737543050631908055}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 7879984351043138175
+BoxCollider:
+  m_GameObject: {fileID: 8737543050631908055}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 18025557957597526913
+Rigidbody:
+  m_GameObject: {fileID: 8737543050631908055}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 6538289987311347968
+Script:
+  m_GameObject: {fileID: 8737543050631908055}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 8752970089702699583
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2959838121589566800}  # Transform
+    - component: {fileID: 11463043979405249954}  # BoxCollider
+    - component: {fileID: 5744983805869878319}  # Rigidbody
+    - component: {fileID: 5814983870882561860}  # Script
+---
+ID: 2959838121589566800
+Transform:
+  m_GameObject: {fileID: 8752970089702699583}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11463043979405249954
+BoxCollider:
+  m_GameObject: {fileID: 8752970089702699583}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 5744983805869878319
+Rigidbody:
+  m_GameObject: {fileID: 8752970089702699583}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 5814983870882561860
+Script:
+  m_GameObject: {fileID: 8752970089702699583}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 2036189163671800282
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12155107540759722456}  # Transform
+    - component: {fileID: 155865891832357681}  # BoxCollider
+    - component: {fileID: 15086471321673337318}  # Rigidbody
+    - component: {fileID: 6429855887889395043}  # Script
+---
+ID: 12155107540759722456
+Transform:
+  m_GameObject: {fileID: 2036189163671800282}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 155865891832357681
+BoxCollider:
+  m_GameObject: {fileID: 2036189163671800282}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 15086471321673337318
+Rigidbody:
+  m_GameObject: {fileID: 2036189163671800282}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 6429855887889395043
+Script:
+  m_GameObject: {fileID: 2036189163671800282}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 1859320014956264795
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17322566691525750558}  # Transform
+    - component: {fileID: 10023756055510667413}  # BoxCollider
+    - component: {fileID: 4879800796180256890}  # Rigidbody
+    - component: {fileID: 1386891484271301491}  # Script
+---
+ID: 17322566691525750558
+Transform:
+  m_GameObject: {fileID: 1859320014956264795}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 10023756055510667413
+BoxCollider:
+  m_GameObject: {fileID: 1859320014956264795}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 4879800796180256890
+Rigidbody:
+  m_GameObject: {fileID: 1859320014956264795}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 1386891484271301491
+Script:
+  m_GameObject: {fileID: 1859320014956264795}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 12702401490049601225
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6638808573809146286}  # Transform
+    - component: {fileID: 733454350368266933}  # BoxCollider
+    - component: {fileID: 9561133318000287806}  # Rigidbody
+    - component: {fileID: 5085484431170117440}  # Script
+---
+ID: 6638808573809146286
+Transform:
+  m_GameObject: {fileID: 12702401490049601225}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 733454350368266933
+BoxCollider:
+  m_GameObject: {fileID: 12702401490049601225}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 9561133318000287806
+Rigidbody:
+  m_GameObject: {fileID: 12702401490049601225}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 5085484431170117440
+Script:
+  m_GameObject: {fileID: 12702401490049601225}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 9873304508655296805
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3917428317229436741}  # Transform
+    - component: {fileID: 3182145282608965818}  # BoxCollider
+    - component: {fileID: 3321524479986829851}  # Rigidbody
+    - component: {fileID: 12112598561197845609}  # Script
+---
+ID: 3917428317229436741
+Transform:
+  m_GameObject: {fileID: 9873304508655296805}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3182145282608965818
+BoxCollider:
+  m_GameObject: {fileID: 9873304508655296805}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 3321524479986829851
+Rigidbody:
+  m_GameObject: {fileID: 9873304508655296805}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 12112598561197845609
+Script:
+  m_GameObject: {fileID: 9873304508655296805}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 11728886119229421634
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3447450064045396865}  # Transform
+    - component: {fileID: 4451546358558383814}  # BoxCollider
+    - component: {fileID: 17536254862483903116}  # Rigidbody
+    - component: {fileID: 13066437478519252422}  # Script
+---
+ID: 3447450064045396865
+Transform:
+  m_GameObject: {fileID: 11728886119229421634}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 4451546358558383814
+BoxCollider:
+  m_GameObject: {fileID: 11728886119229421634}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 17536254862483903116
+Rigidbody:
+  m_GameObject: {fileID: 11728886119229421634}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 13066437478519252422
+Script:
+  m_GameObject: {fileID: 11728886119229421634}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
+---
+ID: 11431698503551896276
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttackTrigger - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15362606408493440828}  # Transform
+    - component: {fileID: 3135112983731379591}  # BoxCollider
+    - component: {fileID: 10372480190839420861}  # Rigidbody
+    - component: {fileID: 5307657854808574903}  # Script
+---
+ID: 15362606408493440828
+Transform:
+  m_GameObject: {fileID: 11431698503551896276}
+  Translation: [45.7749634, -0.651587069, -35.1261559]
+  Rotation: [-3.14159226, -1.54447591, -3.14159226]
+  Scale: [0.99998486, 1, 0.99998498]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3135112983731379591
+BoxCollider:
+  m_GameObject: {fileID: 11431698503551896276}
+  m_IsEnabled: true
+  Dimensions: [2, 1, 2]
+  Offset: [0, 0, 0]
+---
+ID: 10372480190839420861
+Rigidbody:
+  m_GameObject: {fileID: 11431698503551896276}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 5307657854808574903
+Script:
+  m_GameObject: {fileID: 11431698503551896276}
+  m_IsEnabled: true
+  Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
+  playerController: {fileID: 13523510586901288919}  # Component
