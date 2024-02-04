@@ -187,7 +187,9 @@ void Shadows::DrawDepthDirectional()
 		glm::mat4 lightProjection, lightView;
 		float near_plane = -1000.f, far_plane = 1000.f;
 
-		lightProjection = glm::ortho(-90.f, 90.f, -90.f, 90.f, near_plane, far_plane);
+		//lightProjection = glm::ortho(-90.f, 90.f, -90.f, 90.f, near_plane, far_plane);
+		lightProjection = glm::ortho(-180.f, 180.f, -180.f, 180.f, near_plane, far_plane);
+
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
 		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 
