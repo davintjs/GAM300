@@ -142,9 +142,15 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void PauseMusic() {
 		AUDIOMANAGER.PauseMusic();
 	}
+
 	static void ResumeMusic() {
 		AUDIOMANAGER.PlayMusic();
 	}
+
+	static void SetMusicFade(ScriptObject<AudioSource> audioSource, float fadeOut, float fadeIn) {
+		AUDIOMANAGER.SetMusicFade(audioSource, fadeOut, fadeIn);
+	}
+
 	static void EnableSFX(bool toggle) {
 		AUDIOMANAGER.EnableSFX(toggle);
 		if (!toggle) {
@@ -651,6 +657,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(StopMusic);
 		Register(PauseMusic);
 		Register(ResumeMusic);
+		Register(SetMusicFade);
 		Register(EnableSFX);
 
 		// Animator Component

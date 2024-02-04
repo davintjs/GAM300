@@ -148,6 +148,9 @@ namespace BeanFactory
         public static extern void ResumeMusic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMusicFade(AudioSource audioSource, float fadeIn, float fadeOut);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void EnableSFX(bool toggle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
