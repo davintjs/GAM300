@@ -67,7 +67,9 @@ namespace BeanFactory
         public Texture ambientOcclusionTexture { get { return _ambientOcclusionTexture; } set { _ambientOcclusionTexture = value; PropertyChangedCallBack(); } }
         public Texture emissionTexture { get { return _emissionTexture; } set { _emissionTexture = value; PropertyChangedCallBack(); } }
 
-        public MeshRenderer meshRenderer;
+        public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; PropertyChangedCallBack(); } }
+
+        public MeshRenderer _meshRenderer;
 
         void PropertyChangedCallBack()
         {

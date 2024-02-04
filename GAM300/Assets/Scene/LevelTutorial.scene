@@ -12717,7 +12717,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1207.92456
+  LookAtDistance: 1252.56995
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12939,6 +12939,9 @@ ParticleComponent:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
   Material: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Local Space: false
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
   Number Of Particles: 16
   Particle Lifetime: 0.300000012
   Particle Emission Rate: 1
@@ -12946,10 +12949,11 @@ ParticleComponent:
   Particle Max Scale: 0.0599999987
   Particle Scale Rate: 0.699999988
   Particle Speed: 4
-  Particle Noise: 0
+  Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
   2D particle: false
   Trailing: false
+  Trail Size: 0
   Looping: false
 ---
 ID: 13482372997539004348
@@ -18384,11 +18388,15 @@ Script:
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
   index: 0
+  colors: [0, 1, 1]
+  glowObjectReference: {fileID: 15195771717882542615}  # GameObject
+  terminalglowMesh: {fileID: 11216421603765919212}  # Component
+  glowMesh: {fileID: 11575640942403156428}  # Component
 ---
 ID: 15562948075197465161
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(1308)
+  m_Name: TerminalGlow
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -18410,7 +18418,7 @@ MeshRenderer:
   m_GameObject: {fileID: 15562948075197465161}
   m_IsEnabled: true
   Mesh: {guid: 54ea3312f5a499707ff2b38aacc2c623}
-  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+  Material_ID: {guid: f42c85bad3af18ad18bdec3dd0aa2e3f}
 ---
 ID: 14764595615424322734
 GameObject:
@@ -18437,7 +18445,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14764595615424322734}
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
-  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}
+  Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
 ---
 ID: 13798602388106733380
 GameObject:
@@ -18508,11 +18516,15 @@ Script:
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
   index: 1
+  colors: [0, 0, 0]
+  glowObjectReference: {fileID: 15195771717882542615}  # GameObject
+  terminalglowMesh: {fileID: 5249366417715043332}  # Component
+  glowMesh: {fileID: 11575640942403156428}  # Component
 ---
 ID: 3412261393044614546
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(1308) - Copy
+  m_Name: TerminalGlow2
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -18523,7 +18535,7 @@ ID: 345081206908782488
 Transform:
   m_GameObject: {fileID: 3412261393044614546}
   Translation: [0, 0, 0]
-  Rotation: [0, -6.57495605e-07, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00002766, 1, 1.00002718]
   Father: {fileID: 11931344363477315440}
   m_Children:
@@ -18534,7 +18546,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3412261393044614546}
   m_IsEnabled: true
   Mesh: {guid: 54ea3312f5a499707ff2b38aacc2c623}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Material_ID: {guid: f42c85bad3af18ad18bdec3dd0aa2e3f}
 ---
 ID: 6280282286412234633
 GameObject:
@@ -18550,7 +18562,7 @@ ID: 13845230118947875613
 Transform:
   m_GameObject: {fileID: 6280282286412234633}
   Translation: [0, 0, 0]
-  Rotation: [0, -6.57495605e-07, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00002766, 1, 1.00002718]
   Father: {fileID: 11931344363477315440}
   m_Children:
@@ -18561,7 +18573,7 @@ MeshRenderer:
   m_GameObject: {fileID: 6280282286412234633}
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
-  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}
+  Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
 ---
 ID: 5713504039664526619
 GameObject:
@@ -20204,3 +20216,30 @@ Transform:
   Father: {fileID: 14449198235318879022}
   m_Children:
     - {fileID: 6364420056334471666}
+---
+ID: 15195771717882542615
+GameObject:
+  m_IsActive: true
+  m_Name: GlowMat
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10985358785333421070}  # Transform
+    - component: {fileID: 11575640942403156428}  # MeshRenderer
+---
+ID: 10985358785333421070
+Transform:
+  m_GameObject: {fileID: 15195771717882542615}
+  Translation: [0, 0, 2.12663054]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11575640942403156428
+MeshRenderer:
+  m_GameObject: {fileID: 15195771717882542615}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
