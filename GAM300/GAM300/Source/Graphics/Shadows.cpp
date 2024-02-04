@@ -38,7 +38,7 @@ void Shadows::Update(float dt)
 	}
 #else
 	// This helps performance by only updating certains light type per frame
-	static int delay = 0;
+	/*static int delay = 0;
 	if (RENDERER.enableShadows())
 	{
 		if (delay == 0)
@@ -55,6 +55,12 @@ void Shadows::Update(float dt)
 		}
 
 		delay = (delay > 1) ? 0 : ++delay;
+	}*/
+	if (RENDERER.enableShadows())
+	{
+		DrawDepthSpot();
+		DrawDepthDirectional();
+		DrawDepthPoint();
 	}
 #endif
 	
