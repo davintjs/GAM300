@@ -26,5 +26,10 @@ namespace BeanFactory
         {
             InternalCalls.LoadScene(sceneName);
         }
+
+        public static void LoadNext()
+        {
+            InternalCalls.LoadNext();
+        }
     }
 }

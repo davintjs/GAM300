@@ -21,6 +21,6 @@ public class LoadingIcon : Script
     {
         if (spriteRenderer == null)
             return;
-        transform.localRotation += new vec3(0, 0, 1) * speed * Time.deltaTime;
+        transform.localRotation -= new vec3(0, 0, 1) * speed * Time.deltaTime;
     }
 }

@@ -395,11 +395,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static void LoadScene(MonoString* mString)
 	{
 		// Bean: Not really elegant because we can only load scenes from the scene folder
+		// Zach: kek
 		std::string scenePath = "Assets/Scene/";
 		scenePath += mono_string_to_utf8(mString);
 		scenePath += ".scene";
 
 		MySceneManager.sceneToLoad = scenePath;
+	}
+
+	static void LoadNext()
+	{
+		MySceneManager.LoadNext();
 	}
 
 	//Gets object that entity has
@@ -618,6 +624,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetActive);
 		Register(SetActive);
 		Register(LoadScene);
+		Register(LoadNext);
 		Register(AddComponent);
 		
 		Register(CloneGameObject);

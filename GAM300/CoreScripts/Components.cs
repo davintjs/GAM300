@@ -315,6 +315,12 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class SpriteRenderer
     {
+        bool WorldSpace;
+        bool ColourPicked;
+        bool IncludeAlpha;
+        public float alpha;
+        bool onHover;
+        bool onClick;
         public bool IsButtonClicked()
         {
             return InternalCalls.IsButtonClicked(this);

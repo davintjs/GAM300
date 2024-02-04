@@ -44,4 +44,17 @@ namespace GlmSharp
 		}
 
 	}
+
+
+}
+
+namespace BeanFactory
+{
+    public static class Mathf
+    {
+        public static float Lerp(float start, float end, float percentage)
+        {
+            return start + (end - start) * percentage;
+        }
+    }
 }

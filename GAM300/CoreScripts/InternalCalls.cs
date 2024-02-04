@@ -264,6 +264,9 @@ namespace BeanFactory
         public static extern void SetFullscreenMode(bool fullscreenMode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LoadNext();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void QuitGame();
 
         [MethodImpl(MethodImplOptions.InternalCall)]

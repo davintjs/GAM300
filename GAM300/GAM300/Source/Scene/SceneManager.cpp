@@ -125,14 +125,28 @@ void SceneManager::Update(float dt)
 
 	if (sceneToLoad != "")
 	{
-		StopScene();
-		LoadScene(sceneToLoad);
-		StartScene();
-		sceneToLoad = "";
-		++sceneCount;
+		if (!loaded)
+		{
+			if (GetCurrentScene().sceneName != "LoadingScreen [PREVIEW]")
+			{
+				StopScene();
+				LoadScene("Assets/Scene/LoadingScreen.scene");
+				StartScene();
+				++sceneCount;
+			}
+
+		}
+		else
+		{
+			StopScene();
+			LoadScene(sceneToLoad);
+			StartScene();
+			sceneToLoad = "";
+			++sceneCount;
+			loaded = false;
+		}
 	}
 }
-
 
 void SceneManager::StartScene()
 {
@@ -202,7 +216,7 @@ void SceneManager::StopScene()
 	}
 
 	sceneCount = 0;
-
+	
 	InputSystem::Instance().LockCursor(false);
 	SceneStopEvent stopEvent{ sceneID };
 	EVENTS.Publish(&stopEvent);
