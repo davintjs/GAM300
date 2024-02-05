@@ -28,7 +28,7 @@ public class SceneLoadManager : Script
             timer += Time.deltaTime;
             if (timer >= loadDuration)
             {
-                fadeToBlack.inAndOut = true;
+                fadeToBlack.Reset();
             }
         }
         else if (timer < loadDuration + fadeDuration)
