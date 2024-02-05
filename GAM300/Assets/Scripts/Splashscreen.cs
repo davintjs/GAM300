@@ -51,6 +51,7 @@ public class Splashscreen : Script
                 if (bgFade.finished || Input.GetMouseDown(0))
                 {
                     bgFade.gameObject.SetActive(false);
+                    SceneManager.LoadScene("MainMenu", true);
                 }
                 break;
         }      
