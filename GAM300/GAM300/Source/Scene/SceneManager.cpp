@@ -124,7 +124,6 @@ void SceneManager::Update(float dt)
 
 	if (stopPreview)
 	{
-		std::cout << "STOPPING PREVIEW!_____________________________" << std::endl;
 		MySceneManager.StopLoadNext();
 		MySceneManager.StopScene();
 		stopPreview = false;

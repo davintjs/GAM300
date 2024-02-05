@@ -1,0 +1,71 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: DialogueBox
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 9421608063411470122
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4626011158628744653}  # Transform
+    - component: {fileID: 14908220505218079184}  # Camera
+---
+ID: 4626011158628744653
+Transform:
+  m_GameObject: {fileID: 9421608063411470122}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14908220505218079184
+Camera:
+  m_GameObject: {fileID: 9421608063411470122}
+  m_IsEnabled: true
+  BackgroundColor: [0, 0, 0, 0]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  LookAtDistance: 0
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 12859177507664830800
+GameObject:
+  m_IsActive: true
+  m_Name: Canvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8734987739639946963}  # Transform
+    - component: {fileID: 6493188979226088829}  # Canvas
+---
+ID: 8734987739639946963
+Transform:
+  m_GameObject: {fileID: 12859177507664830800}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6493188979226088829
+Canvas:
+  m_GameObject: {fileID: 12859177507664830800}
+  m_IsEnabled: true
