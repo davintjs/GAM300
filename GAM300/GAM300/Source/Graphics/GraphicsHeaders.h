@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
+#include "Scene/Components.h"
 
 #define MAX_POINT_LIGHT 20
 #define MAX_SPOT_LIGHT 20
@@ -565,19 +566,34 @@ public:
 		glm::ivec2 Size;
 		glm::ivec2 Bearing;
 		unsigned int Advance;
+		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
-	std::map<char, Character> Characters;
+	using FontCharacters = std::map<char, Character>;
+	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+
+	std::vector<float> allVertices;
+	std::vector<GLuint> allTextures;
+
+
 
 	void Init();
 	void Update(float dt);
 	void Exit();
 
-	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
+	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid);
+
+	void RenderTextFromString(TextRenderer const& text);
+
+	void RenderText_ScreenSpace(BaseCamera& _camera);
+	//void RenderText_ScreeninWorldSpace(BaseCamera& _camera);
+	void RenderText_WorldSpace(BaseCamera& _camera);
+
 	void Draw(BaseCamera& _camera);
-	void GenerateFontAtlas(const char* fontPath, const char* outputPath);
-	void LoadFontAtlas(const char* inputPath);
+	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
+
+	void CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent);
 
 
 private:

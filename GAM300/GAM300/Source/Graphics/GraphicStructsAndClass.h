@@ -71,6 +71,7 @@ enum class SHADERTYPE
 	PARTICLES,
 	TRAILS,
 	TEXT,
+	TEXT_WORLD,
 	COUNT
 };
 

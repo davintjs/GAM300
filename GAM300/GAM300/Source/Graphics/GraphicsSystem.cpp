@@ -326,15 +326,19 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 	{
 		UIRENDERER.UIDraw_2D(_camera);
-		TEXTSYSTEM.Draw(_camera);
+		//TEXTSYSTEM.Draw(_camera);
 	}
 	else
+	{
 		UIRENDERER.UIDraw_2DWorldSpace(_camera);
-
+	}
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
+
 	}
+	TEXTSYSTEM.Draw(_camera);
+
 	FRAMEBUFFER.Unbind();
 
 #if defined(_BUILD)
