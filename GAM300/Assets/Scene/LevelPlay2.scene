@@ -10982,7 +10982,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 477.362213
+  LookAtDistance: 439.772369
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -57822,3 +57822,22 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 8932739375906657777
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(1692)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6693818750374548891}  # Transform
+---
+ID: 6693818750374548891
+Transform:
+  m_GameObject: {fileID: 8932739375906657777}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
