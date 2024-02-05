@@ -133,6 +133,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 13027737300980970512}
     - {fileID: 8065358626952296561}
     - {fileID: 8873786281471961566}
     - {fileID: 8393117941418361269}
@@ -169,6 +170,7 @@ Script:
   playerAttack: {fileID: 3436078548414859258}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
+  overdriveVFXSound: {fileID: 814352591872434956}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
   enemyHit: {fileID: 14492758170611173101}  # Component
   keyCollected: {fileID: 12067369461903983448}  # Component
@@ -10612,7 +10614,7 @@ ID: 14556033001105864622
 Transform:
   m_GameObject: {fileID: 8873786281471961566}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -10982,7 +10984,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 439.772369
+  LookAtDistance: 366.598114
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -11156,7 +11158,7 @@ Script:
   _isAttacking: false
   currentDodgeTimer: 0
   currentOverdriveTimer: 0
-  dodgeCooldown: 0.800000012
+  dodgeCooldown: 0.5
   _isOverdrive: false
   currentDodgeCooldown: 0
   currentStamina: 0
@@ -11207,6 +11209,7 @@ Script:
   healthBar: {fileID: 4056269345217226233}  # Component
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   staminaBarFill: {fileID: 4490157770252088129}  # GameObject
+  overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   staminaBarPos: {fileID: 1155348055569638397}  # Component
   animator: {fileID: 9953969093344891570}  # Component
 ---
@@ -57841,3 +57844,86 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 1342498447182496088
+GameObject:
+  m_IsActive: true
+  m_Name: OverDriveVFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2823202394044180212}  # Transform
+    - component: {fileID: 13560343077879238517}  # MeshRenderer
+    - component: {fileID: 8986741928778724108}  # ParticleComponent
+---
+ID: 2823202394044180212
+Transform:
+  m_GameObject: {fileID: 1342498447182496088}
+  Translation: [0, 1.90781224, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13560343077879238517
+MeshRenderer:
+  m_GameObject: {fileID: 1342498447182496088}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
+---
+ID: 8986741928778724108
+ParticleComponent:
+  m_GameObject: {fileID: 1342498447182496088}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 30
+  Number Of Particles: 15
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 30
+  Particle Noise Movement Percentage: 30
+  Particle Noise Frequency: 30
+  2D particle: false
+  Trailing: true
+  Trail Size: 5
+  Looping: true
+---
+ID: 13027737300980970512
+GameObject:
+  m_IsActive: true
+  m_Name: overDriveVFXSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17205113147846528527}  # Transform
+    - component: {fileID: 814352591872434956}  # AudioSource
+---
+ID: 17205113147846528527
+Transform:
+  m_GameObject: {fileID: 13027737300980970512}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 814352591872434956
+AudioSource:
+  m_GameObject: {fileID: 13027737300980970512}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
+  Play: false

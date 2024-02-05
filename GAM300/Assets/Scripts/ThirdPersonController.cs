@@ -77,7 +77,7 @@ public class ThirdPersonController : Script
     public Transform terminal1;
     public Transform terminal2;
 
-    public MeshRenderer doorTestMesh;
+    //public MeshRenderer doorTestMesh;
 
     void Awake()
     {
@@ -170,7 +170,8 @@ public class ThirdPersonController : Script
     //overdrive bar
     //public float maxOverdrive = 10f;
     //public float currentOverdrive = 0;
-    //public GameObject overDriveBar
+    //public GameObject overDriveBar;
+    public GameObject overDriveVFX;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -547,13 +548,17 @@ public class ThirdPersonController : Script
             overDriveCollider.SetActive(true);
             attackLight.transform.localPosition = new vec3(transform.localPosition);
             attackLight.SetActive(true);
-            
+            overDriveVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y -2, transform.localPosition.z);
+            overDriveVFX.SetActive(true);
+
             if (currentOverdriveTimer <= 0)
             {
                 SetState("Overdrive", false);
                 overDriveCollider.transform.localPosition = new vec3(10000);
                 overDriveCollider.SetActive(false);
                 attackLight.SetActive(false);
+                overDriveVFX.transform.localPosition = new vec3(1000);
+                overDriveVFX.SetActive(false);
                 _isOverdrive = false;
                 currentOverdriveTimer = overdriveTimer;
             }
@@ -614,10 +619,10 @@ public class ThirdPersonController : Script
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && currentStamina >= overDriveStamina)
             {
                 AudioManager.instance.playerOverdrive.Play();
-
+                AudioManager.instance.overdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
-                //Console.WriteLine("Overdrive");
+                Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);

@@ -175,6 +175,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 7724456078516633189}
     - {fileID: 8065358626952296561}
     - {fileID: 8873786281471961566}
     - {fileID: 8393117941418361269}
@@ -193,6 +194,7 @@ Transform:
     - {fileID: 5713504039664526619}
     - {fileID: 1444839062839968456}
     - {fileID: 3873369559540028830}
+    - {fileID: 10168314299232393249}
 ---
 ID: 12555400289260702052
 Script:
@@ -210,6 +212,7 @@ Script:
   playerAttack: {fileID: 3436078548414859258}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
+  overdriveVFXSound: {fileID: 6255831656728013097}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
   enemyHit: {fileID: 14492758170611173101}  # Component
   keyCollected: {fileID: 12067369461903983448}  # Component
@@ -217,7 +220,7 @@ Script:
   useItem: {fileID: 8508182677235274511}  # Component
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
-  playerOverdrive: {fileID: 0}
+  playerOverdrive: {fileID: 10250019823637772651}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -2337,6 +2340,7 @@ GameObject:
     - component: {fileID: 9504656451654388578}  # BoxCollider
     - component: {fileID: 5033578668654550690}  # Rigidbody
     - component: {fileID: 13457975659125709231}  # Script
+    - component: {fileID: 3734156682333709197}  # Script
 ---
 ID: 2078812242787879120
 Transform:
@@ -2414,6 +2418,17 @@ Script:
   animator: {fileID: 2826765051149347733}  # Component
   parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
+---
+ID: 3734156682333709197
+Script:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  Script: {guid: c2842abf1019f5a501732cffb6363736}
+  timeBeforeKeySpawn: 2
+  currentTimeBeforeKeySpawn: 0
+  startTimer: false
+  key: {fileID: 18443479616549604882}  # GameObject
+  tutorialEnemy: {fileID: 0}
 ---
 ID: 3574560937881504822
 GameObject:
@@ -12726,7 +12741,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1436.00464
+  LookAtDistance: 1525.11572
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12835,30 +12850,30 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   currentDashAttackTimer: 0
-  attackMoveSpeed: 3
+  attackMoveSpeed: 160
   currentDashAttackCooldown: 0
   MoveSpeed: 400
   overDriveCooldown: 6
   dashAttackSpeed: 10
   JumpSpeed: 7
-  dashAttackCooldown: 1.5
+  dashAttackCooldown: 0.899999976
   sprintModifier: 1.29999995
   maxHealth: 10
-  dodgeSpeed: 10
+  dodgeSpeed: 5
   Gravity: 9.81000042
   runStepsInterval: 0.300000012
-  dashAttackTimer: 0.100000001
+  dashAttackTimer: 0.899999976
   walkStepsInterval: 0.439999998
   overDriveStamina: 40
   sprintStamina: 0.25
   startDashCooldown: false
   currentOverdriveCooldown: 0
-  dodgeTimer: 1
+  dodgeTimer: 0.5
   startDeathAnimationCountdown: false
   _isAttacking: false
   currentDodgeTimer: 0
   currentOverdriveTimer: 0
-  dodgeCooldown: 2
+  dodgeCooldown: 0.5
   _isOverdrive: false
   currentDodgeCooldown: 0
   currentStamina: 0
@@ -12904,11 +12919,11 @@ Script:
   spawnPoint: {fileID: 13798602388106733380}  # Component
   terminal1: {fileID: 10239403197338088721}  # Component
   terminal2: {fileID: 11931344363477315440}  # Component
-  doorTestMesh: {fileID: 0}
   healthBarFill: {fileID: 6364420056334471666}  # GameObject
   healthBar: {fileID: 4225260783100130983}  # Component
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   staminaBarFill: {fileID: 4490157770252088129}  # GameObject
+  overDriveVFX: {fileID: 17569942394685385403}  # GameObject
   staminaBarPos: {fileID: 744309730467464853}  # Component
   animator: {fileID: 16486884645913952574}  # Component
 ---
@@ -16031,7 +16046,7 @@ ID: 6832024306486094958
 Transform:
   m_GameObject: {fileID: 10419665452268142691}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -16459,7 +16474,7 @@ ID: 2131914696263170567
 Transform:
   m_GameObject: {fileID: 8195998143091088379}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -18700,7 +18715,7 @@ ID: 4405310670290985832
 Transform:
   m_GameObject: {fileID: 1444839062839968456}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -18715,7 +18730,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: a10a36512cec8fd5daf9c70f6aebdd9f}
+  Sound File: {guid: e2c803b37e46493acc4b856df0e91f95}
   Play: false
 ---
 ID: 3873369559540028830
@@ -18732,7 +18747,7 @@ ID: 5359552120802994559
 Transform:
   m_GameObject: {fileID: 3873369559540028830}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -19529,3 +19544,118 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 10168314299232393249
+GameObject:
+  m_IsActive: true
+  m_Name: overDriveVFXSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 849229645439870015}  # Transform
+    - component: {fileID: 6255831656728013097}  # AudioSource
+---
+ID: 849229645439870015
+Transform:
+  m_GameObject: {fileID: 10168314299232393249}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 6255831656728013097
+AudioSource:
+  m_GameObject: {fileID: 10168314299232393249}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
+  Play: false
+---
+ID: 17569942394685385403
+GameObject:
+  m_IsActive: true
+  m_Name: overDriveVFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15849779703745330902}  # Transform
+    - component: {fileID: 11553619597147363711}  # MeshRenderer
+    - component: {fileID: 10894195432161751366}  # ParticleComponent
+---
+ID: 15849779703745330902
+Transform:
+  m_GameObject: {fileID: 17569942394685385403}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11553619597147363711
+MeshRenderer:
+  m_GameObject: {fileID: 17569942394685385403}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
+---
+ID: 10894195432161751366
+ParticleComponent:
+  m_GameObject: {fileID: 17569942394685385403}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 00000000000000000000000000000000}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 30
+  Number Of Particles: 15
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 30
+  Particle Noise Movement Percentage: 30
+  Particle Noise Frequency: 20
+  2D particle: false
+  Trailing: true
+  Trail Size: 5
+  Looping: true
+---
+ID: 7724456078516633189
+GameObject:
+  m_IsActive: true
+  m_Name: playerOverdrive
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1037993256920320242}  # Transform
+    - component: {fileID: 10250019823637772651}  # AudioSource
+---
+ID: 1037993256920320242
+Transform:
+  m_GameObject: {fileID: 7724456078516633189}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 10250019823637772651
+AudioSource:
+  m_GameObject: {fileID: 7724456078516633189}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
+  Play: false

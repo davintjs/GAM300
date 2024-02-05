@@ -95,7 +95,7 @@ public class Enemy : Script
             {
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
-                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                //animator.Pause();//pause the death animation to prevent it from returning to idle animation
                 gameObject.SetActive(false);
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
@@ -377,6 +377,7 @@ public class Enemy : Script
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
             ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
             AudioManager.instance.enemyHit.Play();
+            AudioManager.instance.meleeEnemyInjured.Play();
             currentHealth -= amount;
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
