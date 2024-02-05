@@ -22,14 +22,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Graphics/Texture/TextureManager.h"
 #include "Scene/SceneManager.h"
 
-void EditorToolBar::Init()
-{
-
-}
-
 
 static bool scene_playing = false;
 static bool scene_paused = false;
+
+void EditorToolBar::Init()
+{
+    EVENTS.Subscribe(this, &EditorToolBar::CallbackStopPreview);
+}
+
+void EditorToolBar::CallbackStopPreview(StopPreviewEvent* pEvent)
+{
+    scene_playing = false;
+}
 
 void EditorToolBar::Update(float dt)
 {
@@ -69,7 +74,6 @@ void EditorToolBar::Update(float dt)
         {
             MySceneManager.StopLoadNext();
             MySceneManager.StopScene();
-
         }
         scene_playing = scene_playing ? false : true;
     }

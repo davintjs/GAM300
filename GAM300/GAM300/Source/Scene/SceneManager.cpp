@@ -122,6 +122,13 @@ void SceneManager::Update(float dt)
 
 	scene.ClearBuffer();
 
+	if (stopPreview)
+	{
+		std::cout << "STOPPING PREVIEW!_____________________________" << std::endl;
+		MySceneManager.StopLoadNext();
+		MySceneManager.StopScene();
+		stopPreview = false;
+	}
 
 	if (sceneToLoad != "")
 	{
@@ -165,6 +172,7 @@ void SceneManager::Update(float dt)
 
 void SceneManager::StartScene()
 {
+	stopPreview = false;
 	if (HasScene())
 	{
 		SceneChangingEvent e{ GetCurrentScene() };
