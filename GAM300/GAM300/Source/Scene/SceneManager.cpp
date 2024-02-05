@@ -127,17 +127,32 @@ void SceneManager::Update(float dt)
 	{
 		if (!loaded)
 		{
-			if (GetCurrentScene().sceneName != "LoadingScreen [PREVIEW]")
+			#ifdef _BUILD
+
+			if (GetCurrentScene().sceneName != "LoadingScreen")
 			{
+				std::cout << "Loading!" << GetCurrentScene().sceneName << '\n';
 				StopScene();
 				LoadScene("Assets/Scene/LoadingScreen.scene");
 				StartScene();
 				++sceneCount;
 			}
 
+			#else
+			if (GetCurrentScene().sceneName != "LoadingScreen [PREVIEW]")
+			{
+				std::cout << "Loading!" << GetCurrentScene().sceneName << '\n';
+				StopScene();
+				LoadScene("Assets/Scene/LoadingScreen.scene");
+				StartScene();
+				++sceneCount;
+			}
+			#endif // _BUILD
+
 		}
 		else
 		{
+			std::cout << "Loaded!\n";
 			StopScene();
 			LoadScene(sceneToLoad);
 			StartScene();
