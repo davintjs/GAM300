@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 0.349981308
+  LookAtDistance: 9.30003643
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -100,7 +100,7 @@ Script:
 ID: 13814999657993744981
 Script:
   m_GameObject: {fileID: 11651427043620866289}
-  m_IsEnabled: true
+  m_IsEnabled: false
   Script: {guid: a7a6c9a29959cc48fba7bb72383f1f64}
   digipenFade: {fileID: 16519889670335621150}  # Component
   gameLogoFade: {fileID: 11940627351707711640}  # Component

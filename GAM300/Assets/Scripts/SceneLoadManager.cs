@@ -15,10 +15,9 @@ public class SceneLoadManager : Script
 
     public FadeEffect fadeToBlack;
 
-    void Awake()
+    void Start()
     {
-        fadeToBlack.inDuration = fadeDuration;
-        fadeToBlack.outDuration = fadeDuration;
+        fadeToBlack.StartFadeOut(fadeDuration);
     }
 
     void Update()
@@ -28,14 +27,14 @@ public class SceneLoadManager : Script
             timer += Time.deltaTime;
             if (timer >= loadDuration)
             {
-                fadeToBlack.Reset();
+                fadeToBlack.StartFadeIn(fadeDuration, true);
             }
         }
         else if (timer < loadDuration + fadeDuration)
         {
             timer += Time.deltaTime;
         }
-        else
+        else if(fadeToBlack.finished)
         {
             SceneManager.LoadNext();
         }
