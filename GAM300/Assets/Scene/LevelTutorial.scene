@@ -175,7 +175,6 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 7724456078516633189}
     - {fileID: 8065358626952296561}
     - {fileID: 8873786281471961566}
     - {fileID: 8393117941418361269}
@@ -195,6 +194,7 @@ Transform:
     - {fileID: 1444839062839968456}
     - {fileID: 3873369559540028830}
     - {fileID: 10168314299232393249}
+    - {fileID: 7724456078516633189}
 ---
 ID: 12555400289260702052
 Script:
@@ -12741,7 +12741,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1525.11572
+  LookAtDistance: 1539.96289
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12899,7 +12899,7 @@ Script:
   regenRate: 60
   dashAttackStamina: 15
   jumpStamina: 0
-  attackStamina: 5
+  attackStamina: 0
   attack2duration: 0.600000024
   dodgeStamina: 10
   currentAnimationTimer: 0

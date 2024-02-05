@@ -616,7 +616,7 @@ public class ThirdPersonController : Script
                 SetState("Dodge", true);
             }
             //OVERDRIVE
-            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && currentStamina >= overDriveStamina)
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown)
             {
                 AudioManager.instance.playerOverdrive.Play();
                 AudioManager.instance.overdriveVFXSound.Play();
