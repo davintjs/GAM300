@@ -406,8 +406,10 @@ void main()
     bool hasEmissionMap = false;
     if (Emission_index < 32)
     {
-        hasEmissionMap = true;
         emission  = frag_Metal_Rough_AO_Emission_constant.w * texture(myTextureSampler[Emission_index], TexCoords).xyz; 
+        if(emission != vec3(0.f,0.f,0.f))
+            hasEmissionMap = true;
+
     }
 
 

@@ -154,6 +154,7 @@ vec3 getNormalFromMap()
     vec3 normal = texture(NormalMap, TexCoords).xyz;
     normal.z = normal.z == 0 ? 1 : normal.z;
 
+//    normal.y = 1.0-normal.y;
     vec3 tangentNormal = (normal * 2.0) - 1.0;
 
     // transform normal vector to range [-1,1]
@@ -427,9 +428,11 @@ void main()
     bool hasEmissionMap =false;
     if (hasEmission != 0)
     {
-        hasEmissionMap = true;
 //        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
         emission  =  texture(EmmisionMap, TexCoords).xyz; 
+        
+        if(emission != vec3(0.f,0.f,0.f))
+            hasEmissionMap = true;
         
     }
 
