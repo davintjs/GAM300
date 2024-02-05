@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 0
+  LookAtDistance: 10
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -63,9 +63,179 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 11937392650145691817}
+    - {fileID: 8299889677803722204}
+    - {fileID: 17665757328691436427}
+    - {fileID: 17293751939773049583}
+    - {fileID: 5946213184292781285}
 ---
 ID: 6493188979226088829
 Canvas:
   m_GameObject: {fileID: 12859177507664830800}
   m_IsEnabled: true
+---
+ID: 11937392650145691817
+GameObject:
+  m_IsActive: true
+  m_Name: EscapeTheGrid
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10142065873262891771}  # Transform
+    - component: {fileID: 11859141815355242856}  # TextRenderer
+---
+ID: 10142065873262891771
+Transform:
+  m_GameObject: {fileID: 11937392650145691817}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12859177507664830800}
+  m_Children:
+    []
+---
+ID: 11859141815355242856
+TextRenderer:
+  m_GameObject: {fileID: 11937392650145691817}
+  m_IsEnabled: true
+  Text: ESCAPE THE GRID
+  X-axis Offset: -0.519999981
+  Y-axis Offset: 0
+  Font Size: 1
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+---
+ID: 8299889677803722204
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(4)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6281722497817126711}  # Transform
+    - component: {fileID: 4459533123573552325}  # SpriteRenderer
+---
+ID: 6281722497817126711
+Transform:
+  m_GameObject: {fileID: 8299889677803722204}
+  Translation: [0, -0.600000024, 0]
+  Rotation: [3.14159274, 0, 0]
+  Scale: [1, 0.600000024, 1]
+  Father: {fileID: 12859177507664830800}
+  m_Children:
+    []
+---
+ID: 4459533123573552325
+SpriteRenderer:
+  m_GameObject: {fileID: 8299889677803722204}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e310cfb163a2014181faa3229530b5ed}
+---
+ID: 17665757328691436427
+GameObject:
+  m_IsActive: true
+  m_Name: EscapeTheGrid - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3187791475583515960}  # Transform
+    - component: {fileID: 16501261688645804929}  # TextRenderer
+---
+ID: 3187791475583515960
+Transform:
+  m_GameObject: {fileID: 17665757328691436427}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12859177507664830800}
+  m_Children:
+    []
+---
+ID: 16501261688645804929
+TextRenderer:
+  m_GameObject: {fileID: 17665757328691436427}
+  m_IsEnabled: true
+  Text: Defeat the guards
+  X-axis Offset: -0.519999981
+  Y-axis Offset: 0
+  Font Size: 1
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+---
+ID: 17293751939773049583
+GameObject:
+  m_IsActive: true
+  m_Name: EscapeTheGrid - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2545710795380945419}  # Transform
+    - component: {fileID: 11247153987977944247}  # TextRenderer
+---
+ID: 2545710795380945419
+Transform:
+  m_GameObject: {fileID: 17293751939773049583}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12859177507664830800}
+  m_Children:
+    []
+---
+ID: 11247153987977944247
+TextRenderer:
+  m_GameObject: {fileID: 17293751939773049583}
+  m_IsEnabled: true
+  Text: ESCAPE THE GRID
+  X-axis Offset: -0.519999981
+  Y-axis Offset: 0
+  Font Size: 1
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+---
+ID: 5946213184292781285
+GameObject:
+  m_IsActive: true
+  m_Name: EscapeTheGrid - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12889115688291043973}  # Transform
+    - component: {fileID: 14451082018200697503}  # TextRenderer
+---
+ID: 12889115688291043973
+Transform:
+  m_GameObject: {fileID: 5946213184292781285}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12859177507664830800}
+  m_Children:
+    []
+---
+ID: 14451082018200697503
+TextRenderer:
+  m_GameObject: {fileID: 5946213184292781285}
+  m_IsEnabled: true
+  Text: ESCAPE THE GRID
+  X-axis Offset: -0.519999981
+  Y-axis Offset: 0
+  Font Size: 1
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}

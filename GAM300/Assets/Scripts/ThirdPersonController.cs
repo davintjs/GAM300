@@ -705,6 +705,7 @@ public class ThirdPersonController : Script
             }
             currentAirTime += Time.deltaTime;
             movement += vec3.UnitY * -Gravity;
+            Console.WriteLine(movement);
         }
         wasMoving = moved;
         UpdateRotation(dir);
