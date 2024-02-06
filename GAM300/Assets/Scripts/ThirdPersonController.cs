@@ -64,6 +64,7 @@ public class ThirdPersonController : Script
     public float RotationSpeed = 1;
 
     public AudioSource audioSource;
+    int jumpAudioRotation = 0;
 
     AnimationStateMachine animationManager;
 
@@ -668,7 +669,23 @@ public class ThirdPersonController : Script
                 
                 //Jump will not require stamina
                 //UseStamina(jumpStamina);
-                AudioManager.instance.jumpVoice.Play();
+                
+                switch (jumpAudioRotation)
+                {
+                    case 0:
+                        AudioManager.instance.jumpVoice.Play();
+                        jumpAudioRotation++;
+                        break;
+                        case 1:
+                        AudioManager.instance.jumpVoice2.Play();
+                        jumpAudioRotation++;
+                        break;
+                        case 2:
+                        AudioManager.instance.jumpVoice3.Play();
+                        jumpAudioRotation = 0;
+                        break;
+                }
+                
                 movement += vec3.UnitY * JumpSpeed;
             }
             else if (!IsAttacking)

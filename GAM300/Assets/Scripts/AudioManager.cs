@@ -14,6 +14,8 @@ public class AudioManager : Script
     public AudioSource playerSlashAttack;
     public AudioSource playerInjured;
     public AudioSource jumpVoice;
+    public AudioSource jumpVoice2;
+    public AudioSource jumpVoice3;
     public AudioSource spark;
     public AudioSource itemCollected;
     public AudioSource rangeEnemyFiring;

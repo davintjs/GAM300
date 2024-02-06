@@ -153,22 +153,26 @@ Transform:
     - {fileID: 3873369559540028830}
     - {fileID: 16052600457545288926}
     - {fileID: 13027737300980970512}
+    - {fileID: 17811278805382620369}
+    - {fileID: 18125044553674274218}
 ---
 ID: 12555400289260702052
 Script:
   m_GameObject: {fileID: 14088906961581824457}
   m_IsEnabled: true
   Script: {guid: b01c0159e88a0504f824d8bcb6303ee8}
+  jumpVoice2: {fileID: 17384956244929632316}  # Component
   itemCollected: {fileID: 3483838879810750950}  # Component
   jumpVoice: {fileID: 2598491438105149260}  # Component
   playerSlashAttack: {fileID: 8829355492810947455}  # Component
-  doorOpen: {fileID: 14332204263861564631}  # Component
   meleeEnemyDie: {fileID: 14157919317546456730}  # Component
   playerInjured: {fileID: 3760519619074301342}  # Component
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
+  jumpVoice3: {fileID: 1298934831599437468}  # Component
   spark: {fileID: 1060299922073029148}  # Component
   playerAttack: {fileID: 3436078548414859258}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
+  doorOpen: {fileID: 14332204263861564631}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
   overdriveVFXSound: {fileID: 814352591872434956}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
@@ -10646,7 +10650,7 @@ ID: 11061822046921806353
 Transform:
   m_GameObject: {fileID: 8393117941418361269}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -10661,7 +10665,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: e2f9211cbeda8ddc84eeea688a2c7b0f}
+  Sound File: {guid: 396d135dccd28f7d967a77162d240410}
   Play: false
 ---
 ID: 16642481857729093895
@@ -10984,7 +10988,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 331.272675
+  LookAtDistance: 297.02121
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -57905,8 +57909,8 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 5875524278184929025}
   m_Children:
-    - {fileID: 2810958199702975120}
     - {fileID: 7015002184525685805}
+    - {fileID: 2810958199702975120}
     - {fileID: 14777622929745107469}
     - {fileID: 17250586865779774363}
     - {fileID: 12783140832976237403}
@@ -58291,8 +58295,8 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 645540380337546698}
   m_Children:
-    - {fileID: 8182683830830106933}
     - {fileID: 10878029859731295558}
+    - {fileID: 8182683830830106933}
     - {fileID: 9774949930984829444}
     - {fileID: 10531960800383710774}
     - {fileID: 16991155240569210517}
@@ -58574,8 +58578,8 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 1540245306666661771}
   m_Children:
-    - {fileID: 9821300379321859694}
     - {fileID: 13364204845579319346}
+    - {fileID: 9821300379321859694}
 ---
 ID: 5837962290608196367
 Script:
@@ -59063,8 +59067,8 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 14644019166869827917}
   m_Children:
-    - {fileID: 281677105110147164}
     - {fileID: 4006497799033495863}
+    - {fileID: 281677105110147164}
     - {fileID: 1010775753348018717}
     - {fileID: 10062349294371539704}
     - {fileID: 3986050579131182023}
@@ -59449,8 +59453,8 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 10907715518986589652}
   m_Children:
-    - {fileID: 451535309951510174}
     - {fileID: 11526791438653450813}
+    - {fileID: 451535309951510174}
     - {fileID: 7637532547617532164}
     - {fileID: 8465711756087699251}
     - {fileID: 16801039089028406775}
@@ -60176,12 +60180,12 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 18002162249455713016}
   m_Children:
-    - {fileID: 577384084183701575}
-    - {fileID: 437529948551239981}
     - {fileID: 15141569255631353795}
-    - {fileID: 12750382470313129071}
-    - {fileID: 7162403325583127237}
+    - {fileID: 437529948551239981}
     - {fileID: 15094090839853164388}
+    - {fileID: 7162403325583127237}
+    - {fileID: 577384084183701575}
+    - {fileID: 12750382470313129071}
 ---
 ID: 13704668479497569335
 BoxCollider:
@@ -60473,10 +60477,10 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 17965531684180602427}
   m_Children:
-    - {fileID: 8645608934473913897}
     - {fileID: 7515463743404676320}
     - {fileID: 4519320268619724399}
     - {fileID: 9446928381007520511}
+    - {fileID: 8645608934473913897}
     - {fileID: 295165403516138524}
     - {fileID: 5528017971680024260}
 ---
@@ -60771,11 +60775,11 @@ Transform:
   Father: {fileID: 4661972225695443688}
   m_Children:
     - {fileID: 5281982926383645072}
-    - {fileID: 9541386869828717340}
     - {fileID: 12638172988151957790}
     - {fileID: 1362305524805363709}
-    - {fileID: 450894917400290204}
     - {fileID: 12003551329902121122}
+    - {fileID: 450894917400290204}
+    - {fileID: 9541386869828717340}
 ---
 ID: 2342280633385010611
 BoxCollider:
@@ -61067,12 +61071,12 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 15947505335868758018}
   m_Children:
-    - {fileID: 6483105157560298732}
-    - {fileID: 16600824469883497552}
-    - {fileID: 14436506861363244571}
     - {fileID: 14279260635301039194}
-    - {fileID: 8342972660995522294}
+    - {fileID: 6483105157560298732}
     - {fileID: 6198872537714013164}
+    - {fileID: 8342972660995522294}
+    - {fileID: 14436506861363244571}
+    - {fileID: 16600824469883497552}
 ---
 ID: 1306997075478377716
 BoxCollider:
@@ -61536,11 +61540,11 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 3478415627049949006}
   m_Children:
-    - {fileID: 15563842874536548517}
-    - {fileID: 10190237236238065096}
     - {fileID: 1386070044797248867}
+    - {fileID: 15563842874536548517}
     - {fileID: 13027161896081906842}
     - {fileID: 5067934956310674995}
+    - {fileID: 10190237236238065096}
     - {fileID: 13697535269086352890}
 ---
 ID: 1323850131090951798
@@ -61827,12 +61831,12 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 4041745159297363775}
   m_Children:
-    - {fileID: 213811397115483069}
     - {fileID: 972587819451607496}
-    - {fileID: 12767450099515025495}
     - {fileID: 16432955138586966944}
     - {fileID: 16117849271427541097}
+    - {fileID: 12767450099515025495}
     - {fileID: 7753417984804600304}
+    - {fileID: 213811397115483069}
 ---
 ID: 11956159510430609890
 BoxCollider:
@@ -62125,11 +62129,11 @@ Transform:
   Father: {fileID: 7032846686282748144}
   m_Children:
     - {fileID: 15130924952476962327}
-    - {fileID: 11744720184937591600}
-    - {fileID: 7952693940010827942}
     - {fileID: 13786868336648391692}
+    - {fileID: 7952693940010827942}
     - {fileID: 17806183036129203261}
     - {fileID: 10819322352250023289}
+    - {fileID: 11744720184937591600}
 ---
 ID: 6773265332448624492
 BoxCollider:
@@ -62421,10 +62425,10 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 8981302919829820060}
   m_Children:
-    - {fileID: 15123872632567198623}
-    - {fileID: 17191161355191221412}
     - {fileID: 7260625793403410409}
+    - {fileID: 17191161355191221412}
     - {fileID: 11995541166505464679}
+    - {fileID: 15123872632567198623}
     - {fileID: 569931623211453634}
     - {fileID: 2081039081983382979}
 ---
@@ -62718,12 +62722,12 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 11226160811324718067}
   m_Children:
-    - {fileID: 13286540765541100787}
-    - {fileID: 1746722951871769479}
-    - {fileID: 13454252080407787704}
     - {fileID: 121970142424191478}
-    - {fileID: 4478347065711779966}
     - {fileID: 15911658257270977782}
+    - {fileID: 4478347065711779966}
+    - {fileID: 1746722951871769479}
+    - {fileID: 13286540765541100787}
+    - {fileID: 13454252080407787704}
 ---
 ID: 12054462189951800806
 BoxCollider:
@@ -62997,8 +63001,8 @@ Transform:
   Scale: [0.999852121, 1, 0.999861658]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 13717508100265740664}
     - {fileID: 7590812304464882044}
+    - {fileID: 13717508100265740664}
 ---
 ID: 3223449132966570151
 NavMeshAgent:
@@ -63187,9 +63191,9 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 12842363221823135338}
   m_Children:
-    - {fileID: 1334961919034244727}
     - {fileID: 11539816288079138986}
     - {fileID: 3513438304768953633}
+    - {fileID: 1334961919034244727}
     - {fileID: 10033610898863570652}
     - {fileID: 6904277367866327764}
     - {fileID: 8094987208829643631}
@@ -63471,11 +63475,11 @@ Transform:
   Father: {fileID: 1746742841599475727}
   m_Children:
     - {fileID: 8135072918305409601}
-    - {fileID: 6161412803700044505}
-    - {fileID: 17321800484558403668}
     - {fileID: 11901914460422258853}
     - {fileID: 5462830723061722092}
+    - {fileID: 17321800484558403668}
     - {fileID: 3079600095793850396}
+    - {fileID: 6161412803700044505}
 ---
 ID: 7339897885214852959
 Animator:
@@ -63747,3 +63751,67 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 17811278805382620369
+GameObject:
+  m_IsActive: true
+  m_Name: jumpVoice2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16950316186164793293}  # Transform
+    - component: {fileID: 17384956244929632316}  # AudioSource
+---
+ID: 16950316186164793293
+Transform:
+  m_GameObject: {fileID: 17811278805382620369}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 17384956244929632316
+AudioSource:
+  m_GameObject: {fileID: 17811278805382620369}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 26bd6af77d87a47f3687053eece2db97}
+  Play: false
+---
+ID: 18125044553674274218
+GameObject:
+  m_IsActive: true
+  m_Name: jumpVoice3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1399664433149929236}  # Transform
+    - component: {fileID: 1298934831599437468}  # AudioSource
+---
+ID: 1399664433149929236
+Transform:
+  m_GameObject: {fileID: 18125044553674274218}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 1298934831599437468
+AudioSource:
+  m_GameObject: {fileID: 18125044553674274218}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 97788d462a0c852e308c86b317a4087b}
+  Play: false
