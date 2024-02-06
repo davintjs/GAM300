@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 9.30003643
+  LookAtDistance: 0.349981308
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -158,8 +158,8 @@ Transform:
   Scale: [0.246819168, 0.218375444, 0.876962304]
   Father: {fileID: 11651427043620866289}
   m_Children:
-    - {fileID: 1790461780820641168}
     - {fileID: 18227274232965132690}
+    - {fileID: 1790461780820641168}
 ---
 ID: 8183777527831800993
 SpriteRenderer:
@@ -396,7 +396,7 @@ Transform:
 ---
 ID: 954788506569118624
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: DigipenSplash
   m_TagString: ""
   m_Layer: 0
@@ -441,7 +441,7 @@ Script:
 ---
 ID: 10581735926025398248
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Fadeblack
   m_TagString: ""
   m_Layer: 0
@@ -509,7 +509,7 @@ Transform:
 ID: 15694303816498716019
 SpriteRenderer:
   m_GameObject: {fileID: 16748738666428733763}
-  m_IsEnabled: true
+  m_IsEnabled: false
   World Space: false
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
@@ -519,7 +519,7 @@ SpriteRenderer:
 ID: 11940627351707711640
 Script:
   m_GameObject: {fileID: 16748738666428733763}
-  m_IsEnabled: true
+  m_IsEnabled: false
   Script: {guid: d75689aa359715e72826ba5750f6faf3}
   inDuration: 2
   finished: false
@@ -533,7 +533,7 @@ Script:
 ID: 3552966426003525475
 Script:
   m_GameObject: {fileID: 16748738666428733763}
-  m_IsEnabled: true
+  m_IsEnabled: false
   Script: {guid: 62c453561e7630ccbdd8cafc3f8ee0af}
   translationEffect: [0, 0, 0]
   duration: 2

@@ -57,6 +57,10 @@ public class Settings : Script
             backButtonRenderer = backButton.GetComponent<SpriteRenderer>();
         if (masterVolumeButton.HasComponent<SpriteRenderer>())
             masterVolumeButtonRenderer = masterVolumeButton.GetComponent<SpriteRenderer>();
+        if (bgmVolumeButton.HasComponent<SpriteRenderer>())
+            bgmVolumeButtonRenderer = bgmVolumeButton.GetComponent<SpriteRenderer>();
+        if (sfxVolumeButton.HasComponent<SpriteRenderer>())
+            sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -71,7 +75,43 @@ public class Settings : Script
         if (masterVolumeButtonRenderer != null && masterVolumeButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);
-            Console.WriteLine("Scene");
+            Console.WriteLine("Music");
+            //InternalCalls.PauseMusic();
+            //bgm.Pause();
+            //SceneManager.LoadScene("MainMenu");
+            if(test == true)
+            {
+                bgm.Pause();
+                test = false;
+            }
+            else{
+                bgm.Play();
+                test = true;
+
+            }
+        }
+        if (bgmVolumeButtonRenderer != null && bgmVolumeButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Music");
+            //InternalCalls.PauseMusic();
+            //bgm.Pause();
+            //SceneManager.LoadScene("MainMenu");
+            if(test == true)
+            {
+                bgm.Pause();
+                test = false;
+            }
+            else{
+                bgm.Play();
+                test = true;
+
+            }
+        }
+        if (sfxVolumeButtonRenderer != null && sfxVolumeButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Music");
             //InternalCalls.PauseMusic();
             //bgm.Pause();
             //SceneManager.LoadScene("MainMenu");
