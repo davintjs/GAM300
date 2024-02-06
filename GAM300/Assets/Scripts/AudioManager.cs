@@ -33,6 +33,10 @@ public class AudioManager : Script
     public AudioSource meleeEnemyInjured;
     public AudioSource playerOverdrive;
     public AudioSource overdriveVFXSound;
+    public AudioSource thumpCollision1;
+    public AudioSource thumpCollision2;
+    public AudioSource dodgeRoll1;
+    public AudioSource dodgeRoll2;
 
     void Awake()
     {

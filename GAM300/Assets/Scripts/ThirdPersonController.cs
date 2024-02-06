@@ -65,6 +65,9 @@ public class ThirdPersonController : Script
 
     public AudioSource audioSource;
     int jumpAudioRotation = 0;
+    int damageAudioRotation = 0;
+    int dodgeRollAudioRotation = 0;
+    bool dodgeSound = true;
 
     AnimationStateMachine animationManager;
 
@@ -518,11 +521,29 @@ public class ThirdPersonController : Script
         //dodge check
         if(isDodging)
         {
+            if (dodgeSound)
+            {
+                dodgeSound = false;
+
+                //Plays Dodge Roll Sound
+                switch (dodgeRollAudioRotation)
+                {
+                    case 0:
+                        AudioManager.instance.dodgeRoll1.Play();
+                        dodgeRollAudioRotation++;
+                        break;
+                    case 1:
+                        AudioManager.instance.dodgeRoll2.Play();
+                        dodgeRollAudioRotation = 0;
+                        break;
+                }
+            }
             startDodgeCooldown = true;
             CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
-            if(currentDodgeTimer <= 0)
+
+            if (currentDodgeTimer <= 0)
             {
                 movement = vec3.Zero;
                 isDodging = false;
@@ -534,6 +555,7 @@ public class ThirdPersonController : Script
             currentDodgeCooldown -= Time.deltaTime;
             if(currentDodgeCooldown <= 0)
             {
+                dodgeSound = true;
                 SetState("Dodge", false);
                 startDodgeCooldown = false;
                 currentDodgeCooldown = dodgeCooldown;
@@ -889,7 +911,21 @@ public class ThirdPersonController : Script
         if (!isInvulnerable)
         {
             IsAttacking = false;
+            //dmg noise
             AudioManager.instance.playerInjured.Play();
+
+            switch (damageAudioRotation)
+            {
+                case 0:
+                    AudioManager.instance.thumpCollision1.Play();
+                    damageAudioRotation++;
+                    break;
+                case 1:
+                    AudioManager.instance.thumpCollision2.Play();
+                    damageAudioRotation = 0;
+                    break;
+            }
+
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
             ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
             isInvulnerable = true;

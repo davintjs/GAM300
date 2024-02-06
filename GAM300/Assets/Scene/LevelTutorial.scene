@@ -197,6 +197,10 @@ Transform:
     - {fileID: 7724456078516633189}
     - {fileID: 14435915567425503584}
     - {fileID: 1496189058950795356}
+    - {fileID: 4410001754813060403}
+    - {fileID: 3676613375895642796}
+    - {fileID: 9111973667147776367}
+    - {fileID: 11445212766906873979}
 ---
 ID: 12555400289260702052
 Script:
@@ -216,6 +220,7 @@ Script:
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   doorOpen: {fileID: 14332204263861564631}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
+  thumpCollision1: {fileID: 10783660871907285049}  # Component
   overdriveVFXSound: {fileID: 6255831656728013097}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
   enemyHit: {fileID: 14492758170611173101}  # Component
@@ -224,7 +229,10 @@ Script:
   useItem: {fileID: 8508182677235274511}  # Component
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  dodgeRoll1: {fileID: 11831993938610939546}  # Component
   playerOverdrive: {fileID: 10250019823637772651}  # Component
+  thumpCollision2: {fileID: 7806304394155765163}  # Component
+  dodgeRoll2: {fileID: 10691427519348444029}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -12745,7 +12753,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1584.4978
+  LookAtDistance: 1599.34033
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -19726,4 +19734,132 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 97788d462a0c852e308c86b317a4087b}
+  Play: false
+---
+ID: 4410001754813060403
+GameObject:
+  m_IsActive: true
+  m_Name: thump1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2694899666713809734}  # Transform
+    - component: {fileID: 10783660871907285049}  # AudioSource
+---
+ID: 2694899666713809734
+Transform:
+  m_GameObject: {fileID: 4410001754813060403}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 10783660871907285049
+AudioSource:
+  m_GameObject: {fileID: 4410001754813060403}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 1682f86f9df2666b5d45632da015dcd5}
+  Play: false
+---
+ID: 3676613375895642796
+GameObject:
+  m_IsActive: true
+  m_Name: thump2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12959115113032306765}  # Transform
+    - component: {fileID: 7806304394155765163}  # AudioSource
+---
+ID: 12959115113032306765
+Transform:
+  m_GameObject: {fileID: 3676613375895642796}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 7806304394155765163
+AudioSource:
+  m_GameObject: {fileID: 3676613375895642796}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 26bd6af77d87a47f3687053eece2db97}
+  Play: false
+---
+ID: 9111973667147776367
+GameObject:
+  m_IsActive: true
+  m_Name: dodgeRoll1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15586471753004535644}  # Transform
+    - component: {fileID: 11831993938610939546}  # AudioSource
+---
+ID: 15586471753004535644
+Transform:
+  m_GameObject: {fileID: 9111973667147776367}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 11831993938610939546
+AudioSource:
+  m_GameObject: {fileID: 9111973667147776367}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d44bdb32a0aa5d9f4fde6eeee09a0a91}
+  Play: false
+---
+ID: 11445212766906873979
+GameObject:
+  m_IsActive: true
+  m_Name: dodgeRoll2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4116622695306240964}  # Transform
+    - component: {fileID: 10691427519348444029}  # AudioSource
+---
+ID: 4116622695306240964
+Transform:
+  m_GameObject: {fileID: 11445212766906873979}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 10691427519348444029
+AudioSource:
+  m_GameObject: {fileID: 11445212766906873979}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
   Play: false
