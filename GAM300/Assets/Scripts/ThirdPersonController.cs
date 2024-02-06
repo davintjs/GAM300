@@ -622,6 +622,7 @@ public class ThirdPersonController : Script
             {
                 //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
+                AudioManager.instance.dashAttack.Play();
                 AudioManager.instance.playerAttack.Play();
                 _isDashAttacking = true;
                 SetState("Run", false);

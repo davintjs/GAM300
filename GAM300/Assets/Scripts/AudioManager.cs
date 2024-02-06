@@ -37,6 +37,7 @@ public class AudioManager : Script
     public AudioSource thumpCollision2;
     public AudioSource dodgeRoll1;
     public AudioSource dodgeRoll2;
+    public AudioSource dashAttack;
 
     void Awake()
     {

@@ -159,6 +159,7 @@ Transform:
     - {fileID: 7888217747071975113}
     - {fileID: 7702311490355860096}
     - {fileID: 3801088290079164654}
+    - {fileID: 15187318079590443157}
 ---
 ID: 12555400289260702052
 Script:
@@ -191,6 +192,7 @@ Script:
   playerOverdrive: {fileID: 4330194544441596099}  # Component
   thumpCollision2: {fileID: 10580402611710297282}  # Component
   dodgeRoll2: {fileID: 11490585744734373202}  # Component
+  dashAttack: {fileID: 3292439134972329249}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -10996,7 +10998,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 152.967392
+  LookAtDistance: 133.006836
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -63950,4 +63952,36 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
+  Play: false
+---
+ID: 15187318079590443157
+GameObject:
+  m_IsActive: true
+  m_Name: dashAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6180669855135387070}  # Transform
+    - component: {fileID: 3292439134972329249}  # AudioSource
+---
+ID: 6180669855135387070
+Transform:
+  m_GameObject: {fileID: 15187318079590443157}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 3292439134972329249
+AudioSource:
+  m_GameObject: {fileID: 15187318079590443157}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
   Play: false
