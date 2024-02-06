@@ -227,6 +227,8 @@ public:
 	// Clean-up duty
 	void Exit();
 
+	void UpdateJoltTransforms();
+
 	// Ensure world populates AFTER scene is deserialized
 	void PostSubscription();
 

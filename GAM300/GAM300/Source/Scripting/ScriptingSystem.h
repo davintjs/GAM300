@@ -148,13 +148,22 @@ struct ScriptClass
 	ScriptClass(MonoClass* _mClass);
 	MonoClass* mClass{};
 	//std::unordered_map<std::string, MonoMethod*> mMethods;
-	std::unordered_map<std::string, MonoClassField*> mFields;
-	std::unordered_map<std::string, MonoClassField*> mReferenceFields;
 
 	MonoClassField* GetField(const std::string& fieldName);
 
 	//Collision
 	MonoMethod* DefaultMethods[DefaultMethodTypes::SIZE]{nullptr};
+
+	using FieldMap = std::unordered_map<std::string, MonoClassField*>;
+
+	const FieldMap& GetFields() const { return mFields; }
+	const FieldMap& GetReferenceFields() const { return mReferenceFields; }
+	std::string name;
+
+private:
+
+	FieldMap mFields;
+	FieldMap mReferenceFields;
 };
 
 ENGINE_SYSTEM(ScriptingSystem)

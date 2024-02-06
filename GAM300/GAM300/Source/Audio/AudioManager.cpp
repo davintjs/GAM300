@@ -132,7 +132,7 @@ void AudioManager::AddSFX(const std::string& path, const Engine::GUID<AudioAsset
 }
 
 //@kk change var name
-void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componentFade) {
+void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componentFadeOut, float componentFadeIn) {
 
 	// if on same music, just unpause
 	if (musics[currentMusicIdx].currentMusicPath == name) {
@@ -140,11 +140,11 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 		groups[CATEGORY_MUSIC]->setPaused(false);
 		groups[CATEGORY_MUSIC2]->setPaused(false);
 		musics[currentMusicIdx].currentMusic->setPaused(false);
+		musics[currentMusicIdx].fadetime = componentFadeIn;
 		return;
 	}
 	// if != name
 	// If a Music is playing stop them and set this as the next Music
-	musics[currentMusicIdx].fadetime = componentFade;
 	if (musics[currentMusicIdx].currentMusic != 0) {
 
 		if (musics[currentMusicIdx].fade == FADE_OUT && musics[currentMusicIdx].nextMusicPath != name) {
@@ -163,10 +163,13 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 			musics[currentMusicIdx].currentMusic->setPaused(false);
 			groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
 			musics[currentMusicIdx].fade = FADE_IN;
+			musics[currentMusicIdx].fadetime = componentFadeIn;
+
 			return;
 		}
 
 		musics[currentMusicIdx].fade = FADE_OUT;
+		musics[currentMusicIdx].fadetime = componentFadeOut;
 		musics[currentMusicIdx].nextMusicPath = name;
 		return;
 	}
@@ -184,7 +187,7 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	musics[currentMusicIdx].currentMusic->setPaused(false);
 	groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
 	musics[currentMusicIdx].fade = FADE_IN;
-
+	musics[currentMusicIdx].fadetime = componentFadeIn;
 }
 
 void AudioManager::PlayLoopFX(const Engine::GUID<AudioAsset> name, float pan, float vol,
@@ -260,13 +263,14 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	case 0: // Music
 		Source.play = true;
 		//musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
-		groups[CATEGORY_MUSIC]->setVolume(1.f);
-		groups[CATEGORY_MUSIC2]->setVolume(1.f);
-		PlayMusic(Source.currentSound);
+		groups[CATEGORY_MUSIC]->setVolume(Source.volume);
+		groups[CATEGORY_MUSIC2]->setVolume(Source.volume);
+		PlayMusic(Source.currentSound, Source.fadeOutTime, Source.fadeInTime);
 		break;
 	case 1: // SFX
-		musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
-		PlaySFX(Source.currentSound);
+		if (SFXEnabled()) {
+			PlaySFX(Source.currentSound);
+		}
 		break;
 	default:
 		break;
@@ -285,6 +289,10 @@ void AudioManager::PauseLoopFX() {
 	currentFX->setPaused(true);
 }
 
+void AudioManager::PauseComponent(AudioSource& source) {
+	source.play = false;
+}
+
 void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	float pan,
 	float minVolume, float maxVolume,
@@ -292,6 +300,10 @@ void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 {
 	SoundMap::iterator sound = sounds[CATEGORY_SFX].find(name);
 	if (sound == sounds[CATEGORY_SFX].end()) {
+		return;
+	}
+	if (maxVolume == 0.f)
+	{
 		return;
 	}
 	FMOD::Channel* channel;
@@ -318,12 +330,23 @@ void AudioManager::StopMusic(float fadetime) {
 		musics[currentMusicIdx].fadetime = fadetime;
 	}
 }
+
+void AudioManager::SetMusicFade(AudioSource& source, float fadeOut, float fadeIn) {
+	source.fadeOutTime = fadeOut;
+	source.fadeInTime = fadeIn;
+	/*musics[currentMusicIdx].fadetime = fadeOut;
+	musics[currentMusicIdx ^ 1].fadetime = fadeIn;*/
+}
+
 void AudioManager::StopFX() {
 	currentFX->stop();
 	currentFX = 0;
 	currentFXPath = 0;
 }
 
+void AudioManager::EnableSFX(bool toggle) {
+	enableSFX = toggle;
+}
 void AudioManager::StopAllAudio() {
 
 	musics[0].currentMusicPath = 0;
@@ -359,7 +382,6 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 		currentFXPath = 0;
 		//groups[CATEGORY_MUSIC]->stop();
 		//musics[currentMusicIdx].currentMusic->stop();
-		fadetime = Source.fadetime;
 		musics[currentMusicIdx].fade = FADE_OUT;
 		break;
 	case CATEGORY_LOOPFX:
@@ -381,8 +403,8 @@ void AudioManager::SetSFXVolume(float volume) {
 }
 
 void AudioManager::SetMusicVolume(float volume) {
-	groups[CATEGORY_MUSIC]->setVolume(1.f);
-	groups[CATEGORY_MUSIC2]->setVolume(1.f);
+	//groups[CATEGORY_MUSIC]->setVolume(1.f);
+	//groups[CATEGORY_MUSIC2]->setVolume(1.f);
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }

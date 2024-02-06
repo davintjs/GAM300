@@ -125,14 +125,43 @@ void SceneManager::Update(float dt)
 
 	if (sceneToLoad != "")
 	{
-		StopScene();
-		LoadScene(sceneToLoad);
-		StartScene();
-		sceneToLoad = "";
-		++sceneCount;
+		if (!loaded)
+		{
+			#ifdef _BUILD
+
+			if (GetCurrentScene().sceneName != "LoadingScreen")
+			{
+				std::cout << "Loading!" << GetCurrentScene().sceneName << '\n';
+				StopScene();
+				LoadScene("Assets/Scene/LoadingScreen.scene");
+				StartScene();
+				++sceneCount;
+			}
+
+			#else
+			if (GetCurrentScene().sceneName != "LoadingScreen [PREVIEW]")
+			{
+				std::cout << "Loading!" << GetCurrentScene().sceneName << '\n';
+				StopScene();
+				LoadScene("Assets/Scene/LoadingScreen.scene");
+				StartScene();
+				++sceneCount;
+			}
+			#endif // _BUILD
+
+		}
+		else
+		{
+			std::cout << "Loaded!\n";
+			StopScene();
+			LoadScene(sceneToLoad);
+			StartScene();
+			sceneToLoad = "";
+			++sceneCount;
+			loaded = false;
+		}
 	}
 }
-
 
 void SceneManager::StartScene()
 {
@@ -202,7 +231,7 @@ void SceneManager::StopScene()
 	}
 
 	sceneCount = 0;
-
+	
 	InputSystem::Instance().LockCursor(false);
 	SceneStopEvent stopEvent{ sceneID };
 	EVENTS.Publish(&stopEvent);

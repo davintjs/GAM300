@@ -11,11 +11,17 @@ public class MainMenu : Script
 {
     public GameObject mainMenuBGImage;
 
-    public GameObject pressStartText;
-
     public GameObject mainMenuTitle;
 
     public GameObject startButton;
+
+    public GameObject settingsButton; 
+
+    public GameObject HTPButton; 
+
+    public GameObject ExitButton; 
+
+
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -33,6 +39,13 @@ public class MainMenu : Script
 
     private SpriteRenderer startButtonRenderer;
 
+    private SpriteRenderer settingsButtonRenderer;
+
+    private SpriteRenderer HTPButtonRenderer;
+
+    private SpriteRenderer ExitButtonRenderer;
+
+
     vec3 startGridTextSize;
 
     void Start()
@@ -41,8 +54,29 @@ public class MainMenu : Script
         startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
 
+        //Play Button
         if (startButton.HasComponent<SpriteRenderer>())
+        {
             startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
+        }
+        //Settings Button
+        if (settingsButton.HasComponent<SpriteRenderer>())
+        {
+            settingsButtonRenderer = settingsButton.GetComponent<SpriteRenderer>();
+        }
+        //HTP Button
+        if (HTPButton.HasComponent<SpriteRenderer>())
+        {
+            HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
+        }
+        //Exit Button
+        if (ExitButton.HasComponent<SpriteRenderer>())
+        {
+            ExitButtonRenderer = ExitButton.GetComponent<SpriteRenderer>();
+        }
+
+
+            
     }
 
     void Update()
@@ -52,7 +86,31 @@ public class MainMenu : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("LevelPlay2");
+            SceneManager.LoadScene("LevelTutorial");
+
+        }
+
+        if (settingsButtonRenderer != null && settingsButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("Settings", true);
+
+        }
+
+        if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("HowToPlay",true);
+
+        }
+
+        if (ExitButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            SceneManager.LoadScene("Exit", true);
 
         }
 
@@ -81,27 +139,6 @@ public class MainMenu : Script
         }
     }
 
-    void selfFlicker()
-    {
-        flickerTimer += Time.deltaTime;
-
-        if (flickerTimer > duration)
-        {
-            flickerTimer = 0f;
-            switch (isStartActive)
-            {
-                case true:
-                    pressStartText.SetActive(false);
-                    isStartActive = false;
-                    break;
-                case false:
-                    pressStartText.SetActive(true);
-                    isStartActive = true;
-                    break;
-            }
-
-        }
-    }
 
     void movement()
     {

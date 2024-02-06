@@ -9,10 +9,27 @@ using GlmSharp;
 public class Terminal : Script
 {
     public int index;
+    public vec3 colors;
+    public GameObject glowObjectReference;
+    public MeshRenderer terminalglowMesh;
+    public MeshRenderer glowMesh;
+    public Material glowMat;
+    public bool interaced = false;
 
     void Start()
     {
+        //get the glow color
+        glowMat = glowObjectReference.GetComponent<MeshRenderer>().material;
+        //glowMat = glowMesh.material;
 
+        if (terminalglowMesh == null)
+        {
+            Console.WriteLine("Missing GlowMesh Reference");
+        }
+        if (glowMat == null)
+        {
+            Console.WriteLine("Missing GlowMat Reference");
+        }
     }
 
     void Update()
@@ -28,6 +45,8 @@ public class Terminal : Script
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
             //CheckCheckpoint();
+
+            ThirdPersonController.instance.isAtCheckpoint = true;
         }
 
     }
@@ -37,13 +56,21 @@ public class Terminal : Script
         if(index == ThirdPersonController.instance.checkpointIndex)
         {
             //save checkpoint
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && ThirdPersonController.instance.isAtCheckpoint == true)
             {
                 Console.WriteLine("Save Checkpoint");
+                //change glow of terminal
+                Material mat = terminalglowMesh.material;
+                mat.Set(glowMat);
+                mat.color = new vec4(glowMat.color);
+
+                //mat.metallic = metallic;
+
                 //shift the spawn point to where the current termainal position where the player save
                 ThirdPersonController.instance.spawnPoint.localPosition = new vec3(transform.position + vec3.Ones);
                 ThirdPersonController.instance.spawnPoint.localRotation = new vec3(transform.rotation);
                 AudioManager.instance.uiSound.Play();
+
             }
         }
 

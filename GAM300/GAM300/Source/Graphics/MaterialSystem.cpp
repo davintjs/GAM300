@@ -27,6 +27,7 @@ void MaterialSystem::Init()
 {
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackMaterialAssetLoaded);
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackBindTexturesOnSceneLoad);
+	EVENTS.Subscribe(this, &MaterialSystem::CallbackSceneStop);
 
 	//NewMaterialInstance();
 
@@ -177,6 +178,11 @@ void MaterialSystem::deleteInstance(Engine::GUID<MaterialAsset>& matGUID)
 
 }
 
+void MaterialSystem::CallbackSceneStop(SceneStopEvent* pEvent)
+{
+	_runtimeMaterialInstances.clear();
+}
+
 
 void MaterialSystem::LoadMaterial(const MaterialAsset& _materialAsset, const Engine::GUID<MaterialAsset>& _guid)
 {
@@ -200,8 +206,17 @@ void MaterialSystem::CallbackBindTexturesOnSceneLoad(LoadSceneEvent* pEvent)
 
 Engine::GUID<MaterialAsset> MaterialSystem::InstantiateRuntimeMaterial(Material_instance& mat)
 {
-	auto ret = _runtimeMaterialInstances.insert(std::make_pair(Engine::GUID<MaterialAsset>(), mat));
+	Material_instance tmpMat;
+	tmpMat = mat;
+	auto ret = _runtimeMaterialInstances.insert(std::make_pair(Engine::GUID<MaterialAsset>(), tmpMat));
 	auto it = ret.first;
+	Material_instance& instance = it->second;
+	instance.textureID = TextureManager.GetTexture(instance.albedoTexture);
+	instance.normalID = TextureManager.GetTexture(instance.normalMap);
+	instance.metallicID = TextureManager.GetTexture(instance.metallicTexture);
+	instance.roughnessID = TextureManager.GetTexture(instance.roughnessTexture);
+	instance.ambientID = TextureManager.GetTexture(instance.aoTexture);
+	instance.emissiveID = TextureManager.GetTexture(instance.emissionTexture);
 	return it->first;
 }
 
@@ -263,6 +278,30 @@ Material_instance::Material_instance(const Material_instance& other)
 	roughnessTexture = other.roughnessTexture;
 	aoTexture = other.aoTexture;
 	emissionTexture = other.emissionTexture;
+
+
+	isEmission = other.isEmission;
+	isVariant = other.isVariant;
+}
+
+Material_instance& Material_instance::operator = (const Material_instance& rhs)
+{
+	albedoColour = rhs.albedoColour;
+	metallicConstant = rhs.metallicConstant;
+	roughnessConstant = rhs.roughnessConstant;
+	aoConstant = rhs.aoConstant;
+	emissionConstant = rhs.emissionConstant;
+	albedoTexture = rhs.albedoTexture;
+	normalMap = rhs.normalMap;
+	metallicTexture = rhs.metallicTexture;
+	roughnessTexture = rhs.roughnessTexture;
+	aoTexture = rhs.aoTexture;
+	emissionTexture = rhs.emissionTexture;
+
+	isEmission = rhs.isEmission;
+	isVariant = rhs.isVariant;
+
+	return *this;
 }
 
 Material_instance& Material_instance::Duplicate_MaterialInstance(const Material_instance& other)

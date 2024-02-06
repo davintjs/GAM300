@@ -27,12 +27,11 @@ void EditorContentBrowser::Init()
 {
     currentDirectory = AssetDirectory;
     EVENTS.Subscribe(this, &EditorContentBrowser::CallbackGetCurrentDirectory);
-    payload_set = false;
+    setPayload = false;
 }
 
 void EditorContentBrowser::Update(float dt)
 {
-
     GLint folderIcon = GET_TEXTURE_ID("Assets/Icons/foldericon.dds");
     GLint fileIcon = GET_TEXTURE_ID("Assets/Icons/fileicon.dds");
     UNREFERENCED_PARAMETER(dt);
@@ -117,40 +116,46 @@ void EditorContentBrowser::Update(float dt)
         //Drag drop logic for content browser
         if (!it.is_directory() && ImGui::BeginDragDropSource()) {
 
-            std::string filepath = relativepath.string();
-            std::string ext = filepath;
-            std::string filename = filepath;
-            //check what extension is the file
-            ext.erase(0, ext.find_last_of(".") + 1);
-            //get name of file
-            filename.erase(0, filepath.find_last_of("\\") + 1);
-            filename.erase(filename.find_last_of("."), filename.size());
+            if (!setPayload) {
+                setPayload = true;
+                std::string filepath = relativepath.string();
+                std::string ext = filepath;
+                std::string filename = filepath;
+                //check what extension is the file
+                ext.erase(0, ext.find_last_of(".") + 1);
+                //get name of file
+                filename.erase(0, filepath.find_last_of("\\") + 1);
+                filename.erase(filename.find_last_of("."), filename.size());
 
-            ContentBrowserPayload payload;
+                ContentBrowserPayload payload;
 
-            if (ext == "model") { //mesh files
-                GetAssetEvent<MeshAsset> e{ it.path() };
-                EVENTS.Publish(&e);
-                Engine::GUID<MeshAsset> currentGUID = e.guid;
-                payload.guid = currentGUID;
-                payload.type = MODELTYPE;
-                payload.name = filename;
-            }
-            else if (ext == "material")
-            {
-                GetAssetEvent<MaterialAsset> e{ it.path() };
-                EVENTS.Publish(&e);
-                Engine::GUID<MaterialAsset> currentGUID = e.guid;
-                payload.guid = currentGUID;
-                payload.type = MATERIAL;
-            }
-            else if (ext == "prefab") { //prefab files
+                if (ext == "model") { //mesh files
+                    GetAssetEvent<MeshAsset> e{ it.path() };
+                    EVENTS.Publish(&e);
+                    Engine::GUID<MeshAsset> currentGUID = e.guid;
+                    payload.guid = currentGUID;
+                    payload.type = MODELTYPE;
+                    payload.name = strdup(filename.c_str());
+                }
+                else if (ext == "material")
+                {
+                    GetAssetEvent<MaterialAsset> e{ it.path() };
+                    EVENTS.Publish(&e);
+                    Engine::GUID<MaterialAsset> currentGUID = e.guid;
+                    payload.guid = currentGUID;
+                    payload.type = MATERIAL;
+                }
+                else if (ext == "prefab") { //prefab files
 
-            }
-
-            ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, sizeof(ContentBrowserPayload));
+                }
+                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", &payload, sizeof(ContentBrowserPayload) + 10);
+            }    
             ImGui::EndDragDropSource();
         }
+
+        //reset setpayload if drag drop is finished/cancelled
+        if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+            setPayload = false;
 
         ImGui::PopStyleColor();
         //Change directory into the folder clicked

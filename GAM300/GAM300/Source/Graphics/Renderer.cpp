@@ -143,6 +143,7 @@ void Renderer::Update(float)
 		}
 		else
 		{
+			MATERIALSYSTEM.BindTextureIDs(currMatInstance);
 			UpdatePBRProperties(transform, currMatInstance, vaoIt->second);
 		}
 		++i;
@@ -332,7 +333,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	BindLights(shader);
 
 	GLint hasTexture = glGetUniformLocation(shader.GetHandle(), "hasTexture");
-	GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hassNormal");
+	GLint hasNormal = glGetUniformLocation(shader.GetHandle(), "hasNormal");
 	GLint hasRoughness = glGetUniformLocation(shader.GetHandle(), "hasRoughness");
 	GLint hasMetallic = glGetUniformLocation(shader.GetHandle(), "hasMetallic");
 	GLint hasAO = glGetUniformLocation(shader.GetHandle(), "hasAO");

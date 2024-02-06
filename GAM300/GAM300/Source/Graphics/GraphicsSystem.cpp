@@ -342,7 +342,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	//GLint offset = GLint((Application::GetHeight() - height) * 0.5f);
 	glViewport(0, 0, Application::GetWidth(), Application::GetHeight());
 #else
-
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetAttachment());
 	glDrawBuffer(_camera.GetAttachment());
 #endif
@@ -358,8 +357,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	// glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
 
 	glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
-	// glActiveTexture(GL_TEXTURE1);
-	// glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]); 
+	//glActiveTexture(GL_TEXTURE1);
+	//glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]); 
 
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "hdr");

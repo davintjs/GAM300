@@ -8,10 +8,7 @@ using System.Threading.Tasks;
 
 public class EndKey : Script
 {
-    public bool gameover = false;
     public GameObject mesh;
-
-    private float timer = 0.0f;
 
     void Start()
     {
@@ -20,15 +17,7 @@ public class EndKey : Script
 
     void Update()
     {
-        if(gameover)
-        {
-            if(timer > 0.5f)
-            {
-                gameover = false;
-                SceneManager.LoadScene("VictoryScreenMenu");
-            }
-            timer += Time.deltaTime;
-        }
+
     }
 
     void OnTriggerEnter(PhysicsComponent rb)
@@ -36,9 +25,8 @@ public class EndKey : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
-            gameover = true;
             AudioManager.instance.keyCollected.Play();
-            mesh.SetActive(false);
+            Destroy(mesh);
         }
     }
 }

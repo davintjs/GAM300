@@ -77,6 +77,8 @@ public class ThirdPersonController : Script
     public Transform terminal1;
     public Transform terminal2;
 
+    public MeshRenderer doorTestMesh;
+
     void Awake()
     {
         if (instance != null)
@@ -106,12 +108,12 @@ public class ThirdPersonController : Script
                 playerWeaponCollider2.SetActive(false);
                 playerWeaponCollider3.SetActive(false);
                 comboCount = 1;
-                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                selectedWeaponCollider.transform.position = new vec3(10000);
                 attackLight.SetActive(false);
             }
             else
             {
-                selectedWeaponCollider.transform.localRotation = new vec3(PlayerModel.localRotation);
+                selectedWeaponCollider.transform.rotation = new vec3(PlayerModel.rotation);
                 SetState("Attack" + comboCount, true);
                 AudioManager.instance.playerSlashAttack.Play();
                 AudioManager.instance.spark.Play();
@@ -139,6 +141,7 @@ public class ThirdPersonController : Script
 
     //health bar
     public GameObject healthBarFill;
+    public Transform healthBar;
     public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
@@ -148,6 +151,7 @@ public class ThirdPersonController : Script
     public float maxStamina = 100f;
     public float currentStamina;
     public GameObject staminaBarFill;
+    public Transform staminaBar;
     public Transform staminaBarPos;
     private Coroutine regen;
     public float timeBeforeRegen = 1.5f;
@@ -252,8 +256,10 @@ public class ThirdPersonController : Script
 
     void Start()
     {
+        //Material mat = doorTestMesh.material;
+        //mat.color = vec4.Ones;
         //reference check
-        if(PlayerCamera == null)
+        if (PlayerCamera == null)
         {
             Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
             return;
@@ -372,7 +378,7 @@ public class ThirdPersonController : Script
         //testing respawn
         if (Input.GetKey(KeyCode.R))
         {
-            Console.WriteLine("Test Respawn");
+            //Console.WriteLine("Test Respawn");
             player.localPosition = new vec3(spawnPoint.localPosition);
             //player.localRotation = new vec3(spawnPoint.localRotation);
             //SceneManager.LoadScene("LevelPlay2");
@@ -429,23 +435,23 @@ public class ThirdPersonController : Script
             SetState("DashAttack", false);
             dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
-                movement = PlayerModel.back * attackMoveSpeed * Time.deltaTime;
+                movement = PlayerModel.forward * attackMoveSpeed * Time.deltaTime;
             else
             {
                 if (currentAttackTimer / attackTimer > 0.5f)
                 {
-                    selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                    selectedWeaponCollider.transform.position = new vec3(10000);
                     attackLight.SetActive(false);
                 }
                 else if (currentAttackTimer / attackTimer > 0.3f )
                 {
-                    selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+                    selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                     attackLight.SetActive(true);
                     selectedWeaponCollider.SetActive(true);//enable the weapon collider
                 }
                 movement = vec3.Zero;
             }
-            attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.localPosition);
+            attackLight.transform.localPosition = new vec3(selectedWeaponCollider.transform.position);
             currentAttackTimer += Time.deltaTime;
             if (currentAttackTimer >= attackTimer)
             {
@@ -469,9 +475,9 @@ public class ThirdPersonController : Script
 
             if(currentDashAttackTimer > 0.5f)
             {
-                CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
+                CC.force = PlayerModel.forward * dashAttackSpeed;//dash player forward
 
-                selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
+                selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                 attackLight.SetActive(true);
                 selectedWeaponCollider.SetActive(true);//enable the weapon collider
 
@@ -480,7 +486,7 @@ public class ThirdPersonController : Script
             if(currentDashAttackTimer <= 0.5f)
             {
                 movement = vec3.Zero;
-                selectedWeaponCollider.transform.localPosition = new vec3(10000);
+                selectedWeaponCollider.transform.position = new vec3(10000);
                 attackLight.SetActive(false);//disable weapon collider
             }
             if(currentDashAttackTimer <= 0)
@@ -511,7 +517,7 @@ public class ThirdPersonController : Script
         if(isDodging)
         {
             startDodgeCooldown = true;
-            CC.force = PlayerModel.back * dodgeSpeed;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
             if(currentDodgeTimer <= 0)
@@ -586,7 +592,7 @@ public class ThirdPersonController : Script
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
             if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
-                Console.WriteLine("DashAttack");
+                //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
                 AudioManager.instance.playerAttack.Play();
                 _isDashAttacking = true;
@@ -597,7 +603,7 @@ public class ThirdPersonController : Script
             //DODGE
             if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
             {
-                Console.WriteLine("Dodging");
+                //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
                 SetState("Run", false);
@@ -608,8 +614,10 @@ public class ThirdPersonController : Script
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && currentStamina >= overDriveStamina)
             {
                 AudioManager.instance.playerOverdrive.Play();
-                UseStamina(overDriveStamina);
-                Console.WriteLine("Overdrive");
+
+                //Overdrive doesn't need stamina to use
+                //UseStamina(overDriveStamina);
+                //Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
@@ -619,9 +627,10 @@ public class ThirdPersonController : Script
             }
 
             bool combo = IsAttacking && currentAttackTimer/attackTimer > animCancelPercentage;
-            if (Input.GetMouseDown(0) && (combo || !IsAttacking) && currentStamina >= attackStamina)
+            if (Input.GetMouseDown(0) && (combo || !IsAttacking))
             {
-                UseStamina(attackStamina);
+                //Normal attacks won't use stamina.
+                //UseStamina(attackStamina);
 
                 switch (comboCount)
                 {
@@ -648,10 +657,12 @@ public class ThirdPersonController : Script
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking && currentStamina >= jumpStamina)
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
                 SetState("Jump", true);
-                UseStamina(jumpStamina);
+                
+                //Jump will not require stamina
+                //UseStamina(jumpStamina);
                 AudioManager.instance.jumpVoice.Play();
                 movement += vec3.UnitY * JumpSpeed;
             }
@@ -709,7 +720,7 @@ public class ThirdPersonController : Script
 
     public void Respawn()
     {
-        Console.WriteLine("Respawn");
+        //Console.WriteLine("Respawn");
         isDead = false;
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
@@ -723,65 +734,44 @@ public class ThirdPersonController : Script
 
 
     }
+
+    public void restoreStamina(float staminaPackAmount)
+    {
+        currentStamina += staminaPackAmount;
+        if (currentStamina > maxStamina)
+        {
+            currentStamina = maxStamina;
+        }
+
+        UpdateStaminaBar();
+    }
+
     public void UpdatehealthBar()
     {
-        //NOTE: tempoary disabled, not working currently
-        //float scaleFactor = (float)currentHealth / (float)maxHealth;
-        //float newXScale = initialHealthBarXScale * scaleFactor;
-        //float xOffset = (initialHealthBarXScale - newXScale) * 0.5f;
-        //vec3 currentPos = healthBarFill.GetComponent<Transform>().localPosition;
-        //vec3 currentScale = healthBarFill.GetComponent<Transform>().localScale;
-        //currentPos.x = initialHealthBarXpos - xOffset;
-        //currentScale.x = newXScale;
-        //healthBarFill.GetComponent<Transform>().localPosition = currentPos;
-        //healthBarFill.GetComponent<Transform>().localScale = currentScale;
 
-        //hard code the health bar for now
-        if(currentHealth == maxHealth)
+        vec3 hpScale = healthBar.localScale;
+        hpScale.x = currentHealth / maxHealth;
+        healthBar.localScale = hpScale;
+        if (currentHealth <= 0)
         {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.65f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.2f, -0.035f, -1f);
-        }
-        if(currentHealth == 3)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.7f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.15f, -0.035f, -1f);
-        }
-        if (currentHealth == 2)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.74f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.11f, -0.035f, -1f);
-        }
-        if (currentHealth == 1)
-        {
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0.05f, -0.035f, -1f);
-        }
-        if(currentHealth <= 0)
-        {
-            Console.WriteLine("GameOver");
+            //Console.WriteLine("GameOver");
             isDead = true;
             healthStaminaCanvas.SetActive(false);
             startDeathAnimationCountdown = true;
             currentHealth = 0;
-            healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
-            healthBarFill.GetComponent<Transform>().localScale = new vec3(-0f, -0.035f, -1f);
+            //healthBarFill.GetComponent<Transform>().localPosition = new vec3(-0.8f, 0.857f, 3f);
+            //healthBarFill.GetComponent<Transform>().localScale = new vec3(-0f, -0.035f, -1f);
         }
     }
 
     public void UpdateStaminaBar()
     {
 
-        float scaleFactor = (float)currentStamina / (float)maxStamina;
-        float newXScale = initialStaminaBarXScale * scaleFactor;
-        float xOffset = (initialStaminaBarXScale - newXScale) * 0.5f;
-        //vec3 currentPos = staminaBarFill.GetComponent<Transform>().localPosition;
-        vec3 currentPos = staminaBarPos.localPosition;
-        vec3 currentScale = staminaBarFill.GetComponent<Transform>().localScale;
-        currentPos.x = initialStaminaBarXpos - xOffset;
-        currentScale.x = newXScale;
-        staminaBarFill.GetComponent<Transform>().localPosition = currentPos;
-        staminaBarFill.GetComponent<Transform>().localScale = currentScale;
+
+
+        vec3 staminaScale = staminaBar.localScale;
+        staminaScale.x = currentStamina / maxStamina;
+        staminaBar.localScale = staminaScale;
     }
 
     public float UseStamina(float amount)
@@ -804,7 +794,7 @@ public class ThirdPersonController : Script
             if (currentStamina - amount <= 0)
             {
                 //Debug.Log("Not enough stamina");
-                Console.WriteLine("Not enough stamina");
+                //Console.WriteLine("Not enough stamina");
                 UpdateStaminaBar();
             }
 
@@ -814,7 +804,7 @@ public class ThirdPersonController : Script
         else
         {
             //Debug.Log("Not enough stamina");
-            Console.WriteLine("Not enough stamina");
+            //Console.WriteLine("Not enough stamina");
             UpdateStaminaBar();
 
         }
@@ -825,7 +815,7 @@ public class ThirdPersonController : Script
     //gradually regenerate stamina 
     private IEnumerator RegenStamina()
     {
-        Console.WriteLine("Regenerate Stamina");
+        //Console.WriteLine("Regenerate Stamina");
         yield return new WaitForSeconds(timeBeforeRegen);
 
         regenRate = 60f;
@@ -888,7 +878,7 @@ public class ThirdPersonController : Script
         
         if (currentHealth <= 0)
         {
-            Console.WriteLine("YouDied");
+            //Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
             animationManager.UpdateState();
@@ -913,7 +903,7 @@ public class ThirdPersonController : Script
         }
         if(currentHealth == maxHealth)
         {
-            Console.WriteLine("Health is Full");
+            //Console.WriteLine("Health is Full");
         }
     }
 

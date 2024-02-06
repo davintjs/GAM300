@@ -1,0 +1,15 @@
+Material:
+  Material Name: Neon Pink
+  Shader: 1
+  Albedo: [1, 0.0627451017, 0.941176534, 1]
+  Metallic: 1
+  Roughness: 0.330000013
+  AmbientOcclusion: 3
+  Is Emission: true
+  Emission: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

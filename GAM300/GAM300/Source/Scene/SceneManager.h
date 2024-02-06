@@ -42,6 +42,17 @@ public:
 	// Load a scene from a file path
 	void LoadScene(const std::string& _filePath = "");
 
+	void LoadNext()
+	{
+		loaded = true;
+	}
+
+	void StopLoadNext()
+	{
+		loaded = false;
+		sceneToLoad = "";
+	}
+
 	// Save a scene with the file path
 	bool SaveScene(const std::string& _filePath = "");
 
@@ -77,6 +88,7 @@ public:
 	std::string sceneToLoad;
 private:
 	std::list<Scene> loadedScenes;
+	bool loaded = false;
 	int sceneCount = 0; // For checking how many scenes are loaded after starting
 };
 

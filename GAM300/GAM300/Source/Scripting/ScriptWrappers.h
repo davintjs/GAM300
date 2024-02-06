@@ -28,6 +28,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 #include "Physics/PhysicsSystem.h"
+#include "Graphics/GraphicsHeaders.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -143,10 +144,36 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		AudioSource& audio = audioSource;
 		AUDIOMANAGER.PlayComponent(audioSource);
 	}
+
+	static void SetMasterVolume(bool toggle) { // toggle for now, change to float when ready
+		AUDIOMANAGER.SetMasterVolume(float(toggle));
+	}
+
 	static void StopMusic(float fade = 1.f) {
 		AUDIOMANAGER.StopMusic(fade);
 	}
 
+	static void PauseMusic() {
+		AUDIOMANAGER.SetMusicVolume(0.f);
+	}
+
+	static void ResumeMusic() {
+		AUDIOMANAGER.PlayMusic();
+	}
+
+	static void SetMusicFade(ScriptObject<AudioSource> audioSource, float fadeOut, float fadeIn) {
+		AUDIOMANAGER.SetMusicFade(audioSource, fadeOut, fadeIn);
+	}
+
+	static void EnableSFX(bool toggle) {
+		AUDIOMANAGER.EnableSFX(toggle);
+		if (!toggle) {
+			AUDIOMANAGER.PauseLoopFX();
+		}
+	}
+	static void PauseComponent(ScriptObject<AudioSource> audioSource) {
+		AUDIOMANAGER.PauseComponent(audioSource);
+	}
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -316,6 +343,32 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma endregion
 
+#pragma region MESH_RENDERER
+
+	static void GetMaterial(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance>  mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = mat;
+		matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+	}
+
+	static void SetMaterial(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance> mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+		Material_instance& newInstance = mat;
+		if (!matInstance.isVariant)
+		{
+			mr.materialGUID = MATERIALSYSTEM.InstantiateRuntimeMaterial(mat);
+		}
+		else
+		{
+			matInstance = mat;
+		}
+	}
+
+#pragma endregion
+
 #pragma region CAMERA
 
 	static void SetCameraTarget(ScriptObject<Camera> pCamera, Vector3& position)
@@ -355,14 +408,22 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #pragma endregion
 
 	// Load a scene
-	static void LoadScene(MonoString* mString)
+	static void LoadScene(MonoString* mString, bool loadDirect)
 	{
 		// Bean: Not really elegant because we can only load scenes from the scene folder
+		// Zach: kek
 		std::string scenePath = "Assets/Scene/";
 		scenePath += mono_string_to_utf8(mString);
 		scenePath += ".scene";
 
 		MySceneManager.sceneToLoad = scenePath;
+		if (loadDirect)
+			MySceneManager.LoadNext();
+	}
+
+	static void LoadNext()
+	{
+		MySceneManager.LoadNext();
 	}
 
 	//Gets object that entity has
@@ -581,6 +642,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(GetActive);
 		Register(SetActive);
 		Register(LoadScene);
+		Register(LoadNext);
 		Register(AddComponent);
 		
 		Register(CloneGameObject);
@@ -595,6 +657,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Physics System
 		Register(Raycast);
+
+		//Mesh Renderer
+		Register(GetMaterial);
+		Register(SetMaterial);
 
 		// Transform Component
 		Register(SetTransformParent);
@@ -614,6 +680,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		// Audio Component
 		Register(AudioSourcePlay);
 		Register(StopMusic);
+		Register(PauseMusic);
+		Register(ResumeMusic);
+		Register(SetMusicFade);
+		Register(EnableSFX);
+		Register(PauseComponent);
+
 
 		// Animator Component
 		Register(PlayAnimation);

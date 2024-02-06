@@ -115,20 +115,11 @@ struct Material_instance : Object
 	// To make Copies
 	Material_instance& Duplicate_MaterialInstance(const Material_instance& other);
 
-	int shaderType = (int)SHADERTYPE::PBR;
 
 	//-------------------------
 	//      PBR VARIABLES
 	//-------------------------
 
-	std::string		name;
-	Vector4			albedoColour;// This is pretty much used in all types of shaders
-	float			metallicConstant;
-	float			roughnessConstant;
-	float			aoConstant;
-	float			emissionConstant;
-
-	bool isEmission = false;
 
 	Engine::GUID<TextureAsset>	albedoTexture;
 	Engine::GUID<TextureAsset>	normalMap;
@@ -137,12 +128,28 @@ struct Material_instance : Object
 	Engine::GUID<TextureAsset>	aoTexture;
 	Engine::GUID<TextureAsset>	emissionTexture;
 
+	Vector4			albedoColour;// This is pretty much used in all types of shaders
+
+	int shaderType = (int)SHADERTYPE::PBR;
+
+	float			metallicConstant;
+	float			roughnessConstant;
+	float			aoConstant;
+	float			emissionConstant;
+
+	bool isEmission = false;
+	bool isVariant = false;
+
 	GLuint textureID;
 	GLuint normalID;
 	GLuint metallicID;
 	GLuint roughnessID;
 	GLuint ambientID;
 	GLuint emissiveID;
+
+	std::string	name;
+
+	Material_instance& operator = (const Material_instance& rhs);
 
 	// Blinn Phong - Not in use
 
@@ -231,6 +238,8 @@ public:
 	std::vector<Shader>available_shaders;
 
 private:
+
+	void CallbackSceneStop(SceneStopEvent* pEvent);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 };
@@ -345,15 +354,17 @@ public:
 
 	void DrawCapsuleCollider(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius, const float& _height);
 
-	void DrawSpotLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
+	void DrawSpotLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color, const float& _range, const float& _innerCutOff, const float& _outerCutOff);
 	
-	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color);
+	void DrawDirectionalLight(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec4& _color);
 
 	void DrawSegment3D(InstanceProperties& _iProp, const Segment3D& _segment3D, const glm::vec4& _color);
-	void DrawSegment3D(InstanceProperties & _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
+	void DrawSegment3D(InstanceProperties& _iProp, const glm::vec3& _point1, const glm::vec3& _point2, const glm::vec4& _color);
 
-	void DrawCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
-	void DrawSemiCircle2D(InstanceProperties & _iProp, const glm::vec3 & _center, const glm::vec3 & _rotation, const glm::vec4 & _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
+	void DrawCircle2D(InstanceProperties& _iProp, const glm::mat4& _t, const glm::vec3& _center, const glm::vec4& _color, const float& _radius);
+	
+	void DrawSemiCircle2D(InstanceProperties& _iProp, const glm::vec3& _center, const glm::vec3& _rotation, const glm::vec4& _color, const float& _radius);
 
 	void DrawRay();
 

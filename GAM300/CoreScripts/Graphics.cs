@@ -19,18 +19,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using GlmSharp;
 
-namespace GlmSharp
-{
-    public partial struct vec4
-    {
-        static public vec4 red = new vec4(1f, 0f, 0f, 1f);
-        static public vec4 white = new vec4(1f, 1f, 1f, 1f);
-        static public vec4 gray = new vec4(.5f, .5f, .5f, 1f);
-        static public vec4 green = new vec4(0f, 1f, 0f, 1f);
-    }
-}
-
-
 namespace BeanFactory
 {
     public struct AssetID
@@ -43,24 +31,67 @@ namespace BeanFactory
     {
         AssetID asset;
     }
+    public struct Mesh
+    {
+        AssetID asset;
+    }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct Material
+    public class Material
     {
-        private int shaderType;
+        Texture _albedoTexture;
+        Texture _normalMapTexture;
+        Texture _metallicTexture;
+        Texture _roughnessTexture;
+        Texture _ambientOcclusionTexture;
+        Texture _emissionTexture;
+        vec4 _color = new vec4(1,2,3,4);
+        int shaderType = 1;
+        float _metallic = 2;
+        float _roughness =3 ;
+        float _ambientOcclusion = 4;
+        float _emission = 5;
 
-        vec4 color;
-        float metallic;
-        float roughness;
-        float ambientOcclusion;
-        float emission;
+        bool isEmission;
+        bool isVariant;
 
-        Texture albedoTexture;
-        Texture normalMapTexture;
-        Texture metallicTexture;
-        Texture roughnessTexture;
-        Texture ambientOcclusionTexture;
-        Texture emissionTexture;
+        public vec4 color { get { return _color; } set { _color = value; PropertyChangedCallBack(); } }
+        public float metallic { get { return _metallic; } set { _metallic = value; PropertyChangedCallBack(); } }
+        public float roughness { get { return _roughness; } set { _roughness = value; PropertyChangedCallBack(); } }
+        public float ambientOcclusion { get { return _ambientOcclusion; } set { _ambientOcclusion = value; PropertyChangedCallBack(); } }
+        public float emission { get { return _emission; } set { _emission = value; PropertyChangedCallBack(); } }
+        public Texture albedoTexture { get { return _albedoTexture; } set { _albedoTexture = value; PropertyChangedCallBack(); } }
+        public Texture normalMapTexture { get { return _normalMapTexture; } set { _normalMapTexture = value; PropertyChangedCallBack(); } }
+        public Texture metallicTexture { get { return _metallicTexture; } set { _metallicTexture = value; PropertyChangedCallBack(); } }
+        public Texture roughnessTexture { get { return _roughnessTexture; } set { _roughnessTexture = value; PropertyChangedCallBack(); } }
+        public Texture ambientOcclusionTexture { get { return _ambientOcclusionTexture; } set { _ambientOcclusionTexture = value; PropertyChangedCallBack(); } }
+        public Texture emissionTexture { get { return _emissionTexture; } set { _emissionTexture = value; PropertyChangedCallBack(); } }
+
+        public void Set(Material rhs)
+        {
+            _color = rhs.color;
+            _albedoTexture = rhs.albedoTexture;
+            _normalMapTexture = rhs.normalMapTexture;
+            _metallicTexture = rhs.metallicTexture;
+            _roughnessTexture = rhs.roughnessTexture;
+            _ambientOcclusionTexture = rhs.ambientOcclusionTexture;
+            _emissionTexture = rhs.emissionTexture;
+            shaderType = rhs.shaderType;
+            _metallic = rhs.metallic;
+            _roughness = rhs.roughness;
+            _ambientOcclusion = rhs.ambientOcclusion;
+            _emission = rhs.emission;
+        }
+
+        public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; PropertyChangedCallBack(); } }
+
+        public MeshRenderer _meshRenderer;
+
+        void PropertyChangedCallBack()
+        {
+            isVariant = true;
+            InternalCalls.SetMaterial(meshRenderer, this);
+        }
     }
 
 }

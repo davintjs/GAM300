@@ -10,40 +10,25 @@ public class SpinningPropeller : Script
 {
     public float rotateSpeed = 3f;
     public bool rotateClockwise = true;
-    public bool rotateAntiClockwise = false;
-
 
     void Start()
     {
-
     }
 
     void Update()
     {
 
-        if (rotateClockwise && !rotateAntiClockwise)
-        {
-            rotateAntiClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity.z = gameObject.transform.position.z * -rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
+        rotation();
+    }
 
-            //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
-
-            //transform.localRotation = rot;
-        }
-        if (rotateAntiClockwise && !rotateClockwise)
-        {
-            rotateClockwise = false;
-            GetComponent<Rigidbody>().angularVelocity = new vec3(gameObject.transform.position) * rotateSpeed;
-            //vec3 rot = new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
-
-            //reset rotation so it only rotates z axis
-            //rot.x = 0f;
-            //rot.y = 0f;
-
-            //transform.localRotation = rot;
-        }
+    void rotation()
+    {
+        vec3 rot = transform.localRotation;
+        //Rotation of the propellor
+        if (rotateClockwise)
+            rot += new vec3(0f, 0f, 10f) * Time.deltaTime * rotateSpeed;
+        else
+            rot += new vec3(0f, 0f, -10f) * Time.deltaTime * rotateSpeed;
+        transform.localRotation = rot;
     }
 }

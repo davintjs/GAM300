@@ -193,6 +193,10 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 				mEntities.push_back(euid);
 			}
 		}
+		else {
+			EditorScene::Instance().ClearMultiselect();
+
+		}
 		SelectedEntityEvent selectedEvent{ &curr_scene.Get<Entity>(euid) };
 		EVENTS.Publish(&selectedEvent);
 	}
@@ -203,7 +207,6 @@ void EditorHierarchy::DisplayEntity(Engine::UUID euid)
 		ImGui::Text(curr_scene.Get<Tag>(selectedEntity).name.c_str());
 		ImGui::EndDragDropSource();
 	}
-
 	if (ImGui::BeginDragDropTarget())
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Entity"))

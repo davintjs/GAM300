@@ -39,7 +39,7 @@ void ColourPicker::Init()
 
 Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 {
-
+	//return 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
 	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
@@ -151,7 +151,11 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 #if defined(_BUILD)
 
-	glReadPixels(mousepos.x, mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glm::vec2 true_mousepos;
+	true_mousepos.x = (mousepos.x / windowDimension.x) * 1600.f;
+	true_mousepos.y = (mousepos.y / windowDimension.y) * 900.f;
+
+	glReadPixels(true_mousepos.x, true_mousepos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 #else
 
@@ -196,7 +200,7 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	return toReturn;
 }
 

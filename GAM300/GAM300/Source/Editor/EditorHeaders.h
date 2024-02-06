@@ -29,6 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #include "Core/SystemInterface.h"
 #include "Utilities/SparseSet.h"
+#include "Utilities/PlatformUtils.h"
 #include "Scene/Entity.h"
 #include "Core/Events.h"
 #include <imgui_node_editor.h>
@@ -48,9 +49,9 @@ struct ContentBrowserPayload {
     ContentBrowserPayload() { type = NONE; }
     ContentBrowserPayload(filetype _type, Engine::HexID _guid) : type(_type), guid(_guid) {}
 
-    std::string name;
     Engine::HexID guid;
     filetype type;
+    char* name;
 };
 
 struct BaseCamera;
@@ -172,7 +173,7 @@ public:
 
     Engine::HexID selectedAss;
 
-    bool payload_set;
+    bool setPayload;
 
 private:
     std::filesystem::path currentDirectory;
@@ -211,11 +212,14 @@ public:
     bool const DebugDraw() { return debug_draw; }
 
     void CallbackEditorWindow(EditorWindowEvent* pEvent);
+    void ClearMultiselect();
+
     //Multiselect variables
     std::list<Engine::UUID>multiselectEntities;
     Transform multiTransform; 
     MeshRenderer multiMeshRenderer;
     bool useMeshRenderer = true;
+
 
 private:
     glm::vec2 sceneDimension{}; // Dimensions of the viewport
@@ -376,12 +380,14 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
         };
 
         struct Node {
-            int id;
+            ed::NodeId id;
             NodeType type;
             ImVec2 position;
             std::string filename;
             ed::PinId inputPinId;  // Add pin IDs as needed
             ed::PinId outputPinId;
+
+            ImU32 color;  // Add color attribute
 
             Node(int& _id, NodeType _type, std::string _filename, const ImVec2& _position)
                 : id(_id), type(_type), filename(_filename), position(_position), inputPinId(0), outputPinId(0) {}
@@ -392,6 +398,7 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
                 : Node(id, NodeType::ControlFlow, _filename, position) {
                 inputPinId = id++;
                 outputPinId = id++;
+                color = IM_COL32(255, 0, 0, 255);
             }
         };
 
@@ -400,6 +407,7 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
                 : Node(id, NodeType::Decorator, _filename, position) {
                 inputPinId = id++;
                 outputPinId = id++;
+                color = IM_COL32(0, 255, 0, 255);  // Green for Decorator nodes
             }
         };
 
@@ -408,6 +416,7 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
                 : Node(id, NodeType::Leaf, _filename, position) {
                 inputPinId = id++;
                 outputPinId = id++;
+                color = IM_COL32(0, 0, 255, 255);  // Blue for Leaf nodes
             }
         };
 
@@ -417,10 +426,11 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
             ed::PinId OutputId;
         };
 
-    private:
-        
-        int uniqueId = 1;
+        bool editorOpen = true;
         ed::EditorContext* m_Context = nullptr;
+
+    private: 
+        int uniqueId = 1;
         bool m_FirstFrame = true;
         ImVector<LinkInfo> m_Links;
         int m_NextLinkId = 100;
@@ -428,6 +438,11 @@ ENGINE_EDITOR_SYSTEM(EditorBehaviourTreeEditor)
 
         Node CreateNode(int& id, NodeType type, const std::string & filename, const ImVec2 & position);
         void DrawNode(Node& node);
+
+        void DrawNodeHierarchyWindow();
+        void DrawNodeHierarchy(Node& currentNode, int depth);
+        //const Node& GetNodeById(ed::PinId nodeId);
+
 };
 
 #endif // !EDITORHEADERS_H

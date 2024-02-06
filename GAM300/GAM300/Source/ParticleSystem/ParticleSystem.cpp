@@ -16,7 +16,6 @@ void ParticleManager::Init()
 void ParticleManager::Update(float dt)
 {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-    //int counter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         
         if (!currentScene.IsActive(particleComponent))      //use the same for Button 
@@ -25,14 +24,22 @@ void ParticleManager::Update(float dt)
         if (!currentScene.IsActive(entity))
             continue;
         Transform& entityTransform = currentScene.Get<Transform>(entity);
+        Transform& entityTransformParent = currentScene.Get<Transform>(entityTransform.parent);
+        vec3 origin = particleComponent.isLocalSpace ? vec3{ 0.f,0.f,0.f } : entityTransform.GetGlobalTranslation();
+        bool enableDirection = glm::length(vec3(particleComponent.direction)) > 0.1f ? true : false;
 
         if (particleComponent.particles_.size() != particleComponent.numParticles_) { // initialize or resize
             particleComponent.particles_.resize(particleComponent.numParticles_);
 
+
             // Initialize the position, velocity, and acceleration of each particle
             for (int i = 0; i < particleComponent.numParticles_; i++) {
-                particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
+
+                particleComponent.particles_[i].position = origin;
+
+                //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
                 particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
+                particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = 1.0f;
                 particleComponent.particles_[i].lifetime = random.NextFloat1(0.0f, particleComponent.particleLifetime_);
@@ -43,18 +50,15 @@ void ParticleManager::Update(float dt)
             }
         }
 
-        
-        // Handle particle collisions
-        // Emit new particles
-  
-        if (particleComponent.particleEmissionRate_ > 0.0f) { // idk how emmision rate works, @desmond your turn to do this
+        if (particleComponent.particleEmissionRate_ > 0.0f) {
             for (int i = 0; i < particleComponent.numParticles_; i++) {
-                if (particleComponent.particles_[i].lifetime <= 0.0f) {
+                if (particleComponent.particles_[i].lifetime <= 0.0f) { // when particle dies, reset
                     particleComponent.particles_[i].trails.pos.clear();
                     particleComponent.particles_[i].trails.count = 0;
+                    particleComponent.particles_[i].position = origin;
 
-                    particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
-                    particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
+                    //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
+                    particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                     particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                     particleComponent.particles_[i].acceleration = 1.0f;
                     particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
@@ -69,64 +73,76 @@ void ParticleManager::Update(float dt)
                 }
             }
         }
-        //}
 
-        for (int i = 0; i < particleComponent.numParticles_; i++) { // update particles
+        const float noiseMovementFactor = particleComponent.noiseMovement / 100.f;
 
-            // speed += acceleration * dt
-            // velocity = speed * direction
+        for (int i = 0; i < particleComponent.numParticles_; i++) {
+            Particle& particle = particleComponent.particles_[i];
+            Trail& trails = particle.trails;
 
+            if (particleComponent.noiseMovement > 1.f) {
+                if (particle.noiselifetime <= 0.f) {
 
-            if (particleComponent.noise > 1.f) {
-                if (particleComponent.particles_[i].noiselifetime <= 0.f) {
-                    vec3 noiseDirection = random.NextVector3(-20.0f, 20.0f);
-                    noiseDirection = glm::normalize(noiseDirection);
-                    float noise = particleComponent.noise / 100.f;
-                    particleComponent.particles_[i].direction = noise * noiseDirection + (1.f - noise) * particleComponent.particles_[i].direction;
-                    if (particleComponent.noisefrequency >= 2.f ) {
-                        particleComponent.particles_[i].noiselifetime = random.NextFloat1(particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - particleComponent.particleLifetime_ / (particleComponent.noisefrequency - 1.f));
+                    if (enableDirection && 
+                        (glm::dot(glm::normalize(particle.position - origin), glm::normalize(vec3(particleComponent.direction))) <= cosf((particleComponent.angle * 3.1415926f) / 180.f))) {
+                        particle.direction = vec3(particleComponent.direction);
                     }
                     else {
-                        particleComponent.particles_[i].noiselifetime = particleComponent.particleLifetime_;
+                        vec3 noiseDirection = random.NextVector3(-20.0f, 20.0f);
+                        noiseDirection = glm::normalize(noiseDirection);
+                        particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
                     }
+
+                    if (particleComponent.noisefrequency >= 1.f) {
+                        particle.noiselifetime = random.NextFloat1(10.f * particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - 12.5f * particleComponent.particleLifetime_ / (particleComponent.noisefrequency)) / 10.f;
+                    }
+                    else {
+                        particle.noiselifetime = particleComponent.particleLifetime_;
+                    }
+
                 }
-                particleComponent.particles_[i].noiselifetime -= dt;
+                particle.noiselifetime -= dt;
             }
 
-            particleComponent.particles_[i].speed += particleComponent.particles_[i].acceleration * dt;
-            particleComponent.particles_[i].velocity = particleComponent.particles_[i].direction * particleComponent.particles_[i].speed;
-            particleComponent.particles_[i].position += particleComponent.particles_[i].velocity * dt;
-            particleComponent.particles_[i].lifetime -= dt;
-            particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
-            particleComponent.particles_[i].scale = glm::clamp(particleComponent.particles_[i].scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
+            particle.speed += particle.acceleration * dt;
+            particle.velocity = particle.direction * particle.speed;
+            particle.position += particle.velocity * dt;
+            particle.lifetime -= dt;
+            particle.scale += dt * particleComponent.particleScaleRate_;
+            particle.scale = glm::clamp(particle.scale, particleComponent.particleMinScale_, particleComponent.particleMaxScale_);
+
+            vec3 particlePos = particle.position;
+            if (particleComponent.isLocalSpace) {
+                particlePos += entityTransform.GetGlobalTranslation();
+            }
 
             if (!particleComponent.trailEnabled) {
                 continue;
             }
-            if (1 >= particleComponent.particles_[i].trails.count) {
-                ++particleComponent.particles_[i].trails.count;
-                particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
+
+            const size_t trailCount = trails.count;
+
+            if (1 >= trailCount) {
+                ++trails.count;
+                trails.pos.emplace_back(particlePos);
+                continue;
+            }
+            const glm::vec3& endPoint = trails.pos[trailCount - 1];
+            const glm::vec3& startPoint = trails.pos[trailCount - 2];
+
+            if (isParallel(endPoint - startPoint, particlePos - startPoint)) {
+                trails.pos[trailCount - 1] = particlePos;
             }
             else {
-                // check if in the same ray
-                
-                glm::vec3 currPoint = particleComponent.particles_[i].position;
-                glm::vec3 endPoint = particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 1 ];
-                glm::vec3 startPoint = particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 2 ];
-
-                if (isParallel(endPoint - startPoint, currPoint - startPoint)) {
-                    //endPoint = currPoint;
-                    particleComponent.particles_[i].trails.pos[particleComponent.particles_[i].trails.count - 1] = particleComponent.particles_[i].position;
-                }
-                else {
-                    particleComponent.particles_[i].trails.pos.emplace_back(currPoint);
-                    particleComponent.particles_[i].trails.count++;
-                }
+                trails.pos.emplace_back(particlePos);
+                trails.count++;
             }
-
+            if (particleComponent.trailSize > 0 && trailCount > static_cast<size_t>(particleComponent.trailSize)) {
+                trails.count--;
+                trails.pos.pop_front();
+            }
         }
 
-        //counter += particleComponent.numParticles_;
     }
 }
 
@@ -139,8 +155,11 @@ void ParticleManager::Exit()
 bool isParallel(const glm::vec3& v1, const glm::vec3& v2)
 {
     glm::vec3 test = glm::cross(v1, v2);
-    if ((test.x < 0.01f) && (test.y < 0.01f) && (test.z < 0.01f) &&
-        (test.x > -0.01f) && (test.y > -0.01f) && (test.z > -0.01f))
+    //test.length();
+    /*if ((test.x < 0.01f) && (test.y < 0.01f) && (test.z < 0.01f) &&
+        (test.x > -0.01f) && (test.y > -0.01f) && (test.z > -0.01f))*/
+    //std::cout << glm::length(test) << std::endl;
+    if (glm::length(test) < 0.01f)
     {
         return true;
     }

@@ -57,9 +57,9 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static string GetState(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetAnimationColor(ulong ID, out Color color);
+        public static extern void GetAnimationColor(ulong ID, out vec4 color);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetAnimationColor(ulong ID, ref Color color);
+        internal extern static void SetAnimationColor(ulong ID, ref vec4 color);
         #endregion
 
         #region COMPONENT
@@ -131,14 +131,31 @@ namespace BeanFactory
 
         #region SCENE
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void LoadScene(string sceneName);
+        public static extern void LoadScene(string sceneName, bool loadDirect);
         #endregion
 
         #region AUDIO_SOURCE
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourcePlay(AudioSource audioSource);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void StopMusic(float fadetime);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void ResumeMusic();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMusicFade(AudioSource audioSource, float fadeIn, float fadeOut);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void EnableSFX(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMasterVolume(bool toggle);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
 
@@ -156,6 +173,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioMute(bool mute);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void PauseComponent(AudioSource audioSource);
         #endregion	
 
         #region INPUT_SYSTEM
@@ -191,10 +211,10 @@ namespace BeanFactory
         internal extern static void SetTextString(ulong compID,string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void GetTextColor(ulong ID, out Color color);
+        public static extern void GetTextColor(ulong ID, out vec4 color);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextColor(ulong ID, ref Color color);
+        internal extern static void SetTextColor(ulong ID, ref vec4 color);
         #endregion
 
         #region IDENTIFIERS
@@ -234,8 +254,20 @@ namespace BeanFactory
 
         #endregion
 
+        #region MESH_RENDERER
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetMaterial(MeshRenderer meshRenderer, Material mat);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMaterial(MeshRenderer meshRenderer, Material mat);
+
+        #endregion
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void LoadNext();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void QuitGame();

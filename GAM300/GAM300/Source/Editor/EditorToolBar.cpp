@@ -67,6 +67,7 @@ void EditorToolBar::Update(float dt)
         }
         else
         {
+            MySceneManager.StopLoadNext();
             MySceneManager.StopScene();
 
         }

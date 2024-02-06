@@ -15,8 +15,9 @@ public class Inventory : Script
     public int healthPackCount;
     public int staminaPackCount;
     public int maxStatPackCount;
-
+    public float staminaPackValue = 100f;
     public float healthPackHealValue = 5f;
+    
 
     void Awake()
     {
@@ -35,7 +36,22 @@ public class Inventory : Script
 
     void Update()
     {
-        if(healthPackCount > 0 && Input.GetKey(KeyCode.D1))
+        thePacks();
+        //theCheats();
+    }
+
+    //(CHEAT) Adds one of eah pack count.
+    void theCheats()
+    {
+        healthPackCount++;
+        staminaPackCount++;
+        maxStatPackCount++;
+    }
+
+    void thePacks()
+    {
+        //HEALTH PACK - RESTORES HEALTH
+        if (healthPackCount > 0 && Input.GetKey(KeyCode.D1))
         {
             healthPackCount -= 1;
             Console.WriteLine("Use Health Pack");
@@ -44,13 +60,26 @@ public class Inventory : Script
             thirdPersonController.UpdatehealthBar();
         }
 
-        if(maxStatPackCount > 0 && Input.GetKey(KeyCode.D2))
+        //STAMINA PACK - RESTORE STAMINA
+        if (staminaPackCount > 0 && Input.GetKey(KeyCode.D2))
+        {
+            staminaPackCount -= 1;
+            Console.WriteLine("Use Stamina Pack");
+            AudioManager.instance.useItem.Play();
+            thirdPersonController.restoreStamina(staminaPackValue);
+            thirdPersonController.UpdateStaminaBar();
+        }
+
+        //MAXSTAT PACK - RESTORE HEALTH AND STAMINA
+        if (maxStatPackCount > 0 && Input.GetKey(KeyCode.D3))
         {
             maxStatPackCount -= 1;
             Console.WriteLine("Use MaxStat Pack");
             AudioManager.instance.useItem.Play();
             thirdPersonController.HealHealth(thirdPersonController.maxHealth);
             thirdPersonController.UpdatehealthBar();
+            thirdPersonController.restoreStamina(thirdPersonController.maxStamina);
+            thirdPersonController.UpdateStaminaBar();
         }
     }
 

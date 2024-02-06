@@ -11,9 +11,14 @@ public class Settings : Script
 {
     public GameObject mainMenuBGImage;
 
-    public GameObject pressStartText;
-
     public GameObject backButton;
+
+    public GameObject masterVolumeButton;
+
+    public GameObject bgmVolumeButton;
+
+    public GameObject sfxVolumeButton;
+
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -22,14 +27,19 @@ public class Settings : Script
     public float duration = 2f;
     public float timer = 0f;
     public bool back = false;
+    public bool test = false;
 
     public float sizeMultiplier = 1.5f;
 
     //sounds
-    //public AudioSource bgm;
+    public AudioSource bgm;
     //public AudioSource uibutton;
 
     private SpriteRenderer backButtonRenderer;
+    private SpriteRenderer masterVolumeButtonRenderer;
+    private SpriteRenderer bgmVolumeButtonRenderer;
+    private SpriteRenderer sfxVolumeButtonRenderer;
+
 
     vec3 startGridTextSize;
 
@@ -39,8 +49,14 @@ public class Settings : Script
         //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
 
+        bgm.Play();
+        test = true;
+
+
         if (backButton.HasComponent<SpriteRenderer>())
             backButtonRenderer = backButton.GetComponent<SpriteRenderer>();
+        if (masterVolumeButton.HasComponent<SpriteRenderer>())
+            masterVolumeButtonRenderer = masterVolumeButton.GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -50,9 +66,28 @@ public class Settings : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu");
-
+            SceneManager.LoadScene("MainMenu", true);
         }
+        if (masterVolumeButtonRenderer != null && masterVolumeButtonRenderer.IsButtonClicked())
+        {
+            //LoadScene(1.0f);
+            Console.WriteLine("Scene");
+            //InternalCalls.PauseMusic();
+            //bgm.Pause();
+            //SceneManager.LoadScene("MainMenu");
+            if(test == true)
+            {
+                bgm.Pause();
+                test = false;
+            }
+            else{
+                bgm.Play();
+                test = true;
+
+            }
+        }
+   
+
 
         // Check if button state is clicked
 

@@ -101,6 +101,8 @@ namespace BeanFactory
     {
         public void Play() { InternalCalls.AudioSourcePlay(this); }
 
+        public void Pause() { InternalCalls.PauseComponent(this); }
+
         public GameObject gameObject
         {
             get
@@ -248,7 +250,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(0,0,1));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -264,7 +266,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(1, 0, 0));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -282,7 +284,7 @@ namespace BeanFactory
         {
             get
             {
-                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(localRotation));
+                mat4 mat = glm.ToMat4(glm.FromEulerToQuat(rotation));
                 mat *= glm.Translate(new vec3(0, 1, 0));
                 return glm.Normalized(glm.GetTranslation(mat));
             }
@@ -315,6 +317,12 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class SpriteRenderer
     {
+        bool WorldSpace;
+        bool ColourPicked;
+        bool IncludeAlpha;
+        public float alpha;
+        bool onHover;
+        bool onClick;
         public bool IsButtonClicked()
         {
             return InternalCalls.IsButtonClicked(this);
@@ -440,6 +448,28 @@ namespace BeanFactory
         public float fieldOfView = 0f;      // The vertical field of view in degrees
         public float lookatDistance = 0f;   // How close is the camera to the focal point
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class MeshRenderer
+    {
+        UInt32 VAO;
+        UInt32 debugVAO;
+        AssetID meshID;
+        Int32 shaderType;
+        AssetID materialID;
+
+        public Material material
+        {
+            get 
+            {
+                Material mat = new Material();
+                InternalCalls.GetMaterial(this, mat);
+                mat.meshRenderer = this;
+                return mat;
+            }
+        }
+    }
+
     /*
         public class Camera : Component
         {

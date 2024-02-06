@@ -29,8 +29,6 @@ void UISystem::Init()
 void UISystem::Update(float dt)
 {
 
-
-
 	//std::cout << "test" << std::endl
 	/*Button button;
 	HandleButtonInput(button, 10, 10, true);*/
@@ -41,7 +39,12 @@ void UISystem::Update(float dt)
 	for (Camera& camera : currentScene.GetArray<Camera>()) 
 	{
 		Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
+		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
+		{
+		
+			sr.onClick = false;
 
+		}
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
 			if (sr.EUID() == id)

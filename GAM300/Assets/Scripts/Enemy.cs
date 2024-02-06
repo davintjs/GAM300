@@ -41,13 +41,14 @@ public class Enemy : Script
 
     //public GameObject spawnObject;
     public GameObject attackTrigger;
+    public Transform parentTransform;
     Rigidbody rb;
 
     public bool isAttacking = false;
     public bool isAttackCooldown = false;
     float attackTimer = 0.001f;
     float currentAttackTimer;
-    float attackCooldownTimer = 1f;
+    public float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
 
     // NavMesh stuff
@@ -56,7 +57,7 @@ public class Enemy : Script
     public bool newRequest = false;
 
     public bool isStunned;
-    private float stunDuration = 1.5f;
+    public float stunDuration = 1.5f;
     public float currentStunDuration;
 
     //audio
@@ -88,12 +89,14 @@ public class Enemy : Script
         //death animation timer
         if (startDeathAnimationCountdown)
         {
+            SetEnabled(GetComponent<Rigidbody>(), false);
             currentDeathAnimationTimer -= Time.deltaTime;
             if (currentDeathAnimationTimer <= 0.5f)
             {
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                gameObject.SetActive(false);
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
             }
@@ -131,7 +134,7 @@ public class Enemy : Script
                         attackTrigger.SetActive(true);
                         attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
                         attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
-                        attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
+                        attackTrigger.transform.rotation = new vec3(modelOffset.rotation);
                         //attackTrigger.SetActive(true);
                     }
                 }
@@ -146,7 +149,7 @@ public class Enemy : Script
         }
         else if(state != 2)
         {
-            //attackTrigger.SetActive(false);
+            attackTrigger.SetActive(false);
             isAttacking = false;
             isAttackCooldown = false;
             currentAttackCooldownTimer = 0f;
@@ -154,11 +157,11 @@ public class Enemy : Script
         }
 
         //NOTE: testing state, remove this later
-        if (Input.GetKey(KeyCode.K))
-        {
-            Console.WriteLine("TestingState");
+        //if (Input.GetKey(KeyCode.K))
+        //{
+            //Console.WriteLine("TestingState");
             //SetState("Run", true);
-        }
+        //}
 
 
         vec3 direction = player.localPosition - transform.position;
@@ -308,7 +311,7 @@ public class Enemy : Script
             return;
         float angle = (float)Math.Atan2(dir.x, dir.z);
         quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
-        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+        quat oldQuat = glm.FromEulerToQuat(transform.rotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
@@ -328,7 +331,7 @@ public class Enemy : Script
             }
             if (!isNan)
             {
-                transform.localRotation = rot;
+                transform.rotation = rot;
             }
         }
     }
@@ -348,8 +351,7 @@ public class Enemy : Script
         AnimationState idle = animationManager.GetState("Idle");
         //Lowest Precedence
 
-        //death.SetConditionals(false, stun, attack, walk, run, idle);
-        stun.SetConditionals(false, death, attack, walk, run);
+        stun.SetConditionals(false, death);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
         walk.SetConditionals(true, walk);
@@ -386,8 +388,13 @@ public class Enemy : Script
         if (currentHealth <= 0)
         {
             currentHealth = 0;
+            vec3 hpScale = hpBar.localScale;
+            hpScale.x = currentHealth / maxHealth;
+            hpScale.y = currentHealth / maxHealth;
+            hpScale.z = currentHealth / maxHealth;
+            hpBar.localScale = hpScale;
             isDead = true;
-            Console.WriteLine("EnemyDead");
+            //Console.WriteLine("EnemyDead");
             SetState("Death", true);
             animationManager.UpdateState();
             startDeathAnimationCountdown = true;
@@ -410,7 +417,7 @@ public class Enemy : Script
         if (GetTag(other) == "PlayerAttack")
         {
             Transform otherT = other.gameObject.GetComponent<Transform>();
-            vec3 dir = otherT.back;
+            vec3 dir = otherT.forward;
             dir = dir.NormalizedSafe;
             isStunned = true;
             if (damagedCoroutine != null)
@@ -426,9 +433,6 @@ public class Enemy : Script
     {
         duration /= 2;
         float startDuration = duration;
-        vec3 newRot = modelOffset.localRotation;
-        newRot.x = glm.Radians(-45f);
-        modelOffset.localRotation = newRot;
         while (duration > 0)
         {
             rb.linearVelocity = new vec3(knockback * (duration / startDuration));
@@ -439,8 +443,6 @@ public class Enemy : Script
         while (duration > 0)
         {
             float val = glm.Radians(-45f);
-            newRot.x = glm.Lerp(0, val, duration / startDuration);
-            modelOffset.localRotation = newRot;
             duration -= Time.deltaTime;
             yield return new WaitForSeconds(Time.deltaTime);
         }
