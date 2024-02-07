@@ -62,6 +62,8 @@ public class Enemy : Script
 
     //audio
     public bool playOnce = true;
+    public bool alertedOnce = true;
+    int alertedRotation = 0;
 
     void Start()
     {
@@ -176,6 +178,7 @@ public class Enemy : Script
                     //Console.WriteLine("Idle");
                     //idle animation
                     playOnce = true;//reset ability to play audio
+                    alertedOnce = true;
                     SetState("Idle", true);
                     //attackTrigger.SetActive(false);
                     //player detection
@@ -201,6 +204,28 @@ public class Enemy : Script
                     playOnce = true;//reset ability to play audio
                     //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
+
+                    if (alertedOnce)
+                    {
+                        Random rd = new Random();
+                        alertedRotation = rd.Next(0, 2);
+                        alertedOnce = false;
+
+                        switch (alertedRotation)
+                        {
+                            case 0:
+                                AudioManager.instance.enemyAlerted1.Play();
+                                break;
+                            case 1:
+                                AudioManager.instance.enemyAlerted2.Play();
+                                break;
+                            case 2:
+                                AudioManager.instance.enemyAlerted3.Play();
+                                break;
+
+                        }
+                    }
+
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
                     {
                         state = 2;

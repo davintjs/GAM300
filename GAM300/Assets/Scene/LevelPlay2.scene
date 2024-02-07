@@ -160,6 +160,9 @@ Transform:
     - {fileID: 7702311490355860096}
     - {fileID: 3801088290079164654}
     - {fileID: 15187318079590443157}
+    - {fileID: 7345429221838225698}
+    - {fileID: 2597072424818364743}
+    - {fileID: 6687611820943646563}
 ---
 ID: 12555400289260702052
 Script:
@@ -193,6 +196,9 @@ Script:
   thumpCollision2: {fileID: 10580402611710297282}  # Component
   dodgeRoll2: {fileID: 11490585744734373202}  # Component
   dashAttack: {fileID: 3292439134972329249}  # Component
+  enemyAlerted1: {fileID: 12262929383047051249}  # Component
+  enemyAlerted2: {fileID: 6670779144662544128}  # Component
+  enemyAlerted3: {fileID: 998502570275308366}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -10118,7 +10124,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 117.27182
+  LookAtDistance: 98.3747864
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -34657,6 +34663,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -35078,6 +35085,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -44320,6 +44328,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -44811,6 +44820,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -45197,6 +45207,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -50415,6 +50426,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -50801,6 +50813,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -51222,6 +51235,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -51643,6 +51657,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -56035,6 +56050,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -56421,6 +56437,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -56807,6 +56824,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -57193,6 +57211,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -57579,6 +57598,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -59666,6 +59686,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -61317,6 +61338,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -61703,6 +61725,7 @@ Script:
   duration: 0.5
   playOnce: true
   newRequest: false
+  alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
   player: {fileID: 3977294589520766028}  # Component
@@ -62394,3 +62417,99 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 7345429221838225698
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5474435996662912753}  # Transform
+    - component: {fileID: 12262929383047051249}  # AudioSource
+---
+ID: 5474435996662912753
+Transform:
+  m_GameObject: {fileID: 7345429221838225698}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12262929383047051249
+AudioSource:
+  m_GameObject: {fileID: 7345429221838225698}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 7f4dca2867d7267a988760fbb9e6e63b}
+  Play: false
+---
+ID: 2597072424818364743
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6953088724175365596}  # Transform
+    - component: {fileID: 6670779144662544128}  # AudioSource
+---
+ID: 6953088724175365596
+Transform:
+  m_GameObject: {fileID: 2597072424818364743}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 6670779144662544128
+AudioSource:
+  m_GameObject: {fileID: 2597072424818364743}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 961c5ccf4652254f50f84f2f7c5fa599}
+  Play: false
+---
+ID: 6687611820943646563
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17408746616720987109}  # Transform
+    - component: {fileID: 998502570275308366}  # AudioSource
+---
+ID: 17408746616720987109
+Transform:
+  m_GameObject: {fileID: 6687611820943646563}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 998502570275308366
+AudioSource:
+  m_GameObject: {fileID: 6687611820943646563}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
+  Play: false

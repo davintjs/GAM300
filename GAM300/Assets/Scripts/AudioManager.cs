@@ -38,6 +38,7 @@ public class AudioManager : Script
     public AudioSource dodgeRoll1;
     public AudioSource dodgeRoll2;
     public AudioSource dashAttack;
+    public AudioSource enemyAlerted1, enemyAlerted2, enemyAlerted3;
 
     void Awake()
     {
