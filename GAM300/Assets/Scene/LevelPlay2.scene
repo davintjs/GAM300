@@ -3955,7 +3955,7 @@ ID: 14546361102916022508
 Transform:
   m_GameObject: {fileID: 2192591855247491201}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 8570980724102235789}
   m_Children:
@@ -4928,7 +4928,6 @@ Transform:
   Father: {fileID: 5342341385656655212}
   m_Children:
     - {fileID: 8570980724102235789}
-    - {fileID: 14092934376519335738}
     - {fileID: 6114433046832618349}
     - {fileID: 5656349068340904868}
     - {fileID: 5620146544089966174}
@@ -4936,21 +4935,6 @@ Transform:
     - {fileID: 2960608298331768514}
     - {fileID: 4060621067760633829}
     - {fileID: 7767185065212578595}
-    - {fileID: 14901801198090768630}
-    - {fileID: 14242016621748025125}
-    - {fileID: 10200379991897450049}
-    - {fileID: 11500666045453601179}
-    - {fileID: 7926377388103741377}
-    - {fileID: 4178068731016754182}
-    - {fileID: 15521626501906400691}
-    - {fileID: 17374434327060195124}
-    - {fileID: 883435849511948444}
-    - {fileID: 844236223186479458}
-    - {fileID: 16968244135856834379}
-    - {fileID: 87465416025566901}
-    - {fileID: 3008049630033293871}
-    - {fileID: 769329147301760830}
-    - {fileID: 4377640290721114999}
     - {fileID: 12021609195616173519}
 ---
 ID: 7424671051085572371
@@ -8688,7 +8672,7 @@ GameObject:
 ID: 12348527874528831583
 Transform:
   m_GameObject: {fileID: 11291534077837522555}
-  Translation: [60.1243668, 38.9551697, -70.3997955]
+  Translation: [60.9392204, 38.9551697, -70.3997955]
   Rotation: [0, 0, 0]
   Scale: [2.28999996, 4.71888018, 2.75691295]
   Father: {fileID: 6661078963704661251}
@@ -9253,60 +9237,6 @@ MeshRenderer:
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 14092934376519335738
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13712382653739177491}  # Transform
-    - component: {fileID: 3439367436587642016}  # MeshRenderer
----
-ID: 13712382653739177491
-Transform:
-  m_GameObject: {fileID: 14092934376519335738}
-  Translation: [58.966301, 51.5784035, -86.4874573]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 1794775946083750869}
----
-ID: 3439367436587642016
-MeshRenderer:
-  m_GameObject: {fileID: 14092934376519335738}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 1794775946083750869
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6257261972468885090}  # Transform
-    - component: {fileID: 11517245403810786203}  # MeshRenderer
----
-ID: 6257261972468885090
-Transform:
-  m_GameObject: {fileID: 1794775946083750869}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14092934376519335738}
-  m_Children:
-    []
----
-ID: 11517245403810786203
-MeshRenderer:
-  m_GameObject: {fileID: 1794775946083750869}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
 ID: 6114433046832618349
 GameObject:
   m_IsActive: true
@@ -9348,7 +9278,7 @@ ID: 307598350967213853
 Transform:
   m_GameObject: {fileID: 2390087278609519044}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 6114433046832618349}
   m_Children:
@@ -9708,816 +9638,6 @@ Transform:
 ID: 11737742686472332634
 MeshRenderer:
   m_GameObject: {fileID: 1758284564648050865}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 14901801198090768630
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10643491690293685239}  # Transform
-    - component: {fileID: 3519968340350043566}  # MeshRenderer
----
-ID: 10643491690293685239
-Transform:
-  m_GameObject: {fileID: 14901801198090768630}
-  Translation: [73.9469223, 51.5784035, -86.4554138]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 11819903582906378735}
----
-ID: 3519968340350043566
-MeshRenderer:
-  m_GameObject: {fileID: 14901801198090768630}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 11819903582906378735
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1889022333134578093}  # Transform
-    - component: {fileID: 14332929289443015161}  # MeshRenderer
----
-ID: 1889022333134578093
-Transform:
-  m_GameObject: {fileID: 11819903582906378735}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14901801198090768630}
-  m_Children:
-    []
----
-ID: 14332929289443015161
-MeshRenderer:
-  m_GameObject: {fileID: 11819903582906378735}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 14242016621748025125
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13484378303529217068}  # Transform
-    - component: {fileID: 11914581993040631056}  # MeshRenderer
----
-ID: 13484378303529217068
-Transform:
-  m_GameObject: {fileID: 14242016621748025125}
-  Translation: [68.9464798, 51.5784035, -86.4815063]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 1411510460848068960}
----
-ID: 11914581993040631056
-MeshRenderer:
-  m_GameObject: {fileID: 14242016621748025125}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 1411510460848068960
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 473083134679777137}  # Transform
-    - component: {fileID: 4830202630978958858}  # MeshRenderer
----
-ID: 473083134679777137
-Transform:
-  m_GameObject: {fileID: 1411510460848068960}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14242016621748025125}
-  m_Children:
-    []
----
-ID: 4830202630978958858
-MeshRenderer:
-  m_GameObject: {fileID: 1411510460848068960}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 10200379991897450049
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10496889160654954490}  # Transform
-    - component: {fileID: 12235412899170468055}  # MeshRenderer
----
-ID: 10496889160654954490
-Transform:
-  m_GameObject: {fileID: 10200379991897450049}
-  Translation: [63.9494171, 51.5784035, -86.4918747]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 8616662498438671346}
----
-ID: 12235412899170468055
-MeshRenderer:
-  m_GameObject: {fileID: 10200379991897450049}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8616662498438671346
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18084646448189071625}  # Transform
-    - component: {fileID: 16700383922424759426}  # MeshRenderer
----
-ID: 18084646448189071625
-Transform:
-  m_GameObject: {fileID: 8616662498438671346}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 10200379991897450049}
-  m_Children:
-    []
----
-ID: 16700383922424759426
-MeshRenderer:
-  m_GameObject: {fileID: 8616662498438671346}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 11500666045453601179
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 515682875597489462}  # Transform
-    - component: {fileID: 18283197934208881590}  # MeshRenderer
----
-ID: 515682875597489462
-Transform:
-  m_GameObject: {fileID: 11500666045453601179}
-  Translation: [58.966301, 51.5784035, -71.5348434]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 1756447309968196971}
----
-ID: 18283197934208881590
-MeshRenderer:
-  m_GameObject: {fileID: 11500666045453601179}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 1756447309968196971
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 463349353942035263}  # Transform
-    - component: {fileID: 18156227030914333020}  # MeshRenderer
----
-ID: 463349353942035263
-Transform:
-  m_GameObject: {fileID: 1756447309968196971}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 11500666045453601179}
-  m_Children:
-    []
----
-ID: 18156227030914333020
-MeshRenderer:
-  m_GameObject: {fileID: 1756447309968196971}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 7926377388103741377
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 275068810003872267}  # Transform
-    - component: {fileID: 11552264445901650207}  # MeshRenderer
----
-ID: 275068810003872267
-Transform:
-  m_GameObject: {fileID: 7926377388103741377}
-  Translation: [58.966301, 51.5784035, -76.5152283]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 17198149245489567356}
----
-ID: 11552264445901650207
-MeshRenderer:
-  m_GameObject: {fileID: 7926377388103741377}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 17198149245489567356
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 431739469611875090}  # Transform
-    - component: {fileID: 538181975006697163}  # MeshRenderer
----
-ID: 431739469611875090
-Transform:
-  m_GameObject: {fileID: 17198149245489567356}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7926377388103741377}
-  m_Children:
-    []
----
-ID: 538181975006697163
-MeshRenderer:
-  m_GameObject: {fileID: 17198149245489567356}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 4178068731016754182
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18409574415060151871}  # Transform
-    - component: {fileID: 17220992716342000939}  # MeshRenderer
----
-ID: 18409574415060151871
-Transform:
-  m_GameObject: {fileID: 4178068731016754182}
-  Translation: [58.966301, 51.5784035, -81.4907761]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 13509877452604674276}
----
-ID: 17220992716342000939
-MeshRenderer:
-  m_GameObject: {fileID: 4178068731016754182}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 13509877452604674276
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12809988684611347718}  # Transform
-    - component: {fileID: 18174318283578463022}  # MeshRenderer
----
-ID: 12809988684611347718
-Transform:
-  m_GameObject: {fileID: 13509877452604674276}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4178068731016754182}
-  m_Children:
-    []
----
-ID: 18174318283578463022
-MeshRenderer:
-  m_GameObject: {fileID: 13509877452604674276}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 15521626501906400691
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16787607416932018886}  # Transform
-    - component: {fileID: 5091200192773062526}  # MeshRenderer
----
-ID: 16787607416932018886
-Transform:
-  m_GameObject: {fileID: 15521626501906400691}
-  Translation: [63.9494171, 51.5784035, -71.5348434]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 14503849665283211555}
----
-ID: 5091200192773062526
-MeshRenderer:
-  m_GameObject: {fileID: 15521626501906400691}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 14503849665283211555
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16399979093252778995}  # Transform
-    - component: {fileID: 11493232495498373330}  # MeshRenderer
----
-ID: 16399979093252778995
-Transform:
-  m_GameObject: {fileID: 14503849665283211555}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 15521626501906400691}
-  m_Children:
-    []
----
-ID: 11493232495498373330
-MeshRenderer:
-  m_GameObject: {fileID: 14503849665283211555}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 17374434327060195124
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4119242128956882984}  # Transform
-    - component: {fileID: 6584078388587164452}  # MeshRenderer
----
-ID: 4119242128956882984
-Transform:
-  m_GameObject: {fileID: 17374434327060195124}
-  Translation: [63.9494171, 51.5784035, -76.5151062]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 17547185968701206130}
----
-ID: 6584078388587164452
-MeshRenderer:
-  m_GameObject: {fileID: 17374434327060195124}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 17547185968701206130
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6834387202387627467}  # Transform
-    - component: {fileID: 2348468251411787104}  # MeshRenderer
----
-ID: 6834387202387627467
-Transform:
-  m_GameObject: {fileID: 17547185968701206130}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 17374434327060195124}
-  m_Children:
-    []
----
-ID: 2348468251411787104
-MeshRenderer:
-  m_GameObject: {fileID: 17547185968701206130}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 883435849511948444
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6227096986441859500}  # Transform
-    - component: {fileID: 17192948836718505246}  # MeshRenderer
----
-ID: 6227096986441859500
-Transform:
-  m_GameObject: {fileID: 883435849511948444}
-  Translation: [63.9494171, 51.5784035, -81.4756699]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 866663091420343841}
----
-ID: 17192948836718505246
-MeshRenderer:
-  m_GameObject: {fileID: 883435849511948444}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 866663091420343841
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2025290656354202098}  # Transform
-    - component: {fileID: 7188973957945921164}  # MeshRenderer
----
-ID: 2025290656354202098
-Transform:
-  m_GameObject: {fileID: 866663091420343841}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 883435849511948444}
-  m_Children:
-    []
----
-ID: 7188973957945921164
-MeshRenderer:
-  m_GameObject: {fileID: 866663091420343841}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 844236223186479458
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1460175694924432648}  # Transform
-    - component: {fileID: 15585631300909448191}  # MeshRenderer
----
-ID: 1460175694924432648
-Transform:
-  m_GameObject: {fileID: 844236223186479458}
-  Translation: [68.9464798, 51.5784035, -71.5348434]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 16555229688038687212}
----
-ID: 15585631300909448191
-MeshRenderer:
-  m_GameObject: {fileID: 844236223186479458}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 16555229688038687212
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12797022734425617700}  # Transform
-    - component: {fileID: 8219957479996103560}  # MeshRenderer
----
-ID: 12797022734425617700
-Transform:
-  m_GameObject: {fileID: 16555229688038687212}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 844236223186479458}
-  m_Children:
-    []
----
-ID: 8219957479996103560
-MeshRenderer:
-  m_GameObject: {fileID: 16555229688038687212}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 16968244135856834379
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8659513160623054033}  # Transform
-    - component: {fileID: 3307566991540686366}  # MeshRenderer
----
-ID: 8659513160623054033
-Transform:
-  m_GameObject: {fileID: 16968244135856834379}
-  Translation: [68.9464798, 51.5784035, -76.5648956]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 10740552412621569899}
----
-ID: 3307566991540686366
-MeshRenderer:
-  m_GameObject: {fileID: 16968244135856834379}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 10740552412621569899
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9431203502361240546}  # Transform
-    - component: {fileID: 14739328474391955519}  # MeshRenderer
----
-ID: 9431203502361240546
-Transform:
-  m_GameObject: {fileID: 10740552412621569899}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16968244135856834379}
-  m_Children:
-    []
----
-ID: 14739328474391955519
-MeshRenderer:
-  m_GameObject: {fileID: 10740552412621569899}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 87465416025566901
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4128063379966251701}  # Transform
-    - component: {fileID: 8108040608899569664}  # MeshRenderer
----
-ID: 4128063379966251701
-Transform:
-  m_GameObject: {fileID: 87465416025566901}
-  Translation: [68.9464798, 51.5784035, -81.5008163]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 13627694674237271995}
----
-ID: 8108040608899569664
-MeshRenderer:
-  m_GameObject: {fileID: 87465416025566901}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 13627694674237271995
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10719555638774424724}  # Transform
-    - component: {fileID: 5788794550050104841}  # MeshRenderer
----
-ID: 10719555638774424724
-Transform:
-  m_GameObject: {fileID: 13627694674237271995}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 87465416025566901}
-  m_Children:
-    []
----
-ID: 5788794550050104841
-MeshRenderer:
-  m_GameObject: {fileID: 13627694674237271995}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 3008049630033293871
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9046477815881311709}  # Transform
-    - component: {fileID: 9542430590160078326}  # MeshRenderer
----
-ID: 9046477815881311709
-Transform:
-  m_GameObject: {fileID: 3008049630033293871}
-  Translation: [73.9469223, 51.5784035, -71.5348434]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 7395178916672571311}
----
-ID: 9542430590160078326
-MeshRenderer:
-  m_GameObject: {fileID: 3008049630033293871}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 7395178916672571311
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14525996520450976307}  # Transform
-    - component: {fileID: 15444672447643473421}  # MeshRenderer
----
-ID: 14525996520450976307
-Transform:
-  m_GameObject: {fileID: 7395178916672571311}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3008049630033293871}
-  m_Children:
-    []
----
-ID: 15444672447643473421
-MeshRenderer:
-  m_GameObject: {fileID: 7395178916672571311}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 769329147301760830
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16265358241632252191}  # Transform
-    - component: {fileID: 10067748269697266546}  # MeshRenderer
----
-ID: 16265358241632252191
-Transform:
-  m_GameObject: {fileID: 769329147301760830}
-  Translation: [73.9469223, 51.5784035, -76.5329132]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 8165140262813524124}
----
-ID: 10067748269697266546
-MeshRenderer:
-  m_GameObject: {fileID: 769329147301760830}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8165140262813524124
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 973838238627269507}  # Transform
-    - component: {fileID: 6019084260977022707}  # MeshRenderer
----
-ID: 973838238627269507
-Transform:
-  m_GameObject: {fileID: 8165140262813524124}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 769329147301760830}
-  m_Children:
-    []
----
-ID: 6019084260977022707
-MeshRenderer:
-  m_GameObject: {fileID: 8165140262813524124}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 4377640290721114999
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4629173864416319448}  # Transform
-    - component: {fileID: 1946791206056705908}  # MeshRenderer
----
-ID: 4629173864416319448
-Transform:
-  m_GameObject: {fileID: 4377640290721114999}
-  Translation: [73.9469223, 51.5784035, -81.4988098]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 13881035960641182372}
-  m_Children:
-    - {fileID: 8154724984552472556}
----
-ID: 1946791206056705908
-MeshRenderer:
-  m_GameObject: {fileID: 4377640290721114999}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8154724984552472556
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8414467712326381726}  # Transform
-    - component: {fileID: 9311640175921566616}  # MeshRenderer
----
-ID: 8414467712326381726
-Transform:
-  m_GameObject: {fileID: 8154724984552472556}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4377640290721114999}
-  m_Children:
-    []
----
-ID: 9311640175921566616
-MeshRenderer:
-  m_GameObject: {fileID: 8154724984552472556}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
@@ -10998,7 +10118,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 133.006836
+  LookAtDistance: 117.27182
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -14132,39 +13252,6 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
-ID: 10110590738670396230
-GameObject:
-  m_IsActive: true
-  m_Name: LightSource - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2120960920705211697}  # Transform
-    - component: {fileID: 16821202709218263828}  # LightSource
----
-ID: 2120960920705211697
-Transform:
-  m_GameObject: {fileID: 10110590738670396230}
-  Translation: [66.0363159, 40.3264885, -61.3983307]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 16821202709218263828
-LightSource:
-  m_GameObject: {fileID: 10110590738670396230}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 2
-  lightpos: [0, 0, 0]
-  Intensity: 2
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 0
-  Outer Cutoff: 0
-  Color: [100, 100, 100]
----
 ID: 14790332214141994081
 GameObject:
   m_IsActive: true
@@ -14317,39 +13404,6 @@ LightSource:
   Direction: [-0.200000003, -0.649999976, 0.300000012]
   Inner Cutoff: 30
   Outer Cutoff: 60
-  Color: [100, 100, 100]
----
-ID: 541121105422146752
-GameObject:
-  m_IsActive: true
-  m_Name: LiftHandleLight
-  m_TagString: Untagged
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12112849001586193047}  # Transform
-    - component: {fileID: 2021343440525441341}  # LightSource
----
-ID: 12112849001586193047
-Transform:
-  m_GameObject: {fileID: 541121105422146752}
-  Translation: [66.6812592, 44.0730171, -32.3671227]
-  Rotation: [2.28309846, 0, 0]
-  Scale: [1, 0.999742866, 0.999740243]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 2021343440525441341
-LightSource:
-  m_GameObject: {fileID: 541121105422146752}
-  m_IsEnabled: true
-  EnableShadow: false
-  lightType: 0
-  lightpos: [0, 0, 0]
-  Intensity: 20
-  Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 20
-  Outer Cutoff: 35
   Color: [100, 100, 100]
 ---
 ID: 263938901046208410
@@ -16854,19 +15908,6 @@ Transform:
     - {fileID: 11780476677865946446}
     - {fileID: 3590890209447231269}
     - {fileID: 2703940818378972440}
-    - {fileID: 7626306960761974968}
-    - {fileID: 10012738002167348310}
-    - {fileID: 9254466345510812969}
-    - {fileID: 12319591078379837515}
-    - {fileID: 18260803632768665326}
-    - {fileID: 15312969914448644439}
-    - {fileID: 14530660261652420237}
-    - {fileID: 7704025325702271151}
-    - {fileID: 12733221042470065466}
-    - {fileID: 8676436787469977521}
-    - {fileID: 5354756287993560788}
-    - {fileID: 5222063075687086902}
-    - {fileID: 15328889319130511800}
     - {fileID: 12479032707833595619}
     - {fileID: 4343116405914393907}
     - {fileID: 12982178531736353327}
@@ -19462,156 +18503,6 @@ MeshRenderer:
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 7626306960761974968
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12812584639318533426}  # Transform
-    - component: {fileID: 15046883872545845048}  # MeshRenderer
----
-ID: 12812584639318533426
-Transform:
-  m_GameObject: {fileID: 7626306960761974968}
-  Translation: [73.9047241, 52.0394592, -120.197784]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 8424857124365758223}
----
-ID: 15046883872545845048
-MeshRenderer:
-  m_GameObject: {fileID: 7626306960761974968}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8424857124365758223
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 124245081251052039}  # Transform
-    - component: {fileID: 13733592810427427003}  # MeshRenderer
----
-ID: 124245081251052039
-Transform:
-  m_GameObject: {fileID: 8424857124365758223}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7626306960761974968}
-  m_Children:
-    []
----
-ID: 13733592810427427003
-MeshRenderer:
-  m_GameObject: {fileID: 8424857124365758223}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 10012738002167348310
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13165743639208936424}  # Transform
-    - component: {fileID: 7948793260334992784}  # MeshRenderer
----
-ID: 13165743639208936424
-Transform:
-  m_GameObject: {fileID: 10012738002167348310}
-  Translation: [68.8778839, 52.0349579, -119.979286]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 8059633168125137452}
----
-ID: 7948793260334992784
-MeshRenderer:
-  m_GameObject: {fileID: 10012738002167348310}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8059633168125137452
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6362791033228873207}  # Transform
-    - component: {fileID: 17921215296665716412}  # MeshRenderer
----
-ID: 6362791033228873207
-Transform:
-  m_GameObject: {fileID: 8059633168125137452}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 10012738002167348310}
-  m_Children:
-    []
----
-ID: 17921215296665716412
-MeshRenderer:
-  m_GameObject: {fileID: 8059633168125137452}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 9254466345510812969
-GameObject:
-  m_IsActive: true
-  m_Name: Glas
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2619536316580853304}  # Transform
-    - component: {fileID: 9532431554697390433}  # MeshRenderer
-    - component: {fileID: 12827691795525806635}  # Rigidbody
----
-ID: 2619536316580853304
-Transform:
-  m_GameObject: {fileID: 9254466345510812969}
-  Translation: [66.4319534, 52.0349579, -109.051849]
-  Rotation: [0, -0, 0]
-  Scale: [10.3656435, 1, 1.67908537]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    []
----
-ID: 9532431554697390433
-MeshRenderer:
-  m_GameObject: {fileID: 9254466345510812969}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 12827691795525806635
-Rigidbody:
-  m_GameObject: {fileID: 9254466345510812969}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
 ID: 1405799851012533709
 GameObject:
   m_IsActive: true
@@ -19765,492 +18656,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 12319591078379837515
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5633704846862606702}  # Transform
-    - component: {fileID: 2993103207040000330}  # MeshRenderer
----
-ID: 5633704846862606702
-Transform:
-  m_GameObject: {fileID: 12319591078379837515}
-  Translation: [58.9001083, 52.0349579, -105.692871]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 2078293676646419680}
----
-ID: 2993103207040000330
-MeshRenderer:
-  m_GameObject: {fileID: 12319591078379837515}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 2078293676646419680
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4154155927852268171}  # Transform
-    - component: {fileID: 16522332693735745034}  # MeshRenderer
----
-ID: 4154155927852268171
-Transform:
-  m_GameObject: {fileID: 2078293676646419680}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 12319591078379837515}
-  m_Children:
-    []
----
-ID: 16522332693735745034
-MeshRenderer:
-  m_GameObject: {fileID: 2078293676646419680}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 18260803632768665326
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10991952223766874808}  # Transform
-    - component: {fileID: 16056734191798250334}  # MeshRenderer
----
-ID: 10991952223766874808
-Transform:
-  m_GameObject: {fileID: 18260803632768665326}
-  Translation: [58.9001083, 52.0349579, -110.727905]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 14302443620303642394}
----
-ID: 16056734191798250334
-MeshRenderer:
-  m_GameObject: {fileID: 18260803632768665326}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 14302443620303642394
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7305148000851607505}  # Transform
-    - component: {fileID: 7957344896355652488}  # MeshRenderer
----
-ID: 7305148000851607505
-Transform:
-  m_GameObject: {fileID: 14302443620303642394}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 18260803632768665326}
-  m_Children:
-    []
----
-ID: 7957344896355652488
-MeshRenderer:
-  m_GameObject: {fileID: 14302443620303642394}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 15312969914448644439
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10783786085928836514}  # Transform
-    - component: {fileID: 17113877477397580231}  # MeshRenderer
----
-ID: 10783786085928836514
-Transform:
-  m_GameObject: {fileID: 15312969914448644439}
-  Translation: [58.9001083, 52.0349579, -115.795197]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 5708620310414839273}
----
-ID: 17113877477397580231
-MeshRenderer:
-  m_GameObject: {fileID: 15312969914448644439}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 5708620310414839273
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15667310610413432033}  # Transform
-    - component: {fileID: 17666269865461540648}  # MeshRenderer
----
-ID: 15667310610413432033
-Transform:
-  m_GameObject: {fileID: 5708620310414839273}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 15312969914448644439}
-  m_Children:
-    []
----
-ID: 17666269865461540648
-MeshRenderer:
-  m_GameObject: {fileID: 5708620310414839273}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 14530660261652420237
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2177454113036336871}  # Transform
-    - component: {fileID: 17038621398012801600}  # MeshRenderer
----
-ID: 2177454113036336871
-Transform:
-  m_GameObject: {fileID: 14530660261652420237}
-  Translation: [58.9001083, 52.0349579, -120.15284]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 8752275139056678886}
----
-ID: 17038621398012801600
-MeshRenderer:
-  m_GameObject: {fileID: 14530660261652420237}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8752275139056678886
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1844040513618853338}  # Transform
-    - component: {fileID: 5392400775755998660}  # MeshRenderer
----
-ID: 1844040513618853338
-Transform:
-  m_GameObject: {fileID: 8752275139056678886}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14530660261652420237}
-  m_Children:
-    []
----
-ID: 5392400775755998660
-MeshRenderer:
-  m_GameObject: {fileID: 8752275139056678886}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 7704025325702271151
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7371116727423519022}  # Transform
-    - component: {fileID: 16701760480602522163}  # MeshRenderer
----
-ID: 7371116727423519022
-Transform:
-  m_GameObject: {fileID: 7704025325702271151}
-  Translation: [73.9047241, 52.0349579, -105.692871]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 8876092255100763512}
----
-ID: 16701760480602522163
-MeshRenderer:
-  m_GameObject: {fileID: 7704025325702271151}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 8876092255100763512
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12211868097046144596}  # Transform
-    - component: {fileID: 17733197367084757838}  # MeshRenderer
----
-ID: 12211868097046144596
-Transform:
-  m_GameObject: {fileID: 8876092255100763512}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 7704025325702271151}
-  m_Children:
-    []
----
-ID: 17733197367084757838
-MeshRenderer:
-  m_GameObject: {fileID: 8876092255100763512}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 12733221042470065466
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3992094627246384694}  # Transform
-    - component: {fileID: 8022977000135010867}  # MeshRenderer
----
-ID: 3992094627246384694
-Transform:
-  m_GameObject: {fileID: 12733221042470065466}
-  Translation: [73.9047241, 52.0349579, -110.739326]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 17662078921658019375}
----
-ID: 8022977000135010867
-MeshRenderer:
-  m_GameObject: {fileID: 12733221042470065466}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 17662078921658019375
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15866115263587394917}  # Transform
-    - component: {fileID: 11882275646808247954}  # MeshRenderer
----
-ID: 15866115263587394917
-Transform:
-  m_GameObject: {fileID: 17662078921658019375}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 12733221042470065466}
-  m_Children:
-    []
----
-ID: 11882275646808247954
-MeshRenderer:
-  m_GameObject: {fileID: 17662078921658019375}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 8676436787469977521
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17272190324946250026}  # Transform
-    - component: {fileID: 16712100045000755982}  # MeshRenderer
----
-ID: 17272190324946250026
-Transform:
-  m_GameObject: {fileID: 8676436787469977521}
-  Translation: [73.9047241, 52.0349579, -115.75708]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 15150237004096293088}
----
-ID: 16712100045000755982
-MeshRenderer:
-  m_GameObject: {fileID: 8676436787469977521}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 15150237004096293088
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 10232151955055346055}  # Transform
-    - component: {fileID: 8199743229920836134}  # MeshRenderer
----
-ID: 10232151955055346055
-Transform:
-  m_GameObject: {fileID: 15150237004096293088}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 8676436787469977521}
-  m_Children:
-    []
----
-ID: 8199743229920836134
-MeshRenderer:
-  m_GameObject: {fileID: 15150237004096293088}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 5354756287993560788
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6618187778340567489}  # Transform
-    - component: {fileID: 10298242560584752110}  # MeshRenderer
----
-ID: 6618187778340567489
-Transform:
-  m_GameObject: {fileID: 5354756287993560788}
-  Translation: [68.8778839, 52.0349579, -105.692871]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 12885144943375573168}
----
-ID: 10298242560584752110
-MeshRenderer:
-  m_GameObject: {fileID: 5354756287993560788}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 12885144943375573168
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3983464495908025589}  # Transform
-    - component: {fileID: 10455906846792236629}  # MeshRenderer
----
-ID: 3983464495908025589
-Transform:
-  m_GameObject: {fileID: 12885144943375573168}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 5354756287993560788}
-  m_Children:
-    []
----
-ID: 10455906846792236629
-MeshRenderer:
-  m_GameObject: {fileID: 12885144943375573168}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 5222063075687086902
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13628661996686457783}  # Transform
-    - component: {fileID: 2091611856221608637}  # MeshRenderer
----
-ID: 13628661996686457783
-Transform:
-  m_GameObject: {fileID: 5222063075687086902}
-  Translation: [63.8856583, 52.0349579, -105.692871]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 5277573343605995666}
----
-ID: 2091611856221608637
-MeshRenderer:
-  m_GameObject: {fileID: 5222063075687086902}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 5277573343605995666
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12444942818122998781}  # Transform
-    - component: {fileID: 13551078921898060052}  # MeshRenderer
----
-ID: 12444942818122998781
-Transform:
-  m_GameObject: {fileID: 5277573343605995666}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 5222063075687086902}
-  m_Children:
-    []
----
-ID: 13551078921898060052
-MeshRenderer:
-  m_GameObject: {fileID: 5277573343605995666}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 2809050424356514679
 GameObject:
@@ -21783,60 +20188,6 @@ MeshRenderer:
   m_GameObject: {fileID: 11737258588876354396}
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 15328889319130511800
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4296958357331183864}  # Transform
-    - component: {fileID: 13691994126104788095}  # MeshRenderer
----
-ID: 4296958357331183864
-Transform:
-  m_GameObject: {fileID: 15328889319130511800}
-  Translation: [63.9344978, 52.0349579, -120.15284]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4100540002064570061}
-  m_Children:
-    - {fileID: 12597398215950092449}
----
-ID: 13691994126104788095
-MeshRenderer:
-  m_GameObject: {fileID: 15328889319130511800}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 12597398215950092449
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18234182413807836275}  # Transform
-    - component: {fileID: 2285875820613130247}  # MeshRenderer
----
-ID: 18234182413807836275
-Transform:
-  m_GameObject: {fileID: 12597398215950092449}
-  Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 15328889319130511800}
-  m_Children:
-    []
----
-ID: 2285875820613130247
-MeshRenderer:
-  m_GameObject: {fileID: 12597398215950092449}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 12479032707833595619
@@ -27605,6 +25956,11 @@ Transform:
     - {fileID: 16295360212562242357}
     - {fileID: 12067568611331168495}
     - {fileID: 8285154108894793581}
+    - {fileID: 5155128040009709842}
+    - {fileID: 11767514810004432881}
+    - {fileID: 3312324250784731518}
+    - {fileID: 2381421719076894972}
+    - {fileID: 1735086472539308034}
 ---
 ID: 11039035109336594243
 GameObject:
@@ -37167,7 +35523,6 @@ Transform:
   Father: {fileID: 16642481857729093895}
   m_Children:
     - {fileID: 7985734796248280150}
-    - {fileID: 8022746796618059291}
     - {fileID: 9484366937565982887}
     - {fileID: 6966971664858682820}
     - {fileID: 7399219870366902425}
@@ -37179,7 +35534,7 @@ Transform:
     - {fileID: 18082078447115237715}
     - {fileID: 4351527284239826213}
     - {fileID: 11189866876296185859}
-    - {fileID: 3073393996740150742}
+    - {fileID: 3100779827254322048}
 ---
 ID: 6453077814518682103
 GameObject:
@@ -44956,60 +43311,6 @@ MeshRenderer:
   Mesh: {guid: 504aa52eb20be542c9a493ccdc50cdc4}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 8022746796618059291
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8235854420086607048}  # Transform
-    - component: {fileID: 10235665918474899590}  # MeshRenderer
----
-ID: 8235854420086607048
-Transform:
-  m_GameObject: {fileID: 8022746796618059291}
-  Translation: [2.30377698, 54.1581039, -93.1269836]
-  Rotation: [0, 1.57079542, 0]
-  Scale: [1.05959105, 1, 1.42075515]
-  Father: {fileID: 1123033275711972212}
-  m_Children:
-    - {fileID: 7081083793203506352}
----
-ID: 10235665918474899590
-MeshRenderer:
-  m_GameObject: {fileID: 8022746796618059291}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 7081083793203506352
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5063701852291732451}  # Transform
-    - component: {fileID: 5634571582198050281}  # MeshRenderer
----
-ID: 5063701852291732451
-Transform:
-  m_GameObject: {fileID: 7081083793203506352}
-  Translation: [-7.62939453e-06, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1.00000012]
-  Father: {fileID: 8022746796618059291}
-  m_Children:
-    []
----
-ID: 5634571582198050281
-MeshRenderer:
-  m_GameObject: {fileID: 7081083793203506352}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
 ID: 9484366937565982887
 GameObject:
   m_IsActive: true
@@ -45673,60 +43974,6 @@ Transform:
 ID: 11750054003987740864
 MeshRenderer:
   m_GameObject: {fileID: 13964487717095893730}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 3073393996740150742
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2156491044915719230}  # Transform
-    - component: {fileID: 4136411085278035339}  # MeshRenderer
----
-ID: 2156491044915719230
-Transform:
-  m_GameObject: {fileID: 3073393996740150742}
-  Translation: [2.30377698, 54.1764755, -98.4387054]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [1.05959105, 1, 1.42075515]
-  Father: {fileID: 1123033275711972212}
-  m_Children:
-    - {fileID: 17461470088345473766}
----
-ID: 4136411085278035339
-MeshRenderer:
-  m_GameObject: {fileID: 3073393996740150742}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 17461470088345473766
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy - Copy - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9605347334985394901}  # Transform
-    - component: {fileID: 3263625043362214910}  # MeshRenderer
----
-ID: 9605347334985394901
-Transform:
-  m_GameObject: {fileID: 17461470088345473766}
-  Translation: [-7.62939453e-06, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1.00000012]
-  Father: {fileID: 3073393996740150742}
-  m_Children:
-    []
----
-ID: 3263625043362214910
-MeshRenderer:
-  m_GameObject: {fileID: 17461470088345473766}
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
@@ -49354,7 +47601,7 @@ GameObject:
 ID: 17131318036348326671
 Transform:
   m_GameObject: {fileID: 10266636446231664446}
-  Translation: [58.1066437, 39.3185196, -70.3889771]
+  Translation: [58.3741379, 39.3185196, -70.3889771]
   Rotation: [0, 0, 0]
   Scale: [2.28999996, 5.36100674, 2.79907107]
   Father: {fileID: 6661078963704661251}
@@ -63985,3 +62232,165 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
   Play: false
+---
+ID: 3100779827254322048
+GameObject:
+  m_IsActive: true
+  m_Name: Ceiling - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14109203820408108617}  # Transform
+    - component: {fileID: 8285919279428640170}  # MeshRenderer
+---
+ID: 14109203820408108617
+Transform:
+  m_GameObject: {fileID: 3100779827254322048}
+  Translation: [2.1444993, 54.0691032, -96.1850739]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [1.60000002, 1, 1.70000005]
+  Father: {fileID: 1123033275711972212}
+  m_Children:
+    []
+---
+ID: 8285919279428640170
+MeshRenderer:
+  m_GameObject: {fileID: 3100779827254322048}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 5155128040009709842
+GameObject:
+  m_IsActive: true
+  m_Name: Patchup - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11911292737188166745}  # Transform
+    - component: {fileID: 9251265012112906299}  # MeshRenderer
+---
+ID: 11911292737188166745
+Transform:
+  m_GameObject: {fileID: 5155128040009709842}
+  Translation: [66.5771561, 52.0774994, -77.9652252]
+  Rotation: [0, 0, 0]
+  Scale: [22.6296635, 1.08243537, 22.1577644]
+  Father: {fileID: 952121716206972440}
+  m_Children:
+    []
+---
+ID: 9251265012112906299
+MeshRenderer:
+  m_GameObject: {fileID: 5155128040009709842}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 11767514810004432881
+GameObject:
+  m_IsActive: true
+  m_Name: Patchup - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11453748024802896365}  # Transform
+    - component: {fileID: 11184828904898952113}  # MeshRenderer
+---
+ID: 11453748024802896365
+Transform:
+  m_GameObject: {fileID: 11767514810004432881}
+  Translation: [66.5771561, 52.0774994, -106.552231]
+  Rotation: [0, 0, 0]
+  Scale: [20.5528336, 1.08243537, 6.68825531]
+  Father: {fileID: 952121716206972440}
+  m_Children:
+    []
+---
+ID: 11184828904898952113
+MeshRenderer:
+  m_GameObject: {fileID: 11767514810004432881}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 3312324250784731518
+GameObject:
+  m_IsActive: true
+  m_Name: Patchup - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17576341403104500097}  # Transform
+    - component: {fileID: 12640355301618688895}  # MeshRenderer
+---
+ID: 17576341403104500097
+Transform:
+  m_GameObject: {fileID: 3312324250784731518}
+  Translation: [66.5771561, 52.0774994, -120.304466]
+  Rotation: [0, 0, 0]
+  Scale: [20.5528336, 1.08243537, 5.48467302]
+  Father: {fileID: 952121716206972440}
+  m_Children:
+    []
+---
+ID: 12640355301618688895
+MeshRenderer:
+  m_GameObject: {fileID: 3312324250784731518}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 2381421719076894972
+GameObject:
+  m_IsActive: true
+  m_Name: Patchup - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2691999064302454911}  # Transform
+    - component: {fileID: 14919836123241443237}  # MeshRenderer
+---
+ID: 2691999064302454911
+Transform:
+  m_GameObject: {fileID: 2381421719076894972}
+  Translation: [73.9570084, 52.0774994, -113.568222]
+  Rotation: [0, 0, 0]
+  Scale: [5.9646616, 1.08243537, 8.14088631]
+  Father: {fileID: 952121716206972440}
+  m_Children:
+    []
+---
+ID: 14919836123241443237
+MeshRenderer:
+  m_GameObject: {fileID: 2381421719076894972}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
+---
+ID: 1735086472539308034
+GameObject:
+  m_IsActive: true
+  m_Name: Patchup - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7896099725571993965}  # Transform
+    - component: {fileID: 14214863232355804232}  # MeshRenderer
+---
+ID: 7896099725571993965
+Transform:
+  m_GameObject: {fileID: 1735086472539308034}
+  Translation: [59.1876297, 52.0774994, -113.568222]
+  Rotation: [0, 0, 0]
+  Scale: [5.9646616, 1.08243537, 8.14088631]
+  Father: {fileID: 952121716206972440}
+  m_Children:
+    []
+---
+ID: 14214863232355804232
+MeshRenderer:
+  m_GameObject: {fileID: 1735086472539308034}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
