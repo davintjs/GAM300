@@ -239,6 +239,8 @@ Transform:
     - {fileID: 15115753960540565494}
     - {fileID: 17033157074617951400}
     - {fileID: 17866851235588629267}
+    - {fileID: 5769265740441844970}
+    - {fileID: 15996983871537068920}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -10124,7 +10126,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 93.864624
+  LookAtDistance: 88.9538116
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -62513,3 +62515,97 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
   Play: false
+---
+ID: 5769265740441844970
+GameObject:
+  m_IsActive: true
+  m_Name: DoorYellowPrompt
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7412216793858067871}  # Transform
+    - component: {fileID: 9128584686572205671}  # SpriteRenderer
+    - component: {fileID: 11164401453586494058}  # Script
+---
+ID: 7412216793858067871
+Transform:
+  m_GameObject: {fileID: 5769265740441844970}
+  Translation: [0, -0.600000024, 10]
+  Rotation: [0, 0, 0]
+  Scale: [0.449999988, 0.400000006, 0.999999523]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 9128584686572205671
+SpriteRenderer:
+  m_GameObject: {fileID: 5769265740441844970}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 5d5163d870b2132fbeb9cf39d42cc125}
+---
+ID: 11164401453586494058
+Script:
+  m_GameObject: {fileID: 5769265740441844970}
+  m_IsEnabled: true
+  Script: {guid: 64535fc777b68da65b292651794230a2}
+  promptDistance: 3
+  player: {fileID: 3977294589520766028}  # Component
+  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
+  yellowDoor2: {fileID: 2184944943370057333}  # Component
+  doorPrompt_white: {fileID: 15996983871537068920}  # Component
+  yellowDoor1: {fileID: 17394995871374744838}  # Component
+  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
+  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
+  whiteDoor1: {fileID: 15531594244202276862}  # Component
+  whiteDoor1Script: {fileID: 6679733462023512194}  # Component
+---
+ID: 15996983871537068920
+GameObject:
+  m_IsActive: true
+  m_Name: DoorWhitePrompt
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17885691129230689111}  # Transform
+    - component: {fileID: 14688439069679945604}  # SpriteRenderer
+    - component: {fileID: 4626470578165836461}  # Script
+---
+ID: 17885691129230689111
+Transform:
+  m_GameObject: {fileID: 15996983871537068920}
+  Translation: [0, -0.600000024, 10]
+  Rotation: [0, 0, 0]
+  Scale: [0.449999988, 0.400000006, 0.999999523]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 14688439069679945604
+SpriteRenderer:
+  m_GameObject: {fileID: 15996983871537068920}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4e49ab6a453fcd8a0ab6927db797194c}
+---
+ID: 4626470578165836461
+Script:
+  m_GameObject: {fileID: 15996983871537068920}
+  m_IsEnabled: true
+  Script: {guid: 64535fc777b68da65b292651794230a2}
+  promptDistance: 3
+  player: {fileID: 3977294589520766028}  # Component
+  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
+  yellowDoor2: {fileID: 2184944943370057333}  # Component
+  doorPrompt_white: {fileID: 15996983871537068920}  # Component
+  yellowDoor1: {fileID: 17394995871374744838}  # Component
+  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
+  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
+  whiteDoor1: {fileID: 15531594244202276862}  # Component
+  whiteDoor1Script: {fileID: 6679733462023512194}  # Component

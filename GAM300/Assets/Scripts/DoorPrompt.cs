@@ -12,20 +12,20 @@ using System.Threading;
 public class DoorPrompt : Script
 {
     public float promptDistance = 1f;
+
     public Transform doorPrompt_yellow;
     public Transform doorPrompt_white;
 
-
     public Transform player;
 
-    public Transform doortoSec3;
-    public Door doortoSec3Script;
+    public Transform yellowDoor1;
+    public Door yellowDoor1Script;
 
-    public Transform doortoBossSec2;
-    public Door doortoBossSec2Script;
+    public Transform yellowDoor2;
+    public Door yellowDoor2Script;
 
-    public Transform doortoBoss;
-    public Door doortoBossScript;
+    public Transform whiteDoor1;
+    public Door whiteDoor1Script;
 
     void Start()
     {
@@ -40,30 +40,30 @@ public class DoorPrompt : Script
         pos.x = 1999f;
         doorPrompt_yellow.position = doorPrompt_white.position = pos;
 
-        if (doortoSec3 != null)
+        if (yellowDoor1 != null)
         {
-            vec3 door_pos = doortoSec3.position;
-            if ( !doortoSec3Script.moving && vec3.Distance(door_pos, player.position) < promptDistance)
+            vec3 door_pos = yellowDoor1.position;
+            if ( !yellowDoor1Script.moving && vec3.Distance(door_pos, player.position) < promptDistance)
             {
                 pos.x = 0;
                 doorPrompt_yellow.position = pos;
             }            
         }
 
-        if (doortoBossSec2 != null)
+        if (yellowDoor2 != null)
         {
-            vec3 door_pos = doortoBossSec2.position;
-            if (!doortoBossSec2Script.moving && vec3.Distance(door_pos, player.position) < promptDistance)
+            vec3 door_pos = yellowDoor2.position;
+            if (!yellowDoor2Script.moving && vec3.Distance(door_pos, player.position) < promptDistance)
             {
                 pos.x = 0;
                 doorPrompt_yellow.position = pos;
             }
         }
 
-        if (doortoBoss != null)
+        if (whiteDoor1 != null)
         {
-            vec3 door_pos = doortoBoss.position;
-            if (!doortoBossScript.moving && vec3.Distance(door_pos, player.position) < promptDistance)
+            vec3 door_pos = whiteDoor1.position;
+            if (!whiteDoor1Script.moving && vec3.Distance(door_pos, player.position) < promptDistance)
             {
                 pos.x = 0;
                 doorPrompt_white.position = pos;
