@@ -13386,8 +13386,8 @@ GameObject:
 ID: 6317419242230538949
 Transform:
   m_GameObject: {fileID: 1978797479256161258}
-  Translation: [66.4787216, 51.565052, -79.0797577]
-  Rotation: [1.57079542, 0, 0]
+  Translation: [66.4787216, 44.7801857, -79.0797577]
+  Rotation: [0, 0, 0]
   Scale: [1, 0.999997973, 0.999997854]
   Father: {fileID: 0}
   m_Children:
@@ -13398,13 +13398,13 @@ LightSource:
   m_GameObject: {fileID: 1978797479256161258}
   m_IsEnabled: true
   EnableShadow: false
-  lightType: 0
+  lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 50
+  Intensity: 2500
   Direction: [-0.200000003, -0.649999976, 0.300000012]
-  Inner Cutoff: 30
-  Outer Cutoff: 60
-  Color: [100, 100, 100]
+  Inner Cutoff: 10
+  Outer Cutoff: 45
+  Color: [0.646764636, 0.267639518, 0.724290848]
 ---
 ID: 263938901046208410
 GameObject:
@@ -47833,8 +47833,8 @@ GameObject:
 ID: 143493551921096792
 Transform:
   m_GameObject: {fileID: 12783513891982554032}
-  Translation: [56.4230003, 42.9017296, -78.0252228]
-  Rotation: [0, -1.57079542, 0]
+  Translation: [56.4230003, 42.9017296, -78.0376663]
+  Rotation: [0, -1.57045102, 0]
   Scale: [5.51907444, 3.37942195, 0.987493813]
   Father: {fileID: 8701853331577378169}
   m_Children:
@@ -50352,8 +50352,8 @@ ID: 8462967646332722776
 Transform:
   m_GameObject: {fileID: 14536608074641899265}
   Translation: [38.8344612, 37.4989395, -72.2000961]
-  Rotation: [-3.14159203, 0.0201624632, 3.14159203]
-  Scale: [0.99989152, 1, 0.999901295]
+  Rotation: [-3.14159203, 0.0201624651, 3.14159203]
+  Scale: [0.9998914, 1, 0.999901175]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 8194879675306407408}
@@ -50542,7 +50542,7 @@ ID: 5794390520012510428
 Transform:
   m_GameObject: {fileID: 7929598916906600207}
   Translation: [0, -0.75, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 14536608074641899265}
   m_Children:
@@ -50573,7 +50573,7 @@ ID: 17068026411992375743
 Transform:
   m_GameObject: {fileID: 8141847868341262647}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -50600,7 +50600,7 @@ ID: 4516314819218882340
 Transform:
   m_GameObject: {fileID: 2278992921713795763}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -50627,7 +50627,7 @@ ID: 2427613819005071646
 Transform:
   m_GameObject: {fileID: 11687995531724670886}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -50654,7 +50654,7 @@ ID: 4239340178402486810
 Transform:
   m_GameObject: {fileID: 366452511516068587}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -50681,7 +50681,7 @@ ID: 17012370870445482007
 Transform:
   m_GameObject: {fileID: 10411338053535393924}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -50708,7 +50708,7 @@ ID: 2314810951981687793
 Transform:
   m_GameObject: {fileID: 17172930340850525650}
   Translation: [0.00048828125, 0, -0.000244140625]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7929598916906600207}
   m_Children:
@@ -54360,11 +54360,11 @@ LightSource:
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 3000
+  Intensity: 500
   Direction: [0, 0, 0]
   Inner Cutoff: 80
   Outer Cutoff: 500
-  Color: [1, 1, 1]
+  Color: [0.894225955, 0.0317072757, 0.0317072757]
 ---
 ID: 5299177623276563606
 GameObject:
@@ -54393,11 +54393,11 @@ LightSource:
   EnableShadow: false
   lightType: 2
   lightpos: [0, 0, 0]
-  Intensity: 3000
+  Intensity: 500
   Direction: [0, 0, 0]
   Inner Cutoff: 80
   Outer Cutoff: 500
-  Color: [1, 1, 1]
+  Color: [1, 0, 0]
 ---
 ID: 76883666513725944
 GameObject:
@@ -54430,7 +54430,7 @@ LightSource:
   Direction: [0, 0, 0]
   Inner Cutoff: 80
   Outer Cutoff: 500
-  Color: [1, 1, 1]
+  Color: [0, 0.115097195, 0.825316906]
 ---
 ID: 1845828409332507245
 GameObject:
