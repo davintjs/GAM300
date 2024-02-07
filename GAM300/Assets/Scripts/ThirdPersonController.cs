@@ -523,6 +523,8 @@ public class ThirdPersonController : Script
         {
             if (dodgeSound)
             {
+                Random rd = new Random();
+                dodgeRollAudioRotation = rd.Next(0, 1);
                 dodgeSound = false;
 
                 //Plays Dodge Roll Sound
@@ -530,11 +532,9 @@ public class ThirdPersonController : Script
                 {
                     case 0:
                         AudioManager.instance.dodgeRoll1.Play();
-                        dodgeRollAudioRotation++;
                         break;
                     case 1:
                         AudioManager.instance.dodgeRoll2.Play();
-                        dodgeRollAudioRotation = 0;
                         break;
                 }
             }
@@ -689,23 +689,23 @@ public class ThirdPersonController : Script
             else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
                 SetState("Jump", true);
-                
+
                 //Jump will not require stamina
                 //UseStamina(jumpStamina);
-                
+
+                Random rd = new Random();
+                jumpAudioRotation = rd.Next(0, 2);
+
                 switch (jumpAudioRotation)
                 {
                     case 0:
                         AudioManager.instance.jumpVoice.Play();
-                        jumpAudioRotation++;
                         break;
-                        case 1:
+                    case 1:
                         AudioManager.instance.jumpVoice2.Play();
-                        jumpAudioRotation++;
                         break;
-                        case 2:
+                    case 2:
                         AudioManager.instance.jumpVoice3.Play();
-                        jumpAudioRotation = 0;
                         break;
                 }
                 
@@ -915,15 +915,16 @@ public class ThirdPersonController : Script
             //dmg noise
             AudioManager.instance.playerInjured.Play();
 
+            Random rd = new Random();
+            damageAudioRotation = rd.Next(0, 1);
+
             switch (damageAudioRotation)
             {
                 case 0:
                     AudioManager.instance.thumpCollision1.Play();
-                    damageAudioRotation++;
                     break;
                 case 1:
                     AudioManager.instance.thumpCollision2.Play();
-                    damageAudioRotation = 0;
                     break;
             }
 
