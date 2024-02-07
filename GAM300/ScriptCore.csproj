@@ -48,6 +48,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnemyBullet.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
+    <Compile Include="Assets\Scripts\Exit.cs" />
     <Compile Include="Assets\Scripts\FreeLookCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HealthPack.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Assets\Scripts\RangeEnemy.cs" />
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
     <Compile Include="Assets\Scripts\SpinningPropeller.cs" />
+    <Compile Include="Assets\Scripts\Splashscreen.cs" />
     <Compile Include="Assets\Scripts\Terminal.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
