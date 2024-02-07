@@ -118,7 +118,16 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma region PHYSICS SYSTEM
 
-	static EngineRayCastResult Raycast(Vector3& position, Vector3& direction, float& distance)
+	struct ScriptRayCastResult {
+		ScriptRayCastResult(const EngineRayCastResult&& ercr) : gameobject{ ercr.gameobject }, point{ ercr.point }, hit{ ercr.hit }{}
+
+		ScriptObject<Entity> gameobject;
+		Vector3 point;
+		bool hit;
+	};
+
+
+	static ScriptRayCastResult Raycast(Vector3& position, Vector3& direction, float& distance)
 	{
 		// jDirection MUST be normalized
 		JPH::RVec3 jPosition = JPH::RVec3::sZero();
@@ -132,8 +141,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		jDirection.SetY(direction.y);
 		jDirection.SetZ(direction.z);
 
-		EngineRayCastResult ercr = PHYSICS.CastRay(jPosition, jDirection, distance);
-		return ercr;
+		return ScriptRayCastResult(PHYSICS.CastRay(jPosition, jDirection, distance));
 	}
 
 #pragma endregion

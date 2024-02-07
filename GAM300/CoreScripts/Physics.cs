@@ -29,11 +29,9 @@ namespace BeanFactory
 
     public class Physics
     {
-        public RayCastResult Raycast(vec3 position, vec3 direction, float distance)
+        public GameObject Raycast(vec3 position, vec3 direction, float distance)
         {
-            RayCastResult tmp = InternalCalls.Raycast(position, direction, distance);
-
-            return tmp;
+            return InternalCalls.Raycast(position, direction, distance);
         }
     }
 

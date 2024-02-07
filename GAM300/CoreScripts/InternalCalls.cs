@@ -200,7 +200,7 @@ namespace BeanFactory
 
         #region PHYSICS_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern RayCastResult Raycast(vec3 position, vec3 direction, float distance);
+        public static extern GameObject Raycast(vec3 position, vec3 direction, float distance);
         #endregion
 
         #region TEXT

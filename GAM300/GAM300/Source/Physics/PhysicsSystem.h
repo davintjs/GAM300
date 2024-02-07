@@ -176,7 +176,7 @@ struct EngineRayCastResult {
 
 	EngineRayCastResult(Entity* obj, Vector3 pt, bool hasHit) : gameobject{ obj }, point { pt }, hit{ hasHit }{}
 
-	ScriptObject<Entity> gameobject;
+	Entity* gameobject;
 	Vector3 point;
 	bool hit;
 

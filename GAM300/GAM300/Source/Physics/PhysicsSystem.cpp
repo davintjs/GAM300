@@ -690,70 +690,6 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			motionType = JPH::EMotionType::Kinematic;
 		}
 
-		/*
-		// Create rigidbody's collider shape
-		if (scene.Has<BoxCollider>(entity)) {
-
-			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
-			Vector3 tScale = t.GetGlobalScale();
-			Vector3 tPos = t.GetGlobalTranslation();
-			Vector3 colliderScale(boxCollider.dimensions.x * tScale.x/2.f, boxCollider.dimensions.y * tScale.y/2.f, boxCollider.dimensions.z * tScale.z/2.f);
-			GlmVec3ToJoltVec3(colliderScale, scale);
-
-			Vector3 finalPos(tPos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
-			GlmVec3ToJoltVec3(finalPos, pos);
-
-			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
-
-
-		}
-		else if (scene.Has<SphereCollider>(entity)) {
-
-			Vector3 tScale = t.GetGlobalScale();
-			SphereCollider& sc = scene.Get<SphereCollider>(entity);
-			Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
-			GlmVec3ToJoltVec3(finalPos, pos);
-
-			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * sc.radius;
-
-			if (rb.is_trigger)
-			{
-				motionType = JPH::EMotionType::Kinematic;
-			}
-
-			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
-
-		}
-		else if (scene.Has<CapsuleCollider>(entity)) {
-
-
-			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
-			Vector3 tScale = t.GetGlobalScale();
-			GlmVec3ToJoltVec3(tpos, pos);
-
-
-			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * cc.radius;
-			float offset = 0.5f * (tScale.y * cc.height) - radius;
-
-			if (offset <= 0.f) {
-				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-
-				SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
-
-			}
-			else {
-				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
-
-			}
-
-		}
-		else {
-			continue;
-		}*/
-
 		// Create rigidbody's collider shape
 		if (scene.Has<BoxCollider>(entity)) {
 
@@ -1190,7 +1126,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 	JoltVec3ToGlmVec3(origin, tmp);
 
 	if (!physicsSystem)
-		return EngineRayCastResult(nullptr, tmp, false);
+		return EngineRayCastResult(nullptr, Vector3(0,0,0), false);
 
 	// TODO:
 	/*
@@ -1208,7 +1144,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 	JPH::RayCast ray(origin, direction * distance);
 	bpq.CastRay(ray, collector);
 	if(!collector.HadHit())
-		return EngineRayCastResult(nullptr, tmp, false);
+		return EngineRayCastResult(nullptr, Vector3(0, 0, 0), false);
 	size_t numHits = (int)collector.mHits.size();
 	std::cout << "Number of hits on raycast: " << numHits << std::endl;	
 	
@@ -1233,33 +1169,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 		}
 	}
 
-	//collector.Sort();
-	/*
-	for (int i{ 0 }; i < numHits; ++i) {
-		
-		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
-		
-		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
-
-		// Find 1st contact pt outside of max distance
-		float distance = (pt - ray.mOrigin).Length();
-		if (distance >= maxDistance && i >= 1) {
-
-			closestPointToEnd = ray.GetPointOnRay(results[i-1].mFraction);
-			break;
-			
-		}
-
-		if (i == numHits - 1) {
-			closestPointToEnd = ray.GetPointOnRay(results[i].mFraction);
-			break;
-		}
-	}*/
-	std::cout << "Closest pt: " << hitPt.x << '|' 
-									<< hitPt.y << '|' 
-									<< hitPt.z << std::endl;
-
-	return EngineRayCastResult(nullptr, hitPt, true);
+	return EngineRayCastResult(nullptr, Vector3(0, 0, 0), false);
 	
 }
 
