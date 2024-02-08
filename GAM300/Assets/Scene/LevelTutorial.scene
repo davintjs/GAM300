@@ -260,7 +260,6 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 4891637289365399706}
     - {fileID: 2866402867161245437}
     - {fileID: 9228689185262017297}
     - {fileID: 3525555548824268013}
@@ -282,6 +281,7 @@ Transform:
     - {fileID: 12478379518054110186}
     - {fileID: 14449198235318879022}
     - {fileID: 14843899441988254193}
+    - {fileID: 4891637289365399706}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -12688,7 +12688,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 396d135dccd28f7d967a77162d240410}
+  Sound File: {guid: 2ad5e72bb60d94853db5887c5613d42d}
   Play: false
 ---
 ID: 10480691383386351295
@@ -12763,7 +12763,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1658.69971
+  LookAtDistance: 1673.53687
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -19711,7 +19711,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 26bd6af77d87a47f3687053eece2db97}
+  Sound File: {guid: aa6451d6590602fdf2db752614208085}
   Play: false
 ---
 ID: 1496189058950795356
@@ -19743,7 +19743,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 97788d462a0c852e308c86b317a4087b}
+  Sound File: {guid: 710626a7a15b9e86a2f7e9b8626b8c57}
   Play: false
 ---
 ID: 4410001754813060403

@@ -9803,7 +9803,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 396d135dccd28f7d967a77162d240410}
+  Sound File: {guid: 2ad5e72bb60d94853db5887c5613d42d}
   Play: false
 ---
 ID: 16642481857729093895
@@ -10126,7 +10126,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 88.9538116
+  LookAtDistance: 88.7760315
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -62063,7 +62063,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 26bd6af77d87a47f3687053eece2db97}
+  Sound File: {guid: aa6451d6590602fdf2db752614208085}
   Play: false
 ---
 ID: 18125044553674274218
@@ -62095,7 +62095,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 97788d462a0c852e308c86b317a4087b}
+  Sound File: {guid: 710626a7a15b9e86a2f7e9b8626b8c57}
   Play: false
 ---
 ID: 12153697188064801473
