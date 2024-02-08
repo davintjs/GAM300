@@ -133,7 +133,7 @@ Script:
 ---
 ID: 1497825775628923368
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: GameLogo
   m_TagString: ""
   m_Layer: 0
@@ -171,9 +171,9 @@ Script:
   inDuration: 2
   finished: false
   outDuration: 2
-  inAndOut: false
+  inAndOut: true
   blink: false
-  start: false
+  start: true
   targetVal: 1
   waitDelay: 0
 ---
