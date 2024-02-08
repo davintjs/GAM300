@@ -9803,7 +9803,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 2ad5e72bb60d94853db5887c5613d42d}
+  Sound File: {guid: ce3fdcccf31b5a51da0972687da66904}
   Play: false
 ---
 ID: 16642481857729093895
@@ -10126,7 +10126,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 88.7760315
+  LookAtDistance: 88.6421585
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -34394,7 +34394,7 @@ GameObject:
 ID: 9927322997862495073
 Transform:
   m_GameObject: {fileID: 11931344363477315440}
-  Translation: [65.168541, 36.5663452, -46.2187767]
+  Translation: [58.8871994, 36.5663452, -9.84059429]
   Rotation: [0, 0, 0]
   Scale: [0.999907494, 1, 0.999907494]
   Father: {fileID: 0}
@@ -62063,7 +62063,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: aa6451d6590602fdf2db752614208085}
+  Sound File: {guid: 3b5597373ba0415f19eee83296ad752b}
   Play: false
 ---
 ID: 18125044553674274218
@@ -62095,7 +62095,7 @@ AudioSource:
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 710626a7a15b9e86a2f7e9b8626b8c57}
+  Sound File: {guid: 4ac3da6f90ffe925e1368718223c7629}
   Play: false
 ---
 ID: 12153697188064801473
