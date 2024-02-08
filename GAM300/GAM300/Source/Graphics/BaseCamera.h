@@ -178,7 +178,7 @@ protected:
 property_begin_name(BaseCamera, "BaseCamera") {
 	property_var(clearFlags).Name("ClearFlags"),
 	property_var(cullingMask).Name("CullingMask"),
-	property_var(lookatDistance).Name("LookAtDistance"),
+	property_var(lookatDistance).Name("LookAtDistance").Flags(property::flags::DONTSAVE),
 	property_var(nearClip).Name("NearClip"),
 	property_var(farClip).Name("FarClip"),
 	property_var(fieldOfView).Name("FieldOfView"),

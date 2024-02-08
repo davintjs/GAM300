@@ -34,7 +34,7 @@ Camera:
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 1.36689305
+  LookAtDistance: 7.26972151
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -97,10 +97,10 @@ GameObject:
 ID: 5205254661984323289
 Transform:
   m_GameObject: {fileID: 15122834859859923062}
-  Translation: [0, -2.98023224e-08, -6.46740261e-09]
+  Translation: [0, -5.96046448e-08, -1.3917985e-08]
   Rotation: [-3.14159083, 0, 0]
   Scale: [0.185415089, 0.0635305196, 0.541499794]
-  Father: {fileID: 2696979337586478641}
+  Father: {fileID: 8036619736215287961}
   m_Children:
     []
 ---
@@ -189,7 +189,7 @@ Script:
 ID: 11003882171245847636
 GameObject:
   m_IsActive: true
-  m_Name: Loading_Tutorial_Text
+  m_Name: Loading_Level_Yellow_Text
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -199,10 +199,10 @@ GameObject:
 ID: 5059618897602400407
 Transform:
   m_GameObject: {fileID: 11003882171245847636}
-  Translation: [0.00586110353, -0.00179371238, -3.55294469e-06]
+  Translation: [0.00586110353, -0.00179374218, -3.56039527e-06]
   Rotation: [-3.14159083, 0, 0]
   Scale: [0.185415089, 0.0635305196, 0.541499794]
-  Father: {fileID: 2696979337586478641}
+  Father: {fileID: 13100383674099119714}
   m_Children:
     []
 ---
@@ -283,8 +283,8 @@ Transform:
   Scale: [1, 0.999999821, 0.999999762]
   Father: {fileID: 11651427043620866289}
   m_Children:
-    - {fileID: 15122834859859923062}
-    - {fileID: 11003882171245847636}
+    - {fileID: 8036619736215287961}
+    - {fileID: 13100383674099119714}
 ---
 ID: 16497195656445347944
 GameObject:
@@ -296,7 +296,6 @@ GameObject:
     - component: {fileID: 999685955602433356}  # Transform
     - component: {fileID: 3476415689041592635}  # SpriteRenderer
     - component: {fileID: 5095741578982203672}  # Script
-    - component: {fileID: 5744785273842460629}  # Script
 ---
 ID: 999685955602433356
 Transform:
@@ -325,18 +324,6 @@ Script:
   Script: {guid: 145753d475c38b450f4aa5f909a9f77c}
   speed: 16
 ---
-ID: 5744785273842460629
-Script:
-  m_GameObject: {fileID: 16497195656445347944}
-  m_IsEnabled: true
-  Script: {guid: d75689aa359715e72826ba5750f6faf3}
-  inDuration: 0.400000006
-  finished: false
-  outDuration: 0.200000003
-  targetVal: 0
-  waitDelay: 0.200000003
-  fader: {fileID: 0}
----
 ID: 5563119787680248999
 GameObject:
   m_IsActive: true
@@ -362,16 +349,18 @@ Script:
   m_GameObject: {fileID: 5563119787680248999}
   m_IsEnabled: true
   Script: {guid: d75689aa359715e72826ba5750f6faf3}
+  isFading: false
   inDuration: 1
   finished: false
   outDuration: 1
   targetVal: 0
   waitDelay: 0.5
+  looping: false
   fader: {fileID: 1104040051038181722}  # GameObject
 ---
 ID: 1104040051038181722
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: FadeImage
   m_TagString: ""
   m_Layer: 0
@@ -397,4 +386,72 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: afc41f0e3a411dec20b629556fb375c4}
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 8036619736215287961
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Level
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15442410225058297463}  # Transform
+    - component: {fileID: 7436430944982363297}  # Script
+---
+ID: 15442410225058297463
+Transform:
+  m_GameObject: {fileID: 8036619736215287961}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2696979337586478641}
+  m_Children:
+    - {fileID: 15122834859859923062}
+---
+ID: 7436430944982363297
+Script:
+  m_GameObject: {fileID: 8036619736215287961}
+  m_IsEnabled: true
+  Script: {guid: d75689aa359715e72826ba5750f6faf3}
+  isFading: false
+  inDuration: 0
+  finished: false
+  outDuration: 0
+  targetVal: 1
+  waitDelay: 0.400000006
+  looping: true
+  fader: {fileID: 15122834859859923062}  # GameObject
+---
+ID: 13100383674099119714
+GameObject:
+  m_IsActive: true
+  m_Name: Loading_Level_Yellow
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9980223043260966408}  # Transform
+    - component: {fileID: 593964020929520773}  # Script
+---
+ID: 9980223043260966408
+Transform:
+  m_GameObject: {fileID: 13100383674099119714}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2696979337586478641}
+  m_Children:
+    - {fileID: 11003882171245847636}
+---
+ID: 593964020929520773
+Script:
+  m_GameObject: {fileID: 13100383674099119714}
+  m_IsEnabled: true
+  Script: {guid: d75689aa359715e72826ba5750f6faf3}
+  isFading: false
+  inDuration: 0
+  finished: false
+  outDuration: 0
+  targetVal: 1
+  waitDelay: 0.400000006
+  looping: true
+  fader: {fileID: 11003882171245847636}  # GameObject
