@@ -241,6 +241,7 @@ public:
 private:
 
 	void CallbackSceneStop(SceneStopEvent* pEvent);
+	void CallbackSceneStart(SceneStartEvent * pEvent);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 };

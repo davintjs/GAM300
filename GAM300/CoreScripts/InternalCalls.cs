@@ -261,6 +261,9 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMaterial(MeshRenderer meshRenderer, Material mat);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMaterialRaw(MeshRenderer meshRenderer, Material mat);
+
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]

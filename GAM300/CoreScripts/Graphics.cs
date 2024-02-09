@@ -83,12 +83,19 @@ namespace BeanFactory
             _emission = rhs.emission;
         }
 
-        public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; PropertyChangedCallBack(); } }
+        public void SetRawColor(vec4 color_)
+        {
+            _color = color_;
+            InternalCalls.SetMaterialRaw(meshRenderer, this);
+        }
 
-        public MeshRenderer _meshRenderer;
+        public MeshRenderer meshRenderer { get { return _meshRenderer; } set { _meshRenderer = value; } }
+
+        public MeshRenderer _meshRenderer = null;
 
         void PropertyChangedCallBack()
         {
+            Console.WriteLine("Changed!");
             isVariant = true;
             InternalCalls.SetMaterial(meshRenderer, this);
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,36 +8,35 @@ using BeanFactory;
 class CutsceneTrigger : Script
 {
     public Transform cameraPosition;
-    public Transform camera;
 
     bool triggered = false;
 
-    void Update()
+    public float cutsceneDuration = 2f;
+
+    ThirdPersonCamera camera;
+
+    void Start()
     {
-        if (triggered)
-        {
-            camera.position = cameraPosition.position;
-            camera.rotation = cameraPosition.rotation;
-        }
+        camera = ThirdPersonCamera.instance;
     }
 
     void OnTriggerEnter(PhysicsComponent rb)
     {
-        if (triggered)
-            return;
+        if (triggered) return;
         if (GetTag(rb) == "Player")
         {
+            StartCoroutine(stopCutscene());
             Console.WriteLine("Cutscene Triggered!");
-            triggered = true;
-
         }
     }
 
-    void OnTriggerExit(PhysicsComponent rb)
+    IEnumerator stopCutscene()
     {
-        if (GetTag(rb) == "Player")
-        {
-            triggered = false;
-        }
+        camera.cutscene = true;
+        triggered = true;
+        camera.transform.position = cameraPosition.position;
+        camera.transform.rotation = cameraPosition.rotation;
+        yield return new WaitForSeconds(cutsceneDuration);
+        camera.cutscene = false;
     }
 }

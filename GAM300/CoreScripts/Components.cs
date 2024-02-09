@@ -460,11 +460,13 @@ namespace BeanFactory
 
         public Material material
         {
-            get 
+            get
             {
+                Console.WriteLine("Before Changed!");
                 Material mat = new Material();
                 InternalCalls.GetMaterial(this, mat);
                 mat.meshRenderer = this;
+                Console.WriteLine("After Changed!");
                 return mat;
             }
         }

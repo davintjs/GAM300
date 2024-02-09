@@ -374,7 +374,7 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
-        if (cutscene)
+        if (ThirdPersonCamera.instance.cutscene)
             return;
 
 
@@ -708,7 +708,6 @@ public class ThirdPersonController : Script
             }
             currentAirTime += Time.deltaTime;
             movement += vec3.UnitY * -Gravity;
-            Console.WriteLine(movement);
         }
         wasMoving = moved;
         UpdateRotation(dir);

@@ -353,6 +353,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
+	static void SetMaterialRaw(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance> mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+		matInstance = mat;
+	}
+
 #pragma endregion
 
 #pragma region CAMERA
@@ -399,8 +406,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Application::Instance().TryExit();
 	#else
 		MySceneManager.StopPreview();
-		StopPreviewEvent* stopPreviewEvent;
-		EVENTS.Publish(stopPreviewEvent);
+		StopPreviewEvent stopPreviewEvent;
+		EVENTS.Publish(&stopPreviewEvent);
 	#endif
 	}
 
@@ -658,6 +665,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Mesh Renderer
 		Register(GetMaterial);
 		Register(SetMaterial);
+		Register(SetMaterialRaw);
 
 		// Transform Component
 		Register(SetTransformParent);
