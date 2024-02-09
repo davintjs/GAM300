@@ -34,7 +34,7 @@ public class Splashscreen : Script
                 if (digipenFade.finished || Input.GetMouseDown(0))
                 {
                     ++state;
-                    gameLogoFade.Start();
+                    //gameLogoFade.Start();
                     gameLogoFade.gameObject.SetActive(true);
                     digipenFade.gameObject.SetActive(false);
                 }
@@ -43,7 +43,7 @@ public class Splashscreen : Script
                 if (gameLogoFade.finished || Input.GetMouseDown(0))
                 {
                     ++state;
-                    bgFade.start = true;
+                    //bgFade.start = true;
                     gameLogoFade.gameObject.SetActive(false);
                 }
                 break;
