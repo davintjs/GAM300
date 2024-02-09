@@ -23,6 +23,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define TextureManager Texture_Manager::Instance()
 
+struct BaseTexture 
+{
+	char const* path;
+	GLuint textureID;
+	glm::vec2 pixelDimension;
+};
+
 SINGLETON(Texture_Manager)
 {
 public:
@@ -36,11 +43,15 @@ public:
 	void AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID);
 
 	// uses GUID to retrieve a texture from the texture container
-	GLuint GetTexture(const Engine::GUID<TextureAsset> & GUID);
+	GLuint GetTexture(const Engine::GUID<TextureAsset>& GUID);
+
+	BaseTexture* GetBaseTexture(const Engine::GUID<TextureAsset>& GUID);
 
 	GLuint GetTexture(const fs::path& filePath);
 
 	// creates a texture and returns it to be stored in the texture container
+	void CreateTexture(BaseTexture& _texture);
+
 	GLuint CreateTexture(char const* Filename);
 
 	// creates a skybox texture and returns it to be stored in the texture container
@@ -54,7 +65,7 @@ public:
 	void CallbackTextureAssetUnloaded(AssetUnloadedEvent<TextureAsset>*pEvent);
 private:
 
-	std::unordered_map<Engine::GUID<TextureAsset>, std::pair<char const*, GLuint>> mTextureContainer; // GUID, <file name, GLuint>
+	std::unordered_map<Engine::GUID<TextureAsset>, BaseTexture> mTextureContainer; // GUID, <file name, GLuint>
 	
 };
 
