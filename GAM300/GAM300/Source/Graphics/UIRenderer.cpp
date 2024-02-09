@@ -24,8 +24,6 @@ unsigned int Renderer_quadVBO = 0;
 unsigned int Renderer_quadVAO_WM = 0;
 unsigned int Renderer_quadVBO_WM = 0;
 
-#define AR 1.777778f
-
 
 void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 {
@@ -36,7 +34,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
 	//glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
 	//glm::mat4 OrthoProjection = glm::ortho(-8.f, 8.f, -4.5f, 4.5f, -10.f, 10.f);
-	glm::mat4 OrthoProjection = glm::ortho(-1.f * AR, 1.f * AR, -1.f, 1.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_SCREEN);
@@ -66,7 +64,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 	//canvasMatrix = glm::inverse()
 
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -83,46 +81,25 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		if (!currentScene.IsActive(entity)) continue;
 
 		Transform& transform = currentScene.Get<Transform>(entity);
-		
+
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(
+				canvasMatrix * transform.GetWorldMatrix() )
+		);
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
 			Sprite.AlphaMultiplier);
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-		Tag name = currentScene.Get<Tag>(entity);
-
-		if (pTexture)
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		if (Sprite.SpriteTexture == 0)
 		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix  * transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
+			glUniform1f(uniform1, false);
 		}
 		else
 		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix * transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
+			glUniform1f(uniform1, true);
 		}
 
 		// Binding Texture - might be empty , above uniform will sort it
@@ -155,7 +132,6 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		if (Sprite.state == DELETED) continue;
@@ -173,44 +149,22 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 
 		Transform& transform = currentScene.Get<Transform>(entity);
 
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-
-		if (pTexture)
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
+		if (Sprite.SpriteTexture == 0)
 		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
+			glUniform1f(uniform1, false);
 		}
 		else
 		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
+			glUniform1f(uniform1, true);
 		}
-
 
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
@@ -244,8 +198,6 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), false);
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
 
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
-	scaleMat[0][0] = AR;
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
 	{
 		if (currCanvas.state == DELETED) continue;
@@ -254,15 +206,21 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat));
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
 
 		glLineWidth(20.f);
 		renderQuadWireMesh(Renderer_quadVAO_WM, Renderer_quadVBO_WM);
 	}
 	glLineWidth(1.f);
 
-	
 	// Setting the projection here since all of them use the same projection
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		// This means it's 2D space
@@ -277,46 +235,24 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 		Transform& transform = currentScene.Get<Transform>(entity);
 
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
 			Sprite.AlphaMultiplier);
-		
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-
-		if (pTexture)
+		if (Sprite.SpriteTexture == 0)
 		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
+			glUniform1f(uniform1, false);
 		}
 		else
 		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
+			glUniform1f(uniform1, true);
 		}
 
 		// Binding Texture - might be empty , above uniform will sort it
