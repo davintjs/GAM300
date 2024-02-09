@@ -105,11 +105,9 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
-
-
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
-
 	}
+
 	shader.UnUse();
 	glDisable(GL_BLEND);
 }
@@ -131,6 +129,9 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+	std::vector<std::pair<SpriteRenderer,float>> Sorted_SR;
+
+
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
@@ -140,15 +141,36 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 		{
 			continue;
 		}
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
-			Sprite.AlphaMultiplier);
-
 		// Declarations for the things we need - SRT
 		Entity& entity = currentScene.Get<Entity>(Sprite);
 		if (!currentScene.IsActive(entity)) continue;
-
 		Transform& transform = currentScene.Get<Transform>(entity);
 
+		bool been_inserted = false;
+		float dist = glm::distance(transform.GetGlobalTranslation(), _camera.GetCameraPosition());
+		std::pair<SpriteRenderer, float> temp{ Sprite,dist };
+		for (int i = 0; i < Sorted_SR.size(); ++i)
+		{
+			if (dist > Sorted_SR[i].second)
+			{
+				Sorted_SR.insert(Sorted_SR.begin() + i, temp);
+				been_inserted = true;
+				break;
+			}
+		}
+		if (!been_inserted)
+		{
+			Sorted_SR.push_back(temp);
+		}
+	}
+
+	for (int i = 0; i < Sorted_SR.size(); ++i)
+	{
+		SpriteRenderer Sprite = Sorted_SR[i].first;
+		Transform& transform = currentScene.Get<Transform>(Sprite);
+
+		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
+			Sprite.AlphaMultiplier);
 		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
@@ -165,13 +187,12 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 		{
 			glUniform1f(uniform1, true);
 		}
-
 		// Binding Texture - might be empty , above uniform will sort it
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
-
 		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 	}
+	
 	shader.UnUse();
 	glDisable(GL_BLEND);
 }
