@@ -9,11 +9,12 @@ public class DialogueManager : Script
 {
     public static DialogueManager Instance;
 
-    public GameObject dialogue1;
     public GameObject dialogue2;
     public GameObject dialogue3;
+    public GameObject dialogueWarning;
     public GameObject dialogue4;
     public GameObject dialogue5;
+    public GameObject dialogueDefence;
     public GameObject ai;
     public GameObject playerName;
     public GameObject dialogueBg;
@@ -25,24 +26,21 @@ public class DialogueManager : Script
 
     public void Reset()
     {
-        dialogue1.SetActive(false);
         dialogue2.SetActive(false);
         dialogue3.SetActive(false);
+        dialogueWarning.SetActive(false);
         dialogue4.SetActive(false);
         dialogue5.SetActive(false);
         ai.SetActive(false);
         playerName.SetActive(false);
         dialogueBg.SetActive(false);
+        dialogueDefence.SetActive(false);
     }
 
     public void SetState(int i)
     {
         switch (i)
         {
-            case 1:
-                ai.SetActive(true);
-                dialogue1.SetActive(true);
-                break;
             case 2:
                 playerName.SetActive(true);
                 dialogue2.SetActive(true);
@@ -57,6 +55,14 @@ public class DialogueManager : Script
                 break;
             case 5:
                 dialogue5.SetActive(true);
+                break;
+            case 6:
+                ai.SetActive(true);
+                dialogueWarning.SetActive(true);
+                break;
+            case 7:
+                ai.SetActive(true);
+                dialogueDefence.SetActive(true);
                 break;
         }
         dialogueBg.SetActive(true);

@@ -1,5 +1,5 @@
-[2024-02-05 05:01:05.863] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 301)
+[2024-02-08 15:20:11.421] [Error] [critical] 
+Caused By:	false
+Info:		Could not find handle!
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 125)
 

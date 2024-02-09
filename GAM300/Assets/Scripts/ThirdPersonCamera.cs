@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BeanFactory;
 using GlmSharp;
 using System;
+using System.Runtime.InteropServices;
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
@@ -36,6 +37,8 @@ public class ThirdPersonCamera : Script
     private float bufferTimer = 0f;
     private float bufferDuration = 3.0f;
 
+    public bool cutscene = false;
+
     private vec3 targetPosition;
 
     void Awake()
@@ -46,8 +49,12 @@ public class ThirdPersonCamera : Script
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
+        if (cutscene)
+        {
+            return;
+        }
         Zoom();
 
         FocusOnTarget();

@@ -33,6 +33,7 @@ static std::unordered_set<fs::path> TEMP_EXTENSIONS
 // Bean: Include model compiler here temporarily, should use events instead
 #include "ModelCompiler.h"
 #include "TextureCompiler.h"
+#include "FontCompiler.h"
 
 static std::vector<fs::path> COMPILABLE_EXTENSIONS
 {
@@ -40,6 +41,7 @@ static std::vector<fs::path> COMPILABLE_EXTENSIONS
 	{".png"},
 	{".fbx"},
 	{".obj"},
+	{".ttf"},
 	//{".cs"},
 };
 
@@ -54,6 +56,11 @@ void AssetManager::Compile(const fs::path& path)
 	{
 		// Bean: From TextureCompiler.h
 		LoadTexture(path);
+	}
+	else if (path.extension() == ".ttf")
+	{
+		// Toe: From FontCompiler.h
+		LoadFont(path);
 	}
 	//else
 	//{

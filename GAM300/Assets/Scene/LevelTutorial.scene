@@ -12726,7 +12726,7 @@ Camera:
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  LookAtDistance: 1436.00464
+  LookAtDistance: 1450.85986
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -12857,6 +12857,7 @@ Script:
   startDeathAnimationCountdown: false
   _isAttacking: false
   currentDodgeTimer: 0
+  cutscene: false
   currentOverdriveTimer: 0
   dodgeCooldown: 2
   _isOverdrive: false
@@ -19529,3 +19530,73 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 8901547350537235594
+GameObject:
+  m_IsActive: true
+  m_Name: CutsceneTrigger1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1803562012832693148}  # Transform
+    - component: {fileID: 2766018670245555694}  # BoxCollider
+    - component: {fileID: 10200205906163045512}  # Rigidbody
+    - component: {fileID: 10093081211614675035}  # Script
+---
+ID: 1803562012832693148
+Transform:
+  m_GameObject: {fileID: 8901547350537235594}
+  Translation: [-20.1308727, 4.16739082, 9.04606056]
+  Rotation: [0, 0, 0]
+  Scale: [4.44171, 3.54853249, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2766018670245555694
+BoxCollider:
+  m_GameObject: {fileID: 8901547350537235594}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 10200205906163045512
+Rigidbody:
+  m_GameObject: {fileID: 8901547350537235594}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: true
+---
+ID: 10093081211614675035
+Script:
+  m_GameObject: {fileID: 8901547350537235594}
+  m_IsEnabled: true
+  Script: {guid: 7dca9db8fae3b3e65d96d4ac4f69098f}
+  cameraPosition: {fileID: 17687876639685579741}  # Component
+  camera: {fileID: 15334681090738628473}  # Component
+---
+ID: 17687876639685579741
+GameObject:
+  m_IsActive: true
+  m_Name: CutscenePoint1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17128708381542079703}  # Transform
+---
+ID: 17128708381542079703
+Transform:
+  m_GameObject: {fileID: 17687876639685579741}
+  Translation: [-29, 76, 14]
+  Rotation: [-0.75049156, -0.541052043, 0]
+  Scale: [0.999994695, 0.999998927, 0.999994636]
+  Father: {fileID: 0}
+  m_Children:
+    []

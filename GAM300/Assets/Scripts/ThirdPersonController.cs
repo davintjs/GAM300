@@ -79,6 +79,8 @@ public class ThirdPersonController : Script
 
     public MeshRenderer doorTestMesh;
 
+    public bool cutscene = false;
+
     void Awake()
     {
         if (instance != null)
@@ -372,7 +374,8 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
-
+        if (ThirdPersonCamera.instance.cutscene)
+            return;
 
 
         //testing respawn

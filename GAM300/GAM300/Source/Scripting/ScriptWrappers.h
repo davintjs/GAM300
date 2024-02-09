@@ -353,6 +353,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		}
 	}
 
+	static void SetMaterialRaw(ScriptObject<MeshRenderer> meshRenderer, ScriptObject<Material_instance> mat)
+	{
+		MeshRenderer& mr = meshRenderer;
+		Material_instance& matInstance = MATERIALSYSTEM.getMaterialInstance(mr.materialGUID);
+		matInstance = mat;
+	}
+
 #pragma endregion
 
 #pragma region CAMERA
@@ -392,6 +399,17 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 
 #pragma endregion
+
+	static void QuitGame()
+	{
+	#ifdef _BUILD
+		Application::Instance().TryExit();
+	#else
+		MySceneManager.StopPreview();
+		StopPreviewEvent stopPreviewEvent;
+		EVENTS.Publish(&stopPreviewEvent);
+	#endif
+	}
 
 	// Load a scene
 	static void LoadScene(MonoString* mString, bool loadDirect)
@@ -647,6 +665,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		//Mesh Renderer
 		Register(GetMaterial);
 		Register(SetMaterial);
+		Register(SetMaterialRaw);
 
 		// Transform Component
 		Register(SetTransformParent);
@@ -702,5 +721,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// SpriteRenderer Component
 		Register(IsButtonClicked);
+
+		//
+		Register(QuitGame);
 	}
 #endif // !SCRIPT_WRAPPERS_H

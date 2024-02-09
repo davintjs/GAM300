@@ -6,73 +6,8 @@
 
 void TextSystem::Init()
 {
-	GenerateFontAtlas("Assets/Fonts/opensansbold.ttf", "atlas.bin"); // compiler thing need to move
-	LoadFontAtlas("atlas.bin"); // decompile
-
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	//FT_Library ft;
-	//if (FT_Init_FreeType(&ft))
-	//{
-	//	std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-	//}
-
-	//FT_Face face;
-	//if (FT_New_Face(ft, "Assets/Fonts/opensansbold.ttf", 0, &face))
-	//{
-	//	std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-	//}
-	//else {
-	//	FT_Set_Pixel_Sizes(face, 0, 48);
-	//	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-	//	{
-	//		std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-	//	}
-	//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-
-	//	for (unsigned char c = 0; c < 128; c++)
-	//	{
-	//		// load character glyph 
-	//		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-	//		{
-	//			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-	//			continue;
-	//		}
-	//		// generate texture
-	//		unsigned int texture;
-	//		glGenTextures(1, &texture);
-	//		glBindTexture(GL_TEXTURE_2D, texture);
-	//		glTexImage2D(
-	//			GL_TEXTURE_2D,
-	//			0,
-	//			GL_RED,
-	//			face->glyph->bitmap.width,
-	//			face->glyph->bitmap.rows,
-	//			0,
-	//			GL_RED,
-	//			GL_UNSIGNED_BYTE,
-	//			face->glyph->bitmap.buffer
-	//		);
-	//		// set texture options
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//		// now store character for later use
-	//		Character character = {
-	//			texture,
-	//			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-	//			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-	//			face->glyph->advance.x
-	//		};
-	//		Characters.insert(std::pair<char, Character>(c, character));
-	//	}
-	//	glBindTexture(GL_TEXTURE_2D, 0); //??
-	//}
-	////glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//FT_Done_Face(face);
-	//FT_Done_FreeType(ft);
+	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
+	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
 	
 
 	glGenVertexArrays(1, &txtVAO);
@@ -95,100 +30,12 @@ void TextSystem::Update(float dt)
 void TextSystem::Exit()
 {
 	// Empty by design
+
+	//glDeleteTextures(1, &texture);
 }
-//
-//void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera)
-//{
-//	scale *= 0.001f; // hack bc it too big
-//
-//	glEnable(GL_BLEND);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	// activate corresponding render state	
-//	s.Use();
-//	//s.SetUniform(,)
-//	glUniform3f(glGetUniformLocation(s.GetHandle(), "textColor"), color.x, color.y, color.z);
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindVertexArray(txtVAO);
-//
-//	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
-//	//s.SetUniform("projection", proj);
-//	glUniformMatrix4fv(glGetUniformLocation(s.GetHandle(), "projection"),
-//		1, GL_FALSE, glm::value_ptr(OrthoProjection));
-//
-//	// iterate through all characters
-//	std::string::const_iterator c;
-//
-//	for (c = text.begin(); c != text.end(); c++)
-//	{
-//		Character ch = Characters[*c];
-//
-//		float xpos = x + ch.Bearing.x * scale;
-//		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-//
-//		float w = ch.Size.x * scale;
-//		float h = ch.Size.y * scale;
-//
-//		float maxsize = std::max(xpos, ypos) + std::max(w, h);
-//		maxsize *= 2.f;
-//
-//		// update VBO for each character
-//		float vertices[4][4] = {
-//			//{ xpos,     ypos + h,   0.0f, 0.0f },
-//			//{ xpos,     ypos,       0.0f, 1.0f },
-//			//{ xpos + w, ypos,       1.0f, 1.0f },
-//
-//			//{ xpos,     ypos + h,   0.0f, 0.0f },
-//			//{ xpos + w, ypos,       1.0f, 1.0f },
-//			//{ xpos + w, ypos + h,   1.0f, 0.0f }
-//
-//			{ xpos,     ypos,       0.0f, 1.0f },
-//			{ xpos,     ypos + h,   0.0f, 0.0f },
-//			{ xpos + w, ypos,       1.0f, 1.0f },
-//			{ xpos + w, ypos + h,   1.0f, 0.0f }
-//
-//			//{ -1.f,     1.f,		0.0f, 1.0f },
-//			//{ -1.f,     -1.f,		0.0f, 0.0f },
-//			//{ 1.f,		1.f,       1.0f, 1.0f },
-//			//{ 1.f,		-1.f,		1.0f, 0.0f }
-//
-//			//{ (xpos / maxsize) -1.f,			((ypos + h) / maxsize) -1.f,   0.0f, 0.0f },
-//			//{ (xpos / maxsize) -1.f,			(ypos / maxsize) -1.f,			0.0f, 1.0f },
-//			//{ ((xpos + w) / maxsize) -1.f,		(ypos / maxsize) -1.f,			1.0f, 1.0f },
-//			//{ ((xpos + w) / maxsize) -1.f,		((ypos + h) / maxsize) -1.f,   1.0f, 0.0f }
-//		};
-//
-//
-//		//float maxwh = std::max(w, h);
-//		//Vector3 translation_{ xpos / maxsize, ypos / maxsize, 1.f};
-//		//Vector3 rotation_{};
-//		//Vector3 scale_{ scale * w/maxwh, scale * h/maxwh, scale };
-//		//glm::mat4 rot = glm::toMat4(glm::quat(glm::vec3(rotation_)));
-//		//glm::mat4 srt = glm::translate(glm::mat4(1.0f), glm::vec3(translation_)) * rot *
-//		//	glm::scale(glm::mat4(1.0f), glm::vec3(scale_));
-//
-//		//glUniformMatrix4fv(glGetUniformLocation(s.GetHandle(), "SRT"),
-//		//	1, GL_FALSE, glm::value_ptr(srt));
-//
-//
-//		// render glyph texture over quad
-//		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-//		// update content of VBO memory
-//		glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
-//		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-//		glBindBuffer(GL_ARRAY_BUFFER, 0);
-//		// render quad
-//		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-//		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-//	}
-//	glBindVertexArray(0);
-//	glBindTexture(GL_TEXTURE_2D, 0);
-//	s.UnUse();
-//}
 
-void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera)
+void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
 {
-
 	scale *= 0.001f; // hack bc it too big
 
 	glEnable(GL_BLEND);
@@ -206,17 +53,14 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
 	for (const char& c : text) {
-		Character ch = Characters.at(c);  // Use .at() to ensure the character exists in the map
+		Character ch = mFontContainer.at(_guid).at(c);  // Use .at() to ensure the character exists in the map
 
 		float xpos = x + ch.Bearing.x * scale;
 		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
 
 		float w = ch.Size.x * scale;
-		float h = ch.Size.y * scale;
-
-		float maxsize = std::max(xpos, ypos) + std::max(w, h);
-		maxsize *= 2.f;
-
+		float h = ch.Size.y * scale * 2.f;
+		
 		// Generate OpenGL texture from the loaded texture data ->> can optimise so it doesnt get texture every frame
 		GLuint texture;
 		glGenTextures(1, &texture);
@@ -258,111 +102,201 @@ void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, f
 void TextSystem::Draw(BaseCamera& _camera)
 {
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
+
+	RenderText_WorldSpace(_camera);
+	//RenderText_ScreeninWorldSpace(_camera);
+	RenderText_ScreenSpace(_camera);
+
+}
+
+void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
+{
+	// Initializing Variables
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) {
-		RenderText(txtshader, text.text, text.x, text.y, text.scale, glm::vec3(text.r, text.g, text.b), _camera);
+	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
+	txtshader.Use();
+
+	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(OrthoProjection));
+
+	const Transform* canvasTransform{ nullptr };
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		if (currCanvas.state == DELETED) continue;
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		canvasTransform = &currentScene.Get<Transform>(entity);
+		continue;
 	}
-	
-	//RenderText(txtshader, "uwu owo @w@ ujtdfgxcg", 0.0f, 0.0f, 1.f, glm::vec3(0.5, 0.8f, 0.2f), _camera);
+
+	if (!canvasTransform)
+	{
+		return;
+	}
+
+	for (TextRenderer& text : currentScene.GetArray<TextRenderer>())
+	{
+		// Maybe need a worldspace checker?
+
+		if (text.guid == 0)
+			continue;
+		
+		Entity& entity = currentScene.Get<Entity>(text);
+		if (!currentScene.IsActive(entity)) continue;
+
+		Transform& transform = currentScene.Get<Transform>(entity);
+		
+		if (!transform.parent || _camera.GetCameraType() == CAMERATYPE::SCENE) continue;
+
+		glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
+
+		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix()));
+
+		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+			text.alpha);
+
+		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(txtVAO);
+
+		RenderTextFromString(text);
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	txtshader.UnUse();
+
 }
 
 
-// Function to generate font atlas and save to binary file
-void TextSystem::GenerateFontAtlas(const char* fontPath, const char* outputPath) {
-	// existing code to initialize FreeType, load font face, etc.
+void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
+{
+	// Initializing Variables
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	FT_Library ft;
-	if (FT_Init_FreeType(&ft))
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT_WORLD);
+	txtshader.Use();
+
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
+
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "view"),
+		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
+
+	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) 
 	{
-		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-	}
+		// Maybe need a worldspace checker?
 
-	FT_Face face;
-	if (FT_New_Face(ft, fontPath, 0, &face))
-	{
-		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-	}
-	else {
-		FT_Set_Pixel_Sizes(face, 0, 96);
-		if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-		{
-			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-		}
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+		if (text.guid == 0)
+			continue;
 
+		Entity& entity = currentScene.Get<Entity>(text);
+		if (!currentScene.IsActive(entity)) continue;
 
-		std::map<char, Character> tempCharacters;
+		Transform& transform = currentScene.Get<Transform>(entity);
 
-		for (unsigned char c = 0; c < 128; c++) {
-			// load character glyph, generate texture, and store in Characters map
-			
-			// load character glyph 
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-			{
-				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-				continue;
-			}
-			// generate texture
-			unsigned int texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
-				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
-				GL_RED,
-				GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer
-			);
-			// set texture options
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			// Store character with texture data in Characters map
-			std::vector<unsigned char> textureData(
-				face->glyph->bitmap.buffer,
-				face->glyph->bitmap.buffer + face->glyph->bitmap.width * face->glyph->bitmap.rows
-			);
+		if (_camera.GetCameraType() != CAMERATYPE::SCENE && transform.parent)
+			continue;
 
-			Character character = {
-				std::move(textureData),
-				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				(unsigned int)face->glyph->advance.x
-			};
+		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
+		
+		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+			text.alpha);
 
-			tempCharacters.insert(std::pair<char, Character>(c, character));
-		}
-		glBindTexture(GL_TEXTURE_2D, 0); //??
+		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
 
-		// Save Characters map to binary file
-		std::ofstream outFile(outputPath, std::ios::binary);
-		for (const auto& pair : tempCharacters) {
-			outFile.write(reinterpret_cast<const char*>(&pair.first), sizeof(char));
-			outFile.write(reinterpret_cast<const char*>(&pair.second.Size), sizeof(glm::ivec2));
-			outFile.write(reinterpret_cast<const char*>(&pair.second.Bearing), sizeof(glm::ivec2));
-			outFile.write(reinterpret_cast<const char*>(&pair.second.Advance), sizeof(unsigned int));
-			outFile.write(reinterpret_cast<const char*>(pair.second.TextureData.data()), pair.second.TextureData.size());
-		}
-		outFile.close();
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(txtVAO);
+
+		RenderTextFromString(text);
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
+
+
+	txtshader.UnUse();
+
 }
 
-// Function to load font atlas from binary file
-void TextSystem::LoadFontAtlas(const char* inputPath) {
-	//std::map<char, Character> Characters;
+void TextSystem::RenderTextFromString(TextRenderer const& text)
+{
+	// Clear previous data
+	allVertices.clear();
+	allTextures.clear();
 
-	std::ifstream inFile(inputPath, std::ios::binary);
+	float xoffset = text.x;
+	for (const char& c : text.text) {
+		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
+
+		float xpos = xoffset + ch.Bearing.x * (text.fontSize * 0.001f);
+		float ypos = text.y - (ch.Size.y - ch.Bearing.y) * (text.fontSize * 0.001f);
+
+		float w = ch.Size.x * (text.fontSize * 0.001f);
+		float h = ch.Size.y * (text.fontSize * 0.001f) * 2.f;
+
+		if (!ch.Texture)
+		{
+			glGenTextures(1, &ch.Texture);
+			glBindTexture(GL_TEXTURE_2D, ch.Texture);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+		}
+
+		// Update content of VBO memory with the new vertices
+		float vertices[4][4] = {
+			{ xpos,     ypos,       0.0f, 1.0f },
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+			{ xpos + w, ypos + h,   1.0f, 0.0f }
+		};
+
+		for (int i = 0; i < 4; ++i) {
+			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
+		}
+		allTextures.push_back(ch.Texture);
+
+		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+		xoffset += (ch.Advance >> 6) * (text.fontSize * 0.001f); // bitshift by 6 to get value in pixels (2^6 = 64)
+
+	}
+
+	// Update content of VBO memory with the new vertices and texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
+	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Use the new texture for rendering
+	for (size_t i = 0; i < allTextures.size(); ++i) {
+		glBindTexture(GL_TEXTURE_2D, allTextures[i]);
+		glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
+	}
+
+}
+
+
+// Function to load font atlas from binary file
+void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid) {
+	std::map<char, Character> Characters;
+	std::string path = inputPath.string();
+	std::replace(path.begin(), path.end(), '\\', '/');
+
+	std::ifstream inFile(path, std::ios::binary);
 	if (!inFile.is_open()) {
 		std::cerr << "Failed to open font atlas file" << std::endl;
 		return;
@@ -381,6 +315,13 @@ void TextSystem::LoadFontAtlas(const char* inputPath) {
 
 		Characters.insert(std::pair<char, Character>(c, character));
 	}
+	//Characters.insert(std::pair<std::string, std::map<char, Character>>(c, haracter));
+	mFontContainer.insert(std::make_pair(_guid, Characters));
 
 	inFile.close();
+}
+
+void TextSystem::CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent)
+{
+	AddFont(pEvent->asset.mFilePath, pEvent->asset.importer->guid);
 }

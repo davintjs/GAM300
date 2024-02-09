@@ -28,6 +28,7 @@ void MaterialSystem::Init()
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackMaterialAssetLoaded);
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackBindTexturesOnSceneLoad);
 	EVENTS.Subscribe(this, &MaterialSystem::CallbackSceneStop);
+	EVENTS.Subscribe(this, &MaterialSystem::CallbackSceneStart);
 
 	//NewMaterialInstance();
 
@@ -178,6 +179,14 @@ void MaterialSystem::deleteInstance(Engine::GUID<MaterialAsset>& matGUID)
 
 }
 
+void MaterialSystem::CallbackSceneStart(SceneStartEvent* pEvent)
+{
+	for (auto& pair : _allMaterialInstances)
+	{
+		_runtimeMaterialInstances.emplace(pair);
+	}
+}
+
 void MaterialSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 {
 	_runtimeMaterialInstances.clear();
@@ -223,20 +232,20 @@ Engine::GUID<MaterialAsset> MaterialSystem::InstantiateRuntimeMaterial(Material_
 Material_instance& MaterialSystem::getMaterialInstance(Engine::GUID<MaterialAsset> matGUID)
 {
 	static Material_instance defaultInstance;
+	auto iter = _runtimeMaterialInstances.find(matGUID);
 
-	auto iter = _allMaterialInstances.find(matGUID);
+	if (iter != _runtimeMaterialInstances.end())
+	{
+		return iter->second;
+	}
+
+	iter = _allMaterialInstances.find(matGUID);
 
 	if (iter != _allMaterialInstances.end())
 	{
 		return iter->second;
 	}
 
-	iter = _runtimeMaterialInstances.find(matGUID);
-
-	if (iter != _runtimeMaterialInstances.end())
-	{
-		return iter->second;
-	}
 
 	return defaultInstance;
 

@@ -131,6 +131,7 @@ public:
     // Exit the system
     void Exit();
 
+    void CallbackStopPreview(StopPreviewEvent* pEvent);
 private:
 };
 

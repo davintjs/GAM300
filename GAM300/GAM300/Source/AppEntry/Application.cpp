@@ -238,3 +238,8 @@ void Application::SetCursorMode(const bool& _shown)
     else
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
+
+void Application::TryExit()
+{
+    glfwSetWindowShouldClose(window, true);
+}
