@@ -54,6 +54,7 @@ public class Door : Script
         }
 
     }
+
     void OnTriggerEnter(PhysicsComponent rb)
     {
         //detect the player
@@ -62,6 +63,5 @@ public class Door : Script
             Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
 
         }
-
     }
 }
