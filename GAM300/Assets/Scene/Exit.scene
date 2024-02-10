@@ -34,7 +34,6 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 7.81407881
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -102,9 +101,9 @@ GameObject:
 ID: 10434548019950719823
 Transform:
   m_GameObject: {fileID: 9386478579826465449}
-  Translation: [-0.0382067561, 0, -0.492439002]
+  Translation: [-0.0454536155, 0, -0.492439002]
   Rotation: [0, 0, 0]
-  Scale: [0.602047026, 1, 0.999977291]
+  Scale: [0.968361914, 0.972704649, 0.999977291]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -192,9 +191,9 @@ GameObject:
 ID: 3837679008896948487
 Transform:
   m_GameObject: {fileID: 15290233428529554524}
-  Translation: [-0.00994747225, 0, 0]
+  Translation: [-0.818123639, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.621717036, 1.02806139, 1]
+  Scale: [1.00000048, 1.00000036, 0.999992192]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -204,9 +203,11 @@ TextRenderer:
   m_GameObject: {fileID: 15290233428529554524}
   m_IsEnabled: true
   Text: Are you sure you want to quit?
-  X-axis Position: -0.839999974
-  Y-axis Position: 0.189999998
-  Scale: 1.19000006
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 1
   Color R: 2.91000009
   Color G: 2.06999993
   Color B: 1.54999995
+  Opacity: 1
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
