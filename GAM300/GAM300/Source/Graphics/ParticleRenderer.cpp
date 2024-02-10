@@ -84,6 +84,11 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
+        if (particleComponent.numParticles_ == 0)
+            continue;
+        if (particleSRT.size() == 0)
+            continue;
+
         GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
         GLenum prim = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->prim; // for now particles are all cubes
         InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
@@ -100,6 +105,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         else {
             glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
         }
+
         glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
