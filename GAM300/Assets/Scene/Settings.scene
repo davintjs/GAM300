@@ -34,7 +34,6 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 1.45728099
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -65,11 +64,7 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 9386478579826465449}
-    - {fileID: 12690634969259096449}
-    - {fileID: 1497825775628923368}
-    - {fileID: 4580145406200005427}
     - {fileID: 13236326914152460117}
-    - {fileID: 15290233428529554524}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -123,103 +118,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
----
-ID: 12690634969259096449
-GameObject:
-  m_IsActive: true
-  m_Name: MasterVolumeText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7029561702410403906}  # Transform
-    - component: {fileID: 17923271576364070975}  # TextRenderer
----
-ID: 7029561702410403906
-Transform:
-  m_GameObject: {fileID: 12690634969259096449}
-  Translation: [-0.207906917, 0.11277201, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.126897767, 0.305675298, 0.999988973]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 17923271576364070975
-TextRenderer:
-  m_GameObject: {fileID: 12690634969259096449}
-  m_IsEnabled: true
-  Text: Master Volume
-  X-axis Position: -0.920000017
-  Y-axis Position: 0.319999993
-  Scale: 1
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
----
-ID: 1497825775628923368
-GameObject:
-  m_IsActive: true
-  m_Name: BgmText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15388810202921298389}  # Transform
-    - component: {fileID: 1594056506594008907}  # TextRenderer
----
-ID: 15388810202921298389
-Transform:
-  m_GameObject: {fileID: 1497825775628923368}
-  Translation: [-0.206111997, -0.0066492334, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.0825265124, 0.0650342181, 0.999982297]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 1594056506594008907
-TextRenderer:
-  m_GameObject: {fileID: 1497825775628923368}
-  m_IsEnabled: true
-  Text: BGM Volume
-  X-axis Position: -0.889999986
-  Y-axis Position: -0.0500000007
-  Scale: 1
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
----
-ID: 4580145406200005427
-GameObject:
-  m_IsActive: true
-  m_Name: SfxText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18409390317228816037}  # Transform
-    - component: {fileID: 9769306262495974476}  # TextRenderer
----
-ID: 18409390317228816037
-Transform:
-  m_GameObject: {fileID: 4580145406200005427}
-  Translation: [-0.204542458, -0.129541427, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.0846519098, 0.0588557497, 0.999965072]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 9769306262495974476
-TextRenderer:
-  m_GameObject: {fileID: 4580145406200005427}
-  m_IsEnabled: true
-  Text: SFX Volume
-  X-axis Position: -0.899999976
-  Y-axis Position: -0.430000007
-  Scale: 1
-  Color R: 1.87
-  Color G: 1.22000003
-  Color B: 1.22000003
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
 ID: 13236326914152460117
 GameObject:
@@ -250,38 +149,6 @@ SpriteRenderer:
   Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: ed56c386d40abda3ef9b4b7c8a3f126e}
----
-ID: 15290233428529554524
-GameObject:
-  m_IsActive: true
-  m_Name: SettingsTitle
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3837679008896948487}  # Transform
-    - component: {fileID: 1929880018281593265}  # TextRenderer
----
-ID: 3837679008896948487
-Transform:
-  m_GameObject: {fileID: 15290233428529554524}
-  Translation: [-0.00994747225, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.621717036, 1.02806139, 1]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 1929880018281593265
-TextRenderer:
-  m_GameObject: {fileID: 15290233428529554524}
-  m_IsEnabled: true
-  Text: Settings
-  X-axis Position: -0.939999998
-  Y-axis Position: 0.639999986
-  Scale: 2.61999989
-  Color R: 2.91000009
-  Color G: 2.06999993
-  Color B: 1.54999995
 ---
 ID: 6712040991204226818
 GameObject:
