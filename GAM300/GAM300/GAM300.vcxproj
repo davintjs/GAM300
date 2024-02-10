@@ -691,14 +691,13 @@ copy "$(SolutionDir)External\Mono\bin\Release\mono-2.0-sgen.dll" "$(TargetDir)mo
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)External\assimp;$(SolutionDir)External\FMOD;$(SolutionDir)External\freetype-2.12.1;$(SolutionDir)External\GLEW;$(SolutionDir)External\GLFW;$(SolutionDir)External\GLM;$(SolutionDir)External\GLFW\glfw-3.3.8.bin.WIN64\lib-vc2022;$(SolutionDir)External\Mono\lib\Release;$(SolutionDir)External\yaml-cpp-master\build;$(SolutionDir)External\JoltPhysics-master\lib\Release;$(SolutionDir)External\spdlog\lib\Release;$(SolutionDir)External\DirectXTex-main\DirectXTex\Bin\Desktop_2022_Win10\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\assimp\assimp-vc142-mt.lib;$(SolutionDir)External\FMOD\lib\x64\fmod_vc.lib;$(SolutionDir)External\freetype-2.12.1\objs\freetype.lib;$(SolutionDir)External\GLEW\include\glew32.lib;glfw3_mt.lib;opengl32.lib;$(SolutionDir)External\yaml-cpp-master\build\yaml-cpp.lib;$(SolutionDir)External\Meshoptimizer\Meshoptimizer\meshoptimizer.lib;Jolt.lib;spdlog.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;mono-2.0-sgen.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib /LTCG
-/ENTRY:mainCRTStartup</AdditionalOptions>
+      <AdditionalOptions>/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib /LTCG</AdditionalOptions>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>

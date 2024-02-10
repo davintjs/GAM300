@@ -37,16 +37,16 @@ public class Splashscreen : Script
                 if (digipenFade.finished || Input.GetMouseDown(0))
                 {
                     ++state;
-                    //gameLogoFade.Start();
                     digipenFade.gameObject.SetActive(false);
                     gameLogoFade.StartFadeInAndOut();
+                    Console.WriteLine("YES1");
                 }
                 break;
             case 1:
                 if (gameLogoFade.finished || Input.GetMouseDown(0))
                 {
+                    Console.WriteLine("YES2");
                     ++state;
-                    
                     SceneManager.LoadScene("MainMenu", true);
                 }
                 break;

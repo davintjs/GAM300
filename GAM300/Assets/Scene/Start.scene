@@ -76,11 +76,11 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: a7a6c9a29959cc48fba7bb72383f1f64}
-  gameLogoFade: {fileID: 9208090720111084582}  # Component
+  gameLogoFade: {fileID: 12304487287803117599}  # Component
   digipenLogo: {fileID: 16418068684118110211}  # Component
   gameLogo: {fileID: 855182628053331437}  # Component
   digipenFade: {fileID: 6403663983442491192}  # Component
-  gameLogoTransform: {fileID: 9208090720111084582}  # Component
+  gameLogoTransform: {fileID: 12304487287803117599}  # Component
 ---
 ID: 12690634969259096449
 GameObject:
@@ -124,19 +124,18 @@ Script:
   outDuration: 1
   targetVal: 1
   waitDelay: 0
-  looping: true
+  looping: false
   fader: {fileID: 12690634969259096449}  # GameObject
 ---
 ID: 1497825775628923368
 GameObject:
-  m_IsActive: false
+  m_IsActive: true
   m_Name: GameLogo
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15388810202921298389}  # Transform
     - component: {fileID: 855182628053331437}  # SpriteRenderer
-    - component: {fileID: 9208090720111084582}  # Script
     - component: {fileID: 12304487287803117599}  # Script
 ---
 ID: 15388810202921298389
@@ -156,19 +155,8 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
+  Alpha Scalar: 0
   SpriteTexture: {guid: 951aa8d2c1666788ebb81984b77754a5}
----
-ID: 9208090720111084582
-Script:
-  m_GameObject: {fileID: 1497825775628923368}
-  m_IsEnabled: true
-  Script: {guid: 62c453561e7630ccbdd8cafc3f8ee0af}
-  translationEffect: [0, 0, 0]
-  duration: 2
-  rotateEffect: [0, 0, 0]
-  scaleEffect: [0.280000001, 0.5, 0]
-  finished: false
 ---
 ID: 12304487287803117599
 Script:
@@ -181,7 +169,7 @@ Script:
   outDuration: 2
   targetVal: 1
   waitDelay: 0
-  looping: true
+  looping: false
   fader: {fileID: 1497825775628923368}  # GameObject
 ---
 ID: 4592072074559840146
