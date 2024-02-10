@@ -1,0 +1,7 @@
+guid: 40a29912f1af373a382d94fdaf04155a
+meshes:
+  data: {guid: 2824e7436f665ac4e829b6766a1578ff}
+animations:
+  data: {guid: 8195958d51435807d51070b601315d5d}
+animationStates:
+  Idle: [2, 57]

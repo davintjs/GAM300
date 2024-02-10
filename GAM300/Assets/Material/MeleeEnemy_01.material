@@ -1,14 +1,15 @@
 Material:
   Material Name: MeleeEnemy_01
   Shader: 0
-  Albedo: [1, 1, 1, 1]
+  Albedo: [1, 0.999899983, 0.999899983, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
+  Is Emission: false
   Emission: 1
-  AlbedoTexture: {guid: d51bb512379795a97a1d09316aefba85}
+  AlbedoTexture: {guid: 46b1ab0f5a9f6e951fe6fd603f2d3f9a}
   NormalMap: {guid: 00000000000000000000000000000000}
-  MetallicTexture: {guid: b06929fe3552b349e44a0e02012e007a}
-  RoughnessTexture: {guid: dc24a3aac024a9c9597f1e36953bc4b7}
-  AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 91b0b456122e2f2c79659388bc919450}
+  MetallicTexture: {guid: c8e77eea4863e8ff85e3ebda98548226}
+  RoughnessTexture: {guid: 2d469a44415adee56b57e019d308acfe}
+  AoTexture: {guid: cb9d7207677204df37d7e75bfcdbba9f}
+  EmissionTexture: {guid: 4a8d43d44d358d51b50320abe3e84a3b}

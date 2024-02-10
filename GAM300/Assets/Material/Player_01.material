@@ -7,7 +7,7 @@ Material:
   AmbientOcclusion: 1
   Is Emission: false
   Emission: 1
-  AlbedoTexture: {guid: 10819e920e1faadb2a5116e600cbabcd}
+  AlbedoTexture: {guid: ed3bd1e1b374f6e762df0e04f180a713}
   NormalMap: {guid: 5de267e850c4395aa871fe12bc6f289a}
   MetallicTexture: {guid: ea664b9c2dbe7dac843982884b9c7d73}
   RoughnessTexture: {guid: 010d260b89c858091e0120ca511080a3}

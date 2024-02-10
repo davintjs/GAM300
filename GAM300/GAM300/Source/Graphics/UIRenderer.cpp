@@ -44,7 +44,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
-	
+
 	const Transform* canvasTransform{ nullptr };
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
@@ -55,12 +55,12 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		continue;
 	}
 
-	if(!canvasTransform)
+	if (!canvasTransform)
 	{
 		return;
 	}
 
-	glm::mat4 canvasMatrix = glm::inverse( canvasTransform->GetWorldMatrix());
+	glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
 
 	//canvasMatrix = glm::inverse()
 
@@ -85,7 +85,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(
-				canvasMatrix * transform.GetWorldMatrix() )
+				canvasMatrix * transform.GetWorldMatrix())
 		);
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
 			Sprite.AlphaMultiplier);
