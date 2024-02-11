@@ -1,5 +1,0 @@
-[2024-02-11 00:03:47.636] [Error] [critical] 
-Caused By:	mClassField
-Info:		FIELD  audioSource COULD NOT BE FOUND IN SCRIPT 
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 715)
-

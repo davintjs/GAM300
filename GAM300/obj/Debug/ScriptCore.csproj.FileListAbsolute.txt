@@ -1,2 +1,0 @@
-C:\Users\Azam\Desktop\tempdesktop\Digipen\3rd Year - 1st Trimester\GAM300\GAM300\obj\Debug\ScriptCore.csproj.AssemblyReference.cache
-C:\Users\Azam\Desktop\tempdesktop\Digipen\3rd Year - 1st Trimester\GAM300\GAM300\obj\Debug\ScriptCore.csproj.CoreCompileInputs.cache
