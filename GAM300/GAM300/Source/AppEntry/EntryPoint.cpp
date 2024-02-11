@@ -42,7 +42,7 @@ int main(int, char**) {
 	app->Init();
 	MyEngineCore.Init();
 	MyFrameRateController.Init(1/60.f);
-	app->Fullscreen(true, 1920, 1080);
+	//app->Fullscreen(true, 1920, 1080);
 
 	float dt = 0;
 	while (!glfwWindowShouldClose(Application::GetWindow()))
