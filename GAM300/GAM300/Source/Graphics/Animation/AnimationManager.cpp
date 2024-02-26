@@ -41,13 +41,16 @@ void Animation_Manager::Update(float dt)
             //PRINT("Animator ID: ", animator.UUID(), "\n");
             animator.prevAnimID = animator.animID;
             animator.m_CurrentTime = 0.f;
-            if (animator.animID == 0)
+            if (animator.animID == 0) // Replaced to empty
                 animator.m_AnimationIdx = -1;
             else
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
             animator.SetDefaultState("Idle");
             animator.ChangeState();
+
+            Transform& t = currentScene.Get<Transform>(animator);
+            animator.CreateRig(&t);
         }
 
         /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
