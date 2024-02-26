@@ -78,8 +78,6 @@ public class ThirdPersonController : Script
     public int checkpointIndex = -1;
     public bool isAtCheckpoint = false;
     public Transform spawnPoint;
-    public Transform terminal1;
-    public Transform terminal2;
 
     //public MeshRenderer doorTestMesh;
 
@@ -314,16 +312,6 @@ public class ThirdPersonController : Script
         if(spawnPoint == null)
         {
             Console.WriteLine("Missing SpawnPoint reference in ThirdPersonController script");
-            return;
-        }
-        if(terminal1 == null)
-        {
-            Console.WriteLine("Missing terminal1 reference in ThirdPersonController script");
-            return;
-        }
-        if(terminal2 == null)
-        {
-            Console.WriteLine("Missing terminal2 reference in ThirdPersonController script");
             return;
         }
         if(healthBarFill == null)

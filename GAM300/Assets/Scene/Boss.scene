@@ -1,0 +1,3244 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: Boss
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 5342434905140024301
+GameObject:
+  m_IsActive: true
+  m_Name: DialogueManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7239797430794508520}  # Transform
+    - component: {fileID: 14502904174403692166}  # Script
+---
+ID: 7239797430794508520
+Transform:
+  m_GameObject: {fileID: 5342434905140024301}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14502904174403692166
+Script:
+  m_GameObject: {fileID: 5342434905140024301}
+  m_IsEnabled: true
+  Script: {guid: 0470ed2b8def9ecbe83ea13ee17af641}
+  playerName: {fileID: 15243324590400962737}  # GameObject
+  dialogue2: {fileID: 11733672071644877139}  # GameObject
+  dialogue3: {fileID: 7012372586903751207}  # GameObject
+  dialogue4: {fileID: 1397792527501854904}  # GameObject
+  dialogueWarning: {fileID: 0}
+  dialogue5: {fileID: 6586543693501608855}  # GameObject
+  dialogueDefence: {fileID: 0}
+  ai: {fileID: 7835293411479101006}  # GameObject
+  dialogueBg: {fileID: 6826500622308863951}  # GameObject
+---
+ID: 9202772318638598359
+GameObject:
+  m_IsActive: true
+  m_Name: CombatManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5931254185596814660}  # Transform
+    - component: {fileID: 12164376346583283218}  # Script
+---
+ID: 5931254185596814660
+Transform:
+  m_GameObject: {fileID: 9202772318638598359}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12164376346583283218
+Script:
+  m_GameObject: {fileID: 9202772318638598359}
+  m_IsEnabled: true
+  Script: {guid: 240ef1325945ba7654a2ccd34ac0a17b}
+  damagedShakeMag: 0.0500000007
+  damagedShakeDur: 0.300000012
+  hitEffectDuration: 1
+  hitShakeMag: 0.100000001
+  hitShakeDur: 0.100000001
+  hitEffect: {fileID: 17611351097031071778}  # GameObject
+---
+ID: 11768379503594195228
+GameObject:
+  m_IsActive: true
+  m_Name: GameManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11982424069542032470}  # Transform
+    - component: {fileID: 688516125537709214}  # AudioSource
+    - component: {fileID: 16513437755539554979}  # Script
+---
+ID: 11982424069542032470
+Transform:
+  m_GameObject: {fileID: 11768379503594195228}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 688516125537709214
+AudioSource:
+  m_GameObject: {fileID: 11768379503594195228}
+  m_IsEnabled: true
+  AudioChannel: 0
+  Loop: true
+  Volume: 0.699999988
+  Fade In Time (s): 10
+  Fade Out Time (s): 5
+  Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
+  Play: false
+---
+ID: 16513437755539554979
+Script:
+  m_GameObject: {fileID: 11768379503594195228}
+  m_IsEnabled: true
+  Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
+  fadeTime: 1
+  paused: false
+  BGM_Source: {fileID: 688516125537709214}  # Component
+---
+ID: 14088906961581824457
+GameObject:
+  m_IsActive: true
+  m_Name: AudioManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15434041396282750435}  # Transform
+    - component: {fileID: 12555400289260702052}  # Script
+---
+ID: 15434041396282750435
+Transform:
+  m_GameObject: {fileID: 14088906961581824457}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 8065358626952296561}
+    - {fileID: 8873786281471961566}
+    - {fileID: 8393117941418361269}
+    - {fileID: 263938901046208410}
+    - {fileID: 497501804413490616}
+    - {fileID: 183898391583128112}
+    - {fileID: 1704405459447429049}
+    - {fileID: 7505235272623281090}
+    - {fileID: 11931709940185671807}
+    - {fileID: 2723553382536766900}
+    - {fileID: 10419665452268142691}
+    - {fileID: 8195998143091088379}
+    - {fileID: 5382915443314468010}
+    - {fileID: 8310365372469502612}
+    - {fileID: 4679045281971681028}
+    - {fileID: 5713504039664526619}
+    - {fileID: 1444839062839968456}
+    - {fileID: 3873369559540028830}
+    - {fileID: 16052600457545288926}
+    - {fileID: 13027737300980970512}
+    - {fileID: 17811278805382620369}
+    - {fileID: 18125044553674274218}
+    - {fileID: 12153697188064801473}
+    - {fileID: 7888217747071975113}
+    - {fileID: 7702311490355860096}
+    - {fileID: 3801088290079164654}
+    - {fileID: 15187318079590443157}
+    - {fileID: 7345429221838225698}
+    - {fileID: 2597072424818364743}
+    - {fileID: 6687611820943646563}
+---
+ID: 12555400289260702052
+Script:
+  m_GameObject: {fileID: 14088906961581824457}
+  m_IsEnabled: true
+  Script: {guid: b01c0159e88a0504f824d8bcb6303ee8}
+  jumpVoice2: {fileID: 17384956244929632316}  # Component
+  itemCollected: {fileID: 3483838879810750950}  # Component
+  jumpVoice: {fileID: 2598491438105149260}  # Component
+  playerSlashAttack: {fileID: 8829355492810947455}  # Component
+  meleeEnemyDie: {fileID: 14157919317546456730}  # Component
+  playerInjured: {fileID: 3760519619074301342}  # Component
+  rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
+  jumpVoice3: {fileID: 1298934831599437468}  # Component
+  spark: {fileID: 1060299922073029148}  # Component
+  playerAttack: {fileID: 3436078548414859258}  # Component
+  rangeEnemyDead: {fileID: 2502308778807293875}  # Component
+  doorOpen: {fileID: 14332204263861564631}  # Component
+  elevator: {fileID: 2406511765798993316}  # Component
+  thumpCollision1: {fileID: 12152755750733174901}  # Component
+  overdriveVFXSound: {fileID: 814352591872434956}  # Component
+  playerFootstep: {fileID: 6518591935153270902}  # Component
+  enemyHit: {fileID: 14492758170611173101}  # Component
+  keyCollected: {fileID: 12067369461903983448}  # Component
+  uiSound: {fileID: 12043367231734905459}  # Component
+  useItem: {fileID: 8508182677235274511}  # Component
+  meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
+  meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  dodgeRoll1: {fileID: 1086886035799123363}  # Component
+  playerOverdrive: {fileID: 4330194544441596099}  # Component
+  thumpCollision2: {fileID: 10580402611710297282}  # Component
+  dodgeRoll2: {fileID: 11490585744734373202}  # Component
+  dashAttack: {fileID: 3292439134972329249}  # Component
+  enemyAlerted1: {fileID: 12262929383047051249}  # Component
+  enemyAlerted2: {fileID: 6670779144662544128}  # Component
+  enemyAlerted3: {fileID: 998502570275308366}  # Component
+---
+ID: 4212138099454399691
+GameObject:
+  m_IsActive: true
+  m_Name: Canvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 178297584539063747}  # Transform
+    - component: {fileID: 13547543225942679706}  # Canvas
+---
+ID: 178297584539063747
+Transform:
+  m_GameObject: {fileID: 4212138099454399691}
+  Translation: [0, 138.102646, 0]
+  Rotation: [0, 0, 0]
+  Scale: [160, 90, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 2866402867161245437}
+    - {fileID: 3525555548824268013}
+    - {fileID: 6826500622308863951}
+    - {fileID: 3827453200974574750}
+    - {fileID: 12660956963810181687}
+    - {fileID: 8603716528774636938}
+    - {fileID: 17837455119039999797}
+    - {fileID: 17344769666620842143}
+    - {fileID: 12115195871797465227}
+    - {fileID: 4720521423488205772}
+    - {fileID: 1953613848853671180}
+    - {fileID: 3925618525247661714}
+    - {fileID: 11966624967280915999}
+    - {fileID: 10673191397735378312}
+    - {fileID: 9691624766500435789}
+    - {fileID: 13993313988089347944}
+    - {fileID: 1370432261870288088}
+    - {fileID: 12478379518054110186}
+    - {fileID: 15115753960540565494}
+    - {fileID: 17033157074617951400}
+    - {fileID: 17866851235588629267}
+    - {fileID: 14731098160436409708}
+    - {fileID: 17638106604129844536}
+---
+ID: 13547543225942679706
+Canvas:
+  m_GameObject: {fileID: 4212138099454399691}
+  m_IsEnabled: true
+---
+ID: 2866402867161245437
+GameObject:
+  m_IsActive: true
+  m_Name: HealthStaminaCanvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15285288528075692707}  # Transform
+    - component: {fileID: 8812244467539034998}  # SpriteRenderer
+---
+ID: 15285288528075692707
+Transform:
+  m_GameObject: {fileID: 2866402867161245437}
+  Translation: [-0.699999988, 0.857109547, 1.93912086e-08]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.287, -0.100000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 8812244467539034998
+SpriteRenderer:
+  m_GameObject: {fileID: 2866402867161245437}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
+---
+ID: 16176702755422307341
+GameObject:
+  m_IsActive: true
+  m_Name: AttackFlash
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16204800754304224962}  # Transform
+    - component: {fileID: 8693032171322657670}  # LightSource
+---
+ID: 16204800754304224962
+Transform:
+  m_GameObject: {fileID: 16176702755422307341}
+  Translation: [70.8189392, 29.7941284, -76.7908173]
+  Rotation: [3.14159203, -1.33832181, 3.14159203]
+  Scale: [0.999981761, 1.00000012, 0.99998194]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 8693032171322657670
+LightSource:
+  m_GameObject: {fileID: 16176702755422307341}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 1000
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [0.5, 0.5, 1]
+---
+ID: 17150978404869133335
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerWeaponCollider1
+  m_TagString: PlayerAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 127352606862801721}  # Transform
+    - component: {fileID: 1643463474539382495}  # BoxCollider
+    - component: {fileID: 8887050174963517391}  # Rigidbody
+---
+ID: 127352606862801721
+Transform:
+  m_GameObject: {fileID: 17150978404869133335}
+  Translation: [68.6550217, 32.6116066, -77.1053467]
+  Rotation: [3.14159083, -1.33832085, 3.14159083]
+  Scale: [0.999996662, 1, 0.999998271]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 14790332214141994081}
+---
+ID: 1643463474539382495
+BoxCollider:
+  m_GameObject: {fileID: 17150978404869133335}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 8887050174963517391
+Rigidbody:
+  m_GameObject: {fileID: 17150978404869133335}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 6663313825132233637
+GameObject:
+  m_IsActive: true
+  m_Name: Camera Target
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12260939983537743611}  # Transform
+---
+ID: 12260939983537743611
+Transform:
+  m_GameObject: {fileID: 6663313825132233637}
+  Translation: [-0.100004196, 0.799999952, 0]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3977294589520766028}
+  m_Children:
+    []
+---
+ID: 9126212843899289109
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerWeaponCollider2
+  m_TagString: PlayerAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12043303004412789833}  # Transform
+    - component: {fileID: 12761635425976796727}  # BoxCollider
+    - component: {fileID: 10785757113571870180}  # Rigidbody
+---
+ID: 12043303004412789833
+Transform:
+  m_GameObject: {fileID: 9126212843899289109}
+  Translation: [67.0619507, 31.4752522, -77.1053467]
+  Rotation: [0, 0, 0]
+  Scale: [0.999999523, 1, 0.999999523]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 7328944263752446106}
+---
+ID: 12761635425976796727
+BoxCollider:
+  m_GameObject: {fileID: 9126212843899289109}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 10785757113571870180
+Rigidbody:
+  m_GameObject: {fileID: 9126212843899289109}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 7640003431994965172
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerWeaponCollider3
+  m_TagString: PlayerAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13578791677455827938}  # Transform
+    - component: {fileID: 2657870414629103368}  # BoxCollider
+    - component: {fileID: 16248115100177674810}  # Rigidbody
+---
+ID: 13578791677455827938
+Transform:
+  m_GameObject: {fileID: 7640003431994965172}
+  Translation: [68.6550217, 30.4899502, -77.1053467]
+  Rotation: [3.14159203, -1.33832181, 3.14159203]
+  Scale: [0.999996006, 1, 0.999996424]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 10893071549809871378}
+---
+ID: 2657870414629103368
+BoxCollider:
+  m_GameObject: {fileID: 7640003431994965172}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 16248115100177674810
+Rigidbody:
+  m_GameObject: {fileID: 7640003431994965172}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 1098662833275935246
+GameObject:
+  m_IsActive: true
+  m_Name: Void
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16405143203390184246}  # Transform
+    - component: {fileID: 2112202879884307600}  # MeshRenderer
+    - component: {fileID: 18121006448172505932}  # BoxCollider
+    - component: {fileID: 16366078056267294191}  # Rigidbody
+    - component: {fileID: 2684625323833621391}  # Script
+---
+ID: 16405143203390184246
+Transform:
+  m_GameObject: {fileID: 1098662833275935246}
+  Translation: [0, -15.2808886, 0]
+  Rotation: [0, 0, 0]
+  Scale: [400, 1, 400]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2112202879884307600
+MeshRenderer:
+  m_GameObject: {fileID: 1098662833275935246}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 18121006448172505932
+BoxCollider:
+  m_GameObject: {fileID: 1098662833275935246}
+  m_IsEnabled: true
+  Dimensions: [1, 2, 1]
+  Offset: [0, 0, 0]
+---
+ID: 16366078056267294191
+Rigidbody:
+  m_GameObject: {fileID: 1098662833275935246}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2684625323833621391
+Script:
+  m_GameObject: {fileID: 1098662833275935246}
+  m_IsEnabled: true
+  Script: {guid: e205f8534a708c1f3f0aca3705badae5}
+  hit: false
+  player: {fileID: 13523510586901288919}  # Component
+---
+ID: 4490157770252088129
+GameObject:
+  m_IsActive: true
+  m_Name: staminaBarFill
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1190925597282428397}  # Transform
+    - component: {fileID: 13794654781201628733}  # SpriteRenderer
+---
+ID: 1190925597282428397
+Transform:
+  m_GameObject: {fileID: 4490157770252088129}
+  Translation: [0.117640615, 0, 1]
+  Rotation: [3.14156556, 0, 0]
+  Scale: [0.138668314, 0.0249990169, 0.999955654]
+  Father: {fileID: 1155348055569638397}
+  m_Children:
+    []
+---
+ID: 13794654781201628733
+SpriteRenderer:
+  m_GameObject: {fileID: 4490157770252088129}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: b531347e23ddc645f011247c1cf2d80b}
+---
+ID: 3525555548824268013
+GameObject:
+  m_IsActive: true
+  m_Name: HealthBarBackground
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11755855291565287921}  # Transform
+    - component: {fileID: 3080129883531070451}  # SpriteRenderer
+---
+ID: 11755855291565287921
+Transform:
+  m_GameObject: {fileID: 3525555548824268013}
+  Translation: [-0.650000036, 0.857109547, 1.81727982]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.200000003, -0.0350000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 3080129883531070451
+SpriteRenderer:
+  m_GameObject: {fileID: 3525555548824268013}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: b9dcab9e8bd76d6ce1bfa6bad0e324d8}
+---
+ID: 8065358626952296561
+GameObject:
+  m_IsActive: true
+  m_Name: playerSlashAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2429932456632985597}  # Transform
+    - component: {fileID: 8829355492810947455}  # AudioSource
+---
+ID: 2429932456632985597
+Transform:
+  m_GameObject: {fileID: 8065358626952296561}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 8829355492810947455
+AudioSource:
+  m_GameObject: {fileID: 8065358626952296561}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4bdfa959f8e2dc7ae0d617c8e6620ad8}
+  Play: false
+---
+ID: 8873786281471961566
+GameObject:
+  m_IsActive: true
+  m_Name: spark
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14556033001105864622}  # Transform
+    - component: {fileID: 1060299922073029148}  # AudioSource
+---
+ID: 14556033001105864622
+Transform:
+  m_GameObject: {fileID: 8873786281471961566}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 1060299922073029148
+AudioSource:
+  m_GameObject: {fileID: 8873786281471961566}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 5e16beacb1259528db74e50fb01bad43}
+  Play: false
+---
+ID: 8393117941418361269
+GameObject:
+  m_IsActive: true
+  m_Name: jumpVoice
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11061822046921806353}  # Transform
+    - component: {fileID: 2598491438105149260}  # AudioSource
+---
+ID: 11061822046921806353
+Transform:
+  m_GameObject: {fileID: 8393117941418361269}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 2598491438105149260
+AudioSource:
+  m_GameObject: {fileID: 8393117941418361269}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ce3fdcccf31b5a51da0972687da66904}
+  Play: false
+---
+ID: 6669890113452856865
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveCollider
+  m_TagString: PlayerAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6927322750178525837}  # Transform
+    - component: {fileID: 7256963670896431468}  # BoxCollider
+    - component: {fileID: 10611958364909359659}  # Rigidbody
+---
+ID: 6927322750178525837
+Transform:
+  m_GameObject: {fileID: 6669890113452856865}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.999999285, 1, 0.999999285]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 7256963670896431468
+BoxCollider:
+  m_GameObject: {fileID: 6669890113452856865}
+  m_IsEnabled: true
+  Dimensions: [5, 5, 5]
+  Offset: [0, 0, 0]
+---
+ID: 10611958364909359659
+Rigidbody:
+  m_GameObject: {fileID: 6669890113452856865}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 15334681090738628473
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 813583600382484493}  # Transform
+    - component: {fileID: 16773315215798417911}  # Camera
+    - component: {fileID: 5416340461028794432}  # BoxCollider
+    - component: {fileID: 1139370946230178394}  # Rigidbody
+    - component: {fileID: 12100504774977972383}  # Script
+---
+ID: 813583600382484493
+Transform:
+  m_GameObject: {fileID: 15334681090738628473}
+  Translation: [66.5078735, 38.3068237, -34.3390808]
+  Rotation: [-3.01991605e-07, 1.74845567e-07, 3.0199152e-07]
+  Scale: [0.999998093, 1, 0.999998093]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 16773315215798417911
+Camera:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 50
+---
+ID: 5416340461028794432
+BoxCollider:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  Dimensions: [0.5, 0.5, 0.5]
+  Offset: [0, 0, 0]
+---
+ID: 1139370946230178394
+Rigidbody:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 12100504774977972383
+Script:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  Script: {guid: f204530c811d06247b59f2ef14dd1085}
+  maxPitchAngle: 170
+  yawRotSpeed: 2
+  defaultZoom: 4
+  invertPitch: true
+  pitchRotSpeed: 1
+  minPitchAngle: -85
+  zoom: 5.00000143
+  pitchAngle: 0
+  zoomSpeed: 50
+  zoomInSpeed: 3
+  closestZoom: 0.5
+  furthestZoom: 6
+  isZooming: false
+  timer: 0
+  cutscene: false
+  target: {fileID: 6663313825132233637}  # GameObject
+---
+ID: 3977294589520766028
+GameObject:
+  m_IsActive: true
+  m_Name: Player
+  m_TagString: Player
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18246905878658813158}  # Transform
+    - component: {fileID: 15939117778428800744}  # CharacterController
+    - component: {fileID: 16716648517964172389}  # AudioSource
+    - component: {fileID: 13523510586901288919}  # Script
+    - component: {fileID: 14362096387145765665}  # Script
+---
+ID: 18246905878658813158
+Transform:
+  m_GameObject: {fileID: 3977294589520766028}
+  Translation: [66.307869, 37.3068237, -39.339077]
+  Rotation: [-3.14159203, 0, -3.14159203]
+  Scale: [0.999999285, 1, 0.999999285]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 6663313825132233637}
+    - {fileID: 3187203319805926689}
+---
+ID: 15939117778428800744
+CharacterController:
+  m_GameObject: {fileID: 3977294589520766028}
+  m_IsEnabled: true
+  Velocity: [-0.0051422324, -5.09682953e-13, 1.73219764]
+  Force: [0, 0, 0]
+  Friction: 1
+  Mass: 1
+  GravityFactor: 1.89999998
+  SlopeLimit: 45
+  IsGrounded: true
+  Radius: 0.5
+  Height: 1
+---
+ID: 16716648517964172389
+AudioSource:
+  m_GameObject: {fileID: 3977294589520766028}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 000000000000000000000000000001f4}
+  Play: false
+---
+ID: 13523510586901288919
+Script:
+  m_GameObject: {fileID: 3977294589520766028}
+  m_IsEnabled: true
+  Script: {guid: 47f8df58609a73e48a47639b5258e80a}
+  currentDashAttackTimer: 0
+  attackMoveSpeed: 160
+  currentDashAttackCooldown: 0
+  MoveSpeed: 400
+  overDriveCooldown: 6
+  dashAttackSpeed: 10
+  JumpSpeed: 7
+  dashAttackCooldown: 0.899999976
+  sprintModifier: 1.29999995
+  maxHealth: 10
+  dodgeSpeed: 10
+  Gravity: 9.81000042
+  runStepsInterval: 0.300000012
+  dashAttackTimer: 0.899999976
+  walkStepsInterval: 0.439999998
+  overDriveStamina: 40
+  sprintStamina: 0.25
+  startDashCooldown: false
+  currentOverdriveCooldown: 0
+  dodgeTimer: 0.5
+  startDeathAnimationCountdown: false
+  _isAttacking: false
+  currentDodgeTimer: 0
+  cutscene: false
+  currentOverdriveTimer: 0
+  dodgeCooldown: 0.5
+  _isOverdrive: false
+  currentDodgeCooldown: 0
+  currentStamina: 0
+  isDodging: false
+  startDodgeCooldown: false
+  currentInvulnerableTimer: 1
+  _isDashAttacking: false
+  overdriveTimer: 2
+  isInvulnerable: false
+  startOverdriveCooldown: false
+  maxStamina: 100
+  RotationSpeed: 5
+  checkpointIndex: -1
+  attack3duration: 0.699999988
+  isAtCheckpoint: false
+  attackTimer: 1
+  currentHealth: 4
+  invulnerableTimer: 0.699999988
+  isDead: false
+  colliderDist: 0
+  maxColliderDist: 1.5
+  timeBeforeRegen: 1
+  regenRate: 60
+  dashAttackStamina: 15
+  jumpStamina: 0
+  attackStamina: 0
+  attack2duration: 0.600000024
+  dodgeStamina: 10
+  currentAnimationTimer: 0
+  attack1duration: 0.5
+  animCancelPercentage: 0.600000024
+  playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
+  CC: {fileID: 15939117778428800744}  # Component
+  attackLight: {fileID: 16176702755422307341}  # GameObject
+  staminaBar: {fileID: 1155348055569638397}  # Component
+  PlayerCamera: {fileID: 15334681090738628473}  # Component
+  overDriveCollider: {fileID: 6669890113452856865}  # GameObject
+  PlayerModel: {fileID: 3187203319805926689}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
+  playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
+  audioSource: {fileID: 16716648517964172389}  # Component
+  spawnPoint: {fileID: 0}
+  terminal1: {fileID: 0}
+  terminal2: {fileID: 0}
+  healthBarFill: {fileID: 18315212324025487925}  # GameObject
+  healthBar: {fileID: 4056269345217226233}  # Component
+  healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  staminaBarFill: {fileID: 4490157770252088129}  # GameObject
+  overDriveVFX: {fileID: 1342498447182496088}  # GameObject
+  staminaBarPos: {fileID: 1155348055569638397}  # Component
+  animator: {fileID: 9953969093344891570}  # Component
+---
+ID: 14362096387145765665
+Script:
+  m_GameObject: {fileID: 3977294589520766028}
+  m_IsEnabled: true
+  Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
+  healthPackCount: 0
+  staminaPackCount: 0
+  healthPackHealValue: 5
+  maxStatPackCount: 0
+  staminaPackValue: 50
+  thirdPersonController: {fileID: 0}
+---
+ID: 17611351097031071778
+GameObject:
+  m_IsActive: true
+  m_Name: ParticleEmitter
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1697064786422148714}  # Transform
+    - component: {fileID: 14811258098067119871}  # ParticleComponent
+---
+ID: 1697064786422148714
+Transform:
+  m_GameObject: {fileID: 17611351097031071778}
+  Translation: [-13.1134081, -0.263694435, 15.7915907]
+  Rotation: [0, 0, 0]
+  Scale: [0.0318250023, 0.0318250023, 0.0318250023]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14811258098067119871
+ParticleComponent:
+  m_GameObject: {fileID: 17611351097031071778}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Local Space: false
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 16
+  Particle Lifetime: 0.300000012
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.0299999993
+  Particle Max Scale: 0.0599999987
+  Particle Scale Rate: 0.699999988
+  Particle Speed: 4
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Trailing: false
+  Trail Size: 0
+  Looping: false
+---
+ID: 14790332214141994081
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(626)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8769483136706904913}  # Transform
+---
+ID: 8769483136706904913
+Transform:
+  m_GameObject: {fileID: 14790332214141994081}
+  Translation: [0.0103302002, 0.346759796, -0.406848907]
+  Rotation: [1.97282481, -1.38594162, -1.16821289]
+  Scale: [0.489806265, 0.384890139, 0.562217832]
+  Father: {fileID: 17150978404869133335}
+  m_Children:
+    - {fileID: 13205461523405376336}
+    - {fileID: 17254093529953705875}
+    - {fileID: 16415768293130856210}
+---
+ID: 13205461523405376336
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(627)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14910230518305205473}  # Transform
+    - component: {fileID: 17792669546097506250}  # MeshRenderer
+---
+ID: 14910230518305205473
+Transform:
+  m_GameObject: {fileID: 13205461523405376336}
+  Translation: [0, 0, -3.81469727e-05]
+  Rotation: [0, -0.0620817803, 0]
+  Scale: [0.247995794, 1.00000024, 0.999998987]
+  Father: {fileID: 14790332214141994081}
+  m_Children:
+    []
+---
+ID: 17792669546097506250
+MeshRenderer:
+  m_GameObject: {fileID: 13205461523405376336}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 17254093529953705875
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(628)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2039695554397620448}  # Transform
+    - component: {fileID: 15432414888215761212}  # MeshRenderer
+---
+ID: 2039695554397620448
+Transform:
+  m_GameObject: {fileID: 17254093529953705875}
+  Translation: [0.19670105, 0.00048828125, -0.809036255]
+  Rotation: [0, 0.541232646, 3.14159203]
+  Scale: [0.199994296, 0.999967694, 0.999997199]
+  Father: {fileID: 14790332214141994081}
+  m_Children:
+    []
+---
+ID: 15432414888215761212
+MeshRenderer:
+  m_GameObject: {fileID: 17254093529953705875}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 16415768293130856210
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(629)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3980394692026844433}  # Transform
+    - component: {fileID: 11595556845754652271}  # MeshRenderer
+---
+ID: 3980394692026844433
+Transform:
+  m_GameObject: {fileID: 16415768293130856210}
+  Translation: [0.150009155, 0, 0.749992371]
+  Rotation: [0, 0.450295001, 0]
+  Scale: [0.200000003, 1.00000012, 1.00000012]
+  Father: {fileID: 14790332214141994081}
+  m_Children:
+    []
+---
+ID: 11595556845754652271
+MeshRenderer:
+  m_GameObject: {fileID: 16415768293130856210}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 263938901046208410
+GameObject:
+  m_IsActive: true
+  m_Name: ItemCollected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18372212286040797480}  # Transform
+    - component: {fileID: 3483838879810750950}  # AudioSource
+---
+ID: 18372212286040797480
+Transform:
+  m_GameObject: {fileID: 263938901046208410}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 3483838879810750950
+AudioSource:
+  m_GameObject: {fileID: 263938901046208410}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
+  Play: false
+---
+ID: 497501804413490616
+GameObject:
+  m_IsActive: true
+  m_Name: RangeEnemyBullet
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9394596766560980627}  # Transform
+    - component: {fileID: 11367208140139232291}  # AudioSource
+---
+ID: 9394596766560980627
+Transform:
+  m_GameObject: {fileID: 497501804413490616}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 11367208140139232291
+AudioSource:
+  m_GameObject: {fileID: 497501804413490616}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 0.300000012
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: eda674df517607f98c64da16ea040919}
+  Play: false
+---
+ID: 183898391583128112
+GameObject:
+  m_IsActive: true
+  m_Name: RangeEnemyDead
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13812295196817184781}  # Transform
+    - component: {fileID: 2502308778807293875}  # AudioSource
+---
+ID: 13812295196817184781
+Transform:
+  m_GameObject: {fileID: 183898391583128112}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 2502308778807293875
+AudioSource:
+  m_GameObject: {fileID: 183898391583128112}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 06f54883e9bc513507a05a5298dba06f}
+  Play: false
+---
+ID: 1704405459447429049
+GameObject:
+  m_IsActive: true
+  m_Name: DoorOpen
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13811611442745766600}  # Transform
+    - component: {fileID: 14332204263861564631}  # AudioSource
+---
+ID: 13811611442745766600
+Transform:
+  m_GameObject: {fileID: 1704405459447429049}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 14332204263861564631
+AudioSource:
+  m_GameObject: {fileID: 1704405459447429049}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 42dcb3de127c7dba6b7c233d0d648a80}
+  Play: false
+---
+ID: 7505235272623281090
+GameObject:
+  m_IsActive: true
+  m_Name: playerInjured
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17431661257437165654}  # Transform
+    - component: {fileID: 3760519619074301342}  # AudioSource
+---
+ID: 17431661257437165654
+Transform:
+  m_GameObject: {fileID: 7505235272623281090}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 3760519619074301342
+AudioSource:
+  m_GameObject: {fileID: 7505235272623281090}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: e163082ab73fa95c5d0a07c82df6920c}
+  Play: false
+---
+ID: 11931709940185671807
+GameObject:
+  m_IsActive: true
+  m_Name: elevator
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9155072371493984954}  # Transform
+    - component: {fileID: 2406511765798993316}  # AudioSource
+---
+ID: 9155072371493984954
+Transform:
+  m_GameObject: {fileID: 11931709940185671807}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 2406511765798993316
+AudioSource:
+  m_GameObject: {fileID: 11931709940185671807}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: c4f9a933d2103f414ffbc861e92d5bb1}
+  Play: false
+---
+ID: 2723553382536766900
+GameObject:
+  m_IsActive: true
+  m_Name: playerFootstep
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8100482910037792098}  # Transform
+    - component: {fileID: 6518591935153270902}  # AudioSource
+---
+ID: 8100482910037792098
+Transform:
+  m_GameObject: {fileID: 2723553382536766900}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 6518591935153270902
+AudioSource:
+  m_GameObject: {fileID: 2723553382536766900}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 7ea8fb553399a4eba3df2a0d19e0a815}
+  Play: false
+---
+ID: 10419665452268142691
+GameObject:
+  m_IsActive: true
+  m_Name: playerAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6832024306486094958}  # Transform
+    - component: {fileID: 3436078548414859258}  # AudioSource
+---
+ID: 6832024306486094958
+Transform:
+  m_GameObject: {fileID: 10419665452268142691}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 3436078548414859258
+AudioSource:
+  m_GameObject: {fileID: 10419665452268142691}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: f4bb7a459a14c3256accf4e34b46c4d0}
+  Play: false
+---
+ID: 7328944263752446106
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(626) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2086627091158762551}  # Transform
+---
+ID: 2086627091158762551
+Transform:
+  m_GameObject: {fileID: 7328944263752446106}
+  Translation: [0.0311126709, 0.29775238, -0.349998474]
+  Rotation: [0, -1.55246758, 0]
+  Scale: [0.99999994, 0.384890854, 0.562218368]
+  Father: {fileID: 9126212843899289109}
+  m_Children:
+    - {fileID: 8370415163675668691}
+    - {fileID: 9670403625460596022}
+    - {fileID: 6360561650707867498}
+---
+ID: 8370415163675668691
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(627) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7124760779876070323}  # Transform
+    - component: {fileID: 6566990991901330653}  # MeshRenderer
+---
+ID: 7124760779876070323
+Transform:
+  m_GameObject: {fileID: 8370415163675668691}
+  Translation: [-7.62939544e-06, 0, -3.81469763e-05]
+  Rotation: [0, -0.0620878227, 0]
+  Scale: [0.247995898, 1, 0.999998569]
+  Father: {fileID: 7328944263752446106}
+  m_Children:
+    []
+---
+ID: 6566990991901330653
+MeshRenderer:
+  m_GameObject: {fileID: 8370415163675668691}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 9670403625460596022
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(628) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1178776057468283928}  # Transform
+    - component: {fileID: 1006225837294451105}  # MeshRenderer
+---
+ID: 1178776057468283928
+Transform:
+  m_GameObject: {fileID: 9670403625460596022}
+  Translation: [0.196701065, 0.000495910703, -0.809013426]
+  Rotation: [0, 0.541232347, 3.14159203]
+  Scale: [0.199994281, 0.999967575, 0.999997318]
+  Father: {fileID: 7328944263752446106}
+  m_Children:
+    []
+---
+ID: 1006225837294451105
+MeshRenderer:
+  m_GameObject: {fileID: 9670403625460596022}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 6360561650707867498
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(629) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13817896685837015631}  # Transform
+    - component: {fileID: 15725213246579771717}  # MeshRenderer
+---
+ID: 13817896685837015631
+Transform:
+  m_GameObject: {fileID: 6360561650707867498}
+  Translation: [0.149993911, 0, 0.750015318]
+  Rotation: [0, 0.450294793, 0]
+  Scale: [0.200000033, 1, 1.00000036]
+  Father: {fileID: 7328944263752446106}
+  m_Children:
+    []
+---
+ID: 15725213246579771717
+MeshRenderer:
+  m_GameObject: {fileID: 6360561650707867498}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 10893071549809871378
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(626) - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15491326949455498983}  # Transform
+---
+ID: 15491326949455498983
+Transform:
+  m_GameObject: {fileID: 10893071549809871378}
+  Translation: [-0.0223388672, 0.342956543, -0.439975739]
+  Rotation: [0, -1.45821536, -1.11261249]
+  Scale: [0.48980543, 0.384890914, 0.562219203]
+  Father: {fileID: 7640003431994965172}
+  m_Children:
+    - {fileID: 5270388731237124701}
+    - {fileID: 5716258948522411767}
+    - {fileID: 585853501604749385}
+---
+ID: 5270388731237124701
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(627) - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8473890026961084877}  # Transform
+    - component: {fileID: 3595766795674192657}  # MeshRenderer
+---
+ID: 8473890026961084877
+Transform:
+  m_GameObject: {fileID: 5270388731237124701}
+  Translation: [0, -1.52587909e-05, -2.28881854e-05]
+  Rotation: [0, -0.0620817095, 0]
+  Scale: [0.247995734, 1.00000012, 0.999998748]
+  Father: {fileID: 10893071549809871378}
+  m_Children:
+    []
+---
+ID: 3595766795674192657
+MeshRenderer:
+  m_GameObject: {fileID: 5270388731237124701}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 5716258948522411767
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(629) - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3656545125230562672}  # Transform
+    - component: {fileID: 3944018536577046462}  # MeshRenderer
+---
+ID: 3656545125230562672
+Transform:
+  m_GameObject: {fileID: 5716258948522411767}
+  Translation: [0.149986282, -3.05175818e-05, 0.750007689]
+  Rotation: [0, 0.450295001, 0]
+  Scale: [0.200000048, 1.00000024, 1.00000036]
+  Father: {fileID: 10893071549809871378}
+  m_Children:
+    []
+---
+ID: 3944018536577046462
+MeshRenderer:
+  m_GameObject: {fileID: 5716258948522411767}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 585853501604749385
+GameObject:
+  m_IsActive: false
+  m_Name: New GameObject(628) - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6941969636332614735}  # Transform
+    - component: {fileID: 616546660887947649}  # MeshRenderer
+---
+ID: 6941969636332614735
+Transform:
+  m_GameObject: {fileID: 585853501604749385}
+  Translation: [0.196701065, 0.00047302249, -0.809021056]
+  Rotation: [0, 0.541232646, 3.14159203]
+  Scale: [0.199994326, 0.999967754, 0.999997437]
+  Father: {fileID: 10893071549809871378}
+  m_Children:
+    []
+---
+ID: 616546660887947649
+MeshRenderer:
+  m_GameObject: {fileID: 585853501604749385}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 18047848578679342217
+GameObject:
+  m_IsActive: true
+  m_Name: DirectionalLight
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4700641269588020503}  # Transform
+    - component: {fileID: 5561963866911114795}  # LightSource
+---
+ID: 4700641269588020503
+Transform:
+  m_GameObject: {fileID: 18047848578679342217}
+  Translation: [0, 12.5846453, 0]
+  Rotation: [0, 1.57079542, 0.0174532924]
+  Scale: [0.999962866, 0.999957502, 0.999984145]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5561963866911114795
+LightSource:
+  m_GameObject: {fileID: 18047848578679342217}
+  m_IsEnabled: true
+  EnableShadow: true
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 5
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [255, 255, 255]
+---
+ID: 8195998143091088379
+GameObject:
+  m_IsActive: true
+  m_Name: enemyHit
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2131914696263170567}  # Transform
+    - component: {fileID: 14492758170611173101}  # AudioSource
+---
+ID: 2131914696263170567
+Transform:
+  m_GameObject: {fileID: 8195998143091088379}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 14492758170611173101
+AudioSource:
+  m_GameObject: {fileID: 8195998143091088379}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
+  Play: false
+---
+ID: 5382915443314468010
+GameObject:
+  m_IsActive: true
+  m_Name: keyCollected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6380692802903293290}  # Transform
+    - component: {fileID: 12067369461903983448}  # AudioSource
+---
+ID: 6380692802903293290
+Transform:
+  m_GameObject: {fileID: 5382915443314468010}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12067369461903983448
+AudioSource:
+  m_GameObject: {fileID: 5382915443314468010}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
+  Play: false
+---
+ID: 6826500622308863951
+GameObject:
+  m_IsActive: false
+  m_Name: DialogueBG
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3659628927964928141}  # Transform
+    - component: {fileID: 2832426300105790159}  # SpriteRenderer
+---
+ID: 3659628927964928141
+Transform:
+  m_GameObject: {fileID: 6826500622308863951}
+  Translation: [0, -1, -10]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-1, -1, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 2832426300105790159
+SpriteRenderer:
+  m_GameObject: {fileID: 6826500622308863951}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e310cfb163a2014181faa3229530b5ed}
+---
+ID: 16740076942321656330
+GameObject:
+  m_IsActive: false
+  m_Name: Dialogue1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13373188585270318738}  # Transform
+    - component: {fileID: 7006300196534865551}  # SpriteRenderer
+---
+ID: 13373188585270318738
+Transform:
+  m_GameObject: {fileID: 16740076942321656330}
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.5, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 7006300196534865551
+SpriteRenderer:
+  m_GameObject: {fileID: 16740076942321656330}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f09c087da8a5a8295f5fc419dbaec1c9}
+---
+ID: 3827453200974574750
+GameObject:
+  m_IsActive: true
+  m_Name: Dialogues
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14751546446793523439}  # Transform
+---
+ID: 14751546446793523439
+Transform:
+  m_GameObject: {fileID: 3827453200974574750}
+  Translation: [0, 0, -10]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 0.999999523]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 16740076942321656330}
+    - {fileID: 11733672071644877139}
+    - {fileID: 7012372586903751207}
+    - {fileID: 1397792527501854904}
+    - {fileID: 6586543693501608855}
+    - {fileID: 7835293411479101006}
+    - {fileID: 15243324590400962737}
+---
+ID: 11733672071644877139
+GameObject:
+  m_IsActive: false
+  m_Name: Dialogue2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6625356397320967961}  # Transform
+    - component: {fileID: 17484321396297611436}  # SpriteRenderer
+---
+ID: 6625356397320967961
+Transform:
+  m_GameObject: {fileID: 11733672071644877139}
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.349999994, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 17484321396297611436
+SpriteRenderer:
+  m_GameObject: {fileID: 11733672071644877139}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 8389a067b7fead603aa8391a4cf5d163}
+---
+ID: 7012372586903751207
+GameObject:
+  m_IsActive: false
+  m_Name: Dialogue3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7476295874243819059}  # Transform
+    - component: {fileID: 14966611981919305350}  # SpriteRenderer
+---
+ID: 7476295874243819059
+Transform:
+  m_GameObject: {fileID: 7012372586903751207}
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.25, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 14966611981919305350
+SpriteRenderer:
+  m_GameObject: {fileID: 7012372586903751207}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: ef98ccf5ac02e5c8417c7412241d2f6e}
+---
+ID: 1397792527501854904
+GameObject:
+  m_IsActive: false
+  m_Name: Dialogue4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17425439136219415660}  # Transform
+    - component: {fileID: 15667416370789945763}  # SpriteRenderer
+---
+ID: 17425439136219415660
+Transform:
+  m_GameObject: {fileID: 1397792527501854904}
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.550000012, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 15667416370789945763
+SpriteRenderer:
+  m_GameObject: {fileID: 1397792527501854904}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 78368b7cbb512fd0999fde1c1182da82}
+---
+ID: 6586543693501608855
+GameObject:
+  m_IsActive: false
+  m_Name: Dialogue5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17869955248320907728}  # Transform
+    - component: {fileID: 5544492160321895204}  # SpriteRenderer
+---
+ID: 17869955248320907728
+Transform:
+  m_GameObject: {fileID: 6586543693501608855}
+  Translation: [0, -0.850000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.550000012, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 5544492160321895204
+SpriteRenderer:
+  m_GameObject: {fileID: 6586543693501608855}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: d36d7d1d7b35a1558ad23201dff9994d}
+---
+ID: 7835293411479101006
+GameObject:
+  m_IsActive: false
+  m_Name: DialogueAI
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6106577147750693818}  # Transform
+    - component: {fileID: 5331509604325132769}  # SpriteRenderer
+---
+ID: 6106577147750693818
+Transform:
+  m_GameObject: {fileID: 7835293411479101006}
+  Translation: [0, -0.600000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.150000006, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 5331509604325132769
+SpriteRenderer:
+  m_GameObject: {fileID: 7835293411479101006}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 34f6cdd41fef9ef80bf3a3814384202f}
+---
+ID: 15243324590400962737
+GameObject:
+  m_IsActive: false
+  m_Name: DialogueUser
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10071358079469959902}  # Transform
+    - component: {fileID: 10130008463578250076}  # SpriteRenderer
+---
+ID: 10071358079469959902
+Transform:
+  m_GameObject: {fileID: 15243324590400962737}
+  Translation: [0, -0.600000083, 5]
+  Rotation: [-3.14158487, 0, 3.14159274]
+  Scale: [-0.150000006, -0.0500000007, -0.25000003]
+  Father: {fileID: 3827453200974574750}
+  m_Children:
+    []
+---
+ID: 10130008463578250076
+SpriteRenderer:
+  m_GameObject: {fileID: 15243324590400962737}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 2c86b31c6fd13537742a42c83a8b516a}
+---
+ID: 8310365372469502612
+GameObject:
+  m_IsActive: true
+  m_Name: uiSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14053836816538118579}  # Transform
+    - component: {fileID: 12043367231734905459}  # AudioSource
+---
+ID: 14053836816538118579
+Transform:
+  m_GameObject: {fileID: 8310365372469502612}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12043367231734905459
+AudioSource:
+  m_GameObject: {fileID: 8310365372469502612}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
+  Play: false
+---
+ID: 4679045281971681028
+GameObject:
+  m_IsActive: true
+  m_Name: useItem
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2509363505227465543}  # Transform
+    - component: {fileID: 8508182677235274511}  # AudioSource
+---
+ID: 2509363505227465543
+Transform:
+  m_GameObject: {fileID: 4679045281971681028}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 8508182677235274511
+AudioSource:
+  m_GameObject: {fileID: 4679045281971681028}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
+  Play: false
+---
+ID: 12660956963810181687
+GameObject:
+  m_IsActive: true
+  m_Name: playerIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6741521074388384309}  # Transform
+    - component: {fileID: 1519606982010244742}  # SpriteRenderer
+---
+ID: 6741521074388384309
+Transform:
+  m_GameObject: {fileID: 12660956963810181687}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [3.14158487, -5.42101086e-20, 3.1415925]
+  Scale: [-0.0799999982, -0.0799999982, -0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 1519606982010244742
+SpriteRenderer:
+  m_GameObject: {fileID: 12660956963810181687}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: ed67f80cc8530c2f1eb31d14779f6a88}
+---
+ID: 8603716528774636938
+GameObject:
+  m_IsActive: true
+  m_Name: RoundBackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1314039668191076128}  # Transform
+    - component: {fileID: 6156993243117896172}  # SpriteRenderer
+---
+ID: 1314039668191076128
+Transform:
+  m_GameObject: {fileID: 8603716528774636938}
+  Translation: [-0.929799974, 0.857109547, 4]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.100000001, -0.120000005, -0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 6156993243117896172
+SpriteRenderer:
+  m_GameObject: {fileID: 8603716528774636938}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f1e2252c9bed7adeab8c9cfea67d8e5c}
+---
+ID: 17837455119039999797
+GameObject:
+  m_IsActive: true
+  m_Name: RoundFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16141717525383989037}  # Transform
+    - component: {fileID: 15833187439275913594}  # SpriteRenderer
+---
+ID: 16141717525383989037
+Transform:
+  m_GameObject: {fileID: 17837455119039999797}
+  Translation: [-0.929799974, 0.857109547, 4.5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.100000001, -0.120000005, -0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 15833187439275913594
+SpriteRenderer:
+  m_GameObject: {fileID: 17837455119039999797}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e8f1b5b7e6ccf016426fb9befbdcb1cb}
+---
+ID: 17344769666620842143
+GameObject:
+  m_IsActive: true
+  m_Name: RoundOuterFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3099933147011238881}  # Transform
+    - component: {fileID: 1214303970905809033}  # SpriteRenderer
+---
+ID: 3099933147011238881
+Transform:
+  m_GameObject: {fileID: 17344769666620842143}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.100000001, -0.120000005, -0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 1214303970905809033
+SpriteRenderer:
+  m_GameObject: {fileID: 17344769666620842143}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e94a3b58c1e9691c92035ec7508476ab}
+---
+ID: 12115195871797465227
+GameObject:
+  m_IsActive: true
+  m_Name: RoundCharacterFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18383208018285672524}  # Transform
+    - component: {fileID: 972436811981113598}  # SpriteRenderer
+---
+ID: 18383208018285672524
+Transform:
+  m_GameObject: {fileID: 12115195871797465227}
+  Translation: [-0.929799974, 0.857109547, 5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.0799999982, -0.0900000036, -0.100000001]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 972436811981113598
+SpriteRenderer:
+  m_GameObject: {fileID: 12115195871797465227}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
+---
+ID: 4720521423488205772
+GameObject:
+  m_IsActive: true
+  m_Name: Overdrivebackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12859451180230906073}  # Transform
+    - component: {fileID: 15241298173543357892}  # SpriteRenderer
+---
+ID: 12859451180230906073
+Transform:
+  m_GameObject: {fileID: 4720521423488205772}
+  Translation: [-0.75, 0.75, 1.81727982]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.150000006, -0.0199999996, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 15241298173543357892
+SpriteRenderer:
+  m_GameObject: {fileID: 4720521423488205772}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}
+---
+ID: 1953613848853671180
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveBackFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17405891383651685792}  # Transform
+    - component: {fileID: 3599254905845664684}  # SpriteRenderer
+---
+ID: 17405891383651685792
+Transform:
+  m_GameObject: {fileID: 1953613848853671180}
+  Translation: [-0.75, 0.75, 2]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.150000006, -0.0199999996, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 3599254905845664684
+SpriteRenderer:
+  m_GameObject: {fileID: 1953613848853671180}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4032521077463f2715840b35c4b4e13e}
+---
+ID: 3925618525247661714
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveFrontFill
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6440725200320908511}  # Transform
+    - component: {fileID: 5944911866698831055}  # SpriteRenderer
+---
+ID: 6440725200320908511
+Transform:
+  m_GameObject: {fileID: 3925618525247661714}
+  Translation: [-0.75, 0.75, 2.0999999]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.150000006, -0.0199999996, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 5944911866698831055
+SpriteRenderer:
+  m_GameObject: {fileID: 3925618525247661714}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 05eabcd5686e83c719e179558b23b1a3}
+---
+ID: 11966624967280915999
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11180506814816798271}  # Transform
+    - component: {fileID: 9429827192945704677}  # SpriteRenderer
+---
+ID: 11180506814816798271
+Transform:
+  m_GameObject: {fileID: 11966624967280915999}
+  Translation: [-0.900000036, -0.850000024, 5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.0599999987, -0.100000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 9429827192945704677
+SpriteRenderer:
+  m_GameObject: {fileID: 11966624967280915999}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 10673191397735378312
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1051630031486288378}  # Transform
+    - component: {fileID: 4597313407553912148}  # SpriteRenderer
+---
+ID: 1051630031486288378
+Transform:
+  m_GameObject: {fileID: 10673191397735378312}
+  Translation: [-0.893999994, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 4597313407553912148
+SpriteRenderer:
+  m_GameObject: {fileID: 10673191397735378312}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 9691624766500435789
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2755569868383402096}  # Transform
+    - component: {fileID: 5378824823806842645}  # SpriteRenderer
+---
+ID: 2755569868383402096
+Transform:
+  m_GameObject: {fileID: 9691624766500435789}
+  Translation: [-0.75, -0.850000024, 5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.0599999987, -0.100000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 5378824823806842645
+SpriteRenderer:
+  m_GameObject: {fileID: 9691624766500435789}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 13993313988089347944
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13691015580275777266}  # Transform
+    - component: {fileID: 4741940390945997965}  # SpriteRenderer
+---
+ID: 13691015580275777266
+Transform:
+  m_GameObject: {fileID: 13993313988089347944}
+  Translation: [-0.748000026, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 4741940390945997965
+SpriteRenderer:
+  m_GameObject: {fileID: 13993313988089347944}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}
+---
+ID: 1370432261870288088
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPackUIFrame
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10817413614210890440}  # Transform
+    - component: {fileID: 3686822582642055789}  # SpriteRenderer
+---
+ID: 10817413614210890440
+Transform:
+  m_GameObject: {fileID: 1370432261870288088}
+  Translation: [-0.600000024, -0.850000024, 5]
+  Rotation: [3.14158487, 0, 3.14159274]
+  Scale: [-0.0599999987, -0.100000001, -1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 3686822582642055789
+SpriteRenderer:
+  m_GameObject: {fileID: 1370432261870288088}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 12478379518054110186
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatPackIcon
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11083728837774791348}  # Transform
+    - component: {fileID: 6445528378693974545}  # SpriteRenderer
+---
+ID: 11083728837774791348
+Transform:
+  m_GameObject: {fileID: 12478379518054110186}
+  Translation: [-0.600000024, -0.845000029, 7]
+  Rotation: [0, 0, 0]
+  Scale: [0.0500000007, -0.0500000007, 0.999999046]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 6445528378693974545
+SpriteRenderer:
+  m_GameObject: {fileID: 12478379518054110186}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
+---
+ID: 5713504039664526619
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyDie
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5544704717921281025}  # Transform
+    - component: {fileID: 14157919317546456730}  # AudioSource
+---
+ID: 5544704717921281025
+Transform:
+  m_GameObject: {fileID: 5713504039664526619}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 14157919317546456730
+AudioSource:
+  m_GameObject: {fileID: 5713504039664526619}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9f8df03759bd025de40156229fe387ec}
+  Play: false
+---
+ID: 1444839062839968456
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4405310670290985832}  # Transform
+    - component: {fileID: 9604268664669988043}  # AudioSource
+---
+ID: 4405310670290985832
+Transform:
+  m_GameObject: {fileID: 1444839062839968456}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 9604268664669988043
+AudioSource:
+  m_GameObject: {fileID: 1444839062839968456}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: e2c803b37e46493acc4b856df0e91f95}
+  Play: false
+---
+ID: 3873369559540028830
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemyInjured
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5359552120802994559}  # Transform
+    - component: {fileID: 9193573896841228309}  # AudioSource
+---
+ID: 5359552120802994559
+Transform:
+  m_GameObject: {fileID: 3873369559540028830}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 9193573896841228309
+AudioSource:
+  m_GameObject: {fileID: 3873369559540028830}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 6dfc6a4ff8d5e37c5b303cc3350fe00d}
+  Play: false
+---
+ID: 16052600457545288926
+GameObject:
+  m_IsActive: true
+  m_Name: playerOverdrive
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5287081828516019792}  # Transform
+    - component: {fileID: 4330194544441596099}  # AudioSource
+---
+ID: 5287081828516019792
+Transform:
+  m_GameObject: {fileID: 16052600457545288926}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 4330194544441596099
+AudioSource:
+  m_GameObject: {fileID: 16052600457545288926}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
+  Play: false
+---
+ID: 18315212324025487925
+GameObject:
+  m_IsActive: true
+  m_Name: HealthBarFill
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15678506457491043011}  # Transform
+    - component: {fileID: 712470475064291031}  # SpriteRenderer
+---
+ID: 15678506457491043011
+Transform:
+  m_GameObject: {fileID: 18315212324025487925}
+  Translation: [33.743, 0, 3]
+  Rotation: [-3.14159274, 0, 0]
+  Scale: [32, 3.1500001, 1]
+  Father: {fileID: 4056269345217226233}
+  m_Children:
+    []
+---
+ID: 712470475064291031
+SpriteRenderer:
+  m_GameObject: {fileID: 18315212324025487925}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
+---
+ID: 1155348055569638397
+GameObject:
+  m_IsActive: true
+  m_Name: staminaBarPosition
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11860368498721011032}  # Transform
+---
+ID: 11860368498721011032
+Transform:
+  m_GameObject: {fileID: 1155348055569638397}
+  Translation: [-0.119530022, -0.00747156143, 1]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15115753960540565494}
+  m_Children:
+    - {fileID: 4490157770252088129}
+---
+ID: 15115753960540565494
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8018982651727449708}  # Transform
+---
+ID: 8018982651727449708
+Transform:
+  m_GameObject: {fileID: 15115753960540565494}
+  Translation: [-0.740470052, 0.803471327, 1]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 1155348055569638397}
+---
+ID: 17033157074617951400
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerHealthBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7607465505945886517}  # Transform
+---
+ID: 7607465505945886517
+Transform:
+  m_GameObject: {fileID: 17033157074617951400}
+  Translation: [-0.680000007, 0.850000024, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.00625000009, 0.0111111114, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 4056269345217226233}
+---
+ID: 4056269345217226233
+GameObject:
+  m_IsActive: true
+  m_Name: playerHealthBarPos
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12631365225660443833}  # Transform
+---
+ID: 12631365225660443833
+Transform:
+  m_GameObject: {fileID: 4056269345217226233}
+  Translation: [-28.3920002, 0.828999996, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17033157074617951400}
+  m_Children:
+    - {fileID: 18315212324025487925}
+---
+ID: 13140446175095248756
+GameObject:
+  m_IsActive: true
+  m_Name: GlowMatReference
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15866575428375403428}  # Transform
+    - component: {fileID: 15514360625503175091}  # MeshRenderer
+---
+ID: 15866575428375403428
+Transform:
+  m_GameObject: {fileID: 13140446175095248756}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15514360625503175091
+MeshRenderer:
+  m_GameObject: {fileID: 13140446175095248756}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 3187203319805926689
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerModel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13167244482501997278}  # Transform
+    - component: {fileID: 9953969093344891570}  # Animator
+---
+ID: 13167244482501997278
+Transform:
+  m_GameObject: {fileID: 3187203319805926689}
+  Translation: [0, -0.5, 0]
+  Rotation: [-3.14159203, 0, -3.14159203]
+  Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+  Father: {fileID: 3977294589520766028}
+  m_Children:
+    - {fileID: 13634005917329744601}
+---
+ID: 9953969093344891570
+Animator:
+  m_GameObject: {fileID: 3187203319805926689}
+  m_IsEnabled: true
+  Animation: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
+---
+ID: 13634005917329744601
+GameObject:
+  m_IsActive: true
+  m_Name: Player2_0
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16851664901465332004}  # Transform
+    - component: {fileID: 6957468999272188579}  # MeshRenderer
+---
+ID: 16851664901465332004
+Transform:
+  m_GameObject: {fileID: 13634005917329744601}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3187203319805926689}
+  m_Children:
+    []
+---
+ID: 6957468999272188579
+MeshRenderer:
+  m_GameObject: {fileID: 13634005917329744601}
+  m_IsEnabled: true
+  Mesh: {guid: 12597e24af252df94929ea556633fff1}
+  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 76883666513725944
+GameObject:
+  m_IsActive: true
+  m_Name: PlatformAreaLight
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11178443394863569934}  # Transform
+    - component: {fileID: 1783216909072539358}  # LightSource
+---
+ID: 11178443394863569934
+Transform:
+  m_GameObject: {fileID: 76883666513725944}
+  Translation: [127.441017, 44.7026176, -80.6745682]
+  Rotation: [0, 0, 0.698131442]
+  Scale: [0.999999821, 0.999999821, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 1783216909072539358
+LightSource:
+  m_GameObject: {fileID: 76883666513725944}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 2
+  lightpos: [0, 0, 0]
+  Intensity: 3000
+  Direction: [0, 0, 0]
+  Inner Cutoff: 80
+  Outer Cutoff: 500
+  Color: [0, 0.115097195, 0.825316906]
+---
+ID: 17866851235588629267
+GameObject:
+  m_IsActive: true
+  m_Name: FadeBlack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7042426106851415746}  # Transform
+    - component: {fileID: 2293742353939863974}  # SpriteRenderer
+---
+ID: 7042426106851415746
+Transform:
+  m_GameObject: {fileID: 17866851235588629267}
+  Translation: [0, 0, 9]
+  Rotation: [3.14158463, 0, -3.14159274]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 2293742353939863974
+SpriteRenderer:
+  m_GameObject: {fileID: 17866851235588629267}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+---
+ID: 1342498447182496088
+GameObject:
+  m_IsActive: true
+  m_Name: OverDriveVFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2823202394044180212}  # Transform
+    - component: {fileID: 13560343077879238517}  # MeshRenderer
+    - component: {fileID: 8986741928778724108}  # ParticleComponent
+---
+ID: 2823202394044180212
+Transform:
+  m_GameObject: {fileID: 1342498447182496088}
+  Translation: [0, 1.90781224, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 13560343077879238517
+MeshRenderer:
+  m_GameObject: {fileID: 1342498447182496088}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
+---
+ID: 8986741928778724108
+ParticleComponent:
+  m_GameObject: {fileID: 1342498447182496088}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 30
+  Number Of Particles: 15
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 30
+  Particle Noise Movement Percentage: 30
+  Particle Noise Frequency: 30
+  2D particle: false
+  Trailing: true
+  Trail Size: 5
+  Looping: true
+---
+ID: 13027737300980970512
+GameObject:
+  m_IsActive: true
+  m_Name: overDriveVFXSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17205113147846528527}  # Transform
+    - component: {fileID: 814352591872434956}  # AudioSource
+---
+ID: 17205113147846528527
+Transform:
+  m_GameObject: {fileID: 13027737300980970512}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 814352591872434956
+AudioSource:
+  m_GameObject: {fileID: 13027737300980970512}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
+  Play: false
+---
+ID: 17811278805382620369
+GameObject:
+  m_IsActive: true
+  m_Name: jumpVoice2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16950316186164793293}  # Transform
+    - component: {fileID: 17384956244929632316}  # AudioSource
+---
+ID: 16950316186164793293
+Transform:
+  m_GameObject: {fileID: 17811278805382620369}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 17384956244929632316
+AudioSource:
+  m_GameObject: {fileID: 17811278805382620369}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 3b5597373ba0415f19eee83296ad752b}
+  Play: false
+---
+ID: 18125044553674274218
+GameObject:
+  m_IsActive: true
+  m_Name: jumpVoice3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1399664433149929236}  # Transform
+    - component: {fileID: 1298934831599437468}  # AudioSource
+---
+ID: 1399664433149929236
+Transform:
+  m_GameObject: {fileID: 18125044553674274218}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 1298934831599437468
+AudioSource:
+  m_GameObject: {fileID: 18125044553674274218}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4ac3da6f90ffe925e1368718223c7629}
+  Play: false
+---
+ID: 12153697188064801473
+GameObject:
+  m_IsActive: true
+  m_Name: thump1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11495029340857605506}  # Transform
+    - component: {fileID: 12152755750733174901}  # AudioSource
+---
+ID: 11495029340857605506
+Transform:
+  m_GameObject: {fileID: 12153697188064801473}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12152755750733174901
+AudioSource:
+  m_GameObject: {fileID: 12153697188064801473}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4879d8cbccffbd2c22b3508a370ec969}
+  Play: false
+---
+ID: 7888217747071975113
+GameObject:
+  m_IsActive: true
+  m_Name: thump2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 905309707759191102}  # Transform
+    - component: {fileID: 10580402611710297282}  # AudioSource
+---
+ID: 905309707759191102
+Transform:
+  m_GameObject: {fileID: 7888217747071975113}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 10580402611710297282
+AudioSource:
+  m_GameObject: {fileID: 7888217747071975113}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 1682f86f9df2666b5d45632da015dcd5}
+  Play: false
+---
+ID: 7702311490355860096
+GameObject:
+  m_IsActive: true
+  m_Name: dodgeRoll1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15155954054943357669}  # Transform
+    - component: {fileID: 1086886035799123363}  # AudioSource
+---
+ID: 15155954054943357669
+Transform:
+  m_GameObject: {fileID: 7702311490355860096}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 1086886035799123363
+AudioSource:
+  m_GameObject: {fileID: 7702311490355860096}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d44bdb32a0aa5d9f4fde6eeee09a0a91}
+  Play: false
+---
+ID: 3801088290079164654
+GameObject:
+  m_IsActive: true
+  m_Name: dodgeRoll2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3199961399440766800}  # Transform
+    - component: {fileID: 11490585744734373202}  # AudioSource
+---
+ID: 3199961399440766800
+Transform:
+  m_GameObject: {fileID: 3801088290079164654}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 11490585744734373202
+AudioSource:
+  m_GameObject: {fileID: 3801088290079164654}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
+  Play: false
+---
+ID: 15187318079590443157
+GameObject:
+  m_IsActive: true
+  m_Name: dashAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6180669855135387070}  # Transform
+    - component: {fileID: 3292439134972329249}  # AudioSource
+---
+ID: 6180669855135387070
+Transform:
+  m_GameObject: {fileID: 15187318079590443157}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 3292439134972329249
+AudioSource:
+  m_GameObject: {fileID: 15187318079590443157}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
+  Play: false
+---
+ID: 7345429221838225698
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5474435996662912753}  # Transform
+    - component: {fileID: 12262929383047051249}  # AudioSource
+---
+ID: 5474435996662912753
+Transform:
+  m_GameObject: {fileID: 7345429221838225698}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 12262929383047051249
+AudioSource:
+  m_GameObject: {fileID: 7345429221838225698}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 7f4dca2867d7267a988760fbb9e6e63b}
+  Play: false
+---
+ID: 2597072424818364743
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6953088724175365596}  # Transform
+    - component: {fileID: 6670779144662544128}  # AudioSource
+---
+ID: 6953088724175365596
+Transform:
+  m_GameObject: {fileID: 2597072424818364743}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 6670779144662544128
+AudioSource:
+  m_GameObject: {fileID: 2597072424818364743}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 961c5ccf4652254f50f84f2f7c5fa599}
+  Play: false
+---
+ID: 6687611820943646563
+GameObject:
+  m_IsActive: true
+  m_Name: enemyAlerted3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17408746616720987109}  # Transform
+    - component: {fileID: 998502570275308366}  # AudioSource
+---
+ID: 17408746616720987109
+Transform:
+  m_GameObject: {fileID: 6687611820943646563}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 998502570275308366
+AudioSource:
+  m_GameObject: {fileID: 6687611820943646563}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
+  Play: false
+---
+ID: 14731098160436409708
+GameObject:
+  m_IsActive: true
+  m_Name: ObjectiveHeader
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13331606679983483713}  # Transform
+    - component: {fileID: 786724386458700197}  # SpriteRenderer
+---
+ID: 13331606679983483713
+Transform:
+  m_GameObject: {fileID: 14731098160436409708}
+  Translation: [-0.849763691, 0.479999989, 9.07999992]
+  Rotation: [3.14156556, 0, -3.14159203]
+  Scale: [0.199967518, 0.140000001, 0.00100000005]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 786724386458700197
+SpriteRenderer:
+  m_GameObject: {fileID: 14731098160436409708}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 0.899999976
+  SpriteTexture: {guid: 8bc854365fdc7a36838180a2c1c954dd}
+---
+ID: 17638106604129844536
+GameObject:
+  m_IsActive: true
+  m_Name: Objective_1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13282041324919832414}  # Transform
+    - component: {fileID: 6595519785796661465}  # SpriteRenderer
+    - component: {fileID: 442471287748242189}  # Script
+---
+ID: 13282041324919832414
+Transform:
+  m_GameObject: {fileID: 17638106604129844536}
+  Translation: [-0.810000002, 0.360000014, 9.19999981]
+  Rotation: [3.14156556, 0, 3.14159203]
+  Scale: [0.209999993, 0.200000003, 0.00100000005]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 6595519785796661465
+SpriteRenderer:
+  m_GameObject: {fileID: 17638106604129844536}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 0
+  SpriteTexture: {guid: 773a0f539ca112cd2a3858cf16706d50}
+---
+ID: 442471287748242189
+Script:
+  m_GameObject: {fileID: 17638106604129844536}
+  m_IsEnabled: true
+  Script: {guid: d67c873baa7d662fa5ef2fa2b2efef6b}
+  alphaValue: 0.800000012
+  player: {fileID: 3977294589520766028}  # Component
+  Objective1: {fileID: 6595519785796661465}  # Component
