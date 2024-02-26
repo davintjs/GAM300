@@ -34,7 +34,6 @@ Camera:
   BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
-  LookAtDistance: 7.81407881
   NearClip: 0.100000001
   FarClip: 100
   FieldOfView: 45
@@ -102,9 +101,9 @@ GameObject:
 ID: 10434548019950719823
 Transform:
   m_GameObject: {fileID: 9386478579826465449}
-  Translation: [-0.0382067561, 0, -0.492439002]
+  Translation: [-0.0454536155, 0, -0.492439002]
   Rotation: [0, 0, 0]
-  Scale: [0.602047026, 1, 0.999977291]
+  Scale: [0.968361914, 0.972704649, 0.999977291]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -117,7 +116,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
 ID: 12690634969259096449
 GameObject:
@@ -134,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 12690634969259096449}
   Translation: [-0.107464127, -0.0499872416, 0.131215349]
   Rotation: [-3.13925648, -0.09978576, 0.0135172568]
-  Scale: [0.0741347447, 0.0428141095, 0.144865379]
+  Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -143,7 +142,7 @@ ID: 10194207354943163215
 SpriteRenderer:
   m_GameObject: {fileID: 12690634969259096449}
   m_IsEnabled: true
-  World Space: true
+  World Space: false
   Colour Picker Mode: true
   Include Alpha (ColourPicking): true
   Alpha Scalar: 1
@@ -162,9 +161,9 @@ GameObject:
 ID: 4585798291201254240
 Transform:
   m_GameObject: {fileID: 13236326914152460117}
-  Translation: [0.0782189146, -0.064494364, -0.00125762285]
-  Rotation: [-3.61283159, -0.0131946886, 0]
-  Scale: [0.0767442062, 0.0571210235, 1.73605609]
+  Translation: [0.18459554, -0.0644943789, 0.0727835372]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.225000039, 0.224999949, 0.199993297]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -173,7 +172,7 @@ ID: 15272266936174703665
 SpriteRenderer:
   m_GameObject: {fileID: 13236326914152460117}
   m_IsEnabled: true
-  World Space: true
+  World Space: false
   Colour Picker Mode: true
   Include Alpha (ColourPicking): true
   Alpha Scalar: 1
@@ -187,26 +186,24 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 3837679008896948487}  # Transform
-    - component: {fileID: 1929880018281593265}  # TextRenderer
+    - component: {fileID: 4657300578877953889}  # SpriteRenderer
 ---
 ID: 3837679008896948487
 Transform:
   m_GameObject: {fileID: 15290233428529554524}
-  Translation: [-0.00994747225, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.621717036, 1.02806139, 1]
+  Translation: [2.79396795e-09, 0.411597997, 0]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.800000131, 0.350000024, 0.99998945]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
 ---
-ID: 1929880018281593265
-TextRenderer:
+ID: 4657300578877953889
+SpriteRenderer:
   m_GameObject: {fileID: 15290233428529554524}
   m_IsEnabled: true
-  Text: Are you sure you want to quit?
-  X-axis Position: -0.839999974
-  Y-axis Position: 0.189999998
-  Scale: 1.19000006
-  Color R: 2.91000009
-  Color G: 2.06999993
-  Color B: 1.54999995
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: d74f57dc18703b6781d5c4381370a558}

@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Terminal.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
+    <Compile Include="Assets\Scripts\TutorialEnemyKeyDrop.cs" />
     <Compile Include="Assets\Scripts\VictoryMenu.cs" />
     <Compile Include="CoreScripts\Application.cs" />
     <Compile Include="CoreScripts\Collision.cs" />

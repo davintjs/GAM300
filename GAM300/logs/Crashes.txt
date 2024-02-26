@@ -1,5 +1,0 @@
-[2024-02-08 15:20:11.421] [Error] [critical] 
-Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 125)
-

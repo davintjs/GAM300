@@ -64,6 +64,10 @@ public class ThirdPersonController : Script
     public float RotationSpeed = 1;
 
     public AudioSource audioSource;
+    int jumpAudioRotation = 0;
+    int damageAudioRotation = 0;
+    int dodgeRollAudioRotation = 0;
+    bool dodgeSound = true;
 
     AnimationStateMachine animationManager;
 
@@ -77,7 +81,7 @@ public class ThirdPersonController : Script
     public Transform terminal1;
     public Transform terminal2;
 
-    public MeshRenderer doorTestMesh;
+    //public MeshRenderer doorTestMesh;
 
     public bool cutscene = false;
 
@@ -172,7 +176,8 @@ public class ThirdPersonController : Script
     //overdrive bar
     //public float maxOverdrive = 10f;
     //public float currentOverdrive = 0;
-    //public GameObject overDriveBar
+    //public GameObject overDriveBar;
+    public GameObject overDriveVFX;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -519,11 +524,29 @@ public class ThirdPersonController : Script
         //dodge check
         if(isDodging)
         {
+            if (dodgeSound)
+            {
+                Random rd = new Random();
+                dodgeRollAudioRotation = rd.Next(0, 1);
+                dodgeSound = false;
+
+                //Plays Dodge Roll Sound
+                switch (dodgeRollAudioRotation)
+                {
+                    case 0:
+                        AudioManager.instance.dodgeRoll1.Play();
+                        break;
+                    case 1:
+                        AudioManager.instance.dodgeRoll2.Play();
+                        break;
+                }
+            }
             startDodgeCooldown = true;
             CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
-            if(currentDodgeTimer <= 0)
+
+            if (currentDodgeTimer <= 0)
             {
                 movement = vec3.Zero;
                 isDodging = false;
@@ -535,6 +558,7 @@ public class ThirdPersonController : Script
             currentDodgeCooldown -= Time.deltaTime;
             if(currentDodgeCooldown <= 0)
             {
+                dodgeSound = true;
                 SetState("Dodge", false);
                 startDodgeCooldown = false;
                 currentDodgeCooldown = dodgeCooldown;
@@ -550,13 +574,17 @@ public class ThirdPersonController : Script
             overDriveCollider.SetActive(true);
             attackLight.transform.localPosition = new vec3(transform.localPosition);
             attackLight.SetActive(true);
-            
+            overDriveVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y -2, transform.localPosition.z);
+            overDriveVFX.SetActive(true);
+
             if (currentOverdriveTimer <= 0)
             {
                 SetState("Overdrive", false);
                 overDriveCollider.transform.localPosition = new vec3(10000);
                 overDriveCollider.SetActive(false);
                 attackLight.SetActive(false);
+                overDriveVFX.transform.localPosition = new vec3(1000);
+                overDriveVFX.SetActive(false);
                 _isOverdrive = false;
                 currentOverdriveTimer = overdriveTimer;
             }
@@ -597,6 +625,7 @@ public class ThirdPersonController : Script
             {
                 //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
+                AudioManager.instance.dashAttack.Play();
                 AudioManager.instance.playerAttack.Play();
                 _isDashAttacking = true;
                 SetState("Run", false);
@@ -614,13 +643,13 @@ public class ThirdPersonController : Script
                 SetState("Dodge", true);
             }
             //OVERDRIVE
-            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && currentStamina >= overDriveStamina)
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown)
             {
                 AudioManager.instance.playerOverdrive.Play();
-
+                AudioManager.instance.overdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
-                //Console.WriteLine("Overdrive");
+                Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
@@ -663,10 +692,26 @@ public class ThirdPersonController : Script
             else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
                 SetState("Jump", true);
-                
+
                 //Jump will not require stamina
                 //UseStamina(jumpStamina);
-                AudioManager.instance.jumpVoice.Play();
+
+                Random rd = new Random();
+                jumpAudioRotation = rd.Next(0, 2);
+
+                switch (jumpAudioRotation)
+                {
+                    case 0:
+                        AudioManager.instance.jumpVoice.Play();
+                        break;
+                    case 1:
+                        AudioManager.instance.jumpVoice2.Play();
+                        break;
+                    case 2:
+                        AudioManager.instance.jumpVoice3.Play();
+                        break;
+                }
+                
                 movement += vec3.UnitY * JumpSpeed;
             }
             else if (!IsAttacking)
@@ -870,7 +915,22 @@ public class ThirdPersonController : Script
         if (!isInvulnerable)
         {
             IsAttacking = false;
+            //dmg noise
             AudioManager.instance.playerInjured.Play();
+
+            Random rd = new Random();
+            damageAudioRotation = rd.Next(0, 1);
+
+            switch (damageAudioRotation)
+            {
+                case 0:
+                    AudioManager.instance.thumpCollision1.Play();
+                    break;
+                case 1:
+                    AudioManager.instance.thumpCollision2.Play();
+                    break;
+            }
+
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
             ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
             isInvulnerable = true;

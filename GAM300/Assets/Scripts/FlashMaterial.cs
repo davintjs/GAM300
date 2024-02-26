@@ -16,6 +16,8 @@ class FlashMaterial : Script
     public int numOfFlashes = 4;
     bool flashed = false;
 
+    bool done = false;
+
     void Start()
     {
         origColor = materialOwner.material.color;
@@ -28,12 +30,14 @@ class FlashMaterial : Script
 
     public void OnTriggerEnter(PhysicsComponent rb)
     {
+        if (done) return;
         if (GetTag(rb) == "Player")
             StartCoroutine(Flash());
     }
 
     IEnumerator Flash()
     {
+        done = true;
         for (int i = 0; i < numOfFlashes; i++)
         {
             if (flashed)

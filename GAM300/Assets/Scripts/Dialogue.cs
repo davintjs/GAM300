@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 class Dialogue : Script
 {
     public int state = 1;
+    bool done = false;
 
     public void OnTriggerEnter(PhysicsComponent component)
     {
+        if (done) return;
         if (GetTag(component) == "Player")
         {
 
@@ -21,8 +23,10 @@ class Dialogue : Script
 
     public void OnTriggerExit(PhysicsComponent component)
     {
+        if (done) return;
         if (GetTag(component) == "Player")
         {
+            done = true;
             DialogueManager.Instance.Reset();
             AudioManager.instance.uiSound.Play();
         }

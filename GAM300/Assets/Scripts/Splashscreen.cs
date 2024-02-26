@@ -9,21 +9,24 @@ public class Splashscreen : Script
 {
     public SpriteRenderer digipenLogo;
     public SpriteRenderer gameLogo;
-    public SpriteRenderer bg;
 
     public FadeEffect digipenFade;
     public FadeEffect gameLogoFade;
-    public FadeEffect bgFade;
 
     public TransformEffect gameLogoTransform;
 
     int state = 0;
 
+    void Start()
+    {
+        digipenFade.StartFadeInAndOut();
+    }
+
     void Update()
     {
-        if (digipenLogo == null || gameLogo == null || bg == null)
+        if (digipenLogo == null || gameLogo == null)
             return;
-        if (digipenFade == null || gameLogoFade == null || bgFade == null)
+        if (digipenFade == null || gameLogoFade == null)
             return;
         if (gameLogoTransform == null)
             return;
@@ -34,31 +37,19 @@ public class Splashscreen : Script
                 if (digipenFade.finished || Input.GetMouseDown(0))
                 {
                     ++state;
-                    gameLogoFade.Start();
-                    gameLogoFade.gameObject.SetActive(true);
                     digipenFade.gameObject.SetActive(false);
+                    gameLogoFade.StartFadeInAndOut();
+                    Console.WriteLine("YES1");
                 }
                 break;
             case 1:
                 if (gameLogoFade.finished || Input.GetMouseDown(0))
                 {
+                    Console.WriteLine("YES2");
                     ++state;
-                    bgFade.start = true;
-                    gameLogoFade.gameObject.SetActive(false);
-                }
-                break;
-            case 2:
-                if (bgFade.finished || Input.GetMouseDown(0))
-                {
-                    bgFade.gameObject.SetActive(false);
+                    SceneManager.LoadScene("MainMenu", true);
                 }
                 break;
         }      
     }
-
-    void SetState(int state_)
-    {
-
-    }
-
 }
