@@ -37,8 +37,6 @@ public:
 
 	void UpdateAnimation(float dt, glm::mat4& pTransform);
 
-	void UpdateRigDisplay(Animation& _animation);
-
 	void ChangeState();
 
 	void PlayAnimation(Animation* pAnimation);
