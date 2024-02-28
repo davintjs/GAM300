@@ -216,6 +216,7 @@ struct AudioSource : Object
 	float volume{1.f};
 	float fadeInTime{1.f};
 	float fadeOutTime{1.f};
+	float maxDistance{1.f};
 	Engine::GUID<AudioAsset> currentSound;
 	property_vtable();
 };
@@ -230,6 +231,15 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
+
+struct AudioListener : Object {
+		// no properties
+	property_vtable();
+};
+
+property_begin_name(AudioListener, "Audio Listener") {
+	property_parent(Object).Flags(property::flags::DONTSHOW)
+}property_vend_h(AudioListener)
 
 struct BoxCollider : Object
 {
@@ -761,7 +771,8 @@ using SingleComponentTypes = decltype(
 		Canvas, 
 		ParticleComponent, 
 		NavMeshAgent,
-		TextRenderer
+		TextRenderer,
+		AudioListener
 	>::Concatenate(PhysicsTypes()));
 
 //Template pack of components that entities can only have multiple of each

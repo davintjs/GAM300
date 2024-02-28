@@ -71,7 +71,7 @@ GameObject:
 ID: 11834711623357585551
 Transform:
   m_GameObject: {fileID: 1589847083358243135}
-  Translation: [0, 0, 0]
+  Translation: [-12.9325571, 0, 7.10922956]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -82,12 +82,12 @@ ID: 6091472549070461199
 AudioSource:
   m_GameObject: {fileID: 1589847083358243135}
   m_IsEnabled: true
-  AudioChannel: 0
+  AudioChannel: 1
   Loop: false
   Volume: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: c921bd0028ce6d21877c994c16ad963b}
+  Sound File: {guid: 0c5d64e57774262af773998dd773b932}
   Play: false
 ---
 ID: 4728600544200370801
@@ -149,3 +149,35 @@ LightSource:
   Inner Cutoff: 55
   Outer Cutoff: 70
   Color: [1, 1, 1]
+---
+ID: 15007905995033540618
+GameObject:
+  m_IsActive: true
+  m_Name: SoundTest - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7685856408681179285}  # Transform
+    - component: {fileID: 3683946791089176973}  # AudioSource
+---
+ID: 7685856408681179285
+Transform:
+  m_GameObject: {fileID: 15007905995033540618}
+  Translation: [15.0199327, 0, 3.15683818]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 3683946791089176973
+AudioSource:
+  m_GameObject: {fileID: 15007905995033540618}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
+  Play: false

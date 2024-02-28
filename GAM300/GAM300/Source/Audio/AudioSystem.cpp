@@ -39,8 +39,6 @@ void AudioSystem::Update(float dt) {
 				continue;
 			}
 		}
-		/**/
-		//AUDIOMANAGER.PauseMusic();
 		AUDIOMANAGER.PauseLoopFX();
 		// update music settings
 		if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
@@ -52,17 +50,24 @@ void AudioSystem::Update(float dt) {
 		// update SFX settings
 		if (audio.current_channel == (int)AudioSource::Channel::SFX && AUDIOMANAGER.SFXEnabled()) {
 			//no loop
+			Transform& pos = currentScene.Get<Transform>(audio); // gotta set channel's position
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			if (audio.loop) {
 				AUDIOMANAGER.PlayLoopFX(audio.currentSound);
 			}
 			else {
-				AUDIOMANAGER.PlaySFX(audio.currentSound);
+				AUDIOMANAGER.PlaySFX(audio.currentSound, 
+					{ pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z });
+					// { float(rand()%200 - 100), float(rand() % 200 - 100), float(rand() % 200 - 100) });
 				audio.play = false;
 			}
 			
 			continue;
 		}
+	}
+
+	for (AudioListener& listener : currentScene.GetArray<AudioListener>()) {
+		
 	}
 	AUDIOMANAGER.Update(dt); // this is for loops and other fancy stuff
 }

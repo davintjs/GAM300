@@ -53,34 +53,32 @@ public:
 	void Update(float dt);
 
 	// add music into music channel
-	//void AddMusic(const std::string& soundGUID, const std::string& name); // @kk delete once done
 	void AddMusic(const std::string & path, const Engine::GUID<AudioAsset>&soundGUID);
 
 	// add looping SFX onto LoopFX channel
-	//void AddLoopFX(const std::string& soundGUID, const std::string& name);
 	void AddLoopFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// add SFX into SFX channel
-	//void AddSFX(const std::string& soundGUID, const std::string& name);
 	void AddSFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
 
 	// Play / Unpause music with the filename
-	//void PlayMusic(const std::string soundGUID);
 	void PlayMusic(Engine::GUID<AudioAsset> soundGUID, float componentFadeOut = 1.f, float componentFadeIn = 1.f);
 
 	// Unpause Music
 	void PlayMusic();
 
 	// Play SFX with the filename on loop
-	//void PlayLoopFX(const std::string soundGUID, float pan = 0.f, float vol = 1.f);
 	void PlayLoopFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0.f, float vol = 1.f,
 		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
-	//void PlaySFX(const std::string& name, float pan = 0,
-	void PlaySFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0,
+	void PlaySFX(Engine::GUID<AudioAsset> soundGUID, 
+		FMOD_VECTOR pos = {0,0,0},
+		float maxDistance = 1.f,
 		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
+
+	void UpdateSFXPosition(FMOD_VECTOR pos);
 
 	// play from component
 	void PlayComponent(AudioSource & Source);
@@ -139,6 +137,7 @@ private:
 	MusicBuffer musics[2];
 	int currentMusicIdx{ 0 };
 	FMOD::Channel* currentFX{};
+	std::vector<FMOD::Channel> playingSFXChannels;
 	SoundMap sounds[CATEGORY_COUNT];
 	std::vector<SoundMap> soundvec;
 	Engine::GUID<AudioAsset> currentFXPath{};

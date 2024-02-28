@@ -25,7 +25,7 @@ void AudioManager::InitAudioManager() {
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetUnloaded);
 	EVENTS.Subscribe(this, &AudioManager::CallbackSceneStop);
 	FMOD::System_Create(&system);
-	system->init(32, FMOD_INIT_NORMAL, 0);
+	system->init(32, FMOD_INIT_3D_RIGHTHANDED, 0);
 	system->getMasterChannelGroup(&master);
 	for (int i = 0; i < CATEGORY_COUNT; ++i) {
 		system->createChannelGroup(0, &groups[i]);
@@ -34,7 +34,7 @@ void AudioManager::InitAudioManager() {
 	}
 	master->setVolume(1.f);
 	// Set up modes for each category
-	modes[CATEGORY_SFX] = FMOD_DEFAULT;
+	modes[CATEGORY_SFX] = FMOD_3D;
 	modes[CATEGORY_MUSIC] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
 	modes[CATEGORY_MUSIC2] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
 	modes[CATEGORY_LOOPFX] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
@@ -98,6 +98,12 @@ void AudioManager::Update(float dt) {
 	}
 	
 	currentFX->setVolume(GetSFXVolume() * loopfxVolume);
+	/* int listener, vec* pos, vec* vel, vec* forward, vec* up */
+	FMOD_VECTOR pos = { 0.f, 0.f, 1.f};
+	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+	FMOD_VECTOR forward = { 0.0f, 0.0f, -1.0f };
+	FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
+	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
 	system->update();
 }
 
@@ -294,7 +300,7 @@ void AudioManager::PauseComponent(AudioSource& source) {
 }
 
 void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
-	float pan,
+	FMOD_VECTOR pos, float maxDistance,
 	float minVolume, float maxVolume,
 	float minPitch, float maxPitch)
 {
@@ -319,8 +325,18 @@ void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 
 	frequency = frequency * pow(semitone_ratio, pitch);
 	channel->setFrequency(frequency);
-	channel->setPan(pan);
 	channel->setPaused(false);/**/
+	FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
+	channel->set3DAttributes(&pos, &velocity);
+	channel->set3DMinMaxDistance(1.f, maxDistance);
+	//playingSFXChannels.emplace_back(channel);
+}
+
+void AudioManager::UpdateSFXPosition(FMOD_VECTOR pos) {
+	FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
+	/*for (FMOD::Channel& channel : playingSFXChannels) {
+		channel.set3DAttributes(&pos, &velocity);
+	}*/
 }
 
 void AudioManager::StopMusic(float fadetime) {
@@ -423,6 +439,7 @@ float AudioManager::GetMusicVolume() {
 
 	return musicVolume;
 }
+
 
 float AudioManager::RandFloat(float min, float max) {
 	if (min == max) return min;
