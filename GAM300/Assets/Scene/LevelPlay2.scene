@@ -34589,8 +34589,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 18081422161438025274}  # Component
   modelOffset: {fileID: 5297853854918785373}  # Component
@@ -34920,7 +34918,7 @@ ID: 10457539616347212571
 MeshRenderer:
   m_GameObject: {fileID: 13973967014568888864}
   m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000000}
+  Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 00000000000000000000000000000000}
 ---
 ID: 858545735501911786
@@ -35013,8 +35011,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 13563546279246814984}  # Component
   modelOffset: {fileID: 17325133999229751987}  # Component
@@ -44131,8 +44127,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 17338308076949455477}  # Component
   modelOffset: {fileID: 9983597563396382479}  # Component
@@ -49352,8 +49346,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 13277852543598371328}  # Component
   modelOffset: {fileID: 8181097202000610831}  # Component
@@ -49811,8 +49803,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 10180225711759476473}  # Component
   modelOffset: {fileID: 4651293391192650299}  # Component
@@ -53909,8 +53899,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 898546543010589386}  # Component
   modelOffset: {fileID: 3295364860990313297}  # Component
@@ -55702,8 +55690,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 10544989079879360673}  # Component
   modelOffset: {fileID: 16614945116669692070}  # Component
@@ -57356,8 +57342,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 14331869571018254577}  # Component
   modelOffset: {fileID: 15771493367344086800}  # Component
@@ -59703,8 +59687,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 6964300282308578913}  # Component
   modelOffset: {fileID: 2281979527073026994}  # Component
@@ -60092,8 +60074,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 3197518610534636844}  # Component
   modelOffset: {fileID: 17410272475223950305}  # Component
@@ -60481,8 +60461,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 8961390157855236339}  # Component
   modelOffset: {fileID: 13679024543590507492}  # Component
@@ -60870,8 +60848,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 7102901748506770040}  # Component
   modelOffset: {fileID: 10571348349847112841}  # Component
@@ -61259,8 +61235,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 2766190930066491268}  # Component
   modelOffset: {fileID: 17530039533555631439}  # Component
@@ -61648,8 +61622,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 1595158727373292423}  # Component
   modelOffset: {fileID: 13301186590583378764}  # Component
@@ -62037,8 +62009,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 15182354761892658855}  # Component
   modelOffset: {fileID: 16213852318901244393}  # Component
@@ -62426,8 +62396,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 4872432287772594624}  # Component
   modelOffset: {fileID: 10869195669279574947}  # Component
@@ -63215,8 +63183,6 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
-  staggerCooldown: 8
-  staggerTimer: 0
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 12771960829225364734}  # Component
   modelOffset: {fileID: 10169941270709570099}  # Component
@@ -63243,12 +63209,12 @@ Transform:
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 15613771325304660657}
   m_Children:
-    - {fileID: 1900627424937850475}
-    - {fileID: 16446432672371287651}
     - {fileID: 13667835057243733406}
     - {fileID: 9950752047790059703}
     - {fileID: 4077798666885374154}
+    - {fileID: 1900627424937850475}
     - {fileID: 14589795695152264346}
+    - {fileID: 16446432672371287651}
 ---
 ID: 13324091730434544865
 Animator:
