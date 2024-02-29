@@ -99,11 +99,11 @@ void AudioManager::Update(float dt) {
 	
 	currentFX->setVolume(GetSFXVolume() * loopfxVolume);
 	/* int listener, vec* pos, vec* vel, vec* forward, vec* up */
-	FMOD_VECTOR pos = { 0.f, 0.f, 1.f};
+	/*FMOD_VECTOR pos = { 0.f, 0.f, 1.f};
 	FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 	FMOD_VECTOR forward = { 0.0f, 0.0f, -1.0f };
 	FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
-	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+	system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);*/
 	system->update();
 }
 
@@ -299,20 +299,21 @@ void AudioManager::PauseComponent(AudioSource& source) {
 	source.play = false;
 }
 
-void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
-	FMOD_VECTOR pos, float maxDistance,
+FMOD::Channel* AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
+	FMOD_VECTOR pos, FMOD::Channel* channel,
+	float maxDistance,
 	float minVolume, float maxVolume,
 	float minPitch, float maxPitch)
 {
 	SoundMap::iterator sound = sounds[CATEGORY_SFX].find(name);
 	if (sound == sounds[CATEGORY_SFX].end()) {
-		return;
+		return nullptr;
 	}
 	if (maxVolume == 0.f)
 	{
-		return;
+		return nullptr;
 	}
-	FMOD::Channel* channel;
+	//FMOD::Channel* channel;
 	system->playSound(sound->second, 0, false, &channel);
 	float frequency;
 	static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
@@ -329,7 +330,7 @@ void AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
 	channel->set3DAttributes(&pos, &velocity);
 	channel->set3DMinMaxDistance(1.f, maxDistance);
-	//playingSFXChannels.emplace_back(channel);
+	return channel;
 }
 
 void AudioManager::UpdateSFXPosition(FMOD_VECTOR pos) {

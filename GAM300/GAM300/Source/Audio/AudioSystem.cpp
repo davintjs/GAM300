@@ -32,6 +32,16 @@ void AudioSystem::Update(float dt) {
 			if (audio.current_channel == (int)AudioSource::Channel::SFX) {
 				AUDIOMANAGER.PauseLoopFX();
 				AUDIOMANAGER.StopFX();
+				if (audio.channel != nullptr) {
+					// Update position of the playing SFX
+					Transform& pos = currentScene.Get<Transform>(audio);
+					FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // Assuming no velocity for now
+					FMOD_VECTOR position = { pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z };
+					audio.channel->set3DAttributes(&position, &velocity);
+					bool play;
+					audio.channel->isPlaying(&play);
+					audio.channel = play ? audio.channel : nullptr;
+				}
 				continue;
 			}
 			if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
@@ -50,24 +60,32 @@ void AudioSystem::Update(float dt) {
 		// update SFX settings
 		if (audio.current_channel == (int)AudioSource::Channel::SFX && AUDIOMANAGER.SFXEnabled()) {
 			//no loop
-			Transform& pos = currentScene.Get<Transform>(audio); // gotta set channel's position
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			if (audio.loop) {
 				AUDIOMANAGER.PlayLoopFX(audio.currentSound);
 			}
 			else {
-				AUDIOMANAGER.PlaySFX(audio.currentSound, 
-					{ pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z });
-					// { float(rand()%200 - 100), float(rand() % 200 - 100), float(rand() % 200 - 100) });
+				Transform& pos = currentScene.Get<Transform>(audio);
+				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound,
+					{ pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z },
+					audio.channel);
 				audio.play = false;
 			}
-			
 			continue;
 		}
 	}
 
 	for (AudioListener& listener : currentScene.GetArray<AudioListener>()) {
-		
+		if (currentScene.Has<Camera>(currentScene.Get<Entity>(listener))) {
+			Camera& cam = currentScene.Get<Camera>(listener);
+			// to be continued...
+			FMOD_VECTOR pos = { 0.f, 0.f, 1.f };
+			FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+			FMOD_VECTOR forward = { 0.0f, 0.0f, -1.0f };
+			FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
+			AUDIOMANAGER.system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+			break;
+		}
 	}
 	AUDIOMANAGER.Update(dt); // this is for loops and other fancy stuff
 }

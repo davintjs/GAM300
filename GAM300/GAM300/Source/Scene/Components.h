@@ -34,6 +34,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/Debugger.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <FMOD/fmod.hpp>
 
 
 constexpr size_t MAX_ENTITIES{ 5 };
@@ -218,6 +219,7 @@ struct AudioSource : Object
 	float fadeOutTime{1.f};
 	float maxDistance{1.f};
 	Engine::GUID<AudioAsset> currentSound;
+	FMOD::Channel* channel;
 	property_vtable();
 };
 

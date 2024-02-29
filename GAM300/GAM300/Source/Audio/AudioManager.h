@@ -72,8 +72,8 @@ public:
 		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
-	void PlaySFX(Engine::GUID<AudioAsset> soundGUID, 
-		FMOD_VECTOR pos = {0,0,0},
+	FMOD::Channel* PlaySFX(Engine::GUID<AudioAsset> soundGUID,
+		FMOD_VECTOR pos = {0,0,0}, FMOD::Channel* channel = nullptr,
 		float maxDistance = 1.f,
 		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
@@ -128,9 +128,11 @@ public:
 
 
 	bool SFXEnabled() { return enableSFX; }
-private:
 
 	FMOD::System* system{};
+
+private:
+
 	FMOD::ChannelGroup* master{};
 	FMOD::ChannelGroup* groups[CATEGORY_COUNT]{};
 	FMOD_MODE modes[CATEGORY_COUNT]{};
