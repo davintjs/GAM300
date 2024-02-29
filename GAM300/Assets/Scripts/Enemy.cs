@@ -45,8 +45,9 @@ public class Enemy : Script
 
     public bool isAttacking = false;
     public bool isAttackCooldown = false;
-    float attackTimer = 0.001f;
+    float attackTimer = 1f;
     float currentAttackTimer;
+    float currentAttackBuffer;
     public float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
 
@@ -119,39 +120,48 @@ public class Enemy : Script
             isAttacking = true;
             if(isAttacking && !isAttackCooldown)
             {
-                //AudioManager.instance.meleeEnemyAttack.Play();
                 currentAttackTimer += Time.deltaTime;
+                currentAttackBuffer += Time.deltaTime;
+                if (currentAttackBuffer >= 0.8f) // So that the attack is not instantaneous
+                {
+                    if (attackTrigger != null)
+                    {
+                        Console.WriteLine("Attackkkkk");
+                        attackTrigger.SetActive(true);
+                        attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
+                        attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
+                        attackTrigger.transform.rotation = new vec3(modelOffset.rotation);
+                    }
+                    currentAttackBuffer = 0f;
+                }
+                
+                //AudioManager.instance.meleeEnemyAttack.Play();
                 if (currentAttackTimer >= attackTimer)
                 {
                     isAttacking = false;
                     isAttackCooldown = true;
+                    SetState("Attack", false);
+                    Console.WriteLine("Setted state attack false");
                     currentAttackTimer = 0f;
                 }
             }
             if(isAttackCooldown)
             {
                 currentAttackCooldownTimer += Time.deltaTime;
-                if(currentAttackCooldownTimer >= 0.5f)
-                {
-                    if (attackTrigger != null)
-                    {
-                        attackTrigger.SetActive(true);
-                        attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
-                        attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
-                        attackTrigger.transform.rotation = new vec3(modelOffset.rotation);
-                        //attackTrigger.SetActive(true);
-                    }
-                }
-                if(currentAttackCooldownTimer >= attackCooldownTimer)
+                if (attackTrigger != null)
                 {
                     attackTrigger.SetActive(false);
+                }
+
+                if (currentAttackCooldownTimer >= attackCooldownTimer)
+                {
                     isAttackCooldown = false;
                     currentAttackCooldownTimer = 0f;
                 }
             }
            
         }
-        else if(state != 2)
+        else if (state != 2)
         {
             attackTrigger.SetActive(false);
             isAttacking = false;
@@ -160,19 +170,14 @@ public class Enemy : Script
             currentAnimationTimer = 0f;
         }
 
-        //NOTE: testing state, remove this later
-        //if (Input.GetKey(KeyCode.K))
-        //{
-            //Console.WriteLine("TestingState");
-            //SetState("Run", true);
-        //}
-
 
         vec3 direction = player.localPosition - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
         if(!isDead)
         {
+            // Bean: This shouldnt be here
+            // animationManager.currentState = "";
             switch (state)
             {
                 //idle state
@@ -255,17 +260,7 @@ public class Enemy : Script
                     break;
                 //attack state
                 case 2:
-                    //attack animation
-                    SetState("Attack", true);
-                    //if(attackTrigger != null)
-                    //{
-                    //    Console.WriteLine("Attack");
-                    //    attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
-                    //    attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
-                    //    attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
-                    //    attackTrigger.SetActive(true);
-                    //}
-
+                    SetState("Attack", true); //attack animation
                     staggerTimer += Time.deltaTime; // Start counting stagger timer
 
                     if (playOnce)
@@ -277,7 +272,6 @@ public class Enemy : Script
                     LookAt(direction);
                     if(!isAttacking)
                     {
-
                         //change to chase state once player has reach out of range
                         if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
                         {
@@ -321,7 +315,7 @@ public class Enemy : Script
         }
 
         //timer += Time.deltaTime;
-
+        Console.WriteLine("Current state: " + animationManager.currentState);
 
         //needed for the animation to change
         animationManager.UpdateState();

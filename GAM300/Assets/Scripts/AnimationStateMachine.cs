@@ -60,7 +60,7 @@ namespace BeanFactory
     {
         Animator animator;
         Dictionary<string, AnimationState> animationStates = new Dictionary<string, AnimationState>();
-        string currentState = "";
+        public string currentState = "";
 
         public AnimationStateMachine (Animator _animator)
         {
