@@ -1,0 +1,5 @@
+[2024-02-29 20:55:20.675] [Error] [critical] 
+Caused By:	mClassField
+Info:		FIELD  healthPackCount COULD NOT BE FOUND IN SCRIPT 
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 715)
+

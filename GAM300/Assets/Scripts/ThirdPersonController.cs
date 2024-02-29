@@ -44,7 +44,6 @@ public class ThirdPersonController : Script
     public float currentOverdriveCooldown;
     public bool startOverdriveCooldown = false;
 
-
     public CharacterController CC;
     public Transform PlayerCamera;
     public Transform PlayerModel;
@@ -55,7 +54,6 @@ public class ThirdPersonController : Script
     public GameObject playerWeaponCollider2;
     public GameObject playerWeaponCollider3;
     GameObject selectedWeaponCollider;
-    //public Transform checkpoint2;
 
     //public InstantDeath instantDeath;
 
@@ -77,7 +75,8 @@ public class ThirdPersonController : Script
 
     public int checkpointIndex = -1;
     public bool isAtCheckpoint = false;
-    public Transform spawnPoint;
+
+    public vec3 spawnPoint;
 
     //public MeshRenderer doorTestMesh;
 
@@ -309,11 +308,6 @@ public class ThirdPersonController : Script
             Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
             return;
         }
-        if(spawnPoint == null)
-        {
-            Console.WriteLine("Missing SpawnPoint reference in ThirdPersonController script");
-            return;
-        }
         if(healthBarFill == null)
         {
             Console.WriteLine("Missing healthBarFill reference in ThirdPersonController script");
@@ -362,6 +356,7 @@ public class ThirdPersonController : Script
         initialStaminaBarXScale = staminaBarFill.GetComponent<Transform>().localScale.x;
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -375,7 +370,7 @@ public class ThirdPersonController : Script
         if (Input.GetKey(KeyCode.R))
         {
             //Console.WriteLine("Test Respawn");
-            player.localPosition = new vec3(spawnPoint.localPosition);
+            player.localPosition = spawnPoint;
             //player.localRotation = new vec3(spawnPoint.localRotation);
             //SceneManager.LoadScene("LevelPlay2");
         }
@@ -761,7 +756,7 @@ public class ThirdPersonController : Script
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
         //animator.Play();
-        player.localPosition = new vec3(spawnPoint.localPosition);
+        player.localPosition = spawnPoint;
         HealHealth(maxHealth);
         healthBarFill.GetComponent<Transform>().localPosition = initialHealthBarPos;
         UpdatehealthBar();

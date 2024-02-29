@@ -697,6 +697,8 @@ void DeserializeScriptHelper(Field& rhs, YAML::Node& node)
             }
             else
             {
+                if (rhs.fType != GetType::E<T>())
+                    return;
                 // Store Basic Types
                 T& value = rhs.Get<T>();
                 value = node.as<T>();
