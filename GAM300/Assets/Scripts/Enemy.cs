@@ -60,7 +60,7 @@ public class Enemy : Script
     public float currentStunDuration;
 
     // Staggering stuff
-    public float staggerCooldown = 3f;
+    public float staggerCooldown = 8f;
     public float staggerTimer = 0f;
 
     //audio
