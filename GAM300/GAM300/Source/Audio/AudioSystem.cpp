@@ -76,13 +76,21 @@ void AudioSystem::Update(float dt) {
 	}
 
 	for (AudioListener& listener : currentScene.GetArray<AudioListener>()) {
+
+		Transform& transform = currentScene.Get<Transform>(listener);
+
+		FMOD_VECTOR pos = { transform.GetGlobalTranslation().x , transform.GetGlobalTranslation().y, transform.GetGlobalTranslation().z };
+		FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR up = { 0.f, 1.f, 0.f };
+		glm::vec3 gl_forward = transform.GetGlobalRotation() * glm::vec3{0.f, 0.f, -1.f};
+		FMOD_VECTOR forward = { gl_forward.x, gl_forward.y, gl_forward.z };
+
 		if (currentScene.Has<Camera>(currentScene.Get<Entity>(listener))) {
+
 			Camera& cam = currentScene.Get<Camera>(listener);
-			// to be continued...
-			FMOD_VECTOR pos = { 0.f, 0.f, 1.f };
-			FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-			FMOD_VECTOR forward = { 0.0f, 0.0f, -1.0f };
-			FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
+			
+			forward = { cam.GetForwardVec().x, cam.GetForwardVec().y, cam.GetForwardVec().z };
+			up = { cam.GetUpVec().x, cam.GetUpVec().y, cam.GetUpVec().z};
 			AUDIOMANAGER.system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
 			break;
 		}
