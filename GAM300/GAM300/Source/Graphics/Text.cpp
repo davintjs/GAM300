@@ -365,7 +365,7 @@ void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::G
 	}
 	//Characters.insert(std::pair<std::string, std::map<char, Character>>(c, haracter));
 
-	GenerateTextureAtlas(Characters);
+	//GenerateTextureAtlas(Characters);
 	mFontContainer.insert(std::make_pair(_guid, Characters));
 
 	inFile.close();
