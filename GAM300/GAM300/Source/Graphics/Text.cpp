@@ -9,7 +9,9 @@ void TextSystem::Init()
 	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
 	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
 	
-
+	/*for (auto& font : mFontContainer) {
+		GenerateTextureAtlas(font.second);
+	}*/
 	glGenVertexArrays(1, &txtVAO);
 	glGenBuffers(1, &txtVBO);
 
@@ -19,7 +21,9 @@ void TextSystem::Init()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	glBindVertexArray(0);/**/
+
+
 }
 
 void TextSystem::Update(float dt)
@@ -33,6 +37,50 @@ void TextSystem::Exit()
 
 	//glDeleteTextures(1, &texture);
 }
+
+void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
+	const int atlasSize = 1024; // Adjust this as needed
+
+	// Create a blank texture atlas
+	unsigned int textureAtlas;
+	glGenTextures(1, &textureAtlas);
+	glBindTexture(GL_TEXTURE_2D, textureAtlas);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlasSize, atlasSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+	int xOffset = 0;
+	int yOffset = 0;
+
+	// Populate the texture atlas with individual character textures
+	for (const auto& pair : characters) {
+		const TextSystem::Character& character = pair.second;
+
+		// Copy the character's texture to the atlas
+		glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, character.Size.x, character.Size.y, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+		// Update the character's texture coordinates
+		characters[pair.first].Texture = textureAtlas;
+		characters[pair.first].Bearing.x = xOffset;
+		characters[pair.first].Bearing.y = yOffset;
+
+		// Move the offset for the next character
+		xOffset += character.Size.x;
+
+		// Check if we need to move to the next row
+		if (xOffset + character.Size.x > atlasSize) {
+			xOffset = 0;
+			yOffset += character.Size.y;
+		}
+	}
+
+	// Set texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 
 void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
 {
@@ -316,6 +364,8 @@ void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::G
 		Characters.insert(std::pair<char, Character>(c, character));
 	}
 	//Characters.insert(std::pair<std::string, std::map<char, Character>>(c, haracter));
+
+	GenerateTextureAtlas(Characters);
 	mFontContainer.insert(std::make_pair(_guid, Characters));
 
 	inFile.close();
