@@ -568,12 +568,12 @@ public:
 		glm::ivec2 Bearing;
 		unsigned int Advance;
 		GLuint Texture{ 0 }; // temp will be upgraded more later
-		glm::vec2 AtlasCoords;y
+		glm::vec2 AtlasCoords;
 	};
 
 	unsigned int txtVAO, txtVBO;
 	using FontCharacters = std::map<char, Character>;
-	std::map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
 
 	/*struct FontType {
 		Engine::GUID<FontAsset> GUID;
