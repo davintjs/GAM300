@@ -203,21 +203,22 @@ property_begin_name(Transform, "Transform")
 
 struct AudioSource : Object
 {
-	enum Channel { MUSIC, SFX, LOOPFX, COUNT };
+	enum Channel { MUSIC, SFX, COUNT };
 	int current_channel = (int)SFX;
 
 	std::vector<const char*> ChannelName =
 	{
 		"Music",
-		"SFX",
-		"Looping SFX"
+		"SFX"
 	};
 	bool loop = false;
 	bool play = false;
 	float volume{1.f};
+	float minPitch{-1.f};
+	float maxPitch{3.f};
 	float fadeInTime{1.f};
 	float fadeOutTime{1.f};
-	float maxDistance{1.f};
+	float maxDistance{100.f};
 	Engine::GUID<AudioAsset> currentSound;
 	FMOD::Channel* channel;
 	property_vtable();
@@ -228,6 +229,8 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(minPitch).Name("SFX min Pitch"),
+		property_var(maxPitch).Name("SFX max Pitch"),
 		property_var(fadeInTime).Name("Fade In Time (s)"),
 		property_var(fadeOutTime).Name("Fade Out Time (s)"),
 		property_var(currentSound).Name("Sound File"),

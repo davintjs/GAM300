@@ -153,9 +153,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 	static void EnableSFX(bool toggle) {
 		AUDIOMANAGER.EnableSFX(toggle);
-		if (!toggle) {
-			AUDIOMANAGER.PauseLoopFX();
-		}
 	}
 	static void PauseComponent(ScriptObject<AudioSource> audioSource) {
 		AUDIOMANAGER.PauseComponent(audioSource);

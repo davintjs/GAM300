@@ -37,7 +37,7 @@ void AudioManager::InitAudioManager() {
 	modes[CATEGORY_SFX] = FMOD_3D;
 	modes[CATEGORY_MUSIC] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
 	modes[CATEGORY_MUSIC2] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
-	modes[CATEGORY_LOOPFX] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
+	//modes[CATEGORY_LOOPFX] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
 	// Seed random number generator for SFXs
 	srand((unsigned int)time(0));
 
@@ -401,11 +401,11 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 		//musics[currentMusicIdx].currentMusic->stop();
 		musics[currentMusicIdx].fade = FADE_OUT;
 		break;
-	case CATEGORY_LOOPFX:
+	/*case CATEGORY_LOOPFX:
 		currentFXPath = 0;
 		groups[CATEGORY_LOOPFX]->stop();
 		currentFX->stop();
-		break;
+		break;*/
 	default:
 		break;
 	}
@@ -456,7 +456,7 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());*/
 	AUDIOMANAGER.AddMusic(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
 	AUDIOMANAGER.AddSFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
-	AUDIOMANAGER.AddLoopFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
+	//AUDIOMANAGER.AddLoopFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
 }
 
 //Handle audio removal here

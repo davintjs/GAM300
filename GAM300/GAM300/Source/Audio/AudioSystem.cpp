@@ -30,8 +30,6 @@ void AudioSystem::Update(float dt) {
 		// if audio is not playing, skip this loop unless it is music
 		if (!audio.play) {
 			if (audio.current_channel == (int)AudioSource::Channel::SFX) {
-				AUDIOMANAGER.PauseLoopFX();
-				AUDIOMANAGER.StopFX();
 				if (audio.channel != nullptr) {
 					// Update position of the playing SFX
 					Transform& pos = currentScene.Get<Transform>(audio);
@@ -49,7 +47,6 @@ void AudioSystem::Update(float dt) {
 				continue;
 			}
 		}
-		AUDIOMANAGER.PauseLoopFX();
 		// update music settings
 		if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
 			// music should auto loop
@@ -59,18 +56,25 @@ void AudioSystem::Update(float dt) {
 
 		// update SFX settings
 		if (audio.current_channel == (int)AudioSource::Channel::SFX && AUDIOMANAGER.SFXEnabled()) {
-			//no loop
+
+			Transform& pos = currentScene.Get<Transform>(audio);
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
+			FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // Assuming no velocity for now
+			FMOD_VECTOR position = { pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z };
+
 			if (audio.loop) {
-				AUDIOMANAGER.PlayLoopFX(audio.currentSound);
+				audio.channel->set3DAttributes(&position, &velocity);
+				bool isPlaying;
+				audio.channel->isPlaying(&isPlaying);
+				if (!isPlaying) {
+					audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.maxDistance, audio.volume, audio.volume, audio.minPitch, audio.maxPitch);
+				}
 			}
 			else {
-				Transform& pos = currentScene.Get<Transform>(audio);
-				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound,
-					{ pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z },
-					audio.channel);
+				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.maxDistance, audio.volume, audio.volume, audio.minPitch, audio.maxPitch);
 				audio.play = false;
 			}
+
 			continue;
 		}
 	}
