@@ -126,7 +126,6 @@ public class Enemy : Script
                 {
                     if (attackTrigger != null)
                     {
-                        Console.WriteLine("Attackkkkk");
                         attackTrigger.SetActive(true);
                         attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
                         attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
@@ -141,7 +140,6 @@ public class Enemy : Script
                     isAttacking = false;
                     isAttackCooldown = true;
                     SetState("Attack", false);
-                    Console.WriteLine("Setted state attack false");
                     currentAttackTimer = 0f;
                 }
             }
@@ -315,7 +313,6 @@ public class Enemy : Script
         }
 
         //timer += Time.deltaTime;
-        Console.WriteLine("Current state: " + animationManager.currentState);
 
         //needed for the animation to change
         animationManager.UpdateState();
@@ -370,6 +367,7 @@ public class Enemy : Script
         stun.SetConditionals(false, death);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
+        attack.loop = true;
         walk.SetConditionals(true, walk);
         walk.SetConditionals(false, attack, death, stun);
         walk.loop = true;
